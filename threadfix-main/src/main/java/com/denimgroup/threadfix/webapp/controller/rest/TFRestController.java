@@ -39,7 +39,7 @@ import java.util.Set;
  * @author mcollins
  *
  */
-public abstract class RestController {
+public abstract class TFRestController {
 
 	protected final SanitizedLogger log = new SanitizedLogger(this.getClass());
 

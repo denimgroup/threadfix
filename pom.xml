@@ -304,7 +304,7 @@
         <itext.version>4.2.1</itext.version>
         <javassist.version>3.19.0-GA</javassist.version>
         <jgit.version>3.6.2.201501210735-r</jgit.version>
-        <json.version>20140107</json.version>
+        <json.version>20090211</json.version>
         <jstl.version>1.2</jstl.version>
         <jsp-api.version>2.3.1</jsp-api.version>
         <jta.version>1.1</jta.version>
@@ -331,6 +331,7 @@
         <easymock.version>3.0</easymock.version>
         <hsqldb.version>1.8.0.10</hsqldb.version>
         <mysql.version>5.1.26</mysql.version>
+        <jackson-2-version>2.5.1</jackson-2-version>
         <junit.version>4.11</junit.version>
         <selenium-client.version>1.0.2</selenium-client.version>
 

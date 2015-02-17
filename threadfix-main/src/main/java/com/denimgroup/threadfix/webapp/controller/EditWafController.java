@@ -26,11 +26,13 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -65,7 +67,8 @@ public class EditWafController {
 	public List<WafType> populateWafTypes() {
 		return wafService.loadAllWafTypes();
 	}
-	
+
+	@JsonView(AllViews.TableRow.class)
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
 	public Object editSubmitFromTable(@PathVariable("wafId") int wafId, @Valid @ModelAttribute Waf waf,
@@ -74,7 +77,7 @@ public class EditWafController {
 		String editResult = editSubmit(wafId, waf, result, status, model);
 		
 		if (editResult.equals("Success")) {
-			return ControllerUtils.writeSuccessObjectWithView(wafService.loadAll(), AllViews.TableRow.class);
+			return RestResponse.success(wafService.loadAll());
 		} else {
 			return FormRestResponse.failure(editResult, result);
 		}

@@ -24,14 +24,8 @@
 
 package com.denimgroup.threadfix.service.util;
 
-import com.denimgroup.threadfix.remote.response.RestResponse;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
-import org.codehaus.jackson.map.SerializationConfig;
-
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 
 public final class ControllerUtils {
 	
@@ -93,25 +87,5 @@ public final class ControllerUtils {
         if (activeTab != null)
             return activeTab.toString();
         else return null;
-    }
-
-    public static <T> ObjectWriter getObjectWriter(@Nonnull Class<T> targetClass) {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationConfig.Feature.DEFAULT_VIEW_INCLUSION, false);
-
-        return mapper.writerWithView(targetClass);
-    }
-
-    public static String writeSuccessObjectWithView(@Nonnull Object object, @Nonnull Class view) {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationConfig.Feature.DEFAULT_VIEW_INCLUSION, false);
-
-        ObjectWriter writer = mapper.writerWithView(view);
-
-        try {
-            return writer.writeValueAsString(RestResponse.success(object));
-        } catch (IOException e) {
-            throw new RuntimeException("Unable to write JSON Object.", e);
-        }
     }
 }

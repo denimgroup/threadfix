@@ -27,16 +27,15 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import org.codehaus.jackson.map.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
@@ -48,8 +47,6 @@ import org.springframework.web.bind.support.SessionStatus;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
-
-import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
 
 @RestController
 @RequestMapping("/organizations/{orgId}/applications/{appId}/edit")
@@ -108,16 +105,15 @@ public class EditApplicationController {
                 "repositoryUserName", "repositoryPassword", "repositoryFolder", "skipApplicationMerge");
 	}
 
+	@JsonView(AllViews.FormInfo.class)
 	@RequestMapping(method = RequestMethod.POST)
-	public String processSubmit(@PathVariable("appId") int appId,
+	public Object processSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Application application,
 			BindingResult result, Model model) throws IOException {
 
-        ObjectWriter writer = ControllerUtils.getObjectWriter(AllViews.FormInfo.class);
-
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
-			return writer.writeValueAsString(RestResponse.failure("You don't have permission."));
+			return RestResponse.failure("You don't have permission.");
 		}
 		
 		Application databaseApplication = applicationService.loadApplication(appId);
@@ -155,7 +151,7 @@ public class EditApplicationController {
 				application.setDefectTracker(null);
 			}
 
-			return writer.writeValueAsString(FormRestResponse.failure("Errors", result));
+			return FormRestResponse.failure("Errors", result);
 
 		} else {
 			application.setOrganization(organizationService.loadById(application.getOrganization().getId()));
@@ -165,11 +161,12 @@ public class EditApplicationController {
 			
 			log.debug("The Application " + application.getName() + " (id=" + application.getId() + ") has been edited by user " + user);
 
-            return writer.writeValueAsString(RestResponse.success(application));
+            return RestResponse.success(application);
 		}
 	}
 	
 	@RequestMapping(value="/wafAjax", method = RequestMethod.POST)
+	@JsonView(AllViews.TableRow.class)
 	public Object processSubmitAjaxWaf(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@ModelAttribute Application application,
@@ -224,12 +221,13 @@ public class EditApplicationController {
 		if (result.hasErrors() || waf == null) {
             return FormRestResponse.failure("Unable to add the WAF. Try again.", result);
 		} else {
-		    return writeSuccessObjectWithView(waf, AllViews.TableRow.class);
+		    return RestResponse.success(waf);
         }
 	}
 
+	@JsonView(AllViews.TableRow.class)
 	@RequestMapping(value="/addDTAjax", method = RequestMethod.POST)
-	public RestResponse<DefectTracker> processSubmitAjaxDefectTracker(@PathVariable("appId") int appId,
+	public Object processSubmitAjaxDefectTracker(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@ModelAttribute Application application,
 			BindingResult result, SessionStatus status, Model model) {

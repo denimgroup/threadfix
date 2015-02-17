@@ -25,12 +25,14 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.importer.interop.ScannerMappingsUpdaterService;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.GenericVulnerabilityService;
 import com.denimgroup.threadfix.service.ScannerMappingsExportService;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,7 +45,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
+
 
 @Controller
 @RequestMapping("/mappings")
@@ -70,17 +72,17 @@ public class ScannerMappingsController {
 	}
 
 	@RequestMapping(value = "/index/cwe", method = RequestMethod.GET)
+	@JsonView(AllViews.TableRow.class)
 	@ResponseBody
-	public String getCweList() {
+	public Object getCweList() {
 
-		return writeSuccessObjectWithView(
-				genericVulnerabilityService.loadAll(),
-				AllViews.TableRow.class);
+		return RestResponse.success(genericVulnerabilityService.loadAll());
 	}
 
 	@RequestMapping(value = "/index/unmappedTable", method = RequestMethod.POST)
+	@JsonView(AllViews.TableRow.class)
 	@ResponseBody
-	public String unmappedScanTable(@ModelAttribute TableSortBean bean) throws IOException {
+	public Object unmappedScanTable(@ModelAttribute TableSortBean bean) throws IOException {
 
 		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS, null, null)) {
 			return "403";
@@ -108,7 +110,7 @@ public class ScannerMappingsController {
 		responseMap.put("numFindings", numFindings);
 		responseMap.put("findingList", findingService.getUnmappedFindingTable(bean));
 
-		return writeSuccessObjectWithView(responseMap, AllViews.TableRow.class);
+		return RestResponse.success(responseMap);
 	}
 }
 

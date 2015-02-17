@@ -30,21 +30,17 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.service.ScanService;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
-import org.codehaus.jackson.map.ObjectWriter;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.io.IOException;
 
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
@@ -53,11 +49,10 @@ import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 /**
  * Created by mac on 9/11/14.
  */
-@Controller
+@RestController
 public class UploadScanController {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(UploadScanController.class);
-    private static final ObjectWriter writer = ControllerUtils.getObjectWriter(AllViews.TableRow.class);
 
     @Autowired
     private ScanTypeCalculationService scanTypeCalculationService;
@@ -74,19 +69,20 @@ public class UploadScanController {
      * @return Team with updated stats.
      */
     @RequestMapping(value = "/organizations/{orgId}/applications/{appId}/upload/remote", method = RequestMethod.POST)
-    public @ResponseBody String uploadScan(@PathVariable("appId") int appId, @PathVariable("orgId") int orgId,
+    @JsonView(AllViews.TableRow.class)
+    public Object uploadScan(@PathVariable("appId") int appId, @PathVariable("orgId") int orgId,
                                                  HttpServletRequest request, @RequestParam("file") MultipartFile file) throws IOException {
 
         LOG.info("Received REST request to upload a scan to application " + appId + ".");
 
         if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
-            return writer.writeValueAsString(failure("You don't have permission to upload scans."));
+            return failure("You don't have permission to upload scans.");
         }
 
         Integer myChannelId = scanTypeCalculationService.calculateScanType(appId, file, request.getParameter("channelId"));
 
         if (myChannelId == null) {
-            return writer.writeValueAsString(failure("Failed to determine the scan type."));
+            return failure("Failed to determine the scan type.");
         }
 
         String fileName = scanTypeCalculationService.saveFile(myChannelId, file);
@@ -98,12 +94,12 @@ public class UploadScanController {
 
             if (scan != null) {
                 Organization organization = organizationService.loadById(orgId);
-                return writer.writeValueAsString(success(organization));
+                return success(organization);
             } else {
-                return writer.writeValueAsString(failure("Something went wrong while processing the scan."));
+                return failure("Something went wrong while processing the scan.");
             }
         } else {
-            return writer.writeValueAsString(failure(returnValue.getScanCheckResult().toString()));
+            return failure(returnValue.getScanCheckResult().toString());
         }
     }
 }

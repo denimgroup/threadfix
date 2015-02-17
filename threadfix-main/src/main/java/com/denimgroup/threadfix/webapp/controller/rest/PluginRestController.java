@@ -33,13 +33,8 @@ import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.GitService;
-import com.denimgroup.threadfix.service.repository.GitServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
@@ -48,9 +43,9 @@ import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
-@Controller
+@RestController
 @RequestMapping("/rest/code")
-public class PluginRestController extends RestController {
+public class PluginRestController extends TFRestController {
 
     @Autowired
     private GitService         gitService;
@@ -62,9 +57,7 @@ public class PluginRestController extends RestController {
      * @see com.denimgroup.threadfix.remote.PluginClient#getVulnerabilityMarkers(String)
      */
     @RequestMapping(value = "/markers/{appId}", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    RestResponse<VulnerabilityMarker[]> getMarkers(
+    public RestResponse<VulnerabilityMarker[]> getMarkers(
             HttpServletRequest request,
             @PathVariable("appId") int appId) {
         log.info("Received REST request for marker information for application with id = " + appId);

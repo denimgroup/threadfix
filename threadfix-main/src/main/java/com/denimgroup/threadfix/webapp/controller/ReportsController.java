@@ -34,7 +34,7 @@ import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
-import org.codehaus.jackson.map.ObjectWriter;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -54,7 +54,6 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 public class ReportsController {
 	
 	private final SanitizedLogger log = new SanitizedLogger(ReportsController.class);
-    private static final ObjectWriter WRITER = ControllerUtils.getObjectWriter(AllViews.RestViewScanStatistic.class);
 
     @Autowired
 	private OrganizationService organizationService;
@@ -121,13 +120,11 @@ public class ReportsController {
 	}
 
     @RequestMapping(value="/trendingScans", method = RequestMethod.POST)
-    public @ResponseBody String processTrendingScans(@ModelAttribute ReportParameters reportParameters,
+	@JsonView(AllViews.RestViewScanStatistic.class)
+    public @ResponseBody Object processTrendingScans(@ModelAttribute ReportParameters reportParameters,
                                                      HttpServletRequest request) throws IOException {
         log.info("Generating trending scans report");
-        String responseString = WRITER.writeValueAsString(
-                RestResponse.success(reportsService.generateTrendingReport(reportParameters, request)));
-        return responseString;
-
+        return RestResponse.success(reportsService.generateTrendingReport(reportParameters, request));
     }
 
     @RequestMapping(value="/snapshot", method = RequestMethod.POST)
@@ -149,7 +146,6 @@ public class ReportsController {
         Map<String, Object> map = reportsService.generateMostAppsReport(reportParameters,
                 request);
         return RestResponse.success(map);
-
     }
 
 }

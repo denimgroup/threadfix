@@ -28,13 +28,14 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.WafService;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -80,6 +81,7 @@ public class AddWafController {
 		dataBinder.setAllowedFields("name", "wafType.id", "applicationId");
 	}
 
+	@JsonView(AllViews.TableRow.class)
 	@RequestMapping(value="/ajax/appPage", method = RequestMethod.POST)
 	public Object newSubmitAjaxAppPage(@Valid @ModelAttribute Waf waf,
 								BindingResult result,
@@ -110,7 +112,7 @@ public class AddWafController {
 			applicationService.storeApplication(application);
 		}
 
-        return ControllerUtils.writeSuccessObjectWithView(waf, AllViews.TableRow.class);
+        return RestResponse.success(waf);
 	}
 	
 	@RequestMapping(value="/ajax", method = RequestMethod.POST)

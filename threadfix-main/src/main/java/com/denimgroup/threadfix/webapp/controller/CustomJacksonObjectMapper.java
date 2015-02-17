@@ -21,42 +21,18 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+package com.denimgroup.threadfix.webapp.controller;
 
-package com.denimgroup.threadfix.data.entities;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
+/**
+ * Created by mcollins on 2/17/15.
+ */
+public class CustomJacksonObjectMapper extends ObjectMapper {
 
-import javax.persistence.*;
-
-@Entity
-@Table(name="ScheduledScan")
-public class ScheduledScan extends ScheduledJob {
-
-    private static final long serialVersionUID = 3165699013829091108L;
-
-	private Application application;
-    private String scanner;
-
-	@ManyToOne
-	@JoinColumn(name = "applicationId")
-	@JsonIgnore
-	public Application getApplication() {
-		return this.application;
-    }
-	
-	public void setApplication(Application application) {
-		this.application = application;
-	}
-
-    @Column(nullable=false)
-    @JsonView(Object.class)
-    public String getScanner() {
-        return scanner;
-    }
-
-    public void setScanner(String scanner) {
-        this.scanner = scanner;
+    public CustomJacksonObjectMapper() {
+        configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false);
     }
 
 }

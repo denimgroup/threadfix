@@ -31,6 +31,7 @@ import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -40,7 +41,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
+
 
 @Controller
 @RequestMapping("/organizations/{orgId}/edit")
@@ -62,6 +63,7 @@ public class EditOrganizationController {
 		dataBinder.setValidator(new BeanValidator());
 	}
 
+	@JsonView(AllViews.TableRow.class)
 	@RequestMapping(method = RequestMethod.POST)
 	public @ResponseBody Object editSubmit(@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Organization organization, BindingResult result) {
@@ -89,7 +91,7 @@ public class EditOrganizationController {
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug("The Organization " + organization.getName() + " (id=" + organization.getId() + ") has been edited by user " + user);
 			
-            return writeSuccessObjectWithView(organization, AllViews.TableRow.class);
+            return RestResponse.success(organization);
 		}
 	}
 
