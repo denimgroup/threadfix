@@ -73,7 +73,7 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
         if (!$scope.$parent.trendingActive)
             return;
         $scope.parameters = angular.copy(parameters);
-        trendingUtilities.updateDisplayData($scope);
+        trendingUtilities.refreshScans($scope);
     });
 
     $scope.exportPNG = function(isPDF){

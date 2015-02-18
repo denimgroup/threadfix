@@ -575,14 +575,15 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
                     $scope.trendingScansData.push(_scan);
             });
 
-            if ($scope.trendingScansData.length===1 && $scope.trendingStartDate == $scope.trendingEndDate) {
-                $scope.trendingEndDate = (new Date()).getTime();
-                var time = new Date($scope.trendingScansData[0].importTime);
-                $scope.trendingStartDate = (new Date(time.getFullYear(), time.getMonth() - 1, 1)).getTime();
-            }
             if ($scope.trendingScansData.length > 0) {
-                $scope.trendingScansData.unshift(createStartHash(hashBefore, $scope));
-                $scope.trendingScansData.push(createEndHash(hashAfter, $scope));
+                //If this is first scan ever, then set time range from first scan
+                if (!hashBefore) {
+                    $scope.trendingStartDate = $scope.trendingScansData[0].importTime;
+                    $scope.trendingScansData.push(createEndHash(hashAfter, $scope));
+                } else {
+                    $scope.trendingScansData.unshift(createStartHash(hashBefore, $scope));
+                    $scope.trendingScansData.push(createEndHash(hashAfter, $scope));
+                }
             }
         }
     };
