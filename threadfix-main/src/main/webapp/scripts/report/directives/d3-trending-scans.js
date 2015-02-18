@@ -192,9 +192,23 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
 
                     var diffMonths = monthDiff(new Date(startAxis), new Date(endAxis)),
                         intervalMonths = Math.round(diffMonths/6);
-                    intervalMonths = (intervalMonths===5 ? 4 : intervalMonths);
-                    intervalMonths = (intervalMonths>6 ? 12 : intervalMonths);
-                    xAxis.ticks(d3.time.month, intervalMonths);
+
+                    // If date span is more than a month
+                    if (diffMonths > 0) {
+                        intervalMonths = (intervalMonths===5 ? 4 : intervalMonths);
+                        intervalMonths = (intervalMonths>6 ? 12 : intervalMonths);
+                        xAxis.ticks(d3.time.month, intervalMonths);
+                    } else {
+                        // If time span is within a month
+                        xAxis.tickFormat(function(d) {
+                            return monthList[d.getMonth()] + "-" + d.getDate() + "-" + d.getFullYear().toString().substr(2,2);
+                        });
+                        var diffDays = Math.round((endAxis-startAxis)/(24*60*60*1000));
+                        if (diffDays <=6 )
+                            xAxis.ticks(d3.time.day, 1);
+                        else
+                            xAxis.ticks(d3.time.day, 5);
+                    }
 
                     var g = svg.selectAll(".symbol");
                     svg.call(tip);
@@ -389,8 +403,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 function monthDiff(d1, d2) {
                     var months;
                     months = (d2.getFullYear() - d1.getFullYear()) * 12;
-                    months -= d1.getMonth() + 1;
-                    months += d2.getMonth();
+                    months += d2.getMonth() - d1.getMonth();
                     return months <= 0 ? 0 : months;
                 }
 
@@ -406,7 +419,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         title = (scope.exportInfo && scope.exportInfo.tags) ? "Compliance_Report" : "Trending_Scans";
 
                     reportExporter.exportPDF(d3, scope.exportInfo, svgWidth, svgHeight,
-                            title + teamsName + appsName + tagsName);
+                        title + teamsName + appsName + tagsName);
 
                 };
 

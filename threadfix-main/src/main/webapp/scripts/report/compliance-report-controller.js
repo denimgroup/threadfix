@@ -92,7 +92,7 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
         if ($scope.remediationType !== parameters.remediationType)
             return;
         $scope.parameters = angular.copy(parameters);
-        trendingUtilities.updateDisplayData($scope);
+        trendingUtilities.refreshScans($scope);
         renderTable();
         $scope.$broadcast("updateTableVulnerabilities");
     });
