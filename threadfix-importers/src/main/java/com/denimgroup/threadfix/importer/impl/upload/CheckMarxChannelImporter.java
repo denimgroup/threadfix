@@ -72,7 +72,8 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
             LINE = "Line",
             FILE_NAME = "FileName",
             URL = "DeepLink",
-            CODE = "Code";
+            CODE = "Code",
+            FALSE_POSITIVE = "FalsePositive";
 
     // sample is                                                 17-Dec-2013 10:39
     static final SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy HH:mm", Locale.US);
@@ -109,7 +110,7 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
 
         boolean getText = false;
         int currentSequence = 1;
-        boolean inFinding = false;
+        boolean inFinding = false, isFalsePositive = false;
 
         List<DataFlowElement> currentDataFlowElements = list();
 
@@ -129,6 +130,7 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
 
             if (finding != null) {
                 finding.setSourceFileLocation(currentFileName);
+                finding.setMarkedFalsePositive(isFalsePositive);
 
                 finding.setEntryPointLineNumber(IntegerUtils.getPrimitive(findingLineNumber));
                 finding.setNativeId(getNativeId(finding));
@@ -142,6 +144,7 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
             currentFileName = null;
             findingLineNumber = null;
             currentUrlReference = null;
+            isFalsePositive = false;
             currentDataFlowElements = list();
             inFinding = false;
             currentRawFinding.setLength(0);
@@ -179,6 +182,7 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
                 currentFileName = atts.getValue(FILE_NAME);
                 findingLineNumber = atts.getValue(LINE);
                 currentUrlReference = atts.getValue(URL);
+                isFalsePositive = "True".equals(atts.getValue(FALSE_POSITIVE));
                 inFinding = true;
                 currentRawFinding.append(currentQueryBeginTag);
 
