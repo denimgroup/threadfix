@@ -492,7 +492,7 @@ public class DefaultConfiguration extends BaseEntity {
 
     @Column
     public Boolean getShouldProxyTrustwaveHailstorm() {
-        return shouldProxyTrustwaveHailstorm;
+        return shouldProxyTrustwaveHailstorm == null || shouldProxyTrustwaveHailstorm;
     }
 
     public void setShouldProxyTrustwaveHailstorm(Boolean shouldProxyTrustwaveHailstorm) {
@@ -503,7 +503,7 @@ public class DefaultConfiguration extends BaseEntity {
 
     @Column
     public Boolean getShouldProxyContrast() {
-        return shouldProxyContrast;
+        return shouldProxyContrast == null || shouldProxyContrast;
     }
 
     public void setShouldProxyContrast(Boolean shouldProxyContrast) {
