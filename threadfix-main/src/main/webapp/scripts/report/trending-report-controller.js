@@ -21,7 +21,7 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
             var parameters = JSON.parse(filter.json);
             return (parameters.filterType && parameters.filterType.isTrendingFilter);
         });
-        filterService.findDefaultFilter($scope);
+        $scope.savedDefaultTrendingFilter = filterService.findDefaultFilter($scope);
 
         if (!$scope.allScans) {
             $scope.loading = true;

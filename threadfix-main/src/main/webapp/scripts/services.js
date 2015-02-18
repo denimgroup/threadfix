@@ -529,14 +529,20 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
                             }
                         });
 
-                        if (filterSavedFilters)
-                            $scope.savedFilters = $scope.savedFilters.filter(filterSavedFilters);
+                        if (filterSavedFilters) {
+                            var savedFilters = $scope.savedFilters.filter(filterSavedFilters);
+                            $scope.savedFilters = savedFilters;
+                            $scope.$parent.savedFilters = savedFilters;
+                        }
 
-                        filter.findDefaultFilter($scope);
+                        var defaultFilter = filter.findDefaultFilter($scope);
+                        $scope.savedDefaultTrendingFilter = defaultFilter;
+                        $scope.$parent.savedDefaultTrendingFilter = defaultFilter;
 
                         $scope.currentFilterNameInput = '';
                         $scope.saveFilterSuccessMessage = 'Successfully saved filter ' + submissionObject.name;
                         $scope.saveFilterErrorMessage = undefined;
+
                     } else {
                         $scope.saveFilterErrorMessage = "Failure. Message was : " + data.message;
                         $scope.saveFilterSuccessMessage = undefined;
@@ -565,9 +571,15 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
                         $scope.selectedFilter = undefined;
                         $scope.savedFilters = data.object;
                         if ($scope.savedFilters){
-                            if (filterSavedFilters)
-                                $scope.savedFilters = $scope.savedFilters.filter(filterSavedFilters);
-                            filter.findDefaultFilter($scope);
+
+                            if (filterSavedFilters) {
+                                var savedFilters = $scope.savedFilters.filter(filterSavedFilters);
+                                $scope.savedFilters = savedFilters;
+                                $scope.$parent.savedFilters = savedFilters;
+                            }
+                            var defaultFilter = filter.findDefaultFilter($scope);
+                            $scope.savedDefaultTrendingFilter = defaultFilter;
+                            $scope.$parent.savedDefaultTrendingFilter = defaultFilter;
                         }
                     } else {
                         $scope.errorMessage = "Failure. Message was : " + data.message;
@@ -584,12 +596,14 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
     };
 
     filter.findDefaultFilter = function($scope) {
+        var savedDefaultTrendingFilter = undefined;
         $scope.savedFilters.some(function(filter){
             if (filter.defaultTrending) {
-                $scope.savedDefaultTrendingFilter = filter;
+                savedDefaultTrendingFilter = filter;
                 return true;
             }
         });
+        return savedDefaultTrendingFilter;
     };
 
     return filter;

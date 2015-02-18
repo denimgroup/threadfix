@@ -862,7 +862,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
                 showTotal: false,
                 showNew: false,
                 showResurfaced: false,
-                daysOldModifier: 'LastYear',
+                daysOldModifier: 'Forever',
                 endDate: undefined,
                 startDate: undefined
             };
