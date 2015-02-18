@@ -137,7 +137,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
 
                 var tip = d3Service.getTip(d3, 'd3-tip', [-10, 0], 'horizontalBarTip')
                     .html(function(d) {
-                        return "<strong>" + d.tip + ":</strong> <span style='color:red'>" + (d.y1 - d.y0) + "</span>";
+                        return "<strong>" + d.tip + ":</strong> <span style='color:" + d.fillColor +"'>" + (d.y1 - d.y0) + "</span>";
                     });
                 svg.call(tip);
 
@@ -179,8 +179,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                         .selectAll("text")
                         .attr("transform", function(d) {
                             return "rotate(-35)"
-                        });;
-
+                        });
                     var col = svg1.selectAll(".rect")
                         .data(data)
                         .enter().append("g")

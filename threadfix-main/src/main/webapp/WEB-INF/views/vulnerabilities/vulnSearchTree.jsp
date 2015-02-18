@@ -24,7 +24,6 @@
                     <span id="collapse{{ category.name }}" ng-show="category.expanded" ng-click="toggleVulnCategory(category, false)" class="icon icon-minus-sign"></span>
                 </td>
                 <td colspan="2">
-                    {{ category.name }}
                     <span id="totalBadge{{ category.name }}" ng-style="badgeWidth" class="badge" ng-class="{
                                             'badge-critical': category.intValue === 5 && category.total !== 0,
                                             'badge-high': category.intValue === 4 && category.total !== 0,
@@ -35,6 +34,7 @@
                                             }">
                         {{ category.total }}
                     </span>
+                    {{ category.name }}
                 </td>
                 <td></td>
             </tr>
@@ -81,7 +81,7 @@
                                             'text-info': category.intValue === 1 && category.total !== 0,
                                             'text-inform': category.total === 0
                                             }">
-                <p><b>{{ category.name }} {{ category.total }} </b></p>
+                <p><b> {{ category.total }} {{ category.name }} </b></p>
             </td>
             <td></td>
         </tr>

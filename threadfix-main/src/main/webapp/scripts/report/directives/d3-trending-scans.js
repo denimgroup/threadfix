@@ -366,19 +366,22 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         }
 
                         time = d.values[i].date;
-                        tips.push("<strong>" + d.key + ":</strong> <span style='color:red'>" + d.values[i].noOfVulns + "</span>");
+                        tips.push("<tr><td>" + d.key + "&nbsp;</td> <td style='color:"+ getColor(d.key) +"'>" + d.values[i].noOfVulns + "</td></tr>");
                         return 'translate(' + x(d.values[i].date) + ',' + y(d.values[i].noOfVulns + d.values[i].noOfVulns0) + ')';
                     });
 
                     tip.html(function(){
                         var date = new Date(time);
-                        var tipContent = "<strong>" + "Time" + ":</strong> <span style='color:red'>" +
-                            (monthList[date.getMonth()]) + " " + date.getDate() + " " + date.getFullYear() + "</span>";
-                        tips.forEach(function(tip) {
-                            tipContent += "<br/>" + tip;
-                        });
+                        var tipContent = "<tr><td>Date&nbsp;</td> <td style='color:dodgerblue'>" +
+                            (monthList[date.getMonth()]) + " " + date.getDate() + " " + date.getFullYear() + "</td></tr>";
 
-                        return tipContent;
+                        var table = '<table style="text-align:right;font-weight: bold;">' + tipContent;
+                        tips.forEach(function(tip) {
+                            table += tip;
+                        });
+                        table += "</table>";
+
+                        return table;
                     });
                     tip.show();
                 }
