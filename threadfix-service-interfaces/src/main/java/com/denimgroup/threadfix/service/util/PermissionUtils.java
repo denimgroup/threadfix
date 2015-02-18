@@ -79,9 +79,17 @@ public class PermissionUtils extends SpringBeanAutowiringSupport {
 						new SimpleGrantedAuthority(Permission.READ_ACCESS.getText()));
 	}
 
-    public static boolean isAuthorized(Permission canUploadScans, Integer orgId, Integer appId) {
+    public static boolean isAuthorized(Permission permission) {
+        return isAuthorized(permission, null, null);
+    }
+
+    public static boolean isAuthorized(Permission permission, Integer orgId) {
+        return isAuthorized(permission, orgId, null);
+    }
+
+    public static boolean isAuthorized(Permission permission, Integer orgId, Integer appId) {
         return getInstance().isCommunity() ||
-                getInstance().permissionService.isAuthorized(canUploadScans, orgId, appId);
+                getInstance().permissionService.isAuthorized(permission, orgId, appId);
     }
 
     public static void addPermissions(ModelAndView modelAndView, Integer orgId,

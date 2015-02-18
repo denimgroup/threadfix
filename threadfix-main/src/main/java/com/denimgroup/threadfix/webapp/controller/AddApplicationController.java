@@ -108,7 +108,7 @@ public class AddApplicationController {
                          @Valid @ModelAttribute Application application, BindingResult result,
                          Model model) {
 
-        if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
+        if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId)) {
             return RestResponse.failure("You don't have permissions to add a new application.");
         }
 
@@ -163,7 +163,7 @@ public class AddApplicationController {
     public String submitApp(int orgId, @Valid @ModelAttribute Application application,
                             BindingResult result, Model model) {
 
-        if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
+        if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId)) {
             return "403";
         }
         Organization org;
@@ -186,10 +186,10 @@ public class AddApplicationController {
             model.addAttribute("applicationTypes", FrameworkType.values());
             model.addAttribute("tags", tagService.loadAll());
             model.addAttribute("canSetDefectTracker", PermissionUtils.isAuthorized(
-                    Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId, null));
+                    Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId));
 
             model.addAttribute("canSetWaf", PermissionUtils.isAuthorized(
-                    Permission.CAN_MANAGE_WAFS, orgId, null));
+                    Permission.CAN_MANAGE_WAFS, orgId));
 
             model.addAttribute("contentPage", "applications/forms/newApplicationForm.jsp");
 
