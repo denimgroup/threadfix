@@ -73,7 +73,7 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
 
         modalInstance.result.then(function (s) {
             $scope.refresh();
-            $rootScope.$broadcast('successMessage', "Successfully submitted the Control: " + s);
+            $rootScope.$broadcast('successMessage', s);
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });

@@ -103,6 +103,8 @@ public class ApplicationsController {
     private ReportService reportService;
     @Autowired
     private CacheBustService cacheBustService;
+    @Autowired
+    private GRCToolService grcToolService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
