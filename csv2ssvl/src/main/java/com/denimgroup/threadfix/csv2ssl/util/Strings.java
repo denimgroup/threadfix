@@ -85,7 +85,9 @@ public final class Strings {
 
     public static final Set<String> HEADER_NAMES = set(
             SEVERITY, CWE, SOURCE, URL,
-            PARAMETER, NATIVE_ID, LONG_DESCRIPTION, SHORT_DESCRIPTION,
+            PARAMETER, NATIVE_ID,
+            LONG_DESCRIPTION,
+            SHORT_DESCRIPTION,
             ISSUE_ID, FINDING_DATE
     );
 
