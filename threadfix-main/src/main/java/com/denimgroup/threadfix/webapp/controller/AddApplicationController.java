@@ -25,7 +25,6 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
-import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
@@ -34,9 +33,7 @@ import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
-import org.codehaus.jackson.map.SerializationConfig;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
@@ -45,7 +42,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -103,6 +99,7 @@ public class AddApplicationController {
 		dataBinder.setValidator(new BeanValidator());
 	}
 
+    @JsonView(AllViews.TableRow.class)
     @RequestMapping(method = RequestMethod.POST)
     public Object submit(@PathVariable("orgId") int orgId,
                          @Valid @ModelAttribute Application application, BindingResult result,
@@ -136,28 +133,12 @@ public class AddApplicationController {
             map.put("uploadScan", PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId,
                     application.getId()));
 
-            return write(RestResponse.success(map));
+            return RestResponse.success(map);
         } else {
             model.addAttribute("organization", team);
 
-            return write(FormRestResponse.failure(submitResult, result));
+            return FormRestResponse.failure(submitResult, result);
         }
-    }
-
-    // TODO pull this into ControllerUtils
-    private Object write(Object input) {
-        try {
-            return getWriter().writeValueAsString(input);
-        } catch (IOException e) {
-            throw new RestIOException(e, "Got IOException while serializing JSON");
-        }
-    }
-
-    private ObjectWriter getWriter() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationConfig.Feature.DEFAULT_VIEW_INCLUSION, false);
-
-        return mapper.writerWithView(AllViews.FormInfo.class);
     }
 
     public String submitApp(int orgId, @Valid @ModelAttribute Application application,

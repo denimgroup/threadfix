@@ -24,6 +24,8 @@
 package com.denimgroup.threadfix.csv2ssl.parser;
 
 import com.denimgroup.threadfix.csv2ssl.ResourceLoader;
+import com.denimgroup.threadfix.csv2ssl.checker.Configuration;
+import org.junit.Before;
 import org.junit.Test;
 
 import static com.denimgroup.threadfix.csv2ssl.DialogUtils.testDialog;
@@ -32,6 +34,11 @@ import static com.denimgroup.threadfix.csv2ssl.DialogUtils.testDialog;
  * Created by mcollins on 1/21/15.
  */
 public class InteractiveTests {
+
+    @Before
+    public void init() {
+        Configuration.reset();
+    }
 
     @Test
     public void testBasicDialog() {
@@ -66,6 +73,7 @@ public class InteractiveTests {
                 "3\n" +
                 "5\n" +
                 "4\n" +
+                "skip\n" +
                 "skip\n" +
                 "skip\n" +
                 "n\n" +

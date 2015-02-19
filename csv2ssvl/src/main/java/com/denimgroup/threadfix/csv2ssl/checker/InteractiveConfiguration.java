@@ -23,8 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.csv2ssl.checker;
 
+import com.denimgroup.threadfix.csv2ssl.parser.FormatParser;
 import com.denimgroup.threadfix.csv2ssl.util.Header;
 import com.denimgroup.threadfix.csv2ssl.util.InteractionUtils;
+import com.denimgroup.threadfix.csv2ssl.util.Option;
 
 import java.io.File;
 import java.util.Arrays;
@@ -46,21 +48,22 @@ public class InteractiveConfiguration {
         if (readFromFile) {
             File file = getCsvFile();
 
-            String firstLine = InteractionUtils.getFirstLine(file);
+            Option<String[]> option = FormatParser.parseFromFile(file);
 
-            if (firstLine == null) {
-                System.out.println("Unable to read line from file.");
-            } else {
-                System.out.println("Got " + firstLine);
+            if (option.isValid()) {
+                System.out.println("Got " + Arrays.toString(option.getValue()));
                 boolean saveResult = getYNAnswer("Save this result? (y/n)");
 
                 if (saveResult) {
-                    CONFIG.headers = firstLine.split(",");
+                    CONFIG.headers = option.getValue();
                     CONFIG.shouldSkipFirstLine = true;
                     CONFIG.csvFile = file;
                     checkConfiguredHeaders();
                 }
+            } else {
+                System.out.println("Unable to read line from file.");
             }
+
         } else {
             System.out.println("Please enter the headers.");
             String headers = getLine();
@@ -99,7 +102,7 @@ public class InteractiveConfiguration {
 
     private static File getCsvFile() {
         if (CONFIG.csvFile == null) {
-            return InteractionUtils.getValidFileFromStdIn("CSV");
+            return InteractionUtils.getValidFileFromStdIn("input");
         } else {
             return CONFIG.csvFile;
         }
