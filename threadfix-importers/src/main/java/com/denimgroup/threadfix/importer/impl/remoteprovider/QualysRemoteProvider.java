@@ -566,16 +566,18 @@ public class QualysRemoteProvider extends AbstractRemoteProvider {
 		private Boolean getParameter          = false;
 		private Boolean getChannelVulnName    = false;
 		private Boolean getAttackDetail       = false;
+        private boolean getAttackResponse     = false;
 
-		private String currentChannelVulnCode = null;
-		private String currentPath            = null;
-		private String currentParameter       = null;
-		private String currentSeverityCode    = null;
-		private String currentAttackDetail    = null;
+        private String currentChannelVulnCode = null;
+        private String currentPath            = null;
+        private String currentParameter       = null;
+        private String currentSeverityCode    = null;
+        private String currentAttackDetail    = null;
+        private String currentAttackResponse  = null;
 
         private Map<FindingKey, String> findingMap = new HashMap<>();
 
-	    public void add(Finding finding) {
+        public void add(Finding finding) {
 			if (finding != null) {
     			finding.setNativeId(getNativeId(finding));
 	    		finding.setIsStatic(false);
@@ -606,6 +608,9 @@ public class QualysRemoteProvider extends AbstractRemoteProvider {
                 case "payload":
                     getAttackDetail = true;
                     break;
+                case "result":
+                    getAttackResponse = true;
+                    break;
                 case "instances":
                     currentSeverityCode = SEVERITIES_MAP.get(currentChannelVulnCode);
 
@@ -619,6 +624,9 @@ public class QualysRemoteProvider extends AbstractRemoteProvider {
                     findingMap.put(FindingKey.VULN_CODE,        currentChannelVulnCode);
                     findingMap.put(FindingKey.SEVERITY_CODE,    currentSeverityCode);
                     findingMap.put(FindingKey.VALUE,            currentAttackDetail);
+                    findingMap.put(FindingKey.ATTACK_STRING,    currentAttackDetail);
+                    findingMap.put(FindingKey.REQUEST,          currentAttackDetail);
+                    findingMap.put(FindingKey.RESPONSE,         currentAttackResponse);
 
                     Finding finding = constructFinding(findingMap);
                     add(finding);
@@ -651,11 +659,14 @@ public class QualysRemoteProvider extends AbstractRemoteProvider {
             } else if (getAttackDetail) {
                 currentAttackDetail = getBuilderText();
                 getAttackDetail = false;
+            } else if (getAttackResponse) {
+                currentAttackResponse = getBuilderText();
+                getAttackResponse = false;
             }
 	    }
 
 	    public void characters (char ch[], int start, int length) {
-	    	if (getDate || getUri || getChannelVulnName || getParameter || getAttackDetail) {
+	    	if (getAttackResponse || getDate || getUri || getChannelVulnName || getParameter || getAttackDetail) {
 	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }

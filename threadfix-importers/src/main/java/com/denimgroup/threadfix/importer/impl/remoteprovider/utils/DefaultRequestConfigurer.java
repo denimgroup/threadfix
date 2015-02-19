@@ -23,10 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.remoteprovider.utils;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
+import org.eclipse.jgit.util.Base64;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -103,7 +103,7 @@ public class DefaultRequestConfigurer implements RequestConfigurer {
     public void configure(HttpMethodBase method) {
         if (username != null && password != null) {
             String login = username + ":" + password;
-            String encodedLogin = new String(Base64.encodeBase64(login.getBytes()));
+            String encodedLogin = Base64.encodeBytes(login.getBytes());
 
             method.setRequestHeader("Authorization", "Basic " + encodedLogin);
         }
@@ -128,9 +128,6 @@ public class DefaultRequestConfigurer implements RequestConfigurer {
                 postVersion.setRequestEntity(getRequestEntity());
             }
         } // if it's a get then the parameters should be in the URL
-
-
-
     }
 
     private RequestEntity getRequestEntity() {
