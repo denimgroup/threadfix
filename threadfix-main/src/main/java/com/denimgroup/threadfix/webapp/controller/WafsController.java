@@ -180,7 +180,8 @@ public class WafsController {
 
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_WAFS')")
 	@RequestMapping("/{wafId}/delete")
-	public String deleteWaf(@PathVariable("wafId") int wafId, 
+	@ResponseBody
+	public Object deleteWaf(@PathVariable("wafId") int wafId,
 			SessionStatus status, HttpServletRequest request) {
 		Waf waf = wafService.loadWaf(wafId);
 		boolean canDelete = waf != null && waf.getCanDelete();
@@ -188,12 +189,13 @@ public class WafsController {
 		if (waf != null && canDelete) {
 			wafService.deleteById(wafId);
 			status.setComplete();
-			return "redirect:/wafs";
+			return RestResponse.success("Successfully deleted.");
 		} else {
 			
 			// For now we can't do this.
-			log.warn("The user has attempted to delete a WAF with application mappings.");
-			return "redirect:/wafs/" + wafId;
+			String error = "The user has attempted to delete a WAF with application mappings.";
+			log.warn(error);
+			return RestResponse.failure(error);
 		}
 	}
 

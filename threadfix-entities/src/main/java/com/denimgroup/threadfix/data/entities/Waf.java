@@ -139,6 +139,7 @@ public class Waf extends AuditableEntity {
 	}
 	
 	@Transient
+	@JsonView(AllViews.TableRow.class)
 	public boolean getCanDelete() {
 		boolean hasActiveApplication = false;
 		if (getApplications() != null) {
