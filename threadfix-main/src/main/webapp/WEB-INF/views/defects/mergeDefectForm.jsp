@@ -19,6 +19,7 @@
                                ng-model="object.id"
                                typeahead="defect for defect in config.defects | filter:$viewValue | limitTo:10"
                                typeahead-editable="false"
+                               placeholder="{{config.placeholder}}"
                                class="form-control"/>
                     </td>
                 </tr>
