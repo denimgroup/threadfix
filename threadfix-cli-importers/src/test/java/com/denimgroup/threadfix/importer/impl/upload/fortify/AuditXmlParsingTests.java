@@ -23,7 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload.fortify;
 
+import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
+import com.denimgroup.threadfix.importer.util.ScanUtils;
 import org.junit.Test;
+
+import java.io.InputStream;
 
 /**
  * Created by mcollins on 2/16/15.
@@ -31,10 +35,26 @@ import org.junit.Test;
 public class AuditXmlParsingTests {
 
     @Test
-    public void testEmptyAuditXml() {
+    public void testNotAnIssue() {
+        FortifyAuditXmlParser timeParser = getParsedResult();
 
+        assert timeParser.suppressedIds.contains("F4B239E280210E3ADF7044526BBE3F13") :
+                "Didn't have F4B239E280210E3ADF7044526BBE3F13";
     }
 
+    @Test
+    public void testSuppressed() {
+        FortifyAuditXmlParser timeParser = getParsedResult();
 
+        assert timeParser.suppressedIds.contains("7FB3F7B4BF0EBD97F3BA5FEA8BC0E682") :
+                "Didn't have 7FB3F7B4BF0EBD97F3BA5FEA8BC0E682";
+    }
 
+    private FortifyAuditXmlParser getParsedResult() {
+        InputStream auditXmlStream = AuditXmlParsingTests.class.getClassLoader().getResourceAsStream("fortify/full-audit.xml");
+
+        FortifyAuditXmlParser timeParser = new FortifyAuditXmlParser();
+        ScanUtils.readSAXInput(timeParser, AbstractChannelImporter.FILE_CHECK_COMPLETED, auditXmlStream);
+        return timeParser;
+    }
 }
