@@ -39,7 +39,10 @@ class FortifyAuditXmlParser extends HandlerWithBuilder {
     Calendar resultTime = null;
     boolean getDate = false;
 
+    String lastId;
+
     Set<String> suppressedIds = set();
+    private boolean getValue;
 
     public void startElement (String uri, String name,
                               String qName, Attributes atts)
@@ -51,7 +54,12 @@ class FortifyAuditXmlParser extends HandlerWithBuilder {
             boolean suppressed = "true".equals(atts.getValue("suppressed"));
             if (suppressed && instanceId != null) {
                 suppressedIds.add(instanceId);
+                lastId = null;
+            } else {
+                lastId = instanceId;
             }
+        } else if ("Value".equals(qName)) {
+            getValue = true;
         }
     }
 
@@ -66,11 +74,16 @@ class FortifyAuditXmlParser extends HandlerWithBuilder {
                 }
             }
             getDate = false;
+        } else if (getValue) {
+            getValue = false;
+            if (getBuilderText().equals("Not an Issue")) {
+                suppressedIds.add(lastId);
+            }
         }
     }
 
     public void characters (char ch[], int start, int length) {
-        if (getDate) {
+        if (getDate || getValue) {
             addTextToBuilder(ch, start, length);
         }
     }

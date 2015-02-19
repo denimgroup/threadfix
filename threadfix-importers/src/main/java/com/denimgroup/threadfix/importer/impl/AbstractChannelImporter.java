@@ -79,7 +79,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
     // this.getClass() will turn into the individual importer name at runtime.
     protected final SanitizedLogger log = new SanitizedLogger(this.getClass());
-    protected static final String FILE_CHECK_COMPLETED = "File check completed.";
+    public static final String FILE_CHECK_COMPLETED = "File check completed.";
 
     protected enum FindingKey {
         VULN_CODE, PATH, PARAMETER, SEVERITY_CODE, NATIVE_ID, CVE, CWE, VALUE, REQUEST, RESPONSE, DETAIL,
