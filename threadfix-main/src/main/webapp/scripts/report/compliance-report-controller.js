@@ -8,20 +8,24 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
     $scope.margin = [70, 70, 100, 70];
 
     $scope.resetFilters = function() {
-        $scope.parameters = {
-            tags: [],
-            severities: {
-                critical: true,
-                high: true,
-                medium: true,
-                low: true,
-                info: true
-            },
-            daysOldModifier: 'LastYear',
-            endDate: undefined,
-            startDate: undefined,
-            remediationType: $scope.remediationType
-        };
+        if ($scope.remediationType === 2 && $scope.currentTag) {
+            $scope.addNewTag($scope.currentTag);
+        } else {
+            $scope.parameters = {
+                tags: [],
+                severities: {
+                    critical: true,
+                    high: true,
+                    medium: true,
+                    low: true,
+                    info: true
+                },
+                daysOldModifier: 'Forever',
+                endDate: undefined,
+                startDate: undefined,
+                remediationType: $scope.remediationType
+            };
+        }
     };
 
     $scope.$on('loadComplianceReport', function() {
@@ -99,7 +103,7 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
 
     var renderTable = function() {
         var startingInfo, endingInfo;
-            $scope.tableInfo = [];
+        $scope.tableInfo = [];
         if ($scope.trendingScansData.length> 0) {
             startingInfo = (trendingUtilities.getFirstHashInList()) ? trendingUtilities.getFirstHashInList() : $scope.trendingScansData[0];
             endingInfo = (trendingUtilities.getLastHashInList()) ? trendingUtilities.getLastHashInList() : $scope.trendingScansData[$scope.trendingScansData.length-1];
@@ -159,7 +163,7 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
     };
 
     $scope.$on("finishedretrievingPdfExportAllTagsVuln", function(){
-       $scope.numberVulnType +=1;
+        $scope.numberVulnType +=1;
 
         // Done with loading both closed and open vulnerabilities
         if ($scope.numberVulnType === 2) {
@@ -198,6 +202,7 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
         $scope.enterpriseTags.some(function(tag) {
             if (tag.name === name) {
                 $scope.parameters =  JSON.parse(tag.defaultJsonFilter);
+                $scope.currentTag = name;
                 return true;
             }
         });

@@ -47,6 +47,7 @@ public class JsonFilterBlobController {
 
         FilterJsonBlob dbBlob = filterJsonBlobService.loadByName(filterJsonBlob.getName());
 
+        // If there is active saved filterJson with same name, and this is not updating then return error
         if (dbBlob != null && dbBlob.isActive() && (filterJsonBlob.getId() == null || dbBlob.getId().compareTo(filterJsonBlob.getId()) != 0)) {
             return RestResponse.failure("A filter with that name already exists.");
         } else {

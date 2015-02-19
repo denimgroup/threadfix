@@ -216,6 +216,7 @@
                 protected-regex ^/reports/update/heading/[0-9]+$,
         		protected-regex ^/reports/search/delete/[0-9]+$,
         		protected-regex ^/reports/filter$,
+				protected-regex ^/reports/filter/save$,
         		protected-regex ^/reports/search$,
 				protected-regex ^/reports/search/export/pdf$,
 				protected-regex ^/reports/search/export/tag/pdf$,

@@ -59,4 +59,13 @@ public class HibernateFilterJsonBlobDao extends AbstractNamedObjectDao<FilterJso
                 .add(Restrictions.eq("defaultTrending", true))
                 .uniqueResult();
     }
+
+    @Override
+    public FilterJsonBlob retrieveByName(String name) {
+        return (FilterJsonBlob) getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.eq("name", name))
+                .uniqueResult();
+    }
 }
