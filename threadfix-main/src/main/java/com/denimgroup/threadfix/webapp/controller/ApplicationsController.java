@@ -100,11 +100,7 @@ public class ApplicationsController {
     @Autowired
     private DefaultConfigService defaultConfigService;
     @Autowired
-    private ReportService reportService;
-    @Autowired
     private CacheBustService cacheBustService;
-    @Autowired
-    private GRCToolService grcToolService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
