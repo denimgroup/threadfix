@@ -49,7 +49,7 @@ public class FormatParser {
             if (arg.startsWith(Strings.FORMAT_STRING)) {
                 return parseFromString(arg);
             } else if (arg.startsWith(Strings.FORMAT_FILE)) {
-                return parseFromFile(arg);
+                return parseFromFileArgument(arg);
             }
         }
 
@@ -60,11 +60,15 @@ public class FormatParser {
         return Option.failure("Didn't find the format string.");
     }
 
-    private static Option<String[]> parseFromFile(String arg) {
+    public static Option<String[]> parseFromFileArgument(String arg) {
         String fileName = arg.substring(arg.indexOf(Strings.FORMAT_STRING));
 
         File file = new File(fileName);
 
+        return parseFromFile(file);
+    }
+
+    public static Option<String[]> parseFromFile(File file) {
         if (Configuration.isExcel(file)) {
             return getHeadersExcel(file);
         } else {
@@ -72,7 +76,7 @@ public class FormatParser {
         }
     }
 
-    private static Option<String[]> getHeadersExcel(File file) {
+    public static Option<String[]> getHeadersExcel(File file) {
         try {
             FileInputStream fis = new FileInputStream(file);
             XSSFWorkbook wb = new XSSFWorkbook(fis);
@@ -88,7 +92,7 @@ public class FormatParser {
 
             String[] headers = new String[row.getLastCellNum()];
 
-            for (int index = 0; index <= row.getLastCellNum(); index++) {
+            for (int index = 0; index < row.getLastCellNum(); index++) {
                 XSSFCell cell = row.getCell(index);
 
                 assert cell != null : "Got null cell at index " + index;
@@ -111,7 +115,7 @@ public class FormatParser {
             try {
                 String content = readFile(file, StandardCharsets.UTF_8);
 
-                if (content.length() > 0) {
+                if (content.length() == 0) {
                     error = "No content found in file " + file.getName();
                 } else {
                     return getStringsOrError(content);
@@ -143,43 +147,13 @@ public class FormatParser {
     }
 
     public static Option<String[]> getStringsOrError(String inputString) {
-        String[] strings = inputString.split(",");
-        
-        if (strings.length == 0) {
-            return Option.failure("Only " + strings.length + " sections found.");
-        }
 
-        boolean isValid = true;
+        String[] lines = inputString.split("\n");
 
-        String[] cleanedHeaders = new String[strings.length];
-        StringBuilder errorBuilder = new StringBuilder();
-
-        for (int index = 0; index < strings.length; index++) {
-            String possibleHeader = strings[index].trim();
-
-            boolean foundMatch = false;
-
-            for (String headerName : Configuration.CONFIG.headerMap.values()) {
-                if (possibleHeader.equalsIgnoreCase(headerName)) {
-                    foundMatch = true;
-                    cleanedHeaders[index] = headerName;
-                }
-            }
-
-            if (!foundMatch) {
-                isValid = false;
-                errorBuilder
-                        .append("Invalid header name found: ")
-                        .append(possibleHeader)
-                        .append("\n");
-            }
-        }
-
-        // interestingly, the ternary equivalent breaks Java 7's type inference system
-        if (isValid) {
-            return Option.success(cleanedHeaders);
+        if (lines.length > 0) {
+            return Option.success(lines[0].split(","));
         } else {
-            return Option.failure(errorBuilder.toString());
+            return Option.failure("0-length array returned from inputString.split(\"\\n\")");
         }
     }
 }

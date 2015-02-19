@@ -24,8 +24,10 @@
 package com.denimgroup.threadfix.csv2ssl.parser.csv;
 
 import com.denimgroup.threadfix.csv2ssl.ResourceLoader;
+import com.denimgroup.threadfix.csv2ssl.checker.Configuration;
 import com.denimgroup.threadfix.csv2ssl.checker.FormatChecker;
 import com.denimgroup.threadfix.csv2ssl.parser.CSVToSSVLParser;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.InputStreamReader;
@@ -36,27 +38,15 @@ import java.io.Reader;
  */
 public class BasicParserTest {
 
+    @Before
+    public void init() {
+        Configuration.reset();
+    }
+
     @Test
     public void testBasicParser() {
 
         Reader reader = new InputStreamReader(ResourceLoader.getResource("basic.csv"));
-
-        String output = CSVToSSVLParser.parse(reader,
-                "CWE",
-                "url",
-                "parameter", "LongDescription", "NativeID", "Source");
-
-        assert FormatChecker.checkFormat(output);
-        assert output.contains("<Vulnerability") : "Didn't have a starting Vulnerability tag.";
-
-        System.out.println("Was valid, got: ");
-        System.out.println(output);
-    }
-
-    @Test
-    public void testBasicParserUnicode() {
-
-        Reader reader = new InputStreamReader(ResourceLoader.getResource("WebAdmin.csv"));
 
         String output = CSVToSSVLParser.parse(reader,
                 "CWE",

@@ -24,7 +24,13 @@
 package com.denimgroup.threadfix.csv2ssl.parser.excel;
 
 import com.denimgroup.threadfix.csv2ssl.ResourceLoader;
+import com.denimgroup.threadfix.csv2ssl.checker.Configuration;
+import com.denimgroup.threadfix.csv2ssl.parser.FormatParser;
+import com.denimgroup.threadfix.csv2ssl.util.Option;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
 
 import static com.denimgroup.threadfix.csv2ssl.DialogUtils.testDialog;
 
@@ -32,6 +38,11 @@ import static com.denimgroup.threadfix.csv2ssl.DialogUtils.testDialog;
  * Created by mcollins on 2/12/15.
  */
 public class ExcelParserTests {
+
+    @Before
+    public void init() {
+        Configuration.reset();
+    }
 
     private String filePath =
             ResourceLoader.getFilePath("withDifferentHeaderLine.xlsx");
@@ -44,6 +55,30 @@ public class ExcelParserTests {
                 filePath + "\n";
 
         System.out.println(dialog);
+
+        testDialog(dialog);
+    }
+
+    @Test
+    public void testExcelParsingHeaders() {
+        String book = ResourceLoader.getFilePath("Book.xlsx");
+
+        Option<String[]> headers = FormatParser.getHeadersExcel(new File(book));
+
+        assert headers.isValid() : "No headers received.";
+    }
+
+    @Test
+    public void testExcelParsing() {
+        String book = ResourceLoader.getFilePath("Book.xlsx");
+
+        String dialog = "n\n" +
+                        "y\n" +
+                        book + "\n" +
+                        "y\n" +
+                        "n\n" +
+                        "stdout\n"
+                ;
 
         testDialog(dialog);
     }
