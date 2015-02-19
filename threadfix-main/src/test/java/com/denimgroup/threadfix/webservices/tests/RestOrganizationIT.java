@@ -27,7 +27,7 @@ package com.denimgroup.threadfix.webservices.tests;
 import com.denimgroup.threadfix.WebServiceTests;
 import com.denimgroup.threadfix.remote.ThreadFixRestClient;
 import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
-import com.denimgroup.threadfix.webapp.controller.rest.RestController;
+import com.denimgroup.threadfix.webapp.controller.rest.TFRestController;
 import com.denimgroup.threadfix.webapp.controller.rest.TeamRestController;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,7 +60,7 @@ public class RestOrganizationIT extends BaseRestIT {
 		
 		// Bad Key
 		teamsUrl = BASE_URL + "/teams/?apiKey=" + BAD_API_KEY;
-		assertTrue(httpGet(teamsUrl).equals(RestController.API_KEY_NOT_FOUND_ERROR));
+		assertTrue(httpGet(teamsUrl).equals(TFRestController.API_KEY_NOT_FOUND_ERROR));
 	}
 	
 	@Test
@@ -70,7 +70,7 @@ public class RestOrganizationIT extends BaseRestIT {
 		// Bad Key
 		String error = httpPost(creationUrl, new String[] {"apiKey", "name"}, 
 							new String[] {BAD_API_KEY, "Normal Team Name"});
-		assertTrue(error.equals(RestController.API_KEY_NOT_FOUND_ERROR));
+		assertTrue(error.equals(TFRestController.API_KEY_NOT_FOUND_ERROR));
 		
 		String response = httpPost(creationUrl, new String[] {"apiKey", "name"}, new String[] {GOOD_API_KEY, getRandomString(2000)});
 		assertTrue(response.equals(TeamRestController.CREATION_FAILED));
@@ -106,7 +106,7 @@ public class RestOrganizationIT extends BaseRestIT {
 		
 		// Bad Key
 		String error = httpGet(baseLookupUrl + "1" + apiKeySegment + BAD_API_KEY);
-		assertTrue(error.equals(RestController.API_KEY_NOT_FOUND_ERROR));
+		assertTrue(error.equals(TFRestController.API_KEY_NOT_FOUND_ERROR));
 		
 		if (httpGet(lookupUrl).equals(TeamRestController.LOOKUP_FAILED)) {
 			httpPost(BASE_URL + "/teams/new", 
@@ -117,7 +117,6 @@ public class RestOrganizationIT extends BaseRestIT {
 		String orgString = httpGet(lookupUrl);
 		
 		assertTrue(orgString != null);
-		
 		if (orgString.equals(TeamRestController.LOOKUP_FAILED)) {
 			assertTrue(false);
 		}
