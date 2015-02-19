@@ -251,6 +251,7 @@ public class User extends AuditableEntity {
     }
 
     @Transient
+    @JsonView(AllViews.TableRow.class)
 	public boolean getIsDeletable() {
 		return deletable;
 	}

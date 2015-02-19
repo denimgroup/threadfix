@@ -398,4 +398,18 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
+	@Override
+	public void setRoleCommunity(User user) {
+
+		if (!EnterpriseTest.isEnterprise()) {
+			Role administrator = roleDao.retrieveByName("Administrator");
+			if (administrator == null) {
+				log.error("Administrator role not found in community version. Check your database");
+			} else {
+				user.setGlobalRole(administrator);
+				user.setHasGlobalGroupAccess(true);
+			}
+		}
+	}
+
 }

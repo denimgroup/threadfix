@@ -104,6 +104,8 @@ public class AddUserController {
                 return FormRestResponse.failure("Errors", result);
 			}
 
+			userService.setRoleCommunity(user);
+
             user.setId(null);
 			Integer id = userService.createUser(user);
 			

@@ -148,4 +148,6 @@ public interface UserService {
      * @return
      */
     boolean shouldReloadUserIfRoleChanged(Role role);
+
+	void setRoleCommunity(User user);
 }
