@@ -88,7 +88,9 @@ myAppModule.controller('ScheduledDefectTrackerUpdateTabController', function ($s
                 update.extraMinute = '0';
             }
 
-            update.timeString = (update.day || '') + ' ' + update.hour + ':' + (update.extraMinute || '') + update.minute + ' ' + update.period;
+            update.actualHour = (update.hour === '0' || update.hour === 0) ? '12' : update.hour;
+
+            update.timeString = (update.day || '') + ' ' + update.actualHour + ':' + (update.extraMinute || '') + update.minute + ' ' + update.period;
             update.timeStringId = update.timeString.replace(/ /g, '_').replace(/:/g, '_');
         });
     };
