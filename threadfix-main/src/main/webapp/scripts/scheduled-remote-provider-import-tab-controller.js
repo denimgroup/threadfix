@@ -89,7 +89,9 @@ myAppModule.controller('ScheduledRemoteProviderImportTabController', function ($
                 sImport.extraMinute = '0';
             }
 
-            sImport.timeString = (sImport.day || '') + ' ' + sImport.hour + ':' + (sImport.extraMinute || '') + sImport.minute + ' ' + sImport.period;
+            sImport.actualHour = (sImport.hour === '0' || sImport.hour === 0) ? '12' : sImport.hour;
+
+            sImport.timeString = (sImport.day || '') + ' ' + sImport.actualHour + ':' + (sImport.extraMinute || '') + sImport.minute + ' ' + sImport.period;
             sImport.timeStringId = sImport.timeString.replace(/ /g, '_').replace(/:/g, '_');
         });
     };
