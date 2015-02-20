@@ -49,7 +49,7 @@ public class ExportButton extends JButton {
         addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
-                boolean configured = ConfigurationDialogs.show(view);
+                boolean configured = ConfigurationDialogs.show(view, ConfigurationDialogs.DialogMode.THREADFIX_APPLICATION);
                 if (configured) {
                     File file = generateXml(callbacks);
                     if (file != null && file.exists()) {
@@ -78,7 +78,7 @@ public class ExportButton extends JButton {
 
     private File generateXml(IBurpExtenderCallbacks callbacks) {
         File file = new File("burp_threadfix.xml");
-        IScanIssue[] issues = callbacks.getScanIssues(BurpPropertiesManager.getTargetUrl());
+        IScanIssue[] issues = callbacks.getScanIssues(BurpPropertiesManager.getBurpPropertiesManager().getTargetUrl());
         callbacks.generateScanReport("XML", issues, file);
         return file;
 
