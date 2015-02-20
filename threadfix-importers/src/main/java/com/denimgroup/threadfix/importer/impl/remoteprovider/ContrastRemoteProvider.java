@@ -7,8 +7,8 @@ import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.*;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpMethodBase;
+import org.eclipse.jgit.util.Base64;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -214,7 +214,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
         assert serviceKey != null : "Service Key was null.";
 
         byte[] bytes = (username + ":" + serviceKey).getBytes();
-        final String encoded = new String(Base64.encodeBase64(bytes));
+        final String encoded = Base64.encodeBytes(bytes);
 
         return new RequestConfigurer() {
             @Override

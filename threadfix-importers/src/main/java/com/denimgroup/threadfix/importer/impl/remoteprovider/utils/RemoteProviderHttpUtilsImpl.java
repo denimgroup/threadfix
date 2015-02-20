@@ -1,5 +1,4 @@
-////////////////////////////////////////////////////////////////////////
-//
+//////////////////////////////////////////////////////////////////////
 //     Copyright (c) 2009-2015 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
@@ -25,11 +24,11 @@ package com.denimgroup.threadfix.importer.impl.remoteprovider.utils;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ProxyService;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.eclipse.jgit.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
@@ -65,7 +64,7 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
             public void configure(HttpMethodBase method) {
                 if (username != null && password != null) {
                     String login = username + ":" + password;
-                    String encodedLogin = new String(Base64.encodeBase64(login.getBytes()));
+                    String encodedLogin = Base64.encodeBytes(login.getBytes());
                     method.setRequestHeader("Authorization", "Basic " + encodedLogin);
                 }
                 method.setRequestHeader("Content-type", "text/xml; charset=UTF-8");
