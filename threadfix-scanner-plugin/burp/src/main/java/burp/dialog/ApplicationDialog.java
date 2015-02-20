@@ -37,6 +37,13 @@ public class ApplicationDialog {
 
     public static boolean show(Component view) {
         Map<String, String> applicationMap = getApplicationMap();
+
+        BurpPropertiesManager burpPropertiesManager = BurpPropertiesManager.getBurpPropertiesManager();
+        String appId = burpPropertiesManager.getAppId();
+        if ((appId != null) && !appId.trim().isEmpty() && applicationMap.containsValue(appId)) {
+            return true;
+        }
+
         String resultId = null;
         Object[] possibilities = applicationMap.keySet().toArray();
 
@@ -47,17 +54,17 @@ public class ApplicationDialog {
 	        ImageIcon icon = new ImageIcon("images/middle.gif");
 	        Object idResult = JOptionPane.showInputDialog(
                     view,
-	                "Pick an Application",
-	                "Pick an Application",
-	                JOptionPane.PLAIN_MESSAGE,
-	                icon,
-	                possibilities,
-	                BurpPropertiesManager.getAppId());
+                    "Pick an Application",
+                    "Pick an Application",
+                    JOptionPane.PLAIN_MESSAGE,
+                    icon,
+                    possibilities,
+                    burpPropertiesManager.getAppId());
 	        
 	        if (idResult != null && !idResult.toString().trim().isEmpty() ) {
 	        	// Got a valid result
 	        	resultId = applicationMap.get(idResult);
-	        	BurpPropertiesManager.setAppId(resultId);
+                burpPropertiesManager.setAppId(resultId);
 	        }
         } else {
             JOptionPane.showMessageDialog(view, "Failed while trying to get a list of applications from ThreadFix.",

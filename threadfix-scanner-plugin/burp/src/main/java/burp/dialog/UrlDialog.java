@@ -32,6 +32,12 @@ import java.awt.*;
 public class UrlDialog {
 
     public static String show(Component view) {
+        BurpPropertiesManager burpPropertiesManager = BurpPropertiesManager.getBurpPropertiesManager();
+        String targetUrl = burpPropertiesManager.getTargetUrl();
+        if ((targetUrl != null) && !targetUrl.trim().isEmpty()) {
+            return targetUrl;
+        }
+
         JTextField urlField = new JTextField(40);
         urlField.setText("http://");
 
@@ -65,7 +71,7 @@ public class UrlDialog {
         if (result == JOptionPane.OK_OPTION) {
             String url = urlField.getText();
             if (url != null && !url.isEmpty())
-                BurpPropertiesManager.setTargetUrl(url);
+                burpPropertiesManager.setTargetUrl(url);
             return url;
         } else {
             return null;

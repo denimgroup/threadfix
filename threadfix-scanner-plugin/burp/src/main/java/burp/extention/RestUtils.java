@@ -37,11 +37,11 @@ public class RestUtils {
 
     public static RestResponse<Object> uploadScan(File file) {
 
-        if (BurpPropertiesManager.getUrlStatic() == null || BurpPropertiesManager.getKeyStatic() == null) {
+        if (BurpPropertiesManager.getBurpPropertiesManager().getUrl() == null || BurpPropertiesManager.getBurpPropertiesManager().getKey() == null) {
             return RestResponse.failure("Url and API key were not saved correctly.");
         }
 
-        return getPluginClient().uploadScan(BurpPropertiesManager.getAppId(), file);
+        return getPluginClient().uploadScan(BurpPropertiesManager.getBurpPropertiesManager().getAppId(), file);
     }
 
     public static Application.Info[] getApplications() {
@@ -49,10 +49,10 @@ public class RestUtils {
     }
 
     public static Endpoint.Info[] getEndpoints() {
-        return getPluginClient().getEndpoints(BurpPropertiesManager.getAppId());
+        return getPluginClient().getEndpoints(BurpPropertiesManager.getBurpPropertiesManager().getAppId());
     }
 
     private static PluginClient getPluginClient() {
-        return new PluginClient(new BurpPropertiesManager());
+        return new PluginClient(BurpPropertiesManager.getBurpPropertiesManager());
     }
 }

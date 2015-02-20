@@ -25,102 +25,130 @@
 package burp.extention;
 
 
+import burp.IBurpExtenderCallbacks;
 import com.denimgroup.threadfix.properties.PropertiesManager;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public class BurpPropertiesManager extends PropertiesManager {
+    private static BurpPropertiesManager instance = null;
 
-    private static final String
-            FILE_NAME = "threadfix.properties",
-            API_KEY_KEY = "key",
-            THREADFIX_URL_KEY = "url",
-            TARGET_URL_KEY = "target-url",
-            APP_ID_KEY = "application-id",
-            SAVE_MESSAGE = "Saving BURP properties.";
+    public static final String
+            API_KEY_KEY = "threadfix.key",
+            THREADFIX_URL_KEY = "threadfix.url",
+            APP_ID_KEY = "threadfix.application-id",
+            TARGET_URL_KEY = "threadfix.target-url",
+            SOURCE_FOLDER_KEY = "threadfix.source-folder";
 
-    public static String getKeyStatic() {
-        return getProperties().getProperty(API_KEY_KEY);
+    private static final Map<String, String> defaultPropertyValues = new HashMap<String, String>();
+    static {
+        defaultPropertyValues.put(THREADFIX_URL_KEY, "http://localhost:8080/threadfix/rest");
     }
 
-    public static String getAppId() {
-        return getProperties().getProperty(APP_ID_KEY);
+    private static IBurpExtenderCallbacks callbacks;
+    private static Properties properties = new Properties();
+    private static boolean hasChanges = false;
+
+    private BurpPropertiesManager(IBurpExtenderCallbacks callbacks) {
+        super();
+        this.callbacks = callbacks;
     }
 
-    @Override
-    public String getUrl() {
-        return getUrlStatic();
+    public static BurpPropertiesManager generateBurpPropertiesManager(IBurpExtenderCallbacks callbacks) {
+        if (instance == null) {
+            instance = new BurpPropertiesManager(callbacks);
+            return instance;
+        }
+        throw new RuntimeException("A BurpPropertiesManager already exists.");
+    }
+
+    public static BurpPropertiesManager getBurpPropertiesManager() {
+        return instance;
+    }
+
+    public String getPropertyValue(String key) {
+        String value = properties.getProperty(key);
+        if (value == null) {
+            value = callbacks.loadExtensionSetting(key);
+        }
+        if ((value == null) || (value.trim().equals(""))) {
+            return defaultPropertyValues.get(key);
+        }
+        return value;
+    }
+
+    public void setPropertyValue(String key, String value) {
+        properties.setProperty(key, value);
+        hasChanges = true;
+    }
+
+    public void saveProperties() {
+        if (hasChanges) {
+            for (String key : properties.stringPropertyNames()) {
+                String newValue = properties.getProperty(key);
+                String oldValue = callbacks.loadExtensionSetting(key);
+                if (!newValue.equals(oldValue)) {
+                    callbacks.saveExtensionSetting(key, newValue);
+                    properties.remove(key);
+                }
+            }
+            hasChanges = false;
+        }
     }
 
     @Override
     public String getKey() {
-        return getKeyStatic();
+        return getPropertyValue(API_KEY_KEY);
     }
 
-    public static String getUrlStatic() {
-        String url = getProperties().getProperty(THREADFIX_URL_KEY);
-        if (url == null) {
-            url = "http://localhost:8080/threadfix/rest";
-        }
-        return url;
+    @Override
+    public void setKey(String newKey) {
+        setPropertyValue(API_KEY_KEY, newKey);
     }
 
-    public static String getTargetUrl() {
-        return getProperties().getProperty(TARGET_URL_KEY);
+    @Override
+    public void setMemoryKey(String newKey) {
+        setKey(newKey);
     }
 
-    public static void setKeyAndUrl(String newKey, String newUrl) {
-        Properties properties = getProperties();
-        properties.setProperty(API_KEY_KEY, newKey);
-        properties.setProperty(THREADFIX_URL_KEY, newUrl);
-        saveProperties(properties);
+    @Override
+    public String getUrl() {
+        return getPropertyValue(THREADFIX_URL_KEY);
     }
 
-    public static void setTargetUrl(String targetUrl) {
-        Properties properties = getProperties();
-        properties.setProperty(TARGET_URL_KEY, targetUrl);
-        saveProperties(properties);
+    @Override
+    public void setUrl(String newUrl) {
+        setPropertyValue(THREADFIX_URL_KEY, newUrl);
     }
 
-    public static void setAppId(String appId) {
-        Properties properties = getProperties();
-        properties.setProperty(APP_ID_KEY, appId);
-        saveProperties(properties);
+    @Override
+    public void setMemoryUrl(String newUrl) {
+        setUrl(newUrl);
     }
 
-    private static Properties getProperties() {
-        Properties properties = new Properties();
-
-        File file = new File(FILE_NAME);
-
-
-        try {
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-
-            if (file.exists()) {
-                try (FileReader reader = new FileReader(file)) {
-                    properties.load(reader);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return properties;
+    public String getAppId() {
+        return getPropertyValue(APP_ID_KEY);
     }
 
-    private static void saveProperties(Properties properties) {
-        try (FileWriter writer = new FileWriter(new File(FILE_NAME))) {
-            properties.store(writer, SAVE_MESSAGE);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void setAppId(String newAppId) {
+        setPropertyValue(APP_ID_KEY, newAppId);
     }
 
+    public String getTargetUrl() {
+        return getPropertyValue(TARGET_URL_KEY);
+    }
+
+    public void setTargetUrl(String newTargetUrl) {
+        setPropertyValue(TARGET_URL_KEY, newTargetUrl);
+    }
+
+    public String getSourceFolder() {
+        return getPropertyValue(SOURCE_FOLDER_KEY);
+    }
+
+    public void setSourceFolder(String newSourceFolder) {
+        setPropertyValue(SOURCE_FOLDER_KEY, newSourceFolder);
+    }
 }

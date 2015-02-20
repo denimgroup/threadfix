@@ -29,20 +29,36 @@ import burp.extention.BurpPropertiesManager;
 import javax.swing.*;
 import java.awt.*;
 
-public class ParametersDialog {
+public class SourceDialog {
 
-    public static boolean show(Component view) {
+    public static boolean show(final Component view) {
         BurpPropertiesManager burpPropertiesManager = BurpPropertiesManager.getBurpPropertiesManager();
-        String url = burpPropertiesManager.getUrl();
-        String key = burpPropertiesManager.getKey();
-        if ((url != null) && !url.trim().isEmpty() && (key != null) && !key.trim().isEmpty()) {
+        String sourceFolder = burpPropertiesManager.getSourceFolder();
+        if ((sourceFolder != null) && !sourceFolder.trim().isEmpty()) {
             return true;
         }
 
-        JTextField urlField = new JTextField(40);
-        urlField.setText(url);
-        JTextField keyField = new JTextField(40);
-        keyField.setText(key);
+        final JLabel sourceFolderLabel = new JLabel("Source Code Folder");
+        final JTextField sourceFolderField = new JTextField(40);
+        sourceFolderField.setText(burpPropertiesManager.getSourceFolder());
+        final JButton browseButton = new JButton("Browse");
+        browseButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                JFileChooser chooser = new JFileChooser();
+                String currentDirectory = sourceFolderField.getText();
+                if ((currentDirectory == null) || (currentDirectory.trim().isEmpty())) {
+                    currentDirectory = System.getProperty("user.home");
+                }
+                chooser.setCurrentDirectory(new java.io.File(currentDirectory));
+                chooser.setDialogTitle("Select A Source Code Folder");
+                chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                chooser.setAcceptAllFileFilterUsed(false);
+                if (chooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
+                    sourceFolderField.setText(chooser.getSelectedFile().getAbsolutePath());
+                }
+            }
+        });
 
         GridBagLayout experimentLayout = new GridBagLayout();
         GridBagConstraints labelConstraints = new GridBagConstraints();
@@ -55,32 +71,30 @@ public class ParametersDialog {
         textBoxConstraints.gridx = 1;
         textBoxConstraints.gridy = 0;
         textBoxConstraints.fill = GridBagConstraints.HORIZONTAL;
+        GridBagConstraints browseButtonConstraints = new GridBagConstraints();
+        browseButtonConstraints.gridwidth = 1;
+        browseButtonConstraints.gridx = 5;
+        browseButtonConstraints.gridy = 0;
+        browseButtonConstraints.fill = GridBagConstraints.HORIZONTAL;
 
         JPanel myPanel = new JPanel();
         myPanel.setLayout(experimentLayout);
-        myPanel.add(new JLabel("URL"), labelConstraints);
-        myPanel.add(urlField, textBoxConstraints);
+        myPanel.add(sourceFolderLabel, labelConstraints);
+        myPanel.add(sourceFolderField, textBoxConstraints);
+        myPanel.add(browseButton, browseButtonConstraints);
 
-        labelConstraints.gridy = 1;
-        textBoxConstraints.gridy = 1;
-
-        myPanel.add(new JLabel("API Key"), labelConstraints);
-        myPanel.add(keyField, textBoxConstraints);
-
-        String attempt = ParametersDialog.class.getProtectionDomain().getCodeSource().getLocation().getFile() + "/dg-icon.png";
+        String attempt = SourceDialog.class.getProtectionDomain().getCodeSource().getLocation().getFile() + "/dg-icon.png";
 
         ImageIcon icon = new ImageIcon(attempt);
 
         int result = JOptionPane.showConfirmDialog(view,
                 myPanel,
-                "Please enter the ThreadFix URL and API Key values",
+                "Please enter the location of the source code",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.INFORMATION_MESSAGE,
                 icon);
         if (result == JOptionPane.OK_OPTION) {
-            burpPropertiesManager.setUrl(urlField.getText());
-            burpPropertiesManager.setKey(keyField.getText());
-            burpPropertiesManager.setAppId(null);
+            burpPropertiesManager.setSourceFolder(sourceFolderField.getText());
             return true;
         } else {
             return false;
