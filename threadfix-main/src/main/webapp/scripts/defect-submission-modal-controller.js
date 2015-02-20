@@ -34,6 +34,9 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 $scope.config.defects = data.object.defectList.map(function(defect) {
                     return defect.nativeId;
                 });
+                if ($scope.config.defects && $scope.config.defects.length > 0) {
+                    $scope.config.placeholder = $scope.config.defects[0];
+                }
 
                 if (!$scope.config.editableFields || !$scope.config.editableFields.length === 0) {
                     $scope.object.id = $scope.config.defects[0];
@@ -174,6 +177,16 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
             }
             if (type === "text")
                 fieldForm.maxLength = field.maxLength;
+
+            if (type === "number") {
+                if  (field.step)
+                    fieldForm.step = field.step;
+                if (field.minValue !== null)
+                    fieldForm.minValue = field.minValue;
+                if (field.maxValue !== null)
+                    fieldForm.maxValue = field.maxValue;
+            }
+
             $scope.stdFormTemplate.push(fieldForm)
         });
 

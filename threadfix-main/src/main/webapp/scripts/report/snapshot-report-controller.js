@@ -43,7 +43,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             top10: [
                 {
                     id: 'A1',
-                    name: 'A1-Injection',
+                    name: 'A1 - Injection',
                     members: [77, 78, 88, 89, 90, 91, 929]
                 },
                 {
@@ -98,7 +98,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             top10: [
                 {
                     id: 'A1',
-                    name: 'A1-Injection',
+                    name: 'A1 - Injection',
                     members: [78, 88, 89, 90, 91, 810]
                 },
                 {
@@ -398,7 +398,6 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             }
         });
 
-//        var keys = getKeys(statsMap);
         var keys = Object.keys(statsMap);
         keys.forEach(function(key){
             var mapEntry = statsMap[key];

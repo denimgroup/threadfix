@@ -56,7 +56,7 @@ public class ApplicationCriticality extends BaseEntity {
 
 	@NotEmpty(message = "{errors.required}")
 	@Size(max = 50, message = "{errors.maxlength}")
-    @JsonView(AllViews.FormInfo.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
     private String name;
 
 	private List<Application> applications;

@@ -316,25 +316,10 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                             });
                     });
 
-                    g
-                        .on("mouseover", function() { focus.style("display", null); })
+                    g.on("mouseover", function() { focus.style("display", null); })
                         .on("mouseout", function() { focus.style("display", "none"); tip.hide()})
                         .on("mousemove", mousemove);
 
-                    if (scope.label && noVulnsList.length > 0) {
-                        var listStr = "";
-                        for (var i=0; i<noVulnsList.length-1; i++)
-                            listStr += noVulnsList[i] + ", ";
-
-                        listStr += noVulnsList[noVulnsList.length-1] + ": ";
-
-                        svg.append("g")
-                            .append("text")
-                            .attr("x", w/2)
-                            .attr("y", h + 60)
-                            .attr("class", "small_warning")
-                            .text(listStr + "No Vulnerabilities");
-                    }
                 }
 
                 function drawTable(){

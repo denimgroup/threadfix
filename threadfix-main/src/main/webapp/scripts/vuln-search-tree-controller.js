@@ -146,8 +146,9 @@ module.controller('VulnSearchTreeController', function($log, $scope, $rootScope,
                                 test = test / 10;
                             }
 
-                            //expand each severity level of vulns on page load
-                            treeElement.expanded = true;
+                            //if it is not Top 10 OWASP report, expand each severity level of vulns on page load
+                            if (!parameters.owasp)
+                                treeElement.expanded = true;
 
                             if (size > $scope.badgeWidth) {
                                 $scope.badgeWidth = size;

@@ -39,12 +39,14 @@ public class DynamicFormField {
 
     int maxLength;
     int minLength;
+    Integer minValue, maxValue;
     boolean required;
     String type;
     boolean active;
     boolean editable;
     boolean supportsMultivalue;
     String show;
+    String step;
 
     Map<String, String> optionsMap;
     Map<String, String> errorsMap;
@@ -201,4 +203,27 @@ public class DynamicFormField {
         return sortedMap;
     }
 
+    public String getStep() {
+        return step;
+    }
+
+    public void setStep(String step) {
+        this.step = step;
+    }
+
+    public Integer getMinValue() {
+        return minValue;
+    }
+
+    public void setMinValue(Integer minValue) {
+        this.minValue = minValue;
+    }
+
+    public Integer getMaxValue() {
+        return maxValue;
+    }
+
+    public void setMaxValue(Integer maxValue) {
+        this.maxValue = maxValue;
+    }
 }
