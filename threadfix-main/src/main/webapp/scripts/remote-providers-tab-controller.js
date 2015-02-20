@@ -118,6 +118,11 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                         provider.apiKey = undefined;
                         provider.password = undefined;
                         provider.remoteProviderApplications = undefined;
+                        if (provider.authenticationFields) {
+                            provider.authenticationFields.forEach(function(field){
+                                field.value = undefined;
+                            });
+                        }
                         provider.successMessage = undefined;
                         provider.errorMessage = undefined;
                         provider.hasCredentials = "No";
