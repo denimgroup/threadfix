@@ -34,6 +34,7 @@ import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProvide
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
+import org.eclipse.jgit.util.Base64;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -567,6 +568,7 @@ public class QualysRemoteProvider extends AbstractRemoteProvider {
 		private Boolean getChannelVulnName    = false;
 		private Boolean getAttackDetail       = false;
         private boolean getAttackResponse     = false;
+        private boolean isBase64              = false;
 
         private String currentChannelVulnCode = null;
         private String currentPath            = null;
@@ -610,6 +612,7 @@ public class QualysRemoteProvider extends AbstractRemoteProvider {
                     break;
                 case "result":
                     getAttackResponse = true;
+                    isBase64 = "true".equals(atts.getValue("base64"));
                     break;
                 case "instances":
                     currentSeverityCode = SEVERITIES_MAP.get(currentChannelVulnCode);
@@ -661,6 +664,12 @@ public class QualysRemoteProvider extends AbstractRemoteProvider {
                 getAttackDetail = false;
             } else if (getAttackResponse) {
                 currentAttackResponse = getBuilderText();
+
+                if (isBase64) {
+                    currentAttackResponse = currentAttackResponse.replace('_', '/').replace('-', '+');
+                    currentAttackResponse = new String(Base64.decode(currentAttackResponse));
+                }
+
                 getAttackResponse = false;
             }
 	    }
