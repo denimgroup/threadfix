@@ -1,4 +1,4 @@
-8/6/2014 11:45:00
+11/03/14 12:15:00
 type.info,,,
 CheckMarx,http://www.checkmarx.com,7.8, Download it from the site
 type.vulnerabilities,,,
@@ -342,5 +342,8 @@ Connection_String_Injection,Connection_String_Injection,99,
 type.severities,,,
 Information,Information,1,1
 High,High,4,4
+Critical,Critical,5,5
 Medium,Medium,3,3
 Low,Low,2,2
+Warning,Warning,2,2
+Serious,Serious,4,4

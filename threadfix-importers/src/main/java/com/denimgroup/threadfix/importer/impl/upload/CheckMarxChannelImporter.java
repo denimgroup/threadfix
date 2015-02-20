@@ -67,6 +67,7 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
             NAME = "Name",
             CWE_ID = "cweId",
             SEVERITY = "Severity",
+            LOWER_SEVERITY = "severity",
             PATH_NODE = "PathNode",
             NUMBER = "Number",
             LINE = "Line",
@@ -175,6 +176,7 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
                 currentCweId = atts.getValue(CWE_ID);
                 currentVulnName = atts.getValue(NAME_ATTRIBUTE);
                 currentSeverity = atts.getValue(SEVERITY);
+                currentSeverity = currentSeverity == null ? atts.getValue(LOWER_SEVERITY) : currentSeverity;
                 currentQueryBeginTag = makeTag(name, qName, atts);
                 currentQueryEndTag = "</" + qName + ">";
 
