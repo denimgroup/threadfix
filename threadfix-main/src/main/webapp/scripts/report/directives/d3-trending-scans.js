@@ -340,8 +340,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 function mousemove() {
                     var x0 = x.invert(d3.mouse(this)[0]),
                         month = Math.round(x0);
-                    var time;
-                    var tips = [];
+                    var time, coordObj, tips = [];
                     circles.attr('transform', function (d) {
                         var i;
                         if (month <= d.values[0].date)
@@ -371,10 +370,10 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
 
                     tip.html(function(){
                         var date = new Date(time);
-                        var tipContent = "<tr><td>Date&nbsp;</td> <td style='color:dodgerblue'>" +
+                        var tipContent = "<tr><td colspan='2' style='color:dodgerblue;text-align:center;'>" +
                             (monthList[date.getMonth()]) + " " + date.getDate() + " " + date.getFullYear() + "</td></tr>";
 
-                        var table = '<table style="text-align:right;font-weight: bold;">' + tipContent;
+                        var table = '<table style="text-align:left;font-weight: bold;">' + tipContent;
                         tips.forEach(function(tip) {
                             table += tip;
                         });
@@ -382,7 +381,8 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
 
                         return table;
                     });
-                    tip.show();
+                    coordObj = (circles && circles.length>0 && circles[0] && circles[0].length > 0) ?  circles[0][0] : undefined;
+                    tip.show(coordObj);
                 }
 
                 function monthDiff(d1, d2) {
