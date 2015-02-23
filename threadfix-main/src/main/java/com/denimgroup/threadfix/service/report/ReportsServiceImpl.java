@@ -321,6 +321,16 @@ public class ReportsServiceImpl implements ReportsService {
             }
 
             String openedDate = formatter.format(vuln.getOpenTime().getTime());
+            String description = "";
+
+            for (Finding finding : vuln.getFindings()) {
+                String longDescription = finding.getLongDescription();
+                if (longDescription != null && !longDescription.isEmpty()) {
+                    description = longDescription;
+                    break;
+                }
+            }
+
             // Order of fields: CWE ID, CWE Name, Path, Parameter, Severity, Open Date, Defect ID, Application, Team, Payload, Attack surface path
             rowParamsList.add(list(
                     vuln.getGenericVulnerability().getId().toString(),
@@ -329,6 +339,7 @@ public class ReportsServiceImpl implements ReportsService {
                     vuln.getSurfaceLocation().getParameter(),
                     vuln.getGenericSeverity().getName(),
                     openedDate,
+                    description,
                     (vuln.getDefect() == null) ? "" : vuln.getDefect().getNativeId(),
                     vuln.getApplication().getName(),
                     vuln.getApplication().getOrganization().getName(),
@@ -360,7 +371,7 @@ public class ReportsServiceImpl implements ReportsService {
             data.append("Application: ").append(appName).append(" \n \n");
         }
 
-		data.append("CWE ID, CWE Name, Path, Parameter, Severity, Open Date, Defect ID, Application Name, Team Name, Payload, Attack Surface Path \n");
+		data.append("CWE ID, CWE Name, Path, Parameter, Severity, Open Date, Description, Defect ID, Application Name, Team Name, Payload, Attack Surface Path \n");
 		for (List<String> row: rowParamsList) {
 			for (int i=0;i<row.size();i++) {
 				String str = "";
