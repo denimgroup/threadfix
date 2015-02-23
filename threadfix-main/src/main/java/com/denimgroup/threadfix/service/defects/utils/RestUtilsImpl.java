@@ -28,11 +28,11 @@ import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.exception.RestUrlException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ProxyService;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.codec.Base64;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.annotation.Nonnull;
@@ -232,7 +232,7 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
 	private void setupAuthorization(HttpURLConnection connection,
 			String username, String password) {
 		String login = username + ":" + password;
-		String encodedLogin = new String(Base64.encodeBase64(login.getBytes()));
+		String encodedLogin = new String(Base64.encode(login.getBytes()));
 		//String encodedLogin = Base64.encodeBase64String(login.getBytes());
 		connection.setRequestProperty("Authorization", "Basic " + encodedLogin);
 	}
