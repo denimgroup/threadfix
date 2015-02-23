@@ -768,6 +768,7 @@ public class WafIT extends BaseDataTest {
                 .clickUpdateApplicationButton()
                 .clickWafsHeaderLink()
                 .clickRules(wafName)
+                .setWafDirectiveSelect("drop")
                 .clickGenerateWafRulesButton();
 
         WafRulesPage wafRulesPage2 = wafRulesPage1.clickWafsHeaderLink()
