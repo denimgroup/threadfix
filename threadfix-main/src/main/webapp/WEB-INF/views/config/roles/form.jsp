@@ -241,7 +241,7 @@
             <td class="inputValue" style="text-align: center;">
                 <input type="radio"
                        ng-model="object.canSubmitComments"
-                       id="canSubmitComments"
+                       id="canSubmitCommentsTrue"
                        name="canSubmitComments"
                        value="true" />
             </td>

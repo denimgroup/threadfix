@@ -481,7 +481,8 @@ public abstract class BasePage {
 	}
 
     public void takeScreenShot() {
-        File screenShot = driver.getScreenshotAs(OutputType.FILE);
+        System.out.println("This method is deprecated, will be back soon.");
+        /*File screenShot = driver.getScreenshotAs(OutputType.FILE);
         String fileName = System.getProperty("SCREENSHOT_BASE") + DateFormatUtils.format(new Date(), "HH-MM-SS") + ".jpg";
 
         try {
@@ -489,7 +490,7 @@ public abstract class BasePage {
             System.out.println("Saving screen shot with filename: " + fileName);
         } catch (IOException f) {
             System.err.println("Unable to save file.\n" + f.getMessage());
-        }
+        }*/
     }
 
     public void refreshPage() {

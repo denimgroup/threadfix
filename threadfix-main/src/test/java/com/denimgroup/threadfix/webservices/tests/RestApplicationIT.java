@@ -29,7 +29,7 @@ import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.remote.ThreadFixRestClient;
 import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
 import com.denimgroup.threadfix.webapp.controller.rest.ApplicationRestController;
-import com.denimgroup.threadfix.webapp.controller.rest.RestController;
+import com.denimgroup.threadfix.webapp.controller.rest.TFRestController;
 import com.denimgroup.threadfix.webapp.controller.rest.TeamRestController;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -73,7 +73,7 @@ public class RestApplicationIT extends BaseRestIT {
                 getRandomString(20),
                 "http://normal.url.com" });
 
-        assertTrue(response.equals(RestController.API_KEY_NOT_FOUND_ERROR));
+        assertTrue(response.equals(TFRestController.API_KEY_NOT_FOUND_ERROR));
 
 		if (httpGet(getTeamUrl)
 				.equals(TeamRestController.LOOKUP_FAILED)) {
@@ -166,7 +166,7 @@ public class RestApplicationIT extends BaseRestIT {
 		// Bad Key
 		String error = httpGet(baseLookupUrl + "1" + apiKeySegment
 				+ BAD_API_KEY);
-		assertTrue(error.equals(RestController.API_KEY_NOT_FOUND_ERROR));
+		assertTrue(error.equals(TFRestController.API_KEY_NOT_FOUND_ERROR));
 
 		// If we're in an empty database, we may have to create some objects
 		// first
@@ -219,7 +219,7 @@ public class RestApplicationIT extends BaseRestIT {
 		String response = httpPost(url,
 				new String[] { "apiKey", "channelName" }, new String[] {
 						BAD_API_KEY, "Arachni" });
-		assertTrue(response.equals(RestController.API_KEY_NOT_FOUND_ERROR));
+		assertTrue(response.equals(TFRestController.API_KEY_NOT_FOUND_ERROR));
 
 		// bad channel name
 		response = httpPost(url, new String[] { "apiKey", "channelName" },
@@ -292,7 +292,7 @@ public class RestApplicationIT extends BaseRestIT {
 		// bad key
 		String response = httpPost(addWafUrl, paramArray, new String[] {
 				BAD_API_KEY, String.valueOf(wafId) });
-		assertTrue(response.equals(RestController.API_KEY_NOT_FOUND_ERROR));
+		assertTrue(response.equals(TFRestController.API_KEY_NOT_FOUND_ERROR));
 
 		// waf ID testing
 
