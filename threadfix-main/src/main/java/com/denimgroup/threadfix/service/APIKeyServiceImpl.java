@@ -26,11 +26,11 @@ package com.denimgroup.threadfix.service;
 import com.denimgroup.threadfix.data.dao.APIKeyDao;
 import com.denimgroup.threadfix.data.entities.APIKey;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.apache.ws.commons.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.xml.bind.DatatypeConverter;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
@@ -106,10 +106,10 @@ public class APIKeyServiceImpl implements APIKeyService {
 
 			String newKey = "";
 			
-			newKey = newKey.concat(Base64.encode(toByteArray(random.nextLong())).trim());
-			newKey = newKey.concat(Base64.encode(toByteArray(random.nextLong())).trim());
-			newKey = newKey.concat(Base64.encode(toByteArray(random.nextLong())).trim());
-			newKey = newKey.concat(Base64.encode(toByteArray(random.nextLong())).trim());
+			newKey = newKey.concat(DatatypeConverter.printBase64Binary(toByteArray(random.nextLong())).trim());
+			newKey = newKey.concat(DatatypeConverter.printBase64Binary(toByteArray(random.nextLong())).trim());
+			newKey = newKey.concat(DatatypeConverter.printBase64Binary(toByteArray(random.nextLong())).trim());
+			newKey = newKey.concat(DatatypeConverter.printBase64Binary(toByteArray(random.nextLong())).trim());
 						
 			newKey = newKey.replaceAll("[\\[!@#$%\\^&*\\(\\)=\\-+/]", "");
 			

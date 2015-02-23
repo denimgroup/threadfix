@@ -430,37 +430,51 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         String urlReference = findingMap.get(FindingKey.URL_REFERENCE);
         String attackString = findingMap.get(FindingKey.ATTACK_STRING);
 
-        if (parameterValue != null && parameterValue.length() > Finding.ATTACK_STRING_LENGTH)
-            parameterValue = parameterValue.substring(0,Finding.ATTACK_STRING_LENGTH-20) + "\n\n[truncated]\n";
-        finding.setAttackString(parameterValue);
+        parameterValue = getTruncated(parameterValue, Finding.ATTACK_STRING_LENGTH);
+        if (finding.getAttackString() == null) {
+            finding.setAttackString(parameterValue);
+        }
 
-        if (request != null && request.length() > Finding.ATTACK_REQUEST_LENGTH)
-            request = request.substring(0,Finding.ATTACK_REQUEST_LENGTH-20) + "\n\n[truncated]\n";
-        finding.setAttackRequest(request);
+        request = getTruncated(request, Finding.ATTACK_REQUEST_LENGTH);
+        if (finding.getAttackRequest() == null) {
+            finding.setAttackRequest(request);
+        }
 
-        if (response != null && response.length() > Finding.ATTACK_RESPONSE_LENGTH)
-            response = response.substring(0,Finding.ATTACK_RESPONSE_LENGTH-20) + "\n\n[truncated]\n";
-        finding.setAttackResponse(response);
+        response = getTruncated(response, Finding.ATTACK_RESPONSE_LENGTH);
+        if (finding.getAttackResponse() == null) {
+            finding.setAttackResponse(response);
+        }
 
-        if (detail != null && detail.length() > Finding.SCANNER_DETAIL_LENGTH)
-            detail = detail.substring(0,Finding.SCANNER_DETAIL_LENGTH-20) + "\n\n[truncated]\n";
-        finding.setScannerDetail(detail);
+        detail = getTruncated(detail, Finding.SCANNER_DETAIL_LENGTH);
+        if (finding.getScannerDetail() == null) {
+            finding.setScannerDetail(detail);
+        }
 
-        if (recommendation != null && recommendation.length() > Finding.SCANNER_RECOMMENDATION_LENGTH)
-            recommendation = recommendation.substring(0,Finding.SCANNER_RECOMMENDATION_LENGTH-20) + "\n\n[truncated]\n";
-        finding.setScannerRecommendation(recommendation);
+        recommendation = getTruncated(recommendation, Finding.SCANNER_RECOMMENDATION_LENGTH);
+        if (finding.getScannerRecommendation() == null) {
+            finding.setScannerRecommendation(recommendation);
+        }
 
-        if (rawFinding != null && rawFinding.length() > Finding.RAW_FINDING_LENGTH)
-            rawFinding = rawFinding.substring(0,Finding.RAW_FINDING_LENGTH-20) + "\n\n[truncated]\n";
-        finding.setRawFinding(rawFinding);
+        rawFinding = getTruncated(rawFinding, Finding.RAW_FINDING_LENGTH);
+        if (finding.getRawFinding() == null) {
+            finding.setRawFinding(rawFinding);
+        }
 
-        if (urlReference != null && urlReference.length() > Finding.URL_REFERENCE_LENGTH)
-            urlReference = urlReference.substring(0,Finding.URL_REFERENCE_LENGTH-20) + "\n\n[truncated]\n";
-        finding.setUrlReference(urlReference);
+        urlReference = getTruncated(urlReference, Finding.URL_REFERENCE_LENGTH);
+        if (finding.getUrlReference() == null) {
+            finding.setUrlReference(urlReference);
+        }
 
-        if (attackString != null && attackString.length() > Finding.ATTACK_STRING_LENGTH)
-            attackString = attackString.substring(0,Finding.ATTACK_STRING_LENGTH-20) + "\n\n[truncated]\n";
-        finding.setAttackString(attackString);
+        attackString = getTruncated(attackString, Finding.ATTACK_STRING_LENGTH);
+        if (finding.getAttackString() == null) {
+            finding.setAttackString(attackString);
+        }
+    }
+
+    private String getTruncated(String parameterValue, int length) {
+        if (parameterValue != null && parameterValue.length() > length)
+            parameterValue = parameterValue.substring(0, length-20) + "\n\n[truncated]\n";
+        return parameterValue;
     }
 
     protected void closeInputStream(InputStream stream) {
