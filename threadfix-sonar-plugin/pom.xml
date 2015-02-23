@@ -109,7 +109,6 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
-            <type>pom</type>
         </dependency>
         <dependency>
             <groupId>org.hsqldb</groupId>
@@ -122,6 +121,14 @@
         <groupId>com.denimgroup.threadfix</groupId>
         <version>2.2-SNAPSHOT</version>
     </parent>
+
+    <properties>
+        <!-- Sonar contains Hibernate annotations version 3.4.0.GA -->
+        <!-- This means we must use a compatible version of hibernate -->
+        <hibernate.version>3.3.2.GA</hibernate.version>
+        <!-- Unfortunately Spring 4 only supports hibernate 3.6+. This is the most recent 3.x release -->
+        <spring.version>3.2.13.RELEASE</spring.version>
+    </properties>
 
     <modelVersion>4.0.0</modelVersion>
 
