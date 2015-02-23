@@ -34,11 +34,11 @@ import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProvide
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
-import org.eclipse.jgit.util.Base64;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
+import javax.xml.bind.DatatypeConverter;
 import java.io.InputStream;
 import java.util.*;
 
@@ -667,7 +667,7 @@ public class QualysRemoteProvider extends AbstractRemoteProvider {
 
                 if (isBase64) {
                     currentAttackResponse = currentAttackResponse.replace('_', '/').replace('-', '+');
-                    currentAttackResponse = new String(Base64.decode(currentAttackResponse));
+                    currentAttackResponse = new String(DatatypeConverter.parseBase64Binary(currentAttackResponse));
                 }
 
                 getAttackResponse = false;
