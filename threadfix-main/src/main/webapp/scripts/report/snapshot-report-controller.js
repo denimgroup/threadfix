@@ -720,7 +720,10 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         $scope.exportInfo.teams = $scope.title.teams;
         $scope.exportInfo.apps = $scope.title.apps;
 
-        reportExporter.exportPDFTable($scope, parameters, $scope.exportInfo);
+        if ($scope.reportId === $scope.PIT_Report_Id || $scope.reportId === $scope.OWASP_Report_Id)
+            reportExporter.exportPDFTable($scope, parameters, $scope.exportInfo);
+        else
+            reportExporter.exportPDFTableFromId($scope.exportInfo);
 
     }
 
