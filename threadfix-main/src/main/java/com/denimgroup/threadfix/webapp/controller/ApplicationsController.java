@@ -170,7 +170,7 @@ public class ApplicationsController {
 		return "applications/detail";
 	}
 
-    @JsonView(AllViews.TableRow.class)
+    @JsonView(AllViews.FormInfo.class)
     @RequestMapping("{appId}/objects")
     public @ResponseBody Object getBaseObjects(@PathVariable("appId") Integer appId) throws IOException {
         Map<String, Object> map = new HashMap<>();
