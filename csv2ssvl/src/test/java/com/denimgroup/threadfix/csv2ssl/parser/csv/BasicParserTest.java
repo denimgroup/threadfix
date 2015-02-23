@@ -24,8 +24,10 @@
 package com.denimgroup.threadfix.csv2ssl.parser.csv;
 
 import com.denimgroup.threadfix.csv2ssl.ResourceLoader;
+import com.denimgroup.threadfix.csv2ssl.checker.Configuration;
 import com.denimgroup.threadfix.csv2ssl.checker.FormatChecker;
 import com.denimgroup.threadfix.csv2ssl.parser.CSVToSSVLParser;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.InputStreamReader;
@@ -35,6 +37,11 @@ import java.io.Reader;
  * Created by mac on 12/2/14.
  */
 public class BasicParserTest {
+
+    @Before
+    public void init() {
+        Configuration.reset();
+    }
 
     @Test
     public void testBasicParser() {

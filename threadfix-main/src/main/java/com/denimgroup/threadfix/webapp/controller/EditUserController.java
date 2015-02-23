@@ -26,14 +26,15 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import com.denimgroup.threadfix.webapp.validator.UserValidator;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -88,6 +89,7 @@ public class EditUserController {
 		return roleService.loadAll();
 	}
 
+	@JsonView(AllViews.TableRow.class)
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
 	public Object processEdit(@PathVariable("userId") int userId,
@@ -136,7 +138,7 @@ public class EditUserController {
 			// This may not hold for AD scenarios.
 			log.info("The User " + user.getName() + " (id=" + user.getId() + ") has been edited by user " + currentUser);
 
-			return ControllerUtils.writeSuccessObjectWithView(user, AllViews.TableRow.class);
+			return RestResponse.success(user);
 		}
 	}
 }

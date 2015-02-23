@@ -32,7 +32,7 @@
         <tbody>
         <tr ng-repeat-start="log in logs" >
             <td id="{{ $index }}LogId">
-                <a class="pointer" ng-click="log.expanded = !log.expanded">{{ log.time | date : 'medium' }} -- {{ log.type }}</a>
+                <a class="pointer" ng-click="log.expanded = !log.expanded">{{ log.time | date:'MMM d, y h:mm:ss a' }} -- {{ log.type }}</a>
             </td>
             <td id="{{ $index }}ReportLink" style="padding-left: 5em">
                 <a class="pointer" ng-click="log.expanded = true"

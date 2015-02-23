@@ -24,9 +24,9 @@
 package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.views.AllViews;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonView;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -95,7 +95,7 @@ public class Organization extends AuditableEntity {
     }
 
     @Transient
-    @JsonView({AllViews.TableRow.class, AllViews.RestViewTeam2_1.class, AllViews.VulnSearchApplications.class })
+    @JsonView({AllViews.TableRow.class, AllViews.GRCToolsPage.class, AllViews.RestViewTeam2_1.class, AllViews.VulnSearchApplications.class })
     @JsonProperty("applications")
     public List<Application> getActiveApplications() {
         if (activeApps == null && this.applications != null) {

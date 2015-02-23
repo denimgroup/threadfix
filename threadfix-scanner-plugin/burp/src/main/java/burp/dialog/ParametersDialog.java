@@ -32,10 +32,17 @@ import java.awt.*;
 public class ParametersDialog {
 
     public static boolean show(Component view) {
+        BurpPropertiesManager burpPropertiesManager = BurpPropertiesManager.getBurpPropertiesManager();
+        String url = burpPropertiesManager.getUrl();
+        String key = burpPropertiesManager.getKey();
+        if ((url != null) && !url.trim().isEmpty() && (key != null) && !key.trim().isEmpty()) {
+            return true;
+        }
+
         JTextField urlField = new JTextField(40);
-        urlField.setText(BurpPropertiesManager.getUrlStatic());
+        urlField.setText(url);
         JTextField keyField = new JTextField(40);
-        keyField.setText(BurpPropertiesManager.getKeyStatic());
+        keyField.setText(key);
 
         GridBagLayout experimentLayout = new GridBagLayout();
         GridBagConstraints labelConstraints = new GridBagConstraints();
@@ -71,7 +78,9 @@ public class ParametersDialog {
                 JOptionPane.INFORMATION_MESSAGE,
                 icon);
         if (result == JOptionPane.OK_OPTION) {
-            BurpPropertiesManager.setKeyAndUrl(keyField.getText(), urlField.getText());
+            burpPropertiesManager.setUrl(urlField.getText());
+            burpPropertiesManager.setKey(keyField.getText());
+            burpPropertiesManager.setAppId(null);
             return true;
         } else {
             return false;

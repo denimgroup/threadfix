@@ -24,15 +24,23 @@
 
 package burp;
 
-import burp.custombutton.EndpointsButton;
 import burp.custombutton.ExportButton;
+import burp.custombutton.LocalEndpointsButton;
+import burp.custombutton.RemoteEndpointsButton;
+import burp.extention.BurpPropertiesManager;
+import burp.extention.RestUtils;
+import com.denimgroup.threadfix.data.entities.Application;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -41,14 +49,19 @@ import java.util.List;
  * Time: 2:28 PM
  * To change this template use File | Settings | File Templates.
  */
-public class BurpExtender extends AbstractTableModel implements IBurpExtender, ITab, IHttpListener, IMessageEditorController
+public class BurpExtender implements IBurpExtender, ITab
 {
+    private BurpPropertiesManager burpPropertiesManager;
     private IBurpExtenderCallbacks callbacks;
     private IExtensionHelpers helpers;
-    private JRootPane rootPane;
-    private final List<LogEntry> log = new ArrayList<LogEntry>();
-    private IHttpRequestResponse currentlyDisplayedItem;
-    private JButton b1, b2;
+    private JTabbedPane tabbedPane;
+    private JTextField urlField;
+    private JTextField keyField;
+    private JLabel apiErrorLabel;
+    private Map<String, String> applicationMap = new HashMap<>();
+    private JComboBox applicationComboBox;
+    private JTextField sourceFolderField;
+    private JTextField targetUrlField;
 
     //
     // implement IBurpExtender
@@ -59,6 +72,8 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
     {
         // keep a reference to our callbacks object
         this.callbacks = callbacks;
+
+        burpPropertiesManager = BurpPropertiesManager.generateBurpPropertiesManager(callbacks);
 
         // obtain an extension helpers object
         helpers = callbacks.getHelpers();
@@ -72,32 +87,195 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
             @Override
             public void run()
             {
-                b1 = new EndpointsButton(getUiComponent(), callbacks);
-                b2 = new ExportButton(getUiComponent(), callbacks);
-                b1.setLocation(10,10);
-                b1.setSize(200,30);
-                b2.setLocation(10,50);
-                b2.setSize(200,30);
+                tabbedPane = new JTabbedPane();
 
-                // main pane
-                rootPane = new JRootPane();
-                rootPane.getContentPane().setLayout(null);
-                rootPane.getContentPane().add(b1);
-                rootPane.getContentPane().add(b2);
+                JPanel mainPanel = buildMainPanel();
+                JScrollPane mainScrollPane = new JScrollPane(mainPanel);
+                tabbedPane.addTab("Main", mainScrollPane);
+
+                JPanel optionsPanel = buildOptionsPanel();
+                JScrollPane optionsScrollPane = new JScrollPane(optionsPanel);
+                tabbedPane.addTab("Options", optionsScrollPane);
 
                 // customize our UI components
-                callbacks.customizeUiComponent(rootPane);
-                callbacks.customizeUiComponent(b1);
-                callbacks.customizeUiComponent(b2);
+                callbacks.customizeUiComponent(tabbedPane);
 
                 // add the custom tab to Burp's UI
                 callbacks.addSuiteTab(BurpExtender.this);
-
-                // register ourselves as an HTTP listener
-                callbacks.registerHttpListener(BurpExtender.this);
-
             }
         });
+    }
+
+    private JPanel buildMainPanel() {
+        JPanel mainPanel = new JPanel();
+
+        JButton localEndpointsButton = new LocalEndpointsButton(getUiComponent(), callbacks);
+        callbacks.customizeUiComponent(localEndpointsButton);
+
+        JButton remoteEndpointsButton = new RemoteEndpointsButton(getUiComponent(), callbacks);
+        callbacks.customizeUiComponent(remoteEndpointsButton);
+
+        JButton exportButton = new ExportButton(getUiComponent(), callbacks);
+        callbacks.customizeUiComponent(exportButton);
+
+        localEndpointsButton.setLocation(10, 10);
+        localEndpointsButton.setSize(300, 30);
+        remoteEndpointsButton.setLocation(10, 50);
+        remoteEndpointsButton.setSize(300, 30);
+        exportButton.setLocation(10, 90);
+        exportButton.setSize(300, 30);
+        mainPanel.setLayout(null);
+        mainPanel.add(localEndpointsButton);
+        mainPanel.add(remoteEndpointsButton);
+        mainPanel.add(exportButton);
+
+        return mainPanel;
+    }
+
+    private JPanel buildOptionsPanel() {
+        final JPanel optionsPanel = new JPanel();
+        optionsPanel.addHierarchyListener(new HierarchyListener() {
+            @Override
+            public void hierarchyChanged(HierarchyEvent e) {
+                boolean tabIsShowing = optionsPanel.isShowing();
+                if (tabIsShowing) {
+                    loadOptionsProperties();
+                } else {
+                    burpPropertiesManager.saveProperties();
+                }
+            }
+        });
+        optionsPanel.setLayout(new GridBagLayout());
+        Insets optionsPanelInsets = new Insets(10, 10, 10, 10);
+        int yPosition = 0;
+
+        JPanel parametersPanel = buildParametersPanel();
+        GridBagConstraints parametersPanelConstraints = new GridBagConstraints();
+        parametersPanelConstraints.gridx = 0;
+        parametersPanelConstraints.gridy = yPosition++;
+        parametersPanelConstraints.ipadx = 5;
+        parametersPanelConstraints.ipady = 5;
+        parametersPanelConstraints.insets = optionsPanelInsets;
+        parametersPanelConstraints.anchor = GridBagConstraints.NORTHWEST;
+        optionsPanel.add(parametersPanel, parametersPanelConstraints);
+
+        JSeparator parametersPanelSeparator = new JSeparator(JSeparator.HORIZONTAL);
+        callbacks.customizeUiComponent(parametersPanelSeparator);
+        GridBagConstraints parametersPanelSeparatorConstraints = new GridBagConstraints();
+        parametersPanelSeparatorConstraints.gridx = 0;
+        parametersPanelSeparatorConstraints.gridy = yPosition++;
+        parametersPanelSeparatorConstraints.insets = optionsPanelInsets;
+        parametersPanelSeparatorConstraints.fill = GridBagConstraints.HORIZONTAL;
+        parametersPanelSeparatorConstraints.anchor = GridBagConstraints.NORTH;
+        optionsPanel.add(parametersPanelSeparator, parametersPanelSeparatorConstraints);
+
+        JPanel sourcePanel = buildSourcePanel();
+        GridBagConstraints sourcePanelConstraints = new GridBagConstraints();
+        sourcePanelConstraints.gridx = 0;
+        sourcePanelConstraints.gridy = yPosition++;
+        sourcePanelConstraints.ipadx = 5;
+        sourcePanelConstraints.ipady = 5;
+        sourcePanelConstraints.insets = optionsPanelInsets;
+        sourcePanelConstraints.anchor = GridBagConstraints.NORTHWEST;
+        optionsPanel.add(sourcePanel, sourcePanelConstraints);
+
+        JSeparator sourcePanelSeparator = new JSeparator(JSeparator.HORIZONTAL);
+        callbacks.customizeUiComponent(sourcePanelSeparator);
+        GridBagConstraints sourcePanelSeparatorConstraints = new GridBagConstraints();
+        sourcePanelSeparatorConstraints.gridx = 0;
+        sourcePanelSeparatorConstraints.gridy = yPosition++;
+        sourcePanelSeparatorConstraints.insets = optionsPanelInsets;
+        sourcePanelSeparatorConstraints.fill = GridBagConstraints.HORIZONTAL;
+        sourcePanelSeparatorConstraints.anchor = GridBagConstraints.NORTH;
+        optionsPanel.add(sourcePanelSeparator, sourcePanelSeparatorConstraints);
+
+        JPanel targetPanel = buildTargetPanel();
+        GridBagConstraints targetPanelConstraints = new GridBagConstraints();
+        targetPanelConstraints.gridx = 0;
+        targetPanelConstraints.gridy = yPosition++;
+        targetPanelConstraints.ipadx = 5;
+        targetPanelConstraints.ipady = 5;
+        targetPanelConstraints.insets = optionsPanelInsets;
+        targetPanelConstraints.weightx = 1.0;
+        targetPanelConstraints.weighty = 1.0;
+        targetPanelConstraints.anchor = GridBagConstraints.NORTHWEST;
+        optionsPanel.add(targetPanel, targetPanelConstraints);
+
+        loadOptionsProperties();
+
+        return optionsPanel;
+    }
+
+    private JPanel buildParametersPanel() {
+        JPanel parametersPanel = new JPanel();
+        parametersPanel.setLayout(new GridBagLayout());
+        int yPosition = 0;
+
+        Runnable applicationComboBoxRunnable = new Runnable() {
+            @Override
+            public void run() {
+                updateApplicationComboBox(applicationMap, apiErrorLabel, applicationComboBox);
+            }
+        };
+        ActionListener applicationComboBoxActionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String applicationName = (String) applicationComboBox.getSelectedItem();
+                String applicationId = applicationMap.get(applicationName);
+                burpPropertiesManager.setPropertyValue(BurpPropertiesManager.APP_ID_KEY, applicationId);
+            }
+        };
+
+        final JLabel parametersPanelTitle = addPanelTitleToGridBagLayout("Threadfix Server", parametersPanel, yPosition++);
+        final JLabel parametersPanelDescription = addPanelDescriptionToGridBagLayout("These settings let you connect to a Threadfix server and choose an Application.", parametersPanel, yPosition++);
+        urlField = addTextFieldToGridBagLayout("Threadfix Server URL:", parametersPanel, yPosition++, BurpPropertiesManager.THREADFIX_URL_KEY, applicationComboBoxRunnable);
+        keyField = addTextFieldToGridBagLayout("API Key:", parametersPanel, yPosition++, BurpPropertiesManager.API_KEY_KEY, applicationComboBoxRunnable);
+        applicationComboBox = addComboBoxToGridBagLayout("Pick an Application", parametersPanel, yPosition++, applicationComboBoxActionListener);
+        apiErrorLabel = addErrorMessageToGridBagLayout(parametersPanel, yPosition++);
+
+        return parametersPanel;
+    }
+
+    private JPanel buildSourcePanel() {
+        final JPanel sourcePanel = new JPanel();
+        sourcePanel.setLayout(new GridBagLayout());
+        int yPosition = 0;
+
+        final JLabel sourcePanelTitle = addPanelTitleToGridBagLayout("Local Source Code", sourcePanel, yPosition++);
+        final JLabel sourcePanelDescription = addPanelDescriptionToGridBagLayout("This setting lets you configure the location of your source code.", sourcePanel, yPosition++);
+
+        final JButton sourceFolderBrowseButton = new JButton("Select folder ...");
+        sourceFolderBrowseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                JFileChooser chooser = new JFileChooser();
+                String currentDirectory = sourceFolderField.getText();
+                if ((currentDirectory == null) || (currentDirectory.trim().equals(""))) {
+                    currentDirectory = System.getProperty("user.home");
+                }
+                chooser.setCurrentDirectory(new java.io.File(currentDirectory));
+                chooser.setDialogTitle("Please select the folder containing the source code");
+                chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                chooser.setAcceptAllFileFilterUsed(false);
+                if (chooser.showOpenDialog(sourcePanel) == JFileChooser.APPROVE_OPTION) {
+                    sourceFolderField.setText(chooser.getSelectedFile().getAbsolutePath());
+                }
+            }
+        });
+        sourceFolderField = addTextFieldToGridBagLayout("Location of source code folder:", sourcePanel, yPosition++, BurpPropertiesManager.SOURCE_FOLDER_KEY, sourceFolderBrowseButton);
+
+        return sourcePanel;
+    }
+
+    private JPanel buildTargetPanel() {
+        final JPanel targetPanel = new JPanel();
+        targetPanel.setLayout(new GridBagLayout());
+        int yPosition = 0;
+
+        final JLabel targetPanelTitle = addPanelTitleToGridBagLayout("Target URL", targetPanel, yPosition++);
+        targetUrlField = addTextFieldToGridBagLayout("Please enter the target URL:", targetPanel, yPosition++, BurpPropertiesManager.TARGET_URL_KEY);
+
+        return targetPanel;
     }
 
     //
@@ -113,121 +291,252 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
     @Override
     public Component getUiComponent()
     {
-        return rootPane;
+        return tabbedPane;
     }
 
-    //
-    // implement IHttpListener
-    //
+    private class ThreadfixPropertyFieldDocumentListener implements DocumentListener {
+        private JTextField jTextField;
+        private String propertyName;
+        private Runnable runnable;
 
-    @Override
-    public void processHttpMessage(int toolFlag, boolean messageIsRequest, IHttpRequestResponse messageInfo)
-    {
-        // only process responses
-        if (!messageIsRequest)
-        {
-            // create a new log entry with the message details
-            synchronized(log)
-            {
-                int row = log.size();
-                log.add(new LogEntry(toolFlag, callbacks.saveBuffersToTempFiles(messageInfo),
-                        helpers.analyzeRequest(messageInfo).getUrl()));
-                fireTableRowsInserted(row, row);
+        public ThreadfixPropertyFieldDocumentListener(JTextField jTextField, String propertyName) {
+            this(jTextField, propertyName, null);
+        }
+
+        public ThreadfixPropertyFieldDocumentListener(JTextField jTextField, String propertyName, Runnable runnable) {
+            this.jTextField = jTextField;
+            this.propertyName = propertyName;
+            this.runnable = runnable;
+        }
+
+        protected void update() {
+            burpPropertiesManager.setPropertyValue(propertyName, jTextField.getText().trim());
+            if (runnable != null) {
+                runnable.run();
             }
         }
-    }
 
-    //
-    // extend AbstractTableModel
-    //
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            update();
+        }
 
-    @Override
-    public int getRowCount()
-    {
-        return log.size();
-    }
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            update();
+        }
 
-    @Override
-    public int getColumnCount()
-    {
-        return 2;
-    }
-
-    @Override
-    public String getColumnName(int columnIndex)
-    {
-        switch (columnIndex)
-        {
-            case 0:
-                return "Tool";
-            case 1:
-                return "URL";
-            default:
-                return "";
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            update();
         }
     }
 
-    @Override
-    public Class<?> getColumnClass(int columnIndex)
-    {
-        return String.class;
+    private void loadOptionsProperties() {
+        urlField.setText(burpPropertiesManager.getUrl());
+        keyField.setText(burpPropertiesManager.getKey());
+        updateApplicationComboBox(applicationMap, apiErrorLabel, applicationComboBox);
+        sourceFolderField.setText(burpPropertiesManager.getSourceFolder());
+        targetUrlField.setText(burpPropertiesManager.getTargetUrl());
     }
 
-    @Override
-    public Object getValueAt(int rowIndex, int columnIndex)
-    {
-        LogEntry logEntry = log.get(rowIndex);
+    private void updateApplicationComboBox(Map<String, String> applicationMap, JLabel apiErrorLabel, JComboBox applicationComboBox) {
+        applicationComboBox.setEnabled(false);
+        ActionListener[] applicationComboBoxActionListeners = applicationComboBox.getActionListeners();
+        for (ActionListener applicationComboBoxActionListener : applicationComboBoxActionListeners) {
+            applicationComboBox.removeActionListener(applicationComboBoxActionListener);
+        }
 
-        switch (columnIndex)
-        {
-            case 0:
-                return callbacks.getToolName(logEntry.tool);
-            case 1:
-                return logEntry.url.toString();
-            default:
-                return "";
+        updateApplicationMapData(applicationMap);
+        Object[] possibilities = applicationMap.keySet().toArray();
+
+        boolean failedToConnect = false;
+        String failureMessage = "";
+        if (possibilities.length != 0 && possibilities[0].toString().startsWith("Authentication failed")) {
+            failedToConnect = true;
+            failureMessage = possibilities[0].toString();
+        }
+        else if (possibilities.length == 0) {
+            failedToConnect = true;
+            failureMessage = "Failed while trying to get a list of applications from ThreadFix.";
+        }
+
+        String currentAppId = burpPropertiesManager.getAppId();
+        applicationComboBox.removeAllItems();
+        if (failedToConnect) {
+            apiErrorLabel.setText(failureMessage);
+        } else {
+            apiErrorLabel.setText("");
+            for (Object possibility : possibilities) {
+                applicationComboBox.addItem(possibility);
+            }
+            String currentAppName = applicationMap.get(currentAppId);
+            for (String appName : applicationMap.keySet()) {
+                if(applicationMap.get(appName).equals(currentAppId)) {
+                    currentAppName = appName;
+                    break;
+                }
+            }
+            applicationComboBox.setSelectedItem(currentAppName);
+        }
+        for (ActionListener applicationComboBoxActionListener : applicationComboBoxActionListeners) {
+            applicationComboBox.addActionListener(applicationComboBoxActionListener);
+        }
+        applicationComboBox.setEnabled(!failedToConnect);
+    }
+
+    private void updateApplicationMapData(Map<String, String> applicationMap) {
+        Application.Info[] infos;
+        try {
+            infos = RestUtils.getApplications();
+        } catch (Exception e) {
+            infos = new Application.Info[0];
+        }
+        applicationMap.clear();
+        for (Application.Info info : infos) {
+            applicationMap.put(info.getOrganizationName() + "/" + info.getApplicationName(),
+                    info.getApplicationId());
         }
     }
 
-    //
-    // implement IMessageEditorController
-    // this allows our request/response viewers to obtain details about the messages being displayed
-    //
-
-    @Override
-    public byte[] getRequest()
-    {
-        return currentlyDisplayedItem.getRequest();
+    private JLabel addPanelTitleToGridBagLayout(String titleText, Container gridBagContainer, int yPosition) {
+        final JLabel panelTitle = new JLabel(titleText, JLabel.LEFT);
+        panelTitle.setForeground(new Color(236, 136, 0));
+        Font font = panelTitle.getFont();
+        panelTitle.setFont(new Font(font.getFontName(), font.getStyle(), font.getSize() + 4));
+        panelTitle.setHorizontalAlignment(SwingConstants.LEFT);
+        callbacks.customizeUiComponent(panelTitle);
+        GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = yPosition;
+        gridBagConstraints.ipadx = 5;
+        gridBagConstraints.ipady = 5;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.NORTH;
+        gridBagContainer.add(panelTitle, gridBagConstraints);
+        return panelTitle;
     }
 
-    @Override
-    public byte[] getResponse()
-    {
-        return currentlyDisplayedItem.getResponse();
+    private JLabel addPanelDescriptionToGridBagLayout(String descriptionText, Container gridBagContainer, int yPosition) {
+        final JLabel panelDescription = new JLabel(descriptionText);
+        panelDescription.setHorizontalAlignment(SwingConstants.LEFT);
+        callbacks.customizeUiComponent(panelDescription);
+        GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = yPosition;
+        gridBagConstraints.ipadx = 5;
+        gridBagConstraints.ipady = 5;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagContainer.add(panelDescription, gridBagConstraints);
+        return panelDescription;
     }
 
-    @Override
-    public IHttpService getHttpService()
-    {
-        return currentlyDisplayedItem.getHttpService();
+    private JLabel addErrorMessageToGridBagLayout(Container gridBagContainer, int yPosition) {
+        final JLabel errorMessage = new JLabel("");
+        errorMessage.setForeground(new Color(255, 0, 0));
+        errorMessage.setHorizontalAlignment(SwingConstants.LEFT);
+        callbacks.customizeUiComponent(errorMessage);
+        GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = yPosition;
+        gridBagConstraints.ipadx = 5;
+        gridBagConstraints.ipady = 10;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagContainer.add(errorMessage, gridBagConstraints);
+        return errorMessage;
     }
 
-    //
-    // class to hold details of each log entry
-    //
+    private JTextField addTextFieldToGridBagLayout(String labelText, Container gridBagContainer, int yPosition, String propertyKey) {
+        return addTextFieldToGridBagLayout(labelText, gridBagContainer, yPosition, propertyKey, null, null);
+    }
 
-    private static class LogEntry
-    {
-        final int tool;
-        final IHttpRequestResponsePersisted requestResponse;
-        final URL url;
+    private JTextField addTextFieldToGridBagLayout(String labelText, Container gridBagContainer, int yPosition, String propertyKey, Runnable threadfixPropertyFieldDocumentListenerRunnable) {
+        return addTextFieldToGridBagLayout(labelText, gridBagContainer, yPosition, propertyKey, threadfixPropertyFieldDocumentListenerRunnable, null);
+    }
 
-        LogEntry(int tool, IHttpRequestResponsePersisted requestResponse, URL url)
-        {
-            this.tool = tool;
-            this.requestResponse = requestResponse;
-            this.url = url;
+    private JTextField addTextFieldToGridBagLayout(String labelText, Container gridBagContainer, int yPosition, String propertyKey, JButton button) {
+        return addTextFieldToGridBagLayout(labelText, gridBagContainer, yPosition, propertyKey, null, button);
+    }
+
+    private JTextField addTextFieldToGridBagLayout(String labelText, Container gridBagContainer, int yPosition, String propertyKey, Runnable threadfixPropertyFieldDocumentListenerRunnable, JButton button) {
+        JLabel textFieldLabel = new JLabel(labelText);
+        callbacks.customizeUiComponent(textFieldLabel);
+        textFieldLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = yPosition;
+        gridBagConstraints.ipadx = 5;
+        gridBagConstraints.ipady = 5;
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagContainer.add(textFieldLabel, gridBagConstraints);
+
+        JTextField textField = new JTextField(40);
+        callbacks.customizeUiComponent(textField);
+        textField.getDocument().addDocumentListener(new ThreadfixPropertyFieldDocumentListener(textField, propertyKey, threadfixPropertyFieldDocumentListenerRunnable));
+        gridBagConstraints = new GridBagConstraints();
+        if (button == null) {
+            gridBagConstraints.gridwidth = 2;
+        } else {
+            gridBagConstraints.gridwidth = 1;
         }
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = yPosition;
+        gridBagConstraints.ipadx = 5;
+        gridBagConstraints.ipady = 5;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.NORTH;
+        gridBagContainer.add(textField, gridBagConstraints);
+
+        if (button != null) {
+            callbacks.customizeUiComponent(button);
+            gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridwidth = 1;
+            gridBagConstraints.gridx = 3;
+            gridBagConstraints.gridy = yPosition;
+            gridBagConstraints.ipadx = 5;
+            gridBagConstraints.ipady = 5;
+            gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+            gridBagConstraints.anchor = GridBagConstraints.NORTH;
+            gridBagContainer.add(button, gridBagConstraints);
+        }
+
+        return textField;
     }
 
+    private JComboBox addComboBoxToGridBagLayout(String labelText, Container gridBagContainer, int yPosition, ActionListener actionListener) {
+        JLabel textFieldLabel = new JLabel(labelText);
+        callbacks.customizeUiComponent(textFieldLabel);
+        textFieldLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = yPosition;
+        gridBagConstraints.ipadx = 5;
+        gridBagConstraints.ipady = 5;
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagContainer.add(textFieldLabel, gridBagConstraints);
+
+        JComboBox comboBox = new JComboBox();
+        comboBox.setEnabled(false);
+        callbacks.customizeUiComponent(comboBox);
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = yPosition;
+        gridBagConstraints.ipadx = 5;
+        gridBagConstraints.ipady = 5;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.NORTH;
+        gridBagContainer.add(comboBox, gridBagConstraints);
+
+        comboBox.addActionListener(actionListener);
+
+        return comboBox;
+    }
 }

@@ -27,9 +27,9 @@ import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.views.AllViews;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonView;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
@@ -249,7 +249,7 @@ public class Application extends AuditableEntity {
 	}
 
     @Transient
-    @JsonView(AllViews.FormInfo.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
     public String getObscuredPassword() {
         if(repositoryEncryptedPassword == null || repositoryEncryptedPassword.trim().length() == 0) {
             return "";
@@ -259,14 +259,14 @@ public class Application extends AuditableEntity {
     }
 
     @Transient
-    @JsonView(AllViews.FormInfo.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
     public String getObscuredUserName() throws IllegalAccessException {
         return repositoryUserName;
     }
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "defectTrackerId")
-    @JsonView(AllViews.FormInfo.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
     public DefectTracker getDefectTracker() {
 		return defectTracker;
 	}
@@ -616,7 +616,7 @@ public class Application extends AuditableEntity {
 	}
 	
 	@Column(length = ENUM_LENGTH)
-    @JsonView(AllViews.FormInfo.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
 	public String getFrameworkType() {
 		return frameworkType;
 	}
@@ -636,7 +636,7 @@ public class Application extends AuditableEntity {
 	}
 
 	@Column(length = URL_LENGTH)
-    @JsonView(AllViews.FormInfo.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
 	public String getRepositoryUrl() {
 		return repositoryUrl;
 	}
@@ -645,7 +645,7 @@ public class Application extends AuditableEntity {
 		this.repositoryUrl = repositoryUrl;
 	}
 
-    @JsonView(AllViews.FormInfo.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
     public String getRepositoryBranch() {
         return repositoryBranch;
     }
@@ -664,7 +664,7 @@ public class Application extends AuditableEntity {
     }
 
     @Transient
-    @JsonView(AllViews.FormInfo.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
     public String getRepositoryUserName() {
         return repositoryUserName;
     }
@@ -674,7 +674,7 @@ public class Application extends AuditableEntity {
     }
 
     @Transient
-    @JsonView(AllViews.FormInfo.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
     public String getRepositoryPassword() {
         return repositoryPassword;
     }
@@ -704,7 +704,7 @@ public class Application extends AuditableEntity {
     }
 
     @Column(length = URL_LENGTH)
-    @JsonView(AllViews.FormInfo.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
 	public String getRepositoryFolder() {
 		return repositoryFolder;
 	}
@@ -815,7 +815,7 @@ public class Application extends AuditableEntity {
     }
 
     @Column(nullable = true)
-    @JsonView(AllViews.FormInfo.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
     public Boolean getSkipApplicationMerge() {
         return skipApplicationMerge != null && skipApplicationMerge;
     }

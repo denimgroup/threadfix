@@ -69,6 +69,12 @@ public class RecordToXMLSerializer {
 
             for (int column = 0; column < totalColumns; column++){
                 XSSFCell cell = row.getCell(column);
+
+                if (cell == null) {
+                    // cells are null if there's no data in them; this is fine.
+                    continue;
+                }
+
                 String value = cell.toString();
 
                 if (format.length > column) {

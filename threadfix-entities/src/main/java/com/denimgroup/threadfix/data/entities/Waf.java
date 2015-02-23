@@ -24,9 +24,9 @@
 package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.views.AllViews;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonView;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -77,6 +77,7 @@ public class Waf extends AuditableEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "wafTypeId")
+	@JsonView(AllViews.TableRow.class)
 	public WafType getWafType() {
 		return wafType;
 	}
@@ -138,6 +139,7 @@ public class Waf extends AuditableEntity {
 	}
 	
 	@Transient
+	@JsonView(AllViews.TableRow.class)
 	public boolean getCanDelete() {
 		boolean hasActiveApplication = false;
 		if (getApplications() != null) {

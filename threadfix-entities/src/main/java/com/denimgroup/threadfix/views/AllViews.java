@@ -30,6 +30,8 @@ public class AllViews {
 
     public static interface FormInfo {}
 
+    public static interface GRCToolsPage extends FormInfo {}
+
     public static interface VulnerabilityDetail {}
 
     public static interface VulnSearch {}

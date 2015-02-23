@@ -46,7 +46,7 @@ public class Configuration {
         VALID, NEEDS_HEADERS, NEEDS_INPUT_FILE, NEEDS_OUTPUT_FILE
     }
 
-    public static final Configuration CONFIG = new Configuration();
+    public static Configuration CONFIG = new Configuration();
 
     public String[] headers;
 
@@ -55,6 +55,10 @@ public class Configuration {
     public File csvFile, outputFile;
 
     public Map<String, String> headerMap = getBasicHeaderMap();
+
+    public static void reset() {
+        CONFIG = new Configuration();
+    }
 
     private Map<String, String> getBasicHeaderMap() {
         Map<String, String> returnMap = newMap();
@@ -85,15 +89,7 @@ public class Configuration {
 
             isExcelFile = isExcelFile || POIFSFileSystem.hasPOIFSHeader(maybeExcelStream);
 
-            if (isExcelFile) {
-                System.out.println("We have detected an Excel file.");
-                System.out.println("Please open the file in Excel, click Save As..., select CSV as the type, then click Save.");
-                System.out.println("Then enter the path to the new CSV file in this dialog.");
-                return true;
-            } else {
-                return false;
-            }
-
+            return isExcelFile;
         } catch (IOException e) {
             System.out.println("Somehow got a FileNotFoundException. Please try again.");
             e.printStackTrace();

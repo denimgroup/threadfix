@@ -74,4 +74,12 @@ public class Option<T> {
         return isValid() ? this : new Option<T>(t, null);
     }
 
+    public String toString() {
+        if (isValid()) {
+            return "Some[" + value + "]";
+        } else {
+            return "None";
+        }
+    }
+
 }

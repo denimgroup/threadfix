@@ -159,6 +159,32 @@ public class QueueSenderImpl implements QueueSender {
 		sendMap(defectTrackerVulnMap);
 	}
 
+	@Override
+	public void addGrcToolVulnUpdate(Integer orgId, Integer appId) {
+
+		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+
+		log.info("User " + userName + " is adding a GRC Controls update for application with ID " + appId + ".");
+
+		if (appId == null)
+			return;
+
+		MapMessage grcToolVulnMap = new ActiveMQMapMessage();
+
+		try {
+			grcToolVulnMap.setInt("appId", appId);
+			grcToolVulnMap.setString("type", QueueConstants.GRC_CONTROLS_UPDATE_TYPE);
+			grcToolVulnMap.setString("urlPath",
+					"/organizations/" + orgId + "/applications/" + appId);
+			grcToolVulnMap.setString("urlText", "Go to Application");
+		} catch (JMSException e) {
+			log.error(jmsErrorString);
+			e.printStackTrace();
+		}
+
+		sendMap(grcToolVulnMap);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

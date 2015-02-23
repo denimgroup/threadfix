@@ -24,9 +24,9 @@
 
 package com.denimgroup.threadfix.data.entities;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonView;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -65,6 +65,7 @@ public class GRCApplication extends AuditableEntity {
 
     private List<GRCControl> grcControls;
 
+    @JsonView(Object.class)
     public String getNativeId() {
         return nativeId;
     }
@@ -73,6 +74,7 @@ public class GRCApplication extends AuditableEntity {
         this.nativeId = nativeId;
     }
 
+    @JsonView(Object.class)
     public String getPolicyNumber() {
         return policyNumber;
     }
@@ -81,6 +83,7 @@ public class GRCApplication extends AuditableEntity {
         this.policyNumber = policyNumber;
     }
 
+    @JsonView(Object.class)
     public String getName() {
         return name;
     }

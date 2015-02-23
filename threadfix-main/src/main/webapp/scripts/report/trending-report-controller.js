@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('TrendingReportController', function($scope, $rootScope, $window, $http, tfEncoder, reportUtilities, filterService, trendingUtilities, reportConstants) {
+module.controller('TrendingReportController', function($scope, $rootScope, $window, $http, tfEncoder, reportUtilities, filterService, trendingUtilities, reportConstants, reportExporter) {
 
     $scope.parameters = {};
     $scope.filterScans = [];
@@ -21,7 +21,7 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
             var parameters = JSON.parse(filter.json);
             return (parameters.filterType && parameters.filterType.isTrendingFilter);
         });
-        filterService.findDefaultFilter($scope);
+        $scope.savedDefaultTrendingFilter = filterService.findDefaultFilter($scope);
 
         if (!$scope.allScans) {
             $scope.loading = true;
@@ -73,7 +73,7 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
         if (!$scope.$parent.trendingActive)
             return;
         $scope.parameters = angular.copy(parameters);
-        trendingUtilities.updateDisplayData($scope);
+        trendingUtilities.refreshScans($scope);
     });
 
     $scope.exportPNG = function(isPDF){
@@ -92,6 +92,16 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
         $scope.exportInfo.apps = $scope.title.apps;
         $scope.exportInfo.tags = undefined;
         $scope.exportInfo.isPDF = isPDF;
+    };
+
+    $scope.exportPDF = function(){
+        $scope.exportInfo = {};
+        $scope.exportInfo.svgId = reportConstants.reportTypes.trending.name;
+        $scope.exportInfo.teams = $scope.title.teams;
+        $scope.exportInfo.apps = $scope.title.apps;
+        $scope.exportInfo.tags = undefined;
+        $scope.exportInfo.title = "Trending_Scans";
+        reportExporter.exportPDFTableFromId($scope.exportInfo)
     };
 
 });

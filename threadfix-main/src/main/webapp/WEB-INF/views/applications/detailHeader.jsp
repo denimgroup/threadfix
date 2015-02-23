@@ -53,6 +53,11 @@
                                 Update Defect Status
                             </a>
                         </li>
+                        <li ng-show="config.application.grcApplication">
+                            <a id="updateGRCControlsLink" ng-click="updateControlStatus()">
+                                Update GRC Control Status
+                            </a>
+                        </li>
                     </c:if>
                 </ul>
             </div>

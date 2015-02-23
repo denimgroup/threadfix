@@ -418,16 +418,12 @@ public class ApplicationServiceImpl implements ApplicationService {
 					new String [] { "Criticality" }, null);
 		}
 		
-		boolean canManageWafs = false, canManageDefectTrackers = false;
+		boolean canManageApplications = false;
 
         if (permissionService == null) { // not enterprise, which means everyone is admin
-            canManageDefectTrackers = true;
-            canManageWafs = true;
+			canManageApplications = true;
         } else if (application.getOrganization() != null) {
-			canManageWafs = permissionService.isAuthorized(Permission.CAN_MANAGE_WAFS,
-					application.getOrganization().getId(), application.getId());
-			
-			canManageDefectTrackers = permissionService.isAuthorized(Permission.CAN_MANAGE_DEFECT_TRACKERS,
+			canManageApplications = permissionService.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,
 					application.getOrganization().getId(), application.getId());
 		}
 		
@@ -442,11 +438,8 @@ public class ApplicationServiceImpl implements ApplicationService {
             }
         }
 
-		if (oldApp != null && !canManageWafs) {
+		if (oldApp != null && !canManageApplications) {
 			application.setWaf(oldApp.getWaf());
-		}
-		
-		if (oldApp != null && !canManageDefectTrackers) {
 			application.setDefectTracker(oldApp.getDefectTracker());
 		}
 		

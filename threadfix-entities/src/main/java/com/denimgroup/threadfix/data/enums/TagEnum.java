@@ -25,8 +25,8 @@
 package com.denimgroup.threadfix.data.enums;
 
 public enum TagEnum {
-	PCI("PCI","{\"tags\":[],\"severities\":{\"critical\":true,\"high\":true,\"medium\":true,\"low\":true,\"info\":true},\"daysOldModifier\":\"LastYear\",\"filterType\":{\"isComplianceFilter\":true}}"),
-	HIPAA("HIPAA","{\"tags\":[],\"severities\":{\"critical\":true,\"high\":true,\"medium\":true,\"low\":false,\"info\":false},\"daysOldModifier\":\"LastYear\",\"filterType\":{\"isComplianceFilter\":true}}");
+	PCI("PCI","{\"tags\":[],\"severities\":{\"critical\":true,\"high\":true,\"medium\":true,\"low\":true,\"info\":true},\"daysOldModifier\":\"Forever\",\"filterType\":{\"isComplianceFilter\":true}}"),
+	HIPAA("HIPAA","{\"tags\":[],\"severities\":{\"critical\":true,\"high\":true,\"medium\":true,\"low\":false,\"info\":false},\"daysOldModifier\":\"Forever\",\"filterType\":{\"isComplianceFilter\":true}}");
 
 	private String name, defaultFilter;
 

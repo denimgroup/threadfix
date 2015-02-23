@@ -23,7 +23,7 @@ myAppModule.controller('LeftReportController', function ($scope, $window, thread
                 $scope.savedFilters = data.object.savedFilters;
 
                 if ($scope.allScans) {
-                    filterService.findDefaultFilter($scope);
+                    $scope.savedDefaultTrendingFilter = filterService.findDefaultFilter($scope);
                     trendingUtilities.resetFilters($scope);
 
                     $scope.allScans.sort(function (a, b) {

@@ -30,7 +30,9 @@ import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -45,7 +47,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
@@ -69,8 +74,10 @@ public class WafsController {
 		return "wafs/index";
 	}
 
-    @RequestMapping(value = "/map", method = RequestMethod.GET)
-    public @ResponseBody RestResponse<Map<String, Object>> map() {
+	@JsonView(AllViews.TableRow.class)
+	@RequestMapping(value = "/map", method = RequestMethod.GET)
+	@ResponseBody
+	public Object map() {
         Map<String, Object> responseMap = new HashMap<>();
 
         responseMap.put("wafs", wafService.loadAll());
@@ -173,7 +180,8 @@ public class WafsController {
 
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_WAFS')")
 	@RequestMapping("/{wafId}/delete")
-	public String deleteWaf(@PathVariable("wafId") int wafId, 
+	@ResponseBody
+	public Object deleteWaf(@PathVariable("wafId") int wafId,
 			SessionStatus status, HttpServletRequest request) {
 		Waf waf = wafService.loadWaf(wafId);
 		boolean canDelete = waf != null && waf.getCanDelete();
@@ -181,12 +189,13 @@ public class WafsController {
 		if (waf != null && canDelete) {
 			wafService.deleteById(wafId);
 			status.setComplete();
-			return "redirect:/wafs";
+			return RestResponse.success("Successfully deleted.");
 		} else {
 			
 			// For now we can't do this.
-			log.warn("The user has attempted to delete a WAF with application mappings.");
-			return "redirect:/wafs/" + wafId;
+			String error = "The user has attempted to delete a WAF with application mappings.";
+			log.warn(error);
+			return RestResponse.failure(error);
 		}
 	}
 

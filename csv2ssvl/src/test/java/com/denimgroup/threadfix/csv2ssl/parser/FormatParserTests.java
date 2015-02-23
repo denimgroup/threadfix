@@ -23,8 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.csv2ssl.parser;
 
+import com.denimgroup.threadfix.csv2ssl.checker.Configuration;
 import com.denimgroup.threadfix.csv2ssl.util.Option;
 import com.denimgroup.threadfix.csv2ssl.util.Strings;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -32,24 +34,9 @@ import org.junit.Test;
  */
 public class FormatParserTests {
 
-    @Test
-    public void testBasicFormat() {
-        Option<String[]> stringOption = parseFromString("test,bad,data");
-
-        if (!stringOption.isValid()) {
-            System.out.println(stringOption.getErrorMessage());
-        }
-
-        assert !stringOption.isValid() : "Unexpectedly got valid for test,bad,data";
-    }
-
-    @Test
-    public void testContainsFormatEquals() {
-        Option<String[]> stringOption = parseFromString("test,bad,data");
-
-        assert !stringOption.isValid() : "Unexpectedly got valid for test,bad,data";
-
-        assert !stringOption.getErrorMessage().contains("-format=");
+    @Before
+    public void init() {
+        Configuration.reset();
     }
 
     @Test

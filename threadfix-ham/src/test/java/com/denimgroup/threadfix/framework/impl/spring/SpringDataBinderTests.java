@@ -42,7 +42,7 @@ import static org.junit.Assert.assertTrue;
 // TODO add more tests?
 public class SpringDataBinderTests {
 
-    File editAppController = ResourceManager.getSpringFile("databinder/EditApplicationController.java");
+    File editAppController = ResourceManager.getSpringFile("databinder/EditApplicationController2.java");
 
     Set<String> defaultParameters = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("name", "url", "defectTracker.id", "userName",
             "password", "waf.id", "projectName", "projectRoot", "applicationCriticality.id",

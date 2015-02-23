@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('ComplianceReportController', function($scope, $rootScope, $window, $http, tfEncoder, reportUtilities, trendingUtilities, reportConstants) {
+module.controller('ComplianceReportController', function($scope, $rootScope, $window, $http, tfEncoder, reportUtilities, trendingUtilities, reportConstants, reportExporter) {
 
     $scope.parameters = {};
     $scope.filterScans = [];
@@ -8,20 +8,24 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
     $scope.margin = [70, 70, 100, 70];
 
     $scope.resetFilters = function() {
-        $scope.parameters = {
-            tags: [],
-            severities: {
-                critical: true,
-                high: true,
-                medium: true,
-                low: true,
-                info: true
-            },
-            daysOldModifier: 'LastYear',
-            endDate: undefined,
-            startDate: undefined,
-            remediationType: $scope.remediationType
-        };
+        if ($scope.remediationType === 2 && $scope.currentTag) {
+            $scope.addNewTag($scope.currentTag);
+        } else {
+            $scope.parameters = {
+                tags: [],
+                severities: {
+                    critical: true,
+                    high: true,
+                    medium: true,
+                    low: true,
+                    info: true
+                },
+                daysOldModifier: 'Forever',
+                endDate: undefined,
+                startDate: undefined,
+                remediationType: $scope.remediationType
+            };
+        }
     };
 
     $scope.$on('loadComplianceReport', function() {
@@ -85,7 +89,6 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
         $scope.$broadcast("updateTableVulnerabilities");
     };
 
-
     $scope.$on('updateDisplayData', function(event, parameters) {
         if (!$scope.$parent.complianceActive
             && !$scope.$parent.remediationEnterpriseActive)
@@ -93,14 +96,14 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
         if ($scope.remediationType !== parameters.remediationType)
             return;
         $scope.parameters = angular.copy(parameters);
-        trendingUtilities.updateDisplayData($scope);
+        trendingUtilities.refreshScans($scope);
         renderTable();
         $scope.$broadcast("updateTableVulnerabilities");
     });
 
     var renderTable = function() {
         var startingInfo, endingInfo;
-            $scope.tableInfo = [];
+        $scope.tableInfo = [];
         if ($scope.trendingScansData.length> 0) {
             startingInfo = (trendingUtilities.getFirstHashInList()) ? trendingUtilities.getFirstHashInList() : $scope.trendingScansData[0];
             endingInfo = (trendingUtilities.getLastHashInList()) ? trendingUtilities.getLastHashInList() : $scope.trendingScansData[$scope.trendingScansData.length-1];
@@ -143,6 +146,40 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
         $scope.exportInfo.isPDF = isPDF;
     };
 
+    $scope.exportPDF = function(){
+
+        $scope.exportingPDF = true;
+
+        var reportType = getReportType();
+        $scope.numberVulnType = 0;
+        $scope.exportInfo = {};
+        $scope.exportInfo.svgId = reportType.name;
+        $scope.exportInfo.tableId = $scope.sumTableDivId + "Cmt";
+        $scope.exportInfo.tags = $scope.title.tags;
+        $scope.exportInfo.teams = undefined;
+        $scope.exportInfo.apps = undefined;
+        $scope.exportInfo.title = "Compliance_Report";
+
+    };
+
+    $scope.$on("finishedretrievingPdfExportAllTagsVuln", function(){
+        $scope.numberVulnType +=1;
+
+        // Done with loading both closed and open vulnerabilities
+        if ($scope.numberVulnType === 2) {
+            var reportType = getReportType();
+            $scope.exportInfo = {};
+            $scope.exportInfo.svgId = reportType.name;
+            $scope.exportInfo.tableId = $scope.sumTableDivId + "Cmt";
+            $scope.exportInfo.tags = $scope.title.tags;
+            $scope.exportInfo.teams = undefined;
+            $scope.exportInfo.apps = undefined;
+            $scope.exportInfo.title = "Compliance_Report";
+            reportExporter.exportPDFTableFromId($scope.exportInfo, $scope.tableInfo)
+            $scope.exportingPDF = false;
+        }
+    });
+
     var getReportType = function() {
         if ($scope.$parent.complianceActive)
             return reportConstants.reportTypes.compliance;
@@ -165,6 +202,7 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
         $scope.enterpriseTags.some(function(tag) {
             if (tag.name === name) {
                 $scope.parameters =  JSON.parse(tag.defaultJsonFilter);
+                $scope.currentTag = name;
                 return true;
             }
         });
@@ -172,7 +210,6 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
         $scope.parameters.tags = [];
         $scope.parameters.tags.push({name: name});
         $scope.parameters.remediationType = $scope.remediationType;
-    }
-
+    };
 
 });

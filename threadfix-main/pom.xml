@@ -123,16 +123,29 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>Base64-to-classes</id>
+                        <id>Copy Downloads</id>
                         <phase>prepare-package</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
                         <configuration>
                             <tasks>
-                                <copy file="${project.build.directory}/unpacked-jars/org/apache/commons/codec/binary/Base64.class"
-                                      tofile="target/classes/org/apache/commons/codec/binary/Base64.class" />
-                                <delete dir="target/unpacked-jars" includeemptydirs="true"/>
+                                <copy file="${project.build.directory}/../../threadfix-cli/target/threadfix-cli-${project.version}-jar-with-dependencies.jar"
+                                      tofile="target/classes/downloads/tfcli.jar" />
+                                <copy file="${project.build.directory}/../../threadfix-cli-importers/target/threadfix-cli-importers-${project.version}.jar"
+                                      tofile="target/classes/downloads/threadfix-cli-importers.jar" />
+                                <copy file="${project.build.directory}/../../threadfix-cli-endpoints/target/threadfix-endpoint-cli-${project.version}-jar-with-dependencies.jar"
+                                      tofile="target/classes/downloads/endpoints.jar" />
+                                <copy file="${project.build.directory}/../../threadfix-data-migration/target/threadfix-data-migration-${project.version}.jar"
+                                      tofile="target/classes/downloads/threadfix-data-migration.jar" />
+                                <copy file="${project.build.directory}/../../threadfix-scanner-plugin/burp/target/threadfix-release-2-jar-with-dependencies.jar"
+                                      tofile="target/classes/downloads/threadfix-release-2-burp.jar" />
+                                <copy file="${project.build.directory}/../../threadfix-scanner-plugin/zaproxy/target/threadfix-release-2.zap"
+                                      tofile="target/classes/downloads/threadfix-release-2.zap" />
+                                <copy file="${project.build.directory}/../../threadfix-sonar-plugin/target/sonar-threadfix-plugin-${project.version}.jar"
+                                      tofile="target/classes/downloads/sonar-threadfix-plugin.jar" />
+                                <copy file="${project.build.directory}/../../csv2ssvl/target/CSV2SSVL-1.0-SNAPSHOT-jar-with-dependencies.jar"
+                                      tofile="target/classes/downloads/csv2ssvl.jar" />
                             </tasks>
                         </configuration>
                     </execution>
@@ -578,6 +591,28 @@
             <groupId>com.sourceclear.headlines</groupId>
             <artifactId>complete</artifactId>
             <version>0.1.6</version>
+        </dependency>
+
+        <!-- the core, which includes Streaming API, shared low-level abstractions (but NOT data-binding) -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson-2-version}</version>
+        </dependency>
+
+        <!-- Just the annotations; use this dependency if you want to attach annotations
+             to classes without connecting them to the code. -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson-2-version}</version>
+        </dependency>
+
+        <!-- databinding; ObjectMapper, JsonNode and related classes are here -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson-2-version}</version>
         </dependency>
     </dependencies>
 

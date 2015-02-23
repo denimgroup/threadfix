@@ -23,16 +23,16 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
-import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -67,9 +67,11 @@ public class EditWafController {
 	public List<WafType> populateWafTypes() {
 		return wafService.loadAllWafTypes();
 	}
-	
+
+	@JsonView(AllViews.TableRow.class)
 	@RequestMapping(method = RequestMethod.POST)
-	public @ResponseBody RestResponse<List<Waf>> editSubmitFromTable(@PathVariable("wafId") int wafId, @Valid @ModelAttribute Waf waf,
+	@ResponseBody
+	public Object editSubmitFromTable(@PathVariable("wafId") int wafId, @Valid @ModelAttribute Waf waf,
 			BindingResult result, SessionStatus status, Model model) {
 		
 		String editResult = editSubmit(wafId, waf, result, status, model);
@@ -130,16 +132,5 @@ public class EditWafController {
 			
 			return "Success";
 		}
-	}
-	
-	private String index(Model model, String successMessage) {
-		model.addAttribute(wafService.loadAll());
-		model.addAttribute("newWaf", new Waf());
-		model.addAttribute("waf", new Waf());
-		model.addAttribute("wafPage", true);
-		model.addAttribute("successMessage", successMessage);
-        PermissionUtils.addPermissions(model, null, null, Permission.CAN_MANAGE_WAFS);
-		model.addAttribute("contentPage", "wafs/wafsTable.jsp");
-		return "ajaxSuccessHarness";
 	}
 }

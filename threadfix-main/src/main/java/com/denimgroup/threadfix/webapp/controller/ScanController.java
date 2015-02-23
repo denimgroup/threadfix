@@ -30,12 +30,11 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
-import org.codehaus.jackson.map.ObjectWriter;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,7 +50,6 @@ import java.util.Map;
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans")
 public class ScanController {
 
-    private static final ObjectWriter writer = ControllerUtils.getObjectWriter(AllViews.TableRow.class);
 	private final SanitizedLogger log = new SanitizedLogger(ScanController.class);
 
     @Autowired
@@ -127,7 +125,7 @@ public class ScanController {
 	}
 	
 	@RequestMapping(value = "/{scanId}/table", method = RequestMethod.POST)
-	public @ResponseBody String scanTable(
+	public @ResponseBody Object scanTable(
 			@ModelAttribute TableSortBean bean,
 			@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId,
@@ -165,11 +163,12 @@ public class ScanController {
         responseMap.put("findingList", findingService.getFindingTable(scanId, bean));
         responseMap.put("scan", scan);
 
-        return writer.writeValueAsString(RestResponse.success(responseMap));
+        return RestResponse.success(responseMap);
 	}
-	
+
+	@JsonView(AllViews.TableRow.class)
 	@RequestMapping(value = "/{scanId}/unmappedTable", method = RequestMethod.POST)
-	public @ResponseBody String unmappedScanTable(Model model,
+	public @ResponseBody Object unmappedScanTable(Model model,
 			@ModelAttribute TableSortBean bean,
 			@PathVariable("scanId") Integer scanId,
 			@PathVariable("appId") Integer appId,
@@ -207,11 +206,12 @@ public class ScanController {
         responseMap.put("findingList", findingService.getUnmappedFindingTable(scanId, bean));
         responseMap.put("scan", scan);
 
-        return writer.writeValueAsString(RestResponse.success(responseMap));
+        return RestResponse.success(responseMap);
 	}
 
+	@JsonView(AllViews.TableRow.class)
 	@RequestMapping(value = "/{scanId}/cwe", method = RequestMethod.GET)
 	public @ResponseBody Object getGenericVulnerabilities() throws IOException {
-        return writer.writeValueAsString(RestResponse.success(genericVulnerabilityService.loadAll()));
+        return RestResponse.success(genericVulnerabilityService.loadAll());
 	}
 }

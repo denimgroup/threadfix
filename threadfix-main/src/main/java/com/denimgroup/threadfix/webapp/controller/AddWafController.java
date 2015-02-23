@@ -32,12 +32,13 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -48,7 +49,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/wafs/new")
 @SessionAttributes("waf")
 @PreAuthorize("hasRole('ROLE_CAN_MANAGE_WAFS')")
@@ -80,11 +81,12 @@ public class AddWafController {
 		dataBinder.setAllowedFields("name", "wafType.id", "applicationId");
 	}
 
+	@JsonView(AllViews.TableRow.class)
 	@RequestMapping(value="/ajax/appPage", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<Waf> newSubmitAjaxAppPage(@Valid @ModelAttribute Waf waf,
-			BindingResult result,
-			SessionStatus status, Model model,
-			HttpServletRequest request) {
+	public Object newSubmitAjaxAppPage(@Valid @ModelAttribute Waf waf,
+								BindingResult result,
+								SessionStatus status, Model model,
+								HttpServletRequest request) {
 		model.addAttribute("createWafUrl", "/wafs/new/ajax/appPage");
 
 		String validationResult = newSubmit(waf,result,status,model,request);

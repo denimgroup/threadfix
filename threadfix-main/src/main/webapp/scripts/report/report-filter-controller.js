@@ -303,6 +303,6 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
                     $scope.loadingTree = false;
                 });
         };
-    }
+    };
 
 });

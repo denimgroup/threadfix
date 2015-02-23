@@ -318,10 +318,10 @@
     <div class="accordion-heading" ng-click="showOWasp = !showOWasp">
         <span id="showOwasp" class="icon" ng-class="{ 'icon-minus': showOWasp, 'icon-plus': !showOWasp }"></span> OWASP Top 10
     </div>
-    <div class="filter-group-body" ng-show="showOWasp">
-        <span ng-repeat="owaspVer in OWASP_TOP10">
-            <input id="owasp{{owaspVer.year}}" type="radio" ng-model="parameters.selectedOwasp" ng-value="owaspVer" ng-change="refresh()"/>{{owaspVer.year}}<br>
-        </span>
+    <div class="accordion-inner" ng-show="showOWasp">
+        <ul class="nav nav-pills">
+            <li ng-repeat="owaspVer in OWASP_TOP10" id="owasp{{owaspVer.year}}" ng-class="{ active: parameters.selectedOwasp === owaspVer }"><a ng-click="parameters.selectedOwasp = owaspVer; refresh()">{{owaspVer.year}}</a></li>
+        </ul>
     </div>
 </div>
 
@@ -390,12 +390,20 @@
         </div>
     </div>
 
-    <div class="accordion-group"  ng-hide="treeTeam || vulnSearch || treeApplication || reportId === 3 || reportId === 11">
+    <div class="accordion-group"  ng-hide="treeTeam || vulnSearch || treeApplication">
         <div class="accordion-heading" style="text-align:center">
-            <a id="exportPNGButtonReport" class="btn"
-               ng-click="exportPNG()">Export PNG</a>
+                <%--<a id="exportPNGButtonReport" class="btn"--%>
+                <%--ng-click="exportPNG()">Export PNG</a>--%>
             <a id="exportPDFButtonReport" class="btn"
-               ng-click="exportPNG(true)">Export PDF</a>
+               ng-hide="exportingPDF"
+               ng-click="exportPDF()">Export PDF</a>
+            <button id="exportingPDFButton"
+                    ng-show="exportingPDF"
+                    disabled="disabled"
+                    class="btn btn-primary">
+                <span class="spinner"></span>
+                Exporting
+            </button>
         </div>
     </div>
 </security:authorize>

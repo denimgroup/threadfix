@@ -33,7 +33,7 @@ import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
-import org.codehaus.jackson.map.ObjectWriter;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -129,8 +129,9 @@ public class TeamDetailPageController {
         }
     }
 
+    @JsonView(AllViews.TableRow.class)
     @RequestMapping(value="/info", method=RequestMethod.GET)
-    public @ResponseBody String getInfo(@PathVariable int orgId) throws IOException {
+    public @ResponseBody Object getInfo(@PathVariable int orgId) throws IOException {
         final RestResponse<? extends Object> restResponse;
 
         Organization organization = organizationService.loadById(orgId);
@@ -151,9 +152,7 @@ public class TeamDetailPageController {
             restResponse = RestResponse.success(map);
         }
 
-        ObjectWriter writer = ControllerUtils.getObjectWriter(AllViews.TableRow.class);
-
-        return writer.writeValueAsString(restResponse);
+        return restResponse;
     }
 
 

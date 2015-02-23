@@ -24,9 +24,9 @@
 package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.views.AllViews;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonView;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -251,6 +251,7 @@ public class User extends AuditableEntity {
     }
 
     @Transient
+    @JsonView(AllViews.TableRow.class)
 	public boolean getIsDeletable() {
 		return deletable;
 	}

@@ -24,7 +24,7 @@
 package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.views.AllViews;
-import org.codehaus.jackson.map.annotate.JsonView;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -45,9 +45,8 @@ public class GRCControl extends AuditableEntity {
     public final static int STATUS_LENGTH = 32;
 
     // TODO make this smarter
-    public final static Set<String> OPEN_CODES   = set("Active", "Open", "New", "CONFIRMED", "IN_PROGRESS", "Reopen",
-                                                        "Future", "In Progress", "Accepted", "OK");
-    public final static Set<String> CLOSED_CODES = set("Closed", "Resolved", "RESOLVED", "VERIFIED", "Fixed", "Done");
+    public final static Set<String> OPEN_CODES   = set("Impaired", "Proposed");
+    public final static Set<String> CLOSED_CODES = set("Active");
 
     @Size(max = NATIVE_ID_LENGTH, message = "{errors.maxlength} " + NATIVE_ID_LENGTH + ".")
     private String nativeId;

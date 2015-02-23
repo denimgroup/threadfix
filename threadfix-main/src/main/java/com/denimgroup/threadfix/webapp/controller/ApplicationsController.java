@@ -43,9 +43,7 @@ import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
 import com.denimgroup.threadfix.webapp.viewmodels.VulnerabilityCollectionModel;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
-import org.codehaus.jackson.map.SerializationConfig;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -64,7 +62,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.*;
-import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
+
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications")
@@ -101,8 +99,6 @@ public class ApplicationsController {
     private TagService tagService;
     @Autowired
     private DefaultConfigService defaultConfigService;
-    @Autowired
-    private ReportService reportService;
     @Autowired
     private CacheBustService cacheBustService;
 
@@ -174,15 +170,9 @@ public class ApplicationsController {
 		return "applications/detail";
 	}
 
-    private ObjectWriter getWriter() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationConfig.Feature.DEFAULT_VIEW_INCLUSION, false);
-
-        return mapper.writerWithView(AllViews.FormInfo.class);
-    }
-
+    @JsonView(AllViews.FormInfo.class)
     @RequestMapping("{appId}/objects")
-    public @ResponseBody String getBaseObjects(@PathVariable("appId") Integer appId) throws IOException {
+    public @ResponseBody Object getBaseObjects(@PathVariable("appId") Integer appId) throws IOException {
         Map<String, Object> map = new HashMap<>();
 
         Application application = applicationService.loadApplication(appId);
@@ -227,11 +217,7 @@ public class ApplicationsController {
 
         map.put("applicationTags", application.getTags());
 
-        return getSerializedMap(map);
-    }
-
-    private String getSerializedMap(Map<String, Object> map) throws IOException {
-        return getWriter().writeValueAsString(RestResponse.success(map));
+        return RestResponse.success(map);
     }
 
     private String getActiveTab(HttpServletRequest request, long falsePositiveCount, long numClosedVulns) {
@@ -452,7 +438,8 @@ public class ApplicationsController {
 	}
 
     @RequestMapping(value = "/{appId}/unmappedTable", method = RequestMethod.POST)
-    public @ResponseBody String unmappedScanTable(@ModelAttribute TableSortBean bean,
+    @JsonView(AllViews.TableRow.class)
+    public @ResponseBody Object unmappedScanTable(@ModelAttribute TableSortBean bean,
                                                   @PathVariable("appId") Integer appId,
                                                   @PathVariable("orgId") Integer orgId) throws IOException {
 
@@ -483,13 +470,12 @@ public class ApplicationsController {
         responseMap.put("numFindings", numFindings);
         responseMap.put("findingList", findingService.getUnmappedFindingTable(bean));
 
-        return writeSuccessObjectWithView(responseMap, AllViews.TableRow.class);
+        return RestResponse.success(responseMap);
     }
 
+    @JsonView(AllViews.TableRow.class)
     @RequestMapping(value = "/{appId}/cwe", method = RequestMethod.GET)
     public @ResponseBody Object getGenericVulnerabilities() throws IOException {
-        return writeSuccessObjectWithView(
-                genericVulnerabilityService.loadAll(),
-                AllViews.TableRow.class);
+        return RestResponse.success(genericVulnerabilityService.loadAll());
     }
 }

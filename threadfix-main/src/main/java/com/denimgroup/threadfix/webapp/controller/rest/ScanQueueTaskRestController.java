@@ -24,29 +24,25 @@
 
 package com.denimgroup.threadfix.webapp.controller.rest;
 
+import com.denimgroup.threadfix.data.ScanCheckResultBean;
+import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Document;
 import com.denimgroup.threadfix.data.entities.ScanQueueTask;
 import com.denimgroup.threadfix.data.entities.Task;
-import com.denimgroup.threadfix.data.ScanCheckResultBean;
-import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Controller
+@RestController
 @RequestMapping("/rest/tasks/")
-public class ScanQueueTaskRestController extends RestController {
+public class ScanQueueTaskRestController extends TFRestController {
 	
 	public final static String OPERATION_QUEUE_SCAN = "queueScan",
 	    OPERATION_TASK_STATUS_UPDATE = "taskStatusUpdate",
@@ -96,7 +92,7 @@ public class ScanQueueTaskRestController extends RestController {
      * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#queueScan(String, String)
 	 */
 	@RequestMapping(headers="Accept=application/json", value="queueScan", method=RequestMethod.POST)
-	public @ResponseBody RestResponse<ScanQueueTask> queueScan(HttpServletRequest request,
+	public RestResponse<ScanQueueTask> queueScan(HttpServletRequest request,
 			@RequestParam("applicationId") int applicationId,
 			@RequestParam("scannerType") String scannerType) {
 
@@ -125,7 +121,7 @@ public class ScanQueueTaskRestController extends RestController {
 	 * @return
 	 */
 	@RequestMapping(headers="Accept=application/json", value="requestTask", method=RequestMethod.POST)
-	public @ResponseBody RestResponse<Task> requestTask(HttpServletRequest request,
+	public RestResponse<Task> requestTask(HttpServletRequest request,
 			@RequestParam("scanners") String scanners,
 			@RequestParam("agentConfig") String agentConfig) {
 
@@ -170,7 +166,7 @@ public class ScanQueueTaskRestController extends RestController {
      * @return
      */
 	@RequestMapping(headers="Accept=application/json", value="taskStatusUpdate", method=RequestMethod.POST)
-	public @ResponseBody RestResponse<String> taskStatusUpdate(HttpServletRequest request,
+	public RestResponse<String> taskStatusUpdate(HttpServletRequest request,
 			@RequestParam("scanQueueTaskId") int scanQueueTaskId,
 			@RequestParam("message") String message) {
 
@@ -193,7 +189,7 @@ public class ScanQueueTaskRestController extends RestController {
      * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#setTaskConfig(String, String, String)
      */
 	@RequestMapping(headers="Accept=application/json", value="setTaskConfig", method=RequestMethod.POST)
-	public @ResponseBody RestResponse<String> setTaskConfig(HttpServletRequest request,
+	public RestResponse<String> setTaskConfig(HttpServletRequest request,
 			@RequestParam("appId") int appId,
 			@RequestParam("scannerType") String scannerType,
 			@RequestParam("file") MultipartFile file) {
@@ -229,7 +225,7 @@ public class ScanQueueTaskRestController extends RestController {
 	 *	@param file result file from the scanning operation
 	 */
 	@RequestMapping(headers="Accept=application/json", value="completeTask", method=RequestMethod.POST)
-	public @ResponseBody RestResponse<ScanQueueTask> completeTask(HttpServletRequest request,
+	public RestResponse<ScanQueueTask> completeTask(HttpServletRequest request,
 			@RequestParam("scanQueueTaskId") int scanQueueTaskId,
 			@RequestParam("file") MultipartFile file) {
 		
@@ -289,7 +285,7 @@ public class ScanQueueTaskRestController extends RestController {
 	 *	@return true if the scan failure was accepted and noted, false if some sort of error occurred
 	 */
 	@RequestMapping(headers="Accept=application/json", value="failTask", method=RequestMethod.POST)
-	public @ResponseBody RestResponse<String> failTask(HttpServletRequest request,
+	public RestResponse<String> failTask(HttpServletRequest request,
 			@RequestParam("scanQueueTaskId") int scanQueueTaskId,
 			@RequestParam("message") String message) {
 

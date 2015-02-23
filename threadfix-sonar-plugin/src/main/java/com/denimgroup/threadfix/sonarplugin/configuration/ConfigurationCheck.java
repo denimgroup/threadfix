@@ -23,8 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.sonarplugin.configuration;
 
+import com.denimgroup.threadfix.importer.util.SpringConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -42,6 +44,15 @@ public class ConfigurationCheck {
     private ConfigurationCheck() {}
 
     ThreadFixInfo info;
+
+    // This main method will fail if Spring has an invalid configuration
+    public static void main(String[] args) {
+        AnnotationConfigApplicationContext context = SpringConfiguration.getContext();
+
+        SpringConfiguration bean = context.getBean(SpringConfiguration.class);
+
+        System.out.println(bean);
+    }
 
     public static List<String> getErrors(ThreadFixInfo info) {
         ConfigurationCheck check = new ConfigurationCheck();

@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.webapp.config;
 
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
-import org.codehaus.jackson.map.annotate.JsonView;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 

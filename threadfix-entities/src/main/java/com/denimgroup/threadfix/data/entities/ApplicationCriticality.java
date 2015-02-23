@@ -25,8 +25,8 @@
 package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.views.AllViews;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.map.annotate.JsonView;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -56,7 +56,7 @@ public class ApplicationCriticality extends BaseEntity {
 
 	@NotEmpty(message = "{errors.required}")
 	@Size(max = 50, message = "{errors.maxlength}")
-    @JsonView(AllViews.FormInfo.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
     private String name;
 
 	private List<Application> applications;

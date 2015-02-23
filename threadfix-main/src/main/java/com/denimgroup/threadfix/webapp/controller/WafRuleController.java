@@ -23,24 +23,28 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.WafRuleService;
+import com.denimgroup.threadfix.service.WafService;
+import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.WafRuleService;
-import com.denimgroup.threadfix.service.WafService;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/wafs/{wafId}")
@@ -111,9 +115,10 @@ public class WafRuleController {
         return "wafs/rules/detail";
     }
 
+    @JsonView(AllViews.TableRow.class)
 	@RequestMapping("/getRules")
-	public @ResponseBody
-    RestResponse<Map<String, Object>> getRules(@PathVariable("wafId") int wafId) {
+    @ResponseBody
+    public Object getRules(@PathVariable("wafId") int wafId) {
         Map<String, Object> responseMap = new HashMap<>();
 
         Waf waf = wafService.loadWaf(wafId);
@@ -132,7 +137,7 @@ public class WafRuleController {
         responseMap.put("waf", waf);
         responseMap.put("rulesText", rulesText);
         responseMap.put("lastDirective", lastDirective);
-		return  RestResponse.success(responseMap);
+		return RestResponse.success(responseMap);
 	}
 	
 }

@@ -127,18 +127,17 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                         .tickFormat(function(d){
                             var arr = d.split("/");
                             d = (arr.length >1) ? arr[1] : d;
-                            if (d && d.length > 8)
+                            if (d && d.length > 9)
                                 return d.substring(0,8) + "...";
                             else
                                 return d;
-                        })
-                    ;
+                        });
 
                 var svg = d3Service.getSvg(d3, ele[0], width + margin.left + margin.right, height + margin.top + margin.bottom);
 
                 var tip = d3Service.getTip(d3, 'd3-tip', [-10, 0], 'horizontalBarTip')
                     .html(function(d) {
-                        return "<strong>" + d.tip + ":</strong> <span style='color:red'>" + (d.y1 - d.y0) + "</span>";
+                        return "<strong>" + d.tip + ":</strong> <span style='color:" + d.fillColor +"'>" + (d.y1 - d.y0) + "</span>";
                     });
                 svg.call(tip);
 
@@ -149,6 +148,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                 scope.render = function (reportData) {
                     var data = angular.copy(reportData);
                     svg.selectAll('*').remove();
+                    svg.attr("id", "mostVulnAppsGraph");
                     svg.append("g").attr("id","topAppChart");
 
                     var svg1 = d3.select("#topAppChart")
@@ -175,8 +175,11 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
 
                     svg1.append("g")
                         .attr("class", "x axis")
-                        .call(yAxis);
-
+                        .call(yAxis)
+                        .selectAll("text")
+                        .attr("transform", function(d) {
+                            return "rotate(-35)"
+                        });
                     var col = svg1.selectAll(".rect")
                         .data(data)
                         .enter().append("g")
@@ -212,9 +215,9 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
 
                 };
 
-                scope.$watch('exportReportId', function() {
-                    scope.export();
-                }, true);
+                //scope.$watch('exportReportId', function() {
+                //    scope.export();
+                //}, true);
 
                 scope.export = function(){
                     if (scope.exportReportId && scope.exportReportId.id==10) {

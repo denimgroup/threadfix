@@ -26,6 +26,7 @@ package burp.custombutton;
 
 import burp.IBurpExtenderCallbacks;
 import burp.dialog.ConfigurationDialogs;
+import burp.dialog.SourceDialog;
 import burp.dialog.UrlDialog;
 import burp.extention.RestUtils;
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
@@ -43,26 +44,26 @@ import java.util.ArrayList;
  * Time: 2:28 PM
  * To change this template use File | Settings | File Templates.
  */
-public class EndpointsButton extends JButton {
+public abstract class EndpointsButton extends JButton {
 
     public static final String GENERIC_INT_SEGMENT = "\\{id\\}";
 
     public EndpointsButton(final Component view, final IBurpExtenderCallbacks callbacks) {
-        setText("Import Endpoints");
+        setText(getButtonText());
 
         addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
-                boolean configured = ConfigurationDialogs.show(view);
+                boolean configured = ConfigurationDialogs.show(view, getDialogMode());
                 boolean completed = false;
                 java.util.List<String> nodes = new ArrayList<>();
 
                 if (configured) {
-                    Endpoint.Info[] endpoints = RestUtils.getEndpoints();
+                    Endpoint.Info[] endpoints = getEndpoints();
 
                     if (endpoints.length == 0) {
-                        JOptionPane.showMessageDialog(view, "Did not retrieve any endpoints from ThreadFix. Check your application.",
-                                "Warning", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(view, getNoEndpointsMessage(), "Warning",
+                                JOptionPane.WARNING_MESSAGE);
                     } else {
                         for (Endpoint.Info endpoint : endpoints) {
                             if (endpoint != null) {
@@ -99,9 +100,19 @@ public class EndpointsButton extends JButton {
                 }
 
                 if (completed) {
-                    JOptionPane.showMessageDialog(view, "The endpoints were successfully imported from ThreadFix.");
+                    JOptionPane.showMessageDialog(view, getCompletedMessage());
                 }
             }
         });
     }
+
+    protected abstract String getButtonText();
+
+    protected abstract String getNoEndpointsMessage();
+
+    protected abstract String getCompletedMessage();
+
+    protected abstract ConfigurationDialogs.DialogMode getDialogMode();
+
+    protected abstract Endpoint.Info[] getEndpoints();
 }

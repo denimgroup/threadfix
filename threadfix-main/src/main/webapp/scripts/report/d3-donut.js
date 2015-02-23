@@ -8,7 +8,7 @@ angular.module('threadfix')
             .attr("id", "pointInTimeTip")
             .offset([-10, 0])
             .html(function(d) {
-                return "<strong>" + d.data.tip + ":</strong> <span style='color:red'>" + d.value + "</span> <span>(" + getPercent(d) + ")</span>";
+                return "<strong>" + d.data.tip + ":</strong> <span style='color:" + d.data.fillColor +"'>" + d.value + "</span> <span>(" + getPercent(d) + ")</span>";
             });
 
         function pieTop(d, rx, ry, ir ){

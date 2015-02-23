@@ -28,12 +28,11 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.DocumentService;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.codehaus.jackson.map.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -58,19 +57,19 @@ public class DocumentController {
 	private DocumentService documentService;
 
 	private final SanitizedLogger log = new SanitizedLogger(DocumentController.class);
-    private static final ObjectWriter writer = ControllerUtils.getObjectWriter(AllViews.TableRow.class);
 
+    @JsonView(AllViews.TableRow.class)
 	@RequestMapping(value = "/documents/upload", method = RequestMethod.POST)
-	public @ResponseBody String uploadSubmit(@PathVariable("appId") int appId,
+	public @ResponseBody Object uploadSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId, @RequestParam("file") MultipartFile file) throws IOException {
 
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)){
-			return writer.writeValueAsString(RestResponse.failure("You don't have permission to upload a document."));
+			return RestResponse.failure("You don't have permission to upload a document.");
 		}
 
         if (FilenameUtils.getBaseName(file.getOriginalFilename()).length()>Document.MAX_LENGTH_NAME) {
-            return writer.writeValueAsString(RestResponse.failure("File name is too long, max is "
-                    + Document.MAX_LENGTH_NAME + " length."));
+            return RestResponse.failure("File name is too long, max is "
+                    + Document.MAX_LENGTH_NAME + " length.");
         }
 
         try {
@@ -78,9 +77,9 @@ public class DocumentController {
 
             if (document == null) {
                 log.warn("Saving the file have failed. Returning to file upload page.");
-                return writer.writeValueAsString(RestResponse.failure("You don't have permission to upload a document."));
+                return RestResponse.failure("You don't have permission to upload a document.");
             } else {
-                return writer.writeValueAsString(RestResponse.success(document));
+                return RestResponse.success(document);
             }
 
         } catch (OutOfMemoryError e) {
@@ -90,29 +89,30 @@ public class DocumentController {
         }
 	}
 
+    @JsonView(AllViews.TableRow.class)
 	@RequestMapping(value = "/vulnerabilities/{vulnId}/documents/upload", method = RequestMethod.POST)
-	public @ResponseBody String uploadSubmitVuln(@PathVariable("appId") int appId,
+	public @ResponseBody Object uploadSubmitVuln(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@PathVariable("vulnId") int vulnId,
 			HttpServletRequest request,
 			@RequestParam("file") MultipartFile file) throws IOException {
 
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)){
-            return writer.writeValueAsString(RestResponse.failure("You don't have permission to upload a document."));
+            return RestResponse.failure("You don't have permission to upload a document.");
 		}
 
         if (FilenameUtils.getBaseName(file.getOriginalFilename()).length()>Document.MAX_LENGTH_NAME) {
-            return writer.writeValueAsString(RestResponse.failure("File name is too long, max is "
-                    + Document.MAX_LENGTH_NAME + " length."));
+            return RestResponse.failure("File name is too long, max is "
+                    + Document.MAX_LENGTH_NAME + " length.");
         }
 
         try {
             Document document = documentService.saveFileToVuln(vulnId, file);
             if (document == null) {
                 log.warn("Saving the document have failed. Returning to file upload page.");
-                return writer.writeValueAsString(RestResponse.failure("Unable to save the file to the vulnerability."));
+                return RestResponse.failure("Unable to save the file to the vulnerability.");
             } else {
-                return writer.writeValueAsString(RestResponse.success(document));
+                return RestResponse.success(document);
             }
 
         } catch (OutOfMemoryError e) {
@@ -233,8 +233,9 @@ public class DocumentController {
         return null;
     }
 
+    @JsonView(AllViews.TableRow.class)
 	@RequestMapping(value = "/documents/{docId}/delete", method = RequestMethod.POST)
-	public @ResponseBody String deleteAppDocument(@PathVariable("orgId") Integer orgId,
+	public @ResponseBody Object deleteAppDocument(@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId,
 			@PathVariable("docId") Integer docId,
 			HttpServletRequest request) throws SQLException, IOException {
@@ -242,8 +243,9 @@ public class DocumentController {
         return delete(orgId, appId, docId, request);
 	}
 
+    @JsonView(AllViews.TableRow.class)
     @RequestMapping(value = "/vulnerabilities/{vulnId}/documents/{docId}/delete", method = RequestMethod.POST)
-    public @ResponseBody String deleteVulnDocument(@PathVariable("orgId") Integer orgId,
+    public @ResponseBody Object deleteVulnDocument(@PathVariable("orgId") Integer orgId,
                                                   @PathVariable("appId") Integer appId,
                                                   @PathVariable("vulnId") Integer vulnId,
                                                   @PathVariable("docId") Integer docId,
@@ -252,11 +254,11 @@ public class DocumentController {
         return delete(orgId, appId, docId, request);
     }
 
-    private String delete(Integer orgId, Integer appId, Integer docId,
+    private Object delete(Integer orgId, Integer appId, Integer docId,
                                                HttpServletRequest request) throws SQLException, IOException {
 
         if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,orgId,appId)){
-            return writer.writeValueAsString(RestResponse.failure("You don't have permission to delete a document."));
+            return RestResponse.failure("You don't have permission to delete a document.");
         }
 
         Document document = null;
@@ -266,7 +268,7 @@ public class DocumentController {
 
         if (document == null) {
             if (orgId != null && appId != null)
-                return writer.writeValueAsString(RestResponse.success("Invalid document ID received."));
+                return RestResponse.success("Invalid document ID received.");
             else if (orgId != null)
                 return "redirect:/organizations/" + orgId;
             else
@@ -278,9 +280,9 @@ public class DocumentController {
         documentService.deleteDocument(document);
 
         if (appPage || vulnPage) {
-            return writer.writeValueAsString(RestResponse.success("Successfully deleted document."));
+            return RestResponse.success("Successfully deleted document.");
         } else {
-            return writer.writeValueAsString(RestResponse.failure("Document is invalid."));
+            return RestResponse.failure("Document is invalid.");
         }
     }
 

@@ -100,10 +100,10 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     scope.render(scope.data);
                 }, true);
 
-                scope.$watch('exportInfo', function() {
-                    if (scope.exportInfo)
-                        scope.export();
-                }, true);
+                //scope.$watch('exportInfo', function() {
+                //    if (scope.exportInfo)
+                //        scope.export();
+                //}, true);
 
                 scope.render = function (reportData) {
                     if (!reportData)
@@ -192,9 +192,23 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
 
                     var diffMonths = monthDiff(new Date(startAxis), new Date(endAxis)),
                         intervalMonths = Math.round(diffMonths/6);
-                    intervalMonths = (intervalMonths===5 ? 4 : intervalMonths);
-                    intervalMonths = (intervalMonths>6 ? 12 : intervalMonths);
-                    xAxis.ticks(d3.time.month, intervalMonths);
+
+                    // If date span is more than a month
+                    if (diffMonths > 0) {
+                        intervalMonths = (intervalMonths===5 ? 4 : intervalMonths);
+                        intervalMonths = (intervalMonths>6 ? 12 : intervalMonths);
+                        xAxis.ticks(d3.time.month, intervalMonths);
+                    } else {
+                        // If time span is within a month
+                        xAxis.tickFormat(function(d) {
+                            return monthList[d.getMonth()] + "-" + d.getDate() + "-" + d.getFullYear().toString().substr(2,2);
+                        });
+                        var diffDays = Math.round((endAxis-startAxis)/(24*60*60*1000));
+                        if (diffDays <=6 )
+                            xAxis.ticks(d3.time.day, 1);
+                        else
+                            xAxis.ticks(d3.time.day, 5);
+                    }
 
                     var g = svg.selectAll(".symbol");
                     svg.call(tip);
@@ -302,25 +316,10 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                             });
                     });
 
-                    g
-                        .on("mouseover", function() { focus.style("display", null); })
+                    g.on("mouseover", function() { focus.style("display", null); })
                         .on("mouseout", function() { focus.style("display", "none"); tip.hide()})
                         .on("mousemove", mousemove);
 
-                    if (scope.label && noVulnsList.length > 0) {
-                        var listStr = "";
-                        for (var i=0; i<noVulnsList.length-1; i++)
-                            listStr += noVulnsList[i] + ", ";
-
-                        listStr += noVulnsList[noVulnsList.length-1] + ": ";
-
-                        svg.append("g")
-                            .append("text")
-                            .attr("x", w/2)
-                            .attr("y", h + 60)
-                            .attr("class", "small_warning")
-                            .text(listStr + "No Vulnerabilities");
-                    }
                 }
 
                 function drawTable(){
@@ -341,8 +340,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 function mousemove() {
                     var x0 = x.invert(d3.mouse(this)[0]),
                         month = Math.round(x0);
-                    var time;
-                    var tips = [];
+                    var time, coordObj, tips = [];
                     circles.attr('transform', function (d) {
                         var i;
                         if (month <= d.values[0].date)
@@ -366,28 +364,31 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         }
 
                         time = d.values[i].date;
-                        tips.push("<strong>" + d.key + ":</strong> <span style='color:red'>" + d.values[i].noOfVulns + "</span>");
+                        tips.push("<tr><td>" + d.key + "&nbsp;</td> <td style='color:"+ getColor(d.key) +"'>" + d.values[i].noOfVulns + "</td></tr>");
                         return 'translate(' + x(d.values[i].date) + ',' + y(d.values[i].noOfVulns + d.values[i].noOfVulns0) + ')';
                     });
 
                     tip.html(function(){
                         var date = new Date(time);
-                        var tipContent = "<strong>" + "Time" + ":</strong> <span style='color:red'>" +
-                            (monthList[date.getMonth()]) + " " + date.getDate() + " " + date.getFullYear() + "</span>";
-                        tips.forEach(function(tip) {
-                            tipContent += "<br/>" + tip;
-                        });
+                        var tipContent = "<tr><td colspan='2' style='color:dodgerblue;text-align:center;'>" +
+                            (monthList[date.getMonth()]) + " " + date.getDate() + " " + date.getFullYear() + "</td></tr>";
 
-                        return tipContent;
+                        var table = '<table style="text-align:left;font-weight: bold;">' + tipContent;
+                        tips.forEach(function(tip) {
+                            table += tip;
+                        });
+                        table += "</table>";
+
+                        return table;
                     });
-                    tip.show();
+                    coordObj = (circles && circles.length>0 && circles[0] && circles[0].length > 0) ?  circles[0][0] : undefined;
+                    tip.show(coordObj);
                 }
 
                 function monthDiff(d1, d2) {
                     var months;
                     months = (d2.getFullYear() - d1.getFullYear()) * 12;
-                    months -= d1.getMonth() + 1;
-                    months += d2.getMonth();
+                    months += d2.getMonth() - d1.getMonth();
                     return months <= 0 ? 0 : months;
                 }
 
@@ -403,7 +404,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         title = (scope.exportInfo && scope.exportInfo.tags) ? "Compliance_Report" : "Trending_Scans";
 
                     reportExporter.exportPDF(d3, scope.exportInfo, svgWidth, svgHeight,
-                            title + teamsName + appsName + tagsName);
+                        title + teamsName + appsName + tagsName);
 
                 };
 

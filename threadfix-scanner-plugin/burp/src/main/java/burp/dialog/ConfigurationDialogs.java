@@ -27,18 +27,29 @@ package burp.dialog;
 import java.awt.*;
 
 public class ConfigurationDialogs {
-	
+
+    public static enum DialogMode {
+        THREADFIX_APPLICATION, SOURCE;
+    }
+
 	public ConfigurationDialogs() {}
 	
-	public static boolean show(Component view) {
+	public static boolean show(Component view, DialogMode mode) {
+        if (mode == DialogMode.THREADFIX_APPLICATION) {
+            boolean shouldContinue = ParametersDialog.show(view);
 
-        boolean shouldContinue = ParametersDialog.show(view);
-        
-        if (shouldContinue) {
-            shouldContinue = ApplicationDialog.show(view);
+            if (shouldContinue) {
+                shouldContinue = ApplicationDialog.show(view);
+            }
+
+            return shouldContinue;
+        } else if (mode == DialogMode.SOURCE) {
+            boolean shouldContinue = SourceDialog.show(view);
+
+            return shouldContinue;
+        } else {
+            return false;
         }
-        
-        return shouldContinue;
 	}
 
 }

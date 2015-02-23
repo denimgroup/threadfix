@@ -29,9 +29,9 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.report.ReportsService;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,8 +42,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
-
-import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * @author bbeverly
@@ -103,16 +101,16 @@ public class DashboardController {
 		return "dashboard/dashboard";
 	}
 
+    @JsonView(AllViews.RestViewScanStatistic.class)
     @RequestMapping(value="/leftReport", method=RequestMethod.GET)
-    public @ResponseBody String leftReport(HttpServletRequest request) {
+    public @ResponseBody Object leftReport(HttpServletRequest request) {
 
         ReportParameters parameters = getParameters(request, ReportFormat.TRENDING);
         Map<String, Object> map = reportsService.generateTrendingReport(parameters, request);
         map.put("savedFilters", filterJsonBlobService.loadAll());
 
-        return ControllerUtils.writeSuccessObjectWithView(map, AllViews.RestViewScanStatistic.class);
+        return RestResponse.success(map);
     }
-
 
 	@RequestMapping(value="/rightReport", method=RequestMethod.GET)
 	public @ResponseBody RestResponse<List<Map<String, Object>>> rightReport(HttpServletRequest request) {

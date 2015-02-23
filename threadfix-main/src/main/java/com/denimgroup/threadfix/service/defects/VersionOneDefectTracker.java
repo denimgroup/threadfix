@@ -104,7 +104,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         }
 
         String defectXml = MarshallingUtils.unmarshal(Assets.Asset.class, assetTemplate);
-        
+
         LOG.debug(defectXml);
 
         String result = restUtils.postUrlAsString(getUrlWithRest() + "Defect", defectXml, getUsername(), getPassword(), CONTENT_TYPE);
@@ -135,7 +135,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
 
         if ("Theme".equals(attributeDefinition.getRelatedItemType())) {
             url = url + "&where=SecurityScope.Name='" +
-                getUrlEncodedProjectName() + "'";
+                    getUrlEncodedProjectName() + "'";
         }
 
         LOG.info("Adding " + attributeDefinition + " as relation.");
@@ -216,7 +216,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
     @Override
     public String getProjectIdByName() {
         List<Assets.Asset> assetList = getAssets(getUrlWithRest() +
-                    "Scope?where=Scope.Name='" + getUrlEncodedProjectName() + "'");
+                "Scope?where=Scope.Name='" + getUrlEncodedProjectName() + "'");
         if (assetList != null && !assetList.isEmpty()) {
             return assetList.get(0).getId();
         }
@@ -242,18 +242,27 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
 
     private List<DynamicFormField> convertToGenericField(List<AttributeDefinition> attributeDefinitions) {
         List<DynamicFormField> dynamicFormFields = list();
+        String type;
         for (AttributeDefinition attr : attributeDefinitions) {
             DynamicFormField genericField = new DynamicFormField();
             genericField.setActive(true);
             genericField.setEditable(!attr.isReadOnly());
             genericField.setLabel(attr.getName());
             genericField.setName(attr.getName());
-            genericField.setType(attr.getRelationType());
+            type = attr.getRelationType();
+            genericField.setType(type);
+            if ("number".equals(type)) {
+                genericField.setStep("any");
+                genericField.setMinValue(0);
+                genericField.setError("min", "Input positive number.");
+                genericField.setError("number", "Not valid number.");
+            }
+
             genericField.setRequired(attr.isRequired());
             genericField.setSupportsMultivalue(attr.isMultiValue());
             genericField.setOptionsMap(getFieldOptions(attr));
-
-            genericField.setError("required", "This field cannot be empty.");
+            if (attr.isRequired())
+                genericField.setError("required", "This field cannot be empty.");
 
             dynamicFormFields.add(genericField);
         }

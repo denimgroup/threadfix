@@ -30,8 +30,8 @@ import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.LogParserService;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.views.AllViews;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,11 +41,10 @@ import java.util.List;
 
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
-import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
 
-@Controller
+@RestController
 @RequestMapping("/rest/wafs")
-public class WafRestController extends RestController {
+public class WafRestController extends TFRestController {
 	
 	public static final String CREATION_FAILED = "New WAF creation failed.";
     public static final String NOT_FOUND_WAF = "Invalid WAF type requested.";
@@ -74,7 +73,7 @@ public class WafRestController extends RestController {
 
 	// TODO figure out if there is an easier way to make Spring respond to both
 	@RequestMapping(headers="Accept=application/json", value="", method=RequestMethod.GET)
-	public @ResponseBody Object wafIndexNoSlash(HttpServletRequest request) {
+	public Object wafIndexNoSlash(HttpServletRequest request) {
 		return wafIndex(request);
 	}
 
@@ -82,8 +81,9 @@ public class WafRestController extends RestController {
      * @param request
      * @return
      */
+	@JsonView(AllViews.RestViewWaf2_1.class)
 	@RequestMapping(headers="Accept=application/json", value="/", method=RequestMethod.GET)
-	public @ResponseBody Object wafIndex(HttpServletRequest request) {
+	public Object wafIndex(HttpServletRequest request) {
 		log.info("Received REST request for WAFs");
 
 		String result = checkKey(request, INDEX);
@@ -97,7 +97,7 @@ public class WafRestController extends RestController {
 			log.warn("wafService.loadAll() returned null.");
             return failure("No WAFs found.");
 		} else {
-            return writeSuccessObjectWithView(wafs, AllViews.RestViewWaf2_1.class);
+            return RestResponse.success(wafs);
         }
 	}
 
@@ -107,8 +107,9 @@ public class WafRestController extends RestController {
      * @param wafId
      * @return
      */
+	@JsonView(AllViews.RestViewWaf2_1.class)
 	@RequestMapping(headers="Accept=application/json", value="/{wafId}", method=RequestMethod.GET)
-	public @ResponseBody Object wafDetail(HttpServletRequest request,
+	public Object wafDetail(HttpServletRequest request,
 			@PathVariable("wafId") int wafId) {
 		log.info("Received REST request for WAF with ID = " + wafId + ".");
 
@@ -123,7 +124,7 @@ public class WafRestController extends RestController {
 			log.warn("Invalid WAF ID.");
 			return failure(LOOKUP_FAILED);
 		} else {
-            return writeSuccessObjectWithView(waf, AllViews.RestViewWaf2_1.class);
+            return RestResponse.success(waf);
         }
 	}
 
@@ -132,8 +133,9 @@ public class WafRestController extends RestController {
      * @param request
      * @return
      */
+	@JsonView(AllViews.RestViewWaf2_1.class)
 	@RequestMapping(headers="Accept=application/json", value="/lookup", method=RequestMethod.GET)
-	public @ResponseBody Object wafLookup(HttpServletRequest request) {
+	public Object wafLookup(HttpServletRequest request) {
 		
 		if (request.getParameter("name") == null) {
 			log.info("Received REST request for WAF with name = " + request.getParameter("name") + ".");
@@ -156,14 +158,15 @@ public class WafRestController extends RestController {
 			log.warn("Invalid WAF Name.");
 			return failure("Invalid WAF Name.");
 		}
-        return writeSuccessObjectWithView(waf, AllViews.RestViewWaf2_1.class);
+        return RestResponse.success(waf);
 	}
 	
 	/**
 	 * Returns the current set of rules from the WAF, generating new ones if none are present.
 	 */
+	@JsonView(AllViews.RestViewWaf2_1.class)
 	@RequestMapping(headers="Accept=application/json", value="/{wafId}/rules/app/{appId}", method=RequestMethod.GET)
-	public @ResponseBody RestResponse<String> getRules(HttpServletRequest request,
+	public RestResponse<String> getRules(HttpServletRequest request,
 			@PathVariable("wafId") int wafId,
             @PathVariable("appId") int wafAppId) {
 		log.info("Received REST request for rules from WAF with ID = " + wafId + ".");
@@ -199,9 +202,10 @@ public class WafRestController extends RestController {
             return success(ruleStr);
         }
 	}
-	
+
+	@JsonView(AllViews.RestViewWaf2_1.class)
 	@RequestMapping(headers="Accept=application/json", value="/new", method=RequestMethod.POST)
-	public @ResponseBody Object newWaf(HttpServletRequest request) {
+	public Object newWaf(HttpServletRequest request) {
 		log.info("Received REST request for a new WAF.");
 		
 		String result = checkKey(request, NEW);
@@ -238,14 +242,15 @@ public class WafRestController extends RestController {
 			waf.setWafType(wafType);
 			
 			wafService.storeWaf(waf);
-            return writeSuccessObjectWithView(waf, AllViews.RestViewWaf2_1.class);
+            return RestResponse.success(waf);
 		} else {
 			return failure(CREATION_FAILED);
 		}
 	}
-	
+
+	@JsonView(AllViews.RestViewWaf2_1.class)
 	@RequestMapping(headers="Accept=application/json", value="/{wafId}/uploadLog", method=RequestMethod.POST)
-	public @ResponseBody RestResponse uploadWafLog(HttpServletRequest request,
+	public RestResponse uploadWafLog(HttpServletRequest request,
 			@PathVariable("wafId") int wafId, @RequestParam("file") MultipartFile file) {
 		log.info("Received REST request for a new WAF.");
 

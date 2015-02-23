@@ -24,7 +24,6 @@
                     <span id="collapse{{ category.name }}" ng-show="category.expanded" ng-click="toggleVulnCategory(category, false)" class="icon icon-minus-sign"></span>
                 </td>
                 <td colspan="2">
-                    {{ category.name }}
                     <span id="totalBadge{{ category.name }}" ng-style="badgeWidth" class="badge" ng-class="{
                                             'badge-critical': category.intValue === 5 && category.total !== 0,
                                             'badge-high': category.intValue === 4 && category.total !== 0,
@@ -35,6 +34,7 @@
                                             }">
                         {{ category.total }}
                     </span>
+                    {{ category.name }}
                 </td>
                 <td></td>
             </tr>
@@ -66,4 +66,39 @@
             </tr>
         </tbody>
     </table>
+
+
+    <!-- For PDF export -->
+    <br>
+    <table ng-if="exportingPDF" id="pointInTimeTablePdf">
+        <tbody ng-repeat="category in exportVulnTree" >
+        <tr>
+            <td colspan="2" ng-class="{
+                                            'text-critical': category.intValue === 5 && category.total !== 0,
+                                            'text-high': category.intValue === 4 && category.total !== 0,
+                                            'text-medium': category.intValue === 3 && category.total !== 0,
+                                            'text-low': category.intValue === 2 && category.total !== 0,
+                                            'text-info': category.intValue === 1 && category.total !== 0,
+                                            'text-inform': category.total === 0
+                                            }">
+                <p><b> {{ category.total }} {{ category.name }} </b></p>
+            </td>
+            <td></td>
+        </tr>
+        <tr ng-repeat-start="element in category.entries">
+            <td colspan="3">
+                <p><b>{{ element.numResults }} {{ category.name }} {{ element.genericVulnerability.name | shortCweNames }}</b></p>
+            </td>
+        </tr>
+        <tr ng-repeat-end>
+            <td colspan="4" class="vuln-tree-vuln-list">
+                <div class="accordion-group">
+                    <%@ include file="vulnTreeVulnRowsPdf.jsp" %>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
 </div>
