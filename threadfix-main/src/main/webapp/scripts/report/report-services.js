@@ -141,7 +141,7 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
                     var exportList = [];
                     data.object.forEach(function(elementObj){
                         var element = elementObj.element;
-                        var info = JSON.parse(elementObj.info);
+                        var info = elementObj.info;
                         element.vulns = info.vulns;
                         element.vulnCount = info.vulnCount;
                         exportList.push(element);
