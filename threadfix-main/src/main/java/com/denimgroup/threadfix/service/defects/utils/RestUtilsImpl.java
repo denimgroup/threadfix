@@ -32,11 +32,11 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.codec.Base64;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.annotation.Nonnull;
 import javax.net.ssl.SSLHandshakeException;
+import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -233,8 +233,7 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
 			String username, String password) {
 		String login = username + ":" + password;
 
-		String encodedLogin = new String(Base64.encode(login.getBytes()));
-		//String encodedLogin = Base64.encodeBase64String(login.getBytes());
+		String encodedLogin = DatatypeConverter.printBase64Binary(login.getBytes());
 		connection.setRequestProperty("Authorization", "Basic " + encodedLogin);
 	}
 
