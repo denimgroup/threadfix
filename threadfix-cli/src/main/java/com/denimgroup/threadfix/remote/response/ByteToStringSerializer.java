@@ -25,8 +25,8 @@
 package com.denimgroup.threadfix.remote.response;
 
 import com.google.gson.*;
-import org.apache.commons.codec.binary.Base64;
 
+import javax.xml.bind.DatatypeConverter;
 import java.lang.reflect.Type;
 
 /**
@@ -36,7 +36,7 @@ public class ByteToStringSerializer implements JsonSerializer<byte[]>, JsonDeser
 
     @Override
     public byte[] deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        return Base64.decodeBase64(json.getAsString().getBytes());
+        return DatatypeConverter.parseBase64Binary(json.getAsString());
     }
 
     @Override

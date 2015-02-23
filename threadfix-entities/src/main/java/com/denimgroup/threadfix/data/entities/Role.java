@@ -373,6 +373,7 @@ public class Role extends AuditableEntity {
 	boolean canDelete = false;
 	
 	@Transient
+    @JsonView(AllViews.TableRow.class)
 	public boolean isCanDelete() {
 		return canDelete;
 	}
