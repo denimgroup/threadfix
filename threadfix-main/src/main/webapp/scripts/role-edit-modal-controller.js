@@ -65,6 +65,7 @@ myAppModule.controller('RoleEditModalController',
         $scope.object.canUploadScans = value;
         $scope.object.canSubmitDefects = value;
         $scope.object.canModifyVulnerabilities = value;
+        $scope.object.canSubmitComments = value;
         $scope.object.canManageWafs = value;
         $scope.object.canManageVulnFilters = value;
         $scope.object.canManageUsers = value;
