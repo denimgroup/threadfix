@@ -35,6 +35,7 @@ import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.xml.bind.DatatypeConverter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -591,7 +592,7 @@ public class HPQCUtils {
         // Create a string that looks like:
         // "Basic ((username:password)<as bytes>)<64encoded>"
         byte[] credBytes = (username + ":" + password).getBytes();
-        String credEncodedString = "Basic " + Base64Encoder.encode(credBytes);
+        String credEncodedString = "Basic " + DatatypeConverter.printBase64Binary(credBytes);
 
         Map<String, String> map = new HashMap<String, String>();
         map.put("Authorization", credEncodedString);
