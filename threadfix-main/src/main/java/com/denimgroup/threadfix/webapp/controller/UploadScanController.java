@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.IOException;
 
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
@@ -70,8 +71,10 @@ public class UploadScanController {
      */
     @RequestMapping(value = "/organizations/{orgId}/applications/{appId}/upload/remote", method = RequestMethod.POST)
     @JsonView(AllViews.TableRow.class)
-    public Object uploadScan(@PathVariable("appId") int appId, @PathVariable("orgId") int orgId,
-                                                 HttpServletRequest request, @RequestParam("file") MultipartFile file) throws IOException {
+    public Object uploadScan(@PathVariable("appId") int appId,
+                             @PathVariable("orgId") int orgId,
+                             HttpServletRequest request,
+                             @RequestParam("file") MultipartFile file) throws IOException {
 
         LOG.info("Received REST request to upload a scan to application " + appId + ".");
 
@@ -87,19 +90,34 @@ public class UploadScanController {
 
         String fileName = scanTypeCalculationService.saveFile(myChannelId, file);
 
-        ScanCheckResultBean returnValue = scanService.checkFile(myChannelId, fileName);
+        try {
+            ScanCheckResultBean returnValue = scanService.checkFile(myChannelId, fileName);
 
-        if (ScanImportStatus.SUCCESSFUL_SCAN == returnValue.getScanCheckResult()) {
-            Scan scan = scanMergeService.saveRemoteScanAndRun(myChannelId, fileName);
+            if (ScanImportStatus.SUCCESSFUL_SCAN == returnValue.getScanCheckResult()) {
+                Scan scan = scanMergeService.saveRemoteScanAndRun(myChannelId, fileName);
 
-            if (scan != null) {
-                Organization organization = organizationService.loadById(orgId);
-                return success(organization);
+                if (scan != null) {
+                    Organization organization = organizationService.loadById(orgId);
+                    return success(organization);
+                } else {
+                    return failure("Something went wrong while processing the scan.");
+                }
             } else {
-                return failure("Something went wrong while processing the scan.");
+                return failure(returnValue.getScanCheckResult().toString());
             }
-        } else {
-            return failure(returnValue.getScanCheckResult().toString());
+        } finally { // error recovery code
+            File diskFile = new File(fileName);
+
+            if (diskFile.exists()) {
+                LOG.info("After scan upload, file is still present. Attempting to delete.");
+                boolean deletedSuccessfully = diskFile.delete();
+
+                if (deletedSuccessfully) {
+                    LOG.info("Successfully deleted scan file.");
+                } else {
+                    LOG.error("Unable to delete file.");
+                }
+            }
         }
     }
 }
