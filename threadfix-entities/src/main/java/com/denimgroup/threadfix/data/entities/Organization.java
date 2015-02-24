@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.hibernate.annotations.Index;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -36,6 +37,13 @@ import java.util.List;
 
 @Entity
 @Table(name = "Organization")
+@org.hibernate.annotations.Table(appliesTo = "Organization",
+        indexes = {
+                @Index(name = "activeIndex",
+                        columnNames = { "id", "active" }
+                )
+        }
+)
 public class Organization extends AuditableEntity {
 
     // These are used for caching and will require frequent updates.
