@@ -162,7 +162,7 @@ public class TagsController {
 
     @JsonView(AllViews.RestViewTag.class)
     @RequestMapping(value = "/{tagId}/objects", method = RequestMethod.GET)
-    public Object getAppList(@PathVariable("tagId") int tagId) throws IOException {
+    public @ResponseBody Object getAppList(@PathVariable("tagId") int tagId) throws IOException {
 
         Tag tag = tagService.loadTag(tagId);
 

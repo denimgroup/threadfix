@@ -283,6 +283,6 @@ public class User extends AuditableEntity {
     @Transient
     @JsonProperty("bestName")
     public String getBestName() {
-        return displayName == null ? name : displayName;
+        return displayName == null || displayName.isEmpty() ? name : displayName;
     }
 }
