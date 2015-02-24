@@ -67,6 +67,8 @@ public class EditApplicationController {
 	private OrganizationService organizationService;
     @Autowired
     private VulnerabilityService vulnerabilityService;
+	@Autowired
+	private DefectService defectService;
 
 	@ModelAttribute("defectTrackerList")
 	public List<DefectTracker> populateDefectTrackers() {
@@ -247,11 +249,12 @@ public class EditApplicationController {
             return FormRestResponse.failure("Invalid data.", result);
 			
 		} else {
-
             PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS);
-			
+
 			applicationService.storeApplication(application);
-			
+
+			defectService.updateScannerSuppliedStatuses(appId);
+
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			
 			log.debug("The Application " + application.getName() + " (id=" + application.getId() + ") has been edited by user " + user);
