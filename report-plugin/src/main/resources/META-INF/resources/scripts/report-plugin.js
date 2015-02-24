@@ -1,4 +1,10 @@
 var threadfixModule = angular.module('threadfix');
 
+threadfixModule.controller('ReportPluginController', function($scope, $http, $modal, $rootScope, $log, tfEncoder) {
 
-// All js goes here (angular controllers, directives, factories, etc)
+    $scope.$on('rootScopeInitialized', function() {
+        $scope.heading = 'Test Plugin Name';
+        $scope.body = 'Report Plugin Module goes here';
+    });
+
+});
