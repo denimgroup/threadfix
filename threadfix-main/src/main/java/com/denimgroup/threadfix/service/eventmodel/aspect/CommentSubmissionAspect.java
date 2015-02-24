@@ -43,9 +43,13 @@ public class CommentSubmissionAspect implements ApplicationEventPublisherAware {
 
     @Around("execution(* com.denimgroup.threadfix.service.VulnerabilityCommentService.addCommentToVuln(..))")
     public Object emitEvent(ProceedingJoinPoint joinPoint) throws Throwable {
-        VulnerabilityComment comment = (VulnerabilityComment) joinPoint.getArgs()[0];
+        String commentString = (String) joinPoint.getArgs()[0];
         Integer vulnerabilityId = (Integer) joinPoint.getArgs()[1];
         Object proceed = joinPoint.proceed();
+
+        VulnerabilityComment comment = new VulnerabilityComment();
+        comment.setComment(commentString);
+
         eventPublisher.publishEvent(new CommentSubmissionEvent(comment, vulnerabilityId));
         return proceed;
     }
