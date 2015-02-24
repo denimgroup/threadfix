@@ -69,7 +69,7 @@ public class Main {
                     System.out.println(
                             "To start this program again with this configuration, use the options " +
                                     Strings.CONFIG_FILE + actualFile.getAbsolutePath() + " " +
-                                    Strings.TARGET_FILE + "{path to CSV you want to convert}"
+                                    Strings.TARGET_FILE + "{path to file you want to convert}"
                     );
                 }
             }
