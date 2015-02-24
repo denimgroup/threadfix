@@ -176,9 +176,9 @@ public class Configuration {
 
             File csvFile = new File(csvFileName);
             if (!csvFile.exists()) {
-                System.out.println("CSV File '" + csvFileName + "' was not found.");
+                System.out.println("File '" + csvFileName + "' was not found.");
             } else if (!csvFile.isFile()) {
-                System.out.println("CSV File '" + csvFileName + "' was not a regular file.");
+                System.out.println("File '" + csvFileName + "' was not a regular file.");
             } else {
                 CONFIG.csvFile = csvFile;
             }

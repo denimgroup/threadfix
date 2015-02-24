@@ -43,7 +43,7 @@ import static com.denimgroup.threadfix.csv2ssl.util.InteractionUtils.getYNAnswer
 public class InteractiveConfiguration {
 
     public static void configureHeaders() {
-        boolean readFromFile = getYNAnswer("Does the CSV file contain the list of headers as the first line? (y/n)");
+        boolean readFromFile = getYNAnswer("Does the file contain the list of headers as the first line? (y/n)");
 
         if (readFromFile) {
             File file = getCsvFile();
@@ -110,7 +110,7 @@ public class InteractiveConfiguration {
 
     public static void configureHeaderNames() {
         boolean reconfigure = getYNAnswer(
-                "If you got Failures above for header names but the data is present in your CSV file, you should configure the column mappings.\n" +
+                "If you got Failures above for header names but the data is present in your file, you should configure the column mappings.\n" +
                 "Configure mappings now? (y/n)");
 
         if (reconfigure) {
@@ -152,7 +152,7 @@ public class InteractiveConfiguration {
 
 
     public static void configureInputFile() {
-        CONFIG.csvFile = InteractionUtils.getValidFileFromStdIn("CSV");
+        CONFIG.csvFile = InteractionUtils.getValidFileFromStdIn("input (CSV or XLSX)");
     }
 
     public static void configureOutputFile() {
