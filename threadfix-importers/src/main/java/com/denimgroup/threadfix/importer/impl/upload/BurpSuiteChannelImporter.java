@@ -196,7 +196,7 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    		getParamValueText = true;
 	    		getScannerDetail = true;
 	    		getBuilderText(); //resets the stringbuffer
-	    	} else if ("remediationDetail".equals(qName)) {
+	    	} else if ("remediationBackground".equals(qName)) {
 	    		getScannerRecommendation = true;
 	    		getBuilderText(); //resets the stringbuffer
 	    	} else if ("issue".equals(qName)){
