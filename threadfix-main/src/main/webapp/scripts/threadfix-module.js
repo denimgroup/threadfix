@@ -17,6 +17,18 @@ angular.module('threadfix', ['ui.bootstrap', 'angularFileUpload', 'threadfixFilt
         return data;
     });
 
+    $httpProvider.defaults.transformResponse.push(function (data, headerGetter) {
+        if (data === "") {
+            return {
+                "message": "Please refresh the page (CSRF error.)",
+                "success": false,
+                "responseCode": 204
+            };
+        } else {
+            return data;
+        }
+    });
+
     // Override $http service's default transformRequest
     $httpProvider.defaults.transformRequest = [function(data)
     {

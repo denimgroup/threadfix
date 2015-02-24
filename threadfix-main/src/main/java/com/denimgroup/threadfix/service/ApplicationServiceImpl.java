@@ -33,6 +33,7 @@ import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -380,9 +381,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 				if (!gitService.testGitConfiguration(application)) {
                     result.rejectValue("repositoryUrl", null, null, "Unable to clone repository");
                 }
-			} catch (GitAPIException e) {
+			} catch (GitAPIException | JGitInternalException e) {
 
 				boolean shouldLog = true;
+
+				if (e instanceof JGitInternalException) {
+					result.rejectValue("repositoryUrl", null, null, "Unable to connect to this URL.");
+				}
 
 				if (e.getMessage().contains("not authorized")) {
 					result.rejectValue("repositoryUrl", null, null, "Authorization failed.");
