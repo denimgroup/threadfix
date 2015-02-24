@@ -75,6 +75,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Autowired private GenericVulnerabilityDao genericVulnerabilityDao;
 	@Autowired private GitService gitService;
 	@Autowired private ExceptionLogService exceptionLogService;
+	@Autowired private ScanQueueTaskDao scanQueueTaskDao;
+	@Autowired private ScheduledScanDao scheduledScanDao;
 
     @Nullable
 	@Autowired(required = false)
@@ -163,6 +165,19 @@ public class ApplicationServiceImpl implements ApplicationService {
 		if (applicationDao.retrieveByName(possibleName, application.getOrganization().getId()) == null) {
 			application.setName(possibleName);
 		}
+
+
+		for (ScanQueueTask scanQueueTask : application.getScanQueueTasks()) {
+			scanQueueTaskDao.delete(scanQueueTask);
+			scanQueueTask.setApplication(null);
+		}
+		application.setScanQueueTasks(null);
+
+		for (ScheduledScan scheduledScan : application.getScheduledScans()) {
+			scheduledScanDao.delete(scheduledScan);
+			scheduledScan.setApplication(null);
+		}
+		application.setScheduledScans(null);
 
 		application.getOrganization().updateVulnerabilityReport();
 
