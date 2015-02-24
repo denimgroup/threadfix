@@ -63,7 +63,7 @@ import com.denimgroup.threadfix.annotations.ReportPlugin;
          *
          * Locations are noted in the ReportLocation enum (ex. ReportLocation.TEAM)
          */
-        locations = { })
+        locations = { ReportLocation.APPLICATION, ReportLocation.DASHBOARD, ReportLocation.TEAM })
 /*
  * Empty class to hold report plugin metadata
  * 
