@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.loader;
 
+import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.annotations.ScanFormat;
 import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.annotations.StartingTagSet;
@@ -48,7 +49,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.*;
-import java.lang.annotation.Annotation;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.*;
 import java.util.Map.Entry;
@@ -189,7 +189,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 	private String figureOutZip(String fileName) {
 		
 		String result = null;
-		try (ZipFile zipFile = new ZipFile(fileName)) {
+		try (ZipFile zipFile = new ZipFile(DiskUtils.getScratchFile(fileName))) {
 			if (zipFile.getEntry("audit.fvdl") != null) {
 				result = ScannerType.FORTIFY.getDbName();
 			} else if (ZipFileUtils.getZipEntry("issue_index.js", zipFile) != null){
@@ -211,7 +211,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 		try {
 			TagCollector collector = new TagCollector();
 			
-			InputStream stream = new FileInputStream(fileName);
+			InputStream stream = new FileInputStream(DiskUtils.getScratchFile(fileName));
 			
 			ScanUtils.readSAXInput(collector, "Done.", stream);
 			
@@ -383,29 +383,46 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 			log.warn("The scan upload file failed to save, it had null input.");
 			return null;
 		}
-		
+
+		checkDiskSpace(file);
+
 		ApplicationChannel applicationChannel = applicationChannelDao.retrieveById(channelId);
-		
+
 		if (applicationChannel == null) {
 			log.warn("Unable to retrieve Application Channel - scan save failed.");
 			return null;
 		}
-		
+
 		String inputFileName = applicationChannel.getNextFileHandle();
 
 		applicationChannel.setScanCounter(applicationChannel.getScanCounter() + 1);
-		
+
 		applicationChannelDao.saveOrUpdate(applicationChannel);
-		
+
 		return saveFile(inputFileName,file);
 	}
-	
+
+	private void checkDiskSpace(MultipartFile file) {
+		long usableSpace = DiskUtils.getAvailableDiskSpace();
+
+		long size = file.getSize();
+
+		String sizeMessage = "need " + size + " bytes to write file, " + usableSpace + " available.";
+
+		if (size > usableSpace) {
+			log.error("Not enough space to write temporary scan file: " + sizeMessage);
+			throw new RestIOException("Not enough disk space to store temporary scan file.", 200);
+		} else {
+			log.debug("Should have enough room: " + sizeMessage);
+		}
+	}
+
 	private String saveFile(String inputFileName, MultipartFile file) {
         String returnValue = null;
 
 		try (InputStream stream = file.getInputStream()) {
 
-            File diskFile = new File(inputFileName);
+            File diskFile = DiskUtils.getScratchFile(inputFileName);
             try (FileOutputStream out = new FileOutputStream(diskFile)) {
                 byte[] buf = new byte[1024];
                 int len;

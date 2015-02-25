@@ -4,6 +4,33 @@ module.controller("ErrorLogsController", function($scope, $http, tfEncoder) {
 
     $scope.numberToShow = 50;
 
+    var bytesToMessage = function(number) {
+        var unit = "bytes";
+        var lowerNumber = number;
+
+        if (lowerNumber > 1000) {
+            lowerNumber = lowerNumber / 1000;
+            unit = "kilobytes";
+        }
+
+        if (lowerNumber > 1000) {
+            lowerNumber = lowerNumber / 1000;
+            unit = "megabytes";
+        }
+
+        if (lowerNumber > 1000) {
+            lowerNumber = lowerNumber / 1000;
+            unit = "gigabytes";
+        }
+
+        if (lowerNumber > 1000) {
+            lowerNumber = lowerNumber / 1000;
+            unit = "terabytes";
+        }
+
+        return '' + Math.round(lowerNumber) + ' ' + unit;
+    };
+
     $scope.updatePage = function(page) {
         if (page) {
 
@@ -14,6 +41,12 @@ module.controller("ErrorLogsController", function($scope, $http, tfEncoder) {
 
                         $scope.logs = data.object.logs;
                         $scope.totalLogs = data.object.totalLogs;
+
+                        $scope.logs.forEach(function(log) {
+                            log.freeMemory = bytesToMessage(log.freeMemory);
+                            log.totalMemory = bytesToMessage(log.totalMemoryAvailable);
+                            log.freeDiskSpace = bytesToMessage(log.totalSpaceAvailable);
+                        });
 
                     } else {
                         $scope.errorMessage = "Failure. Message was : " + data.message;
@@ -26,7 +59,7 @@ module.controller("ErrorLogsController", function($scope, $http, tfEncoder) {
                     $scope.errorMessage = "Failed to retrieve waf list. HTTP status was " + status;
                 });
         }
-    }
+    };
 
     $scope.$watch('page', function() {
         if ($scope.initialized) {
@@ -34,13 +67,9 @@ module.controller("ErrorLogsController", function($scope, $http, tfEncoder) {
         }
     });
 
-
     $scope.$on('rootScopeInitialized', function() {
         $scope.page = 1;
         $scope.updatePage(1);
     });
-
-
-
 
 });

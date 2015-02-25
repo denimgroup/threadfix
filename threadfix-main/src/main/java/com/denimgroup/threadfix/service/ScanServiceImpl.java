@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
@@ -209,7 +210,7 @@ public class ScanServiceImpl implements ScanService {
 
         if (emptyScan != null) {
             emptyScan.setAlreadyProcessed(true);
-            File file = new File(emptyScan.getFileName());
+            File file = DiskUtils.getScratchFile(emptyScan.getFileName());
             if (file.exists()) {
                 if (!file.delete())
                     file.deleteOnExit();
