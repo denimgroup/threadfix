@@ -368,7 +368,7 @@
                    ng-hide="savingFilter"
                    ng-disabled="!currentFilterNameInput"
                    ng-click="saveCurrentFilters()">
-                    {{selectedFilter && selectedFilter.id ? 'Update' : 'Save'}}
+                    {{selectedFilter && selectedFilter.id ? 'Update Saved Filter' : 'Save'}}
                 </a>
                 <button id="savingFilterButton"
                         ng-show="savingFilter"

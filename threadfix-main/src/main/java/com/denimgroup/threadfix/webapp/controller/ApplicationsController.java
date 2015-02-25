@@ -131,15 +131,15 @@ public class ApplicationsController {
 		hiddenBean.setHidden(true);
 		
         PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS,
-				Permission.CAN_UPLOAD_SCANS,
-				Permission.CAN_MODIFY_VULNERABILITIES,
-				Permission.CAN_MANAGE_VULN_FILTERS,
-				Permission.CAN_SUBMIT_DEFECTS,
+                Permission.CAN_UPLOAD_SCANS,
+                Permission.CAN_MODIFY_VULNERABILITIES,
+                Permission.CAN_MANAGE_VULN_FILTERS,
+                Permission.CAN_SUBMIT_DEFECTS,
                 Permission.CAN_SUBMIT_COMMENTS,
-				Permission.CAN_GENERATE_REPORTS,
-				Permission.CAN_MANAGE_DEFECT_TRACKERS,
-				Permission.CAN_MANAGE_GRC_TOOLS,
-				Permission.CAN_MANAGE_USERS,
+                Permission.CAN_GENERATE_REPORTS,
+                Permission.CAN_MANAGE_DEFECT_TRACKERS,
+                Permission.CAN_MANAGE_GRC_TOOLS,
+                Permission.CAN_MANAGE_USERS,
                 Permission.CAN_MANAGE_TAGS);
 		
 		if (application.getPassword() != null && !"".equals(application.getPassword())) {
@@ -170,7 +170,7 @@ public class ApplicationsController {
 		return "applications/detail";
 	}
 
-    @JsonView(AllViews.TableRow.class)
+    @JsonView(AllViews.FormInfo.class)
     @RequestMapping("{appId}/objects")
     public @ResponseBody Object getBaseObjects(@PathVariable("appId") Integer appId) throws IOException {
         Map<String, Object> map = new HashMap<>();
@@ -216,6 +216,11 @@ public class ApplicationsController {
         map.put("tags", tagService.loadAll());
 
         map.put("applicationTags", application.getTags());
+
+        // permissions
+        for (Permission permission : new Permission[]{Permission.CAN_MANAGE_DEFECT_TRACKERS, Permission.CAN_MANAGE_WAFS}) {
+            map.put(permission.getCamelCase(), PermissionUtils.hasGlobalPermission(permission));
+        }
 
         return RestResponse.success(map);
     }

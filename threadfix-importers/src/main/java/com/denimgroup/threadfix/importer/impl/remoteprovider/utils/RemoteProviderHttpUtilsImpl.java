@@ -28,11 +28,11 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
-import org.eclipse.jgit.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.annotation.Nonnull;
+import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 
 public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport implements RemoteProviderHttpUtils {
@@ -64,7 +64,7 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
             public void configure(HttpMethodBase method) {
                 if (username != null && password != null) {
                     String login = username + ":" + password;
-                    String encodedLogin = Base64.encodeBytes(login.getBytes());
+                    String encodedLogin = DatatypeConverter.printBase64Binary(login.getBytes());
                     method.setRequestHeader("Authorization", "Basic " + encodedLogin);
                 }
                 method.setRequestHeader("Content-type", "text/xml; charset=UTF-8");

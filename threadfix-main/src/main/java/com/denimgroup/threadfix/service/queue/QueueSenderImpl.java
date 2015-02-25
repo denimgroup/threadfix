@@ -24,8 +24,10 @@
 package com.denimgroup.threadfix.service.queue;
 
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
+import com.denimgroup.threadfix.data.entities.ExceptionLog;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.ExceptionLogService;
 import com.denimgroup.threadfix.service.JobStatusService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService;
 import org.apache.activemq.command.ActiveMQMapMessage;
@@ -38,6 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
@@ -50,12 +53,16 @@ import java.util.List;
 public class QueueSenderImpl implements QueueSender {
 	protected final SanitizedLogger log = new SanitizedLogger(QueueSenderImpl.class);
 
+    @Autowired
+    private ExceptionLogService exceptionLogService;
 	@Autowired
 	private JmsTemplate jmsTemplate = null;
 	@Autowired
 	private JobStatusService jobStatusService = null;
     @Autowired
     private RemoteProviderTypeService remoteProviderTypeService;
+
+    private static final SimpleDateFormat format = new SimpleDateFormat("MMM d, y h:mm:ss a");
 
 	String jmsErrorString = "The JMS system encountered an error that prevented the message from being correctly created.";
 
@@ -120,7 +127,7 @@ public class QueueSenderImpl implements QueueSender {
 			scanMap.setString("urlText", "Go to Application");
 		} catch (JMSException e) {
 			log.error(jmsErrorString);
-			e.printStackTrace();
+            addExceptionLog(e);
 		}
 
 		sendMap(scanMap, calendar, applicationChannel);
@@ -153,7 +160,7 @@ public class QueueSenderImpl implements QueueSender {
 			defectTrackerVulnMap.setString("urlText", "Go to Application");
 		} catch (JMSException e) {
 			log.error(jmsErrorString);
-			e.printStackTrace();
+            addExceptionLog(e);
 		}
 
 		sendMap(defectTrackerVulnMap);
@@ -179,7 +186,7 @@ public class QueueSenderImpl implements QueueSender {
 			grcToolVulnMap.setString("urlText", "Go to Application");
 		} catch (JMSException e) {
 			log.error(jmsErrorString);
-			e.printStackTrace();
+            addExceptionLog(e);
 		}
 
 		sendMap(grcToolVulnMap);
@@ -218,7 +225,7 @@ public class QueueSenderImpl implements QueueSender {
 			submitDefectMap.setString("urlText", "Submit more defects");
 		} catch (JMSException e) {
 			log.error(jmsErrorString);
-			e.printStackTrace();
+            addExceptionLog(e);
 		}
 
 		sendMap(submitDefectMap);
@@ -249,7 +256,7 @@ public class QueueSenderImpl implements QueueSender {
 			remoteProviderImportMap.setString("type", QueueConstants.IMPORT_REMOTE_PROVIDER_SCANS_REQUEST);
 		} catch (JMSException e) {
 			log.error(jmsErrorString);
-			e.printStackTrace();
+            addExceptionLog(e);
 		}
 
 		sendMap(remoteProviderImportMap);
@@ -268,7 +275,7 @@ public class QueueSenderImpl implements QueueSender {
             scheduledScanMap.setString("scanner", scanner);
         } catch (JMSException e) {
             log.error(jmsErrorString);
-            e.printStackTrace();
+            addExceptionLog(e);
         }
 
         sendMap(scheduledScanMap);
@@ -283,7 +290,7 @@ public class QueueSenderImpl implements QueueSender {
             scheduledScanMap.setString("type", QueueConstants.STATISTICS_UPDATE);
         } catch (JMSException e) {
             log.error(jmsErrorString);
-            e.printStackTrace();
+            addExceptionLog(e);
         }
 
         sendMap(scheduledScanMap);
@@ -298,7 +305,7 @@ public class QueueSenderImpl implements QueueSender {
             scheduledScanMap.setString("type", QueueConstants.STATISTICS_UPDATE);
         } catch (JMSException e) {
             log.error(jmsErrorString);
-            e.printStackTrace();
+            addExceptionLog(e);
         }
 
         sendMap(scheduledScanMap);
@@ -313,12 +320,11 @@ public class QueueSenderImpl implements QueueSender {
             scheduledScanMap.setString("type", QueueConstants.VULNS_FILTER);
         } catch (JMSException e) {
             log.error(jmsErrorString);
-            e.printStackTrace();
+            addExceptionLog(e);
         }
 
         sendMap(scheduledScanMap);
     }
-
 
     private void send(String message) {
 		jmsTemplate.convertAndSend("requestQueue", message);
@@ -339,7 +345,13 @@ public class QueueSenderImpl implements QueueSender {
 			}
 		} catch (JMSException e) {
 			log.error(jmsErrorString);
-			e.printStackTrace();
+            addExceptionLog(e);
 		}
 	}
+
+    private void addExceptionLog(Exception e) {
+        ExceptionLog exceptionLog = new ExceptionLog(e);
+        exceptionLogService.storeExceptionLog(exceptionLog);
+        log.error("Uncaught exception - logging at " + format.format(exceptionLog.getTime().getTime()) + ".");
+    }
 }

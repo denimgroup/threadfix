@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.data.entities;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.hibernate.annotations.Index;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -79,6 +80,7 @@ public class Defect extends AuditableEntity {
 
     @Column(length = 255, nullable = false)
     @JsonView({AllViews.TableRow.class, AllViews.VulnSearch.class})
+    @Index(name="status")
     public String getStatus() {
         return status;
     }

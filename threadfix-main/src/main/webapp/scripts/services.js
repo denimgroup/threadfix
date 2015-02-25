@@ -507,12 +507,13 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
             $scope.startDate = $scope.parameters.startDate;
             $scope.endDate = $scope.parameters.endDate;
             var submissionObject = vulnSearchParameterService.serialize($scope, $scope.parameters);
+            var editing = $scope.selectedFilter && $scope.selectedFilter.id;
 
             submissionObject.name = $scope.currentFilterNameInput;
             if ($scope.parameters.defaultTrending)
                 submissionObject.defaultTrending = true;
 
-            if ($scope.selectedFilter && $scope.selectedFilter.id)
+            if (editing)
                 submissionObject.id = $scope.selectedFilter.id;
 
             $http.post(tfEncoder.encode("/reports/filter/save"), submissionObject).
@@ -540,7 +541,11 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
                         $scope.$parent.savedDefaultTrendingFilter = defaultFilter;
 
                         $scope.currentFilterNameInput = '';
-                        $scope.saveFilterSuccessMessage = 'Successfully saved filter ' + submissionObject.name;
+                        if (editing) {
+                            $scope.saveFilterSuccessMessage = 'Successfully edited filter ' + submissionObject.name;
+                        } else {
+                            $scope.saveFilterSuccessMessage = 'Successfully saved filter ' + submissionObject.name;
+                        }
                         $scope.saveFilterErrorMessage = undefined;
 
                     } else {
@@ -556,7 +561,6 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
                     $scope.savingFilter = false;
                 });
         }
-
     };
 
     filter.deleteCurrentFilter = function($scope, filterSavedFilters) {

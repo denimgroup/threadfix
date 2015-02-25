@@ -133,17 +133,27 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
     // Handle the complex modal interactions on the edit application modal
     $scope.$on('modalSwitch', function(event, name) {
-        $scope.currentModal.dismiss('modalChanged');
         if (name === 'addWaf') {
             if (!$scope.config.wafList) {
                 $scope.config.wafList = [];
             }
             if ($scope.config.wafList.length === 0) {
+                if (!$scope.config.canManageWafs) {
+                    alert("No WAFs were found, and you don't have permission to create WAFs. Please contact your administrator.");
+                    return;
+                }
+                $scope.currentModal.dismiss('modalChanged');
                 $scope.showCreateWafModal();
             } else {
+                $scope.currentModal.dismiss('modalChanged');
                 $scope.showAddWafModal();
             }
         } else if (name === 'createWaf') {
+            if (!$scope.config.canManageWafs) {
+                alert("You don't have permission to create WAFs. Please contact your administrator.");
+                return;
+            }
+            $scope.currentModal.dismiss('modalChanged');
             $scope.showCreateWafModal();
 
         } else if (name === 'addDefectTracker') {
@@ -151,12 +161,25 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                 $scope.config.defectTrackerList = [];
             }
             if ($scope.config.defectTrackerList.length === 0) {
+                if (!$scope.config.canManageDefectTrackers) {
+                    alert("No defect trackers were found, and you don't have permission to create defect trackers. Please contact your administrator.");
+                    return;
+                }
+
+                $scope.currentModal.dismiss('modalChanged');
                 $scope.showCreateDefectTrackerModal();
             } else {
+                $scope.currentModal.dismiss('modalChanged');
                 $scope.showAddDefectTrackerModal(null);
             }
 
         } else if (name === 'createDefectTracker') {
+            if (!$scope.config.canManageDefectTrackers) {
+                alert("You don't have permission to create defect trackers. Please contact your administrator.");
+                return;
+            }
+
+            $scope.currentModal.dismiss('modalChanged');
             $scope.showCreateDefectTrackerModal();
         } else if (name === 'goToWaf') {
             $scope.goToWaf();
