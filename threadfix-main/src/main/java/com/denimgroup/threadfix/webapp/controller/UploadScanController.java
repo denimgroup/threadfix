@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.Organization;
@@ -106,7 +107,7 @@ public class UploadScanController {
                 return failure(returnValue.getScanCheckResult().toString());
             }
         } finally { // error recovery code
-            File diskFile = new File(fileName);
+            File diskFile = DiskUtils.getScratchFile(fileName);
 
             if (diskFile.exists()) {
                 LOG.info("After scan upload, file is still present. Attempting to delete.");

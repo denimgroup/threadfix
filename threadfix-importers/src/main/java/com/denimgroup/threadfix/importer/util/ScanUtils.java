@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.importer.util;
 
+import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.exception.RestInvalidScanFormatException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -124,7 +125,7 @@ public final class ScanUtils {
 	}
 
 	public static boolean isZip(String fileName) {
-		try (RandomAccessFile file = new RandomAccessFile(new File(fileName), "r")) {
+		try (RandomAccessFile file = new RandomAccessFile(DiskUtils.getScratchFile(fileName), "r")) {
 			// these are the magic bytes for a zip file
 	        return file.readInt() == 0x504B0304;
 		} catch (FileNotFoundException e) {
