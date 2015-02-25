@@ -34,21 +34,32 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 @Table(name = "Dependency")
 public class Dependency extends AuditableEntity {
 
-	private static final long serialVersionUID = 3647499545381978852L;
-	
-	@Size(max = 20, message = "{errors.maxlength} 20.")
-	private String cve;
+    private static Map<String, String> refLinkMap = Collections.unmodifiableMap(new HashMap<String, String>(){{
+        put("cve", "http://cve.mitre.org/cgi-bin/cvename.cgi?name=");
+        put("osvdb", "http://osvdb.org/");
+    }});
+
+    private static final long serialVersionUID = 3647499545381978852L;
+
+    @Size(max = 20, message = "{errors.maxlength} 20.")
+    private String cve;
 
     @Size(max = 1024)
     private String componentName = null;
 
     @Size(max = 1024)
     private String componentFilePath = null;
+
+    @Size(max = 1024)
+    private String refLink = null;
 
     @Size(max = 1024000)
     private String description = null;
@@ -128,14 +139,17 @@ public class Dependency extends AuditableEntity {
                 '}';
     }
 
-    @Transient
     @JsonView(Object.class)
     public String getRefLink() {
-        if (getSource() != null && getSource().toUpperCase().equals("OSVDB")) {
-            return "http://osvdb.org/" + getCve();
-        } else {
-            return "http://cve.mitre.org/cgi-bin/cvename.cgi?name=" + getCve();
-        }
+        if (this.refLink != null)
+            return this.refLink;
+
+        String src = (getSource() != null && refLinkMap.get(getSource().toLowerCase()) != null ? getSource() : "cve");
+        return refLinkMap.get(src) + getCve();
+    }
+
+    public void setRefLink(String refLink) {
+        this.refLink = refLink;
     }
 
     @Transient
