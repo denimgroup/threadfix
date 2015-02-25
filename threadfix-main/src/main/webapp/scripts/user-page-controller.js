@@ -97,11 +97,11 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
             }
         });
 
-        modalInstance.result.then(function (editedUser) {
+        modalInstance.result.then(function (editedUserName) {
 
-            if (editedUser) {
+            if (editedUserName) {
                 reloadList();
-                $scope.successMessage = "Successfully edited user " + editedUser.name;
+                $scope.successMessage = "Successfully edited user " + editedUserName;
             } else {
                 $scope.successMessage = "Successfully deleted user " + user.name;
                 reloadList();
