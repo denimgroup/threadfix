@@ -44,7 +44,10 @@
         </tr>
         <tr ng-repeat-end>
             <td colspan="2" id="{{ $index }}LogContent">
-                <pre ng-show="log.expanded">{{ log.exceptionStackTrace }}</pre>
+                <pre ng-show="log.expanded">Diagnostics: {{ log.freeMemory }} memory available out of {{ log.totalMemory }}. {{ log.freeDiskSpace }} disk space available.
+
+{{ log.exceptionStackTrace }}
+                </pre>
             </td>
 
         </tr>

@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.DiskUtils;
+
 import javax.persistence.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -42,6 +44,8 @@ public final class ExceptionLog extends BaseEntity {
 	private String message;
 	private String uuid;
 	private String type;
+
+	private long totalSpaceAvailable, freeMemory, totalMemoryAvailable;
 	
 	/**
 	 * This is to make Spring happy and allow us to retrieve items from the database. 
@@ -55,7 +59,7 @@ public final class ExceptionLog extends BaseEntity {
 		
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 		PrintStream printStream = new PrintStream(byteArrayOutputStream);
-		
+
 		e.printStackTrace(printStream);
 
 		setExceptionStackTrace(byteArrayOutputStream.toString());
@@ -64,6 +68,9 @@ public final class ExceptionLog extends BaseEntity {
 		setType(e.getClass().getSimpleName());
 		setExceptionToString(e.toString());
 		setUUID(java.util.UUID.randomUUID().toString());
+		setTotalMemoryAvailable(Runtime.getRuntime().maxMemory());
+		setFreeMemory(Runtime.getRuntime().freeMemory());
+		setTotalSpaceAvailable(DiskUtils.getAvailableDiskSpace());
 		
 		if (message != null && message.length() >= 255)
 			message = message.substring(0, 254);
@@ -128,5 +135,32 @@ public final class ExceptionLog extends BaseEntity {
 
 	public void setTime(Calendar time) {
 		this.time = time;
+	}
+
+	@Column(nullable = true)
+	public long getTotalSpaceAvailable() {
+		return totalSpaceAvailable;
+	}
+
+	public void setTotalSpaceAvailable(long totalSpaceAvailable) {
+		this.totalSpaceAvailable = totalSpaceAvailable;
+	}
+
+	@Column(nullable = true)
+	public long getFreeMemory() {
+		return freeMemory;
+	}
+
+	public void setFreeMemory(long freeMemory) {
+		this.freeMemory = freeMemory;
+	}
+
+	@Column(nullable = true)
+	public long getTotalMemoryAvailable() {
+		return totalMemoryAvailable;
+	}
+
+	public void setTotalMemoryAvailable(long totalMemoryAvailable) {
+		this.totalMemoryAvailable = totalMemoryAvailable;
 	}
 }
