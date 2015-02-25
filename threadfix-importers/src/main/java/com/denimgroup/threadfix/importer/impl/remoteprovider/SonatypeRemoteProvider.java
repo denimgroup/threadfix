@@ -200,73 +200,54 @@ public class SonatypeRemoteProvider extends AbstractRemoteProvider {
             if (!object.has("pathnames") || "null".equals(object.getString("pathnames")))
                 return findings;
 
-            Iterable<JSONObject> ite = toJSONObjectIterable(object.getString("pathnames"));
-
             JSONArray jsonArray = object.getJSONArray("pathnames");
-            if (jsonArray.length() < 1)
-                return findings;
+            Map<FindingKey, String> findingMap;
+            String pathName, component;
 
-            // Get only first component in the list
-            String pathName = jsonArray.getString(0);
-            pathName = pathName.replace("\\", "/");
-            String component = pathName.split("/")[pathName.split("/").length - 1];
+            for (int i = 0; i< jsonArray.length(); i++) {
+                pathName = jsonArray.getString(i).replace("\\", "/");
+                component = pathName.split("/")[pathName.split("/").length - 1];
 
-            Map<FindingKey, String> findingMap = map (
-                    FindingKey.PATH, pathName,
-                    FindingKey.VULN_CODE, "Configuration"
-            );
+                findingMap = map (
+                        FindingKey.PATH, pathName,
+                        FindingKey.VULN_CODE, "Configuration"
+                );
 
-            JSONObject securityData = null;
-            if (object.has("securityData") && !"null".equals(object.getString("securityData")))
-                securityData = getJSONObject(object.getString("securityData"));
+                JSONObject securityData = null;
+                if (object.has("securityData") && !"null".equals(object.getString("securityData")))
+                    securityData = getJSONObject(object.getString("securityData"));
 
-            if (securityData == null)
-                return findings;
+                if (securityData == null)
+                    return findings;
 
-            String rawFinding = object.toString(2);
+                String rawFinding = object.toString(2);
 
-            for (JSONObject issue : toJSONObjectIterable(securityData.getString("securityIssues"))) {
+                for (JSONObject issue : toJSONObjectIterable(securityData.getString("securityIssues"))) {
 
-                if (issue.has("status") && "Open".equals(issue.getString("status"))) {
-                    Dependency dependency = new Dependency();
-                    dependency.setCve(issue.getString("reference"));
-                    dependency.setSource(issue.getString("source"));
-                    dependency.setComponentName(component);
-                    dependency.setComponentFilePath(pathName);
-                    findingMap.put(FindingKey.SEVERITY_CODE, getSeverity(issue));
-                    Finding finding = constructFinding(findingMap);
-                    assert finding != null : "Null finding received from constructFinding";
-                    finding.setRawFinding(rawFinding);
-                    finding.setDependency(dependency);
-                    finding.setNativeId(object.getString("hash") + "-" + issue.getString("reference"));
-                    finding.setIsStatic(true);
-                    findings.add(finding);
+                    if (issue.has("status") && "Open".equals(issue.getString("status"))) {
+                        Dependency dependency = new Dependency();
+                        dependency.setCve(issue.getString("reference"));
+                        dependency.setSource(issue.getString("source"));
+                        dependency.setComponentName(component);
+                        dependency.setComponentFilePath(pathName);
+                        dependency.setRefLink(issue.getString("url"));
+                        findingMap.put(FindingKey.SEVERITY_CODE, issue.getString("threatCategory"));
+                        Finding finding = constructFinding(findingMap);
+                        assert finding != null : "Null finding received from constructFinding";
+                        finding.setRawFinding(rawFinding);
+                        finding.setDependency(dependency);
+                        finding.setNativeId(object.getString("hash") + "-" + issue.getString("reference"));
+                        finding.setIsStatic(true);
+                        findings.add(finding);
+                    }
                 }
             }
+
         } catch (JSONException e) {
             throw new RestIOException(e, "Invalid response received.");
         }
 
         return findings;
-    }
-
-    private String getSeverity(JSONObject issue) {
-        int severity = 1;
-        try {
-            if (issue.has("severity") && !"null".equals(issue.getString("severity")))
-                severity = issue.getInt("severity");
-            if (severity>=7 && severity<=10)
-                return "Critical";
-            else if (severity >=4 && severity<7)
-                return "Severe";
-            else if (severity>=1 && severity <4)
-                return "Moderate";
-            else return "No Threat";
-
-        } catch (JSONException e) {
-            throw new RestIOException(e, "Invalid response received.");
-        }
-
     }
 
     private String getUrl(String inputUrl) {

@@ -189,7 +189,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 	private String figureOutZip(String fileName) {
 		
 		String result = null;
-		try (ZipFile zipFile = new ZipFile(fileName)) {
+		try (ZipFile zipFile = new ZipFile(DiskUtils.getScratchFile(fileName))) {
 			if (zipFile.getEntry("audit.fvdl") != null) {
 				result = ScannerType.FORTIFY.getDbName();
 			} else if (ZipFileUtils.getZipEntry("issue_index.js", zipFile) != null){
@@ -211,7 +211,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 		try {
 			TagCollector collector = new TagCollector();
 			
-			InputStream stream = new FileInputStream(fileName);
+			InputStream stream = new FileInputStream(DiskUtils.getScratchFile(fileName));
 			
 			ScanUtils.readSAXInput(collector, "Done.", stream);
 			
@@ -422,7 +422,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 
 		try (InputStream stream = file.getInputStream()) {
 
-            File diskFile = new File(inputFileName);
+            File diskFile = DiskUtils.getScratchFile(inputFileName);
             try (FileOutputStream out = new FileOutputStream(diskFile)) {
                 byte[] buf = new byte[1024];
                 int len;

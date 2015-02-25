@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.dao.UserDao;
@@ -203,7 +204,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			return null;
 		}
 	
-		File file = new File(fileName);
+		File file = DiskUtils.getScratchFile(fileName);
 		ApplicationChannel applicationChannel = applicationChannelDao
 				.retrieveById(channelId);
 	
