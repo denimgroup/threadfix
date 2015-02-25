@@ -133,12 +133,16 @@ public class EditUserController {
 			userService.storeUser(user);
 
 			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+            String userName = user.getName();
 
 			// For now, we'll say that if the name matches then they are the same.
 			// This may not hold for AD scenarios.
-			log.info("The User " + user.getName() + " (id=" + user.getId() + ") has been edited by user " + currentUser);
+			log.info("The User " + userName + " (id=" + user.getId() + ") has been edited by user " + currentUser);
 
-			return RestResponse.success(user);
+            // clear user details from session attribute
+            user = new User();
+
+			return RestResponse.success(userName);
 		}
 	}
 }
