@@ -92,10 +92,8 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
             } else if (line.equals("type.authenticationfields")) {
                 currentState = State.AUTHENTICATION_FIELDS;
             } else if (currentState == State.NAME) {
-                if (line != null) {
-                    name = line.split(",")[0];
-                    channelVulnerabilityUpdater.updateChannelTypeInfo(line);
-                }
+                name = line.split(",")[0];
+                channelVulnerabilityUpdater.updateChannelTypeInfo(line);
             } else if (currentState == State.CREDENTIALS) {
                 usernamePassword = line.equalsIgnoreCase("usernamepassword");
             } else if (currentState == State.CHANNEL_TYPE) {
@@ -126,10 +124,8 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
             type.setName(name);
             type.setHasUserNamePassword(usernamePassword);
             type.setChannelType(channelType);
-            type.setAuthenticationFields(fields);
-            for (RemoteProviderAuthenticationField field : fields) {
-                field.setRemoteProviderType(type);
-            }
+            updateAuthenticationFields(type, fields);
+
             remoteProviderTypeDao.saveOrUpdate(type);
 
         } else {
@@ -137,13 +133,30 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
 
             databaseType.setHasUserNamePassword(usernamePassword);
             databaseType.setChannelType(channelType);
-            databaseType.setAuthenticationFields(fields);
-
-            for (RemoteProviderAuthenticationField field : fields) {
-                field.setRemoteProviderType(databaseType);
-            }
+            updateAuthenticationFields(databaseType, fields);
 
             remoteProviderTypeDao.saveOrUpdate(databaseType);
+        }
+    }
+
+    private void updateAuthenticationFields(
+            RemoteProviderType type,
+            List<RemoteProviderAuthenticationField> fields) {
+
+        for (RemoteProviderAuthenticationField field : fields) {
+            boolean found = false;
+            for (RemoteProviderAuthenticationField oldField : type.getAuthenticationFields()) {
+                if (oldField.getName().equals(field.getName())) {
+                    oldField.setRequired(field.getRequired());
+                    oldField.setSecret(field.isSecret());
+                    found = true;
+                }
+            }
+
+            if (!found) {
+                type.getAuthenticationFields().add(field);
+                field.setRemoteProviderType(type);
+            }
         }
     }
 

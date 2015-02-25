@@ -169,23 +169,23 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
 
     }
 
-    reportExporter.exportPDFTableFromId = function(exportInfo, tableInfo) {
+    reportExporter.exportPDFTableFromId = function(exportIds, tableData) {
 
-        var fileName = getName(exportInfo);
-        var tableId = exportInfo.tableId, graghId = exportInfo.svgId;
+        var fileName = getName(exportIds);
+        var tableId = exportIds.tableId, graghId = exportIds.svgId;
 
         var pdf = new jsPDF({lineHeight: 0.85});
         addSvgToPdf(pdf, graghId);
 
         // Adding summary table in Compliance report
-        if (tableInfo && tableInfo.length > 0) {
+        if (tableData && tableData.length > 0) {
             pdf.cellInitialize();
             pdf.setFontSize(10);
-            var headers = Object.keys(tableInfo[0]);
+            var headers = Object.keys(tableData[0]);
             headers.forEach(function(header){
                 pdf.cell(20, 150, 50, 10, header, 0);
             });
-            tableInfo.forEach(function(row, i){
+            tableData.forEach(function(row, i){
                 headers.forEach(function(header){
                     pdf.cell(20, 150, 50, 10, "" + row[header], i+1);
                 });

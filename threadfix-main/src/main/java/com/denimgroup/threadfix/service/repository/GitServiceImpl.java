@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.repository;
 
+import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.GitService;
@@ -49,7 +50,7 @@ public class GitServiceImpl implements GitService {
     public boolean testGitConfiguration(Application application) throws GitAPIException {
 
         InitCommand initCommand = new InitCommand();
-        File applicationDirectory = new File(baseDirectory + application.getId() + "-test");
+        File applicationDirectory = DiskUtils.getScratchFile(baseDirectory + application.getId() + "-test");
         initCommand.setDirectory(applicationDirectory);
 
         Git otherGit = initCommand.call();
@@ -187,7 +188,7 @@ public class GitServiceImpl implements GitService {
     @Override
     public File getWorkTree(Application application) {
 
-        File applicationDirectory = new File(baseDirectory + application.getId());
+        File applicationDirectory = DiskUtils.getScratchFile(baseDirectory + application.getId());
 
         if (application.getRepositoryUrl() != null && !application.getRepositoryUrl().trim().isEmpty()) {
             File repo = cloneGitTreeToDirectory(application, applicationDirectory);
