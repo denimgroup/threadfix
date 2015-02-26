@@ -242,6 +242,10 @@ public class EditManualFindingController {
             }
 
         }
+
+        dbFinding.getVulnerability().setCalculatedUrlPath(dbFinding.getCalculatedUrlPath());
+        dbFinding.getVulnerability().setCalculatedFilePath(dbFinding.getCalculatedFilePath());
+
         queueSender.updateCachedStatistics(appId);
     }
 
