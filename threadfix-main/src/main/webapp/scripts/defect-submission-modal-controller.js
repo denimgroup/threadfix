@@ -31,9 +31,8 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                     $scope.isDynamicForm = true;
                 $scope.config.defectTrackerName = data.object.defectTrackerName;
 
-                $scope.config.defects = data.object.defectList.map(function(defect) {
-                    return defect.nativeId;
-                });
+                $scope.config.defects = data.object.defectList;
+
                 if ($scope.config.defects && $scope.config.defects.length > 0) {
                     $scope.config.placeholder = $scope.config.defects[0];
                 }
