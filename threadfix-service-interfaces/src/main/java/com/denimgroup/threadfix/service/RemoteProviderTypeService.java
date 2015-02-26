@@ -33,7 +33,7 @@ import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 public interface RemoteProviderTypeService {
 	
 	String USE_OLD_PASSWORD = "no password here.";
-	String API_KEY_PREFIX = "************************";
+	String MASKED_VALUE = "************************";
 	
 	public static enum ResponseCode {
 		SUCCESS, BAD_ID, NO_APPS,

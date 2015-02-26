@@ -343,7 +343,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
             if (authenticationFieldMap.containsKey(field.getName())) {
                 String value = authenticationFieldMap.get(field.getName());
 
-                if (!value.equals(field.getValue())) {
+                if (!value.equals(MASKED_VALUE) && !value.equals(field.getValue())) {
                     field.setValue(value);
                     updated = true;
                 }
@@ -376,7 +376,9 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
                                        boolean matchSourceNumberBoolean) {
 
         if (databaseRemoteProviderType.getHasApiKey() &&
-                apiKey != null && !apiKey.startsWith(USE_OLD_PASSWORD) &&
+                apiKey != null &&
+				!apiKey.startsWith(USE_OLD_PASSWORD) &&
+				!apiKey.startsWith(MASKED_VALUE) &&
                 !apiKey.equals(databaseRemoteProviderType.getApiKey())
                 ||
                 databaseRemoteProviderType.getHasUserNamePassword() &&
@@ -442,6 +444,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 
             } else if (username.equals(databaseRemoteProviderType.getUsername()) &&
                     !password.equals(USE_OLD_PASSWORD) &&
+                    !password.equals(MASKED_VALUE) &&
                     !password.equals(databaseRemoteProviderType.getPassword())) {
                 LOG.info("Provider password has changed, updating applications.");
 

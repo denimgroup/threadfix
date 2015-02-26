@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
+import com.denimgroup.threadfix.data.entities.RemoteProviderAuthenticationField;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.enums.QualysPlatform;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -53,6 +54,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.service.RemoteProviderTypeService.MASKED_VALUE;
 
 @Controller
 @RequestMapping("configuration/remoteproviders")
@@ -85,9 +87,7 @@ public class RemoteProvidersController {
 		List<RemoteProviderType> typeList = remoteProviderTypeService.loadAll();
 
 		for (RemoteProviderType type : typeList) {
-			if (type != null && type.getApiKey() != null) {
-				type.setApiKey(mask(type.getApiKey()));
-			}
+			maskValues(type);
 		}
 
 		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
@@ -103,17 +103,36 @@ public class RemoteProvidersController {
 		return "config/remoteproviders/index";
 	}
 
-	private String mask(String input) {
-		if (input != null) {
-			if (input.length() > 5) {
-                return input.replace(input.substring(0,input.length() - 4),
-                        RemoteProviderTypeService.API_KEY_PREFIX);
-			} else {
-				// should never get here, but let's not return the info anyway
-				return RemoteProviderTypeService.API_KEY_PREFIX;
+	private void maskValues(RemoteProviderType type) {
+		if (type.getPassword() != null) {
+			type.setPassword(MASKED_VALUE);
+		}
+
+		if (type.getApiKey() != null) {
+			type.setApiKey(MASKED_VALUE);
+		}
+
+		for (RemoteProviderAuthenticationField field : type.getAuthenticationFields()) {
+			if (field.isSecret() && field.getValue() != null) {
+				field.setValue(MASKED_VALUE);
 			}
-		} else {
-			return null;
+		}
+	}
+
+	private void unmaskVAlues(RemoteProviderType type) {
+
+		if (type.getPassword() != null) {
+			type.setPassword(MASKED_VALUE);
+		}
+
+		if (type.getApiKey() != null) {
+			type.setApiKey(MASKED_VALUE);
+		}
+
+		for (RemoteProviderAuthenticationField field : type.getAuthenticationFields()) {
+			if (field.isSecret() && field.getValue() != null) {
+				field.setValue(MASKED_VALUE);
+			}
 		}
 	}
 	
@@ -220,7 +239,10 @@ public class RemoteProvidersController {
 	@JsonView(AllViews.TableRow.class)
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
 	@RequestMapping(value="/{typeId}/apps/{rpAppId}/delete/{appId}", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<RemoteProviderApplication> deleteAppConfiguration(@PathVariable("typeId") int typeId, @PathVariable("rpAppId") int rpAppId,
+	@ResponseBody
+	public RestResponse<RemoteProviderApplication> deleteAppConfiguration(
+			@PathVariable("typeId") int typeId,
+			@PathVariable("rpAppId") int rpAppId,
 			@PathVariable("appId") int appId) {
         RemoteProviderApplication dbRemoteProviderApplication =
                 remoteProviderApplicationService.load(rpAppId);
@@ -299,7 +321,13 @@ public class RemoteProvidersController {
 
         Map<String, Object> map = new HashMap<>();
 
-        map.put("remoteProviders", remoteProviderTypeService.loadAll());
+		List<RemoteProviderType> value = remoteProviderTypeService.loadAll();
+
+		for (RemoteProviderType remoteProviderType : value) {
+			maskValues(remoteProviderType);
+		}
+
+		map.put("remoteProviders", value);
         map.put("qualysPlatforms", QualysPlatform.getPlatforms());
         map.put("teams", organizationService.loadAllActive());
         map.put("scheduledImports", scheduledRemoteProviderImportService.loadAll());
