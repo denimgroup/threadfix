@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.listOf;
 import static com.denimgroup.threadfix.importer.update.UpdaterConstants.REMOTE_PROVIDERS_FOLDER;
 
 /**
@@ -145,6 +146,11 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
 
         for (RemoteProviderAuthenticationField field : fields) {
             boolean found = false;
+
+            if (type.getAuthenticationFields() == null) {
+                type.setAuthenticationFields(listOf(RemoteProviderAuthenticationField.class));
+            }
+
             for (RemoteProviderAuthenticationField oldField : type.getAuthenticationFields()) {
                 if (oldField.getName().equals(field.getName())) {
                     oldField.setRequired(field.getRequired());
