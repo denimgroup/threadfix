@@ -354,7 +354,10 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
             LOG.info("Credentials have been updated, updating applications");
 
             List<RemoteProviderApplication> applications = remoteProviderApplicationService.updateApplications(databaseRemoteProviderType);
-            store(databaseRemoteProviderType); // should cascade field values too
+
+			encryptCredentials(databaseRemoteProviderType);
+
+			store(databaseRemoteProviderType); // should cascade field values too
 
             if (applications != null && !applications.isEmpty()) {
                 return ResponseCode.SUCCESS;
