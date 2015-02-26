@@ -33,16 +33,14 @@
 	<table class="table table-striped">
 		<thead>
 		<tr>
-			<th class="short first"></th>
+			<th style="width: 60px;" class="short first"></th>
 			<th class="short">1 Month</th>
-			<th class="short">2 Months</th>
 			<th class="short">3 Months</th>
 			<th class="short">6 Months</th>
-			<th class="short">9 Months</th>
 			<th class="short">12 Months</th>
 			<th class="short">12+ Months</th>
-			<th class="short">Never</th>
-			<th class="short last" >Total</th>
+			<th style="width: 50px;" >Never</th>
+			<th style="width: 50px;" class="short last" >Total</th>
 		</tr>
 		</thead>
 		<tbody>
@@ -50,10 +48,8 @@
 		<tr ng-repeat = "app in appsByCriticality" id="{{app.criticality}}">
 			<td id="{{app.criticality}}Criticality"> {{app.criticality}} </td>
 			<td id="{{app.criticality}}1M"> {{app.1Month ? app.1Month : '0'}} </td>
-			<td id="{{app.criticality}}2M"> {{app.2Months ? app.2Months : '0'}} </td>
 			<td id="{{app.criticality}}3M"> {{app.3Months ? app.3Months : '0'}} </td>
 			<td id="{{app.criticality}}6M"> {{app.6Months ? app.6Months : '0'}} </td>
-			<td id="{{app.criticality}}9M"> {{app.9Months ? app.9Months : '0'}} </td>
 			<td id="{{app.criticality}}12M"> {{app.12Months ? app.12Months : '0'}} </td>
 			<td ng-if="app.Years" id="{{app.criticality}}Years" style="background:orange;font-weight:bold;"> {{app.Years ? app.Years : '0'}} </td>
 			<td ng-if="!app.Years" id="{{app.criticality}}Years"> {{app.Years ? app.Years : '0'}} </td>

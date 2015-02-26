@@ -690,13 +690,11 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
                 if (monthsOld < 2)
                     index = "1Month";
                 else if (monthsOld < 4)
-                    index = monthsOld + "Months";
+                    index = "3Months";
                 else if (monthsOld < 7)
-                    index = 6 + "Months";
-                else if (monthsOld < 10)
-                    index = 9 + "Months";
+                    index = "6Months";
                 else if (monthsOld < 13)
-                    index = 12 + "Months";
+                    index = "12Months";
                 else index = 'Years';
 
                 temp[index] = (temp[index] ? temp[index] + 1 : 1);
