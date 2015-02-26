@@ -74,7 +74,9 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 	@Transactional(readOnly = false)
 	public boolean processManualFindingEdit(Finding finding, Integer applicationId) {
 		boolean result = processManualFinding(finding, applicationId);
-		if (result && finding != null && finding.getScan() != null && 
+        finding.getScan().setNumberTotalVulnerabilities(finding.getScan().getNumberTotalVulnerabilities() - 1);
+
+		if (result && finding != null && finding.getScan() != null &&
 				finding.getScan().getFindings() != null) {
 			
 			Finding oldFinding = null;
@@ -163,6 +165,12 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 						scan.getApplication().getProjectRoot().toLowerCase()));
 			}
 			finding.getSurfaceLocation().setPath(path);
+		}
+
+        if (finding.getIsStatic()) {
+            finding.setCalculatedFilePath(finding.getDataFlowElements().get(0).getSourceFileName());
+        } else {
+            finding.setCalculatedUrlPath(finding.getSurfaceLocation().getPath());
 		}
 
 		Scan tempScan = new Scan();
