@@ -23,7 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -113,6 +115,7 @@ public class WafRule extends AuditableEntity {
 	}
 
 	@Column(length = 25)
+	@JsonView(AllViews.TableRow.class)
 	public String getNativeId() {
 		return nativeId;
 	}
@@ -164,7 +167,8 @@ public class WafRule extends AuditableEntity {
 	}
 
     @Transient
-    public int getSecurityEventsCount() {
+	@JsonView(AllViews.TableRow.class)
+	public int getSecurityEventsCount() {
         if (securityEvents != null)
             return securityEvents.size();
 
