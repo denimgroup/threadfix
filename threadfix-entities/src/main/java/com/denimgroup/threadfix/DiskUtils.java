@@ -38,9 +38,56 @@ public class DiskUtils {
 
     private DiskUtils(){}
 
+    public static String getRootPath() {
+        return System.getProperty("threadfix.scratchFolder");
+    }
+
+    public static File getScratchFile(String path) {
+        if (path == null) {
+            throw new IllegalArgumentException("Null path passed to getScratchFile()");
+        }
+
+        LOG.debug("getScratchFile << " + path);
+
+        final File returnFile;
+        String root = getRootPath();
+
+        if (root == null) {
+            LOG.debug("Scratch folder is not configured, using relative path.");
+            returnFile = new File(path);
+        } else {
+            File file = new File(root);
+
+            if (!file.exists()) {
+                LOG.error("Supplied scratch location (" + root + ") didn't exist. Defaulting to relative path.");
+                returnFile = new File(path);
+            } else if (!file.isDirectory()) {
+                LOG.error("Supplied scratch location (" + root + ") is not a directory. Defaulting to relative path.");
+                returnFile = new File(path);
+            } else if (!file.canWrite()) {
+                LOG.error("ThreadFix is unable to write to the supplied scratch location (" + root + "). Defaulting to relative path.");
+                returnFile = new File(path);
+            } else {
+                LOG.debug("Got a valid scratch root from system properties.");
+                String canonicalRoot = file.getAbsolutePath();
+
+                boolean hasSlash = canonicalRoot.endsWith(File.separator) || path.startsWith(File.separator);
+                if (hasSlash) {
+                    returnFile = new File(canonicalRoot + path);
+                } else {
+                    returnFile = new File(canonicalRoot + File.separator + path);
+                }
+            }
+        }
+
+        LOG.debug("getScratchFile >> " + returnFile.getAbsolutePath());
+
+        return returnFile;
+    }
+
     public static long getAvailableDiskSpace() {
 
-        File tmp = new File("tmp");
+        File tmp = getScratchFile("tmp");
         try {
             if (!tmp.exists()) {
                 tmp.createNewFile();

@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.translator;
 
+import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
@@ -126,7 +127,7 @@ class FindingProcessorFactory extends SpringBeanAutowiringSupport {
             LOG.info("Successfully found GitService.");
         }
 
-		File applicationDirectory = new File(baseDirectory + application.getId());
+		File applicationDirectory = DiskUtils.getScratchFile(baseDirectory + application.getId());
 
 		if (factory.gitService != null &&
                 application.getRepositoryUrl() != null &&

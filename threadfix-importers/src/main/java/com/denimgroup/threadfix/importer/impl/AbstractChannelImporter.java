@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl;
 
+import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
@@ -168,8 +169,8 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
     @Override
     public void setFileName(String fileName) {
         try {
-            this.inputStream = new FileInputStream(fileName);
-            this.inputFileName = new File(fileName).getAbsolutePath();
+            this.inputStream = new FileInputStream(DiskUtils.getScratchFile(fileName));
+            this.inputFileName = DiskUtils.getScratchFile(fileName).getAbsolutePath();
         } catch (FileNotFoundException e) {
             log.warn("It appears that the scan file did not save correctly and is " +
                     "therefore not available to the scan file parser", e);
