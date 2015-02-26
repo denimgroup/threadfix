@@ -411,8 +411,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
 
                 function monthDiff(d1, d2) {
                     var months;
-                    months = (d2.getFullYear() - d1.getFullYear()) * 12;
-                    months += d2.getMonth() - d1.getMonth();
+                    months = (d2.getFullYear() - d1.getFullYear()) * 12 + d2.getMonth() - d1.getMonth();
                     return months <= 0 ? 0 : months;
                 }
 

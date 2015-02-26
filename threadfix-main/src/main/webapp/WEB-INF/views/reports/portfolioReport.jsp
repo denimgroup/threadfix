@@ -1,123 +1,85 @@
-<%@ include file="/common/taglibs.jsp"%>
-
-<head>
-	<title>Scanner Comparison By Vulnerability</title>
-	<cbs:cachebustscript src="/scripts/confirm.js"/>
-	<cbs:cachebustscript src="/scripts/sortable_us.js"/>
-	<cbs:cachebustscript src="/scripts/tablefilter2.js"/> 
-	<style type="text/css">
-		input { width:100% }
-	</style>
-</head>
-
-<body>
+<div style="overflow: auto" ng-show="reportId==Portfolio_Report_Id" id="portfolioDiv">
 	<h2>Portfolio Report</h2>
-	
+
 	<table class="dataTable">
+		<thead>
+		<tr>
+			<td class="long first"><b>Summary</b></td>
+			<td></td>
+		</tr>
+		</thead>
 		<tbody>
-			<tr>
-				<td>Team:</td>
-				<td class="inputValue"><c:out value="${ teamName }"/></td>
-			</tr>
-			<tr>
-				<td>Number of Applications:</td>
-				<td class="inputValue"><c:out value="${ totalApps }"/></td>
-			</tr>
-			<tr>
-				<td>Number of Scans:</td>
-				<td class="inputValue"><c:out value="${ totalScans }"/></td>
-			</tr>
+		<tr>
+			<td>Team:</td>
+			<td class="inputValue">{{title.teams}}</td>
+		</tr>
+		<tr>
+			<td>Application:</td>
+			<td class="inputValue">{{title.apps}}</td>
+		</tr>
+		<tr>
+			<td>Number of Applications:</td>
+			<td class="inputValue">{{filterPortfolioApps.length}}</td>
+		</tr>
+		<tr>
+			<td>Number of Scans:</td>
+			<td class="inputValue">{{noOfScans}}</td>
+		</tr>
 		</tbody>
 	</table>
-	
+
 	<h3>Application Breakdown by Latest Scan</h3>
-	
+
 	<table class="table table-striped">
 		<thead>
-			<tr>
-				<th class="short first"></th>
-				<th class="short">1 Month</th>
-				<th class="short">2 Months</th>
-				<th class="short">3 Months</th>
-				<th class="short">6 Months</th>
-				<th class="short">9 Months</th>
-				<th class="short">12 Months</th>
-				<th class="short">12+ Months</th>
-				<th class="short">Never</th>
-				<th class="short last" >Totals</th>
-			</tr>
+		<tr>
+			<th style="width: 60px;" class="short first"></th>
+			<th class="short">1 Month</th>
+			<th class="short">3 Months</th>
+			<th class="short">6 Months</th>
+			<th class="short">12 Months</th>
+			<th class="short">12+ Months</th>
+			<th style="width: 50px;" >Never</th>
+			<th style="width: 50px;" class="short last" >Total</th>
+		</tr>
 		</thead>
 		<tbody>
-			<c:forEach var="row" items="${appsByCriticality}" varStatus="outerStatus">
-				<c:if test="${ outerStatus.count == 5 }">
-					<tr class="bodyRow" style="background-color: #E2E4FF; font-weight: bold;"/>
-				</c:if>
-				<c:if test="${ outerStatus.count != 5 }">
-					<tr class="bodyRow">
-				</c:if>
-				<c:forEach var="cell" items="${ row }" varStatus="status">
-					<c:choose> 
-						<c:when test="${ status.count == 8 and not cell.equals('0') }">
-							<td style="background:orange;font-weight:bold;"><c:out value="${ cell }"/></td>
-						</c:when>
-						<c:when test="${ status.count == 9 and not cell.equals('0')}">
-							<td style="background:red;font-weight:bold;"><c:out value="${ cell }"/></td>
-						</c:when>
-						<c:when test="${ status.count == 10 }">
-							<td style="background-color: #E2E4FF; font-weight: bold;"><c:out value="${ cell }"/></td>
-						</c:when>
-						<c:otherwise>
-							<td><c:out value="${ cell }"/></td>
-						</c:otherwise> 
-					</c:choose>  
-				</c:forEach>
-			</tr>
-		</c:forEach>
+
+		<tr ng-repeat = "app in appsByCriticality" id="{{app.criticality}}">
+			<td id="{{app.criticality}}Criticality"> {{app.criticality}} </td>
+			<td id="{{app.criticality}}1M"> {{app.1Month ? app.1Month : '0'}} </td>
+			<td id="{{app.criticality}}3M"> {{app.3Months ? app.3Months : '0'}} </td>
+			<td id="{{app.criticality}}6M"> {{app.6Months ? app.6Months : '0'}} </td>
+			<td id="{{app.criticality}}12M"> {{app.12Months ? app.12Months : '0'}} </td>
+			<td ng-if="app.Years" id="{{app.criticality}}Years" style="background:orange;font-weight:bold;"> {{app.Years ? app.Years : '0'}} </td>
+			<td ng-if="!app.Years" id="{{app.criticality}}Years"> {{app.Years ? app.Years : '0'}} </td>
+			<td ng-if="app.Never" id="{{app.criticality}}Never" style="background:red;font-weight:bold;"> {{app.Never ? app.Never : '0'}} </td>
+			<td ng-if="!app.Never" id="{{app.criticality}}Never"> {{app.Never ? app.Never : '0'}} </td>
+			<td id="{{app.criticality}}Total" style="background-color: #E2E4FF; font-weight: bold;"> {{app.Total ? app.Total : '0'}} </td>
+		</tr>
 		</tbody>
 	</table>
-	
+
 	<h3>Portfolio Scan Statistics</h3>
-	
+
 	<table class="table table-striped">
 		<thead>
-			<tr>
-				<th class="first"></th>
-				<th class="medium">Criticality</th>
-				<th class="short"># Scans</th>
-				<th class="medium last">Most Recent Scan</th>
-			</tr>
+		<tr>
+			<th class="first" colspan="6"></th>
+			<th class="medium">Criticality</th>
+			<th class="short"># Scans</th>
+			<th class="medium last">Most Recent Scan</th>
+		</tr>
 		</thead>
 		<tbody>
-		<c:forEach var="row" items="${ tableContents }" varStatus="outerStatus">
-			<tr class="bodyRow">
-				<c:if test="${ empty row }">
-					<td colspan="4"></td>
-				</c:if>
-				<c:if test="${ not empty row }">
-					<c:forEach var="cell" items="${ row }" varStatus="status">
-						<c:choose> 
-							<c:when test="${status.count == 4 and cell.equals('Never')}" > 
-								<td style="background:red;font-weight:bold;"><c:out value="${ cell }"/></td>
-							</c:when> 
-							<c:when test="${status.count == 4 and old[outerStatus.count - 1] }" > 
-								<td style="background:orange;font-weight:bold;"><c:out value="${ cell }"/> days ago</td>
-							</c:when> 
-							<c:when test="${status.count == 4}" > 
-								<td><c:out value="${ cell }"/> days ago</td>
-							</c:when> 
-						 	<c:otherwise> 
-								<td><c:out value="${ cell }"/></td>
-							</c:otherwise> 
-						</c:choose>  
-					</c:forEach>
-				</c:if>
-			</tr>
-		</c:forEach>
+		<tr ng-repeat = "row in scanStatistics">
+			<td id="{{row.name}}" colspan="6">{{row.name}}</td>
+			<td id="{{row.name}}{{row.criticality}}">{{row.criticality}}</td>
+			<td id="{{row.name}}{{row.noOfScans}}">{{row.noOfScans}}</td>
+			<td ng-if="row.daysScanedOld && row.daysScanedOld > 365" id="{{row.name}}{{row.daysScanedOld}}" style="background:orange;font-weight:bold;">{{row.daysScanedOld}}  days ago</td>
+			<td ng-if="row.daysScanedOld && !(row.daysScanedOld && row.daysScanedOld > 365)" id="{{row.name}}{{row.daysScanedOld}}" >{{row.daysScanedOld}}  days ago</td>
+			<td ng-if="!row.daysScanedOld" id="{{row.name}}daysScanedOld"></td>
+		</tr>
 		</tbody>
-		<tfoot>
-			<tr class="footer">
-				<td colspan="10" class="pagination" style="text-align:right"></td>
-			</tr>
-		</tfoot>
 	</table>
-</body>
+</div>
