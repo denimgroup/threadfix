@@ -130,6 +130,7 @@ public class Waf extends AuditableEntity {
 	}
 
 	@OneToMany(mappedBy = "waf")
+	@JsonView(AllViews.TableRow.class)
 	public List<WafRule> getWafRules() {
 		return wafRuleList;
 	}
