@@ -130,7 +130,7 @@ public class EditManualFindingController {
             model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + vulnerabilityId);
             return RestResponse.failure("Finding submitted is invalid.");
         }
-		if (isManual(dbFinding)) {
+		if (!isManual(dbFinding)) {
             model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + vulnerabilityId);
             return RestResponse.failure("Finding submitted is not manual.");
 		} else if (!isAuthorizedForFinding(dbFinding)) {
@@ -184,7 +184,7 @@ public class EditManualFindingController {
             model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + vulnerabilityId);
             return RestResponse.failure("Finding submitted is invalid.");
         }
-		if (isManual(dbFinding)) {
+		if (!isManual(dbFinding)) {
             model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + vulnerabilityId);
             return RestResponse.failure("Finding submitted is not manual.");
 		} else if (!isAuthorizedForFinding(dbFinding)) {
@@ -242,6 +242,10 @@ public class EditManualFindingController {
             }
 
         }
+
+        dbFinding.getVulnerability().setCalculatedUrlPath(dbFinding.getCalculatedUrlPath());
+        dbFinding.getVulnerability().setCalculatedFilePath(dbFinding.getCalculatedFilePath());
+
         queueSender.updateCachedStatistics(appId);
     }
 
