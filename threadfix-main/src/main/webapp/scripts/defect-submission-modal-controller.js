@@ -34,6 +34,7 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 $scope.config.defects = data.object.defectList.map(function(defect) {
                     return defect.nativeId;
                 });
+                $scope.config.defects = data.object.defectList;
 
                 if (!$scope.config.editableFields || !$scope.config.editableFields.length === 0) {
                     $scope.object.id = $scope.config.defects[0];

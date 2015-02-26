@@ -319,13 +319,25 @@ public class ApplicationsController {
 		}
 
 		map.put("defectTrackerName", application.getDefectTracker().getDefectTrackerType().getName());
-		map.put("defectList", defectList);
+		map.put("defectList", getNativeIds(defectList));
 		map.put("projectMetadata", data);
 
 		return map;
 	}
 
-	@RequestMapping("/{appId}/defectSubmission")
+    // TODO return a list of strings directly from the defect tracker integrations instead of unboxing them here
+    // They have a relatively small memory cost but I don't see any advantages at this point
+    private List<String> getNativeIds(List<Defect> defectList) {
+        List<String> nativeIds = list();
+
+        for (Defect defect : defectList) {
+            nativeIds.add(defect.getNativeId());
+        }
+
+        return nativeIds;
+    }
+
+    @RequestMapping("/{appId}/defectSubmission")
 	public @ResponseBody RestResponse<Map<String, Object>> getDefectSubmissionForm(
             @PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId) {
@@ -380,7 +392,7 @@ public class ApplicationsController {
 		DefectTracker defectTracker = defectTrackerService.loadDefectTracker(bean
 				.getDefectTrackerId());
 		AbstractDefectTracker dt = DefectTrackerFactory.getTrackerByType(defectTracker,
-				bean.getUserName(), bean.getPassword());
+                bean.getUserName(), bean.getPassword());
 		if (dt == null) {
 			log.warn("Incorrect Defect Tracker credentials submitted.");
 			return RestResponse.failure("Authentication failed.");
@@ -396,40 +408,6 @@ public class ApplicationsController {
         Collections.sort(result);
 
 		return RestResponse.success(result);
-	}
-	
-	@RequestMapping("/{appId}/getDefectsFromDefectTracker")
-	public String getDefectsFromDefectTracker(@PathVariable("appId") int appId, Model model) {
-		
-		log.info("Start getting defect list.");
-		Application application = applicationService.loadApplication(appId);
-		if (application == null || !application.isActive()) {
-			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
-			throw new ResourceNotFoundException();
-		}
-		
-		if (application.getDefectTracker() == null ||
-				application.getDefectTracker().getDefectTrackerType() == null) {
-			return "";
-		}
-		applicationService.decryptCredentials(application);
-
-		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
-		List<Defect> defectList = list();
-		
-		ProjectMetadata data = null;
-		if (dt != null) {
-			data = defectTrackerService.getProjectMetadata(dt);
-			defectList = dt.getDefectList();
-		}
-		model.addAttribute("projectMetadata", data);
-		model.addAttribute("defectList", defectList);
-		model.addAttribute(new DefectViewModel());
-		model.addAttribute("contentPage", "defects/mergeDefectForm.jsp");
-		
-		log.info("Ended getting defect list.");
-		
-		return "ajaxSuccessHarness";
 	}
 
     @RequestMapping(value = "/{appId}/unmappedTable", method = RequestMethod.POST)
