@@ -446,7 +446,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Transient
-	@JsonView({ AllViews.TableRow.class, AllViews.VulnerabilityDetail.class })
+	@JsonView({ AllViews.TableRow.class, AllViews.VulnerabilityDetail.class, AllViews.UIVulnSearch.class })
 	private String getScannerName() {
 		return getScan().getApplicationChannel().getChannelType().getName();
 	}

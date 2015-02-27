@@ -1,16 +1,14 @@
 <div ng-show="vulnerability.dynamicFindings.length > 1">
     <h4>Request Variants</h4>
     <div ng-repeat="finding in vulnerability.dynamicFindings">
-        <a class="pointer" ng-click="toggleFinding(finding)">Toggle
-            finding {{ finding.id }} attack string
+        <a class="pointer" ng-click="toggleFinding(finding)">
+            Toggle {{ finding.scannerName }} ({{ $index + 1 }}) request
         </a>
         <br />
 
         <div id='{{ finding.id }}' ng-show="isShowFlow{{finding.id}}">
             <h5>
-                Finding
-                {{ finding.id }}
-                Attack
+                {{ finding.scannerName }} ({{ $index + 1 }})
             </h5>
             <table class="dataTable">
                 <tr>
