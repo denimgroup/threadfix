@@ -161,7 +161,7 @@ public class SystemSettingsController {
 
 		model.addAttribute("applicationCount", applicationService.getApplicationCount());
 		model.addAttribute("licenseCount", licenseService == null ? 0 : licenseService.getAppLimit());
-		model.addAttribute("licenseExpirationDate", licenseService == null ? 0 : licenseService());
+		model.addAttribute("licenseExpirationDate", licenseService == null ? 0 : licenseService.getAppLimit());
 
 		model.addAttribute("defaultConfiguration", configuration);
 		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
