@@ -29,7 +29,7 @@
                 <tr ng-if="object.hasApiKey">
                     <td class="no-color">API Key</td>
                     <td class="no-color inputValue">
-                        <input focus-on="focusInput" ng-model="object.apiKey" id="apiKeyInput" type="text" name="apiKey" ng-required="object.hasApiKey" size="50" maxlength="60" style="width:280px"/>
+                        <input focus-on="focusInput" ng-model="object.apiKey" id="apiKeyInput" type="password" name="apiKey" ng-required="object.hasApiKey" size="50" maxlength="60" style="width:280px"/>
                     </td>
                     <td>
                         <span class="errors" ng-show="object.hasApiKey && form.apiKey.$dirty && form.apiKey.$error.required">API Key is required.</span>
