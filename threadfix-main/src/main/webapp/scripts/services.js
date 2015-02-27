@@ -241,6 +241,23 @@ threadfixModule.factory('vulnSearchParameterService', function() {
             }
         });
 
+        parameters.usingComponentsWithKnownVulnerabilities = false;
+
+        if (parameters.owasp) {
+            parameters.genericVulnerabilities = [];
+            parameters.owasp.top10.forEach(function(owaspVuln){
+                owaspVuln.members.forEach(function(cweId){
+                    parameters.genericVulnerabilities.push({id: cweId});
+
+                    // Query all vulnerabilities of Sonatype and Dependency Check for
+                    // OWASP Top Ten 2013 Category A9 - Using Components with Known Vulnerabilities
+                    if (cweId === 937)
+                        parameters.usingComponentsWithKnownVulnerabilities = true;
+
+                });
+            });
+        }
+
         var date;
 
         if (parameters.endDate) {
@@ -425,15 +442,16 @@ threadfixModule.factory('vulnTreeTransformer', function() {
 
             var vulnSum = {}, vulnList = [];
             serverResponse.forEach(function(element) {
-                var oldNum = 0, oldVulns = [];
-                if (vulnSum[element.genericVulnerability.displayId]) {
-                    oldNum = vulnSum[element.genericVulnerability.displayId].numResults;
-                    oldVulns = vulnSum[element.genericVulnerability.displayId].vulns;
+                var oldNum = 0, oldVulns = [], key = element.genericVulnerability.displayId + "_" +element.memberOf;
+                if (vulnSum[key]) {
+                    oldNum = vulnSum[key].numResults;
+                    oldVulns = vulnSum[key].vulns;
                 }
-                vulnSum[element.genericVulnerability.displayId] = {
+                vulnSum[key] = {
                     genericVulnerability: element.genericVulnerability,
                     numResults: oldNum + element.numResults,
-                    vulns: oldVulns.concat(element.vulns)
+                    vulns: oldVulns.concat(element.vulns),
+                    memberOf: element.memberOf
                 }
             });
 
@@ -444,7 +462,8 @@ threadfixModule.factory('vulnTreeTransformer', function() {
 
                 var newTreeCategory = getCategory(owaspVuln.name, 5);
                 vulnList.forEach(function(element) {
-                    if (owaspVuln.members.indexOf(element.genericVulnerability.displayId) > -1) {
+                    if (owaspVuln.members.indexOf(element.genericVulnerability.displayId) > -1
+                        || (element.memberOf && owaspVuln.members.indexOf(element.memberOf) > -1)) {
                         newTreeCategory.total = newTreeCategory.total + element.numResults;
                         newTreeCategory.entries.push(element);
                     }

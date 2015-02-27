@@ -88,6 +88,7 @@ module.controller('VulnSearchTreeController', function($log, $scope, $rootScope,
         parameters.genericVulnerabilities = [ element.genericVulnerability ];
         parameters.page = page;
         parameters.numberVulnerabilities = numToShow;
+        parameters.usingComponentsWithKnownVulnerabilities = element.memberOf ? true : false;
 
         $scope.loadingTree = true;
 
@@ -119,16 +120,6 @@ module.controller('VulnSearchTreeController', function($log, $scope, $rootScope,
 
     $scope.$on('refreshVulnSearchTree', function(event, parameters) {
         $scope.loadingTree = true;
-
-        if (parameters.owasp) {
-            parameters.genericVulnerabilities = [];
-            parameters.owasp.top10.forEach(function(owaspVuln){
-                owaspVuln.members.forEach(function(cweId){
-                    parameters.genericVulnerabilities.push({id: cweId})
-
-                });
-            });
-        }
 
         $http.post(tfEncoder.encode("/reports/tree"), parameters).
             success(function(data, status, headers, config) {
