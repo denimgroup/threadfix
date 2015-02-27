@@ -115,13 +115,31 @@
             <artifactId>hsqldb</artifactId>
             <version>${hsqldb.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.owasp</groupId>
+            <artifactId>dependency-check-maven</artifactId>
+            <version>${dependencycheck.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <parent>
         <artifactId>master-pom</artifactId>
         <groupId>com.denimgroup.threadfix</groupId>
         <version>2.2-SNAPSHOT</version>
     </parent>
-
+    <profiles>
+        <profile>
+            <id>dependencycheck</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     <properties>
         <!-- Sonar contains Hibernate annotations version 3.4.0.GA -->
         <!-- This means we must use a compatible version of hibernate -->
