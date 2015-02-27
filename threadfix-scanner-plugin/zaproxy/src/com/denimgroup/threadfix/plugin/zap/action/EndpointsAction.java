@@ -48,6 +48,8 @@ public abstract class EndpointsAction extends JMenuItem {
 
     private AttackThread attackThread = null;
 
+    List<String> nodes = new ArrayList<>();
+
     public EndpointsAction(final ViewDelegate view, final Model model) {
         getLogger().info("Initializing ThreadFix menu item: \"" + getMenuItemText() + "\"");
         setText(getMenuItemText());
@@ -70,44 +72,16 @@ public abstract class EndpointsAction extends JMenuItem {
 
                         getLogger().info("Got " + endpoints.length + " endpoints.");
 
-		                for (Endpoint.Info endpoint : endpoints) {
-		                    getLogger().debug("  " + endpoint.getCsvLine());
-		                    if (endpoint != null) {
+                        buildNodesFromEndpoints(endpoints);
 
-		                    	String urlPath = endpoint.getUrlPath();
-
-		                    	if (urlPath.startsWith("/")) {
-		                    		urlPath = urlPath.substring(1);
-		                    	}
-
-                                urlPath = urlPath.replaceAll(GENERIC_INT_SEGMENT, "1");
-
-		                    	nodes.add(urlPath);
-
-		                    	Set<String> params = endpoint.getParameters();
-
-                                if (!params.isEmpty()) {
-                                    for(String parameter : params){
-                                        nodes.add(urlPath + "?" + parameter + "=true");
-                                    }
-                                }
-		                    }
-		                }
-		                
 		                String url = UrlDialog.show(view);
-		
-		                if (url != null) { // cancel not pressed
-			                try {
-			                	if(!url.substring(url.length()-1).equals("/")){
-			                		url = url+"/";
-			                	}
-			                    attack(new URL(url));
-			                    completed = true;
-			                } catch (MalformedURLException e1) {
-                                getLogger().warn("Bad URL format.");
-			                    view.showWarningDialog("Invalid URL.");
-			                }
-		                }
+
+                        if (url != null) { // cancel not pressed
+                            completed = attackUrl(url);
+                            if (!completed) {
+                                view.showWarningDialog("Invalid URL.");
+                            }
+                        }
 	                }
                 }
 
@@ -118,23 +92,46 @@ public abstract class EndpointsAction extends JMenuItem {
         });
     }
 
-    protected abstract String getMenuItemText();
+    public void buildNodesFromEndpoints(Endpoint.Info[] endpoints) {
+        for (Endpoint.Info endpoint : endpoints) {
+            getLogger().debug("  " + endpoint.getCsvLine());
+            if (endpoint != null) {
 
-    protected abstract String getNoEndpointsMessage();
+                String urlPath = endpoint.getUrlPath();
 
-    protected abstract String getCompletedMessage();
+                if (urlPath.startsWith("/")) {
+                    urlPath = urlPath.substring(1);
+                }
 
-    protected abstract ConfigurationDialogs.DialogMode getDialogMode();
+                urlPath = urlPath.replaceAll(GENERIC_INT_SEGMENT, "1");
 
-    protected abstract Logger getLogger();
+                nodes.add(urlPath);
 
-    protected abstract Endpoint.Info[] getEndpoints();
+                Set<String> params = endpoint.getParameters();
 
-    public void notifyProgress(AttackThread.Progress progress) {
-        getLogger().info("Status is " + progress);
+                if (!params.isEmpty()) {
+                    for(String parameter : params){
+                        nodes.add(urlPath + "?" + parameter + "=true");
+                    }
+                }
+            }
+        }
     }
 
-    public void attack (URL url) {
+    public boolean attackUrl(String url) {
+        try {
+            if(!url.substring(url.length()-1).equals("/")){
+                url = url+"/";
+            }
+            attack(new URL(url));
+            return true;
+        } catch (MalformedURLException e1) {
+            getLogger().warn("Bad URL format.");
+            return false;
+        }
+    }
+
+    private void attack (URL url) {
         getLogger().info("Starting url " + url);
 
         if (attackThread != null && attackThread.isAlive()) {
@@ -147,6 +144,20 @@ public abstract class EndpointsAction extends JMenuItem {
 
     }
 
-    List<String> nodes = new ArrayList<>();
+    protected abstract String getMenuItemText();
+
+    protected abstract String getNoEndpointsMessage();
+
+    protected abstract String getCompletedMessage();
+
+    protected abstract ConfigurationDialogs.DialogMode getDialogMode();
+
+    protected abstract Logger getLogger();
+
+    public abstract Endpoint.Info[] getEndpoints();
+
+    public void notifyProgress(AttackThread.Progress progress) {
+        getLogger().info("Status is " + progress);
+    }
 
 }

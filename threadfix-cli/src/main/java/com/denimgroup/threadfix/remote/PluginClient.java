@@ -66,6 +66,12 @@ public class PluginClient {
     }
 
     @Nonnull
+    public RestResponse<Application.Info[]> getThreadFixApplicationsResponse() {
+        RestResponse<Application.Info[]> response = getRestResponse("code/applications", Application.Info[].class);
+        return response;
+    }
+
+    @Nonnull
     public VulnerabilityMarker[] getVulnerabilityMarkers(String appId) {
         VulnerabilityMarker[] markers = getItem("code/markers/" + appId, VulnerabilityMarker[].class);
         return markers == null ? new VulnerabilityMarker[]{} : markers;
@@ -78,6 +84,12 @@ public class PluginClient {
     }
 
     @Nonnull
+    public RestResponse<Endpoint.Info[]> getEndpointsResponse(String appId) {
+        RestResponse<Endpoint.Info[]> response = getRestResponse("code/applications/" + appId + "/endpoints", Endpoint.Info[].class);
+        return response;
+    }
+
+    @Nonnull
     public RestResponse<Object> uploadScan(String appId, File inputFile) {
         return httpRestUtils.httpPostFile("applications/" + appId + "/upload",
                 inputFile, new String[]{}, new String[]{}, Object.class);
@@ -85,15 +97,24 @@ public class PluginClient {
 
     @Nullable
     private <T> T getItem(String path, Class<T> targetClass) {
-        RestResponse<T> appsInfo = httpRestUtils.httpGet(path, "", targetClass);
+        RestResponse<T> response = getRestResponse(path, targetClass);
 
-        if (appsInfo.success) {
-            return appsInfo.object;
+        if (response.success) {
+            return response.object;
         } else {
-            LOGGER.error("Request for ThreadFix data failed at " + path +
-                    ". Reason: " + appsInfo.message);
             return null;
         }
+    }
+
+    @Nullable
+    private <T> RestResponse<T> getRestResponse(String path, Class<T> targetClass) {
+        RestResponse<T> response = httpRestUtils.httpGet(path, "", targetClass);
+
+        if (!response.success) {
+            LOGGER.error("Request for ThreadFix data failed at " + path +
+                    ". Reason: " + response.message);
+        }
+        return response;
     }
 
 }
