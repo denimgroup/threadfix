@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.report;
 
+import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.data.dao.*;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
@@ -45,7 +46,7 @@ import static com.denimgroup.threadfix.CollectionUtils.newMap;
 /**
  * @author mcollins
  * @author drivera
- * 
+ *
  */
 @Service
 public class ReportsServiceImpl implements ReportsService {
@@ -127,6 +128,21 @@ public class ReportsServiceImpl implements ReportsService {
             return map;
         }
         map.put("vulnList", vulnerabilityDao.retrieveMapByApplicationIdList(applicationIdList));
+
+        List<Map<String, Object>> appList = list();
+        for (Application application: applicationDao.retrieveAllActive()) {
+            if (application.getScans() != null && application.getScans().size() > 0)
+                appList.add(CollectionUtils.<String, Object>map("appId", application.getId(), "appName", application.getName(),
+                        "criticality", application.getApplicationCriticality().getName(),
+                        "teamId", application.getOrganization().getId(), "teamName", application.getOrganization().getName(),
+                        "noOfScans", application.getScans().size(), "latestScanTime", application.getScans().get(0).getImportTime()));
+            else {
+                appList.add(CollectionUtils.<String, Object>map("appId", application.getId(), "appName", application.getName(),
+                        "criticality", application.getApplicationCriticality().getName(),
+                        "teamId", application.getOrganization().getId(), "teamName", application.getOrganization().getName()));
+            }
+        }
+        map.put("appList", appList);
 
         return map;
     }
@@ -249,9 +265,9 @@ public class ReportsServiceImpl implements ReportsService {
         }
     }
 
-	private List<Integer> getApplicationIdList(ReportParameters reportParameters) {
-		List<Integer> applicationIdList = list();
-		Set<Integer> teamIds = null;
+    private List<Integer> getApplicationIdList(ReportParameters reportParameters) {
+        List<Integer> applicationIdList = list();
+        Set<Integer> teamIds = null;
         if (permissionService == null) {
             teamIds = new HashSet<>();
             List<Organization> organizations = organizationDao.retrieveAllActive();
@@ -265,47 +281,47 @@ public class ReportsServiceImpl implements ReportsService {
             teamIds = permissionService.getAuthenticatedTeamIds();
         }
 
-		if (reportParameters.getOrganizationId() < 0) {
-			if (reportParameters.getApplicationId() < 0) {
-				List<Application> appList;
-				
-				if (PermissionUtils.hasGlobalReadAccess()) {
-					appList = applicationDao.retrieveAllActive();
-				} else if (teamIds == null || teamIds.size() == 0) {
-					appList = list();
-				} else {
-					appList = applicationDao.retrieveAllActiveFilter(teamIds);
-				}
-				
-				for (Application app : appList) {
-					applicationIdList.add(app.getId());
-				}
-				
-				Set<Integer> appIds = PermissionUtils.getAuthenticatedAppIds();
-				if (appIds != null && !appIds.isEmpty()) {
-					applicationIdList.addAll(appIds);
-				}
-			} else {
-				applicationIdList.add(reportParameters.getApplicationId());
-			}
-		} else if (PermissionUtils.hasGlobalPermission(Permission.READ_ACCESS) ||
-				teamIds.contains(reportParameters.getOrganizationId())) {
-			Organization org = organizationDao.retrieveById(reportParameters.getOrganizationId());
-			if (reportParameters.getApplicationId() < 0) {
-				List<Application> appList = org.getActiveApplications();
-				for (Application app : appList) {
-					if (app.isActive()) {
-						applicationIdList.add(app.getId());
-					}
-				}
-			} else {
-				applicationIdList.add(reportParameters.getApplicationId());
-			}
-		}
-		
-		return applicationIdList;
-	}
-	
+        if (reportParameters.getOrganizationId() < 0) {
+            if (reportParameters.getApplicationId() < 0) {
+                List<Application> appList;
+
+                if (PermissionUtils.hasGlobalReadAccess()) {
+                    appList = applicationDao.retrieveAllActive();
+                } else if (teamIds == null || teamIds.size() == 0) {
+                    appList = list();
+                } else {
+                    appList = applicationDao.retrieveAllActiveFilter(teamIds);
+                }
+
+                for (Application app : appList) {
+                    applicationIdList.add(app.getId());
+                }
+
+                Set<Integer> appIds = PermissionUtils.getAuthenticatedAppIds();
+                if (appIds != null && !appIds.isEmpty()) {
+                    applicationIdList.addAll(appIds);
+                }
+            } else {
+                applicationIdList.add(reportParameters.getApplicationId());
+            }
+        } else if (PermissionUtils.hasGlobalPermission(Permission.READ_ACCESS) ||
+                teamIds.contains(reportParameters.getOrganizationId())) {
+            Organization org = organizationDao.retrieveById(reportParameters.getOrganizationId());
+            if (reportParameters.getApplicationId() < 0) {
+                List<Application> appList = org.getActiveApplications();
+                for (Application app : appList) {
+                    if (app.isActive()) {
+                        applicationIdList.add(app.getId());
+                    }
+                }
+            } else {
+                applicationIdList.add(reportParameters.getApplicationId());
+            }
+        }
+
+        return applicationIdList;
+    }
+
     @Override
     public ReportCheckResultBean generateSearchReport(List<Vulnerability> vulnerabilityList) {
         StringBuffer dataExport = getDataVulnListReport(getVulnListInfo(vulnerabilityList), null);
@@ -349,10 +365,10 @@ public class ReportsServiceImpl implements ReportsService {
         }
         return rowParamsList;
     }
-	
-	private StringBuffer getDataVulnListReport(List<List<String>> rowParamsList, List<Integer> applicationIdList) {
-		StringBuffer data = new StringBuffer();
-		data.append("Vulnerability List \n\n");
+
+    private StringBuffer getDataVulnListReport(List<List<String>> rowParamsList, List<Integer> applicationIdList) {
+        StringBuffer data = new StringBuffer();
+        data.append("Vulnerability List \n\n");
 
         if (applicationIdList != null) {
 
@@ -375,7 +391,12 @@ public class ReportsServiceImpl implements ReportsService {
 		for (List<String> row: rowParamsList) {
 			for (int i=0;i<row.size();i++) {
 				String str = "";
-				if (row.get(i) != null) str = row.get(i).replace(",", " ");
+				if (row.get(i) != null) str = row.get(i);//
+
+				if (str.contains(",")) {
+                    str = "\"" + str.replaceAll("\"", "\"\"") + "\"";
+                }
+
 				if (i<row.size()-1)
 					data.append(str).append(",");
 				else data.append(str).append(" \n");

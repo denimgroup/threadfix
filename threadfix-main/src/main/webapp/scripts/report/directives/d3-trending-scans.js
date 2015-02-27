@@ -28,7 +28,8 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 var
                     stackedData,
                     _data,
-                    circles,
+                    focus,
+                    focusCircles,
                     duration = 500,
                     firstScanNotReal,
                     lastScanNotReal;
@@ -77,13 +78,17 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
 
                 // A line generator, for the dark stroke.
                 var line = d3.svg.line()
-//                    .interpolate("basis")
                     .x(function(d) { return x(d.date); })
                     .y(function(d) { return y(d.noOfVulns); });
 
+                var mouserOverLine = d3.svg.area()
+                    .interpolate('basis')
+                    .x (function (d) { return x(d.date); })
+                    .y0(function (d) { return 0; })
+                    .y1(function (d) { return h; });
+
                 // A area generator, for the dark stroke.
                 var area = d3.svg.area()
-//                    .interpolate("basis")
                     .x(function(d) { return x(d.date); })
                     .y1(function(d) { return y(d.noOfVulns); });
 
@@ -99,11 +104,6 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 scope.$watch('label', function() {
                     scope.render(scope.data);
                 }, true);
-
-                //scope.$watch('exportInfo', function() {
-                //    if (scope.exportInfo)
-                //        scope.export();
-                //}, true);
 
                 scope.render = function (reportData) {
                     if (!reportData)
@@ -235,11 +235,11 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         .duration(duration)
                         .call(yAxis);
 
-                    var focus = svg.append("g")
+                    focus = svg.append("g")
                         .attr("class", "focus")
                         .style("display", "none");
 
-                    circles = focus.selectAll('circle')
+                    focusCircles = focus.selectAll('circle')
                         .data(stackedData)
                         .enter()
                         .append('circle')
@@ -269,7 +269,6 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                             .transition()
                             .duration(duration)
                             .style("fill", getColor(d.key))
-//                            .style("fill-opacity", .5)
                             .attr("d", area(d.values));
 
                         e.append("path")
@@ -278,6 +277,21 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                             .duration(duration)
                             .style("stroke-opacity", 1)
                             .attr("d", line(d.values));
+
+                        e.selectAll("scanCircle")
+                            .data(d.values)
+                            .enter()
+                            .append('circle')
+                            .attr('class', 'circle')
+                            .attr('r', 1.5)
+                            .attr('fill', 'steelblue')
+                            .attr('transform', function(scan, i) {
+                                if (i === 0 && firstScanNotReal)
+                                    return;
+                                if (i === d.values.length - 1 && lastScanNotReal)
+                                    return;
+                                return 'translate(' + x(scan.date) + ',' + y(scan.noOfVulns + scan.noOfVulns0) + ')';
+                            })
 
                         e.append("text")
                             .attr("x", 15)
@@ -341,7 +355,10 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     var x0 = x.invert(d3.mouse(this)[0]),
                         month = Math.round(x0);
                     var time, coordObj, tips = [];
-                    circles.attr('transform', function (d) {
+
+                    focusCircles.attr('transform', function (d) {
+
+                        // Find mouse's nearest scan
                         var i;
                         if (month <= d.values[0].date)
                             i = 0;
@@ -365,6 +382,13 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
 
                         time = d.values[i].date;
                         tips.push("<tr><td>" + d.key + "&nbsp;</td> <td style='color:"+ getColor(d.key) +"'>" + d.values[i].noOfVulns + "</td></tr>");
+
+                        focus.selectAll('path').remove();
+                        focus.append("path")
+                            .attr("class", "line")
+                            .style("stroke-width", '0.5px')
+                            .attr("d", mouserOverLine([d.values[i]]));
+
                         return 'translate(' + x(d.values[i].date) + ',' + y(d.values[i].noOfVulns + d.values[i].noOfVulns0) + ')';
                     });
 
@@ -381,14 +405,13 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
 
                         return table;
                     });
-                    coordObj = (circles && circles.length>0 && circles[0] && circles[0].length > 0) ?  circles[0][0] : undefined;
+                    coordObj = (focusCircles && focusCircles.length>0 && focusCircles[0] && focusCircles[0].length > 0) ?  focusCircles[0][0] : undefined;
                     tip.show(coordObj);
                 }
 
                 function monthDiff(d1, d2) {
                     var months;
-                    months = (d2.getFullYear() - d1.getFullYear()) * 12;
-                    months += d2.getMonth() - d1.getMonth();
+                    months = (d2.getFullYear() - d1.getFullYear()) * 12 + d2.getMonth() - d1.getMonth();
                     return months <= 0 ? 0 : months;
                 }
 

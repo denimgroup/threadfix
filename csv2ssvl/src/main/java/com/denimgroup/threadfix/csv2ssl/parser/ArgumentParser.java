@@ -49,6 +49,11 @@ public class ArgumentParser {
         for (String arg : args) {
             if (arg.startsWith(key)) {
                 String fileName = arg.substring(key.length());
+
+                if (!fileName.equals("\"") && fileName.startsWith("\"") && fileName.endsWith("\"")) {
+                    fileName = fileName.substring(1, fileName.length() - 1);
+                }
+
                 return Option.success(fileName);
             }
         }
