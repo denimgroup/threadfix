@@ -218,7 +218,7 @@ public class EditApplicationController {
             return FormRestResponse.failure("Unable to retrieve the application.", result);
 		}
 		
-		if (result.hasErrors() || waf == null) {
+		if (result.hasErrors()) {
             return FormRestResponse.failure("Unable to add the WAF. Try again.", result);
 		} else {
 		    return RestResponse.success(waf);
@@ -265,7 +265,7 @@ public class EditApplicationController {
 	}
 
 	@RequestMapping(value="/setTagsEndpoint", method = RequestMethod.POST)
-    public RestResponse<Application> setTagsEndpoint(@PathVariable("appId") int appId,
+    public @ResponseBody RestResponse<Application> setTagsEndpoint(@PathVariable("appId") int appId,
                                                                                     @PathVariable("orgId") int orgId,
                                                                                     @RequestParam("jsonStr") String jsonStr) {
         log.info("Updating tags endpoint");
@@ -284,7 +284,7 @@ public class EditApplicationController {
 
             return RestResponse.success(dbApplication);
 
-        } catch (JsonSyntaxException exception) {
+        }    catch (JsonSyntaxException exception) {
             log.warn("JSON Parsing failed.", exception);
             return FormRestResponse.failure("Invalid data.");
         }
