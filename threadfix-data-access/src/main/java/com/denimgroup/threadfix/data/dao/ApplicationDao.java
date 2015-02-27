@@ -89,4 +89,5 @@ public interface ApplicationDao extends GenericObjectDao<Application> {
 
     List<Object[]> getPointInTime(List<Integer> applicationIdList);
 
+	long getApplicationCount();
 }
