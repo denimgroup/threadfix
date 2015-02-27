@@ -39,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -95,7 +96,8 @@ public class EditUserController {
 	public Object processEdit(@PathVariable("userId") int userId,
 							  @ModelAttribute User user,
 							  BindingResult result,
-							  HttpServletRequest request) {
+							  HttpServletRequest request,
+							  Model model) {
 
 		userService.applyChanges(user, userId);
 
@@ -140,7 +142,7 @@ public class EditUserController {
 			log.info("The User " + userName + " (id=" + user.getId() + ") has been edited by user " + currentUser);
 
             // clear user details from session attribute
-            user = new User();
+			model.addAttribute("user", new User());
 
 			return RestResponse.success(userName);
 		}
