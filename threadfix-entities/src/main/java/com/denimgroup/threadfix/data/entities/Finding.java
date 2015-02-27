@@ -388,6 +388,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Column(length = URL_REFERENCE_LENGTH)
+	@JsonView(AllViews.VulnerabilityDetail.class)
 	public String getUrlReference() {
 		return urlReference;
 	}
