@@ -30,7 +30,7 @@
 						<a id="reportsHeader" href="<spring:url value="/reports" htmlEscape="true"/>">Analytics</a>
 					</td>
 				</security:authorize>
-				<td id="tab-user" style="width: 130px;">
+				<td id="tab-user" style="width:130px; white-space:nowrap">
 					<div class="dropdown normalLinks">
 					<div class="dropdown-toggle" data-target="#" style="height:32px;text-align:center;">
 						<div style="display:inline-block;margin-top:6px;">
