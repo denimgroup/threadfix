@@ -41,7 +41,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.CollectionUtils.newMap;
 
 /**
@@ -392,7 +391,12 @@ public class ReportsServiceImpl implements ReportsService {
 		for (List<String> row: rowParamsList) {
 			for (int i=0;i<row.size();i++) {
 				String str = "";
-				if (row.get(i) != null) str = row.get(i).replace(",", " ");
+				if (row.get(i) != null) str = row.get(i);//
+
+				if (str.contains(",")) {
+                    str = "\"" + str.replaceAll("\"", "\"\"") + "\"";
+                }
+
 				if (i<row.size()-1)
 					data.append(str).append(",");
 				else data.append(str).append(" \n");
