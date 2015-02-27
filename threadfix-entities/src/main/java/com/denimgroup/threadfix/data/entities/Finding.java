@@ -236,6 +236,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Column(nullable = false)
+    @JsonView(AllViews.VulnerabilityDetail.class)
 	public boolean getIsStatic() {
 		return isStatic;
 	}
@@ -319,7 +320,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Column(length = LONG_DESCRIPTION_LENGTH)
-    @JsonView(AllViews.RestView2_1.class)
+    @JsonView({AllViews.RestView2_1.class, AllViews.VulnerabilityDetail.class})
 	public void setLongDescription(String longDescription) {
 		this.longDescription = longDescription;
 	}
