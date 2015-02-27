@@ -29,9 +29,7 @@ import com.denimgroup.threadfix.data.entities.Report;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.ReportService;
-import com.denimgroup.threadfix.service.DefaultConfigService;
-import com.denimgroup.threadfix.service.RoleService;
+import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +59,10 @@ public class SystemSettingsController {
     private DefaultConfigService defaultConfigService = null;
 	@Autowired
 	private ReportService reportService = null;
+	@Autowired
+	private ApplicationService applicationService;
+	@Autowired(required = false)
+	LicenseService licenseService;
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
@@ -156,6 +158,10 @@ public class SystemSettingsController {
 		if (configuration.getActiveDirectoryCredentials() != null && !configuration.getActiveDirectoryCredentials().isEmpty()) {
 			configuration.setActiveDirectoryCredentials(DefaultConfiguration.MASKED_PASSWORD);
 		}
+
+		model.addAttribute("applicationCount", applicationService.getApplicationCount());
+		model.addAttribute("licenseCount", licenseService == null ? 0 : licenseService.getAppLimit());
+		model.addAttribute("licenseExpirationDate", licenseService == null ? 0 : licenseService.getAppLimit());
 
 		model.addAttribute("defaultConfiguration", configuration);
 		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));

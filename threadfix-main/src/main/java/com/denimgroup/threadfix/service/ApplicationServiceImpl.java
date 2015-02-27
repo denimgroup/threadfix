@@ -531,7 +531,12 @@ public class ApplicationServiceImpl implements ApplicationService {
         return applicationDao.getUnmappedFindingCount(appId);
     }
 
-    @Override
+	@Override
+	public long getApplicationCount() {
+		return applicationDao.getApplicationCount();
+	}
+
+	@Override
 	public void updateProjectRoot(Application application) {
 		if (application != null && application.getProjectRoot() != null
 				&& !application.getProjectRoot().trim().equals("")) {

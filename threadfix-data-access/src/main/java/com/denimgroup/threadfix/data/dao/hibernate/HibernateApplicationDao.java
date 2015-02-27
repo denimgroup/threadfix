@@ -250,4 +250,9 @@ public class HibernateApplicationDao implements ApplicationDao {
                 .setParameterList("appIds", applicationIdList)
                 .list();
     }
+
+    @Override
+    public long getApplicationCount() {
+        return (long) getActiveAppCriteria().setProjection(Projections.rowCount()).uniqueResult();
+    }
 }
