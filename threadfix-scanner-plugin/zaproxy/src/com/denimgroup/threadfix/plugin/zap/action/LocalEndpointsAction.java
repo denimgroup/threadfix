@@ -71,10 +71,14 @@ public class LocalEndpointsAction extends EndpointsAction {
     }
 
     @Override
-    protected Endpoint.Info[] getEndpoints() {
+    public Endpoint.Info[] getEndpoints() {
+        return getEndpoints(ZapPropertiesManager.INSTANCE.getSourceFolder());
+    }
+
+    public Endpoint.Info[] getEndpoints(String sourceFolder) {
         getLogger().info("Got source information, about to generate endpoints.");
 
-        EndpointDatabase endpointDatabase = EndpointDatabaseFactory.getDatabase(ZapPropertiesManager.INSTANCE.getSourceFolder());
+        EndpointDatabase endpointDatabase = EndpointDatabaseFactory.getDatabase(sourceFolder);
 
         Endpoint.Info[] endpoints = null;
         if (endpointDatabase != null) {

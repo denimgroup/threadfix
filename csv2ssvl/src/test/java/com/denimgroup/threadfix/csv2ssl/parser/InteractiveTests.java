@@ -133,4 +133,16 @@ public class InteractiveTests {
         testDialog(dialog);
     }
 
+    @Test
+    public void testWithQuotes() {
+        String dialog =
+                "y\n" +
+                "\"" + ResourceLoader.getFilePath("fromJunit.properties") + "\"\n" +
+                "\"" + ResourceLoader.getFilePath("withDifferentHeaderLine.csv") + "\"\n";
+
+        System.out.println(dialog);
+
+        testDialog(dialog);
+    }
+
 }

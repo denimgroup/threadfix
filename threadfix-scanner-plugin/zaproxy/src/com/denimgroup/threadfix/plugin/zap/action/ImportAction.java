@@ -35,6 +35,7 @@ import org.parosproxy.paros.extension.ViewDelegate;
 import org.parosproxy.paros.model.Model;
 
 import com.denimgroup.threadfix.plugin.zap.dialog.ConfigurationDialogs;
+import org.zaproxy.zap.extension.threadfix.AbstractZapPropertiesManager;
 import org.zaproxy.zap.extension.threadfix.ZapPropertiesManager;
 
 public class ImportAction extends JMenuItem {
@@ -43,9 +44,15 @@ public class ImportAction extends JMenuItem {
 	
 	private static final Logger logger = Logger.getLogger(ImportAction.class);
 
+    private ViewDelegate view;
+    private Model model;
+
     public ImportAction(final ViewDelegate view, final Model model) {
 		logger.info("Initializing ThreadFix menu item: \"ThreadFix: Export Scan\"");
         setText("ThreadFix: Export Scan");
+
+        this.view = view;
+        this.model = model;
 
         addActionListener(new java.awt.event.ActionListener() {
             @Override
@@ -54,41 +61,55 @@ public class ImportAction extends JMenuItem {
                 boolean configured = ConfigurationDialogs.show(view, ConfigurationDialogs.DialogMode.THREADFIX_APPLICATION);
                 
                 if (configured) {
-	
-	                logger.info("Got application id, about to generate XML and use REST call.");
-	
-	                File file = ReportGenerator.generateXml(view, model);
-	                
-	                if (file != null && file.exists()) {
-	                	logger.info("About to try to upload.");
 
+                    logger.info("Got application id, about to generate XML and use REST call.");
 
-                        ZapPropertiesManager manager = ZapPropertiesManager.INSTANCE;
+                    ZapPropertiesManager manager = ZapPropertiesManager.INSTANCE;
 
-                        RestResponse<Object> response = new PluginClient(manager)
-                                    .uploadScan(manager.getAppId(), file);
+                    Integer responseCode = uploadReport(manager);
 
-                        int responseCode = response.responseCode;
-
-		                if (responseCode == 0) {
-		                    view.showWarningDialog("The response code was 0, indicating that the ThreadFix server " +
-		                            "was unreachable. Make sure that the server is running and not blocked by the ZAP " +
-		                            "local proxy.");
-		                } else if (responseCode == -2) {
-		                    view.showWarningDialog("The parameters were not saved correctly.");
-		                } else if (responseCode != 200) {
-		                    view.showWarningDialog("Scan upload failed: the HTTP response code was " + responseCode +
-		                            " and not 200.");
-		                } else {
-		                    view.showMessageDialog("The scan was uploaded to ThreadFix successfully.");
-		                }
-	                } else {
-	                	// file didn't exist
-	                	view.showWarningDialog("Unable to create scan file.");
-	                }
+                    if (responseCode == null) {
+                        // file didn't exist
+                        view.showWarningDialog("Unable to create scan file.");
+                    } else if (responseCode == 0) {
+                        view.showWarningDialog("The response code was 0, indicating that the ThreadFix server " +
+                                "was unreachable. Make sure that the server is running and not blocked by the ZAP " +
+                                "local proxy.");
+                    } else if (responseCode == -2) {
+                        view.showWarningDialog("The parameters were not saved correctly.");
+                    } else if (responseCode != 200) {
+                        view.showWarningDialog("Scan upload failed: the HTTP response code was " + responseCode +
+                                " and not 200.");
+                    } else {
+                        view.showMessageDialog("The scan was uploaded to ThreadFix successfully.");
+                    }
                 }
             }
         });
     }
 
+    public Integer uploadReport(AbstractZapPropertiesManager manager) {
+        RestResponse<Object> response = uploadReportAndGetResponse(manager);
+
+        if (response != null) {
+            int responseCode = response.responseCode;
+            return responseCode;
+        } else {
+            return null;
+        }
+    }
+
+    public RestResponse<Object> uploadReportAndGetResponse(AbstractZapPropertiesManager manager) {
+        File file = ReportGenerator.generateXml(view, model);
+
+        if (file != null && file.exists()) {
+            logger.info("About to try to upload.");
+            RestResponse<Object> response = new PluginClient(manager)
+                    .uploadScan(manager.getAppId(), file);
+
+            return response;
+        } else {
+            return null;
+        }
+    }
 }

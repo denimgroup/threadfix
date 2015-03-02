@@ -186,4 +186,6 @@ public interface ApplicationService {
 	void validateDefectTracker(Application application, BindingResult result);
 
     long getUnmappedFindingCount(Integer appId);
+
+	long getApplicationCount();
 }

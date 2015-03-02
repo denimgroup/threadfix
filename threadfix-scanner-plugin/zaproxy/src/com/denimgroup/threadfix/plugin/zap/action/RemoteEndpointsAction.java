@@ -27,9 +27,11 @@ package com.denimgroup.threadfix.plugin.zap.action;
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.plugin.zap.dialog.ConfigurationDialogs;
 import com.denimgroup.threadfix.remote.PluginClient;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import org.apache.log4j.Logger;
 import org.parosproxy.paros.extension.ViewDelegate;
 import org.parosproxy.paros.model.Model;
+import org.zaproxy.zap.extension.threadfix.AbstractZapPropertiesManager;
 import org.zaproxy.zap.extension.threadfix.ZapPropertiesManager;
 
 public class RemoteEndpointsAction extends EndpointsAction {
@@ -68,12 +70,21 @@ public class RemoteEndpointsAction extends EndpointsAction {
     }
 
     @Override
-    protected Endpoint.Info[] getEndpoints() {
+    public Endpoint.Info[] getEndpoints() {
+        RestResponse<Endpoint.Info[]> response = getEndpointsResponse(ZapPropertiesManager.INSTANCE);
+        if (response.success) {
+            return response.object;
+        } else {
+            return new Endpoint.Info[]{};
+        }
+    }
+
+    public RestResponse<Endpoint.Info[]> getEndpointsResponse(AbstractZapPropertiesManager propertiesManager) {
         getLogger().info("Got application id, about to generate XML and use REST call.");
 
-        Endpoint.Info[] endpoints = new PluginClient(ZapPropertiesManager.INSTANCE)
-                .getEndpoints(ZapPropertiesManager.INSTANCE.getAppId());
+        RestResponse<Endpoint.Info[]> response = new PluginClient(propertiesManager)
+                .getEndpointsResponse(propertiesManager.getAppId());
 
-        return endpoints;
+        return response;
     }
 }

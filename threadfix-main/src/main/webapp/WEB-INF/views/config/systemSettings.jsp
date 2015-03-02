@@ -305,6 +305,20 @@
             </div>
         </div>
 
+        <div class="panel panel-default">
+            <div id="licenseInformationPanel" class="panel-heading pointer" style="width:200px"
+                 ng-click="editLicenseInformationPanel = !editLicenseInformationPanel">
+                <h3 class="panel-title">
+                    <span ng-hide="editLicenseInformationPanel" class="icon icon-chevron-right"></span>
+                    <span ng-show="editLicenseInformationPanel" class="icon icon-chevron-down"></span>
+                    License Information
+                </h3>
+            </div>
+            <div class="panel-body" ng-show="editLicenseInformationPanel">
+                <c:out value="${ applicationCount }"/> applications used out of <c:out value="${ licenseCount }"/> available for the license. License expires on
+            </div>
+        </div>
+
 		<div class="panel panel-default">
             <div id="defaultDashboardSettingsPanel" class="panel-heading pointer" style="width:200px" ng-click="editDashboardSettings = !editDashboardSettings">
                 <h3 class="panel-title">

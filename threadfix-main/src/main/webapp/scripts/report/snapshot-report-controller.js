@@ -661,9 +661,8 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         $scope.loading = true;
 
         var parameters = angular.copy($scope.parameters);
-        vulnSearchParameterService.updateParameters($scope, parameters);
-
         parameters.owasp = parameters.selectedOwasp;
+        vulnSearchParameterService.updateParameters($scope, parameters);
 
         $scope.$broadcast("refreshVulnSearchTree", parameters);
         $scope.loading = false;

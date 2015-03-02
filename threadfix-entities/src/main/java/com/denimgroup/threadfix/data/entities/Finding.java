@@ -388,6 +388,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Column(length = URL_REFERENCE_LENGTH)
+	@JsonView(AllViews.VulnerabilityDetail.class)
 	public String getUrlReference() {
 		return urlReference;
 	}
@@ -446,7 +447,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Transient
-	@JsonView({ AllViews.TableRow.class, AllViews.VulnerabilityDetail.class })
+	@JsonView({ AllViews.TableRow.class, AllViews.VulnerabilityDetail.class, AllViews.UIVulnSearch.class })
 	private String getScannerName() {
 		return getScan().getApplicationChannel().getChannelType().getName();
 	}

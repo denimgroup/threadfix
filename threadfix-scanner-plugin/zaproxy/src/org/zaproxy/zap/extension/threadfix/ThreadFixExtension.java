@@ -24,12 +24,14 @@
 
 package org.zaproxy.zap.extension.threadfix;
 
+import com.denimgroup.threadfix.plugin.zap.ThreadFixApi;
 import com.denimgroup.threadfix.plugin.zap.action.ImportAction;
 import com.denimgroup.threadfix.plugin.zap.action.LocalEndpointsAction;
 import com.denimgroup.threadfix.plugin.zap.action.RemoteEndpointsAction;
 import org.apache.log4j.Logger;
 import org.parosproxy.paros.extension.ExtensionAdaptor;
 import org.parosproxy.paros.extension.ExtensionHook;
+import org.zaproxy.zap.extension.api.API;
 
 import javax.swing.*;
 import java.net.MalformedURLException;
@@ -38,7 +40,9 @@ import java.util.ResourceBundle;
 
 public class ThreadFixExtension extends ExtensionAdaptor {
 
-    private JMenuItem importAction = null, remoteEndpointsAction = null, localEndpointsAction = null;
+    private ImportAction importAction = null;
+    private RemoteEndpointsAction remoteEndpointsAction = null;
+    private LocalEndpointsAction localEndpointsAction = null;
     private ResourceBundle messages = null;
 
     private static final Logger logger = Logger.getLogger(ThreadFixExtension.class);
@@ -94,9 +98,10 @@ public class ThreadFixExtension extends ExtensionAdaptor {
             extensionHook.getHookMenu().addToolsMenuItem(getLocalEndpointsAction());
         }
 
+        API.getInstance().registerApiImplementor(new ThreadFixApi(this));
     }
 
-    private JMenuItem getImportAction() {
+    public ImportAction getImportAction() {
        logger.info("Getting menu");
         if (importAction == null) {
             importAction = new ImportAction(getView(), getModel());
@@ -104,7 +109,7 @@ public class ThreadFixExtension extends ExtensionAdaptor {
         return importAction;
     }
 
-    private JMenuItem getRemoteEndpointsAction() {
+    public RemoteEndpointsAction getRemoteEndpointsAction() {
        logger.info("Getting menu");
         if (remoteEndpointsAction == null) {
             remoteEndpointsAction = new RemoteEndpointsAction(getView(), getModel());
@@ -112,7 +117,7 @@ public class ThreadFixExtension extends ExtensionAdaptor {
         return remoteEndpointsAction;
     }
 
-    private JMenuItem getLocalEndpointsAction() {
+    public LocalEndpointsAction getLocalEndpointsAction() {
         logger.info("Getting menu");
         if (localEndpointsAction == null) {
             localEndpointsAction = new LocalEndpointsAction(getView(), getModel());
