@@ -75,8 +75,11 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Autowired private GenericVulnerabilityDao genericVulnerabilityDao;
 	@Autowired private GitService gitService;
 	@Autowired private ExceptionLogService exceptionLogService;
-	@Autowired private ScanQueueTaskDao scanQueueTaskDao;
-	@Autowired private ScheduledScanDao scheduledScanDao;
+    @Autowired private ScheduledScanDao scheduledScanDao;
+
+    @Nullable
+    @Autowired(required = false)
+    private ScanQueueTaskDao scanQueueTaskDao;
 
     @Nullable
 	@Autowired(required = false)
@@ -134,44 +137,45 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Override
 	@Transactional(readOnly = false)
 	public void deactivateApplication(Application application) {
-		application.setActive(false);
-		application.setModifiedDate(new Date());
+        application.setActive(false);
+        application.setModifiedDate(new Date());
         application.setTags(new ArrayList<Tag>());
-		removeRemoteApplicationLinks(application);
-		String possibleName = getNewName(application);
-		
-		if (application.getAccessControlApplicationMaps() != null) {
-			for (AccessControlApplicationMap map : application.getAccessControlApplicationMaps()) {
-				accessControlMapService.deactivate(map);
-			}
-		}
+        removeRemoteApplicationLinks(application);
+        String possibleName = getNewName(application);
+
+        if (application.getAccessControlApplicationMaps() != null) {
+            for (AccessControlApplicationMap map : application.getAccessControlApplicationMaps()) {
+                accessControlMapService.deactivate(map);
+            }
+        }
 
         if (scanQueueService != null && application.getScanQueueTasks() != null) {
-			for (ScanQueueTask task : application.getScanQueueTasks()) {
-				scanQueueService.deactivateTask(task);
-			}
-		}
+            for (ScanQueueTask task : application.getScanQueueTasks()) {
+                scanQueueService.deactivateTask(task);
+            }
+        }
 
-		if (application.getGrcApplication() != null) {
-			application.getGrcApplication().setApplication(null);
-			application.setGrcApplication(null);
-		}
+        if (application.getGrcApplication() != null) {
+            application.getGrcApplication().setApplication(null);
+            application.setGrcApplication(null);
+        }
 
         application.setWaf(null);
 
         // Delete WafRules attached with application
         deleteWafRules(application);
 
-		if (applicationDao.retrieveByName(possibleName, application.getOrganization().getId()) == null) {
-			application.setName(possibleName);
-		}
+        if (applicationDao.retrieveByName(possibleName, application.getOrganization().getId()) == null) {
+            application.setName(possibleName);
+        }
 
-
-		for (ScanQueueTask scanQueueTask : application.getScanQueueTasks()) {
-			scanQueueTaskDao.delete(scanQueueTask);
-			scanQueueTask.setApplication(null);
-		}
-		application.setScanQueueTasks(null);
+        if (scanQueueTaskDao != null) {
+            for (ScanQueueTask scanQueueTask : application.getScanQueueTasks()) {
+                scanQueueTaskDao.delete(scanQueueTask);
+                scanQueueTask.setApplication(null);
+            }
+            application.setScanQueueTasks(null);
+        }
 
 		for (ScheduledScan scheduledScan : application.getScheduledScans()) {
 			scheduledScanDao.delete(scheduledScan);
