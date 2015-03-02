@@ -590,7 +590,7 @@
         </dependency>
         <dependency>
             <groupId>com.denimgroup.threadfix</groupId>
-            <artifactId>defect-tracker-plugin</artifactId>
+            <artifactId>importer-plugin</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

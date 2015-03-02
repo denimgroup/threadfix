@@ -30,7 +30,7 @@
         <module>threadfix-cli-endpoints</module>
         <module>threadfix-cli-importers</module>
         <module>threadfix-data-migration</module>
-        <module>threadfix-plugin-examples/defect-tracker</module>
+        <module>threadfix-plugin-examples/importer</module>
         <module>threadfix-main</module>
     </modules>
 
