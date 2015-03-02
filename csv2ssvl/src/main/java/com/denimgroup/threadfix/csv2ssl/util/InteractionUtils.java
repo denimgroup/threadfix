@@ -52,7 +52,15 @@ public class InteractionUtils {
             if (file.exists() && file.isFile()) {
                 break;
             } else {
-                System.out.println("Invalid file name entered: " + fileName);
+                // Windows gives quoted paths to users; let's try to strip quotes for convenience.
+                fileName = fileName.replaceAll("^\"|\"$", "");
+                file = new File(fileName);
+
+                if (file.exists() && file.isFile()) {
+                    break;
+                } else {
+                    System.out.println("Invalid file name entered: " + fileName);
+                }
             }
         }
         return file;
