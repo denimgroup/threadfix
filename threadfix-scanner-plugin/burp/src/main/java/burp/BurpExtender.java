@@ -223,9 +223,9 @@ public class BurpExtender implements IBurpExtender, ITab
             }
         };
 
-        final JLabel parametersPanelTitle = addPanelTitleToGridBagLayout("Threadfix Server", parametersPanel, yPosition++);
-        final JLabel parametersPanelDescription = addPanelDescriptionToGridBagLayout("These settings let you connect to a Threadfix server and choose an Application.", parametersPanel, yPosition++);
-        urlField = addTextFieldToGridBagLayout("Threadfix Server URL:", parametersPanel, yPosition++, BurpPropertiesManager.THREADFIX_URL_KEY, applicationComboBoxRunnable);
+        final JLabel parametersPanelTitle = addPanelTitleToGridBagLayout("ThreadFix Server", parametersPanel, yPosition++);
+        final JLabel parametersPanelDescription = addPanelDescriptionToGridBagLayout("These settings let you connect to a ThreadFix server and choose an Application.", parametersPanel, yPosition++);
+        urlField = addTextFieldToGridBagLayout("ThreadFix Server URL:", parametersPanel, yPosition++, BurpPropertiesManager.THREADFIX_URL_KEY, applicationComboBoxRunnable);
         keyField = addTextFieldToGridBagLayout("API Key:", parametersPanel, yPosition++, BurpPropertiesManager.API_KEY_KEY, applicationComboBoxRunnable);
 
         final JButton applicationComboBoxRefreshButton = new JButton("Refresh application list");
@@ -299,18 +299,18 @@ public class BurpExtender implements IBurpExtender, ITab
         return tabbedPane;
     }
 
-    private class ThreadfixPropertyFieldListener implements DocumentListener, FocusListener {
+    private class ThreadFixPropertyFieldListener implements DocumentListener, FocusListener {
         private JTextField jTextField;
         private String propertyName;
         private Runnable runnable;
 
         private String lastValue = null;
 
-        public ThreadfixPropertyFieldListener(JTextField jTextField, String propertyName) {
+        public ThreadFixPropertyFieldListener(JTextField jTextField, String propertyName) {
             this(jTextField, propertyName, null);
         }
 
-        public ThreadfixPropertyFieldListener(JTextField jTextField, String propertyName, Runnable runnable) {
+        public ThreadFixPropertyFieldListener(JTextField jTextField, String propertyName, Runnable runnable) {
             this.jTextField = jTextField;
             this.propertyName = propertyName;
             this.runnable = runnable;
@@ -477,15 +477,15 @@ public class BurpExtender implements IBurpExtender, ITab
         return addTextFieldToGridBagLayout(labelText, gridBagContainer, yPosition, propertyKey, null, null);
     }
 
-    private JTextField addTextFieldToGridBagLayout(String labelText, Container gridBagContainer, int yPosition, String propertyKey, Runnable threadfixPropertyFieldListenerRunnable) {
-        return addTextFieldToGridBagLayout(labelText, gridBagContainer, yPosition, propertyKey, threadfixPropertyFieldListenerRunnable, null);
+    private JTextField addTextFieldToGridBagLayout(String labelText, Container gridBagContainer, int yPosition, String propertyKey, Runnable threadFixPropertyFieldListenerRunnable) {
+        return addTextFieldToGridBagLayout(labelText, gridBagContainer, yPosition, propertyKey, threadFixPropertyFieldListenerRunnable, null);
     }
 
     private JTextField addTextFieldToGridBagLayout(String labelText, Container gridBagContainer, int yPosition, String propertyKey, JButton button) {
         return addTextFieldToGridBagLayout(labelText, gridBagContainer, yPosition, propertyKey, null, button);
     }
 
-    private JTextField addTextFieldToGridBagLayout(String labelText, Container gridBagContainer, int yPosition, String propertyKey, Runnable threadfixPropertyFieldListenerRunnable, JButton button) {
+    private JTextField addTextFieldToGridBagLayout(String labelText, Container gridBagContainer, int yPosition, String propertyKey, Runnable threadFixPropertyFieldListenerRunnable, JButton button) {
         JLabel textFieldLabel = new JLabel(labelText);
         callbacks.customizeUiComponent(textFieldLabel);
         textFieldLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -500,7 +500,7 @@ public class BurpExtender implements IBurpExtender, ITab
 
         JTextField textField = new JTextField(40);
         callbacks.customizeUiComponent(textField);
-        textField.addFocusListener(new ThreadfixPropertyFieldListener(textField, propertyKey, threadfixPropertyFieldListenerRunnable));
+        textField.addFocusListener(new ThreadFixPropertyFieldListener(textField, propertyKey, threadFixPropertyFieldListenerRunnable));
         gridBagConstraints = new GridBagConstraints();
         if (button == null) {
             gridBagConstraints.gridwidth = 2;
