@@ -24,7 +24,6 @@
 
 package org.zaproxy.zap.extension.threadfix;
 
-import com.denimgroup.threadfix.properties.PropertiesManager;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -38,7 +37,7 @@ import org.parosproxy.paros.Constant;
 /**
  * Created by mac on 9/23/13.
  */
-public class ZapPropertiesManager extends PropertiesManager {
+public class ZapPropertiesManager extends AbstractZapPropertiesManager {
 
     private static final Logger logger = Logger.getLogger(ZapPropertiesManager.class);
 
@@ -61,6 +60,7 @@ public class ZapPropertiesManager extends PropertiesManager {
         return key;
     }
 
+    @Override
     public String getAppId() {
         return getProperties().getProperty(APP_ID_KEY);
     }

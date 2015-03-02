@@ -254,8 +254,8 @@
             <groupId>net.sf.json-lib</groupId>
             <artifactId>json-lib</artifactId>
             <version>${json-lib.version}</version>
-            <type>pom</type>
             <scope>provided</scope>
+            <classifier>jdk15</classifier>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
