@@ -125,16 +125,6 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
         //Retrieving table data
         vulnSearchParameterService.updateParameters($scope, parameters);
 
-        if (parameters.owasp) {
-            parameters.genericVulnerabilities = [];
-            parameters.owasp.top10.forEach(function(owaspVuln){
-                owaspVuln.members.forEach(function(cweId){
-                    parameters.genericVulnerabilities.push({id: cweId})
-
-                });
-            });
-        }
-
         $http.post(tfEncoder.encode("/reports/search/export/pdf"), parameters).
             success(function(data, status, headers, config) {
                 if (data.success) {
