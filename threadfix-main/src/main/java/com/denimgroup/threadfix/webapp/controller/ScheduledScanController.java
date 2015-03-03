@@ -39,6 +39,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Nullable;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -49,8 +50,9 @@ public class ScheduledScanController {
 
 	private final SanitizedLogger log = new SanitizedLogger(ScheduledScanController.class);
 
-    @Autowired
-	private ScheduledScanService scheduledScanService;
+    @Nullable
+    @Autowired(required = false)
+    private ScheduledScanService scheduledScanService;
 
     @Autowired
     private ScheduledScanScheduler scheduledScanScheduler;
@@ -62,6 +64,11 @@ public class ScheduledScanController {
 	public @ResponseBody RestResponse<List<ScheduledScan>> addScheduledScan(@PathVariable("appId") int appId, @PathVariable("orgId") int orgId,
                                    @Valid @ModelAttribute ScheduledScan scheduledScan,
                                    BindingResult result) {
+
+        if(scheduledScanService == null) {
+            return RestResponse.failure("This method cannot be reached in the Community Edition.");
+        }
+
 		log.info("Start adding scheduled scan to application " + appId);
 
         if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)){
@@ -103,12 +110,18 @@ public class ScheduledScanController {
 	public @ResponseBody RestResponse<String> delete(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@PathVariable("scheduledScanId") int scheduledScanId) {
+
+        if(scheduledScanService == null) {
+            return RestResponse.failure("This method cannot be reached in the Community Edition.");
+        }
 		
 		log.info("Start deleting scheduled scan from application with id " + appId);
+
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,orgId,appId)){
 			return RestResponse.failure("You are not authorized to delete this scheduled scan.");
 		}
         ScheduledScan scheduledScan = scheduledScanService.loadById(scheduledScanId);
+
         if (scheduledScan == null) {
             return RestResponse.failure("That scheduled scan was not found.");
         }

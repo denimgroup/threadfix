@@ -68,7 +68,7 @@ public class ScheduledGRCToolUpdateController {
             @Valid @ModelAttribute ScheduledGRCToolUpdate scheduledGRCToolUpdate,
             BindingResult result) {
 
-        if(scheduledGRCToolUpdateService == null) {
+        if (scheduledGRCToolUpdateService == null) {
             return RestResponse.failure("This method cannot be reached in the Community Edition.");
         }
 
@@ -108,10 +108,16 @@ public class ScheduledGRCToolUpdateController {
     public @ResponseBody RestResponse<String> delete(
             @PathVariable("scheduledGRCToolUpdateId") int scheduledGRCToolUpdateId) {
 
+        if (scheduledGRCToolUpdateService == null) {
+            return RestResponse.failure("This method cannot be reached in the Community Edition.");
+        }
+
         log.info("Start deleting scheduled GRC tool update");
+
         if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_DEFECT_TRACKERS, null, null)){
             return RestResponse.failure("You are not authorized to delete this scheduled GRC tool update.");
         }
+
         ScheduledGRCToolUpdate scheduledGRCToolUpdate = scheduledGRCToolUpdateService.loadById(scheduledGRCToolUpdateId);
         if (scheduledGRCToolUpdate == null) {
             return RestResponse.failure("That scheduled GRC tool update was not found.");
