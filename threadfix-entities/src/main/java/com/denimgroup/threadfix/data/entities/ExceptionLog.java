@@ -45,7 +45,7 @@ public final class ExceptionLog extends BaseEntity {
 	private String uuid;
 	private String type;
 
-	private long totalSpaceAvailable, freeMemory, totalMemoryAvailable;
+	private Long totalSpaceAvailable = null, freeMemory = null, totalMemoryAvailable = null;
 	
 	/**
 	 * This is to make Spring happy and allow us to retrieve items from the database. 
@@ -138,29 +138,29 @@ public final class ExceptionLog extends BaseEntity {
 	}
 
 	@Column(nullable = true)
-	public long getTotalSpaceAvailable() {
+	public Long getTotalSpaceAvailable() {
 		return totalSpaceAvailable;
 	}
 
-	public void setTotalSpaceAvailable(long totalSpaceAvailable) {
+	public void setTotalSpaceAvailable(Long totalSpaceAvailable) {
 		this.totalSpaceAvailable = totalSpaceAvailable;
 	}
 
 	@Column(nullable = true)
-	public long getFreeMemory() {
+	public Long getFreeMemory() {
 		return freeMemory;
 	}
 
-	public void setFreeMemory(long freeMemory) {
+	public void setFreeMemory(Long freeMemory) {
 		this.freeMemory = freeMemory;
 	}
 
 	@Column(nullable = true)
-	public long getTotalMemoryAvailable() {
+	public Long getTotalMemoryAvailable() {
 		return totalMemoryAvailable;
 	}
 
-	public void setTotalMemoryAvailable(long totalMemoryAvailable) {
+	public void setTotalMemoryAvailable(Long totalMemoryAvailable) {
 		this.totalMemoryAvailable = totalMemoryAvailable;
 	}
 }
