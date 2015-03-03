@@ -36,10 +36,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -226,11 +223,19 @@ public class BurpExtender implements IBurpExtender, ITab
             }
         };
 
-        final JLabel parametersPanelTitle = addPanelTitleToGridBagLayout("Threadfix Server", parametersPanel, yPosition++);
-        final JLabel parametersPanelDescription = addPanelDescriptionToGridBagLayout("These settings let you connect to a Threadfix server and choose an Application.", parametersPanel, yPosition++);
-        urlField = addTextFieldToGridBagLayout("Threadfix Server URL:", parametersPanel, yPosition++, BurpPropertiesManager.THREADFIX_URL_KEY, applicationComboBoxRunnable);
+        final JLabel parametersPanelTitle = addPanelTitleToGridBagLayout("ThreadFix Server", parametersPanel, yPosition++);
+        final JLabel parametersPanelDescription = addPanelDescriptionToGridBagLayout("These settings let you connect to a ThreadFix server and choose an Application.", parametersPanel, yPosition++);
+        urlField = addTextFieldToGridBagLayout("ThreadFix Server URL:", parametersPanel, yPosition++, BurpPropertiesManager.THREADFIX_URL_KEY, applicationComboBoxRunnable);
         keyField = addTextFieldToGridBagLayout("API Key:", parametersPanel, yPosition++, BurpPropertiesManager.API_KEY_KEY, applicationComboBoxRunnable);
-        applicationComboBox = addComboBoxToGridBagLayout("Pick an Application", parametersPanel, yPosition++, applicationComboBoxActionListener);
+
+        final JButton applicationComboBoxRefreshButton = new JButton("Refresh application list");
+        applicationComboBoxRefreshButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                updateApplicationComboBox(applicationMap, apiErrorLabel, applicationComboBox);
+            }
+        });
+        applicationComboBox = addComboBoxToGridBagLayout("Pick an Application", parametersPanel, yPosition++, applicationComboBoxActionListener, applicationComboBoxRefreshButton);
         apiErrorLabel = addErrorMessageToGridBagLayout(parametersPanel, yPosition++);
 
         return parametersPanel;
@@ -294,16 +299,18 @@ public class BurpExtender implements IBurpExtender, ITab
         return tabbedPane;
     }
 
-    private class ThreadfixPropertyFieldDocumentListener implements DocumentListener {
+    private class ThreadFixPropertyFieldListener implements DocumentListener, FocusListener {
         private JTextField jTextField;
         private String propertyName;
         private Runnable runnable;
 
-        public ThreadfixPropertyFieldDocumentListener(JTextField jTextField, String propertyName) {
+        private String lastValue = null;
+
+        public ThreadFixPropertyFieldListener(JTextField jTextField, String propertyName) {
             this(jTextField, propertyName, null);
         }
 
-        public ThreadfixPropertyFieldDocumentListener(JTextField jTextField, String propertyName, Runnable runnable) {
+        public ThreadFixPropertyFieldListener(JTextField jTextField, String propertyName, Runnable runnable) {
             this.jTextField = jTextField;
             this.propertyName = propertyName;
             this.runnable = runnable;
@@ -329,6 +336,21 @@ public class BurpExtender implements IBurpExtender, ITab
         @Override
         public void changedUpdate(DocumentEvent e) {
             update();
+        }
+
+        @Override
+        public void focusGained(FocusEvent e) {
+            System.out.println("focusGained -- " + jTextField.getText());
+            lastValue = jTextField.getText().trim();
+        }
+
+        @Override
+        public void focusLost(FocusEvent e) {
+            System.out.println("focusLost -- " + jTextField.getText());
+            String currentValue = jTextField.getText().trim();
+            if (!currentValue.equals(lastValue)) {
+                update();
+            }
         }
     }
 
@@ -455,15 +477,15 @@ public class BurpExtender implements IBurpExtender, ITab
         return addTextFieldToGridBagLayout(labelText, gridBagContainer, yPosition, propertyKey, null, null);
     }
 
-    private JTextField addTextFieldToGridBagLayout(String labelText, Container gridBagContainer, int yPosition, String propertyKey, Runnable threadfixPropertyFieldDocumentListenerRunnable) {
-        return addTextFieldToGridBagLayout(labelText, gridBagContainer, yPosition, propertyKey, threadfixPropertyFieldDocumentListenerRunnable, null);
+    private JTextField addTextFieldToGridBagLayout(String labelText, Container gridBagContainer, int yPosition, String propertyKey, Runnable threadFixPropertyFieldListenerRunnable) {
+        return addTextFieldToGridBagLayout(labelText, gridBagContainer, yPosition, propertyKey, threadFixPropertyFieldListenerRunnable, null);
     }
 
     private JTextField addTextFieldToGridBagLayout(String labelText, Container gridBagContainer, int yPosition, String propertyKey, JButton button) {
         return addTextFieldToGridBagLayout(labelText, gridBagContainer, yPosition, propertyKey, null, button);
     }
 
-    private JTextField addTextFieldToGridBagLayout(String labelText, Container gridBagContainer, int yPosition, String propertyKey, Runnable threadfixPropertyFieldDocumentListenerRunnable, JButton button) {
+    private JTextField addTextFieldToGridBagLayout(String labelText, Container gridBagContainer, int yPosition, String propertyKey, Runnable threadFixPropertyFieldListenerRunnable, JButton button) {
         JLabel textFieldLabel = new JLabel(labelText);
         callbacks.customizeUiComponent(textFieldLabel);
         textFieldLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -478,7 +500,7 @@ public class BurpExtender implements IBurpExtender, ITab
 
         JTextField textField = new JTextField(40);
         callbacks.customizeUiComponent(textField);
-        textField.getDocument().addDocumentListener(new ThreadfixPropertyFieldDocumentListener(textField, propertyKey, threadfixPropertyFieldDocumentListenerRunnable));
+        textField.addFocusListener(new ThreadFixPropertyFieldListener(textField, propertyKey, threadFixPropertyFieldListenerRunnable));
         gridBagConstraints = new GridBagConstraints();
         if (button == null) {
             gridBagConstraints.gridwidth = 2;
@@ -501,8 +523,8 @@ public class BurpExtender implements IBurpExtender, ITab
             gridBagConstraints.gridy = yPosition;
             gridBagConstraints.ipadx = 5;
             gridBagConstraints.ipady = 5;
-            gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
-            gridBagConstraints.anchor = GridBagConstraints.NORTH;
+            gridBagConstraints.fill = GridBagConstraints.NONE;
+            gridBagConstraints.anchor = GridBagConstraints.NORTHEAST;
             gridBagContainer.add(button, gridBagConstraints);
         }
 
@@ -510,6 +532,10 @@ public class BurpExtender implements IBurpExtender, ITab
     }
 
     private JComboBox addComboBoxToGridBagLayout(String labelText, Container gridBagContainer, int yPosition, ActionListener actionListener) {
+        return addComboBoxToGridBagLayout(labelText, gridBagContainer, yPosition, actionListener, null);
+    }
+
+    private JComboBox addComboBoxToGridBagLayout(String labelText, Container gridBagContainer, int yPosition, ActionListener actionListener, JButton button) {
         JLabel textFieldLabel = new JLabel(labelText);
         callbacks.customizeUiComponent(textFieldLabel);
         textFieldLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -526,7 +552,11 @@ public class BurpExtender implements IBurpExtender, ITab
         comboBox.setEnabled(false);
         callbacks.customizeUiComponent(comboBox);
         gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.gridwidth = 2;
+        if (button == null) {
+            gridBagConstraints.gridwidth = 2;
+        } else {
+            gridBagConstraints.gridwidth = 1;
+        }
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = yPosition;
         gridBagConstraints.ipadx = 5;
@@ -534,6 +564,19 @@ public class BurpExtender implements IBurpExtender, ITab
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = GridBagConstraints.NORTH;
         gridBagContainer.add(comboBox, gridBagConstraints);
+
+        if (button != null) {
+            callbacks.customizeUiComponent(button);
+            gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridwidth = 1;
+            gridBagConstraints.gridx = 3;
+            gridBagConstraints.gridy = yPosition;
+            gridBagConstraints.ipadx = 5;
+            gridBagConstraints.ipady = 5;
+            gridBagConstraints.fill = GridBagConstraints.NONE;
+            gridBagConstraints.anchor = GridBagConstraints.NORTHEAST;
+            gridBagContainer.add(button, gridBagConstraints);
+        }
 
         comboBox.addActionListener(actionListener);
 
