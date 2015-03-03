@@ -418,6 +418,8 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         }
         finding.setChannelSeverity(channelSeverity);
 
+        finding.setNativeId(findingMap.get(FindingKey.NATIVE_ID));
+
         return finding;
     }
 

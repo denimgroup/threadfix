@@ -590,7 +590,7 @@
         </dependency>
         <dependency>
             <groupId>com.denimgroup.threadfix</groupId>
-            <artifactId>importer-plugin</artifactId>
+            <artifactId>remote-provider-plugin</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
