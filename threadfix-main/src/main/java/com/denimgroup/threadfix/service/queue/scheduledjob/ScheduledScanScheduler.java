@@ -58,7 +58,7 @@ public class ScheduledScanScheduler {
     private static final SanitizedLogger log = new SanitizedLogger(ScheduledScanScheduler.class);
     private static Scheduler scheduler = getScheduler();
 
-    @Autowired
+    @Autowired(required = false)
     private ScheduledScanService scheduledScanService;
 
     @Autowired
@@ -77,7 +77,7 @@ public class ScheduledScanScheduler {
     }
     @PostConstruct
     public void run() {
-        if (scheduler == null)
+        if (scheduler == null || scheduledScanService == null)
             return;
 
         log.info("Loading all Scheduled Scans from database");
