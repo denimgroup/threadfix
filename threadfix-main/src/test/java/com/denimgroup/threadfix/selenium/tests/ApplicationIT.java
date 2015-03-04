@@ -431,6 +431,7 @@ public class ApplicationIT extends BaseDataTest {
     public void testVulnExpandCollapse() {
         initializeTeamAndApp();
         String cwe = "Improper Validation of Certificate Expiration";
+        String sourceFile = "/test";
         String parameter = "Test Parameter";
         String description = "Test Description.";
         String appVuln = "Critical298";
@@ -446,6 +447,7 @@ public class ApplicationIT extends BaseDataTest {
                 .clickManualFindingButton()
                 .clickStaticRadioButton()
                 .setCWE(cwe)
+                .setSourceFile(sourceFile)
                 .setParameter(parameter)
                 .setDescription(description)
                 .clickDynamicSubmit();
@@ -467,6 +469,7 @@ public class ApplicationIT extends BaseDataTest {
     public void testCommentValidation() {
         initializeTeamAndApp();
         String cwe = "Improper Validation of Certificate Expiration";
+        String sourceFile = "/test";
         String parameter = "Test Parameter";
         String description = "Test Description.";
         String appVuln = "Critical298";
@@ -481,6 +484,7 @@ public class ApplicationIT extends BaseDataTest {
                 .clickManualFindingButton()
                 .clickStaticRadioButton()
                 .setCWE(cwe)
+                .setSourceFile(sourceFile)
                 .setParameter(parameter)
                 .setDescription(description)
                 .clickDynamicSubmit();
@@ -504,6 +508,7 @@ public class ApplicationIT extends BaseDataTest {
         String cwe = "Improper Validation of Certificate Expiration";
         String parameter = "Test Parameter";
         String description = "Test Description.";
+        String sourceFile = "/Test";
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -514,6 +519,7 @@ public class ApplicationIT extends BaseDataTest {
                 .clickManualFindingButton()
                 .clickStaticRadioButton()
                 .setCWE(cwe)
+                .setSourceFile(sourceFile)
                 .setParameter(parameter)
                 .setDescription(description)
                 .clickDynamicSubmit();
@@ -538,6 +544,7 @@ public class ApplicationIT extends BaseDataTest {
         initializeTeamAndApp();
         String originalCwe = "Improper Validation of Certificate Expiration";
         String editedCwe = "Improper Resolution of Path Equivalence";
+        String sourceFile = "/test";
         String originalParameter = "testParameter";
         String editedParameter = "testParameter-edited";
         String originalDescription = "Test Description: This is a test, this is only a test.";
@@ -552,6 +559,7 @@ public class ApplicationIT extends BaseDataTest {
                 .clickManualFindingButton()
                 .clickStaticRadioButton()
                 .setCWE(originalCwe)
+                .setSourceFile(sourceFile)
                 .setParameter(originalParameter)
                 .setDescription(originalDescription)
                 .clickDynamicSubmit();
