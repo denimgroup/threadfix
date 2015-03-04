@@ -661,7 +661,7 @@ public class ApplicationIT extends BaseDataTest {
         String teamName = createTeam();
         String appName = getName();
 
-        String repositoryURL = "http://test.com";
+        String repositoryURL = "https://github.com/denimgroup/threadfix";
         String repositoryRevision = "QA";
         String repositoryUserName = "user";
         String repositoryPassword = "password";
@@ -692,12 +692,12 @@ public class ApplicationIT extends BaseDataTest {
         String teamName = createTeam();
         String appName = getName();
 
-        String repositoryURL = "http://test.com";
+        String repositoryURL = "https://github.com/denimgroup/threadfix";
         String repositoryRevision = "QA";
         String repositoryUserName = "user";
         String repositoryPassword = "password";
 
-        String repositoryURLEdited = "http://test2.com";
+        String repositoryURLEdited = "https://github.com/denimgroup/threadfix";
         String repositoryRevisionEdited = "QA2";
         String repositoryUserNameEdited = "user2";
         String repositoryPasswordEdited = "password2";
