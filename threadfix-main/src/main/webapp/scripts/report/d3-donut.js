@@ -157,7 +157,16 @@ angular.module('threadfix')
             var svg = d3.select("#"+id)
                 .append("svg")
                 .attr("width", width)
+                .attr("height", height);
+
+            svg.append("rect")
+                .attr("transform", "translate(0, 0)")
+                .attr("width", width)
                 .attr("height", height)
+                .attr("fill", "#ffffff")
+                .attr("strokeWidth", 0);
+
+            svg = svg
                 .append("g")
                 .attr("transform", "translate(" + x + "," + y + ")");
 

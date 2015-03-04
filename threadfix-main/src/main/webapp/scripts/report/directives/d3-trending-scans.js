@@ -57,7 +57,16 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     .attr("height", h + m[0] + m[2])
                     .attr("id", function(){
                         return (scope.svgId) ? scope.svgId : "trendingGraph";
-                    })
+                    });
+
+                svg.append("rect")
+                    .attr("transform", "translate(0, 0)")
+                    .attr("width", w + m[1] + m[3])
+                    .attr("height", h + m[0] + m[2])
+                    .attr("fill", "#ffffff")
+                    .attr("strokeWidth", 0);
+
+                svg = svg
                     .append("g")
                     .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 

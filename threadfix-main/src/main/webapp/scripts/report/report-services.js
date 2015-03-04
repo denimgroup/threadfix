@@ -3,51 +3,43 @@ var threadfixModule = angular.module('threadfix');
 threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, vulnSearchParameterService, vulnTreeTransformer, $timeout) {
 
     var reportExporter = {};
+    var browerErrMsg = "Sorry, your browser does not support this feature. Please upgrade IE version or change to Chrome which is recommended.";
 
     reportExporter.exportCSV = function(data, contentType, fileName) {
 
-        // Get the blob url creator
-        var urlCreator = window.URL || window.webkitURL || window.mozURL || window.msURL;
+        var blob = new Blob([data], { type: contentType });
 
-        var octetStreamMime = "application/octet-stream";
-
-        if(urlCreator) {
-            // Try to use a download link
-            var link = document.createElement("a");
-            var blob, url;
-            if ("download" in link) {
-                // Prepare a blob URL
-                blob = new Blob([data], { type: contentType });
-                url = urlCreator.createObjectURL(blob);
-                link.setAttribute("href", url);
-
-                // Set the download attribute (Supported in Chrome 14+ / Firefox 20+)
-                link.setAttribute("download", fileName);
-
-                // Simulate clicking the download link
-                var event = document.createEvent('MouseEvents');
-                event.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
-                link.dispatchEvent(event);
-
-                $log.info("Download Data Success");
-
-            } else {
-                // Prepare a blob URL
-                // Use application/octet-stream when using window.location to force download
-                blob = new Blob([data], { type: octetStreamMime });
-                url = urlCreator.createObjectURL(blob);
-                window.location = url;
-
-                $log.info("window.location Success");
+        // IE <10, FileSaver.js is explicitly unsupported
+        if (checkOldIE()) {
+            var success = false;
+            if (document.execCommand) {
+                var oWin = window.open("about:blank", "_blank");
+                oWin.document.open("application/csv", "replace");
+                oWin.document.charset = "utf-8";
+                oWin.document.write('sep=,\r\n' + data);
+                oWin.document.close();
+                success = oWin.document.execCommand('SaveAs', true, fileName)
+                oWin.close();
             }
-        } else {
-            $log.info("Not supported");
+
+            if (!success)
+                alert(browerErrMsg);
+            return;
         }
+
+        // Else, using saveAs of FileSaver.js
+        saveAs(blob, fileName);
     };
 
     reportExporter.exportPDF = function(d3, exportInfo, width, height, name) {
         reportExporter.exportPDFSvg(d3, selectSvg(exportInfo.svgId), width, height, name, exportInfo.isPDF);
     };
+
+    var checkOldIE = function() {
+        // IE <10, unsupported
+         return (typeof navigator !== "undefined" &&
+            /MSIE [1-9]\./.test(navigator.userAgent));
+    }
 
     var selectSvg = function(svgId) {
         var svg = d3.select("svg");
@@ -120,6 +112,11 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
 
     reportExporter.exportPDFTable = function($scope, parameters, exportInfo) {
 
+        if (checkOldIE()) {
+            alert(browerErrMsg);
+            return;
+        }
+
         $scope.exportingPDF = true;
 
         //Retrieving table data
@@ -161,6 +158,11 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
 
     reportExporter.exportPDFTableFromId = function(exportIds, tableData) {
 
+        if (checkOldIE()) {
+            alert(browerErrMsg);
+            return;
+        }
+
         var fileName = getName(exportIds);
         var tableId = exportIds.tableId, graghId = exportIds.svgId;
 
@@ -190,6 +192,7 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
     }
 
     var addSvgToPdf = function(pdf, graphId) {
+
         if (graphId) {
             var svg = selectSvg(graphId);
             var node = svg
@@ -208,18 +211,29 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
             var canvas = document.createElement("canvas");
             canvas.width = svg.attr("width");
             canvas.height = svg.attr("height");
-            var context = canvas.getContext("2d");
 
+            var context = canvas.getContext("2d");
             var image = new Image();
             image.src = imgsrc;
-            //image.onload = function () {
-            context.drawImage(image, 0, 0);
-            var canvasdata = canvas.toDataURL("image/png");
-            pdf.addImage(canvasdata, 'PNG', 10, 10);
-            //return pdf;
-            //}
+
+            try {
+                context.drawImage(image, 0, 0);
+                var canvasdata = canvas.toDataURL("image/png");
+                pdf.addImage(canvasdata, 'PNG', 10, 10);
+
+            } catch (ex) {
+                // So I guess, you are using IE...
+                $log.warn(ex);
+                try {
+                    canvg(canvas, html);
+                    var canvasData = canvas.toDataURL("image/jpeg");
+                    pdf.addImage(canvasData, 'JPEG', 10, 10);
+                } catch (ex1) {
+                    $log.warn(ex1);
+                    alert(browerErrMsg);
+                }
+            }
         }
-        return pdf;
     }
 
     var addElementToPdf = function(pdf, elementId) {
