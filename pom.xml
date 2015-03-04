@@ -30,7 +30,6 @@
         <module>threadfix-cli-endpoints</module>
         <module>threadfix-cli-importers</module>
         <module>threadfix-data-migration</module>
-        <module>threadfix-plugin-examples/remote-provider</module>
         <module>threadfix-main</module>
     </modules>
 

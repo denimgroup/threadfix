@@ -49,12 +49,10 @@ package com.denimgroup.threadfix.service.waf;
 
 import com.denimgroup.threadfix.annotations.WebApplicationFirewall;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
-import com.denimgroup.threadfix.data.entities.WafRule;
 import com.denimgroup.threadfix.data.entities.WafType;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -64,8 +62,6 @@ import java.util.Map;
 @WebApplicationFirewall(name = WafType.RIVERBED_WEB_APP_FIREWALL)
 public class RiverbedWebAppFirewallGenerator extends RealTimeProtectionGenerator {
 
-    public static String RULE_PROVIDER_NAME = "threadfix";
-    public static String RULE_PROVIDER_VERSION = "20140915";
     protected static final Map<String, String> VULNERABILITY_CLASS_MAPPING = new HashMap<String, String>() {
         {
             // XSS
@@ -109,15 +105,6 @@ public class RiverbedWebAppFirewallGenerator extends RealTimeProtectionGenerator
             GenericVulnerability.CWE_SQL_INJECTION,
             GenericVulnerability.CWE_XPATH_INJECTION, 
         };
-    }
-
-    public static String getStart(List<WafRule> rules) {
-        return "{\"provider\":\"" + RULE_PROVIDER_NAME + "\",\"version\":\"" + RULE_PROVIDER_VERSION + "\",\"rules\":[\n";
-    }
-
-    public static String getEnd(List<WafRule> rules) {
-        // add empty element to list of protection rules
-        return "\tnull]\n}\n";
     }
 
     @Override
