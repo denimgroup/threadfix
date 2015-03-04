@@ -27,7 +27,7 @@ import com.denimgroup.threadfix.data.dao.WafRuleDao;
 import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
@@ -155,12 +155,6 @@ public abstract class RealTimeProtectionGenerator extends SpringBeanAutowiringSu
 	
 	/**
 	 * This method should be overwritten by classes that use the default makeRule implementation.
-	 * @param uri
-	 * @param action
-	 * @param id
-	 * @param payload
-	 * @param parameter
-	 * @param message
 	 * @return A rule filtering the URL for a given parameter payload.
 	 */
 	protected String generateRuleWithParameter(String uri, String action, String id,
@@ -172,11 +166,6 @@ public abstract class RealTimeProtectionGenerator extends SpringBeanAutowiringSu
 	
 	/**
 	 * This method should be overwritten by classes that use the default makeRule implementation.
-	 * @param uri
-	 * @param action
-	 * @param id
-	 * @param payload
-	 * @param message
 	 * @return A rule prohibiting access to the exact URI.
 	 */
 	protected String generateRuleForExactUrl(String uri, String action, String id,
@@ -188,11 +177,6 @@ public abstract class RealTimeProtectionGenerator extends SpringBeanAutowiringSu
 	
 	/**
 	 * This method should be overwritten by classes that use the default makeRule implementation.
-	 * @param uri
-	 * @param action
-	 * @param id
-	 * @param payload
-	 * @param message
 	 * @return A rule filtering the URL for a given payload.
 	 */
 	protected String generateRuleWithPayloadInUrl(String uri, String action, String id,
@@ -222,7 +206,7 @@ public abstract class RealTimeProtectionGenerator extends SpringBeanAutowiringSu
 			return list();
 		}
 
-		log.info("About to generate rules for the WAF " + StringEscapeUtils.escapeHtml(waf.getName()) + 
+		log.info("About to generate rules for the WAF " + StringEscapeUtils.escapeHtml4(waf.getName()) +
 				": " + applications.size() + " applications.");
 
 		int numVulns = 0;
@@ -332,7 +316,7 @@ public abstract class RealTimeProtectionGenerator extends SpringBeanAutowiringSu
 			String vulnName = MESSAGE_MAP.get(genericVulnName);
 			if (vulnName != null) {
 				vulnName = vulnName.replaceFirst(" attempt", "");
-				log.debug("New " + StringEscapeUtils.escapeHtml(vulnName) + " rule was " + StringEscapeUtils.escapeHtml(rule.trim()));
+				log.debug("New " + StringEscapeUtils.escapeHtml4(vulnName) + " rule was " + StringEscapeUtils.escapeHtml4(rule.trim()));
 			}
 		}
 			
@@ -426,7 +410,7 @@ public abstract class RealTimeProtectionGenerator extends SpringBeanAutowiringSu
 		} else if (type.equals(WafType.IMPERVA_SECURE_SPHERE)) {
 			return ImpervaSecureSphereGenerator.getStart(rules);
 		} else if (type.equals(WafType.RIVERBED_WEB_APP_FIREWALL)) {
-			return RiverbedWebAppFirewallGenerator.getStart(rules);
+			return RiverbedStartAndEndHolder.getStart(rules);
 		} else {
 			return null;
 		}
@@ -438,7 +422,7 @@ public abstract class RealTimeProtectionGenerator extends SpringBeanAutowiringSu
 		} else if (type.equals(WafType.IMPERVA_SECURE_SPHERE)) {
 			return ImpervaSecureSphereGenerator.getEnd(rules);
 		} else if (type.equals(WafType.RIVERBED_WEB_APP_FIREWALL)) {
-			return RiverbedWebAppFirewallGenerator.getEnd(rules);
+			return RiverbedStartAndEndHolder.getEnd(rules);
 		} else {
 			return null;
 		}

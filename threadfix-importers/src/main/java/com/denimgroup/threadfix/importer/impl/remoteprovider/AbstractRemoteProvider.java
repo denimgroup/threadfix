@@ -46,6 +46,10 @@ public abstract class AbstractRemoteProvider extends AbstractChannelImporter {
 		super(scannerType);
 	}
 
+	public AbstractRemoteProvider(String scannerType) {
+		super(scannerType);
+	}
+
 	protected final SanitizedLogger LOG = new SanitizedLogger(this.getClass());
 
 	protected RemoteProviderType remoteProviderType;

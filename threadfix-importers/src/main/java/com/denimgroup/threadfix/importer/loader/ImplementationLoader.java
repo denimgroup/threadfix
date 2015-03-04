@@ -63,7 +63,9 @@ public class ImplementationLoader<A extends Annotation, C> {
         Class<?> channelImporterClass = classMap.get(key);
 
         try {
-            assert channelImporterClass != null : "Got null class for key " + key;
+            if (channelImporterClass == null) {
+                throw new IllegalStateException("Got null class for key " + key);
+            }
 
             Constructor<?>[] constructors = channelImporterClass.getConstructors();
 
