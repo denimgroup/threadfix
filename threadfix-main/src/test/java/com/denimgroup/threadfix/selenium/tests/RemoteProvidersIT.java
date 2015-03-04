@@ -346,10 +346,9 @@ public class RemoteProvidersIT extends BaseDataTest {
                 .clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
                 .saveWhiteHat()
-                .clickEditWhiteHatButton(1)
-                .selectTeamMapping(teamName);
+                .clickEditWhiteHatButton(1);
 
-        assertFalse("Application wasn't deleted", remoteProvidersIndexPage.isElementPresentInSelect("appSelect1",appName));
+        assertFalse("Application wasn't deleted", remoteProvidersIndexPage.isElementPresentInSelect("orgSelect1",teamName));
 
         remoteProvidersIndexPage.clickCloseButton()
                .clearWhiteHat();
