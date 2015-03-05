@@ -411,18 +411,5 @@
         <maven-compiler.version>2.3.2</maven-compiler.version>
         <maven-surefire.version>2.6</maven-surefire.version>
     </properties>
-    <profiles>
-    <profile>
-        	<id>dependencycheck</id>
-        	<build>
-        		<plugins>
-        			<plugin>
-        				<groupId>org.owasp</groupId>
-        				<artifactId>dependency-check-maven</artifactId>
-        			</plugin>
-        		</plugins>
-        	</build>
-        </profile>
-    </profiles>
 
 </project>
