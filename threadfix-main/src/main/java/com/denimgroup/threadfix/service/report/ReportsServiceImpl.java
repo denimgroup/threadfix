@@ -332,7 +332,7 @@ public class ReportsServiceImpl implements ReportsService {
         List<List<String>> rowParamsList = list();
         SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd");
         for (Vulnerability vuln : vulnerabilityList) {
-            if (vuln == null || (!vuln.isActive() && !vuln.getIsFalsePositive())) {
+            if (vuln == null) {
                 continue;
             }
 
