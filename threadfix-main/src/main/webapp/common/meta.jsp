@@ -1,6 +1,5 @@
 
-		<meta http-equiv="X-UA-Compatible" content="IE=9" />
-        <!-- HTTP 1.1 -->
+		<!-- HTTP 1.1 -->
         <meta http-equiv="Cache-Control" content="no-store"/>
         <!-- HTTP 1.0 -->
         <meta http-equiv="Pragma" content="no-cache"/>
