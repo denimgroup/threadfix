@@ -331,11 +331,11 @@ public class WafIT extends BaseDataTest {
         if (applicationDetailPage.isWafPresent()) {
             applicationDetailPage.clickCreateNewWaf()
                     .setWafName(wafName)
-                    .clickCreateWAfButtom()
+                    .clickCreateWafButton()
                     .clickModalSubmit();
         } else {
             applicationDetailPage.setWafName(wafName)
-                    .clickCreateWAfButtom()
+                    .clickCreateWafButton()
                     .clickModalSubmit();
         }
 
@@ -344,7 +344,7 @@ public class WafIT extends BaseDataTest {
         WafRulesPage wafRulesPage = wafIndexPage.clickRules(wafName)
                 .clickGenerateWafRulesButton();
 
-        assertTrue("WAf Rule does not exist",
+        assertTrue("WAF Rule does not exist",
                 wafRulesPage.isDownloadWafRulesDisplay());
     }
 
@@ -364,11 +364,11 @@ public class WafIT extends BaseDataTest {
         if (applicationDetailPage.isWafPresent()) {
             applicationDetailPage.clickCreateNewWaf()
                     .setWafName(wafName)
-                    .clickCreateWAfButtom()
+                    .clickCreateWafButton()
                     .clickModalSubmit();
         } else {
             applicationDetailPage.setWafName(wafName)
-                    .clickCreateWAfButtom()
+                    .clickCreateWafButton()
                     .clickModalSubmit();
         }
 
@@ -457,11 +457,11 @@ public class WafIT extends BaseDataTest {
         if (applicationDetailPage.isWafPresent()) {
             applicationDetailPage.clickCreateNewWaf()
                     .setWafName(wafName)
-                    .clickCreateWAfButtom()
+                    .clickCreateWafButton()
                     .clickModalSubmit();
         } else {
             applicationDetailPage.setWafName(wafName)
-                    .clickCreateWAfButtom()
+                    .clickCreateWafButton()
                     .clickModalSubmit();
         }
 
@@ -530,11 +530,11 @@ public class WafIT extends BaseDataTest {
         if (applicationDetailPage.isWafPresent()) {
             applicationDetailPage.clickCreateNewWaf()
                     .setWafName(wafName)
-                    .clickCreateWAfButtom()
+                    .clickCreateWafButton()
                     .clickModalSubmit();
         } else {
             applicationDetailPage.setWafName(wafName)
-                    .clickCreateWAfButtom()
+                    .clickCreateWafButton()
                     .clickModalSubmit();
         }
 
@@ -646,10 +646,10 @@ public class WafIT extends BaseDataTest {
         if (applicationDetailPage.isWafPresent()) {
             applicationDetailPage.clickCreateNewWaf()
                     .setWafName(wafName)
-                    .clickCreateWAfButtom();
+                    .clickCreateWafButton();
         } else {
             applicationDetailPage.setWafName(wafName)
-                    .clickCreateWAfButtom();
+                    .clickCreateWafButton();
         }
 
         assertTrue("Waf wasn't created", applicationDetailPage.checkWafName().contains(wafName));

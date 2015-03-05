@@ -429,10 +429,10 @@ public class UserPermissionsEntIT extends BaseDataTest{
         if (applicationDetailPage.isWafPresent()) {
             applicationDetailPage.clickCreateNewWaf()
                     .setWafName(wafName)
-                    .clickCreateWAfButtom();
+                    .clickCreateWafButton();
         } else {
             applicationDetailPage.setWafName(wafName)
-                    .clickCreateWAfButtom();
+                    .clickCreateWafButton();
         }
 
         assertTrue("Creating WAf is still Present", applicationDetailPage.applicationErrorMessage());
@@ -577,10 +577,10 @@ public class UserPermissionsEntIT extends BaseDataTest{
         if (applicationDetailPage.isWafPresent()) {
             applicationDetailPage.clickCreateNewWaf()
                     .setWafName(wafName)
-                    .clickCreateWAfButtom();
+                    .clickCreateWafButton();
         } else {
             applicationDetailPage.setWafName(wafName)
-                    .clickCreateWAfButtom();
+                    .clickCreateWafButton();
         }
 
         WafIndexPage wafIndexPage = applicationDetailPage.clickWafNameLink();

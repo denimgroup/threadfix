@@ -274,7 +274,7 @@ public class ApplicationDetailPage extends BasePage {
         return this;
     }
 
-    public ApplicationDetailPage clickCreateWAfButtom() {
+    public ApplicationDetailPage clickCreateWafButton() {
         sleep(1000);
         driver.findElementById("submit").click();
         // waitForElement(driver.findElementById("addWafButton"));
