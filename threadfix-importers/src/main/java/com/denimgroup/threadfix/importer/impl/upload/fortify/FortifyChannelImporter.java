@@ -42,6 +42,7 @@ import java.io.InputStream;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
 
 /**
  * Parses the SCA Fortify fpr output file.
@@ -88,9 +89,15 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
         }
 
 		deleteZipFile();
-		
+
+		for (Map.Entry<String, Integer> stringIntegerEntry : resultMap.entrySet()) {
+			System.out.println(stringIntegerEntry.getKey() + "," + stringIntegerEntry.getValue());
+		}
+
 		return returnScan;
 	}
+
+	Map<String, Integer> resultMap = newMap();
 
 	private void applySuppressedInformation(FortifyAuditXmlParser timeParser, Scan returnScan) {
 		Set<String> suppressedIds = timeParser.suppressedIds;
@@ -242,33 +249,49 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    	}
 	    }
 
+		/**
+		 * This method generates the default confidence, pre-filtering by Fortify
+		 */
 	    private String getSeverityName(Float confidence, Map<String, Float> map) {
-			if (confidence != null && map != null && map.get("Impact") != null && 
-					map.get("Probability") != null && map.get("Accuracy") != null)  {
+			String result;
+
+			Float accuracy = map.get("Accuracy");
+			Float probability = map.get("Probability");
+			if (confidence != null && map.get("Impact") != null &&
+					probability != null && accuracy != null)  {
 				
 				Float impact = map.get("Impact");
-				Float likelihood = (float) (confidence * map.get("Accuracy") * map.get("Probability")) / 25;
 
-				
+				Float likelihood = (float) (confidence * accuracy * probability) / 25;
+
 				// TODO figure out what we should actually be doing here.
-				// This comes from the Fortify training materials and *almost* works with our sample files.
-				if (impact >= 2.5) {
-					if (likelihood < 2.795) {
-						return "High";
-					} else {
-						return "Critical";
-					}
+				// This comes from the Fortify javadoc and *almost* works with our sample files.
+
+				if (impact >= 2.5F && likelihood >= 2.5F) {
+					result = "Critical";
+				} else if (impact >= 2.5F) {
+					result = "High";
+				} else if (likelihood >= 2.5F) {
+					result = "Medium";
 				} else {
-					if (likelihood < 2.795) {
-						return "Low";
-					} else {
-						return "Medium";
-					}
+					result = "Low";
 				}
+
+				String key = confidence + "," + accuracy + "," + probability + "," + impact + "," + likelihood + "," + result;
+
+				if (!resultMap.containsKey(key)) {
+					resultMap.put(key, 0);
+				}
+
+				resultMap.put(key, resultMap.get(key) + 1);
+
+			} else {
+				result = null;
 			}
-			return null;
+			return result;
 		}
-	   
+
+
 	    ////////////////////////////////////////////////////////////////////
 	    // Event handlers.
 	    ////////////////////////////////////////////////////////////////////
@@ -347,11 +370,12 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    			}
 	    		} else if (currentRuleID != null && "Group".equals(qName) &&
 	    				atts.getValue("name") != null) {
-	    			 if (atts.getValue("name").equals("Impact")) {
+					String groupName = atts.getValue("name");
+					if (groupName.equals("Impact")) {
 	    				 getImpact = true;
-	    			 } else if (atts.getValue("name").equals("Probability")) {
+	    			 } else if (groupName.equals("Probability")) {
 	    				 getProbability = true;
-	    			 } else if (atts.getValue("name").equals("Accuracy")) {
+	    			 } else if (groupName.equals("Accuracy")) {
 	    				 getAccuracy = true;
 	    			 }
 	    		}
