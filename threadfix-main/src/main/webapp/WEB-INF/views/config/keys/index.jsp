@@ -33,7 +33,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-hide="keys || loading">
+                <tr ng-hide="keys.length || loading">
                     <td colspan="4" style="text-align:center;">No API Keys found.</td>
                 </tr>
                 <tr ng-repeat="key in keys">
