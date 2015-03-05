@@ -51,7 +51,7 @@ public class APIKeyServiceImpl implements APIKeyService {
 
 	@Override
 	public List<APIKey> loadAll() {
-		return apiKeyDao.retrieveAll();
+		return apiKeyDao.retrieveAllActive();
 	}
 
 	@Override
