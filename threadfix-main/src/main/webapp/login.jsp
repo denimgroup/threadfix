@@ -4,7 +4,6 @@
 
 <html lang="en">
 <head>
-	<meta http-equiv="X-UA-Compatible" content="IE=9" />
 	<meta http-equiv="X-FRAME-OPTIONS" content="DENY"/>
 	<title>ThreadFix</title>
     <cbs:cachebustscript src="/scripts/angular.min.js"/>

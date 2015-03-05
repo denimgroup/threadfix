@@ -37,6 +37,7 @@ import com.denimgroup.threadfix.service.ScanService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -65,12 +66,26 @@ public class UploadScanController {
     @Autowired
     private OrganizationService        organizationService;
 
+    @RequestMapping(value = "/organizations/{orgId}/applications/{appId}/upload/remote", method = RequestMethod.POST, produces = "text/plain")
+    @JsonView(AllViews.TableRow.class)
+    public String uploadScan2(@PathVariable("appId") int appId,
+                             @PathVariable("orgId") int orgId,
+                             HttpServletRequest request,
+                             @RequestParam("file") MultipartFile file) throws IOException {
+        Object o = uploadScan(appId, orgId, request, file);
+
+        ObjectWriter mapper = new CustomJacksonObjectMapper().writerWithView(AllViews.TableRow.class);
+        String s = mapper.writeValueAsString(o);
+
+        return s;
+    }
+
     /**
      * Allows the user to upload a scan to an existing application.
      *
      * @return Team with updated stats.
      */
-    @RequestMapping(value = "/organizations/{orgId}/applications/{appId}/upload/remote", method = RequestMethod.POST)
+    @RequestMapping(value = "/organizations/{orgId}/applications/{appId}/upload/remote", method = RequestMethod.POST, produces = "application/json")
     @JsonView(AllViews.TableRow.class)
     public Object uploadScan(@PathVariable("appId") int appId,
                              @PathVariable("orgId") int orgId,

@@ -31,6 +31,7 @@ import com.denimgroup.threadfix.service.DocumentService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,17 @@ public class DocumentController {
 	private final SanitizedLogger log = new SanitizedLogger(DocumentController.class);
 
     @JsonView(AllViews.TableRow.class)
-	@RequestMapping(value = "/documents/upload", method = RequestMethod.POST)
+    @RequestMapping(value = "/documents/upload", method = RequestMethod.POST, produces = "text/plain")
+    public @ResponseBody String uploadSubmitText(@PathVariable("appId") int appId,
+            @PathVariable("orgId") int orgId, @RequestParam("file") MultipartFile file) throws IOException {
+        Object o = uploadSubmit(appId, orgId, file);
+        ObjectWriter mapper = new CustomJacksonObjectMapper().writerWithView(AllViews.TableRow.class);
+        String s = mapper.writeValueAsString(o);
+        return s;
+    }
+
+    @JsonView(AllViews.TableRow.class)
+	@RequestMapping(value = "/documents/upload", method = RequestMethod.POST, produces = "application/json")
 	public @ResponseBody Object uploadSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId, @RequestParam("file") MultipartFile file) throws IOException {
 
