@@ -99,15 +99,22 @@ public class APIKeysIT extends BaseIT {
 
 	@Test
 	public void deleteKeyTest() {
+        String apiKeyNote = getRandomString(10);
+
         //Create API Key
 		apiIndexPage = apiIndexPage.clickNewLink()
-                .setNote("toDeleteAPIKey")
+                .setNote(apiKeyNote)
                 .clickSubmitButton();
 
-        apiIndexPage = apiIndexPage.clickDelete("toDeleteAPIKey");
+        apiIndexPage = apiIndexPage.clickDelete(apiKeyNote);
 
 		assertTrue("Validation Message not present.",apiIndexPage.isDeleteSuccessAlertPresent());
-        assertFalse("API Key was not deleted properly.", apiIndexPage.isAPINotePresent("toDeleteAPIKey"));
+        assertFalse("API Key was not deleted properly.", apiIndexPage.isAPINotePresent(apiKeyNote));
+
+        apiIndexPage.refreshPage();
+
+        assertFalse("Deleted API key was still present after refresh.",
+                apiIndexPage.isAPINotePresent(apiKeyNote));
 	}
 
 	@Test
