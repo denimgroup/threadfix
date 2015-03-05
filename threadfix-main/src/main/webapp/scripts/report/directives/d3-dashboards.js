@@ -154,7 +154,16 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                     var svg1 = d3.select("#topAppChart")
                         .append("svg")
                         .attr("width", scope.width)
+                        .attr("height", scope.height);
+
+                    svg1.append("rect")
+                        .attr("transform", "translate(0, 0)")
+                        .attr("width", scope.width)
                         .attr("height", scope.height)
+                        .attr("fill", "#ffffff")
+                        .attr("strokeWidth", 0);
+
+                    svg1 = svg1
                         .append("g")
                         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 

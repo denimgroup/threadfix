@@ -25,7 +25,7 @@ myAppModule.controller('UploadScanController', function ($scope, $modalInstance,
             $scope.upload = $upload.upload({
                 url: url,
                 method: "POST",
-                // headers: {'headerKey': 'headerValue'},
+                headers: {'Accept': 'application/json'},
                 // withCredentials: true,
                 file: file
                 // file: $files, //upload multiple files, this feature only works in HTML5 FromData browsers

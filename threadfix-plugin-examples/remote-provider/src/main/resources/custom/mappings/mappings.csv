@@ -1,0 +1,9 @@
+3/3/2015 14:22:00
+type.info,,,
+Sample Remote Provider,http://scanner.url.com,1.VersionNumber,Instructions for downloading
+type.vulnerabilities,,,
+Type name,Type code followed by CWE number,64
+Cross-Site Scripting,XSS,79,
+type.severities,,,
+Severity Name,code then ordinal 1-5,1,1
+High,High,4,4

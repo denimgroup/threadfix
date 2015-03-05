@@ -77,6 +77,10 @@ public class DefectTrackerUpdater extends SpringBeanAutowiringSupport implements
 
                 } else {
                     LOG.info("Already had an entry for " + splitLine[0]);
+
+                    type.setFullClassName(splitLine[1]);
+
+                    defectTrackerTypeDao.saveOrUpdate(type);
                 }
 
             } else {

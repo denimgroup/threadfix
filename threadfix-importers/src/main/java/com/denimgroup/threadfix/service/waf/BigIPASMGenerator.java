@@ -24,8 +24,6 @@
 package com.denimgroup.threadfix.service.waf;
 
 import com.denimgroup.threadfix.annotations.WebApplicationFirewall;
-import com.denimgroup.threadfix.data.dao.WafRuleDao;
-import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
 import com.denimgroup.threadfix.data.entities.*;
 
 import java.text.SimpleDateFormat;
@@ -168,60 +166,60 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 
 	/**
 	 * Generate the first part of the policy.
-	 * 
+	 *
 	 * The general strategy is to compose a non-repeating structure of URL/param pairs,
 	 * keeping track of corresponding attack signatures and combining them if necessary,
 	 * then expanding that into the policy string using string templates.
 	 * <br/><br/>
 	 * Non-attack signature related rules are handled separately, adding to the length and
 	 * complexity of this method.
-	 * 
+	 *
 	 * TODO split into smaller methods
 	 * @param rules
 	 * @return
 	 */
-	public static String getStart(List<WafRule> rules) { 
+	public static String getStart(List<WafRule> rules) {
 		 if (rules == null || rules.size() == 0) {
 			 return null;
 		 }
 		 String directive = null;
-		 
+
 		 StringBuilder csrfStrings =  new StringBuilder();
 		 List<String> csrfStringList = list();
-		 
+
 		 StringBuilder ruleTextBuilder = new StringBuilder();
-		 
+
 		 // First keys are paths
 		 // Second keys are parameters
 		 // Set<String> values are the signatures
-		 Map<String, Map<String, Set<String>>> ruleMap = 
+		 Map<String, Map<String, Set<String>>> ruleMap =
 			 new HashMap<>();
 		 Map<String, String> dateMap = new HashMap<>();
-		 
+
 		 boolean directoryTraversalsOn = false;
 		 boolean responseScrubbingOn = false;
 		 boolean illegalMethodOn = false;
-		 
+
 		 // Construct the map<string, map<string, set<string>>> structure
 		 for (WafRule rule : rules) {
 			 if (rule == null || rule.getRule() == null) {
 				 continue;
 			 }
-			 
+
 			 // get values from rule
 			 String path = rule.getPath();
 			 String parameter = rule.getParameter();
 			 String[] attackSignatures = vulnTypeSignatureMap.get(rule.getVulnerabilityDesc());
 
 			 SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			 
+
 			 String date = null;
 			 if (rule.getCreatedDate() != null) {
 				 date = dateFormatter.format(rule.getCreatedDate());
 			 } else {
 				 date = dateFormatter.format(Calendar.getInstance().getTime());
 			 }
-			 
+
 			 // Add the entry
 			 if (path != null && parameter != null) {
 				 if (ruleMap.get(path) == null) {
@@ -229,31 +227,31 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 						 date = dateFormatter.format(Calendar.getInstance().getTime());
 					 }
 					 dateMap.put(path, date);
-					 
+
 					 Map<String, Set<String>> entry = new HashMap<>();
 					 ruleMap.put(path, entry);
 				 }
-				 
+
 				 if (ruleMap.get(path).get(parameter) == null) {
 					 ruleMap.get(path).put(parameter, new TreeSet<String>());
 				 }
-				 
+
 				 if (attackSignatures != null && attackSignatures.length > 0) {
 					 ruleMap.get(path).get(parameter)
 					 	.addAll(Arrays.asList(attackSignatures));
 				 }
 			 }
-			 
-			 if (directive == null && rule != null && 
+
+			 if (directive == null && rule != null &&
 					 rule.getWafRuleDirective() != null) {
 				 directive = rule.getWafRuleDirective().getDirective();
 			 }
-			 
+
 			 // check for any of the special cases
 			 if (rule != null && rule.getVulnerabilityDesc() != null &&
 					 rule.getVulnerabilityDesc().startsWith("CSRF")) {
 				 csrfStringList.add(rule.getRule());
-			 } else if (!directoryTraversalsOn && 
+			 } else if (!directoryTraversalsOn &&
 					 rule != null && rule.getVulnerabilityDesc() != null &&
 					 rule.getVulnerabilityDesc()
 					 	.equals(GenericVulnerability.CWE_PATH_TRAVERSAL)) {
@@ -266,23 +264,23 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 				 illegalMethodOn = true;
 			 }
 		 }
-		 
+
 		 Collections.sort(csrfStringList);
-		 
+
 		 for (String rule : csrfStringList) {
 			 csrfStrings.append("\n    ").append(rule);
 		 }
-		 		 
+
 		 // this does the expansion of the big data structure
 		 expandRules(ruleMap, dateMap, ruleTextBuilder);
-			 
+
 		 StringBuilder start = new StringBuilder();
-		 
+
 		 // handle special cases and expand the rest of the policy
 		 String directoryTraversal = directoryTraversalsOn ? "enabled" : "disabled";
 		 String responseScrubbing = responseScrubbingOn ? "true" : "false";
 		 String illegalMethod = illegalMethodOn ? "true" : "false";
-		 
+
 		 if (csrfStrings.length() == 0) {
 			 start.append(BigIPStrings.XML_START_BEFORE_CSRF)
 			 	  .append(BigIPStrings.XML_START_AFTER_CSRF
@@ -297,20 +295,20 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 					.replaceAll("\\{responseScrubbing\\}", responseScrubbing))
 				  .append(BigIPStrings.XML_START_CSRF_ENABLED);
 		 }
-		 
+
 		 SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		 
+
 		 start.append(BigIPStrings.XML_START_FINAL
-				 			.replaceAll("\\{date\\}", 
+				 			.replaceAll("\\{date\\}",
 				 					dateFormatter.format(Calendar.getInstance().getTime()))
 				 			.replaceAll("\\{directoryTraversal\\}", directoryTraversal)
 				 			.replaceAll("\\{illegalMethod\\}", illegalMethod)
 			 				);
 		 start.append(ruleTextBuilder);
-		 
+
 		 return start.toString();
 	}
-	
+
 	/**
 	 * Take the map structure that is constructed and append all of the rule text
 	 * onto the supplied StringBuilder
@@ -318,49 +316,49 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 	 * @param dateMap
 	 * @param ruleTextBuilder
 	 */
-	private static void expandRules(Map<String, Map<String, Set<String>>> ruleMap, 
+	private static void expandRules(Map<String, Map<String, Set<String>>> ruleMap,
 			Map<String, String> dateMap, StringBuilder ruleTextBuilder) {
 		if (ruleMap == null || dateMap == null || ruleTextBuilder == null) {
 			return;
 		}
-	
+
 		for (Entry<String, Map<String, Set<String>>> entry : ruleMap.entrySet()) {
 			if (entry == null) {
 				continue;
 			}
-			 
+
 			String date = dateMap.get(entry.getKey());
-			 
+
 			ruleTextBuilder.append(BigIPStrings.TEMPLATE_URL
 					 				.replaceFirst("\\{path\\}", entry.getKey())
 					 				.replaceFirst("\\{date\\}", date));
-			 
+
 			for (Entry<String, Set<String>> paramEntry : entry.getValue().entrySet()) {
 				ruleTextBuilder.append(BigIPStrings.TEMPLATE_PARAM
 						 			.replaceFirst("\\{parameter\\}", paramEntry.getKey())
 						 			.replaceFirst("\\{date\\}", date));
-				 
+
 				for (String attackSignature : paramEntry.getValue()) {
 					ruleTextBuilder.append(BigIPStrings.TEMPLATE_ATTACK_SIGNATURE
 							 		.replaceFirst("\\{signatureNumber\\}", attackSignature));
 				}
-				 
+
 				ruleTextBuilder.append(BigIPStrings.TEMPLATE_PARAM_END);
 			}
-			 
+
 			ruleTextBuilder.append(BigIPStrings.TEMPLATE_URL_END);
 		}
 	}
 
-	public static String getEnd(List<WafRule> rules) { 
+	public static String getEnd(List<WafRule> rules) {
 		if (rules == null || rules.size() == 0) {
 			 return null;
 		}
-		
-		// using a set ensures that we don't include the same signature set 
-		// more than one time. 
+
+		// using a set ensures that we don't include the same signature set
+		// more than one time.
 		Set<String> signatureSet =  new TreeSet<>();
-				 
+
 		for (WafRule rule : rules) {
 			if (rule != null && rule.getVulnerability() != null &&
 					rule.getVulnerability().getGenericVulnerability() != null &&
@@ -375,17 +373,17 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 		String signatureString = "";
 		if (signatureSet.size() > 0) {
 			StringBuilder signatures = new StringBuilder();
-			 
+
 			for (String signature : signatureSet) {
 				signatures.append(BigIPStrings.TEMPLATE_SIGNATURE_SET.replaceFirst("\\{id\\}", signature));
 			}
-			
+
 			signatureString = signatures.toString();
 		}
-		
+
 		//  Java complains about super long strings, so I cut it into pieces.
 		return BigIPStrings.XML_END_BEFORE_SIGNATURES +
-			   signatureString + 
+			   signatureString +
 			   BigIPStrings.XML_AFTER_SIGNATURES_1 +
 			   BigIPStrings.XML_AFTER_SIGNATURES_2 +
 			   BigIPStrings.XML_AFTER_SIGNATURES_3 +

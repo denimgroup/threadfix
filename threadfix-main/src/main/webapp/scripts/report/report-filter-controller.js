@@ -274,29 +274,9 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
             }
 
             $http.post(tfEncoder.encode("/reports/search/export/csv"), parameters).
-                success(function(data, status, headers, config, response) {
-
-                    var octetStreamMime = "application/octet-stream";
-
-                    // Get the headers
-                    headers = headers();
-
-                    // Get the filename from the x-filename header or default to "download.bin"
-                    var filename = headers["x-filename"] || "search_export.csv";
-
-                    // Determine the content type from the header or default to "application/octet-stream"
-                    var contentType = headers["content-type"] || octetStreamMime;
-
-                    if(navigator.msSaveBlob)
-                    {
-                        // Save blob is supported, so get the blob as it's contentType and call save.
-                        var blob = new Blob([data], { type: contentType });
-                        navigator.msSaveBlob(blob, filename);
-                        $log.info("SaveBlob Success");
-                    }
-                    else {
-                        reportExporter.exportCSV(data, contentType, filename);
-                    }
+                success(function(data, status, headers, config, response)
+                {
+                    reportExporter.exportCSV(data, "application/octet-stream", "search_export.csv");
                 }).
                 error(function(data, status, headers, config) {
                     $scope.errorMessage = "Failed to retrieve vulnerability report. HTTP status was " + status;

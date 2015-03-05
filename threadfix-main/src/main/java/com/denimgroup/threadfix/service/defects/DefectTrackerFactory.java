@@ -23,13 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.defects;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author bbeverly
@@ -102,7 +102,7 @@ public final class DefectTrackerFactory {
         } else {
 			
 			// Must be a legitimate Java identifier
-			if (type.getFullClassName() != null && type.getName().matches("^[A-Za-z_][a-zA-Z0-9_]*$")) {
+			if (type.getFullClassName() != null) {
 				Exception exception = null;
 	
 				STATIC_LOG.info("A non-standard Defect Tracker type was requested. Attempting to load using Class.forName()");

@@ -55,7 +55,7 @@ final class UpdaterHarness {
 
     private Calendar processFilesInternal(Updater updater, boolean doUpdates) {
         Iterable<String> mappingsFiles =
-                ResourceUtils.getFileNamesInResourceDirectoryFromInsideThisJar(updater.getFolder());
+                ResourceUtils.getFileNamesInResourceDirectoryFromJarWithClass(updater.getClass(), updater.getFolder());
 
         Calendar latestUpdateDate = lastUpdatedTime;
 
