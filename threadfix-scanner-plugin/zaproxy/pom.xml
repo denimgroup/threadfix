@@ -127,7 +127,19 @@
             </snapshots>
         </repository>
     </repositories>
-
+    <profiles>
+        <profile>
+            <id>dependencycheck</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     <dependencies>
         <dependency>
             <groupId>org.bouncycastle</groupId>
@@ -337,6 +349,12 @@
             <groupId>com.denimgroup.threadfix</groupId>
             <artifactId>threadfix-ham</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.owasp</groupId>
+            <artifactId>dependency-check-maven</artifactId>
+            <version>${dependencycheck.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

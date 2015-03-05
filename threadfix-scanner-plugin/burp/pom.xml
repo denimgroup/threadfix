@@ -38,8 +38,26 @@
             <artifactId>threadfix-ham</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.owasp</groupId>
+            <artifactId>dependency-check-maven</artifactId>
+            <version>${dependencycheck.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
-
+    <profiles>
+        <profile>
+            <id>dependencycheck</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
