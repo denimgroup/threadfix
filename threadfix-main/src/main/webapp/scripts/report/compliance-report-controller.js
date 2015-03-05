@@ -53,8 +53,8 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
                         $scope.allScans.sort(function (a, b) {
                             return a.importTime - b.importTime;
                         });
-                        trendingUtilities.filterByTag($scope);
-                        trendingUtilities.refreshScans($scope);
+                        $scope.filterScans = trendingUtilities.filterByTag($scope.allScans, $scope.parameters.tags);
+                        $scope.trendingScansData = trendingUtilities.refreshScans($scope);
                     }).
                     error(function() {
                         $scope.loading = false;
@@ -62,8 +62,8 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
             }
         }
         else {
-            trendingUtilities.filterByTag($scope);
-            trendingUtilities.refreshScans($scope);
+            $scope.filterScans = trendingUtilities.filterByTag($scope.allScans, $scope.parameters.tags);
+            $scope.trendingScansData = trendingUtilities.refreshScans($scope);
         }
         $scope.title.svgId = getReportType().name;
         renderTable();
@@ -83,8 +83,8 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
             return;
 
         $scope.parameters = angular.copy(parameters);
-        trendingUtilities.filterByTag($scope);
-        trendingUtilities.refreshScans($scope);
+        $scope.filterScans = trendingUtilities.filterByTag($scope.allScans, $scope.parameters.tags);
+        $scope.trendingScansData = trendingUtilities.refreshScans($scope);
         renderTable();
         $scope.$broadcast("updateTableVulnerabilities");
     };
@@ -96,7 +96,7 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
         if ($scope.remediationType !== parameters.remediationType)
             return;
         $scope.parameters = angular.copy(parameters);
-        trendingUtilities.refreshScans($scope);
+        $scope.trendingScansData = trendingUtilities.refreshScans($scope);
         renderTable();
         $scope.$broadcast("updateTableVulnerabilities");
     });

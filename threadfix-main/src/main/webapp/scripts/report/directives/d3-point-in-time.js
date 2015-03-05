@@ -54,6 +54,13 @@ d3ThreadfixModule.directive('d3Pointintime', ['$window', '$timeout', 'd3', 'd3do
 
                     var id = "pointInTimeDonut";
 
+                    svg.append("rect")
+                        .attr("transform", "translate(0, 0)")
+                        .attr("width", pieDim.w)
+                        .attr("height", pieDim.h)
+                        .attr("fill", "#ffffff")
+                        .attr("strokeWidth", 0);
+
                     svg.append("g").attr("id",id);
 
                     d3donut.draw2D(id, getData(), pieDim.h, pieDim.w, 150, 200 , 100, true, scope.label);
