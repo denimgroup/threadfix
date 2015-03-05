@@ -31,7 +31,7 @@ myAppModule.controller('LeftReportController', function ($scope, $window, thread
                     });
 
                     $scope.filterScans = $scope.allScans;
-                    trendingUtilities.refreshScans($scope);
+                    $scope.trendingScansData = trendingUtilities.refreshScans($scope);
                 } else {
                     $scope.noData = true;
                 }

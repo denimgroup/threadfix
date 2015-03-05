@@ -49,8 +49,8 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
                     $scope.allScans.sort(function (a, b) {
                         return a.importTime - b.importTime;
                     });
-                    trendingUtilities.filterByTeamAndApp($scope);
-                    trendingUtilities.refreshScans($scope);
+                    $scope.filterScans = trendingUtilities.filterByTeamAndApp($scope.allScans, $scope.parameters.teams, $scope.parameters.applications);
+                    $scope.trendingScansData = trendingUtilities.refreshScans($scope);
 
                     $rootScope.$broadcast('allTrendingScans', $scope.allScans);
                 }).
@@ -65,15 +65,16 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
         if (!$scope.$parent.trendingActive)
             return;
         $scope.parameters = angular.copy(parameters);
-        trendingUtilities.filterByTeamAndApp($scope);
-        trendingUtilities.refreshScans($scope);
+        $scope.filterScans = trendingUtilities.filterByTeamAndApp($scope.allScans, $scope.parameters.teams, $scope.parameters.applications);
+        $scope.filterScans = trendingUtilities.filterByTag($scope.filterScans, $scope.parameters.tags);
+        $scope.trendingScansData = trendingUtilities.refreshScans($scope);
     });
 
     $scope.$on('updateDisplayData', function(event, parameters) {
         if (!$scope.$parent.trendingActive)
             return;
         $scope.parameters = angular.copy(parameters);
-        trendingUtilities.refreshScans($scope);
+        $scope.trendingScansData = trendingUtilities.refreshScans($scope);
     });
 
     $scope.exportPNG = function(isPDF){
@@ -99,7 +100,7 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
         $scope.exportInfo.svgId = reportConstants.reportTypes.trending.name;
         $scope.exportInfo.teams = $scope.title.teams;
         $scope.exportInfo.apps = $scope.title.apps;
-        $scope.exportInfo.tags = undefined;
+        $scope.exportInfo.tags = $scope.title.tags;
         $scope.exportInfo.title = "Trending_Scans";
         reportExporter.exportPDFTableFromId($scope.exportInfo)
     };

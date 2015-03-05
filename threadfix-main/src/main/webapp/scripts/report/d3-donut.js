@@ -1,5 +1,5 @@
 angular.module('threadfix')
-    .factory('d3donut',['d3', 'threadFixModalService', 'vulnSearchParameterService', function(d3, threadFixModalService, vulnSearchParameterService){
+    .factory('d3donut',['d3', 'threadFixModalService', 'vulnSearchParameterService', 'reportUtilities', function(d3, threadFixModalService, vulnSearchParameterService, reportUtilities){
 
         var Donut={};
 
@@ -159,12 +159,7 @@ angular.module('threadfix')
                 .attr("width", width)
                 .attr("height", height);
 
-            svg.append("rect")
-                .attr("transform", "translate(0, 0)")
-                .attr("width", width)
-                .attr("height", height)
-                .attr("fill", "#ffffff")
-                .attr("strokeWidth", 0);
+            reportUtilities.drawTitle(svg, width, label, "Point in Time Report", 30);
 
             svg = svg
                 .append("g")
