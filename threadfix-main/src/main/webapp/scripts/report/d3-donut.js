@@ -159,8 +159,6 @@ angular.module('threadfix')
                 .attr("width", width)
                 .attr("height", height);
 
-            reportUtilities.drawTitle(svg, width, label, "Point in Time Report", 30);
-
             svg = svg
                 .append("g")
                 .attr("transform", "translate(" + x + "," + y + ")");

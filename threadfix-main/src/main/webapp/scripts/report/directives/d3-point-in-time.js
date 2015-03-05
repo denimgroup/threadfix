@@ -37,9 +37,7 @@ d3ThreadfixModule.directive('d3Pointintime', ['$window', '$timeout', 'd3', 'd3do
 
                     color.domain(reportConstants.vulnTypeList);
                     svg = d3Service.getExistingSvg(d3, ele[0], pieDim.w, pieDim.h);
-
                     svg.selectAll('*').remove();
-                    reportUtilities.drawTitle(svg, pieDim.w, scope.label, "Point in Time Report", 30);
                     svg.attr("id", "pointInTimeGraph");
 
                     if (Object.keys(data).length === 0) {
@@ -53,13 +51,14 @@ d3ThreadfixModule.directive('d3Pointintime', ['$window', '$timeout', 'd3', 'd3do
                     }
 
                     var id = "pointInTimeDonut";
-
                     svg.append("rect")
                         .attr("transform", "translate(0, 0)")
                         .attr("width", pieDim.w)
                         .attr("height", pieDim.h)
                         .attr("fill", "#ffffff")
                         .attr("strokeWidth", 0);
+
+                    reportUtilities.drawTitle(svg, pieDim.w, scope.label, "Point in Time Report", 30);
 
                     svg.append("g").attr("id",id);
 
