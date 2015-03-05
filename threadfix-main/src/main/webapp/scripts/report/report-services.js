@@ -230,7 +230,8 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
                     pdf.addImage(canvasData, 'JPEG', 10, 10);
                 } catch (ex1) {
                     $log.warn(ex1);
-                    alert(browerErrMsg);
+                    if (checkOldIE())
+                        alert(browerErrMsg);
                 }
             }
         }
@@ -534,7 +535,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
     trendingUtilities.refreshScans = function($scope){
         $scope.loading = true;
         $scope.noData = false;
-        $scope.trendingScansData = [];
+        var trendingScansData = [];
         reportUtilities.createTeamAppNames($scope);
 
         trendingUtilities.filterByTime($scope);
@@ -543,13 +544,15 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
             $scope.loading = false;
             return;
         }
-        trendingUtilities.updateDisplayData($scope);
-        if ($scope.trendingScansData.length === 0) {
+        trendingScansData = trendingUtilities.updateDisplayData($scope);
+        if (trendingScansData.length === 0) {
             $scope.noData = true;
             $scope.loading = false;
             return;
         }
         $scope.loading = false;
+
+        return trendingScansData;
     };
 
     trendingUtilities.updateDisplayData = function($scope){
@@ -558,7 +561,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
         lastHashInList = null;
 
         reportUtilities.createTeamAppNames($scope);
-        $scope.trendingScansData = [];
+        var trendingScansData = [];
         $scope.totalVulnsByChannelMap = {};
         $scope.infoVulnsByChannelMap = {};
         $scope.lowVulnsByChannelMap = {};
@@ -576,30 +579,31 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
                     hashAfter = _scan;
                 if ((startIndex===-1 || startIndex <= index)
                     && (endIndex===-1 || endIndex >= index))
-                    $scope.trendingScansData.push(_scan);
+                    trendingScansData.push(_scan);
             });
 
-            if ($scope.trendingScansData.length > 0) {
+            if (trendingScansData.length > 0) {
                 //If this is first scan ever, then set time range from first scan
                 if (!hashBefore) {
-                    $scope.trendingStartDate = $scope.trendingScansData[0].importTime;
-                    $scope.trendingScansData.push(createEndHash(hashAfter, $scope));
+                    $scope.trendingStartDate = trendingScansData[0].importTime;
+                    trendingScansData.push(createEndHash(hashAfter, $scope, trendingScansData));
                 } else {
-                    $scope.trendingScansData.unshift(createStartHash(hashBefore, $scope));
-                    $scope.trendingScansData.push(createEndHash(hashAfter, $scope));
+                    trendingScansData.unshift(createStartHash(hashBefore, $scope, trendingScansData));
+                    trendingScansData.push(createEndHash(hashAfter, $scope, trendingScansData));
                 }
             }
         }
+        return trendingScansData;
     };
 
-    var createStartHash = function(hashBefore, $scope) {
+    var createStartHash = function(hashBefore, $scope, trendingScansData) {
         var startHash = {
             notRealScan : true
         };
-        if ($scope.trendingScansData.length===0)
+        if (trendingScansData.length===0)
             return startHash;
 
-        firstHashInList = $scope.trendingScansData[0];
+        firstHashInList = trendingScansData[0];
 
         var keys;
 
@@ -629,14 +633,14 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
         return startHash;
     };
 
-    var createEndHash = function(hashAfter, $scope) {
+    var createEndHash = function(hashAfter, $scope, trendingScansData) {
         var endHash = {
             notRealScan : true
         };
-        if ($scope.trendingScansData.length===0)
+        if (trendingScansData.length===0)
             return endHash;
 
-        lastHashInList = $scope.trendingScansData[$scope.trendingScansData.length-1];
+        lastHashInList = trendingScansData[trendingScansData.length-1];
 
         var keys;
 
@@ -747,20 +751,20 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
         return numTotal;
     };
 
-    trendingUtilities.filterByTeamAndApp = function($scope) {
+    trendingUtilities.filterByTeamAndApp = function(originalCol, teams, apps) {
 
-        $scope.filterScans = $scope.allScans.filter(function(scan){
-            if ($scope.parameters.teams.length === 0 && $scope.parameters.applications.length === 0)
+        return originalCol.filter(function(scan){
+            if (teams.length === 0 && apps.length === 0)
                 return true;
             var i;
-            for (i=0; i<$scope.parameters.teams.length; i++) {
-                if (scan.team.name === $scope.parameters.teams[i].name) {
+            for (i=0; i<teams.length; i++) {
+                if (scan.team.name === teams[i].name) {
                     return true;
                 }
             }
-            for (i=0; i<$scope.parameters.applications.length; i++) {
-                if (beginsWith($scope.parameters.applications[i].name, scan.team.name + " / ") &&
-                    endsWith($scope.parameters.applications[i].name, " / " + scan.app.name)) {
+            for (i=0; i<apps.length; i++) {
+                if (beginsWith(apps[i].name, scan.team.name + " / ") &&
+                    endsWith(apps[i].name, " / " + scan.app.name)) {
                     return true;
                 }
             }
@@ -769,15 +773,15 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
 
     };
 
-    trendingUtilities.filterByTag = function($scope) {
+    trendingUtilities.filterByTag = function(originalCol, tags) {
 
-        $scope.filterScans = $scope.allScans.filter(function(scan){
-            if ($scope.parameters.tags.length === 0 )
+        return originalCol.filter(function(scan){
+            if (tags.length === 0 )
                 return true;
             var i, j;
-            for (i=0; i<$scope.parameters.tags.length; i++) {
+            for (i=0; i<tags.length; i++) {
                 for (j=0; j<scan.applicationTags.length; j++) {
-                    if (scan.applicationTags[j].name === $scope.parameters.tags[i].name) {
+                    if (scan.applicationTags[j].name === tags[i].name) {
                         return true;
                     }
                 }
@@ -853,6 +857,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
             $scope.parameters = {
                 teams: [],
                 applications: [],
+                tags: [],
                 severities: {
                     info: true,
                     low: true,
