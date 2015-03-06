@@ -29,10 +29,10 @@ import java.util.regex.Pattern;
  * Created by mcollins on 3/6/15.
  */
 enum VulnKey {
-    KINGDOM("kingdom:\"(.*)\""),
-    CATEGORY("category:\"(.+)\""),
-    TAINT("taint:\"(.*)\""),
-    ANALYSIS("Analysis:\"(.*)\"");
+    KINGDOM("kingdom:\"([^\"]*)\""),
+    CATEGORY("category:\"([^\"]+)\""),
+    TAINT("taint:\"([^\"]*)\""),
+    ANALYSIS("Analysis:\"([^\"]*)\"");
 
     Pattern pattern;
 

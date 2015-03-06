@@ -25,6 +25,8 @@ package com.denimgroup.threadfix.importer.impl.upload.fortify;
 
 import org.junit.Test;
 
+import java.util.Map;
+
 import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
@@ -34,14 +36,32 @@ public class FortifyFilterSetTests {
 
     @Test
     public void testFilterSetApplication() {
-        FilterTemplateXmlParser parsedResult = FilterTemplateXmlTests.getParsedResult();
-
-        FortifyFilterSet filterSet = parsedResult.filterSet;
+        FortifyFilterSet filterSet = getFortifyFilterSet();
 
         String result = filterSet.getResult(map(VulnKey.CATEGORY, "Denial of Service"), 0F, 0F);
 
         assert "Code Quality".equals(result) : "Got " + result + " instead of Code Quality";
     }
 
+    private FortifyFilterSet getFortifyFilterSet() {
+        FilterTemplateXmlParser parsedResult = FilterTemplateXmlTests.getParsedResult();
+
+        return parsedResult.filterSet;
+    }
+
+    @Test
+    public void testFilterSetOrder() {
+        FortifyFilterSet filterSet = getFortifyFilterSet();
+
+        Map<VulnKey, String> multipleValueMap = map(
+                VulnKey.ANALYSIS, "Low",
+                VulnKey.CATEGORY, "Unreleased Resource"
+        );
+
+        String result = filterSet.getResult(multipleValueMap, 0F, 0F);
+
+        assert "Low".equals(result) : "Got " + result + " instead of Low.";
+
+    }
 
 }

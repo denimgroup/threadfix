@@ -70,4 +70,55 @@ public class FortifyFilterTests {
         return new FortifyFilter(filterMap);
     }
 
+    @Test
+    public void testParseAndQuery() {
+        FortifyFilter fortifyFilter = getAndedFortifyFilter();
+
+        String category = fortifyFilter.myFields.get(VulnKey.CATEGORY);
+        String kingdom  = fortifyFilter.myFields.get(VulnKey.KINGDOM);
+
+        assert category.equals("unreleased resource") :
+                "Got " + category + " instead of unreleased resource";
+        assert kingdom.equals("code quality") :
+                "Got " + kingdom + " instead of code quality";
+    }
+
+    @Test
+    public void testApplyAndQueryValid() {
+        FortifyFilter filter = getAndedFortifyFilter();
+
+        Map<VulnKey, String> factMap = map(
+                VulnKey.CATEGORY, "Unreleased Resource",
+                VulnKey.KINGDOM, "Code Quality"
+        );
+
+        String result = filter.getFinalSeverity(factMap, 0F, 0F);
+
+        assert "Critical".equals(result) : "Expected Critical, got " + result;
+    }
+
+    @Test
+    public void testApplyAndQueryHalfValid() {
+        FortifyFilter filter = getAndedFortifyFilter();
+
+        Map<VulnKey, String> factMap = map(
+                VulnKey.CATEGORY, "Unreleased Resource 2",
+                VulnKey.KINGDOM, "Code Quality"
+        );
+
+        String result = filter.getFinalSeverity(factMap, 0F, 0F);
+
+        assert result == null : "Expected null, got " + result;
+
+    }
+
+    private FortifyFilter getAndedFortifyFilter() {
+        Map<FilterKey, String> filterMap = map(
+                FilterKey.SEVERITY, "Critical",
+                FilterKey.QUERY, "category:\"unreleased resource\" AND kingdom:\"code quality\""
+        );
+
+        return new FortifyFilter(filterMap);
+    }
+
 }
