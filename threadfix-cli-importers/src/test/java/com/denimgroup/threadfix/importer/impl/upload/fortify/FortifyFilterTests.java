@@ -121,4 +121,23 @@ public class FortifyFilterTests {
         return new FortifyFilter(filterMap);
     }
 
+    @Test
+    public void testThresholdParsing() {
+        Map<FilterKey, String> filterMap = map(
+                FilterKey.SEVERITY, "Critical",
+                FilterKey.QUERY, "likelihood:[0,5.0] AND impact:[0,5.0]"
+        );
+
+        FortifyFilter filter = new FortifyFilter(filterMap);
+
+        assert filter.impactHighThreshold > 4.9 :
+                "Was expecting impact high threshold of 5.0, got " + filter.impactHighThreshold;
+        assert filter.impactLowThreshold < 0.1 :
+                "Was expecting impact low threshold of 0, got " + filter.impactLowThreshold;
+        assert filter.likelihoodLowThreshold < 0.1 :
+                "Was expecting likelihood low threshold of 0, got " + filter.likelihoodLowThreshold;
+        assert filter.likelihoodHighThreshold > 4.9 :
+                "Was expecting likelihood high threshold of 5.0, got " + filter.likelihoodHighThreshold;
+    }
+
 }

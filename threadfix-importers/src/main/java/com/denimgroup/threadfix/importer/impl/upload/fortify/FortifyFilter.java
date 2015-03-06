@@ -45,6 +45,13 @@ public class FortifyFilter {
 
     Map<VulnKey, String> myFields = newMap();
 
+    // TODO compile these into patterns
+    //                    impact:[0,5.0]
+    String impactRegexLow = "impact:\\[([0-9\\.]+),[0-9\\.]+\\]";
+    String impactRegexHigh = "impact:\\[[0-9\\.]+,([0-9\\.]+)\\]";
+    String likelihoodRegexLow = "likelihood:\\[([0-9\\.]+),[0-9\\.]+\\]";
+    String likelihoodRegexHigh = "likelihood:\\[[0-9\\.]+,([0-9\\.]+)\\]";
+
     float impactLowThreshold, impactHighThreshold,
             likelihoodLowThreshold, likelihoodHighThreshold;
 
@@ -57,7 +64,23 @@ public class FortifyFilter {
             }
         }
 
-        // TODO alternatively parse impact + likelihood thresholds
+        String impactLow = RegexUtils.getRegexResult(query, impactRegexLow);
+        String impactHigh = RegexUtils.getRegexResult(query, impactRegexHigh);
+        String likelihoodLow = RegexUtils.getRegexResult(query, likelihoodRegexLow);
+        String likelihoodHigh = RegexUtils.getRegexResult(query, likelihoodRegexHigh);
+
+        if (impactLow != null) {
+            impactLowThreshold = Float.valueOf(impactLow);
+        }
+        if (impactHigh != null) {
+            impactHighThreshold = Float.valueOf(impactHigh);
+        }
+        if (likelihoodHigh != null) {
+            likelihoodHighThreshold = Float.valueOf(likelihoodHigh);
+        }
+        if (likelihoodLow != null) {
+            likelihoodLowThreshold = Float.valueOf(likelihoodLow);
+        }
     }
 
     public String getFinalSeverity(Map<VulnKey, String> vulnInfo, float impact, float likelihood) {
