@@ -25,6 +25,8 @@ package com.denimgroup.threadfix.importer.impl.upload.fortify;
 
 import org.junit.Test;
 
+import static com.denimgroup.threadfix.CollectionUtils.map;
+
 /**
  * Created by mcollins on 3/5/15.
  */
@@ -36,7 +38,7 @@ public class FortifyFilterSetTests {
 
         FortifyFilterSet filterSet = parsedResult.filterSet;
 
-        String result = filterSet.getResult("Denial of Service");
+        String result = filterSet.getResult(map(VulnKey.CATEGORY, "Denial of Service"), 0F, 0F);
 
         assert "Code Quality".equals(result) : "Got " + result + " instead of Code Quality";
     }

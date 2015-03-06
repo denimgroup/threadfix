@@ -42,14 +42,14 @@ public class FilterTemplateXmlParser extends HandlerWithBuilder {
     private Map<String, String> uuidToSeverityMap = newMap();
     private boolean getName = false, inActiveFilter = false;
 
-    Map<String, Key> keyMap = map(
-            "actionParam", Key.ACTION_PARAM,
-            "query", Key.QUERY,
-            "action", Key.ACTION
+    Map<String, FilterKey> keyMap = map(
+            "actionParam", FilterKey.ACTION_PARAM,
+            "query", FilterKey.QUERY,
+            "action", FilterKey.ACTION
     );
-    Key currentKey = null;
+    FilterKey currentKey = null;
 
-    Map<Key, String> currentFilterMap = new EnumMap<>(Key.class);
+    Map<FilterKey, String> currentFilterMap = new EnumMap<>(FilterKey.class);
 
     public FortifyFilterSet filterSet = new FortifyFilterSet();
 
@@ -81,10 +81,10 @@ public class FilterTemplateXmlParser extends HandlerWithBuilder {
 
             String value = getBuilderText();
 
-            if (currentKey == Key.ACTION && "setFolder".equals(value)) {
+            if (currentKey == FilterKey.ACTION && "setFolder".equals(value)) {
 
-                String severity = uuidToSeverityMap.get(currentFilterMap.get(Key.ACTION_PARAM));
-                currentFilterMap.put(Key.SEVERITY, severity);
+                String severity = uuidToSeverityMap.get(currentFilterMap.get(FilterKey.ACTION_PARAM));
+                currentFilterMap.put(FilterKey.SEVERITY, severity);
 
                 FortifyFilter newFilter = new FortifyFilter(currentFilterMap);
                 filterSet.addFilter(newFilter);

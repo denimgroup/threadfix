@@ -58,13 +58,13 @@ public class FortifyFilterTests {
     private String getFilterResult(String value) {
         FortifyFilter filter = getFortifyFilter();
 
-        return filter.getFinalSeverity(value);
+        return filter.getFinalSeverity(map(VulnKey.CATEGORY, value), 0F, 0F);
     }
 
     private FortifyFilter getFortifyFilter() {
-        Map<Key, String> filterMap = map(
-                Key.SEVERITY, "Critical",
-                Key.QUERY, "category:\"use after free\""
+        Map<FilterKey, String> filterMap = map(
+                FilterKey.SEVERITY, "Critical",
+                FilterKey.QUERY, "category:\"use after free\""
         );
 
         return new FortifyFilter(filterMap);

@@ -23,9 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload.fortify;
 
-import com.denimgroup.threadfix.importer.util.RegexUtils;
+import com.denimgroup.threadfix.framework.util.RegexUtils;
 
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
 
 /**
  * Created by mcollins on 3/5/15.
@@ -34,30 +36,54 @@ public class FortifyFilter {
 
     final String query, target;
 
-    public FortifyFilter(Map<Key, String> map) {
-        query = map.get(Key.QUERY);
-        target = map.get(Key.SEVERITY);
+    public FortifyFilter(Map<FilterKey, String> map) {
+        query = map.get(FilterKey.QUERY);
+        target = map.get(FilterKey.SEVERITY);
 
         parseFields(query);
     }
 
-    String categoryRegex = "category:\"(.+)\"";
-    String category = null;
+    Map<VulnKey, String> myFields = newMap();
+
+    float impactLowThreshold, impactHighThreshold,
+            likelihoodLowThreshold, likelihoodHighThreshold;
 
     private void parseFields(String query) {
 
-        if (query.matches(categoryRegex)) {
-            category = RegexUtils.getRegexResult(query, categoryRegex);
+        for (VulnKey key : VulnKey.values()) {
+            String result = RegexUtils.getRegexResult(query, key.pattern);
+            if (result != null) {
+                myFields.put(key, result);
+            }
         }
 
+        // TODO alternatively parse impact + likelihood thresholds
     }
 
-    public String getFinalSeverity(String category) {
+    public String getFinalSeverity(Map<VulnKey, String> vulnInfo, float impact, float likelihood) {
 
-        if (category.equalsIgnoreCase(this.category)) {
-            return target;
+        boolean matches = false, miss = false;
+
+        for (VulnKey key : VulnKey.values()) {
+
+            String theirValue = vulnInfo.get(key);
+            String myValue = myFields.get(key);
+
+            if (myValue != null) { // we need to filter on this value
+                if (myValue.equalsIgnoreCase(theirValue)) {
+                    // this means we've passed at least one condition
+                    // we can't break here because there may be multiple conditions
+                    matches = true;
+                } else {
+                    // if we miss any one filter, fail the test
+                    miss = true;
+                    break;
+                }
+            }
         }
 
-        return null;
+        // TODO incorporate custom impact + likelihood filtering
+
+        return matches && !miss ? target : null;
     }
 }

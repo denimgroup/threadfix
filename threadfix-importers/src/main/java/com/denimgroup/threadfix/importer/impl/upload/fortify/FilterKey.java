@@ -26,6 +26,6 @@ package com.denimgroup.threadfix.importer.impl.upload.fortify;
 /**
  * Created by mcollins on 3/5/15.
  */
-public enum Key {
+public enum FilterKey {
     ACTION_PARAM, QUERY, ACTION, SEVERITY
 }

@@ -23,35 +23,20 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload.fortify;
 
-import java.util.List;
-import java.util.Map;
-
-import static com.denimgroup.threadfix.CollectionUtils.list;
+import java.util.regex.Pattern;
 
 /**
- * Created by mcollins on 3/5/15.
+ * Created by mcollins on 3/6/15.
  */
-public class FortifyFilterSet {
+enum VulnKey {
+    KINGDOM("kingdom:\"(.*)\""),
+    CATEGORY("category:\"(.+)\""),
+    TAINT("taint:\"(.*)\""),
+    ANALYSIS("Analysis:\"(.*)\"");
 
-    List<FortifyFilter> filters = list();
+    Pattern pattern;
 
-    public void addFilter(FortifyFilter filter) {
-        filters.add(filter);
+    VulnKey(String patternString) {
+        this.pattern = Pattern.compile(patternString);
     }
-
-    // the last applicable filter should be the one applied
-    public String getResult(Map<VulnKey, String> vulnInfo, float impact, float likelihood) {
-        String result = null;
-
-        for (FortifyFilter filter : filters) {
-            String filterResult = filter.getFinalSeverity(vulnInfo, impact, likelihood);
-            if (filterResult != null) {
-                result = filterResult;
-            }
-        }
-
-        return result;
-    }
-
-
 }
