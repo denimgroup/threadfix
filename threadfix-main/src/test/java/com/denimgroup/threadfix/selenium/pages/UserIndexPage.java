@@ -210,7 +210,7 @@ public class UserIndexPage extends BasePage {
 	}
 	
 	public boolean isRoleSelected(String oldName,String role){
-		sleep(3000);
+		waitForElement(driver.findElementById("roleSelect"));
 		if(oldName == null){
 			return new Select(driver.findElementById("roleSelect")).getFirstSelectedOption().getText().contains(role);
 		}else{

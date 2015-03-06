@@ -407,7 +407,6 @@ public class RemoteProvidersIndexPage extends BasePage {
             WebDriverWait wait = new WebDriverWait(driver, 60);
             wait.until(ExpectedConditions.presenceOfElementLocated(By.className("alert-success")));
         } catch (TimeoutException e) {
-            takeScreenShot();
             throw new RuntimeException("Success message was not shown as it should have been.", e);
         }
     }

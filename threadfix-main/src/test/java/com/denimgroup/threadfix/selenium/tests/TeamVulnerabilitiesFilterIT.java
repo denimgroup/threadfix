@@ -174,8 +174,6 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
         sleep(5000);
 
-        teamDetailPage.takeScreenShot();
-
         assertTrue("Only 4 critical vulnerabilities should be shown. There was a problem loading saved filter.",
                 teamDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
         assertTrue("Only 4 medium vulnerabilities should be shown. There was a problem loading saved filter.",

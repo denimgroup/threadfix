@@ -744,8 +744,8 @@ public class ApplicationIT extends BaseDataTest {
                 .clickEditDeleteBtn()
                 .expandSourceCodeFields();
 
-        assertTrue("Repository Path was not saved properly",
-                applicationDetailPage.isRepositoryPathEmpty(repositoryPath));
+        assertFalse("Repository Path was not saved properly",
+                applicationDetailPage.isRepositoryPathEmpty());
     }
 
     @Test

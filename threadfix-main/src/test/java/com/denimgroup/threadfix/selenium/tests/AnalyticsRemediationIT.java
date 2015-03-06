@@ -77,8 +77,6 @@ public class AnalyticsRemediationIT extends BaseDataTest {
                 .toggleAgingFilter("Forever", "complianceFilterDiv")
                 .sleepOnArrival(5000);
 
-        analyticsPage.takeScreenShot();
-
         assertTrue("Starting count is incorrect",
                 driver.findElement(By.cssSelector("#\\31")).getText().equals("0"));
 

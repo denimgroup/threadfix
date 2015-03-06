@@ -1297,8 +1297,8 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementById("repositoryPassword").getAttribute("value").isEmpty();
     }
 
-    public boolean isRepositoryPathEmpty(String repositoryPath) {
-        return driver.findElementById("repositoryFolderInput").getAttribute("value").equals(repositoryPath);
+    public boolean isRepositoryPathEmpty() {
+        return driver.findElementById("repositoryFolderInput").getAttribute("value").isEmpty();
     }
 
     public boolean isApplicationSaveChangesButtonClickable() {

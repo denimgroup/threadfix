@@ -534,7 +534,6 @@ public class TeamDetailPage extends BasePage {
         if (expected.equals(driver.findElementById("totalBadge" + level).getText())) {
             return true;
         } else {
-            this.takeScreenShot();
             return false;
         }
     }

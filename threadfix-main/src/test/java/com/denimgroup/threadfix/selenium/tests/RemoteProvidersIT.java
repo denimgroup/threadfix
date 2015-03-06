@@ -646,8 +646,6 @@ public class RemoteProvidersIT extends BaseDataTest {
         assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(),
                 remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS"));
 
-        remoteProvidersIndexPage.takeScreenShot();
-
         remoteProvidersIndexPage.clickEditName("3","0");
 
         assertTrue("Modal does not contain app name",

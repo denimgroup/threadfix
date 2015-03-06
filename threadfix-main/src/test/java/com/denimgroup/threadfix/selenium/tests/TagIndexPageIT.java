@@ -69,8 +69,6 @@ public class TagIndexPageIT extends BaseDataTest{
                 .clickTagsLink()
                 .editTagName(tagName,newName);
 
-        tagIndexPage.takeScreenShot();
-
         assertTrue("Old tag name was not deleted properly", !tagIndexPage.isTagNameLinkPresent(tagName));
         assertTrue("New tag name was no added properly ", tagIndexPage.isTagNameLinkPresent(newName));
     }

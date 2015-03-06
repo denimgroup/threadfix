@@ -130,6 +130,8 @@ public class UserEntIT extends BaseDataTest {
 				.clickAddNewUserBtn()
 				.clickEditLink(userName);
 
+
+
 		assertTrue("User role was not selected",userIndexPage.isRoleSelected(userName, "User"));
 
         // Change role to 'Read Access'

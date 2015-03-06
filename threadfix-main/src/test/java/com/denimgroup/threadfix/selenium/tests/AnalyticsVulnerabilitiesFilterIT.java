@@ -176,8 +176,6 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
         filterDiv.findElement(By.linkText("More Than")).click();
         filterDiv.findElement(By.linkText("1 Week")).click();
 
-        analyticsPage.takeScreenShot();
-
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
 

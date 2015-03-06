@@ -146,7 +146,7 @@ public class WafIT extends BaseDataTest {
 		
 		WafIndexPage wafIndexPage = loginPage.defaultLogin()
                 .clickWafsHeaderLink();
-		
+
 		wafIndexPage = wafIndexPage.clickAddWafLink();
 
 		// Test empty and whitespace input
@@ -251,6 +251,8 @@ public class WafIT extends BaseDataTest {
         wafIndexPage = wafIndexPage.clickEditWaf(wafName)
                 .editWaf(wafName, wafNameDuplicateTest, type2)
                 .clickModalSubmitInvalid();
+
+        sleep(1000);
 
         assertTrue("Duplicate name error was not displayed", wafIndexPage.isElementVisible("otherNameError"));
     }
