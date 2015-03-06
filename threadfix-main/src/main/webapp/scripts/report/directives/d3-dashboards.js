@@ -20,6 +20,7 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'd3Service'
                 var y = d3Service.getScaleLinearRange(d3, [height, 0]);
 
                 var color = d3Service.getColorScale(d3, reportConstants.vulnTypeColorList);
+                var textColor = d3Service.getColorScale(d3, reportConstants.vulnTypeTextColorList);
 
                 var xAxis = d3Service.getAxis(d3, x, "bottom");
 
@@ -45,7 +46,7 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'd3Service'
 
                     if (!data || data.length < 1) return;
 
-                    barGraphData(d3, data, color, true, scope.label, reportConstants);
+                    barGraphData(d3, data, color, true, scope.label, reportConstants, textColor);
 
                     x.domain(data.map(function(d) { return d.title; }));
                     y.domain([0, d3.max(data, function(d) { return d.total; })]);
@@ -283,7 +284,6 @@ d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut', 
                     }
 
                 };
-                ;
             }
         }
     }]);
