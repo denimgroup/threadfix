@@ -28,6 +28,7 @@ import org.junit.Test;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
 
 /**
  * Created by mcollins on 3/5/15.
@@ -138,6 +139,23 @@ public class FortifyFilterTests {
                 "Was expecting likelihood low threshold of 0, got " + filter.likelihoodLowThreshold;
         assert filter.likelihoodHighThreshold > 4.9 :
                 "Was expecting likelihood high threshold of 5.0, got " + filter.likelihoodHighThreshold;
+    }
+
+    Map<VulnKey, String> emptyMap = newMap();
+
+    @Test
+    public void testThresholdApplication() {
+        Map<FilterKey, String> filterMap = map(
+                FilterKey.SEVERITY, "Critical",
+                FilterKey.QUERY, "likelihood:[0,5.0] AND impact:[0,5.0]"
+        );
+
+        FortifyFilter filter = new FortifyFilter(filterMap);
+
+        String finalSeverity = filter.getFinalSeverity(emptyMap, 3F, 5F);
+
+        assert "Critical".equals(finalSeverity) :
+                "Expected Critical, got " + finalSeverity;
     }
 
 }

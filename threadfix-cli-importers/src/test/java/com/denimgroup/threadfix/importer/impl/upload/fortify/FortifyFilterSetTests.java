@@ -28,6 +28,7 @@ import org.junit.Test;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
 
 /**
  * Created by mcollins on 3/5/15.
@@ -58,10 +59,63 @@ public class FortifyFilterSetTests {
                 VulnKey.CATEGORY, "Unreleased Resource"
         );
 
-        String result = filterSet.getResult(multipleValueMap, 0F, 0F);
+        String result = filterSet.getResult(multipleValueMap, 4F, 4F);
 
         assert "Low".equals(result) : "Got " + result + " instead of Low.";
+    }
 
+    Map<VulnKey, String> emptyMap = newMap();
+
+    @Test
+    public void testImpactAndLikelihoodFilters() {
+
+        FortifyFilterSet filters = getFortifyFilterSet();
+
+        float [][] criticals = new float[][] {
+                { 5F, 5F },
+                { 4F, 4F },
+                { 3.5F, 3.5F }
+        };
+        test(filters, "Critical", criticals);
+
+        float [][] highs = new float[][] {
+                { 3F, 5F },
+                { 3F, 4F },
+                { 3F, 3.5F },
+                { 3F, 3.4F},
+                { 5F, 3.4F },
+                { 4F, 3.4F }
+        };
+        test(filters, "High", highs);
+
+        float [][] mediums = new float[][] {
+                { 2.4F, 5F },
+                { 3F, 2.4F },
+                { 2.4F, 3.5F },
+                { 5F, 2.4F },
+                { 4F, 2.4F },
+                { 2.5F, 2.4F },
+                { 2, 2 }
+        };
+        test(filters, "Medium", mediums);
+
+        float [][] lows = new float[][] {
+                { 1.0F, 5F },
+                { 0, 5 },
+                { 5, 0 },
+                { 1.9F, 1.9F },
+        };
+        test(filters, "Low", lows);
+    }
+
+    private void test(FortifyFilterSet filters, String expected, float[][] criticals) {
+        for (float[] pair : criticals) {
+            String result = filters.getResult(emptyMap, pair[0], pair[1]);
+
+            assert expected.equals(result) :
+                    "Got " + result + " instead of " + expected +
+                            " for " + pair[0] + ", " + pair[1];
+        }
     }
 
 }

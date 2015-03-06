@@ -52,8 +52,8 @@ public class FortifyFilter {
     String likelihoodRegexLow = "likelihood:\\[([0-9\\.]+),[0-9\\.]+\\]";
     String likelihoodRegexHigh = "likelihood:\\[[0-9\\.]+,([0-9\\.]+)\\]";
 
-    float impactLowThreshold, impactHighThreshold,
-            likelihoodLowThreshold, likelihoodHighThreshold;
+    float impactLowThreshold = -2, impactHighThreshold = -2,
+            likelihoodLowThreshold = -2, likelihoodHighThreshold = -2;
 
     private void parseFields(String query) {
 
@@ -105,7 +105,22 @@ public class FortifyFilter {
             }
         }
 
-        // TODO incorporate custom impact + likelihood filtering
+        if (!miss) {
+            if (likelihoodLowThreshold > -1 && likelihoodHighThreshold > -1) {
+                if (likelihood >= likelihoodLowThreshold && likelihood <= likelihoodHighThreshold) {
+                    matches = true;
+                } else {
+                    miss = true;
+                }
+            }
+            if (impactLowThreshold > -1 && impactHighThreshold > -1) {
+                if (impact >= impactLowThreshold && impact <= impactHighThreshold) {
+                    matches = true;
+                } else {
+                    miss = true;
+                }
+            }
+        }
 
         return matches && !miss ? target : null;
     }
