@@ -292,13 +292,21 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
     /* Aging */
     @Test
     public void agingFilterTest() {
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
-
-        applicationDetailPage.refreshPage();
-
-        applicationDetailPage = applicationDetailPage.expandAging()
+       applicationDetailPage = applicationDetailPage.expandAging()
                 .toggleLessThan()
                 .toggle90Days();
+
+        assertTrue("No vulnerabilities should be shown.",
+                applicationDetailPage.areAllVulnerabilitiesHidden());
+
+        applicationDetailPage = applicationDetailPage.toggleOneWeek();
+        sleep(1000);
+
+        assertTrue("No vulnerabilities should be shown.",
+                applicationDetailPage.areAllVulnerabilitiesHidden());
+
+        applicationDetailPage = applicationDetailPage.toggleMoreThan();
+        sleep(1000);
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
@@ -309,34 +317,17 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
         assertTrue("Only 5 info vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Info", "5"));
 
-        applicationDetailPage = applicationDetailPage.toggleOneWeek();
-        sleep(1000);
-
-        assertTrue("No Results Found should be displayed.", applicationDetailPage.areAllVulnerabilitiesHidden());
-
-        applicationDetailPage = applicationDetailPage.toggleMoreThan();
-        sleep(1000);
-
-        assertTrue("Only 16 critical vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "16"));
-        assertTrue("Only 15 medium vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Medium", "15"));
-        assertTrue("Only 25 low vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Low", "25"));
-        assertTrue("Only 15 info vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Info", "15"));
-
         applicationDetailPage = applicationDetailPage.toggle90Days();
         sleep(1000);
 
-        assertTrue("Only 6 critical vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "6"));
-        assertTrue("Only 6 medium vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Medium", "6"));
-        assertTrue("Only 4 low vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Low", "4"));
-        assertTrue("Only 10 info vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Info", "10"));
+        assertTrue("Only 10 critical vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+        assertTrue("Only 9 medium vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Medium", "9"));
+        assertTrue("Only 21 low vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Low", "21"));
+        assertTrue("Only 5 info vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Info", "5"));
     }
 
     /* Date Range */

@@ -396,51 +396,46 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
     @Test
     public void testAgingFilter() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndApp();
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("71");
+                .clickVulnerabilitiesTab("26");
 
         teamDetailPage.expandAging()
                 .toggleLessThan()
                 .toggle90Days();
 
-        assertTrue("Only 10 critical vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
-        assertTrue("Only 9 medium vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Medium", "9"));
-        assertTrue("Only 21 low vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Low", "21"));
-        assertTrue("Only 5 info vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Info", "5"));
+        assertTrue("There should be no vulnerabilities displayed.",
+                teamDetailPage.areAllVulnerabilitiesHidden());
 
         teamDetailPage.toggleOneWeek();
 
-        assertTrue("No Results Found should be displayed.", teamDetailPage.areAllVulnerabilitiesHidden());
+        assertTrue("There should be no vulnerabilities displayed.",
+                teamDetailPage.areAllVulnerabilitiesHidden());
 
         teamDetailPage.toggleMoreThan();
 
-        assertTrue("Only 16 critical vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Critical", "16"));
-        assertTrue("Only 15 medium vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Medium", "15"));
-        assertTrue("Only 25 low vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Low", "25"));
-        assertTrue("Only 15 info vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Info", "15"));
+        assertTrue("6 critical vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Critical", "6"));
+        assertTrue("6 medium vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Medium", "6"));
+        assertTrue("4 low vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Low", "4"));
+        assertTrue("10 info vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Info", "10"));
 
         teamDetailPage.toggle90Days();
 
-        assertTrue("Only 6 critical vulnerabilities should be shown.",
+        assertTrue("6 critical vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Critical", "6"));
-        assertTrue("Only 6 medium vulnerabilities should be shown.",
+        assertTrue("6 medium vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Medium", "6"));
-        assertTrue("Only 4 low vulnerabilities should be shown.",
+        assertTrue("4 low vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Low", "4"));
-        assertTrue("Only 10 info vulnerabilities should be shown.",
+        assertTrue("10 info vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Info", "10"));
     }
 
