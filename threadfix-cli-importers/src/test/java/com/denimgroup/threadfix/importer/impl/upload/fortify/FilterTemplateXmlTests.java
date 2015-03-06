@@ -87,7 +87,7 @@ public class FilterTemplateXmlTests {
     }
 
 
-    private FilterTemplateXmlParser getParsedResult() {
+    public static FilterTemplateXmlParser getParsedResult() {
         InputStream auditXmlStream = AuditXmlParsingTests.class.getClassLoader().getResourceAsStream("fortify/filtertemplate.xml");
 
         FilterTemplateXmlParser parser = new FilterTemplateXmlParser();

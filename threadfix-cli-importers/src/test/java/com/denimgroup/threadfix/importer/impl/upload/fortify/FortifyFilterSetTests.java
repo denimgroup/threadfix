@@ -23,33 +23,22 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload.fortify;
 
-import java.util.List;
-
-import static com.denimgroup.threadfix.CollectionUtils.list;
+import org.junit.Test;
 
 /**
  * Created by mcollins on 3/5/15.
  */
-public class FortifyFilterSet {
+public class FortifyFilterSetTests {
 
-    List<FortifyFilter> filters = list();
+    @Test
+    public void testFilterSetApplication() {
+        FilterTemplateXmlParser parsedResult = FilterTemplateXmlTests.getParsedResult();
 
-    public void addFilter(FortifyFilter filter) {
-        filters.add(filter);
-    }
+        FortifyFilterSet filterSet = parsedResult.filterSet;
 
-    // the last applicable filter should be the one applied
-    public String getResult(String category) {
-        String result = null;
+        String result = filterSet.getResult("Denial of Service");
 
-        for (FortifyFilter filter : filters) {
-            String filterResult = filter.getFinalSeverity(category);
-            if (filterResult != null) {
-                result = filterResult;
-            }
-        }
-
-        return result;
+        assert "Code Quality".equals(result) : "Got " + result + " instead of Code Quality";
     }
 
 

@@ -23,41 +23,51 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload.fortify;
 
-import com.denimgroup.threadfix.importer.util.RegexUtils;
+import org.junit.Test;
 
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * Created by mcollins on 3/5/15.
  */
-public class FortifyFilter {
+public class FortifyFilterTests {
 
-    final String query, target;
+    @Test
+    public void testCategoryFilterNull() {
+        String test = getFilterResult("test");
 
-    public FortifyFilter(Map<Key, String> map) {
-        query = map.get(Key.QUERY);
-        target = map.get(Key.SEVERITY);
-
-        parseFields(query);
+        assert test == null : "Got non-null result for dummy category.";
     }
 
-    String categoryRegex = "category:\"(.+)\"";
-    String category = null;
+    @Test
+    public void testCategoryFilterNotNull() {
+        String result = getFilterResult("use after free");
 
-    private void parseFields(String query) {
-
-        if (query.matches(categoryRegex)) {
-            category = RegexUtils.getRegexResult(query, categoryRegex);
-        }
-
+        assert "Critical".equals(result) : "Got " + result + " instead of Critical.";
     }
 
-    public String getFinalSeverity(String category) {
+    @Test
+    public void testCategoryFilterUpperCase() {
+        String result = getFilterResult("Use After Free");
 
-        if (category.equalsIgnoreCase(this.category)) {
-            return target;
-        }
-
-        return null;
+        assert "Critical".equals(result) : "Got " + result + " instead of Critical.";
     }
+
+    private String getFilterResult(String value) {
+        FortifyFilter filter = getFortifyFilter();
+
+        return filter.getFinalSeverity(value);
+    }
+
+    private FortifyFilter getFortifyFilter() {
+        Map<Key, String> filterMap = map(
+                Key.SEVERITY, "Critical",
+                Key.QUERY, "category:\"use after free\""
+        );
+
+        return new FortifyFilter(filterMap);
+    }
+
 }
