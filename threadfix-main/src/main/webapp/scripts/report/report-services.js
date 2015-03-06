@@ -154,7 +154,7 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
                 $scope.exportingPDF = false;
             });
 
-    }
+    };
 
     reportExporter.exportPDFTableFromId = function(exportIds, tableData) {
 
@@ -189,7 +189,7 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
         addElementToPdf(pdf, tableId);
         pdf.save(fileName + '.pdf');
 
-    }
+    };
 
     var addSvgToPdf = function(pdf, graphId) {
 
@@ -235,7 +235,7 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
                 }
             }
         }
-    }
+    };
 
     var addElementToPdf = function(pdf, elementId) {
         if (elementId) {
@@ -255,7 +255,7 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
         }
 
         return pdf;
-    }
+    };
 
     var getName = function(exportInfo) {
         var teamsName = (exportInfo && exportInfo.teams) ? "_" + exportInfo.teams : "",
@@ -263,7 +263,7 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
             tagsName = (exportInfo && exportInfo.tags) ? "_" + exportInfo.tags : "",
             title = (exportInfo && exportInfo.title) ? exportInfo.title : "Report";
         return title + teamsName + appsName + tagsName;
-    }
+    };
 
     var styles = function(dom) {
         var used = "";
@@ -359,13 +359,29 @@ threadfixModule.factory('reportConstants', function() {
     var reportConstants = {};
 
     reportConstants.vulnTypeColorList = ["#014B6E", "#458A37", "#EFD20A", "#F27421", "#F7280C"];
+    reportConstants.vulnTypeTextColorList = ["#688c9d", "#458A37", "#EFD20A", "#F27421", "#F7280C"];
     reportConstants.vulnTypeList = ["Info", "Low", "Medium", "High", "Critical"];
     reportConstants.vulnTypeColorMap = {
-        Info: reportConstants.vulnTypeColorList[0],
-        Low: reportConstants.vulnTypeColorList[1],
-        Medium: reportConstants.vulnTypeColorList[2],
-        High: reportConstants.vulnTypeColorList[3],
-        Critical: reportConstants.vulnTypeColorList[4]
+        Info: {
+            graphColor: reportConstants.vulnTypeColorList[0],
+            textColor: reportConstants.vulnTypeTextColorList[0]
+        },
+        Low:  {
+            graphColor: reportConstants.vulnTypeColorList[1],
+            textColor: reportConstants.vulnTypeTextColorList[1]
+        },
+        Medium:  {
+            graphColor: reportConstants.vulnTypeColorList[2],
+            textColor: reportConstants.vulnTypeTextColorList[2]
+        },
+        High:  {
+            graphColor: reportConstants.vulnTypeColorList[3],
+            textColor: reportConstants.vulnTypeTextColorList[3]
+        },
+        Critical:  {
+            graphColor: reportConstants.vulnTypeColorList[4],
+            textColor: reportConstants.vulnTypeTextColorList[4]
+        }
     };
     reportConstants.reportTypes = {
         trending: {
