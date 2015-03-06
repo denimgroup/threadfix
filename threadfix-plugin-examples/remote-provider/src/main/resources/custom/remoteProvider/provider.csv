@@ -7,6 +7,6 @@ type.channelname
 Sample Remote Provider
 type.authenticationfields
 Non-secret mandatory,false,true
-Non-secret optional,false,true
+Non-secret optional,false,false
 Secret mandatory,true,true
 Sample field,true,true
