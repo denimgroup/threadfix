@@ -499,7 +499,7 @@ public abstract class BasePage {
 
     public void checkForAlert() {
         try {
-            WebDriverWait wait = new WebDriverWait(driver, 240);
+            WebDriverWait wait = new WebDriverWait(driver, 340);
             wait.until(ExpectedConditions.alertIsPresent());
         } catch (TimeoutException e) {
             takeScreenShot();
