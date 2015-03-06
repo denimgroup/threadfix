@@ -5,7 +5,7 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
     $scope.parameters = {};
     $scope.filterScans = [];
     $scope.noData = false;
-    $scope.margin = [60, 70, 100, 60];
+    $scope.margin = [100, 70, 100, 60];
     $scope.savedDefaultTrendingFilter = undefined;
     $scope.title = {
         svgId: reportConstants.reportTypes.trending.name
