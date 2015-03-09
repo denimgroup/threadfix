@@ -697,7 +697,7 @@ public class ApplicationIT extends BaseDataTest {
         String repositoryUserName = "user";
         String repositoryPassword = "password";
 
-        String repositoryURLEdited = "https://github.com/denimgroup/threadfix";
+        String repositoryURLEdited = "https://github.com/denimgroup/threadfix/tree/dev-qa";
         String repositoryRevisionEdited = "QA2";
         String repositoryUserNameEdited = "user2";
         String repositoryPasswordEdited = "password2";
