@@ -127,7 +127,10 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
 
         assertTrue("Success message not present.", applicationDetailPage.isSavedFilterSuccessMessageDisplayed());
 
-        applicationDetailPage.addSavedFilterInvalid(filterName);
+        applicationDetailPage.clickLoadFilters()
+                .clearSavedFilter()
+                .clickFiltersTab()
+                .addSavedFilterInvalid(filterName);
 
         assertTrue("Error message not displayed.", applicationDetailPage.isDuplicateNameErrorMessageDisplayed());
     }

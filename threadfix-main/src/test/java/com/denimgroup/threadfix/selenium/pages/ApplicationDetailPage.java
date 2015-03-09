@@ -606,9 +606,20 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public ApplicationDetailPage clearSavedFilter() {
+        driver.findElementById("clearFiltersButtonSavedTab").click();
+        return new ApplicationDetailPage(driver);
+    }
+
     public ApplicationDetailPage clickLoadFilters() {
         driver.findElementByLinkText("Load Filters").click();
         waitForElement(driver.findElementById("filterSelect"));
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage clickFiltersTab() {
+        driver.findElementByLinkText("Filters").click();
+        waitForElement(driver.findElementById("clearFiltersButton"));
         return new ApplicationDetailPage(driver);
     }
 
