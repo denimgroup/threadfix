@@ -1230,6 +1230,13 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementById("commentText" + commentNumber).getText().trim().contains(comment);
     }
 
+    public boolean isWafCreationDenied() {
+        sleep(2000);
+        handleAlert();
+        return driver.findElementByXPath("//h4[@id='myModalLabel']").getText().equals("Add WAF");
+    }
+
+
     public boolean isSeverityLevelShown(String level) {
         return driver.findElementsById("expand" + level).size() != 0;
     }
