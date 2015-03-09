@@ -28,11 +28,18 @@ import java.util.regex.Pattern;
 /**
  * Created by mcollins on 3/6/15.
  */
+
+
+class test {
+    static String regexEnd = "\"?([^\"]*)\"?";
+}
+
 enum VulnKey {
-    KINGDOM("kingdom:\"([^\"]*)\""),
-    CATEGORY("category:\"([^\"]+)\""),
-    TAINT("taint:\"([^\"]*)\""),
-    ANALYSIS("Analysis:\"([^\"]*)\"");
+    KINGDOM("kingdom:\"?([^\"]*)\"?"),
+    CATEGORY("category:\"?([^\":]+)\"?$"),
+    FULL_CATEGORY("category:\"?([^\"]+:[^\"]+)\"?$"),
+    TAINT("taint:\"?([^\"]*)\"?"),
+    ANALYSIS("Analysis:" + test.regexEnd);
 
     Pattern pattern;
 

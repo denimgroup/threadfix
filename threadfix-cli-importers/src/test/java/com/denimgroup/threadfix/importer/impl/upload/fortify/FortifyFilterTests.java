@@ -158,4 +158,34 @@ public class FortifyFilterTests {
                 "Expected Critical, got " + finalSeverity;
     }
 
+    @Test
+    public void testFullCategoryNotParsed() {
+        Map<FilterKey, String> filterMap = map(
+                FilterKey.SEVERITY, "Critical",
+                FilterKey.QUERY, "category:Unreleased Resource"
+        );
+
+        FortifyFilter filter = new FortifyFilter(filterMap);
+
+        assert filter.myFields.containsKey(VulnKey.CATEGORY) :
+                "Didn't have normal category.";
+        assert !filter.myFields.containsKey(VulnKey.FULL_CATEGORY) :
+                "Had full category :(";
+    }
+
+    @Test
+    public void testFullCategoryParsed() {
+        Map<FilterKey, String> filterMap = map(
+                FilterKey.SEVERITY, "Critical",
+                FilterKey.QUERY, "category:Unreleased Resource: Database"
+        );
+
+        FortifyFilter filter = new FortifyFilter(filterMap);
+
+        assert !filter.myFields.containsKey(VulnKey.CATEGORY) :
+                "Had normal category.";
+        assert filter.myFields.containsKey(VulnKey.FULL_CATEGORY) :
+                "Didn't have full category :(";
+    }
+
 }

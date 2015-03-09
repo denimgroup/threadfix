@@ -44,6 +44,15 @@ public class FortifyFilterSetTests {
         assert "Code Quality".equals(result) : "Got " + result + " instead of Code Quality";
     }
 
+    @Test
+    public void testUnreleasedResource() {
+        FortifyFilterSet filterSet = getFortifyFilterSet();
+
+        String result = filterSet.getResult(map(VulnKey.KINGDOM, "Code Quality", VulnKey.CATEGORY, "Unreleased Resource"), 0F, 0F);
+
+        assert "High".equals(result) : "Got " + result + " instead of Code Quality";
+    }
+
     private FortifyFilterSet getFortifyFilterSet() {
         FilterTemplateXmlParser parsedResult = FilterTemplateXmlTests.getParsedResult();
 
@@ -116,6 +125,42 @@ public class FortifyFilterSetTests {
                     "Got " + result + " instead of " + expected +
                             " for " + pair[0] + ", " + pair[1];
         }
+    }
+
+    @Test
+    public void testBasicTaint() {
+        FortifyFilter filter = new FortifyFilter(map(
+                FilterKey.SEVERITY, "Critical",
+                FilterKey.QUERY, "taint:serialized"
+        ));
+
+        String result = filter.getFinalSeverity(map(VulnKey.TAINT, "Serialized"), 0f, 0f);
+
+        assert "Critical".equals(result) : "Expected Critical, got " + result;
+    }
+
+    @Test
+    public void testMultipleTaintFail() {
+        FortifyFilter filter = new FortifyFilter(map(
+                FilterKey.SEVERITY, "Critical",
+                FilterKey.QUERY, "taint:database, serialized"
+        ));
+
+        String result = filter.getFinalSeverity(map(VulnKey.TAINT, "SERIALIZED"), 0f, 0f);
+
+        assert null == result : "Expected null, got " + result;
+    }
+
+    @Test
+    public void testMultipleTaintSuccess() {
+        FortifyFilter filter = new FortifyFilter(map(
+                FilterKey.SEVERITY, "Critical",
+                FilterKey.QUERY, "taint:serialized, xss"
+        ));
+
+        String result = filter.getFinalSeverity(map(VulnKey.TAINT, "SERIALIZED, XSS"), 0f, 0f);
+
+        assert "Critical".equals(result) : "Expected Critical, got " + result;
     }
 
 }

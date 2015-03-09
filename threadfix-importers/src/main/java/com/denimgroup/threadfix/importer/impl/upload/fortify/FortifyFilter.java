@@ -47,15 +47,26 @@ public class FortifyFilter {
 
     // TODO compile these into patterns
     //                    impact:[0,5.0]
-    String impactRegexLow = "impact:\\[([0-9\\.]+),[0-9\\.]+\\]";
-    String impactRegexHigh = "impact:\\[[0-9\\.]+,([0-9\\.]+)\\]";
-    String likelihoodRegexLow = "likelihood:\\[([0-9\\.]+),[0-9\\.]+\\]";
-    String likelihoodRegexHigh = "likelihood:\\[[0-9\\.]+,([0-9\\.]+)\\]";
+    String lowRegex =  "\\[([0-9\\.]+),[0-9\\.]+\\]";
+    String highRegex = "\\[[0-9\\.]+,([0-9\\.]+)\\]";
+
+    String impactRegexLow      = "impact:"     + lowRegex;
+    String impactRegexHigh     = "impact:"     + highRegex;
+    String likelihoodRegexLow  = "likelihood:" + lowRegex;
+    String likelihoodRegexHigh = "likelihood:" + highRegex;
 
     float impactLowThreshold = -2, impactHighThreshold = -2,
             likelihoodLowThreshold = -2, likelihoodHighThreshold = -2;
 
     private void parseFields(String query) {
+
+        if (query.contains(" AND ")) {
+            String[] subqueries = query.split(" AND ");
+            for (String subquery : subqueries) {
+                parseFields(subquery);
+            }
+            return;
+        }
 
         for (VulnKey key : VulnKey.values()) {
             String result = RegexUtils.getRegexResult(query, key.pattern);
@@ -93,7 +104,16 @@ public class FortifyFilter {
             String myValue = myFields.get(key);
 
             if (myValue != null) { // we need to filter on this value
-                if (myValue.equalsIgnoreCase(theirValue)) {
+                if (VulnKey.TAINT == key && theirValue != null) {
+
+                    if (theirValue.toLowerCase().contains(myValue.toLowerCase())) {
+                        matches = true;
+                    } else {
+                        miss = true;
+                        break;
+                    }
+
+                } else if (myValue.equalsIgnoreCase(theirValue)) {
                     // this means we've passed at least one condition
                     // we can't break here because there may be multiple conditions
                     matches = true;
@@ -122,6 +142,13 @@ public class FortifyFilter {
             }
         }
 
-        return matches && !miss ? target : null;
+        String result = matches && !miss ? target : null;
+
+        if (result != null) {
+            System.out.println(myFields);
+            System.out.println(vulnInfo + " -> " + result);
+        }
+
+        return result;
     }
 }

@@ -44,7 +44,6 @@ import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
 
 /**
  * Parses the SCA Fortify fpr output file.
@@ -99,14 +98,8 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 
 		deleteZipFile();
 
-		for (Map.Entry<String, Integer> stringIntegerEntry : resultMap.entrySet()) {
-			System.out.println(stringIntegerEntry.getKey() + "," + stringIntegerEntry.getValue());
-		}
-
 		return returnScan;
 	}
-
-	Map<String, Integer> resultMap = newMap();
 
 	private void applySuppressedInformation(FortifyAuditXmlParser timeParser, Scan returnScan) {
 		Set<String> suppressedIds = timeParser.suppressedIds;
@@ -160,6 +153,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		String currentRuleID = null;
 
 		String currentKingdom = null;
+		String currentCategory = null;
 		String currentChannelType = null;
 		String currentChannelSubtype = null;
 		String currentSeverity = null;
@@ -168,6 +162,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		String currentParameter = null;
 		String currentConfidence = null;
 		String currentClassID = null;
+		String currentTaint = null;
 		
 		String nodeId = null;
 		
@@ -199,15 +194,15 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    			!currentChannelSubtype.trim().equals("")) {
 	    		currentChannelType = currentChannelType + ": " + currentChannelSubtype;
 	    	}
-	    	
-	    	
+
 	    	findingMap.put("channelType", currentChannelType);
 	    	findingMap.put("severity",currentSeverity);
 	    	findingMap.put("nativeId", currentNativeId);
 	    	findingMap.put("confidence", currentConfidence);
 	    	findingMap.put("classID", currentClassID);
 			findingMap.put("Kingdom", currentKingdom);
-			findingMap.put("Category", currentChannelType);
+			findingMap.put("Category", currentCategory);
+			findingMap.put("Taint", currentTaint);
 	    	staticPathInformationMap.put(currentNativeId, currentStaticPathInformation);
 	    	nativeIdDataFlowElementsMap.put(currentNativeId, dataFlowElementMaps);
 	    	
@@ -215,6 +210,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    	
 			currentKingdom = null;
 	    	currentChannelType = null;
+			currentTaint = null;
 	    	currentChannelSubtype = null;
 			currentSeverity = null;
 			currentNativeId = null;
@@ -248,9 +244,10 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 
 				// TODO add analysis
 				Map<VulnKey, String> vulnMap = map(
+						VulnKey.FULL_CATEGORY, findingMap.get("channelType"),
 						VulnKey.CATEGORY, findingMap.get("Category"),
 						VulnKey.KINGDOM, findingMap.get("Kingdom"),
-						VulnKey.TAINT, getTaint(dataFlowElementMaps)
+						VulnKey.TAINT, findingMap.get("Taint")
 				);
 	   			String filterSeverity = filterSet.getResult(vulnMap, impact, likelihood);
 
@@ -275,18 +272,6 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 				currentSeverity = null;
 	    	}
 	    }
-
-		private String getTaint(List<DataFlowElementMap> dataFlowElementMaps) {
-			String taint = null;
-
-			for (DataFlowElementMap map : dataFlowElementMaps) {
-				if (map.taint != null) {
-					taint = map.taint;
-				}
-			}
-
-			return taint;
-		}
 
 		/**
 		 * @return likelihood calculated from the Fortify Javadoc formula
@@ -374,7 +359,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		    		currentMap.fileName = atts.getValue("path");
 		    	} else if (!skipToNextVuln && "Fact".equals(qName) && "Call".equals(atts.getValue("type"))){
 		    		getFact = true;
-				} else if (!skipToNextVuln && "Fact".equals(qName) && "TaintFlags".equals(atts.getValue("type"))){
+				} else if ("Fact".equals(qName) && "TaintFlags".equals(atts.getValue("type"))){
 		    		getTaint = true;
 		    	} else if ("CreatedTS".equals(qName) && atts.getValue("date") != null
 		    			&& atts.getValue("time") != null) {
@@ -425,6 +410,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 				getKingdom = false;
 			} else if (getChannelType) {
 	    		currentChannelType = getBuilderText();
+				currentCategory = currentChannelType;
 	    		getChannelType = false;
 	    	} else if (getSeverity) {
 	    		currentSeverity = getBuilderText();
@@ -439,9 +425,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 				currentMap.fact = getBuilderText();
 				getFact = false;
 			} else if (getTaint) {
-				if (nodeId != null && nodeSnippetMap.get(nodeId) != null) {
-					nodeSnippetMap.get(nodeId).taint = getBuilderText();
-				}
+				currentTaint = getBuilderText();
 				getTaint = false;
 	    	} else if (getStaticPathInformationUrl) {
 	    		currentStaticPathInformation.setValue(getBuilderText());
@@ -507,7 +491,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    	if (getChannelType || getSeverity || getNativeId || getClassID || getFact 
 	    			|| getSnippetText || getChannelSubtype || getAction || getImpact ||
 	    			getProbability || getAccuracy || getConfidence || getStaticPathInformationUrl
-					|| getKingdom) {
+					|| getKingdom || getTaint) {
 	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }
