@@ -78,10 +78,10 @@ public class AnalyticsRemediationIT extends BaseDataTest {
                 .sleepOnArrival(5000);
 
         assertTrue("Starting count is incorrect",
-                driver.findElement(By.cssSelector("#\\31")).getText().equals("0"));
+                driver.findElement(By.xpath("//div[@id='complianceTable1']//tr[@id='4']/td[@id='1']")).getText().equals("0"));
 
         assertTrue("Ending count is incorrect",
-                driver.findElement(By.cssSelector("#\\32")).getText().equals("21"));
+                driver.findElement(By.xpath("//div[@id='complianceTable1']//tr[@id='4']/td[@id='2']")).getText().equals("21"));
     }
 
     @Test
