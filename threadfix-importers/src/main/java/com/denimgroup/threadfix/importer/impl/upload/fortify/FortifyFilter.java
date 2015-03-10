@@ -71,7 +71,7 @@ public class FortifyFilter {
         for (VulnKey key : VulnKey.values()) {
             String result = RegexUtils.getRegexResult(query, key.pattern);
             if (result != null) {
-                myFields.put(key, result);
+                myFields.put(key, result.replaceAll("\\\\:", ":"));
             }
         }
 
@@ -142,13 +142,6 @@ public class FortifyFilter {
             }
         }
 
-        String result = matches && !miss ? target : null;
-
-        if (result != null) {
-            System.out.println(myFields);
-            System.out.println(vulnInfo + " -> " + result);
-        }
-
-        return result;
+        return matches && !miss ? target : null;
     }
 }

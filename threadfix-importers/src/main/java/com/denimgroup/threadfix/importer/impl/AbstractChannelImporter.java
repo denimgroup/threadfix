@@ -102,13 +102,13 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
     public boolean shouldDeleteAfterParsing = true;
 
     @Autowired
-    protected ChannelVulnerabilityDao channelVulnerabilityDao;
+    public ChannelVulnerabilityDao channelVulnerabilityDao;
     @Autowired
-    protected ChannelSeverityDao channelSeverityDao;
+    public ChannelSeverityDao channelSeverityDao;
     @Autowired
-    protected ChannelTypeDao channelTypeDao;
+    public ChannelTypeDao channelTypeDao;
     @Autowired
-    protected GenericVulnerabilityDao genericVulnerabilityDao;
+    public GenericVulnerabilityDao genericVulnerabilityDao;
 
     protected String channelTypeCode;
 

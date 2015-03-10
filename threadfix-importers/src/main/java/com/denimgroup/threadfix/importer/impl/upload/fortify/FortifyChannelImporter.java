@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
+import com.denimgroup.threadfix.importer.impl.upload.WebInspectChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
@@ -67,9 +68,10 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	public Scan parseInput() {
 		zipFile = unpackZipStream();
 
-		InputStream auditXmlStream  = getFileFromZip("audit.xml");
-		InputStream fvdlInputStream = getFileFromZip("audit.fvdl");
-		InputStream filterStream    = getFileFromZip("filtertemplate.xml");
+		InputStream auditXmlStream   = getFileFromZip("audit.xml");
+		InputStream fvdlInputStream  = getFileFromZip("audit.fvdl");
+		InputStream filterStream     = getFileFromZip("filtertemplate.xml");
+		InputStream webinspectStream = getFileFromZip("WEBINSPECT.xml");
 
 		if (zipFile == null || fvdlInputStream == null)
 			return null;
@@ -79,6 +81,21 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 			FilterTemplateXmlParser parser = new FilterTemplateXmlParser();
 			parseSAXInput(parser);
 			filterSet = parser.filterSet;
+		}
+
+		Scan webinspectScan = null;
+		if (webinspectStream != null) {
+			WebInspectChannelImporter importer = new WebInspectChannelImporter();
+			importer.channelSeverityDao = this.channelSeverityDao;
+			importer.channelVulnerabilityDao = this.channelVulnerabilityDao;
+			importer.genericVulnerabilityDao = this.genericVulnerabilityDao;
+			importer.channelTypeDao = this.channelTypeDao;
+
+			importer.setInputStream(webinspectStream);
+
+			webinspectScan = importer.parseInput();
+
+			reassignSeverities(webinspectScan);
 		}
 
 		inputStream = fvdlInputStream;
@@ -98,8 +115,63 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 
 		deleteZipFile();
 
+		if (webinspectScan != null) {
+			// I'm still a little unsure about this one
+			returnScan.getFindings().addAll(webinspectScan.getFindings());
+		}
+
 		return returnScan;
 	}
+
+	/**
+	 * WebInspect scans are subject to Fortify's filtering rules too, but under a different system.
+	 *
+	 * WebInspect 4 -> impact 5, likelihood 5.
+	 * WebInspect 3 -> impact 3, likelihood 2.
+	 * WebInspect 2 -> impact 2, likelihood 3.
+	 * WebInspect 1 -> impact 1, likelihood 1.
+	 *
+	 * We need to run these through the filter system, because user-defined filters
+	 * can reassign any of these to any other category.
+	 *
+	 * @param webinspectScan WebInspect scan with raw severities
+	 */
+	private void reassignSeverities(Scan webinspectScan) {
+		ChannelType type = channelTypeDao.retrieveByName(ScannerType.WEBINSPECT.getDbName());
+
+		if (type == null) {
+			throw new IllegalStateException("WebInspect channel type not found, can't continue.");
+		}
+
+		for (Finding finding : webinspectScan) {
+
+			if (finding.getChannelSeverity() != null) {
+				final float impact, likelihood;
+
+				switch (finding.getChannelSeverity().getName()) {
+					case "4": impact = 5f; likelihood = 5f; break;
+					case "3": impact = 3f; likelihood = 2f; break;
+					case "2": impact = 2f; likelihood = 3f; break;
+					default : impact = 1f; likelihood = 1f;
+				}
+
+				// it's ok for the map to be empty for now
+				String result = filterSet.getResult(new HashMap<VulnKey, String>(), impact, likelihood);
+
+				if (result != null) {
+					ChannelSeverity newSeverity = channelSeverityDao.retrieveByCode(type, severityMap.get(result));
+					finding.setChannelSeverity(newSeverity);
+				}
+			}
+		}
+	}
+
+	private static final Map<String, String> severityMap = map(
+			"Critical", "4",
+			"High", "3",
+			"Medium", "2",
+			"Low", "1"
+	);
 
 	private void applySuppressedInformation(FortifyAuditXmlParser timeParser, Scan returnScan) {
 		Set<String> suppressedIds = timeParser.suppressedIds;
