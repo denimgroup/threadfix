@@ -86,6 +86,9 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		Scan webinspectScan = null;
 		if (webinspectStream != null) {
 			WebInspectChannelImporter importer = new WebInspectChannelImporter();
+
+			// TODO refactor unit tests to avoid this code
+			// it doesn't hurt anything; just ugly
 			importer.channelSeverityDao = this.channelSeverityDao;
 			importer.channelVulnerabilityDao = this.channelVulnerabilityDao;
 			importer.genericVulnerabilityDao = this.genericVulnerabilityDao;
@@ -116,7 +119,6 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		deleteZipFile();
 
 		if (webinspectScan != null) {
-			// I'm still a little unsure about this one
 			returnScan.getFindings().addAll(webinspectScan.getFindings());
 		}
 

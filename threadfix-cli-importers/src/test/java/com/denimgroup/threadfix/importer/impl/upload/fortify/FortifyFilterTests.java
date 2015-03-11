@@ -188,4 +188,32 @@ public class FortifyFilterTests {
                 "Didn't have full category :(";
     }
 
+    @Test
+    public void testNegativeCategorySuccess() {
+        Map<FilterKey, String> filterMap = map(
+                FilterKey.SEVERITY, "Critical",
+                FilterKey.QUERY, "category:!Unreleased Resource"
+        );
+
+        FortifyFilter filter = new FortifyFilter(filterMap);
+
+        String result = filter.getFinalSeverity(map(VulnKey.CATEGORY, "Test Resource"), 0f, 0f);
+
+        assert "Critical".equals(result) : "Expected Critical, got " + result;
+    }
+
+    @Test
+    public void testNegativeCategoryFailure() {
+        Map<FilterKey, String> filterMap = map(
+                FilterKey.SEVERITY, "Critical",
+                FilterKey.QUERY, "category:!Unreleased Resource"
+        );
+
+        FortifyFilter filter = new FortifyFilter(filterMap);
+
+        String result = filter.getFinalSeverity(map(VulnKey.CATEGORY, "Unreleased Resource"), 0f, 0f);
+
+        assert null == result : "Expected null, got " + result;
+    }
+
 }

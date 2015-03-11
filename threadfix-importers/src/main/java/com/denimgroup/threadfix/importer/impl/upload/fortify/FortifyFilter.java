@@ -28,6 +28,9 @@ import com.denimgroup.threadfix.framework.util.RegexUtils;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.importer.impl.upload.fortify.FortifyFilter.Result.MATCH;
+import static com.denimgroup.threadfix.importer.impl.upload.fortify.FortifyFilter.Result.MISS;
+import static com.denimgroup.threadfix.importer.impl.upload.fortify.FortifyFilter.Result.NO_MATCH;
 
 /**
  * Created by mcollins on 3/5/15.
@@ -44,6 +47,7 @@ public class FortifyFilter {
     }
 
     Map<VulnKey, String> myFields = newMap();
+    Map<VulnKey, String> myNegativeFields = newMap();
 
     // TODO compile these into patterns
     //                    impact:[0,5.0]
@@ -71,7 +75,12 @@ public class FortifyFilter {
         for (VulnKey key : VulnKey.values()) {
             String result = RegexUtils.getRegexResult(query, key.pattern);
             if (result != null) {
-                myFields.put(key, result.replaceAll("\\\\:", ":"));
+                String replaced = result.replaceAll("\\\\:", ":");
+                if (replaced.charAt(0) == '!') {
+                    myNegativeFields.put(key, replaced.substring(1));
+                } else {
+                    myFields.put(key, replaced);
+                }
             }
         }
 
@@ -94,11 +103,49 @@ public class FortifyFilter {
         }
     }
 
+    enum Result {
+        NO_MATCH, MATCH, MISS
+    }
+
     public String getFinalSeverity(Map<VulnKey, String> vulnInfo, float impact, float likelihood) {
 
-        boolean matches = false, miss = false;
+        // basic, positive matching
+        Result result = getResult(vulnInfo, myFields);
 
-        for (VulnKey key : VulnKey.values()) {
+        // negative matching
+        Result negativeResult = getResult(vulnInfo, myNegativeFields);
+        if (negativeResult == MISS) {
+            negativeResult = MATCH;
+        } else if (negativeResult == MATCH) {
+            negativeResult = MISS;
+        }
+
+        // threshold matching
+        Result thresholdResult = passesThresholds(impact, likelihood);
+
+        return getCombinedResult(result, negativeResult, thresholdResult) == MATCH ? target : null;
+    }
+
+    private Result getCombinedResult(Result... results) {
+        Result finalResult = NO_MATCH;
+
+        for (Result result : results) {
+            if (result == MISS) {
+                finalResult = MISS;
+                break;
+            } else if (result == MATCH) {
+                finalResult = MATCH;
+            }
+        }
+
+        return finalResult;
+    }
+
+
+    private Result getResult(Map<VulnKey, String> vulnInfo, Map<VulnKey, String> myFields) {
+        Result result = NO_MATCH;
+
+        for (VulnKey key : myFields.keySet()) {
 
             String theirValue = vulnInfo.get(key);
             String myValue = myFields.get(key);
@@ -107,41 +154,44 @@ public class FortifyFilter {
                 if (VulnKey.TAINT == key && theirValue != null) {
 
                     if (theirValue.toLowerCase().contains(myValue.toLowerCase())) {
-                        matches = true;
+                        result = MATCH;
                     } else {
-                        miss = true;
+                        result = MISS;
                         break;
                     }
-
                 } else if (myValue.equalsIgnoreCase(theirValue)) {
                     // this means we've passed at least one condition
                     // we can't break here because there may be multiple conditions
-                    matches = true;
+                    result = MATCH;
                 } else {
                     // if we miss any one filter, fail the test
-                    miss = true;
+                    result = MISS;
                     break;
                 }
             }
         }
+        return result;
+    }
 
-        if (!miss) {
-            if (likelihoodLowThreshold > -1 && likelihoodHighThreshold > -1) {
-                if (likelihood >= likelihoodLowThreshold && likelihood <= likelihoodHighThreshold) {
-                    matches = true;
-                } else {
-                    miss = true;
-                }
+    private Result passesThresholds(float impact, float likelihood) {
+
+        Result result = NO_MATCH;
+
+        if (likelihoodLowThreshold > -1 && likelihoodHighThreshold > -1) {
+            if (likelihood >= likelihoodLowThreshold && likelihood <= likelihoodHighThreshold) {
+                result = MATCH;
+            } else {
+                return MISS;
             }
-            if (impactLowThreshold > -1 && impactHighThreshold > -1) {
-                if (impact >= impactLowThreshold && impact <= impactHighThreshold) {
-                    matches = true;
-                } else {
-                    miss = true;
-                }
+        }
+        if (impactLowThreshold > -1 && impactHighThreshold > -1) {
+            if (impact >= impactLowThreshold && impact <= impactHighThreshold) {
+                result = MATCH;
+            } else {
+                return MISS;
             }
         }
 
-        return matches && !miss ? target : null;
+        return result;
     }
 }
