@@ -6,6 +6,7 @@
         <groupId>com.denimgroup.threadfix</groupId>
         <artifactId>master-pom</artifactId>
         <version>2.2-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>Zap-Plugin</artifactId>
