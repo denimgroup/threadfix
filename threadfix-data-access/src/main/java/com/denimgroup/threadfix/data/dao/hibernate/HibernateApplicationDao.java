@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.hibernate.classic.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -166,41 +167,55 @@ public class HibernateApplicationDao implements ApplicationDao {
     @Override
     public List<Integer> getTopXVulnerableAppsFromList(int numApps, List<Integer> teamIdList,
                                                        List<Integer> applicationIdList) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("SELECT application.id as id " +
-                " FROM Application as application join application.vulnerabilities as vulnerability " +
-                " WHERE" +
-                "   application.active = true AND " +
-                " 	vulnerability.active = true AND " +
-                "   vulnerability.isFalsePositive = false " );
+        List<Integer> tagIdList = list();
+        return getTopXVulnerableAppsFromList(numApps, teamIdList, applicationIdList, tagIdList);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Integer> getTopXVulnerableAppsFromList(int numApps, List<Integer> teamIdList,
+                                                       List<Integer> applicationIdList,
+                                                       List<Integer> tagIdList) {
+        Session session = sessionFactory.getCurrentSession();
+        Criteria criteria = session.createCriteria(Application.class);
+        criteria.createAlias("vulnerabilities", "vulnerability");
+        criteria.add(Restrictions.eq("active", true));
+        criteria.add(Restrictions.eq("vulnerability.active", true));
+        criteria.add(Restrictions.eq("vulnerability.isFalsePositive", false));
 
         if (teamIdList.isEmpty() || applicationIdList.isEmpty()) {
             if (!applicationIdList.isEmpty()) {
-                builder.append(" AND application.id IN (:applicationIdList)");
+                criteria.add(Restrictions.in("id", applicationIdList));
             }
 
             if (!teamIdList.isEmpty()) {
-                builder.append(" AND application.organization.id IN (:teamIdList)");
+                criteria.add(Restrictions.in("organization.id", teamIdList));
             }
         } else {
-            builder.append(" AND (application.id IN (:applicationIdList) OR application.organization.id IN (:teamIdList))");
+            criteria.add(Restrictions.or(
+                    Restrictions.in("id", applicationIdList),
+                    Restrictions.in("organization.id", teamIdList)
+            ));
+        }
+        if (!tagIdList.isEmpty()) {
+            criteria.createAlias("tags", "tag");
+            criteria.add(Restrictions.in("tag.id", tagIdList));
         }
 
-        builder.append(" GROUP BY application.id" +
-                " ORDER BY count(vulnerability) desc");
+        criteria.setProjection(Projections.projectionList()
+                        .add(Projections.groupProperty("id"))
+                        .add(Projections.alias(Projections.count("vulnerabilities"), "vulnCount"))
+        );
+        criteria.addOrder(Order.desc("vulnCount"));
 
-        Query query = sessionFactory.getCurrentSession()
-                .createQuery(builder.toString());
-        if (!teamIdList.isEmpty())
-            query.setParameterList("teamIdList", teamIdList);
-
-        if (!applicationIdList.isEmpty()) {
-            query.setParameterList("applicationIdList", applicationIdList);
+        List<Integer> list = list();
+        List results = criteria.setMaxResults(numApps).list();
+        for (Object result : results) {
+            Object[] resultArray = (Object[]) result;
+            list.add((Integer) resultArray[0]);
         }
-        List<Integer> list = query.setMaxResults(numApps)
-                .list();
 
-        if (list==null || list.isEmpty())
+        if (list == null || list.isEmpty())
             list = Arrays.asList(new Integer[]{-1});
         return list;
     }

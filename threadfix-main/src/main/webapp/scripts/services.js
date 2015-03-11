@@ -307,6 +307,10 @@ threadfixModule.factory('vulnSearchParameterService', function() {
             });
         }
 
+        filterParameters.tags.forEach(function (tag) {
+            $scope.parameters.tags.push(tag);
+        });
+
         $scope.parameters.genericVulnerabilities = filterParameters.genericVulnerabilities;
 
         //$scope.endDate = filterParameters.endDate;
@@ -350,6 +354,18 @@ threadfixModule.factory('vulnSearchParameterService', function() {
         }
         if (label.appsList)
             criteria.parameters.applications.push.apply(criteria.parameters.applications, label.appsList);
+
+        if (d.tagId && label.tagId) {
+            criteria.treeTag = {id: d.tagId};
+        } else if (d.tagId) {
+            criteria.parameters.tags = [{id: d.tagId, name: d.tagName}];
+            criteria.searchTags = [];
+        } else {
+            criteria.parameters.tags = [];
+            criteria.searchTags = [];
+        }
+        if (label.tagsList)
+            criteria.parameters.tags.push.apply(criteria.parameters.tags, label.tagsList);
 
         criteria.parameters.channelTypes = [];
         criteria.parameters.scanners = [];

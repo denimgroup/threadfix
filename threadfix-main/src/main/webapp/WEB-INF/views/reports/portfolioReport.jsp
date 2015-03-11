@@ -18,6 +18,10 @@
 			<td class="inputValue">{{title.apps}}</td>
 		</tr>
 		<tr>
+			<td>Tag:</td>
+			<td class="inputValue">{{title.tags}}</td>
+		</tr>
+		<tr>
 			<td>Number of Applications:</td>
 			<td class="inputValue">{{filterPortfolioApps.length}}</td>
 		</tr>
