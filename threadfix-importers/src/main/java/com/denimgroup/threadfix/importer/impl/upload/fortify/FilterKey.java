@@ -24,30 +24,8 @@
 package com.denimgroup.threadfix.importer.impl.upload.fortify;
 
 /**
- * Created by mcollins on 2/16/15.
+ * Created by mcollins on 3/5/15.
  */
-class DataFlowElementMap {
-
-    String line = null, column = null, lineText = null, fileName = null,
-            node = null, snippet = null, fact = null, action = null, taint;
-
-    public void merge(DataFlowElementMap other) {
-        if (line == null && other.line != null)
-            this.line = other.line;
-        if (lineText == null && other.lineText != null)
-            this.lineText = other.lineText;
-        if (column == null && other.column != null)
-            this.column = other.column;
-        if (fileName == null && other.fileName != null)
-            this.fileName = other.fileName;
-        if (node == null && other.node != null)
-            this.node = other.node;
-        if (snippet == null && other.snippet != null)
-            this.snippet = other.snippet;
-        if (fact == null && other.fact != null)
-            this.fact = other.fact;
-        if (action == null && other.action != null)
-            this.action = other.action;
-
-    }
+public enum FilterKey {
+    ACTION_PARAM, QUERY, ACTION, SEVERITY
 }
