@@ -143,11 +143,19 @@ public class FindingServiceImpl implements FindingService {
 			result.rejectValue("dataFlowElements", "errors.invalid", new String [] { "Line number" }, null);
 		}
 
-        if (isStatic && (finding.getSurfaceLocation() == null
-                || finding.getSurfaceLocation().getParameter() == null
-                || finding.getSurfaceLocation().getParameter().trim().isEmpty())) {
-            result.rejectValue("surfaceLocation.parameter", MessageConstants.ERROR_REQUIRED, new String [] { "Parameter" }, null);
-        } else if (!isStatic) {
+        if (isStatic) {
+            if (finding.getSurfaceLocation() == null
+                    || finding.getSurfaceLocation().getParameter() == null
+                    || finding.getSurfaceLocation().getParameter().trim().isEmpty()) {
+                result.rejectValue("surfaceLocation.parameter", MessageConstants.ERROR_REQUIRED, new String[]{"Parameter"}, null);
+            }
+            if (finding.getDataFlowElements() == null
+                    || finding.getDataFlowElements().get(0) == null
+                    || finding.getDataFlowElements().get(0).getSourceFileName() == null
+                    || finding.getDataFlowElements().get(0).getSourceFileName().trim().isEmpty()) {
+                result.rejectValue("surfaceLocation.parameter", MessageConstants.ERROR_REQUIRED, new String[]{"Source File"}, null);
+            }
+        } else {    // dynamic
             if (finding.getSurfaceLocation() == null ||
                     ( (finding.getSurfaceLocation().getParameter() == null || finding.getSurfaceLocation().getParameter().trim().isEmpty()) &&
                             (finding.getSurfaceLocation().getPath() == null || finding.getSurfaceLocation().getPath().trim().isEmpty()) )) {

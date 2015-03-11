@@ -390,7 +390,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         }
 
                         time = d.values[i].date;
-                        tips.push("<tr><td>" + d.key + "&nbsp;</td> <td style='color:"+ getColor(d.key) +"'>" + d.values[i].noOfVulns + "</td></tr>");
+                        tips.push("<tr><td>" + d.key + "&nbsp;</td> <td style='color:"+ getTextColor(d.key) +"'>" + d.values[i].noOfVulns + "</td></tr>");
 
                         focus.selectAll('path').remove();
                         focus.append("path")
@@ -425,7 +425,11 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 }
 
                 function getColor(key) {
-                    return (reportConstants.vulnTypeColorMap[key] ? reportConstants.vulnTypeColorMap[key] : color(key));
+                    return (reportConstants.vulnTypeColorMap[key].graphColor ? reportConstants.vulnTypeColorMap[key].graphColor : color(key));
+                }
+
+                function getTextColor(key) {
+                    return (reportConstants.vulnTypeColorMap[key].textColor ? reportConstants.vulnTypeColorMap[key].textColor : color(key));
                 }
 
                 scope.export = function(){
