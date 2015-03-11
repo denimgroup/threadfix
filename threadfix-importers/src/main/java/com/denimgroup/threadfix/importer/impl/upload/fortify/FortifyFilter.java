@@ -27,10 +27,9 @@ import com.denimgroup.threadfix.framework.util.RegexUtils;
 
 import java.util.Map;
 
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.CollectionUtils.newMap;
-import static com.denimgroup.threadfix.importer.impl.upload.fortify.FortifyFilter.Result.MATCH;
-import static com.denimgroup.threadfix.importer.impl.upload.fortify.FortifyFilter.Result.MISS;
-import static com.denimgroup.threadfix.importer.impl.upload.fortify.FortifyFilter.Result.NO_MATCH;
+import static com.denimgroup.threadfix.importer.impl.upload.fortify.FilterResult.*;
 
 /**
  * Created by mcollins on 3/5/15.
@@ -49,18 +48,14 @@ public class FortifyFilter {
     Map<VulnKey, String> myFields = newMap();
     Map<VulnKey, String> myNegativeFields = newMap();
 
-    // TODO compile these into patterns
-    //                    impact:[0,5.0]
-    String lowRegex =  "\\[([0-9\\.]+),[0-9\\.]+\\]";
-    String highRegex = "\\[[0-9\\.]+,([0-9\\.]+)\\]";
+    Threshold impact   = new Threshold("Impact"),
+            likelihood = new Threshold("Likelihood"),
+            confidence = new Threshold("Confidence"),
+            severity   = new Threshold("Severity");
 
-    String impactRegexLow      = "impact:"     + lowRegex;
-    String impactRegexHigh     = "impact:"     + highRegex;
-    String likelihoodRegexLow  = "likelihood:" + lowRegex;
-    String likelihoodRegexHigh = "likelihood:" + highRegex;
-
-    float impactLowThreshold = -2, impactHighThreshold = -2,
-            likelihoodLowThreshold = -2, likelihoodHighThreshold = -2;
+    public static void main(String[] args) {
+        System.out.println(3.5 == 3.5);
+    }
 
     private void parseFields(String query) {
 
@@ -84,36 +79,28 @@ public class FortifyFilter {
             }
         }
 
-        String impactLow = RegexUtils.getRegexResult(query, impactRegexLow);
-        String impactHigh = RegexUtils.getRegexResult(query, impactRegexHigh);
-        String likelihoodLow = RegexUtils.getRegexResult(query, likelihoodRegexLow);
-        String likelihoodHigh = RegexUtils.getRegexResult(query, likelihoodRegexHigh);
-
-        if (impactLow != null) {
-            impactLowThreshold = Float.valueOf(impactLow);
-        }
-        if (impactHigh != null) {
-            impactHighThreshold = Float.valueOf(impactHigh);
-        }
-        if (likelihoodHigh != null) {
-            likelihoodHighThreshold = Float.valueOf(likelihoodHigh);
-        }
-        if (likelihoodLow != null) {
-            likelihoodLowThreshold = Float.valueOf(likelihoodLow);
-        }
+        if (!impact.isValid()) impact.initialize(query);
+        if (!confidence.isValid()) confidence.initialize(query);
+        if (!severity.isValid()) severity.initialize(query);
+        if (!likelihood.isValid()) likelihood.initialize(query);
     }
 
-    enum Result {
-        NO_MATCH, MATCH, MISS
+    public String getFinalSeverity(Map<VulnKey, String> vulnInfo, float likelihood, float impact) {
+        Map<String, Float> numberMap = map(
+                "Impact", impact,
+                "Likelihood", likelihood
+        );
+
+        return getFinalSeverity(vulnInfo, numberMap);
     }
 
-    public String getFinalSeverity(Map<VulnKey, String> vulnInfo, float impact, float likelihood) {
+    public String getFinalSeverity(Map<VulnKey, String> vulnInfo, Map<String, Float> numberMap) {
 
         // basic, positive matching
-        Result result = getResult(vulnInfo, myFields);
+        FilterResult result = getStringResult(vulnInfo, myFields);
 
         // negative matching
-        Result negativeResult = getResult(vulnInfo, myNegativeFields);
+        FilterResult negativeResult = getStringResult(vulnInfo, myNegativeFields);
         if (negativeResult == MISS) {
             negativeResult = MATCH;
         } else if (negativeResult == MATCH) {
@@ -121,15 +108,15 @@ public class FortifyFilter {
         }
 
         // threshold matching
-        Result thresholdResult = passesThresholds(impact, likelihood);
+        FilterResult thresholdResult = passesThresholds(numberMap);
 
         return getCombinedResult(result, negativeResult, thresholdResult) == MATCH ? target : null;
     }
 
-    private Result getCombinedResult(Result... results) {
-        Result finalResult = NO_MATCH;
+    private FilterResult getCombinedResult(FilterResult... results) {
+        FilterResult finalResult = NO_MATCH;
 
-        for (Result result : results) {
+        for (FilterResult result : results) {
             if (result == MISS) {
                 finalResult = MISS;
                 break;
@@ -142,8 +129,8 @@ public class FortifyFilter {
     }
 
 
-    private Result getResult(Map<VulnKey, String> vulnInfo, Map<VulnKey, String> myFields) {
-        Result result = NO_MATCH;
+    private FilterResult getStringResult(Map<VulnKey, String> vulnInfo, Map<VulnKey, String> myFields) {
+        FilterResult result = NO_MATCH;
 
         for (VulnKey key : myFields.keySet()) {
 
@@ -173,25 +160,15 @@ public class FortifyFilter {
         return result;
     }
 
-    private Result passesThresholds(float impact, float likelihood) {
+    private FilterResult passesThresholds(Map<String, Float> numberMap) {
 
-        Result result = NO_MATCH;
+        FilterResult[] individualResults = {
+                impact.check(numberMap.get("Impact")),
+                confidence.check(numberMap.get("Confidence")),
+                likelihood.check(numberMap.get("Likelihood")),
+                severity.check(numberMap.get("Severity"))
+        };
 
-        if (likelihoodLowThreshold > -1 && likelihoodHighThreshold > -1) {
-            if (likelihood >= likelihoodLowThreshold && likelihood <= likelihoodHighThreshold) {
-                result = MATCH;
-            } else {
-                return MISS;
-            }
-        }
-        if (impactLowThreshold > -1 && impactHighThreshold > -1) {
-            if (impact >= impactLowThreshold && impact <= impactHighThreshold) {
-                result = MATCH;
-            } else {
-                return MISS;
-            }
-        }
-
-        return result;
+        return getCombinedResult(individualResults);
     }
 }

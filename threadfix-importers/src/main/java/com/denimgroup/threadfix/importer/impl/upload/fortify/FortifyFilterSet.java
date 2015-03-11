@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * Created by mcollins on 3/5/15.
@@ -39,18 +40,37 @@ public class FortifyFilterSet {
         filters.add(filter);
     }
 
+    Map<String, String> legacyMap = map(
+            "Hot", "4.0",
+            "Warning", "3.0"
+    );
+
     // the last applicable filter should be the one applied
-    public String getResult(Map<VulnKey, String> vulnInfo, float impact, float likelihood) {
+    public String getResult(Map<VulnKey, String> vulnInfo, Map<String, Float> numberMap) {
         String result = null;
 
         for (FortifyFilter filter : filters) {
-            String filterResult = filter.getFinalSeverity(vulnInfo, impact, likelihood);
+            String filterResult = filter.getFinalSeverity(vulnInfo, numberMap);
             if (filterResult != null) {
                 result = filterResult;
             }
         }
 
+        if (legacyMap.containsKey(result)) {
+            result = legacyMap.get(result);
+        }
+
         return result;
+    }
+
+    // overload for testing convenience
+    public String getResult(Map<VulnKey, String> vulnInfo, float impact, float likelihood) {
+        Map<String, Float> numberMap = map(
+                "Impact", impact,
+                "Likelihood", likelihood
+        );
+
+        return getResult(vulnInfo, numberMap);
     }
 
 

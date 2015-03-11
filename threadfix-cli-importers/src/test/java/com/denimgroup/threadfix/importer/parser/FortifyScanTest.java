@@ -77,10 +77,4 @@ public class FortifyScanTest extends TransactionalTest {
         ScanComparisonUtils.compare(fortify360Results, ScanLocationManager.getRoot() +
                 "Static/Fortify/ZigguratUtility.fpr");
     }
-
-    @Test
-    public void fortifyScanTest2() {
-        ScanComparisonUtils.compare(new String[][]{}, ScanLocationManager.getRoot() +
-                "Static/Fortify/Webgoat-full.fpr");
-    }
 }

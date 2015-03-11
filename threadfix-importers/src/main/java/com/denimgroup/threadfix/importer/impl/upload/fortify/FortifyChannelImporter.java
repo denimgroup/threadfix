@@ -157,8 +157,10 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 					default : impact = 1f; likelihood = 1f;
 				}
 
+				Map<String, Float> map = map("Impact", impact, "Likelihood", likelihood);
+
 				// it's ok for the map to be empty for now
-				String result = filterSet.getResult(new HashMap<VulnKey, String>(), impact, likelihood);
+				String result = filterSet.getResult(new HashMap<VulnKey, String>(), map);
 
 				if (result != null) {
 					ChannelSeverity newSeverity = channelSeverityDao.retrieveByCode(type, severityMap.get(result));
@@ -170,7 +172,9 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 
 	private static final Map<String, String> severityMap = map(
 			"Critical", "4",
+			"Hot", "4",
 			"High", "3",
+			"Warning", "3",
 			"Medium", "2",
 			"Low", "1"
 	);
@@ -309,12 +313,21 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    		StaticPathInformation staticPathInformation = staticPathInformationMap.get(nativeId);
 
 				Float confidence = getFloatOrNull(findingMap.get("confidence"));
-				Map<String, Float> classID = ruleMap.get(findingMap.get("classID"));
-				Float likelihood = getLikelihood(confidence, classID);
-				Float impact = classID.get("Impact");
-				String severity = getSeverityName(
-						likelihood,
-						impact);
+				Map<String, Float> numberMap = ruleMap.get(findingMap.get("classID"));
+				Float likelihood = getLikelihood(confidence, numberMap);
+				Float impact = numberMap.get("Impact");
+				numberMap.put("Likelihood", likelihood);
+
+				String severity = findingMap.get("severity");
+
+				if (likelihood > 0f) {
+					severity = getSeverityName(
+							likelihood,
+							impact);
+				}
+
+				numberMap.put("Confidence", confidence);
+				numberMap.put("Severity", getFloatOrNull(severity));
 
 				// TODO add analysis
 				Map<VulnKey, String> vulnMap = map(
@@ -323,7 +336,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 						VulnKey.KINGDOM, findingMap.get("Kingdom"),
 						VulnKey.TAINT, findingMap.get("Taint")
 				);
-	   			String filterSeverity = filterSet.getResult(vulnMap, impact, likelihood);
+	   			String filterSeverity = filterSet.getResult(vulnMap, numberMap);
 
 				if (filterSeverity != null) {
 					severity = filterSeverity;

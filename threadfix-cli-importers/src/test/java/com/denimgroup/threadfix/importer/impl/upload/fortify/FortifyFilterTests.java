@@ -124,21 +124,19 @@ public class FortifyFilterTests {
 
     @Test
     public void testThresholdParsing() {
-        Map<FilterKey, String> filterMap = map(
-                FilterKey.SEVERITY, "Critical",
-                FilterKey.QUERY, "likelihood:[0,5.0] AND impact:[0,5.0]"
-        );
+        String query = "likelihood:[0,5.0] AND impact:[0,5.0]";
 
-        FortifyFilter filter = new FortifyFilter(filterMap);
+        Threshold impact = new Threshold(query, "Likelihood");
+        Threshold likelihood= new Threshold(query, "Impact");
 
-        assert filter.impactHighThreshold > 4.9 :
-                "Was expecting impact high threshold of 5.0, got " + filter.impactHighThreshold;
-        assert filter.impactLowThreshold < 0.1 :
-                "Was expecting impact low threshold of 0, got " + filter.impactLowThreshold;
-        assert filter.likelihoodLowThreshold < 0.1 :
-                "Was expecting likelihood low threshold of 0, got " + filter.likelihoodLowThreshold;
-        assert filter.likelihoodHighThreshold > 4.9 :
-                "Was expecting likelihood high threshold of 5.0, got " + filter.likelihoodHighThreshold;
+        assert impact.high > 4.9 :
+                "Was expecting impact high threshold of 5.0, got " + impact.high;
+        assert impact.low < 0.1 :
+                "Was expecting impact low threshold of 0, got " + impact.low;
+        assert likelihood.low < 0.1 :
+                "Was expecting likelihood low threshold of 0, got " + likelihood.low;
+        assert likelihood.high > 4.9 :
+                "Was expecting likelihood high threshold of 5.0, got " + likelihood.high;
     }
 
     Map<VulnKey, String> emptyMap = newMap();
@@ -214,6 +212,47 @@ public class FortifyFilterTests {
         String result = filter.getFinalSeverity(map(VulnKey.CATEGORY, "Unreleased Resource"), 0f, 0f);
 
         assert null == result : "Expected null, got " + result;
+    }
+
+    @Test
+    public void testOldStyleFilters() {
+        Map<FilterKey, String> filterMap = map(
+                FilterKey.SEVERITY, "Warning",
+                FilterKey.QUERY, "confidence:[4,5] severity:(3,5]"
+        );
+
+        FortifyFilter filter = new FortifyFilter(filterMap);
+
+        String result = filter.getFinalSeverity(map(VulnKey.CATEGORY, "Unreleased Resource"),
+                map("Confidence", 4f, "Severity", 5f));
+
+        assert "Warning".equals(result) : "Expected Warning, got " + result;
+    }
+
+    @Test
+    public void testInclusiveExclusiveFilters() {
+        test("confidence:[4,5]", 4f, true);
+        test("confidence:(4,5]", 4f, false);
+        test("confidence:[4,5]", 5f, true);
+        test("confidence:[4,5)", 5f, false);
+    }
+
+    void test(String query, float confidence, boolean shouldSucceed) {
+        Map<FilterKey, String> filterMap = map(
+                FilterKey.SEVERITY, "Warning",
+                FilterKey.QUERY, query
+        );
+
+        FortifyFilter filter = new FortifyFilter(filterMap);
+
+        String result = filter.getFinalSeverity(map(VulnKey.CATEGORY, "Fake Resource"),
+                map("Confidence", confidence));
+
+        if (shouldSucceed) {
+            assert "Warning".equals(result) : "Expected Warning, got " + result + " for " + query + " and value " + confidence;
+        } else {
+            assert result == null : "Expected null, got " + result + " for " + query + " and value " + confidence;
+        }
     }
 
 }

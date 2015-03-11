@@ -497,7 +497,12 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
      * @return the correct severity from the DB.
      */
     protected ChannelSeverity getChannelSeverity(String code) {
-        if (getChannelType() == null || code == null || channelSeverityDao == null) {
+        if (getChannelType() == null || channelSeverityDao == null) {
+            throw new IllegalStateException("Autowiring failed.");
+        }
+
+        if (code == null) {
+            log.warn("Null severity code passed to getChannelSeverity");
             return null;
         }
 
@@ -510,6 +515,8 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
             severity = channelSeverityDao.retrieveByCode(getChannelType(), code);
             if (severity != null) {
                 channelSeverityMap.put(code, severity);
+            } else {
+                log.warn("No channel severity found for severity " + code);
             }
         }
 
