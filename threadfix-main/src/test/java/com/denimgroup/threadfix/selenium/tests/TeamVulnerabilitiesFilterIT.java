@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openqa.selenium.By;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -137,9 +138,15 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
         assertTrue("Success message not present.", teamDetailPage.isSavedFilterSuccessMessageDisplayed());
 
-        teamDetailPage.addSavedFilter(filterName);
+        TeamDetailPage teamDetailPage1 = teamDetailPage.clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName)
+                .clickVulnerabilitiesTab("0")
+                .expandSavedFilters()
+                .addInvalidNameSavedFilter(filterName);
 
-        assertTrue("Error message not displayed.", teamDetailPage.isDuplicateNameErrorMessageDisplayed());
+        driver.findElement(By.id("saveFilterButton")).click();
+
+        assertTrue("Error message not displayed.", teamDetailPage1.isDuplicateNameErrorMessageDisplayed());
     }
 
     @Test

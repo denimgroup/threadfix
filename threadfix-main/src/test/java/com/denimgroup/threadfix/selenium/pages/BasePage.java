@@ -97,6 +97,7 @@ public abstract class BasePage {
     public TeamIndexPage clickOrganizationHeaderLink() {
         driver.findElementById("orgHeader").click();
         waitForElement(driver.findElementById("expandAllButton"));
+        takeScreenShot();
         return new TeamIndexPage(driver);
     }
 
