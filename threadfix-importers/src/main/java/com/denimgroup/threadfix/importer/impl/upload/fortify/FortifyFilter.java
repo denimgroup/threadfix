@@ -25,8 +25,10 @@ package com.denimgroup.threadfix.importer.impl.upload.fortify;
 
 import com.denimgroup.threadfix.framework.util.RegexUtils;
 
+import java.util.List;
 import java.util.Map;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.CollectionUtils.newMap;
 import static com.denimgroup.threadfix.importer.impl.upload.fortify.FilterResult.*;
@@ -36,17 +38,23 @@ import static com.denimgroup.threadfix.importer.impl.upload.fortify.FilterResult
  */
 public class FortifyFilter {
 
-    final String query, target;
+    final String target, query;
 
     public FortifyFilter(Map<FilterKey, String> map) {
-        query = map.get(FilterKey.QUERY);
-        target = map.get(FilterKey.SEVERITY);
+        this(map.get(FilterKey.SEVERITY), map.get(FilterKey.QUERY));
+    }
 
+    public FortifyFilter(String target, String query) {
+        this.target = target;
+        this.query = query;
         parseFields(query);
     }
 
     Map<VulnKey, String> myFields = newMap();
     Map<VulnKey, String> myNegativeFields = newMap();
+
+    // list of filters that were in an OR
+    List<FortifyFilter> oredFilters = list();
 
     Threshold impact   = new Threshold("Impact"),
             likelihood = new Threshold("Likelihood"),
@@ -58,6 +66,14 @@ public class FortifyFilter {
     }
 
     private void parseFields(String query) {
+
+        if (query.contains(" OR ")) {
+            String[] subqueries = query.split(" OR ");
+            for (String subquery : subqueries) {
+                oredFilters.add(new FortifyFilter(target, subquery));
+            }
+            return;
+        }
 
         if (query.contains(" AND ")) {
             String[] subqueries = query.split(" AND ");
@@ -96,6 +112,21 @@ public class FortifyFilter {
 
     public String getFinalSeverity(Map<VulnKey, String> vulnInfo, Map<String, Float> numberMap) {
 
+        if (oredFilters.isEmpty()) {
+            return passes(vulnInfo, numberMap) ? target : null;
+        } else {
+            boolean success = false;
+            for (FortifyFilter filter : oredFilters) {
+                if (filter.passes(vulnInfo, numberMap)) {
+                    success = true;
+                    break;
+                }
+            }
+            return success ? target: null;
+        }
+    }
+
+    public boolean passes(Map<VulnKey, String> vulnInfo, Map<String, Float> numberMap) {
         // basic, positive matching
         FilterResult result = getStringResult(vulnInfo, myFields);
 
@@ -110,7 +141,7 @@ public class FortifyFilter {
         // threshold matching
         FilterResult thresholdResult = passesThresholds(numberMap);
 
-        return getCombinedResult(result, negativeResult, thresholdResult) == MATCH ? target : null;
+        return getCombinedResult(result, negativeResult, thresholdResult) == MATCH;
     }
 
     private FilterResult getCombinedResult(FilterResult... results) {
