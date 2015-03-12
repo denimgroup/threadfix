@@ -23,9 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import java.util.List;
-
 import com.denimgroup.threadfix.data.dao.AbstractNamedObjectDao;
+import com.denimgroup.threadfix.data.dao.DefectTrackerDao;
+import com.denimgroup.threadfix.data.entities.DefectTracker;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
@@ -33,15 +33,14 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.denimgroup.threadfix.data.dao.DefectTrackerDao;
-import com.denimgroup.threadfix.data.entities.DefectTracker;
+import java.util.List;
 
 /**
  * Hibernate DefectTracker DAO implementation. Most basic methods are
  * implemented in the AbstractGenericDao
  * 
  * @author mcollins, dwolf
- * @see AbstractGenericDao
+ * @see AbstractNamedObjectDao
  */
 @Repository
 public class HibernateDefectTrackerDao
@@ -51,6 +50,13 @@ public class HibernateDefectTrackerDao
 	@Autowired
 	public HibernateDefectTrackerDao(SessionFactory sessionFactory) {
 		super(sessionFactory);
+	}
+
+	@Override
+	public DefectTracker retrieveByName(String name) {
+		return (DefectTracker) getActiveDTCriteria()
+				.add(Restrictions.eq("name", name))
+				.uniqueResult();
 	}
 
 	@Override
