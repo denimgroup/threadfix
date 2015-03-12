@@ -25,11 +25,13 @@ package com.denimgroup.threadfix.service.defects.utils.tfs;
 
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.exception.DefectTrackerUnavailableException;
+import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.importer.util.ResourceUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ProxyService;
 import com.denimgroup.threadfix.service.defects.TFSDefectTracker;
 import com.denimgroup.threadfix.viewmodel.DefectMetadata;
+import com.denimgroup.threadfix.viewmodel.DynamicFormField;
 import com.microsoft.tfs.core.TFSTeamProjectCollection;
 import com.microsoft.tfs.core.clients.workitem.WorkItem;
 import com.microsoft.tfs.core.clients.workitem.WorkItemClient;
@@ -37,6 +39,7 @@ import com.microsoft.tfs.core.clients.workitem.fields.*;
 import com.microsoft.tfs.core.clients.workitem.project.Project;
 import com.microsoft.tfs.core.clients.workitem.project.ProjectCollection;
 import com.microsoft.tfs.core.clients.workitem.query.WorkItemCollection;
+import com.microsoft.tfs.core.clients.workitem.wittype.WorkItemType;
 import com.microsoft.tfs.core.config.ConnectionAdvisor;
 import com.microsoft.tfs.core.config.DefaultConnectionAdvisor;
 import com.microsoft.tfs.core.exceptions.TECoreException;
@@ -51,9 +54,12 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
 
 public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSClient {
 
@@ -61,6 +67,7 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
     private ProxyService proxyService;
 
     protected static final SanitizedLogger LOG = new SanitizedLogger("TFSClientImpl");
+    private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
 
     // We need to load the native libraries and this seems to be the best spot.
     // The idea is to use the same code for loading all the libraries but use
@@ -178,26 +185,6 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
     }
 
     @Override
-    public List<String> getPriorities() {
-        if (lastStatus != ConnectionStatus.VALID || client == null) {
-            LOG.error("Please configure the tracker properly before trying to submit a defect.");
-            return null;
-        }
-
-        List<String> returnPriorities = list();
-
-        FieldDefinitionCollection collection = client
-                .getFieldDefinitions();
-
-        Collections.addAll(returnPriorities, collection.get("Priority")
-                .getAllowedValues().getValues());
-
-        client.close();
-
-        return returnPriorities;
-    }
-
-    @Override
     public List<String> getDefectIds(String projectName) {
         if (lastStatus != ConnectionStatus.VALID || client == null) {
             LOG.error("Please configure the tracker properly before trying to get defect IDs.");
@@ -218,6 +205,62 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
         client.close();
 
         return ids;
+    }
+
+    @Override
+    public List<DynamicFormField> getDynamicFormFields(String projectName) {
+        if (lastStatus != ConnectionStatus.VALID || client == null) {
+            LOG.error("Please configure the tracker properly before trying to submit a defect.");
+            return null;
+        }
+
+        try {
+            Project project = client.getProjects().get(projectName);
+
+            if (project == null) {
+                LOG.warn("Product was not found. Unable to create defect.");
+                return null;
+            }
+
+            WorkItem item;
+            WorkItemType[] workItemTypes = project.getVisibleWorkItemTypes();
+
+            if (workItemTypes == null) {
+                LOG.warn("Unable to create item in TFS.");
+                return null;
+            }
+
+            List<DynamicFormField> fieldList = list();
+            Map<String, String> wiTypeValuesMap = newMap();
+            DynamicFormField workItemField = createWorkItemField();
+            fieldList.add(workItemField);
+
+            for (WorkItemType workItemType: workItemTypes) {
+                item = client.newWorkItem(workItemType);
+
+                fieldList.addAll(DynamicFormFieldParser.getFields(item, wiTypeValuesMap));
+                workItemField.setOptionsMap(wiTypeValuesMap);
+            }
+
+            return fieldList;
+
+        } catch (UnauthorizedException | TFSUnauthorizedException e) {
+            LOG.warn("Ran into TFSUnauthorizedException while trying to retrieve products.", e);
+            throw new RestIOException(e, "Ran into TFSUnauthorizedException while trying to retrieve products.");
+        } finally {
+            client.close();
+        }
+    }
+
+    private DynamicFormField createWorkItemField(){
+        DynamicFormField workItemTypeField = new DynamicFormField();
+        workItemTypeField.setRequired(true);
+        workItemTypeField.setName(DynamicFormFieldParser.WORKITEM_TYPE);
+        workItemTypeField.setLabel("Work Item Type");
+        workItemTypeField.setActive(true);
+        workItemTypeField.setEditable(true);
+        workItemTypeField.setType("select");
+        return workItemTypeField;
     }
 
     @Override
@@ -337,20 +380,33 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
                 return null;
             }
 
-            WorkItem item = client.newWorkItem(project
-                    .getVisibleWorkItemTypes()[0]);
+            WorkItemType selectedWorkItemType = null;
+            String selectedWorkItemTypeId = metadata.getFieldsMap().get(DynamicFormFieldParser.WORKITEM_TYPE).toString();
+            if (selectedWorkItemTypeId != null) {
+                for (WorkItemType type: project.getVisibleWorkItemTypes()) {
+                    if (selectedWorkItemTypeId.equals(String.valueOf(type.getID()))) {
+                        selectedWorkItemType = type;
+                        break;
+                    }
+                }
+            }
+
+            if (selectedWorkItemType == null) {
+                LOG.error("Data submitted wasn't valid. Couldn't find WorkItemType field.");
+                return null;
+            }
+            Map<String, Object> fieldsMap = DynamicFormFieldParser.filterFieldsByWorkItemType(metadata.getFieldsMap());
+
+            WorkItem item = client.newWorkItem(selectedWorkItemType);
 
             if (item == null) {
                 LOG.warn("Unable to create item in TFS.");
                 return null;
             }
 
-            item.setTitle(metadata.getDescription());
-            item.getFields().getField("Description").setValue(description);
-            item.getFields().getField("Priority").setValue(metadata.getPriority());
+            setValues(item, fieldsMap, description);
 
             String itemId = null;
-
             if (checkItemValues(item)) {
                 item.save();
                 itemId = String.valueOf(item.getID());
@@ -362,10 +418,48 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
             return itemId;
 
         } catch (UnauthorizedException | TFSUnauthorizedException e) {
-            LOG.warn("Ran into TFSUnauthorizedException while trying to retrieve products.", e);
-            return null;
+            LOG.warn("Ran into TFSUnauthorizedException while trying to retrieve products.");
+            throw new RestIOException(e, "Ran into TFSUnauthorizedException while trying to retrieve products.");
         } finally {
             client.close();
+        }
+    }
+
+    private void setValues(WorkItem item, Map<String, Object> fieldsMap, String description) {
+
+        try {
+            boolean isInsertedDesc = false;
+            for (Map.Entry<String, Object> entry : fieldsMap.entrySet()){
+
+                Field itemField = item.getFields().getField(entry.getKey());
+
+                if (itemField != null) {
+                    Object value = entry.getValue();
+                    FieldType fieldType = itemField.getFieldDefinition().getFieldType();
+
+                    // Cast from Integer to Double if necessary
+                    if (fieldType == FieldType.DOUBLE) {
+                        itemField.setValue(value != null ? Double.valueOf(value.toString()) : null);
+                    } else if (fieldType == FieldType.DATETIME) {
+                        itemField.setValue(value != null ? FORMATTER.parse(value.toString()) : null);
+                    } else if (fieldType == FieldType.HTML || fieldType == FieldType.HISTORY) {
+                        String htmlVal = value != null ? value.toString() : null;
+                        if (!isInsertedDesc && (entry.getKey().equals("System.Description")
+                                || entry.getKey().equals("Microsoft.VSTS.TCM.ReproSteps"))) {
+                            isInsertedDesc = true;
+                            htmlVal = htmlVal != null ? description + htmlVal : description;
+                        }
+
+                        itemField.setValue(htmlVal != null ? htmlVal.replaceAll("\n", "<br>") : null);
+                    } else
+                        itemField.setValue(value);
+                } else {
+                    LOG.warn("Unable to find " + entry.getKey());
+                }
+            }
+        } catch (ParseException e) {
+            LOG.warn("Invalid input value.");
+            throw new RestIOException(e, "Invalid input value.");
         }
     }
 
@@ -377,7 +471,6 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
         // we want to exit early if we find a field that we can't patch
         OUTER: for (Field field : item.getFields()) {
             if (field.getStatus() != FieldStatus.VALID) {
-
                 if (field.getStatus() == FieldStatus.INVALID_EMPTY) {
                     LOG.info("Found INVALID_EMPTY error on field " + field.getName() +
                             ". Attempting to assign the string \"<None>\" to the field.");
@@ -452,7 +545,6 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
 
         try {
             projects.getWorkItemClient().getProjects();
-            //projects.getWorkItemClient();
             LOG.info("No UnauthorizedException was thrown when attempting to connect with blank credentials.");
             return ConnectionStatus.VALID;
         } catch (UnauthorizedException | TFSUnauthorizedException e) {

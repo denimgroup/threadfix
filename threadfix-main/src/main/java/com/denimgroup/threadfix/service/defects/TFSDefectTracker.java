@@ -169,17 +169,8 @@ public class TFSDefectTracker extends AbstractDefectTracker {
         boolean validConfiguration = configureClient();
 
         if (validConfiguration) {
-            List<String> statuses = new ArrayList<>();
-            List<String> priorities = client.getPriorities();
-            List<String> emptyList = new ArrayList<>();
-            emptyList.add("-");
 
-            statuses.add("New");
-
-            log.info("End Collecting project metadata " + priorities);
-
-            return new ProjectMetadata(emptyList, emptyList, emptyList, statuses,
-                    priorities);
+            return new ProjectMetadata(client.getDynamicFormFields(getProjectName()));
         } else {
             log.error("Invalid configuration.");
             return null;

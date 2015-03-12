@@ -254,15 +254,11 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
             if ("number".equals(type)) {
                 genericField.setStep("any");
                 genericField.setMinValue(0);
-                genericField.setError("min", "Input positive number.");
-                genericField.setError("number", "Not valid number.");
             }
 
             genericField.setRequired(attr.isRequired());
             genericField.setSupportsMultivalue(attr.isMultiValue());
             genericField.setOptionsMap(getFieldOptions(attr));
-            if (attr.isRequired())
-                genericField.setError("required", "This field cannot be empty.");
 
             dynamicFormFields.add(genericField);
         }

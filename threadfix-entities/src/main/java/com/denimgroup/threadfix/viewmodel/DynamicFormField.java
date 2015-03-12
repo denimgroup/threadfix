@@ -36,6 +36,7 @@ public class DynamicFormField {
     String label;
     String placeholder;
     String validate;
+    Object value;
 
     int maxLength;
     int minLength;
@@ -105,6 +106,7 @@ public class DynamicFormField {
 
     public void setMaxLength(int maxLength) {
         this.maxLength = maxLength;
+        this.setError("maxlength", "Input up to " + maxLength +" characters only.");
     }
 
     public int getMinLength() {
@@ -121,6 +123,8 @@ public class DynamicFormField {
 
     public void setRequired(boolean required) {
         this.required = required;
+        if (required)
+            this.setError("required", "This field cannot be empty.");
     }
 
     public String getType() {
@@ -129,6 +133,9 @@ public class DynamicFormField {
 
     public void setType(String type) {
         this.type = type;
+        if ("number".equals(type)) {
+            this.setError("number", "Not valid number.");
+        }
     }
 
     public boolean isActive() {
@@ -217,6 +224,7 @@ public class DynamicFormField {
 
     public void setMinValue(Integer minValue) {
         this.minValue = minValue;
+        this.setError("min", "Input min is " + minValue + ".");
     }
 
     public Integer getMaxValue() {
@@ -225,5 +233,14 @@ public class DynamicFormField {
 
     public void setMaxValue(Integer maxValue) {
         this.maxValue = maxValue;
+        this.setError("max", "Input max is " + maxValue + ".");
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    public void setValue(Object value) {
+        this.value = value;
     }
 }
