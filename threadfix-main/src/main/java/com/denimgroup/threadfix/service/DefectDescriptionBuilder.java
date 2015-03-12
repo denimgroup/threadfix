@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.ChannelType;
+import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
@@ -84,6 +85,16 @@ public class DefectDescriptionBuilder {
                     if (findings != null && !findings.isEmpty()) {
                         addUrlReferences(findings, stringBuilder);
                         addNativeIds(findings, stringBuilder);
+                        
+                        for(Finding finding: findings){
+                    		stringBuilder.append("\n");
+                        	presentFieldIfNotNull("Scanner Recommendation", finding.getScannerRecommendation(), stringBuilder);
+                    		presentFieldIfNotNull("Attack String", finding.getAttackString(), stringBuilder);
+                        	presentFieldIfNotNull("Attack Request", finding.getAttackRequest(), stringBuilder);
+                        	presentFieldIfNotNull("Attack Response", finding.getAttackResponse(), stringBuilder);
+                        
+                        	addDataFlow(finding, stringBuilder);
+                        }
                     }
 
                     stringBuilder.append("\n\n");
@@ -123,6 +134,52 @@ public class DefectDescriptionBuilder {
                 }
             }
         }
+    }
+    
+    private static void presentFieldIfNotNull(String fieldName, String fieldValue, StringBuilder builder) {
+    	if (fieldValue != null){
+    		builder
+    			.append("\n")
+    			.append("============================================")
+    			.append("\n")
+        		.append(fieldName)
+        		.append("\n")
+        		.append(fieldValue)
+        		.append("\n");
+    	}
+    }
+   
+    private static void addDataFlow(Finding finding, StringBuilder builder) {
+    	List<DataFlowElement> dataFlowElements = finding.getDataFlowElements();
+    	String filename;
+    	String prevFilename = null;
+    	int lineNumber;
+    	int prevlineNumber = -1;
+    	
+    	if (dataFlowElements != null && !dataFlowElements.isEmpty()) {
+    		builder
+    			.append("\n")
+    			.append("============================================")
+    			.append("\nData Flow:");
+    		for(DataFlowElement dataFlowElement: dataFlowElements){
+    			filename = dataFlowElement.getSourceFileName();
+    			lineNumber=dataFlowElement.getLineNumber();
+    			
+    			if (!filename.equals(prevFilename) || lineNumber != prevlineNumber) {
+    				builder
+    					.append("\n")
+    					.append("-----------------------------------------------------------------")
+    					.append("\n")
+    					.append(filename)
+    					.append(" line ")
+    					.append(lineNumber)
+    					.append("\n")
+    					.append(dataFlowElement.getLineText());
+    				prevFilename = filename;
+    				prevlineNumber = lineNumber;
+    			}
+    		}
+    	}
     }
 
 }
