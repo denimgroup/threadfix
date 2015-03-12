@@ -113,7 +113,7 @@
 					    </security:authorize>
 						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_CAN_MANAGE_USERS,ROLE_CAN_MANAGE_ROLES,ROLE_CAN_VIEW_ERROR_LOGS">
 							<li class="divider" role="presentation"></li>
-                            <security:authorize ifAllGranted="ROLE_ENTERPRISE,ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
+                            <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
                                 <li class="normalLinks">
                                     <a id="configureDefaultsLink" href="<spring:url value="/configuration/settings" htmlEscape="true"/>">System Settings</a>
                                 </li>
