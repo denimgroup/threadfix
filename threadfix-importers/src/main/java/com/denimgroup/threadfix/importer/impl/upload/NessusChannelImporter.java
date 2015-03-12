@@ -201,7 +201,7 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    			}
 
 	    			param = RegexUtils.getRegexResult(line, infoLineParamRegex);
-	    			path = RegexUtils.getRegexResult(line,infoLinePathRegex);
+	    			path  = RegexUtils.getRegexResult(line, infoLinePathRegex);
 
 	    			if (path != null && host != null && !path.startsWith("http"))
 	    				path = host + path;
