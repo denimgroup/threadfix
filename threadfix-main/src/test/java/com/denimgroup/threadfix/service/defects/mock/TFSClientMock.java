@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.service.defects.mock;
 
 import com.denimgroup.threadfix.service.defects.utils.tfs.TFSClient;
 import com.denimgroup.threadfix.viewmodel.DefectMetadata;
+import com.denimgroup.threadfix.viewmodel.DynamicFormField;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,7 +46,6 @@ public class TFSClientMock implements TFSClient {
 
     }
 
-    @Override
     public List<String> getPriorities() {
         return priorities;
     }
@@ -86,4 +86,7 @@ public class TFSClientMock implements TFSClient {
     public String createDefect(String projectName, DefectMetadata metadata, String description) {
         return null;
     }
+
+    @Override
+    public List<DynamicFormField> getDynamicFormFields(String something) {return null; }
 }
