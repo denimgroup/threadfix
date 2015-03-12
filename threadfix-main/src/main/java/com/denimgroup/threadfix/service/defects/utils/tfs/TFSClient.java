@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service.defects.utils.tfs;
 
 import com.denimgroup.threadfix.viewmodel.DefectMetadata;
+import com.denimgroup.threadfix.viewmodel.DynamicFormField;
 
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,8 @@ public interface TFSClient {
     List<String> getPriorities();
 
     List<String> getDefectIds(String projectName);
+
+    List<DynamicFormField> getDynamicFormFields(String projectName);
 
     enum ConnectionStatus {
         VALID, INVALID, INVALID_CERTIFICATE
