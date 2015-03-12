@@ -322,12 +322,13 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 
 				if (likelihood > 0f) {
 					severity = getSeverityName(
-							likelihood,
-							impact);
+							impact,
+							likelihood);
+				} else {
+					numberMap.put("Severity", getFloatOrNull(severity));
 				}
 
 				numberMap.put("Confidence", confidence);
-				numberMap.put("Severity", getFloatOrNull(severity));
 
 				// TODO add analysis
 				Map<VulnKey, String> vulnMap = map(
