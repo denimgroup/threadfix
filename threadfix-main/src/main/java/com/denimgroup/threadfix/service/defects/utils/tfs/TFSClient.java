@@ -37,8 +37,6 @@ public interface TFSClient {
     // Passing two maps and using mutable state is gross but we don't have to define an object
     void updateDefectIdMaps(String ids, Map<String, String> stringStatusMap, Map<String, Boolean> openStatusMap);
 
-    List<String> getPriorities();
-
     List<String> getDefectIds(String projectName);
 
     List<DynamicFormField> getDynamicFormFields(String projectName);

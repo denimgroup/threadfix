@@ -185,26 +185,6 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
     }
 
     @Override
-    public List<String> getPriorities() {
-        if (lastStatus != ConnectionStatus.VALID || client == null) {
-            LOG.error("Please configure the tracker properly before trying to submit a defect.");
-            return null;
-        }
-
-        List<String> returnPriorities = list();
-
-        FieldDefinitionCollection collection = client
-                .getFieldDefinitions();
-
-        Collections.addAll(returnPriorities, collection.get("Priority")
-                .getAllowedValues().getValues());
-
-        client.close();
-
-        return returnPriorities;
-    }
-
-    @Override
     public List<String> getDefectIds(String projectName) {
         if (lastStatus != ConnectionStatus.VALID || client == null) {
             LOG.error("Please configure the tracker properly before trying to get defect IDs.");
@@ -467,7 +447,7 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
                         if (!isInsertedDesc && (entry.getKey().equals("System.Description")
                                 || entry.getKey().equals("Microsoft.VSTS.TCM.ReproSteps"))) {
                             isInsertedDesc = true;
-                            htmlVal = description + htmlVal;
+                            htmlVal = htmlVal != null ? description + htmlVal : description;
                         }
 
                         itemField.setValue(htmlVal != null ? htmlVal.replaceAll("\n", "<br>") : null);
