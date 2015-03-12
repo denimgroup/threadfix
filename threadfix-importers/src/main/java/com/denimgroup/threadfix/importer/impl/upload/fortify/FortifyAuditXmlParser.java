@@ -47,9 +47,9 @@ class FortifyAuditXmlParser extends HandlerWithBuilder {
     public void startElement (String uri, String name,
                               String qName, Attributes atts)
     {
-        if ("WriteDate".equals(qName)) {
+        if ("WriteDate".equals(name)) {
             getDate = true;
-        } else if ("Issue".equals(qName)) {
+        } else if ("Issue".equals(name)) {
             String instanceId = atts.getValue("instanceId");
             boolean suppressed = "true".equals(atts.getValue("suppressed"));
             if (suppressed && instanceId != null) {
@@ -58,7 +58,7 @@ class FortifyAuditXmlParser extends HandlerWithBuilder {
             } else {
                 lastId = instanceId;
             }
-        } else if ("Value".equals(qName)) {
+        } else if ("Value".equals(name)) {
             getValue = true;
         }
     }
