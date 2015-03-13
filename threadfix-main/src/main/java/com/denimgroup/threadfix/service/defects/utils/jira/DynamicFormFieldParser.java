@@ -94,7 +94,6 @@ public class DynamicFormFieldParser {
 
                 DynamicFormField issueTypeField = new DynamicFormField();
                 issueTypeField.setRequired(true);
-                issueTypeField.setError("required", "This field cannot be empty.");
                 issueTypeField.setName("issuetype");
                 issueTypeField.setLabel("Issue Type");
                 issueTypeField.setActive(true);
@@ -121,9 +120,6 @@ public class DynamicFormFieldParser {
                         field.setShow("issuetype=" + issueType.getId());
 
                         field.setRequired(jsonField.isRequired());
-                        if (jsonField.isRequired()) {
-                            field.setError("required", "This field cannot be empty.");
-                        }
 
                         field.setName(entry.getKey());
                         field.setLabel(jsonField.getName());
@@ -159,7 +155,6 @@ public class DynamicFormFieldParser {
                             originalEstimate.setType("text");
                             originalEstimate.setPlaceholder(PLACEHOLDER_TEXT);
                             originalEstimate.setError("pattern", TIMETRACKING_ERROR);
-                            originalEstimate.setError("required", "This field cannot be empty.");
                             fieldList.add(originalEstimate);
 
                             DynamicFormField remainingEstimate = new DynamicFormField();
@@ -172,7 +167,6 @@ public class DynamicFormFieldParser {
                             remainingEstimate.setPlaceholder(PLACEHOLDER_TEXT);
                             remainingEstimate.setEditable(true);
                             remainingEstimate.setType("text");
-                            remainingEstimate.setError("required", "This field cannot be empty.");
                             remainingEstimate.setError("pattern", TIMETRACKING_ERROR);
                             fieldList.add(remainingEstimate);
                             continue;

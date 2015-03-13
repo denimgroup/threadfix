@@ -27,7 +27,8 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 $scope.config.typeName = data.object.defectTrackerName;
                 if ($scope.config.typeName === 'HP Quality Center'
                     || $scope.config.typeName === 'Jira'
-                    || $scope.config.typeName === 'Version One')
+                    || $scope.config.typeName === 'Version One'
+                    || $scope.config.typeName === 'Microsoft TFS')
                     $scope.isDynamicForm = true;
                 $scope.config.defectTrackerName = data.object.defectTrackerName;
 
@@ -152,7 +153,8 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 "required" : field.required,
                 "labelClass" : field.required ? "errors" : null,
                 "options" : calculateOptions(field),
-                "multiple" : field.supportsMultivalue
+                "multiple" : field.supportsMultivalue,
+                "val" : field.value
             };
 
             if (!field.required) {
@@ -184,6 +186,10 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                     fieldForm.minValue = field.minValue;
                 if (field.maxValue !== null)
                     fieldForm.maxValue = field.maxValue;
+            }
+
+            if (field.editable === false) {
+                fieldForm.readonly = true;
             }
 
             $scope.stdFormTemplate.push(fieldForm)

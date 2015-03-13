@@ -135,11 +135,13 @@ public class ReportsServiceImpl implements ReportsService {
                 appList.add(CollectionUtils.<String, Object>map("appId", application.getId(), "appName", application.getName(),
                         "criticality", application.getApplicationCriticality().getName(),
                         "teamId", application.getOrganization().getId(), "teamName", application.getOrganization().getName(),
-                        "noOfScans", application.getScans().size(), "latestScanTime", application.getScans().get(0).getImportTime()));
+                        "noOfScans", application.getScans().size(), "latestScanTime", application.getScans().get(0).getImportTime(),
+                        "tags", application.getTags()));
             else {
                 appList.add(CollectionUtils.<String, Object>map("appId", application.getId(), "appName", application.getName(),
                         "criticality", application.getApplicationCriticality().getName(),
-                        "teamId", application.getOrganization().getId(), "teamName", application.getOrganization().getName()));
+                        "teamId", application.getOrganization().getId(), "teamName", application.getOrganization().getName(),
+                        "tags", application.getTags()));
             }
         }
         map.put("appList", appList);
@@ -152,6 +154,7 @@ public class ReportsServiceImpl implements ReportsService {
         Map<String, Object> map = newMap();
         List<Integer> teamIdList = list();
         List<Integer> applicationIdList = list();
+        List<Integer> tagIdList = list();
 
         vulnerabilitySearchService.applyPermissions(parameters);
 
@@ -161,7 +164,10 @@ public class ReportsServiceImpl implements ReportsService {
         for (Application application: parameters.getApplications())
             applicationIdList.add(application.getId());
 
-        List<Integer> top20Apps = applicationDao.getTopXVulnerableAppsFromList(20, teamIdList, applicationIdList);
+        for (Tag tag: parameters.getTags())
+            tagIdList.add(tag.getId());
+
+        List<Integer> top20Apps = applicationDao.getTopXVulnerableAppsFromList(20, teamIdList, applicationIdList, tagIdList);
         map.put("appList", getTopAppsListInfo(top20Apps));
         return map;
     }

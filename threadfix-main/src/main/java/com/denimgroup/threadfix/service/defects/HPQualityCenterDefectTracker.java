@@ -234,9 +234,6 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
             genericField.setOptionsMap(getFieldOptions(hpqcField));
             genericField.setType(hpqcField.getType());
 
-            genericField.setError("required", "This field cannot be empty.");
-            genericField.setError("maxlength", "Input up to " + hpqcField.getSize() +" characters only.");
-
             // Set placeholder for Date type is YYYY-MM-DD
             if (hpqcField.getType().equalsIgnoreCase("date"))
                 genericField.setPlaceholder("yyyy-MM-dd");

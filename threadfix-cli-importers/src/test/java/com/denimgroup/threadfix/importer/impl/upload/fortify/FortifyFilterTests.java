@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.importer.impl.upload.fortify;
 
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
@@ -143,27 +144,17 @@ public class FortifyFilterTests {
 
     @Test
     public void testThresholdApplication() {
-        Map<FilterKey, String> filterMap = map(
-                FilterKey.SEVERITY, "Critical",
-                FilterKey.QUERY, "likelihood:[0,5.0] AND impact:[0,5.0]"
-        );
-
-        FortifyFilter filter = new FortifyFilter(filterMap);
+        FortifyFilter filter = getFilterFromQuery("likelihood:[0,5.0] AND impact:[0,5.0]");
 
         String finalSeverity = filter.getFinalSeverity(emptyMap, 3F, 5F);
 
-        assert "Critical".equals(finalSeverity) :
+        assert "Warning".equals(finalSeverity) :
                 "Expected Critical, got " + finalSeverity;
     }
 
     @Test
     public void testFullCategoryNotParsed() {
-        Map<FilterKey, String> filterMap = map(
-                FilterKey.SEVERITY, "Critical",
-                FilterKey.QUERY, "category:Unreleased Resource"
-        );
-
-        FortifyFilter filter = new FortifyFilter(filterMap);
+        FortifyFilter filter = getFilterFromQuery("category:Unreleased Resource");
 
         assert filter.myFields.containsKey(VulnKey.CATEGORY) :
                 "Didn't have normal category.";
@@ -173,12 +164,7 @@ public class FortifyFilterTests {
 
     @Test
     public void testFullCategoryParsed() {
-        Map<FilterKey, String> filterMap = map(
-                FilterKey.SEVERITY, "Critical",
-                FilterKey.QUERY, "category:Unreleased Resource: Database"
-        );
-
-        FortifyFilter filter = new FortifyFilter(filterMap);
+        FortifyFilter filter = getFilterFromQuery("category:Unreleased Resource: Database");
 
         assert !filter.myFields.containsKey(VulnKey.CATEGORY) :
                 "Had normal category.";
@@ -188,26 +174,16 @@ public class FortifyFilterTests {
 
     @Test
     public void testNegativeCategorySuccess() {
-        Map<FilterKey, String> filterMap = map(
-                FilterKey.SEVERITY, "Critical",
-                FilterKey.QUERY, "category:!Unreleased Resource"
-        );
-
-        FortifyFilter filter = new FortifyFilter(filterMap);
+        FortifyFilter filter = getFilterFromQuery("category:!Unreleased Resource");
 
         String result = filter.getFinalSeverity(map(VulnKey.CATEGORY, "Test Resource"), 0f, 0f);
 
-        assert "Critical".equals(result) : "Expected Critical, got " + result;
+        assert "Warning".equals(result) : "Expected Critical, got " + result;
     }
 
     @Test
     public void testNegativeCategoryFailure() {
-        Map<FilterKey, String> filterMap = map(
-                FilterKey.SEVERITY, "Critical",
-                FilterKey.QUERY, "category:!Unreleased Resource"
-        );
-
-        FortifyFilter filter = new FortifyFilter(filterMap);
+        FortifyFilter filter = getFilterFromQuery("category:!Unreleased Resource");
 
         String result = filter.getFinalSeverity(map(VulnKey.CATEGORY, "Unreleased Resource"), 0f, 0f);
 
@@ -216,12 +192,7 @@ public class FortifyFilterTests {
 
     @Test
     public void testOldStyleFilters() {
-        Map<FilterKey, String> filterMap = map(
-                FilterKey.SEVERITY, "Warning",
-                FilterKey.QUERY, "confidence:[4,5] severity:(3,5]"
-        );
-
-        FortifyFilter filter = new FortifyFilter(filterMap);
+        FortifyFilter filter = getFilterFromQuery("confidence:[4,5] severity:(3,5]");
 
         String result = filter.getFinalSeverity(map(VulnKey.CATEGORY, "Unreleased Resource"),
                 map("Confidence", 4f, "Severity", 5f));
@@ -238,12 +209,7 @@ public class FortifyFilterTests {
     }
 
     void test(String query, float confidence, boolean shouldSucceed) {
-        Map<FilterKey, String> filterMap = map(
-                FilterKey.SEVERITY, "Warning",
-                FilterKey.QUERY, query
-        );
-
-        FortifyFilter filter = new FortifyFilter(filterMap);
+        FortifyFilter filter = getFilterFromQuery(query);
 
         String result = filter.getFinalSeverity(map(VulnKey.CATEGORY, "Fake Resource"),
                 map("Confidence", confidence));
@@ -254,5 +220,38 @@ public class FortifyFilterTests {
             assert result == null : "Expected null, got " + result + " for " + query + " and value " + confidence;
         }
     }
+
+    private FortifyFilter getFilterFromQuery(String query) {
+        Map<FilterKey, String> filterMap = map(
+                FilterKey.SEVERITY, "Warning",
+                FilterKey.QUERY, query
+        );
+
+        return new FortifyFilter(filterMap);
+    }
+
+    @Test
+    public void testBasicOr() {
+        String query = "category:access control\\: database OR " +
+                "category:password management\\: empty password in configuration file";
+
+        FortifyFilter filter = getFilterFromQuery(query);
+
+        String finalSeverity = filter.getFinalSeverity(
+                map(VulnKey.FULL_CATEGORY, "access control: database"),
+                new HashMap<String, Float>());
+
+        assert "Warning".equals(finalSeverity) :
+                "Expected Warning for access control: database, got " + finalSeverity;
+
+        finalSeverity = filter.getFinalSeverity(
+                map(VulnKey.FULL_CATEGORY, "password management: empty password in configuration file"),
+                new HashMap<String, Float>());
+
+        assert "Warning".equals(finalSeverity) :
+                "Expected Warning for password management, got " + finalSeverity;
+
+    }
+
 
 }
