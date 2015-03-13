@@ -816,6 +816,11 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public ApplicationDetailPage uploadEmptyScan(String file) {
+        driver.findElementById("scanFileInput").sendKeys(file);
+        return new ApplicationDetailPage(driver);
+    }
+
     public ApplicationDetailPage clickCreateNewDefectTracker() {
         driver.findElementById("createDefectTrackerButton").click();
         return new ApplicationDetailPage(driver);

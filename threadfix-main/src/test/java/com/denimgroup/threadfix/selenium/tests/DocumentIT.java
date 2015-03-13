@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openqa.selenium.By;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -73,5 +74,20 @@ public class DocumentIT extends BaseIT {
 			docCnt++;
 		}
 		assertTrue("Document count is incorrect", docCnt == applicationDetailPage.docsCount());
+	}
+
+	@Test
+	public void testUploadEmptyScan() {
+		String teamName = createTeam();
+		String appName = createApplication(teamName);
+
+		loginPage.defaultLogin()
+				.clickOrganizationHeaderLink()
+				.expandTeamRowByName(teamName)
+				.clickViewAppLink(appName, teamName).clickActionButton()
+				.clickUploadScan()
+				.uploadEmptyScan(ScanContents.getScanFilePath("Empty Scan"));
+
+		assertTrue("Scan was not uploaded", driver.findElement(By.linkText("1 Scan")).isDisplayed());
 	}
 }

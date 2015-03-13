@@ -56,6 +56,7 @@ public class ScanContents extends BaseIT {
         SCAN_FILE_MAP.put("Old ZAP Scan", getScanFilePath("Dynamic","ZAP","smallpetclinic.xml"));
         SCAN_FILE_MAP.put("New ZAP Scan", getScanFilePath("Dynamic","ZAP","largepetclinic.xml"));
         SCAN_FILE_MAP.put("CPP Scan", getScanFilePath("Static","cppcheck","cppcheckScan.xml"));
+		SCAN_FILE_MAP.put("Empty Scan", getScanFilePath("Static", "dependencycheck","empty-report.xml"));
 	}
 
     public static String getScanFilePath(String scannerName) {
