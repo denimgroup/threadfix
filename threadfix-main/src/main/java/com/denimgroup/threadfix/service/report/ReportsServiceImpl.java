@@ -174,6 +174,11 @@ public class ReportsServiceImpl implements ReportsService {
 
     private ReportCheckResultBean getTopVulnsReportD3(List<Integer> applicationIdList, List<Integer> vulnIds) {
 
+        // to prevent exceptions on empty data
+        if (vulnIds.isEmpty()) {
+            vulnIds.add(0);
+        }
+
         List<Object[]> vulns = vulnerabilityDao.getTopVulnsInfo(applicationIdList, vulnIds);
         List<Map<String, Object>> resultList = list();
         Application application = applicationDao.retrieveById(applicationIdList.get(0));
