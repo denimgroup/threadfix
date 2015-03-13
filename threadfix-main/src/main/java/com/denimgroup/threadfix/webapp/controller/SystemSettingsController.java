@@ -119,6 +119,10 @@ public class SystemSettingsController {
             errors.add("Cannot set more than one Team report placement to the same report.");
         }
 
+		if (configModel.getSessionTimeout() != null && configModel.getSessionTimeout() > 30) {
+			bindingResult.reject("sessionTimeout", null, "30 is the maximum.");
+		}
+
         model.addAttribute("errors", errors);
 
         if (bindingResult.hasErrors() || errors.size() > 0) {

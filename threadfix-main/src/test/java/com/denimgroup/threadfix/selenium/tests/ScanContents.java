@@ -46,6 +46,8 @@ public class ScanContents extends BaseIT {
 		SCAN_FILE_MAP.put("NTO Spider6", getScanFilePath("Dynamic","NTOSpider","VulnerabilitiesSummary6.xml"));
 		SCAN_FILE_MAP.put("Brakeman", getScanFilePath("Static","Brakeman","brakeman.json")); 
 		SCAN_FILE_MAP.put("Fortify 360", getScanFilePath("Static","Fortify","ZigguratUtility.fpr"));
+        SCAN_FILE_MAP.put("Fortify AndOrAnd", getScanFilePath("Static","Fortify","AndOrAnd.fpr"));
+        SCAN_FILE_MAP.put("Fortify OrAndOr", getScanFilePath("Static","Fortify","OrAndOr.fpr"));
 		SCAN_FILE_MAP.put("Acunetix WVS", getScanFilePath("Dynamic","Acunetix","testaspnet.xml"));
 		SCAN_FILE_MAP.put("Burp Suite", getScanFilePath("Dynamic","Burp","burp-demo-site.xml"));
 		SCAN_FILE_MAP.put("IBM Rational AppScan Source Edition", null);
