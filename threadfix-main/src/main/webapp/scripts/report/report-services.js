@@ -558,13 +558,13 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
         if ($scope.filterScans.length === 0) {
             $scope.noData = true;
             $scope.loading = false;
-            return;
+            return trendingScansData;
         }
         trendingScansData = trendingUtilities.updateDisplayData($scope);
         if (trendingScansData.length === 0) {
             $scope.noData = true;
             $scope.loading = false;
-            return;
+            return trendingScansData;
         }
         $scope.loading = false;
 

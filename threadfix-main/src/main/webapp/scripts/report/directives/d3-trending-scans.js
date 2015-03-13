@@ -130,7 +130,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                             .attr("x", w/2)
                             .attr("y", 70)
                             .attr("class", "warning")
-                            .text("No New Scans Uploaded This Time");
+                            .text("No Results Found");
                         drawTable();
                         return;
                     }
