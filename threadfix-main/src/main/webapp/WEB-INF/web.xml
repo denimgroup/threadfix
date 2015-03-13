@@ -137,7 +137,7 @@
 		    	protected-regex ^/configuration/roles/new$,
 		    	protected-regex ^/configuration/roles/[0-9]+/edit$,
 		    	protected-regex ^/configuration/roles/[0-9]+/map$,
-                protected-regex ^/configuration/users/map$,
+                protected-regex ^/configuration/users/map/page/[0-9]+/[0-9]+$,
                 protected-regex ^/configuration/users/new$,
                 protected-regex ^/configuration/users/[0-9]+/delete$,
                 protected-regex ^/configuration/users/[0-9]+/edit$,

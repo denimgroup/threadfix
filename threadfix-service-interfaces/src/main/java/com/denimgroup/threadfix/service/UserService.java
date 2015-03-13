@@ -150,4 +150,8 @@ public interface UserService {
     boolean shouldReloadUserIfRoleChanged(Role role);
 
 	void setRoleCommunity(User user);
+
+	List<User> retrievePage(int page, int numberToShow);
+
+	Long countUsers();
 }
