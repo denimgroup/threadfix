@@ -31,6 +31,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import javax.validation.constraints.AssertTrue;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -1008,5 +1010,33 @@ public class ApplicationIT extends BaseDataTest {
         sleep(2000);
 
         assertTrue("Submitted blank description", !applicationDetailPage.isButtonEnabled());
+    }
+
+    @Test
+    public void testFortifySeverityFilterScans() {
+
+        initializeTeamAndApp();
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Fortify AndOrAnd"));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        assertTrue("There should be one critical vulnerability.", applicationDetailPage.isVulnerabilityCountCorrect("Critical", "1"));
+        assertTrue("There should be seven high vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("High", "7"));
+        assertTrue("There should be 24 low vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Low", "24"));
+
+        initializeTeamAndApp();
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Fortify AndOrAnd"));
+
+        applicationDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        assertTrue("There should be one critical vulnerability.", applicationDetailPage.isVulnerabilityCountCorrect("Critical", "1"));
+        assertTrue("There should be seven medium vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Medium", "7"));
+        assertTrue("There should be 24 low vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Low", "24"));
+
     }
 }
