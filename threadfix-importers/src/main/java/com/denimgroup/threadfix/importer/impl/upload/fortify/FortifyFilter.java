@@ -41,6 +41,8 @@ public class FortifyFilter {
     final String target, query;
     boolean invalid = false;
 
+    public static final String HIDE = "Hide";
+
     public FortifyFilter(Map<FilterKey, String> map) {
         this(map.get(FilterKey.SEVERITY), map.get(FilterKey.QUERY));
     }

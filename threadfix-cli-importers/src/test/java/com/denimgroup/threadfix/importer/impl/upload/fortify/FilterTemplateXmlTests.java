@@ -88,7 +88,12 @@ public class FilterTemplateXmlTests {
 
 
     public static FilterTemplateXmlParser getParsedResult() {
-        InputStream auditXmlStream = AuditXmlParsingTests.class.getClassLoader().getResourceAsStream("fortify/filtertemplate.xml");
+        String name = "fortify/filtertemplate.xml";
+        return getParsedResult(name);
+    }
+
+    public static FilterTemplateXmlParser getParsedResult(String fileName) {
+        InputStream auditXmlStream = AuditXmlParsingTests.class.getClassLoader().getResourceAsStream(fileName);
 
         FilterTemplateXmlParser parser = new FilterTemplateXmlParser();
         ScanUtils.readSAXInput(parser, AbstractChannelImporter.FILE_CHECK_COMPLETED, auditXmlStream);

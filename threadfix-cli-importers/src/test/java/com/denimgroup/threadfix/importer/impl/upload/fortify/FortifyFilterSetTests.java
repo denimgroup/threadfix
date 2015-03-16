@@ -163,4 +163,17 @@ public class FortifyFilterSetTests {
         assert "Critical".equals(result) : "Expected Critical, got " + result;
     }
 
+    @Test
+    public void testHiddenFilter() {
+
+        FilterTemplateXmlParser filterTemplateResult = FilterTemplateXmlTests.getParsedResult("fortify/filtertemplate-hide.xml");
+        FortifyFilterSet set = filterTemplateResult.filterSet;
+
+        String result = set.getResult(map(VulnKey.KINGDOM, "encapsulation"), 0f, 0f);
+
+        assert FortifyFilter.HIDE.equals(result) :
+                "Expected " + FortifyFilter.HIDE + " but got " + result;
+
+    }
+
 }
