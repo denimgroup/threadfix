@@ -106,7 +106,7 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
     var renderTable = function() {
         var startingInfo, endingInfo;
         $scope.tableInfo = [];
-        if ($scope.trendingScansData.length> 0) {
+        if ($scope.trendingScansData && $scope.trendingScansData.length> 0) {
             startingInfo = (trendingUtilities.getFirstHashInList()) ? trendingUtilities.getFirstHashInList() : $scope.trendingScansData[0];
             endingInfo = (trendingUtilities.getLastHashInList()) ? trendingUtilities.getLastHashInList() : $scope.trendingScansData[$scope.trendingScansData.length-1];
 
@@ -122,6 +122,8 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
             $scope.tableInfo.sort(function(a, b){
                 return severityOrder[b.Severity] - severityOrder[a.Severity];
             })
+        } else {
+            $scope.noData = true;
         }
     };
 
