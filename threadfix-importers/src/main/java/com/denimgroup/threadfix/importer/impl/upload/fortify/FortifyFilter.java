@@ -39,6 +39,7 @@ import static com.denimgroup.threadfix.importer.impl.upload.fortify.FilterResult
 public class FortifyFilter {
 
     final String target, query;
+    boolean invalid = false;
 
     public FortifyFilter(Map<FilterKey, String> map) {
         this(map.get(FilterKey.SEVERITY), map.get(FilterKey.QUERY));
@@ -60,10 +61,6 @@ public class FortifyFilter {
             likelihood = new Threshold("Likelihood"),
             confidence = new Threshold("Confidence"),
             severity   = new Threshold("Severity");
-
-    public static void main(String[] args) {
-        System.out.println(3.5 == 3.5);
-    }
 
     private void parseFields(String query) {
 
@@ -90,6 +87,12 @@ public class FortifyFilter {
                 if (replaced.charAt(0) == '!') {
                     myNegativeFields.put(key, replaced.substring(1));
                 } else {
+                    // one field cannot have two different values
+                    // Fortify allows the user to build filters like this
+                    if (myFields.containsKey(key) && !replaced.equals(myFields.get(key))) {
+                        invalid = true;
+                        break;
+                    }
                     myFields.put(key, replaced);
                 }
             }
@@ -127,6 +130,10 @@ public class FortifyFilter {
     }
 
     public boolean passes(Map<VulnKey, String> vulnInfo, Map<String, Float> numberMap) {
+        if (invalid) {
+            return false;
+        }
+
         // basic, positive matching
         FilterResult result = getStringResult(vulnInfo, myFields);
 
