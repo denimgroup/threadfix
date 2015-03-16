@@ -73,4 +73,19 @@ public interface UserDao extends GenericNamedObjectDao<User> {
 	 */
 	List<User> retrieveAppPermissibleUsers(Integer orgId, Integer appId);
 
+
+	/**
+	 * Return users by specified page
+	 * @param page
+	 * @param numberToShow
+	 * @return
+	 */
+	List<User> retrievePage(int page, int numberToShow);
+
+	/**
+	 * Return total number of users in system
+	 * @return
+	 */
+	Long countUsers();
+
 }

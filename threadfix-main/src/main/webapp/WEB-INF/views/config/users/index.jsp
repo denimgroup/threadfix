@@ -25,6 +25,17 @@
 
     <a id="newUserModalLink" class="btn" ng-click="openNewModal()">Add User</a>
 
+	<div ng-show="countUsers > numberToShow" class="pagination" ng-init="page = 1">
+		<pagination id="userPagination"
+					class="no-margin"
+					total-items="countUsers / numberToShow * 10"
+					max-size="5"
+					page="page"
+					ng-model="page"
+					ng-click="updatePage(page)"></pagination>
+	</div>
+	<br>
+
 	<table class="table table-striped">
 		<thead>
 			<tr>
