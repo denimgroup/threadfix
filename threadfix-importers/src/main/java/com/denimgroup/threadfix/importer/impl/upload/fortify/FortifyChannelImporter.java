@@ -45,6 +45,7 @@ import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 /**
  * Parses the SCA Fortify fpr output file.
@@ -62,6 +63,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	}
 
 	FortifyFilterSet filterSet = new FortifyFilterSet();
+	Set<String> filteredHiddenIds = set();
 
 	@Override
 	@Transactional
@@ -183,7 +185,8 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		Set<String> suppressedIds = timeParser.suppressedIds;
 
 		for (Finding finding : returnScan) {
-			if (suppressedIds.contains(finding.getNativeId())) {
+			if (suppressedIds.contains(finding.getNativeId()) ||
+					filteredHiddenIds.contains(finding.getNativeId())) {
 				finding.setMarkedFalsePositive(true);
 			}
 		}
@@ -339,7 +342,9 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 				);
 	   			String filterSeverity = filterSet.getResult(vulnMap, numberMap);
 
-				if (filterSeverity != null) {
+				if (FortifyFilter.HIDE.equals(filterSeverity)) {
+					filteredHiddenIds.add(findingMap.get("nativeId"));
+				} else if (filterSeverity != null) {
 					severity = filterSeverity;
 				}
 
