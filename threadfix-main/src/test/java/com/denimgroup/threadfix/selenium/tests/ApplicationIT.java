@@ -1039,4 +1039,20 @@ public class ApplicationIT extends BaseDataTest {
         assertTrue("There should be 24 low vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Low", "24"));
 
     }
+
+    @Test
+    public void testFortifyVulnerabilityCounts() {
+
+        initializeTeamAndApp();
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Fortify NoSeverityFilter"));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        assertTrue("There should be twenty high vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("High", "20"));
+        assertTrue("There should be sixteen medium vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Medium", "16"));
+        assertTrue("There should be two info vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Info", "2"));
+    }
 }
