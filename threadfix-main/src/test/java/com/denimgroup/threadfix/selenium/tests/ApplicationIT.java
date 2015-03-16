@@ -1028,7 +1028,7 @@ public class ApplicationIT extends BaseDataTest {
         assertTrue("There should be 24 low vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Low", "24"));
 
         initializeTeamAndApp();
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Fortify AndOrAnd"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Fortify OrAndOr"));
 
         applicationDetailPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
