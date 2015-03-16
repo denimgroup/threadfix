@@ -250,7 +250,26 @@ public class FortifyFilterTests {
 
         assert "Warning".equals(finalSeverity) :
                 "Expected Warning for password management, got " + finalSeverity;
+    }
 
+    @Test
+    public void testNeverApplicableFilter() {
+        String query = "category:access control\\: database AND " +
+                "category:password management\\: empty password in configuration file OR " +
+                "kingdom:security features AND " +
+                "kingdom:environment";
+
+        FortifyFilter filter = getFilterFromQuery(query);
+
+        String finalSeverity = filter.getFinalSeverity(
+                map(
+                        VulnKey.FULL_CATEGORY, "Password Management: Empty Password in Configuration File",
+                        VulnKey.CATEGORY, "Password Management",
+                        VulnKey.KINGDOM, "Environment"
+                ),
+                new HashMap<String, Float>());
+
+        assert finalSeverity == null : "Didn't get null, got " + finalSeverity;
     }
 
 
