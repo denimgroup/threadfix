@@ -61,7 +61,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		doSAXExceptionCheck = false;
 	}
 
-	FortifyFilterSet filterSet = null;
+	FortifyFilterSet filterSet = new FortifyFilterSet();
 
 	@Override
 	@Transactional
