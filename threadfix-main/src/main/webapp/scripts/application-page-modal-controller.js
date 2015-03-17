@@ -224,6 +224,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
         modalInstance.result.then(function (application) {
             $scope.config.application = application;
             $scope.$parent.application = application;
+            $scope.config.applicationTags = application.tags;
             $scope.$parent.successMessage = "Successfully edited application " + application.name;
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
