@@ -90,6 +90,14 @@ public class FilterTemplateXmlParser extends HandlerWithBuilder {
                 filterSet.addFilter(newFilter);
 
                 currentFilterMap.clear();
+            } else if (currentKey == FilterKey.ACTION && "hide".equals(value)) {
+
+                currentFilterMap.put(FilterKey.SEVERITY, FortifyFilter.HIDE);
+                FortifyFilter newFilter = new FortifyFilter(currentFilterMap);
+                filterSet.addFilter(newFilter);
+
+                currentFilterMap.clear();
+
             } else {
                 currentFilterMap.put(currentKey, value);
             }
