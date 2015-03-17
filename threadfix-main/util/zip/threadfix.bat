@@ -25,7 +25,7 @@ if DEFINED JAVA_HOME (
 )
 
 if not exist tomcat\keystore echo Generating keystore
-if not exist tomcat\keystore java\bin\keytool -genkeypair -dname "cn=localhost, ou=Self-Signed, o=Threadfix Untrusted Certificate, c=US" -alias localhost -keypass changeit -keystore tomcat\keystore -storepass changeit
+if not exist tomcat\keystore java\bin\keytool -genkeypair -dname "cn=localhost, ou=Self-Signed, o=Threadfix Untrusted Certificate, c=US" -alias localhost -keypass changeit -keystore tomcat\keystore -storepass changeit -keyalg RSA
 if exist tomcat\keystore echo Keystore exists
 
 @REM Run tomcat: must have quotes incase var has spaces in it

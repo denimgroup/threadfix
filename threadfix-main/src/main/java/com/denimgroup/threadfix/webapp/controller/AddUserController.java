@@ -39,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -93,7 +94,7 @@ public class AddUserController {
 	@RequestMapping(method = RequestMethod.POST)
 	@JsonView(AllViews.TableRow.class)
 	@ResponseBody
-	public Object processNew(@Valid @ModelAttribute User user, BindingResult result) {
+	public Object processNew(@Valid @ModelAttribute User user, BindingResult result, Model model) {
 		new UserValidator(roleService).validate(user, result);
 		if (result.hasErrors()) {
             return FormRestResponse.failure("Errors", result);
@@ -112,6 +113,8 @@ public class AddUserController {
 			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug(currentUser + " has created a new User with the name " + user.getName() +
                     ", the ID " + user.getId());
+
+			model.addAttribute("user", new User());
 			return RestResponse.success(userService.loadUser(id));
 		}
 	}

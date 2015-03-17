@@ -161,7 +161,7 @@ public class EditApplicationController {
 			
 			log.debug("The Application " + application.getName() + " (id=" + application.getId() + ") has been edited by user " + user);
 
-            return RestResponse.success(application);
+			return RestResponse.success(application);
 		}
 	}
 	
@@ -265,7 +265,7 @@ public class EditApplicationController {
 	}
 
 	@RequestMapping(value="/setTagsEndpoint", method = RequestMethod.POST)
-    public @ResponseBody RestResponse<Application> setTagsEndpoint(@PathVariable("appId") int appId,
+    public @ResponseBody RestResponse<List<Tag>> setTagsEndpoint(@PathVariable("appId") int appId,
                                                                                     @PathVariable("orgId") int orgId,
                                                                                     @RequestParam("jsonStr") String jsonStr) {
         log.info("Updating tags endpoint");
@@ -282,9 +282,9 @@ public class EditApplicationController {
             dbApplication.setTags(newTags);
             applicationService.storeApplication(dbApplication);
 
-            return RestResponse.success(dbApplication);
+            return RestResponse.success(newTags);
 
-        }    catch (JsonSyntaxException exception) {
+        } catch (JsonSyntaxException exception) {
             log.warn("JSON Parsing failed.", exception);
             return FormRestResponse.failure("Invalid data.");
         }

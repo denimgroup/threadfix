@@ -25,11 +25,12 @@ package com.denimgroup.threadfix.service.translator;
 
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.ThreadFixInterface;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleanerFactory;
-import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+
 import javax.annotation.Nonnull;
 
 class NoSourceFindingProcessor implements FindingProcessor {
@@ -50,25 +51,43 @@ class NoSourceFindingProcessor implements FindingProcessor {
         LOG.info("NoSourceFindingProcessor with cleaner = " + cleaner);
     }
 
+    int total = 0,
+            numberWithStaticPathInformation = 0,
+            numberStatic = 0,
+            numberStaticWithNoFile = 0,
+            numberDynamic = 0,
+            numberDynamicWithNoPath = 0;
+
     @Override
     public void process(@Nonnull Finding finding) {
 
         if (finding.getIsStatic()) {
+            numberStatic++;
+
             if (finding.getSourceFileLocation() != null) {
                 finding.setCalculatedFilePath(cleaner.cleanStaticPath(
                         finding.getSourceFileLocation()));
+            } else {
+                numberStaticWithNoFile++;
             }
 
-            if (finding.getCalculatedUrlPath() == null ||
+            if (finding.getStaticPathInformation() != null && finding.getCalculatedUrlPath() == null) {
+                finding.setCalculatedUrlPath(cleaner.cleanDynamicPath(finding.getStaticPathInformation().getValue()));
+                numberWithStaticPathInformation++;
+            } else if (finding.getCalculatedUrlPath() == null ||
                     finding.getCalculatedUrlPath().equals(finding.getCalculatedFilePath())) {
                 finding.setCalculatedUrlPath(cleaner.getDynamicPathFromStaticPath(
                         finding.getCalculatedFilePath()));
             }
         } else {
+            numberDynamic++;
+
             if (finding.getSurfaceLocation() != null &&
                     finding.getSurfaceLocation().getPath() != null) {
                 finding.setCalculatedUrlPath(cleaner.cleanDynamicPath(
                         finding.getSurfaceLocation().getPath()));
+            } else {
+                numberDynamicWithNoPath++;
             }
 
             // TODO create getStaticPathFromDynamic for symmetry's sake
@@ -77,11 +96,30 @@ class NoSourceFindingProcessor implements FindingProcessor {
                         finding.getSourceFileLocation()));
             }
         }
+
+        total++;
     }
 
     @Override
     public void printStatistics() {
+        if (numberStatic > 0) {
+            LOG.info("Static findings with static path info: " + getPercentage(numberWithStaticPathInformation, numberStatic));
+            if (numberStaticWithNoFile > 0) {
+                LOG.info("Static findings with no file info: " + getPercentage(numberStaticWithNoFile, numberStatic));
+            }
+        }
 
+        if (numberDynamicWithNoPath > 0) {
+            LOG.info("Dynamic findings missing paths: " + getPercentage(numberDynamicWithNoPath, numberDynamic));
+        }
+
+        LOG.info("Total static: " + getPercentage(numberStatic, total));
+        LOG.info("Total dynamic: " + getPercentage(numberDynamic, total));
+    }
+
+    private String getPercentage(int numerator, int denominator) {
+        double percent = 100.0 * numerator / denominator;
+        return String.format("%d / %d (%.2f)", numerator, denominator, percent);
     }
 
 }
