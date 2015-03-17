@@ -88,6 +88,7 @@ public class DefectDescriptionBuilder {
                         
                         for(Finding finding: findings){
                     		stringBuilder.append("\n");
+                        	presentFieldIfNotNull("Scanner Detail", finding.getScannerDetail(), stringBuilder);
                         	presentFieldIfNotNull("Scanner Recommendation", finding.getScannerRecommendation(), stringBuilder);
                     		presentFieldIfNotNull("Attack String", finding.getAttackString(), stringBuilder);
                         	presentFieldIfNotNull("Attack Request", finding.getAttackRequest(), stringBuilder);
@@ -137,7 +138,7 @@ public class DefectDescriptionBuilder {
     }
     
     private static void presentFieldIfNotNull(String fieldName, String fieldValue, StringBuilder builder) {
-    	if (fieldValue != null){
+    	if (fieldValue != null && !fieldValue.isEmpty()){
     		builder
     			.append("\n")
     			.append("============================================")

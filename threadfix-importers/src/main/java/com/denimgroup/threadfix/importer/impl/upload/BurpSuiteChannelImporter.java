@@ -129,6 +129,7 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 		private boolean getScannerRecommendation = false;
 		private boolean getRawFinding		  = false;
 		private boolean isBase64Encoded		  = false;
+		private boolean getIssueBackground    = false;
 		 		
 		private String currentScannerDetail   = null;
 		private String currentScannerRecommendation = null;
@@ -143,6 +144,7 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 		private String currentHostText        = null;
 		private String currentBackupParameter = null;
 		private String currentSerialNumber    = null;
+		private String currentIssueBackground = null;
 
 		
 		private void add(Finding finding) {
@@ -198,6 +200,9 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    		getBuilderText(); //resets the stringbuffer
 	    	} else if ("remediationBackground".equals(qName)) {
 	    		getScannerRecommendation = true;
+	    		getBuilderText(); //resets the stringbuffer
+	    	} else if ("issueBackground".equals(qName)){
+	    		getIssueBackground = true;
 	    		getBuilderText(); //resets the stringbuffer
 	    	} else if ("issue".equals(qName)){
 	    		getRawFinding = true;
@@ -279,6 +284,9 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    	} else if (getScannerRecommendation){
 	    		currentScannerRecommendation = getBuilderText();
 	    		getScannerRecommendation = false;
+	    	} else if (getIssueBackground){
+	    		currentIssueBackground = getBuilderText();
+	    		getIssueBackground = false;
 	    	}
 	    	//if we're inside an <issue/>
 	    	if (getRawFinding){
@@ -301,6 +309,15 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    		
 	    		if (currentSeverityCode != null && SEVERITY_MAP.containsKey(currentSeverityCode.toLowerCase()) && SEVERITY_MAP.get(currentSeverityCode.toLowerCase()) != null) {
 	    			currentSeverityCode = SEVERITY_MAP.get(currentSeverityCode.toLowerCase());
+	    		}
+
+	    		//This block appends the Issue Background to the finding detail as it's the most relevant place without messing with the current model
+	    		if (currentIssueBackground != null){
+	    			if (currentScannerDetail != null){
+	    				currentScannerDetail = currentScannerDetail + "\n\nIssue Background:\n" + currentIssueBackground;
+	    			} else {
+	    				currentScannerDetail = currentIssueBackground;
+	    			}
 	    		}
 
                 Map<FindingKey, String> findingMap = new HashMap<>();
@@ -342,7 +359,7 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    	if (getChannelVulnText || getHostText || getUrlText || getParamText || 
 	    			getSeverityText || getBackupParameter || getSerialNumber ||
 	    			getParamValueText || getRequestText || getResponseText || 
-	    			getScannerDetail || getScannerRecommendation ) {
+	    			getScannerDetail || getScannerRecommendation || getIssueBackground) {
 	    		addTextToBuilder(ch,start,length);
 	    	}
 	    	if (getRawFinding){
