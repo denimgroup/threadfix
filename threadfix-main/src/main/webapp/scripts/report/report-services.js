@@ -134,13 +134,12 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
                         exportList.push(element);
                     });
                     $scope.exportVulnTree = vulnTreeTransformer.transform(exportList, parameters.owasp);
-                    $scope.$apply();
-                    reportExporter.exportPDFTableFromId(exportInfo);
+                    //$scope.$apply();
 
-                    $timeout(function() {
+                    reportExporter.exportPDFTableFromId($scope, exportInfo, null, function() {
                         $scope.exportingPDF = false;
                         $scope.exportVulnTree = null;
-                    }, 200);
+                    });
 
                 } else if (data.message) {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
@@ -156,7 +155,7 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
 
     };
 
-    reportExporter.exportPDFTableFromId = function(exportIds, tableData) {
+    reportExporter.exportPDFTableFromId = function($scope, exportIds, tableData, finalize) {
 
         if (checkOldIE()) {
             alert(browerErrMsg);
@@ -167,31 +166,35 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
         var tableId = exportIds.tableId, graghId = exportIds.svgId;
 
         var pdf = new jsPDF({lineHeight: 0.85});
-        addSvgToPdf(pdf, graghId);
+        addSvgToPdf($scope, pdf, graghId, function() {
 
-        // Adding summary table in Compliance report
-        if (tableData && tableData.length > 0) {
-            pdf.cellInitialize();
-            pdf.setFontSize(10);
-            var headers = Object.keys(tableData[0]);
-            headers.forEach(function(header){
-                pdf.cell(20, 150, 50, 10, header, 0);
-            });
-            tableData.forEach(function(row, i){
+            // Adding summary table in Compliance report
+            if (tableData && tableData.length > 0) {
+                pdf.cellInitialize();
+                pdf.setFontSize(10);
+                var headers = Object.keys(tableData[0]);
                 headers.forEach(function(header){
-                    pdf.cell(20, 150, 50, 10, "" + row[header], i+1);
+                    pdf.cell(20, 150, 50, 10, header, 0);
                 });
-            });
-        }
+                tableData.forEach(function(row, i){
+                    headers.forEach(function(header){
+                        pdf.cell(20, 150, 50, 10, "" + row[header], i+1);
+                    });
+                });
+            }
 
-        if (graghId && tableId)
-            pdf.addPage();
-        addElementToPdf(pdf, tableId);
-        pdf.save(fileName + '.pdf');
+            if (graghId && tableId)
+                pdf.addPage();
+            addElementToPdf(pdf, tableId);
+            pdf.save(fileName + '.pdf');
+            if (finalize) {
+                finalize();
+            }
+        });
 
     };
 
-    var addSvgToPdf = function(pdf, graphId) {
+    var addSvgToPdf = function($scope, pdf, graphId, finishPdf) {
 
         if (graphId) {
             var svg = selectSvg(graphId);
@@ -214,26 +217,32 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
 
             var context = canvas.getContext("2d");
             var image = new Image();
+            image.onload = function() {
+                $scope.$apply(function() {
+                    try {
+                        context.drawImage(image, 0, 0);
+                        var canvasdata = canvas.toDataURL("image/png");
+                        pdf.addImage(canvasdata, 'PNG', 10, 10);
+
+                    } catch (ex) {
+                        // So I guess, you are using IE...
+                        $log.warn(ex);
+                        try {
+                            canvg(canvas, html);
+                            var canvasData = canvas.toDataURL("image/jpeg");
+                            pdf.addImage(canvasData, 'JPEG', 10, 10);
+                        } catch (ex1) {
+                            $log.warn(ex1);
+                            if (checkOldIE())
+                                alert(browerErrMsg);
+                        }
+                    }
+                    finishPdf();
+                });
+            };
             image.src = imgsrc;
-
-            try {
-                context.drawImage(image, 0, 0);
-                var canvasdata = canvas.toDataURL("image/png");
-                pdf.addImage(canvasdata, 'PNG', 10, 10);
-
-            } catch (ex) {
-                // So I guess, you are using IE...
-                $log.warn(ex);
-                try {
-                    canvg(canvas, html);
-                    var canvasData = canvas.toDataURL("image/jpeg");
-                    pdf.addImage(canvasData, 'JPEG', 10, 10);
-                } catch (ex1) {
-                    $log.warn(ex1);
-                    if (checkOldIE())
-                        alert(browerErrMsg);
-                }
-            }
+        } else {
+            $timeout(finishPdf, 200);
         }
     };
 

@@ -70,7 +70,7 @@
 
     <!-- For PDF export -->
     <br>
-    <table ng-if="exportingPDF" id="pointInTimeTablePdf">
+    <table ng-if="exportingPDF" id="pointInTimeTablePdf" class="pdf-data">
         <tbody ng-repeat="category in exportVulnTree" >
         <tr>
             <td colspan="2" ng-class="{
