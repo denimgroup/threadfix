@@ -130,7 +130,7 @@ public class UserIndexPage extends BasePage {
 	}
 	
 	
-	public UserIndexPage clickUpdateUserBtn(String name){
+	public UserIndexPage clickUpdateUserBtn(){
 		driver.findElementById("submit").click();
 		sleep(1000);
 		return new UserIndexPage(driver);
@@ -186,6 +186,40 @@ public class UserIndexPage extends BasePage {
 		sleep(1000);
 		return new UserIndexPage(driver);	
 	}
+
+    public UserIndexPage createUser(String user, String disp, String pass, Boolean ldap, Boolean global, String role) {
+        clickAddUserLink();
+        setName(user);
+        setDisplayName(disp);
+        if(!ldap) {
+            setPassword(pass);
+            setConfirmPassword(pass);
+        } else {
+            toggleLDAP();
+        }
+        if(global) {
+            chooseRoleForGlobalAccess(role);
+        }
+        clickModalSubmit();
+        return new UserIndexPage(driver);
+    }
+
+    public UserIndexPage editUser(String user, String disp, String pass, Boolean ldap, Boolean global, String role) {
+        clickEditLink(user);
+        setName(user);
+        setDisplayName(disp);
+        if(!ldap) {
+            setPassword(pass);
+            setConfirmPassword(pass);
+        } else {
+            toggleLDAP();
+        }
+        if(global) {
+            chooseRoleForGlobalAccess(role);
+        }
+        clickUpdateUserBtn();
+        return new UserIndexPage(driver);
+    }
 
     /*----------------------------------- Boolean Methods -----------------------------------*/
 

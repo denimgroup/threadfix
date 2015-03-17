@@ -104,13 +104,13 @@ public class UserEntIT extends BaseDataTest {
 
         userIndexPage.setPassword(testPassword)
                 .setConfirmPassword(testPassword)
-                .clickUpdateUserBtn(userName)
+                .clickUpdateUserBtn()
                 .clickEditLink(userName);
 		assertFalse("LDAP remained selected after editing.", userIndexPage.isLDAPSelected());
 
 		//turn ldap on
 		userIndexPage = userIndexPage.toggleLDAP()
-                .clickUpdateUserBtn(userName)
+                .clickUpdateUserBtn()
                 .clickEditLink(userName);
 		assertTrue("LDAP did not remain selected after editing.", userIndexPage.isLDAPSelected());
 	}
@@ -136,22 +136,22 @@ public class UserEntIT extends BaseDataTest {
 
         // Change role to 'Read Access'
 		userIndexPage = userIndexPage.chooseRoleForGlobalAccess("Read Access")
-				.clickUpdateUserBtn(userName)
+				.clickUpdateUserBtn()
 				.clickEditLink(userName);
 		assertTrue("Read Access role was not selected",userIndexPage.isRoleSelected(userName, "Read Access"));
 
         // Revoke Global Access
 		userIndexPage = userIndexPage.chooseRoleForGlobalAccess("Administrator")
-				.clickUpdateUserBtn(userName)
+				.clickUpdateUserBtn()
 				.clickEditLink(userName)
 				.toggleGlobalAccess()
-				.clickUpdateUserBtn(userName)
+				.clickUpdateUserBtn()
 				.clickEditLink(userName);
 		assertFalse("Global Access was not revoked", userIndexPage.isGlobalAccessSelected());
 
         // Reinstate Global Access
 		userIndexPage = userIndexPage.toggleGlobalAccess()
-                .clickUpdateUserBtn(userName)
+                .clickUpdateUserBtn()
                 .clickEditLink(userName);
 		assertTrue("Global Access was not Added", userIndexPage.isGlobalAccessSelected());
 	}

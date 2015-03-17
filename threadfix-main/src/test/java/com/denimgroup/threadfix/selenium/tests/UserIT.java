@@ -279,7 +279,7 @@ public class UserIT extends BaseIT {
 		// Test submission with no changes
 		userIndexPage = userIndexPage.clickManageUsersLink()
                 .clickEditLink(baseUserName)
-                .clickUpdateUserBtn(baseUserName);
+                .clickUpdateUserBtn();
 		assertTrue("User name was not present in the table.",userIndexPage.isUserNamePresent(baseUserName));
 
         userIndexPage = userIndexPage.clickManageUsersLink();
@@ -403,26 +403,40 @@ public class UserIT extends BaseIT {
         String changedName = getName();
         String displayCssId = "displayName" + changedName;
 
-        userIndexPage = userIndexPage.clickAddUserLink()
-                .setName(userName1)
-                .setPassword(password1)
-                .setConfirmPassword(password1)
-                .clickAddNewUserBtn()
-                .clickAddUserLink()
-                .setName(userName2)
-                .setPassword(password2)
-                .setConfirmPassword(password2)
-                .clickAddNewUserBtn();
+        userIndexPage.createUser(userName1, "", password1, false, false, null)
+                .createUser(userName2, "", password2, false, false, null);
 
-        userIndexPage.clickEditLink(userName1)
-                .setDisplayName(changedName)
-                .clickUpdateUserBtn(userName1)
-                .clickEditLink(userName2)
-                .setPassword(changedPassword)
-                .setConfirmPassword(changedPassword)
-                .clickUpdateUserBtn(userName2);
+        userIndexPage.editUser(userName1,changedName,password1,false,false,null)
+                .editUser(userName2,"",changedPassword,false,false,null);
 
         assertTrue("Second user's display name was changed to the first user's name when attempting to change only password.",
                 driver.findElements(By.id(displayCssId)).size() < 2);
+    }
+
+    @Test
+    public void addUserWithDisplayName() {
+        String userName = getName();
+        String displayName = getName();
+        String password = getName();
+
+        userIndexPage.createUser(userName, displayName, password, false, false, null)
+                .refreshPage();
+
+        assertTrue("User with display name was not added correctly.",
+                driver.findElement(By.id("displayName" + displayName)).isDisplayed());
+    }
+
+    @Test
+    public void addDisplayNameToUser() {
+        String userName = getName();
+        String displayName = getName();
+        String password = getName();
+
+        userIndexPage.createUser(userName, "", password, false, false, null)
+                .editUser(userName, displayName, password, false, false, null)
+                .refreshPage();
+
+        assertTrue("User with display name was not added correctly.",
+                driver.findElement(By.id("displayName" + displayName)).isDisplayed());
     }
 }
