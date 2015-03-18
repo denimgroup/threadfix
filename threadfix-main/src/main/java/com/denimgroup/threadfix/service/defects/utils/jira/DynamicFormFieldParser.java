@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.defects.utils.jira;
 
+import com.denimgroup.threadfix.exception.IllegalStateRestException;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.viewmodel.DynamicFormField;
@@ -81,8 +82,11 @@ public class DynamicFormFieldParser {
             JiraJsonMetadataResponse response =
                     objectMapper.readValue(jsonString, JiraJsonMetadataResponse.class);
 
-            assert response.projects.size() != 0 :
-                    "The response didn't contain any projects. Something went wrong.";
+            if (response.projects.size() == 0) {
+                throw new IllegalStateRestException("No projects were found. " +
+                        "Bad permissions can cause this error. Please check your configuration.");
+            }
+
             assert response.projects.size() == 1 :
                     "The response contained more than one project. Something went wrong.";
 
