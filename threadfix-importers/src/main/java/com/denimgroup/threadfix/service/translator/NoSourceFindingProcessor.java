@@ -71,7 +71,7 @@ class NoSourceFindingProcessor implements FindingProcessor {
                 numberStaticWithNoFile++;
             }
 
-            if (finding.getStaticPathInformation() != null && finding.getCalculatedUrlPath() == null) {
+            if (finding.getStaticPathInformation() != null) {
                 finding.setCalculatedUrlPath(cleaner.cleanDynamicPath(finding.getStaticPathInformation().getValue()));
                 numberWithStaticPathInformation++;
             } else if (finding.getCalculatedUrlPath() == null ||
