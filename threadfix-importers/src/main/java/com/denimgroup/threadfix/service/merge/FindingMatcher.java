@@ -24,6 +24,9 @@
 package com.denimgroup.threadfix.service.merge;
 
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.framework.engine.ThreadFixInterface;
+import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
+import com.denimgroup.threadfix.framework.util.CommonPathFinder;
 
 import java.util.Collections;
 import java.util.List;
@@ -44,9 +47,16 @@ public class FindingMatcher {
 		if (scan != null) {
 			urlPathRoot = scan.getUrlPathRoot();
             lowerCaseFilePathRoot = scan.getFilePathRoot();
-            if (lowerCaseFilePathRoot != null) {
-                lowerCaseFilePathRoot = lowerCaseFilePathRoot.toLowerCase();
-            }
+
+			if (lowerCaseFilePathRoot == null) {
+				List<PartialMapping> partialMappings = ThreadFixInterface.toPartialMappingList(scan);
+
+				lowerCaseFilePathRoot = CommonPathFinder.findOrParseProjectRoot(partialMappings);
+			}
+
+			if (lowerCaseFilePathRoot != null) {
+				lowerCaseFilePathRoot = cleanPathString(lowerCaseFilePathRoot);
+			}
 		} else {
 			urlPathRoot = null;
 		}
@@ -75,7 +85,7 @@ public class FindingMatcher {
 				} else {
 					if (!vulnFinding.getIsStatic() && dynamicToStaticMatch(vulnFinding, finding)) {
 						return true;
-					} else if (vulnFinding.getIsStatic() && staticToStaticMatch(finding, vulnFinding)) {
+					} else if (vulnFinding.getIsStatic() && staticToStaticMatch(vulnFinding, finding)) {
 						return true;
 					}
 				}
@@ -213,7 +223,8 @@ public class FindingMatcher {
 				&& oldFinding.getDependency().getComponentName().equals(newFinding.getDependency().getComponentName());
 	}
 
-	private boolean compareDataFlows(Finding oldFinding, Finding newFinding) {
+	// package scope for testing
+	boolean compareDataFlows(Finding oldFinding, Finding newFinding) {
 		boolean match = false;
 		
 		if (oldFinding != null && newFinding != null &&
@@ -258,35 +269,37 @@ public class FindingMatcher {
 
 	// Compare the relative paths according to the application's projectRoot
 	// variable.
-	private boolean sourceFileNameCompare(String fileName1, String fileName2) {
+	private boolean sourceFileNameCompare(String oldName, String newName) {
 		boolean returnValue;
 		
-		if (fileName1 == null || fileName1.trim().equals("")
-				|| fileName2 == null || fileName2.equals("")) {
+		if (oldName == null || oldName.trim().equals("")
+				|| newName == null || newName.equals("")) {
 			returnValue = false;
 			
 		} else {
 
 			// The "cleaning" here returns a standardized slash + downcased string
-			String path1 = cleanPathString(fileName1), path2 = cleanPathString(fileName2);
+			String oldPath = cleanPathString(oldName), newPath = cleanPathString(newName);
 
 			// if for some reason cleaning the paths failed, compare the uncleaned
 			// paths.
-			if (path1 == null || path1.trim().equals("") || path2 == null
-					|| path2.trim().equals("")) {
-				returnValue = fileName1.equals(fileName2);
+			if (oldPath == null || oldPath.trim().equals("") || newPath == null
+					|| newPath.trim().equals("")) {
+				returnValue = oldName.equals(newName);
 			}
 			// if we don't have a project root, or it isn't in one of the paths,
 			// return normal comparison of the cleaned strings.
 			else if (lowerCaseFilePathRoot == null || lowerCaseFilePathRoot.trim().equals("")
-					|| !path1.contains(lowerCaseFilePathRoot.toLowerCase())
-					|| !path2.contains(lowerCaseFilePathRoot.toLowerCase())) {
-				returnValue = path1.equals(path2);
+					|| !newPath.contains(lowerCaseFilePathRoot.toLowerCase())) {
+				returnValue = oldPath.equals(newPath);
 			}
 			// if we do have it and it is in both paths, compare the relative paths
-			else if (path1.contains(lowerCaseFilePathRoot) && path2.contains(lowerCaseFilePathRoot)) {
-				returnValue = path1.substring(path1.indexOf(lowerCaseFilePathRoot)).equals(
-						path2.substring(path2.indexOf(lowerCaseFilePathRoot)));
+			else if (oldPath.contains(lowerCaseFilePathRoot) && newPath.contains(lowerCaseFilePathRoot)) {
+				returnValue = oldPath.substring(oldPath.indexOf(lowerCaseFilePathRoot)).equals(
+						newPath.substring(newPath.indexOf(lowerCaseFilePathRoot)));
+			} else if (newPath.startsWith(lowerCaseFilePathRoot)) {
+				// if the old path ends with the same relative old path, it's a match
+				returnValue = oldPath.endsWith(newPath.substring(lowerCaseFilePathRoot.length()));
 			} else {
 				returnValue = false;
 			}
@@ -336,5 +349,11 @@ public class FindingMatcher {
 			return null;
 		}
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Matcher " +
+				"url='" + urlPathRoot + '\'' +
+				" file='" + lowerCaseFilePathRoot + '\'';
+	}
 }

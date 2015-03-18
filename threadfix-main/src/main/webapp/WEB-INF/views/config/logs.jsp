@@ -10,7 +10,7 @@
 
     <%@ include file="../angular-init.jspf"%>
 
-    <h3>Log List <span ng-show="totalLogs !== 0">(Click to expand)</span></h3>
+    <h3>Error Messages <span ng-show="totalLogs !== 0">(Click to expand)</span></h3>
 
     <div ng-hide="initialized" class="spinner-div"><span class="spinner dark"></span>Loading</div>
 
