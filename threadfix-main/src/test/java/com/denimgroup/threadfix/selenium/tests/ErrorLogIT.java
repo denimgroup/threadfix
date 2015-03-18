@@ -40,7 +40,7 @@ import static org.junit.Assert.assertTrue;
 public class ErrorLogIT extends BaseDataTest {
 
     @Test
-    public void createSingleError() {
+    public void testCreateSingleError() {
         ErrorLogPage errorLogPage = loginPage.defaultLogin()
                 .clickViewLogsLink();
 

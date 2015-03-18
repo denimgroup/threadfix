@@ -33,12 +33,12 @@ import static org.junit.Assert.assertTrue;
 public class LoginPageIT extends BaseIT {
 	
 	@Test
-	public void usernameFieldPresentTest(){
+	public void testUsernameFieldPresent(){
 		assertTrue("Username field was not present on the page",loginPage.isUserNameFieldPresent());
 	}
 	
 	@Test
-	public void usernameFieldInputTest(){
+	public void testUsernameFieldInput(){
 		String username = getName();
 		
 		loginPage = loginPage.setUsername(username);
@@ -47,12 +47,12 @@ public class LoginPageIT extends BaseIT {
 	}
 	
 	@Test
-	public void passwordFieldPresentTest(){
+	public void testPasswordFieldPresent(){
 		assertTrue("Password field was not present on the page",loginPage.isPasswordFieldPresent());
 	}
 	
 	@Test
-	public void passwordFieldInputTest(){
+	public void testPasswordFieldInput(){
 		String password = getName();
 		
 		loginPage = loginPage.setPassword(password);
@@ -61,12 +61,12 @@ public class LoginPageIT extends BaseIT {
 	}
 	
 	@Test
-	public void loginButtonPresentTest(){
+	public void testLoginButtonPresent(){
 		assertTrue("Login button was not present on the page",loginPage.isLoginButtonPresent());
 	}
 	
 	@Test
-	public void loginButtonClickableTest(){
+	public void testLoginButtonClickable(){
 		assertTrue("Login button is not clickable",loginPage.isLoginButtonClickable());
 	}
 	

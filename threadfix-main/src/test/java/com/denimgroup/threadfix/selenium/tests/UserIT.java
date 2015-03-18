@@ -258,7 +258,7 @@ public class UserIT extends BaseDataTest {
     }
 
     @Test
-    public void testEditUserValidationWhiteSpace (){
+    public void testEditUserValidationWhiteSpace(){
         String userName = getName();
         String passWord = getName();
 
@@ -344,7 +344,7 @@ public class UserIT extends BaseDataTest {
     }
 
     @Test
-    public void addUserWithDisplayName() {
+    public void testAddUserWithDisplayName() {
         String userName = getName();
         String displayName = getName();
         String password = getName();
@@ -357,7 +357,7 @@ public class UserIT extends BaseDataTest {
     }
 
     @Test
-    public void addDisplayNameToUser() {
+    public void testAddDisplayNameToUser() {
         String userName = getName();
         String displayName = getName();
         String password = getName();
@@ -371,7 +371,7 @@ public class UserIT extends BaseDataTest {
     }
 
     @Test
-    public void displayNameOnComment() {
+    public void testDisplayNameOnComment() {
         initializeTeamAndAppWithIBMScan();
         String userName = getName();
         String displayName = getName();
@@ -404,14 +404,14 @@ public class UserIT extends BaseDataTest {
     }
 
     @Test
-    public void displayNameHeader() {
+    public void testDisplayNameHeader() {
         String userName = getName();
         String displayName = getName();
         String password = getName();
 
         userIndexPage.createUser(userName,displayName,password)
                 .logout()
-                .login(userName,password);
+                .login(userName, password);
 
         assertTrue("Display name is not shown in header.",
                 driver.findElement(By.id("tabUserAnchor")).getText().contains(displayName));

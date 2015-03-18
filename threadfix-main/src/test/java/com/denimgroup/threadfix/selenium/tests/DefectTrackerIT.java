@@ -82,7 +82,7 @@ public class DefectTrackerIT extends BaseDataTest {
     }
 
     @Test
-	public void createDefectTrackerTest() {
+	public void testCreateDefectTracker() {
 		String newDefectTrackerName = getName();
 		String defectTrackerType = "Bugzilla";
 
@@ -100,7 +100,7 @@ public class DefectTrackerIT extends BaseDataTest {
 	}
 
     @Test
-    public void deleteDefectTrackerTest() {
+    public void testDeleteDefectTracker() {
         String newDefectTrackerName = getName();
         String defectTrackerType = "Bugzilla";
 
@@ -119,7 +119,7 @@ public class DefectTrackerIT extends BaseDataTest {
     }
 
 	@Test
-	public void createDefectTrackerFieldValidation() {
+	public void testCreateDefectTrackerFieldValidation() {
 		String emptyString = "";
 		String whiteSpaceString = "           ";
 		String urlFormatString = "asdfwe";
@@ -150,7 +150,7 @@ public class DefectTrackerIT extends BaseDataTest {
 	}
 
     @Test
-    public void longNameFormatTest() {
+    public void testLongNameFormat() {
         String longName = getRandomString(60);
         String longNameFormatted = longName.substring(0,49);
 
@@ -168,7 +168,7 @@ public class DefectTrackerIT extends BaseDataTest {
     }
 
 	@Test
-	public void editDefectTrackerTest() {
+	public void testEditDefectTracker() {
 		String originalDefectTrackerName = getName();
 		String editedDefectTrackerName = getName();
 		String originalDefectTrackerType = "Jira";
@@ -198,7 +198,7 @@ public class DefectTrackerIT extends BaseDataTest {
 	}
 
     @Test
-	public void editDefectTrackerFieldValidation() {
+	public void testEditDefectTrackerFieldValidation() {
         String emptyString = "";
         String whiteSpaceString = "           ";
 
@@ -255,7 +255,7 @@ public class DefectTrackerIT extends BaseDataTest {
 	}
 
 	@Test
-	public void jiraEdit() {
+	public void testJiraEdit() {
 		String defectTrackerName = getName();
         String replacementName = getName();
 		String defectTrackerType = "Jira";
@@ -277,7 +277,7 @@ public class DefectTrackerIT extends BaseDataTest {
 	}
 
 	@Test
-	public void bugzillaEdit() {
+	public void testBugzillaEdit() {
 		String defectTrackerName = getName();
         String replacementName = getName();
 		String defectTrackerType = "Bugzilla";
@@ -302,7 +302,7 @@ public class DefectTrackerIT extends BaseDataTest {
     }
 
     @Test
-    public void switchDefectTrackersTest() {
+    public void testSwitchDefectTrackers() {
         String defectTracker1 = getName();
         String defectTracker2 = getName();
         String defectTrackerType = "Bugzilla";
@@ -344,7 +344,7 @@ public class DefectTrackerIT extends BaseDataTest {
     }
 
 	@Test
-	public void attachBugzillaTrackerTest() {
+	public void testAttachBugzillaTracker() {
 		String defectTrackerName = getName();
 		String defectTrackerType = "Bugzilla";
 		String teamName = getName();
@@ -371,7 +371,7 @@ public class DefectTrackerIT extends BaseDataTest {
 	}
 
     @Test
-    public void deleteAttachedBugzillaTrackerTest() {
+    public void testDeleteAttachedBugzillaTracker() {
         String defectTrackerName = getName();
         String defectTrackerType = "Bugzilla";
 
@@ -403,7 +403,7 @@ public class DefectTrackerIT extends BaseDataTest {
 //TODO after HP quality Center machine comes up
     @Ignore
     @Test
-    public void editDefectTrackerFromJiraToHP() {
+    public void testEditDefectTrackerFromJiraToHP() {
         String originalDefectTrackerName = getName();
         String editedDefectTrackerName = getName();
         String originalDefectTrackerType = "Jira";
@@ -436,7 +436,7 @@ public class DefectTrackerIT extends BaseDataTest {
     }
 
     @Test
-    public void checkDefectTrackerPresentAfterEditing() {
+    public void testCheckDefectTrackerPresentAfterEditing() {
         String teamName = createTeam();
         String appName = createApplication(teamName);
 
@@ -478,12 +478,12 @@ public class DefectTrackerIT extends BaseDataTest {
     /*------------------------------ Scheduling ------------------------------*/
 
     @Test
-    public void checkDefectTrackerPage() {
+    public void testCheckDefectTrackerPage() {
         assertTrue("Defect Tracker page wasn't showed", defectTrackerIndexPage.isCreateNewTrackerButtonPresent());
     }
 
     @Test
-    public void defectTrackerDailyScheduling() {
+    public void testDefectTrackerDailyScheduling() {
         DefectTrackerSchedulePage defectTrackerSchedulePage = defectTrackerIndexPage.clickScheduleUpdateTab();
 
         defectTrackerSchedulePage.clickScheduleNewUpdateTab()
@@ -497,7 +497,7 @@ public class DefectTrackerIT extends BaseDataTest {
     }
 
     @Test
-    public void defectTrackerWeeklyScheduling() {
+    public void testDefectTrackerWeeklyScheduling() {
         DefectTrackerSchedulePage defectTrackerSchedulePage = defectTrackerIndexPage.clickScheduleUpdateTab();
 
         defectTrackerSchedulePage.clickScheduleNewUpdateTab()
@@ -513,7 +513,7 @@ public class DefectTrackerIT extends BaseDataTest {
     }
 
     @Test
-    public void checkSameDailyScheduleConflict() {
+    public void testCheckSameDailyScheduleConflict() {
         String frequency = "Daily";
         int hour = 9;
         int minutes = 30;
@@ -546,7 +546,7 @@ public class DefectTrackerIT extends BaseDataTest {
     }
 
     @Test
-    public void checkSameWeeklyScheduleConflict() {
+    public void testCheckSameWeeklyScheduleConflict() {
         DefectTrackerSchedulePage defectTrackerSchedulePage = defectTrackerIndexPage.clickScheduleUpdateTab();
 
             defectTrackerSchedulePage.clickScheduleNewUpdateTab()
@@ -576,7 +576,7 @@ public class DefectTrackerIT extends BaseDataTest {
     }
 
     @Test
-    public void DeleteDailyDefectTrackerScheduling() {
+    public void testDeleteDailyDefectTrackerScheduling() {
         DefectTrackerSchedulePage defectTrackerSchedulePage = defectTrackerIndexPage.clickScheduleUpdateTab();
 
         defectTrackerSchedulePage.clickScheduleNewUpdateTab()
@@ -595,7 +595,7 @@ public class DefectTrackerIT extends BaseDataTest {
     }
 
     @Test
-    public void DeleteweeklyDefectTrackerScheduling() {
+    public void testDeleteweeklyDefectTrackerScheduling() {
         DefectTrackerSchedulePage defectTrackerSchedulePage = defectTrackerIndexPage.clickScheduleUpdateTab();
 
         defectTrackerSchedulePage.clickScheduleNewUpdateTab()
@@ -616,7 +616,7 @@ public class DefectTrackerIT extends BaseDataTest {
     }
 
     @Test
-    public void defectTrackerNameValidation() {
+    public void testDefectTrackerNameValidation() {
         String defectTrackerName = getName();
         String defectTrackerType = "Bugzilla";
 

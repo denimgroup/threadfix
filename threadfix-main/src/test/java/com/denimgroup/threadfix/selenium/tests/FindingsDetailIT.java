@@ -52,7 +52,7 @@ public class FindingsDetailIT extends BaseDataTest{
     }
 
     @Test
-    public void vulnerabilityNavigationTest() {
+    public void testVulnerabilityNavigation() {
         VulnerabilityDetailPage vulnerabilityDetailPage = findingDetailPage.clickViewVulnerability();
 
         assertTrue("Vulnerability Details Page is not Available",
@@ -60,7 +60,7 @@ public class FindingsDetailIT extends BaseDataTest{
     }
 
     @Test
-    public void checkMergeWithOtherFindingsButton() {
+    public void testCheckMergeWithOtherFindingsButton() {
         MergeFindingPage mergeFindingPage = findingDetailPage.clickMergeWithOtherFindings();
 
         assertTrue("Vulnerability Details Page is not Available",
@@ -68,7 +68,7 @@ public class FindingsDetailIT extends BaseDataTest{
     }
 
     @Test
-    public void mergeSameVariableOrLocation() {
+    public void testMergeSameVariableOrLocation() {
         MergeFindingPage mergeFindingPage = findingDetailPage.clickMergeWithOtherFindings();
 
         VulnerabilityDetailPage vulnerabilityDetailPage = mergeFindingPage.setVariableOrLocation()

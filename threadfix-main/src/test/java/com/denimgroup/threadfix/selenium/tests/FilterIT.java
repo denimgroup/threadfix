@@ -39,7 +39,7 @@ public class FilterIT extends BaseIT {
     // TODO if a notification system is implemented then get rid of sleeps...just refresh the page when the work is done
 
     @Test
-    public void applicationFiltersTest() {
+    public void testApplicationFilters() {
         String teamName = createTeam();
         String appName1 = createApplication(teamName);
         String appName2 = createApplication(teamName);
@@ -83,7 +83,7 @@ public class FilterIT extends BaseIT {
     }
 
     @Test
-    public void teamFiltersTest() {
+    public void testTeamFilters() {
         String teamName = createTeam();
         String appName = createApplication(teamName);
         String file = ScanContents.getScanFilePath();
@@ -127,7 +127,7 @@ public class FilterIT extends BaseIT {
     }
 
     @Test
-    public void editFiltersTest() {
+    public void testEditFilters() {
         String teamName = createTeam();
         String appName = createApplication(teamName);
         String file = ScanContents.getScanFilePath();

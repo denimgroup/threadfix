@@ -124,7 +124,7 @@ public class WafIT extends BaseDataTest {
 	}
 
 	@Test
-	public void testCreateWafDenyAllrWeb(){
+	public void testCreateWafDenyAllWeb(){
 		String newWafName = getName();
 		String type = "DenyAll rWeb";
 		
@@ -258,7 +258,7 @@ public class WafIT extends BaseDataTest {
     }
 
 	@Test
-	public void attachModSecWafToaNewApp() throws MalformedURLException {
+	public void testAttachModSecWafToaNewApp() throws MalformedURLException {
 		initializeTeamAndAppWithIBMScan();
 
 		String wafName = getName();
@@ -319,7 +319,7 @@ public class WafIT extends BaseDataTest {
 	}
 
     @Test
-    public void generateWafRules() {
+    public void testGenerateWafRules() {
         initializeTeamAndAppWithIBMScan();
         String wafName = getName();
 
@@ -351,7 +351,7 @@ public class WafIT extends BaseDataTest {
     }
 
     @Test
-    public void uploadLogFile() {
+    public void testUploadLogFile() {
         initializeTeamAndAppWithIBMScan();
         String wafName = getName();
         String logFile = ScanContents.SCAN_FILE_MAP.get("Snort Log");
@@ -416,7 +416,7 @@ public class WafIT extends BaseDataTest {
     }
 
     @Test
-    public void CreateWafWithTheSameNameOfPrevious() {
+    public void testCreateWafWithTheSameNameOfPrevious() {
         String wafName = getName();
         String newWafName = getName();
         String type = "Snort";
@@ -444,7 +444,7 @@ public class WafIT extends BaseDataTest {
     }
 
     @Test
-    public void checkWafLogFileLink() {
+    public void testCheckWafLogFileLink() {
         initializeTeamAndAppWithIBMScan();
         String wafName = getName();
         String logFile = ScanContents.SCAN_FILE_MAP.get("Snort Log");
@@ -491,7 +491,7 @@ public class WafIT extends BaseDataTest {
     }
 
     @Test
-    public void attachWafToApplication() {
+    public void testAttachWafToApplication() {
         String wafName = getName();
         String wafType = "Snort";
         initializeTeamAndApp();
@@ -518,7 +518,7 @@ public class WafIT extends BaseDataTest {
     }
 
     @Test
-    public void createNewWafInApplicationModal() {
+    public void testCreateNewWafInApplicationModal() {
         initializeTeamAndApp();
         String wafName = getName();
 
@@ -586,7 +586,7 @@ public class WafIT extends BaseDataTest {
     //FIX THIS TEST
     @Ignore
     @Test
-    public void removeWaf() {
+    public void testRemoveWaf() {
         String type = "Snort";
         String wafName1 = getName();
 
@@ -602,7 +602,7 @@ public class WafIT extends BaseDataTest {
     }
 
     @Test
-    public void checkDeletedWaf() {
+    public void testCheckDeletedWaf() {
         String wafName1 = getName();
         String wafName2 = getName();
         String wafType = "Snort";
@@ -633,7 +633,7 @@ public class WafIT extends BaseDataTest {
     }
 
     @Test
-    public void DeleteAssignWafToApplication() {
+    public void testDeleteAssignWafToApplication() {
         initializeTeamAndApp();
 
         String wafName = getName();
@@ -778,10 +778,5 @@ public class WafIT extends BaseDataTest {
                 .clickViewDetails();
 
         assertTrue("Fired Waf Navigation failed", wafRulesPage2.checkFiredWafNav("100000"));
-    }
-
-    @Test
-    public void hhahah() {
-        initializeTeamAndAppWithIBMScan();
     }
 }

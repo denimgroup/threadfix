@@ -35,13 +35,13 @@ import static org.junit.Assert.assertTrue;
 public class LoginIT extends BaseIT {
 
 	@Test
-	public void badUsernameTest(){
+	public void testBadUsername(){
 		loginPage = loginPage.loginInvalid("WRONG!!!","password");
 		assertTrue("Invalid login username error message was incorrect",loginPage.isLoginErrorPresent());
 	}
 	
 	@Test
-	public void badPasswordTest(){
+	public void testBadPassword(){
 		//wrong password
 		loginPage = loginPage.loginInvalid("user","WRONG!!!");
 		assertTrue("Invalid login password error message was incorrect",loginPage.isLoginErrorPresent());
@@ -56,7 +56,7 @@ public class LoginIT extends BaseIT {
 	}
 	
 	@Test
-	public void validLoginLogout(){
+	public void testValidLoginLogout(){
 		DashboardPage dashboardPage = loginPage.defaultLogin();
 		assertTrue("Correct user was not logged in",dashboardPage.isLoggedInUser("user"));
 		loginPage = dashboardPage.logout();
