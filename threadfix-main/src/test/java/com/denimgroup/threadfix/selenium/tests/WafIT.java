@@ -319,13 +319,8 @@ public class WafIT extends BaseDataTest {
 	}
 
     @Test
-<<<<<<< HEAD
-    public void generateWafRules() {
-        initializeTeamAndAppWithIbmScan();
-=======
     public void testGenerateWafRules() {
-        initializeTeamAndAppWithIBMScan();
->>>>>>> c93e69bb39cc3786d54b9c187cb1151b4277b3f4
+        initializeTeamAndAppWithIbmScan();
         String wafName = getName();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
@@ -356,13 +351,8 @@ public class WafIT extends BaseDataTest {
     }
 
     @Test
-<<<<<<< HEAD
-    public void uploadLogFile() {
-        initializeTeamAndAppWithIbmScan();
-=======
     public void testUploadLogFile() {
-        initializeTeamAndAppWithIBMScan();
->>>>>>> c93e69bb39cc3786d54b9c187cb1151b4277b3f4
+        initializeTeamAndAppWithIbmScan();
         String wafName = getName();
         String logFile = ScanContents.SCAN_FILE_MAP.get("Snort Log");
 
@@ -454,13 +444,8 @@ public class WafIT extends BaseDataTest {
     }
 
     @Test
-<<<<<<< HEAD
-    public void checkWafLogFileLink() {
-        initializeTeamAndAppWithIbmScan();
-=======
     public void testCheckWafLogFileLink() {
-        initializeTeamAndAppWithIBMScan();
->>>>>>> c93e69bb39cc3786d54b9c187cb1151b4277b3f4
+        initializeTeamAndAppWithIbmScan();
         String wafName = getName();
         String logFile = ScanContents.SCAN_FILE_MAP.get("Snort Log");
 
@@ -794,12 +779,4 @@ public class WafIT extends BaseDataTest {
 
         assertTrue("Fired Waf Navigation failed", wafRulesPage2.checkFiredWafNav("100000"));
     }
-<<<<<<< HEAD
-
-    @Test
-    public void hhahah() {
-        initializeTeamAndAppWithIbmScan();
-    }
-=======
->>>>>>> c93e69bb39cc3786d54b9c187cb1151b4277b3f4
 }
