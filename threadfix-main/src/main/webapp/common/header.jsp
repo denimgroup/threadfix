@@ -137,7 +137,7 @@
 							</security:authorize>
 							<security:authorize ifAnyGranted="ROLE_CAN_VIEW_ERROR_LOGS">
                                 <li class="normalLinks">
-                                    <a id="viewLogsLink" href="<spring:url value="/configuration/logs" htmlEscape="true"/>">View Error Logs</a>
+                                    <a id="viewLogsLink" href="<spring:url value="/configuration/logs" htmlEscape="true"/>">View Error Messages</a>
                                 </li>
 							</security:authorize>
 						</security:authorize>

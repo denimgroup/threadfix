@@ -203,7 +203,7 @@ public class CommonPathFinder {
 			int endIndex = 0;
 			
 			for (int i = 0; i < soFar.length && i < newParts.length; i++) {
-				if (!soFar[i].equals(newParts[i])) {
+				if (!soFar[i].equalsIgnoreCase(newParts[i])) {
 					break;
 				} else {
 					endIndex += 1;

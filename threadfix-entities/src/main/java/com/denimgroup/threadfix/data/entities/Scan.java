@@ -598,4 +598,12 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	public void setLockedMetadata(Boolean lockedMetadata) {
 		this.lockedMetadata = lockedMetadata;
 	}
+
+	@Override
+	public String toString() {
+		String type = applicationChannel == null ? "no type" : applicationChannel.getChannelType().getName();
+
+		return type + " (" + (findings == null ? 0 : findings.size()) + " results)";
+
+	}
 }
