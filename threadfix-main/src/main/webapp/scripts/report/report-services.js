@@ -7,28 +7,30 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
 
     reportExporter.exportCSV = function(data, contentType, fileName) {
 
-        var blob = new Blob([data], { type: contentType });
+        $timeout(function() {
+            var blob = new Blob([data], { type: contentType });
 
-        // IE <10, FileSaver.js is explicitly unsupported
-        if (checkOldIE()) {
-            var success = false;
-            if (document.execCommand) {
-                var oWin = window.open("about:blank", "_blank");
-                oWin.document.open("application/csv", "replace");
-                oWin.document.charset = "utf-8";
-                oWin.document.write('sep=,\r\n' + data);
-                oWin.document.close();
-                success = oWin.document.execCommand('SaveAs', true, fileName)
-                oWin.close();
+            // IE <10, FileSaver.js is explicitly unsupported
+            if (checkOldIE()) {
+                var success = false;
+                if (document.execCommand) {
+                    var oWin = window.open("about:blank", "_blank");
+                    oWin.document.open("application/csv", "replace");
+                    oWin.document.charset = "utf-8";
+                    oWin.document.write('sep=,\r\n' + data);
+                    oWin.document.close();
+                    success = oWin.document.execCommand('SaveAs', true, fileName)
+                    oWin.close();
+                }
+
+                if (!success)
+                    alert(browerErrMsg);
+                return;
             }
 
-            if (!success)
-                alert(browerErrMsg);
-            return;
-        }
-
-        // Else, using saveAs of FileSaver.js
-        saveAs(blob, fileName);
+            // Else, using saveAs of FileSaver.js
+            saveAs(blob, fileName);
+        }, 200);
     };
 
     reportExporter.exportPDF = function(d3, exportInfo, width, height, name) {
