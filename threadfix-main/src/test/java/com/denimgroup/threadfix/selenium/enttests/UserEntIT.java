@@ -41,11 +41,7 @@ public class UserEntIT extends BaseDataTest {
 
         UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
-                .clickAddUserLink()
-                .setName(userName)
-                .setPassword(testPassword)
-                .setConfirmPassword(testPassword)
-                .clickAddNewUserBtn()
+                .createUser(userName,"",testPassword)
                 .clickEditLink(userName);
 
         assertFalse("Global Access was selected when it should not have been.", userIndexPage.isGlobalAccessSelected());

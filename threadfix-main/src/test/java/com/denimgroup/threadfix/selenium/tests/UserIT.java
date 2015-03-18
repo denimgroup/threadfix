@@ -51,11 +51,7 @@ public class UserIT extends BaseIT {
 		String userName = getName();
         String password = "testCreateUser";
 
-		userIndexPage.clickAddUserLink()
-                    .setName(userName)
-                    .setPassword(password)
-                    .setConfirmPassword(password)
-                    .clickAddNewUserBtn();
+		userIndexPage.createUser(userName, "", password);
 
         assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
 		assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(userName));
@@ -68,20 +64,12 @@ public class UserIT extends BaseIT {
 
         String secondUserName = getName();
 
-        userIndexPage.clickAddUserLink()
-                .setName(userName)
-                .setPassword(password)
-                .setConfirmPassword(password)
-                .clickAddNewUserBtn();
+        userIndexPage.createUser(userName, "", password);
 
         assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
         assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(userName));
 
-        userIndexPage.clickAddUserLink()
-                .setName(secondUserName)
-                .setPassword(password)
-                .setConfirmPassword(password)
-                .clickAddNewUserBtn();
+        userIndexPage.createUser(secondUserName,"",password);
 
         assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(secondUserName));
         assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(secondUserName));
@@ -126,12 +114,8 @@ public class UserIT extends BaseIT {
     public void testCreateDuplicateUser(){
         String userName = getName();
         String password = getRandomString(15);
-        // Create a user
-        userIndexPage.clickAddUserLink()
-                .setName(userName)
-                .setPassword(password)
-                .setConfirmPassword(password)
-                .clickAddNewUserBtn();
+
+        userIndexPage.createUser(userName, "", password);
 
         assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
         assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(userName));
@@ -163,27 +147,18 @@ public class UserIT extends BaseIT {
         String password = getRandomString(15);
         String editedPassword = getRandomString(15);
 
-        userIndexPage.clickAddUserLink()
-                .setName(userName)
-                .setPassword(password)
-                .setConfirmPassword(password)
-                .clickAddNewUserBtn();
+        userIndexPage.createUser(userName, "", password);
 
         DashboardPage dashboardPage= userIndexPage.logout()
                 .login(userName, password);
 
         assertTrue("New user was not able to login.", dashboardPage.isLoggedin());
 
-        userIndexPage = dashboardPage.logout()
+        dashboardPage.logout()
                 .defaultLogin()
                 .clickManageUsersLink()
-                .clickEditLink(userName)
-                .setName(editedUserName)
-                .setPassword(editedPassword)
-                .setConfirmPassword(editedPassword)
-                .clickModalSubmit();
-
-        dashboardPage = userIndexPage.logout()
+                .editUser(userName, editedUserName, "", editedPassword)
+                .logout()
                 .login(editedUserName, editedPassword);
 
         assertTrue("Edited user was not able to login.", dashboardPage.isLoggedin());
@@ -197,11 +172,7 @@ public class UserIT extends BaseIT {
 
 		assertFalse("User was already in the table.", userIndexPage.isUserNamePresent(userName));
 
-        UserChangePasswordPage userChangePasswordPage = userIndexPage.clickAddUserLink()
-				.setName(userName)
-				.setPassword(password)
-				.setConfirmPassword(password)
-				.clickAddNewUserBtn()
+        UserChangePasswordPage userChangePasswordPage = userIndexPage.createUser(userName, "", password)
 				.logout()
 				.login(userName, password)
                 .clickChangePasswordLink()
@@ -262,19 +233,10 @@ public class UserIT extends BaseIT {
 
 		// Set up the two User objects for the test
 
-		userIndexPage.clickAddUserLink()
-                .setName(baseUserName)
-                .setPassword("lengthy password 2")
-                .setConfirmPassword("lengthy password 2")
-                .clickAddNewUserBtn();
+		userIndexPage.createUser(baseUserName, "", "lengthy password 2");
 
-        userIndexPage = userIndexPage.clickOrganizationHeaderLink()
-                .clickManageUsersLink()
-                .clickAddUserLink()
-                .setName(userNameDuplicateTest)
-                .setPassword("lengthy password 2")
-                .setConfirmPassword("lengthy password 2")
-                .clickAddNewUserBtn();
+        userIndexPage = userIndexPage.clickManageUsersLink()
+                .createUser(userNameDuplicateTest, "", "lengthy password 2");
 
 		// Test submission with no changes
 		userIndexPage = userIndexPage.clickManageUsersLink()
@@ -299,19 +261,11 @@ public class UserIT extends BaseIT {
         String userName = getName();
         String passWord = getName();
 
-        userIndexPage.clickAddUserLink()
-                .setName(userName)
-                .setPassword(passWord)
-                .setConfirmPassword(passWord)
-                .clickAddNewUserBtn();
+        userIndexPage.createUser(userName, "", passWord);
 
 		// Test White Space
 		userIndexPage = userIndexPage.clickManageUsersLink()
-                .clickAddUserLink()
-                .setName("        ")
-                .setPassword("             ")
-                .setConfirmPassword("             ")
-                .clickAddNewUserBtn();
+                .createUser("        ","","             ");
 
         sleep(5000);
 		assertTrue("Name error not present", userIndexPage.getRequiredNameError().equals("Name is required."));
@@ -320,30 +274,22 @@ public class UserIT extends BaseIT {
     @Test
     public void testEditUserValidationPasswordMatching(){
         String userName = getName();
-		// Test non-matching passwords
+
 		userIndexPage.clickAddUserLink()
                 .setName(userName)
                 .setPassword("lengthy password 1")
                 .setConfirmPassword("lengthy password 2")
                 .clickAddNewUserBtn();
 
-        sleep(5000);
 		assertTrue("Password matching error is not correct.", userIndexPage.getPasswordMatchError().equals("Passwords do not match."));
 
     }
 
     @Test
     public void testEditUserValidationLength(){
-		// Test length
-		userIndexPage = userIndexPage.clickAddUserLink()
-                .setName("Test User")
-                .setPassword("test")
-                .setConfirmPassword("test")
-                .clickAddNewUserBtn();
+        userIndexPage.createUser("Test User","","test");
 
-        sleep(5000);
 		assertTrue("Password length error not present", userIndexPage.getPasswordLengthError().equals("8 characters needed"));
-
     }
 
     @Test
@@ -351,22 +297,9 @@ public class UserIT extends BaseIT {
         String userName = getName();
         String passWord = getName();
 
-        userIndexPage.clickAddUserLink()
-                .setName(userName)
-                .setPassword(passWord)
-                .setConfirmPassword(passWord)
-                .clickAddNewUserBtn();
-	
-		// Test name uniqueness check
-		userIndexPage = userIndexPage
-				.clickManageUsersLink()
-				.clickAddUserLink()
-				.setName(userName)
-				.setPassword("lengthy password 2")
-				.setConfirmPassword("lengthy password 2")
-				.clickAddNewUserBtn();
+        userIndexPage.createUser(userName,"",passWord)
+                .createUser(userName,"","lengthy password 2");
 
-        sleep(5000);
 		assertTrue("Name uniqueness error is not correct.", userIndexPage.getNameError().equals("That name is already taken."));
 		
 	}
@@ -381,11 +314,7 @@ public class UserIT extends BaseIT {
         String userName = getName();
         String password = "testDeleteUser";
 
-        userIndexPage.clickAddUserLink()
-                .setName(userName)
-                .setPassword(password)
-                .setConfirmPassword(password)
-                .clickAddNewUserBtn()
+        userIndexPage.createUser(userName,"",password)
                 .clickEditLink(userName)
                 .clickDelete(userName);
 
@@ -403,11 +332,11 @@ public class UserIT extends BaseIT {
         String changedName = getName();
         String displayCssId = "displayName" + changedName;
 
-        userIndexPage.createUser(userName1, "", password1, false, false, null)
-                .createUser(userName2, "", password2, false, false, null);
+        userIndexPage.createUser(userName1, "", password1)
+                .createUser(userName2, "", password2);
 
-        userIndexPage.editUser(userName1,changedName,password1,false,false,null)
-                .editUser(userName2,"",changedPassword,false,false,null);
+        userIndexPage.editUser(userName1, userName1,changedName,password1)
+                .editUser(userName2, userName2,"",changedPassword);
 
         assertTrue("Second user's display name was changed to the first user's name when attempting to change only password.",
                 driver.findElements(By.id(displayCssId)).size() < 2);
@@ -419,7 +348,7 @@ public class UserIT extends BaseIT {
         String displayName = getName();
         String password = getName();
 
-        userIndexPage.createUser(userName, displayName, password, false, false, null)
+        userIndexPage.createUser(userName, displayName, password)
                 .refreshPage();
 
         assertTrue("User with display name was not added correctly.",
@@ -432,8 +361,8 @@ public class UserIT extends BaseIT {
         String displayName = getName();
         String password = getName();
 
-        userIndexPage.createUser(userName, "", password, false, false, null)
-                .editUser(userName, displayName, password, false, false, null)
+        userIndexPage.createUser(userName, "", password)
+                .editUser(userName, userName, displayName, password)
                 .refreshPage();
 
         assertTrue("User with display name was not added correctly.",
