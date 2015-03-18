@@ -837,4 +837,9 @@ public class Application extends AuditableEntity {
     public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
+
+	@Override
+	public String toString() {
+		return name;
+	}
 }

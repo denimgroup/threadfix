@@ -245,7 +245,7 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 	    		
 	    		// Since we'll calculate a better path later in the path calculation phase,
 	    		// we don't have to worry about it here.
-	    		currentUrlText = currentSourceFileLocation;
+	    		currentUrlText = currentSourceFileLocation.replaceFirst("aspx\\.cs$", "aspx");
 	    	} else if ("StartTimeStamp".equals(qName)) {
 	    		getDate = true;
 	    	} else if ("Result".equals(qName)) {

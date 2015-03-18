@@ -114,4 +114,9 @@ public class ApplicationChannel extends AuditableEntity implements Iterable<Scan
 	public Iterator<Scan> iterator() {
 		return getScanList() == null ? listOf(Scan.class).iterator() : getScanList().iterator();
 	}
+
+	@Override
+	public String toString() {
+		return channelType.getName() + "--" + application.getName();
+	}
 }
