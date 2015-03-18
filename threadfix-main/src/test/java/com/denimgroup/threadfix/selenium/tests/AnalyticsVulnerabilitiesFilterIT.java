@@ -59,7 +59,7 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
 
     @Test
     public void testTeamFilter() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
         String teamName2 = createTeam();
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
@@ -87,7 +87,7 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
 
     @Test
     public void testApplicationFilter() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
         String teamName2 = createTeam();
         String appName2 = createApplication(teamName2);
 
@@ -116,7 +116,7 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
 
     @Test
     public void testCheckDeletedVulnerability() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -144,7 +144,7 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
 
     @Test
     public void testCheckAnalyticsPage() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -161,7 +161,7 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
 
     @Test
     public void testCheckAgingFilter() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()

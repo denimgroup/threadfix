@@ -259,7 +259,7 @@ public class WafIT extends BaseDataTest {
 
 	@Test
 	public void attachModSecWafToaNewApp() throws MalformedURLException {
-		initializeTeamAndAppWithIBMScan();
+		initializeTeamAndAppWithIbmScan();
 
 		String wafName = getName();
 		String wafType = "mod_security";
@@ -320,7 +320,7 @@ public class WafIT extends BaseDataTest {
 
     @Test
     public void generateWafRules() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
         String wafName = getName();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
@@ -352,7 +352,7 @@ public class WafIT extends BaseDataTest {
 
     @Test
     public void uploadLogFile() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
         String wafName = getName();
         String logFile = ScanContents.SCAN_FILE_MAP.get("Snort Log");
 
@@ -445,7 +445,7 @@ public class WafIT extends BaseDataTest {
 
     @Test
     public void checkWafLogFileLink() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
         String wafName = getName();
         String logFile = ScanContents.SCAN_FILE_MAP.get("Snort Log");
 
@@ -704,7 +704,7 @@ public class WafIT extends BaseDataTest {
 
     @Test
     public void testDownloadWafRules() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
         String wafName = getName();
 
         DatabaseUtils.createWaf(wafName,"Snort");
@@ -727,7 +727,7 @@ public class WafIT extends BaseDataTest {
 
     @Test
     public void testCancelButton() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
         String wafName = getName();
 
         DatabaseUtils.createWaf(wafName,"Snort");
@@ -754,7 +754,7 @@ public class WafIT extends BaseDataTest {
 
     @Test
     public void testFiredWafNav() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
         String wafName = getName();
 
         DatabaseUtils.createWaf(wafName,"Snort");
@@ -782,6 +782,6 @@ public class WafIT extends BaseDataTest {
 
     @Test
     public void hhahah() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
     }
 }

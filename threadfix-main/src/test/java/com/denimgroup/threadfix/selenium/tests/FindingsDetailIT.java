@@ -40,7 +40,7 @@ public class FindingsDetailIT extends BaseDataTest{
 
     @Before
     public void initialize() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
 
         findingDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()

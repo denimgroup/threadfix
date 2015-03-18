@@ -40,7 +40,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
     @Test
     public void testSnapshotD3TeamFilter() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
         String teamName2 = createTeam();
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
@@ -71,7 +71,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
     @Test
     public void testSnapshotD3ApplicationFilter() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
         String teamName2 = createTeam();
         String appName2 = createApplication(teamName2);
 
@@ -340,7 +340,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
     @Test
     public void testProgressByVulnCheckSavedFilter() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
         initializeTeamAndAppWithWebInspectScan();
         String filterName = getName();
 

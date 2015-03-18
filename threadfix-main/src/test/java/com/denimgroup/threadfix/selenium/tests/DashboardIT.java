@@ -43,7 +43,7 @@ public class DashboardIT extends BaseDataTest {
 
     @Before
     public void initialize() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
     }
 
 	@Test

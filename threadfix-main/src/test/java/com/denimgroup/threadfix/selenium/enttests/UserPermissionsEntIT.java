@@ -279,7 +279,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     @Ignore
     @Test
     public void testReportPermissions() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
 
         String userName = getRandomString(8);
 
@@ -328,7 +328,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
     @Test
     public void testSubmitDefectsPermission() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
 
         createRestrictedUser("canSubmitDefects");
 
@@ -355,7 +355,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
     @Test
     public void testManageVulnerabilityFilters() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
 
         createRestrictedUser("canManageVulnFilters");
 
@@ -375,7 +375,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
     @Test
     public void testModifyVulnerabilitiesPermission() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
 
         createRestrictedUser("canModifyVulnerabilities");
 
@@ -418,7 +418,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
         attempting to handle JavaScript alert message.
         Similar error have appeared online.
          */
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
 
         String wafName = getName();
         DatabaseUtils.createWaf(wafName, "Snort" );
@@ -567,7 +567,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
     @Test
     public void testGenerateWAFRulesPermission() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
 
         createRestrictedUser("canGenerateWafRules");
 

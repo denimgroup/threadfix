@@ -45,7 +45,7 @@ public class DashboardPageIT extends BaseDataTest {
 
     @Before
     public void initialize() {
-       initializeTeamAndAppWithIBMScan();
+       initializeTeamAndAppWithIbmScan();
 
        dashboardPage = loginPage.defaultLogin();
     }

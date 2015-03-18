@@ -60,7 +60,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
     @Test
     public void testClearFilter() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
 
         String parameter = "username";
 
@@ -151,7 +151,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
     @Test
     public void testSavedFilters() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
         String scanner = "IBM Rational AppScan";
@@ -191,7 +191,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
     @Test
     public void testApplicationFilter() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
         String appName2 = createApplication(teamName);
 
         DatabaseUtils.uploadScan(teamName, appName2, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
@@ -245,7 +245,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
     @Test
     public void testMergedFindingsFilter() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
@@ -266,7 +266,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
     @Test
     public void testScannerFilter() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
         String scanner = "IBM Rational AppScan";
@@ -315,7 +315,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
     @Test
     public void testPathFilter() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
 
         String path = "/demo/EvalInjection2.php";
 
@@ -335,7 +335,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
     @Test
     public void testParameterFilter() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
 
         String parameter = "username";
 
@@ -357,7 +357,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
     @Test
     public void testSeverityFilter() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
 
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -383,7 +383,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
     @Test
     public void testStatusFilter() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
 
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()

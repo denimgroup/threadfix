@@ -76,7 +76,7 @@ public class TagDetailPageIT extends BaseDataTest {
 
     @Test
     public void testAttachTagToComment() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
         String tagName = createTag();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
@@ -99,7 +99,7 @@ public class TagDetailPageIT extends BaseDataTest {
 
     @Test
     public void testCorrectNumberofComments() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
         String tagName = createTag();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
@@ -155,7 +155,7 @@ public class TagDetailPageIT extends BaseDataTest {
 
     @Test
     public void testCommentTagLinkNavigation() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
         String tagName = createTag();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
@@ -177,7 +177,7 @@ public class TagDetailPageIT extends BaseDataTest {
 
     @Test
     public void testUpdateCommentTag() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
         String tagName = createTag();
         String tagName2 = createTag();
 

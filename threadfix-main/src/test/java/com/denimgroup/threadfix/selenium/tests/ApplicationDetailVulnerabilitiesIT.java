@@ -41,7 +41,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
 
     @Before
     public void initialize() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
 
         applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()

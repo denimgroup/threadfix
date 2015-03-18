@@ -41,7 +41,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
 
     @Before
     public void initialNavigation() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
 
         applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()

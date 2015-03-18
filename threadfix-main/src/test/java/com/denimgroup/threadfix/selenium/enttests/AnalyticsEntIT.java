@@ -38,8 +38,8 @@ import static org.junit.Assert.assertTrue;
 public class AnalyticsEntIT extends BaseDataTest {
 
     @Test
-    public void testUtilsAttachPCITag() {
-        initializeTeamAndAppWithIBMScan();
+    public void testUtilsAttachPciTag() {
+        initializeTeamAndAppWithIbmScan();
         DatabaseUtils.attachAppToTag("PCI",appName,teamName);
 
         loginPage.defaultLogin()
@@ -49,8 +49,8 @@ public class AnalyticsEntIT extends BaseDataTest {
     }
 
     @Test
-    public void testUtilsAttachHIPAATag() {
-        initializeTeamAndAppWithIBMScan();
+    public void testUtilsAttachHipaaTag() {
+        initializeTeamAndAppWithIbmScan();
         DatabaseUtils.attachAppToTag("HIPAA",appName,teamName);
 
         loginPage.defaultLogin()
@@ -60,7 +60,7 @@ public class AnalyticsEntIT extends BaseDataTest {
     }
 
     @Test
-    public void testManuallyAttachPCITagtoApp() {
+    public void testManuallyAttachPciTagToApp() {
         initializeTeamAndApp();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
@@ -79,7 +79,7 @@ public class AnalyticsEntIT extends BaseDataTest {
     }
 
     @Test
-    public void testManuallyAttachHIPAATagtoApp() {
+    public void testManuallyAttachHipaaTagToApp() {
         initializeTeamAndApp();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
@@ -98,7 +98,7 @@ public class AnalyticsEntIT extends BaseDataTest {
     }
 
     @Test
-    public void testPCITagPresence() {
+    public void testPciTagPresence() {
         loginPage.defaultLogin()
                 .clickTagsLink();
 
@@ -106,7 +106,7 @@ public class AnalyticsEntIT extends BaseDataTest {
     }
 
     @Test
-    public void testHIPAATagPresence() {
+    public void testHipaaTagPresence() {
         loginPage.defaultLogin()
                 .clickTagsLink();
 

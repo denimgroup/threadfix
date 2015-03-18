@@ -63,7 +63,7 @@ public abstract class BaseDataTest extends BaseIT{
         appName = createApplication(teamName);
     }
 
-    protected void initializeTeamAndAppWithIBMScan() {
+    protected void initializeTeamAndAppWithIbmScan() {
         initializeTeamAndApp();
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
     }

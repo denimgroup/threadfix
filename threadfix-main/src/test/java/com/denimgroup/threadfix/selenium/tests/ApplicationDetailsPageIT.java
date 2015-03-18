@@ -22,7 +22,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     */
 
     public void initialize() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
 
         dashboardPage = loginPage.defaultLogin();
 
