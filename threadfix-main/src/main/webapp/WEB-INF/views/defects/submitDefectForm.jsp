@@ -8,7 +8,7 @@
         <div ng-hide="initialized" class="modal-spinner-div"><span class="spinner dark"></span>Loading</div><br>
 
         <div class="dynamic-defect-form" ng-if="isDynamicForm">
-            <span ng-if="stdFormTemplate" class="errors">* required field</span>
+            <span ng-if="stdFormTemplate && hasFields" class="errors">* required field</span>
             <dynamic-form ng-if="stdFormTemplate" template="stdFormTemplate"
                           ng-model="fieldsMap">
             </dynamic-form>
@@ -85,6 +85,7 @@
             Submitting
         </button>
         <button id="submit"
+                ng-if="hasFields"
                 ng-class="{ disabled : form.$invalid }"
                 class="btn btn-primary"
                 ng-mouseenter="form.summary.$dirty = true"

@@ -33,17 +33,17 @@ import static com.denimgroup.threadfix.importer.TestConstants.*;
 public class CatNetTests extends TransactionalTest {
 
     public final static String[][] catnetResults = {
-            { XSS, "Critical", "c:\\Project_Archive\\Ziggurat\\ZigguratUtility\\ZigguratUtilityWeb\\ContactUs.aspx.cs", "email"},
-            { XSS, "Critical", "c:\\Project_Archive\\Ziggurat\\ZigguratUtility\\ZigguratUtilityWeb\\ContactUs.aspx.cs", "txtMessage"},
-            { XSS, "Critical", "c:\\Project_Archive\\Ziggurat\\ZigguratUtility\\ZigguratUtilityWeb\\ContactUs.aspx.cs", "txtSubject"},
-            { XSS, "Critical", "c:\\Project_Archive\\Ziggurat\\ZigguratUtility\\ZigguratUtilityWeb\\MakePayment.aspx.cs", "txtAmount"},
-            { XSS, "Critical", "c:\\Project_Archive\\Ziggurat\\ZigguratUtility\\ZigguratUtilityWeb\\MakePayment.aspx.cs", "txtAmount"},
-            { XSS, "Critical", "c:\\Project_Archive\\Ziggurat\\ZigguratUtility\\ZigguratUtilityWeb\\MakePayment.aspx.cs", "txtCardNumber"},
+            { XSS, "Critical", "c:\\Project_Archive\\Ziggurat\\ZigguratUtility\\ZigguratUtilityWeb\\ContactUs.aspx", "email"},
+            { XSS, "Critical", "c:\\Project_Archive\\Ziggurat\\ZigguratUtility\\ZigguratUtilityWeb\\ContactUs.aspx", "txtMessage"},
+            { XSS, "Critical", "c:\\Project_Archive\\Ziggurat\\ZigguratUtility\\ZigguratUtilityWeb\\ContactUs.aspx", "txtSubject"},
+            { XSS, "Critical", "c:\\Project_Archive\\Ziggurat\\ZigguratUtility\\ZigguratUtilityWeb\\MakePayment.aspx", "txtAmount"},
+            { XSS, "Critical", "c:\\Project_Archive\\Ziggurat\\ZigguratUtility\\ZigguratUtilityWeb\\MakePayment.aspx", "txtAmount"},
+            { XSS, "Critical", "c:\\Project_Archive\\Ziggurat\\ZigguratUtility\\ZigguratUtilityWeb\\MakePayment.aspx", "txtCardNumber"},
             { XSS, "Critical", "c:\\Project_Archive\\Ziggurat\\ZigguratUtility\\ZigguratUtilityWeb\\Message.aspx", "Msg"},
-            { SQLI, "Critical", "c:\\Project_Archive\\Ziggurat\\ZigguratUtility\\ZigguratUtilityWeb\\LoginPage.aspx.cs", "txtPassword"},
-            { SQLI, "Critical", "c:\\Project_Archive\\Ziggurat\\ZigguratUtility\\ZigguratUtilityWeb\\LoginPage.aspx.cs", "txtUsername"},
-            { SQLI, "Critical", "c:\\Project_Archive\\Ziggurat\\ZigguratUtility\\ZigguratUtilityWeb\\MakePayment.aspx.cs", "txtAmount"},
-            { SQLI, "Critical", "c:\\Project_Archive\\Ziggurat\\ZigguratUtility\\ZigguratUtilityWeb\\ViewStatement.aspx.cs", "StatementID"},
+            { SQLI, "Critical", "c:\\Project_Archive\\Ziggurat\\ZigguratUtility\\ZigguratUtilityWeb\\LoginPage.aspx", "txtPassword"},
+            { SQLI, "Critical", "c:\\Project_Archive\\Ziggurat\\ZigguratUtility\\ZigguratUtilityWeb\\LoginPage.aspx", "txtUsername"},
+            { SQLI, "Critical", "c:\\Project_Archive\\Ziggurat\\ZigguratUtility\\ZigguratUtilityWeb\\MakePayment.aspx", "txtAmount"},
+            { SQLI, "Critical", "c:\\Project_Archive\\Ziggurat\\ZigguratUtility\\ZigguratUtilityWeb\\ViewStatement.aspx", "StatementID"},
     };
 
     @Test
