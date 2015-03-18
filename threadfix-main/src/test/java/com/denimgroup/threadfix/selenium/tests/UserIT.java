@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
+import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.UserChangePasswordPage;
 import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
@@ -36,7 +37,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
-public class UserIT extends BaseIT {
+public class UserIT extends BaseDataTest {
 
     private UserIndexPage userIndexPage;
 
@@ -265,7 +266,7 @@ public class UserIT extends BaseIT {
 
 		// Test White Space
 		userIndexPage = userIndexPage.clickManageUsersLink()
-                .createUser("        ","","             ");
+                .createUser("        ", "", "             ");
 
         sleep(5000);
 		assertTrue("Name error not present", userIndexPage.getRequiredNameError().equals("Name is required."));
@@ -298,7 +299,7 @@ public class UserIT extends BaseIT {
         String passWord = getName();
 
         userIndexPage.createUser(userName,"",passWord)
-                .createUser(userName,"","lengthy password 2");
+                .createUser(userName, "", "lengthy password 2");
 
 		assertTrue("Name uniqueness error is not correct.", userIndexPage.getNameError().equals("That name is already taken."));
 		
@@ -367,5 +368,52 @@ public class UserIT extends BaseIT {
 
         assertTrue("User with display name was not added correctly.",
                 driver.findElement(By.id("displayName" + displayName)).isDisplayed());
+    }
+
+    @Test
+    public void displayNameOnComment() {
+        initializeTeamAndAppWithIBMScan();
+        String userName = getName();
+        String displayName = getName();
+        String password = getName();
+
+        userIndexPage.createUser(userName,displayName,password)
+                .clickEditLink(userName)
+                .toggleGlobalAccess()
+                .getGlobalAccessRole("Administrator")
+                .clickUpdateUserBtn();
+
+        ApplicationDetailPage applicationDetailPage = userIndexPage.logout()
+                .login(userName, password)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage.expandVulnerabilityByType("Critical79")
+                .expandCommentSection("Critical790")
+                .addComment("Critical790")
+                .setComment(getName())
+                .clickModalSubmit()
+                .refreshPage();
+
+        applicationDetailPage.expandVulnerabilityByType("Critical79")
+                .expandCommentSection("Critical790");
+
+        assertTrue("Display name was not used on comment.",
+                driver.findElement(By.id("commentUser0")).getText().equals(displayName));
+    }
+
+    @Test
+    public void displayNameHeader() {
+        String userName = getName();
+        String displayName = getName();
+        String password = getName();
+
+        userIndexPage.createUser(userName,displayName,password)
+                .logout()
+                .login(userName,password);
+
+        assertTrue("Display name is not shown in header.",
+                driver.findElement(By.id("tabUserAnchor")).getText().contains(displayName));
     }
 }

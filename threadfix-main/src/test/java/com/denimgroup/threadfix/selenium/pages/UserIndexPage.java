@@ -142,8 +142,9 @@ public class UserIndexPage extends BasePage {
 		return new UserIndexPage(driver);
 	}
 	
-	public String getGlobalAccessRole(String name){
-		return new Select(driver.findElementById("roleSelect"+(name))).getAllSelectedOptions().get(0).getText().trim();
+	public UserIndexPage getGlobalAccessRole(String name){
+		driver.findElementById("roleSelect").sendKeys(name);
+        return new UserIndexPage(driver);
 	}
 
 	public UserIndexPage clickEditLink(String userName) {
