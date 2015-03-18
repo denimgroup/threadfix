@@ -50,7 +50,7 @@ public class ScanDetailIT extends BaseDataTest {
     }
 
     @Test
-    public void checkViewScan() {
+    public void testCheckViewScan() {
         ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan();
 
         assertTrue("Scans Finding is not available", scanDetailPage.isViewFindingPresent());
@@ -80,7 +80,7 @@ public class ScanDetailIT extends BaseDataTest {
     }
 
     @Test
-    public void findingNavigationTest() {
+    public void testFindingNavigation() {
         ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan();
 
         FindingDetailPage findingDetailPage = scanDetailPage.clickViewFinding();
@@ -90,7 +90,7 @@ public class ScanDetailIT extends BaseDataTest {
     }
 
     @Test
-    public void showStatisticResultsCorrect() {
+    public void testShowStatisticResultsCorrect() {
         ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan()
                 .toggleStatistics();
 

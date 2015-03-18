@@ -95,7 +95,7 @@ public class TeamIndexPageIT extends BaseDataTest {
     }
 
     @Test
-    public void isUploadScanButtonAvailableAfterUploading() {
+    public void testIsUploadScanButtonAvailableAfterUploading() {
         DatabaseUtils.uploadScan(teamName, appName,ScanContents.SCAN_FILE_MAP.get("Burp Suite"));
 
         TeamIndexPage teamIndexPage = loginPage.defaultLogin()
@@ -106,7 +106,7 @@ public class TeamIndexPageIT extends BaseDataTest {
     }
 
     @Test
-    public void testuploadSameScanTwice() {
+    public void testUploadSameScanTwice() {
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         String newScan = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");

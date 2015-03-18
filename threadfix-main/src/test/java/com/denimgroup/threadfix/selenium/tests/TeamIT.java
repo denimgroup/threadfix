@@ -44,7 +44,7 @@ public class TeamIT extends BaseDataTest {
     }
 
 	@Test
-	public void createTeamTest(){
+	public void testCreateTeam(){
 		String teamName = getName();
 
 		assertFalse("The organization was already present.", teamIndexPage.isTeamPresent(teamName));
@@ -58,7 +58,7 @@ public class TeamIT extends BaseDataTest {
 	}
 
     @Test
-    public void createTeamValidation(){
+    public void testCreateTeamValidation(){
         String emptyString = "";
         String whiteSpaceString = "           ";
 
@@ -80,7 +80,7 @@ public class TeamIT extends BaseDataTest {
     }
 
     @Test
-    public void createTeamNameLengthValidation() {
+    public void testCreateTeamNameLengthValidation() {
         String newOrgName = getRandomString(70);
 
         teamIndexPage.clickAddTeamButton()
@@ -91,7 +91,7 @@ public class TeamIT extends BaseDataTest {
     }
 
     @Test
-    public void editTeamTest(){
+    public void testEditTeam(){
         String newTeamName = createTeam();
         String editedTeamName = getName();
 
@@ -108,7 +108,7 @@ public class TeamIT extends BaseDataTest {
     }
 
     @Test
-    public void editTeamWithApplicationTest() {
+    public void testEditTeamWithApplication() {
         String teamName = createTeam();
         String editedTeamName = getName();
 
@@ -124,7 +124,7 @@ public class TeamIT extends BaseDataTest {
     }
 
     @Test
-    public void editTeamValidation(){
+    public void testEditTeamValidation(){
         String orgName = createTeam();
         String orgNameDuplicateTest = createTeam();
 
@@ -162,7 +162,7 @@ public class TeamIT extends BaseDataTest {
     }
 
     @Test
-    public void viewMoreTest() {
+    public void testViewMore() {
         String teamName = createTeam();
 
         teamIndexPage.refreshPage();
@@ -173,7 +173,7 @@ public class TeamIT extends BaseDataTest {
     }
 
     @Test
-    public void teamGraphsTest() {
+    public void testTeamGraphs() {
         initializeTeamAndAppWithWebInspectScan();
 
         teamIndexPage.refreshPage();
@@ -189,7 +189,7 @@ public class TeamIT extends BaseDataTest {
     }
 
     @Test
-    public void expandAndCollapseSingleTeamTest() {
+    public void testExpandAndCollapseSingleTeam() {
         initializeTeamAndApp();
 
         teamIndexPage.refreshPage();
@@ -204,7 +204,7 @@ public class TeamIT extends BaseDataTest {
     }
 
     @Test
-    public void expandAndCollapseAllTeamsTest(){
+    public void testExpandAndCollapseAllTeams(){
         String teamName1 = createTeam();
         String teamName2 = createTeam();
         String appName1 = createApplication(teamName1);
@@ -223,7 +223,7 @@ public class TeamIT extends BaseDataTest {
     }
 
     @Test
-    public void deleteTeamTest() {
+    public void testDeleteTeam() {
         String teamName = createTeam();
 
         teamIndexPage.refreshPage();

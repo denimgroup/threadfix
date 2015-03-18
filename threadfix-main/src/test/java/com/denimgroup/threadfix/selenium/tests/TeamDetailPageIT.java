@@ -29,7 +29,7 @@ public class TeamDetailPageIT extends BaseIT {
     }
 
 	@Test
-	public void actionButtonTest(){
+	public void testActionButton(){
         TeamDetailPage teamDetailPage = loginPage.defaultLogin().
                 clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
@@ -42,7 +42,7 @@ public class TeamDetailPageIT extends BaseIT {
 	}
 	
 	@Test
-	public void editDeleteModalTest(){
+	public void testEditDeleteModal(){
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
@@ -59,7 +59,7 @@ public class TeamDetailPageIT extends BaseIT {
 	}
 	
 	@Test
-	public void chartTest(){
+	public void testChart(){
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName);
@@ -73,7 +73,7 @@ public class TeamDetailPageIT extends BaseIT {
 	}
 	
 	@Test
-	public void addApplicationButtonTest(){
+	public void testAddApplicationButton(){
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName);
@@ -84,7 +84,7 @@ public class TeamDetailPageIT extends BaseIT {
 	}
 
 	@Test
-	public void applicationDetailLink(){
+	public void testApplicationDetailLink(){
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName);

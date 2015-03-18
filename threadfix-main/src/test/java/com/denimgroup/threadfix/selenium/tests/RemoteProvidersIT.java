@@ -69,12 +69,12 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
 	@Test
-	public void navigationTest() {
+	public void testNavigation() {
 		assertTrue("Remote Provider Page not found", remoteProvidersIndexPage.isTabPresent());
 	}
 
     @Test
-    public void configureQualysTest() {
+    public void testConfigureQualys() {
         remoteProvidersIndexPage.clickConfigureQualys()
                 .setQualysUsername(QUALYS_USER)
                 .setQualysPassword(QUALYS_PASS)
@@ -94,7 +94,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void invalidQualysTest(){
+    public void testInvalidQualys(){
         remoteProvidersIndexPage.clickConfigureQualys()
                 .setQualysUsername("No Such User")
                 .setQualysPassword("Password Bad")
@@ -107,7 +107,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
 	@Test
-	public void configureWhiteHatTest() {
+	public void testConfigureWhiteHat() {
         remoteProvidersIndexPage.clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
                 .saveWhiteHat();
@@ -126,7 +126,7 @@ public class RemoteProvidersIT extends BaseDataTest {
 	}
 
 	@Test
-	public void invalidWhiteHatTest(){
+	public void testInvalidWhiteHat(){
         remoteProvidersIndexPage.clearPreviousWhiteHat()
                 .clickConfigureWhiteHat()
                 .setWhiteHatAPI("This should't Work!")
@@ -139,7 +139,7 @@ public class RemoteProvidersIT extends BaseDataTest {
 	}
 
 	@Test
-	public void configureVeracodeTest() {
+	public void testConfigureVeracode() {
         remoteProvidersIndexPage.clickConfigureVeracode()
                 .setVeraUsername(VERACODE_USER)
                 .setVeraPassword(VERACODE_PASSWORD)
@@ -159,7 +159,7 @@ public class RemoteProvidersIT extends BaseDataTest {
 	}
 	
 	@Test
-	public void invalidVeracodeTest(){
+	public void testInvalidVeracode(){
         remoteProvidersIndexPage.clickConfigureVeracode()
                 .setVeraUsername("No Such User")
                 .setVeraPassword("Password Bad")
@@ -172,7 +172,7 @@ public class RemoteProvidersIT extends BaseDataTest {
 	}
 
     @Test
-    public void editQualysMapping() {
+    public void testEditQualysMapping() {
         remoteProvidersIndexPage.clickConfigureQualys()
                 .setQualysUsername(QUALYS_USER)
                 .setQualysPassword(QUALYS_PASS)
@@ -189,7 +189,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void editVeracodeMapping() {
+    public void testEditVeracodeMapping() {
         remoteProvidersIndexPage.clickConfigureVeracode()
                 .setVeraUsername(VERACODE_USER)
                 .setVeraPassword(VERACODE_PASSWORD)
@@ -206,7 +206,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void editWhiteHatMapping() {
+    public void testEditWhiteHatMapping() {
         remoteProvidersIndexPage.clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
                 .saveWhiteHat();
@@ -222,7 +222,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void importWhiteHatScan() {
+    public void testImportWhiteHatScan() {
         remoteProvidersIndexPage.clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
                 .saveWhiteHat()
@@ -243,7 +243,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void importVeracodeScan() {
+    public void testImportVeracodeScan() {
         remoteProvidersIndexPage.clickConfigureVeracode()
                 .setVeraUsername(VERACODE_USER)
                 .setVeraPassword(VERACODE_PASSWORD)
@@ -265,7 +265,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void importQualysGuardScan() {
+    public void testImportQualysGuardScan() {
         remoteProvidersIndexPage.clickConfigureQualys()
                 .setQualysUsername(QUALYS_USER)
                 .setQualysPassword(QUALYS_PASS)
@@ -383,7 +383,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void checkNumberUnderSeverity() {
+    public void testCheckNumberUnderSeverity() {
         remoteProvidersIndexPage.clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
                 .saveWhiteHat()
@@ -467,7 +467,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void scheduledImportNavigationTest() {
+    public void testScheduledImportNavigation() {
         navigateToSchedule();
 
         assertTrue("Navigation to scheduled imports failed.",
@@ -475,7 +475,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void scheduledDailyImportCreationTest() {
+    public void testScheduledDailyImportCreation() {
         navigateToSchedule();
 
         remoteProvidersSchedulePage.clickScheduleNewImportButton()
@@ -489,7 +489,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void scheduledWeeklyImportCreationTest() {
+    public void testScheduledWeeklyImportCreation() {
         navigateToSchedule();
 
         remoteProvidersSchedulePage.clickScheduleNewImportButton()
@@ -505,7 +505,7 @@ public class RemoteProvidersIT extends BaseDataTest {
 
     //TODO remove extra navigation when enhancement #618 is added
     @Test
-    public void checkSameDailyScheduleConflict() {
+    public void testCheckSameDailyScheduleConflict() {
         String frequency = "Daily";
         int hour = 9;
         int minutes = 30;
@@ -539,7 +539,7 @@ public class RemoteProvidersIT extends BaseDataTest {
 
     //TODO remove extra navigation when enhancement #618 is added
     @Test
-    public void checkSameWeeklyScheduleConflict() {
+    public void testCheckSameWeeklyScheduleConflict() {
         navigateToSchedule();
 
         remoteProvidersSchedulePage.clickScheduleNewImportButton()
@@ -569,7 +569,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void deleteDailyRemoteProviderScheduling() {
+    public void testDeleteDailyRemoteProviderScheduling() {
         navigateToSchedule();
 
         remoteProvidersSchedulePage.clickScheduleNewImportButton()
@@ -588,7 +588,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void deleteWeeklyRemoteProviderScheduling() {
+    public void testDeleteWeeklyRemoteProviderScheduling() {
         navigateToSchedule();
 
         remoteProvidersSchedulePage.clickScheduleNewImportButton()
@@ -609,7 +609,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void checkSuccessMessageLocation() {
+    public void testCheckSuccessMessageLocation() {
         navigateToSchedule();
 
         remoteProvidersSchedulePage.clickScheduleNewImportButton()
@@ -636,7 +636,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void checkQualysEditNameModalHeader() {
+    public void testCheckQualysEditNameModalHeader() {
         remoteProvidersIndexPage.clickConfigureQualys()
                 .setQualysUsername(QUALYS_USER)
                 .setQualysPassword(QUALYS_PASS)
@@ -658,7 +658,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void checkVeracodeEditNameModalHeader() {
+    public void testCheckVeracodeEditNameModalHeader() {
         remoteProvidersIndexPage.clickConfigureVeracode()
                 .setVeraUsername(VERACODE_USER)
                 .setVeraPassword(VERACODE_PASSWORD)
@@ -677,7 +677,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void checkWhiteHatEditNameModalHeader() {
+    public void testCheckWhiteHatEditNameModalHeader() {
         remoteProvidersIndexPage.clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
                 .saveWhiteHat();
@@ -694,7 +694,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
     
     @Test
-    public void configureContrastTest() {
+    public void testConfigureContrast() {
         remoteProvidersIndexPage.clickConfigureContrast()
                 .setContrastUser(CONTRAST_USER)
                 .setContrastAPI(CONTRAST_API_KEY)
@@ -715,7 +715,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void updateContrastApplicationsTest() {
+    public void testUpdateContrastApplications() {
         remoteProvidersIndexPage.clickConfigureContrast()
                 .setContrastUser(CONTRAST_USER)
                 .setContrastAPI(CONTRAST_API_KEY)
@@ -742,7 +742,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void editContrastApplicationName() {
+    public void testEditContrastApplicationName() {
         String newName = getName();
 
         remoteProvidersIndexPage.clickConfigureContrast()

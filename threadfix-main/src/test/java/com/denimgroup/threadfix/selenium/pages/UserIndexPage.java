@@ -142,8 +142,9 @@ public class UserIndexPage extends BasePage {
 		return new UserIndexPage(driver);
 	}
 	
-	public String getGlobalAccessRole(String name){
-		return new Select(driver.findElementById("roleSelect"+(name))).getAllSelectedOptions().get(0).getText().trim();
+	public UserIndexPage getGlobalAccessRole(String name){
+		driver.findElementById("roleSelect").sendKeys(name);
+        return new UserIndexPage(driver);
 	}
 
 	public UserIndexPage clickEditLink(String userName) {
@@ -187,36 +188,22 @@ public class UserIndexPage extends BasePage {
 		return new UserIndexPage(driver);	
 	}
 
-    public UserIndexPage createUser(String user, String disp, String pass, Boolean ldap, Boolean global, String role) {
+    public UserIndexPage createUser(String user, String disp, String pass) {
         clickAddUserLink();
         setName(user);
         setDisplayName(disp);
-        if(!ldap) {
-            setPassword(pass);
-            setConfirmPassword(pass);
-        } else {
-            toggleLDAP();
-        }
-        if(global) {
-            chooseRoleForGlobalAccess(role);
-        }
-        clickModalSubmit();
+        setPassword(pass);
+        setConfirmPassword(pass);
+        clickAddNewUserBtn();
         return new UserIndexPage(driver);
     }
 
-    public UserIndexPage editUser(String user, String disp, String pass, Boolean ldap, Boolean global, String role) {
+    public UserIndexPage editUser(String user, String newName, String disp, String pass) {
         clickEditLink(user);
-        setName(user);
+        setName(newName);
         setDisplayName(disp);
-        if(!ldap) {
-            setPassword(pass);
-            setConfirmPassword(pass);
-        } else {
-            toggleLDAP();
-        }
-        if(global) {
-            chooseRoleForGlobalAccess(role);
-        }
+        setPassword(pass);
+        setConfirmPassword(pass);
         clickUpdateUserBtn();
         return new UserIndexPage(driver);
     }
