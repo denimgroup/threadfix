@@ -50,7 +50,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
     }
 
     @Test
-    public void markSingleVulnerabilityClosedTest() {
+    public void testMarkSingleVulnerabilityClosed() {
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilityByType("Critical790")
                 .clickVulnerabilitiesActionButton()
@@ -69,7 +69,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
     }
 
     @Test
-    public void reopenSingleVulnerabilityTest() {
+    public void testReopenSingleVulnerability() {
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilityByType("Critical790")
                 .clickVulnerabilitiesActionButton()
@@ -107,7 +107,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
     }
 
     @Test
-    public void markMultipleVulnerabilitiesClosedTest() {
+    public void testMarkMultipleVulnerabilitiesClosed() {
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilitiesByCategory("Critical79")
                 .clickVulnerabilitiesActionButton()
@@ -127,7 +127,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
     }
 
     @Test
-    public void reopenMultipleVulnerabilitiesTest() {
+    public void testReopenMultipleVulnerabilities() {
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilitiesByCategory("Critical79")
                 .clickVulnerabilitiesActionButton()
@@ -165,7 +165,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
     }
 
     @Test
-    public void markSingleVulnerabilityFalsePositiveTest() {
+    public void testMarkSingleVulnerabilityFalsePositive() {
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilityByType("Critical790")
                 .clickVulnerabilitiesActionButton()
@@ -183,7 +183,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
     }
 
     @Test
-    public void unMarkSingleVulnerabilityFalsePositiveTest() {
+    public void testUnmarkSingleVulnerabilityFalsePositive() {
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilityByType("Critical790")
                 .clickVulnerabilitiesActionButton()
@@ -221,7 +221,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
     }
 
     @Test
-    public void markMultipleVulnerabilitiesFalsePositiveTest() {
+    public void testMarkMultipleVulnerabilitiesFalsePositive() {
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilitiesByCategory("Critical79")
                 .clickVulnerabilitiesActionButton()
@@ -240,7 +240,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
     }
 
     @Test
-    public void unMarkMultipleVulnerabilitiesFalsePositiveTest() {
+    public void testUnmarkMultipleVulnerabilitiesFalsePositive() {
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilitiesByCategory("Critical79")
                 .clickVulnerabilitiesActionButton()
@@ -278,7 +278,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
     }
 
     @Test
-    public void viewMoreLinkTest() {
+    public void testViewMoreLink() {
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .expandCommentSection("Critical790")
                 .addComment("Critical790")
@@ -292,7 +292,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
     }
 
     @Test
-    public void addCommentToVulnerabilityTest() {
+    public void testAddCommentToVulnerability() {
         String comment = getName();
 
         applicationDetailPage.expandVulnerabilityByType("Critical79")
@@ -310,7 +310,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
 
     //TODO fix bad navigation
     @Test
-    public void vulnerabilityPaginationTestingAvailable() {
+    public void testVulnerabilityPaginationTestingAvailable() {
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
 
         applicationDetailPage.refreshPage();
@@ -321,7 +321,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
     }
 
     @Test
-    public void vulnerabilityPaginationTestingUnavailable() {
+    public void testVulnerabilityPaginationTestingUnavailable() {
         applicationDetailPage.expandVulnerabilityByType("Critical79");
 
         assertFalse("Pagination available", applicationDetailPage.isPaginationPresent("Critical79"));

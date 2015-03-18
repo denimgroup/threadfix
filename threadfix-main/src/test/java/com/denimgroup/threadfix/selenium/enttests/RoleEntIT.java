@@ -40,7 +40,7 @@ import static org.junit.Assert.assertTrue;
 public class RoleEntIT extends BaseDataTest {
 
 	@Test
-	public void createRoleTest() {
+	public void testCreateRole() {
         String roleName = getName();
 
 		RolesIndexPage rolesIndexPage = loginPage.defaultLogin()
@@ -54,7 +54,7 @@ public class RoleEntIT extends BaseDataTest {
 	}
 
     @Test
-    public void deleteRoleTest() {
+    public void testDeleteRole() {
         String roleName = getName();
 
         RolesIndexPage rolesIndexPage = loginPage.defaultLogin()
@@ -72,7 +72,7 @@ public class RoleEntIT extends BaseDataTest {
     }
 
 	@Test
-	public void editRoleTest() {
+	public void testEditRole() {
 		String originalRoleName = getName();
 		String editedRoleName = getName();
 
@@ -99,7 +99,7 @@ public class RoleEntIT extends BaseDataTest {
 	}
 
     @Test
-    public void createRoleValidation() {
+    public void testCreateRoleValidation() {
         String whiteSpaceName = "     ";
 
         RolesIndexPage rolesIndexPage = loginPage.defaultLogin()
@@ -113,7 +113,7 @@ public class RoleEntIT extends BaseDataTest {
     }
 
     @Test
-    public void editRoleValidation() {
+    public void testEditRoleValidation() {
         String roleName = getName();
         String whiteSpaceName = "     ";
         String emptyStringName = "";
@@ -137,7 +137,7 @@ public class RoleEntIT extends BaseDataTest {
     }
 
     @Test
-	public void createRoleDuplicateValidation() {
+	public void testCreateRoleDuplicateValidation() {
 		String roleName = createRole();
 
 		RolesIndexPage rolesIndexPage = loginPage.defaultLogin()
@@ -151,7 +151,7 @@ public class RoleEntIT extends BaseDataTest {
 	}
 
 	@Test
-	public void addApplicationOnlyRoleTest(){
+	public void testAddApplicationOnlyRole(){
 		String roleName = createSpecificPermissionRole("canManageApplications");
 		String userName = createSpecificRoleUser(roleName);
 		initializeTeamAndApp();
@@ -170,7 +170,7 @@ public class RoleEntIT extends BaseDataTest {
 	}
 
 	@Test
-	public void setPermissionsTest() {
+	public void testSetPermissions() {
 		String roleName = getName();
 		
 		RolesIndexPage rolesIndexPage = loginPage.defaultLogin()
@@ -218,7 +218,7 @@ public class RoleEntIT extends BaseDataTest {
 	}
 
 	@Test
-	public void deleteRoleWithUserAttachedTest(){
+	public void testDeleteRoleWithUserAttached(){
 		String roleName = createRole();
         String roleUser = createSpecificRoleUser(roleName);
 

@@ -39,7 +39,7 @@ import static org.junit.Assert.assertTrue;
 public class AnalyticsSnapshotIT extends BaseDataTest{
 
     @Test
-    public void snapshotD3TeamFilterTest() {
+    public void testSnapshotD3TeamFilter() {
         initializeTeamAndAppWithIBMScan();
         String teamName2 = createTeam();
 
@@ -70,7 +70,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     }
 
     @Test
-    public void snapshotD3ApplicationFilterTest() {
+    public void testSnapshotD3ApplicationFilter() {
         initializeTeamAndAppWithIBMScan();
         String teamName2 = createTeam();
         String appName2 = createApplication(teamName2);
@@ -104,7 +104,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     }
 
     @Test
-    public void expandCollapseTest() {
+    public void testExpandCollapse() {
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
                 .clickSnapshotTab(true);
@@ -162,7 +162,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     }
 
     @Test
-    public void pieModalCloseTest() {
+    public void testClosePieModal() {
         initializeTeamAndAppWithWebInspectScan();
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
@@ -180,7 +180,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     }
 
     @Test
-    public void checkMostVulnerableAppTips() {
+    public void testMostVulnerableAppTips() {
         initializeTeamAndAppWithWebInspectScan();
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
@@ -206,7 +206,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     }
 
     @Test
-    public void checkMostVulnerableAppModalHeader() {
+    public void testMostVulnerableAppModalHeader() {
         initializeTeamAndAppWithWebInspectScan();
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
@@ -224,7 +224,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     }
 
     @Test
-    public void checkProgressByVulnNav() {
+    public void testProgressByVulnNav() {
         initializeTeamAndAppWithWebInspectScan();
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
@@ -238,7 +238,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     }
 
     @Test
-    public void checkMostVulnAppsNav() {
+    public void testMostVulnAppsNav() {
         initializeTeamAndAppWithWebInspectScan();
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
@@ -252,7 +252,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     }
 
     @Test
-    public void checkPointInTimeNav() {
+    public void testPointInTimeNav() {
         initializeTeamAndAppWithWebInspectScan();
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
@@ -267,7 +267,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     }
 
     @Test
-    public void checkVulnClosedTime() {
+    public void testVulnClosedTime() {
         initializeTeamAndAppWithWebInspectScan();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin().clickOrganizationHeaderLink()
@@ -294,7 +294,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     }
 
     @Test
-    public void progressByVulnInTimeFieldFilters() {
+    public void testProgressByVulnInTimeFieldFilters() {
         initializeTeamAndAppWithWebInspectScan();
 
         loginPage.defaultLogin()
@@ -314,7 +314,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     }
 
     @Test
-    public void progressByVulnTeamFilterCount() {
+    public void testProgressByVulnTeamFilterCount() {
         initializeTeamAndAppWithWebInspectScan();
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
@@ -339,7 +339,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     }
 
     @Test
-    public void progressByVulnCheckSavedFilter() {
+    public void testProgressByVulnCheckSavedFilter() {
         initializeTeamAndAppWithIBMScan();
         initializeTeamAndAppWithWebInspectScan();
         String filterName = getName();
@@ -374,7 +374,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     }
 
     @Test
-    public void mostVulnAppTestFilter() {
+    public void testMostVulnAppTestFilter() {
         initializeTeamAndAppWithWebInspectScan();
 
         loginPage.defaultLogin()
@@ -397,7 +397,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     }
 
     @Test
-    public void mostVulnAppSaveFilter() {
+    public void testMostVulnAppSaveFilter() {
         initializeTeamAndAppWithWebInspectScan();
         String filterName = getName();
 

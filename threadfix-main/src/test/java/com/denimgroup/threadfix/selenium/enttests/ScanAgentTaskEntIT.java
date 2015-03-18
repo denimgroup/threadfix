@@ -56,7 +56,7 @@ public class ScanAgentTaskEntIT extends BaseDataTest {
     }
 
     @Test
-    public void addScanAgentTaskTest() {
+    public void testAddScanAgentTask() {
         String scanner = scanAgentMap.get("ZAP");
         String date;
         int scanId;
@@ -83,7 +83,7 @@ public class ScanAgentTaskEntIT extends BaseDataTest {
     }
 
     @Test
-    public void deleteScanAgentTaskTest() {
+    public void testDeleteScanAgentTask() {
         String scanner = scanAgentMap.get("ZAP");
         String date;
 

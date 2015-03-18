@@ -233,7 +233,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
-    public void createDefectTrackerEditDeleteModal() {
+    public void testCreateDefectTrackerEditDeleteModal() {
         initializeTeamAndApp();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin().clickOrganizationHeaderLink()
@@ -260,7 +260,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
-    public void top10VulnerabilitiesPresentTest() {
+    public void testTop10VulnerabilitiesPresent() {
         initialize();
 
         applicationDetailPage.waitForCWEBar(teamName, appName, "CWE20");
@@ -269,7 +269,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
-    public void top10VulnerabilitiesUpdatedTest() {
+    public void testTop10VulnerabilitiesUpdated() {
         initialize();
 
         applicationDetailPage.clickActionButton()
@@ -283,7 +283,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
-    public void top10ShowLessTest() {
+    public void testTop10ShowLess() {
         initializeTeamAndApp();
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.getScanFilePath("Microsoft CAT.NET"));
@@ -298,7 +298,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
-    public void top10VulnerabilitiesTipInfoTest() {
+    public void testTop10VulnerabilitiesTipInfo() {
         initialize();
         String tipText = "Improper Input Validation (CWE 20): 10";
         String vulnerabilityBar = teamName + appName + "CWE20Bar";
@@ -309,7 +309,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
-    public void top10VulnerabilitiesModalInfoTest() {
+    public void testTop10VulnerabilitiesModalInfo() {
         initialize();
         String cweID = "20";
         String cweName = "Improper Input Validation";
@@ -326,7 +326,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
-    public void vulnerabilitySummaryDetailFilter() {
+    public void testVulnerabilitySummaryDetailFilter() {
         initialize();
         String vulnerabilityBar = teamName + appName + "CWE20Bar";
 
@@ -337,7 +337,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
-    public void checkTopVulnerabilitiesResponsivetoScanDelete() {
+    public void testTopVulnerabilitiesResponsiveToScanDelete() {
         initialize();
         String vulnerabilityBar = teamName + appName + "CWE20Bar";
 

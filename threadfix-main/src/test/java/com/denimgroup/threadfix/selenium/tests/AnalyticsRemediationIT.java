@@ -62,7 +62,7 @@ public class AnalyticsRemediationIT extends BaseDataTest {
     }
 
     @Test
-    public void checkStartingEndingCount() {
+    public void testStartingEndingCount() {
         String tagName = initialize();
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("OWASP Zed Attack Proxy"));
@@ -85,7 +85,7 @@ public class AnalyticsRemediationIT extends BaseDataTest {
     }
 
     @Test
-    public void checkAppNameNavigation() {
+    public void testAppNameNavigation() {
         initialize();
 
         analyticsPage.clickAppName(appName);
@@ -94,7 +94,7 @@ public class AnalyticsRemediationIT extends BaseDataTest {
     }
 
     @Test
-    public void checkTeamNameNavigation() {
+    public void testTeamNameNavigation() {
         initialize();
 
         analyticsPage.clickTeamName(teamName);
@@ -135,7 +135,7 @@ public class AnalyticsRemediationIT extends BaseDataTest {
     }
 
     @Test
-    public void attachComment() {
+    public void testAttachComment() {
         String tagName = initialize();
         String testComment = getName();
 

@@ -295,7 +295,7 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void sameAppNameMultipleTeams() {
+    public void testSameAppNameMultipleTeams() {
         initializeTeamAndApp();
         String teamName2 = createTeam();
 
@@ -321,7 +321,7 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void switchTeamTest() {
+    public void testSwitchTeam() {
         initializeTeamAndApp();
         String teamName2 = createTeam();
 
@@ -593,7 +593,7 @@ public class ApplicationIT extends BaseDataTest {
 
     //TODO add validation test for static manual finding modal
     @Test
-    public void deleteManualFindingScan() {
+    public void testDeleteManualFindingScan() {
         initializeTeamAndApp();
         String CWE = "79";
         String url = "http://test.com";
@@ -622,7 +622,7 @@ public class ApplicationIT extends BaseDataTest {
     /*___________________________ Deletion ___________________________*/
 
     @Test
-    public void deleteUploadedScan() {
+    public void testDeleteUploadedScan() {
         initializeTeamAndApp();
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
@@ -639,7 +639,7 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void deleteApplicationTest() {
+    public void testDeleteApplication() {
         initializeTeamAndApp();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
@@ -659,7 +659,7 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void remoteSourceCodeTest() {
+    public void testRemoteSourceCode() {
         String teamName = createTeam();
         String appName = getName();
 
@@ -690,7 +690,7 @@ public class ApplicationIT extends BaseDataTest {
 
 
     @Test
-    public void editSourceCodeTest() {
+    public void testEditSourceCode() {
         String teamName = createTeam();
         String appName = getName();
 
@@ -730,7 +730,7 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void localSourceCodeTest() {
+    public void testLocalSourceCode() {
         String teamName = createTeam();
         String appName = getName();
 
@@ -751,7 +751,7 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void createAppSourceCodeValidate() {
+    public void testCreateAppSourceCodeValidate() {
         String teamName = createTeam();
         String appName = getName();
 
@@ -770,7 +770,7 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void editApplicationSourceCodeValidation() {
+    public void testEditApplicationSourceCodeValidation() {
         String teamName = createTeam();
         String appName = getName();
 
@@ -796,7 +796,7 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void checkUnmappedFindingsLink() {
+    public void testCheckUnmappedFindingsLink() {
         initializeTeamAndApp();
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Unmapped Scan"));
@@ -813,7 +813,7 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void uploadNewScan() {
+    public void testUploadNewScan() {
         initializeTeamAndApp();
 
         String newScan = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
@@ -830,7 +830,7 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void uploadSameScanTwiceOnApplicationPage() {
+    public void testUploadSameScanTwiceOnApplicationPage() {
         initializeTeamAndApp();
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
@@ -849,7 +849,7 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void uniqueIDTest() {
+    public void testUniqueId() {
         String teamName = createTeam();
         String appName = getName();
 
@@ -868,7 +868,7 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void unmappedFindingScanTest() {
+    public void testUnmappedFindingScan() {
         initializeTeamAndApp();
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Unmapped Scan"));
@@ -883,7 +883,7 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void AlphabetizeSortTeamByEditApplication() {
+    public void testAlphabetizeSortTeamByEditApplication() {
         String firstTeamName = "A" + getName();
         String appName = getName();
 
@@ -908,7 +908,7 @@ public class ApplicationIT extends BaseDataTest {
     //TODO wait till the bug for Scheduling to fix
     @Ignore
     @Test
-    public void checkDateRangeFilterSaving() {
+    public void testDateRangeFilterSaving() {
         initializeTeamAndApp();
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
@@ -934,7 +934,7 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void checkDependencyScanInformation() {
+    public void testDependencyScanInformation() {
         initializeTeamAndApp();
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("DependencyCheck"));
@@ -951,7 +951,7 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void cancelDeleteScanAlert() {
+    public void testCancelDeleteScanAlert() {
         initializeTeamAndApp();
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));

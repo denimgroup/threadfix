@@ -76,7 +76,7 @@ public class SystemSettingsEntIT extends BaseDataTest {
     }
 
     @Test
-    public void testValidLDAPSettings() {
+    public void testValidLdapSettings() {
         String invalidUserPassword = getRandomString(15);
 
         systemSettingsPage.expandLDAPSettings()
@@ -100,7 +100,7 @@ public class SystemSettingsEntIT extends BaseDataTest {
     }
 
     @Test
-    public void testInvalidLDAPSettings() {
+    public void testInvalidLdapSettings() {
         systemSettingsPage.expandLDAPSettings()
                 .setLDAPSearchBase(LDAP_SEARCHBASE)
                 .setLDAPUserDN(LDAP_USERDN)
@@ -117,7 +117,7 @@ public class SystemSettingsEntIT extends BaseDataTest {
     }
 
     @Test
-    public void testValidLDAPUserAndWipedSystemSettings() {
+    public void testValidLdapUserAndWipedSystemSettings() {
         systemSettingsPage.expandLDAPSettings()
                 .setLDAPSearchBase(LDAP_SEARCHBASE)
                 .setLDAPUserDN(LDAP_USERDN)
@@ -152,7 +152,7 @@ public class SystemSettingsEntIT extends BaseDataTest {
     }
 
     @Test
-    public void testDefaultLDAPRole() {
+    public void testDefaultLdapRole() {
         systemSettingsPage.expandLDAPSettings()
                 .setLDAPSearchBase(LDAP_SEARCHBASE)
                 .setLDAPUserDN(LDAP_USERDN)
@@ -188,7 +188,7 @@ public class SystemSettingsEntIT extends BaseDataTest {
     }
 
     @Test
-    public void testReadAccessLDAPRole() {
+    public void testReadAccessLdapRole() {
         initializeTeamAndApp();
 
         systemSettingsPage.expandLDAPSettings()
@@ -237,7 +237,7 @@ public class SystemSettingsEntIT extends BaseDataTest {
     }
 
     @Test
-    public void testClearLDAPConfiguration() {
+    public void testClearLdapConfiguration() {
         systemSettingsPage.expandLDAPSettings()
                 .setLDAPSearchBase(LDAP_SEARCHBASE)
                 .setLDAPUserDN(LDAP_USERDN)

@@ -41,7 +41,7 @@ import static org.junit.Assert.assertTrue;
 public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
 
     @Test
-    public void expandCollapseTest() {
+    public void testExpandCollapse() {
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
                 .clickVulnerabilitySearchTab();
@@ -58,7 +58,7 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
     }
 
     @Test
-    public void teamFilterTest() {
+    public void testTeamFilter() {
         initializeTeamAndAppWithIBMScan();
         String teamName2 = createTeam();
 
@@ -86,7 +86,7 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
     }
 
     @Test
-    public void applicationFilterTest() {
+    public void testApplicationFilter() {
         initializeTeamAndAppWithIBMScan();
         String teamName2 = createTeam();
         String appName2 = createApplication(teamName2);
@@ -115,7 +115,7 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
     }
 
     @Test
-    public void checkDeletedVulnerability() {
+    public void testCheckDeletedVulnerability() {
         initializeTeamAndAppWithIBMScan();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
@@ -143,7 +143,7 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
     }
 
     @Test
-    public void checkAnalyticsPage() {
+    public void testCheckAnalyticsPage() {
         initializeTeamAndAppWithIBMScan();
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
@@ -160,7 +160,7 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
     }
 
     @Test
-    public void checkAgingFilter() {
+    public void testCheckAgingFilter() {
         initializeTeamAndAppWithIBMScan();
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()

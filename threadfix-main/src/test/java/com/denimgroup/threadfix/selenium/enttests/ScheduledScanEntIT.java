@@ -50,7 +50,7 @@ public class ScheduledScanEntIT extends BaseDataTest {
     }
 
     @Test
-    public void scheduleDailyScanTest() {
+    public void testScheduleDailyScan() {
         applicationDetailPage.clickScheduleNewScanButton()
                 .setScheduledScanFrequency("Daily")
                 .setScheduledScanTime("8", "15", "PM")
@@ -61,7 +61,7 @@ public class ScheduledScanEntIT extends BaseDataTest {
     }
 
     @Test
-    public void validDailyScanTest(){
+    public void testValidDailyScan(){
         applicationDetailPage.clickScheduleNewScanButton()
                 .setScheduledScanFrequency("Daily")
                 .setScheduledScanTime("8", "15", "PM")
@@ -76,7 +76,7 @@ public class ScheduledScanEntIT extends BaseDataTest {
     }
 
     @Test
-    public void deleteDailyScanTest(){
+    public void testDeleteDailyScan(){
         applicationDetailPage.clickScheduleNewScanButton()
                 .setScheduledScanFrequency("Daily")
                 .setScheduledScanTime("8", "15", "PM")
@@ -90,7 +90,7 @@ public class ScheduledScanEntIT extends BaseDataTest {
     }
 
     @Test
-    public void scheduleWeeklyScanTest() {
+    public void testScheduleWeeklyScan() {
         applicationDetailPage.clickScheduleNewScanButton()
                 .setScheduledScanFrequency("Weekly")
                 .setScheduledScanTime("6", "30", "AM")
@@ -102,7 +102,7 @@ public class ScheduledScanEntIT extends BaseDataTest {
     }
 
     @Test
-    public void validWeeklyScanTest(){
+    public void testValidWeeklyScan(){
         applicationDetailPage.clickScheduleNewScanButton()
                 .setScheduledScanFrequency("Weekly")
                 .setScheduledScanTime("6", "30", "AM")
@@ -118,7 +118,7 @@ public class ScheduledScanEntIT extends BaseDataTest {
     }
 
     @Test
-    public void deleteWeeklyScanTest(){
+    public void testDeleteWeeklyScan(){
         applicationDetailPage.clickScheduleNewScanButton()
                 .setScheduledScanFrequency("Weekly")
                 .setScheduledScanTime("6", "30", "AM")

@@ -36,7 +36,7 @@ import static org.junit.Assert.assertTrue;
 public class UserEntIT extends BaseDataTest {
 
     @Test
-    public void createUserWithoutGlobalAccess() {
+    public void testCreateUserWithoutGlobalAccess() {
         String userName = getName();
 
         UserIndexPage userIndexPage = loginPage.defaultLogin()
@@ -57,7 +57,7 @@ public class UserEntIT extends BaseDataTest {
     }
 
     @Test
-    public void createUserWithGlobalAccess() {
+    public void testCreateUserWithGlobalAccess() {
         String userName = getName();
 
         UserIndexPage userIndexPage = loginPage.defaultLogin()
@@ -81,7 +81,7 @@ public class UserEntIT extends BaseDataTest {
     }
 
 	@Test
-	public void createLdapUser(){
+	public void testCreateLdapUser(){
 		String userName = getName();
 
 		UserIndexPage userIndexPage = loginPage.defaultLogin()
@@ -116,7 +116,7 @@ public class UserEntIT extends BaseDataTest {
 	}
 
 	@Test
-	public void editUserRoleTest(){
+	public void testEditUserRole(){
 		String userName = getName();
 
 		UserIndexPage userIndexPage = loginPage.defaultLogin()

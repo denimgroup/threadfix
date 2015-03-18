@@ -40,7 +40,7 @@ import static org.junit.Assert.assertTrue;
 public class UserPermissionsEntIT extends BaseDataTest{
 
     @Test
-    public void navigationTest() {
+    public void testBasicNavigation() {
         String userName = createRegularUser();
 
         UserPermissionsPage userPermissionsPage = loginPage.defaultLogin()
@@ -55,7 +55,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void addAllPermissionsTest() {
+    public void testAddAllPermissions() {
         String teamName = createTeam();
         String userName = createRegularUser();
 
@@ -76,7 +76,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void addPermissionsFieldValidation() {
+    public void testAddPermissionsFieldValidation() {
         initializeTeamAndApp();
 
         String userName = createRegularUser();
@@ -103,7 +103,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void duplicatePermissionsFieldValidation() {
+    public void testDuplicatePermissionsFieldValidation() {
         initializeTeamAndApp();
 
         String userName = createRegularUser();
@@ -132,7 +132,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void permissionUsageValidation() {
+    public void testPermissionUsageValidation() {
         String teamName1 = createTeam();
         String teamName2 = createTeam();
         String appName = getName();
@@ -181,7 +181,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void deletePermissionsTest() {
+    public void testDeletePermissions() {
         initializeTeamAndApp();
 
         String userName = createRegularUser();
@@ -205,7 +205,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void deletePermissionsValidation() {
+    public void testDeletePermissionsValidation() {
         String teamName1 = createTeam();
         String teamName2 = createTeam();
         String appName = getName();
@@ -255,7 +255,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void permissionsAlphabeticalOrderTest() {
+    public void testPermissionsAlphabeticalOrder() {
         String firstTeamName = "A" + getName();
         DatabaseUtils.createTeam(firstTeamName);
         String firstAppName = createApplication(firstTeamName);
@@ -278,7 +278,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
     @Ignore
     @Test
-    public void reportPermissionsTest() {
+    public void testReportPermissions() {
         initializeTeamAndAppWithIBMScan();
 
         String userName = getRandomString(8);
@@ -298,7 +298,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void checkViewErrorLogPermission() {
+    public void testViewErrorLogPermission() {
         createRestrictedUser("canViewErrorLogs");
 
         DashboardPage dashboardPage = loginPage.login(userName, testPassword);
@@ -309,7 +309,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void checkUploadScanPermission() {
+    public void testUploadScanPermission() {
         initializeTeamAndApp();
 
         createRestrictedUser("canUploadScans");
@@ -327,7 +327,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void checkSubmitDefectsPermission() {
+    public void testSubmitDefectsPermission() {
         initializeTeamAndAppWithIBMScan();
 
         createRestrictedUser("canSubmitDefects");
@@ -354,7 +354,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void checkManageVulnerabilityFilters() {
+    public void testManageVulnerabilityFilters() {
         initializeTeamAndAppWithIBMScan();
 
         createRestrictedUser("canManageVulnFilters");
@@ -374,7 +374,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void checkModifyVulnerabilitiesPermission() {
+    public void testModifyVulnerabilitiesPermission() {
         initializeTeamAndAppWithIBMScan();
 
         createRestrictedUser("canModifyVulnerabilities");
@@ -413,7 +413,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
     @Ignore
     @Test
-    public void checkManageWAFsPermission() {
+    public void testManageWAFsPermission() {
         /* This test is throwing JavaScript errors when
         attempting to handle JavaScript alert message.
         Similar error have appeared online.
@@ -461,7 +461,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void checkManageUsersPermission() {
+    public void testManageUsersPermission() {
         createRestrictedUser("canManageUsers");
 
         DashboardPage dashboardPage = loginPage.login(userName, testPassword);
@@ -472,7 +472,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void checkManageTeamsPermission() {
+    public void testManageTeamsPermission() {
         String teamName = createTeam();
 
         createRestrictedUser("canManageTeams");
@@ -486,7 +486,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void checkManageRoles() {
+    public void testManageRoles() {
         createRestrictedUser("canManageRoles");
 
         DashboardPage dashboardPage = loginPage.login(userName, testPassword);
@@ -497,7 +497,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void checkManageSystemSettingsPermission() {
+    public void testManageSystemSettingsPermission() {
         createRestrictedUser("canManageSystemSettings");
 
         DashboardPage dashboardPage = loginPage.login(userName, testPassword);
@@ -508,7 +508,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void checkManageScanAgentsPermission() {
+    public void testManageScanAgentsPermission() {
         initializeTeamAndApp();
 
         createRestrictedUser("canManageScanAgents");
@@ -527,7 +527,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void checkManageRemoteProvidersPermission() {
+    public void testManageRemoteProvidersPermission() {
         createRestrictedUser("canManageRemoteProviders");
 
         DashboardPage dashboardPage = loginPage.login(userName, testPassword);
@@ -538,7 +538,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void checkManageApplicationsPermission() {
+    public void testManageApplicationsPermission() {
         initializeTeamAndApp();
 
         createRestrictedUser("canManageApplications");
@@ -555,7 +555,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void checkManageAPIKeysPermission() {
+    public void testManageAPIKeysPermission() {
         createRestrictedUser("canManageApiKeys");
 
         DashboardPage dashboardPage = loginPage.login(userName, testPassword);
@@ -566,7 +566,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void checkGenerateWAFRulesPermission() {
+    public void testGenerateWAFRulesPermission() {
         initializeTeamAndAppWithIBMScan();
 
         createRestrictedUser("canGenerateWafRules");
@@ -596,7 +596,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void checkGenerateReportsPermission() {
+    public void testGenerateReportsPermission() {
         initializeTeamAndAppWithWebInspectScan();
 
         createRestrictedUser("canGenerateReports");

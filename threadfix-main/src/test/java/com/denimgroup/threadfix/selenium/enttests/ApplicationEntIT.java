@@ -40,7 +40,7 @@ import static org.junit.Assert.assertTrue;
 public class ApplicationEntIT extends BaseDataTest {
 
     @Test
-    public void viewBasicPermissibleUsers(){
+    public void testViewBasicPermissibleUsers(){
         initializeTeamAndApp();
         String userName = createRegularUser();
 

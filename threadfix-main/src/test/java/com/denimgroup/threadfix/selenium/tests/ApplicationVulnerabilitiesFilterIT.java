@@ -50,7 +50,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
     }
 
     @Test
-    public void expandCollapseTest() {
+    public void testExpandCollapse() {
         int filtersExpandedSize;
         int filtersCollapsedSize;
 
@@ -68,7 +68,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
     }
 
     @Test
-    public void clearFilterTest() {
+    public void testClearFilter() {
         String parameter = "username";
 
         applicationDetailPage = applicationDetailPage.expandFieldControls()
@@ -119,7 +119,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
     }
 
     @Test
-    public void duplicateNameSavedFilterTest() {
+    public void testDuplicateNameSavedFilter() {
         String filterName = getRandomString(8);
 
         applicationDetailPage.expandSavedFilters()
@@ -136,7 +136,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
     }
 
     @Test
-    public void savedFiltersTest() {
+    public void testSavedFilters() {
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
         String scanner = "IBM Rational AppScan";
@@ -174,7 +174,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
 
     /* Scanner and Merged */
     @Test
-    public void mergedFindingsFilterTest() {
+    public void testMergedFindingsFilter() {
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
         applicationDetailPage.refreshPage();
@@ -191,7 +191,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
     }
 
     @Test
-    public void scannerFilterTest() {
+    public void testScannerFilter() {
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
         String scanner = "IBM Rational AppScan";
@@ -213,7 +213,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
 
     /* Field Controls */
     @Test
-    public void vulnerabilityTypeFilterTest() {
+    public void testVulnerabilityTypeFilter() {
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation";
 
         applicationDetailPage = applicationDetailPage.expandFieldControls()
@@ -227,7 +227,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
 
     //TODO get rid of the extra clicks for the info shown when fix
     @Test
-    public void pathFilterTest() {
+    public void testPathFilter() {
         String path = "/demo/EvalInjection2.php";
 
         // Get rid of these when fix is issued.
@@ -245,7 +245,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
 
     //TODO get rid of the extra clicks for the info shown when fix
     @Test
-    public void parameterFilterTest() {
+    public void testParameterFilter() {
         String parameter = "username";
 
         applicationDetailPage = applicationDetailPage.expandFieldControls()
@@ -264,7 +264,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
     }
 
     @Test
-    public void severityFilterTest() {
+    public void testSeverityFilter() {
         applicationDetailPage = applicationDetailPage.expandFieldControls()
                 .toggleSeverityFilter("Critical")
                 .toggleSeverityFilter("Low");
@@ -284,7 +284,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
 
     //TODO check for open/closed/false positives and what not
     @Test
-    public void statusFilterTest() {
+    public void testStatusFilter() {
         applicationDetailPage = applicationDetailPage.expandFieldControls()
                 .toggleStatusFilter("Open")
                 .toggleStatusFilter("Closed");
@@ -294,7 +294,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
 
     /* Aging */
     @Test
-    public void agingFilterTest() {
+    public void testAgingFilter() {
        applicationDetailPage = applicationDetailPage.expandAging()
                 .toggleLessThan()
                 .toggle90Days();
@@ -337,7 +337,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
     //TODO when issue 358 has been closed this test can be added back
     @Ignore
     @Test
-    public void dateFilterTest() {
+    public void testDateFilter() {
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
         applicationDetailPage.refreshPage();

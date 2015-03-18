@@ -46,12 +46,12 @@ public class APIKeysIT extends BaseIT {
 	}
 
 	@Test
-	public void navigationTest() {
+	public void testNavigation() {
 		assertTrue("API Keys Page not found", apiIndexPage.getH2Tag().contains("API Keys"));
 	}
 
 	@Test
-	public void createAPIKeyTest() {
+	public void testCreateApiKey() {
         apiIndexPage = apiIndexPage.clickNewLink()
                 .setNote("createAPIKey")
                 .setRestricted()
@@ -63,7 +63,7 @@ public class APIKeysIT extends BaseIT {
 	}
 
 	@Test
-	public void editKeyTest() {
+	public void testEditKey() {
 		apiIndexPage = apiIndexPage.clickNewLink()
                 .setNote("editAPIKeyNote")
                 .clickSubmitButton();
@@ -82,7 +82,7 @@ public class APIKeysIT extends BaseIT {
 	}
 
 	@Test
-	public void markRestrictedTest() {
+	public void testMarkRestricted() {
         String note = getName();
         //Create API Key
         apiIndexPage = apiIndexPage.clickNewLink()
@@ -98,7 +98,7 @@ public class APIKeysIT extends BaseIT {
 	}
 
 	@Test
-	public void deleteKeyTest() {
+	public void testDeleteKey() {
         String apiKeyNote = getRandomString(10);
 
         //Create API Key
@@ -118,7 +118,7 @@ public class APIKeysIT extends BaseIT {
 	}
 
 	@Test
-	public void longAPIKeyNoteDisplayTest(){
+	public void testLongApiKeyNoteDisplay(){
 		String shortNote = getName();
 		String longNoteA = getRandomString(2056);
         String longNoteB = getRandomString(254);
