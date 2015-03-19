@@ -42,7 +42,7 @@ import java.util.*;
  */
 @ScanImporter(
         scannerName = ScannerDatabaseNames.FINDBUGS_DB_NAME,
-        startingXMLTags = { "BugCollection", "Project", "BugInstance", "Class" })
+        startingXMLTags = { "BugCollection", "Project"})
 public class FindBugsChannelImporter extends AbstractChannelImporter {
 
 	public FindBugsChannelImporter() {
