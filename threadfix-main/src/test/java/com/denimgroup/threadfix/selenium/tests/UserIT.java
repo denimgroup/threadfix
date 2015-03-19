@@ -372,7 +372,7 @@ public class UserIT extends BaseDataTest {
 
     @Test
     public void testDisplayNameOnComment() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithIbmScan();
         String userName = getName();
         String displayName = getName();
         String password = getName();
