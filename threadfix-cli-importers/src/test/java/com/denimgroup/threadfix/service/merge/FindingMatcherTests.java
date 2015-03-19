@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.importer.ScanLocationManager;
 import org.junit.Test;
 
 import static com.denimgroup.threadfix.data.entities.ScannerDatabaseNames.CAT_NET_DB_NAME;
+import static com.denimgroup.threadfix.data.entities.ScannerDatabaseNames.CHECKMARX_DB_NAME;
 import static com.denimgroup.threadfix.data.entities.ScannerDatabaseNames.FORTIFY_DB_NAME;
 
 /**
@@ -61,6 +62,35 @@ public class FindingMatcherTests {
 
                 assert hasFortify : "Didn't have Fortify.";
                 assert hasCatNet : "Didn't have cat.net.";
+                hadOneMatch = true;
+            }
+        }
+
+        assert hadOneMatch : "Didn't find any matches.";
+    }
+    @Test
+    public void testCWE584StaticMerging() {
+        Application application = Merger.mergeFromDifferentScanners(null, // no source available
+                ScanLocationManager.getRoot() + "Static/Checkmarx/Checkmarx-CWE584.xml",
+                ScanLocationManager.getRoot() + "Static/Fortify/Fortify-CWE584.fpr");
+
+        boolean hadOneMatch = false;
+
+        for (Vulnerability vulnerability : application.getVulnerabilities()) {
+            if (vulnerability.getGenericVulnerability().getDisplayId() == 584 &&
+                    vulnerability.getSurfaceLocation().getPath().contains("CWE584_Return_in_Finally_Block")) {
+                boolean hasFortify = false, hasCheckMarx = false;
+
+                for (Finding finding : vulnerability.getFindings()) {
+                    if (FORTIFY_DB_NAME.equals(finding.getChannelNameOrNull())) {
+                        hasFortify = true;
+                    } else if (CHECKMARX_DB_NAME.equals(finding.getChannelNameOrNull())) {
+                        hasCheckMarx = true;
+                    }
+                }
+
+                assert hasFortify : "Didn't have Fortify.";
+                assert hasCheckMarx : "Didn't have CheckMarx.";
                 hadOneMatch = true;
             }
         }
