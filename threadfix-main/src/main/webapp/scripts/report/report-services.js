@@ -157,7 +157,7 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
 
     };
 
-    reportExporter.exportPDFTableFromId = function($scope, exportIds, tableData, finalize) {
+    reportExporter.exportPDFTableFromId = function($scope, exportIds, tableData, cleanup) {
 
         if (checkOldIE()) {
             alert(browerErrMsg);
@@ -189,14 +189,14 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
                 pdf.addPage();
             addElementToPdf(pdf, tableId);
             pdf.save(fileName + '.pdf');
-            if (finalize) {
-                finalize();
+            if (cleanup) {
+                cleanup();
             }
         });
 
     };
 
-    var addSvgToPdf = function($scope, pdf, graphId, finishPdf) {
+    var addSvgToPdf = function($scope, pdf, graphId, continueBuildingPdf) {
 
         if (graphId) {
             var svg = selectSvg(graphId);
@@ -213,23 +213,30 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
             var img = '<img src="' + imgsrc + '">';
             d3.select("#svgdataurl").html(img);
 
-            var canvas = document.createElement("canvas");
-            canvas.width = svg.attr("width");
-            canvas.height = svg.attr("height");
-
-            var context = canvas.getContext("2d");
             var image = new Image();
             image.onload = function() {
                 $scope.$apply(function() {
+                    var canvas = null;
+                    var context = null;
+                    var canvasdata = null;
                     try {
+                        canvas = document.createElement("canvas");
+                        canvas.width = svg.attr("width");
+                        canvas.height = svg.attr("height");
+
+                        context = canvas.getContext("2d");
                         context.drawImage(image, 0, 0);
-                        var canvasdata = canvas.toDataURL("image/png");
+                        canvasdata = canvas.toDataURL("image/png");
                         pdf.addImage(canvasdata, 'PNG', 10, 10);
 
                     } catch (ex) {
                         // So I guess, you are using IE...
                         $log.warn(ex);
                         try {
+                            canvas = document.createElement("canvas");
+                            canvas.width = svg.attr("width");
+                            canvas.height = svg.attr("height");
+
                             canvg(canvas, html);
                             var canvasData = canvas.toDataURL("image/jpeg");
                             pdf.addImage(canvasData, 'JPEG', 10, 10);
@@ -239,12 +246,12 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
                                 alert(browerErrMsg);
                         }
                     }
-                    finishPdf();
+                    continueBuildingPdf();
                 });
             };
             image.src = imgsrc;
         } else {
-            $timeout(finishPdf, 200);
+            $timeout(continueBuildingPdf, 200);
         }
     };
 
