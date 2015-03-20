@@ -595,7 +595,7 @@ public class DefectTrackerIT extends BaseDataTest {
     }
 
     @Test
-    public void testDeleteweeklyDefectTrackerScheduling() {
+    public void testDeleteWeeklyDefectTrackerScheduling() {
         DefectTrackerSchedulePage defectTrackerSchedulePage = defectTrackerIndexPage.clickScheduleUpdateTab();
 
         defectTrackerSchedulePage.clickScheduleNewUpdateTab()
@@ -616,7 +616,7 @@ public class DefectTrackerIT extends BaseDataTest {
     }
 
     @Test
-    public void testDefectTrackerNameValidation() {
+    public void testDeleteAddDefectTrackerWithSameName() {
         String defectTrackerName = getName();
         String defectTrackerType = "Bugzilla";
 
@@ -624,15 +624,18 @@ public class DefectTrackerIT extends BaseDataTest {
                 .setName(defectTrackerName)
                 .setType(defectTrackerType)
                 .setURL(BUGZILLA_URL)
-                .clickSaveDefectTracker()
-                .clickAddDefectTrackerButton()
+                .clickSaveDefectTracker();
+
+        defectTrackerIndexPage.clickEditLink(defectTrackerName)
+                .clickDeleteButton();
+
+        defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(defectTrackerName)
                 .setType(defectTrackerType)
                 .setURL(BUGZILLA_URL)
-                .clickSaveDefectTrackerErrorExpected();
+                .clickSaveDefectTracker();
 
         System.out.print(driver.findElement(By.id("nameServerError")).getText());
-        assertTrue("No error message displayed", driver.findElement(By.id("nameServerError"))
-                .getText().equals("That name is already taken."));
+        assertTrue("Defect tracker was not present in table.", defectTrackerIndexPage.isNamePresent(defectTrackerName));
     }
 }
