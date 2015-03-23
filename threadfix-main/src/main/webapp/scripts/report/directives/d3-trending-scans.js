@@ -425,11 +425,11 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 }
 
                 function getColor(key) {
-                    return (reportConstants.vulnTypeColorMap[key].graphColor ? reportConstants.vulnTypeColorMap[key].graphColor : color(key));
+                    return (reportConstants.vulnTypeColorMap[key] && reportConstants.vulnTypeColorMap[key].graphColor ? reportConstants.vulnTypeColorMap[key].graphColor : color(key));
                 }
 
                 function getTextColor(key) {
-                    return (reportConstants.vulnTypeColorMap[key].textColor ? reportConstants.vulnTypeColorMap[key].textColor : color(key));
+                    return (reportConstants.vulnTypeColorMap[key] && reportConstants.vulnTypeColorMap[key].textColor ? reportConstants.vulnTypeColorMap[key].textColor : color(key));
                 }
 
                 scope.export = function(){
