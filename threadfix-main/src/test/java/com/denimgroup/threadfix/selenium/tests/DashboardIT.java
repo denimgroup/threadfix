@@ -89,15 +89,15 @@ public class DashboardIT extends BaseDataTest {
 
         dashboardPage.hover(teamName + appName + "InfoBar");
         assertTrue("The number of Info Vulnerabilities in report tip was not correct.",
-                dashboardPage.isMostVulnerableTipCorrect("Info: 218"));
+                dashboardPage.isMostVulnerableTipCorrect("Info: 60"));
 
         dashboardPage.hover(teamName + appName + "LowBar");
         assertTrue("The number of Low Vulnerabilities in report tip was not correct.",
-                dashboardPage.isMostVulnerableTipCorrect("Low: 137"));
+                dashboardPage.isMostVulnerableTipCorrect("Low: 134"));
 
         dashboardPage.hover(teamName + appName + "MediumBar");
         assertTrue("The number of Medium Vulnerabilities in report tip was not correct.",
-                dashboardPage.isMostVulnerableTipCorrect("Medium: 112"));
+                dashboardPage.isMostVulnerableTipCorrect("Medium: 110"));
 
         dashboardPage.hover(teamName + appName + "HighBar");
         assertTrue("The number of High Vulnerabilities in report tip was not correct.",
@@ -122,7 +122,7 @@ public class DashboardIT extends BaseDataTest {
 
         assertTrue("Team name was not correct.", dashboardPage.isTeamNameCorrectInVulnerabilitySummaryModal(teamName));
         assertTrue("Application name was not correct.", dashboardPage.isApplicationNameCorrectInVulnerabilitySummaryModal(appName));
-        assertTrue("Count was not correct.", dashboardPage.isCountCorrectInVulnerabilitySummaryModal("218"));
+        assertTrue("Count was not correct.", dashboardPage.isCountCorrectInVulnerabilitySummaryModal("60"));
     }
 
     @Test
@@ -138,7 +138,7 @@ public class DashboardIT extends BaseDataTest {
         dashboardPage.clickSVGElement(teamName + appName + "InfoBar");
         AnalyticsPage analyticsPage = dashboardPage.clickDetails();
 
-        assertTrue("Info filtered results were not correct.", analyticsPage.isVulnerabilityCountCorrect("Info", "218"));
+        assertTrue("Info filtered results were not correct.", analyticsPage.isVulnerabilityCountCorrect("Info", "60"));
 
         assertFalse("Low vulnerabilities should have been filtered out.", analyticsPage.isSeverityLevelShown("Low"));
         assertFalse("Medium vulnerabilities should have been filtered out.", analyticsPage.isSeverityLevelShown("Medium"));

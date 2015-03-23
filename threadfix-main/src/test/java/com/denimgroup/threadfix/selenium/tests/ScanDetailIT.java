@@ -99,10 +99,10 @@ public class ScanDetailIT extends BaseDataTest {
         assertTrue("Total finding result is incorrect", scanDetailPage.isTotalFindingCorrect("45"));
         assertTrue("Finding Without Vulnerabilities result is incorrect", scanDetailPage.isFindingsWithoutVulnerabilitiesCorrect("0"));
         assertTrue("Finding With Vulnerabilities result is incorrect", scanDetailPage.isFindingsWithVulnerabilitiesCorrect("45"));
-        assertTrue("Duplicate Finding result is incorrect",scanDetailPage.isDuplicateFindingCorrect("0"));
+        assertTrue("Duplicate Finding result is incorrect",scanDetailPage.isDuplicateFindingCorrect("1"));
         assertTrue("Hidden Vulnerabilities result is incorrect",scanDetailPage.isHiddenVulnerabilitiesCorrect("0"));
-        assertTrue("Total Vulnerabilities is incorrect", scanDetailPage.isTotalVulnerabilitiesCorrect("45"));
-        assertTrue("New Vulnerabilities is incorrect", scanDetailPage.isNewVulnerabilitiesCorrect("45"));
+        assertTrue("Total Vulnerabilities is incorrect", scanDetailPage.isTotalVulnerabilitiesCorrect("44"));
+        assertTrue("New Vulnerabilities is incorrect", scanDetailPage.isNewVulnerabilitiesCorrect("44"));
         assertTrue("Old Vulnerabilities result is incorrect", scanDetailPage.isOldVulnerabilitiesCorrect("0"));
         assertTrue("Resurfaced Vulnerabilities result is incorrect", scanDetailPage.isResurfacedVulnerabilitiesCorrect("0"));
         assertTrue("Closed Vulnerabilities result is incorrect", scanDetailPage.isClosedVulnerabilitiesCorrect("0"));
