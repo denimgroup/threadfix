@@ -71,7 +71,21 @@ public class DefectPayload {
 
                 Object returnedObject = getObjectValue(objectMap, key, entry.getValue());
 
-                if (returnedObject != null) {
+                if (returnedObject instanceof ObjectDescriptor) {
+                    String id = ((ObjectDescriptor) returnedObject).getId();
+
+                    if (!"null".equals(id)) {
+                        fields.put(key, returnedObject);
+                    }
+
+                } else if (returnedObject instanceof NamedObjectDescriptor) {
+                    String name = ((NamedObjectDescriptor) returnedObject).getName();
+
+                    if (!"null".equals(name)) {
+                        fields.put(key, returnedObject);
+                    }
+
+                } else if (returnedObject != null) {
                     fields.put(key, returnedObject);
                 }
             }
