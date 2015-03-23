@@ -102,7 +102,7 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
         $scope.exportInfo.apps = $scope.title.apps;
         $scope.exportInfo.tags = $scope.title.tags;
         $scope.exportInfo.title = "Trending_Scans";
-        reportExporter.exportPDFTableFromId($scope.exportInfo)
+        reportExporter.exportPDFTableFromId($scope, $scope.exportInfo)
     };
 
 });

@@ -426,11 +426,19 @@ public class HPQCUtils {
             } else {
                 log.warn("The response for the get request was " + serverResponse.getStatusCode() + ", not 200.");
                 throw new DefectTrackerCommunicationException(
-                        "Got " + serverResponse.getStatusCode() + " response from server.");
+                        "Got " + getServerErrorMsg(serverResponse) + " response from server.");
             }
         } else {
             throw new DefectTrackerCommunicationException("Invalid project selected.");
         }
+    }
+
+    private static String getServerErrorMsg(@Nonnull Response serverResponse) {
+        if (serverResponse.toString().contains("<QCRestException>")) {
+            QCRestException exception = MarshallingUtils.marshal(QCRestException.class, serverResponse.toString());
+            return exception.getId() + ": " + exception.getTitle();
+        } else
+            return String.valueOf(serverResponse.getStatusCode());
     }
 
     private static boolean checkProjectName(String serverUrl, String domain_project) {

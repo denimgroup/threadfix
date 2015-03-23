@@ -181,7 +181,7 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
             $scope.exportInfo.teams = undefined;
             $scope.exportInfo.apps = undefined;
             $scope.exportInfo.title = "Compliance_Report";
-            reportExporter.exportPDFTableFromId($scope.exportInfo, $scope.tableInfo)
+            reportExporter.exportPDFTableFromId($scope, $scope.exportInfo, $scope.tableInfo)
             $scope.exportingPDF = false;
         }
     });

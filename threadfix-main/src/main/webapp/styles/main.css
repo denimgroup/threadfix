@@ -1295,3 +1295,7 @@ input.wide {
 .typeaheadPointer ul {
 	cursor: pointer;
 }
+
+.pdf-data {
+    display: none;
+}

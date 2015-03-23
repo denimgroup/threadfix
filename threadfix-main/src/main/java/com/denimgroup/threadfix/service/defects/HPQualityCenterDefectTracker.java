@@ -80,7 +80,8 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
         Entity.Fields fields = new Entity.Fields();
         if (fieldsMap != null) {
             for(Map.Entry<String, Object> entry : fieldsMap.entrySet()){
-                fields.getField().add(createField(entry.getKey(), entry.getValue(), isMemoType(entry.getKey())));
+                if (entry.getValue() != null && !entry.getKey().equals("AdditionalScannerInfo"))
+                    fields.getField().add(createField(entry.getKey(), entry.getValue(), isMemoType(entry.getKey())));
             }
         }
 
