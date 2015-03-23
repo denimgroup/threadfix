@@ -95,6 +95,6 @@ public class TeamEntIT extends BaseDataTest {
                 .clickOrganizationHeaderLink();
 
         assertTrue("App vulnerabilities are shown which user should not have permissions to see.",
-                teamIndexPage.teamVulnerabilitiesFiltered(teamName,"Total","45"));
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName,"Total","44"));
     }
 }

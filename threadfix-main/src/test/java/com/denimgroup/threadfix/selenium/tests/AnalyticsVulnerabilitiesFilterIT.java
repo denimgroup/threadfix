@@ -71,8 +71,8 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
-        assertTrue("Only 9 medium vulnerabilities should be shown.",
-                analyticsPage.isVulnerabilityCountCorrect("Medium", "9"));
+        assertTrue("Only 8 medium vulnerabilities should be shown.",
+                analyticsPage.isVulnerabilityCountCorrect("Medium", "8"));
         assertTrue("Only 21 low vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Low", "21"));
         assertTrue("Only 5 info vulnerabilities should be shown.",
@@ -100,8 +100,8 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
-        assertTrue("Only 9 medium vulnerabilities should be shown.",
-                analyticsPage.isVulnerabilityCountCorrect("Medium", "9"));
+        assertTrue("Only 8 medium vulnerabilities should be shown.",
+                analyticsPage.isVulnerabilityCountCorrect("Medium", "8"));
         assertTrue("Only 21 low vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Low", "21"));
         assertTrue("Only 5 info vulnerabilities should be shown.",

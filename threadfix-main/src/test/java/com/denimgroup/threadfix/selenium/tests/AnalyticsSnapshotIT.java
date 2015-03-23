@@ -89,8 +89,8 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
-        assertTrue("Only 9 medium vulnerabilities should be shown.",
-                analyticsPage.isVulnerabilityCountCorrect("Medium", "9"));
+        assertTrue("Only 8 medium vulnerabilities should be shown.",
+                analyticsPage.isVulnerabilityCountCorrect("Medium", "8"));
         assertTrue("Only 21 low vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Low", "21"));
         assertTrue("Only 5 info vulnerabilities should be shown.",
@@ -194,13 +194,13 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         analyticsPage.selectDropDownReport("Most Vulnerable Applications");
 
         assertTrue("Tip at level info does not match count", analyticsPage.mostVulnAppTip("Info", teamName, appName)
-                .equals("Info: 121"));
+                .equals("Info: 17"));
         assertTrue("Tip at level low does not match count", analyticsPage.mostVulnAppTip("Low",teamName,appName)
-                .equals("Low: 144"));
+                .equals("Low: 139"));
         assertTrue("Tip at level medium does not match count", analyticsPage.mostVulnAppTip("Medium",teamName,appName)
                 .equals("Medium: 117"));
         assertTrue("Tip at level high does not match count", analyticsPage.mostVulnAppTip("High",teamName,appName)
-                .equals("High: 38"));
+                .equals("High: 37"));
         assertTrue("Tip at level critical does not match count", analyticsPage.mostVulnAppTip("Critical",teamName,appName)
                 .equals("Critical: 27"));
     }
@@ -220,7 +220,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         analyticsPage.selectDropDownReport("Most Vulnerable Applications");
 
         assertTrue("Tip at level info does not match count", analyticsPage.mostVulnAppModalHeader("Info", teamName, appName)
-                .equals("Info: 121"));
+                .equals("Info: 17"));
     }
 
     @Test
