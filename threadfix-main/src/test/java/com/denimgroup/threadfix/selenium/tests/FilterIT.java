@@ -169,7 +169,7 @@ public class FilterIT extends BaseIT {
         assertTrue("Low vulnerability count was not correct.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Low", "4"));
         assertTrue("Info vulnerability count was not correct.",
-                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Info", "10"));
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Info", "9"));
 
         applicationFilterPage = teamIndexPage.expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)

@@ -137,7 +137,7 @@ public class TeamIndexPageIT extends BaseDataTest {
                 .uploadNewScan(newScan, teamName1, appName);
 
         assertTrue("The scan wasn't uploaded",
-                teamIndexPage.applicationVulnerabilitiesFiltered(teamName1, appName, "Total", "45"));
+                teamIndexPage.applicationVulnerabilitiesFiltered(teamName1, appName, "Total", "44"));
     }
 
     @Test

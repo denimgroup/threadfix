@@ -204,7 +204,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
         assertTrue("Only 9 medium vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Medium", "9"));
+                applicationDetailPage.isVulnerabilityCountCorrect("Medium", "8"));
         assertTrue("Only 21 low vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Low", "21"));
         assertTrue("Only 5 info vulnerabilities should be shown.",
@@ -313,8 +313,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
-        assertTrue("Only 9 medium vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Medium", "9"));
+        assertTrue("Only 8 medium vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Medium", "8"));
         assertTrue("Only 21 low vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Low", "21"));
         assertTrue("Only 5 info vulnerabilities should be shown.",
@@ -325,8 +325,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
-        assertTrue("Only 9 medium vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Medium", "9"));
+        assertTrue("Only 8 medium vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Medium", "8"));
         assertTrue("Only 21 low vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Low", "21"));
         assertTrue("Only 5 info vulnerabilities should be shown.",

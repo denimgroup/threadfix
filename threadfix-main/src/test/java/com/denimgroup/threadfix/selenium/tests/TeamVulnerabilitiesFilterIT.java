@@ -67,7 +67,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("45");
+                .clickVulnerabilitiesTab("44");
 
         teamDetailPage.expandFieldControls()
                 .setParameterFilter(parameter)
@@ -86,7 +86,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         //TODO remove refresh when issue #663 is fixed in 2.2milestone2
         teamDetailPage.refreshPage();
 
-        teamDetailPage.clickVulnerabilitiesTab("45");
+        teamDetailPage.clickVulnerabilitiesTab("44");
 
         assertTrue("Critical vulnerabilities should be shown.",
                 teamDetailPage.isSeverityLevelShown("Critical"));
@@ -161,7 +161,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("71");
+                .clickVulnerabilitiesTab("69");
 
         teamDetailPage.expandScannerAndMerged()
                 .addScannerFilter(scanner)
@@ -174,7 +174,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
         teamDetailPage.clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("71")
+                .clickVulnerabilitiesTab("69")
                 .clickClearFilters()
                 .clickLoadFilters()
                 .loadSavedFilter(newFilter);
@@ -199,7 +199,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("71");
+                .clickVulnerabilitiesTab("69");
 
         teamDetailPage.expandTeamApplication()
                 .addApplicationFilter(appName);
@@ -207,7 +207,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
         assertTrue("Only 9 medium vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Medium", "9"));
+                teamDetailPage.isVulnerabilityCountCorrect("Medium", "8"));
         assertTrue("Only 21 low vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Low", "21"));
         assertTrue("Only 5 info vulnerabilities should be shown.",
@@ -218,16 +218,16 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         //TODO remove refresh when issue #663 is fixed in 2.2milestone2
         teamDetailPage.refreshPage();
 
-        teamDetailPage.clickVulnerabilitiesTab("71");
+        teamDetailPage.clickVulnerabilitiesTab("69");
 
         assertTrue("Only 16 critical vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Critical", "16"));
-        assertTrue("Only 15 medium vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Medium", "15"));
+        assertTrue("Only 14 medium vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Medium", "14"));
         assertTrue("Only 25 low vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Low", "25"));
-        assertTrue("Only 15 info vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Info", "15"));
+        assertTrue("Only 14 info vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Info", "14"));
 
         teamDetailPage.expandTeamApplication().addApplicationFilter(appName2);
 
@@ -237,8 +237,8 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
                 teamDetailPage.isVulnerabilityCountCorrect("Medium", "6"));
         assertTrue("Only 4 low vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Low", "4"));
-        assertTrue("Only 10 info vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Info", "10"));
+        assertTrue("Only 9 info vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Info", "9"));
     }
 
     /*_________________ Scanner and Merged _________________*/
@@ -251,7 +251,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("71");
+                .clickVulnerabilitiesTab("69");
 
         teamDetailPage.expandScannerAndMerged()
                 .toggleTwoPlus();
@@ -274,15 +274,15 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("71");
+                .clickVulnerabilitiesTab("69");
 
         teamDetailPage.expandScannerAndMerged()
                 .addScannerFilter(scanner);
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
-        assertTrue("Only 9 medium vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Medium", "9"));
+        assertTrue("Only 8 medium vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Medium", "8"));
         assertTrue("Only 21 low vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Low", "21"));
         assertTrue("Only 5 info vulnerabilities should be shown.",
@@ -304,7 +304,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("45");
+                .clickVulnerabilitiesTab("44");
 
         teamDetailPage.expandFieldControls()
                 .addVulnerabilityTypeFilter(vulnerabilityType, defaultVulnerabilityType);
@@ -322,7 +322,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("45");
+                .clickVulnerabilitiesTab("44");
 
         teamDetailPage.expandFieldControls()
                 .setPathFilter(path);
@@ -342,7 +342,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("45");
+                .clickVulnerabilitiesTab("44");
 
         teamDetailPage.expandFieldControls()
                 .setParameterFilter(parameter);
@@ -362,7 +362,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("45");
+                .clickVulnerabilitiesTab("44");
 
         teamDetailPage.expandFieldControls()
                 .toggleSeverityFilter("Critical")
@@ -388,7 +388,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("45");
+                .clickVulnerabilitiesTab("44");
 
         teamDetailPage.expandFieldControls()
                 .toggleStatusFilter("Open")
@@ -407,7 +407,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("26");
+                .clickVulnerabilitiesTab("25");
 
         teamDetailPage.expandAging()
                 .toggleLessThan()
@@ -429,8 +429,8 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
                 teamDetailPage.isVulnerabilityCountCorrect("Medium", "6"));
         assertTrue("4 low vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Low", "4"));
-        assertTrue("10 info vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Info", "10"));
+        assertTrue("9 info vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Info", "9"));
 
         teamDetailPage.toggle90Days();
 
@@ -440,8 +440,8 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
                 teamDetailPage.isVulnerabilityCountCorrect("Medium", "6"));
         assertTrue("4 low vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Low", "4"));
-        assertTrue("10 info vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Info", "10"));
+        assertTrue("9 info vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Info", "9"));
     }
 
     /*_________________ Date Range _________________*/
