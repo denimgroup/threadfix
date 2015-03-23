@@ -92,14 +92,16 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
 
         for (Map.Entry<String, Object> entry : fieldsMap.entrySet()){
             AttributeDefinition entryDef = findAttributeDefinition(entry.getKey());
-            if (entryDef != null) {
+            if (entryDef == null) {
+                LOG.warn("Was unable to find " + entry.getKey() + " information");
+            } else if (entry.getValue() == null) {
+                LOG.debug("Value was null for field " + entry.getKey());
+            } else {
                 if (entryDef.getRelationType().equals("select")) {
                     addRelation(entryDef, assetTemplate, entry.getValue());
                 } else {
                     addAttribute(entryDef, assetTemplate, entry.getValue());
                 }
-            } else {
-                LOG.warn("Was unable to find " + entry.getKey() + " information");
             }
         }
 
