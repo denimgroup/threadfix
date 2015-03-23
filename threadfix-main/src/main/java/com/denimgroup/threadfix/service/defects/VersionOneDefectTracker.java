@@ -92,14 +92,16 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
 
         for (Map.Entry<String, Object> entry : fieldsMap.entrySet()){
             AttributeDefinition entryDef = findAttributeDefinition(entry.getKey());
-            if (entryDef != null) {
+            if (entryDef == null) {
+                LOG.warn("Was unable to find " + entry.getKey() + " information");
+            } else if (entry.getValue() == null) {
+                LOG.debug("Value was null for field " + entry.getKey());
+            } else {
                 if (entryDef.getRelationType().equals("select")) {
                     addRelation(entryDef, assetTemplate, entry.getValue());
                 } else {
                     addAttribute(entryDef, assetTemplate, entry.getValue());
                 }
-            } else {
-                LOG.warn("Was unable to find " + entry.getKey() + " information");
             }
         }
 
@@ -254,15 +256,11 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
             if ("number".equals(type)) {
                 genericField.setStep("any");
                 genericField.setMinValue(0);
-                genericField.setError("min", "Input positive number.");
-                genericField.setError("number", "Not valid number.");
             }
 
             genericField.setRequired(attr.isRequired());
             genericField.setSupportsMultivalue(attr.isMultiValue());
             genericField.setOptionsMap(getFieldOptions(attr));
-            if (attr.isRequired())
-                genericField.setError("required", "This field cannot be empty.");
 
             dynamicFormFields.add(genericField);
         }

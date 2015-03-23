@@ -10,18 +10,27 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         return a.name.localeCompare(b.name);
     };
 
+    $scope.numberToShow = 50;
+
     var reloadList = function() {
         $scope.initialized = false;
 
-        $http.get(tfEncoder.encode('/configuration/users/map')).
+        $http.get(tfEncoder.encode('/configuration/users/map/page/' + $scope.page + '/' + $scope.numberToShow)).
             success(function(data, status, headers, config) {
 
                 if (data.success) {
-
+                    $scope.countUsers = data.object.countUsers;
                     if (data.object.users.length > 0) {
                         $scope.users = data.object.users;
                         $scope.roles = data.object.roles;
                         $scope.users.sort(nameCompare);
+                    } else {
+
+                        // If the last page is no longer exist then refresh to page 1
+                        if ($scope.page !== 1) {
+                            $scope.page = 1;
+                            reloadList();
+                        }
                     }
 
                 } else {
@@ -37,6 +46,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     };
 
     $scope.$on('rootScopeInitialized', function() {
+        $scope.page = 1;
         reloadList();
     });
 
@@ -110,6 +120,11 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
+    };
+
+    $scope.updatePage = function(page) {
+        $scope.page = page;
+        reloadList();
     }
 
 });

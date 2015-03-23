@@ -1,5 +1,5 @@
 angular.module('threadfix')
-    .factory('d3donut',['d3', 'threadFixModalService', 'vulnSearchParameterService', function(d3, threadFixModalService, vulnSearchParameterService){
+    .factory('d3donut',['d3', 'threadFixModalService', 'vulnSearchParameterService', 'reportUtilities', function(d3, threadFixModalService, vulnSearchParameterService, reportUtilities){
 
         var Donut={};
 
@@ -157,7 +157,9 @@ angular.module('threadfix')
             var svg = d3.select("#"+id)
                 .append("svg")
                 .attr("width", width)
-                .attr("height", height)
+                .attr("height", height);
+
+            svg = svg
                 .append("g")
                 .attr("transform", "translate(" + x + "," + y + ")");
 

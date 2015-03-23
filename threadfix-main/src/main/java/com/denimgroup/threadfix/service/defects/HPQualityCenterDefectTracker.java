@@ -80,7 +80,8 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
         Entity.Fields fields = new Entity.Fields();
         if (fieldsMap != null) {
             for(Map.Entry<String, Object> entry : fieldsMap.entrySet()){
-                fields.getField().add(createField(entry.getKey(), entry.getValue(), isMemoType(entry.getKey())));
+                if (entry.getValue() != null && !entry.getKey().equals("AdditionalScannerInfo"))
+                    fields.getField().add(createField(entry.getKey(), entry.getValue(), isMemoType(entry.getKey())));
             }
         }
 
@@ -233,9 +234,6 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
             genericField.setSupportsMultivalue(hpqcField.isSupportsMultivalue());
             genericField.setOptionsMap(getFieldOptions(hpqcField));
             genericField.setType(hpqcField.getType());
-
-            genericField.setError("required", "This field cannot be empty.");
-            genericField.setError("maxlength", "Input up to " + hpqcField.getSize() +" characters only.");
 
             // Set placeholder for Date type is YYYY-MM-DD
             if (hpqcField.getType().equalsIgnoreCase("date"))

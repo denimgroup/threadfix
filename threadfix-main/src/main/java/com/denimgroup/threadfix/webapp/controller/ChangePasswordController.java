@@ -78,23 +78,24 @@ public class ChangePasswordController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView editForm(HttpServletRequest request) {
-		
-		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-		
+
 		User user = null;
-		
-		Object successMessage = ControllerUtils.getSuccessMessage(request);
-        Object errorMessage = ControllerUtils.getErrorMessage(request);
-		
-		if (userName != null){
-			user = userService.loadUser(userName);
+		Integer userId = null;
+		Object auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (auth instanceof ThreadFixUserDetails) {
+			userId = ((ThreadFixUserDetails) auth).getUserId();
+			user = userService.loadUser(userId);
 		}
-		
+
 		if (user == null) {
-			log.warn(ResourceNotFoundException.getLogMessage("User", userName));
+			log.warn(ResourceNotFoundException.getLogMessage("User", userId));
 			throw new ResourceNotFoundException();
 		}
-				
+
+		Object successMessage = ControllerUtils.getSuccessMessage(request);
+		Object errorMessage = ControllerUtils.getErrorMessage(request);
+
+
 		ModelAndView mav = new ModelAndView("config/users/password");
 		mav.addObject(user);
 		mav.addObject("successMessage", successMessage);

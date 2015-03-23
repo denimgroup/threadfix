@@ -84,7 +84,7 @@
 </div>
 
 <!-- Tags. -->
-<div class="accordion-group" ng-show="treeTeam || vulnSearch || complianceActive">
+<div class="accordion-group" ng-show="treeTeam || vulnSearch || complianceActive || trendingActive || snapshotActive">
     <div class="accordion-heading" ng-click="showTagControls = !showTagControls">
         <span id="expandTagFilters" class="icon" ng-class="{ 'icon-minus': showTagControls, 'icon-plus': !showTagControls }"></span> Tags
     </div>

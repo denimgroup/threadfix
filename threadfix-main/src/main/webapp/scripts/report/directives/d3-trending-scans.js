@@ -53,11 +53,20 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 var color = d3.scale.category10();
 
                 var svg = d3.select(ele[0]).append("svg")
-                    .attr("width", w + m[1] + m[3])
-                    .attr("height", h + m[0] + m[2])
+                    .attr("width", svgWidth)
+                    .attr("height", svgHeight)
                     .attr("id", function(){
                         return (scope.svgId) ? scope.svgId : "trendingGraph";
-                    })
+                    });
+
+                svg.append("rect")
+                    .attr("transform", "translate(0, 0)")
+                    .attr("width", svgWidth)
+                    .attr("height", svgHeight)
+                    .attr("fill", "#ffffff")
+                    .attr("strokeWidth", 0);
+
+                svg = svg
                     .append("g")
                     .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
@@ -113,7 +122,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     svg.selectAll('*').remove();
 
                     if (scope.label)
-                        reportUtilities.drawTitle(svg, w, scope.label, "Trending Report", -40);
+                        reportUtilities.drawTitle(svg, w, scope.label, "Trending Report", 30-m[0]);
 
                     if (_data.length === 0) {
                         svg.append("g")
@@ -121,7 +130,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                             .attr("x", w/2)
                             .attr("y", 70)
                             .attr("class", "warning")
-                            .text("No New Scans Uploaded This Time");
+                            .text("No Results Found");
                         drawTable();
                         return;
                     }
@@ -213,7 +222,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     var g = svg.selectAll(".symbol");
                     svg.call(tip);
                     if (scope.label)
-                        reportUtilities.drawTitle(svg, w, scope.label, "Trending Report", -40);
+                        reportUtilities.drawTitle(svg, w, scope.label, "Trending Report", 30-m[0]);
 
                     // Add the x-axis.
                     svg.append("g")
@@ -381,7 +390,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         }
 
                         time = d.values[i].date;
-                        tips.push("<tr><td>" + d.key + "&nbsp;</td> <td style='color:"+ getColor(d.key) +"'>" + d.values[i].noOfVulns + "</td></tr>");
+                        tips.push("<tr><td>" + d.key + "&nbsp;</td> <td style='color:"+ getTextColor(d.key) +"'>" + d.values[i].noOfVulns + "</td></tr>");
 
                         focus.selectAll('path').remove();
                         focus.append("path")
@@ -416,7 +425,11 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 }
 
                 function getColor(key) {
-                    return (reportConstants.vulnTypeColorMap[key] ? reportConstants.vulnTypeColorMap[key] : color(key));
+                    return (reportConstants.vulnTypeColorMap[key] && reportConstants.vulnTypeColorMap[key].graphColor ? reportConstants.vulnTypeColorMap[key].graphColor : color(key));
+                }
+
+                function getTextColor(key) {
+                    return (reportConstants.vulnTypeColorMap[key] && reportConstants.vulnTypeColorMap[key].textColor ? reportConstants.vulnTypeColorMap[key].textColor : color(key));
                 }
 
                 scope.export = function(){

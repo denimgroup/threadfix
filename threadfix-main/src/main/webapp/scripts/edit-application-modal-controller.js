@@ -28,16 +28,17 @@ myAppModule.controller('EditApplicationModalController', function ($log, $scope,
                 jsonStr: jsonStr
             };
             threadFixModalService.post(tagsUrl, map).
-                success(function(data, status, headers, config) {
+                success(function(outerData, status, headers, config) {
                     $scope.loading = false;
 
-                    if (data.success) {
+                    if (outerData.success) {
                         threadFixModalService.post(url, $scope.object).
                             success(function(data, status, headers, config) {
                                 timeoutService.cancel();
                                 $scope.loading = false;
 
                                 if (data.success) {
+                                    data.object.tags = outerData.object;
                                     $modalInstance.close(data.object);
                                 } else {
                                     if (data.errorMap) {

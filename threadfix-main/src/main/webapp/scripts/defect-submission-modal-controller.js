@@ -1,12 +1,12 @@
-var myAppModule = angular.module('threadfix')
+var myAppModule = angular.module('threadfix');
 
-// TODO wrap this back into genericModalController and make config optional
 myAppModule.controller('DefectSubmissionModalController', function ($scope, $rootScope, $modalInstance, $http, threadFixModalService, object, config, configUrl, url, timeoutService) {
 
     $scope.focusInput = true;
 
     $scope.object = object;
     $scope.isDynamicForm = false;
+    $scope.hasFields = true;
 
     $scope.config = config;
 
@@ -27,7 +27,8 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 $scope.config.typeName = data.object.defectTrackerName;
                 if ($scope.config.typeName === 'HP Quality Center'
                     || $scope.config.typeName === 'Jira'
-                    || $scope.config.typeName === 'Version One')
+                    || $scope.config.typeName === 'Version One'
+                    || $scope.config.typeName === 'Microsoft TFS')
                     $scope.isDynamicForm = true;
                 $scope.config.defectTrackerName = data.object.defectTrackerName;
 
@@ -48,7 +49,12 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                     createSubmitForm();
                 }
             } else {
-                $scope.errorMessage = "Failure. Message was : " + data.message;
+
+                // setting these two booleans will hide the form.
+                $scope.hasFields = false;
+                $scope.isDynamicForm = true;
+
+                $scope.errorMessage = data.message;
             }
         }).
         error(function(data, status, headers, config) {
@@ -152,7 +158,8 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 "required" : field.required,
                 "labelClass" : field.required ? "errors" : null,
                 "options" : calculateOptions(field),
-                "multiple" : field.supportsMultivalue
+                "multiple" : field.supportsMultivalue,
+                "val" : field.value
             };
 
             if (!field.required) {
@@ -186,11 +193,16 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                     fieldForm.maxValue = field.maxValue;
             }
 
+            if (field.editable === false) {
+                fieldForm.readonly = true;
+            }
+
             $scope.stdFormTemplate.push(fieldForm)
         });
 
         if ($scope.config.editableFields.length === 1) {
-            $scope.errorMessage = "Please check your project configuration because we couldn't retrieve any dynamic fields from issue submit form."
+            $scope.errorMessage = "ThreadFix was unable to populate a submission form. Check your configuration.";
+            $scope.hasFields = false;
         }
 
     };
@@ -210,7 +222,7 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
             else if (lowerCaseOldType === "string")
                 return "text";
             else if (lowerCaseOldType === "memo")
-                return "textarea"
+                return "textarea";
             else if (lowerCaseOldType === "float")
                 return "number";
             else

@@ -3,51 +3,45 @@ var threadfixModule = angular.module('threadfix');
 threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, vulnSearchParameterService, vulnTreeTransformer, $timeout) {
 
     var reportExporter = {};
+    var browerErrMsg = "Sorry, your browser does not support this feature. Please upgrade IE version or change to Chrome which is recommended.";
 
     reportExporter.exportCSV = function(data, contentType, fileName) {
 
-        // Get the blob url creator
-        var urlCreator = window.URL || window.webkitURL || window.mozURL || window.msURL;
+        $timeout(function() {
+            var blob = new Blob([data], { type: contentType });
 
-        var octetStreamMime = "application/octet-stream";
+            // IE <10, FileSaver.js is explicitly unsupported
+            if (checkOldIE()) {
+                var success = false;
+                if (document.execCommand) {
+                    var oWin = window.open("about:blank", "_blank");
+                    oWin.document.open("application/csv", "replace");
+                    oWin.document.charset = "utf-8";
+                    oWin.document.write('sep=,\r\n' + data);
+                    oWin.document.close();
+                    success = oWin.document.execCommand('SaveAs', true, fileName)
+                    oWin.close();
+                }
 
-        if(urlCreator) {
-            // Try to use a download link
-            var link = document.createElement("a");
-            var blob, url;
-            if ("download" in link) {
-                // Prepare a blob URL
-                blob = new Blob([data], { type: contentType });
-                url = urlCreator.createObjectURL(blob);
-                link.setAttribute("href", url);
-
-                // Set the download attribute (Supported in Chrome 14+ / Firefox 20+)
-                link.setAttribute("download", fileName);
-
-                // Simulate clicking the download link
-                var event = document.createEvent('MouseEvents');
-                event.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
-                link.dispatchEvent(event);
-
-                $log.info("Download Data Success");
-
-            } else {
-                // Prepare a blob URL
-                // Use application/octet-stream when using window.location to force download
-                blob = new Blob([data], { type: octetStreamMime });
-                url = urlCreator.createObjectURL(blob);
-                window.location = url;
-
-                $log.info("window.location Success");
+                if (!success)
+                    alert(browerErrMsg);
+                return;
             }
-        } else {
-            $log.info("Not supported");
-        }
+
+            // Else, using saveAs of FileSaver.js
+            saveAs(blob, fileName);
+        }, 200);
     };
 
     reportExporter.exportPDF = function(d3, exportInfo, width, height, name) {
         reportExporter.exportPDFSvg(d3, selectSvg(exportInfo.svgId), width, height, name, exportInfo.isPDF);
     };
+
+    var checkOldIE = function() {
+        // IE <10, unsupported
+         return (typeof navigator !== "undefined" &&
+            /MSIE [1-9]\./.test(navigator.userAgent));
+    }
 
     var selectSvg = function(svgId) {
         var svg = d3.select("svg");
@@ -120,6 +114,11 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
 
     reportExporter.exportPDFTable = function($scope, parameters, exportInfo) {
 
+        if (checkOldIE()) {
+            alert(browerErrMsg);
+            return;
+        }
+
         $scope.exportingPDF = true;
 
         //Retrieving table data
@@ -137,13 +136,12 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
                         exportList.push(element);
                     });
                     $scope.exportVulnTree = vulnTreeTransformer.transform(exportList, parameters.owasp);
-                    $scope.$apply();
-                    reportExporter.exportPDFTableFromId(exportInfo);
+                    //$scope.$apply();
 
-                    $timeout(function() {
+                    reportExporter.exportPDFTableFromId($scope, exportInfo, null, function() {
                         $scope.exportingPDF = false;
                         $scope.exportVulnTree = null;
-                    }, 200);
+                    });
 
                 } else if (data.message) {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
@@ -157,39 +155,49 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
                 $scope.exportingPDF = false;
             });
 
-    }
+    };
 
-    reportExporter.exportPDFTableFromId = function(exportIds, tableData) {
+    reportExporter.exportPDFTableFromId = function($scope, exportIds, tableData, cleanup) {
+
+        if (checkOldIE()) {
+            alert(browerErrMsg);
+            return;
+        }
 
         var fileName = getName(exportIds);
         var tableId = exportIds.tableId, graghId = exportIds.svgId;
 
         var pdf = new jsPDF({lineHeight: 0.85});
-        addSvgToPdf(pdf, graghId);
+        addSvgToPdf($scope, pdf, graghId, function() {
 
-        // Adding summary table in Compliance report
-        if (tableData && tableData.length > 0) {
-            pdf.cellInitialize();
-            pdf.setFontSize(10);
-            var headers = Object.keys(tableData[0]);
-            headers.forEach(function(header){
-                pdf.cell(20, 150, 50, 10, header, 0);
-            });
-            tableData.forEach(function(row, i){
+            // Adding summary table in Compliance report
+            if (tableData && tableData.length > 0) {
+                pdf.cellInitialize();
+                pdf.setFontSize(10);
+                var headers = Object.keys(tableData[0]);
                 headers.forEach(function(header){
-                    pdf.cell(20, 150, 50, 10, "" + row[header], i+1);
+                    pdf.cell(20, 150, 50, 10, header, 0);
                 });
-            });
-        }
+                tableData.forEach(function(row, i){
+                    headers.forEach(function(header){
+                        pdf.cell(20, 150, 50, 10, "" + row[header], i+1);
+                    });
+                });
+            }
 
-        if (graghId && tableId)
-            pdf.addPage();
-        addElementToPdf(pdf, tableId);
-        pdf.save(fileName + '.pdf');
+            if (graghId && tableId)
+                pdf.addPage();
+            addElementToPdf(pdf, tableId);
+            pdf.save(fileName + '.pdf');
+            if (cleanup) {
+                cleanup();
+            }
+        });
 
-    }
+    };
 
-    var addSvgToPdf = function(pdf, graphId) {
+    var addSvgToPdf = function($scope, pdf, graphId, continueBuildingPdf) {
+
         if (graphId) {
             var svg = selectSvg(graphId);
             var node = svg
@@ -205,22 +213,47 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
             var img = '<img src="' + imgsrc + '">';
             d3.select("#svgdataurl").html(img);
 
-            var canvas = document.createElement("canvas");
-            canvas.width = svg.attr("width");
-            canvas.height = svg.attr("height");
-            var context = canvas.getContext("2d");
-
             var image = new Image();
+            image.onload = function() {
+                $scope.$apply(function() {
+                    var canvas = null;
+                    var context = null;
+                    var canvasdata = null;
+                    try {
+                        canvas = document.createElement("canvas");
+                        canvas.width = svg.attr("width");
+                        canvas.height = svg.attr("height");
+
+                        context = canvas.getContext("2d");
+                        context.drawImage(image, 0, 0);
+                        canvasdata = canvas.toDataURL("image/png");
+                        pdf.addImage(canvasdata, 'PNG', 10, 10);
+
+                    } catch (ex) {
+                        // So I guess, you are using IE...
+                        $log.warn(ex);
+                        try {
+                            canvas = document.createElement("canvas");
+                            canvas.width = svg.attr("width");
+                            canvas.height = svg.attr("height");
+
+                            canvg(canvas, html);
+                            var canvasData = canvas.toDataURL("image/jpeg");
+                            pdf.addImage(canvasData, 'JPEG', 10, 10);
+                        } catch (ex1) {
+                            $log.warn(ex1);
+                            if (checkOldIE())
+                                alert(browerErrMsg);
+                        }
+                    }
+                    continueBuildingPdf();
+                });
+            };
             image.src = imgsrc;
-            //image.onload = function () {
-            context.drawImage(image, 0, 0);
-            var canvasdata = canvas.toDataURL("image/png");
-            pdf.addImage(canvasdata, 'PNG', 10, 10);
-            //return pdf;
-            //}
+        } else {
+            $timeout(continueBuildingPdf, 200);
         }
-        return pdf;
-    }
+    };
 
     var addElementToPdf = function(pdf, elementId) {
         if (elementId) {
@@ -240,7 +273,7 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
         }
 
         return pdf;
-    }
+    };
 
     var getName = function(exportInfo) {
         var teamsName = (exportInfo && exportInfo.teams) ? "_" + exportInfo.teams : "",
@@ -248,7 +281,7 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
             tagsName = (exportInfo && exportInfo.tags) ? "_" + exportInfo.tags : "",
             title = (exportInfo && exportInfo.title) ? exportInfo.title : "Report";
         return title + teamsName + appsName + tagsName;
-    }
+    };
 
     var styles = function(dom) {
         var used = "";
@@ -344,13 +377,29 @@ threadfixModule.factory('reportConstants', function() {
     var reportConstants = {};
 
     reportConstants.vulnTypeColorList = ["#014B6E", "#458A37", "#EFD20A", "#F27421", "#F7280C"];
+    reportConstants.vulnTypeTextColorList = ["#688c9d", "#458A37", "#EFD20A", "#F27421", "#F7280C"];
     reportConstants.vulnTypeList = ["Info", "Low", "Medium", "High", "Critical"];
     reportConstants.vulnTypeColorMap = {
-        Info: reportConstants.vulnTypeColorList[0],
-        Low: reportConstants.vulnTypeColorList[1],
-        Medium: reportConstants.vulnTypeColorList[2],
-        High: reportConstants.vulnTypeColorList[3],
-        Critical: reportConstants.vulnTypeColorList[4]
+        Info: {
+            graphColor: reportConstants.vulnTypeColorList[0],
+            textColor: reportConstants.vulnTypeTextColorList[0]
+        },
+        Low:  {
+            graphColor: reportConstants.vulnTypeColorList[1],
+            textColor: reportConstants.vulnTypeTextColorList[1]
+        },
+        Medium:  {
+            graphColor: reportConstants.vulnTypeColorList[2],
+            textColor: reportConstants.vulnTypeTextColorList[2]
+        },
+        High:  {
+            graphColor: reportConstants.vulnTypeColorList[3],
+            textColor: reportConstants.vulnTypeTextColorList[3]
+        },
+        Critical:  {
+            graphColor: reportConstants.vulnTypeColorList[4],
+            textColor: reportConstants.vulnTypeTextColorList[4]
+        }
     };
     reportConstants.reportTypes = {
         trending: {
@@ -520,22 +569,24 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
     trendingUtilities.refreshScans = function($scope){
         $scope.loading = true;
         $scope.noData = false;
-        $scope.trendingScansData = [];
+        var trendingScansData = [];
         reportUtilities.createTeamAppNames($scope);
 
         trendingUtilities.filterByTime($scope);
         if ($scope.filterScans.length === 0) {
             $scope.noData = true;
             $scope.loading = false;
-            return;
+            return trendingScansData;
         }
-        trendingUtilities.updateDisplayData($scope);
-        if ($scope.trendingScansData.length === 0) {
+        trendingScansData = trendingUtilities.updateDisplayData($scope);
+        if (trendingScansData.length === 0) {
             $scope.noData = true;
             $scope.loading = false;
-            return;
+            return trendingScansData;
         }
         $scope.loading = false;
+
+        return trendingScansData;
     };
 
     trendingUtilities.updateDisplayData = function($scope){
@@ -544,7 +595,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
         lastHashInList = null;
 
         reportUtilities.createTeamAppNames($scope);
-        $scope.trendingScansData = [];
+        var trendingScansData = [];
         $scope.totalVulnsByChannelMap = {};
         $scope.infoVulnsByChannelMap = {};
         $scope.lowVulnsByChannelMap = {};
@@ -562,30 +613,31 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
                     hashAfter = _scan;
                 if ((startIndex===-1 || startIndex <= index)
                     && (endIndex===-1 || endIndex >= index))
-                    $scope.trendingScansData.push(_scan);
+                    trendingScansData.push(_scan);
             });
 
-            if ($scope.trendingScansData.length > 0) {
+            if (trendingScansData.length > 0) {
                 //If this is first scan ever, then set time range from first scan
                 if (!hashBefore) {
-                    $scope.trendingStartDate = $scope.trendingScansData[0].importTime;
-                    $scope.trendingScansData.push(createEndHash(hashAfter, $scope));
+                    $scope.trendingStartDate = trendingScansData[0].importTime;
+                    trendingScansData.push(createEndHash(hashAfter, $scope, trendingScansData));
                 } else {
-                    $scope.trendingScansData.unshift(createStartHash(hashBefore, $scope));
-                    $scope.trendingScansData.push(createEndHash(hashAfter, $scope));
+                    trendingScansData.unshift(createStartHash(hashBefore, $scope, trendingScansData));
+                    trendingScansData.push(createEndHash(hashAfter, $scope, trendingScansData));
                 }
             }
         }
+        return trendingScansData;
     };
 
-    var createStartHash = function(hashBefore, $scope) {
+    var createStartHash = function(hashBefore, $scope, trendingScansData) {
         var startHash = {
             notRealScan : true
         };
-        if ($scope.trendingScansData.length===0)
+        if (trendingScansData.length===0)
             return startHash;
 
-        firstHashInList = $scope.trendingScansData[0];
+        firstHashInList = trendingScansData[0];
 
         var keys;
 
@@ -615,14 +667,14 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
         return startHash;
     };
 
-    var createEndHash = function(hashAfter, $scope) {
+    var createEndHash = function(hashAfter, $scope, trendingScansData) {
         var endHash = {
             notRealScan : true
         };
-        if ($scope.trendingScansData.length===0)
+        if (trendingScansData.length===0)
             return endHash;
 
-        lastHashInList = $scope.trendingScansData[$scope.trendingScansData.length-1];
+        lastHashInList = trendingScansData[trendingScansData.length-1];
 
         var keys;
 
@@ -733,20 +785,20 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
         return numTotal;
     };
 
-    trendingUtilities.filterByTeamAndApp = function($scope) {
+    trendingUtilities.filterByTeamAndApp = function(originalCol, teams, apps) {
 
-        $scope.filterScans = $scope.allScans.filter(function(scan){
-            if ($scope.parameters.teams.length === 0 && $scope.parameters.applications.length === 0)
+        return originalCol.filter(function(scan){
+            if (teams.length === 0 && apps.length === 0)
                 return true;
             var i;
-            for (i=0; i<$scope.parameters.teams.length; i++) {
-                if (scan.team.name === $scope.parameters.teams[i].name) {
+            for (i=0; i<teams.length; i++) {
+                if (scan.team.name === teams[i].name) {
                     return true;
                 }
             }
-            for (i=0; i<$scope.parameters.applications.length; i++) {
-                if (beginsWith($scope.parameters.applications[i].name, scan.team.name + " / ") &&
-                    endsWith($scope.parameters.applications[i].name, " / " + scan.app.name)) {
+            for (i=0; i<apps.length; i++) {
+                if (beginsWith(apps[i].name, scan.team.name + " / ") &&
+                    endsWith(apps[i].name, " / " + scan.app.name)) {
                     return true;
                 }
             }
@@ -755,15 +807,15 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
 
     };
 
-    trendingUtilities.filterByTag = function($scope) {
+    trendingUtilities.filterByTag = function(originalCol, tags) {
 
-        $scope.filterScans = $scope.allScans.filter(function(scan){
-            if ($scope.parameters.tags.length === 0 )
+        return originalCol.filter(function(scan){
+            if (tags.length === 0 )
                 return true;
             var i, j;
-            for (i=0; i<$scope.parameters.tags.length; i++) {
+            for (i=0; i<tags.length; i++) {
                 for (j=0; j<scan.applicationTags.length; j++) {
-                    if (scan.applicationTags[j].name === $scope.parameters.tags[i].name) {
+                    if (scan.applicationTags[j].name === tags[i].name) {
                         return true;
                     }
                 }
@@ -839,6 +891,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
             $scope.parameters = {
                 teams: [],
                 applications: [],
+                tags: [],
                 severities: {
                     info: true,
                     low: true,

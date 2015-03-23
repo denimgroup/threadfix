@@ -182,13 +182,13 @@ public class WafsController {
 	@RequestMapping("/{wafId}/delete")
 	@ResponseBody
 	public Object deleteWaf(@PathVariable("wafId") int wafId,
-			SessionStatus status, HttpServletRequest request) {
+			SessionStatus status, HttpServletRequest request, Model model) {
 		Waf waf = wafService.loadWaf(wafId);
 		boolean canDelete = waf != null && waf.getCanDelete();
 		
 		if (waf != null && canDelete) {
 			wafService.deleteById(wafId);
-			status.setComplete();
+			model.addAttribute("waf", new Waf());
 			return RestResponse.success("Successfully deleted.");
 		} else {
 			

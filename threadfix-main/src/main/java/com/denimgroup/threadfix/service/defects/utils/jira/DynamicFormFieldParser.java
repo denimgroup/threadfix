@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.defects.utils.jira;
 
+import com.denimgroup.threadfix.exception.IllegalStateRestException;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.viewmodel.DynamicFormField;
@@ -81,8 +82,11 @@ public class DynamicFormFieldParser {
             JiraJsonMetadataResponse response =
                     objectMapper.readValue(jsonString, JiraJsonMetadataResponse.class);
 
-            assert response.projects.size() != 0 :
-                    "The response didn't contain any projects. Something went wrong.";
+            if (response.projects.size() == 0) {
+                throw new IllegalStateRestException("No projects were found. " +
+                        "Bad permissions can cause this error. Please check your configuration.");
+            }
+
             assert response.projects.size() == 1 :
                     "The response contained more than one project. Something went wrong.";
 
@@ -94,7 +98,6 @@ public class DynamicFormFieldParser {
 
                 DynamicFormField issueTypeField = new DynamicFormField();
                 issueTypeField.setRequired(true);
-                issueTypeField.setError("required", "This field cannot be empty.");
                 issueTypeField.setName("issuetype");
                 issueTypeField.setLabel("Issue Type");
                 issueTypeField.setActive(true);
@@ -121,9 +124,6 @@ public class DynamicFormFieldParser {
                         field.setShow("issuetype=" + issueType.getId());
 
                         field.setRequired(jsonField.isRequired());
-                        if (jsonField.isRequired()) {
-                            field.setError("required", "This field cannot be empty.");
-                        }
 
                         field.setName(entry.getKey());
                         field.setLabel(jsonField.getName());
@@ -159,7 +159,6 @@ public class DynamicFormFieldParser {
                             originalEstimate.setType("text");
                             originalEstimate.setPlaceholder(PLACEHOLDER_TEXT);
                             originalEstimate.setError("pattern", TIMETRACKING_ERROR);
-                            originalEstimate.setError("required", "This field cannot be empty.");
                             fieldList.add(originalEstimate);
 
                             DynamicFormField remainingEstimate = new DynamicFormField();
@@ -172,7 +171,6 @@ public class DynamicFormFieldParser {
                             remainingEstimate.setPlaceholder(PLACEHOLDER_TEXT);
                             remainingEstimate.setEditable(true);
                             remainingEstimate.setType("text");
-                            remainingEstimate.setError("required", "This field cannot be empty.");
                             remainingEstimate.setError("pattern", TIMETRACKING_ERROR);
                             fieldList.add(remainingEstimate);
                             continue;

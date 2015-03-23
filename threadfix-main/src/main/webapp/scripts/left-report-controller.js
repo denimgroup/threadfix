@@ -31,7 +31,19 @@ myAppModule.controller('LeftReportController', function ($scope, $window, thread
                     });
 
                     $scope.filterScans = $scope.allScans;
-                    trendingUtilities.refreshScans($scope);
+                    $scope.trendingScansData = trendingUtilities.refreshScans($scope);
+
+                    var hasResultsFilter = function(scan) {
+                        return scan.Critical + scan.High + scan.Medium + scan.Low + scan.Info > 0;
+                    };
+
+                    if ($scope.trendingScansData &&
+                        $scope.trendingScansData.filter(hasResultsFilter).length == 0) {
+
+                        $scope.noData = true;
+                        $scope.trendingScansData = undefined;
+                    }
+
                 } else {
                     $scope.noData = true;
                 }
@@ -53,9 +65,7 @@ myAppModule.controller('LeftReportController', function ($scope, $window, thread
             appId: $scope.$parent.appId
 
         };
-        if (!$scope.empty) {
-            loadLeftReport();
-        }
+        loadLeftReport();
     });
 
     var reload = function() {

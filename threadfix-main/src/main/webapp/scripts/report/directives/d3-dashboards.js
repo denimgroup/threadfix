@@ -20,6 +20,7 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'd3Service'
                 var y = d3Service.getScaleLinearRange(d3, [height, 0]);
 
                 var color = d3Service.getColorScale(d3, reportConstants.vulnTypeColorList);
+                var textColor = d3Service.getColorScale(d3, reportConstants.vulnTypeTextColorList);
 
                 var xAxis = d3Service.getAxis(d3, x, "bottom");
 
@@ -45,7 +46,7 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'd3Service'
 
                     if (!data || data.length < 1) return;
 
-                    barGraphData(d3, data, color, true, scope.label, reportConstants);
+                    barGraphData(d3, data, color, true, scope.label, reportConstants, textColor);
 
                     x.domain(data.map(function(d) { return d.title; }));
                     y.domain([0, d3.max(data, function(d) { return d.total; })]);
@@ -120,6 +121,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                 var y = d3Service.getScaleOrdinalRangeBand(d3, [0, height], .1);
 
                 var color = d3Service.getColorScale(d3, reportConstants.vulnTypeColorList);
+                var textColor = d3Service.getColorScale(d3, reportConstants.vulnTypeTextColorList);
 
                 var xAxis = d3Service.getAxis(d3, x, "bottom");
 
@@ -137,7 +139,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
 
                 var tip = d3Service.getTip(d3, 'd3-tip', [-10, 0], 'horizontalBarTip')
                     .html(function(d) {
-                        return "<strong>" + d.tip + ":</strong> <span style='color:" + d.fillColor +"'>" + (d.y1 - d.y0) + "</span>";
+                        return "<strong>" + d.tip + ":</strong> <span style='color:" + d.textColor +"'>" + (d.y1 - d.y0) + "</span>";
                     });
                 svg.call(tip);
 
@@ -154,16 +156,25 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                     var svg1 = d3.select("#topAppChart")
                         .append("svg")
                         .attr("width", scope.width)
+                        .attr("height", scope.height);
+
+                    svg1.append("rect")
+                        .attr("transform", "translate(0, 0)")
+                        .attr("width", scope.width)
                         .attr("height", scope.height)
+                        .attr("fill", "#ffffff")
+                        .attr("strokeWidth", 0);
+
+                    svg1 = svg1
                         .append("g")
                         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
                     if (!data || data.length < 1) return;
 
-                    if (scope.label && (scope.label.teams || scope.label.apps))
-                        reportUtilities.drawTitle(svg1, scope.width, scope.label, "Most Vulnerable Applications", -30);
+                    if (scope.label && (scope.label.teams || scope.label.apps || scope.label.tags))
+                        reportUtilities.drawTitle(svg1, scope.width, scope.label, "Most Vulnerable Applications", 40 - margin.top);
 
-                    barGraphData(d3, data, color, false, scope.label, reportConstants);
+                    barGraphData(d3, data, color, false, scope.label, reportConstants, textColor);
 
                     y.domain(data.map(function(d) { return d.title; }));
                     x.domain([0, d3.max(data, function(d) { return d.total; })]);
@@ -273,7 +284,6 @@ d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut', 
                     }
 
                 };
-                ;
             }
         }
     }]);
@@ -281,7 +291,7 @@ d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut', 
 
 /*** UTILITY FUNCTIONS ***/
 
-function barGraphData(d3, data, color, isLeftReport, label, reportConstants) {
+function barGraphData(d3, data, color, isLeftReport, label, reportConstants, textColor) {
     var keys = d3.keys(data[0]).filter(function(key) { return key; });
     var topVulnsReport = false;
 
@@ -289,8 +299,11 @@ function barGraphData(d3, data, color, isLeftReport, label, reportConstants) {
         color.domain(topVulnMapKeyword);
         topVulnsReport = true;
     }
-    else
+    else {
+        textColor.domain(reportConstants.vulnTypeList);
         color.domain(reportConstants.vulnTypeList);
+    }
+
 
     data.forEach(function(d, index) {
         var y0 = 0;
@@ -300,6 +313,7 @@ function barGraphData(d3, data, color, isLeftReport, label, reportConstants) {
             var tip = (topVulnsReport) ? d.name + " (CWE " + d.displayId + ")" : key;
             return {
                 time: (isLeftReport) ? getTime(data.length-index) : undefined,
+                textColor: (topVulnsReport) ? color(_key) : textColor(_key),
                 fillColor: color(_key),
                 tip : tip,
                 y0: y0,

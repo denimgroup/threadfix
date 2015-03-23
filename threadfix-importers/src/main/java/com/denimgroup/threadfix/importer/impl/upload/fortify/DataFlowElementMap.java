@@ -29,7 +29,7 @@ package com.denimgroup.threadfix.importer.impl.upload.fortify;
 class DataFlowElementMap {
 
     String line = null, column = null, lineText = null, fileName = null,
-            node = null, snippet = null, fact = null, action = null;
+            node = null, snippet = null, fact = null, action = null, taint;
 
     public void merge(DataFlowElementMap other) {
         if (line == null && other.line != null)

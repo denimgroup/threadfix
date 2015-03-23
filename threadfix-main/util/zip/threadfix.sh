@@ -22,7 +22,7 @@ fi
 echo $"Looking for a key in $KEYSTORE_LOCATION"
 
 if [ ! -e $KEYSTORE_LOCATION ]; then
-	$JAVA_HOME/bin/keytool -genkeypair -dname "cn=localhost, ou=Self-Signed, o=Threadfix Untrusted Certificate, c=US" -alias localhost -keypass changeit -keystore $KEYSTORE_LOCATION -storepass changeit
+	$JAVA_HOME/bin/keytool -genkeypair -dname "cn=localhost, ou=Self-Signed, o=Threadfix Untrusted Certificate, c=US" -alias localhost -keypass changeit -keystore $KEYSTORE_LOCATION -storepass changeit -keyalg RSA
 	if [ -e ./tomcat/keystore ]; then
 		echo "Generated a keystore."
 	else

@@ -1,0 +1,623 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<FilterTemplate disableEdit="false" id="Fortify-Priority-Project-Template" objectVersion="9" publishVersion="1" version="1.1" xmlns:ns2="xmlns://www.fortifysoftware.com/schema/wsTypes" xmlns:ns3="http://www.fortify.com/schema/fws" xmlns:ns4="xmlns://www.fortify.com/schema/issuemanagement" xmlns:ns5="xmlns://www.fortify.com/schema/audit" xmlns:ns6="xmlns://www.fortifysoftware.com/schema/activitytemplate" xmlns:ns7="xmlns://www.fortifysoftware.com/schema/seed" xmlns:ns8="xmlns://www.fortify.com/schema/attachments" xmlns:ns9="xmlns://www.fortifysoftware.com/schema/runtime">
+    <Name>Security Template</Name>
+    <Description>Project Template</Description>
+    <FolderDefinition color="ca3f37" id="b968f72f-cc12-03b5-976e-ad4c13920c21">
+        <name>Critical</name>
+        <description>This folder provides a comprehensive list of issues in the application with a high impact and high likelihood.</description>
+    </FolderDefinition>
+    <FolderDefinition color="ff8c00" id="5b50bb77-071d-08ed-fdba-1213fa90ac5a">
+        <name>High</name>
+        <description>This folder provides a comprehensive list of issues in the application with a high impact and low likelihood.</description>
+    </FolderDefinition>
+    <FolderDefinition color="ffc800" id="d5f55910-5f0d-a775-e91f-191d1f5608a4">
+        <name>Medium</name>
+        <description>This folder provides a comprehensive list of issues in the application with a low impact and high likelihood.</description>
+    </FolderDefinition>
+    <FolderDefinition color="dbb604" id="bb824e8d-b401-40be-13bd-5d156696a685">
+        <name>Low</name>
+        <description>This folder provides a comprehensive list of issues in the application with a low impact and low likelihood.</description>
+    </FolderDefinition>
+    <FolderDefinition color="blue" id="ab628d89-4e8c-4d72-8f44-e1c72ac26da0">
+        <name>Code Quality</name>
+        <description/>
+    </FolderDefinition>
+    <DefaultFolder folderID="bb824e8d-b401-40be-13bd-5d156696a685"/>
+    <TagDefinition extensible="false" hidden="false" id="87f2364f-dcd4-49e6-861d-f8d3f351686b" isIconTag="true" objectVersion="2" restriction="NONE" type="user">
+        <name>Analysis</name>
+        <Description>The analysis tag must be set for an issue to be counted as 'Audited.' This is encouraged to be the final action performed by an auditor.</Description>
+        <value hidden="false" id="0" isDefault="false">Not an Issue</value>
+        <value Description="" hidden="false" id="1" isDefault="false">Requires More Information</value>
+        <value Description="" hidden="false" id="2" isDefault="false">Critical</value>
+        <value Description="" hidden="false" id="3" isDefault="false">High</value>
+        <value Description="" hidden="false" id="4" isDefault="false">Medium</value>
+        <value Description="" hidden="false" id="5" isDefault="false">Low</value>
+        <value Description="" hidden="true" id="6" isDefault="false">Reliability Issue</value>
+        <value Description="" hidden="true" id="7" isDefault="false">Suspicious</value>
+        <value Description="" hidden="true" id="8" isDefault="false">Bad Practice</value>
+        <value Description="" hidden="true" id="9" isDefault="false">Exploitable</value>
+    </TagDefinition>
+    <PrimaryTag>
+        <primaryTagGUID>87f2364f-dcd4-49e6-861d-f8d3f351686b</primaryTagGUID>
+        <neutralWeight>0</neutralWeight>
+        <openRange>(2,5]</openRange>
+        <naiRange>[0,2]</naiRange>
+    </PrimaryTag>
+    <FilterSet disableEdit="false" enabled="true" id="a243b195-0a59-3f8b-1403-d55b7a7d78e6" type="user">
+        <Title>Findings Priority</Title>
+        <Description>This setting provides the static code analyzer with the most comprehensive set of rules.  It should be used to discover a broad set of security issues to be audited.  Fortify assigns issues impact, accuracy, probability, and confidence values, which are used to calculate priority.  These filters sort issues into four folders based on their priority: Critical, High, Medium, and Low.</Description>
+        <EnabledFolders>b968f72f-cc12-03b5-976e-ad4c13920c21</EnabledFolders>
+        <EnabledFolders>5b50bb77-071d-08ed-fdba-1213fa90ac5a</EnabledFolders>
+        <EnabledFolders>d5f55910-5f0d-a775-e91f-191d1f5608a4</EnabledFolders>
+        <EnabledFolders>bb824e8d-b401-40be-13bd-5d156696a685</EnabledFolders>
+        <EnabledFolders>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</EnabledFolders>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>taint:&quot;database, number&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>b968f72f-cc12-03b5-976e-ad4c13920c21</actionParam>
+            <query>[fortify priority order]:critical</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>5b50bb77-071d-08ed-fdba-1213fa90ac5a</actionParam>
+            <query>[fortify priority order]:high</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>d5f55910-5f0d-a775-e91f-191d1f5608a4</actionParam>
+            <query>[fortify priority order]:medium</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>bb824e8d-b401-40be-13bd-5d156696a685</actionParam>
+            <query>[fortify priority order]:low</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>bb824e8d-b401-40be-13bd-5d156696a685</actionParam>
+            <query>likelihood:[0,5.0] AND impact:[0,5.0]</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>d5f55910-5f0d-a775-e91f-191d1f5608a4</actionParam>
+            <query>likelihood:[2.0,5.0] AND impact:[2.0,5.0]</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>5b50bb77-071d-08ed-fdba-1213fa90ac5a</actionParam>
+            <query>likelihood:[2.5,5.0] AND impact:[2.5,5.0]</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>b968f72f-cc12-03b5-976e-ad4c13920c21</actionParam>
+            <query>likelihood:[3.5,5.0] AND impact:[3.5,5.0]</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>kingdom:code quality</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:!unreleased resource AND kingdom:&quot;code quality&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;serializable class with no version id&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;incorrect definition of serializable class&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;use after free&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;denial of service&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;j2ee bad practices\: non-serializable object stored in session&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>taint:serialized</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;race condition\: static database connection&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:j2ee</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;inconsistent implementations&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;heap inspection&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;insecure compiler optimization&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>taint:environment</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>taint:property</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>taint:args</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:poor style</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;file access race condition&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>taint:constantfile</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>taint:file_system</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;missing check against null&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;uninitialized variable&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;null dereference&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;double free&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;poor error handling\: empty catch block&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;poor error handling\: overly broad catch&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;poor error handling\: overly broad throws&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;poor error handling\: throw inside finally&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;password management\: password in comment&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;unchecked return value&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;system information leak\: html comment in jsp&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;password management\: null password&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;password management\: empty password&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>taint:database</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>bb824e8d-b401-40be-13bd-5d156696a685</actionParam>
+            <query>taint:stream</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>bb824e8d-b401-40be-13bd-5d156696a685</actionParam>
+            <query>taint:database</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>d5f55910-5f0d-a775-e91f-191d1f5608a4</actionParam>
+            <query>category:&quot;privacy violation&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>d5f55910-5f0d-a775-e91f-191d1f5608a4</actionParam>
+            <query>category:&quot;race condition\: singleton member field&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>5b50bb77-071d-08ed-fdba-1213fa90ac5a</actionParam>
+            <query>category:unreleased resource</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>5b50bb77-071d-08ed-fdba-1213fa90ac5a</actionParam>
+            <query>category:&quot;cookie security\: cookie not sent over ssl&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>bb824e8d-b401-40be-13bd-5d156696a685</actionParam>
+            <query>Analysis:&quot;low&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>d5f55910-5f0d-a775-e91f-191d1f5608a4</actionParam>
+            <query>Analysis:&quot;medium&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>5b50bb77-071d-08ed-fdba-1213fa90ac5a</actionParam>
+            <query>Analysis:&quot;high&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>b968f72f-cc12-03b5-976e-ad4c13920c21</actionParam>
+            <query>Analysis:&quot;critical&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+    </FilterSet>
+    <FilterSet disableEdit="false" enabled="false" id="e866754c-34b1-46fc-807b-ead0f2dc6154" type="user">
+        <Title>Fortify Default</Title>
+        <Description>This setting provides the static code analyzer with the most comprehensive set of rules.  It should be used to discover a broad set of security issues to be audited.  Fortify assigns issues impact, accuracy, probability, and confidence values, which are used to calculate priority.  These filters sort issues into four folders based on their priority: Critical, High, Medium, and Low.</Description>
+        <EnabledFolders>b968f72f-cc12-03b5-976e-ad4c13920c21</EnabledFolders>
+        <EnabledFolders>5b50bb77-071d-08ed-fdba-1213fa90ac5a</EnabledFolders>
+        <EnabledFolders>d5f55910-5f0d-a775-e91f-191d1f5608a4</EnabledFolders>
+        <EnabledFolders>bb824e8d-b401-40be-13bd-5d156696a685</EnabledFolders>
+        <EnabledFolders>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</EnabledFolders>
+        <Filter>
+            <actionParam>b968f72f-cc12-03b5-976e-ad4c13920c21</actionParam>
+            <query>[fortify priority order]:critical</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>5b50bb77-071d-08ed-fdba-1213fa90ac5a</actionParam>
+            <query>[fortify priority order]:high</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>d5f55910-5f0d-a775-e91f-191d1f5608a4</actionParam>
+            <query>[fortify priority order]:medium</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>bb824e8d-b401-40be-13bd-5d156696a685</actionParam>
+            <query>[fortify priority order]:low</query>
+            <action>setFolder</action>
+        </Filter>
+    </FilterSet>
+    <FilterSet disableEdit="false" enabled="false" id="aadc5347-3b46-4b90-ad50-8a3e2402c49e" type="user">
+        <Title>TEST High Priority</Title>
+        <Description>This setting provides the static code analyzer with the most comprehensive set of rules.  It should be used to discover a broad set of security issues to be audited.  Fortify assigns issues impact, accuracy, probability, and confidence values, which are used to calculate priority.  These filters sort issues into four folders based on their priority: Critical, High, Medium, and Low.</Description>
+        <EnabledFolders>b968f72f-cc12-03b5-976e-ad4c13920c21</EnabledFolders>
+        <EnabledFolders>5b50bb77-071d-08ed-fdba-1213fa90ac5a</EnabledFolders>
+        <EnabledFolders>d5f55910-5f0d-a775-e91f-191d1f5608a4</EnabledFolders>
+        <EnabledFolders>bb824e8d-b401-40be-13bd-5d156696a685</EnabledFolders>
+        <EnabledFolders>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</EnabledFolders>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>taint:&quot;database, number&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>b968f72f-cc12-03b5-976e-ad4c13920c21</actionParam>
+            <query>[fortify priority order]:critical</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>5b50bb77-071d-08ed-fdba-1213fa90ac5a</actionParam>
+            <query>[fortify priority order]:high</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>d5f55910-5f0d-a775-e91f-191d1f5608a4</actionParam>
+            <query>[fortify priority order]:medium</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>bb824e8d-b401-40be-13bd-5d156696a685</actionParam>
+            <query>[fortify priority order]:low</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>bb824e8d-b401-40be-13bd-5d156696a685</actionParam>
+            <query>likelihood:[0,5.0] AND impact:[0,5.0]</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>d5f55910-5f0d-a775-e91f-191d1f5608a4</actionParam>
+            <query>likelihood:[2.0,5.0] AND impact:[2.0,5.0]</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>5b50bb77-071d-08ed-fdba-1213fa90ac5a</actionParam>
+            <query>likelihood:[2.5,5.0] AND impact:[2.5,5.0]</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>b968f72f-cc12-03b5-976e-ad4c13920c21</actionParam>
+            <query>likelihood:[3.5,5.0] AND impact:[3.5,5.0]</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>kingdom:code quality</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:!unreleased resource AND kingdom:&quot;code quality&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;serializable class with no version id&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;incorrect definition of serializable class&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;use after free&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;denial of service&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;j2ee bad practices\: non-serializable object stored in session&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>taint:serialized</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;race condition\: static database connection&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:j2ee</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;inconsistent implementations&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;heap inspection&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;insecure compiler optimization&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>taint:environment</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>taint:property</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>taint:args</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:poor style</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;file access race condition&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>taint:constantfile</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>taint:file_system</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;missing check against null&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;uninitialized variable&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;null dereference&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;double free&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;poor error handling\: empty catch block&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;poor error handling\: overly broad catch&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;poor error handling\: overly broad throws&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;poor error handling\: throw inside finally&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;password management\: password in comment&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;unchecked return value&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;system information leak\: html comment in jsp&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;password management\: null password&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>category:&quot;password management\: empty password&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>ab628d89-4e8c-4d72-8f44-e1c72ac26da0</actionParam>
+            <query>taint:database</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>bb824e8d-b401-40be-13bd-5d156696a685</actionParam>
+            <query>taint:stream</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>bb824e8d-b401-40be-13bd-5d156696a685</actionParam>
+            <query>taint:database</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>d5f55910-5f0d-a775-e91f-191d1f5608a4</actionParam>
+            <query>category:&quot;privacy violation&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>d5f55910-5f0d-a775-e91f-191d1f5608a4</actionParam>
+            <query>category:&quot;race condition\: singleton member field&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>5b50bb77-071d-08ed-fdba-1213fa90ac5a</actionParam>
+            <query>category:unreleased resource</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>5b50bb77-071d-08ed-fdba-1213fa90ac5a</actionParam>
+            <query>category:&quot;cookie security\: cookie not sent over ssl&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>bb824e8d-b401-40be-13bd-5d156696a685</actionParam>
+            <query>Analysis:&quot;low&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>d5f55910-5f0d-a775-e91f-191d1f5608a4</actionParam>
+            <query>Analysis:&quot;medium&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>5b50bb77-071d-08ed-fdba-1213fa90ac5a</actionParam>
+            <query>Analysis:&quot;high&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>b968f72f-cc12-03b5-976e-ad4c13920c21</actionParam>
+            <query>Analysis:&quot;critical&quot;</query>
+            <action>setFolder</action>
+        </Filter>
+    </FilterSet>
+</FilterTemplate>

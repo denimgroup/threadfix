@@ -40,26 +40,26 @@ import com.denimgroup.threadfix.data.entities.User;
 /**
  * Hibernate User DAO implementation. Most basic methods are implemented in the
  * AbstractGenericDao
- * 
+ *
  * @author dshannon
  * @see AbstractGenericDao
  */
 @Repository
 public class HibernateUserDao
-        extends AbstractNamedObjectDao<User>
-        implements UserDao {
+		extends AbstractNamedObjectDao<User>
+		implements UserDao {
 
 	@Autowired
 	public HibernateUserDao(SessionFactory sessionFactory) {
 		super(sessionFactory);
 	}
 
-    @Override
-    protected Order getOrder() {
-        return Order.asc("name");
-    }
+	@Override
+	protected Order getOrder() {
+		return Order.asc("name");
+	}
 
-    @Override
+	@Override
 	public User retrieveLdapUser(String name) {
 		return (User) getActiveUserCriteria()
 				.add(Restrictions.eq("name", name))
@@ -67,15 +67,15 @@ public class HibernateUserDao
 				.uniqueResult();
 	}
 
-    @Override
-    protected Class<User> getClassReference() {
-        return User.class;
-    }
+	@Override
+	protected Class<User> getClassReference() {
+		return User.class;
+	}
 
-    private Criteria getActiveUserCriteria() {
+	private Criteria getActiveUserCriteria() {
 		return sessionFactory.getCurrentSession().createCriteria(User.class).add(Restrictions.eq("active", true));
 	}
-	
+
 	public boolean canRemovePermissionFromRole(Integer id, String string) {
 		Long result = (Long) sessionFactory.getCurrentSession()
 				.createCriteria(User.class)
@@ -85,10 +85,10 @@ public class HibernateUserDao
 				.add(Restrictions.ne("roleAlias.id", id))
 				.setProjection(Projections.rowCount())
 				.uniqueResult();
-		
+
 		return result != null && result > 0;
 	}
-	
+
 	public boolean canRemovePermissionFromUser(Integer id, String string) {
 		Long result = (Long) sessionFactory.getCurrentSession()
 				.createCriteria(User.class)
@@ -98,29 +98,29 @@ public class HibernateUserDao
 				.add(Restrictions.ne("id", id))
 				.setProjection(Projections.rowCount())
 				.uniqueResult();
-		
+
 		return result != null && result > 0;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> retrieveOrgPermissibleUsers(Integer orgId) {
-		
+
 		List<User> globalUserList = getActiveUserCriteria()
 				.add(Restrictions.eq("hasGlobalGroupAccess", true))
 				.addOrder(Order.asc("name"))
-				.list();	
+				.list();
 		List<User> orgUserList = getActiveUserCriteria()
 				.add(Restrictions.eq("hasGlobalGroupAccess", false))
 				.createAlias("accessControlTeamMaps", "teamMap")
 				.add(Restrictions.eq("teamMap.organization.id",orgId))
 				.addOrder(Order.asc("name"))
 				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
-				.list();	
+				.list();
 		globalUserList.addAll(orgUserList);
-		
+
 		return globalUserList;
-				
+
 	}
 
 	@SuppressWarnings("unchecked")
@@ -134,24 +134,40 @@ public class HibernateUserDao
 		List<User> appAllUserList = getActiveUserCriteria()
 				.add(Restrictions.eq("hasGlobalGroupAccess", false))
 				.createAlias("accessControlTeamMaps", "teamMap")
-				.add(Restrictions.and(Restrictions.eq("teamMap.allApps", true), 
-							Restrictions.eq("teamMap.organization.id", orgId)))
+				.add(Restrictions.and(Restrictions.eq("teamMap.allApps", true),
+						Restrictions.eq("teamMap.organization.id", orgId)))
 				.addOrder(Order.asc("name"))
 				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
-				.list();	
+				.list();
 		List<User> appUserList = getActiveUserCriteria()
 				.add(Restrictions.eq("hasGlobalGroupAccess", false))
 				.createAlias("accessControlTeamMaps", "teamMap")
 				.createAlias("teamMap.accessControlApplicationMaps", "appMap")
-				.add(Restrictions.and(Restrictions.eq("teamMap.allApps", false), 
+				.add(Restrictions.and(Restrictions.eq("teamMap.allApps", false),
 						Restrictions.eq("appMap.application.id",appId)))
 				.addOrder(Order.asc("name"))
 				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
 				.list();
 		globalUserList.addAll(appUserList);
-		for (User u: appAllUserList) 
+		for (User u: appAllUserList)
 			if (!globalUserList.contains(u)) globalUserList.add(u);
 
 		return globalUserList;
+	}
+
+	@Override
+	public List<User> retrievePage(int page, int numberToShow) {
+		return getActiveUserCriteria()
+				.addOrder(Order.asc("name"))
+				.setMaxResults(numberToShow)
+				.setFirstResult((page - 1) * numberToShow)
+				.list();
+	}
+
+	@Override
+	public Long countUsers() {
+		return (Long) getActiveUserCriteria()
+				.setProjection(Projections.rowCount())
+				.uniqueResult();
 	}
 }

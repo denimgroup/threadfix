@@ -53,8 +53,8 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
                         $scope.allScans.sort(function (a, b) {
                             return a.importTime - b.importTime;
                         });
-                        trendingUtilities.filterByTag($scope);
-                        trendingUtilities.refreshScans($scope);
+                        $scope.filterScans = trendingUtilities.filterByTag($scope.allScans, $scope.parameters.tags);
+                        $scope.trendingScansData = trendingUtilities.refreshScans($scope);
                     }).
                     error(function() {
                         $scope.loading = false;
@@ -62,8 +62,8 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
             }
         }
         else {
-            trendingUtilities.filterByTag($scope);
-            trendingUtilities.refreshScans($scope);
+            $scope.filterScans = trendingUtilities.filterByTag($scope.allScans, $scope.parameters.tags);
+            $scope.trendingScansData = trendingUtilities.refreshScans($scope);
         }
         $scope.title.svgId = getReportType().name;
         renderTable();
@@ -83,8 +83,8 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
             return;
 
         $scope.parameters = angular.copy(parameters);
-        trendingUtilities.filterByTag($scope);
-        trendingUtilities.refreshScans($scope);
+        $scope.filterScans = trendingUtilities.filterByTag($scope.allScans, $scope.parameters.tags);
+        $scope.trendingScansData = trendingUtilities.refreshScans($scope);
         renderTable();
         $scope.$broadcast("updateTableVulnerabilities");
     };
@@ -96,20 +96,21 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
         if ($scope.remediationType !== parameters.remediationType)
             return;
         $scope.parameters = angular.copy(parameters);
-        trendingUtilities.refreshScans($scope);
+        $scope.trendingScansData = trendingUtilities.refreshScans($scope);
         renderTable();
         $scope.$broadcast("updateTableVulnerabilities");
     });
 
+    var severityOrder = {'Info': 1, 'Low': 2, 'Medium': 3, 'High': 4, 'Critical': 5};
+
     var renderTable = function() {
         var startingInfo, endingInfo;
         $scope.tableInfo = [];
-        if ($scope.trendingScansData.length> 0) {
+        if ($scope.trendingScansData && $scope.trendingScansData.length> 0) {
             startingInfo = (trendingUtilities.getFirstHashInList()) ? trendingUtilities.getFirstHashInList() : $scope.trendingScansData[0];
             endingInfo = (trendingUtilities.getLastHashInList()) ? trendingUtilities.getLastHashInList() : $scope.trendingScansData[$scope.trendingScansData.length-1];
-            var keys = Object.keys(startingInfo);
 
-            keys.forEach(function(key){
+            Object.keys(startingInfo).forEach(function(key){
                 if (key !== 'importTime' && key !== 'notRealScan') {
                     var map = {};
                     map['Severity'] = key;
@@ -117,7 +118,12 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
                     map['Ending Count'] = endingInfo[key];
                     $scope.tableInfo.push(map);
                 }
+            });
+            $scope.tableInfo.sort(function(a, b){
+                return severityOrder[b.Severity] - severityOrder[a.Severity];
             })
+        } else {
+            $scope.noData = true;
         }
     };
 
@@ -175,7 +181,7 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
             $scope.exportInfo.teams = undefined;
             $scope.exportInfo.apps = undefined;
             $scope.exportInfo.title = "Compliance_Report";
-            reportExporter.exportPDFTableFromId($scope.exportInfo, $scope.tableInfo)
+            reportExporter.exportPDFTableFromId($scope, $scope.exportInfo, $scope.tableInfo)
             $scope.exportingPDF = false;
         }
     });

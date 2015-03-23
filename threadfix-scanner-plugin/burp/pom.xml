@@ -4,8 +4,9 @@
 
     <parent>
         <groupId>com.denimgroup.threadfix</groupId>
-        <artifactId>scanner-intermediate-pom</artifactId>
+        <artifactId>master-pom</artifactId>
         <version>2.2-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>Burp-Plugin</artifactId>
@@ -38,8 +39,26 @@
             <artifactId>threadfix-ham</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.owasp</groupId>
+            <artifactId>dependency-check-maven</artifactId>
+            <version>${dependencycheck.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
-
+    <profiles>
+        <profile>
+            <id>dependencycheck</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
@@ -90,22 +109,5 @@
             </plugin>
         </plugins>
     </build>
-
-    <repositories>
-        <repository>
-            <id>jboss-public-repository-group</id>
-            <name>JBoss Public Repository Group</name>
-            <url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-            <layout>default</layout>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
 
 </project>

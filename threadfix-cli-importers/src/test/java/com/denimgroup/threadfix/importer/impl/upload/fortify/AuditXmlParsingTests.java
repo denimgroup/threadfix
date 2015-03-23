@@ -51,7 +51,21 @@ public class AuditXmlParsingTests {
     }
 
     private FortifyAuditXmlParser getParsedResult() {
-        InputStream auditXmlStream = AuditXmlParsingTests.class.getClassLoader().getResourceAsStream("fortify/full-audit.xml");
+        String fileName = "fortify/full-audit.xml";
+        return getFortifyAuditXmlParser(fileName);
+    }
+
+    @Test
+    public void testv4Suppressed() {
+        FortifyAuditXmlParser parser = getFortifyAuditXmlParser("fortify/audit-v4.xml");
+
+        assert parser.suppressedIds.contains("F6B2D27A23F8A82998D2264A3939E3FC") :
+                "Didn't have F6B2D27A23F8A82998D2264A3939E3FC";
+
+    }
+
+    private FortifyAuditXmlParser getFortifyAuditXmlParser(String fileName) {
+        InputStream auditXmlStream = AuditXmlParsingTests.class.getClassLoader().getResourceAsStream(fileName);
 
         FortifyAuditXmlParser timeParser = new FortifyAuditXmlParser();
         ScanUtils.readSAXInput(timeParser, AbstractChannelImporter.FILE_CHECK_COMPLETED, auditXmlStream);

@@ -100,10 +100,10 @@ public class UsersController {
 		return "config/users/index";
 	}
 
-    @RequestMapping(value = "/map", method = RequestMethod.GET)
+    @RequestMapping(value = "/map/page/{page}/{numberToShow}", method = RequestMethod.GET)
 	@JsonView(AllViews.TableRow.class)
-    public @ResponseBody Object map() {
-        List<User> users = userService.loadAllUsers();
+    public @ResponseBody Object map(@PathVariable int page, @PathVariable int numberToShow) {
+        List<User> users = userService.retrievePage(page, numberToShow);
 
         String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -116,6 +116,7 @@ public class UsersController {
 
         returnMap.put("users", users);
         returnMap.put("roles", roleService.loadAll());
+		returnMap.put("countUsers", userService.countUsers());
 
 		return RestResponse.success(returnMap);
     }

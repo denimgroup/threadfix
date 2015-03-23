@@ -412,4 +412,14 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	@Override
+	public List<User> retrievePage(int page, int numberToShow) {
+		return userDao.retrievePage(page, numberToShow);
+	}
+
+	@Override
+	public Long countUsers() {
+		return userDao.countUsers();
+	}
+
 }
