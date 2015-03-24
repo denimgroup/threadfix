@@ -1,5 +1,0 @@
-= DESCRIPTION:
-
-Does various configuration to lock down an Ubuntu 12.04 system with the other components in this package.
-
-
