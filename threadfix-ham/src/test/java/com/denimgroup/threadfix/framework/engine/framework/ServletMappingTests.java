@@ -185,7 +185,7 @@ public class ServletMappingTests {
 
     @Nonnull
     private Entry<String,String> entry(String key, String value) {
-    	return new SimpleEntry<>(key, value);
+    	return new SimpleEntry<String, String>(key, value);
     }
 
     @Nonnull

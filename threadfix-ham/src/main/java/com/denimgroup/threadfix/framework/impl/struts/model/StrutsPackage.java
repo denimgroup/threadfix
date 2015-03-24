@@ -23,9 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.struts.model;
 
-import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * Created by sgerick on 11/12/2014.
@@ -70,7 +70,7 @@ public class StrutsPackage {
 
 	public void addAction(StrutsAction action) {
 		if (actions == null)
-			actions = new ArrayList<>();
+			actions = list();
 		actions.add(action);
 	}
 

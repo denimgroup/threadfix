@@ -37,11 +37,12 @@ import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 /**
  *
@@ -59,14 +60,14 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 
 	private static final String SQL_INJECTION = "SQL Injection", XSS = "Cross Site Scripting";
 
-    private static final Set<Entry<String[], String>> alternativesMap = new HashSet<>();
+    private static final Set<Entry<String[], String>> alternativesMap = set();
 
     // It looks like ZAP pulls from system language / region settings so this may not work everywhere
     private final String dateFormatString = "EEE, dd MMM yyyy kk:mm:ss";
     private String formatString;
 
     private static void addToSet(String[] array, String key) {
-        alternativesMap.add(new SimpleEntry<>(array, key));
+        alternativesMap.add(new SimpleEntry<String[], String>(array, key));
     }
 
     static {
@@ -122,7 +123,7 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
         private String currentSolution        = null;
         private StringBuffer currentRawFinding      = new StringBuffer();
 
-        private Map<FindingKey, String> findingMap = new HashMap<>();
+        private Map<FindingKey, String> findingMap = map();
 
         public void add(Finding finding) {
             if (finding != null) {

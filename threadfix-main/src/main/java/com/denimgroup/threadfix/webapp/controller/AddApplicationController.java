@@ -45,7 +45,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 @RestController
 @RequestMapping("/organizations/{orgId}/modalAddApp")
@@ -127,7 +127,7 @@ public class AddApplicationController {
 
             model.addAttribute("application", new Application());
 
-            Map<String, Object> map = newMap();
+            Map<String, Object> map = map();
 
             map.put("application", application);
             map.put("uploadScan", PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId,

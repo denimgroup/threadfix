@@ -42,7 +42,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.enumMap;
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl.getImpl;
 
 @RemoteProvider(name = "WhiteHat Sentinel")
 public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
@@ -57,7 +60,7 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 	private List<Calendar> scanDateList = null;
 	private Map<Finding, List<DateStatus>> findingDateStatusMap = null;
 
-    RemoteProviderHttpUtils utils = new RemoteProviderHttpUtilsImpl<>(this.getClass());
+    RemoteProviderHttpUtils utils = getImpl(this.getClass());
 
     public WhiteHatRemoteProvider() {
 		super(ScannerType.SENTINEL);
@@ -277,7 +280,7 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 
 	public class WhiteHatSitesParser extends HandlerWithBuilder {
 		
-		public Map<String, String> map = new HashMap<>();
+		public Map<String, String> map = map();
 		
 		private String currentId = null;
 		private boolean grabLabel;
@@ -348,7 +351,7 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 		
 		public Finding finding = new Finding();
 		
-		private Map<FindingKey, String> map = new EnumMap<>(FindingKey.class);
+		private Map<FindingKey, String> map = enumMap(FindingKey.class);
 		
 		private boolean creatingVuln = false;
 		
@@ -391,7 +394,7 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 	    
 	    	if ("vulnerabilities".equals(qName)) {
 	    		scanDateList = list();
-	    		findingDateStatusMap = new HashMap<>();
+	    		findingDateStatusMap = map();
 	    	}
 	    	else if ("vulnerability".equals(qName)) {
                 vulnTag = makeTag(name, qName, atts) + "\n";
@@ -473,7 +476,7 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 
 		public Finding finding = new Finding();
 
-		private Map<FindingKey, String> map = new EnumMap<>(FindingKey.class);
+		private Map<FindingKey, String> map = enumMap(FindingKey.class);
 
 		private boolean creatingVuln = false;
 
@@ -515,7 +518,7 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 
 	    	if ("vulnerabilities".equals(qName)) {
 	    		scanDateList = list();
-	    		findingDateStatusMap = new HashMap<>();
+	    		findingDateStatusMap = map();
 	    	}
 	    	else if ("vulnerability".equals(qName)) {
                 vulnTag = makeTag(name, qName, atts) + "\n";

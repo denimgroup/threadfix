@@ -38,9 +38,10 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
-import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.enumMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  *
@@ -55,7 +56,7 @@ import java.util.Map;
 )
 public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 
-	private static Map<String, FindingKey> tagMap = new HashMap<>();
+	private static Map<String, FindingKey> tagMap = map();
 	static { 
 		tagMap.put("vulntype",      FindingKey.VULN_CODE);
 		tagMap.put("attackscore",   FindingKey.SEVERITY_CODE);
@@ -112,7 +113,7 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	    	if (date == null && SCAN_DATE.equalsIgnoreCase(qName)) {
 	    		getDate = true;
 	    	} else if (VULN_TAG.equalsIgnoreCase(qName)) {
-	    		findingMap = new EnumMap<>(FindingKey.class);
+	    		findingMap = enumMap(FindingKey.class);
 	    		inFinding = true;
 	    	} else if (inFinding && tagMap.containsKey(qName.toLowerCase())) {
 	    		itemKey = tagMap.get(qName.toLowerCase());

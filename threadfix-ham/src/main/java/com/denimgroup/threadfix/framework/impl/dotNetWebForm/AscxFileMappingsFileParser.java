@@ -31,7 +31,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Map;
 
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * Created by mac on 10/24/14.
@@ -48,7 +48,7 @@ public class AscxFileMappingsFileParser {
         Collection ascxFiles = FileUtils.listFiles(rootDirectory,
                 new FileExtensionFileFilter("ascx"), TrueFileFilter.INSTANCE);
 
-        Map<String, AscxFile> map = newMap();
+        Map<String, AscxFile> map = map();
 
         for (Object aspxFile : ascxFiles) {
             if (aspxFile instanceof File) {

@@ -133,7 +133,7 @@ public class CollectionUtils {
      * @param <V> value type parameter
      * @return new HashMap<K, V>()
      */
-    public static <K, V> Map<K, V> newMap() {
+    public static <K, V> Map<K, V> map() {
         return new HashMap<K, V>();
     }
 

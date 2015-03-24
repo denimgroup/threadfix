@@ -39,7 +39,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 public class SpringDataFlowParser implements ParameterParser {
 	
@@ -102,7 +102,7 @@ public class SpringDataFlowParser implements ParameterParser {
 	
 	@Nonnull
     private List<String> getLines(@Nonnull List<CodePoint> codePoints) {
-		List<String> returnList = new ArrayList<>(codePoints.size());
+		List<String> returnList = list();
 		
 		for (CodePoint element : codePoints) {
 			if (element != null && element.getLineText() != null) {
@@ -154,7 +154,7 @@ public class SpringDataFlowParser implements ParameterParser {
 
     private String scoreParameters(List<String> parameters, List<String> lines) {
 
-        Map<String, Integer> map = newMap();
+        Map<String, Integer> map = map();
 
         for (String parameter : parameters) {
             map.put(parameter, 0);

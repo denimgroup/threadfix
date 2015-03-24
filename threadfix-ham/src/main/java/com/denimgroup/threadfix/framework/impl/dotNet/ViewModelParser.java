@@ -30,11 +30,11 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.framework.impl.dotNet.DotNetKeywords.CLASS;
 import static com.denimgroup.threadfix.framework.impl.dotNet.DotNetKeywords.NAMESPACE;
 
@@ -43,8 +43,8 @@ import static com.denimgroup.threadfix.framework.impl.dotNet.DotNetKeywords.NAME
  */
 public class ViewModelParser implements EventBasedTokenizer {
 
-    Map<String, Set<ModelField>> map           = new HashMap<>();
-    Map<String, String>          superClassMap = new HashMap<>();
+    Map<String, Set<ModelField>> map           = map();
+    Map<String, String>          superClassMap = map();
 
     public static final SanitizedLogger LOG = new SanitizedLogger(ViewModelParser.class);
 

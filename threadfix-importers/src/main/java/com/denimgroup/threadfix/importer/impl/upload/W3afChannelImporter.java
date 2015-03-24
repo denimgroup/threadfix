@@ -41,8 +41,9 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * Imports the results of a W3AF scan (xml output).
@@ -133,7 +134,7 @@ public class W3afChannelImporter extends AbstractChannelImporter {
     public class W3afSAXParser extends HandlerWithBuilder {
 
         private StringBuffer currentRawFinding = new StringBuffer();
-        private Map<FindingKey, String> findingMap = new HashMap<>();
+        private Map<FindingKey, String> findingMap = map();
         private Boolean inVuln = false;
         private String path, param, vuln, severity;
 

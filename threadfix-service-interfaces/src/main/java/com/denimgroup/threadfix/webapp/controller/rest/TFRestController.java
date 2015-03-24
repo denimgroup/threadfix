@@ -30,8 +30,9 @@ import com.denimgroup.threadfix.service.APIKeyService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashSet;
 import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 /**
  * This class provides the checkKey method and log implementation to each REST Controller.
@@ -57,7 +58,7 @@ public abstract class TFRestController {
 	 * <br/><br/>
 	 * TODO move to a configuration file. All in code right now.
 	 */
-	protected static Set<String> restrictedMethods = new HashSet<>();
+	protected static Set<String> restrictedMethods = set();
 
 	/**
 	 * This method checks that the key is valid and has permission to use 

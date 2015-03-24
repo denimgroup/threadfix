@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
@@ -65,7 +64,7 @@ public class ConfigurationCheck {
 
         LOG.info("Checking ThreadFix configuration.");
 
-        List<String> errors = new ArrayList<>();
+        List<String> errors = list();
 
         boolean emptyLocal = allEmpty(info.localDirectories, info.localFiles),
                 emptyServer = allEmpty(info.url, info.apiKey, info.applicationName, info.applicationId);

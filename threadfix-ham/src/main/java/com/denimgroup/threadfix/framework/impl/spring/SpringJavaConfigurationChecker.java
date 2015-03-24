@@ -66,15 +66,18 @@ public class SpringJavaConfigurationChecker {
         public void processToken(int type, int lineNumber, String stringValue) {
 
             if (type == StreamTokenizer.TT_WORD) {
-                switch (stringValue) {
-                    case "Configuration": hasConfiguration = arroba; break;
-                    case "EnableWebMvc":  hasEnableWebMvc  = arroba; break;
-                    case "extends":       hasExtends       = true;   break;
-                    case "class":         beforeClass      = false;  break;
-                    case "WebMvcConfigurationSupport":
-                        isWebMvcConfigurationSupportSubclass = hasExtends;
-                        break;
-                    default:
+                if (stringValue.equals("Configuration")) {
+                    hasConfiguration = arroba;
+                } else if (stringValue.equals("EnableWebMvc")) {
+                    hasEnableWebMvc = arroba;
+                } else if (stringValue.equals("extends")) {
+                    hasExtends = true;
+                } else if (stringValue.equals("class")) {
+                    beforeClass = false;
+                } else if (stringValue.equals("WebMvcConfigurationSupport")) {
+                    isWebMvcConfigurationSupportSubclass = hasExtends;
+
+                } else {
                 }
                 arroba = false;
             } else if (type == ARROBA) {

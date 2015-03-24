@@ -38,6 +38,8 @@ import java.io.File;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 public class SpringControllerMappings implements EndpointGenerator {
 	
@@ -58,8 +60,8 @@ public class SpringControllerMappings implements EndpointGenerator {
 	public SpringControllerMappings(@Nonnull File rootDirectory) {
 		this.rootDirectory = rootDirectory;
 
-        urlToControllerMethodsMap = new HashMap<>();
-        controllerToUrlsMap = new HashMap<>();
+        urlToControllerMethodsMap = map();
+        controllerToUrlsMap = map();
 
 		if (rootDirectory.exists()) {
 			javaFiles = FileUtils.listFiles(rootDirectory,
@@ -75,7 +77,7 @@ public class SpringControllerMappings implements EndpointGenerator {
 		if (controllerToUrlsMap.containsKey(controllerPath)) {
 			return controllerToUrlsMap.get(controllerPath);
 		} else {
-			return new HashSet<>();
+			return set();
 		}
 	}
 
@@ -84,7 +86,7 @@ public class SpringControllerMappings implements EndpointGenerator {
 		if (urlToControllerMethodsMap.containsKey(controllerPath)) {
 			return urlToControllerMethodsMap.get(controllerPath);
 		} else {
-			return new HashSet<>();
+			return set();
 		}
 	}
 	

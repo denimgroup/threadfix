@@ -59,7 +59,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSClient {
 
@@ -231,7 +231,7 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
             }
 
             List<DynamicFormField> fieldList = list();
-            Map<String, String> wiTypeValuesMap = newMap();
+            Map<String, String> wiTypeValuesMap = map();
             DynamicFormField workItemField = createWorkItemField();
             fieldList.add(workItemField);
 

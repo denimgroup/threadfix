@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.service.defects.utils.jira;
 import java.util.List;
 import java.util.Map;
 
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.service.defects.utils.jira.JiraCustomFieldsConstants.CASCADING_SEPARATOR;
 
 /**
@@ -277,7 +277,7 @@ public class JiraJsonMetadataResponse {
         }
 
         public Map<String, String> getOptionsMap() {
-            Map<String, String> map = newMap();
+            Map<String, String> map = map();
 
             if (allowedValues != null) {
                 for (AllowedValue value : allowedValues) {

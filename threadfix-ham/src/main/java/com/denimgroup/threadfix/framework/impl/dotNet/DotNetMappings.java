@@ -34,6 +34,8 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  * Created by mac on 6/16/14.
  */
@@ -43,7 +45,7 @@ public class DotNetMappings implements EndpointGenerator {
     final File             rootDirectory;
 
     DotNetRouteMappings routeMappings = null;
-    List<DotNetControllerMappings> controllerMappingsList = new ArrayList<>();
+    List<DotNetControllerMappings> controllerMappingsList = list();
     DotNetEndpointGenerator generator = null;
 
     @SuppressWarnings("unchecked")
@@ -61,7 +63,7 @@ public class DotNetMappings implements EndpointGenerator {
 
     private void generateMappings() {
 
-        List<ViewModelParser> modelParsers = new ArrayList<>();
+        List<ViewModelParser> modelParsers = list();
 
         for (File file : cSharpFiles) {
             if (file != null && file.exists() && file.isFile() &&

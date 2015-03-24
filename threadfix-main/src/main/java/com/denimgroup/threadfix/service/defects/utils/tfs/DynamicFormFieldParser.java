@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * Created by stran on 3/10/15.
@@ -118,7 +118,7 @@ public class DynamicFormFieldParser {
                         if (fieldItem.getAllowedValues() != null && fieldItem.getAllowedValues().size() > 0 || fieldItem.getFieldDefinition().getFieldType() == FieldType.TREEPATH) {
                             genericField.setType("select");
 
-                            Map<String, String> optionMap = newMap();
+                            Map<String, String> optionMap = map();
                             if (fieldItem.getFieldDefinition().getFieldType() != FieldType.TREEPATH)
                                 for (String allowedValue : fieldItem.getAllowedValues())
                                     optionMap.put(allowedValue, allowedValue);
@@ -226,7 +226,7 @@ public class DynamicFormFieldParser {
 
         if (itemTypeId != null) {
 
-            Map<String, Object> filteredMap = newMap();
+            Map<String, Object> filteredMap = map();
             for (String key: fieldsMap.keySet()) {
                 if (key.endsWith("." + itemTypeId)) {
                     int ind = key.lastIndexOf("." + itemTypeId);

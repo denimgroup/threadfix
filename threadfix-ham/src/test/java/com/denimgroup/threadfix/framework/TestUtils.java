@@ -28,11 +28,11 @@ import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.setFrom;
 import static org.junit.Assert.assertTrue;
 
 public class TestUtils {
@@ -49,8 +49,8 @@ public class TestUtils {
 	}
 
     public static void compare(Collection<String> parsed, Collection<String> expected, String name) {
-        Set<String> paramsCopy = new HashSet<>(parsed),
-                expectedCopy = new HashSet<>(expected);
+        Set<String> paramsCopy = setFrom(parsed),
+                expectedCopy = setFrom(expected);
 
         paramsCopy.removeAll(expected);
         expectedCopy.removeAll(parsed);

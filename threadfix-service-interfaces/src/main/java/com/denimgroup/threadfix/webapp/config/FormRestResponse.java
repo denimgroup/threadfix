@@ -30,8 +30,9 @@ import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * This is the basic RestResponse which is returned by all the methods on the ThreadFix server side.
@@ -42,19 +43,19 @@ public class FormRestResponse<T> extends RestResponse<T> {
     public Map<String, String> errorMap;
 
     public static <T> FormRestResponse<T> failure(String response, Map<String, String> errorMap) {
-        FormRestResponse<T> restResponse = new FormRestResponse<>();
+        FormRestResponse<T> restResponse = new FormRestResponse<T>();
         restResponse.errorMap = errorMap;
         restResponse.message = response;
         return restResponse;
     }
 
     public static <T> FormRestResponse<T> failure(String response, BindingResult result) {
-        FormRestResponse<T> restResponse = new FormRestResponse<>();
+        FormRestResponse<T> restResponse = new FormRestResponse<T>();
 
         Map<String, String> resultMap = null;
         if (result != null) {
             if (result.getFieldErrors() != null && result.getFieldErrors().size() > 0)
-                resultMap = new HashMap<>();
+                resultMap = map();
             for (FieldError error : result.getFieldErrors()) {
                 String value = getErrorMessage(error);
                 String field = error.getField().replace(".","_");
@@ -68,9 +69,9 @@ public class FormRestResponse<T> extends RestResponse<T> {
     }
 
     public static <T> FormRestResponse<T> failure(String response, String field, String fieldErrorMessage) {
-        FormRestResponse<T> restResponse = new FormRestResponse<>();
+        FormRestResponse<T> restResponse = new FormRestResponse<T>();
 
-        Map<String, String> resultMap = new HashMap<>();
+        Map<String, String> resultMap = map();
         resultMap.put(field, fieldErrorMessage);
 
         restResponse.errorMap = resultMap;

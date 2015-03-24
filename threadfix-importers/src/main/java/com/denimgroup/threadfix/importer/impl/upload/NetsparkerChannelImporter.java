@@ -36,8 +36,9 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import javax.annotation.Nonnull;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * 
@@ -183,7 +184,7 @@ public class NetsparkerChannelImporter extends AbstractChannelImporter {
 	    	
 	    	if ("vulnerability".equals(qName)) {
 
-                Map<FindingKey, String> findingMap = new HashMap<>();
+                Map<FindingKey, String> findingMap = map();
                 findingMap.put(FindingKey.PATH, currentUrlText);
                 findingMap.put(FindingKey.PARAMETER, currentParameter);
                 findingMap.put(FindingKey.VULN_CODE, currentChannelVulnCode);

@@ -35,7 +35,7 @@ import java.io.*;
 import java.util.List;
 import java.util.Map;
 
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 @Component
 public class CommandLineMigration {
@@ -47,7 +47,7 @@ public class CommandLineMigration {
     private static final String ACUNETIX_ESCAPE = "Cross-Site Scripting in HTML \\''script\\'' tag";
     private static final String ACUNETIX_ESCAPE_REPLACE = "Cross-Site Scripting in HTML &quot;script&quot; tag";
 
-    private static Map<String, String> tableMap = newMap();
+    private static Map<String, String> tableMap = map();
 
     private static final int SAME_SET_TRY_LIMIT = 10;
 

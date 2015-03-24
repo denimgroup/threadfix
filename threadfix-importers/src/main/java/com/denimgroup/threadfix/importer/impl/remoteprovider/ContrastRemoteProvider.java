@@ -8,7 +8,6 @@ import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
-import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RequestConfigurer;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.json.JSONArray;
@@ -22,6 +21,7 @@ import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl.getImpl;
 import static com.denimgroup.threadfix.importer.util.JsonUtils.toJSONObjectIterable;
 
 /**
@@ -41,7 +41,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
         super(ScannerType.CONTRAST);
     }
 
-    RemoteProviderHttpUtils httpUtils = new RemoteProviderHttpUtilsImpl<>(ContrastRemoteProvider.class);
+    RemoteProviderHttpUtils httpUtils = getImpl(ContrastRemoteProvider.class);
 
     ////////////////////////////////////////////////////////////////////////
     //                     Get Applications

@@ -152,7 +152,7 @@ public class RemappingServiceImpl implements RemappingService {
 
         // collectMaps
         Map<Calendar, Event> scannerEventMap = getScannerEventMap(newVulnerability, channel);
-        Map<Calendar, Scan> scanTimeMap = newMap();
+        Map<Calendar, Scan> scanTimeMap = map();
         for (Scan scan : channel) {
             scanTimeMap.put(scan.getImportTime(), scan);
         }
@@ -264,7 +264,7 @@ public class RemappingServiceImpl implements RemappingService {
 
     private Map<Calendar, Event> getScannerEventMap(Vulnerability newVulnerability,
                                                     ApplicationChannel applicationChannel) {
-        Map<Calendar, Event> scannerEvents = newMap();
+        Map<Calendar, Event> scannerEvents = map();
 
         for (Finding finding : newVulnerability.getFindings()) {
             scannerEvents.put(finding.getScan().getImportTime(), Event.OLD_FINDING);
@@ -286,7 +286,7 @@ public class RemappingServiceImpl implements RemappingService {
     }
 
     private Map<Calendar, ScanCloseVulnerabilityMap> getCloseMap(Vulnerability newVulnerability) {
-        Map<Calendar, ScanCloseVulnerabilityMap> scannerEvents = newMap();
+        Map<Calendar, ScanCloseVulnerabilityMap> scannerEvents = map();
 
         if (newVulnerability.getScanCloseVulnerabilityMaps() != null) {
             for (ScanCloseVulnerabilityMap closeMap : newVulnerability.getScanCloseVulnerabilityMaps()) {
@@ -298,7 +298,7 @@ public class RemappingServiceImpl implements RemappingService {
     }
 
     private Map<Calendar, ScanReopenVulnerabilityMap> getReopenMap(Vulnerability newVulnerability) {
-        Map<Calendar, ScanReopenVulnerabilityMap> scannerEvents = newMap();
+        Map<Calendar, ScanReopenVulnerabilityMap> scannerEvents = map();
 
         if (newVulnerability.getScanReopenVulnerabilityMaps() != null) {
             for (ScanReopenVulnerabilityMap reopenMap : newVulnerability.getScanReopenVulnerabilityMaps()) {

@@ -276,10 +276,11 @@ public class HibernateFindingDao
 
 	@Override
 	public long getTotalUnmappedFindings() {
-		return (long) sessionFactory.getCurrentSession().createCriteria(Finding.class)
+		Long maybeLong = (Long) sessionFactory.getCurrentSession().createCriteria(Finding.class)
 				.add(Restrictions.eq("active", true))
 				.add(Restrictions.isNull("vulnerability"))
 				.setProjection(Projections.rowCount())
 				.uniqueResult();
+		return maybeLong == null ? 0 : maybeLong;
 	}
 }

@@ -40,6 +40,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.map;
+
 /**
  * Created by mhatzenbuehler on 7/3/2014.
  */
@@ -60,7 +62,7 @@ public class PMDChannelImporter extends AbstractChannelImporter {
     }
 
     public class PmdSAXParser extends HandlerWithBuilder {
-        Map<FindingKey, String> findingMap = new HashMap<>();
+        Map<FindingKey, String> findingMap = map();
 
         private Boolean inSecurityBug         = false;
         private Boolean getDataFlowElements   = false;
@@ -125,7 +127,7 @@ public class PMDChannelImporter extends AbstractChannelImporter {
                 }
 
                 getDataFlowElements = true;
-                dataFlowElements = new LinkedList<>();
+                dataFlowElements = new LinkedList<DataFlowElement>();
                 dataFlowElements.add(getDataFlowElement(atts,0));
                 dataFlowPosition = 1;
             }

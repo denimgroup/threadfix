@@ -142,10 +142,14 @@ public class CollectionUtils {
      * @return new HashMap<K, V>()
      */
     @Nonnull
-    public static <K, V> Map<K, V> newMap() {
+    public static <K, V> Map<K, V> map() {
         return new HashMap<K, V>();
     }
 
+    @Nonnull
+    public static <K extends Enum<K>, V> Map<K, V> enumMap(Class<K> enumClass) {
+        return new EnumMap<K, V>(enumClass);
+    }
 
     /**
      * The following methods all create maps in a Scala Map style.

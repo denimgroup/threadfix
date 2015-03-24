@@ -23,17 +23,20 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.jsp;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.util.*;
-
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
+import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
-import javax.annotation.Nonnull;
 import org.junit.Test;
 
-import com.denimgroup.threadfix.framework.TestConstants;
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.set;
+import static com.denimgroup.threadfix.CollectionUtils.setFrom;
+import static org.junit.Assert.assertTrue;
 
 // TODO add more tests
 public class JSPIncludeParserTests {
@@ -86,8 +89,8 @@ public class JSPIncludeParserTests {
 	}
 
 	private void compare(@Nonnull Collection<File> results, @Nonnull Collection<String> expected) {
-		Set<String> resultsCopy = new HashSet<>();
-		Set<String> expectedCopy = new HashSet<>(expected);
+		Set<String> resultsCopy = set();
+		Set<String> expectedCopy = setFrom(expected);
 
         for (File file : results) {
             resultsCopy.add(file.getAbsolutePath());

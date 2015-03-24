@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.framework.util;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -79,7 +78,7 @@ public class RegexUtils {
 		
 		Matcher matcher = pattern.matcher(targetString);
 
-		List<String> resultsList = new ArrayList<>(matcher.groupCount());
+		List<String> resultsList = list();
 		
 		while (matcher.find()) {
 			resultsList.add(matcher.group(1));

@@ -38,6 +38,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * 
@@ -49,7 +50,7 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 )
 public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 
-	private static final Map<String, String> REGEX_MAP = new HashMap<>();
+	private static final Map<String, String> REGEX_MAP = map();
 	static {
 		REGEX_MAP.put("System.Data.Common.DbDataReader.get_Item", 
 				"System\\.Data\\.Common\\.DbDataReader\\.get_Item " +
@@ -91,15 +92,15 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 
 	public class AppScanSourceSAXParser extends DefaultHandler {
 		
-		private Map<String, String> stringValueMap = new HashMap<>();
+		private Map<String, String> stringValueMap = map();
 		// String.id -> String.value
-		private Map<String, String> fileMap = new HashMap<>();
+		private Map<String, String> fileMap = map();
 		// File.id -> File.value
-		private Map<String, Map<String,String>> siteMap = new HashMap<>();
+		private Map<String, Map<String,String>> siteMap = map();
 		// Site.id -> ("fileId" -> File.id, "line" -> File.ln, "column" -> Site.col, "methodId" -> Site.method)
-		private Map<String, Map<String, String>> findingDataMap = new HashMap<>();
+		private Map<String, Map<String, String>> findingDataMap = map();
 		// FindingData.id -> ("vulnType" -> FindingData.vtype, "siteId" -> FindingData.site_id, "sev" -> FindingData.sev)
-		private Map<String, Map<String, String>> taintMap = new HashMap<>();
+		private Map<String, Map<String, String>> taintMap = map();
 		// Taint.id -> ("argName" -> Taint.arg_name, "siteId" -> Taint.site_id, "arg" -> Taint.arg)
 
 		/*
@@ -151,25 +152,28 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	    	} else if ("File".equals(qName)) {
 	    		fileMap.put(atts.getValue("id"), atts.getValue("value"));
 	    	} else if ("Site".equals(qName)) {
-	    		Map<String, String> map = new HashMap<>();
-	    		map.put("fileId", atts.getValue("file_id"));
-	    		map.put("line", atts.getValue("ln"));
-	    		map.put("column", atts.getValue("col"));
-	    		map.put("methodId", atts.getValue("method"));
-	    		map.put("cxt", atts.getValue("cxt"));
-	    		map.put("caller", atts.getValue("caller"));
-	    		siteMap.put(atts.getValue("id"), map);
+	    		Map<String, String> newMap = map(
+						"fileId", atts.getValue("file_id"),
+						"line", atts.getValue("ln"),
+						"column", atts.getValue("col"),
+						"methodId", atts.getValue("method"),
+						"cxt", atts.getValue("cxt"),
+						"caller", atts.getValue("caller")
+				);
+	    		siteMap.put(atts.getValue("id"), newMap);
 	    	} else if ("FindingData".equals(qName)) {
-	    		Map<String, String> map = new HashMap<>();
-	    		map.put("vulnType", atts.getValue("vtype"));
-	    		map.put("siteId", atts.getValue("site_id"));
-	    		map.put("severity", atts.getValue("sev"));
+	    		Map<String, String> map = map(
+						"vulnType", atts.getValue("vtype"),
+						"siteId", atts.getValue("site_id"),
+						"severity", atts.getValue("sev")
+				);
 	    		findingDataMap.put(atts.getValue("id"), map);
 	    	} else if ("Taint".equals(qName)) {
-	    		Map<String, String> map = new HashMap<>();
-	    		map.put("argName", atts.getValue("arg_name"));
-	    		map.put("arg", atts.getValue("arg"));
-	    		map.put("siteId", atts.getValue("site_id"));
+	    		Map<String, String> map = map(
+						"argName", atts.getValue("arg_name"),
+						"arg", atts.getValue("arg"),
+						"siteId", atts.getValue("site_id")
+				);
 	    		taintMap.put(atts.getValue("id"), map);
 	    	} else if ("Finding".equals(qName)) {
 	    		Map<String,String> findingMap = findingDataMap.get(atts.getValue("data_id"));

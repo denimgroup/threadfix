@@ -40,7 +40,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * @author zabdisubhan
@@ -88,8 +88,8 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 
         DefaultConfiguration config = defaultConfigService.loadCurrentConfiguration();
 
-        Map<ReportLocation, Report> vulnTrendReports = newMap();
-        Map<ReportLocation, Report> mostVulnAppsReports = newMap();
+        Map<ReportLocation, Report> vulnTrendReports = map();
+        Map<ReportLocation, Report> mostVulnAppsReports = map();
 
         for (ReportLocation location : ReportLocation.values()) {
             vulnTrendReports.put(location,
@@ -153,7 +153,7 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
             }
 
             List<Report> reports = reportService.loadAllNonNativeReports();
-            Map<Report, Boolean> availableReportPlugins = newMap();
+            Map<Report, Boolean> availableReportPlugins = map();
 
             for (Report report : reports) {
                 if (report.getAvailable()) {

@@ -28,8 +28,9 @@ import com.denimgroup.threadfix.annotations.WebApplicationFirewall;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.WafType;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * @author mcollins
@@ -78,20 +79,19 @@ public class DenyAllRWebGenerator extends RealTimeProtectionGenerator {
 	public static final String POSIX_FORMAT_STRING_INJECTION = "[%]";
 	public static final String POSIX_EVAL_INJECTION = "[;]";
 
-	protected static final Map<String, String> POSIX_PAYLOAD_MAP = new HashMap<>();
-	static {
-		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, POSIX_XSS);
-		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_SQL_INJECTION, POSIX_SQL_INJECTION);
-		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_PATH_TRAVERSAL, POSIX_PATH_TRAVERSAL);
-		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_HTTP_RESPONSE_SPLITTING, POSIX_HTTP_RESPONSE_SPLITTING);
-		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_XPATH_INJECTION, POSIX_XPATH_INJECTION);
-		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_DIRECTORY_INDEXING, POSIX_DIRECTORY_INDEXING);
-		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_LDAP_INJECTION, POSIX_LDAP_INJECTION);
-		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_OS_COMMAND_INJECTION, POSIX_OS_COMMAND_INJECTION);
-		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_FORMAT_STRING_INJECTION, POSIX_FORMAT_STRING_INJECTION);
-		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_DIRECT_REQUEST, POSIX_DIRECTORY_INDEXING);
-		POSIX_PAYLOAD_MAP.put(GenericVulnerability.CWE_EVAL_INJECTION, POSIX_EVAL_INJECTION);
-	}
+	protected static final Map<String, String> POSIX_PAYLOAD_MAP = map(
+			GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, POSIX_XSS,
+			GenericVulnerability.CWE_SQL_INJECTION, POSIX_SQL_INJECTION,
+			GenericVulnerability.CWE_PATH_TRAVERSAL, POSIX_PATH_TRAVERSAL,
+			GenericVulnerability.CWE_HTTP_RESPONSE_SPLITTING, POSIX_HTTP_RESPONSE_SPLITTING,
+			GenericVulnerability.CWE_XPATH_INJECTION, POSIX_XPATH_INJECTION,
+			GenericVulnerability.CWE_DIRECTORY_INDEXING, POSIX_DIRECTORY_INDEXING,
+			GenericVulnerability.CWE_LDAP_INJECTION, POSIX_LDAP_INJECTION,
+			GenericVulnerability.CWE_OS_COMMAND_INJECTION, POSIX_OS_COMMAND_INJECTION,
+			GenericVulnerability.CWE_FORMAT_STRING_INJECTION, POSIX_FORMAT_STRING_INJECTION,
+			GenericVulnerability.CWE_DIRECT_REQUEST, POSIX_DIRECTORY_INDEXING,
+			GenericVulnerability.CWE_EVAL_INJECTION, POSIX_EVAL_INJECTION
+	);
 	
 	@Override
 	protected String generateRuleWithParameter(String uri, String action, String id,

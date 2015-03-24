@@ -41,7 +41,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * @author mcollins
@@ -101,7 +101,7 @@ public class ReportsServiceImpl implements ReportsService {
     @Override
     public Map<String, Object> generateTrendingReport(ReportParameters parameters, HttpServletRequest request) {
 
-        Map<String, Object> map = newMap();
+        Map<String, Object> map = map();
 
         List<Integer> applicationIdList = getApplicationIdList(parameters);
         if (applicationIdList == null || applicationIdList.isEmpty()) {
@@ -121,7 +121,7 @@ public class ReportsServiceImpl implements ReportsService {
 
     @Override
     public Map<String, Object> generateSnapshotReport(ReportParameters parameters, HttpServletRequest request) {
-        Map<String, Object> map = newMap();
+        Map<String, Object> map = map();
         List<Integer> applicationIdList = getApplicationIdList(parameters);
         if (applicationIdList.isEmpty()) {
             log.info("No applications found.");
@@ -151,7 +151,7 @@ public class ReportsServiceImpl implements ReportsService {
 
     @Override
     public Map<String, Object> generateMostAppsReport(VulnerabilitySearchParameters parameters, HttpServletRequest request) {
-        Map<String, Object> map = newMap();
+        Map<String, Object> map = map();
         List<Integer> teamIdList = list();
         List<Integer> applicationIdList = list();
         List<Integer> tagIdList = list();
@@ -187,7 +187,7 @@ public class ReportsServiceImpl implements ReportsService {
 
                 if (!(objects[0] instanceof Integer)) continue;
                 GenericVulnerability genericVulnerability = genericVulnerabilityDao.retrieveById((Integer) objects[0]);
-                Map<String, Object> hash = newMap();
+                Map<String, Object> hash = map();
                 hash.put("count", objects[1]);
                 hash.put("title", "CWE-" + genericVulnerability.getDisplayId());
                 hash.put("name", genericVulnerability.getName());
@@ -229,7 +229,7 @@ public class ReportsServiceImpl implements ReportsService {
         List<Application> apps = applicationDao.getTopAppsFromList(applicationIdList);
         List<Map<String, Object>> resultList = list();
         for (Application app: apps) {
-            Map<String, Object> hash = newMap();
+            Map<String, Object> hash = map();
             hash.put("Critical", app.getCriticalVulnCount());
             hash.put("High", app.getHighVulnCount());
             hash.put("Medium", app.getMediumVulnCount());
@@ -253,7 +253,7 @@ public class ReportsServiceImpl implements ReportsService {
         Organization team = organizationDao.retrieveById(teamId);
         List<Map<String, Object>> resultList = list();
         for (Object[] infoArr: objects) {
-            Map<String, Object> hash = newMap();
+            Map<String, Object> hash = map();
 
             if (infoArr != null && infoArr.length >= 5) {
                 hash.put("Critical", infoArr[4]);

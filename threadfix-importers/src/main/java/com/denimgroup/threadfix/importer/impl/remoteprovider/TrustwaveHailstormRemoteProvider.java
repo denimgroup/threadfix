@@ -30,10 +30,8 @@ import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.exception.RestIOException;
-import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
-import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RequestConfigurer;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -52,6 +50,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.*;
+import static com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl.getImpl;
 
 /**
  * Created by mac on 11/18/14.
@@ -69,7 +68,7 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
             method.setRequestHeader("CTSAuth", constructHeaderValue());
         }
     };
-    private final RemoteProviderHttpUtils utils      = new RemoteProviderHttpUtilsImpl<>(TrustwaveHailstormRemoteProvider.class);
+    private final RemoteProviderHttpUtils utils      = getImpl(TrustwaveHailstormRemoteProvider.class);
 
     private static final Set<String> CLOSED_CODES = set("Fixed");
 
@@ -185,7 +184,7 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
                 "TypeName", FindingKey.VULN_CODE,
                 "TypeDescription", FindingKey.DETAIL
         );
-        Map<FindingKey, String> map       = newMap();
+        Map<FindingKey, String> map       = map();
         boolean                 getStatus = false, findingIsOpen = false, getDate = false, inFinding = false;
 
         List<Finding> findings = list();
