@@ -113,7 +113,9 @@ public class ThreadFixBridgeImpl implements ThreadFixBridge {
                         "AbstractChannelImporter for this module to work.");
             }
 
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
     }

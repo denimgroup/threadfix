@@ -29,12 +29,14 @@ import com.denimgroup.threadfix.importer.ScanLocationManager;
 
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.enumMap;
+
 /**
  * Created by mac on 2/11/14.
  */
 public class FolderMappings {
 
-    static Map<ScannerType, Collection<String>> items = new HashMap<>();
+    static Map<ScannerType, Collection<String>> items = enumMap(ScannerType.class);
 
     static {
         addToMap(ScannerType.ACUNETIX_WVS, "Dynamic/Acunetix");

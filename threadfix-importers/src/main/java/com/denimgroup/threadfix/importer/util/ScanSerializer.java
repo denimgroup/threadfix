@@ -41,7 +41,7 @@ public class ScanSerializer {
     // Format is channel vuln code, channel vuln name, CWE, severity, file, path, parameter
     // TODO make this more configurable.
     public static String toCSVString(Scan scan) {
-        Set<String> lines = new TreeSet<>();
+        Set<String> lines = new TreeSet<String>();
 
         StringBuilder builder = new StringBuilder();
 

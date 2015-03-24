@@ -55,7 +55,7 @@ public class StrutsEndpointMappings implements EndpointGenerator {
 
     public StrutsEndpointMappings(@Nonnull File rootDirectory) {
         this.rootDirectory = rootDirectory;
-//        urlToControllerMethodsMap = new HashMap<>();
+//        urlToControllerMethodsMap = map();
         File strutsConfigFile = null;
         File strutsPropertiesFile = null;
 

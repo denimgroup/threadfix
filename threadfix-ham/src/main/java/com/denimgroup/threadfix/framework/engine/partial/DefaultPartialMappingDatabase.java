@@ -28,11 +28,11 @@ import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 class DefaultPartialMappingDatabase implements PartialMappingDatabase {
 
@@ -41,8 +41,8 @@ class DefaultPartialMappingDatabase implements PartialMappingDatabase {
 	
 	@Nonnull
     private Map<String, List<PartialMapping>>
-		dynamicMap = new HashMap<>(),
-		staticMap  = new HashMap<>();
+		dynamicMap = map(),
+		staticMap  = map();
 	
 	public DefaultPartialMappingDatabase(@Nullable Iterable<PartialMapping> partialMappings,
                                          @Nonnull PathCleaner pathCleaner) {

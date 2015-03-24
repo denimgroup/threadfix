@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * Created by stran on 3/10/14.
@@ -50,7 +50,7 @@ import static com.denimgroup.threadfix.CollectionUtils.newMap;
 public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
 
     private List<Fields.Field> editableFieldsList = list();
-    private Map<String, List<String>> defectListMap = newMap();
+    private Map<String, List<String>> defectListMap = map();
 
     @Override
     public String createDefect(List<Vulnerability> vulnerabilities, DefectMetadata metadata) {

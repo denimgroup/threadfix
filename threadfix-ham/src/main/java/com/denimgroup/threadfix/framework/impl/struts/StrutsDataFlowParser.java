@@ -73,7 +73,7 @@ public class StrutsDataFlowParser implements ParameterParser {
 	
 	@Nonnull
     private List<String> getLines(@Nonnull List<CodePoint> codePoints) {
-		List<String> returnList = new ArrayList<>(codePoints.size());
+		List<String> returnList = list();
 		
 		for (CodePoint element : codePoints) {
 			if (element != null && element.getLineText() != null) {

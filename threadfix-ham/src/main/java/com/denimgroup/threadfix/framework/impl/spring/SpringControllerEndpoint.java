@@ -32,6 +32,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.set;
+import static com.denimgroup.threadfix.CollectionUtils.setFrom;
+
 public class SpringControllerEndpoint extends AbstractEndpoint {
 	
 	public static final String GENERIC_INT_SEGMENT = "{id}";
@@ -70,8 +74,8 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 
         this.modelObject = modelObject;
 
-        this.parameters = new HashSet<>(parameters);
-        this.pathParameters = new HashSet<>(pathParameters);
+        this.parameters = setFrom(parameters);
+        this.pathParameters = setFrom(pathParameters);
         this.methods = getCleanedSet(methods);
     }
 
@@ -120,7 +124,7 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 
     @Nonnull
 	private Set<String> getCleanedSet(@Nonnull Collection<String> methods) {
-		Set<String> returnSet = new HashSet<>();
+		Set<String> returnSet = set();
 		for (String method : methods) {
 			if (method.startsWith(requestMappingStart)) {
 				returnSet.add(method.substring(requestMappingStart.length()));
@@ -192,7 +196,7 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
     @Nonnull
     @Override
     protected List<String> getLintLine() {
-        return new ArrayList<>();
+        return list();
     }
 
     @Nonnull

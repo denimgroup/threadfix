@@ -32,7 +32,7 @@ import java.io.File;
 import java.util.Map;
 import java.util.Set;
 
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.CollectionUtils.set;
 
 /**
@@ -149,7 +149,7 @@ public class AspxUniqueIdParser implements EventBasedTokenizer {
     }
     State currentState = State.START;
     String currentSrc, currentTagPrefix, currentTagName;
-    Map<String, AscxFile> includedControlMap = newMap();
+    Map<String, AscxFile> includedControlMap = map();
 
     private void processRequires(int type, String stringValue) {
         switch (currentState) {

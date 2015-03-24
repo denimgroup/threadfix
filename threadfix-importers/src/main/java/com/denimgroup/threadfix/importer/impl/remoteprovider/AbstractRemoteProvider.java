@@ -40,6 +40,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
 
+import static com.denimgroup.threadfix.CloseableUtils.closeQuietly;
+
 public abstract class AbstractRemoteProvider extends AbstractChannelImporter {
 
 	public AbstractRemoteProvider(ScannerType scannerType) {
@@ -98,15 +100,14 @@ public abstract class AbstractRemoteProvider extends AbstractChannelImporter {
 			InputSource source = new InputSource(fileReader);
 			source.setEncoding("UTF-8");
 			xmlReader.parse(source);
-		} catch (SAXException | IOException e) {
+		} catch (SAXException e) {
+			LOG.warn("Exception encountered while attempting to parse XML.", e);
+			e.printStackTrace();
+		} catch (IOException e) {
 			LOG.warn("Exception encountered while attempting to parse XML.", e);
 			e.printStackTrace();
 		} finally {
-			try {
-                inputStream.close();
-			} catch (IOException e) {
-                LOG.error("Failed to close the input stream in RemoteProvider.", e);
-            }
+			closeQuietly(inputStream);
         }
     }
 

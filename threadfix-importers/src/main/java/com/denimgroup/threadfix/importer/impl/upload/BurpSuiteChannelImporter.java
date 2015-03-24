@@ -43,10 +43,11 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  *
@@ -62,7 +63,7 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	private static final String TEMPLATE_NAME = "name of an arbitrarily supplied request";
 	private static final String REST_URL_PARAM = "REST URL parameter";
 	private static final String MANUAL_INSERTION_POINT = "manual insertion point";
-	private static final HashMap<String, String> SEVERITY_MAP = new HashMap<>();
+	private static final Map<String, String> SEVERITY_MAP = map();
 	private static Pattern pattern = Pattern.compile("The payload <b>(.*)</b> was submitted");
 
     // We don't know why this happens but sometimes these strings show up in the burp XML.
@@ -303,7 +304,7 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    			currentSeverityCode = SEVERITY_MAP.get(currentSeverityCode.toLowerCase());
 	    		}
 
-                Map<FindingKey, String> findingMap = new HashMap<>();
+                Map<FindingKey, String> findingMap = map();
                 findingMap.put(FindingKey.PATH, currentHostText + currentUrlText);
                 findingMap.put(FindingKey.PARAMETER, currentParameter);
                 findingMap.put(FindingKey.VULN_CODE, currentChannelVulnCode);

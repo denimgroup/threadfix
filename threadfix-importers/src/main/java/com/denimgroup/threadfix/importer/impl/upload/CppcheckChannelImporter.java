@@ -37,11 +37,11 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.data.entities.ScannerDatabaseNames.CPPCHECK_DB_NAME;
 
 /**
@@ -94,8 +94,8 @@ public class CppcheckChannelImporter extends AbstractChannelImporter {
 				      String qName, Attributes atts)
 	    {
 		    if ("error".equals(qName)) {
-			    findingMap = new HashMap<>();
-			    dataFlowElements = new ArrayList<>();
+			    findingMap = map();
+			    dataFlowElements = list();
 
 			    inFinding = true;
 			    errorId = atts.getValue("id");

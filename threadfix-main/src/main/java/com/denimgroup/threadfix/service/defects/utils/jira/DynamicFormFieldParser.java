@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.service.defects.utils.jira.JiraCustomFieldsConstants.*;
 import static com.denimgroup.threadfix.service.defects.utils.jira.JiraJsonMetadataResponse.*;
 
@@ -103,7 +103,7 @@ public class DynamicFormFieldParser {
                 issueTypeField.setActive(true);
                 issueTypeField.setEditable(true);
                 issueTypeField.setType("select");
-                Map<String, String> issueTypeValuesMap = newMap();
+                Map<String, String> issueTypeValuesMap = map();
                 addField(issueTypeField, fieldList, null);
 
                 for (IssueType issueType : project.getIssuetypes()) {

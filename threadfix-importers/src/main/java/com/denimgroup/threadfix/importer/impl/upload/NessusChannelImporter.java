@@ -24,14 +24,10 @@
 package com.denimgroup.threadfix.importer.impl.upload;
 
 import com.denimgroup.threadfix.annotations.ScanImporter;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.GenericVulnerability;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScannerDatabaseNames;
-import com.denimgroup.threadfix.data.entities.ScannerType;
-import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.IntegerUtils;
@@ -43,11 +39,12 @@ import javax.annotation.Nonnull;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * TODO import more scans and make sure parameters and paths 
@@ -70,14 +67,14 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	private static final List<String> SSL_VULNS =
 			Arrays.asList("26928", "60108", "57620", "53360", "42873", "35291");
 
-	private static final Map<String,String> PATH_PARSE_MAP = new HashMap<>();
+	private static final Map<String,String> PATH_PARSE_MAP = map();
 	static {
 		PATH_PARSE_MAP.put("26194", PAGE_COLON_REGEX);
 		PATH_PARSE_MAP.put("11411", URL_COLON_REGEX);
 		PATH_PARSE_MAP.put("40984", SIMPLE_HTTP_REGEX);
 	}
 
-	private static final Map<String,String> PARAM_PARSE_MAP = new HashMap<>();
+	private static final Map<String,String> PARAM_PARSE_MAP = map();
 	static {
 		PARAM_PARSE_MAP.put("26194", INPUT_NAME_COLON_PARAM_REGEX);
 	}
@@ -109,7 +106,7 @@ public class NessusChannelImporter extends AbstractChannelImporter {
         private StringBuffer currentRawFinding	  = new StringBuffer();
         private String cwe = null;
 
-        Map<FindingKey, String> findingMap = new HashMap<>();
+        Map<FindingKey, String> findingMap = map();
 
 		private String pluginOutputString = null;
 

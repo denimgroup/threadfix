@@ -42,7 +42,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import javax.validation.Valid;
 import java.util.Map;
 
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 @Controller
 @RequestMapping("/organizations/modalAdd")
@@ -95,7 +95,7 @@ public class AddOrganizationController {
 
 			status.setComplete();
 
-            Map<String, Object> map = newMap();
+            Map<String, Object> map = map();
 
             map.put("team", organization);
             map.put("canEdit", PermissionUtils.hasGlobalPermission(Permission.CAN_MANAGE_APPLICATIONS));

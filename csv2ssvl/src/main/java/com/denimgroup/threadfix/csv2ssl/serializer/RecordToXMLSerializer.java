@@ -37,7 +37,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.csv2ssl.util.CollectionUtils.map;
-import static com.denimgroup.threadfix.csv2ssl.util.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.csv2ssl.util.CollectionUtils.map;
 
 /**
  * Created by mac on 12/2/14.
@@ -62,7 +62,7 @@ public class RecordToXMLSerializer {
         XSSFSheet ws = wb.getSheetAt(0); // read the first sheet
         int totalColumns = ws.getRow(0).getLastCellNum();
         int totalRows = ws.getLastRowNum();
-        Map<String, String> rowMap = newMap();
+        Map<String, String> rowMap = map();
 
         for (; line <= totalRows; line++) { // we want <= because the index returned from ws.getLastRowNum() is valid
             XSSFRow row = ws.getRow(line);

@@ -29,6 +29,8 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import java.io.*;
 import java.util.Calendar;
 
+import static com.denimgroup.threadfix.CloseableUtils.closeQuietly;
+
 /**
  *
  * This class takes in Updaters and runs them against files that have timestampes after the date given to the constructor.
@@ -66,7 +68,10 @@ final class UpdaterHarness {
                 withStartingSlash = "/" + mappingsFile;
             }
 
-            try (BufferedReader bufferedReader = ResourceUtils.getResourceAsBufferedReader(withStartingSlash)) {
+            BufferedReader bufferedReader = null;
+            try {
+                bufferedReader = ResourceUtils.getResourceAsBufferedReader(withStartingSlash);
+
                 Calendar fileDate = UpdaterUtils.getCalendarFromFirstLine(bufferedReader);
 
                 if (doUpdates && (lastUpdatedTime == null || fileDate.after(lastUpdatedTime))) {
@@ -85,6 +90,8 @@ final class UpdaterHarness {
                 LOG.error("Received IOException for file " + mappingsFile);
                 throw new IllegalStateException(
                         "Can't continue without mappings file " + mappingsFile, e);
+            } finally {
+                closeQuietly(bufferedReader);
             }
         }
 

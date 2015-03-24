@@ -34,11 +34,11 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * Imports the results of a dynamic AppScan scan.
@@ -66,7 +66,7 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 	
 	public class AppScanSAXParser extends HandlerWithBuilder {
 
-        Map<FindingKey, String> findingMap = new HashMap<>();
+        Map<FindingKey, String> findingMap = map();
 
         private ChannelVulnerability currentChannelVuln = null;
 		private ChannelSeverity currentChannelSeverity  = null;
@@ -81,9 +81,9 @@ public class AppScanWebImporter extends AbstractChannelImporter {
         private String currentRequestResponse         = null;
         private StringBuffer currentRawFinding	  = new StringBuffer();
 		
-		private final Map<String, ChannelSeverity> severityMap = new HashMap<>();
-		private final Map<String, String> genericVulnMap = new HashMap<>();
-		private final Map<String, String> channelVulnNameMap = new HashMap<>();
+		private final Map<String, ChannelSeverity> severityMap = map();
+		private final Map<String, String> genericVulnMap = map();
+		private final Map<String, String> channelVulnNameMap = map();
 						
 		private boolean grabUrlText       = false;
 		private boolean grabSeverity      = false;
@@ -158,14 +158,18 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 	    		hosts.add(atts.getValue(0));
 	    	
 	    	if (inIssueTypes) {
-	    		
-	    		switch (qName) {
-	    			case "IssueType" : currentIssueTypeId = atts.getValue(0); break;
-	    			case "Issue"     : inIssueTypes = false;                  break;
-	    			case "Severity"  : grabSeverity = true;                   break;
-	    			case "link"      : grabCWE = true;                        break;
-	    			case "name"      : grabIssueTypeName = true;              break;
-	    		}
+
+				if (qName.equals("IssueType")) {
+					currentIssueTypeId = atts.getValue(0);
+				} else if (qName.equals("Issue")) {
+					inIssueTypes = false;
+				} else if (qName.equals("Severity")) {
+					grabSeverity = true;
+				} else if (qName.equals("link")) {
+					grabCWE = true;
+				} else if (qName.equals("name")) {
+					grabIssueTypeName = true;
+				}
 	    			    	
 	    	} else {
 		    	if ("Issue".equals(qName)) {

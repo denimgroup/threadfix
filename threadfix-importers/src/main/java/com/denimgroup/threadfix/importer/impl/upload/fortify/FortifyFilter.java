@@ -30,7 +30,7 @@ import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.importer.impl.upload.fortify.FilterResult.*;
 
 /**
@@ -53,8 +53,8 @@ public class FortifyFilter {
         parseFields(query);
     }
 
-    Map<VulnKey, String> myFields = newMap();
-    Map<VulnKey, String> myNegativeFields = newMap();
+    Map<VulnKey, String> myFields = map();
+    Map<VulnKey, String> myNegativeFields = map();
 
     // list of filters that were in an OR
     List<FortifyFilter> oredFilters = list();

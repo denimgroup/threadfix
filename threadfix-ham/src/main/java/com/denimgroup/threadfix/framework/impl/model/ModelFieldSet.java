@@ -27,16 +27,20 @@ import javax.annotation.Nonnull;
 
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.CollectionUtils.set;
+
 public class ModelFieldSet implements Iterable<ModelField> {
 
     @Nonnull
-    private Map<String, ModelField> fieldMap = new HashMap<>();
+    private Map<String, ModelField> fieldMap = map();
 
     @Nonnull
     private final Set<ModelField> fieldSet;
 
     public ModelFieldSet() {
-        fieldSet = new HashSet<>();
+        fieldSet = set();
     }
 
     public ModelFieldSet(@Nonnull Set<ModelField> fields) {
@@ -76,7 +80,7 @@ public class ModelFieldSet implements Iterable<ModelField> {
 
     @Nonnull
     public Collection<String> getPossibleParameters() {
-        List<String> strings = new ArrayList<>();
+        List<String> strings = list();
         for (ModelField field : fieldSet) {
             strings.add(field.getParameterKey());
         }

@@ -27,13 +27,13 @@ import com.denimgroup.threadfix.annotations.RemoteProvider;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.DefaultRequestConfigurer;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
-import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl;
 
 import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl.getImpl;
 
 /**
  * Created by mcollins on 3/2/15.
@@ -74,7 +74,7 @@ public class SampleRemoteProvider extends AbstractRemoteProvider {
         type.getAuthenticationFieldValue("Sample field"); // for example, can be anything
 
         // You can use the HTTP utils like so (or use other HTTP libraries of course):
-        RemoteProviderHttpUtils utils = new RemoteProviderHttpUtilsImpl<>(SampleRemoteProvider.class);
+        RemoteProviderHttpUtils utils = getImpl(SampleRemoteProvider.class);
 
         // configure request
         DefaultRequestConfigurer configurer = new DefaultRequestConfigurer();

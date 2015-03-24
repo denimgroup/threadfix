@@ -42,9 +42,9 @@ public class ChannelMerger {
     private ApplicationChannel applicationChannel;
 
     List<Finding> newFindings = list();
-    Map<String, Vulnerability> oldNativeIdVulnHash = newMap();
-    Map<String, Finding> oldNativeIdFindingHash = newMap();
-    Set<Integer> alreadySeenVulnIds = new TreeSet<>();
+    Map<String, Vulnerability> oldNativeIdVulnHash = map();
+    Map<String, Finding> oldNativeIdFindingHash = map();
+    Set<Integer> alreadySeenVulnIds = new TreeSet<Integer>();
     Integer closed = 0, resurfaced = 0, total = 0, numberNew = 0, old = 0,
             numberRepeatResults = 0, numberRepeatFindings = 0, oldVulnerabilitiesInitiallyFromThisChannel = 0;
     Map<String, Finding> scanHash;
@@ -271,7 +271,7 @@ public class ChannelMerger {
 
     private Map<String, Finding> createNativeIdFindingMap(Scan scan) {
 
-        Map<String, Finding> scanHash = newMap();
+        Map<String, Finding> scanHash = map();
 
         // Construct a hash of native ID -> finding
         for (Finding finding : scan.getFindings()) {

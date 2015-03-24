@@ -45,7 +45,7 @@ import java.net.URL;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * Created by stran on 3/25/14.
@@ -269,7 +269,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
     }
 
     private Map<String, String> getFieldOptions(AttributeDefinition attr) {
-        Map<String, String> optionMap = newMap();
+        Map<String, String> optionMap = map();
         List<String> options;
 
         if (attr.getRelationType() != null && attr.getRelationType().equals("select")) {

@@ -55,6 +55,7 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  *
@@ -217,8 +218,8 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
      *
      */
     protected void initializeMaps() {
-        channelSeverityMap = new HashMap<>();
-        channelVulnerabilityMap = new HashMap<>();
+        channelSeverityMap = map();
+        channelVulnerabilityMap = map();
     }
 
     /**
@@ -273,7 +274,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
     @Nullable
     protected Finding constructFinding(String url, String parameter,
                                        String channelVulnerabilityCode, String channelSeverityCode) {
-        Map<FindingKey, String> findingMap = new HashMap<>();
+        Map<FindingKey, String> findingMap = map();
         findingMap.put(FindingKey.PATH, url);
         findingMap.put(FindingKey.PARAMETER, parameter);
         findingMap.put(FindingKey.VULN_CODE, channelVulnerabilityCode);
@@ -289,7 +290,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
     @Nullable
     protected Finding constructFinding(String url, String parameter,
                                        String channelVulnerabilityCode, String channelSeverityCode, String cweCode) {
-        Map<FindingKey, String> findingMap = new HashMap<>();
+        Map<FindingKey, String> findingMap = map();
         findingMap.put(FindingKey.PATH, url);
         findingMap.put(FindingKey.PARAMETER, parameter);
         findingMap.put(FindingKey.VULN_CODE, channelVulnerabilityCode);

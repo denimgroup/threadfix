@@ -33,6 +33,8 @@ import com.denimgroup.threadfix.importer.loader.ImplementationLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.denimgroup.threadfix.importer.loader.ImplementationLoader.getLoader;
+
 @Service
 public class ChannelImporterFactoryImpl implements ChannelImporterFactory {
 
@@ -64,7 +66,8 @@ public class ChannelImporterFactoryImpl implements ChannelImporterFactory {
 
     private void init() {
 
-        loader = new ImplementationLoader<>(ScanImporter.class,
+        loader = getLoader(
+                ScanImporter.class,
                 ChannelImporter.class,
                 "com.denimgroup.threadfix.importer.impl.upload",
                 new AnnotationKeyGenerator<ScanImporter>() {

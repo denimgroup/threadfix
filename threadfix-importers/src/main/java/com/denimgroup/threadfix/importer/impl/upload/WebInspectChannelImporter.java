@@ -38,10 +38,11 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * Imports the results of a WebInspect scan (xml output).
@@ -90,9 +91,9 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 		private String currentCWE;
         private StringBuffer currentRawFinding = new StringBuffer();
 
-        private Map<FindingKey, String> findingMap = new HashMap<>();
+        private Map<FindingKey, String> findingMap = map();
 
-		private List<Finding> sessionFindings = new ArrayList<>();
+		private List<Finding> sessionFindings = list();
 
 		private boolean hasIssues         = false;
         private boolean grabUrlText       = false;

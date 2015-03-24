@@ -222,13 +222,14 @@ public class HibernateApplicationDao implements ApplicationDao {
 
     @Override
     public long getUnmappedFindingCount(Integer appId) {
-        return (long) sessionFactory.getCurrentSession().createCriteria(Finding.class)
+        Long result = (Long) sessionFactory.getCurrentSession().createCriteria(Finding.class)
                 .add(Restrictions.isNull("vulnerability"))
                 .createAlias("scan", "scanAlias")
                 .createAlias("scanAlias.application", "applicationAlias")
                 .add(Restrictions.eq("applicationAlias.id", appId))
                 .setProjection(Projections.rowCount())
                 .uniqueResult();
+        return result == null ? 0 : result;
     }
 
     @Override
@@ -268,6 +269,9 @@ public class HibernateApplicationDao implements ApplicationDao {
 
     @Override
     public long getApplicationCount() {
-        return (long) getActiveAppCriteria().setProjection(Projections.rowCount()).uniqueResult();
+        Long result = (Long) getActiveAppCriteria()
+                .setProjection(Projections.rowCount())
+                .uniqueResult();
+        return result == null ? 0 : result;
     }
 }

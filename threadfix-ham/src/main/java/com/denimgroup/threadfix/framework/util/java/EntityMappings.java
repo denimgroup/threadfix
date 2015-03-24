@@ -36,6 +36,7 @@ import java.io.File;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.framework.impl.model.FieldSetLookupUtils.addSuperClassFieldsToModels;
 
 public class EntityMappings {
@@ -45,7 +46,7 @@ public class EntityMappings {
     private final Collection<EntityParser> entityParsers;
 
     @Nonnull
-    private final Map<String, ModelFieldSet> fieldMap = new HashMap<>();
+    private final Map<String, ModelFieldSet> fieldMap = map();
 
     // This version will parse all the Java files in the directory.
     @SuppressWarnings("unchecked")
@@ -88,7 +89,7 @@ public class EntityMappings {
 	
 	@Nonnull
     public List<ModelField> getFieldsFromMethodCalls(@Nullable String methodCalls, @Nullable ModelField initialField) {
-		List<ModelField> fields = new ArrayList<>();
+		List<ModelField> fields = list();
 
 		if (methodCalls != null && initialField != null) {
 			fields.add(initialField);
@@ -127,7 +128,7 @@ public class EntityMappings {
 	}
 
 	private void generateMap() {
-		Map<String, String> superClassMap = new HashMap<>();
+		Map<String, String> superClassMap = map();
 		
 		addModelsToSuperClassAndFieldMaps(superClassMap);
 		

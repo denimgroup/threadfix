@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * Created by mcollins on 3/5/15.
@@ -140,7 +140,7 @@ public class FortifyFilterTests {
                 "Was expecting likelihood high threshold of 5.0, got " + likelihood.high;
     }
 
-    Map<VulnKey, String> emptyMap = newMap();
+    Map<VulnKey, String> emptyMap = map();
 
     @Test
     public void testThresholdApplication() {

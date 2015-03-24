@@ -21,34 +21,28 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.impl.spring;
+package com.denimgroup.threadfix;
 
-import com.denimgroup.threadfix.framework.filefilter.ClassAnnotationBasedFileFilter;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
-import javax.annotation.Nonnull;
-import java.util.Set;
-
-import static com.denimgroup.threadfix.CollectionUtils.set;
+import java.io.Closeable;
+import java.io.IOException;
 
 /**
- * This class can be used with Commons FileUtils to filter for finding Spring Entities.
- *
- * It actually just finds any file with an uncommented Entity or MappedSuperclass in it.
- * 
- * @author mcollins
- *
+ * Created by mcollins on 3/24/15.
  */
-class SpringEntityFileFilter extends ClassAnnotationBasedFileFilter {
-	
-	private SpringEntityFileFilter(){}
-	
-	public static final SpringEntityFileFilter INSTANCE = new SpringEntityFileFilter();
-	
-	private static final Set<String> annotations = set("Entity", "MappedSuperclass");
-	
-	@Nonnull
-    @Override
-	protected Set<String> getClassAnnotations() {
-		return annotations;
-	}
+public class CloseableUtils {
+
+    private static final SanitizedLogger LOG = new SanitizedLogger(CloseableUtils.class);
+
+    public static void closeQuietly(Closeable closeable) {
+        try {
+            if (closeable != null) {
+                closeable.close();
+            }
+        } catch (IOException e) {
+            LOG.error("Encountered IOException while attempting to close.", e);
+        }
+    }
+
 }

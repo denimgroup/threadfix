@@ -30,8 +30,9 @@ import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * Created by mac on 6/25/14.
@@ -41,7 +42,7 @@ public class DotNetEndpointDatabaseTests {
     @Test
     public void testDotNetProjects() {
 
-        List<String> errorMessages = new ArrayList<>();
+        List<String> errorMessages = list();
 
         for (String project : DotNetDetectionTests.projects) {
 

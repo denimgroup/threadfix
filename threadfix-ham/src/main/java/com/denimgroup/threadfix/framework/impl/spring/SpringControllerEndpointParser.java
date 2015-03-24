@@ -43,7 +43,7 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 class SpringControllerEndpointParser implements EventBasedTokenizer {
 
     @Nonnull
-    Set<SpringControllerEndpoint> endpoints = new TreeSet<>();
+    Set<SpringControllerEndpoint> endpoints = new TreeSet<SpringControllerEndpoint>();
     private int startLineNumber = 0, curlyBraceCount = 0, openParenCount = 0;
     private boolean inClass = false, afterOpenParen = false, isPathParameter;
     boolean hasControllerAnnotation = false;

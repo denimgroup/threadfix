@@ -31,8 +31,9 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.JobStatusService;
 
-import java.util.HashSet;
 import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 /**
  * This class is used to remove all the logging code from the merging code.
@@ -44,7 +45,7 @@ public class ScanStatisticsUpdater {
 	private final static SanitizedLogger log = new SanitizedLogger(ScanStatisticsUpdater.class);
 	
 	private Scan scan;
-	private Set<Vulnerability> alreadySeenVulns = new HashSet<>();
+	private Set<Vulnerability> alreadySeenVulns = set();
 	private ScanDao scanDao;
 	private JobStatusService jobStatusService;
 	private int numMergedInsideScan = 0, initialOld = 0, numUnableToParseVuln = 0;

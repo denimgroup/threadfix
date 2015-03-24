@@ -32,6 +32,7 @@ import java.io.File;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 // TODO make more error resistant
 public class ProjectDirectory {
@@ -60,7 +61,7 @@ public class ProjectDirectory {
 
     @Nonnull
     private Map<String, Set<String>> buildMaps(@Nonnull File startingFile) {
-		Map<String, Set<String>> returnMap = new HashMap<>();
+		Map<String, Set<String>> returnMap = map();
 		
 		if (startingFile.isDirectory()) {
 			recurseMap(startingFile, returnMap);

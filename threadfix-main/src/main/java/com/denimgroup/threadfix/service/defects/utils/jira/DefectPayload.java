@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.service.defects.utils.jira.JiraCustomFieldsConstants.*;
 import static com.denimgroup.threadfix.service.defects.utils.jira.JiraJsonMetadataResponse.*;
 
@@ -41,7 +41,7 @@ public class DefectPayload {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(DefectPayload.class);
 
-    Map<String, Object> fields = newMap();
+    Map<String, Object> fields = map();
 
     public DefectPayload(Map<String, Object> objectMap, Project metadata) {
 

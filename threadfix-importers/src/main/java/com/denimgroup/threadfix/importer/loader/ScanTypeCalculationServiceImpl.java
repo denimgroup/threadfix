@@ -54,7 +54,9 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.zip.ZipFile;
 
+import static com.denimgroup.threadfix.CloseableUtils.closeQuietly;
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 @Service
 public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationService {
@@ -131,13 +133,13 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
         return type;
     }
 
-    private static final Set<Entry<String, String[]>> map = new HashSet<>();
-	private static final Set<Entry<String, ScanImporter>> jsonMap = new HashSet<>();
+    private static final Set<Entry<String, String[]>> map = set();
+	private static final Set<Entry<String, ScanImporter>> jsonMap = set();
 	private static void addToJSONMap(String name, ScanImporter scanImporter) {
-		jsonMap.add(new SimpleEntry<>(name, scanImporter));
+		jsonMap.add(new SimpleEntry<String, ScanImporter>(name, scanImporter));
 	}
     private static void addToMap(String name, String... tags) {
-        map.add(new SimpleEntry<>(name, tags));
+        map.add(new SimpleEntry<String, String[]>(name, tags));
     }
 
     private void initializeMappingsFromAnnotations() {
@@ -187,9 +189,12 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
     // We currently only have zip files for skipfish and fortify
 	// if we support a few more it would be worth a more modular style
 	private String figureOutZip(String fileName) {
-		
+
 		String result = null;
-		try (ZipFile zipFile = new ZipFile(DiskUtils.getScratchFile(fileName))) {
+		ZipFile zipFile = null;
+		try {
+			zipFile = new ZipFile(DiskUtils.getScratchFile(fileName));
+
 			if (zipFile.getEntry("audit.fvdl") != null) {
 				result = ScannerType.FORTIFY.getDbName();
 			} else if (ZipFileUtils.getZipEntry("issue_index.js", zipFile) != null){
@@ -202,6 +207,8 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 			log.warn("Unable to find zip file.", e);
 		} catch (IOException e) {
 			log.warn("Exception encountered while trying to identify zip file.", e);
+		} finally {
+			closeQuietly(zipFile);
 		}
 		
 		return result;
@@ -216,7 +223,10 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 			ScanUtils.readSAXInput(collector, "Done.", stream);
 			
 			return getType(collector.tags);
-		} catch (IOException | RestIOException e) {
+		} catch (IOException e) {
+			log.error("Encountered IOException. Rethrowing.");
+            throw new RestIOException(e, "Unable to determine scan type.");
+		} catch (RestIOException e) {
 			log.error("Encountered IOException. Rethrowing.");
             throw new RestIOException(e, "Unable to determine scan type.");
 		}
@@ -234,7 +244,9 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 			} else if ('{' == (jsonInput.trim().charAt(0))) {
 				jsonObject = new JSONObject(jsonInput);
 			}
-		} catch (JSONException | IOException e) {
+		} catch (JSONException e) {
+			log.debug("Error attempting to determine first element type of JSON input.", e);
+		} catch (IOException e) {
 			log.debug("Error attempting to determine first element type of JSON input.", e);
 		}
 
@@ -420,10 +432,14 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 	private String saveFile(String inputFileName, MultipartFile file) {
         String returnValue = null;
 
-		try (InputStream stream = file.getInputStream()) {
+		InputStream stream = null;
+		FileOutputStream out = null;
+		try {
 
+			stream = file.getInputStream();
             File diskFile = DiskUtils.getScratchFile(inputFileName);
-            try (FileOutputStream out = new FileOutputStream(diskFile)) {
+            try {
+				out = new FileOutputStream(diskFile);
                 byte[] buf = new byte[1024];
                 int len;
 
@@ -438,6 +454,9 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
             }
 		} catch (IOException e) {
             log.warn("Failed to retrieve an InputStream from the file upload.", e);
+		} finally {
+			closeQuietly(stream);
+			closeQuietly(out);
 		}
 
 		return returnValue;

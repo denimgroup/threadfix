@@ -42,6 +42,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collection;
 
+import static com.denimgroup.threadfix.CloseableUtils.closeQuietly;
+
 /**
  * Created by mcollins on 2/4/15.
  */
@@ -151,12 +153,18 @@ public class SonarTools {
     }
 
     private static Integer getLineCount(File file) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        BufferedReader reader = null;
+
+        try {
+            reader = new BufferedReader(new FileReader(file));
+
             int lines = 0;
             while (reader.readLine() != null) lines++;
             return lines;
         } catch (IOException e) {
             LOG.error("Got IOException trying to read from file " + file, e);
+        } finally {
+            closeQuietly(reader);
         }
         return 0;
     }

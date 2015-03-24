@@ -26,22 +26,23 @@ package com.denimgroup.threadfix.framework.util.java;
 import com.denimgroup.threadfix.framework.impl.model.ModelField;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 public class EntityParser implements EventBasedTokenizer {
 
     @Nonnull
-    private Set<ModelField> fieldMappings = new HashSet<>();
+    private Set<ModelField> fieldMappings = set();
 
     @Nonnull
-    private List<String> publicMethods = new ArrayList<>();
+    private List<String> publicMethods = list();
 
     @Nullable
     private String          className     = null, superClass = null, currentParamType = null;

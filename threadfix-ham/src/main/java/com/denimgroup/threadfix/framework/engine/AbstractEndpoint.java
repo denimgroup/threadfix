@@ -28,10 +28,10 @@ import com.denimgroup.threadfix.data.interfaces.Endpoint;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 
 public abstract class AbstractEndpoint implements Endpoint {
@@ -58,7 +58,7 @@ public abstract class AbstractEndpoint implements Endpoint {
 	@Nonnull
     @Override
 	public String getCSVLine(PrintFormat... formats) {
-        Set<PrintFormat> formatSet = new HashSet<>(Arrays.asList(formats));
+        Set<PrintFormat> formatSet = set(formats);
 
         StringBuilder builder = new StringBuilder();
 

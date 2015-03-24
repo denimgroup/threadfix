@@ -33,7 +33,7 @@ import javax.validation.constraints.Size;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 @Entity
 @Table(name = "Scan")
@@ -526,7 +526,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
         List<Map> maps = list();
         List<Tag> tags = getApplication().getTags();
         for (Tag tag: tags) {
-            Map<String, Object> map = newMap();
+            Map<String, Object> map = map();
             map.put("id", tag.getId());
             map.put("name", tag.getName());
             maps.add(map);
