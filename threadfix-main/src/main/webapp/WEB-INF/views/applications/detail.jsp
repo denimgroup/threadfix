@@ -27,14 +27,14 @@
 </head>
 
 <body ng-controller="ApplicationDetailPageController"
-      ng-init="empty = <c:out value="${ numVulns }"/> === 0; numVulns = <c:out value="${numVulns}"/>"s
+      ng-init="empty = <c:out value="${ numVulns }"/> === 0; numVulns = <c:out value="${numVulns}"/>"
       ng-file-drop="onFileSelect($files)"
       ng-class="{ 'drag-enabled': dragEnabled }"
       id="apps">
 
     <%@ include file="/WEB-INF/views/angular-init.jspf"%>
 
-    <div class="uploadable" style="padding-top:300px"><div style="opacity:1">Drop files anywhere to upload.</div></div>
+    <div ng-if="enableOverlay" class="uploadable" style="padding-top:300px"><div style="opacity:1">Drop files anywhere to upload.</div></div>
     <div>
 
         <div id="headerDiv">
