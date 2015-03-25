@@ -36,7 +36,8 @@ public enum Header {
     SHORT_DESCRIPTION(Strings.SHORT_DESCRIPTION, "Short Description"),
     LONG_DESCRIPTION(Strings.LONG_DESCRIPTION, "Long Description"),
     ISSUE_ID(Strings.ISSUE_ID, "Issue ID(Jira, TFS, etc. ID format)"),
-    FINDING_DATE(Strings.FINDING_DATE, "Finding Date (Must be in the format " + Strings.DATE_FORMAT + ")");
+    FINDING_DATE(Strings.FINDING_DATE, "Finding Date (Must be in the format " + Strings.DATE_FORMAT + ")"),
+    SOURCE_FILE_NAME(Strings.SOURCE_FILE_NAME, "Source File (String, ex. testFile.jsp)");
 
     public final String text, description;
 

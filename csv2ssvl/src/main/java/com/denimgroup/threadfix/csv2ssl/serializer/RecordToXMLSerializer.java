@@ -37,7 +37,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.csv2ssl.util.CollectionUtils.map;
-import static com.denimgroup.threadfix.csv2ssl.util.CollectionUtils.map;
 
 /**
  * Created by mac on 12/2/14.
@@ -129,6 +128,7 @@ public class RecordToXMLSerializer {
         }
 
         String sourceScanner = get(map, Strings.SOURCE);
+        String sourceFileName = get(map, Strings.SOURCE_FILE_NAME);
         String severity = get(map, Strings.SEVERITY);
         String cweId = get(map, Strings.CWE);
         String urlString = get(map, Strings.URL);
@@ -165,6 +165,10 @@ public class RecordToXMLSerializer {
 
         if (sourceScanner != null) {
             builder.append(" Source=\"").append(StringEscapeUtils.escapeXml(sourceScanner)).append("\"");
+        }
+
+        if (sourceFileName != null) {
+            builder.append(" SourceFileName=\"").append(StringEscapeUtils.escapeXml(sourceFileName)).append("\"");
         }
 
         if (dateString != null) {

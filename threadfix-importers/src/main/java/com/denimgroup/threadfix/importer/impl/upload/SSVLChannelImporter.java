@@ -127,6 +127,7 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 	    private void parseNativeId(Attributes atts) {
 			String nativeID = atts.getValue("NativeID");
 			findingMap.put(FindingKey.NATIVE_ID, nativeID);
+			findingMap.put(FindingKey.SOURCE_FILE_NAME, atts.getValue("SourceFileName"));
 			lastDate = DateUtils.getCalendarFromString(FINDING_DATE_FORMAT, atts.getValue("IdentifiedTimestamp"));
 	    }
 	    

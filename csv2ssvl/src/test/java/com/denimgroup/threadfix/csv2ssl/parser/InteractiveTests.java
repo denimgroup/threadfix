@@ -55,6 +55,25 @@ public class InteractiveTests {
 
         testDialog(dialog);
     }
+    @Test
+    public void testBasicDialogWithFileName() {
+
+        // define inputs
+        String dialog =
+                "n\n" +
+                "n\n" +
+                "CWE,url,Parameter,LongDescription,NativeID,Source,SourceFileName\n" +
+                "y\n" +
+                "n\n" +
+                ResourceLoader.getFilePath("filename.csv") + "\n" +
+                ResourceLoader.getFilePath("out.ssvl") + "\n";
+
+        String result = testDialog(dialog);
+
+        System.out.println(result);
+
+        assert result.contains("SourceFileName=\"testfile.jsp\"") : "Got " + result;
+    }
 
     @Test
     public void testWithColumnConfiguration() {
@@ -73,6 +92,7 @@ public class InteractiveTests {
                 "3\n" +
                 "5\n" +
                 "4\n" +
+                "skip\n" +
                 "skip\n" +
                 "skip\n" +
                 "skip\n" +
@@ -126,6 +146,7 @@ public class InteractiveTests {
                 "Injection Point\n" +
                 "ID\n" +
                 "Text\n" +
+                "skip\n" +
                 "skip\n" +
                 "skip\n" +
                 "skip\n" +
