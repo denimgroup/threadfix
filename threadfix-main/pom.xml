@@ -144,8 +144,8 @@
                                       tofile="target/classes/downloads/threadfix-release-2.zap" />
                                 <copy file="${project.build.directory}/../../threadfix-sonar-plugin/target/sonar-threadfix-plugin-${project.version}.jar"
                                       tofile="target/classes/downloads/sonar-threadfix-plugin.jar" />
-                                <copy file="${project.build.directory}/../../csv2ssvl/target/CSV2SSVL-1.0-SNAPSHOT-jar-with-dependencies.jar"
-                                      tofile="target/classes/downloads/csv2ssvl.jar" />
+                                <copy file="${project.build.directory}/../../ssvl-converter/target/ssvl-converter-1.0-SNAPSHOT-jar-with-dependencies.jar"
+                                      tofile="target/classes/downloads/ssvl-converter.jar" />
                             </tasks>
                         </configuration>
                     </execution>

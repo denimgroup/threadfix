@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.ExceptionLog;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ExceptionLogService;
-import com.denimgroup.threadfix.service.ExceptionLogServiceImpl;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,7 +57,7 @@ public class ToolsDownloadController {
     private final static String TF_BURP_JAR = "threadfix-release-2-burp.jar";
     private final static String TF_ZAP = "threadfix-release-2.zap";
     private final static String TF_SONAR_JAR = "sonar-threadfix-plugin.jar";
-    private final static String CSV2SSVL_JAR = "csv2ssvl.jar";
+    private final static String SSVL_CONVERTER_JAR = "ssvl-converter.jar";
 
 
     public ToolsDownloadController(){}
@@ -103,9 +102,9 @@ public class ToolsDownloadController {
         return doDownload(request, response, TF_SONAR_JAR);
     }
 
-    @RequestMapping(value="/csv2ssvl")
-    public String doDownloadCsv2ssvl(HttpServletRequest request, HttpServletResponse response) {
-        return doDownload(request, response, CSV2SSVL_JAR);
+    @RequestMapping(value="/ssvl-converter")
+    public String doDownloadSSVLConverter(HttpServletRequest request, HttpServletResponse response) {
+        return doDownload(request, response, SSVL_CONVERTER_JAR);
     }
 
 

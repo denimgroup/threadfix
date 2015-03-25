@@ -17,7 +17,7 @@
 
     <modules>
         <module>threadfix-entities</module>
-        <module>csv2ssvl</module>
+        <module>ssvl-converter</module>
         <module>threadfix-data-access</module>
         <module>threadfix-cli</module>
         <module>threadfix-ham</module>
