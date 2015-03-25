@@ -148,7 +148,7 @@ public class FormatParser {
 
     public static Option<String[]> getStringsOrError(String inputString) {
 
-        String[] lines = inputString.split("\n");
+        String[] lines = inputString.split("[\n\r]");
 
         if (lines.length > 0) {
             return Option.success(lines[0].split(","));
