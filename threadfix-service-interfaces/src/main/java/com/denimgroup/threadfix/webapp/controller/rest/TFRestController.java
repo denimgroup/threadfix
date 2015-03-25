@@ -84,7 +84,7 @@ public abstract class TFRestController {
 		boolean validRequest = key != null;
 
 		if (validRequest) {
-			log.info("API key with ID: " + key.getId() + " authenticated successfully on path: "
+			log.debug("API key with ID: " + key.getId() + " authenticated successfully on path: "
 					+ request.getPathInfo() + " for methodName: " + methodName);
 			
 			if (key.getIsRestrictedKey() &&
