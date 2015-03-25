@@ -80,11 +80,11 @@
                         Jar File</a></td>
                 </tr>
                 <tr>
-                    <td>CSV2SSVL, CSV to SSVL Tool</td>
-                    <td><a target="_blank" href="https://github.com/denimgroup/threadfix/wiki/CSV2SSVL">
+                    <td>SSVLConverter</td>
+                    <td><a target="_blank" href="https://github.com/denimgroup/threadfix/wiki/SSVLConverter">
                         Wiki
                         </a></td>
-                    <td><a href="<spring:url value="/configuration/download/csv2ssvl" htmlEscape="true"/>">
+                    <td><a href="<spring:url value="/configuration/download/ssvl-converter" htmlEscape="true"/>">
                         Jar File</a></td>
                 </tr>
             </tbody>

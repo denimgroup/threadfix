@@ -10,7 +10,7 @@
         <version>2.2-SNAPSHOT</version>
     </parent>
 
-    <artifactId>CSV2SSVL</artifactId>
+    <artifactId>ssvl-converter</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <build>
