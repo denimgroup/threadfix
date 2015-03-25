@@ -267,7 +267,7 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
 
             var table = d3.select("#" + elementId)[0][0];
             pdf.fromHTML(table, 15, 15, {
-                'width': 200,
+                'width': 180,
                 'elementHandlers': specialElementHandlers
             });
         }
