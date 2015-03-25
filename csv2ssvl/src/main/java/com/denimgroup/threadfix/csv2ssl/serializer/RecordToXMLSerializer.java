@@ -192,7 +192,7 @@ public class RecordToXMLSerializer {
 
     private static void appendTagIfPresent(Map<String, String> map, StringBuilder builder, String name, String key) {
         String value = get(map, key);
-        if (value != null) {
+        if (value != null && !"".equals(value.trim())) {
             builder.append("\t\t<").append(StringEscapeUtils.escapeXml(name)).append(">\n\t\t\t")
                     .append(StringEscapeUtils.escapeXml(value)).append("\n")
                     .append("\t\t</").append(StringEscapeUtils.escapeXml(name)).append(">\n");

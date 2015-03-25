@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
  */
 public class DateUtilsTests {
 
-    SimpleDateFormat OURS = DateUtils.OUR_DATE_FORMAT, THEIRS = new SimpleDateFormat("MM/dd/yyyy");
+    SimpleDateFormat OURS = DateUtils.OUR_DATE_FORMAT, THEIRS = new SimpleDateFormat("dd/MM/yyyy");
 
     String[][] tests = {
             { "05/10/2014", "2014-10-05 00:00:00" },
@@ -25,7 +25,11 @@ public class DateUtilsTests {
     }
 
     private void test(String dateString, String prefix) {
-        String converted = DateUtils.convertTo(dateString, OURS, THEIRS);
+
+        DateUtils.THEIR_DATE_FORMAT = THEIRS;
+        DateUtils.OUR_DATE_FORMAT = OURS;
+
+        String converted = DateUtils.toOurFormat(dateString);
 
         assert converted.startsWith(prefix) :
                 dateString + " converted to " + converted + " which didn't start with " + prefix;

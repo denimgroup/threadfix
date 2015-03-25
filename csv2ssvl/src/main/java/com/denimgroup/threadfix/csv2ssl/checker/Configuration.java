@@ -50,6 +50,8 @@ public class Configuration {
 
     public String[] headers;
 
+    public String dateString = Strings.DATE_FORMAT;
+
     public boolean loadedFromFile = false, useStandardOut = false, shouldSkipFirstLine = false;
 
     public File csvFile, outputFile;
@@ -134,6 +136,8 @@ public class Configuration {
         }
 
         properties.setProperty("headers", builder.toString());
+
+        properties.setProperty("dateFormat", CONFIG.dateString);
 
         properties.setProperty("outputFile", CONFIG.outputFile  == null ? "" : CONFIG.outputFile.getAbsolutePath());
 
@@ -241,6 +245,10 @@ public class Configuration {
             if (properties.containsKey(key)) {
                 CONFIG.headerMap.put(key, properties.getProperty(key));
             }
+        }
+
+        if (properties.containsKey("dateFormat")) {
+            CONFIG.dateString = properties.getProperty("dateFormat");
         }
 
         CONFIG.useStandardOut      = "true".equalsIgnoreCase(properties.getProperty("useStandardOut"));
