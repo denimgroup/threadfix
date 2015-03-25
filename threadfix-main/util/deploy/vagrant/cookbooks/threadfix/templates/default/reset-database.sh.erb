@@ -1,6 +1,0 @@
-sudo service tomcat7 stop
-sudo echo "drop database threadfix;" | /usr/bin/mysql -u threadfix -ptfpassword
-sudo service tomcat7 start
-sudo curl -k -I https://localhost:443/threadfix/login.jsp
-sudo echo "use threadfix;" > /tmp/db.sql
-sudo cat /tmp/db.sql /var/lib/tomcat7/webapps/threadfix/WEB-INF/classes/import.sql | /usr/bin/mysql -u threadfix -ptfpassword
