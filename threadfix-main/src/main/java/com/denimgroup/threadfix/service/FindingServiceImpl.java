@@ -76,12 +76,12 @@ public class FindingServiceImpl implements FindingService {
 	
 	@Override
 	public void validateManualFinding(Finding finding, BindingResult result, boolean isStatic) {
-		
-		
+
 		if (finding == null || ((finding.getChannelVulnerability() == null) || 
 				(finding.getChannelVulnerability().getCode() == null) ||
 				(finding.getChannelVulnerability().getCode().isEmpty()))) {
 			result.rejectValue("channelVulnerability.code", "errors.required", new String [] { "Vulnerability" }, null);
+			return;
 		} else {
             String code = finding.getChannelVulnerability().getCode();
             if (code.indexOf("(CWE")<0)
@@ -131,8 +131,8 @@ public class FindingServiceImpl implements FindingService {
 			}
 		}
 
-		if (finding != null && (finding.getLongDescription() == null || 
-				finding.getLongDescription().trim().isEmpty())) {
+		if (finding.getLongDescription() == null ||
+				finding.getLongDescription().trim().isEmpty()) {
 			result.rejectValue("longDescription", "errors.required", new String [] { "Description" }, null);
 		}
 
@@ -153,7 +153,7 @@ public class FindingServiceImpl implements FindingService {
                     || finding.getDataFlowElements().get(0) == null
                     || finding.getDataFlowElements().get(0).getSourceFileName() == null
                     || finding.getDataFlowElements().get(0).getSourceFileName().trim().isEmpty()) {
-                result.rejectValue("surfaceLocation.parameter", MessageConstants.ERROR_REQUIRED, new String[]{"Source File"}, null);
+                result.rejectValue("sourceFileLocation", MessageConstants.ERROR_REQUIRED, new String[]{"Source File"}, null);
             }
         } else {    // dynamic
             if (finding.getSurfaceLocation() == null ||
