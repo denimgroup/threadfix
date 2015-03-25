@@ -35,11 +35,13 @@ public class DialogUtils {
 
     private DialogUtils(){}
 
-    public static void testDialog(String dialog) {
+    public static String testDialog(String dialog) {
         InteractionUtils.reader = new BufferedReader(new StringReader(dialog));
 
         String s = Main.doConfigurationAndParsing(new String[]{});
 
         assert s.contains("<Vulnerability") : "Didn't have any vulnerabilities.";
+
+        return s;
     }
 }

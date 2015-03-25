@@ -85,7 +85,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
     protected enum FindingKey {
         VULN_CODE, PATH, PARAMETER, SEVERITY_CODE, NATIVE_ID, CVE, CWE, VALUE, REQUEST, RESPONSE, DETAIL,
-        RECOMMENDATION, RAWFINDING, URL_REFERENCE, ISSUE_ID, ATTACK_STRING
+        RECOMMENDATION, RAWFINDING, URL_REFERENCE, ISSUE_ID, ATTACK_STRING, SOURCE_FILE_NAME
     }
 
     // A stream pointing to the scan's contents. Set with either setFile or
@@ -315,7 +315,8 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
                 channelVulnerabilityCode = findingMap.get(FindingKey.VULN_CODE),
                 channelSeverityCode = findingMap.get(FindingKey.SEVERITY_CODE),
                 cweCode = findingMap.get(FindingKey.CWE),
-                issueId = findingMap.get(FindingKey.ISSUE_ID);
+                issueId = findingMap.get(FindingKey.ISSUE_ID),
+                sourceFileName = findingMap.get(FindingKey.SOURCE_FILE_NAME);
 
         if (channelVulnerabilityCode == null || channelVulnerabilityCode.isEmpty()) {
             return null;
@@ -419,6 +420,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         }
         finding.setChannelSeverity(channelSeverity);
 
+        finding.setSourceFileLocation(sourceFileName);
         finding.setNativeId(findingMap.get(FindingKey.NATIVE_ID));
 
         return finding;

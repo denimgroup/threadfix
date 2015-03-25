@@ -53,6 +53,7 @@ public final class Strings {
             OUTPUT_FILE = getParameter("arguments.outputFile"),
             FORMAT_FILE = getParameter("arguments.formatFile"),
             FORMAT_STRING = getParameter("arguments.format"),
+            SOURCE_FILE_NAME = getParameter("fields.sourceFileName"),
             FINDING_DATE = getParameter("fields.findingDate"),
             DEFAULT_CWE = getParameter("defaults.cwe"),
             DATE_FORMAT = getParameter("formats.date"),
@@ -88,7 +89,8 @@ public final class Strings {
             PARAMETER, NATIVE_ID,
             LONG_DESCRIPTION,
             SHORT_DESCRIPTION,
-            ISSUE_ID, FINDING_DATE
+            ISSUE_ID, FINDING_DATE,
+            SOURCE_FILE_NAME
     );
 
     private static Properties properties = null;

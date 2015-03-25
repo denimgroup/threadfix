@@ -55,6 +55,23 @@ public class InteractiveTests {
 
         testDialog(dialog);
     }
+    @Test
+    public void testBasicDialogWithFileName() {
+
+        // define inputs
+        String dialog =
+                "n\n" +
+                "n\n" +
+                "CWE,url,Parameter,LongDescription,NativeID,Source,SourceFileName\n" +
+                "y\n" +
+                "n\n" +
+                ResourceLoader.getFilePath("filename.csv") + "\n" +
+                ResourceLoader.getFilePath("out.ssvl") + "\n";
+
+        String result = testDialog(dialog);
+
+        assert result.contains("SourceFileName=\"testfile.jsp\"") : "Got " + result;
+    }
 
     @Test
     public void testWithColumnConfiguration() {
@@ -73,6 +90,7 @@ public class InteractiveTests {
                 "3\n" +
                 "5\n" +
                 "4\n" +
+                "skip\n" +
                 "skip\n" +
                 "skip\n" +
                 "skip\n" +
@@ -106,9 +124,31 @@ public class InteractiveTests {
                 ResourceLoader.getFilePath("windows-line-endings.csv") + "\n" +
                 "y\n" +
                 "n\n" +
-                "stdout\n";
+                "stdout\n" +
+                "n\n" +
+                "n\n" +
+                "n\n" +
+                "n\n"
+                ;
 
-        testDialog(dialog);
+        System.out.println(testDialog(dialog));
+    }
+
+    @Test
+    public void testConfigureDates() {
+
+        String dialog =
+                "n\n" +
+                "y\n" +
+                ResourceLoader.getFilePath("windows-line-endings.csv") + "\n" +
+                "y\n" +
+                "n\n" +
+                "stdout\n" +
+                "y\n" +
+                "dd-MMM-yy\n"
+                ;
+
+        System.out.println(testDialog(dialog));
     }
 
     @Test
@@ -129,6 +169,7 @@ public class InteractiveTests {
                 "skip\n" +
                 "skip\n" +
                 "skip\n" +
+                "skip\n" +
                 "n\n" +
                 "stdout\n";
 
@@ -141,6 +182,18 @@ public class InteractiveTests {
                 "y\n" +
                 ResourceLoader.getFilePath("fromJunit.properties") + "\n" +
                 ResourceLoader.getFilePath("withDifferentHeaderLine.csv") + "\n";
+
+        System.out.println(dialog);
+
+        testDialog(dialog);
+    }
+
+    @Test
+    public void testConfigurationDateLoading() {
+        String dialog =
+                "y\n" +
+                ResourceLoader.getFilePath("customDateConfig.properties") + "\n" +
+                ResourceLoader.getFilePath("windows-line-endings.csv") + "\n";
 
         System.out.println(dialog);
 

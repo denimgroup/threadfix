@@ -37,7 +37,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.csv2ssl.util.CollectionUtils.map;
-import static com.denimgroup.threadfix.csv2ssl.util.CollectionUtils.map;
 
 /**
  * Created by mac on 12/2/14.
@@ -129,6 +128,7 @@ public class RecordToXMLSerializer {
         }
 
         String sourceScanner = get(map, Strings.SOURCE);
+        String sourceFileName = get(map, Strings.SOURCE_FILE_NAME);
         String severity = get(map, Strings.SEVERITY);
         String cweId = get(map, Strings.CWE);
         String urlString = get(map, Strings.URL);
@@ -167,6 +167,10 @@ public class RecordToXMLSerializer {
             builder.append(" Source=\"").append(StringEscapeUtils.escapeXml(sourceScanner)).append("\"");
         }
 
+        if (sourceFileName != null) {
+            builder.append(" SourceFileName=\"").append(StringEscapeUtils.escapeXml(sourceFileName)).append("\"");
+        }
+
         if (dateString != null) {
             String newDate = DateUtils.toOurFormat(dateString);
             if (newDate != null) {
@@ -188,7 +192,7 @@ public class RecordToXMLSerializer {
 
     private static void appendTagIfPresent(Map<String, String> map, StringBuilder builder, String name, String key) {
         String value = get(map, key);
-        if (value != null) {
+        if (value != null && !"".equals(value.trim())) {
             builder.append("\t\t<").append(StringEscapeUtils.escapeXml(name)).append(">\n\t\t\t")
                     .append(StringEscapeUtils.escapeXml(value)).append("\n")
                     .append("\t\t</").append(StringEscapeUtils.escapeXml(name)).append(">\n");

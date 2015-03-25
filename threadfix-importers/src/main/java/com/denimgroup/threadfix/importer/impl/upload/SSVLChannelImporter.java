@@ -76,13 +76,14 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 
 		Calendar lastDate = null;
 		
-		private boolean getText = false;
+		private boolean getText = false, inFinding = false;
 		private String description = null, longDescription = null;
 
 		private List<DataFlowElement> dataFlowElementList = list();
 		private DataFlowElement lastDataFlowElement = null;
 		
 		private Map<FindingKey, String> findingMap = map();
+		StringBuilder currentFindingText = new StringBuilder();
 					    
 	    public void add(Finding finding) {
 			if (finding != null) {
@@ -105,12 +106,17 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 				parseTypeAndSeverity(atts);
 			} else if (qName.equals("Finding")) {
 				parseNativeId(atts);
+				inFinding = true;
 			} else if (qName.equals("SurfaceLocation")) {
 				parseSurfaceLocation(atts);
 			} else if (qName.equals("FindingDescription")) {
 				getText = true;
 			} else if (qName.equals("LongDescription")) {
 				getText = true;
+			}
+
+			if (inFinding) {
+				currentFindingText.append(makeTag(name, qName, atts));
 			}
 	    }
 	    
@@ -127,6 +133,7 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 	    private void parseNativeId(Attributes atts) {
 			String nativeID = atts.getValue("NativeID");
 			findingMap.put(FindingKey.NATIVE_ID, nativeID);
+			findingMap.put(FindingKey.SOURCE_FILE_NAME, atts.getValue("SourceFileName"));
 			lastDate = DateUtils.getCalendarFromString(FINDING_DATE_FORMAT, atts.getValue("IdentifiedTimestamp"));
 	    }
 	    
@@ -156,8 +163,13 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 	    @Override
 		public void endElement (String uri, String name, String qName)
 	    {
+			if (inFinding) {
+				currentFindingText.append(makeEndTag(name, qName));
+			}
+
 			if (qName.equals("Finding")) {
 				finalizeFinding();
+				inFinding = false;
 			} else if (qName.equals("LineText")) {
 				addLineText();
 			} else if (qName.equals("DataFlowElement")) {
@@ -205,6 +217,10 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 				if (genericVulnerability != null && genericVulnerability.getName() != null) {
 					findingMap.put(FindingKey.VULN_CODE, genericVulnerability.getName());
 				}
+
+				findingMap.put(FindingKey.RAWFINDING, currentFindingText.toString());
+
+				currentFindingText.setLength(0);
 			
 				Finding finding = constructFinding(findingMap);
                 if (finding != null) {
@@ -237,6 +253,10 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 	    	if (getText) {
 	    		addTextToBuilder(ch, start, length);
 	    	}
+
+			if (inFinding) {
+				currentFindingText.append(ch, start, length);
+			}
 	    }
 	}
 	
