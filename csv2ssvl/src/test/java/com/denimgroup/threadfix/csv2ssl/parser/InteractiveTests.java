@@ -98,6 +98,20 @@ public class InteractiveTests {
     }
 
     @Test
+    public void testBadLineEndings() {
+
+        String dialog =
+                "n\n" +
+                "y\n" +
+                ResourceLoader.getFilePath("windows-line-endings.csv") + "\n" +
+                "y\n" +
+                "n\n" +
+                "stdout\n";
+
+        testDialog(dialog);
+    }
+
+    @Test
     public void testWithDifferentHeadersInFile() {
         String dialog =
                 "n\n" +
