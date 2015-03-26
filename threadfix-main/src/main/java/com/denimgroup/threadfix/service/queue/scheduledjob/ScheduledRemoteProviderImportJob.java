@@ -51,7 +51,14 @@ public class ScheduledRemoteProviderImportJob implements Job {
         QueueSender queueSender = (QueueSender)dataMap.get("queueSender");
 
         for (String remoteProviderTypeId : remoteProviderTypeIds.split(",")) {
-            queueSender.addRemoteProviderImport(Integer.parseInt(remoteProviderTypeId));
+
+            if (remoteProviderTypeId == null || "".equals(remoteProviderTypeId.trim())) {
+                log.error("Got empty string in remote provider update job.");
+            } else if (remoteProviderTypeId.matches("^[0-9]+$")) {
+                queueSender.addRemoteProviderImport(Integer.parseInt(remoteProviderTypeId));
+            } else {
+                log.error("Non-numeric String encountered for ID: " + remoteProviderTypeId);
+            }
         }
     }
 }
