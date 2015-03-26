@@ -16,7 +16,7 @@ env.shell = 'C:/\"Program Files (x86)\"/Git/bin/bash.exe -l -c'
 @task(default=True)
 @runs_once
 def deploy_war():
-   # local('scp -i ~/.ssh/id_rsa %s/threadfix-main/target/*.war %s@%s:threadfix.war' % (local_working_folder_loc, env.user, env.host))
+    local('scp -i ~/.ssh/id_rsa %s/threadfix-main/target/*.war %s@%s:threadfix.war' % (local_working_folder_loc, env.user, env.host))
     run('%s/bin/Tomcat7.exe stop' % (server_base_loc))   #stop tomcat
     with settings(warn_only=True):
         run('rm -rf %s/webapps/threadfix' % (server_base_loc))
