@@ -144,11 +144,6 @@ public class FindingServiceImpl implements FindingService {
 		}
 
         if (isStatic) {
-            if (finding.getSurfaceLocation() == null
-                    || finding.getSurfaceLocation().getParameter() == null
-                    || finding.getSurfaceLocation().getParameter().trim().isEmpty()) {
-                result.rejectValue("surfaceLocation.parameter", MessageConstants.ERROR_REQUIRED, new String[]{"Parameter"}, null);
-            }
             if (finding.getDataFlowElements() == null
                     || finding.getDataFlowElements().get(0) == null
                     || finding.getDataFlowElements().get(0).getSourceFileName() == null
