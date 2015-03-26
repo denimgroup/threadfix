@@ -183,8 +183,6 @@ public class InteractiveTests {
                 ResourceLoader.getFilePath("fromJunit.properties") + "\n" +
                 ResourceLoader.getFilePath("withDifferentHeaderLine.csv") + "\n";
 
-        System.out.println(dialog);
-
         testDialog(dialog);
     }
 
@@ -195,7 +193,15 @@ public class InteractiveTests {
                 ResourceLoader.getFilePath("customDateConfig.properties") + "\n" +
                 ResourceLoader.getFilePath("windows-line-endings.csv") + "\n";
 
-        System.out.println(dialog);
+        testDialog(dialog);
+    }
+
+    @Test
+    public void testTest2() {
+        String dialog =
+                "y\n" +
+                ResourceLoader.getFilePath("customDateConfig.properties") + "\n" +
+                ResourceLoader.getFilePath("sept.csv") + "\n";
 
         testDialog(dialog);
     }
@@ -206,8 +212,6 @@ public class InteractiveTests {
                 "y\n" +
                 "\"" + ResourceLoader.getFilePath("fromJunit.properties") + "\"\n" +
                 "\"" + ResourceLoader.getFilePath("withDifferentHeaderLine.csv") + "\"\n";
-
-        System.out.println(dialog);
 
         testDialog(dialog);
     }

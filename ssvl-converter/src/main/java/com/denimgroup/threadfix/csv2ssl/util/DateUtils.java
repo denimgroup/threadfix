@@ -22,9 +22,18 @@ public class DateUtils {
 
     public static String toOurFormat(String dateString) {
         try {
-            return OUR_DATE_FORMAT.format(THEIR_DATE_FORMAT.parse(dateString));
+
+            String editedDateString = dateString;
+
+            // if we have 3 but not 4 Ms
+            if (CONFIG.dateString.contains("MMM") && !CONFIG.dateString.contains("MMMM")) {
+                // SimpleDateFormat doesn't parse Sept but humans do
+                editedDateString = editedDateString.replaceAll("Sept", "Sep");
+            }
+
+            return OUR_DATE_FORMAT.format(THEIR_DATE_FORMAT.parse(editedDateString));
         } catch (ParseException e) {
-            System.out.println("Failed to parse date " + dateString + " using pattern " + Strings.DATE_FORMAT);
+            System.out.println("Failed to parse date " + dateString + " using pattern " + CONFIG.dateString);
 
             if (InteractionUtils.getYNAnswer("Would you like to configure the date pattern? (y/n)")) {
                 System.out.println("Grammar reference: http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html");
