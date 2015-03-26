@@ -33,7 +33,7 @@ public class DateUtils {
 
             return OUR_DATE_FORMAT.format(THEIR_DATE_FORMAT.parse(editedDateString));
         } catch (ParseException e) {
-            System.out.println("Failed to parse date " + dateString + " using pattern " + Strings.DATE_FORMAT);
+            System.out.println("Failed to parse date " + dateString + " using pattern " + CONFIG.dateString);
 
             if (InteractionUtils.getYNAnswer("Would you like to configure the date pattern? (y/n)")) {
                 System.out.println("Grammar reference: http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html");
