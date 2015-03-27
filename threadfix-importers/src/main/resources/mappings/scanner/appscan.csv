@@ -11,7 +11,6 @@ Apache Struts Multiple Cross-Site Scripting,apacheStrutsMultipleXSS,79
 Apache Struts 2 OGNL Action/Redirect Exploit,apacheStrutsOGNL,601
 Apache Struts 2 OGNL Action/Redirect/RedirectAction Code Execution,apacheStrutsOGNL_Dos,698
 Apache2 Undefined Charset UTF-7 Cross-Site Scripting,apacheUTF7XSS,79
-'Behold' Counter.exe Denial of Service,attBeholdCounterDoS,400
 Blind Parameter System Call Code Injection,attBlindCodeInjection,78
 OpenSSL TLS Heartbeat buffer over-read (a.k.a. Heartbleed bug),attHeartbleedCheck,125
 Integer Overflow,attIntegerOverflow,550
@@ -32,9 +31,9 @@ Silverlight allows access from any domain,SilverlightAnyDomainAccess,456
 Apache Struts2 ClassLoader Manipulation,Struts2ClassLoaderManip,79
 Struts2/XWork Remote Command Execution,struts2XWorkRemoteCommandExecution,77
 When an authorization object contains the field 'ACTVT'  the corresponding AUTHORITY-CHECK must not ignore this field,TPHidden_OWB_ABAP_AccessControl_AuthCheck_Dummy_ACTVT,284
-If a standard Function Module exists for any given authorization object that performs additional relevant tests in this context  it must be used instead of the simple/basic AUTHORITY-CHECK command,TPHidden_OWB_ABAP_AccessControl_AuthCheck_Insufficient,284
-When an authorization object contains the field 'ACTVT'  the corresponding AUTHORITY-CHECKs should not require '*' authorization for this field,TPHidden_OWB_ABAP_AccessControl_AuthCheck_Privileging_ACTVT,284
-Investigate the methods that generate and/or permit the excessive traffic to reduce the risk that the limited resources will be exhausted under normal to high utilization periods,TPHidden_OWB_ABAP_AppDOS_Transfer,16
+Insufficient simple/basic AUTHORITY-CHECK command,TPHidden_OWB_ABAP_AccessControl_AuthCheck_Insufficient,284
+AUTHORITY-CHECKs should not require '*' authorization for this field,TPHidden_OWB_ABAP_AccessControl_AuthCheck_Privileging_ACTVT,284
+The limited resources will be exhausted under normal to high utilization periods,TPHidden_OWB_ABAP_AppDOS_Transfer,16
 Only use Open SQL in order to access the SAP database,TPHidden_OWB_ABAP_DB_Generic_Query_C_GET_TABLE,16
 Only use Open SQL in order to access the SAP database,TPHidden_OWB_ABAP_DB_Generic_Query_C_MOD_TABLE,16
 User input must not be part of a file resource locator,TPHidden_OWB_ABAP_Injection_File_Alerts,16

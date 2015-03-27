@@ -53,7 +53,7 @@ Often Misused: Strings,Often Misused: Strings,251
 Spring Webflow Bad Practices: Flow Bypass,Spring Webflow Bad Practices: Flow Bypass,20
 HTML5: Overly Permissive Message Posting Policy,HTML5: Overly Permissive Message Posting Policy,275
 Android Bad Practices: Use of Released SQLite Resource,Android Bad Practices: Use of Released SQLite Resource,416
-Unreleased Resource: Android Camera,Unreleased Resource: Android Camera, 404
+Unreleased Resource: Android Camera,Unreleased Resource: Android Camera,404
 ASP.NET Misconfiguration: Excessive Session Timeout,ASP.NET Misconfiguration: Excessive Session Timeout,613
 Weak XML Schema: Unbounded Occurences,Weak XML Schema: Unbounded Occurences,770
 Spring MVC Bad Practices: Flow Bypass,Spring MVC Bad Practices: Flow Bypass,20
@@ -61,7 +61,7 @@ HTML5: Overly Permissive CORS Policy,HTML5: Overly Permissive CORS Policy,20
 Struts 2 Bad Practices: Application Map Tampering,Struts 2 Bad Practices: Application Map Tampering,20
 Null Dereference: Dereference before Check,Null Dereference: Dereference before Check,690
 Privacy Violation: Android Internal Storage,Privacy Violation: Android Internal Storage,359
-Unreleased Resource: Android SQLite Database,Unreleased Resource: Android SQLite Database, 404
+Unreleased Resource: Android SQLite Database,Unreleased Resource: Android SQLite Database,404
 Dynamic Code Evaluation: Code Manipulation,Dynamic Code Evaluation: Code Manipulation,94
 Insecure SSL: Android Customized Implementation,Insecure SSL: Android Customized Implementation,299
 HTML5: Easy-to-Guess Database Name,HTML5: Easy-to-Guess Database Name,330
@@ -77,7 +77,6 @@ Android Bad Practices: Use of Released Camera Resource,Android Bad Practices: Us
 ASP.NET Misconfiguration: Double Escaping Enabled,ASP.NET Misconfiguration: Double Escaping Enabled,11
 Android Bad Practices: Unnecessary Component Exposure,Android Bad Practices: Unnecessary Component Exposure,265
 Insecure SSL: Android Hostname Verification Disabled,Insecure SSL: Android Hostname Verification Disabled,297
-Privacy Violation: Autocomplete,Privacy Violation: Autocomplete,525
 Struts 2 Bad Practices: Session Map Tampering,Struts 2 Bad Practices: Session Map Tampering,20
 Poor Error Handling: No Default Exception Handler,Poor Error Handling: No Default Exception Handler,388
 JSON Injection,JSON Injection,91

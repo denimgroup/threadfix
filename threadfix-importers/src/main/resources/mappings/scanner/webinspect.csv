@@ -48,14 +48,12 @@ Falt4 CMS index.php 'handler' Parameter Cross-Site Scripting,Falt4 CMS index.php
 Novell Groupwise WebAccess 'User.Theme.index' Cross-Site Scripting,Novell Groupwise WebAccess 'User.Theme.index' Cross-Site Scripting,79
 ZDR Captcha Detected,ZDR Captcha Detected,200
 Security Image CAPTCHA Detected,Security Image CAPTCHA Detected,200
-IIS uploadn.asp Arbitrary File Upload,IIS uploadn.asp Arbitrary File Upload,284
 Netflow Analyzer index.jsp 'section' Cross-Site Scripting,Netflow Analyzer index.jsp 'section' Cross-Site Scripting,79
 Insecure Cache-control Policy for Session Cookies,Insecure Cache-control Policy for Session Cookies,3
 Insufficient Session ID Length,Insufficient Session ID Length,361
 Possible SQL Query,Possible SQL Query,200
 ENABLEDEBUGGER Tag Detected,ENABLEDEBUGGER Tag Detected,16
 HacmeBank Settings Template,HacmeBank Settings Template,16
-IIS repost.asp Arbitrary File Upload,IIS repost.asp Arbitrary File Upload,284
 MyBB member.php 'uid' parameter SQL Injection Vulnerability,MyBB member.php 'uid' parameter SQL Injection Vulnerability,89
 Arbitrary File Upload,Arbitrary File Upload,87
 PostMessage Broadcast Vulnerability,PostMessage Broadcast Vulnerability,200
@@ -152,7 +150,6 @@ BEA Weblogic 'weblogic.xml' Information Disclosure,BEA Weblogic 'weblogic.xml' I
 Directory Enumeration,Directory Enumeration,16
 Unused Parameter Detected,Unused Parameter Detected,489
 Sambar 'showini.asp' Information Disclosure,Sambar 'showini.asp' Information Disclosure,200
-FCKeditor 'CurrentFolder' Parameter Directory Traversal,FCKeditor 'CurrentFolder' Parameter Directory Traversal,548
 PROTECT Tag detected,PROTECT Tag detected,200
 Misconfigured HTTP Strict-Transport-Security Header,Misconfigured HTTP Strict-Transport-Security Header,319
 W3Mail Mail Attachment Disclosure,W3Mail Mail Attachment Disclosure,200
