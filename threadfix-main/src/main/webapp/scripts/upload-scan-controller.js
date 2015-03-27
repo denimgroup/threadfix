@@ -44,8 +44,8 @@ myAppModule.controller('UploadScanController', function ($scope, $modalInstance,
                     $modalInstance.close(data.object); // pass the team back up to update stats
                 } else {
                     if (!data.message) {
-                        // If there's no message, this is often an uncaught RuntimeException. It should be stored in View Error Logs.
-                        $scope.alerts = [{ type: 'danger', msg: "An error has occurred. Please go to the 'View Error Logs' page (under the cog) for more details." }];
+                        // If there's no message, this is often an uncaught RuntimeException. It should be stored in View Error Messages.
+                        $scope.alerts = [{ type: 'danger', msg: "An error has occurred. Please go to the 'View Error Messages' page (under the cog) for more details." }];
                     } else {
                         $scope.alerts = [{ type: 'danger', msg: data.message }];
                     }
