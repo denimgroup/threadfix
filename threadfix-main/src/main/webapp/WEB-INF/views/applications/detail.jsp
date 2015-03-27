@@ -20,6 +20,7 @@
     <cbs:cachebustscript src="/scripts/vuln-search-tree-controller.js"/>
     <cbs:cachebustscript src="/scripts/report/report-filter-controller.js"/>
 	<cbs:cachebustscript src="/scripts/scan-unmapped-finding-table-controller.js"/>
+	<cbs:cachebustscript src="/scripts/add-to-existing-defect-controller.js"/>
     <cbs:cachebustscript src="/scripts/report/vuln-summary-modal-controller.js"/>
     <c:forEach items="${ reportJsPaths }" var="reportJs">
         <script type="text/javascript" src="${ reportJs }"></script>
@@ -89,7 +90,7 @@
     <%@ include file="/WEB-INF/views/config/users/permissibleUsers.jsp" %>
     <%@ include file="/WEB-INF/views/defects/submitDefectForm.jsp" %>
     <%@ include file="/WEB-INF/views/applications/modals/submitGRCControl.jsp" %>
-    <%@ include file="/WEB-INF/views/defects/mergeDefectForm.jsp" %>
+    <%@ include file="/WEB-INF/views/defects/addToExistingDefectForm.jsp" %>
     <%@ include file="/WEB-INF/views/applications/forms/vulnCommentForm.jsp"%>
     <%@ include file="/WEB-INF/views/applications/forms/uploadDocForm.jsp"%>
     <%@ include file="/WEB-INF/views/applications/forms/manualFindingForm.jsp"%>

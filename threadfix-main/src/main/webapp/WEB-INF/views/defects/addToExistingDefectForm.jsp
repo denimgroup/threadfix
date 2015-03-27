@@ -1,13 +1,13 @@
-<script type="text/ng-template" id="mergeDefectForm.html">
+<script type="text/ng-template" id="addToExistingDefect.html">
     <div class="modal-header">
         <h4 id="myModalLabel">
-            Submit Defect
+            Add to Existing Defect
         </h4>
     </div>
 	<div ng-form="form" class="modal-body">
-        <div ng-hide="initialized" class="modal-spinner-div"><span class="spinner dark"></span>Loading</div><br>
+        <div ng-if="loadingDefectIds" class="modal-spinner-div-long"><span class="spinner dark"></span>Loading options from server. You can enter the ID manually.</div><br>
 
-        <table ng-show="initialized" class="dataTable">
+        <table class="dataTable">
             <tbody>
                 <tr class="left-align">
                     <td style="padding:5px;">Select Defect</td>
@@ -18,7 +18,7 @@
                                name = "id"
                                ng-model="object.id"
                                typeahead="defect for defect in config.defects | filter:$viewValue | limitTo:10"
-                               typeahead-editable="false"
+                               typeahead-editable="true"
                                placeholder="{{config.placeholder}}"
                                class="form-control"/>
                     </td>
