@@ -12,8 +12,8 @@
                 </button>
                 <ul class="dropdown-menu">
                     <c:if test="${ canSubmitDefects }">
-                        <li ng-show="$parent.treeApplication.defectTracker"><a class="pointer" id="submitDefectButton" ng-click="showSubmitDefectModal()">Submit Defect</a></li>
-                        <li ng-show="$parent.treeApplication.defectTracker"><a class="pointer" id="mergeDefectButton" ng-click="showMergeDefectModal()">Merge Defect</a></li>
+                        <li ng-show="$parent.treeApplication.defectTracker"><a class="pointer" id="submitDefectButton" ng-click="showSubmitDefectModal()">Create Defect</a></li>
+                        <li ng-show="$parent.treeApplication.defectTracker"><a class="pointer" id="mergeDefectButton" ng-click="showMergeDefectModal()">Add to Existing Defect</a></li>
                     </c:if>
                     <c:if test="${ canManageGrcTools }">
                         <li ng-show="$parent.treeApplication.grcApplication"><a class="pointer" id="submitGrcControlButton" ng-click="showSubmitGrcControlModal()">Submit GRC Control(s)</a></li>

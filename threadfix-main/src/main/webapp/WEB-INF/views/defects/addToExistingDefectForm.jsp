@@ -1,7 +1,7 @@
-<script type="text/ng-template" id="mergeDefectForm.html">
+<script type="text/ng-template" id="addToExistingDefect.html">
     <div class="modal-header">
         <h4 id="myModalLabel">
-            Submit Defect
+            Add to Existing Defect
         </h4>
     </div>
 	<div ng-form="form" class="modal-body">
@@ -18,7 +18,7 @@
                                name = "id"
                                ng-model="object.id"
                                typeahead="defect for defect in config.defects | filter:$viewValue | limitTo:10"
-                               typeahead-editable="false"
+                               typeahead-editable="true"
                                placeholder="{{config.placeholder}}"
                                class="form-control"/>
                     </td>
