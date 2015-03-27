@@ -222,4 +222,11 @@ public class WhiteHatScanParsingTests {
         return args;
     }
 
+    @Test
+    public void testEmptyXmlHasScans() {
+
+        test("allClosed", false);
+
+    }
+
 }
