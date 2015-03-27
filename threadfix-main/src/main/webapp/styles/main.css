@@ -959,6 +959,11 @@ h3 .spinner-div .spinner.dark {
     width:70px;
 }
 
+.modal-spinner-div-long {
+    padding-left:131px;
+	padding-right:131px;
+}
+
 .modal-loading {
     width:100%;
     text-align:center;

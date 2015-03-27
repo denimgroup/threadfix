@@ -5,9 +5,9 @@
         </h4>
     </div>
 	<div ng-form="form" class="modal-body">
-        <div ng-hide="initialized" class="modal-spinner-div"><span class="spinner dark"></span>Loading</div><br>
+        <div ng-if="loadingDefectIds" class="modal-spinner-div-long"><span class="spinner dark"></span>Loading options from server. You can enter the ID manually.</div><br>
 
-        <table ng-show="initialized" class="dataTable">
+        <table class="dataTable">
             <tbody>
                 <tr class="left-align">
                     <td style="padding:5px;">Select Defect</td>
