@@ -1,4 +1,4 @@
-8/6/2014 11:45:00
+3/27/2015 11:45:00
 type.info,,,
 Arachni,,,
 type.vulnerabilities,,,
@@ -43,6 +43,17 @@ Insecure cookie,Insecure cookie,614,
 Private IP address finder,Private IP address finder,200,
 Private IP address disclosure,Private IP address disclosure,200,
 Unencrypted password forms,Unencrypted password forms,311,
+NoSQL Injection,NoSQL Injection,89,
+Blind NoSQL Injection (differential analysis),Blind NoSQL Injection (differential analysis),89,
+DOM-based Cross-Site Scripting (XSS),DOM-based Cross-Site Scripting (XSS),79,
+DOM-based Cross-Site Scripting (XSS) via input fields,DOM-based Cross-Site Scripting (XSS) via input fields,79,
+DOM-based Cross-Site Scripting (XSS) in script context,DOM-based Cross-Site Scripting (XSS) in script context,79,
+Cross-Site Scripting (XSS) in event tag of HTML element,Cross-Site Scripting (XSS) in event tag of HTML element,79,
+Cross-Site Scripting (XSS) in script context,Cross-Site Scripting (XSS) in script context,79,
+Backup directory,Backup directory,530,
+Cookie set for parent domain,Cookie set for parent domain,200,
+Missing 'Strict-Transport-Security' header,Missing 'Strict-Transport-Security' header,200,
+Access restriction bypass via origin spoof,Access restriction bypass via origin spoof,16,
 type.severities,,,
 Informational,Informational,1,1
 High,High,4,4
