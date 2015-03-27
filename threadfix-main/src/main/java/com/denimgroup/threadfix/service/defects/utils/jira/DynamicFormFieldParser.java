@@ -33,9 +33,11 @@ import org.codehaus.jackson.map.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.CollectionUtils.set;
 import static com.denimgroup.threadfix.service.defects.utils.jira.JiraCustomFieldsConstants.*;
 import static com.denimgroup.threadfix.service.defects.utils.jira.JiraJsonMetadataResponse.*;
 
@@ -106,6 +108,8 @@ public class DynamicFormFieldParser {
                 Map<String, String> issueTypeValuesMap = map();
                 addField(issueTypeField, fieldList, null);
 
+                Set<String> timetrackingSet = set();
+
                 for (IssueType issueType : project.getIssuetypes()) {
                     issueTypeValuesMap.put(issueType.getId(), issueType.getName());
                     for (Map.Entry<String, Field> entry : issueType.getFields().entrySet()) {
@@ -147,6 +151,12 @@ public class DynamicFormFieldParser {
                             field.setOptionsMap(jsonField.getOptionsMap());
                         } else if (type.equals("timetracking")) {
                             LOG.debug("Adding timetracking fields (x2)");
+
+                            if (timetrackingSet.contains(entry.getKey())) {
+                                continue; // otherwise we will have duplicates
+                            } else {
+                                timetrackingSet.add(entry.getKey());
+                            }
 
                             DynamicFormField originalEstimate = new DynamicFormField();
 
