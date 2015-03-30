@@ -1,4 +1,4 @@
-8/6/2014 11:45:00
+3/27/2015 11:45:00
 type.info,,
 Mavituna Security Netsparker,,
 type.vulnerabilities,,
@@ -32,7 +32,7 @@ Log File Found,Log File Found,425
 MDB (MS Access Database) File Found,MDB (MS Access Database) File Found,425
 Microsoft SharePoint Version Disclosure,Microsoft SharePoint Version Disclosure,200
 Mint Identified,Mint Identified,200
-MSSQL Version Is Out Of Date,MSSQL Version Is Out Of Date,672
+MS SQL Version Is Out Of Date,MSSQLOutOfDate,672
 MySQL Dos Detected,MySQL Dos Detected,400
 OpenSSL Version Is Out Of Date,OpenSSL Version Is Out Of Date,672
 Passive Web Backdoor Identified,Passive Web Backdoor Identified,200
@@ -52,3 +52,139 @@ Weak Signature Detected,Weak Signature Detected,731
 Web Logic Version Disclosure,Web Logic Version Disclosure,200
 Windows Username Disclosure,Windows Username Disclosure,200
 WS_FTP Log File Identified,WS_FTP Log File Identified,200
+Apache Coyote Version Disclosure,ApacheCoyoteVersionDisclosure,200
+Apache Module Version Disclosure,ApacheModuleVersionDisclosure,200
+Apache MultiViews Enabled,ApacheMultiViewsEnabled,16
+Apache Version Is Out Of Date,ApacheOutOfDate,672
+Basic Authorization Required,BasicAuthorisationRequired,285
+Default Apache Page Identified,DefaultApachePage,200
+Default IIS 6 Page Identified,DefaultIIS6Page,200
+Default IIS 7 Page Identified,DefaultIIS7Page,200
+Default Tomcat Page Identified,DefaultTomcatPage,200
+Digest Authorization Required,DigestAuthorizationRequired,285
+Digest Authorization Required,DigestAuthrizationRequired,285
+File Upload Functionality Identified,FileUploadFound,434
+Forbidden Resource,ForbiddenResource,399
+IIS Identified,IISIdentified,200
+IIS Version Disclosure,IISVersion,200
+IIS Version Disclosure,IISVersionDisclosure,200
+Ineffective Filtering,InactiveXSS,79
+Java Servlet Version Disclosure,JavaServletVersionDisclosure,200
+[Low Possibility] Command Injection,LowPossibilityCI,77
+Permanent Cross-site Scripting (XSS),LowPossibilityPermanentXSS,79
+[Low Possibility] Remote File Inclusion,LowPossibilityRFI,99
+MDB (MS Access Database) File Found,MDBFound,425
+MySQL 4 Database Identified,MySQL4Idenfitied,200
+MySQL 5 Database Identified,MySQL5Identified,200
+MySQL Database Identified,MySQLIdentified,200
+MySQL Version Is Out Of Date,MySQLOutOfDate,672
+NTLM Authorization Required,NTLMAuthrizationRequired,285
+ORACLE Application Server Version Disclosure,ORACLEApplicationServerVersion,200
+ORACLE Server Identified,ORACLEIdentified,200
+Oracle Version Is Out Of Date,OracleOutOfDate,672
+PHP Version Disclosure,PhpOutOfDate,200
+Inactive Web Backdoor Identified,PassiveWebBackdoorIdentified,200
+[Possible] Permanent Cross-site Scripting,PossiblePermanentXSS,79
+Redirect Response BODY Is Too Large,RedirectBodyTooLarge,204
+Redirect Response BODY Has Two Responses,RedirectTwoResponses,204
+Insecure Transportation Security Protocol (SSLv2) Supported,SSLVersion2Support,818
+Sitemap Identified,SitemapIdentified,200
+Static Special Check,SpecialCase,253
+Special Check: No Basic Auth,SpecialCaseNoBasicAuthentication,253
+Special Check: Cookie Support Detection,SpecialCaseNoCookies,253
+Tomcat Version Is Out Of Date,TomcatOutOfDate,672
+ViewState Pre Analyser,ViewStateAnalyser,16
+Weak Credentials Identified,WeakCredentials,522
+Web Backdoor Identified,WebBackdoorIdentified,200
+XSS Protection Disabled,XSSProtectionDisabled,16
+htaccess Disclosure,htaccessDisclosure,200
+htpasswd Disclosure,htpasswdDisclosure,200
+ViewState Is Not Encrypted,ViewState Is Not Encrypted,16
+CsrfDetected,CsrfDetected,352
+InsecureFrameExternal,InsecureFrameExternal,16
+Apache MyFaces Stack Trace Disclosure,ApacheMyFacesStackTraceDisclosure,209
+Auto Complete Enabled,AutoCompleteEnabledPasswordField,425
+AWStats Identified,AWStatsIdentified,200
+Code Execution Via Web Dav,CodeExecutionViaWebDav,78
+ColdFusion Source Code Disclosure,ColdFusionSourceCodeDisclosure,540
+Command Injection Shell Shock,CommandInjectionShellshock,77
+Cookie Leakage In AntiCsrf Token Detected,CookieLeakageInAntiCsrfTokenDetected,539
+Csrf Detected,CsrfDetected,352
+Csrf In Login Form Detected,CsrfInLoginFormDetected,352
+Default IIS 8 Page Identified,DefaultIis8Page,200
+Dom Based XSS,DomBasedXss,79
+Drupal Identified,DrupalIdentified,200
+Drupal Is Out Of Date,DrupalOutOfDate,672
+Expression Language Injection,ElInjection,917
+Elmahaxd Found,ElmahaxdFound,200
+Generic Email Disclosure,GenericEmailDisclosure,200
+Grails StackTrace Disclosure,GrailsStackTraceDisclosure,200
+HSTS Inefficient,HstsInefficient,818
+HstsInMa,HstsInMa,818
+HSTS Max Age,HstsMaxAge,818
+HSTS Not Enabled,HstsNotEnabled,818
+HSTS Via HTTP,HstsViaHttp,818
+Insecure Frame External,InsecureFrameExternal,16
+Java Source Code Disclosure,JavaSourceCodeDisclosure,540
+Java Stack Trace Disclosure,JavaStackTraceDisclosure,532
+Joomla Identified,JoomlaIdentified,200
+Joomla Is Out Of Date,JoomlaOutOfDate,672
+Directory Listing (LigHTTPD),LigHTTPDDirectoryListing,538
+Lighttpd Version Disclosure,LighttpdVersionDisclosure,200
+Directory Listing (Litespeed),LiteSpeedDirectoryListing,538
+MediaWiki Identified,MediaWikiIdentified,200
+MediaWiki Is Out Of Date,MediaWikiOutOfDate,672
+Mint Identified,MintIdentified,200
+Misconfigured Frame,MisconfiguredFrame,16
+Movable Type Identified,MovableTypeIdentified,200
+Movable Type Is Out Of Date,MovableTypeOutOfDate,672
+MySQL DOS Detected,MySQLDoSDetected,400
+Directory Listing (NginX),NginxDirectoryListing,538
+Nginx Identified,NginxIdentified,200
+Nginx Is Out Of Date,NginxOutOfDate,672
+NuSOAP Is Out Of Date,NuSoapOutOfDate,672
+NuSOAP Version Disclosure,NuSoapVersionDisclosure,200
+OpenSSL Heartbleed Vulnerability,OpenSslHeartbleedVulnerability,16
+OpenSSL Is Out Of Date,OpenSslOutOfDate,672
+Options Method Enabled,OptionsMethodEnabled,16
+OsCommerce Identified,OscommerceIdentified,200
+Oscommerce Is Out Of Date,OscommerceOutOfDate,672
+Passive Vulnerabilities,PassiveVulns,16
+Perl Source Code Disclosure,PerlSourceCodeDisclosure,540
+PhpBB Identified,PhpBBIdentified,200
+PhpBB Is Out Of Date,PhpBBOutOfDate,672
+PHPMyAdmin Identified,PHPMyAdminIdentified,200
+Piwik Identified,PiwikIdentified,200
+[Possible] Blind Command Injection,PossibleBlindCommandInjection,77
+[Possible] Database ConnectionString Identified,PossibleDatabaseConnectionStringIdentified,200
+[Possible] Expression Language Injection,PossibleElInjection,917
+[Possible] Remote Code Evaluation (PERL),PossibleRcePerl,94
+[Possible] Remote Code Evaluation (Ruby on Rails Json),PossibleRceRorJson,94
+[Possible] Remote Code Evaluation (Ruby on Rails Xml),PossibleRceRorXml,94
+Python Source Code Disclosure,PythonSourceCodeDisclosure,540
+Remote Code Evaluation (PERL),RcePerl,94
+Remote Code Evaluation (Ruby on Rails Json),RceRorJson,94
+Remote Code Evaluation (Ruby on Rails Xml),RceRorXml,94
+Ruby Source Code Disclosure,RubySourceCodeDisclosure,540
+SharePoint Version Disclosure,SharePointVersionDisclosure,200
+ShellScript Identified,ShellScriptIdentified,200
+Social Security Number Disclosure,SocialSecurityNumberDisclosure,200
+Insecure Transportation Security Protocol (SSLv3) Supported,SslVersion3Support,818
+Struts2 Development Mode Enabled,Struts2DevModeEnabled,16
+TWiki Identified,TWikiIdentified,200
+TWiki Is Out Of Date,TWikiOutOfDate,672
+UNC Server And Share Disclosure,UNCServerAndShareDisclosure,200
+Mod SSL Version Disclosure,VersionDisclosureModSsl,200
+Ruby Version Disclosure,VersionDisclosureRuby,200
+Webrick Version Disclosure,VersionDisclosureWebrick,200
+ViewState Pre Analyser,ViewStateAnalyzer,16
+Webalizer Identified,WebalizerIdentified,200
+WebConfig Identified,WebConfigIdentified,200
+WebDav Directory Has Write Permissions,WebDavDirectoryHasWritePermissions,284
+Directory Listing (WebDav),WebDavDirectoryListing,538
+WebDav Enabled,WebDavEnabled,16
+WebLogic Version Disclosure,WebLogicVersionDisclosure,200
+Win Username Disclosure,WinUsernameDisclosure,200
+WordPress Identified,WordPressIdentified,200
+WordPress Is Out Of Date,WordPressOutOfDate,672
+WSFTP Log File Identified,WSFTPLogFileIdentified,532

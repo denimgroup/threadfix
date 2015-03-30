@@ -1,0 +1,51 @@
+3/27/2015 11:45:00
+type.info,,
+IBM Rational AppScan,,
+type.vulnerabilities,,
+Ajax File and Image Manager PHP Code Injection,AjaxFileImageManagerPHPCodeInjection,94
+Apache HTTP Method Cross-Site Scripting,ApacheHTTPMethodXSS,79
+Apache Struts2 Multiple Remote Command Execution vulnerabilities,apacheStruts2MultipleExec,77
+Apache Struts2 Multiple Cross-Site Scripting,apacheStruts2MultipleXSS,79
+Apache Struts 2 'includeParams' Remote Command Execution,apacheStrutsIncludeParams,73
+Apache Struts Multiple Cross-Site Scripting,apacheStrutsMultipleXSS,79
+Apache Struts 2 OGNL Action/Redirect Exploit,apacheStrutsOGNL,601
+Apache Struts 2 OGNL Action/Redirect/RedirectAction Code Execution,apacheStrutsOGNL_Dos,698
+Apache2 Undefined Charset UTF-7 Cross-Site Scripting,apacheUTF7XSS,79
+Blind Parameter System Call Code Injection,attBlindCodeInjection,78
+OpenSSL TLS Heartbeat buffer over-read (a.k.a. Heartbleed bug),attHeartbleedCheck,125
+Integer Overflow,attIntegerOverflow,550
+MongoDB NoSQL Injection,attMongoDB,89
+Link to Non-Existing Domain Found,attNXDOMAIN,601
+Padding Oracle On Downgraded Legacy Encryption (a.k.a. POODLE),attPoodleCheck,319
+Port Listener Command Injection,attPortListenerCmdInj,78
+Inclusive Phishing Through URL Redirection,attRedirectInURL_inclusive,601
+Factoring RSA Export Keys (a.k.a. FREAK),FREAK_TLS_ATK,327
+XML Injection,GB_XMLInjection,91
+lighttpd SQL injection and Path Traversal vulnerabilities,lighttpdSQLiPathTraversal,89
+Microsoft Windows MHTML Cross-Site Scripting,MHTMLXSS,79
+Movable Type (MT) Upgrade Program Code Execution and SQL Injection,MTUpgrade,89
+Phishing Through Remote File Inclusion,PhishingThroughRFI,73
+PHP-CGI query string vulnerability,PHPCGIqueryParam,598
+Remote Command Execution through Bash (a.k.a. Shellshock  a.k.a. Bashdoor),ShellShockCheck,94
+Silverlight allows access from any domain,SilverlightAnyDomainAccess,456
+Apache Struts2 ClassLoader Manipulation,Struts2ClassLoaderManip,79
+Struts2/XWork Remote Command Execution,struts2XWorkRemoteCommandExecution,77
+When an authorization object contains the field 'ACTVT'  the corresponding AUTHORITY-CHECK must not ignore this field,TPHidden_OWB_ABAP_AccessControl_AuthCheck_Dummy_ACTVT,284
+Insufficient simple/basic AUTHORITY-CHECK command,TPHidden_OWB_ABAP_AccessControl_AuthCheck_Insufficient,284
+AUTHORITY-CHECKs should not require '*' authorization for this field,TPHidden_OWB_ABAP_AccessControl_AuthCheck_Privileging_ACTVT,284
+The limited resources will be exhausted under normal to high utilization periods,TPHidden_OWB_ABAP_AppDOS_Transfer,16
+Only use Open SQL in order to access the SAP database,TPHidden_OWB_ABAP_DB_Generic_Query_C_GET_TABLE,16
+Only use Open SQL in order to access the SAP database,TPHidden_OWB_ABAP_DB_Generic_Query_C_MOD_TABLE,16
+User input must not be part of a file resource locator,TPHidden_OWB_ABAP_Injection_File_Alerts,16
+User input must not be part of a file resource locator,TPHidden_OWB_ABAP_Injection_File_C_RSTRB_READ_BUFFERED,16
+Only use Open SQL in order to access the SAP database,TPHidden_OWB_ABAP_Injection_SQL_C_DB_EXECUTE,16
+Verify that the file permissions are limited to only what the authorized user should be able to do,TPHidden_OWB_AccessControl_InsecureFilePermissions,16
+Secure both the Intent sender and receiver using permissions and do not send unencrypted private data using Intents,TPHidden_OWB_Communications_InsecureIntent,16
+Verify that the Android Fragment name is validated and sanitized,TPHidden_OWB_Injection_AndroidFragment,16
+Verify that data sent to an aspect is propery validated and sanitized,TPHidden_OWB_Injection_Aspect,16
+Verify that the HTTP request headers are validated and sanitized,TPHidden_OWB_Injection_HttpRequestSplitting,16
+Weak SSL Cipher Suites are Supported,WeakCipherSuites,327
+"WikkaWiki ""/UserSettings"" SQL Injection",WikkaWikiUserSettingsSQLInjection,89
+Missing Cross-Frame Scripting Defence,XFS,693
+Cross-Site Scripting through Remote File Inclusion,XSSThroughRFI,73
+Zikula Application Framework index.php Cross-Site Scripting,ZikulaApplicationFrameworkindexphpXSS,79

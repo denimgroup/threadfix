@@ -41,7 +41,7 @@ Cookie Does Not Contain The "secure" Attribute,150122,614
 Cookie Does Not Contain The "HTTPOnly" Attribute,150123,614
 Framable Page,150124,693
 File Upload Form Found,150125,16
-Apache Struts ClassLoader Manipulation Security Bypass Vulnerability (S2-020, S2-021),150127,20
+Apache Struts ClassLoader Manipulation Security Bypass Vulnerability (S2-020 S2-021),150127,20
 Authenticated Resource Is Not Served Over HTTPS,150128,319
 Insufficient Session Protection/Regeneration,150129,613
 Shellshock Apache Injection,150134,78
