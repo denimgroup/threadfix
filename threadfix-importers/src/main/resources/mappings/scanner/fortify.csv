@@ -1,4 +1,4 @@
-3/10/2015 14:38:00
+3/27/2015 11:45:00
 type.info,,
 Fortify 360
 type.vulnerabilities,,
@@ -7,5 +7,97 @@ Privacy Violation: Autocomplete,Privacy Violation: Autocomplete,522
 ASP.NET MVC Bad Practices: Controller Action Without AntiForgery Validation,ASP.NET MVC Bad Practices: Controller Action Without AntiForgery Validation,352
 ASP.NET MVC Bad Practices: Controller Action Not Restricted to POST,ASP.NET MVC Bad Practices: Controller Action Not Restricted to POST,598
 Cookie Security: HTTPOnly not Set on Application Cookie,Cookie Security: HTTPOnly not Set on Application Cookie,614
+Code Correctness: Negative Content-Length,Code Correctness: Negative Content-Length,398
+Often Misused: HTTPS Check,Often Misused: HTTPS Check,300
+Code Correctness: Use of Arithmetic Operators on Boolean Values,Code Correctness: Use of Arithmetic Operators on Boolean Values,398
+Android Bad Practices: Missing Exported Flag or Component Permission,Android Bad Practices: Missing Exported Flag or Component Permission,265
+Android Bad Practices: Application Permission Defined,Android Bad Practices: Application Permission Defined,265
+Often Misused: File Uploads,Often Misused: File Uploads,434
+Unsafe Native Invoke,Unsafe Native Invoke,111
+Insecure Storage: Android World Readable or Writeable,Insecure Storage: Android World Readable or Writeable,359
+ASP.NET Misconfiguration: HttpOnly Unset,ASP.NET Misconfiguration: HttpOnly Unset,565
+Often Misused: Weak SSL Certificate,Often Misused: Weak SSL Certificate,296
+Insecure Storage: Android Backup Storage,Insecure Storage: Android Backup Storage,359
+Password Management: Insecure Submission,Password Management: Insecure Submission,359
+Object Model Violation: Just One of Equals() and GetHashCode() Defined,Object Model Violation: Just One of Equals() and GetHashCode() Defined,581
+Dangerous Function: Strcpy,Dangerous Function: Strcpy,676
+Poor Error Handling: XACT_STATE(),Poor Error Handling: XACT_STATE(),754
+Statistical: Function Return Unused,Statistical: Function Return Unused,754
+Struts 2 Bad Practices: Request Map Tampering,Struts 2 Bad Practices: Request Map Tampering,20
+XQuery Injection,XQuery Injection,652
+Privacy Violation: Heap Inspection,Privacy Violation: Heap Inspection,226
+Insecure Randomness: Poor Seeding,Insecure Randomness: Poor Seeding,330
+PHP Misconfiguration: magic_quotes_sybase Enabled,PHP Misconfiguration: magic_quotes_sybase Enabled,20
+WCF Misconfiguration: Certificate Validation Not Enabled,WCF Misconfiguration: Certificate Validation Not Enabled,345
+ASP.NET MVC Bad Practices: Request Parameters Bound into Persisted Objects,ASP.NET MVC Bad Practices: Request Parameters Bound into Persisted Objects,20
+Encoded Data Validation,Encoded Data Validation,722
+Key Management: Empty Encryption Key,Key Management: Empty Encryption Key,259
+SQL Injection: Lateral SQL Injection,SQL Injection: Lateral SQL Injection,704
+Often Misused: Exception Handling,Often Misused: Exception Handling,248
+Privilege Management: Missing Content Provider Permission,Privilege Management: Missing Content Provider Permission,265
+Hadoop Job Manipulation,Hadoop Job Manipulation,20
+Insecure SSL: Android Socket,Insecure SSL: Android Socket,297
+Unreleased Resource: Android Media,Unreleased Resource: Android Media,619
+Key Management: Null Encryption Key,Key Management: Null Encryption Key,259
+HTML5: Form Validation Turned Off,HTML5: Form Validation Turned Off,20
+ASP.NET Misconfiguration: Sensitive File Persistence,ASP.NET Misconfiguration: Sensitive File Persistence,384
+Password Management: Password in HTML Form,Password Management: Password in HTML Form,798
+ASP.NET Misconfiguration: Incomplete Certificate Validation,ASP.NET Misconfiguration: Incomplete Certificate Validation,296
+Android Bad Practices: Weak Authentication,Android Bad Practices: Weak Authentication,287
+Insecure Transport,Insecure Transport,311
+Often Misused: Android Permission Check,Often Misused: Android Permission Check,275
+XML External Entity Injection,XML External Entity Injection,611
+Portability Flaw: File Separator,Portability Flaw: File Separator,474
+Denial of Service: Routing,Denial of Service: Routing,730
+Often Misused: Strings,Often Misused: Strings,251
+Spring Webflow Bad Practices: Flow Bypass,Spring Webflow Bad Practices: Flow Bypass,20
+HTML5: Overly Permissive Message Posting Policy,HTML5: Overly Permissive Message Posting Policy,275
+Android Bad Practices: Use of Released SQLite Resource,Android Bad Practices: Use of Released SQLite Resource,416
+Unreleased Resource: Android Camera,Unreleased Resource: Android Camera,404
+ASP.NET Misconfiguration: Excessive Session Timeout,ASP.NET Misconfiguration: Excessive Session Timeout,613
+Weak XML Schema: Unbounded Occurences,Weak XML Schema: Unbounded Occurences,770
+Spring MVC Bad Practices: Flow Bypass,Spring MVC Bad Practices: Flow Bypass,20
+HTML5: Overly Permissive CORS Policy,HTML5: Overly Permissive CORS Policy,20
+Struts 2 Bad Practices: Application Map Tampering,Struts 2 Bad Practices: Application Map Tampering,20
+Null Dereference: Dereference before Check,Null Dereference: Dereference before Check,690
+Privacy Violation: Android Internal Storage,Privacy Violation: Android Internal Storage,359
+Unreleased Resource: Android SQLite Database,Unreleased Resource: Android SQLite Database,404
+Dynamic Code Evaluation: Code Manipulation,Dynamic Code Evaluation: Code Manipulation,94
+Insecure SSL: Android Customized Implementation,Insecure SSL: Android Customized Implementation,299
+HTML5: Easy-to-Guess Database Name,HTML5: Easy-to-Guess Database Name,330
+Often Misused: File System,Often Misused: File System,560
+ASP.NET Bad Practices: Unvalidated Web API Model,ASP.NET Bad Practices: Unvalidated Web API Model,20
+HTTP Parameter Pollution,HTTP Parameter Pollution,235
+HTTP Response Splitting,HTTP Response Splitting,113
+Code Correctness: Regular Expressions Denial of Service,Code Correctness: Regular Expressions Denial of Service,730
+Dangerous Function: strcpy(),Dangerous Function: strcpy(),676
+Insecure Storage: Missing Encryption on Stored Private Media,Insecure Storage: Missing Encryption on Stored Private Media,311
+Privilege Management: Android Connectivity,Privilege Management: Android Connectivity,265
+Android Bad Practices: Use of Released Camera Resource,Android Bad Practices: Use of Released Camera Resource,416
+ASP.NET Misconfiguration: Double Escaping Enabled,ASP.NET Misconfiguration: Double Escaping Enabled,11
+Android Bad Practices: Unnecessary Component Exposure,Android Bad Practices: Unnecessary Component Exposure,265
+Insecure SSL: Android Hostname Verification Disabled,Insecure SSL: Android Hostname Verification Disabled,297
+Struts 2 Bad Practices: Session Map Tampering,Struts 2 Bad Practices: Session Map Tampering,20
+Poor Error Handling: No Default Exception Handler,Poor Error Handling: No Default Exception Handler,388
+JSON Injection,JSON Injection,91
+Hadoop Cluster Manipulation,Hadoop Cluster Manipulation,20
+Null Dereference: Check before Dereference,Null Dereference: Check before Dereference,690
+Android Bad Practices: Use of Released Media Resource,Android Bad Practices: Use of Released Media Resource,416
+Android Misconfiguration: Debug Information,Android Misconfiguration: Debug Information,11
+ASP.NET Misconfiguration: Request Path Validation Disabled,ASP.NET Misconfiguration: Request Path Validation Disabled,554
+Unsafe Mobile Code: Insecure Transport,Unsafe Mobile Code: Insecure Transport,311
+Array Bounds Error,Array Bounds Error,131
+Unreleased Resource: Unmanaged Object,Unreleased Resource: Unmanaged Object,404
+PCI Privacy Violation,PCI Privacy Violation,359
+Often Misused: SMS,Often Misused: SMS,265
+Privacy Violation: Keyboard Caching,Privacy Violation: Keyboard Caching,359
+XML Entity Expansion Injection,XML Entity Expansion Injection,776
+Key Management: Hardcoded Encryption Key,Key Management: Hardcoded Encryption Key,798
+Access Control: SecurityManager Bypass,Access Control: SecurityManager Bypass,287
+ASP.NET Misconfiguration: Header Checking Disabled,ASP.NET Misconfiguration: Header Checking Disabled,113
+Privacy Violation: Screen Caching,Privacy Violation: Screen Caching,359
+XSLT Injection,XSLT Injection,631
+Insecure Transport: HTTP GET,Insecure Transport: HTTP GET,311
+Android Bad Practices: Mixed Component Functionality,Android Bad Practices: Mixed Component Functionality,265
 type.severities,,
 Code Quality,Code Quality,1,1
