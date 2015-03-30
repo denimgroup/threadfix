@@ -54,12 +54,13 @@ public class FormRestResponse<T> extends RestResponse<T> {
 
         Map<String, String> resultMap = null;
         if (result != null) {
-            if (result.getFieldErrors() != null && result.getFieldErrors().size() > 0)
+            if (result.getFieldErrors() != null && result.getFieldErrors().size() > 0) {
                 resultMap = map();
-            for (FieldError error : result.getFieldErrors()) {
-                String value = getErrorMessage(error);
-                String field = error.getField().replace(".","_");
-                resultMap.put(field, value);
+                for (FieldError error : result.getFieldErrors()) {
+                    String value = getErrorMessage(error);
+                    String field = error.getField().replace(".", "_");
+                    resultMap.put(field, value);
+                }
             }
         }
 
