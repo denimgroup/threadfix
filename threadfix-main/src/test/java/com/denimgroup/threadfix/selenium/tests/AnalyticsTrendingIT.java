@@ -39,7 +39,7 @@ import static org.junit.Assert.assertTrue;
 public class AnalyticsTrendingIT extends BaseDataTest {
 
     @Test
-    public void testExpandCollapse() {
+    public void testExpandCollapseFilters() {
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
                 .clickTrendingTab(false);

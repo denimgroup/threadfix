@@ -62,7 +62,7 @@ public class AnalyticsRemediationIT extends BaseDataTest {
     }
 
     @Test
-    public void testStartingEndingCount() {
+    public void testStartingEndingTableCount() {
         String tagName = initialize();
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("OWASP Zed Attack Proxy"));
@@ -103,7 +103,7 @@ public class AnalyticsRemediationIT extends BaseDataTest {
     }
 
     @Test
-    public void testOpenVulns() {
+    public void testOpenVulnerabilities() {
         initialize();
 
         assertTrue("Open Vulnerabilities are correct", driver.findElement(By.id("vulnName0"))
@@ -111,7 +111,7 @@ public class AnalyticsRemediationIT extends BaseDataTest {
     }
 
     @Test
-    public void testClosedVulns() {
+    public void testClosedVulnerabilities() {
         String tagName = initialize();
 
         analyticsPage.clickOrganizationHeaderLink()
@@ -154,7 +154,7 @@ public class AnalyticsRemediationIT extends BaseDataTest {
     }
 
     @Test
-    public void testNumVulns() {
+    public void testNumberOfVulnerabilities() {
         initialize();
 
         assertTrue("There aren't enough vulnerabilities shown on the page.",
