@@ -46,8 +46,12 @@ public class DashboardIT extends BaseDataTest {
         initializeTeamAndAppWithIbmScan();
     }
 
+    //===========================================================================================================
+    // General Graph Tests
+    //===========================================================================================================
+
 	@Test
-	public void testDashboardGraphsDisplay(){
+	public void testDashboardGraphsArePresent(){
         DashboardPage dashboardPage = loginPage.defaultLogin();
 
 		assertFalse("6 month vulnerability graph is not displayed", dashboardPage.is6MonthGraphNoDataFound());
@@ -70,15 +74,12 @@ public class DashboardIT extends BaseDataTest {
         assertTrue("Incorrect report shown.", analyticsPage.isReportCorrect());
     }
 
-    @Test
-    public void testDashboardRecentUploadsDisplay(){
-        DashboardPage dashboardPage = loginPage.defaultLogin();
-
-        assertFalse("Recent Scan Uploads are not displayed.", dashboardPage.isRecentUploadsNoScanFound());
-    }
+    //===========================================================================================================
+    // Most Vulnerable Applications Graph
+    //===========================================================================================================
 
     @Test
-    public void testMostVulnerableApplicationTipInformation() {
+    public void testMostVulnerableApplicationGraphTips() {
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Burp Suite"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Skipfish"));
@@ -109,7 +110,7 @@ public class DashboardIT extends BaseDataTest {
     }
 
     @Test
-    public void testMostVulnerableApplicationTipModal() {
+    public void testMostVulnerableApplicationGraphModal() {
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Burp Suite"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Skipfish"));
@@ -146,8 +147,12 @@ public class DashboardIT extends BaseDataTest {
         assertFalse("Critical vulnerabilities should have been filtered out.", analyticsPage.isSeverityLevelShown("Critical"));
     }
 
+    //===========================================================================================================
+    // Recent Comments
+    //===========================================================================================================
+
     @Test
-    public void testDashboardRecentCommentsDisplay() {
+    public void testDashboardRecentCommentsElement() {
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
@@ -161,5 +166,15 @@ public class DashboardIT extends BaseDataTest {
         DashboardPage dashboardPage = applicationDetailPage.clickDashboardLink();
 
         assertTrue("Comments are not displayed on Dashboard Page.", dashboardPage.isCommentDisplayed());
+    }
+
+    //===========================================================================================================
+    // Recent Uploads
+    //===========================================================================================================
+    @Test
+    public void testRecentUploadsDisplay(){
+        DashboardPage dashboardPage = loginPage.defaultLogin();
+
+        assertFalse("Recent Scan Uploads are not displayed.", dashboardPage.isRecentUploadsNoScanFound());
     }
 }

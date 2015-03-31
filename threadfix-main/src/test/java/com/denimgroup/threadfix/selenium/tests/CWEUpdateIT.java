@@ -36,7 +36,7 @@ import static org.junit.Assert.assertTrue;
 public class CWEUpdateIT extends BaseIT {
 
     @Test
-    public void testCWEUpdate() {
+    public void testCreateDeleteGlobalFilter() {
         String vulnerabilityType = "Improper Authorization in Handler for Custom URL Scheme";
         String severity = "High";
 

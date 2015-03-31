@@ -49,8 +49,13 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
                 .clickViewAppLink(appName, teamName);
     }
 
+
+    //===========================================================================================================
+    // Filter Basics
+    //===========================================================================================================
+
     @Test
-    public void testExpandCollapse() {
+    public void testExpandCollapseFilters() {
         int filtersExpandedSize;
         int filtersCollapsedSize;
 
@@ -98,7 +103,10 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
                 applicationDetailPage.isSeverityLevelShown("Info"));
     }
 
-    /* Saved Filters */
+    //===========================================================================================================
+    // Saved Filters
+    //===========================================================================================================
+
     @Test
     public void testSavedFilterFieldValidation() {
         String tooLong = getRandomString(26);
@@ -136,7 +144,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
     }
 
     @Test
-    public void testSavedFilters() {
+    public void testSavedFiltersUpdateResults() {
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
         String scanner = "IBM Rational AppScan";
@@ -172,7 +180,10 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
                 applicationDetailPage.isVulnerabilityCountCorrect("Medium", "4"));
     }
 
-    /* Scanner and Merged */
+    //===========================================================================================================
+    // Scanner and Merged Findings
+    //===========================================================================================================
+
     @Test
     public void testMergedFindingsFilter() {
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
@@ -211,7 +222,10 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
                 applicationDetailPage.isVulnerabilityCountCorrect("Info", "5"));
     }
 
-    /* Field Controls */
+    //===========================================================================================================
+    // Field Controls
+    //===========================================================================================================
+
     @Test
     public void testVulnerabilityTypeFilter() {
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation";
@@ -292,7 +306,10 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
         assertTrue("No Results Found should be displayed.", applicationDetailPage.areAllVulnerabilitiesHidden());
     }
 
-    /* Aging */
+    //===========================================================================================================
+    // Aging Filter
+    //===========================================================================================================
+
     @Test
     public void testAgingFilter() {
        applicationDetailPage = applicationDetailPage.expandAging()
@@ -333,7 +350,10 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
                 applicationDetailPage.isVulnerabilityCountCorrect("Info", "5"));
     }
 
-    /* Date Range */
+    //===========================================================================================================
+    // Date Range
+    //===========================================================================================================
+
     //TODO when issue 358 has been closed this test can be added back
     @Ignore
     @Test
