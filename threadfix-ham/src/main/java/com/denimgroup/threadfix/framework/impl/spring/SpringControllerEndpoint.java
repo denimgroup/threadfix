@@ -50,7 +50,8 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 	@Nullable
     private String cleanedFilePath = null, cleanedUrlPath = null;
 
-    private String fileRoot;
+    private boolean requiresAuthentication;
+    private String fileRoot, authorizationString;
 
     @Nullable
     private ModelField modelObject;
@@ -243,4 +244,21 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 	public int getLineNumberForParameter(String parameter) {
 		return startLineNumber;
 	}
+
+
+    public boolean requiresAuthentication() {
+        return requiresAuthentication;
+    }
+
+    public void setRequiresAuthentication(boolean requiresAuthentication) {
+        this.requiresAuthentication = requiresAuthentication;
+    }
+
+    public String getAuthorizationString() {
+        return authorizationString;
+    }
+
+    public void setAuthorizationString(String authorizationString) {
+        this.authorizationString = authorizationString;
+    }
 }
