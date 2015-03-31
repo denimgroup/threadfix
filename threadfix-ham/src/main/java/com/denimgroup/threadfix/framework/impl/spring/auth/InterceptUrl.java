@@ -31,16 +31,56 @@ import org.xml.sax.Attributes;
 public class InterceptUrl {
 
     private final String pattern, role;
+    String[] patternSegments = null;
 
     public InterceptUrl(Attributes attributes) {
         pattern = attributes.getValue("pattern");
         role    = attributes.getValue("access");
     }
 
-    public boolean matches(String url) {
-        // TODO implement this
+    public InterceptUrl(String pattern, String role) {
+        this.pattern = pattern;
+        this.role    = role;
+    }
 
-        return false;
+    public boolean matches(String url) {
+        if (pattern.endsWith("**")) {
+            String patternStart = pattern.substring(0, pattern.length() - 2);
+            if (patternStart.contains("*")) {
+                return matchSingleStar(url, false);
+            } else {
+                return url.startsWith(patternStart);
+            }
+        }
+
+        if (pattern.contains("*")) {
+            return matchSingleStar(url, true);
+        }
+
+        return pattern.equals(url);
+    }
+
+    private boolean matchSingleStar(String url, boolean failOnMismatch) {
+        String[] urlSegments = url.split("/"); // this feels wrong
+        if (patternSegments == null) {
+            patternSegments = pattern.split("/");
+        }
+
+        if (failOnMismatch && urlSegments.length != patternSegments.length) {
+            return false;
+        }
+
+        boolean failed = false;
+        for (int index = 0; index < patternSegments.length; index++) {
+            if (!"*".equals(patternSegments[index]) && !"**".equals(patternSegments[index])) {
+                if (!urlSegments[index].equals(patternSegments[index])) {
+                    failed = true;
+                    break;
+                }
+            }
+        }
+
+        return !failed;
     }
 
     @Override
