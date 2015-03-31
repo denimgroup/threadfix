@@ -40,7 +40,7 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 // TODO recognize String variables
 // TODO support * values:
 // from Spring documentation: Ant-style path patterns are supported (e.g. "/myPath/*.do").
-class SpringControllerEndpointParser implements EventBasedTokenizer {
+public class SpringControllerEndpointParser implements EventBasedTokenizer {
 
     @Nonnull
     Set<SpringControllerEndpoint> endpoints = new TreeSet<SpringControllerEndpoint>();

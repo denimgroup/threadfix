@@ -26,11 +26,13 @@ package com.denimgroup.threadfix.framework.impl.spring;
 import com.denimgroup.threadfix.framework.engine.AbstractEndpoint;
 import com.denimgroup.threadfix.framework.impl.model.ModelField;
 import com.denimgroup.threadfix.framework.impl.model.ModelFieldSet;
+import com.denimgroup.threadfix.framework.util.RegexUtils;
 import com.denimgroup.threadfix.framework.util.java.EntityMappings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.set;
@@ -260,5 +262,17 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 
     public void setAuthorizationString(String authorizationString) {
         this.authorizationString = authorizationString;
+    }
+
+    Pattern pattern = Pattern.compile("hasRole\\('([^']+)'\\)");
+
+    public List<String> getRequiredPermissions() {
+        List<String> permissions = list();
+
+        if (authorizationString != null) {
+            permissions.addAll(RegexUtils.getRegexResults(authorizationString, pattern));
+        }
+
+        return permissions;
     }
 }

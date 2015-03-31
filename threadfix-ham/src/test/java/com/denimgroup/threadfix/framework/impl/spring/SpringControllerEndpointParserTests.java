@@ -179,7 +179,6 @@ public class SpringControllerEndpointParserTests {
         assert hasNoAuth : "Didn't find non-authenticated endpoint";
     }
 
-
     Set<SpringControllerEndpoint> parseEndpoints(String controllerName, String rootFolderName) {
         return SpringControllerEndpointParser.parse(ResourceManager.getSpringFile(controllerName),
                 new EntityMappings(new File(TestConstants.getFolderName(rootFolderName))));

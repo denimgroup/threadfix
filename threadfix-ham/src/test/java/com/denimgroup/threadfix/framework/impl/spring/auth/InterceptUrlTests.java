@@ -82,6 +82,7 @@ public class InterceptUrlTests {
 
         String[] tests = new String[] {
                 "/test/3/path/",
+                "/test/3/path",
                 "/test/testString/path/andSomethingElse",
                 "/test/other/path/other_stuff/in/path"
         };
