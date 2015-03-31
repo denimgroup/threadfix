@@ -69,6 +69,26 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
     }
 
     @Test
+    public void testMarkMultipleVulnerabilitiesClosed() {
+        applicationDetailPage.expandVulnerabilityByType("Critical79")
+                .checkVulnerabilitiesByCategory("Critical79")
+                .clickVulnerabilitiesActionButton()
+                .clickCloseVulnerabilitiesButton()
+                .sleepForResults();
+
+        assertTrue("There should only be 5 critical vulnerabilities shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "5"));
+
+        TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        assertTrue("The total number is not showing correctly", teamIndexPage.isTeamTotalNumberCorrect(teamName, "39"));
+        assertTrue("The total number is not showing correctly",
+                teamIndexPage.isApplicationTotalNumberCorrect(teamName,appName, "39"));
+
+    }
+
+    @Test
     public void testReopenSingleVulnerability() {
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilityByType("Critical790")
@@ -104,26 +124,6 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
         assertTrue("The total number is not showing correctly", teamIndexPage.isTeamTotalNumberCorrect(teamName, "44"));
         assertTrue("The total number is not showing correctly",
                 teamIndexPage.isApplicationTotalNumberCorrect(teamName,appName, "44"));
-    }
-
-    @Test
-    public void testMarkMultipleVulnerabilitiesClosed() {
-        applicationDetailPage.expandVulnerabilityByType("Critical79")
-                .checkVulnerabilitiesByCategory("Critical79")
-                .clickVulnerabilitiesActionButton()
-                .clickCloseVulnerabilitiesButton()
-                .sleepForResults();
-
-        assertTrue("There should only be 5 critical vulnerabilities shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "5"));
-
-        TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName);
-
-        assertTrue("The total number is not showing correctly", teamIndexPage.isTeamTotalNumberCorrect(teamName, "39"));
-        assertTrue("The total number is not showing correctly",
-                teamIndexPage.isApplicationTotalNumberCorrect(teamName,appName, "39"));
-
     }
 
     @Test
@@ -310,7 +310,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
 
     //TODO fix bad navigation
     @Test
-    public void testVulnerabilityPaginationTestingAvailable() {
+    public void testVulnerabilityPaginationAvailable() {
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
 
         applicationDetailPage.refreshPage();
@@ -321,7 +321,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
     }
 
     @Test
-    public void testVulnerabilityPaginationTestingUnavailable() {
+    public void testVulnerabilityPaginationUnavailable() {
         applicationDetailPage.expandVulnerabilityByType("Critical79");
 
         assertFalse("Pagination available", applicationDetailPage.isPaginationPresent("Critical79"));

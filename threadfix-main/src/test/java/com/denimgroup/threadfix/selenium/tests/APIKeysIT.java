@@ -46,7 +46,7 @@ public class APIKeysIT extends BaseIT {
 	}
 
 	@Test
-	public void testNavigation() {
+	public void testNavigateToPage() {
 		assertTrue("API Keys Page not found", apiIndexPage.getH2Tag().contains("API Keys"));
 	}
 
@@ -82,7 +82,7 @@ public class APIKeysIT extends BaseIT {
 	}
 
 	@Test
-	public void testMarkRestricted() {
+	public void testMarkKeyRestricted() {
         String note = getName();
         //Create API Key
         apiIndexPage = apiIndexPage.clickNewLink()
@@ -118,7 +118,7 @@ public class APIKeysIT extends BaseIT {
 	}
 
 	@Test
-	public void testLongApiKeyNoteDisplay(){
+	public void testDisplayLongApiKeyNote(){
 		String shortNote = getName();
 		String longNoteA = getRandomString(2056);
         String longNoteB = getRandomString(254);

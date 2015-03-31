@@ -32,7 +32,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
-    public void testHeaderNavigation() {
+    public void testNavigationHeader() {
         initialize();
         dashboardPage = applicationDetailPage.clickDashboardLink();
         assertTrue("Dashboard link is not present", dashboardPage.isDashboardMenuLinkPresent() );
@@ -52,7 +52,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
-    public void testTabUserNavigation() {
+    public void testUserDropdownElement() {
         initialize();
         dashboardPage = applicationDetailPage.clickDashboardLink();
         sleep(3000);
@@ -66,7 +66,8 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
-    public void testConfigTabNavigation() {
+    public void testCogMenuElement() {
+        //TODO: Update this test with new config menu links.
         initialize();
         dashboardPage = applicationDetailPage.clickDashboardLink();
         dashboardPage.clickConfigTab();
@@ -90,7 +91,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
-    public void testBreadCrumbNavigation() {
+    public void testBreadCrumbNavigationLinks() {
         initialize();
         sleep(1000);
         assertTrue("BreadCrumb Application is not present", applicationDetailPage.isBreadcrumbPresent());
@@ -111,7 +112,8 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
-    public void testActionButtonContents() {
+    public void testActionButtonDropdownContents() {
+        //TODO: Update these dropdown elements.
         initialize();
         sleep(3000);
         applicationDetailPage.clickActionButton();
@@ -149,7 +151,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
-    public void testActionButtonEditVulnFilter() {
+    public void testActionButtonEditVulnerabilityFilters() {
         initialize();
         sleep(3000);
         applicationDetailPage.clickActionButton();
@@ -181,7 +183,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
-    public void testApplicationTypeDefect() {
+    public void testDefaultApplicationTypeValue() {
         initialize();
         applicationDetailPage.clickEditDeleteBtn();
         assertTrue("Application Type is not set to Detect.", applicationDetailPage.isAppTypeDetect());
@@ -211,7 +213,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
 
     //TODO look at this test
     @Test
-    public void testScanLinkNav() {
+    public void testScansTab() {
         initializeTeamAndApp();
 
         TeamIndexPage teamIndexPage = loginPage.defaultLogin()
@@ -233,7 +235,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
-    public void testCreateDefectTrackerEditDeleteModal() {
+    public void testCreateDefectTrackerViaAppDetailPage() {
         initializeTeamAndApp();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin().clickOrganizationHeaderLink()
@@ -260,7 +262,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
-    public void testTop10VulnerabilitiesPresent() {
+    public void testTop10VulnerabilitiesGraphIsPresent() {
         initialize();
 
         applicationDetailPage.waitForCWEBar(teamName, appName, "CWE20");
@@ -269,7 +271,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
-    public void testTop10VulnerabilitiesUpdated() {
+    public void testTop10VulnerabilitiesGraphUpdates() {
         initialize();
 
         applicationDetailPage.clickActionButton()
@@ -283,7 +285,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
-    public void testTop10ShowLess() {
+    public void testTop10GraphNumberOfBars() {
         initializeTeamAndApp();
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.getScanFilePath("Microsoft CAT.NET"));
@@ -298,7 +300,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
-    public void testTop10VulnerabilitiesTipInfo() {
+    public void testTop10VulnerabilitiesGraphTipInfo() {
         initialize();
         String tipText = "Improper Input Validation (CWE 20): 10";
         String vulnerabilityBar = teamName + appName + "CWE20Bar";
@@ -337,7 +339,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
-    public void testTopVulnerabilitiesResponsiveToScanDelete() {
+    public void testTop10VulnerabilitiesGraphRespondsToScanDelete() {
         initialize();
         String vulnerabilityBar = teamName + appName + "CWE20Bar";
 

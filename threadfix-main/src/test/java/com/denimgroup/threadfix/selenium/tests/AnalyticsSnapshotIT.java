@@ -37,7 +37,9 @@ import static org.junit.Assert.assertTrue;
 @Category(CommunityTests.class)
 public class AnalyticsSnapshotIT extends BaseDataTest{
 
-    /* Point in Time Report */
+    //===========================================================================================================
+    // Point in Time Report
+    //===========================================================================================================
 
     @Test
     public void testSnapshotTeamFilter() {
@@ -195,7 +197,9 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .getText().equals("Point in Time Report"));
     }
 
-    /* Progress by Vulnerability Report */
+    //===========================================================================================================
+    // Progress by Vulnerability Report
+    //===========================================================================================================
 
     @Test
     public void testProgressByVulnerabilityNav() {
@@ -318,7 +322,9 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                         driver.findElement(By.id("totalVuln6")).getText().equals("2"));
     }
 
-    /* Most Vulnerable Applications Report */
+    //===========================================================================================================
+    // Most Vulnerable Applications Report
+    //===========================================================================================================
 
     @Test
     public void testMostVulnerableAppGraphTips() {
@@ -429,9 +435,13 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .getAttribute("width").equals("0"));
     }
 
-    /* OWASP Top 10 Report */
+    //===========================================================================================================
+    // OWASP Top 10 Report
+    //===========================================================================================================
     //TODO: Write OWASP Top 10 Report ITs
 
-    /* Portfolio Report */
+    //===========================================================================================================
+    // Portfolio Report
+    //===========================================================================================================
     //TODO: Write Portfolio Report ITs.
 }

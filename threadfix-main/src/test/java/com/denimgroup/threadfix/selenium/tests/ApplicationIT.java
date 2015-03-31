@@ -39,8 +39,13 @@ import static org.junit.Assert.assertTrue;
 @Category(CommunityTests.class)
 public class ApplicationIT extends BaseDataTest {
 
+    //===========================================================================================================
+    // Application Creation, Deletion, and Editing
+    //===========================================================================================================
+
+    //TODO: Evaluate what test class these tests should belong to.
     @Test
-    public void testCreateBasicApplicationDisplayedTeamIndexPage() {
+    public void testCreatedApplicationIsPresentOnTeamIndexPage() {
         String teamName = createTeam();
         String appName = getName();
         String urlText = "http://testurl.com";
@@ -56,7 +61,7 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void testCreateBasicApplicationDisplayedApplicationDetailPage() {
+    public void testAppShowsCorrectNameOnApplicationDetailPage() {
         String teamName = createTeam();
         String appName = getName();
         String urlText = "http://testurl.com";
@@ -75,7 +80,7 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void testCreateBasicAppFromTeamDetailPage() {
+    public void testCreateAppFromTeamDetailPage() {
         String teamName = createTeam();
         String appName = getName();
         String url = "http://testurl.com";
@@ -103,9 +108,8 @@ public class ApplicationIT extends BaseDataTest {
         assertTrue("Application was not present on team index page.", teamIndexPage.isAppPresent(teamName, appName));
     }
 
-    /*___________________________ Validation ___________________________*/
     @Test
-    public void testCreateBasicApplicationValidation() {
+    public void testApplicationCreationFieldValidation() {
         String teamName = createTeam();
 
         String emptyError = "Name is required.";
@@ -149,7 +153,7 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void testCreateBasicApplicationDuplicateValidation() {
+    public void testPreventDuplicateApplicationCreation() {
         initializeTeamAndApp();
 
         String duplicateError = "That name is already taken.";
@@ -166,56 +170,7 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void testEditBasicApplicationDisplayedApplicationDetailPage() {
-        initializeTeamAndApp();
-        String appNameEdited = getName();
-        String urlText2 = "http://testurl.com352";
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickEditDeleteBtn()
-                .setNameInput(appNameEdited)
-                .setUrlInput(urlText2)
-                .clickUpdateApplicationButton();
-
-        applicationDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appNameEdited, teamName);
-
-        assertTrue("The name was not preserved correctly on Application Detail Page.",
-                appNameEdited.equals(applicationDetailPage.getNameText()));
-
-        applicationDetailPage.clickEditDeleteBtn();
-        assertTrue("The URL was not edited correctly.", applicationDetailPage.getUrlText().contains(urlText2));
-    }
-
-    @Test
-    public void testEditBasicApplicationDisplayedTeamIndexPage() {
-        initializeTeamAndApp();
-        String appNameEdited = getName();
-        String urlText2 = "http://testurl.com352";
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
-
-        applicationDetailPage = applicationDetailPage.clickEditDeleteBtn()
-                .setNameInput(appNameEdited)
-                .setUrlInput(urlText2)
-                .clickUpdateApplicationButton();
-
-        // ensure that the application is present in the organization's app table.
-        TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName);
-
-        assertTrue("The edited application does not appear on Team Index Page.", teamIndexPage.isAppPresent(teamName, appNameEdited));
-    }
-
-    @Test
-    public void testEditBasicApplicationValidation() {
+    public void testEditApplicationFieldValidation() {
         String teamName = getName();
         String appName2 = "testApp23";
         String appName = "testApp17";
@@ -295,7 +250,7 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void testSameAppNameMultipleTeams() {
+    public void testCreateAppWithSameNameForMultipleTeams() {
         initializeTeamAndApp();
         String teamName2 = createTeam();
 
@@ -321,7 +276,76 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void testSwitchTeam() {
+    public void testDeleteApplication() {
+        initializeTeamAndApp();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        TeamDetailPage teamDetailPage = applicationDetailPage.clickEditDeleteBtn()
+                .clickDeleteLink();
+
+        assertFalse("Application is still present on team's detail page.", teamDetailPage.isAppPresent(appName));
+
+        TeamIndexPage teamIndexPage = teamDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        assertFalse("Application is still present on the team index page.", teamIndexPage.isAppPresent(teamName, appName));
+    }
+
+    @Test
+    public void testEditedApplicationInfoPresentOnApplicationDetailPage() {
+        initializeTeamAndApp();
+        String appNameEdited = getName();
+        String urlText2 = "http://testurl.com352";
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .setNameInput(appNameEdited)
+                .setUrlInput(urlText2)
+                .clickUpdateApplicationButton();
+
+        applicationDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appNameEdited, teamName);
+
+        assertTrue("The name was not preserved correctly on Application Detail Page.",
+                appNameEdited.equals(applicationDetailPage.getNameText()));
+
+        applicationDetailPage.clickEditDeleteBtn();
+        assertTrue("The URL was not edited correctly.", applicationDetailPage.getUrlText().contains(urlText2));
+    }
+
+    @Test
+    public void testEditedApplicationInfoPresentOnTeamIndexPage() {
+        initializeTeamAndApp();
+        String appNameEdited = getName();
+        String urlText2 = "http://testurl.com352";
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage = applicationDetailPage.clickEditDeleteBtn()
+                .setNameInput(appNameEdited)
+                .setUrlInput(urlText2)
+                .clickUpdateApplicationButton();
+
+        // ensure that the application is present in the organization's app table.
+        TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        assertTrue("The edited application does not appear on Team Index Page.", teamIndexPage.isAppPresent(teamName, appNameEdited));
+    }
+
+    @Test
+    public void testAttachAppToADifferentTeam() {
         initializeTeamAndApp();
         String teamName2 = createTeam();
 
@@ -347,7 +371,10 @@ public class ApplicationIT extends BaseDataTest {
         assertTrue("The application was not switched properly.", !isAppAttachedToTeam1 && isAppAttachedToTeam2);
     }
 
-    /*___________________________ Manual Findings ___________________________*/
+    //===========================================================================================================
+    // Manual Findings
+    //===========================================================================================================
+
     @Test
     public void testAddDynamicManualFinding() {
         initializeTeamAndApp();
@@ -427,81 +454,6 @@ public class ApplicationIT extends BaseDataTest {
                 editedDescription.equals(findingDetailPage.getDetail("longDescription")));
         assertTrue("Finding parameter did not match the given input.",
                 editedParameter.equals(findingDetailPage.getDetail("parameter")));
-    }
-
-    @Test
-    public void testVulnExpandCollapse() {
-        initializeTeamAndApp();
-        String cwe = "Improper Validation of Certificate Expiration";
-        String sourceFile = "/test";
-        String parameter = "Test Parameter";
-        String description = "Test Description.";
-        String appVuln = "Critical298";
-        String expandVuln = "expandVuln" + appVuln;
-        String collapseVuln = "collapseVuln" + appVuln;
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
-
-        applicationDetailPage.clickActionButton()
-                .clickManualFindingButton()
-                .clickStaticRadioButton()
-                .setCWE(cwe)
-                .setSourceFile(sourceFile)
-                .setParameter(parameter)
-                .setDescription(description)
-                .clickDynamicSubmit();
-
-        applicationDetailPage.expandVulnerabilityByType(appVuln);
-        sleep(2000);
-        applicationDetailPage.collapseVulnerabilityByType(appVuln);
-        sleep(2000);
-
-        assertTrue("Vulnerability did not expand twice", applicationDetailPage.isClickable(expandVuln));
-
-        applicationDetailPage.expandVulnerabilityByType(appVuln);
-        sleep(2000);
-
-        assertTrue("Vulnerability did not collapse twice", applicationDetailPage.isClickable(collapseVuln));
-    }
-
-    @Test
-    public void testCommentValidation() {
-        initializeTeamAndApp();
-        String cwe = "Improper Validation of Certificate Expiration";
-        String sourceFile = "/test";
-        String parameter = "Test Parameter";
-        String description = "Test Description.";
-        String appVuln = "Critical298";
-        String longComment = getRandomString(450);
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
-
-        applicationDetailPage.clickActionButton()
-                .clickManualFindingButton()
-                .clickStaticRadioButton()
-                .setCWE(cwe)
-                .setSourceFile(sourceFile)
-                .setParameter(parameter)
-                .setDescription(description)
-                .clickDynamicSubmit();
-
-        applicationDetailPage.expandVulnerabilityByType(appVuln)
-                .expandCommentSection(appVuln + "0")
-                .addComment(appVuln + "0")
-                .setComment("")
-                .clickDynamicSubmit();
-
-        assertTrue("Blank comment accepted as valid submission", applicationDetailPage.errorMessagePresent());
-
-        applicationDetailPage.setComment(longComment);
-
-        assertTrue(">200 character comment accepted", !applicationDetailPage.isButtonEnabled());
     }
 
     @Test
@@ -619,7 +571,53 @@ public class ApplicationIT extends BaseDataTest {
 
     }
 
-    /*___________________________ Deletion ___________________________*/
+    //TODO Waiting for id's on manual finding form
+    @Ignore
+    @Test
+    public void testManualFindingValidation() {
+        initializeTeamAndApp();
+        String cwe = "Improper Validation of Certificate Expiration";
+        String parameter = "Test Parameter";
+        String description = "Test Description.";
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage.clickActionButton()
+                .clickManualFindingButton()
+                .setCWE(cwe)
+                .setParameter(parameter)
+                .setDescription(description);
+        sleep(2000);
+
+        assertTrue("Manual Finding cannot be submitted", applicationDetailPage.isButtonEnabled());
+
+        applicationDetailPage.setCWE("");
+        sleep(2000);
+
+        assertTrue("Submitted blank CWE", !applicationDetailPage.isButtonEnabled());
+
+        applicationDetailPage.setCWE("asdfashrhhr");
+        sleep(2000);
+
+        assertTrue("Submitted invalid CWE", applicationDetailPage.isCweErrorPresent());
+
+        applicationDetailPage.setCWE(cwe).setParameter("");
+        sleep(2000);
+
+        assertTrue("Submitted blank parameter", !applicationDetailPage.isButtonEnabled());
+
+        applicationDetailPage.setParameter(parameter).setDescription("");
+        sleep(2000);
+
+        assertTrue("Submitted blank description", !applicationDetailPage.isButtonEnabled());
+    }
+
+    //===========================================================================================================
+    // Scans
+    //===========================================================================================================
 
     @Test
     public void testDeleteUploadedScan() {
@@ -639,24 +637,123 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void testDeleteApplication() {
+    public void testUploadNewScan() {
         initializeTeamAndApp();
+
+        String newScan = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickActionButton()
+                .clickUploadScan()
+                .uploadScan(newScan);
+
+        assertTrue("Scan didn't Upload", applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+    }
+
+    @Test
+    public void testUploadSameScanTwiceOnApplicationPage() {
+        initializeTeamAndApp();
+
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        String newScan = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickActionButton()
+                .clickUploadScan()
+                .uploadScan(newScan);
+
+        assertTrue("The first scan hasn't uploaded yet", applicationDetailPage.isScanUploadedAlready(teamName, appName));
+    }
+
+    @Test
+    public void testDependencyScanInformation() {
+        initializeTeamAndApp();
+
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("DependencyCheck"));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .expandVulnerabilityByType("High119");
+
+        assertTrue("CVE link wasn't showed", applicationDetailPage.isCveLinkDisplay("0"));
+        assertTrue("Component wasn't showed", applicationDetailPage.isCveComponentDisplay("0"));
+        assertTrue("Description wasn't showed", applicationDetailPage.isCveDescriptionInputPresent("0"));
+    }
+
+    @Test
+    public void testCancelDeleteScanAlert() {
+        initializeTeamAndApp();
+
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickScansTab()
+                .cancelDeleteScanTaskButton();
+
+        applicationDetailPage.clickDeleteScanButton();
+
+        assertTrue("Delete Button is still available", applicationDetailPage.isScanDeleted());
+    }
+
+    @Test
+    public void testFortifySeverityFilterScans() {
+
+        initializeTeamAndApp();
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Fortify AndOrAnd"));
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-        TeamDetailPage teamDetailPage = applicationDetailPage.clickEditDeleteBtn()
-                .clickDeleteLink();
+        assertTrue("There should be one critical vulnerability.", applicationDetailPage.isVulnerabilityCountCorrect("Critical", "1"));
+        assertTrue("There should be seven high vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("High", "7"));
+        assertTrue("There should be 24 low vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Low", "24"));
 
-        assertFalse("Application is still present on team's detail page.", teamDetailPage.isAppPresent(appName));
+        initializeTeamAndApp();
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Fortify OrAndOr"));
 
-        TeamIndexPage teamIndexPage = teamDetailPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName);
+        applicationDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
 
-        assertFalse("Application is still present on the team index page.", teamIndexPage.isAppPresent(teamName, appName));
+        assertTrue("There should be one critical vulnerability.", applicationDetailPage.isVulnerabilityCountCorrect("Critical", "1"));
+        assertTrue("There should be seven medium vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Medium", "7"));
+        assertTrue("There should be 24 low vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Low", "24"));
+
     }
+
+    @Test
+    public void testFortifyVulnerabilityCounts() {
+
+        initializeTeamAndApp();
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Fortify NoSeverityFilter"));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        assertTrue("There should be twenty high vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("High", "20"));
+        assertTrue("There should be sixteen medium vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Medium", "16"));
+        assertTrue("There should be two info vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Info", "2"));
+    }
+
+    //===========================================================================================================
+    // Source Code Fields
+    //===========================================================================================================
 
     @Test
     public void testRemoteSourceCode() {
@@ -751,25 +848,6 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void testCreateAppSourceCodeValidate() {
-        String teamName = createTeam();
-        String appName = getName();
-
-        String repositoryURL = "htt://test.com";
-
-        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .addNewApplication(teamName, appName, "http://testapp.com", "Low")
-                .setRemoteSourceCodeURL(repositoryURL);
-
-        assertTrue("The correct error did not appear for the url field.",
-                teamIndexPage.getUrlRepositoryError().equals("URL is invalid."));
-        assertFalse("Add Application Button is clickable",
-                teamIndexPage.isAddApplicationButtonClickable());
-
-    }
-
-    @Test
     public void testEditApplicationSourceCodeValidation() {
         String teamName = createTeam();
         String appName = getName();
@@ -796,7 +874,109 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void testCheckUnmappedFindingsLink() {
+    public void testSourceCodeValidation() {
+        String teamName = createTeam();
+        String appName = getName();
+
+        String repositoryURL = "htt://test.com";
+
+        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .addNewApplication(teamName, appName, "http://testapp.com", "Low")
+                .setRemoteSourceCodeURL(repositoryURL);
+
+        assertTrue("The correct error did not appear for the url field.",
+                teamIndexPage.getUrlRepositoryError().equals("URL is invalid."));
+        assertFalse("Add Application Button is clickable",
+                teamIndexPage.isAddApplicationButtonClickable());
+
+    }
+
+    //===========================================================================================================
+    // Vulnerabilities
+    //===========================================================================================================
+
+    @Test
+    public void testExpandCollapseVulnerability() {
+        initializeTeamAndApp();
+        String cwe = "Improper Validation of Certificate Expiration";
+        String sourceFile = "/test";
+        String parameter = "Test Parameter";
+        String description = "Test Description.";
+        String appVuln = "Critical298";
+        String expandVuln = "expandVuln" + appVuln;
+        String collapseVuln = "collapseVuln" + appVuln;
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage.clickActionButton()
+                .clickManualFindingButton()
+                .clickStaticRadioButton()
+                .setCWE(cwe)
+                .setSourceFile(sourceFile)
+                .setParameter(parameter)
+                .setDescription(description)
+                .clickDynamicSubmit();
+
+        applicationDetailPage.expandVulnerabilityByType(appVuln);
+        sleep(2000);
+        applicationDetailPage.collapseVulnerabilityByType(appVuln);
+        sleep(2000);
+
+        assertTrue("Vulnerability did not expand twice", applicationDetailPage.isClickable(expandVuln));
+
+        applicationDetailPage.expandVulnerabilityByType(appVuln);
+        sleep(2000);
+
+        assertTrue("Vulnerability did not collapse twice", applicationDetailPage.isClickable(collapseVuln));
+    }
+
+    @Test
+    public void testCommentValidation() {
+        initializeTeamAndApp();
+        String cwe = "Improper Validation of Certificate Expiration";
+        String sourceFile = "/test";
+        String parameter = "Test Parameter";
+        String description = "Test Description.";
+        String appVuln = "Critical298";
+        String longComment = getRandomString(450);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage.clickActionButton()
+                .clickManualFindingButton()
+                .clickStaticRadioButton()
+                .setCWE(cwe)
+                .setSourceFile(sourceFile)
+                .setParameter(parameter)
+                .setDescription(description)
+                .clickDynamicSubmit();
+
+        applicationDetailPage.expandVulnerabilityByType(appVuln)
+                .expandCommentSection(appVuln + "0")
+                .addComment(appVuln + "0")
+                .setComment("")
+                .clickDynamicSubmit();
+
+        assertTrue("Blank comment accepted as valid submission", applicationDetailPage.errorMessagePresent());
+
+        applicationDetailPage.setComment(longComment);
+
+        assertTrue(">200 character comment accepted", !applicationDetailPage.isButtonEnabled());
+    }
+
+    //===========================================================================================================
+    // Other
+    //===========================================================================================================
+
+    @Test
+    public void testUnmappedFindingsLink() {
         initializeTeamAndApp();
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Unmapped Scan"));
@@ -813,39 +993,18 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void testUploadNewScan() {
+    public void testUnmappedFindingsScan() {
         initializeTeamAndApp();
 
-        String newScan = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Unmapped Scan"));
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
-                .clickActionButton()
-                .clickUploadScan()
-                .uploadScan(newScan);
+                .clickUnmappedFindings("20 Unmapped Findings");
 
-        assertTrue("Scan didn't Upload", applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
-    }
-
-    @Test
-    public void testUploadSameScanTwiceOnApplicationPage() {
-        initializeTeamAndApp();
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
-
-        String newScan = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickActionButton()
-                .clickUploadScan()
-                .uploadScan(newScan);
-
-        assertTrue("The first scan hasn't uploaded yet", applicationDetailPage.isScanUploadedAlready(teamName, appName));
+        assertTrue("Unmapped findings displayed does not match scan.", applicationDetailPage.checkNumberOfUnmappedCorrect(21));
     }
 
     @Test
@@ -868,22 +1027,7 @@ public class ApplicationIT extends BaseDataTest {
     }
 
     @Test
-    public void testUnmappedFindingScan() {
-        initializeTeamAndApp();
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Unmapped Scan"));
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickUnmappedFindings("20 Unmapped Findings");
-
-        assertTrue("Unmapped findings displayed does not match scan.", applicationDetailPage.checkNumberOfUnmappedCorrect(21));
-    }
-
-    @Test
-    public void testAlphabetizeSortTeamByEditApplication() {
+    public void testTeamsAreSortedAlphabeticallyInDropdown() {
         String firstTeamName = "A" + getName();
         String appName = getName();
 
@@ -901,7 +1045,7 @@ public class ApplicationIT extends BaseDataTest {
                 .clickEditDeleteBtn()
                 .clickTeamSelector();
 
-        assertTrue("The Teams wasn't not sorted",
+        assertTrue("The teams weren't sorted in alphabetical order.",
                 applicationDetailPage.compareOrderOfSelector(firstTeamName, secondTeamName));
     }
 
@@ -931,128 +1075,5 @@ public class ApplicationIT extends BaseDataTest {
                 .loadSavedFilter(filterName);
 
         assertTrue("The Vulnerabilities still available", applicationDetailPage.areAllVulnerabilitiesHidden());
-    }
-
-    @Test
-    public void testDependencyScanInformation() {
-        initializeTeamAndApp();
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("DependencyCheck"));
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .expandVulnerabilityByType("High119");
-
-        assertTrue("CVE link wasn't showed", applicationDetailPage.isCveLinkDisplay("0"));
-        assertTrue("Component wasn't showed", applicationDetailPage.isCveComponentDisplay("0"));
-        assertTrue("Description wasn't showed", applicationDetailPage.isCveDescriptionInputPresent("0"));
-    }
-
-    @Test
-    public void testCancelDeleteScanAlert() {
-        initializeTeamAndApp();
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickScansTab()
-                .cancelDeleteScanTaskButton();
-
-        applicationDetailPage.clickDeleteScanButton();
-
-        assertTrue("Delete Button is still available", applicationDetailPage.isScanDeleted());
-    }
-
-    //TODO Waiting for id's on manual finding form
-    @Ignore
-    @Test
-    public void testManualFindingValidation() {
-        initializeTeamAndApp();
-        String cwe = "Improper Validation of Certificate Expiration";
-        String parameter = "Test Parameter";
-        String description = "Test Description.";
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
-
-        applicationDetailPage.clickActionButton()
-                .clickManualFindingButton()
-                .setCWE(cwe)
-                .setParameter(parameter)
-                .setDescription(description);
-        sleep(2000);
-
-        assertTrue("Manual Finding cannot be submitted", applicationDetailPage.isButtonEnabled());
-
-        applicationDetailPage.setCWE("");
-        sleep(2000);
-
-        assertTrue("Submitted blank CWE", !applicationDetailPage.isButtonEnabled());
-
-        applicationDetailPage.setCWE("asdfashrhhr");
-        sleep(2000);
-
-        assertTrue("Submitted invalid CWE", applicationDetailPage.isCweErrorPresent());
-
-        applicationDetailPage.setCWE(cwe).setParameter("");
-        sleep(2000);
-
-        assertTrue("Submitted blank parameter", !applicationDetailPage.isButtonEnabled());
-
-        applicationDetailPage.setParameter(parameter).setDescription("");
-        sleep(2000);
-
-        assertTrue("Submitted blank description", !applicationDetailPage.isButtonEnabled());
-    }
-
-    @Test
-    public void testFortifySeverityFilterScans() {
-
-        initializeTeamAndApp();
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Fortify AndOrAnd"));
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
-
-        assertTrue("There should be one critical vulnerability.", applicationDetailPage.isVulnerabilityCountCorrect("Critical", "1"));
-        assertTrue("There should be seven high vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("High", "7"));
-        assertTrue("There should be 24 low vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Low", "24"));
-
-        initializeTeamAndApp();
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Fortify OrAndOr"));
-
-        applicationDetailPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
-
-        assertTrue("There should be one critical vulnerability.", applicationDetailPage.isVulnerabilityCountCorrect("Critical", "1"));
-        assertTrue("There should be seven medium vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Medium", "7"));
-        assertTrue("There should be 24 low vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Low", "24"));
-
-    }
-
-    @Test
-    public void testFortifyVulnerabilityCounts() {
-
-        initializeTeamAndApp();
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Fortify NoSeverityFilter"));
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
-
-        assertTrue("There should be twenty high vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("High", "20"));
-        assertTrue("There should be sixteen medium vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Medium", "16"));
-        assertTrue("There should be two info vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Info", "2"));
     }
 }
