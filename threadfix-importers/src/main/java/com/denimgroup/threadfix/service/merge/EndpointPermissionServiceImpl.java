@@ -68,6 +68,7 @@ public class EndpointPermissionServiceImpl
 
             if (!permission.getFindingList().contains(finding)) {
                 permission.getFindingList().add(finding);
+                finding.getEndpointPermissions().add(permission);
             }
 
             endpointPermissionDao.saveOrUpdate(permission);

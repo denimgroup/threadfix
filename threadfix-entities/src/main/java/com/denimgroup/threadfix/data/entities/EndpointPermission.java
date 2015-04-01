@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.data.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 import java.util.List;
@@ -53,6 +54,7 @@ public class EndpointPermission extends BaseEntity {
         this.application = application;
     }
 
+    @JsonView(Object.class)
     @Column
     public String getName() {
         return name;
@@ -62,6 +64,7 @@ public class EndpointPermission extends BaseEntity {
         this.name = name;
     }
 
+    @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name="EndpointPermission_Vulnerability",
@@ -76,6 +79,7 @@ public class EndpointPermission extends BaseEntity {
         this.vulnerabilityList = vulnerabilityList;
     }
 
+    @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name="EndpointPermission_Finding",

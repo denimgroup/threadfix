@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.EndpointPermissionService;
+import com.denimgroup.threadfix.service.VulnerabilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +45,8 @@ public class PermissionsHandler {
 
     @Autowired
     private EndpointPermissionService endpointPermissionService;
+    @Autowired
+    private VulnerabilityService vulnerabilityService;
 
     public void setPermissions(Scan scan, Integer applicationId) {
 
@@ -52,17 +55,21 @@ public class PermissionsHandler {
         for (Finding finding : scan) {
             endpointPermissionService.addToFinding(finding, applicationId, finding.getRawPermissions());
 
-            if (finding.getVulnerability() != null && !seenIds.contains(finding.getVulnerability())) {
-                seenIds.add(finding.getVulnerability());
+            Vulnerability vulnerability = finding.getVulnerability();
+            if (vulnerability != null && !seenIds.contains(vulnerability)) {
+                seenIds.add(vulnerability);
 
-                finding.getVulnerability().setEndpointPermissions(new ArrayList<EndpointPermission>());
+                vulnerability.setEndpointPermissions(new ArrayList<EndpointPermission>());
 
-                for (Finding vulnFinding : finding.getVulnerability().getFindings()) {
-
-                    finding.getVulnerability().addPermissions(vulnFinding.getEndpointPermissions());
-
+                for (EndpointPermission endpointPermission : finding.getEndpointPermissions()) {
+                    if (!vulnerability.getEndpointPermissions().contains(endpointPermission)) {
+                        endpointPermission.getVulnerabilityList().add(vulnerability);
+                        vulnerability.getEndpointPermissions().add(endpointPermission);
+                        endpointPermissionService.saveOrUpdate(endpointPermission);
+                    }
                 }
             }
+
         }
     }
 

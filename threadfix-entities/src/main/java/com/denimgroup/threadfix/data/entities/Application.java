@@ -815,6 +815,7 @@ public class Application extends AuditableEntity {
         return map;
     }
 
+	@JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
 	@OneToMany(mappedBy = "application")
 	public List<EndpointPermission> getEndpointPermissions() {
 		return endpointPermissions;

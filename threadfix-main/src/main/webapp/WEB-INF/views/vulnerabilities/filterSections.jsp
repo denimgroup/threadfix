@@ -325,6 +325,24 @@
     </div>
 </div>
 
+<!-- Permissions -->
+<div class="accordion-group" ng-show="treeApplication.endpointPermissions">
+    <div class="accordion-heading" ng-click="showPermissions = !showPermissions">
+        <span id="showPermissions" class="icon" ng-class="{ 'icon-minus': showPermissions, 'icon-plus': !showPermissions }"></span> Permissions
+    </div>
+    <div class="accordion-inner" ng-show="showPermissions">
+        <ul class="nav nav-pills">
+            <li ng-repeat="permission in treeApplication.endpointPermissions"
+                id="showPermissions{{permission.name}}"
+                ng-class="{ active: parameters.permissionsList.indexOf(permission.name) != -1 }">
+                <a ng-click="parameters.permissionsList = [permission.name]; refresh()">
+                    {{permission.name}}
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
 <!-- Save Filter -->
 <div class="accordion-group" ng-hide="remediationEnterpriseActive">
     <div class="accordion-heading" ng-click="showSaveFilter = !showSaveFilter">
