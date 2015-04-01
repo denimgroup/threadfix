@@ -266,6 +266,8 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 
     Pattern pattern = Pattern.compile("hasRole\\('([^']+)'\\)");
 
+    @Override
+    @Nonnull
     public List<String> getRequiredPermissions() {
         List<String> permissions = list();
 

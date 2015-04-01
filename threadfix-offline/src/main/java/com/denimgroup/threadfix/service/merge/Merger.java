@@ -93,7 +93,7 @@ public class Merger extends SpringBeanAutowiringSupport {
 
         for (String file : filePaths) {
             Scan resultScan = scanParser.getScan(file);
-            scanMerger.merge(resultScan, channel);
+            scanMerger.merge(resultScan, channel, false);
             application.getScans().add(resultScan);
         }
 
@@ -141,7 +141,7 @@ public class Merger extends SpringBeanAutowiringSupport {
             Scan resultScan = scanParser.getScan(file);
             resultScan.getApplicationChannel().setApplication(application);
             application.getChannelList().add(resultScan.getApplicationChannel());
-            scanMerger.merge(resultScan, resultScan.getApplicationChannel());
+            scanMerger.merge(resultScan, resultScan.getApplicationChannel(), false);
             application.getScans().add(resultScan);
         }
 

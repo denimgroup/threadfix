@@ -62,6 +62,31 @@ public class EndpointPermissionParsingTests {
         assert hasNoAuth : "Didn't find non-authenticated endpoint";
     }
 
+    @Test
+    public void testHasAny() {
+        Set<SpringControllerEndpoint> endpoints = SpringControllerEndpointParser.parse(
+                ResourceManager.getSpringFile("ControllerWithClassAuthorization.java"), null);
+
+        boolean hasAuth = false, hasNoAuth = false;
+
+        for (SpringControllerEndpoint endpoint : endpoints) {
+            if (endpoint.getUrlPath().equals("/noAuth")) {
+                assert endpoint.getRequiredPermissions().contains("CLASS_ROLE") :
+                        "Didn't have CLASS_ROLE: " + endpoint.getRequiredPermissions();
+                assert endpoint.getRequiredPermissions().size() == 1 :
+                        "Expected size 1: " + endpoint.getRequiredPermissions();
+                hasNoAuth = true;
+            } else if (endpoint.getUrlPath().equals("/withAuth")) {
+                assert endpoint.getRequiredPermissions().containsAll(list("CLASS_ROLE", "METHOD_ROLE")) :
+                        "Didn't have all the required permissions: " + endpoint.getRequiredPermissions();
+                hasAuth = true;
+            }
+        }
+
+        assert hasAuth : "Didn't find authenticated endpoint";
+        assert hasNoAuth : "Didn't find non-authenticated endpoint";
+    }
+
 
 
 }

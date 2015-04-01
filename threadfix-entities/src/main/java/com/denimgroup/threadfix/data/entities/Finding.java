@@ -34,6 +34,8 @@ import javax.validation.constraints.Size;
 import java.util.Calendar;
 import java.util.List;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 @Entity
 @Table(name = "Finding")
 public class Finding extends AuditableEntity implements FindingLike {
@@ -125,6 +127,8 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	private List<DataFlowElement> dataFlowElements;
 	private List<ScanRepeatFindingMap> scanRepeatFindingMaps;
+	private List<EndpointPermission> endpointPermissions = list();
+	private List<String> rawPermissions = list();
 
 	private String calculatedUrlPath = "", calculatedFilePath = "";
 	private Dependency dependency;
@@ -446,6 +450,16 @@ public class Finding extends AuditableEntity implements FindingLike {
 		this.issueId = issueId;
 	}
 
+	@ManyToMany(mappedBy = "findingList")
+	@JsonIgnore
+	public List<EndpointPermission> getEndpointPermissions() {
+		return endpointPermissions;
+	}
+
+	public void setEndpointPermissions(List<EndpointPermission> endpointPermissions) {
+		this.endpointPermissions = endpointPermissions;
+	}
+
 	@Transient
 	@JsonView({ AllViews.TableRow.class, AllViews.VulnerabilityDetail.class, AllViews.UIVulnSearch.class })
 	private String getScannerName() {
@@ -527,4 +541,14 @@ public class Finding extends AuditableEntity implements FindingLike {
                     getScan().getApplicationChannel().getChannelType().getName() :
                     null;
     }
+
+	@JsonIgnore
+	@Transient
+	public List<String> getRawPermissions() {
+		return rawPermissions;
+	}
+
+	public void setRawPermissions(List<String> rawPermissions) {
+		this.rawPermissions = rawPermissions;
+	}
 }

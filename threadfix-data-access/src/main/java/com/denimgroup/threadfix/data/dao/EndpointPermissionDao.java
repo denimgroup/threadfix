@@ -21,26 +21,15 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.data.dao;
 
-import com.denimgroup.threadfix.data.dao.GenericNamedObjectDao;
+import com.denimgroup.threadfix.data.entities.EndpointPermission;
 
 /**
- * Created by mac on 5/13/14.
+ * Created by mcollins on 3/31/15.
  */
-public abstract class AbstractNamedObjectService<T>
-        extends AbstractGenericObjectService<T>
-        implements GenericNamedObjectService<T> {
+public interface EndpointPermissionDao
+        extends GenericNamedObjectDao<EndpointPermission> {
 
-    abstract GenericNamedObjectDao<T> getDao();
-
-    @Override
-    public T loadByName(String name) {
-        return getDao().retrieveByName(name);
-    }
-
-    @Override
-    public boolean nameExists(String name) {
-        return getDao().retrieveByName(name) != null;
-    }
+    EndpointPermission retrieveByNameAndApplication(String stringPermission, Integer applicationId);
 }

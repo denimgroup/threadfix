@@ -23,9 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.translator;
 
-import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.engine.ProjectConfig;
@@ -47,7 +45,6 @@ class FullSourceFindingProcessor implements FindingProcessor {
 
     @Nullable
     private final EndpointDatabase database;
-
     @Nullable
     private final ParameterParser parameterParser;
 
@@ -104,6 +101,8 @@ class FullSourceFindingProcessor implements FindingProcessor {
             } else {
                 finding.setEntryPointLineNumber(endpoint.getStartingLineNumber());
             }
+
+            finding.setRawPermissions(endpoint.getRequiredPermissions());
 
         } else {
 

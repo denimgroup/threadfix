@@ -21,23 +21,26 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.merge;
+package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.Scan;
-import org.springframework.transaction.annotation.Transactional;
+import com.denimgroup.threadfix.data.dao.GenericNamedObjectDao;
 
-public interface ScanMerger {
+/**
+ * Created by mac on 5/13/14.
+ */
+public abstract class AbstractNamedObjectService<T>
+        extends AbstractGenericObjectService<T>
+        implements GenericNamedObjectService<T> {
 
-    /**
-     * This method handles HAM, merging with scans from the same channel, and merging with scans from other channels
-     * @param scan the recently completed Scan object from the ChannelImporter
-     * @param channel the ApplicationChannel which has context information for the scan
-     */
-    @Transactional
-	void merge(Scan scan, ApplicationChannel channel);
+    public abstract GenericNamedObjectDao<T> getDao();
 
-    @Transactional
-    void merge(Scan scan, ApplicationChannel applicationChannel, boolean shouldSaveScan);
+    @Override
+    public T loadByName(String name) {
+        return getDao().retrieveByName(name);
+    }
 
+    @Override
+    public boolean nameExists(String name) {
+        return getDao().retrieveByName(name) != null;
+    }
 }
