@@ -23,28 +23,37 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.spring;
 
+import com.denimgroup.threadfix.XMLUtils;
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
+import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
+import com.denimgroup.threadfix.framework.impl.spring.auth.InterceptUrl;
+import com.denimgroup.threadfix.framework.impl.spring.auth.SpringSecurityXmlParser;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
 import com.denimgroup.threadfix.framework.util.FilePathUtils;
 import com.denimgroup.threadfix.framework.util.java.EntityMappings;
 import com.denimgroup.threadfix.framework.util.java.EntityParser;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.*;
 
-import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.map;
-import static com.denimgroup.threadfix.CollectionUtils.set;
+import static com.denimgroup.threadfix.CollectionUtils.*;
 
 public class SpringControllerMappings implements EndpointGenerator {
 	
 	@Nonnull
     private final Collection<File> javaFiles;
+	@Nonnull
+    private final Collection<File> xmlFiles;
+
+    private static final SanitizedLogger LOG = new SanitizedLogger(SpringControllerMappings.class);
 	
 	@Nonnull
     private final Map<String, Set<SpringControllerEndpoint>>
@@ -64,13 +73,19 @@ public class SpringControllerMappings implements EndpointGenerator {
         controllerToUrlsMap = map();
 
 		if (rootDirectory.exists()) {
-			javaFiles = FileUtils.listFiles(rootDirectory,
-                    new FileExtensionFileFilter("java"), TrueFileFilter.INSTANCE);
+			javaFiles = getFiles(rootDirectory, "java");
+            xmlFiles  = getFiles(rootDirectory, "xml");
 		    generateMaps();
 		} else {
 			javaFiles = Collections.emptyList();
+            xmlFiles  = Collections.emptyList();
 		}
 	}
+
+    private Collection<File> getFiles(File rootDirectory, String extension) {
+        return FileUtils.listFiles(rootDirectory,
+                new FileExtensionFileFilter(extension), TrueFileFilter.INSTANCE);
+    }
 
     @Nonnull
 	public Set<SpringControllerEndpoint> getEndpointsFromController(String controllerPath) {
@@ -95,6 +110,27 @@ public class SpringControllerMappings implements EndpointGenerator {
 
         SpringDataBinderParser globalDataBinderParser = null;
 
+        SpringSecurityXmlParser securityXmlParser = new SpringSecurityXmlParser();
+        for (File file : xmlFiles) {
+            if (file != null && file.exists() && file.isFile() &&
+                    file.getAbsolutePath().contains(rootDirectory.getAbsolutePath())) {
+
+                try {
+                    XMLUtils.readSAXInput(securityXmlParser, "", new FileInputStream(file));
+
+                    if (!securityXmlParser.urls.isEmpty() || securityXmlParser.prePostEnabled) {
+                        break;
+                    }
+
+                } catch (FileNotFoundException e) {
+                    // this shouldn't happen
+                    LOG.error("This is an illegal code path. security.xml results won't be available", e);
+                } catch (RestIOException e) {
+                    LOG.error("Encountered XML parsing error while parsing file " + file.getAbsolutePath());
+                }
+            }
+        }
+
 		for (File file: javaFiles) {
 			if (file != null && file.exists() && file.isFile() &&
 					file.getAbsolutePath().contains(rootDirectory.getAbsolutePath())) {
@@ -116,6 +152,11 @@ public class SpringControllerMappings implements EndpointGenerator {
         EntityMappings mappings = new EntityMappings(entityParsers);
 
         for (SpringControllerEndpoint endpoint : endpointsList) {
+            for (InterceptUrl url : securityXmlParser.urls) {
+                if (url.matches(endpoint.getUrlPath())) {
+                    endpoint.getRequiredPermissions().add(url.role);
+                }
+            }
             endpoint.expandParameters(mappings, globalDataBinderParser);
         }
 	}

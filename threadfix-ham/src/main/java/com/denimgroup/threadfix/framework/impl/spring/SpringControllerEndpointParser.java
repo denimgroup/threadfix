@@ -72,7 +72,8 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
             CLASS           = "class",
             PRE_AUTHORIZE   = "PreAuthorize",
             BINDING_RESULT  = "BindingResult",
-            CONTROLLER      = "Controller";
+            CONTROLLER      = "RestController",
+            REST_CONTROLLER = "Controller";
 
     @Nonnull
     private Phase           phase           = Phase.ANNOTATION;
@@ -250,7 +251,7 @@ public class SpringControllerEndpointParser implements EventBasedTokenizer {
                     annotationState = AnnotationState.REQUEST_MAPPING;
                 } else if (PRE_AUTHORIZE.equals(stringValue)) {
                     annotationState = AnnotationState.SECURITY_ANNOTATION;
-                } else if (CONTROLLER.equals(stringValue)) {
+                } else if (CONTROLLER.equals(stringValue) || REST_CONTROLLER.equals(stringValue)) {
                     hasControllerAnnotation = true;
                     annotationState = AnnotationState.START;
                 } else {

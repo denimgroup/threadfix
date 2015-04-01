@@ -30,7 +30,7 @@ import org.xml.sax.Attributes;
  */
 public class InterceptUrl {
 
-    private final String pattern, role;
+    public final String pattern, role;
     String[] patternSegments = null;
 
     public InterceptUrl(Attributes attributes) {
@@ -73,6 +73,10 @@ public class InterceptUrl {
         boolean failed = false;
         for (int index = 0; index < patternSegments.length; index++) {
             if (!"*".equals(patternSegments[index]) && !"**".equals(patternSegments[index])) {
+                if (urlSegments.length >= index) {
+                    failed = true;
+                    break; // not long enough
+                }
                 if (!urlSegments[index].equals(patternSegments[index])) {
                     failed = true;
                     break;

@@ -33,8 +33,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.set;
 
 /**
@@ -61,12 +63,18 @@ public class PermissionsHandler {
 
                 vulnerability.setEndpointPermissions(new ArrayList<EndpointPermission>());
 
+                List<EndpointPermission> toAdd = list();
+
                 for (EndpointPermission endpointPermission : finding.getEndpointPermissions()) {
                     if (!vulnerability.getEndpointPermissions().contains(endpointPermission)) {
-                        endpointPermission.getVulnerabilityList().add(vulnerability);
-                        vulnerability.getEndpointPermissions().add(endpointPermission);
-                        endpointPermissionService.saveOrUpdate(endpointPermission);
+                        toAdd.add(endpointPermission);
                     }
+                }
+
+                for (EndpointPermission endpointPermission : toAdd) {
+                    endpointPermission.getVulnerabilityList().add(vulnerability);
+                    vulnerability.getEndpointPermissions().add(endpointPermission);
+                    endpointPermissionService.saveOrUpdate(endpointPermission);
                 }
             }
 

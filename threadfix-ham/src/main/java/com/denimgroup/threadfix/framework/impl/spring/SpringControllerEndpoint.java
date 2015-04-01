@@ -199,7 +199,9 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
     @Nonnull
     @Override
     protected List<String> getLintLine() {
-        return list();
+        List<String> finalList = list("Permissions:");
+        finalList.addAll(getRequiredPermissions());
+        return finalList;
     }
 
     @Nonnull
@@ -265,14 +267,17 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
     }
 
     Pattern pattern = Pattern.compile("hasRole\\('([^']+)'\\)");
+    List<String> permissions = null;
 
     @Override
     @Nonnull
     public List<String> getRequiredPermissions() {
-        List<String> permissions = list();
 
-        if (authorizationString != null) {
-            permissions.addAll(RegexUtils.getRegexResults(authorizationString, pattern));
+        if (permissions == null) {
+            permissions = list();
+            if (authorizationString != null) {
+                permissions.addAll(RegexUtils.getRegexResults(authorizationString, pattern));
+            }
         }
 
         return permissions;
