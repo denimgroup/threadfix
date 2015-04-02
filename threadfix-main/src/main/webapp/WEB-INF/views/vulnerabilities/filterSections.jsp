@@ -243,6 +243,24 @@
     </div>
 </div>
 
+<!-- Permissions -->
+<div class="accordion-group" ng-show="treeApplication.endpointPermissions">
+    <div class="accordion-heading" ng-click="showPermissions = !showPermissions">
+        <span id="showPermissions" class="icon" ng-class="{ 'icon-minus': showPermissions, 'icon-plus': !showPermissions }"></span> Authentication / Authorization
+    </div>
+    <div class="accordion-inner" ng-show="showPermissions">
+        <ul class="nav nav-pills">
+            <li ng-repeat="permission in treeApplication.endpointPermissions"
+                id="showPermissions{{permission.name}}"
+                ng-class="{ active: parameters.permissionsList && parameters.permissionsList.indexOf(permission.name) != -1 }">
+                <a ng-click="togglePermission(permission.name)">
+                    {{permission.name}}
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
 <!-- Aging -->
 <div class="accordion-group" ng-hide="snapshotActive">
     <div class="accordion-heading" ng-click="showDateControls = !showDateControls">
@@ -321,24 +339,6 @@
     <div class="accordion-inner" ng-show="showOWasp">
         <ul class="nav nav-pills">
             <li ng-repeat="owaspVer in OWASP_TOP10" id="owasp{{owaspVer.year}}" ng-class="{ active: parameters.selectedOwasp === owaspVer }"><a ng-click="parameters.selectedOwasp = owaspVer; refresh()">{{owaspVer.year}}</a></li>
-        </ul>
-    </div>
-</div>
-
-<!-- Permissions -->
-<div class="accordion-group" ng-show="treeApplication.endpointPermissions">
-    <div class="accordion-heading" ng-click="showPermissions = !showPermissions">
-        <span id="showPermissions" class="icon" ng-class="{ 'icon-minus': showPermissions, 'icon-plus': !showPermissions }"></span> Permissions
-    </div>
-    <div class="accordion-inner" ng-show="showPermissions">
-        <ul class="nav nav-pills">
-            <li ng-repeat="permission in treeApplication.endpointPermissions"
-                id="showPermissions{{permission.name}}"
-                ng-class="{ active: parameters.permissionsList.indexOf(permission.name) != -1 }">
-                <a ng-click="parameters.permissionsList = [permission.name]; refresh()">
-                    {{permission.name}}
-                </a>
-            </li>
         </ul>
     </div>
 </div>
