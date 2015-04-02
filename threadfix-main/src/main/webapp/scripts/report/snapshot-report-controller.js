@@ -12,13 +12,15 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     $scope.MVA_Report_Id = 10;
     $scope.OWASP_Report_Id = 11;
     $scope.Portfolio_Report_Id = 12;
+    $scope.DISA_STIG_Report_Id = 13;
 
     $scope.snapshotOptions = [
         { name: "Point in Time", id: $scope.PIT_Report_Id },
         { name: "Progress By Vulnerability", id: $scope.PBV_Report_Id },
         { name: "Most Vulnerable Applications", id: $scope.MVA_Report_Id },
         { name: "OWASP Top 10", id: $scope.OWASP_Report_Id },
-        { name: "Portfolio", id: $scope.Portfolio_Report_Id }
+        { name: "Portfolio", id: $scope.Portfolio_Report_Id },
+        { name: "DISA STIG", id: $scope.DISA_STIG_Report_Id }
     ];
 
     $scope.graphIdMap = {
@@ -32,6 +34,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     $scope.htmlElementIdMap[$scope.OWASP_Report_Id] = "pointInTimeTablePdf";
     $scope.htmlElementIdMap[$scope.PBV_Report_Id] = "progressVulnsDiv";
     $scope.htmlElementIdMap[$scope.Portfolio_Report_Id] = "portfolioDiv";
+    $scope.htmlElementIdMap[$scope.DISA_STIG_Report_Id] = "pointInTimeTablePdf";
 
     $scope.titleMap = {};
     $scope.titleMap[$scope.PIT_Report_Id] = "Point_In_Time";
@@ -39,6 +42,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     $scope.titleMap[$scope.PBV_Report_Id] = "Progress_By_Vulnerability";
     $scope.titleMap[$scope.MVA_Report_Id] = "Most_Vulnerable_Applications";
     $scope.titleMap[$scope.Portfolio_Report_Id] = "Portfolio";
+    $scope.titleMap[$scope.DISA_STIG_Report_Id] = "DISA STIG";
 
 
     $scope.OWASP_TOP10 = [
@@ -209,6 +213,115 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             ]
         }];
 
+    $scope.DISA_STIG = [
+        {
+            id: "CATI",
+            name: "CAT I",
+            members: [
+                {
+                    stigId: "APP3130",
+                    cweIds:[636]
+                },
+                {
+                    stigId: "APP3310",
+                    cweIds:[256,257]
+                },
+                {
+                    stigId: "APP3350",
+                    cweIds: [13,259]
+                },
+                {
+                    stigId: "APP3510",
+                    cweIds: [20]
+                },
+                {
+                    stigId: "APP3540",
+                    cweIds: [89,564]
+                },
+                {
+                    stigId: "APP3550",
+                    cweIds: [190,191,192,738,872]
+                },
+                {
+                    stigId: "APP3560",
+                    cweIds: [134]
+                },
+                {
+                    stigId: "APP3570",
+                    cweIds: [77,78,990]
+                },
+                {
+                    stigId: "APP3580",
+                    cweIds: [80,85,87,712,725,811,931]
+                },
+                {
+                    stigId: "APP3590",
+                    cweIds: [120,121,122,680]
+                },
+                {
+                    stigId: "APP3810",
+                    cweIds: [91]
+                }
+            ]
+        },
+        {
+            id: "CATII",
+            name: "CAT II",
+            members: [
+                {
+                    stigId: "APP3050",
+                    cweIds: [561]
+                },
+                {
+                    stigId: "APP3060",
+                    cweIds: [493]
+                },
+                {
+                    stigId: "APP3100",
+                    cweIds: [376]
+                },
+                {
+                    stigId: "APP3110",
+                    cweIds: [489]
+                },
+                {
+                    stigId: "APP3140",
+                    cweIds: [455]
+                },
+                {
+                    stigId: "APP3230",
+                    cweIds: [244]
+                },
+                {
+                    stigId: "APP3585",
+                    cweIds: [352,716,814,936]
+                },
+                {
+                    stigId: "APP3600",
+                    cweIds: [171,647]
+                },
+                {
+                    stigId: "APP3620",
+                    cweIds: [200]
+                },
+                {
+                    stigId: "APP3630",
+                    cweIds: [362,363,364,366,367,368,421,689,988]
+                },
+                {
+                    stigId: "APP3800",
+                    cweIds: [674]
+                }
+            ]
+        },
+        {
+            id: "CATIII",
+            name: "CAT III",
+            members: []
+        }
+    ];
+
+
     $scope.resetFilters = function() {
         $scope.parameters = {
             tags: [],
@@ -326,6 +439,8 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             filterMVABySeverity();
         } else if ($scope.reportId === $scope.OWASP_Report_Id) {
             processOWASPData();
+        } else if ($scope.reportId === $scope.DISA_STIG_Report_Id) {
+            processDisaStigData();
         }
     });
 
@@ -342,7 +457,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
         $scope.$broadcast("refreshVulnSearchTree", $scope.parameters);
         $scope.parameters = _parameters;
-    }
+    };
 
     $scope.loadReport = function() {
         $scope.reportId = parseInt($scope.reportId);
@@ -387,11 +502,13 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             processMVAData();
         } else if ($scope.reportId === $scope.OWASP_Report_Id) {
             processOWASPData();
+        }  else if ($scope.reportId === $scope.DISA_STIG_Report_Id) {
+            processDisaStigData();
         } else if ($scope.reportId === $scope.Portfolio_Report_Id) {
             $scope.filterPortfolioApps = filterByTag(filterByTeamAndApp($scope.allPortfolioApps));
             processPortfolioData();
         }
-    }
+    };
 
     var processPBVData = function(allCWEvulns) {
         $scope.progressByTypeData = [];
@@ -469,13 +586,11 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             processOWASPData();
         } else if ($scope.reportId === $scope.Portfolio_Report_Id) {
             $scope.filterPortfolioApps = filterByTag(filterByTeamAndApp($scope.allPortfolioApps));
+        } else if ($scope.reportId === $scope.DISA_STIG_Report_Id) {
+            processDisaStigData();
         }
 
-        if ($scope.filterVulns.length === 0) {
-            $scope.noData = true;
-        } else {
-            $scope.noData = false;
-        }
+        $scope.noData = $scope.filterVulns.length === 0;
         updateDisplayData();
     };
 
@@ -601,7 +716,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         if ($scope.parameters.severities.info)
             $scope.pointInTimeData.Info = $scope.data.Info;
 
-    }
+    };
 
     var getDates = function(firstTime, secondTime) {
         return Math.round((firstTime - secondTime) / (1000 * 3600 * 24));
@@ -609,11 +724,11 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
     var getPercent = function(rate) {
         return getPercentNumber(rate) + "%";
-    }
+    };
 
     var getPercentNumber = function(rate) {
         return Math.round(1000 * rate)/10;
-    }
+    };
 
     var filterByTeamAndApp = function(rawList) {
 
@@ -701,6 +816,18 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         $scope.$broadcast("refreshVulnSearchTree", parameters);
         $scope.loading = false;
 
+    };
+
+    var processDisaStigData = function() {
+
+        $scope.loading = true;
+
+        var parameters = angular.copy($scope.parameters);
+        parameters.disaStig = $scope.DISA_STIG;
+        vulnSearchParameterService.updateParameters($scope, parameters);
+
+        $scope.$broadcast("refreshVulnSearchTree", parameters);
+        $scope.loading = false;
 
     };
 
@@ -870,7 +997,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         else
             reportExporter.exportPDFTableFromId($scope, $scope.exportInfo);
 
-    }
+    };
 
     $scope.exportCSV = function() {
 
