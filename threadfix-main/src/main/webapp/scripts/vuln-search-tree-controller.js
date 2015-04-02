@@ -124,7 +124,7 @@ module.controller('VulnSearchTreeController', function($log, $scope, $rootScope,
         $http.post(tfEncoder.encode("/reports/tree"), parameters).
             success(function(data, status, headers, config) {
                 if (data.success) {
-                    $scope.vulnTree = vulnTreeTransformer.transform(data.object, parameters.owasp);
+                    $scope.vulnTree = vulnTreeTransformer.transform(data.object, parameters.owasp, parameters.disaStig);
 
                     $scope.$parent.vulnTree = $scope.vulnTree;
                     $scope.badgeWidth = 0;
