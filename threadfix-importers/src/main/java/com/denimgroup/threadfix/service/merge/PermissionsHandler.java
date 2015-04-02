@@ -28,7 +28,6 @@ import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.EndpointPermissionService;
-import com.denimgroup.threadfix.service.VulnerabilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +37,7 @@ import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.set;
+import static com.denimgroup.threadfix.data.entities.AuthenticationRequired.UNKNOWN;
 
 /**
  * Created by mcollins on 3/31/15.
@@ -47,8 +47,6 @@ public class PermissionsHandler {
 
     @Autowired
     private EndpointPermissionService endpointPermissionService;
-    @Autowired
-    private VulnerabilityService vulnerabilityService;
 
     public void setPermissions(Scan scan, Integer applicationId) {
 
@@ -76,6 +74,10 @@ public class PermissionsHandler {
                     vulnerability.getEndpointPermissions().add(endpointPermission);
                     endpointPermissionService.saveOrUpdate(endpointPermission);
                 }
+            }
+
+            if (vulnerability != null && vulnerability.getAuthenticationRequired() == UNKNOWN) {
+                vulnerability.setAuthenticationRequired(finding.getAuthenticationRequired());
             }
 
         }

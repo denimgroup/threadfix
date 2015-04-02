@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.interfaces;
 
+import com.denimgroup.threadfix.data.entities.AuthenticationRequired;
+
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Set;
@@ -56,6 +58,9 @@ public interface Endpoint extends Comparable<Endpoint> {
 
     @Nonnull
     public List<String> getRequiredPermissions();
+
+    @Nonnull
+    public AuthenticationRequired getAuthenticationRequired();
 
     public static class Info {
         Set<String> parameters, httpMethods;

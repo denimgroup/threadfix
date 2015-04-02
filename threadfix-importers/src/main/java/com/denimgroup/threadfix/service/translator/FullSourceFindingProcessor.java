@@ -39,6 +39,8 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static com.denimgroup.threadfix.data.entities.AuthenticationRequired.UNKNOWN;
+
 class FullSourceFindingProcessor implements FindingProcessor {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(FullSourceFindingProcessor.class);
@@ -103,6 +105,9 @@ class FullSourceFindingProcessor implements FindingProcessor {
             }
 
             finding.setRawPermissions(endpoint.getRequiredPermissions());
+            if (finding.getAuthenticationRequired() == UNKNOWN) {
+                finding.setAuthenticationRequired(endpoint.getAuthenticationRequired());
+            }
 
         } else {
 

@@ -35,6 +35,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.data.entities.AuthenticationRequired.UNKNOWN;
 
 @Entity
 @Table(name = "Finding")
@@ -458,6 +459,18 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	public void setEndpointPermissions(List<EndpointPermission> endpointPermissions) {
 		this.endpointPermissions = endpointPermissions;
+	}
+
+	AuthenticationRequired authenticationRequired = UNKNOWN;
+
+	@Column
+	@Enumerated
+	public AuthenticationRequired getAuthenticationRequired() {
+		return authenticationRequired;
+	}
+
+	public void setAuthenticationRequired(AuthenticationRequired authenticationRequired) {
+		this.authenticationRequired = authenticationRequired;
 	}
 
 	@Transient

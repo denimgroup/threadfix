@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.spring;
 
+import com.denimgroup.threadfix.data.entities.AuthenticationRequired;
 import com.denimgroup.threadfix.framework.engine.AbstractEndpoint;
 import com.denimgroup.threadfix.framework.impl.model.ModelField;
 import com.denimgroup.threadfix.framework.impl.model.ModelFieldSet;
@@ -52,7 +53,7 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 	@Nullable
     private String cleanedFilePath = null, cleanedUrlPath = null;
 
-    private boolean requiresAuthentication;
+    private AuthenticationRequired authenticationRequired = AuthenticationRequired.UNKNOWN;
     private String fileRoot, authorizationString;
 
     @Nullable
@@ -250,13 +251,6 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 	}
 
 
-    public boolean requiresAuthentication() {
-        return requiresAuthentication;
-    }
-
-    public void setRequiresAuthentication(boolean requiresAuthentication) {
-        this.requiresAuthentication = requiresAuthentication;
-    }
 
     public String getAuthorizationString() {
         return authorizationString;
@@ -281,5 +275,15 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
         }
 
         return permissions;
+    }
+
+    @Nonnull
+    @Override
+    public AuthenticationRequired getAuthenticationRequired() {
+        return authenticationRequired;
+    }
+
+    public void setAuthenticationRequired(AuthenticationRequired authenticationRequired) {
+        this.authenticationRequired = authenticationRequired;
     }
 }

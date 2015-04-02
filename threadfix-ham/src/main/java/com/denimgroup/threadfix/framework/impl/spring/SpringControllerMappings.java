@@ -45,6 +45,8 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.*;
+import static com.denimgroup.threadfix.data.entities.AuthenticationRequired.ANONYMOUS;
+import static com.denimgroup.threadfix.data.entities.AuthenticationRequired.AUTHENTICATED;
 
 public class SpringControllerMappings implements EndpointGenerator {
 	
@@ -158,6 +160,11 @@ public class SpringControllerMappings implements EndpointGenerator {
                 }
             }
             endpoint.expandParameters(mappings, globalDataBinderParser);
+            if (endpoint.getRequiredPermissions().contains("IS_AUTHENTICATED_ANONYMOUSLY")) {
+                endpoint.setAuthenticationRequired(ANONYMOUS);
+            } else if (!endpoint.getRequiredPermissions().isEmpty()) {
+                endpoint.setAuthenticationRequired(AUTHENTICATED);
+            }
         }
 	}
 
