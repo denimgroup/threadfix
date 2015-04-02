@@ -31,7 +31,8 @@ import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
 public class LoginPageIT extends BaseIT {
-	
+
+    //TODO: Consolidate these tests.
 	@Test
 	public void testUsernameFieldPresent(){
 		assertTrue("Username field was not present on the page",loginPage.isUserNameFieldPresent());

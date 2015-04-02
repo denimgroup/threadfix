@@ -60,7 +60,7 @@ public class FindingsDetailIT extends BaseDataTest{
     }
 
     @Test
-    public void testCheckMergeWithOtherFindingsButton() {
+    public void testMergeWithOtherFindingsButton() {
         MergeFindingPage mergeFindingPage = findingDetailPage.clickMergeWithOtherFindings();
 
         assertTrue("Vulnerability Details Page is not Available",

@@ -19,6 +19,10 @@ public class TeamIndexPageIT extends BaseDataTest {
     private String teamName = createTeam();
     private String appName = createApplication(teamName);
 
+    //===========================================================================================================
+    // Navigation
+    //===========================================================================================================
+
     @Test
     public void testTeamIndexHeaderNavigation() {
         setupDatabase();
@@ -105,6 +109,10 @@ public class TeamIndexPageIT extends BaseDataTest {
         assertTrue("Upload Scan Button is not Available", teamIndexPage.isUploadScanButtonDisplay());
     }
 
+    //===========================================================================================================
+    // Scan Uploads
+    //===========================================================================================================
+
     @Test
     public void testUploadSameScanTwice() {
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
@@ -122,7 +130,7 @@ public class TeamIndexPageIT extends BaseDataTest {
     }
 
     @Test
-    public void testIsNamePreventScanUpload() {
+    public void testDoesNamePreventScanUpload() {
         String teamName1 = getRandomString(6) + "2.0";
 
         DatabaseUtils.createTeam(teamName1);
@@ -181,6 +189,10 @@ public class TeamIndexPageIT extends BaseDataTest {
 
         assertTrue("Old scan replaced newer scan", numOriginalVulns == numUpdatedVulns);
     }
+
+    //===========================================================================================================
+    // Graphs
+    //===========================================================================================================
 
     @Test
     public void testTeamPieGraphNav() {

@@ -50,7 +50,7 @@ public class ScanDetailIT extends BaseDataTest {
     }
 
     @Test
-    public void testCheckViewScan() {
+    public void testViewScan() {
         ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan();
 
         assertTrue("Scans Finding is not available", scanDetailPage.isViewFindingPresent());

@@ -43,6 +43,10 @@ public class TeamIT extends BaseDataTest {
         teamIndexPage = loginPage.defaultLogin().clickOrganizationHeaderLink();
     }
 
+    //===========================================================================================================
+    // Creation, Deletion, and Editing
+    //===========================================================================================================
+
 	@Test
 	public void testCreateTeam(){
 		String teamName = getName();
@@ -56,39 +60,6 @@ public class TeamIT extends BaseDataTest {
 		assertTrue("The validation is not present", teamIndexPage.isCreateValidationPresent(teamName));
 		assertTrue("The organization was not present in the table.", teamIndexPage.isTeamPresent(teamName));
 	}
-
-    @Test
-    public void testCreateTeamValidation(){
-        String emptyString = "";
-        String whiteSpaceString = "           ";
-
-        String emptyInputError = "Name is required.";
-
-        // Test empty input
-        teamIndexPage.clickAddTeamButton()
-                .setTeamName(emptyString)
-                .addNewTeamInvalid();
-
-        assertTrue("The correct error text was not present",
-                emptyInputError.equals(teamIndexPage.getErrorMessage("requiredError")));
-
-        // Test whitespace input
-        teamIndexPage = teamIndexPage.setTeamName(whiteSpaceString)
-                .addNewTeamInvalid();
-        assertTrue("The correct error text was not present",
-                emptyInputError.equals(teamIndexPage.getErrorMessage("requiredError")));
-    }
-
-    @Test
-    public void testCreateTeamNameLengthValidation() {
-        String newOrgName = getRandomString(70);
-
-        teamIndexPage.clickAddTeamButton()
-                .setTeamName(newOrgName);
-
-        assertTrue("Header width was incorrect with long team name",
-                teamIndexPage.getLengthError().contains("Maximum length is 60."));
-    }
 
     @Test
     public void testEditTeam(){
@@ -121,6 +92,56 @@ public class TeamIT extends BaseDataTest {
 
         assertTrue("Success alert was not displayed.", teamDetailPage.isSuccessMessageDisplayed());
         assertTrue("Team name was not edited correctly.", teamDetailPage.isTeamNameDisplayedCorrectly(editedTeamName));
+    }
+
+    @Test
+    public void testDeleteTeam() {
+        String teamName = createTeam();
+
+        teamIndexPage.refreshPage();
+
+        TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
+
+        TeamIndexPage teamIndexPage = teamDetailPage.clickDeleteButton();
+
+        assertFalse("Team should have been deleted.", teamIndexPage.isTeamPresent(teamName));
+    }
+
+    //===========================================================================================================
+    // Validation
+    //===========================================================================================================
+
+    @Test
+    public void testCreateTeamValidation(){
+        String emptyString = "";
+        String whiteSpaceString = "           ";
+
+        String emptyInputError = "Name is required.";
+
+        // Test empty input
+        teamIndexPage.clickAddTeamButton()
+                .setTeamName(emptyString)
+                .addNewTeamInvalid();
+
+        assertTrue("The correct error text was not present",
+                emptyInputError.equals(teamIndexPage.getErrorMessage("requiredError")));
+
+        // Test whitespace input
+        teamIndexPage = teamIndexPage.setTeamName(whiteSpaceString)
+                .addNewTeamInvalid();
+        assertTrue("The correct error text was not present",
+                emptyInputError.equals(teamIndexPage.getErrorMessage("requiredError")));
+    }
+
+    @Test
+    public void testCreateTeamNameLengthValidation() {
+        String newOrgName = getRandomString(70);
+
+        teamIndexPage.clickAddTeamButton()
+                .setTeamName(newOrgName);
+
+        assertTrue("Header width was incorrect with long team name",
+                teamIndexPage.getLengthError().contains("Maximum length is 60."));
     }
 
     @Test
@@ -161,6 +182,10 @@ public class TeamIT extends BaseDataTest {
         assertTrue("The organization name was not cropped correctly.", teamDetailPage.isTeamNameDisplayedCorrectly(orgName));
     }
 
+    //===========================================================================================================
+    // Navigation
+    //===========================================================================================================
+
     @Test
     public void testViewMore() {
         String teamName = createTeam();
@@ -170,22 +195,6 @@ public class TeamIT extends BaseDataTest {
         TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
 
         assertTrue("View Team link did not work properly.", teamDetailPage.isTeamNameDisplayedCorrectly(teamName));
-    }
-
-    @Test
-    public void testTeamGraphs() {
-        initializeTeamAndAppWithWebInspectScan();
-
-        teamIndexPage.refreshPage();
-
-        teamIndexPage.expandTeamRowByName(teamName)
-                .waitForPieWedge(teamName, "Critical");
-
-        assertTrue("Info arc didn't display correctly", teamIndexPage.isGraphWedgeDisplayed(teamName, "Info"));
-        assertTrue("Low arc didn't display correctly", teamIndexPage.isGraphWedgeDisplayed(teamName, "Low"));
-        assertTrue("Medium arc didn't display correctly", teamIndexPage.isGraphWedgeDisplayed(teamName, "Medium"));
-        assertTrue("High arc didn't display correctly", teamIndexPage.isGraphWedgeDisplayed(teamName, "High"));
-        assertTrue("Critical didn't display correctly", teamIndexPage.isGraphWedgeDisplayed(teamName, "Critical"));
     }
 
     @Test
@@ -222,16 +231,23 @@ public class TeamIT extends BaseDataTest {
         assertFalse("Applications are not collapsed", teamIndexPage.isTeamsExpanded(teamName2, appName2));
     }
 
+    //===========================================================================================================
+    // Other
+    //===========================================================================================================
+
     @Test
-    public void testDeleteTeam() {
-        String teamName = createTeam();
+    public void testTeamGraphs() {
+        initializeTeamAndAppWithWebInspectScan();
 
         teamIndexPage.refreshPage();
 
-        TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
+        teamIndexPage.expandTeamRowByName(teamName)
+                .waitForPieWedge(teamName, "Critical");
 
-        TeamIndexPage teamIndexPage = teamDetailPage.clickDeleteButton();
-
-        assertFalse("Team should have been deleted.", teamIndexPage.isTeamPresent(teamName));
+        assertTrue("Info arc didn't display correctly", teamIndexPage.isGraphWedgeDisplayed(teamName, "Info"));
+        assertTrue("Low arc didn't display correctly", teamIndexPage.isGraphWedgeDisplayed(teamName, "Low"));
+        assertTrue("Medium arc didn't display correctly", teamIndexPage.isGraphWedgeDisplayed(teamName, "Medium"));
+        assertTrue("High arc didn't display correctly", teamIndexPage.isGraphWedgeDisplayed(teamName, "High"));
+        assertTrue("Critical didn't display correctly", teamIndexPage.isGraphWedgeDisplayed(teamName, "Critical"));
     }
 }

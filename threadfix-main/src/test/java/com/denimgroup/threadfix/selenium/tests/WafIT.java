@@ -39,7 +39,11 @@ import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
 public class WafIT extends BaseDataTest {
-	
+
+    //===========================================================================================================
+    // Creation, Deletion, and Editing
+    //===========================================================================================================
+
 	@Test
 	public void testCreateWaf(){
 		String newWafName = getName();
@@ -56,24 +60,6 @@ public class WafIT extends BaseDataTest {
 		assertTrue("The waf was not present in the table.", wafIndexPage.isWafPresent(newWafName));
 		assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(newWafName));
 	}
-
-    @Test
-    public void testDeleteWaf() {
-        String wafName = getName();
-        String wafType = "mod_security";
-
-        WafIndexPage wafIndexPage = loginPage.defaultLogin()
-                .clickWafsHeaderLink();
-
-        wafIndexPage = wafIndexPage.clickAddWafLink()
-                .createNewWaf(wafName, wafType)
-                .clickModalSubmit();
-
-        wafIndexPage = wafIndexPage.clickDeleteWaf(wafName)
-                .clickWafsHeaderLink();
-
-        assertFalse("The waf was still present after attempted deletion.", wafIndexPage.isTextPresentInWafTableBody(wafName));
-    }
 	
 	@Test
 	public void testCreateWafSnort(){
@@ -138,6 +124,144 @@ public class WafIT extends BaseDataTest {
 		assertTrue("The waf was not present in the table.", wafIndexPage.isWafPresent(newWafName));
 		assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(newWafName));
 	}
+
+    @Test
+    public void testDeleteWaf() {
+        String wafName = getName();
+        String wafType = "mod_security";
+
+        WafIndexPage wafIndexPage = loginPage.defaultLogin()
+                .clickWafsHeaderLink();
+
+        wafIndexPage = wafIndexPage.clickAddWafLink()
+                .createNewWaf(wafName, wafType)
+                .clickModalSubmit();
+
+        wafIndexPage = wafIndexPage.clickDeleteWaf(wafName)
+                .clickWafsHeaderLink();
+
+        assertFalse("The waf was still present after attempted deletion.", wafIndexPage.isTextPresentInWafTableBody(wafName));
+    }
+
+    @Test
+    public void testEditWaf(){
+        String originalWaf = getName();
+        String editedWaf = originalWaf + "-edited";
+
+        String type1 = "mod_security";
+        String type2 = "Snort";
+
+        WafIndexPage wafIndexPage = loginPage.defaultLogin()
+                .clickWafsHeaderLink();
+
+        wafIndexPage = wafIndexPage.clickAddWafLink()
+                .createNewWaf(originalWaf, type1)
+                .clickModalSubmit();
+
+        wafIndexPage.refreshPage();
+
+        wafIndexPage.clickEditWaf(originalWaf)
+                .editWaf(originalWaf, editedWaf, type2)
+                .clickSaveEditWaf(editedWaf)
+                .clickWafsHeaderLink();
+
+        assertTrue("Editing did not change the name.", wafIndexPage.isWafPresent(editedWaf));
+        assertTrue("Editing did not change the type.", wafIndexPage.isTextPresentInWafTableBody(type2));
+    }
+
+    @Test
+    public void testAttachModSecWafToANewApp() throws MalformedURLException {
+        initializeTeamAndAppWithIbmScan();
+
+        String wafName = getName();
+        String wafType = "mod_security";
+
+        WafIndexPage wafIndexPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .clickWafsHeaderLink()
+                .clickAddWafLink()
+                .createNewWaf(wafName, wafType)
+                .clickModalSubmit();
+
+        //Add waf to application
+        TeamIndexPage teamIndexPage = wafIndexPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .clickAddWaf()
+                .addWaf(wafName)
+                .clickDynamicSubmit();
+
+        assertTrue("waf was not added.", driver.findElement(By.id("wafName")).getText().contains(wafName));
+
+        applicationDetailPage.saveWafAdd();
+        sleep(15000);
+
+        //Generating  Deny waf Rules
+        WafRulesPage wafRulesPage = applicationDetailPage.clickOrganizationHeaderLink()
+                .clickWafsHeaderLink()
+                .clickRules(wafName)
+                .setWafApplicationSelect(teamName, appName)
+                .setWafDirectiveSelect("deny")
+                .clickGenerateWafRulesButton();
+
+        assertTrue("Waf rule not generated", driver.findElement(By.linkText("Download Waf Rules")).isDisplayed());
+
+        // Generate pass Waf Rules
+        wafRulesPage = wafRulesPage.setWafDirectiveSelect("pass")
+                .clickGenerateWafRulesButton();
+
+        String pageText2 = wafRulesPage.tryGetText(By.id("wafrule"));
+        assertTrue("Waf rule not generated", pageText2.contains("SecRule"));
+
+        // Generate drop Waf Rules
+        wafRulesPage = wafRulesPage.setWafDirectiveSelect("drop")
+                .clickGenerateWafRulesButton();
+
+        String pageText5 = wafRulesPage.tryGetText(By.id("wafrule"));
+        assertTrue("Waf rule not generated", pageText5.contains("SecRule"));
+
+        // Generate allow Waf Rules
+        wafRulesPage = wafRulesPage.setWafDirectiveSelect("allow")
+                .clickGenerateWafRulesButton();
+
+        String pageText6 = wafRulesPage.tryGetText(By.id("wafrule"));
+        assertTrue("Waf rule not generated", pageText6.contains("SecRule"));
+    }
+
+    @Test
+    public void testCreateNewWafInApplicationModal() {
+        initializeTeamAndApp();
+        String wafName = getName();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .clickSetWaf();
+
+        if (applicationDetailPage.isWafPresent()) {
+            applicationDetailPage.clickCreateNewWaf()
+                    .setWafName(wafName)
+                    .clickCreateWafButton()
+                    .clickModalSubmit();
+        } else {
+            applicationDetailPage.setWafName(wafName)
+                    .clickCreateWafButton()
+                    .clickModalSubmit();
+        }
+
+        applicationDetailPage.clickEditDeleteBtn();
+
+        assertTrue("The correct error did not appear for the url field.",
+                applicationDetailPage.checkWafName().equals(wafName));
+    }
+
+    //===========================================================================================================
+    // Validation
+    //===========================================================================================================
 	
 	@Test
 	public void testCreateWafFieldValidation() {
@@ -163,32 +287,6 @@ public class WafIT extends BaseDataTest {
                 .clickModalSubmitInvalid();
         sleep(500);
         assertTrue("The correct error text was not present", wafIndexPage.isElementVisible("characterLimitError"));
-	}
-
-	@Test
-	public void testEditWaf(){
-		String originalWaf = getName();
-		String editedWaf = originalWaf + "-edited";
-		
-		String type1 = "mod_security";
-		String type2 = "Snort";
-		
-		WafIndexPage wafIndexPage = loginPage.defaultLogin()
-                .clickWafsHeaderLink();
-
-		wafIndexPage = wafIndexPage.clickAddWafLink()
-                .createNewWaf(originalWaf, type1)
-                .clickModalSubmit();
-
-        wafIndexPage.refreshPage();
-
-		wafIndexPage.clickEditWaf(originalWaf)
-                .editWaf(originalWaf, editedWaf, type2)
-                .clickSaveEditWaf(editedWaf)
-                .clickWafsHeaderLink();
-
-		assertTrue("Editing did not change the name.", wafIndexPage.isWafPresent(editedWaf));
-		assertTrue("Editing did not change the type.", wafIndexPage.isTextPresentInWafTableBody(type2));
 	}
 
     @Test
@@ -257,66 +355,37 @@ public class WafIT extends BaseDataTest {
         assertTrue("Duplicate name error was not displayed", wafIndexPage.isElementVisible("otherNameError"));
     }
 
-	@Test
-	public void testAttachModSecWafToaNewApp() throws MalformedURLException {
-		initializeTeamAndAppWithIbmScan();
-
-		String wafName = getName();
-		String wafType = "mod_security";
+    @Test
+    public void testCreateWafWithTheSameNameOfPrevious() {
+        String wafName = getName();
+        String newWafName = getName();
+        String type = "Snort";
 
         WafIndexPage wafIndexPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .clickWafsHeaderLink()
-                .clickAddWafLink()
-                .createNewWaf(wafName, wafType)
+                .clickWafsHeaderLink();
+
+        wafIndexPage.clickAddWafLink()
+                .createNewWaf(wafName, type)
                 .clickModalSubmit();
 
-		//Add waf to application
-		TeamIndexPage teamIndexPage = wafIndexPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName);
+        assertTrue("The waf was not present in the table.", wafIndexPage.isWafPresent(wafName));
+        assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(wafName));
 
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName)
-                .clickEditDeleteBtn()
-                .clickAddWaf()
-                .addWaf(wafName)
-                .clickDynamicSubmit();
+        wafIndexPage.clickDeleteWaf(wafName);
 
-        assertTrue("waf was not added.", driver.findElement(By.id("wafName")).getText().contains(wafName));
+        assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(wafName));
 
-        applicationDetailPage.saveWafAdd();
-        sleep(15000);
+        wafIndexPage.clickAddWafLink()
+                .createNewWaf(newWafName, type)
+                .clickModalSubmit();
 
-		//Generating  Deny waf Rules
-		WafRulesPage wafRulesPage = applicationDetailPage.clickOrganizationHeaderLink()
-                .clickWafsHeaderLink()
-                .clickRules(wafName)
-                .setWafApplicationSelect(teamName, appName)
-                .setWafDirectiveSelect("deny")
-                .clickGenerateWafRulesButton();
+        assertTrue("The waf was not present in the table.", wafIndexPage.isWafPresent(newWafName));
+        assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(newWafName));
+    }
 
-		assertTrue("Waf rule not generated", driver.findElement(By.linkText("Download Waf Rules")).isDisplayed());
-
-		// Generate pass Waf Rules
-		wafRulesPage = wafRulesPage.setWafDirectiveSelect("pass")
-                .clickGenerateWafRulesButton();
-
-		String pageText2 = wafRulesPage.tryGetText(By.id("wafrule"));
-		assertTrue("Waf rule not generated", pageText2.contains("SecRule"));
-
-		// Generate drop Waf Rules
-		wafRulesPage = wafRulesPage.setWafDirectiveSelect("drop")
-                .clickGenerateWafRulesButton();
-
-        String pageText5 = wafRulesPage.tryGetText(By.id("wafrule"));
-		assertTrue("Waf rule not generated", pageText5.contains("SecRule"));
-
-		// Generate allow Waf Rules
-		wafRulesPage = wafRulesPage.setWafDirectiveSelect("allow")
-                .clickGenerateWafRulesButton();
-
-        String pageText6 = wafRulesPage.tryGetText(By.id("wafrule"));
-		assertTrue("Waf rule not generated", pageText6.contains("SecRule"));
-	}
+    //===========================================================================================================
+    // Other
+    //===========================================================================================================
 
     @Test
     public void testGenerateWafRules() {
@@ -416,34 +485,6 @@ public class WafIT extends BaseDataTest {
     }
 
     @Test
-    public void testCreateWafWithTheSameNameOfPrevious() {
-        String wafName = getName();
-        String newWafName = getName();
-        String type = "Snort";
-
-        WafIndexPage wafIndexPage = loginPage.defaultLogin()
-                .clickWafsHeaderLink();
-
-        wafIndexPage.clickAddWafLink()
-                .createNewWaf(wafName, type)
-                .clickModalSubmit();
-
-        assertTrue("The waf was not present in the table.", wafIndexPage.isWafPresent(wafName));
-        assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(wafName));
-
-        wafIndexPage.clickDeleteWaf(wafName);
-
-        assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(wafName));
-
-        wafIndexPage.clickAddWafLink()
-                .createNewWaf(newWafName, type)
-                .clickModalSubmit();
-
-        assertTrue("The waf was not present in the table.", wafIndexPage.isWafPresent(newWafName));
-        assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(newWafName));
-    }
-
-    @Test
     public void testCheckWafLogFileLink() {
         initializeTeamAndAppWithIbmScan();
         String wafName = getName();
@@ -515,35 +556,6 @@ public class WafIT extends BaseDataTest {
 
         assertTrue("The WAF was not added correctly.",
                 wafDetailPage.isTextPresentInApplicationsTableBody(appName));
-    }
-
-    @Test
-    public void testCreateNewWafInApplicationModal() {
-        initializeTeamAndApp();
-        String wafName = getName();
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickEditDeleteBtn()
-                .clickSetWaf();
-
-        if (applicationDetailPage.isWafPresent()) {
-            applicationDetailPage.clickCreateNewWaf()
-                    .setWafName(wafName)
-                    .clickCreateWafButton()
-                    .clickModalSubmit();
-        } else {
-            applicationDetailPage.setWafName(wafName)
-                    .clickCreateWafButton()
-                    .clickModalSubmit();
-        }
-
-        applicationDetailPage.clickEditDeleteBtn();
-
-        assertTrue("The correct error did not appear for the url field.",
-                applicationDetailPage.checkWafName().equals(wafName));
     }
 
     @Test

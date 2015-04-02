@@ -60,7 +60,7 @@ public class TagDetailPageIT extends BaseDataTest {
     }
 
     @Test
-    public void testCorrectNumberofApps() {
+    public void testCorrectNumberOfApps() {
         initializeTeamAndApp();
         String appName2 = createApplication(teamName);
         String tagName = createTag();
@@ -98,7 +98,7 @@ public class TagDetailPageIT extends BaseDataTest {
     }
 
     @Test
-    public void testCorrectNumberofComments() {
+    public void testCorrectNumberOfComments() {
         initializeTeamAndAppWithIbmScan();
         String tagName = createTag();
 

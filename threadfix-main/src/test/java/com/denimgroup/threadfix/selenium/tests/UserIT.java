@@ -47,6 +47,10 @@ public class UserIT extends BaseDataTest {
                 .clickManageUsersLink();
     }
 
+    //===========================================================================================================
+    // Creation, Deletion, and Editing
+    //===========================================================================================================
+
 	@Test
 	public void testCreateUser() {
 		String userName = getName();
@@ -59,7 +63,7 @@ public class UserIT extends BaseDataTest {
 	}
 
     @Test
-    public void testCreateTwoUsers() {
+    public void testCreateTwoUsersWithoutRefresh() {
         String userName = getName();
         String password = "testCreateUser";
 
@@ -76,6 +80,118 @@ public class UserIT extends BaseDataTest {
         assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(secondUserName));
         assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
     }
+
+    @Test
+    public void testEditUserName() {
+        String userName = getName();
+        String editedUserName = getName();
+        String password = getRandomString(15);
+        String editedPassword = getRandomString(15);
+
+        userIndexPage.createUser(userName, "", password);
+
+        DashboardPage dashboardPage= userIndexPage.logout()
+                .login(userName, password);
+
+        assertTrue("New user was not able to login.", dashboardPage.isLoggedin());
+
+        dashboardPage.logout()
+                .defaultLogin()
+                .clickManageUsersLink()
+                .editUser(userName, editedUserName, "", editedPassword)
+                .logout()
+                .login(editedUserName, editedPassword);
+
+        assertTrue("Edited user was not able to login.", dashboardPage.isLoggedin());
+    }
+
+    @Test
+    public void testEditPassword() {
+        String userName = getName();
+        String password = getRandomString(15);
+        String editedPassword = getRandomString(15);
+
+        assertFalse("User was already in the table.", userIndexPage.isUserNamePresent(userName));
+
+        UserChangePasswordPage userChangePasswordPage = userIndexPage.createUser(userName, "", password)
+                .logout()
+                .login(userName, password)
+                .clickChangePasswordLink()
+                .setCurrentPassword(password)
+                .setNewPassword(editedPassword)
+                .setConfirmPassword(editedPassword)
+                .clickUpdate();
+
+
+        DashboardPage dashboardPage = userChangePasswordPage.logout()
+                .login(userName, editedPassword);
+
+        assertTrue("Edited user could not login.", dashboardPage.isLoggedin());
+    }
+
+    @Test
+    public void testDeleteUser(){
+        String userName = getName();
+        String password = "testDeleteUser";
+
+        userIndexPage.createUser(userName,"",password)
+                .clickEditLink(userName)
+                .clickDelete(userName);
+
+        assertTrue("Deletion Message not displayed.", userIndexPage.isSuccessDisplayed(userName));
+        assertFalse("User still present in user table.", userIndexPage.isUserNamePresent(userName));
+    }
+
+    @Test
+    public void testEditMultipleUsers() {
+        String userName1 = getName();
+        String password1 = "testEditMultipleUsers";
+        String userName2 = getName();
+        String password2 = "testEditMultipleUsers2";
+        String changedPassword = "changedPasswordTestMultipleUsers";
+        String changedName = getName();
+        String displayCssId = "displayName" + changedName;
+
+        userIndexPage.createUser(userName1, "", password1)
+                .createUser(userName2, "", password2);
+
+        userIndexPage.editUser(userName1, userName1,changedName,password1)
+                .editUser(userName2, userName2,"",changedPassword);
+
+        assertTrue("Second user's display name was changed to the first user's name when attempting to change only password.",
+                driver.findElements(By.id(displayCssId)).size() < 2);
+    }
+
+    @Test
+    public void testAddUserWithDisplayName() {
+        String userName = getName();
+        String displayName = getName();
+        String password = getName();
+
+        userIndexPage.createUser(userName, displayName, password)
+                .refreshPage();
+
+        assertTrue("User with display name was not added correctly.",
+                driver.findElement(By.id("displayName" + displayName)).isDisplayed());
+    }
+
+    @Test
+    public void testAddDisplayNameToUser() {
+        String userName = getName();
+        String displayName = getName();
+        String password = getName();
+
+        userIndexPage.createUser(userName, "", password)
+                .editUser(userName, userName, displayName, password)
+                .refreshPage();
+
+        assertTrue("User with display name was not added correctly.",
+                driver.findElement(By.id("displayName" + displayName)).isDisplayed());
+    }
+
+    //===========================================================================================================
+    // Validation
+    //===========================================================================================================
 
     @Test
     public void testUserFieldValidation() {
@@ -140,54 +256,6 @@ public class UserIT extends BaseDataTest {
         sleep(5000);
         assertTrue("Name uniqueness error is not correct.", userIndexPage.getNameError().equals("That name is already taken."));
     }
-
-    @Test
-    public void testEditUserName() {
-        String userName = getName();
-        String editedUserName = getName();
-        String password = getRandomString(15);
-        String editedPassword = getRandomString(15);
-
-        userIndexPage.createUser(userName, "", password);
-
-        DashboardPage dashboardPage= userIndexPage.logout()
-                .login(userName, password);
-
-        assertTrue("New user was not able to login.", dashboardPage.isLoggedin());
-
-        dashboardPage.logout()
-                .defaultLogin()
-                .clickManageUsersLink()
-                .editUser(userName, editedUserName, "", editedPassword)
-                .logout()
-                .login(editedUserName, editedPassword);
-
-        assertTrue("Edited user was not able to login.", dashboardPage.isLoggedin());
-    }
-
-	@Test
-	public void testEditPassword() {
-		String userName = getName();
-        String password = getRandomString(15);
-        String editedPassword = getRandomString(15);
-
-		assertFalse("User was already in the table.", userIndexPage.isUserNamePresent(userName));
-
-        UserChangePasswordPage userChangePasswordPage = userIndexPage.createUser(userName, "", password)
-				.logout()
-				.login(userName, password)
-                .clickChangePasswordLink()
-                .setCurrentPassword(password)
-                .setNewPassword(editedPassword)
-                .setConfirmPassword(editedPassword)
-                .clickUpdate();
-
-
-		DashboardPage dashboardPage = userChangePasswordPage.logout()
-                .login(userName, editedPassword);
-
-        assertTrue("Edited user could not login.", dashboardPage.isLoggedin());
-	}
 
     @Test
     public void testEditPasswordValidation() {
@@ -305,70 +373,14 @@ public class UserIT extends BaseDataTest {
 		
 	}
 
+    //===========================================================================================================
+    // Other
+    //===========================================================================================================
+
 	@Test
 	public void testNavigation() {
         assertTrue("Could not navigate to User Index Page.",driver.findElements(By.id("newUserModalLink")).size() != 0);
-		}
-
-    @Test
-    public void testDeleteUser(){
-        String userName = getName();
-        String password = "testDeleteUser";
-
-        userIndexPage.createUser(userName,"",password)
-                .clickEditLink(userName)
-                .clickDelete(userName);
-
-        assertTrue("Deletion Message not displayed.", userIndexPage.isSuccessDisplayed(userName));
-        assertFalse("User still present in user table.", userIndexPage.isUserNamePresent(userName));
-    }
-
-    @Test
-    public void testEditMultipleUsers() {
-        String userName1 = getName();
-        String password1 = "testEditMultipleUsers";
-        String userName2 = getName();
-        String password2 = "testEditMultipleUsers2";
-        String changedPassword = "changedPasswordTestMultipleUsers";
-        String changedName = getName();
-        String displayCssId = "displayName" + changedName;
-
-        userIndexPage.createUser(userName1, "", password1)
-                .createUser(userName2, "", password2);
-
-        userIndexPage.editUser(userName1, userName1,changedName,password1)
-                .editUser(userName2, userName2,"",changedPassword);
-
-        assertTrue("Second user's display name was changed to the first user's name when attempting to change only password.",
-                driver.findElements(By.id(displayCssId)).size() < 2);
-    }
-
-    @Test
-    public void testAddUserWithDisplayName() {
-        String userName = getName();
-        String displayName = getName();
-        String password = getName();
-
-        userIndexPage.createUser(userName, displayName, password)
-                .refreshPage();
-
-        assertTrue("User with display name was not added correctly.",
-                driver.findElement(By.id("displayName" + displayName)).isDisplayed());
-    }
-
-    @Test
-    public void testAddDisplayNameToUser() {
-        String userName = getName();
-        String displayName = getName();
-        String password = getName();
-
-        userIndexPage.createUser(userName, "", password)
-                .editUser(userName, userName, displayName, password)
-                .refreshPage();
-
-        assertTrue("User with display name was not added correctly.",
-                driver.findElement(By.id("displayName" + displayName)).isDisplayed());
-    }
+	}
 
     @Test
     public void testDisplayNameOnComment() {

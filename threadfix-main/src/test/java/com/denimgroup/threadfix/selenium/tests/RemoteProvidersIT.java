@@ -383,7 +383,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void testCheckNumberUnderSeverity() {
+    public void testNumberUnderSeverity() {
         remoteProvidersIndexPage.clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
                 .saveWhiteHat()
@@ -414,7 +414,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void testTeamExistAfterDeleted() {
+    public void testTeamExistsAfterDeleted() {
         remoteProvidersIndexPage.clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
                 .saveWhiteHat()
@@ -437,7 +437,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void testApplicationExistAfterDeleted(){
+    public void testApplicationExistsAfterDeleted(){
         remoteProvidersIndexPage.clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
                 .saveWhiteHat()
@@ -460,7 +460,9 @@ public class RemoteProvidersIT extends BaseDataTest {
                 remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
     }
 
-    /*------------------------------ Scheduling ------------------------------*/
+    //===========================================================================================================
+    // Scheduling
+    //===========================================================================================================
 
     public void navigateToSchedule() {
         remoteProvidersSchedulePage = remoteProvidersIndexPage.clickScheduleTab();
@@ -505,7 +507,7 @@ public class RemoteProvidersIT extends BaseDataTest {
 
     //TODO remove extra navigation when enhancement #618 is added
     @Test
-    public void testCheckSameDailyScheduleConflict() {
+    public void testSameDailyScheduleConflict() {
         String frequency = "Daily";
         int hour = 9;
         int minutes = 30;
@@ -539,7 +541,7 @@ public class RemoteProvidersIT extends BaseDataTest {
 
     //TODO remove extra navigation when enhancement #618 is added
     @Test
-    public void testCheckSameWeeklyScheduleConflict() {
+    public void testSameWeeklyScheduleConflict() {
         navigateToSchedule();
 
         remoteProvidersSchedulePage.clickScheduleNewImportButton()
@@ -609,7 +611,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void testCheckSuccessMessageLocation() {
+    public void testSuccessMessageLocation() {
         navigateToSchedule();
 
         remoteProvidersSchedulePage.clickScheduleNewImportButton()
@@ -636,7 +638,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void testCheckQualysEditNameModalHeader() {
+    public void testQualysEditNameModalHeader() {
         remoteProvidersIndexPage.clickConfigureQualys()
                 .setQualysUsername(QUALYS_USER)
                 .setQualysPassword(QUALYS_PASS)
@@ -658,7 +660,7 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void testCheckVeracodeEditNameModalHeader() {
+    public void testVeracodeEditNameModalHeader() {
         remoteProvidersIndexPage.clickConfigureVeracode()
                 .setVeraUsername(VERACODE_USER)
                 .setVeraPassword(VERACODE_PASSWORD)

@@ -98,7 +98,9 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
                 teamDetailPage.isSeverityLevelShown("Info"));
     }
 
-    /*_________________ Saved Filters _________________*/
+    //===========================================================================================================
+    // Saved Filters
+    //===========================================================================================================
 
     @Test
     public void testSavedFilterFieldValidation() {
@@ -187,7 +189,9 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
                 teamDetailPage.isVulnerabilityCountCorrect("Medium", "4"));
     }
 
-    /*_________________ Teams and Applications _________________*/
+    //===========================================================================================================
+    // Teams and Applications
+    //===========================================================================================================
 
     @Test
     public void testApplicationFilter() {
@@ -241,7 +245,9 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
                 teamDetailPage.isVulnerabilityCountCorrect("Info", "9"));
     }
 
-    /*_________________ Scanner and Merged _________________*/
+    //===========================================================================================================
+    // Scanner and Merged
+    //===========================================================================================================
 
     @Test
     public void testMergedFindingsFilter() {
@@ -289,7 +295,9 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
                 teamDetailPage.isVulnerabilityCountCorrect("Info", "5"));
     }
 
-    /*_________________ Field Controls _________________*/
+    //===========================================================================================================
+    // Field Controls
+    //===========================================================================================================
 
     @Test
     public void testVulnerabilityTypeFilter() {
@@ -397,7 +405,9 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         assertTrue("No Results Found should be displayed.", teamDetailPage.areAllVulnerabilitiesHidden());
     }
 
-    /*_________________ Aging _________________*/
+    //===========================================================================================================
+    // Aging
+    //===========================================================================================================
 
     @Test
     public void testAgingFilter() {
@@ -444,6 +454,8 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
                 teamDetailPage.isVulnerabilityCountCorrect("Info", "9"));
     }
 
-    /*_________________ Date Range _________________*/
+    //===========================================================================================================
+    // Date Range
+    //===========================================================================================================
     //TODO this functionality works but there is a bug (358) in FF that stops us from writing a test for now.
 }
