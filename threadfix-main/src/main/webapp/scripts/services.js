@@ -512,7 +512,7 @@ threadfixModule.factory('vulnTreeTransformer', function() {
             for (var k in vulnSum)
                 vulnList.push(vulnSum[k]);
 
-            disaStig.forEach(function(disaStigCat, i){
+            disaStig.forEach(function(disaStigCat){
 
                 var categorylvl = 5;
 
@@ -526,11 +526,15 @@ threadfixModule.factory('vulnTreeTransformer', function() {
 
                 var newTreeCategory = getCategory(disaStigCat.name, categorylvl);
                 vulnList.forEach(function(element) {
-                    if (disaStigCat.members.indexOf(element.genericVulnerability.displayId) > -1
-                        || (element.memberOf && disaStigCat.members.indexOf(element.memberOf) > -1)) {
-                        newTreeCategory.total = newTreeCategory.total + element.numResults;
-                        newTreeCategory.entries.push(element);
-                    }
+
+                    disaStigCat.members.forEach(function(disaStig) {
+                        if (disaStig.cweIds.indexOf(element.genericVulnerability.displayId) > -1
+                            || (element.memberOf && disaStig.cweIds.indexOf(element.memberOf) > -1)) {
+                            newTreeCategory.total = newTreeCategory.total + element.numResults;
+                            element.numResultsText = disaStig.stigId;
+                            newTreeCategory.entries.push(element);
+                        }
+                    });
                 });
                 newTreeCategory.entries.sort(function(a, b) {
                     return b.numResults - a.numResults;

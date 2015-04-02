@@ -217,14 +217,102 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         {
             id: "CATI",
             name: "CAT I",
-            members: [13,20,77,78,80,85,87,89,91,119,120,121,122,134,190,191,192,
-                256,257,259,564,636,680,712,725,738,811,872,931,990]
+            members: [
+                {
+                    stigId: "APP3130",
+                    cweIds:[636]
+                },
+                {
+                    stigId: "APP3310",
+                    cweIds:[256,257]
+                },
+                {
+                    stigId: "APP3350",
+                    cweIds: [13,259]
+                },
+                {
+                    stigId: "APP3510",
+                    cweIds: [20]
+                },
+                {
+                    stigId: "APP3540",
+                    cweIds: [89,564]
+                },
+                {
+                    stigId: "APP3550",
+                    cweIds: [190,191,192,738,872]
+                },
+                {
+                    stigId: "APP3560",
+                    cweIds: [134]
+                },
+                {
+                    stigId: "APP3570",
+                    cweIds: [77,78,990]
+                },
+                {
+                    stigId: "APP3580",
+                    cweIds: [80,85,87,712,725,811,931]
+                },
+                {
+                    stigId: "APP3590",
+                    cweIds: [120,121,122,680]
+                },
+                {
+                    stigId: "APP3810",
+                    cweIds: [91]
+                }
+            ]
         },
         {
             id: "CATII",
             name: "CAT II",
-            members: [171,200,244,352,362,363,364,366,367,368,376,421,455,489,493,
-                561,647,674,689,716,814,833,936,988]
+            members: [
+                {
+                    stigId: "APP3050",
+                    cweIds: [561]
+                },
+                {
+                    stigId: "APP3060",
+                    cweIds: [493]
+                },
+                {
+                    stigId: "APP3100",
+                    cweIds: [376]
+                },
+                {
+                    stigId: "APP3110",
+                    cweIds: [489]
+                },
+                {
+                    stigId: "APP3140",
+                    cweIds: [455]
+                },
+                {
+                    stigId: "APP3230",
+                    cweIds: [244]
+                },
+                {
+                    stigId: "APP3585",
+                    cweIds: [352,716,814,936]
+                },
+                {
+                    stigId: "APP3600",
+                    cweIds: [171,647]
+                },
+                {
+                    stigId: "APP3620",
+                    cweIds: [200]
+                },
+                {
+                    stigId: "APP3630",
+                    cweIds: [362,363,364,366,367,368,421,689,988]
+                },
+                {
+                    stigId: "APP3800",
+                    cweIds: [674]
+                }
+            ]
         },
         {
             id: "CATIII",
