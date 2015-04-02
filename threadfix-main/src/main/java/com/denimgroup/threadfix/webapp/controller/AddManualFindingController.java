@@ -137,7 +137,9 @@ public class AddManualFindingController {
                 return FormRestResponse.failure("Form Validation failed.", result);
             } else {
                 status.setComplete();
-                return RestResponse.success("A new static manual finding has been added to application");
+                return RestResponse.success("A new " +
+                                           (isStatic ? "static" : "dynamic") +
+                                           " manual finding has been added to application");
             }
         }
     }
