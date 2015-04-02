@@ -53,7 +53,7 @@
                         {{ element.numResults }}
                     </span>
                     <span id="cweName{{ category.name }}{{ element.genericVulnerability.displayId }}">
-                        <span ng-if="element.numResultsText"> {{ element.preText }}:  </span> {{ element.genericVulnerability.name | shortCweNames }}</span>
+                        <span ng-if="element.preText"> {{ element.preText }}:  </span> {{ element.genericVulnerability.name | shortCweNames }}</span>
                 </td>
             </tr>
             <tr ng-if="category.expanded && element.expanded" ng-repeat-end>
