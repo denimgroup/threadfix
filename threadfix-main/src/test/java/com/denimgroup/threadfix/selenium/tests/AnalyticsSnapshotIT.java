@@ -31,6 +31,8 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
 
+import javax.validation.constraints.AssertTrue;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -444,4 +446,29 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     // Portfolio Report
     //===========================================================================================================
     //TODO: Write Portfolio Report ITs.
+
+    //===========================================================================================================
+    // DISA STIG
+    //===========================================================================================================
+
+    @Test
+    public void testDisaStigReportDisplaysBasicElements() {
+        initializeTeamAndAppWithWebInspectScan();
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
+                .clickAnalyticsLink()
+                .sleepOnArrival(5000)
+                .clickSnapshotTab(false)
+                .sleepOnArrival(5000)
+                .selectDropDownReport("DISA STIG")
+                .expandTeamApplicationFilter("snapshotFilterDiv")
+                .addTeamFilter(teamName, "snapshotFilterDiv");
+
+        assertTrue("CAT I node did not contain correct number of vulnerabilities.",
+                analyticsPage.isVulnerabilityCountCorrect("CAT I", "1"));
+        assertTrue("CAT II node did not contain correct number of vulnerabilities.",
+                analyticsPage.isVulnerabilityCountCorrect("CAT II", "15"));
+        assertTrue("CAT III node did not contain correct number of vulnerabilities.",
+                analyticsPage.isVulnerabilityCountCorrect("CAT III", "0"));
+
+    }
 }
