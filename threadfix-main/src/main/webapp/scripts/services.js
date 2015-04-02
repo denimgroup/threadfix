@@ -531,7 +531,7 @@ threadfixModule.factory('vulnTreeTransformer', function() {
                         if (disaStig.cweIds.indexOf(element.genericVulnerability.displayId) > -1
                             || (element.memberOf && disaStig.cweIds.indexOf(element.memberOf) > -1)) {
                             newTreeCategory.total = newTreeCategory.total + element.numResults;
-                            element.numResultsText = disaStig.stigId;
+                            element.preText = disaStig.stigId;
                             newTreeCategory.entries.push(element);
                         }
                     });
