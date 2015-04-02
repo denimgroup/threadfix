@@ -50,7 +50,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .sleepOnArrival(15000)
+                .waitForReportTab("snapshot")
                 .clickSnapshotTab(true);
 
         analyticsPage.expandTeamApplicationFilter("snapshotFilterDiv")
@@ -82,7 +82,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .sleepOnArrival(15000)
+                .waitForReportTab("snapshot")
                 .clickSnapshotTab(true)
                 .sleepOnArrival(15000);
 
@@ -112,6 +112,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     public void testExpandCollapseFilters() {
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
+                .waitForReportTab("snapshot")
                 .clickSnapshotTab(true);
 
         int filtersCollapsedSize = analyticsPage.getFilterDivHeight("snapshotFilterDiv");
@@ -133,7 +134,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .sleepOnArrival(15000)
+                .waitForReportTab("snapshot")
                 .clickSnapshotTab(true)
                 .sleepOnArrival(15000)
                 .expandTeamApplicationFilter("snapshotFilterDiv")
@@ -154,7 +155,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .sleepOnArrival(15000)
+                .waitForReportTab("snapshot")
                 .clickSnapshotTab(true)
                 .sleepOnArrival(15000)
                 .expandTeamApplicationFilter("snapshotFilterDiv")
@@ -231,7 +232,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .clickCloseVulnerabilitiesButton();
 
         AnalyticsPage analyticsPage = applicationDetailPage.clickAnalyticsLink()
-                .sleepOnArrival(10000)
+                .waitForReportTab("snapshot")
                 .clickSnapshotTab(true)
                 .sleepOnArrival(10000)
                 .selectDropDownReport("Progress By Vulnerability")
@@ -250,7 +251,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .sleepOnArrival(10000)
+                .waitForReportTab("snapshot")
                 .clickSnapshotTab(false)
                 .sleepOnArrival(10000)
                 .selectDropDownReport("Progress By Vulnerability")
@@ -270,7 +271,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .sleepOnArrival(10000)
+                .waitForReportTab("snapshot")
                 .clickSnapshotTab(true)
                 .sleepOnArrival(10000)
                 .selectDropDownReport("Progress By Vulnerability")
@@ -297,7 +298,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .sleepOnArrival(15000)
+                .waitForReportTab("snapshot")
                 .clickSnapshotTab(true)
                 .sleepOnArrival(15000)
                 .selectDropDownReport("Progress By Vulnerability")
@@ -306,7 +307,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .saveCurrentFilter(filterName, "snapshotFilterDiv");
 
         analyticsPage.clickAnalyticsLink()
-                .sleepOnArrival(15000)
+                .waitForReportTab("snapshot")
                 .clickSnapshotTab(false)
                 .sleepOnArrival(15000)
                 .selectDropDownReport("Progress By Vulnerability")
@@ -392,7 +393,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .sleepOnArrival(5000)
+                .waitForReportTab("snapshot")
                 .clickSnapshotTab(false)
                 .sleepOnArrival(5000)
                 .selectDropDownReport("Most Vulnerable Applications")
@@ -416,7 +417,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .sleepOnArrival(5000)
+                .waitForReportTab("snapshot")
                 .clickSnapshotTab(false)
                 .sleepOnArrival(5000)
                 .selectDropDownReport("Most Vulnerable Applications")
@@ -456,7 +457,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         initializeTeamAndAppWithWebInspectScan();
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .sleepOnArrival(5000)
+                .waitForReportTab("snapshot")
                 .clickSnapshotTab(false)
                 .sleepOnArrival(5000)
                 .selectDropDownReport("DISA STIG")

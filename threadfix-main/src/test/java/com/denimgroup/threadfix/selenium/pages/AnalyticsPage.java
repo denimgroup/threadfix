@@ -342,6 +342,11 @@ public class AnalyticsPage extends BasePage {
         }
     }
 
+    public AnalyticsPage waitForReportTab(String report) {
+        waitForElementPresence(report + "Tab", 15);
+        return new AnalyticsPage(driver);
+    }
+
     /* _____________________ Boolean Methods _____________________ */
 
     public boolean isVulnerabilityCountCorrect(String level, String expected) {
