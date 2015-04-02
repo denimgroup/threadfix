@@ -32,43 +32,22 @@ import static org.junit.Assert.assertTrue;
 @Category(CommunityTests.class)
 public class LoginPageIT extends BaseIT {
 
-    //TODO: Consolidate these tests.
 	@Test
-	public void testUsernameFieldPresent(){
+	public void testFieldsPresent(){
 		assertTrue("Username field was not present on the page",loginPage.isUserNameFieldPresent());
+        assertTrue("Password field was not present on the page",loginPage.isPasswordFieldPresent());
+        assertTrue("Login button was not present on the page",loginPage.isLoginButtonPresent());
+        assertTrue("Login button is not clickable",loginPage.isLoginButtonClickable());
 	}
 	
 	@Test
-	public void testUsernameFieldInput(){
-		String username = getName();
+	public void testFieldInputs(){
+		String text = getName();
 		
-		loginPage = loginPage.setUsername(username);
-		
-		assertTrue("Username does not accept text properly",loginPage.getUserNameInput().equals(username));
+		loginPage = loginPage.setUsername(text);
+		assertTrue("Username does not accept text properly",loginPage.getUserNameInput().equals(text));
+
+        loginPage.setPassword(text);
+        assertTrue("password does not accept text properly",loginPage.getLoginInput().equals(text));
 	}
-	
-	@Test
-	public void testPasswordFieldPresent(){
-		assertTrue("Password field was not present on the page",loginPage.isPasswordFieldPresent());
-	}
-	
-	@Test
-	public void testPasswordFieldInput(){
-		String password = getName();
-		
-		loginPage = loginPage.setPassword(password);
-		
-		assertTrue("password does not accept text properly",loginPage.getLoginInput().equals(password));
-	}
-	
-	@Test
-	public void testLoginButtonPresent(){
-		assertTrue("Login button was not present on the page",loginPage.isLoginButtonPresent());
-	}
-	
-	@Test
-	public void testLoginButtonClickable(){
-		assertTrue("Login button is not clickable",loginPage.isLoginButtonClickable());
-	}
-	
 }
