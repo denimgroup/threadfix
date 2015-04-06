@@ -57,7 +57,7 @@ public class RemappingServiceImpl implements RemappingService {
     QueueSender queueSender;
 
     @Override
-    public void remapFindings(ChannelVulnerability vulnerability) {
+    public void remapFindings(ChannelVulnerability vulnerability, String channelName) {
         List<Application> applications = applicationDao.retrieveAllActive();
 
         if (queueSender == null) {
@@ -65,7 +65,7 @@ public class RemappingServiceImpl implements RemappingService {
         }
 
         for (Application application : applications) {
-            boolean shouldUpdate = remapFindings(application, vulnerability);
+            boolean shouldUpdate = remapFindings(application, vulnerability, channelName);
 
             if (queueSender != null && shouldUpdate) {
                 queueSender.updateCachedStatistics(application.getId());
@@ -79,19 +79,20 @@ public class RemappingServiceImpl implements RemappingService {
      * @param type the newly-mapped vulnerability
      * @return whether or not updates were performed
      */
-    private boolean remapFindings(Application application, ChannelVulnerability type) {
-
-        Integer id = type.getChannelType().getId();
+    private boolean remapFindings(Application application, ChannelVulnerability type, String channelName) {
 
         ApplicationChannel channel = null;
 
         for (ApplicationChannel appChannel : application.getChannelList()) {
             ChannelType channelType = appChannel.getChannelType();
-            if (channelType.getId().equals(id)) {
-                channel = appChannel;
-            } else if (channelType.getName().equals("SSVL") && type.getChannelType().getName().equals("Manual")) {
+            if (channelType.getName().equals(channelName)) {
                 channel = appChannel;
             }
+        }
+
+        if (channel == null) {
+            LOG.info("Channel " + channelName + " in application " + application.getName() + " not found.");
+            return false;
         }
 
         VulnerabilityCache
