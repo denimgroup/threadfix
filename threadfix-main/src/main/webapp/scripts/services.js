@@ -138,20 +138,22 @@ threadfixModule.factory('vulnSearchParameterService', function() {
     // glue code to make angular and spring play nice
     updater.updateParameters = function($scope, parameters) {
         parameters.genericSeverities = [];
-        if (parameters.severities.info) {
-            parameters.genericSeverities.push({ intValue: 1 });
-        }
-        if (parameters.severities.low) {
-            parameters.genericSeverities.push({ intValue: 2 });
-        }
-        if (parameters.severities.medium) {
-            parameters.genericSeverities.push({ intValue: 3 });
-        }
-        if (parameters.severities.high) {
-            parameters.genericSeverities.push({ intValue: 4 });
-        }
-        if (parameters.severities.critical) {
-            parameters.genericSeverities.push({ intValue: 5 });
+        if (parameters.severities) {
+            if (parameters.severities.info) {
+                parameters.genericSeverities.push({intValue: 1});
+            }
+            if (parameters.severities.low) {
+                parameters.genericSeverities.push({intValue: 2});
+            }
+            if (parameters.severities.medium) {
+                parameters.genericSeverities.push({intValue: 3});
+            }
+            if (parameters.severities.high) {
+                parameters.genericSeverities.push({intValue: 4});
+            }
+            if (parameters.severities.critical) {
+                parameters.genericSeverities.push({intValue: 5});
+            }
         }
 
         if ($scope.treeTeam) {
