@@ -277,7 +277,10 @@
             <li ng-repeat="permission in treeApplication.endpointPermissions"
                 id="showPermissions{{permission.name}}"
                 ng-class="{ active: parameters.permissionsList && parameters.permissionsList.indexOf(permission.name) != -1 }">
-                <a ng-click="togglePermission(permission.name)">
+                <a ng-click="togglePermission(permission.name)"
+                   class="endpoint-permission-filter"
+                   tooltip-popup-delay="500"
+                   tooltip="{{ permission.name }}">
                     {{permission.name}}
                 </a>
             </li>
