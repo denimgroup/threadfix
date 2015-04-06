@@ -77,7 +77,7 @@ public class RemappingTestHarness {
         Application application = merger.mergeSeriesInternal(null, finalPaths);
 
         // this *should* find the same hibernate-managed object if we're in the same Spring container
-        channelVulnerabilityService.createMapping(ScannerType.MANUAL.getDbName(), unmappedType, cweId);
+        channelVulnerabilityService.createMapping(ScannerType.SSVL.getDbName(), unmappedType, cweId);
 
         applicationDao.saveOrUpdate(application);
 
