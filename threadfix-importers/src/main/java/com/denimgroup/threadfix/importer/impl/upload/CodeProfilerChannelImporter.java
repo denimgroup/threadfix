@@ -4,7 +4,10 @@ import com.denimgroup.threadfix.annotations.ScanFormat;
 import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
-import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.entities.ChannelSeverity;
+import com.denimgroup.threadfix.data.entities.DataFlowElement;
+import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -12,19 +15,13 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.regex.Matcher;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
-import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 @ScanImporter(
         scannerName = "CodeProfiler", // This name must match the name in the CSV file
@@ -41,7 +38,7 @@ public class CodeProfilerChannelImporter extends AbstractChannelImporter {
     }
 
     public class Handler extends DefaultHandler {
-        private final Map<Integer, Map<FindingKey, String>> testcases = new HashMap<>();
+        private final Map<Integer, Map<FindingKey, String>> testcases = map();
         private Map<FindingKey, String> currentFinding = null;
         private Map<FindingKey, String> currentTestcase = null;
         private String currentPU = null;
@@ -62,108 +59,90 @@ public class CodeProfilerChannelImporter extends AbstractChannelImporter {
         @Override
         public void startElement(final String uri, final String localName, final String qName,
                                  final Attributes attributes) throws SAXException {
-            switch(qName) {
-                case "finding": {
-                    currentFinding = newMap();
-                    currentPU = null;
-                    currentFinding.putAll(currentTestcase);
-                    dataFlowElements = new ArrayList<DataFlowElement>();
-                    currentFinding.put(FindingKey.NATIVE_ID, attributes.getValue("fid"));
-                    final int impact = Integer.valueOf(attributes.getValue("impact"));
-                    final int probability = Integer.valueOf(attributes.getValue("prb"));
-                    severity = channelSeverityDao.retrieveById(calculateSeverityCode(impact, probability));
-                    lastline = -1;
+            if (qName.equals("finding")) {
+                currentFinding = map();
+                currentPU = null;
+                currentFinding.putAll(currentTestcase);
+                dataFlowElements = new ArrayList<DataFlowElement>();
+                currentFinding.put(FindingKey.NATIVE_ID, attributes.getValue("fid"));
+                final int impact = Integer.valueOf(attributes.getValue("impact"));
+                final int probability = Integer.valueOf(attributes.getValue("prb"));
+                severity = channelSeverityDao.retrieveById(calculateSeverityCode(impact, probability));
+                lastline = -1;
+
+            } else if (qName.equals("pu")) {
+                if (currentFinding == null) {
+                    return;
                 }
-                    break;
-
-                case "pu":
-                    if (currentFinding == null) {
-                        return;
-                    }
-                    if (currentPU == null) {
-                        currentPU = attributes.getValue("loc");
-                        currentFinding.put(FindingKey.PATH, parsePath(currentPU));
-                    } else {
-                        currentPU = attributes.getValue("loc");
+                if (currentPU == null) {
+                    currentPU = attributes.getValue("loc");
+                    currentFinding.put(FindingKey.PATH, parsePath(currentPU));
+                } else {
+                    currentPU = attributes.getValue("loc");
                         /* do not set anything */
-                    }
-                    break;
+                }
 
-                case "testcase":
-                    currentTestcase = new HashMap<>();
-                    testcaseID = Integer.valueOf(attributes.getValue("id"));
-                    testcases.put(testcaseID, currentTestcase);
-                    currentTestcase.put(FindingKey.SEVERITY_CODE, "Information");
-                    currentTestcase.put(FindingKey.VULN_CODE, attributes.getValue("name"));
-                    break;
+            } else if (qName.equals("testcase")) {
+                currentTestcase = map();
+                testcaseID = Integer.valueOf(attributes.getValue("id"));
+                testcases.put(testcaseID, currentTestcase);
+                currentTestcase.put(FindingKey.SEVERITY_CODE, "Information");
+                currentTestcase.put(FindingKey.VULN_CODE, attributes.getValue("name"));
 
-                case "ln":
-                    if (dataFlowElements == null) {
-                        return;
+            } else if (qName.equals("ln")) {
+                if (dataFlowElements == null) {
+                    return;
+                }
+                try {
+                    final DataFlowElement element = new DataFlowElement();
+                    final String lineNoS = attributes.getValue("line");
+                    Integer lineNo = (lineNoS == null || "".equals(lineNoS)) ? null : Integer.valueOf(lineNoS);
+                    if (lineNo == null) {
+                        lineNo = lastline;
                     }
-                    try {
-                        final DataFlowElement element = new DataFlowElement();
-                        final String lineNoS = attributes.getValue("line");
-                        Integer lineNo = (lineNoS == null || "".equals(lineNoS)) ? null : Integer.valueOf(lineNoS);
-                        if (lineNo == null) {
-                            lineNo = Integer.valueOf(lastline);
-                        }
-                        lastline = lineNo + 1;
-                        element.setLineNumber(lineNo);
-                        element.setLineText(attributes.getValue("sc"));
-                        element.setSourceFileName(currentPU);
-                        dataFlowElements.add(element);
-                    } catch (Throwable t) {
-                        t.printStackTrace();
-                    }
-                    break;
+                    lastline = lineNo + 1;
+                    element.setLineNumber(lineNo);
+                    element.setLineText(attributes.getValue("sc"));
+                    element.setSourceFileName(currentPU);
+                    dataFlowElements.add(element);
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
 
-                case "intro":
-                case "risk":
-                case "detail":
-                    record();
-                    break;
+            } else if (qName.equals("intro") || qName.equals("risk") || qName.equals("detail")) {
+                record();
 
             }
         }
 
         @Override
         public void endElement(String uri, String localName, String qName) throws SAXException {
-            switch (qName) {
-                case "finding":
-                    final CPFinding finding = new CPFinding(currentFinding, dataFlowElements, testcaseID, severity);
-                    dataFlowElements = null;
-                    currentFinding = null;
-                    findings.add(finding);
-                    break;
+            if (qName.equals("finding")) {
+                final CPFinding finding = new CPFinding(currentFinding, dataFlowElements, testcaseID, severity);
+                dataFlowElements = null;
+                currentFinding = null;
+                findings.add(finding);
 
-                case "intro": {
-                    final Map<FindingKey, String> testcase = testcases.get(testcaseID);
-                    if (testcase == null) {
-                        throw new IllegalStateException("Invalid XML file");
-                    }
-                    testcase.put(FindingKey.DETAIL, getCharacters());
+            } else if (qName.equals("intro")) {
+                final Map<FindingKey, String> testcase = testcases.get(testcaseID);
+                if (testcase == null) {
+                    throw new IllegalStateException("Invalid XML file");
                 }
-                    break;
+                testcase.put(FindingKey.DETAIL, getCharacters());
 
-                case "risk":
-                case "detail": {
-                    final Map<FindingKey, String> testcase = testcases.get(testcaseID);
-                    if (testcase == null) {
-                        throw new IllegalStateException("Invalid XML file");
-                    }
-                    testcase.put(FindingKey.DETAIL, getCharacters());
-                    testcases.get(testcaseID).put(FindingKey.DETAIL, currentTestcase.get(FindingKey.DETAIL) +
-                            "\n\n" + getCharacters());
+            } else if (qName.equals("risk") || qName.equals("detail")) {
+                final Map<FindingKey, String> testcase = testcases.get(testcaseID);
+                if (testcase == null) {
+                    throw new IllegalStateException("Invalid XML file");
                 }
-                    break;
+                testcase.put(FindingKey.DETAIL, getCharacters());
+                testcases.get(testcaseID).put(FindingKey.DETAIL, currentTestcase.get(FindingKey.DETAIL) +
+                        "\n\n" + getCharacters());
 
-
-                case "scenario":
-                    for (final CPFinding cpfinding : findings) {
-                        saxFindingList.add(cpfinding.getFinding(testcases));
-                    }
-                    break;
+            } else if (qName.equals("scenario")) {
+                for (final CPFinding cpfinding : findings) {
+                    saxFindingList.add(cpfinding.getFinding(testcases));
+                }
 
             }
         }
