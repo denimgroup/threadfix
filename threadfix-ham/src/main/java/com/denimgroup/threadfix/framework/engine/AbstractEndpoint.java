@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.framework.engine;
 
+import com.denimgroup.threadfix.data.entities.AuthenticationRequired;
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
 
 import javax.annotation.Nonnull;
@@ -31,6 +32,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.set;
 
 
@@ -111,11 +113,22 @@ public abstract class AbstractEndpoint implements Endpoint {
 	private String getToStringNoCommas(@Nonnull Object object) {
         return object.toString().replaceAll(",", "");
 	}
-	
-	@Nonnull
+
+    @Nonnull
+    @Override
+    public List<String> getRequiredPermissions() {
+        return list();
+    }
+
+    @Nonnull
     @Override
 	public String toString() {
 		return getCSVLine();
 	}
 
+    @Nonnull
+    @Override
+    public AuthenticationRequired getAuthenticationRequired() {
+        return AuthenticationRequired.UNKNOWN;
+    }
 }

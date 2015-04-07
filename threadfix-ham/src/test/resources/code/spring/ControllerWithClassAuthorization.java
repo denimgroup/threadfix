@@ -21,23 +21,22 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.merge;
+package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.Scan;
-import org.springframework.transaction.annotation.Transactional;
+@Controller
+@PreAuthorize("hasRole('CLASS_ROLE')")
+public class WafsController {
 
-public interface ScanMerger {
+    @RequestMapping("/noAuth")
+    public ModelAndView detail(@PathVariable("wafId") int wafId,
+                               HttpServletRequest request) {
 
-    /**
-     * This method handles HAM, merging with scans from the same channel, and merging with scans from other channels
-     * @param scan the recently completed Scan object from the ChannelImporter
-     * @param channel the ApplicationChannel which has context information for the scan
-     */
-    @Transactional
-	void merge(Scan scan, ApplicationChannel channel);
+    }
 
-    @Transactional
-    void merge(Scan scan, ApplicationChannel applicationChannel, boolean shouldSaveScan);
-
+    @PreAuthorize("hasRole('METHOD_ROLE')")
+    @RequestMapping("/withAuth")
+    public ModelAndView deleteWaf(@PathVariable("wafId") int wafId,
+                                  SessionStatus status, HttpServletRequest request, Model model) {
+        return null;
+    }
 }

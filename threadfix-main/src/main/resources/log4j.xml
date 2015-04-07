@@ -41,7 +41,15 @@
     <logger name="org.hibernate">
         <level value="WARN"/>
     </logger>
- 	
+
+    <!--<logger name="log4j.logger.org.hibernate.SQL">-->
+        <!--<level value="debug"/>-->
+    <!--</logger>-->
+
+    <!--<logger name="log4j.logger.org.hibernate.type">-->
+        <!--<level value="trace"/>-->
+    <!--</logger>-->
+
     <logger name="org.springframework">
         <level value="WARN"/>
     </logger>

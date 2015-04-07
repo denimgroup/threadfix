@@ -21,26 +21,13 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
-
-import com.denimgroup.threadfix.data.dao.GenericNamedObjectDao;
+package com.denimgroup.threadfix.data.entities;
 
 /**
- * Created by mac on 5/13/14.
+ * Created by mcollins on 4/2/15.
  */
-public abstract class AbstractNamedObjectService<T>
-        extends AbstractGenericObjectService<T>
-        implements GenericNamedObjectService<T> {
+public enum AuthenticationRequired {
 
-    abstract GenericNamedObjectDao<T> getDao();
+    ANONYMOUS, AUTHENTICATED, UNKNOWN
 
-    @Override
-    public T loadByName(String name) {
-        return getDao().retrieveByName(name);
-    }
-
-    @Override
-    public boolean nameExists(String name) {
-        return getDao().retrieveByName(name) != null;
-    }
 }

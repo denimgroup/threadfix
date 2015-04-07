@@ -23,14 +23,17 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.spring;
 
+import com.denimgroup.threadfix.data.entities.AuthenticationRequired;
 import com.denimgroup.threadfix.framework.engine.AbstractEndpoint;
 import com.denimgroup.threadfix.framework.impl.model.ModelField;
 import com.denimgroup.threadfix.framework.impl.model.ModelFieldSet;
+import com.denimgroup.threadfix.framework.util.RegexUtils;
 import com.denimgroup.threadfix.framework.util.java.EntityMappings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.set;
@@ -50,7 +53,8 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 	@Nullable
     private String cleanedFilePath = null, cleanedUrlPath = null;
 
-    private String fileRoot;
+    private AuthenticationRequired authenticationRequired = AuthenticationRequired.UNKNOWN;
+    private String fileRoot, authorizationString;
 
     @Nullable
     private ModelField modelObject;
@@ -196,7 +200,9 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
     @Nonnull
     @Override
     protected List<String> getLintLine() {
-        return list();
+        List<String> finalList = list("Permissions:");
+        finalList.addAll(getRequiredPermissions());
+        return finalList;
     }
 
     @Nonnull
@@ -243,4 +249,41 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 	public int getLineNumberForParameter(String parameter) {
 		return startLineNumber;
 	}
+
+
+
+    public String getAuthorizationString() {
+        return authorizationString;
+    }
+
+    public void setAuthorizationString(String authorizationString) {
+        this.authorizationString = authorizationString;
+    }
+
+    Pattern pattern = Pattern.compile("hasRole\\('([^']+)'\\)");
+    List<String> permissions = null;
+
+    @Override
+    @Nonnull
+    public List<String> getRequiredPermissions() {
+
+        if (permissions == null) {
+            permissions = list();
+            if (authorizationString != null) {
+                permissions.addAll(RegexUtils.getRegexResults(authorizationString, pattern));
+            }
+        }
+
+        return permissions;
+    }
+
+    @Nonnull
+    @Override
+    public AuthenticationRequired getAuthenticationRequired() {
+        return authenticationRequired;
+    }
+
+    public void setAuthenticationRequired(AuthenticationRequired authenticationRequired) {
+        this.authenticationRequired = authenticationRequired;
+    }
 }

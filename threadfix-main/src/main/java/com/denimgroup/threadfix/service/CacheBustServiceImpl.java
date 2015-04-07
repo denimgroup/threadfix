@@ -29,13 +29,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
@@ -58,7 +52,15 @@ public class CacheBustServiceImpl implements CacheBustService {
 
         List<String> notCachedJs = list();
 
+        if (reports == null || reports.isEmpty()) {
+            throw new IllegalStateException("Unable to load any reports. ThreadFix needs the default reports.");
+        }
+
         for (Report report : reports) {
+
+            if (report == null) {
+                throw new IllegalStateException("Got a null report.");
+            }
 
             String jsFilePath = report.getJsFilePath();
 

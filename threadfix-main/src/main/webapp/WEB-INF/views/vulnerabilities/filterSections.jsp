@@ -243,6 +243,51 @@
     </div>
 </div>
 
+<!-- Permissions -->
+<div class="accordion-group">
+    <div class="accordion-heading" ng-click="showPermissions = !showPermissions">
+        <span id="showPermissions" class="icon" ng-class="{ 'icon-minus': showPermissions, 'icon-plus': !showPermissions }"></span> Authentication / Authorization
+    </div>
+    <div class="accordion-inner" ng-show="showPermissions">
+        Authentication
+        <ul class="nav nav-pills">
+            <li id="showAuthenticated"
+                ng-class="{ active: parameters.showAuthenticated }">
+                <a ng-click="parameters.showAuthenticated = !parameters.showAuthenticated; refresh()">
+                    Authenticated
+                </a>
+            </li>
+            <li id="showUnauthenticated"
+                ng-class="{ active: parameters.showUnauthenticated }">
+                <a ng-click="parameters.showUnauthenticated = !parameters.showUnauthenticated; refresh()">
+                    Unauthenticated
+                </a>
+            </li>
+            <li id="showUnknown"
+                ng-class="{ active: parameters.showUnknown }">
+                <a ng-click="parameters.showUnknown = !parameters.showUnknown; refresh()">
+                    Unknown
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="accordion-inner" ng-show="showPermissions">
+        Authorization
+        <ul class="nav nav-pills">
+            <li ng-repeat="permission in treeApplication.endpointPermissions"
+                id="showPermissions{{permission.name}}"
+                ng-class="{ active: parameters.permissionsList && parameters.permissionsList.indexOf(permission.name) != -1 }">
+                <a ng-click="togglePermission(permission.name)"
+                   class="endpoint-permission-filter"
+                   tooltip-popup-delay="500"
+                   tooltip="{{ permission.name }}">
+                    {{permission.name}}
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
 <!-- Aging -->
 <div class="accordion-group" ng-hide="snapshotActive">
     <div class="accordion-heading" ng-click="showDateControls = !showDateControls">

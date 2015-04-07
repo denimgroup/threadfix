@@ -21,23 +21,28 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.merge;
+package com.denimgroup.threadfix.framework.impl.spring.auth;
 
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.Scan;
-import org.springframework.transaction.annotation.Transactional;
+import com.denimgroup.threadfix.XMLUtils;
+import com.denimgroup.threadfix.framework.ResourceManager;
+import org.junit.Test;
 
-public interface ScanMerger {
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
-    /**
-     * This method handles HAM, merging with scans from the same channel, and merging with scans from other channels
-     * @param scan the recently completed Scan object from the ChannelImporter
-     * @param channel the ApplicationChannel which has context information for the scan
-     */
-    @Transactional
-	void merge(Scan scan, ApplicationChannel channel);
+/**
+ * Created by mcollins on 3/31/15.
+ */
+public class SecurityXmlParserTests {
 
-    @Transactional
-    void merge(Scan scan, ApplicationChannel applicationChannel, boolean shouldSaveScan);
+    @Test
+    public void testBasicSecurityXML() throws FileNotFoundException {
+        SpringSecurityXmlParser handler = new SpringSecurityXmlParser();
+        XMLUtils.readSAXInput(handler, "", new FileInputStream(ResourceManager.getSpringFile("test-security.xml")));
+
+        assert handler.prePostEnabled : "prePostEnabled was false";
+
+        assert handler.urls.size() == 6 : "Got " + handler.urls.size() + " instead of 6 urls.";
+    }
 
 }

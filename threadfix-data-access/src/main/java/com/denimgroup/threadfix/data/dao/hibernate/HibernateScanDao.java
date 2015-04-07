@@ -291,6 +291,12 @@ public class HibernateScanDao
 		for (Finding finding : findings) {
 			sessionFactory.getCurrentSession().save(new DeletedFinding(finding));
 			sessionFactory.getCurrentSession().delete(finding);
+
+			for (EndpointPermission endpointPermission : finding.getEndpointPermissions()) {
+				endpointPermission.getFindingList().remove(finding);
+				sessionFactory.getCurrentSession().save(endpointPermission);
+			}
+
 		}
 		
 		findings = null;
