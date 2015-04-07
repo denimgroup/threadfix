@@ -73,7 +73,7 @@ public class InterceptUrl {
         boolean failed = false;
         for (int index = 0; index < patternSegments.length; index++) {
             if (!"*".equals(patternSegments[index]) && !"**".equals(patternSegments[index])) {
-                if (urlSegments.length >= index) {
+                if (index >= urlSegments.length) {
                     failed = true;
                     break; // not long enough
                 }
