@@ -21,23 +21,22 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.merge;
+package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.Scan;
-import org.springframework.transaction.annotation.Transactional;
+import com.denimgroup.threadfix.data.entities.EndpointPermission;
+import com.denimgroup.threadfix.data.entities.Finding;
 
-public interface ScanMerger {
+import javax.annotation.Nonnull;
+import java.util.List;
 
-    /**
-     * This method handles HAM, merging with scans from the same channel, and merging with scans from other channels
-     * @param scan the recently completed Scan object from the ChannelImporter
-     * @param channel the ApplicationChannel which has context information for the scan
-     */
-    @Transactional
-	void merge(Scan scan, ApplicationChannel channel);
+/**
+ * Created by mcollins on 3/31/15.
+ */
+public interface EndpointPermissionService extends
+        GenericNamedObjectService<EndpointPermission> {
 
-    @Transactional
-    void merge(Scan scan, ApplicationChannel applicationChannel, boolean shouldSaveScan);
+    void addToFinding(@Nonnull Finding finding,
+                      @Nonnull Integer applicationId,
+                      @Nonnull List<String> permissions);
 
 }

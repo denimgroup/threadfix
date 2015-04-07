@@ -48,6 +48,7 @@ public class Application extends AuditableEntity {
 	private List<AccessControlApplicationMap> accessControlApplicationMaps;
 	private List<ScanQueueTask> scanQueueTasks;
     private List<ScheduledScan> scheduledScans;
+	private List<EndpointPermission> endpointPermissions;
 
 	public static final int 
 		NAME_LENGTH = 60,
@@ -814,11 +815,21 @@ public class Application extends AuditableEntity {
         return map;
     }
 
-    @Column(nullable = true)
-    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
-    public Boolean getSkipApplicationMerge() {
-        return skipApplicationMerge != null && skipApplicationMerge;
-    }
+	@JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
+	@OneToMany(mappedBy = "application")
+	public List<EndpointPermission> getEndpointPermissions() {
+		return endpointPermissions;
+	}
+
+	public void setEndpointPermissions(List<EndpointPermission> endpointPermissions) {
+		this.endpointPermissions = endpointPermissions;
+	}
+
+	@Column(nullable = true)
+	@JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
+	public Boolean getSkipApplicationMerge() {
+		return skipApplicationMerge != null && skipApplicationMerge;
+	}
 
     public void setSkipApplicationMerge(Boolean isSkipApplicationMerge) {
         this.skipApplicationMerge = isSkipApplicationMerge;

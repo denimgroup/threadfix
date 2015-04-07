@@ -23,9 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.translator;
 
-import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.engine.ProjectConfig;
@@ -41,13 +39,14 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static com.denimgroup.threadfix.data.entities.AuthenticationRequired.UNKNOWN;
+
 class FullSourceFindingProcessor implements FindingProcessor {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(FullSourceFindingProcessor.class);
 
     @Nullable
     private final EndpointDatabase database;
-
     @Nullable
     private final ParameterParser parameterParser;
 
@@ -103,6 +102,11 @@ class FullSourceFindingProcessor implements FindingProcessor {
                 finding.setEntryPointLineNumber(endpoint.getLineNumberForParameter(parameter));
             } else {
                 finding.setEntryPointLineNumber(endpoint.getStartingLineNumber());
+            }
+
+            finding.setRawPermissions(endpoint.getRequiredPermissions());
+            if (finding.getAuthenticationRequired() == UNKNOWN) {
+                finding.setAuthenticationRequired(endpoint.getAuthenticationRequired());
             }
 
         } else {

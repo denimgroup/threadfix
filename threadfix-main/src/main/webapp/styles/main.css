@@ -1304,3 +1304,12 @@ input.wide {
 .pdf-data {
     display: none;
 }
+
+.endpoint-permission-filter {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	-ms-text-overflow: ellipsis;
+	width:172px;
+}

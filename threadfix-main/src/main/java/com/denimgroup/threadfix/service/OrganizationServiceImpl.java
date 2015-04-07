@@ -155,7 +155,7 @@ public class OrganizationServiceImpl extends AbstractNamedObjectService<Organiza
     }
 
     @Override
-    GenericNamedObjectDao<Organization> getDao() {
+    public GenericNamedObjectDao<Organization> getDao() {
         return organizationDao;
     }
 }

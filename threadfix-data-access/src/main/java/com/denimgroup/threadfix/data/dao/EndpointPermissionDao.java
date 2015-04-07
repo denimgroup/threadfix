@@ -21,23 +21,15 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.merge;
+package com.denimgroup.threadfix.data.dao;
 
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.Scan;
-import org.springframework.transaction.annotation.Transactional;
+import com.denimgroup.threadfix.data.entities.EndpointPermission;
 
-public interface ScanMerger {
+/**
+ * Created by mcollins on 3/31/15.
+ */
+public interface EndpointPermissionDao
+        extends GenericNamedObjectDao<EndpointPermission> {
 
-    /**
-     * This method handles HAM, merging with scans from the same channel, and merging with scans from other channels
-     * @param scan the recently completed Scan object from the ChannelImporter
-     * @param channel the ApplicationChannel which has context information for the scan
-     */
-    @Transactional
-	void merge(Scan scan, ApplicationChannel channel);
-
-    @Transactional
-    void merge(Scan scan, ApplicationChannel applicationChannel, boolean shouldSaveScan);
-
+    EndpointPermission retrieveByNameAndApplication(String stringPermission, Integer applicationId);
 }
