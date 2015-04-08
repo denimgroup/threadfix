@@ -148,9 +148,8 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 			int noOfScanNotFound = 0;
 			int noOfNoNewScans = 0;
 			for (Scan resultScan : resultScans) {
-				if (resultScan == null || resultScan.getFindings() == null
-						|| resultScan.getFindings().size() == 0) {
-					LOG.warn("Remote Scan import returned a null scan or a scan with no findings.");
+				if (resultScan == null || resultScan.getFindings() == null) {
+					LOG.warn("Remote Scan import returned a null scan.");
 					noOfScanNotFound++;
 					
 				} else if (remoteProviderApplication.getLastImportTime() != null &&
