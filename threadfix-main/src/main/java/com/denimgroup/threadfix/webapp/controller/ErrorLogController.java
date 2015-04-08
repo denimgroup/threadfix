@@ -30,7 +30,6 @@ import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -51,23 +50,31 @@ public class ErrorLogController {
 	ExceptionLogService exceptionLogService;
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public String manageUsers(ModelMap model, HttpServletRequest request) {
-		model.addAttribute("logId", ControllerUtils.getItem(request, "logId"));
+	public String manageUsers() {
 		return "config/logs";
 	}
 
     @RequestMapping(value="/page/{page}/{numberToShow}", method = RequestMethod.GET)
-    public @ResponseBody RestResponse<Map<String, Object>> getPage(@PathVariable int page, @PathVariable int numberToShow) {
+	@ResponseBody
+	public RestResponse<Map<String, Object>> getPage(
+			@PathVariable int page,
+			@PathVariable int numberToShow,
+			HttpServletRequest request) {
 
         Map<String, Object> map = new HashMap<>();
         map.put("logs", exceptionLogService.loadPage(page, numberToShow));
         map.put("totalLogs", exceptionLogService.countLogs());
+		Object logId = ControllerUtils.getItem(request, "logId");
+		if (logId != null) {
+			map.put("logIdToExpand", logId);
+		}
 
         return RestResponse.success(map);
     }
 	
 	@RequestMapping(value="/{logId}", method = RequestMethod.GET)
-	public String manageUsers(ModelMap model, HttpServletRequest request,
+	public String manageUsers(
+			HttpServletRequest request,
 			@PathVariable("logId") int logId) {
 		ControllerUtils.addItem(request, "logId", logId);
 		return "redirect:/configuration/logs";
