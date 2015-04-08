@@ -46,6 +46,10 @@ module.controller("ErrorLogsController", function($scope, $http, tfEncoder) {
                             log.freeMemory = bytesToMessage(log.freeMemory);
                             log.totalMemory = bytesToMessage(log.totalMemoryAvailable);
                             log.freeDiskSpace = bytesToMessage(log.totalSpaceAvailable);
+
+                            if (data.object.logIdToExpand && data.object.logIdToExpand === log.id) {
+                                log.expanded = true;
+                            }
                         });
 
                     } else {
