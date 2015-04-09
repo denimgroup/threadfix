@@ -271,7 +271,7 @@
             </li>
         </ul>
     </div>
-    <div class="accordion-inner" ng-show="showPermissions">
+    <div class="accordion-inner" ng-show="showPermissions && treeApplication.endpointPermissions && treeApplication.endpointPermissions.length">
         Authorization
         <ul class="nav nav-pills">
             <li ng-repeat="permission in treeApplication.endpointPermissions"
