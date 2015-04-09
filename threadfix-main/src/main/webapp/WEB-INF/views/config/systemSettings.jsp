@@ -2,6 +2,7 @@
 
 <head>
 	<title>System Settings</title>
+    <cbs:cachebustscript src="/scripts/check-ldap-controller.js"/>
 </head>
 
 <body id="config" ng-init="successMessage = '<c:out value="${ successMessage }"/>'; showErrors = '<c:out value="${ errors.size() > 0 }"/>'">
@@ -25,6 +26,10 @@
 	<form:form modelAttribute="defaultConfiguration" name="formEditUser" action="${ fn:escapeXml(emptyUrl) }">
         <security:authorize ifAnyGranted="ROLE_ENTERPRISE">
         <div class="panel panel-default">
+            <pre>AD Search Base = <span>{{ adBase }}</span></pre>
+            <pre>AD Account Name = <span>{{ adAccountName }}</span></pre>
+            <pre>AD Password = <span>{{ adPassword }}</span></pre>
+            <pre>AD URL = <span>{{ adURL }}</span></pre>
             <div id="defaultPermissionsPanel" class="panel-heading pointer" style="width:200px"
                  ng-click="editDefaultPermissions = !editDefaultPermissions">
                 <h3 class="panel-title">
@@ -59,7 +64,7 @@
             </div>
         </div>
 
-        <div class="panel panel-default">
+        <div class="panel panel-default" ng-controller="CheckLDAPController">
             <div id="ldapSettingsPanel" class="panel-heading pointer" style="width:150px"
                  ng-click="editLdapSettings = !editLdapSettings">
                 <h3 class="panel-title">
@@ -68,7 +73,15 @@
                     LDAP Settings
                 </h3>
             </div>
-            <div class="panel-body" ng-show="editLdapSettings">
+            <div ng-show="successMessage" class="alert alert-success">
+                <button class="close" ng-click="successMessage = undefined" type="button">&times;</button>
+                {{ successMessage }}
+            </div>
+            <div ng-show="error" class="alert alert-danger">
+                <button class="close" ng-click="error = undefined" type="button">&times;</button>
+                {{ error }}
+            </div>
+            <div ng-form="form" class="panel-body" ng-show="editLdapSettings">
                 <table>
                     <tr>
                         <td style="width:150px" class="no-color">Search Base</td>
@@ -79,6 +92,8 @@
                                         cssClass="focus wide"
                                         size="60"
                                         maxlength="255"
+                                        ng-model="object.activeDirectoryBase"
+                                        ng-required="true"
                                         value="${ defaultConfiguration.activeDirectoryBase }"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
@@ -94,6 +109,8 @@
                                         cssClass="wide"
                                         size="60"
                                         maxlength="255"
+                                        ng-model="object.activeDirectoryUsername"
+                                        ng-required="true"
                                         value="${ defaultConfiguration.activeDirectoryUsername }"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
@@ -111,6 +128,8 @@
                                         cssClass="wide"
                                         size="60"
                                         maxlength="255"
+                                        ng-model="object.activeDirectoryCredentials"
+                                        ng-required="true"
                                         value="${ defaultConfiguration.activeDirectoryCredentials }"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
@@ -127,6 +146,8 @@
                                         cssClass="wide"
                                         size="60"
                                         maxlength="255"
+                                        ng-model="object.activeDirectoryURL"
+                                        ng-required="true"
                                         value="${ defaultConfiguration.activeDirectoryURL }"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
@@ -134,6 +155,12 @@
                         </td>
                     </tr>
                 </table>
+                <a class="btn"
+                   id="checkLDAPSettings"
+                   ng-class="{ disabled : form.$invalid }"
+                   ng-click="ok(form.$valid)">
+                    Check Connection
+                </a>
             </div>
         </div>
         <div class="panel panel-default">

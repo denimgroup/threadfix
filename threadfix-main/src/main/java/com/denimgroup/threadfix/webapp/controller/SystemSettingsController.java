@@ -12,11 +12,13 @@ import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Report;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,6 +29,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
+import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 
 @Controller
 @RequestMapping("/configuration/settings")
@@ -34,6 +38,9 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 public class SystemSettingsController {
 	
 	protected final SanitizedLogger log = new SanitizedLogger(SystemSettingsController.class);
+
+	@Autowired(required = false)
+	private LdapService ldapService;
 
     @Autowired
 	private RoleService roleService = null;
@@ -97,6 +104,22 @@ public class SystemSettingsController {
 		addModelAttributes(model, request);
 		return "config/systemSettings";
 	}
+
+	@ResponseBody
+    @RequestMapping(value = "/checkLDAP", method = RequestMethod.POST)
+    public RestResponse<String> checkLDAP(@ModelAttribute DefaultConfiguration configModel,
+                            Model model,
+                            HttpServletRequest request) {
+		addModelAttributes(model, request);
+
+		ldapService.innerAuthenticate(configModel.getActiveDirectoryUsername(), configModel.getActiveDirectoryCredentials());
+
+		configModel.getActiveDirectoryCredentials();
+
+        List<String> errors = list();
+
+        return failure("It worked.");
+    }
 
 	@RequestMapping(method = RequestMethod.POST)
 	public String processForm(@ModelAttribute DefaultConfiguration configModel,
