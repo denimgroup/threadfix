@@ -18,7 +18,6 @@ import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -111,8 +110,6 @@ public class SystemSettingsController {
                             Model model,
                             HttpServletRequest request) {
 		addModelAttributes(model, request);
-
-		ldapService.innerAuthenticate(configModel.getActiveDirectoryUsername(), configModel.getActiveDirectoryCredentials());
 
 		configModel.getActiveDirectoryCredentials();
 
