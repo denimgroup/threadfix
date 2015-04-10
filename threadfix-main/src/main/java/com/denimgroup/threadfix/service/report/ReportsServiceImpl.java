@@ -407,6 +407,9 @@ public class ReportsServiceImpl implements ReportsService {
 				if (str.contains(",")) {
                     str = "\"" + str.replaceAll("\"", "\"\"") + "\"";
                 }
+                if (str.contains("\n")) {
+                    str = "\"" + str + "\"";
+                }
 
 				if (i<row.size()-1)
 					data.append(str).append(",");
