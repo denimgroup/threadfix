@@ -16,7 +16,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         $scope.initialized = false;
 
         $http.get(tfEncoder.encode('/configuration/users/map/page/' + $scope.page + '/' + $scope.numberToShow)).
-            success(function(data, status, headers, config) {
+            success(function(data) {
 
                 if (data.success) {
                     $scope.countUsers = data.object.countUsers;
@@ -125,6 +125,50 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     $scope.updatePage = function(page) {
         $scope.page = page;
         reloadList();
+    };
+
+    $scope.setCurrentUser = function(user) {
+        if (user.wasSelected) {
+            $scope.currentUser = user.formUser;
+        } else {
+            $scope.currentUser = angular.copy(user);
+            user.formUser = $scope.currentUser;
+            user.wasSelected = true;
+        }
+    };
+
+    $scope.submitUpdate = function(valid) {
+        if (!valid) {
+            return;
+        }
+
+        $http.post(tfEncoder.encode("/configuration/users/" + $scope.currentUser.id + "/edit"), $scope.currentUser).
+            success(function(data) {
+
+                if (data.success) {
+                    $scope.successMessage = "Edit succeeded.";
+
+                    $scope.users = data.object;
+
+                    var index = 0, targetIndex = -1;
+                    $scope.users.forEach(function(listUser) {
+                        if (listUser.id === $scope.currentUser.id) {
+                            targetIndex = index;
+                        }
+                        index = index + 1;
+                    });
+
+                    $scope.setCurrentUser($scope.users[targetIndex]);
+                } else {
+                    $scope.errorMessage = "Failure. Message was : " + data.message;
+                }
+
+                $scope.initialized = true;
+            }).
+            error(function(data, status, headers, config) {
+                $scope.initialized = true;
+                $scope.errorMessage = "Failed to retrieve user list. HTTP status was " + status;
+            });
     }
 
 });

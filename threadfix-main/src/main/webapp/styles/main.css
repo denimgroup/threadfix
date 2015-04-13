@@ -1313,3 +1313,15 @@ input.wide {
 	-ms-text-overflow: ellipsis;
 	width:172px;
 }
+
+.input-padding-left {
+	margin-left:10px;
+}
+
+.label-height {
+	margin-top:5px;
+}
+
+a.no-underline {
+	text-decoration:none;
+}

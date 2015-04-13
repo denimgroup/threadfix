@@ -23,8 +23,6 @@
 
     <div ng-hide="initialized" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
 
-    <a id="newUserModalLink" class="btn" ng-click="openNewModal()">Add User</a>
-
 	<div ng-show="countUsers > numberToShow" class="pagination" ng-init="page = 1">
 		<pagination id="userPagination"
 					class="no-margin"
@@ -36,7 +34,116 @@
 	</div>
 	<br>
 
-	<table class="table table-striped">
+	<div class="row">
+		<div class="span3">
+			<h4>User List <a id="newUserModalLink" class="btn" ng-click="openNewModal()">Create User</a></h4>
+
+			<ul class="nav nav-pills">
+				<li ng-repeat="user in users"
+					id="lastYearReport"
+					class="span2"
+					ng-class="{ active: currentUser.id === user.id }">
+					<a href="#" class="no-underline" ng-click="setCurrentUser(user)">{{ user.name }}</a>
+				</li>
+			</ul>
+
+		</div>
+		<div class="span8">
+			<h4>User Details</h4>
+
+			<div ng-hide="currentUser">No User Selected</div>
+
+			<div ng-repeat="user in users" ng-if="user.wasSelected" ng-show="currentUser.id === user.id" class="form-group" ng-form="form">
+				<table class="modal-form-table dataTable">
+					<tbody>
+					<tr>
+						<td><label for="name">User</label></td>
+						<td class="inputValue">
+							<input ng-model="currentUser.name" required type="text" name="name" id="name"/>
+							<span id="name.errors.required" class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
+							<span id="name.errors" class="errors" ng-show="user.name_error"> {{ user.name_error }}</span>
+						</td>
+					</tr>
+					<tr>
+						<td><label for="displayName">Display Name</label></td>
+						<td class="inputValue">
+							<input ng-model="currentUser.displayName" type="text" name="displayName" id="displayName"/>
+							<span id="displayName.errors" class="errors" ng-show="user.name_error"> {{ user.name_error }}</span>
+						</td>
+					</tr>
+					<tr ng-if="!currentUser.isLdapUser">
+						<td><label>Password</label></td>
+						<td class="inputValue">
+							<input password-validate="{{ currentUser.passwordConfirm }}" id="password" ng-model="currentUser.unencryptedPassword" type="password" id="passwordInput" name="unencryptedPassword" size="30"/>
+							<span id="password.error.length" class="errors" ng-show="lengthRemaining">{{ lengthRemaining }} characters needed</span>
+							<span id="password.error.match" class="errors" ng-show="form.unencryptedPassword.$dirty && form.unencryptedPassword.$error.matches">Passwords do not match.</span>
+							<span id="password.error" class="errors" ng-show="user.password_error"> {{ user.password_error }}</span>
+						</td>
+					</tr>
+					<tr ng-if="!currentUser.isLdapUser">
+						<td><label>Confirm Password</label></td>
+						<td class="inputValue">
+							<input ng-model="currentUser.passwordConfirm" id="confirm" type="password" style="margin-bottom:0" id="passwordConfirmInput" name="passwordConfirm" size="30" />
+						</td>
+					</tr>
+					<c:if test="${ ldap_plugin }">
+						<tr>
+							<td class="no-color"><label>LDAP user</label></td>
+							<td class="no-color" style="text-align: left;">
+								<input type="checkbox" class="ldapCheckbox"
+									   id="isLdapUserCheckbox"
+									   name="isLdapUser"
+									   ng-model="currentUser.isLdapUser"/>
+							</td>
+						</tr>
+					</c:if>
+					<security:authorize ifAllGranted="ROLE_ENTERPRISE">
+						<tr>
+							<td class="no-color"><label>Global Access</label></td>
+							<td class="no-color" style="text-align: left;">
+								<input type="checkbox"
+									   id="hasGlobalGroupAccessCheckbox"
+									   class="globalAccessCheckBox"
+									   name="hasGlobalGroupAccess"
+									   ng-model="currentUser.hasGlobalGroupAccess"/>
+							</td>
+						</tr>
+						<tr ng-show="currentUser.hasGlobalGroupAccess">
+							<td class="no-color"><label>Global Role</label></td>
+							<td class="no-color" style="text-align: left;">
+								<select id="roleSelect" name="globalRole.id" ng-model="user.globalRole.id">
+									<option value="0" label="Read Access">Read Access</option>
+									<option ng-selected="role.id === currentUser.globalRole.id" ng-repeat="role in roles" value="{{ role.id }}">
+										{{ role.displayName }}
+									</option>
+								</select>
+							</td>
+							<td class="no-color" style="border: 0 solid black; background-color: white; padding-left: 5px">
+								<errors id="hasGlobalGroupAccessErrors" path="hasGlobalGroupAccess" cssClass="errors" />
+							</td>
+						</tr>
+					</security:authorize>
+					</tbody>
+				</table>
+
+				<br>
+				<button id="loadingButton"
+						disabled="disabled"
+						class="btn btn-primary"
+						ng-show="loading">
+					<span class="spinner"></span>
+					Submitting
+				</button>
+				<button id="submit"
+						ng-class="{ disabled : !form.$dirty || form.$invalid }"
+						class="btn btn-primary"
+						ng-hide="loading"
+						ng-click="submitUpdate(form.$valid)">Save Changes</button>
+			</div>
+		</div>
+	</div>
+
+	<table class="table table-striped" ng-hide="true">
 		<thead>
 			<tr>
 				<th class="medium first">Name</th>

@@ -80,23 +80,23 @@ public class UsersController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(ModelMap model, HttpServletRequest request) {
-		
+
 		List<User> users = userService.loadAllUsers();
-		
+
 		String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-		
+
 		for (User user : users) {
 			user.setIsDeletable(userService.canDelete(user));
 			user.setIsThisUser(currentUser != null && currentUser.equals(user.getName()));
 		}
 		model.addAttribute("ldap_plugin", EnterpriseTest.isEnterprise());
 		model.addAttribute("users", users);
-		
+
 		model.addAttribute("user", new User());
 		model.addAttribute("accessControlMapModel", new AccessControlMapModel());
 		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
 		model.addAttribute("errorMessage", ControllerUtils.getErrorMessage(request));
-		
+
 		return "config/users/index";
 	}
 
