@@ -26,41 +26,32 @@ package com.denimgroup.threadfix.util;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.*;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.CollectionUtils.set;
+import static com.denimgroup.threadfix.util.RawPropertiesHolder.getProperty;
 
 /**
  * Created by mcollins on 4/10/15.
  */
-public class CustomPropertiesHolder {
+public class DefectTrackersPropertiesHolder {
 
-    private static final SanitizedLogger LOG = new SanitizedLogger(CustomPropertiesHolder.class);
+    private static final SanitizedLogger LOG = new SanitizedLogger(DefectTrackersPropertiesHolder.class);
 
     // prevent instantiation
-    private CustomPropertiesHolder() {}
+    private DefectTrackersPropertiesHolder() {}
 
-    static {
-        initializeConfiguredFields();
-    }
-
-    /**
-     * This is for Defect Trackers
-     * @param defectTrackerClass
-     * @param name
-     * @return
-     */
     public static boolean showField(Class<?> defectTrackerClass, String name) {
         if (INCLUDE_ALL_SET.contains(defectTrackerClass)) {
+            // include all means just return true
             return true;
         } else if (!CONFIGURED_FIELDS.containsKey(defectTrackerClass)) {
-            return true;
+            // this means no fields were configured, so we should return false.
+            return false;
         } else {
+            // otherwise, return whether or not it's in the configured list
             return CONFIGURED_FIELDS.get(defectTrackerClass).contains(name);
         }
     }
@@ -76,37 +67,24 @@ public class CustomPropertiesHolder {
             "bugzilla", BugzillaDefectTracker.class
     );
 
-    // TODO abstract this to another class
+    static {
+        initializeConfiguredFields();
+    }
+
     private static void initializeConfiguredFields() {
-        InputStream resourceAsStream =
-                CustomPropertiesHolder.class
-                        .getClassLoader()
-                        .getResourceAsStream("custom.properties");
+        for (Map.Entry<String, Class<? extends AbstractDefectTracker>> entry : recognizedClassMap.entrySet()) {
+            String name = entry.getValue().getName();
 
-        if (resourceAsStream == null) {
-            LOG.info("custom.properties not found, using default settings.");
-        } else {
-            Properties properties = new Properties();
-
-            try {
-                properties.load(resourceAsStream);
-            } catch (IOException e) {
-                LOG.error("Got IOException loading properties from defecttracker.properties");
+            if ("false".equals(getProperty(entry.getKey() + ".includeAll"))) {
+                LOG.debug("Not including all fields for " + name + ".");
+            } else {
+                LOG.debug("Including all fields for " + name + ".");
+                INCLUDE_ALL_SET.add(entry.getValue());
             }
 
-            for (Map.Entry<String, Class<? extends AbstractDefectTracker>> entry : recognizedClassMap.entrySet()) {
-                if ("false".equals(properties.getProperty(entry.getKey() + ".includeAll"))) {
-                    LOG.debug("Not including all fields for " + entry.getValue().getName() + ".");
-                } else {
-                    LOG.debug("Including all fields for " + entry.getValue().getName() + ".");
-                    INCLUDE_ALL_SET.add(entry.getValue());
-                }
-
-                String includedFields = properties.getProperty("versionOne.includedFields");
-
-                if (includedFields != null) {
-                    CONFIGURED_FIELDS.put(entry.getValue(), set(includedFields.split(",")));
-                }
+            String includedFields = getProperty(entry.getKey() + ".includedFields");
+            if (includedFields != null) {
+                CONFIGURED_FIELDS.put(entry.getValue(), set(includedFields.split(",")));
             }
         }
     }
