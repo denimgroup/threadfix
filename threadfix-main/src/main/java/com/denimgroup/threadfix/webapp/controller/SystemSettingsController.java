@@ -108,16 +108,7 @@ public class SystemSettingsController {
 	@RequestMapping(value="getLDAPSettings", method = RequestMethod.GET)
 	public RestResponse<DefaultConfiguration> getLDAPSettings(@ModelAttribute DefaultConfiguration configModel, HttpServletRequest request)
 	{
-		DefaultConfiguration configuration = defaultConfigService.loadCurrentConfiguration();
-
-		if (configuration.getProxyPassword() != null && !configuration.getProxyPassword().isEmpty()) {
-			configuration.setProxyPassword(DefaultConfiguration.MASKED_PASSWORD);
-		}
-		if (configuration.getActiveDirectoryCredentials() != null && !configuration.getActiveDirectoryCredentials().isEmpty()) {
-			configuration.setActiveDirectoryCredentials(DefaultConfiguration.MASKED_PASSWORD);
-		}
-
-		return success(configModel);
+		return success(defaultConfigurationWithMaskedPasswords());
 	}
 
 	@ResponseBody
@@ -181,6 +172,17 @@ public class SystemSettingsController {
 	}
 
 	private void addModelAttributes(Model model, HttpServletRequest request) {
+		DefaultConfiguration configuration = defaultConfigurationWithMaskedPasswords();
+
+		model.addAttribute("applicationCount", applicationService.getApplicationCount());
+		model.addAttribute("licenseCount", licenseService == null ? 0 : licenseService.getAppLimit());
+		model.addAttribute("licenseExpirationDate", licenseService == null ? 0 : licenseService.getAppLimit());
+
+		model.addAttribute("defaultConfiguration", configuration);
+		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
+	}
+
+	private DefaultConfiguration defaultConfigurationWithMaskedPasswords() {
 		DefaultConfiguration configuration = defaultConfigService.loadCurrentConfiguration();
 
 		if (configuration.getProxyPassword() != null && !configuration.getProxyPassword().isEmpty()) {
@@ -190,12 +192,7 @@ public class SystemSettingsController {
 			configuration.setActiveDirectoryCredentials(DefaultConfiguration.MASKED_PASSWORD);
 		}
 
-		model.addAttribute("applicationCount", applicationService.getApplicationCount());
-		model.addAttribute("licenseCount", licenseService == null ? 0 : licenseService.getAppLimit());
-		model.addAttribute("licenseExpirationDate", licenseService == null ? 0 : licenseService.getAppLimit());
-
-		model.addAttribute("defaultConfiguration", configuration);
-		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
+		return configuration;
 	}
 
 }

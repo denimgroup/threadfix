@@ -89,8 +89,7 @@
                                         size="60"
                                         maxlength="255"
                                         ng-model="object.activeDirectoryBase"
-                                        ng-required="true"
-                                        value="${ defaultConfiguration.activeDirectoryBase }"/>
+                                        ng-required="true"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
                             <form:errors path="activeDirectoryBase" cssClass="errors" />
@@ -109,8 +108,7 @@
                                         size="60"
                                         maxlength="255"
                                         ng-model="object.activeDirectoryUsername"
-                                        ng-required="true"
-                                        value="${ defaultConfiguration.activeDirectoryUsername }"/>
+                                        ng-required="true"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
                             <form:errors path="activeDirectoryUsername" cssClass="errors" />
@@ -128,8 +126,7 @@
                                         size="60"
                                         maxlength="255"
                                         ng-model="object.activeDirectoryCredentials"
-                                        ng-required="true"
-                                        value="${ defaultConfiguration.activeDirectoryCredentials }"/>
+                                        ng-required="true"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
                             <form:errors path="activeDirectoryCredentials" cssClass="errors" />
@@ -146,8 +143,7 @@
                                         size="60"
                                         maxlength="255"
                                         ng-model="object.activeDirectoryURL"
-                                        ng-required="true"
-                                        value="${ defaultConfiguration.activeDirectoryURL }"/>
+                                        ng-required="true"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
                             <form:errors path="activeDirectoryURL" cssClass="errors" />
