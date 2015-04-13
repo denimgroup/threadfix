@@ -40,15 +40,13 @@ import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
-import static com.denimgroup.threadfix.CollectionUtils.set;
+import static com.denimgroup.threadfix.util.DefectTrackersPropertiesHolder.showField;
 
 /**
  * Created by stran on 3/25/14.
@@ -248,8 +246,10 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
     private List<DynamicFormField> convertToGenericField(List<AttributeDefinition> attributeDefinitions) {
         List<DynamicFormField> dynamicFormFields = list();
         String type;
+        int ignoredFieldslength = 0;
+
         for (AttributeDefinition attr : attributeDefinitions) {
-            if (attr.isRequired() || showField(attr.getName())) {
+            if (attr.isRequired() || showField(VersionOneDefectTracker.class, attr.getName())) {
 
                 DynamicFormField genericField = new DynamicFormField();
                 genericField.setActive(true);
@@ -270,62 +270,16 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
                 dynamicFormFields.add(genericField);
             } else {
                 LOG.debug("Ignoring field " + attr.getName());
+                ignoredFieldslength++;
             }
+        }
+
+        if (ignoredFieldslength > 0) {
+            LOG.info("Ignored " + ignoredFieldslength + " VersionOne fields due to custom.properties configuration.");
+            LOG.info("To see which fields were ignored, enable debug level logging.");
         }
 
         return dynamicFormFields;
-    }
-
-    private boolean showField(String name) {
-        if (!initialized) {
-            initializeConfiguredFields();
-        }
-
-        if (includeAll) {
-            return true;
-        } else {
-            assert configuredFields != null :
-                    "Configured fields were null after initialization.";
-            return configuredFields.contains(name);
-        }
-    }
-
-
-    boolean includeAll = false, initialized = false;
-    Set<String> configuredFields = set();
-
-    // TODO abstract this to another class
-    private void initializeConfiguredFields() {
-        InputStream resourceAsStream =
-                VersionOneDefectTracker.class
-                        .getClassLoader()
-                        .getResourceAsStream("defecttracker.properties");
-
-        if (resourceAsStream == null) {
-            initialized = true;
-            // don't need to do anything else
-        } else {
-            Properties properties = new Properties();
-
-            try {
-                properties.load(resourceAsStream);
-            } catch (IOException e) {
-                log.error("Got IOException loading properties from defecttracker.properties");
-            }
-
-            if ("false".equals(properties.getProperty("versionOne.includeAll"))) {
-                log.debug("Setting includeAll to false.");
-                includeAll = false;
-            } else {
-                log.debug("Setting includeAll to true.");
-            }
-
-            String includedFields = properties.getProperty("versionOne.includedFields");
-
-            if (includedFields != null) {
-                configuredFields.addAll(list(includedFields.split(",")));
-            }
-        }
     }
 
     private Map<String, String> getFieldOptions(AttributeDefinition attr) {
