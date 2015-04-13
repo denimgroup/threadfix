@@ -27,7 +27,7 @@ package com.denimgroup.threadfix.exception;
  * This is an abstract class so that we can intercept it using RestExceptionControllerAdvice
  * Created by mac on 7/3/14.
  */
-public abstract class RestException extends RuntimeException {
+public class RestException extends RuntimeException {
 
     final String responseString;
 
