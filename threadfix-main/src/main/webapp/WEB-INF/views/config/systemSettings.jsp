@@ -2,6 +2,7 @@
 
 <head>
 	<title>System Settings</title>
+    <cbs:cachebustscript src="/scripts/check-ldap-controller.js"/>
 </head>
 
 <body id="config" ng-init="successMessage = '<c:out value="${ successMessage }"/>'; showErrors = '<c:out value="${ errors.size() > 0 }"/>'">
@@ -59,7 +60,7 @@
             </div>
         </div>
 
-        <div class="panel panel-default">
+        <div class="panel panel-default" ng-controller="CheckLDAPController">
             <div id="ldapSettingsPanel" class="panel-heading pointer" style="width:150px"
                  ng-click="editLdapSettings = !editLdapSettings">
                 <h3 class="panel-title">
@@ -68,7 +69,15 @@
                     LDAP Settings
                 </h3>
             </div>
-            <div class="panel-body" ng-show="editLdapSettings">
+            <div ng-show="LDAPSuccessMessage" class="alert alert-success">
+                <button class="close" ng-click="LDAPSuccessMessage = undefined" type="button">&times;</button>
+                {{ LDAPSuccessMessage }}
+            </div>
+            <div ng-show="error" class="alert alert-danger">
+                <button class="close" ng-click="error = undefined" type="button">&times;</button>
+                {{ error }}
+            </div>
+            <div ng-form="form" class="panel-body" ng-show="editLdapSettings">
                 <table>
                     <tr>
                         <td style="width:150px" class="no-color">Search Base</td>
@@ -79,10 +88,14 @@
                                         cssClass="focus wide"
                                         size="60"
                                         maxlength="255"
-                                        value="${ defaultConfiguration.activeDirectoryBase }"/>
+                                        ng-model="object.activeDirectoryBase"
+                                        ng-required="true"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
                             <form:errors path="activeDirectoryBase" cssClass="errors" />
+                        </td>
+                        <td class="no-color" style="padding-left: 5px">
+                            <a class="btn" style="margin-bottom: 10px; " popover="If you only need to search a particular organizational unit (OU) simply preface the search base with the OU. For example, if you the only unit that requires access to ThreadFix is named 'tfusers', then preface the search base with OU=tfusers.">?</a>
                         </td>
                     </tr>
                     <tr>
@@ -94,7 +107,8 @@
                                         cssClass="wide"
                                         size="60"
                                         maxlength="255"
-                                        value="${ defaultConfiguration.activeDirectoryUsername }"/>
+                                        ng-model="object.activeDirectoryUsername"
+                                        ng-required="true"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
                             <form:errors path="activeDirectoryUsername" cssClass="errors" />
@@ -111,7 +125,8 @@
                                         cssClass="wide"
                                         size="60"
                                         maxlength="255"
-                                        value="${ defaultConfiguration.activeDirectoryCredentials }"/>
+                                        ng-model="object.activeDirectoryCredentials"
+                                        ng-required="true"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
                             <form:errors path="activeDirectoryCredentials" cssClass="errors" />
@@ -127,13 +142,20 @@
                                         cssClass="wide"
                                         size="60"
                                         maxlength="255"
-                                        value="${ defaultConfiguration.activeDirectoryURL }"/>
+                                        ng-model="object.activeDirectoryURL"
+                                        ng-required="true"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
                             <form:errors path="activeDirectoryURL" cssClass="errors" />
                         </td>
                     </tr>
                 </table>
+                <a class="btn"
+                   id="checkLDAPSettings"
+                   ng-class="{ disabled : form.$invalid }"
+                   ng-click="ok(form.$valid)">
+                    Check Connection
+                </a>
             </div>
         </div>
         <div class="panel panel-default">
