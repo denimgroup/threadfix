@@ -96,7 +96,7 @@
                             <form:errors path="activeDirectoryBase" cssClass="errors" />
                         </td>
                         <td class="no-color" style="padding-left: 5px">
-                            <a class="btn" style="margin-bottom: 10px; " popover="Searching an entire tree might not be necessary and might also cause timeout issues. If you only need to search a particular organizational unit (OU) simply preface the search base with the OU. For example, if you the only unit that requires access to ThreadFix is named 'tfusers', then preface the search base with OU=tfusers. The new search base would then be OU=tfusers, DC=www, DC=google, DC=com.">?</a>
+                            <a class="btn" style="margin-bottom: 10px; " popover="If you only need to search a particular organizational unit (OU) simply preface the search base with the OU. For example, if you the only unit that requires access to ThreadFix is named 'tfusers', then preface the search base with OU=tfusers.">?</a>
                         </td>
                     </tr>
                     <tr>
