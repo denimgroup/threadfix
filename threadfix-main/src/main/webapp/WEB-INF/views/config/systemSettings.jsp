@@ -26,10 +26,6 @@
 	<form:form modelAttribute="defaultConfiguration" name="formEditUser" action="${ fn:escapeXml(emptyUrl) }">
         <security:authorize ifAnyGranted="ROLE_ENTERPRISE">
         <div class="panel panel-default">
-            <pre>AD Search Base = <span>{{ adBase }}</span></pre>
-            <pre>AD Account Name = <span>{{ adAccountName }}</span></pre>
-            <pre>AD Password = <span>{{ adPassword }}</span></pre>
-            <pre>AD URL = <span>{{ adURL }}</span></pre>
             <div id="defaultPermissionsPanel" class="panel-heading pointer" style="width:200px"
                  ng-click="editDefaultPermissions = !editDefaultPermissions">
                 <h3 class="panel-title">
@@ -73,9 +69,9 @@
                     LDAP Settings
                 </h3>
             </div>
-            <div ng-show="successMessage" class="alert alert-success">
-                <button class="close" ng-click="successMessage = undefined" type="button">&times;</button>
-                {{ successMessage }}
+            <div ng-show="LDAPSuccessMessage" class="alert alert-success">
+                <button class="close" ng-click="LDAPSuccessMessage = undefined" type="button">&times;</button>
+                {{ LDAPSuccessMessage }}
             </div>
             <div ng-show="error" class="alert alert-danger">
                 <button class="close" ng-click="error = undefined" type="button">&times;</button>
@@ -98,6 +94,9 @@
                         </td>
                         <td class="no-color" style="padding-left: 5px">
                             <form:errors path="activeDirectoryBase" cssClass="errors" />
+                        </td>
+                        <td class="no-color" style="padding-left: 5px">
+                            <a class="btn" style="margin-bottom: 10px; " popover="Searching an entire tree might not be necessary and might also cause timeout issues. If you only need to search a particular organizational unit (OU) simply preface the search base with the OU. For example, if you the only unit that requires access to ThreadFix is named 'tfusers', then preface the search base with OU=tfusers. The new search base would then be OU=tfusers, DC=www, DC=google, DC=com.">?</a>
                         </td>
                     </tr>
                     <tr>

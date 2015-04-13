@@ -105,17 +105,35 @@ public class SystemSettingsController {
 	}
 
 	@ResponseBody
+	@RequestMapping(value="getLDAPSettings", method = RequestMethod.GET)
+	public RestResponse<DefaultConfiguration> getLDAPSettings(@ModelAttribute DefaultConfiguration configModel, HttpServletRequest request)
+	{
+		DefaultConfiguration configuration = defaultConfigService.loadCurrentConfiguration();
+
+		if (configuration.getProxyPassword() != null && !configuration.getProxyPassword().isEmpty()) {
+			configuration.setProxyPassword(DefaultConfiguration.MASKED_PASSWORD);
+		}
+		if (configuration.getActiveDirectoryCredentials() != null && !configuration.getActiveDirectoryCredentials().isEmpty()) {
+			configuration.setActiveDirectoryCredentials(DefaultConfiguration.MASKED_PASSWORD);
+		}
+
+		return success(configModel);
+	}
+
+	@ResponseBody
     @RequestMapping(value = "/checkLDAP", method = RequestMethod.POST)
     public RestResponse<String> checkLDAP(@ModelAttribute DefaultConfiguration configModel,
                             Model model,
                             HttpServletRequest request) {
 		addModelAttributes(model, request);
 
-		configModel.getActiveDirectoryCredentials();
-
-        List<String> errors = list();
-
-        return failure("It worked.");
+		long startTime = System.currentTimeMillis();
+        if (ldapService.innerAuthenticate(configModel)) {
+			long endTime = System.currentTimeMillis();
+			return success("LDAP settings are valid. LDAP validation took: " + (endTime - startTime) + "ms.");
+		} else {
+			return failure("Unable to verify LDAP settings.");
+		}
     }
 
 	@RequestMapping(method = RequestMethod.POST)
