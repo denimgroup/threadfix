@@ -308,18 +308,20 @@ public class RemoteProvidersIT extends BaseDataTest {
         assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
         driver.switchTo().alert().accept();
 
-        assertFalse("The critical vulnerability count was not updated.",
-                applicationDetailPage.isVulnerabilityCountNonZero("Critical"));
-        assertFalse("The high vulnerability count was not updated.",
-                applicationDetailPage.isVulnerabilityCountNonZero("High"));
-        assertFalse("The medium vulnerability count was not updated.",
-                applicationDetailPage.isVulnerabilityCountNonZero("Medium"));
-        assertFalse("The low vulnerability count was not updated.",
-                applicationDetailPage.isVulnerabilityCountNonZero("Low"));
-        assertFalse("The info vulnerability count was not updated.",
-                applicationDetailPage.isVulnerabilityCountNonZero("Info"));
+        ApplicationDetailPage applicationDetailPage1 = new ApplicationDetailPage(driver);
 
-        TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
+        assertFalse("The critical vulnerability count was not updated.",
+                applicationDetailPage1.isVulnerabilityCountNonZero("Critical"));
+        assertFalse("The high vulnerability count was not updated.",
+                applicationDetailPage1.isVulnerabilityCountNonZero("High"));
+        assertFalse("The medium vulnerability count was not updated.",
+                applicationDetailPage1.isVulnerabilityCountNonZero("Medium"));
+        assertFalse("The low vulnerability count was not updated.",
+                applicationDetailPage1.isVulnerabilityCountNonZero("Low"));
+        assertFalse("The info vulnerability count was not updated.",
+                applicationDetailPage1.isVulnerabilityCountNonZero("Info"));
+
+        TeamIndexPage teamIndexPage = applicationDetailPage1.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
 
         assertFalse("The vulnerability count was not updated.",
