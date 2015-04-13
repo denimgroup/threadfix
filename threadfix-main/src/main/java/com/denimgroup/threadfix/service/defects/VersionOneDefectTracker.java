@@ -46,7 +46,7 @@ import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
-import static com.denimgroup.threadfix.util.CustomPropertiesHolder.showField;
+import static com.denimgroup.threadfix.util.DefectTrackersPropertiesHolder.showField;
 
 /**
  * Created by stran on 3/25/14.
@@ -246,6 +246,8 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
     private List<DynamicFormField> convertToGenericField(List<AttributeDefinition> attributeDefinitions) {
         List<DynamicFormField> dynamicFormFields = list();
         String type;
+        int ignoredFieldslength = 0;
+
         for (AttributeDefinition attr : attributeDefinitions) {
             if (attr.isRequired() || showField(VersionOneDefectTracker.class, attr.getName())) {
 
@@ -268,7 +270,13 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
                 dynamicFormFields.add(genericField);
             } else {
                 LOG.debug("Ignoring field " + attr.getName());
+                ignoredFieldslength++;
             }
+        }
+
+        if (ignoredFieldslength > 0) {
+            LOG.info("Ignored " + ignoredFieldslength + " VersionOne fields due to custom.properties configuration.");
+            LOG.info("To see which fields were ignored, enable debug level logging.");
         }
 
         return dynamicFormFields;
