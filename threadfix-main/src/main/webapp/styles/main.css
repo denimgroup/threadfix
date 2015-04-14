@@ -1347,3 +1347,7 @@ a.no-underline {
 h4 a {
 	font-weight: normal;
 }
+
+.center, .table td.center {
+	text-align: center;
+}

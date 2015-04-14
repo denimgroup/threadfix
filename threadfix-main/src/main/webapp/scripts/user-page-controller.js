@@ -108,6 +108,18 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
 
                 if (data.success) {
                     user.maps = data.object.maps;
+
+                    user.noTeamRoles = true;
+                    user.noApplicationRoles = true;
+
+                    user.maps.forEach(function(map) {
+                        if (map.allApps) {
+                            user.noTeamRoles = false;
+                        } else {
+                            user.noApplicationRoles = false;
+                        }
+                    });
+
                 } else {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
                 }

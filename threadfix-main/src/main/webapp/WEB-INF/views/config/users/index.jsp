@@ -152,6 +152,11 @@
 								<th>Team</th>
 								<th>Role</th>
 							</thead>
+							<tbody ng-if="currentUser.noTeamRoles">
+								<tr>
+									<td colspan="2" class="center">No Entries</td>
+								</tr>
+							</tbody>
 							<tbody>
 								<tr ng-repeat="map in currentUser.maps | filter:{ allApps : true }" class="bodyRow">
 									<td id="teamName{{ map.organization.name }}all{{ map.role.displayName }}">{{ map.organization.name }}</td>
@@ -183,6 +188,13 @@
 								<th>Application</th>
 								<th>Role</th>
 							</thead>
+
+							<tbody ng-if="currentUser.noApplicationRoles">
+								<tr>
+									<td colspan="3" class="center">No Entries</td>
+								</tr>
+							</tbody>
+
 							<!-- This is a lot of watchers -->
 							<tbody ng-repeat="map in currentUser.maps | filter:{ allApps : false }" style="border-top: 0">
 								<tr ng-repeat="appMap in map.accessControlApplicationMaps" ng-show="!map.allApps && appMap.active" class="bodyRow">
