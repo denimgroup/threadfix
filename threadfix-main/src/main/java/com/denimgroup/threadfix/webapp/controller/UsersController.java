@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.UserService;
@@ -50,13 +49,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.denimgroup.threadfix.remote.response.RestResponse.success;
+
 /**
  * @author dshannon
  * @author mcollins
  */
 @Controller
-@SessionAttributes("user")
-@RequestMapping("/configuration/users")
+@SessionAttributes({"user", "role", "editRole"})
 @PreAuthorize("hasRole('ROLE_CAN_MANAGE_USERS')")
 public class UsersController {
 
@@ -81,9 +81,19 @@ public class UsersController {
 		return roleService.loadAll();
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
+	@PreAuthorize("hasRole('ROLE_ENTERPRISE')")
+	@RequestMapping(value="/configuration/roles")
+	public String rolesIndex(ModelMap model, HttpServletRequest request) {
+		return indexInner(model, request, "roles");
+	}
+
+	@RequestMapping(value="/configuration/users", method = RequestMethod.GET)
 	public String index(ModelMap model, HttpServletRequest request) {
 
+		return indexInner(model, request, "users");
+	}
+
+	private String indexInner(ModelMap model, HttpServletRequest request, String defaultTab) {
 		List<User> users = userService.loadAllUsers();
 
 		String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -95,17 +105,25 @@ public class UsersController {
 		model.addAttribute("ldap_plugin", EnterpriseTest.isEnterprise());
 		model.addAttribute("users", users);
 
+		model.addAttribute("startingTab", defaultTab);
 		model.addAttribute("user", new User());
-		model.addAttribute("accessControlMapModel", new AccessControlMapModel());
 		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
 		model.addAttribute("errorMessage", ControllerUtils.getErrorMessage(request));
 
-		return "config/users/index";
+		if (EnterpriseTest.isEnterprise()) {
+			model.addAttribute("accessControlMapModel", new AccessControlMapModel());
+			model.addAttribute("role", new Role());
+			model.addAttribute("editRole", new Role());
+			return "config/users/enterprise/index";
+		} else {
+			return "config/users/community/index";
+		}
 	}
 
-    @RequestMapping(value = "/map/page/{page}/{numberToShow}", method = RequestMethod.GET)
+	@RequestMapping(value = "/configuration/users/map/page/{page}/{numberToShow}", method = RequestMethod.GET)
 	@JsonView(AllViews.TableRow.class)
-    public @ResponseBody Object map(@PathVariable int page, @PathVariable int numberToShow) {
+	@ResponseBody
+	public Object map(@PathVariable int page, @PathVariable int numberToShow) {
         List<User> users = userService.retrievePage(page, numberToShow);
 
         String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -122,10 +140,10 @@ public class UsersController {
 		returnMap.put("countUsers", userService.countUsers());
 		returnMap.put("teams", organizationService.loadAllActive());
 
-		return RestResponse.success(returnMap);
+		return success(returnMap);
     }
 
-	@RequestMapping("/{userId}/delete")
+	@RequestMapping("/configuration/users/{userId}/delete")
 	public String deleteUser(@PathVariable("userId") int userId, 
 			HttpServletRequest request, SessionStatus status) {
 		User user = userService.loadUser(userId);

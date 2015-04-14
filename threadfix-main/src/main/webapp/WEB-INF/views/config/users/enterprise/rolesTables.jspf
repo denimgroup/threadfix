@@ -1,0 +1,94 @@
+<%@ include file="/common/taglibs.jsp"%>
+
+<security:authorize ifAllGranted="ROLE_ENTERPRISE">
+    <div id="config" ng-show="currentUser">
+
+        <%-- Requires Enterprise --%>
+        <%@ include file="/WEB-INF/views/config/users/permissionForm.jsp" %>
+
+        <h4>
+            Team Roles
+            <a id="addPermissionButton" class="btn" ng-click="openAddTeamPermissionsModal()" ng-disabled="noTeams">
+                Add Team Role
+            </a>
+        </h4>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Team</th>
+                    <th>Role</th>
+                </tr>
+            </thead>
+            <tbody ng-if="currentUser.noTeamRoles">
+                <tr>
+                    <td colspan="2" class="center">No Entries</td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr ng-repeat="map in currentUser.maps | filter:{ allApps : true }" class="bodyRow">
+                    <td id="teamName{{ map.organization.name }}all{{ map.role.displayName }}">{{ map.organization.name }}</td>
+                    <td id="roleName{{ map.organization.name }}all{{ map.role.displayName }}">
+                        {{ map.role.displayName }}
+                    </td>
+                    <td style="text-align:center">
+                        <a id="editAppMap{{ map.organization.name }}all{{ map.role.displayName }}" class="btn" ng-click="edit(map)">
+                            Edit
+                        </a>
+                    </td>
+                    <td style="text-align:center">
+                        <a class="btn" id="deleteAppMap{{ map.organization.name }}all{{ map.role.displayName }}" ng-click="deleteTeam(map)">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4>
+            Application Roles
+            <a id="addApplicationRoleButton" class="btn" ng-click="openAddApplicationPermissionsModal()">Add Application Role</a>
+        </h4>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Team</th>
+                    <th>Application</th>
+                    <th>Role</th>
+                </tr>
+            </thead>
+
+            <tbody ng-if="currentUser.noApplicationRoles">
+                <tr>
+                    <td colspan="3" class="center">No Entries</td>
+                </tr>
+            </tbody>
+
+            <!-- This is a lot of watchers -->
+            <tbody ng-repeat="map in currentUser.maps | filter:{ allApps : false }" style="border-top: 0">
+                <tr ng-repeat="appMap in map.accessControlApplicationMaps" ng-show="!map.allApps && appMap.active" class="bodyRow">
+                    <td id="teamName{{ map.organization.name }}{{ appMap.application.name }}{{ appMap.role.displayName }}">
+                        {{ map.organization.name }}
+                    </td>
+                    <td id="applicationName{{ map.organization.name }}{{ appMap.application.name }}{{ appMap.role.displayName }}">
+                        {{ appMap.application.name }}
+                    </td>
+                    <td id="roleName{{ map.organization.name }}{{ appMap.application.name }}{{ appMap.role.displayName }}">
+                        {{ appMap.role.displayName }}
+                    </td>
+                    <td style="text-align:center">
+                        <a id="editAppMap{{ map.organization.name }}{{ appMap.application.name }}{{ appMap.role.displayName }}" class="btn" ng-click="edit(map)">
+                            Edit
+                        </a>
+                    </td>
+                    <td style="text-align:center">
+                        <a class="btn" id="deleteAppMap{{ map.organization.name }}{{ appMap.application.name }}{{ appMap.role.displayName }}" ng-click="deleteApp(appMap)">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</security:authorize>
