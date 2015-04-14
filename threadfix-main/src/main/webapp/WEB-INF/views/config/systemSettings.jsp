@@ -88,8 +88,7 @@
                                         cssClass="focus wide"
                                         size="60"
                                         maxlength="255"
-                                        ng-model="object.activeDirectoryBase"
-                                        ng-required="true"/>
+                                        ng-model="object.activeDirectoryBase"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
                             <form:errors path="activeDirectoryBase" cssClass="errors" />
@@ -107,8 +106,7 @@
                                         cssClass="wide"
                                         size="60"
                                         maxlength="255"
-                                        ng-model="object.activeDirectoryUsername"
-                                        ng-required="true"/>
+                                        ng-model="object.activeDirectoryUsername"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
                             <form:errors path="activeDirectoryUsername" cssClass="errors" />
@@ -125,8 +123,7 @@
                                         cssClass="wide"
                                         size="60"
                                         maxlength="255"
-                                        ng-model="object.activeDirectoryCredentials"
-                                        ng-required="true"/>
+                                        ng-model="object.activeDirectoryCredentials"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
                             <form:errors path="activeDirectoryCredentials" cssClass="errors" />
@@ -142,8 +139,7 @@
                                         cssClass="wide"
                                         size="60"
                                         maxlength="255"
-                                        ng-model="object.activeDirectoryURL"
-                                        ng-required="true"/>
+                                        ng-model="object.activeDirectoryURL"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
                             <form:errors path="activeDirectoryURL" cssClass="errors" />
@@ -152,7 +148,7 @@
                 </table>
                 <a class="btn"
                    id="checkLDAPSettings"
-                   ng-class="{ disabled : form.$invalid }"
+                   ng-class="{ disabled : shouldDisable() }"
                    ng-click="ok(form.$valid)">
                     Check Connection
                 </a>
