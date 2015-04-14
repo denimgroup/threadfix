@@ -230,7 +230,7 @@ public class DefaultConfiguration extends BaseEntity {
 	public String getActiveDirectoryUsername() {
 		return activeDirectoryUsername == null ? "" : activeDirectoryUsername;
 	}
-	
+
 	@Column(length=256)
 	public void setActiveDirectoryUsername(String activeDirectoryUsername) {
 		this.activeDirectoryUsername = activeDirectoryUsername;
