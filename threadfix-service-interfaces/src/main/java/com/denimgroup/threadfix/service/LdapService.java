@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.sun.deploy.config.DefaultConfig;
 import org.springframework.security.authentication.AuthenticationProvider;
 
 public interface LdapService extends AuthenticationProvider {
