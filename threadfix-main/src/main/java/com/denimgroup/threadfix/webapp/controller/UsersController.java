@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.service.beans.AccessControlMapModel;
@@ -63,6 +64,8 @@ public class UsersController {
 	private UserService userService = null;
 	@Autowired
 	private RoleService roleService = null;
+	@Autowired
+	private OrganizationService organizationService = null;
 
 	private final SanitizedLogger log = new SanitizedLogger(UsersController.class);
 
@@ -117,6 +120,7 @@ public class UsersController {
         returnMap.put("users", users);
         returnMap.put("roles", roleService.loadAll());
 		returnMap.put("countUsers", userService.countUsers());
+		returnMap.put("teams", organizationService.loadAllActive());
 
 		return RestResponse.success(returnMap);
     }

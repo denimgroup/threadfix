@@ -4,6 +4,8 @@
 	<title>Manage Users</title>
 	<cbs:cachebustscript src="/scripts/user-modal-controller.js"/>
 	<cbs:cachebustscript src="/scripts/user-page-controller.js"/>
+	<cbs:cachebustscript src="/scripts/user-permissions-config-controller.js"/>
+	<cbs:cachebustscript src="/scripts/permission-modal-controller.js"/>
 </head>
 
 <body id="config" ng-controller="UserPageController">
@@ -49,96 +51,165 @@
 
 		</div>
 		<div class="span8">
-			<h4>User Details</h4>
+			<h4>Basic Details</h4>
 
 			<div ng-hide="currentUser">No User Selected</div>
 
-			<div ng-repeat="user in users" ng-if="user.wasSelected" ng-show="currentUser.id === user.id" class="form-group" ng-form="form">
-				<table class="modal-form-table dataTable">
-					<tbody>
-					<tr>
-						<td><label for="name">User</label></td>
-						<td class="inputValue">
-							<input ng-model="currentUser.name" required type="text" name="name" id="name"/>
-							<span id="name.errors.required" class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
-							<span id="name.errors" class="errors" ng-show="user.name_error"> {{ user.name_error }}</span>
-						</td>
-					</tr>
-					<tr>
-						<td><label for="displayName">Display Name</label></td>
-						<td class="inputValue">
-							<input ng-model="currentUser.displayName" type="text" name="displayName" id="displayName"/>
-							<span id="displayName.errors" class="errors" ng-show="user.name_error"> {{ user.name_error }}</span>
-						</td>
-					</tr>
-					<tr ng-if="!currentUser.isLdapUser">
-						<td><label>Password</label></td>
-						<td class="inputValue">
-							<input password-validate="{{ currentUser.passwordConfirm }}" id="password" ng-model="currentUser.unencryptedPassword" type="password" id="passwordInput" name="unencryptedPassword" size="30"/>
-							<span id="password.error.length" class="errors" ng-show="lengthRemaining">{{ lengthRemaining }} characters needed</span>
-							<span id="password.error.match" class="errors" ng-show="form.unencryptedPassword.$dirty && form.unencryptedPassword.$error.matches">Passwords do not match.</span>
-							<span id="password.error" class="errors" ng-show="user.password_error"> {{ user.password_error }}</span>
-						</td>
-					</tr>
-					<tr ng-if="!currentUser.isLdapUser">
-						<td><label>Confirm Password</label></td>
-						<td class="inputValue">
-							<input ng-model="currentUser.passwordConfirm" id="confirm" type="password" style="margin-bottom:0" id="passwordConfirmInput" name="passwordConfirm" size="30" />
-						</td>
-					</tr>
-					<c:if test="${ ldap_plugin }">
-						<tr>
-							<td class="no-color"><label>LDAP user</label></td>
-							<td class="no-color" style="text-align: left;">
-								<input type="checkbox" class="ldapCheckbox"
-									   id="isLdapUserCheckbox"
-									   name="isLdapUser"
-									   ng-model="currentUser.isLdapUser"/>
-							</td>
-						</tr>
-					</c:if>
-					<security:authorize ifAllGranted="ROLE_ENTERPRISE">
-						<tr>
-							<td class="no-color"><label>Global Access</label></td>
-							<td class="no-color" style="text-align: left;">
-								<input type="checkbox"
-									   id="hasGlobalGroupAccessCheckbox"
-									   class="globalAccessCheckBox"
-									   name="hasGlobalGroupAccess"
-									   ng-model="currentUser.hasGlobalGroupAccess"/>
-							</td>
-						</tr>
-						<tr ng-show="currentUser.hasGlobalGroupAccess">
-							<td class="no-color"><label>Global Role</label></td>
-							<td class="no-color" style="text-align: left;">
-								<select id="roleSelect" name="globalRole.id" ng-model="user.globalRole.id">
-									<option value="0" label="Read Access">Read Access</option>
-									<option ng-selected="role.id === currentUser.globalRole.id" ng-repeat="role in roles" value="{{ role.id }}">
-										{{ role.displayName }}
-									</option>
-								</select>
-							</td>
-							<td class="no-color" style="border: 0 solid black; background-color: white; padding-left: 5px">
-								<errors id="hasGlobalGroupAccessErrors" path="hasGlobalGroupAccess" cssClass="errors" />
-							</td>
-						</tr>
-					</security:authorize>
-					</tbody>
-				</table>
+			<div ng-repeat="user in users" ng-if="user.wasSelected" ng-show="currentUser.id === user.id" class="user-page" ng-form="form">
 
-				<br>
-				<button id="loadingButton"
-						disabled="disabled"
-						class="btn btn-primary"
-						ng-show="loading">
-					<span class="spinner"></span>
-					Submitting
-				</button>
-				<button id="submit"
-						ng-class="{ disabled : !form.$dirty || form.$invalid }"
-						class="btn btn-primary"
-						ng-hide="loading"
-						ng-click="submitUpdate(form.$valid)">Save Changes</button>
+				<div class="form-group">
+					<label for="name">User</label>
+					<input ng-model="currentUser.name" required type="text" name="name" id="name"/>
+					<span id="name.errors.required" class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
+					<span id="name.errors" class="errors" ng-show="user.name_error"> {{ user.name_error }}</span>
+				</div>
+
+				<div class="form-group">
+					<label for="displayName">Display Name</label></td>
+					<input ng-model="currentUser.displayName" type="text" name="displayName" id="displayName"/>
+					<span id="displayName.errors" class="errors" ng-show="user.name_error"> {{ user.name_error }}</span>
+				</div>
+
+				<div class="form-group">
+					<label for="password">Password</label></td>
+					<input ng-disabled="currentUser.isLdapUser"
+						   password-validate="{{ currentUser.passwordConfirm }}"
+						   id="password"
+						   ng-model="currentUser.unencryptedPassword"
+						   type="password"
+						   name="unencryptedPassword"
+						   size="30"/>
+					<span id="password.error.length" class="errors" ng-show="lengthRemaining">{{ lengthRemaining }} characters needed</span>
+					<span id="password.error.match" class="errors" ng-show="form.unencryptedPassword.$dirty && form.unencryptedPassword.$error.matches">Passwords do not match.</span>
+					<span id="password.error" class="errors" ng-show="user.password_error"> {{ user.password_error }}</span>
+				</div>
+
+				<div class="form-group">
+					<label for="passwordConfirm">Confirm Password</label>
+					<input ng-model="currentUser.passwordConfirm"
+						   type="password"
+						   ng-disabled="currentUser.isLdapUser"
+						   style="margin-bottom:0"
+						   id="passwordConfirm"
+						   name="passwordConfirm"
+						   size="30" />
+				</div>
+
+				<c:if test="${ ldap_plugin }">
+					<div class="form-group">
+						<label for="isLdapUserCheckbox">LDAP user</label>
+						<input type="checkbox" class="ldapCheckbox"
+							   id="isLdapUserCheckbox"
+							   name="isLdapUser"
+							   ng-model="currentUser.isLdapUser"/>
+					</div>
+				</c:if>
+
+				<security:authorize ifAllGranted="ROLE_ENTERPRISE">
+
+					<div class="form-group margin-top">
+						<label for="roleSelect">Global Role</label>
+						<select id="roleSelect" name="globalRole.id" ng-model="user.globalRole.id">
+							<option ng-selected="!currentUser.globalRole.id" value="-1" label="No Global Access">No Global Access</option>
+							<option ng-selected="role.id === 0" value="0" label="Read Access">Read Access</option>
+							<option ng-selected="role.id === currentUser.globalRole.id" ng-repeat="role in roles" value="{{ role.id }}">
+								{{ role.displayName }}
+							</option>
+						</select>
+						<errors id="hasGlobalGroupAccessErrors" path="hasGlobalGroupAccess" cssClass="errors" />
+					</div>
+				</security:authorize>
+
+				<div class="margin-top">
+					<button id="loadingButton"
+							disabled="disabled"
+							class="btn btn-primary"
+							ng-show="loading">
+						<span class="spinner"></span>
+						Submitting
+					</button>
+					<button id="submit"
+							ng-class="{ disabled : !form.$dirty || form.$invalid || angular.equals(currentUser, user) }"
+							class="btn btn-primary"
+							ng-hide="loading"
+							ng-click="submitUpdate(form.$valid)">Save Changes</button>
+				</div>
+
+				<security:authorize ifAllGranted="ROLE_ENTERPRISE">
+					<div id="config">
+
+						<%@ include file="/WEB-INF/views/config/users/permissionForm.jsp" %>
+
+						<h4>
+							Team Roles
+							<a id="addPermissionButton" class="btn" ng-click="openAddTeamPermissionsModal()" ng-disabled="noTeams">
+								Add Team Role
+							</a>
+						</h4>
+
+						<table class="table">
+							<thead>
+								<th>Team</th>
+								<th>Role</th>
+							</thead>
+							<tbody>
+								<tr ng-repeat="map in currentUser.maps | filter:{ allApps : true }" class="bodyRow">
+									<td id="teamName{{ map.organization.name }}all{{ map.role.displayName }}">{{ map.organization.name }}</td>
+									<td id="roleName{{ map.organization.name }}all{{ map.role.displayName }}">
+										{{ map.role.displayName }}
+									</td>
+									<td style="text-align:center">
+										<a id="editAppMap{{ map.organization.name }}all{{ map.role.displayName }}" class="btn" ng-click="edit(map)">
+											Edit
+										</a>
+									</td>
+									<td style="text-align:center">
+										<a class="btn" id="deleteAppMap{{ map.organization.name }}all{{ map.role.displayName }}" ng-click="deleteTeam(map)">
+											Delete
+										</a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<h4>
+							Application Roles
+							<a id="addApplicationRoleButton" class="btn" ng-click="openAddApplicationPermissionsModal()">Add Application Role</a>
+						</h4>
+
+						<table class="table">
+							<thead>
+								<th>Team</th>
+								<th>Application</th>
+								<th>Role</th>
+							</thead>
+							<!-- This is a lot of watchers -->
+							<tbody ng-repeat="map in currentUser.maps | filter:{ allApps : false }" style="border-top: 0">
+								<tr ng-repeat="appMap in map.accessControlApplicationMaps" ng-show="!map.allApps && appMap.active" class="bodyRow">
+									<td id="teamName{{ map.organization.name }}{{ appMap.application.name }}{{ appMap.role.displayName }}">
+										{{ map.organization.name }}
+									</td>
+									<td id="applicationName{{ map.organization.name }}{{ appMap.application.name }}{{ appMap.role.displayName }}">
+										{{ appMap.application.name }}
+									</td>
+									<td id="roleName{{ map.organization.name }}{{ appMap.application.name }}{{ appMap.role.displayName }}">
+										{{ appMap.role.displayName }}
+									</td>
+									<td style="text-align:center">
+										<a id="editAppMap{{ map.organization.name }}{{ appMap.application.name }}{{ appMap.role.displayName }}" class="btn" ng-click="edit(map)">
+											Edit
+										</a>
+									</td>
+									<td style="text-align:center">
+										<a class="btn" id="deleteAppMap{{ map.organization.name }}{{ appMap.application.name }}{{ appMap.role.displayName }}" ng-click="deleteApp(appMap)">
+											Delete
+										</a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</security:authorize>
 			</div>
 		</div>
 	</div>

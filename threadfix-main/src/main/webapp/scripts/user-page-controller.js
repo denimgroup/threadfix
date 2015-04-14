@@ -6,6 +6,10 @@ myAppModule.value('deleteUrl', null);
 
 myAppModule.controller('UserPageController', function ($scope, $modal, $http, $log, tfEncoder) {
 
+    ////////////////////////////////////////////////////////////////////////////////
+    //             Basic Page Functionality + $on(rootScopeInitialized)
+    ////////////////////////////////////////////////////////////////////////////////
+
     var nameCompare = function(a,b) {
         return a.name.localeCompare(b.name);
     };
@@ -24,6 +28,14 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                         $scope.users = data.object.users;
                         $scope.roles = data.object.roles;
                         $scope.users.sort(nameCompare);
+
+                        $scope.teams = data.object.teams;
+                        $scope.teams.sort(nameCompare);
+
+                        $scope.teams.forEach(function(team) {
+                            team.applications.sort(nameCompare);
+                        });
+
                     } else {
 
                         // If the last page is no longer exist then refresh to page 1
@@ -54,6 +66,10 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         window.location.href = tfEncoder.encode("/configuration/users/" + user.id + "/permissions");
     };
 
+    ////////////////////////////////////////////////////////////////////////////////
+    //                              New User Modal
+    ////////////////////////////////////////////////////////////////////////////////
+
     $scope.openNewModal = function() {
         var modalInstance = $modal.open({
             templateUrl: 'userForm.html',
@@ -81,45 +97,27 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         });
     };
 
-    $scope.openEditModal = function(user) {
-        var modalInstance = $modal.open({
-            templateUrl: 'editUserForm.html',
-            controller: 'UserModalController',
-            resolve: {
-                url: function() {
-                    return tfEncoder.encode("/configuration/users/" + user.id + "/edit");
-                },
-                user: function() {
-                    var userCopy = angular.copy(user);
+    ////////////////////////////////////////////////////////////////////////////////
+    //                     Setting current user + updating data
+    ////////////////////////////////////////////////////////////////////////////////
 
-                    if (!userCopy.globalRole) {
-                        userCopy.globalRole = { id: 0 };
-                    }
+    // TODO consider "just adding this"
+    var addMapsToUser = function(user) {
+        $http.get(tfEncoder.encode('/configuration/users/' + user.id + '/permissions/map')).
+            success(function(data) {
 
-                    return userCopy;
-                },
-                deleteUrl: function() {
-                    return tfEncoder.encode("/configuration/users/" + user.id + "/delete");
-                },
-                roles: function() {
-                    return $scope.roles
+                if (data.success) {
+                    user.maps = data.object.maps;
+                } else {
+                    $scope.errorMessage = "Failure. Message was : " + data.message;
                 }
-            }
-        });
 
-        modalInstance.result.then(function (editedUserName) {
-
-            if (editedUserName) {
-                reloadList();
-                $scope.successMessage = "Successfully edited user " + editedUserName;
-            } else {
-                $scope.successMessage = "Successfully deleted user " + user.name;
-                reloadList();
-            }
-
-        }, function () {
-            $log.info('Modal dismissed at: ' + new Date());
-        });
+                $scope.initialized = true;
+            }).
+            error(function(data, status, headers, config) {
+                $scope.initialized = true;
+                $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
+            });
     };
 
     $scope.updatePage = function(page) {
@@ -132,10 +130,15 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
             $scope.currentUser = user.formUser;
         } else {
             $scope.currentUser = angular.copy(user);
+            addMapsToUser($scope.currentUser);
             user.formUser = $scope.currentUser;
             user.wasSelected = true;
         }
     };
+
+    ////////////////////////////////////////////////////////////////////////////////
+    //                              Update (Save Edits)
+    ////////////////////////////////////////////////////////////////////////////////
 
     $scope.submitUpdate = function(valid) {
         if (!valid) {
@@ -165,10 +168,74 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
 
                 $scope.initialized = true;
             }).
-            error(function(data, status, headers, config) {
+            error(function(data, status) {
                 $scope.initialized = true;
                 $scope.errorMessage = "Failed to retrieve user list. HTTP status was " + status;
             });
-    }
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////////
+    //                            New Permissions Modals
+    ////////////////////////////////////////////////////////////////////////////////
+
+    $scope.openAddApplicationPermissionsModal = function() {
+        openPermissionsModal(false);
+    };
+
+    $scope.openAddTeamPermissionsModal = function() {
+        openPermissionsModal(true);
+    };
+
+    var openPermissionsModal = function(allApps) {
+
+        if ($scope.teams.length) {
+            var modalInstance = $modal.open({
+                templateUrl: 'permissionForm.html',
+                controller: 'PermissionModalController',
+                resolve: {
+                    url: function () {
+                        return tfEncoder.encode("/configuration/users/" + $scope.currentUser.id + "/access/new");
+                    },
+                    object: function () {
+                        return {
+                            team: $scope.teams[0],
+                            allApps: allApps,
+                            application: {
+                                id: 0
+                            }, role: {
+                                id: 0
+                            }
+                        };
+                    },
+                    buttonText: function () {
+                        return "Save Map";
+                    },
+                    config: function () {
+                        return {
+                            teams: $scope.teams,
+                            roles: $scope.roles
+                        };
+                    },
+                    headerText: function () {
+                        return allApps ? "Add Team Permission" : "Add Application Permissions";
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (permissions) {
+
+                addMapsToUser($scope.currentUser);
+
+                $scope.successMessage = "Successfully added permissions.";
+
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+
+        }
+
+    };
+
 
 });
