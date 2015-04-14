@@ -134,6 +134,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
             user.formUser = $scope.currentUser;
             user.wasSelected = true;
         }
+        $scope.userId = $scope.currentUser.id;
     };
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -173,7 +174,6 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 $scope.errorMessage = "Failed to retrieve user list. HTTP status was " + status;
             });
     };
-
 
     ////////////////////////////////////////////////////////////////////////////////
     //                            New Permissions Modals
@@ -235,6 +235,133 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
 
         }
 
+    };
+
+    ////////////////////////////////////////////////////////////////////////////////
+    //                            Editing
+    ////////////////////////////////////////////////////////////////////////////////
+
+    // TODO clean this up
+    var doLookups = function(perms) {
+
+        var lastTeam = undefined;
+        var lastRole = undefined;
+
+        $scope.teams.forEach(function(team) {
+            if (team.id === perms.organization.id) {
+                lastTeam = team;
+            }
+        });
+
+        if (perms.role) {
+            $scope.roles.forEach(function(role) {
+                if (role.id === perms.role.id) {
+                    lastRole = role;
+                }
+            });
+        }
+
+        perms.role = lastRole;
+        perms.team = lastTeam;
+        var appList = lastTeam.applications;
+
+        var appMaps = perms.accessControlApplicationMaps;
+
+        appMaps.forEach(function(map) {
+            appList.forEach(function(app) {
+                if (map.role.id !== 0 && app.id === map.application.id) {
+                    app.role = { id: map.role.id };
+                }
+            });
+        });
+
+        appList.forEach(function(app) {
+            if (!app.role) {
+                app.role = { id: 0 };
+            }
+        });
+
+        return appList;
+    };
+
+    $scope.edit = function(permObject) {
+
+        var apps = doLookups(permObject);
+
+        var modalInstance = $modal.open({
+            templateUrl: 'permissionForm.html',
+            controller: 'PermissionModalController',
+            resolve: {
+                url: function() {
+                    return tfEncoder.encode("/configuration/users/" + $scope.userId + "/access/" + permObject.id + "/edit");
+                },
+                object: function() {
+                    return permObject;
+                },
+                buttonText: function() {
+                    return "Save Edits";
+                },
+                deleteUrl: function() {
+                    return tfEncoder.encode("/configuration/users/" + $scope.userId + "/access/" + permObject.id + "/delete");
+                },
+                config: function() {
+                    return {
+                        teams: $scope.teams,
+                        roles: $scope.roles,
+                        appList: apps
+                    };
+                },
+                headerText: function() {
+                    return "Edit Permissions Mapping";
+                }
+            }
+        });
+
+        modalInstance.result.then(function (editedPermissionsObject) {
+
+            addMapsToUser($scope.currentUser);
+
+            if (editedPermissionsObject) {
+                $scope.successMessage = "Successfully edited permissions.";
+            } else {
+                $scope.successMessage = "Permissions object was successfully deleted.";
+            }
+
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    };
+
+    ////////////////////////////////////////////////////////////////////////////////
+    //                            Deletion
+    ////////////////////////////////////////////////////////////////////////////////
+
+    var makeDeleteRequest = function(url) {
+        if (confirm("Are you sure you want to delete this entry?")) {
+            $http.post(tfEncoder.encode('/configuration/users/' + $scope.userId + url)).
+                success(function(data, status, headers, config) {
+                    if (data.success) {
+                        addMapsToUser($scope.currentUser);
+                        $scope.successMessage = "Permission was successfully deleted.";
+                    } else {
+                        $scope.errorMessage = "Failure. Message was : " + data.message;
+                    }
+
+                    $scope.initialized = true;
+                }).
+                error(function(data, status, headers, config) {
+                    $scope.initialized = true;
+                    $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
+                });
+        }
+    };
+
+    $scope.deleteApp = function(map) {
+        makeDeleteRequest('/access/app/' + map.id + '/delete')
+    };
+
+    $scope.deleteTeam = function(map) {
+        makeDeleteRequest('/access/team/' + map.id + '/delete')
     };
 
 
