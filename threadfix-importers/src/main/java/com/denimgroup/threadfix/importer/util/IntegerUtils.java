@@ -44,6 +44,12 @@ public class IntegerUtils {
      * @return the parsed number, or -1 on failure
      */
     public static int getPrimitive(String input) {
+
+        if (input == null) {
+            log.warn("Null string passed to getPrimitive");
+            return -1;
+        }
+
         if (!input.matches("^[0-9]+$")) {
             log.warn("Non-numeric String encountered.");
             return -1;
