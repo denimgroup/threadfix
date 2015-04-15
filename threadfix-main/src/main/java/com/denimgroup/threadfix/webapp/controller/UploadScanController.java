@@ -79,9 +79,8 @@ public class UploadScanController {
         Object o = uploadScan(appId, orgId, request, file);
 
         ObjectWriter mapper = new CustomJacksonObjectMapper().writerWithView(AllViews.TableRow.class);
-        String s = mapper.writeValueAsString(o);
 
-        return s;
+        return mapper.writeValueAsString(o);
     }
 
     /**

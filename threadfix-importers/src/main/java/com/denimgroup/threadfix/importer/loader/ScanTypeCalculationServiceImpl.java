@@ -89,7 +89,8 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
         String fullFilePath = TEMP_FILE_NAME;
 
         if(fileUploadLocation != null && !fileUploadLocation.isEmpty()) {
-            fullFilePath = fileUploadLocation + TEMP_FILE_NAME;
+            File fileUploadDir = new File(fileUploadLocation + File.separator + TEMP_FILE_NAME);
+            fullFilePath = fileUploadDir.getPath();
         }
 
 		saveFile(fullFilePath,file);
@@ -422,7 +423,8 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 		String inputFileName = applicationChannel.getNextFileHandle();
 
         if(fileUploadLocation != null && !fileUploadLocation.isEmpty()) {
-            inputFileName = fileUploadLocation + inputFileName;
+            File fileUploadDir = new File(fileUploadLocation + File.separator + inputFileName);
+            inputFileName = fileUploadDir.getPath();
         }
 
 		applicationChannel.setScanCounter(applicationChannel.getScanCounter() + 1);
