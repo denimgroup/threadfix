@@ -2,6 +2,19 @@ var myAppModule = angular.module('threadfix');
 
 myAppModule.controller('CheckLDAPController', function ($scope, $http, tfEncoder) {
 
+    $scope.shouldDisable = function() {
+        var returnValue = true;
+
+        if ($scope.object) {
+            returnValue = !($scope.object.activeDirectoryBase &&
+                $scope.object.activeDirectoryUsername &&
+                $scope.object.activeDirectoryCredentials &&
+                $scope.object.activeDirectoryURL);
+        }
+
+        return returnValue;
+    };
+
     $scope.$on('rootScopeInitialized', function() {
         var url = tfEncoder.encode('/configuration/settings/getLDAPSettings');
         $http.get(url).
