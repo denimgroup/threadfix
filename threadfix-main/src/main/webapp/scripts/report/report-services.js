@@ -41,7 +41,9 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
         // IE <10, unsupported
          return (typeof navigator !== "undefined" &&
             /MSIE [1-9]\./.test(navigator.userAgent));
-    }
+    };
+
+    reportExporter.checkOldIE = checkOldIE;
 
     var selectSvg = function(svgId) {
         var svg = d3.select("svg");

@@ -273,16 +273,21 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
                 });
             }
 
-            $http.post(tfEncoder.encode("/reports/search/export/csv"), parameters).
-                success(function(data, status, headers, config, response)
-                {
-                    reportExporter.exportCSV(data, "application/octet-stream", "search_export.csv");
-                }).
-                error(function(data, status, headers, config) {
-                    $scope.errorMessage = "Failed to retrieve vulnerability report. HTTP status was " + status;
-                    $scope.loadingTree = false;
-                });
-        };
+
+            if (reportExporter.checkOldIE()) {
+                window.location.href = tfEncoder.encode("/reports/search/export/csv");
+            } else {
+                $http.post(tfEncoder.encode("/reports/search/export/csv"), parameters).
+                    success(function(data, status, headers, config, response)
+                    {
+                        reportExporter.exportCSV(data, "application/octet-stream", "search_export.csv");
+                    }).
+                    error(function(data, status, headers, config) {
+                        $scope.errorMessage = "Failed to retrieve vulnerability report. HTTP status was " + status;
+                        $scope.loadingTree = false;
+                    });
+            }
+        }
     };
 
 });
