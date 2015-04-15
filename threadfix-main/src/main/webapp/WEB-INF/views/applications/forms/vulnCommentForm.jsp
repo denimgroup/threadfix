@@ -36,6 +36,9 @@
                               name="comments"></textarea>
                 </td>
             </tr>
+            <tr ng-if="form.comments.$error.maxlength">
+                <td class="errors" colspan="2">Maximum Length is 200 Characters</td>
+            </tr>
         </table>
     </div>
     <%@ include file="/WEB-INF/views/modal/footer.jspf" %>
