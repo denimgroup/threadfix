@@ -337,6 +337,31 @@
         </div>
         </security:authorize>
 
+        <div class="panel panel-default">
+            <div id="defaultFileUploadLocationSettingsPanel" class="panel-heading pointer" style="width:250px"
+                 ng-click="editFileUploadLocationSettings = !editFileUploadLocationSettings">
+                <h3 class="panel-title">
+                    <span ng-hide="editFileUploadLocationSettings" class="icon icon-chevron-right"></span>
+                    <span ng-show="editFileUploadLocationSettings" class="icon icon-chevron-down"></span>
+                    File Upload Location Settings
+                </h3>
+            </div>
+            <div class="panel-body" ng-show="editFileUploadLocationSettings">
+                <table class="even-sized-rows">
+                    <tr>
+                        <td style="width:150px" class="no-color">File Upload Location</td>
+                        <td class="no-color">
+                            <form:input id="fileUploadLocation" path="fileUploadLocation" cssClass="focus" size="60"
+                                        maxlength="1024" value="${ defaultConfiguration.fileUploadLocation }"/>
+                        </td>
+                        <td class="no-color" style="padding-left: 5px" >
+                            <form:errors id="fileUploadLocationErrors" path="fileUploadLocation" cssClass="errors"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
 		<div class="panel panel-default">
             <div id="defaultDashboardSettingsPanel" class="panel-heading pointer" style="width:200px" ng-click="editDashboardSettings = !editDashboardSettings">
                 <h3 class="panel-title">

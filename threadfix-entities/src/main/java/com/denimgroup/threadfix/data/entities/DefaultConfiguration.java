@@ -60,6 +60,8 @@ public class DefaultConfiguration extends BaseEntity {
     private Report dashboardTopLeft, dashboardTopRight, dashboardBottomLeft,dashboardBottomRight,
             applicationTopLeft, applicationTopRight, teamTopLeft, teamTopRight;
 
+    private String fileUploadLocation = null;
+
     public static DefaultConfiguration getInitialConfig() {
         DefaultConfiguration config = new DefaultConfiguration();
         config.setDefaultRoleId(1);
@@ -77,6 +79,15 @@ public class DefaultConfiguration extends BaseEntity {
 
     public void setSessionTimeout(Integer sessionTimeout) {
         this.sessionTimeout = sessionTimeout;
+    }
+
+    @Column(length = 1024, nullable = true)
+    public String getFileUploadLocation() {
+        return fileUploadLocation;
+    }
+
+    public void setFileUploadLocation(String fileUploadLocation) {
+        this.fileUploadLocation = fileUploadLocation;
     }
 
     @OneToOne
@@ -258,7 +269,7 @@ public class DefaultConfiguration extends BaseEntity {
         this.activeDirectoryCredentialsEncrypted = activeDirectoryCredentialsEncrypted;
     }
 
-    	@Column(length=256)
+    @Column(length=256)
 	public void setActiveDirectoryCredentials(String activeDirectoryCredentials) {
 		this.activeDirectoryCredentials = activeDirectoryCredentials;
 	}

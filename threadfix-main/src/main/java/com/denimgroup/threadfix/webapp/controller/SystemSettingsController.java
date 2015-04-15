@@ -58,7 +58,8 @@ public class SystemSettingsController {
 		String[] reports = {
 				"dashboardTopLeft.id",
 				"dashboardTopRight.id", "dashboardBottomLeft.id", "dashboardBottomRight.id",
-				"applicationTopLeft.id", "applicationTopRight.id", "teamTopLeft.id", "teamTopRight.id"
+				"applicationTopLeft.id", "applicationTopRight.id", "teamTopLeft.id", "teamTopRight.id",
+                "fileUploadLocation"
 		};
 
 		String[] otherSections = {

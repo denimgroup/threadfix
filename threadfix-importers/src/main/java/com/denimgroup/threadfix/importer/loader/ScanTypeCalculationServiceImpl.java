@@ -37,6 +37,7 @@ import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
 import com.denimgroup.threadfix.importer.util.ZipFileUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.DefaultConfigService;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -78,14 +79,24 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 	private ApplicationChannelDao applicationChannelDao;
     @Autowired
 	private ChannelTypeDao channelTypeDao;
+    @Autowired
+    private DefaultConfigService defaultConfigService;
 
 	private String getScannerType(MultipartFile file) {
 
-		saveFile(TEMP_FILE_NAME,file);
+        DefaultConfiguration defaultConfig = defaultConfigService.loadCurrentConfiguration();
+        String fileUploadLocation = defaultConfig.getFileUploadLocation();
+        String fullFilePath = TEMP_FILE_NAME;
 
-        String returnValue = getScannerType(file.getOriginalFilename(), TEMP_FILE_NAME);
+        if(fileUploadLocation != null && !fileUploadLocation.isEmpty()) {
+            fullFilePath = fileUploadLocation + TEMP_FILE_NAME;
+        }
 
-        deleteFile(TEMP_FILE_NAME);
+		saveFile(fullFilePath,file);
+
+        String returnValue = getScannerType(file.getOriginalFilename(), fullFilePath);
+
+        deleteFile(fullFilePath);
 
 		if (REMOTE_PROVIDERS.contains(returnValue)) {
 			throw new RestIOException("Import " + returnValue + " scans using the Remote Provider functionality.", -1);
@@ -396,6 +407,9 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 			return null;
 		}
 
+        DefaultConfiguration defaultConfig = defaultConfigService.loadCurrentConfiguration();
+        String fileUploadLocation = defaultConfig.getFileUploadLocation();
+
 		checkDiskSpace(file);
 
 		ApplicationChannel applicationChannel = applicationChannelDao.retrieveById(channelId);
@@ -407,11 +421,15 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 
 		String inputFileName = applicationChannel.getNextFileHandle();
 
+        if(fileUploadLocation != null && !fileUploadLocation.isEmpty()) {
+            inputFileName = fileUploadLocation + inputFileName;
+        }
+
 		applicationChannel.setScanCounter(applicationChannel.getScanCounter() + 1);
 
 		applicationChannelDao.saveOrUpdate(applicationChannel);
 
-		return saveFile(inputFileName,file);
+		return saveFile(inputFileName, file);
 	}
 
 	private void checkDiskSpace(MultipartFile file) {
