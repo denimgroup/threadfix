@@ -1,0 +1,14 @@
+Template: threadfix/configuration
+Type: note
+Description: Ensure Tomcat is using Java 7 and has enough memory.
+ You may need to change the configuration to ensure Tomcat is using the correct version of Java and has enough memory. Open the 'tomcat7' file located /etc/default/tomcat7 using a text editor and change the following lines.
+ .
+ - Uncomment out the line JAVA_HOME=/usr/lib/jvm/openjdk-6-jdk and use the location of your Java7 installation (which will probably be located in /usr/lib/jvm/). The full JAVA_HOME will then be something like this:
+ .
+   JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
+ .
+ - Change the memory option on the line JAVA_OPTS="-Djava.awt.headless=true -Xmx128m -XX:+UseConcMarkSweeGC". We recommend 4GB(-Xmx4096m) minimum.
+ .
+ - If you wish to designate a specific location for ThreadFix's temporary scratch folder, simply add "-Dthreadfix.scratchFolder=<Path/to/Scratch/Folder>", where "<Path/to/Scratch/folder>" is the location where temp files will be stored during scan uploads. The full JAVA_OPTS will then be:
+ .
+   JAVA_OPTS="-Djava.awt.headless=true -Xmx128m -XX:+UseConcMarkSweeGC -Dthreadfix.scratchFolder=<Path/to/Scratch/Folder>"
