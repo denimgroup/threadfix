@@ -32,7 +32,7 @@ import java.util.Properties;
 /**
  * Created by mcollins on 4/10/15.
  */
-class RawPropertiesHolder {
+public class RawPropertiesHolder {
 
     // Prevent Instantiation
     private RawPropertiesHolder(){}
@@ -47,7 +47,7 @@ class RawPropertiesHolder {
 
     private static void loadProperties() {
         InputStream resourceAsStream =
-                DefectTrackersPropertiesHolder.class
+                RawPropertiesHolder.class
                         .getClassLoader()
                         .getResourceAsStream("custom.properties");
 
@@ -60,7 +60,7 @@ class RawPropertiesHolder {
         }
     }
 
-    static String getProperty(String key) {
+    public static String getProperty(String key) {
         return PROPERTIES.getProperty(key);
     }
 }
