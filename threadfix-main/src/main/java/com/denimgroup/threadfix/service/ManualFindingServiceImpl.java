@@ -152,6 +152,10 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 			finding.setChannelSeverity(channelSeverity);
 		}
 
+		if (finding.getSurfaceLocation() == null) {
+			finding.setSurfaceLocation(new SurfaceLocation());
+		}
+
 		if (!finding.getIsStatic()) {
 			finding.setDataFlowElements(null);
 		} else {

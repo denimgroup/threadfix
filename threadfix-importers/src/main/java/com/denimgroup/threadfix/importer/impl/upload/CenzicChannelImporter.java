@@ -39,8 +39,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * 
@@ -72,7 +73,7 @@ public class CenzicChannelImporter extends AbstractChannelImporter {
 	
 	public class CenzicSAXParser extends HandlerWithBuilder {
 
-        Map<FindingKey, String> findingMap = new HashMap<>();
+        Map<FindingKey, String> findingMap = map();
 
         private boolean getReportItemType = false;
         private boolean getChannelVulnText    = false;
@@ -114,21 +115,33 @@ public class CenzicChannelImporter extends AbstractChannelImporter {
 	    public void startElement (String uri, String name,
 				      String qName, Attributes atts)
 	    {
-	    	switch (qName) {
-                case "SmartAttackInfo" : currentCweId = atts.getValue("VulnerabilityIds"); break;
-                case "StartTime"    : getDateText = true; break;
-		    	case "SmartAttackName"      : getChannelVulnText = true; break;
-		    	case "Url"   : getUrlText = true;         break;
-		    	case "field"   : getParamText = true;       break;
-		    	case "Severity"  : getSeverityText = true;    break;
-		    	case "ReportItemCreateDate" : getItemDateText = true;        break;
-                case "ReportItemType" : getReportItemType = true;        break;
-                case "Remediation" : getScannerRecommendation = true;        break;
-                case "Message" : getScannerDetail = true;        break;
-                case "HttpRequest" : getRequestText = true;        break;
-                case "HttpResponse" : getResponseText = true;        break;
-                case "ReportItem" : inFinding = true;        break;
-	    	}
+            if (qName.equals("SmartAttackInfo")) {
+                currentCweId = atts.getValue("VulnerabilityIds");
+            } else if (qName.equals("StartTime")) {
+                getDateText = true;
+            } else if (qName.equals("SmartAttackName")) {
+                getChannelVulnText = true;
+            } else if (qName.equals("Url")) {
+                getUrlText = true;
+            } else if (qName.equals("field")) {
+                getParamText = true;
+            } else if (qName.equals("Severity")) {
+                getSeverityText = true;
+            } else if (qName.equals("ReportItemCreateDate")) {
+                getItemDateText = true;
+            } else if (qName.equals("ReportItemType")) {
+                getReportItemType = true;
+            } else if (qName.equals("Remediation")) {
+                getScannerRecommendation = true;
+            } else if (qName.equals("Message")) {
+                getScannerDetail = true;
+            } else if (qName.equals("HttpRequest")) {
+                getRequestText = true;
+            } else if (qName.equals("HttpResponse")) {
+                getResponseText = true;
+            } else if (qName.equals("ReportItem")) {
+                inFinding = true;
+            }
             if (inFinding){
                 currentRawFinding.append(makeTag(name, qName , atts));
             }

@@ -31,6 +31,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 
+import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.CollectionUtils.map;
+
 /**
  * @author mcollins
  * 
@@ -39,26 +42,24 @@ import java.util.Map.Entry;
 public class ImpervaSecureSphereGenerator extends RealTimeProtectionGenerator {
 	
 	// TODO look through CVEs in sm_schema_report_vulns.xsd
-	private static final Map<String, String> VULN_TYPE_MAP = new HashMap<>();
-	static {
-		VULN_TYPE_MAP.put(GenericVulnerability.CWE_CROSS_SITE_REQUEST_FORGERY, "cross-site-request-forgery");
-		VULN_TYPE_MAP.put(GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, "cross-site-scripting");
-		VULN_TYPE_MAP.put(GenericVulnerability.CWE_SQL_INJECTION, "sql-injection");
-		VULN_TYPE_MAP.put(GenericVulnerability.CWE_DIRECTORY_INDEXING, "directory-browsing");
-		VULN_TYPE_MAP.put(GenericVulnerability.CWE_HTTP_RESPONSE_SPLITTING, "http-response-splitting");
-		VULN_TYPE_MAP.put(GenericVulnerability.CWE_PATH_TRAVERSAL, "directory-traversal");
-		VULN_TYPE_MAP.put(GenericVulnerability.CWE_EVAL_INJECTION, "remote-command-execution-env");
-		VULN_TYPE_MAP.put(GenericVulnerability.CWE_OS_COMMAND_INJECTION, "remote-command-execution-env");
-	}
-	
-	private static final Map<String, String> SEVERITIES_MAP = new HashMap<>();
-	static {
-		SEVERITIES_MAP.put(GenericSeverity.CRITICAL, "high");
-		SEVERITIES_MAP.put(GenericSeverity.HIGH, "high");
-		SEVERITIES_MAP.put(GenericSeverity.MEDIUM, "medium");
-		SEVERITIES_MAP.put(GenericSeverity.LOW, "low");
-		SEVERITIES_MAP.put(GenericSeverity.INFO, "informative");
-	}
+	private static final Map<String, String> VULN_TYPE_MAP = map(
+			GenericVulnerability.CWE_CROSS_SITE_REQUEST_FORGERY, "cross-site-request-forgery",
+			GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, "cross-site-scripting",
+			GenericVulnerability.CWE_SQL_INJECTION, "sql-injection",
+			GenericVulnerability.CWE_DIRECTORY_INDEXING, "directory-browsing",
+			GenericVulnerability.CWE_HTTP_RESPONSE_SPLITTING, "http-response-splitting",
+			GenericVulnerability.CWE_PATH_TRAVERSAL, "directory-traversal",
+			GenericVulnerability.CWE_EVAL_INJECTION, "remote-command-execution-env",
+			GenericVulnerability.CWE_OS_COMMAND_INJECTION, "remote-command-execution-env"
+		);
+		
+	private static final Map<String, String> SEVERITIES_MAP = map(
+			GenericSeverity.CRITICAL, "high",
+			GenericSeverity.HIGH, "high",
+			GenericSeverity.MEDIUM, "medium",
+			GenericSeverity.LOW, "low",
+			GenericSeverity.INFO, "informative"
+		);
 	
 	public ImpervaSecureSphereGenerator() {
 		this.defaultDirective = "-";
@@ -160,7 +161,7 @@ public class ImpervaSecureSphereGenerator extends RealTimeProtectionGenerator {
 			return builder.toString();
 		}
 		
-		Map<String, List<WafRule>> hostRuleMap = new HashMap<>();
+		Map<String, List<WafRule>> hostRuleMap = map();
 		
 		for (WafRule rule : rules) {
 			String key = null;

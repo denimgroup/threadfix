@@ -53,7 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.service.RemoteProviderTypeService.MASKED_VALUE;
 
 @Controller
@@ -286,7 +286,7 @@ public class RemoteProvidersController {
 	}
 
     private Map<String, String> getAuthenticationFieldMap(HttpServletRequest request) {
-        Map<String, String> authenticationFieldMap = newMap();
+        Map<String, String> authenticationFieldMap = map();
 
         for (int i = 0; i < 100; i++) {
             String value = request.getParameter("authenticationFields[" + i + "].value");

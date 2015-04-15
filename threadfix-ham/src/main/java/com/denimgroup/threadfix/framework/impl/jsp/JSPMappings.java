@@ -39,14 +39,16 @@ import java.io.File;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 // TODO figure out HTTP methods perhaps from form analysis
 public class JSPMappings implements EndpointGenerator {
 	
 	private static final SanitizedLogger LOG = new SanitizedLogger("JSPMappings");
 	
-	private final Map<String, Set<String>> includeMap = new HashMap<>();
-	private final Map<String, JSPEndpoint> jspEndpointMap = new HashMap<>();
+	private final Map<String, Set<String>> includeMap = map();
+	private final Map<String, JSPEndpoint> jspEndpointMap = map();
 	private final List<Endpoint> endpoints = list();
     private final ProjectDirectory projectDirectory;
 	@Nullable
@@ -110,7 +112,7 @@ public class JSPMappings implements EndpointGenerator {
         JSPEndpoint endpoint = new JSPEndpoint(
                 getInputOrEmptyString(staticPath),
                 getInputOrEmptyString(FilePathUtils.getRelativePath(file, jspRoot)),
-                new HashSet<>(Arrays.asList("GET", "POST")),
+                set("GET", "POST"),
                 parserResults
         );
 
@@ -122,7 +124,7 @@ public class JSPMappings implements EndpointGenerator {
     void addToIncludes(String staticPath, Set<File> includedFiles) {
         if (projectRoot != null && projectDirectory != null) {
             if (!includedFiles.isEmpty()) {
-                Set<String> cleanedFilePaths = new HashSet<>();
+                Set<String> cleanedFilePaths = set();
 
                 for (File file : includedFiles) {
                     String cleaned = projectDirectory.findCanonicalFilePath(file);
@@ -156,7 +158,7 @@ public class JSPMappings implements EndpointGenerator {
 
         alreadyVisited.add(key);
 
-        Set<String> params = new HashSet<>();
+        Set<String> params = set();
 
         if (includeMap.get(key) != null) {
             for (String fileKey : includeMap.get(key)) {

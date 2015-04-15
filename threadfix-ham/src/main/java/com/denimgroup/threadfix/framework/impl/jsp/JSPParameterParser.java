@@ -23,17 +23,18 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.jsp;
 
+import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
+import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.StreamTokenizer;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
-import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 
 /**
@@ -44,13 +45,13 @@ import javax.annotation.Nullable;
  */
 public class JSPParameterParser implements EventBasedTokenizer {
 	
-//	private Map<Integer, String> lineNumberToParameterMap = new HashMap<>();
+//	private Map<Integer, String> lineNumberToParameterMap = map();
 	@Nonnull
-    private Map<String, List<Integer>> parameterToLineNumbersMap = new HashMap<>();
+    private Map<String, List<Integer>> parameterToLineNumbersMap = map();
 	@Nonnull
     private Map<String, String>
-		variableToParametersMap = new HashMap<>(),
-		stringsTable = new HashMap<>();
+		variableToParametersMap = map(),
+		stringsTable = map();
 	
 	private static final String REQUEST_GET_PARAMETER = "request.getParameter", STRING = "String";
 	
@@ -81,7 +82,7 @@ public class JSPParameterParser implements EventBasedTokenizer {
 	
 	@Nonnull
     Map<Integer, List<String>> buildParametersMap() {
-		Map<Integer, List<String>> lineNumToParamMap = new HashMap<>();
+		Map<Integer, List<String>> lineNumToParamMap = map();
 		
 		for (String key : parameterToLineNumbersMap.keySet()) {
 			List<Integer> lineNumbers = parameterToLineNumbersMap.get(key);

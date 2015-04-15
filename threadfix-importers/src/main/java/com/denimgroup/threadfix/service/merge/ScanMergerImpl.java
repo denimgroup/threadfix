@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.service.merge;
 
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -45,9 +46,16 @@ public class ScanMergerImpl implements ScanMerger {
     private VulnerabilityDao  vulnerabilityDao;
     @Autowired
     private ScanCleanerUtils  scanCleanerUtils;
+    @Autowired
+    private PermissionsHandler permissionsHandler;
 
     @Override
     public void merge(Scan scan, ApplicationChannel applicationChannel) {
+        merge(scan, applicationChannel, true);
+    }
+
+    @Override
+    public void merge(Scan scan, ApplicationChannel applicationChannel, boolean shouldSaveScan) {
 
         assert applicationMerger != null : "applicationMerger was null, fix your Spring configuration.";
         assert scanDao != null : "scanDao was null, fix your Spring configuration.";
@@ -68,9 +76,11 @@ public class ScanMergerImpl implements ScanMerger {
         }
 
         // TODO probably make all of these autowired
-        PathGuesser.generateGuesses(applicationChannel.getApplication(), scan);
+        Application application = applicationChannel.getApplication();
+
+        PathGuesser.generateGuesses(application, scan);
         ChannelMerger.channelMerge(vulnerabilityDao, scan, applicationChannel);
-        applicationMerger.applicationMerge(scan, applicationChannel.getApplication(), null);
+        applicationMerger.applicationMerge(scan, application, null);
 
         scan.setApplicationChannel(applicationChannel);
         scan.setApplication(applicationChannel.getApplication());
@@ -88,5 +98,9 @@ public class ScanMergerImpl implements ScanMerger {
 		}
 
         scanCleanerUtils.clean(scan);
+        if (shouldSaveScan) {
+            scanDao.saveOrUpdate(scan);
+            permissionsHandler.setPermissions(scan, application.getId());
+        }
 	}
 }

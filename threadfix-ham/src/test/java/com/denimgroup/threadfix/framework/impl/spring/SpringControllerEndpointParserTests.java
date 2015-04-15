@@ -27,11 +27,10 @@ import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.ResourceManager;
 import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
-import javax.annotation.Nonnull;
-
 import com.denimgroup.threadfix.framework.util.java.EntityMappings;
 import org.junit.Test;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Set;
 
@@ -134,14 +133,50 @@ public class SpringControllerEndpointParserTests {
         }
     }
 
-    public void writeCsvFile() {
-        for (String app : SpringDetectionTests.ALL_SPRING_APPS) {
-            EndpointGenerator mappings = new SpringControllerMappings(new File(TestConstants.getFolderName(app)));
-            for (Endpoint endpoint : mappings.generateEndpoints()) {
-                System.out.print(app + ",");
-                System.out.println(endpoint.getCSVLine());
+    @Test
+    public void testMethodAuthParsing() {
+        Set<SpringControllerEndpoint> endpoints = SpringControllerEndpointParser.parse(
+                ResourceManager.getSpringFile("ControllerWithAuthentication.java"), null);
+
+        boolean hasAuth = false, hasNoAuth = false;
+
+        for (SpringControllerEndpoint endpoint : endpoints) {
+            if (endpoint.getUrlPath().equals("/noAuth")) {
+                assert endpoint.getAuthorizationString() == null :
+                    "Expected null, but got " + endpoint.getAuthorizationString();
+                hasNoAuth = true;
+            } else if (endpoint.getUrlPath().equals("/withAuth")) {
+                assert endpoint.getAuthorizationString().equals("hasRole('ROLE')") :
+                    "Expected hasRole('ROLE') but got " + endpoint.getAuthorizationString();
+                hasAuth = true;
             }
         }
+
+        assert hasAuth : "Didn't find authenticated endpoint";
+        assert hasNoAuth : "Didn't find non-authenticated endpoint";
+    }
+
+    @Test
+    public void testClassAuthParsing() {
+        Set<SpringControllerEndpoint> endpoints = SpringControllerEndpointParser.parse(
+                ResourceManager.getSpringFile("ControllerWithClassAuthorization.java"), null);
+
+        boolean hasAuth = false, hasNoAuth = false;
+
+        for (SpringControllerEndpoint endpoint : endpoints) {
+            if (endpoint.getUrlPath().equals("/noAuth")) {
+                assert endpoint.getAuthorizationString().equals("hasRole('CLASS_ROLE')") :
+                    "Expected hasRole('CLASS_ROLE'), but got " + endpoint.getAuthorizationString();
+                hasNoAuth = true;
+            } else if (endpoint.getUrlPath().equals("/withAuth")) {
+                assert endpoint.getAuthorizationString().equals("hasRole('CLASS_ROLE') and hasRole('METHOD_ROLE')") :
+                    "Expected hasRole('CLASS_ROLE') and hasRole('METHOD_ROLE') but got " + endpoint.getAuthorizationString();
+                hasAuth = true;
+            }
+        }
+
+        assert hasAuth : "Didn't find authenticated endpoint";
+        assert hasNoAuth : "Didn't find non-authenticated endpoint";
     }
 
     Set<SpringControllerEndpoint> parseEndpoints(String controllerName, String rootFolderName) {

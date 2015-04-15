@@ -44,6 +44,9 @@ import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
+
 /**
  * Created by mhatzenbuehler on 8/4/2014.
  */
@@ -81,7 +84,7 @@ public class ClangChannelImporter extends AbstractChannelImporter {
 	    scan.setImportTime( getImportTime() );
 
         Map<String, InputStream> reports = getReportFiles();
-        List<Finding> findings = new ArrayList<>(reports.size());
+        List<Finding> findings = list();
 
 	    for (Map.Entry<String, InputStream> entry : reports.entrySet()) {
 		    findings.add(parseInputStream(entry.getKey(), entry.getValue()));
@@ -96,8 +99,8 @@ public class ClangChannelImporter extends AbstractChannelImporter {
 
 	private Finding parseInputStream(String reportFileName, InputStream in) {
 
-        List<DataFlowElement> dataFlowElements = new ArrayList<>();
-        Map<FindingKey, String> findingKeyStringMap = new HashMap<>();
+        List<DataFlowElement> dataFlowElements = list();
+        Map<FindingKey, String> findingKeyStringMap = map();
 
         String bugDesc = null;
         String bugType = null;
@@ -205,7 +208,7 @@ public class ClangChannelImporter extends AbstractChannelImporter {
             throw new ScanFileUnavailableException("No zip entries were found in the zip file.");
         }
 
-        Map<String, InputStream> m = new HashMap<>();
+        Map<String, InputStream> m = map();
         Enumeration<? extends ZipEntry> entries = zipFile.entries();
         while (entries.hasMoreElements()) {
             ZipEntry entry = entries.nextElement();

@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * Created by mac on 10/20/14.
@@ -38,7 +38,7 @@ class AspxControlStack {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(AspxControlStack.class);
 
-    Map<String, Integer> idMap    = newMap(); // this helps us generate
+    Map<String, Integer> idMap    = map(); // this helps us generate
     List<AspxControl>    controls = list(new AspxControl("RootElement", generateIdFromCurrentStack(0)));
 
     void add(AspxControl control) {

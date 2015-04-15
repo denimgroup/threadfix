@@ -70,6 +70,12 @@ script "update time" do
   EOH
 end
 
+execute "apt-get-update" do
+  command "apt-get update"
+  ignore_failure true
+  action :nothing
+end
+
 execute "apt-get upgrade" do
   command "apt-get -y upgrade"
   action :nothing

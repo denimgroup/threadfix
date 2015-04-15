@@ -3,7 +3,7 @@ from fabric.api import *
 from fabric.contrib.console import confirm
 import datetime, re
 
-source_code_loc='https://code.google.com/p/threadfix'
+source_code_loc='https://github.com/denimgroup/threadfix.git'
 local_working_folder_loc = '/home/vagrant' #where fabfile is running from
 server_base_loc = '/home/vagrant/artifacts' #where to deploy to
 local_path = 'threadfix/threadfix-main/src/main/resources' #path to .deploy files
@@ -20,9 +20,7 @@ def remove_old_code():
 @runs_once
 def clone_code():
     with settings(warn_only=True):
-        result = local('git clone %s -b 1.2final' % source_code_loc)
-        with lcd("threadfix"):
-            result2 = local('git checkout tags/1.2final')
+        result = local('git clone %s' % source_code_loc)
     if result.failed and confirm('Source code could not be found. Abort recommended. Abort?'):
         abort('Aborting because source code not found.')
 
@@ -42,10 +40,10 @@ def exchange_files():
 @task
 @runs_once
 def build_war():
-    with lcd('%s/threadfix/threadfix-main' % local_working_folder_loc):
+    with lcd('%s/threadfix' % local_working_folder_loc):
         local('update-java-alternatives -s java-1.7.0-openjdk-i386')
         local('sudo ln -s /usr/lib/jvm/java-1.7.0-openjdk-i386 /usr/lib/jvm/default-java')
-        res = local('mvn package -DskipTests -P mysql')
+        res = local('mvn clean install -DskipTests -P mysql')
     if res.failed and confirm('Maven failed to build the WAR file. Abort recommended. Abort?'):
         abort('Aborting because Maven failed.')
 
@@ -56,9 +54,9 @@ def deploy_war():
     server_target_loc = server_base_loc + '/' +  str(folder_name)
     with settings(warn_only=True):
         local('sudo mkdir %s %s' % (server_base_loc,server_target_loc))
-    local('sudo mv %s/threadfix/threadfix-main/target/threadfix-0.0.1-SNAPSHOT.war %s' % (local_working_folder_loc, server_target_loc))
+    local('sudo mv %s/threadfix/threadfix-main/target/threadfix-2.0M2-SNAPSHOT.war %s' % (local_working_folder_loc, server_target_loc))
     with cd(server_target_loc):        
-        local('sudo unzip -q %s/threadfix-0.0.1-SNAPSHOT.war -d %s/threadfix' % (server_target_loc, server_target_loc)) #unzip the WAR file
+        local('sudo unzip -q %s/threadfix-2.0M2-SNAPSHOT.war -d %s/threadfix' % (server_target_loc, server_target_loc)) #unzip the WAR file
         local('sudo chown tomcat7 %s/threadfix' % (server_target_loc))
     local('sudo service tomcat7 stop')   #stop tomcat
     local('sudo ln -fs %s/threadfix /var/lib/tomcat7/webapps' % server_target_loc) #update symlink in webapps

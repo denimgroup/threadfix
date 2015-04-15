@@ -31,12 +31,11 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * 
@@ -84,35 +83,33 @@ public abstract class RealTimeProtectionGenerator extends SpringBeanAutowiringSu
 	// These maps allow you to easily add new types of vulnerabilities if they :
 	// 1. Follow one of the patterns
 	// 2. Have a known payload
-	protected static final Map<String, String> PAYLOAD_MAP = new HashMap<>();
-	static {
-		PAYLOAD_MAP.put(GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, PAYLOAD_XSS);
-		PAYLOAD_MAP.put(GenericVulnerability.CWE_SQL_INJECTION, PAYLOAD_SQL_INJECTION);
-		PAYLOAD_MAP.put(GenericVulnerability.CWE_PATH_TRAVERSAL, PAYLOAD_PATH_TRAVERSAL);
-		PAYLOAD_MAP.put(GenericVulnerability.CWE_HTTP_RESPONSE_SPLITTING, PAYLOAD_HTTP_RESPONSE_SPLITTING);
-		PAYLOAD_MAP.put(GenericVulnerability.CWE_XPATH_INJECTION, PAYLOAD_XPATH_INJECTION);
-		PAYLOAD_MAP.put(GenericVulnerability.CWE_DIRECTORY_INDEXING, PAYLOAD_DIRECTORY_INDEXING);
-		PAYLOAD_MAP.put(GenericVulnerability.CWE_LDAP_INJECTION, PAYLOAD_LDAP_INJECTION);
-		PAYLOAD_MAP.put(GenericVulnerability.CWE_OS_COMMAND_INJECTION, PAYLOAD_OS_COMMAND_INJECTION);
-		PAYLOAD_MAP.put(GenericVulnerability.CWE_FORMAT_STRING_INJECTION, PAYLOAD_FORMAT_STRING_INJECTION);
-		PAYLOAD_MAP.put(GenericVulnerability.CWE_DIRECT_REQUEST, PAYLOAD_DIRECTORY_INDEXING);
-		PAYLOAD_MAP.put(GenericVulnerability.CWE_EVAL_INJECTION, PAYLOAD_EVAL_INJECTION);
-	}
+	protected static final Map<String, String> PAYLOAD_MAP = map(
+			GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, PAYLOAD_XSS,
+			GenericVulnerability.CWE_SQL_INJECTION, PAYLOAD_SQL_INJECTION,
+			GenericVulnerability.CWE_PATH_TRAVERSAL, PAYLOAD_PATH_TRAVERSAL,
+			GenericVulnerability.CWE_HTTP_RESPONSE_SPLITTING, PAYLOAD_HTTP_RESPONSE_SPLITTING,
+			GenericVulnerability.CWE_XPATH_INJECTION, PAYLOAD_XPATH_INJECTION,
+			GenericVulnerability.CWE_DIRECTORY_INDEXING, PAYLOAD_DIRECTORY_INDEXING,
+			GenericVulnerability.CWE_LDAP_INJECTION, PAYLOAD_LDAP_INJECTION,
+			GenericVulnerability.CWE_OS_COMMAND_INJECTION, PAYLOAD_OS_COMMAND_INJECTION,
+			GenericVulnerability.CWE_FORMAT_STRING_INJECTION, PAYLOAD_FORMAT_STRING_INJECTION,
+			GenericVulnerability.CWE_DIRECT_REQUEST, PAYLOAD_DIRECTORY_INDEXING,
+			GenericVulnerability.CWE_EVAL_INJECTION, PAYLOAD_EVAL_INJECTION
+		);
 	
-	protected static final Map<String, String> MESSAGE_MAP = new HashMap<>();
-	static {
-		MESSAGE_MAP.put(GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, "Cross-site Scripting attempt");
-		MESSAGE_MAP.put(GenericVulnerability.CWE_SQL_INJECTION, "SQL Injection attempt");
-		MESSAGE_MAP.put(GenericVulnerability.CWE_PATH_TRAVERSAL, "Path Traversal attempt");
-		MESSAGE_MAP.put(GenericVulnerability.CWE_HTTP_RESPONSE_SPLITTING, "HTTP Response Splitting attempt");
-		MESSAGE_MAP.put(GenericVulnerability.CWE_XPATH_INJECTION, "XPath Injection attempt");
-		MESSAGE_MAP.put(GenericVulnerability.CWE_DIRECTORY_INDEXING, "Directory Indexing attempt");
-		MESSAGE_MAP.put(GenericVulnerability.CWE_LDAP_INJECTION, "LDAP Injection attempt");
-		MESSAGE_MAP.put(GenericVulnerability.CWE_OS_COMMAND_INJECTION, "OS Command Injection attempt");
-		MESSAGE_MAP.put(GenericVulnerability.CWE_FORMAT_STRING_INJECTION, "Format String Injection attempt");
-		MESSAGE_MAP.put(GenericVulnerability.CWE_DIRECT_REQUEST, "Direct Request attempt");
-		MESSAGE_MAP.put(GenericVulnerability.CWE_EVAL_INJECTION, "Eval Injection attempt");
-	}
+	protected static final Map<String, String> MESSAGE_MAP = map(
+			GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, "Cross-site Scripting attempt",
+			GenericVulnerability.CWE_SQL_INJECTION, "SQL Injection attempt",
+			GenericVulnerability.CWE_PATH_TRAVERSAL, "Path Traversal attempt",
+			GenericVulnerability.CWE_HTTP_RESPONSE_SPLITTING, "HTTP Response Splitting attempt",
+			GenericVulnerability.CWE_XPATH_INJECTION, "XPath Injection attempt",
+			GenericVulnerability.CWE_DIRECTORY_INDEXING, "Directory Indexing attempt",
+			GenericVulnerability.CWE_LDAP_INJECTION, "LDAP Injection attempt",
+			GenericVulnerability.CWE_OS_COMMAND_INJECTION, "OS Command Injection attempt",
+			GenericVulnerability.CWE_FORMAT_STRING_INJECTION, "Format String Injection attempt",
+			GenericVulnerability.CWE_DIRECT_REQUEST, "Direct Request attempt",
+			GenericVulnerability.CWE_EVAL_INJECTION, "Eval Injection attempt"
+		);
 	
 	/**
 	 * 
@@ -196,7 +193,7 @@ public abstract class RealTimeProtectionGenerator extends SpringBeanAutowiringSu
 		if (waf == null || waf.getApplications() == null || waf.getApplications().size() == 0)
 			return list();
 
-        List<Application> applications = new ArrayList<>();
+        List<Application> applications = list();
         if (app == null)
 		    applications = waf.getApplications();
         else applications.add(app);
@@ -251,7 +248,7 @@ public abstract class RealTimeProtectionGenerator extends SpringBeanAutowiringSu
 		log.info("Generating rules for "
 				+ application.getVulnerabilities().size() + " vulnerabilities");
 
-		List<WafRule> rules = new ArrayList<>();
+		List<WafRule> rules = list();
 
 		for (Vulnerability vuln : application.getVulnerabilities()) {
 			if (vuln == null || vuln.getIsFalsePositive())

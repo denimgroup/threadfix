@@ -1,5 +1,0 @@
-<VirtualHost *:80>
-        RewriteEngine on
-        ReWriteCond %{SERVER_PORT} !^443$
-        RewriteRule ^/(.*) https://%{HTTP_HOST}:443/threadfix/ [NC,R,L]
-</VirtualHost>

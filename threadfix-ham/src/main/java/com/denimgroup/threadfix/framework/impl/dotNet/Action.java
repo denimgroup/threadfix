@@ -27,8 +27,9 @@ import com.denimgroup.threadfix.framework.impl.model.ModelField;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
-import java.util.HashSet;
 import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 /**
  * Created by mac on 6/26/14.
@@ -43,7 +44,7 @@ class Action {
     @Nonnull
     Integer     endLineNumber;
     @Nonnull
-    Set<String> parameters = new HashSet<>();
+    Set<String> parameters = set();
     @Nonnull
     Set<ModelField> parametersWithTypes;
 

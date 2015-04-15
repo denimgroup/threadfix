@@ -25,10 +25,11 @@
 package com.denimgroup.threadfix.framework.impl.spring;
 
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
-import javax.annotation.Nonnull;
 
-import java.util.HashSet;
+import javax.annotation.Nonnull;
 import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 /**
  * This class parses out DataBinder.setAllowedFields and DataBinder.setDisallowedFields calls.
@@ -43,7 +44,7 @@ public class SpringDataBinderParser implements EventBasedTokenizer {
     int parenCount = 0, curlyCount = 0;
 
     @Nonnull // but you should check hasBlackList and hasWhitelist
-    Set<String> parametersWhiteList = new HashSet<>(), parametersBlackList = new HashSet<>();
+    Set<String> parametersWhiteList = set(), parametersBlackList = set();
 
     private static final String
         INIT_BINDER = "InitBinder",

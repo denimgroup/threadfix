@@ -267,7 +267,7 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
 
             var table = d3.select("#" + elementId)[0][0];
             pdf.fromHTML(table, 15, 15, {
-                'width': 200,
+                'width': 180,
                 'elementHandlers': specialElementHandlers
             });
         }
@@ -376,8 +376,10 @@ threadfixModule.factory('reportConstants', function() {
 
     var reportConstants = {};
 
-    reportConstants.vulnTypeColorList = ["#014B6E", "#458A37", "#EFD20A", "#F27421", "#F7280C"];
-    reportConstants.vulnTypeTextColorList = ["#688c9d", "#458A37", "#EFD20A", "#F27421", "#F7280C"];
+    reportConstants.vulnTypeColorList = ["#014B6E", "#458A37", "#EFD20A", "#F27421", "#F7280C", "#C2A677",
+        "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd" ];
+    reportConstants.vulnTypeTextColorList = ["#688c9d", "#458A37", "#EFD20A", "#F27421", "#F7280C", "#C2A677",
+        "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd" ];
     reportConstants.vulnTypeList = ["Info", "Low", "Medium", "High", "Critical"];
     reportConstants.vulnTypeColorMap = {
         Info: {
@@ -399,7 +401,28 @@ threadfixModule.factory('reportConstants', function() {
         Critical:  {
             graphColor: reportConstants.vulnTypeColorList[4],
             textColor: reportConstants.vulnTypeTextColorList[4]
+        },
+        Old: {
+            graphColor: reportConstants.vulnTypeColorList[5],
+            textColor: reportConstants.vulnTypeTextColorList[5]
+        },
+        Closed: {
+            graphColor: reportConstants.vulnTypeColorList[6],
+            textColor: reportConstants.vulnTypeTextColorList[6]
+        },
+        Resurfaced: {
+            graphColor: reportConstants.vulnTypeColorList[7],
+            textColor: reportConstants.vulnTypeTextColorList[7]
+        },
+        New: {
+            graphColor: reportConstants.vulnTypeColorList[8],
+            textColor: reportConstants.vulnTypeTextColorList[8]
+        },
+        Total: {
+            graphColor: reportConstants.vulnTypeColorList[9],
+            textColor: reportConstants.vulnTypeTextColorList[9]
         }
+
     };
     reportConstants.reportTypes = {
         trending: {

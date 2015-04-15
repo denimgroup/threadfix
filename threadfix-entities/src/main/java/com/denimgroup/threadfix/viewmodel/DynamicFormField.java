@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.viewmodel;
 
 import java.util.*;
 
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * Created by stran on 7/10/14.
@@ -70,7 +70,7 @@ public class DynamicFormField {
 
     public void setError(String key, String value) {
         if (errorsMap == null) {
-            errorsMap = newMap();
+            errorsMap = map();
         }
 
         errorsMap.put(key, value);

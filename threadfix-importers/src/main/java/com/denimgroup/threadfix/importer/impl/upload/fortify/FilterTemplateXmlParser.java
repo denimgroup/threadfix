@@ -27,11 +27,9 @@ import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import java.util.EnumMap;
 import java.util.Map;
 
-import static com.denimgroup.threadfix.CollectionUtils.map;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.*;
 
 /**
  * Created by mcollins on 3/5/15.
@@ -39,7 +37,7 @@ import static com.denimgroup.threadfix.CollectionUtils.newMap;
 public class FilterTemplateXmlParser extends HandlerWithBuilder {
 
     private String currentUUID = null;
-    private Map<String, String> uuidToSeverityMap = newMap();
+    private Map<String, String> uuidToSeverityMap = map();
     private boolean getName = false, inActiveFilter = false;
 
     Map<String, FilterKey> keyMap = map(
@@ -49,7 +47,7 @@ public class FilterTemplateXmlParser extends HandlerWithBuilder {
     );
     FilterKey currentKey = null;
 
-    Map<FilterKey, String> currentFilterMap = new EnumMap<>(FilterKey.class);
+    Map<FilterKey, String> currentFilterMap = enumMap(FilterKey.class);
 
     public FortifyFilterSet filterSet = new FortifyFilterSet();
 

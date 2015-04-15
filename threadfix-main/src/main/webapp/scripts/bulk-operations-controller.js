@@ -151,8 +151,8 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
 
         var modalInstance = $modal.open({
             windowClass: 'submit-defect-form',
-            templateUrl: 'mergeDefectForm.html',
-            controller: 'DefectSubmissionModalController',
+            templateUrl: 'addToExistingDefect.html',
+            controller: 'AddToExistingDefectController',
             resolve: {
                 url: function() {
                     return tfEncoder.encode(getAppUrlBase() + "/defects/merge");

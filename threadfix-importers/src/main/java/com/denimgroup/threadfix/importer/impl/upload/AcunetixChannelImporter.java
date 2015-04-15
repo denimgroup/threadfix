@@ -38,9 +38,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
 import java.util.Map;
 
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.data.entities.ScannerDatabaseNames.ACUNETIX_WVS_DB_NAME;
 
 /**
@@ -87,7 +87,7 @@ public class AcunetixChannelImporter extends AbstractChannelImporter {
         private String currentRequest         = null;
         private String currentResponse        = null;
 
-        Map<FindingKey, String> findingMap = new HashMap<>();
+        Map<FindingKey, String> findingMap = map();
 		
 	    public void add(Finding finding) {
 			if (finding != null) {
@@ -104,18 +104,27 @@ public class AcunetixChannelImporter extends AbstractChannelImporter {
 	    public void startElement (String uri, String name,
 				      String qName, Attributes atts)
 	    {
-	    	switch (qName) {
-		    	case "Name"      : getChannelVulnText = true; break;
-		    	case "Affects"   : getUrlText = true;         break;
-		    	case "Details"   : getParamText = true;       break;
-		    	case "Severity"  : getSeverityText = true;    break;
-		    	case "StartTime" : getDateText = true;        break;
-                case "Description" : getScannerDetail = true;        break;
-                case "Recommendation" : getScannerRecommendation = true;        break;
-                case "Request" : getRequestText = true;        break;
-                case "Response" : getResponseText = true;        break;
-                case "ReportItem" : inFinding = true;        break;
-	    	}
+			if (qName.equals("Name")) {
+				getChannelVulnText = true;
+			} else if (qName.equals("Affects")) {
+				getUrlText = true;
+			} else if (qName.equals("Details")) {
+				getParamText = true;
+			} else if (qName.equals("Severity")) {
+				getSeverityText = true;
+			} else if (qName.equals("StartTime")) {
+				getDateText = true;
+			} else if (qName.equals("Description")) {
+				getScannerDetail = true;
+			} else if (qName.equals("Recommendation")) {
+				getScannerRecommendation = true;
+			} else if (qName.equals("Request")) {
+				getRequestText = true;
+			} else if (qName.equals("Response")) {
+				getResponseText = true;
+			} else if (qName.equals("ReportItem")) {
+				inFinding = true;
+			}
             if (inFinding){
                 currentRawFinding.append(makeTag(name, qName , atts));
             }

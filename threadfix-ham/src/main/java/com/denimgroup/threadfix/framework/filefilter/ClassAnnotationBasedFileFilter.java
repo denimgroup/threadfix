@@ -23,14 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.filefilter;
 
-import java.io.*;
-import java.util.Set;
-
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.io.filefilter.IOFileFilter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.*;
+import java.util.Set;
 
 /**
  * This class checks for annotations given by getClassAnnotations before the class
@@ -51,8 +50,12 @@ public abstract class ClassAnnotationBasedFileFilter implements IOFileFilter {
 		boolean hasArroba = false;
 		
 		if (file != null && file.exists() && file.isFile() && file.getName().endsWith(".java")) {
-			try (Reader reader = new InputStreamReader(new FileInputStream(file),"UTF-8")) {
-			
+			Reader reader = null;
+
+			try {
+
+				reader = new InputStreamReader(new FileInputStream(file),"UTF-8");
+
 				StreamTokenizer tokenizer = new StreamTokenizer(reader);
 				tokenizer.slashSlashComments(true);
 				tokenizer.slashStarComments(true);
@@ -70,6 +73,14 @@ public abstract class ClassAnnotationBasedFileFilter implements IOFileFilter {
 				}
 			} catch (IOException e) {
 				log.warn("Encountered IOException while tokenizing file.", e);
+			} finally {
+				if (reader != null) {
+					try {
+						reader.close();
+					} catch (IOException e) {
+						log.error("Encountered IOException while attempting to close file.", e);
+					}
+				}
 			}
 		}
 		

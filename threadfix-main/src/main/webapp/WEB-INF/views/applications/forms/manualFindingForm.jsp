@@ -55,6 +55,9 @@
                            id="urlStaticSearch"
                            typeahead="string for string in config.recentFileList | filter:$viewValue | limitTo:10"/>
                     </td>
+                    <td>
+                        <span class="errors" ng-show="object.sourceFileLocation_error">{{ object.sourceFileLocation_error }}</span>
+                    </td>
                 </tr>
                 <tr ng-show="object.group === 'static'">
                     <td>Line Number</td>

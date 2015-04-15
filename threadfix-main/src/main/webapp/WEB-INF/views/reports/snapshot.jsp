@@ -31,7 +31,7 @@
         <%@ include file="filter.jsp" %>
     </div>
 
-    <div id="vulnListDiv" ng-show="reportId == PIT_Report_Id || reportId == OWASP_Report_Id">
+    <div id="vulnListDiv" ng-show="reportId == PIT_Report_Id || reportId == OWASP_Report_Id || reportId == DISA_STIG_Report_Id">
         <%@ include file="/WEB-INF/views/vulnerabilities/vulnSearchTree.jsp"%>
     </div>
 

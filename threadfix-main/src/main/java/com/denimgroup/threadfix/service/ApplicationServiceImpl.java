@@ -425,7 +425,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 				}
 
 				if (shouldLog) {
-					log.info("Got an error from the Git server, logging to database (visible under View Error Logs)");
+					log.info("Got an error from the Git server, logging to database (visible under View Error Messages)");
 					exceptionLogService.storeExceptionLog(new ExceptionLog(e));
 				}
 			}

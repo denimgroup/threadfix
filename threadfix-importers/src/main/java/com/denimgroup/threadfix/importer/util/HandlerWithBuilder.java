@@ -38,7 +38,7 @@ public abstract class HandlerWithBuilder extends DefaultHandler {
     	builder.setLength(0);
     	return toReturn;
     }
-	
+
 	//used for synthesizing raw XML from SAX startElement events
     protected String makeTag(String name, String qName, Attributes attrs){
 	    
@@ -83,6 +83,4 @@ public abstract class HandlerWithBuilder extends DefaultHandler {
     	tag.append(">");
     	return tag.toString();
     }
-
-	
 }

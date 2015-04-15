@@ -4,6 +4,9 @@ myAppModule.controller('ApplicationDetailPageController', function ($scope, $win
 
     $scope.dragEnabled = true;
 
+    // too many IE problems
+    $scope.disableOverlay = !~navigator.userAgent.indexOf("ie");
+
     $scope.$on('dragOff', function() {
         $scope.dragEnabled = false;
     });

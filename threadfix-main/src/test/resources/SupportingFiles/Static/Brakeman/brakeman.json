@@ -1,0 +1,292 @@
+{
+  "errors": [
+
+  ],
+  "scan_info": {
+    "number_of_models": 2,
+    "brakeman_version": "1.6.0",
+    "number_of_templates": 16,
+    "security_warnings": 18,
+    "timestamp": "Wed Apr 25 10:56:48 -0500 2012",
+    "app_path": "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b",
+    "ruby_version": "1.8.7",
+    "checks_performed": [
+      "BasicAuth",
+      "CrossSiteScripting",
+      "DefaultRoutes",
+      "EscapeFunction",
+      "Evaluation",
+      "Execute",
+      "FileAccess",
+      "FilterSkipping",
+      "ForgerySetting",
+      "LinkTo",
+      "LinkToHref",
+      "MailTo",
+      "MassAssignment",
+      "ModelAttributes",
+      "NestedAttributes",
+      "QuoteTableName",
+      "Redirect",
+      "Render",
+      "ResponseSplitting",
+      "SQL",
+      "SafeBufferManipulation",
+      "SelectVulnerability",
+      "Send",
+      "SendFile",
+      "SessionSettings",
+      "SkipBeforeFilter",
+      "StripTags",
+      "TranslateBug",
+      "ValidationRegex",
+      "WithoutProtection"
+    ],
+    "rails_version": "2.3.14",
+    "number_of_controllers": 3
+  },
+  "warnings": [
+    {
+      "line": null,
+      "file": "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/application_controller.rb",
+      "message": "'protect_from_forgery' should be called in ApplicationController",
+      "confidence": "High",
+      "code": null,
+      "user_input": null,
+      "location": {
+        "type": "controller",
+        "controller": "ApplicationController"
+      },
+      "warning_type": "Cross-Site Request Forgery"
+    },
+    {
+      "line": null,
+      "file": "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/post, user.rb",
+      "message": "Mass assignment is not restricted using attr_accessible",
+      "confidence": "High",
+      "code": null,
+      "user_input": null,
+      "location": {
+        "type": "model",
+        "model": "Post, User"
+      },
+      "warning_type": "Attribute Restriction"
+    },
+    {
+      "line": 68,
+      "file": "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/posts_controller.rb",
+      "message": "Possible unprotected redirect",
+      "confidence": "Weak",
+      "code": "redirect_to(Post.find(params[:id]), :notice => \"Post was successfully updated.\")",
+      "user_input": "Post.find(params[:id])",
+      "location": {
+        "type": "method",
+        "class": "PostsController",
+        "method": "update"
+      },
+      "warning_type": "Redirect"
+    },
+    {
+      "line": 67,
+      "file": "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/posts_controller.rb",
+      "message": "Unprotected mass assignment",
+      "confidence": "High",
+      "code": "Post.find(params[:id]).update_attributes(params[:post])",
+      "user_input": "params[:post]",
+      "location": {
+        "type": "method",
+        "class": "PostsController",
+        "method": "update"
+      },
+      "warning_type": "Mass Assignment"
+    },
+    {
+      "line": 47,
+      "file": "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/posts_controller.rb",
+      "message": "Unprotected mass assignment",
+      "confidence": "High",
+      "code": "Post.new(params[:post])",
+      "user_input": "params[:post]",
+      "location": {
+        "type": "method",
+        "class": "PostsController",
+        "method": "create"
+      },
+      "warning_type": "Mass Assignment"
+    },
+    {
+      "line": 70,
+      "file": "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb",
+      "message": "Unprotected mass assignment",
+      "confidence": "High",
+      "code": "User.find(params[:id]).update_attributes(params[:user])",
+      "user_input": "params[:user]",
+      "location": {
+        "type": "method",
+        "class": "UsersController",
+        "method": "update"
+      },
+      "warning_type": "Mass Assignment"
+    },
+    {
+      "line": 67,
+      "file": "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb",
+      "message": "Possible command injection",
+      "confidence": "High",
+      "code": "`echo #{params[:user][:password]} | shasum`",
+      "user_input": "params[:user][:password]",
+      "location": {
+        "type": "method",
+        "class": "UsersController",
+        "method": "update"
+      },
+      "warning_type": "Command Injection"
+    },
+    {
+      "line": 46,
+      "file": "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb",
+      "message": "Unprotected mass assignment",
+      "confidence": "High",
+      "code": "User.new(params[:user])",
+      "user_input": "params[:user]",
+      "location": {
+        "type": "method",
+        "class": "UsersController",
+        "method": "create"
+      },
+      "warning_type": "Mass Assignment"
+    },
+    {
+      "line": 47,
+      "file": "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb",
+      "message": "Possible command injection",
+      "confidence": "High",
+      "code": "`echo #{params[:user][:password]} | shasum`",
+      "user_input": "params[:user][:password]",
+      "location": {
+        "type": "method",
+        "class": "UsersController",
+        "method": "create"
+      },
+      "warning_type": "Command Injection"
+    },
+    {
+      "line": 101,
+      "file": "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb",
+      "message": "Possible command injection",
+      "confidence": "High",
+      "code": "`echo #{params[:user][:password]} | shasum`",
+      "user_input": "params[:user][:password]",
+      "location": {
+        "type": "method",
+        "class": "UsersController",
+        "method": "login_user"
+      },
+      "warning_type": "Command Injection"
+    },
+    {
+      "line": 95,
+      "file": "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb",
+      "message": "Possible unprotected redirect",
+      "confidence": "High",
+      "code": "redirect_to(params)",
+      "user_input": "params",
+      "location": {
+        "type": "method",
+        "class": "UsersController",
+        "method": "login"
+      },
+      "warning_type": "Redirect"
+    },
+    {
+      "line": 125,
+      "file": "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb",
+      "message": "Possible SQL injection",
+      "confidence": "High",
+      "code": "User.all(:conditions => (\"display_name like '%#{params[:query]}%'\"))",
+      "user_input": "params[:query]",
+      "location": {
+        "type": "method",
+        "class": "UsersController",
+        "method": "results"
+      },
+      "warning_type": "SQL Injection"
+    },
+    {
+      "line": 71,
+      "file": "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/controllers/users_controller.rb",
+      "message": "Possible unprotected redirect",
+      "confidence": "Weak",
+      "code": "redirect_to(User.find(params[:id]), :notice => \"User was successfully updated.\")",
+      "user_input": "User.find(params[:id])",
+      "location": {
+        "type": "method",
+        "class": "UsersController",
+        "method": "update"
+      },
+      "warning_type": "Redirect"
+    },
+    {
+      "line": 5,
+      "file": "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/models/user.rb",
+      "message": "Insufficient validation for 'user_name' using /^\\w+$/. Use \\A and \\z as anchors",
+      "confidence": "High",
+      "code": null,
+      "user_input": null,
+      "location": {
+        "type": "model",
+        "model": "User"
+      },
+      "warning_type": "Format Validation"
+    },
+    {
+      "line": 7,
+      "file": "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/models/user.rb",
+      "message": "Insufficient validation for 'display_name' using /^(\\w|\\s)+$/. Use \\A and \\z as anchors",
+      "confidence": "High",
+      "code": null,
+      "user_input": null,
+      "location": {
+        "type": "model",
+        "model": "User"
+      },
+      "warning_type": "Format Validation"
+    },
+    {
+      "line": 6,
+      "file": "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/views/users/index.html.erb",
+      "message": "Unescaped model attribute in link_to",
+      "confidence": "High",
+      "code": "link_to(User.new.display_name, User.new)",
+      "user_input": "User.new",
+      "location": {
+        "type": "template",
+        "template": "users/index (UsersController#index)"
+      },
+      "warning_type": "Cross Site Scripting"
+    },
+    {
+      "line": 2,
+      "file": "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/app/views/users/results.html.erb",
+      "message": "Unescaped parameter value",
+      "confidence": "High",
+      "code": "params[:query]",
+      "user_input": null,
+      "location": {
+        "type": "template",
+        "template": "users/results (UsersController#results)"
+      },
+      "warning_type": "Cross Site Scripting"
+    },
+    {
+      "line": 52,
+      "file": "C:/Users/mcollins/Downloads/presidentbeef-worst-forums-ever-8902d1b/presidentbeef-worst-forums-ever-8902d1b/config/routes.rb",
+      "message": "All public methods in controllers are available as actions in routes.rb",
+      "confidence": "High",
+      "code": null,
+      "user_input": null,
+      "location": null,
+      "warning_type": "Default Routes"
+    }
+  ]
+}

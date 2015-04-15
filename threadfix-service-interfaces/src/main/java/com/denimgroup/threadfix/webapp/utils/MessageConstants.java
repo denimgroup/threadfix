@@ -24,8 +24,9 @@
 
 package com.denimgroup.threadfix.webapp.utils;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * Created by stran on 4/3/14.
@@ -80,7 +81,7 @@ public class MessageConstants {
     public static final String ERROR403_TITLE = "403.title";
     public static final String ERROR403_MESSAGE = "403.message";
 
-    static Map<String, String> messageMap = new HashMap<>();
+    static Map<String, String> messageMap = map();
 
     static {
         addToMap(ERROR_MAXLENGTH, "{0} has a maximum length of {1}.");

@@ -12,6 +12,7 @@ import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Report;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
@@ -27,6 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
+import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 
 @Controller
 @RequestMapping("/configuration/settings")
@@ -34,6 +37,9 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 public class SystemSettingsController {
 	
 	protected final SanitizedLogger log = new SanitizedLogger(SystemSettingsController.class);
+
+	@Autowired(required = false)
+	private LdapService ldapService;
 
     @Autowired
 	private RoleService roleService = null;
@@ -98,6 +104,29 @@ public class SystemSettingsController {
 		return "config/systemSettings";
 	}
 
+	@ResponseBody
+	@RequestMapping(value="getLDAPSettings", method = RequestMethod.GET)
+	public RestResponse<DefaultConfiguration> getLDAPSettings(@ModelAttribute DefaultConfiguration configModel, HttpServletRequest request)
+	{
+		return success(defaultConfigurationWithMaskedPasswords());
+	}
+
+	@ResponseBody
+    @RequestMapping(value = "/checkLDAP", method = RequestMethod.POST)
+    public RestResponse<String> checkLDAP(@ModelAttribute DefaultConfiguration configModel,
+                            Model model,
+                            HttpServletRequest request) {
+		addModelAttributes(model, request);
+
+		long startTime = System.currentTimeMillis();
+        if (ldapService.innerAuthenticate(configModel)) {
+			long endTime = System.currentTimeMillis();
+			return success("LDAP settings are valid. LDAP validation took: " + (endTime - startTime) + "ms.");
+		} else {
+			return failure("Unable to verify LDAP settings.");
+		}
+    }
+
 	@RequestMapping(method = RequestMethod.POST)
 	public String processForm(@ModelAttribute DefaultConfiguration configModel,
 							  BindingResult bindingResult,
@@ -143,6 +172,17 @@ public class SystemSettingsController {
 	}
 
 	private void addModelAttributes(Model model, HttpServletRequest request) {
+		DefaultConfiguration configuration = defaultConfigurationWithMaskedPasswords();
+
+		model.addAttribute("applicationCount", applicationService.getApplicationCount());
+		model.addAttribute("licenseCount", licenseService == null ? 0 : licenseService.getAppLimit());
+		model.addAttribute("licenseExpirationDate", licenseService == null ? 0 : licenseService.getAppLimit());
+
+		model.addAttribute("defaultConfiguration", configuration);
+		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
+	}
+
+	private DefaultConfiguration defaultConfigurationWithMaskedPasswords() {
 		DefaultConfiguration configuration = defaultConfigService.loadCurrentConfiguration();
 
 		if (configuration.getProxyPassword() != null && !configuration.getProxyPassword().isEmpty()) {
@@ -152,12 +192,7 @@ public class SystemSettingsController {
 			configuration.setActiveDirectoryCredentials(DefaultConfiguration.MASKED_PASSWORD);
 		}
 
-		model.addAttribute("applicationCount", applicationService.getApplicationCount());
-		model.addAttribute("licenseCount", licenseService == null ? 0 : licenseService.getAppLimit());
-		model.addAttribute("licenseExpirationDate", licenseService == null ? 0 : licenseService.getAppLimit());
-
-		model.addAttribute("defaultConfiguration", configuration);
-		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
+		return configuration;
 	}
 
 }

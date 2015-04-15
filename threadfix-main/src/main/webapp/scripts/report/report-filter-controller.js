@@ -212,6 +212,24 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
 
     };
 
+    $scope.togglePermission = function(name) {
+
+        if (!$scope.parameters.permissionsList) {
+            $scope.parameters.permissionsList = [];
+        }
+
+        var index = $scope.parameters.permissionsList.indexOf(name);
+
+        if (index === -1) {
+            $scope.parameters.permissionsList.push(name);
+        } else {
+            $scope.remove($scope.parameters.permissionsList, index);
+        }
+
+        $scope.refresh();
+
+    };
+
     $scope.saveCurrentFilters = function() {
         if ($scope.$parent.trendingActive)
             $scope.parameters.filterType = {isTrendingFilter : true};
@@ -240,7 +258,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
             else
                 return (!parameters.filterType || parameters.filterType.isVulnSearchFilter);
         }
-    }
+    };
 
     var resetDateRange = function(){
         // Reset Date Range
@@ -282,7 +300,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
                     $scope.errorMessage = "Failed to retrieve vulnerability report. HTTP status was " + status;
                     $scope.loadingTree = false;
                 });
-        };
+        }
     };
 
 });

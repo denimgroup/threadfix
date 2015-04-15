@@ -35,6 +35,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.denimgroup.threadfix.importer.loader.ImplementationLoader.getLoader;
+
 /**
  * Created by mac on 2/4/14.
  */
@@ -78,7 +80,7 @@ public class RemoteProviderFactoryImpl implements RemoteProviderFactory {
 
     private void init() {
 
-        loader = new ImplementationLoader<>(RemoteProvider.class,
+        loader = getLoader(RemoteProvider.class,
                 AbstractRemoteProvider.class,
                 "com.denimgroup.threadfix.importer.impl.remoteprovider",
                 new AnnotationKeyGenerator<RemoteProvider>() {

@@ -26,9 +26,10 @@ package com.denimgroup.threadfix.framework.impl.model;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 import javax.annotation.Nonnull;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 /**
  * Created by mac on 8/27/14.
@@ -51,7 +52,7 @@ public final class FieldSetLookupUtils {
             fields = new ModelFieldSet();
         }
 
-        Set<String> alreadyVisited = new HashSet<>();
+        Set<String> alreadyVisited = set();
         alreadyVisited.add(className);
 
         ModelFieldSet fieldsToAdd = new ModelFieldSet(), finalFieldSet = new ModelFieldSet();
@@ -106,7 +107,7 @@ public final class FieldSetLookupUtils {
 
     public static void addSuperClassFieldsToModels(@Nonnull Map<String, ModelFieldSet> fieldMap,
                                                    @Nonnull Map<String, String> superClassMap) {
-        Set<String> done = new HashSet<>();
+        Set<String> done = set();
 
         for (String key : fieldMap.keySet()) {
             if (!superClassMap.containsKey(key)) {

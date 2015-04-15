@@ -128,6 +128,7 @@ public class EditApplicationController {
 		application.setDefectTracker(databaseApplication.getDefectTracker());
 		application.setUserName(databaseApplication.getUserName());
 		application.setPassword(databaseApplication.getPassword());
+		application.setEndpointPermissions(databaseApplication.getEndpointPermissions());
 		
 		if(!result.hasErrors()) {
 			applicationService.validateAfterEdit(application, result);

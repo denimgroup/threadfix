@@ -41,7 +41,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.util.CSVExportProperties.*;
 
 /**
  * @author mcollins
@@ -101,7 +102,7 @@ public class ReportsServiceImpl implements ReportsService {
     @Override
     public Map<String, Object> generateTrendingReport(ReportParameters parameters, HttpServletRequest request) {
 
-        Map<String, Object> map = newMap();
+        Map<String, Object> map = map();
 
         List<Integer> applicationIdList = getApplicationIdList(parameters);
         if (applicationIdList == null || applicationIdList.isEmpty()) {
@@ -121,7 +122,7 @@ public class ReportsServiceImpl implements ReportsService {
 
     @Override
     public Map<String, Object> generateSnapshotReport(ReportParameters parameters, HttpServletRequest request) {
-        Map<String, Object> map = newMap();
+        Map<String, Object> map = map();
         List<Integer> applicationIdList = getApplicationIdList(parameters);
         if (applicationIdList.isEmpty()) {
             log.info("No applications found.");
@@ -151,7 +152,7 @@ public class ReportsServiceImpl implements ReportsService {
 
     @Override
     public Map<String, Object> generateMostAppsReport(VulnerabilitySearchParameters parameters, HttpServletRequest request) {
-        Map<String, Object> map = newMap();
+        Map<String, Object> map = map();
         List<Integer> teamIdList = list();
         List<Integer> applicationIdList = list();
         List<Integer> tagIdList = list();
@@ -187,7 +188,7 @@ public class ReportsServiceImpl implements ReportsService {
 
                 if (!(objects[0] instanceof Integer)) continue;
                 GenericVulnerability genericVulnerability = genericVulnerabilityDao.retrieveById((Integer) objects[0]);
-                Map<String, Object> hash = newMap();
+                Map<String, Object> hash = map();
                 hash.put("count", objects[1]);
                 hash.put("title", "CWE-" + genericVulnerability.getDisplayId());
                 hash.put("name", genericVulnerability.getName());
@@ -229,7 +230,7 @@ public class ReportsServiceImpl implements ReportsService {
         List<Application> apps = applicationDao.getTopAppsFromList(applicationIdList);
         List<Map<String, Object>> resultList = list();
         for (Application app: apps) {
-            Map<String, Object> hash = newMap();
+            Map<String, Object> hash = map();
             hash.put("Critical", app.getCriticalVulnCount());
             hash.put("High", app.getHighVulnCount());
             hash.put("Medium", app.getMediumVulnCount());
@@ -253,7 +254,7 @@ public class ReportsServiceImpl implements ReportsService {
         Organization team = organizationDao.retrieveById(teamId);
         List<Map<String, Object>> resultList = list();
         for (Object[] infoArr: objects) {
-            Map<String, Object> hash = newMap();
+            Map<String, Object> hash = map();
 
             if (infoArr != null && infoArr.length >= 5) {
                 hash.put("Critical", infoArr[4]);
@@ -341,7 +342,7 @@ public class ReportsServiceImpl implements ReportsService {
 
     private List<List<String>> getVulnListInfo(List<Vulnerability> vulnerabilityList) {
         List<List<String>> rowParamsList = list();
-        SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         for (Vulnerability vuln : vulnerabilityList) {
             if (vuln == null) {
                 continue;
@@ -358,21 +359,30 @@ public class ReportsServiceImpl implements ReportsService {
                 }
             }
 
-            // Order of fields: CWE ID, CWE Name, Path, Parameter, Severity, Open Date, Defect ID, Application, Team, Payload, Attack surface path
-            rowParamsList.add(list(
-                    vuln.getGenericVulnerability().getId().toString(),
-                    vuln.getGenericVulnerability().getName(),
-                    vuln.getSurfaceLocation().getPath(),
-                    vuln.getSurfaceLocation().getParameter(),
-                    vuln.getGenericSeverity().getName(),
-                    openedDate,
-                    description,
-                    (vuln.getDefect() == null) ? "" : vuln.getDefect().getNativeId(),
-                    vuln.getApplication().getName(),
-                    vuln.getApplication().getOrganization().getName(),
-                    vuln.getSurfaceLocation().getQuery() == null ? "" : vuln.getSurfaceLocation().getQuery(),
-                    vuln.getSurfaceLocation().getUrl() == null ? "" : vuln.getSurfaceLocation().getUrl().toString()
-            ));
+            // create fields map
+            Map<String, String> csvMap = map(
+                    CWE_ID,              vuln.getGenericVulnerability().getId().toString(),
+                    CWE_NAME,            vuln.getGenericVulnerability().getName(),
+                    PATH,                vuln.getSurfaceLocation().getPath(),
+                    PARAMETER,           vuln.getSurfaceLocation().getParameter(),
+                    SEVERITY,            vuln.getGenericSeverity().getName(),
+                    OPEN_DATE,           openedDate,
+                    DESCRIPTION,         description,
+                    DEFECT_ID,           (vuln.getDefect() == null) ? "" : vuln.getDefect().getNativeId(),
+                    APPLICATION_NAME,    vuln.getApplication().getName(),
+                    TEAM_NAME,           vuln.getApplication().getOrganization().getName(),
+                    PAYLOAD,             vuln.getSurfaceLocation().getQuery() == null ? "" : vuln.getSurfaceLocation().getQuery(),
+                    ATTACK_SURFACE_PATH, vuln.getSurfaceLocation().getUrl() == null ? "" : vuln.getSurfaceLocation().getUrl().toString()
+            );
+
+            // add configured fields only
+            List<String> listToAdd = list();
+
+            for (String headerKey : getCSVExportHeaderList()) {
+                listToAdd.add(csvMap.get(headerKey));
+            }
+
+            rowParamsList.add(listToAdd);
         }
         return rowParamsList;
     }
@@ -398,7 +408,7 @@ public class ReportsServiceImpl implements ReportsService {
             data.append("Application: ").append(appName).append(" \n \n");
         }
 
-		data.append("CWE ID, CWE Name, Path, Parameter, Severity, Open Date, Description, Defect ID, Application Name, Team Name, Payload, Attack Surface Path \n");
+		data.append(getCSVExportHeaderString());
 		for (List<String> row: rowParamsList) {
 			for (int i=0;i<row.size();i++) {
 				String str = "";
@@ -406,6 +416,9 @@ public class ReportsServiceImpl implements ReportsService {
 
 				if (str.contains(",")) {
                     str = "\"" + str.replaceAll("\"", "\"\"") + "\"";
+                }
+                if (str.contains("\n")) {
+                    str = "\"" + str + "\"";
                 }
 
 				if (i<row.size()-1)

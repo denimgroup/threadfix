@@ -39,6 +39,8 @@ import java.io.IOException;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 class WebXMLParser {
 
@@ -58,10 +60,14 @@ class WebXMLParser {
 			SAXParser saxParser = factory.newSAXParser();
 
 			saxParser.parse(file, parser);
-		} catch (IOException | SAXException | ParserConfigurationException e) {
+		} catch (IOException e) {
+			log.warn("Encountered exception while parsing mappings.", e);
+		} catch (SAXException e) {
+			log.warn("Encountered exception while parsing mappings.", e);
+		} catch (ParserConfigurationException e) {
 			log.warn("Encountered exception while parsing mappings.", e);
 		}
-		
+
 		return new ServletMappings(parser.mappings,
                 parser.servlets,
                 projectDirectory,
@@ -77,7 +83,7 @@ class WebXMLParser {
 		@Nonnull
         List<UrlPatternMapping> mappings = list();
         @Nonnull
-        Map<String, String> contextParams = new HashMap<>();
+        Map<String, String> contextParams = map();
 		
 		@Nullable
         String servletName = null, urlPattern = null,
@@ -104,9 +110,9 @@ class WebXMLParser {
             CONTEXT_PARAM = "context-param";
 
 		@Nonnull
-        private static Set<String> tagsToGrab = new HashSet<>(Arrays.asList(
-			new String[] { SERVLET_NAME, URL_PATTERN, SERVLET_CLASS,
-					PARAM_NAME, PARAM_VALUE }));
+        private static Set<String> tagsToGrab = set(
+				SERVLET_NAME, URL_PATTERN, SERVLET_CLASS,
+						PARAM_NAME, PARAM_VALUE);
 		
 		@Override
 		public void startElement(String uri, String localName,
@@ -121,51 +127,53 @@ class WebXMLParser {
 		@Override
 		public void endElement(String uri, String localName,
 				@Nonnull String qName) throws SAXException {
-			
-			switch (qName) {
-				case SERVLET_NAME:  servletName  = getBuilderText(); break;
-				case URL_PATTERN:   urlPattern   = getBuilderText(); break;
-				case SERVLET_CLASS: servletClass = getBuilderText(); break;
-				case SERVLET_MAPPING:
-                    if (servletName != null && urlPattern != null) {
-					    mappings.add(new UrlPatternMapping(servletName, urlPattern));
-                    }
-					break;
-				case SERVLET:
-					if (servletName != null && servletClass != null) {
-						servlets.add(new ClassMapping(servletName, servletClass, contextConfigLocation, contextClass));
-						contextConfigLocation = null;
-                        contextClass = null;
-					}
-					break;
-                case CONTEXT_PARAM:
-                    if (contextConfigLocation != null) {
-                        contextParams.put(CONTEXT_CONFIG_LOCATION, contextConfigLocation);
-                        contextConfigLocation = null;
-                    }
-                    if (contextClass != null) {
-                        contextParams.put(CONTEXT_CLASS, contextClass);
-                        contextClass = null;
-                    }
-                    break;
-				case PARAM_VALUE: 
-					if (getContextConfigLocation) {
-						contextConfigLocation = getBuilderText();
-                        getContextConfigLocation = false;
-					} else if (getContextClass) {
-                        contextClass = getBuilderText();
-                        getContextClass = false;
-                    }
-					break;
-				case PARAM_NAME:
-                    String text = getBuilderText();
-					if (CONTEXT_CONFIG_LOCATION.equals(text)) {
-						getContextConfigLocation = true;
-					} else if (CONTEXT_CLASS.equals(text)) {
-                        getContextClass = true;
-                    }
-					break;
-                default:
+
+			if (qName.equals(SERVLET_NAME)) {
+				servletName = getBuilderText();
+			} else if (qName.equals(URL_PATTERN)) {
+				urlPattern = getBuilderText();
+			} else if (qName.equals(SERVLET_CLASS)) {
+				servletClass = getBuilderText();
+			} else if (qName.equals(SERVLET_MAPPING)) {
+				if (servletName != null && urlPattern != null) {
+					mappings.add(new UrlPatternMapping(servletName, urlPattern));
+				}
+
+			} else if (qName.equals(SERVLET)) {
+				if (servletName != null && servletClass != null) {
+					servlets.add(new ClassMapping(servletName, servletClass, contextConfigLocation, contextClass));
+					contextConfigLocation = null;
+					contextClass = null;
+				}
+
+			} else if (qName.equals(CONTEXT_PARAM)) {
+				if (contextConfigLocation != null) {
+					contextParams.put(CONTEXT_CONFIG_LOCATION, contextConfigLocation);
+					contextConfigLocation = null;
+				}
+				if (contextClass != null) {
+					contextParams.put(CONTEXT_CLASS, contextClass);
+					contextClass = null;
+				}
+
+			} else if (qName.equals(PARAM_VALUE)) {
+				if (getContextConfigLocation) {
+					contextConfigLocation = getBuilderText();
+					getContextConfigLocation = false;
+				} else if (getContextClass) {
+					contextClass = getBuilderText();
+					getContextClass = false;
+				}
+
+			} else if (qName.equals(PARAM_NAME)) {
+				String text = getBuilderText();
+				if (CONTEXT_CONFIG_LOCATION.equals(text)) {
+					getContextConfigLocation = true;
+				} else if (CONTEXT_CLASS.equals(text)) {
+					getContextClass = true;
+				}
+
+			} else {
 			}
             grabText = false;
 		}

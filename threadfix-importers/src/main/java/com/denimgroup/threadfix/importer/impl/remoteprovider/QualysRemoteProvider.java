@@ -43,7 +43,9 @@ import java.io.InputStream;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.CollectionUtils.set;
+import static com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl.getImpl;
 
 /**
  * TODO use POST data to pre-filter web requests
@@ -180,7 +182,7 @@ public class QualysRemoteProvider extends AbstractRemoteProvider {
         put("150134","5");
     }};
 
-    RemoteProviderHttpUtils utils = new RemoteProviderHttpUtilsImpl<>(this.getClass());
+    RemoteProviderHttpUtils utils = getImpl(this.getClass());
 	
 	public QualysRemoteProvider() {
 		super(ScannerType.QUALYSGUARD_WAS);
@@ -539,13 +541,14 @@ public class QualysRemoteProvider extends AbstractRemoteProvider {
 		    }
 	    	
 	    	if (qName.equals("WasScan")) {
-	    		Map<String, String> map = new HashMap<>();
-	    		map.put("id", currentId);
-	    		map.put("status", currentStatus);
-	    		map.put("date", currentDate);
-	    		map.put("webAppName", webAppName);
+	    		Map<String, String> myMap = map(
+                        "id", currentId,
+                        "status", currentStatus,
+                        "date", currentDate,
+                        "webAppName", webAppName
+                );
 	    		
-	    		list.add(map);
+	    		list.add(myMap);
 	    			    		
 	    		currentStatus = null;
 	    		currentId = null;
@@ -577,7 +580,7 @@ public class QualysRemoteProvider extends AbstractRemoteProvider {
         private String currentAttackDetail    = null;
         private String currentAttackResponse  = null;
 
-        private Map<FindingKey, String> findingMap = new HashMap<>();
+        private Map<FindingKey, String> findingMap = map();
 
         public void add(Finding finding) {
 			if (finding != null) {
@@ -594,50 +597,49 @@ public class QualysRemoteProvider extends AbstractRemoteProvider {
 	    public void startElement (String uri, String name,
 				      String qName, Attributes atts) {
 
-            switch(qName) {
-                case "launchedDate":
-                    getDate = true;
-                    break;
-                case "uri":
-                    getUri = true;
-                    break;
-                case "qid":
-                    getChannelVulnName = true;
-                    break;
-                case "param":
-                    getParameter = true;
-                    break;
-                case "payload":
-                    getAttackDetail = true;
-                    break;
-                case "result":
-                    getAttackResponse = true;
-                    isBase64 = "true".equals(atts.getValue("base64"));
-                    break;
-                case "instances":
-                    currentSeverityCode = SEVERITIES_MAP.get(currentChannelVulnCode);
+            if (qName.equals("launchedDate")) {
+                getDate = true;
 
-                    if (currentSeverityCode == null) {
-                        LOG.warn("Unable to retrieve severity for code " + currentChannelVulnCode + ". Setting to 3");
-                        currentSeverityCode = "3";
-                    }
+            } else if (qName.equals("uri")) {
+                getUri = true;
 
-                    findingMap.put(FindingKey.PATH,             currentPath);
-                    findingMap.put(FindingKey.PARAMETER,        currentParameter);
-                    findingMap.put(FindingKey.VULN_CODE,        currentChannelVulnCode);
-                    findingMap.put(FindingKey.SEVERITY_CODE,    currentSeverityCode);
-                    findingMap.put(FindingKey.VALUE,            currentAttackDetail);
-                    findingMap.put(FindingKey.ATTACK_STRING,    currentAttackDetail);
-                    findingMap.put(FindingKey.REQUEST,          currentAttackDetail);
-                    findingMap.put(FindingKey.RESPONSE,         currentAttackResponse);
+            } else if (qName.equals("qid")) {
+                getChannelVulnName = true;
 
-                    Finding finding = constructFinding(findingMap);
-                    add(finding);
+            } else if (qName.equals("param")) {
+                getParameter = true;
 
-                    currentParameter       = null;
-                    currentPath            = null;
-                    getParameter           = false;
-                    break;
+            } else if (qName.equals("payload")) {
+                getAttackDetail = true;
+
+            } else if (qName.equals("result")) {
+                getAttackResponse = true;
+                isBase64 = "true".equals(atts.getValue("base64"));
+
+            } else if (qName.equals("instances")) {
+                currentSeverityCode = SEVERITIES_MAP.get(currentChannelVulnCode);
+
+                if (currentSeverityCode == null) {
+                    LOG.warn("Unable to retrieve severity for code " + currentChannelVulnCode + ". Setting to 3");
+                    currentSeverityCode = "3";
+                }
+
+                findingMap.put(FindingKey.PATH, currentPath);
+                findingMap.put(FindingKey.PARAMETER, currentParameter);
+                findingMap.put(FindingKey.VULN_CODE, currentChannelVulnCode);
+                findingMap.put(FindingKey.SEVERITY_CODE, currentSeverityCode);
+                findingMap.put(FindingKey.VALUE, currentAttackDetail);
+                findingMap.put(FindingKey.ATTACK_STRING, currentAttackDetail);
+                findingMap.put(FindingKey.REQUEST, currentAttackDetail);
+                findingMap.put(FindingKey.RESPONSE, currentAttackResponse);
+
+                Finding finding = constructFinding(findingMap);
+                add(finding);
+
+                currentParameter = null;
+                currentPath = null;
+                getParameter = false;
+
             }
 	    }
 	    
@@ -692,7 +694,7 @@ public class QualysRemoteProvider extends AbstractRemoteProvider {
         private String currentConsequence   = null;
         private String currentSolution      = null;
 
-        private Map<FindingKey, String> findingMap = new HashMap<>();
+        private Map<FindingKey, String> findingMap = map();
 
         ////////////////////////////////////////////////////////////////////
         // Event handlers.

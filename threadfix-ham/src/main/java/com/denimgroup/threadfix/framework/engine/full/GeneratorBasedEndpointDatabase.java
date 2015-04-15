@@ -34,9 +34,7 @@ import javax.annotation.Nullable;
 
 import java.util.*;
 
-import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.set;
-import static com.denimgroup.threadfix.CollectionUtils.setFrom;
+import static com.denimgroup.threadfix.CollectionUtils.*;
 
 class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 	
@@ -50,10 +48,10 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 	private final FrameworkType frameworkType;
 	
 	private final Map<String, Set<Endpoint>>
-		dynamicMap = new HashMap<>(),
-		staticMap  = new HashMap<>(),
-		parameterMap = new HashMap<>(),
-		httpMethodMap = new HashMap<>();
+		dynamicMap = map(),
+		staticMap  = map(),
+		parameterMap = map(),
+		httpMethodMap = map();
 	
 	protected final static SanitizedLogger log = new SanitizedLogger(GeneratorBasedEndpointDatabase.class);
 
@@ -203,7 +201,7 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 
     @Nonnull
     private Set<Endpoint> getFromCodePoints(@Nonnull List<CodePoint> codePoints) {
-        Set<Endpoint> results = new HashSet<>();
+        Set<Endpoint> results = set();
 
         top: for (CodePoint codePoint : codePoints) {
             if (codePoint != null) {
@@ -241,7 +239,7 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
     private Set<Endpoint> getValueOrEmptySet(@Nullable String key,
                                              @Nonnull Map<String, Set<Endpoint>> map) {
         if (key == null)
-            return new HashSet<>();
+            return set();
 
         String keyForwardSlash = key.replace("\\","/");
 

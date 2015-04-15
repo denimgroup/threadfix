@@ -40,10 +40,10 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 // TODO recognize String variables
 // TODO support * values:
 // from Spring documentation: Ant-style path patterns are supported (e.g. "/myPath/*.do").
-class SpringControllerEndpointParser implements EventBasedTokenizer {
+public class SpringControllerEndpointParser implements EventBasedTokenizer {
 
     @Nonnull
-    Set<SpringControllerEndpoint> endpoints = new TreeSet<>();
+    Set<SpringControllerEndpoint> endpoints = new TreeSet<SpringControllerEndpoint>();
     private int startLineNumber = 0, curlyBraceCount = 0, openParenCount = 0;
     private boolean inClass = false, afterOpenParen = false, isPathParameter;
     boolean hasControllerAnnotation = false;
@@ -70,8 +70,10 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
             PATH_VARIABLE   = "PathVariable",
             REQUEST_MAPPING = "RequestMapping",
             CLASS           = "class",
+            PRE_AUTHORIZE   = "PreAuthorize",
             BINDING_RESULT  = "BindingResult",
-            CONTROLLER      = "Controller";
+            CONTROLLER      = "RestController",
+            REST_CONTROLLER = "Controller";
 
     @Nonnull
     private Phase           phase           = Phase.ANNOTATION;
@@ -87,7 +89,7 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
     }
 
     private enum AnnotationState {
-        START, ARROBA, REQUEST_MAPPING, VALUE, METHOD, METHOD_MULTI_VALUE, ANNOTATION_END
+        START, ARROBA, REQUEST_MAPPING, VALUE, METHOD, METHOD_MULTI_VALUE, ANNOTATION_END, SECURITY_ANNOTATION
     }
 
     private enum SignatureState {
@@ -247,10 +249,19 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
             case ARROBA:
                 if (REQUEST_MAPPING.equals(stringValue)) {
                     annotationState = AnnotationState.REQUEST_MAPPING;
-                } else if (CONTROLLER.equals(stringValue)) {
+                } else if (PRE_AUTHORIZE.equals(stringValue)) {
+                    annotationState = AnnotationState.SECURITY_ANNOTATION;
+                } else if (CONTROLLER.equals(stringValue) || REST_CONTROLLER.equals(stringValue)) {
                     hasControllerAnnotation = true;
                     annotationState = AnnotationState.START;
                 } else {
+                    annotationState = AnnotationState.START;
+                }
+                break;
+            case SECURITY_ANNOTATION:
+                if ('"' == type) {
+                    parseSecurityString(stringValue);
+                } else if (')' == type) {
                     annotationState = AnnotationState.START;
                 }
                 break;
@@ -324,6 +335,17 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
         }
     }
 
+    String currentAuthString = null;
+    String globalAuthString  = null;
+
+    private void parseSecurityString(String stringValue) {
+        if (inClass) {
+            currentAuthString = stringValue;
+        } else {
+            globalAuthString = stringValue;
+        }
+    }
+
     private void addEndpoint(int endLineNumber) {
         if (classEndpoint != null) {
             if (currentMapping != null) {
@@ -366,6 +388,16 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
 
         if (entityMappings != null) {
             endpoint.expandParameters(entityMappings, null);
+        }
+
+        if (globalAuthString != null) {
+            if (currentAuthString != null) {
+                endpoint.setAuthorizationString(globalAuthString + " and " + currentAuthString);
+            } else {
+                endpoint.setAuthorizationString(globalAuthString);
+            }
+        } else if (currentAuthString != null) {
+            endpoint.setAuthorizationString(currentAuthString);
         }
 
         endpoints.add(endpoint);

@@ -31,6 +31,8 @@ import org.junit.Test;
 
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  * Created by sgerick on 11/12/2014.
  */
@@ -139,7 +141,7 @@ public class StrutsXmlParserTests {
 		assert strutsPackages.size() == PACKAGE_VALUES.length :
 				"Expected " + PACKAGE_VALUES.length + " packages. Got " + strutsPackages.size();
 
-		List<String[][]> action_values = new ArrayList<>(PACKAGE_VALUES.length);
+		List<String[][]> action_values = list();
 		action_values.add(ROLLER_ACTIONS);
 		action_values.add(ROLLER_INSTALL_ACTIONS);
 		action_values.add(ROLLER_ADMIN_ACTIONS);
@@ -223,7 +225,7 @@ public class StrutsXmlParserTests {
 
 					break;
 				case 2:
-					Map<String, String> testParams = new HashMap<>(2);
+					Map<String, String> testParams = new HashMap<String, String>(2);
 					testParams.put("actionName", "createUser");
 					testParams.put("pageTitle", "userAdmin.title.createNewUser");
 					assert params.equals(testParams) : "Wrong params in " + action + action.getParams() + ", expected: " + testParams;
@@ -238,14 +240,14 @@ public class StrutsXmlParserTests {
 					assert results.get(1).getType().equals("redirectAction") : "Wrong type in " + results.get(1) + ", expected: redirectAction";
 					assert results.get(1).getValue() == null : "Wrong value in " + results.get(1) + ", expected: null";
 					Map resultParam = results.get(1).getParams();
-					Map<String, String> testResultParams = new HashMap<>(2);
+					Map<String, String> testResultParams = new HashMap<String, String>(2);
 					testResultParams.put("actionName", "modifyUser!firstSave");
 					testResultParams.put("bean.id", "${bean.id}");
 					assert resultParam.equals(testResultParams) : "Wrong params in " + results.get(1) + ", expected: " + testResultParams;
 
 					break;
 				case 3:
-					testParams = new HashMap<>(2);
+					testParams = new HashMap<String, String>(2);
 					testParams.put("actionName", "modifyUser");
 					testParams.put("pageTitle", "userAdmin.title.editUser");
 					assert params.equals(testParams) : "Wrong params in " + action + action.getParams() + ", expected: " + testParams;
@@ -265,7 +267,7 @@ public class StrutsXmlParserTests {
 					assert results.get(2).getType().equals("redirectAction") : "Wrong type in " + results.get(2) + ", expected: redirectAction";
 					assert results.get(2).getValue() == null;
 					resultParam = results.get(2).getParams();
-					testResultParams = new HashMap<>(1);
+					testResultParams = new HashMap<String, String>(1);
 					testResultParams.put("actionName", "userAdmin");
 					assert resultParam.equals(testResultParams) : "Wrong params in " + results.get(2) + ", expected: " + testResultParams;
 
@@ -296,7 +298,7 @@ public class StrutsXmlParserTests {
 
 					break;
 				case 6:
-					testParams = new HashMap<>(2);
+					testParams = new HashMap<String, String>(2);
 					testParams.put("actionName", "commonPingTargetAdd");
 					testParams.put("pageTitle", "pingTarget.addTarget");
 					assert params.equals(testParams) : "Wrong params in " + action + action.getParams() + ", expected: " + testParams;
@@ -314,7 +316,7 @@ public class StrutsXmlParserTests {
 
 					break;
 				case 7:
-					testParams = new HashMap<>(2);
+					testParams = new HashMap<String, String>(2);
 					testParams.put("actionName", "commonPingTargetEdit");
 					testParams.put("pageTitle", "pingTarget.editTarget");
 					assert params.equals(testParams) : "Wrong params in " + action + action.getParams() + ", expected: " + testParams;

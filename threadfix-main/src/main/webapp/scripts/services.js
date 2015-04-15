@@ -138,20 +138,22 @@ threadfixModule.factory('vulnSearchParameterService', function() {
     // glue code to make angular and spring play nice
     updater.updateParameters = function($scope, parameters) {
         parameters.genericSeverities = [];
-        if (parameters.severities.info) {
-            parameters.genericSeverities.push({ intValue: 1 });
-        }
-        if (parameters.severities.low) {
-            parameters.genericSeverities.push({ intValue: 2 });
-        }
-        if (parameters.severities.medium) {
-            parameters.genericSeverities.push({ intValue: 3 });
-        }
-        if (parameters.severities.high) {
-            parameters.genericSeverities.push({ intValue: 4 });
-        }
-        if (parameters.severities.critical) {
-            parameters.genericSeverities.push({ intValue: 5 });
+        if (parameters.severities) {
+            if (parameters.severities.info) {
+                parameters.genericSeverities.push({intValue: 1});
+            }
+            if (parameters.severities.low) {
+                parameters.genericSeverities.push({intValue: 2});
+            }
+            if (parameters.severities.medium) {
+                parameters.genericSeverities.push({intValue: 3});
+            }
+            if (parameters.severities.high) {
+                parameters.genericSeverities.push({intValue: 4});
+            }
+            if (parameters.severities.critical) {
+                parameters.genericSeverities.push({intValue: 5});
+            }
         }
 
         if ($scope.treeTeam) {
@@ -448,7 +450,7 @@ threadfixModule.factory('vulnTreeTransformer', function() {
         }
     };
 
-    transformer.transform = function(serverResponse, owasp) {
+    transformer.transform = function(serverResponse, owasp, disaStig) {
 
         var initialCategories = [];
         var newTree = [];
@@ -483,6 +485,58 @@ threadfixModule.factory('vulnTreeTransformer', function() {
                         newTreeCategory.total = newTreeCategory.total + element.numResults;
                         newTreeCategory.entries.push(element);
                     }
+                });
+                newTreeCategory.entries.sort(function(a, b) {
+                    return b.numResults - a.numResults;
+                });
+                initialCategories.push(newTreeCategory);
+            });
+
+            newTree = initialCategories;
+
+        } else if (disaStig) {
+
+            var vulnSum = {}, vulnList = [];
+            serverResponse.forEach(function(element) {
+                var oldNum = 0, oldVulns = [], key = element.genericVulnerability.displayId + "_" +element.memberOf;
+                if (vulnSum[key]) {
+                    oldNum = vulnSum[key].numResults;
+                    oldVulns = vulnSum[key].vulns;
+                }
+                vulnSum[key] = {
+                    genericVulnerability: element.genericVulnerability,
+                    numResults: oldNum + element.numResults,
+                    vulns: oldVulns.concat(element.vulns),
+                    memberOf: element.memberOf
+                }
+            });
+
+            for (var k in vulnSum)
+                vulnList.push(vulnSum[k]);
+
+            disaStig.forEach(function(disaStigCat){
+
+                var categorylvl = 5;
+
+                if (disaStigCat.id === "CATI") {
+                    categorylvl = 5;
+                } else if (disaStigCat.id === "CATII") {
+                    categorylvl = 3;
+                } else if (disaStigCat.id === "CATIII") {
+                    categorylvl = 1;
+                }
+
+                var newTreeCategory = getCategory(disaStigCat.name, categorylvl);
+                vulnList.forEach(function(element) {
+
+                    disaStigCat.members.forEach(function(disaStig) {
+                        if (disaStig.cweIds.indexOf(element.genericVulnerability.displayId) > -1
+                            || (element.memberOf && disaStig.cweIds.indexOf(element.memberOf) > -1)) {
+                            newTreeCategory.total = newTreeCategory.total + element.numResults;
+                            element.preText = disaStig.stigId;
+                            newTreeCategory.entries.push(element);
+                        }
+                    });
                 });
                 newTreeCategory.entries.sort(function(a, b) {
                     return b.numResults - a.numResults;

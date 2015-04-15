@@ -32,6 +32,7 @@ import com.denimgroup.threadfix.importer.interop.ChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ChannelImporterFactory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.merge.FindingMatcher;
+import com.denimgroup.threadfix.service.merge.PermissionsHandler;
 import com.denimgroup.threadfix.service.merge.ScanMerger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,6 +68,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
     private VulnerabilityService vulnerabilityService;
 	@Autowired
 	private DefectService defectService;
+	@Autowired
+	private PermissionsHandler permissionsHandler;
 
 	@Override
 	public Scan saveRemoteScanAndRun(Integer channelId, String fileName) {
@@ -82,7 +85,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		}
 		
 		updateScanCounts(scan);
-		defectService.updateScannerSuppliedStatuses(scan.getApplication().getId());
+		Integer id = scan.getApplication().getId();
+		defectService.updateScannerSuppliedStatuses(id);
 		vulnerabilityFilterService.updateVulnerabilities(scan);
 
 		return scan;
@@ -191,7 +195,10 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 
         scanDao.saveOrUpdate(scan);
 
-        // set numbers correctly
+		// set auth parameters
+		permissionsHandler.setPermissions(scan, scan.getApplicationChannel().getApplication().getId());
+
+		// set numbers correctly
         updateScanCounts(scan);
 	
 		return scan;

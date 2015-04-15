@@ -30,13 +30,17 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.CollectionUtils.set;
+
 class JSPEndpoint extends AbstractEndpoint {
 
     @Nonnull
 	private final String dynamicPath, staticPath;
 
     @Nonnull
-	private final Set<String> parameters = new HashSet<>(), methods;
+	private final Set<String> parameters = set(), methods;
 
 	@Nonnull
     private final Map<String, Integer> paramToLineMap;
@@ -63,7 +67,7 @@ class JSPEndpoint extends AbstractEndpoint {
 	@Nonnull
     private Map<String, Integer> getParamToLineMap(
 			Map<Integer, List<String>> parameterMap) {
-		Map<String, Integer> paramMap = new HashMap<>();
+		Map<String, Integer> paramMap = map();
 		
 		for (String parameter : parameters) {
 			paramMap.put(parameter, getFirstLineNumber(parameter, parameterMap));
@@ -156,6 +160,6 @@ class JSPEndpoint extends AbstractEndpoint {
     @Nonnull
     @Override
     protected List<String> getLintLine() {
-        return new ArrayList<>();
+        return list();
     }
 }

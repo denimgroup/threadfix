@@ -23,9 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.dotNet;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * Created by mac on 6/11/14.
@@ -69,7 +70,7 @@ public class DotNetRouteMappings {
         return parameters.contains(routes.get(0).defaultRoute.parameter);
     }
 
-    List<MapRoute> routes = new ArrayList<>();
+    List<MapRoute> routes = list();
 
     public DotNetRouteMappings() {}
 

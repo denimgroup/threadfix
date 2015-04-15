@@ -1,0 +1,1088 @@
+<?xml version="1.0" encoding="UTF-8"?><OWASPZAPReport generated="Mon, 6 Oct 2014 14:52:53" version="2.3.1">
+<site host="localhost" name="http://localhost:9966" port="9966" ssl="false"><alerts><alertitem>
+  <pluginid>10021</pluginid>
+  <alert>X-Content-Type-Options header missing</alert>
+  <riskcode>1</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Low (Warning)</riskdesc>
+  <desc>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'.
+	This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type.
+	Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.
+	</desc>
+  <uri>http://localhost:9966/petclinic</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.
+	If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.
+	</solution>
+  <reference>
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>10020</pluginid>
+  <alert>X-Frame-Options header not set</alert>
+  <riskcode>0</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Informational (Warning)</riskdesc>
+  <desc>X-Frame-Options header is not included in the HTTP response to protect against 'ClickJacking' attacks
+	</desc>
+  <uri>http://localhost:9966/petclinic</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Most modern Web browsers support the X-Frame-Options HTTP header. Ensure it's set on all web pages returned by your site (if you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY.  ALLOW-FROM allows specific websites to frame the web page in supported web browsers).
+	</solution>
+  <reference>http://blogs.msdn.com/b/ieinternals/archive/2010/03/30/combating-clickjacking-with-x-frame-options.aspx?Redirected=true
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>10021</pluginid>
+  <alert>X-Content-Type-Options header missing</alert>
+  <riskcode>1</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Low (Warning)</riskdesc>
+  <desc>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'.
+	This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type.
+	Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.
+	</desc>
+  <uri>http://localhost:9966/petclinic/</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.
+	If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.
+	</solution>
+  <reference>
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>10020</pluginid>
+  <alert>X-Frame-Options header not set</alert>
+  <riskcode>0</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Informational (Warning)</riskdesc>
+  <desc>X-Frame-Options header is not included in the HTTP response to protect against 'ClickJacking' attacks
+	</desc>
+  <uri>http://localhost:9966/petclinic/</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Most modern Web browsers support the X-Frame-Options HTTP header. Ensure it's set on all web pages returned by your site (if you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY.  ALLOW-FROM allows specific websites to frame the web page in supported web browsers).
+	</solution>
+  <reference>http://blogs.msdn.com/b/ieinternals/archive/2010/03/30/combating-clickjacking-with-x-frame-options.aspx?Redirected=true
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>3</pluginid>
+  <alert>Session ID in URL rewrite</alert>
+  <riskcode>2</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Medium (Warning)</riskdesc>
+  <desc>URL rewrite is used to track user session ID. The session ID may be disclosed in referer header. Besides, the session ID can be stored in browser history or server logs.
+	</desc>
+  <uri>http://localhost:9966/petclinic/;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param>jsessionid</param>
+  <attack>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</attack>
+  <otherinfo/>
+  <evidence>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</evidence>
+  <solution>For secure content, put session ID in cookie. To be even more secure consider to use a combination of cookie and URL rewrite.
+	</solution>
+  <reference>http://seclists.org/lists/webappsec/2002/Oct-Dec/0111.html
+	</reference>
+  <cweid>200</cweid>
+  <wascid>13</wascid>
+</alertitem>
+<alertitem>
+  <pluginid>10021</pluginid>
+  <alert>X-Content-Type-Options header missing</alert>
+  <riskcode>1</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Low (Warning)</riskdesc>
+  <desc>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'.
+	This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type.
+	Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.
+	</desc>
+  <uri>http://localhost:9966/petclinic/;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.
+	If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.
+	</solution>
+  <reference>
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>10020</pluginid>
+  <alert>X-Frame-Options header not set</alert>
+  <riskcode>0</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Informational (Warning)</riskdesc>
+  <desc>X-Frame-Options header is not included in the HTTP response to protect against 'ClickJacking' attacks
+	</desc>
+  <uri>http://localhost:9966/petclinic/;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Most modern Web browsers support the X-Frame-Options HTTP header. Ensure it's set on all web pages returned by your site (if you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY.  ALLOW-FROM allows specific websites to frame the web page in supported web browsers).
+	</solution>
+  <reference>http://blogs.msdn.com/b/ieinternals/archive/2010/03/30/combating-clickjacking-with-x-frame-options.aspx?Redirected=true
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>3</pluginid>
+  <alert>Session ID in URL rewrite</alert>
+  <riskcode>2</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Medium (Warning)</riskdesc>
+  <desc>URL rewrite is used to track user session ID. The session ID may be disclosed in referer header. Besides, the session ID can be stored in browser history or server logs.
+	</desc>
+  <uri>http://localhost:9966/petclinic/owners/find.html;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param>jsessionid</param>
+  <attack>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</attack>
+  <otherinfo/>
+  <evidence>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</evidence>
+  <solution>For secure content, put session ID in cookie. To be even more secure consider to use a combination of cookie and URL rewrite.
+	</solution>
+  <reference>http://seclists.org/lists/webappsec/2002/Oct-Dec/0111.html
+	</reference>
+  <cweid>200</cweid>
+  <wascid>13</wascid>
+</alertitem>
+<alertitem>
+  <pluginid>10021</pluginid>
+  <alert>X-Content-Type-Options header missing</alert>
+  <riskcode>1</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Low (Warning)</riskdesc>
+  <desc>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'.
+	This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type.
+	Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.
+	</desc>
+  <uri>http://localhost:9966/petclinic/owners/find.html;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.
+	If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.
+	</solution>
+  <reference>
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>10020</pluginid>
+  <alert>X-Frame-Options header not set</alert>
+  <riskcode>0</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Informational (Warning)</riskdesc>
+  <desc>X-Frame-Options header is not included in the HTTP response to protect against 'ClickJacking' attacks
+	</desc>
+  <uri>http://localhost:9966/petclinic/owners/find.html;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Most modern Web browsers support the X-Frame-Options HTTP header. Ensure it's set on all web pages returned by your site (if you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY.  ALLOW-FROM allows specific websites to frame the web page in supported web browsers).
+	</solution>
+  <reference>http://blogs.msdn.com/b/ieinternals/archive/2010/03/30/combating-clickjacking-with-x-frame-options.aspx?Redirected=true
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>10017</pluginid>
+  <alert>Cross-domain JavaScript source file inclusion</alert>
+  <riskcode>1</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Low (Warning)</riskdesc>
+  <desc>The page at the following URL includes one or more script files from a third-party domain
+	</desc>
+  <uri>http://localhost:9966/petclinic/vets.html;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param>//ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js</param>
+  <attack/>
+  <otherinfo/>
+  <evidence>//ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js</evidence>
+  <solution>Ensure JavaScript source files are loaded from only trusted sources, and the sources can't be controlled by end users of the application
+	</solution>
+  <reference>
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>3</pluginid>
+  <alert>Session ID in URL rewrite</alert>
+  <riskcode>2</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Medium (Warning)</riskdesc>
+  <desc>URL rewrite is used to track user session ID. The session ID may be disclosed in referer header. Besides, the session ID can be stored in browser history or server logs.
+	</desc>
+  <uri>http://localhost:9966/petclinic/vets.html;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param>jsessionid</param>
+  <attack>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</attack>
+  <otherinfo/>
+  <evidence>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</evidence>
+  <solution>For secure content, put session ID in cookie. To be even more secure consider to use a combination of cookie and URL rewrite.
+	</solution>
+  <reference>http://seclists.org/lists/webappsec/2002/Oct-Dec/0111.html
+	</reference>
+  <cweid>200</cweid>
+  <wascid>13</wascid>
+</alertitem>
+<alertitem>
+  <pluginid>10021</pluginid>
+  <alert>X-Content-Type-Options header missing</alert>
+  <riskcode>1</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Low (Warning)</riskdesc>
+  <desc>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'.
+	This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type.
+	Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.
+	</desc>
+  <uri>http://localhost:9966/petclinic/vets.html;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.
+	If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.
+	</solution>
+  <reference>
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>10020</pluginid>
+  <alert>X-Frame-Options header not set</alert>
+  <riskcode>0</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Informational (Warning)</riskdesc>
+  <desc>X-Frame-Options header is not included in the HTTP response to protect against 'ClickJacking' attacks
+	</desc>
+  <uri>http://localhost:9966/petclinic/vets.html;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Most modern Web browsers support the X-Frame-Options HTTP header. Ensure it's set on all web pages returned by your site (if you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY.  ALLOW-FROM allows specific websites to frame the web page in supported web browsers).
+	</solution>
+  <reference>http://blogs.msdn.com/b/ieinternals/archive/2010/03/30/combating-clickjacking-with-x-frame-options.aspx?Redirected=true
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>3</pluginid>
+  <alert>Session ID in URL rewrite</alert>
+  <riskcode>2</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Medium (Warning)</riskdesc>
+  <desc>URL rewrite is used to track user session ID. The session ID may be disclosed in referer header. Besides, the session ID can be stored in browser history or server logs.
+	</desc>
+  <uri>http://localhost:9966/petclinic/oups.html;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param>jsessionid</param>
+  <attack>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</attack>
+  <otherinfo/>
+  <evidence>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</evidence>
+  <solution>For secure content, put session ID in cookie. To be even more secure consider to use a combination of cookie and URL rewrite.
+	</solution>
+  <reference>http://seclists.org/lists/webappsec/2002/Oct-Dec/0111.html
+	</reference>
+  <cweid>200</cweid>
+  <wascid>13</wascid>
+</alertitem>
+<alertitem>
+  <pluginid>10021</pluginid>
+  <alert>X-Content-Type-Options header missing</alert>
+  <riskcode>1</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Low (Warning)</riskdesc>
+  <desc>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'.
+	This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type.
+	Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.
+	</desc>
+  <uri>http://localhost:9966/petclinic/oups.html;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.
+	If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.
+	</solution>
+  <reference>
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>10020</pluginid>
+  <alert>X-Frame-Options header not set</alert>
+  <riskcode>0</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Informational (Warning)</riskdesc>
+  <desc>X-Frame-Options header is not included in the HTTP response to protect against 'ClickJacking' attacks
+	</desc>
+  <uri>http://localhost:9966/petclinic/oups.html;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Most modern Web browsers support the X-Frame-Options HTTP header. Ensure it's set on all web pages returned by your site (if you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY.  ALLOW-FROM allows specific websites to frame the web page in supported web browsers).
+	</solution>
+  <reference>http://blogs.msdn.com/b/ieinternals/archive/2010/03/30/combating-clickjacking-with-x-frame-options.aspx?Redirected=true
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>3</pluginid>
+  <alert>Session ID in URL rewrite</alert>
+  <riskcode>2</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Medium (Warning)</riskdesc>
+  <desc>URL rewrite is used to track user session ID. The session ID may be disclosed in referer header. Besides, the session ID can be stored in browser history or server logs.
+	</desc>
+  <uri>http://localhost:9966/petclinic/webjars/bootstrap/2.3.0/css/bootstrap.min.css;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param>jsessionid</param>
+  <attack>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</attack>
+  <otherinfo/>
+  <evidence>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</evidence>
+  <solution>For secure content, put session ID in cookie. To be even more secure consider to use a combination of cookie and URL rewrite.
+	</solution>
+  <reference>http://seclists.org/lists/webappsec/2002/Oct-Dec/0111.html
+	</reference>
+  <cweid>200</cweid>
+  <wascid>13</wascid>
+</alertitem>
+<alertitem>
+  <pluginid>10021</pluginid>
+  <alert>X-Content-Type-Options header missing</alert>
+  <riskcode>1</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Low (Warning)</riskdesc>
+  <desc>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'.
+	This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type.
+	Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.
+	</desc>
+  <uri>http://localhost:9966/petclinic/webjars/bootstrap/2.3.0/css/bootstrap.min.css;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.
+	If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.
+	</solution>
+  <reference>
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>10020</pluginid>
+  <alert>X-Frame-Options header not set</alert>
+  <riskcode>0</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Informational (Warning)</riskdesc>
+  <desc>X-Frame-Options header is not included in the HTTP response to protect against 'ClickJacking' attacks
+	</desc>
+  <uri>http://localhost:9966/petclinic/webjars/bootstrap/2.3.0/css/bootstrap.min.css;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Most modern Web browsers support the X-Frame-Options HTTP header. Ensure it's set on all web pages returned by your site (if you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY.  ALLOW-FROM allows specific websites to frame the web page in supported web browsers).
+	</solution>
+  <reference>http://blogs.msdn.com/b/ieinternals/archive/2010/03/30/combating-clickjacking-with-x-frame-options.aspx?Redirected=true
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>3</pluginid>
+  <alert>Session ID in URL rewrite</alert>
+  <riskcode>2</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Medium (Warning)</riskdesc>
+  <desc>URL rewrite is used to track user session ID. The session ID may be disclosed in referer header. Besides, the session ID can be stored in browser history or server logs.
+	</desc>
+  <uri>http://localhost:9966/petclinic/resources/css/petclinic.css;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param>jsessionid</param>
+  <attack>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</attack>
+  <otherinfo/>
+  <evidence>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</evidence>
+  <solution>For secure content, put session ID in cookie. To be even more secure consider to use a combination of cookie and URL rewrite.
+	</solution>
+  <reference>http://seclists.org/lists/webappsec/2002/Oct-Dec/0111.html
+	</reference>
+  <cweid>200</cweid>
+  <wascid>13</wascid>
+</alertitem>
+<alertitem>
+  <pluginid>10021</pluginid>
+  <alert>X-Content-Type-Options header missing</alert>
+  <riskcode>1</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Low (Warning)</riskdesc>
+  <desc>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'.
+	This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type.
+	Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.
+	</desc>
+  <uri>http://localhost:9966/petclinic/resources/css/petclinic.css;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.
+	If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.
+	</solution>
+  <reference>
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>10020</pluginid>
+  <alert>X-Frame-Options header not set</alert>
+  <riskcode>0</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Informational (Warning)</riskdesc>
+  <desc>X-Frame-Options header is not included in the HTTP response to protect against 'ClickJacking' attacks
+	</desc>
+  <uri>http://localhost:9966/petclinic/resources/css/petclinic.css;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Most modern Web browsers support the X-Frame-Options HTTP header. Ensure it's set on all web pages returned by your site (if you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY.  ALLOW-FROM allows specific websites to frame the web page in supported web browsers).
+	</solution>
+  <reference>http://blogs.msdn.com/b/ieinternals/archive/2010/03/30/combating-clickjacking-with-x-frame-options.aspx?Redirected=true
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>3</pluginid>
+  <alert>Session ID in URL rewrite</alert>
+  <riskcode>2</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Medium (Warning)</riskdesc>
+  <desc>URL rewrite is used to track user session ID. The session ID may be disclosed in referer header. Besides, the session ID can be stored in browser history or server logs.
+	</desc>
+  <uri>http://localhost:9966/petclinic/webjars/jquery-ui/1.9.2/css/smoothness/jquery-ui-1.9.2.custom.css;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param>jsessionid</param>
+  <attack>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</attack>
+  <otherinfo/>
+  <evidence>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</evidence>
+  <solution>For secure content, put session ID in cookie. To be even more secure consider to use a combination of cookie and URL rewrite.
+	</solution>
+  <reference>http://seclists.org/lists/webappsec/2002/Oct-Dec/0111.html
+	</reference>
+  <cweid>200</cweid>
+  <wascid>13</wascid>
+</alertitem>
+<alertitem>
+  <pluginid>10021</pluginid>
+  <alert>X-Content-Type-Options header missing</alert>
+  <riskcode>1</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Low (Warning)</riskdesc>
+  <desc>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'.
+	This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type.
+	Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.
+	</desc>
+  <uri>http://localhost:9966/petclinic/webjars/jquery-ui/1.9.2/css/smoothness/jquery-ui-1.9.2.custom.css;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.
+	If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.
+	</solution>
+  <reference>
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>10020</pluginid>
+  <alert>X-Frame-Options header not set</alert>
+  <riskcode>0</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Informational (Warning)</riskdesc>
+  <desc>X-Frame-Options header is not included in the HTTP response to protect against 'ClickJacking' attacks
+	</desc>
+  <uri>http://localhost:9966/petclinic/webjars/jquery-ui/1.9.2/css/smoothness/jquery-ui-1.9.2.custom.css;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Most modern Web browsers support the X-Frame-Options HTTP header. Ensure it's set on all web pages returned by your site (if you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY.  ALLOW-FROM allows specific websites to frame the web page in supported web browsers).
+	</solution>
+  <reference>http://blogs.msdn.com/b/ieinternals/archive/2010/03/30/combating-clickjacking-with-x-frame-options.aspx?Redirected=true
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>3</pluginid>
+  <alert>Session ID in URL rewrite</alert>
+  <riskcode>2</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Medium (Warning)</riskdesc>
+  <desc>URL rewrite is used to track user session ID. The session ID may be disclosed in referer header. Besides, the session ID can be stored in browser history or server logs.
+	</desc>
+  <uri>http://localhost:9966/petclinic/webjars/jquery/1.9.0/jquery.js;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param>jsessionid</param>
+  <attack>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</attack>
+  <otherinfo/>
+  <evidence>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</evidence>
+  <solution>For secure content, put session ID in cookie. To be even more secure consider to use a combination of cookie and URL rewrite.
+	</solution>
+  <reference>http://seclists.org/lists/webappsec/2002/Oct-Dec/0111.html
+	</reference>
+  <cweid>200</cweid>
+  <wascid>13</wascid>
+</alertitem>
+<alertitem>
+  <pluginid>10021</pluginid>
+  <alert>X-Content-Type-Options header missing</alert>
+  <riskcode>1</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Low (Warning)</riskdesc>
+  <desc>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'.
+	This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type.
+	Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.
+	</desc>
+  <uri>http://localhost:9966/petclinic/webjars/jquery/1.9.0/jquery.js;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.
+	If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.
+	</solution>
+  <reference>
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>10020</pluginid>
+  <alert>X-Frame-Options header not set</alert>
+  <riskcode>0</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Informational (Warning)</riskdesc>
+  <desc>X-Frame-Options header is not included in the HTTP response to protect against 'ClickJacking' attacks
+	</desc>
+  <uri>http://localhost:9966/petclinic/webjars/jquery/1.9.0/jquery.js;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Most modern Web browsers support the X-Frame-Options HTTP header. Ensure it's set on all web pages returned by your site (if you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY.  ALLOW-FROM allows specific websites to frame the web page in supported web browsers).
+	</solution>
+  <reference>http://blogs.msdn.com/b/ieinternals/archive/2010/03/30/combating-clickjacking-with-x-frame-options.aspx?Redirected=true
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>3</pluginid>
+  <alert>Session ID in URL rewrite</alert>
+  <riskcode>2</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Medium (Warning)</riskdesc>
+  <desc>URL rewrite is used to track user session ID. The session ID may be disclosed in referer header. Besides, the session ID can be stored in browser history or server logs.
+	</desc>
+  <uri>http://localhost:9966/petclinic/webjars/jquery-ui/1.9.2/js/jquery-ui-1.9.2.custom.js;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param>jsessionid</param>
+  <attack>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</attack>
+  <otherinfo/>
+  <evidence>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</evidence>
+  <solution>For secure content, put session ID in cookie. To be even more secure consider to use a combination of cookie and URL rewrite.
+	</solution>
+  <reference>http://seclists.org/lists/webappsec/2002/Oct-Dec/0111.html
+	</reference>
+  <cweid>200</cweid>
+  <wascid>13</wascid>
+</alertitem>
+<alertitem>
+  <pluginid>10021</pluginid>
+  <alert>X-Content-Type-Options header missing</alert>
+  <riskcode>1</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Low (Warning)</riskdesc>
+  <desc>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'.
+	This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type.
+	Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.
+	</desc>
+  <uri>http://localhost:9966/petclinic/webjars/jquery-ui/1.9.2/js/jquery-ui-1.9.2.custom.js;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.
+	If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.
+	</solution>
+  <reference>
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>10020</pluginid>
+  <alert>X-Frame-Options header not set</alert>
+  <riskcode>0</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Informational (Warning)</riskdesc>
+  <desc>X-Frame-Options header is not included in the HTTP response to protect against 'ClickJacking' attacks
+	</desc>
+  <uri>http://localhost:9966/petclinic/webjars/jquery-ui/1.9.2/js/jquery-ui-1.9.2.custom.js;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Most modern Web browsers support the X-Frame-Options HTTP header. Ensure it's set on all web pages returned by your site (if you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY.  ALLOW-FROM allows specific websites to frame the web page in supported web browsers).
+	</solution>
+  <reference>http://blogs.msdn.com/b/ieinternals/archive/2010/03/30/combating-clickjacking-with-x-frame-options.aspx?Redirected=true
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>3</pluginid>
+  <alert>Session ID in URL rewrite</alert>
+  <riskcode>2</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Medium (Warning)</riskdesc>
+  <desc>URL rewrite is used to track user session ID. The session ID may be disclosed in referer header. Besides, the session ID can be stored in browser history or server logs.
+	</desc>
+  <uri>http://localhost:9966/petclinic/resources/images/banner-graphic.png;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param>jsessionid</param>
+  <attack>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</attack>
+  <otherinfo/>
+  <evidence>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</evidence>
+  <solution>For secure content, put session ID in cookie. To be even more secure consider to use a combination of cookie and URL rewrite.
+	</solution>
+  <reference>http://seclists.org/lists/webappsec/2002/Oct-Dec/0111.html
+	</reference>
+  <cweid>200</cweid>
+  <wascid>13</wascid>
+</alertitem>
+<alertitem>
+  <pluginid>10021</pluginid>
+  <alert>X-Content-Type-Options header missing</alert>
+  <riskcode>1</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Low (Warning)</riskdesc>
+  <desc>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'.
+	This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type.
+	Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.
+	</desc>
+  <uri>http://localhost:9966/petclinic/resources/images/banner-graphic.png;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.
+	If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.
+	</solution>
+  <reference>
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>3</pluginid>
+  <alert>Session ID in URL rewrite</alert>
+  <riskcode>2</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Medium (Warning)</riskdesc>
+  <desc>URL rewrite is used to track user session ID. The session ID may be disclosed in referer header. Besides, the session ID can be stored in browser history or server logs.
+	</desc>
+  <uri>http://localhost:9966/petclinic/resources/images/pets.png;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param>jsessionid</param>
+  <attack>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</attack>
+  <otherinfo/>
+  <evidence>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</evidence>
+  <solution>For secure content, put session ID in cookie. To be even more secure consider to use a combination of cookie and URL rewrite.
+	</solution>
+  <reference>http://seclists.org/lists/webappsec/2002/Oct-Dec/0111.html
+	</reference>
+  <cweid>200</cweid>
+  <wascid>13</wascid>
+</alertitem>
+<alertitem>
+  <pluginid>10021</pluginid>
+  <alert>X-Content-Type-Options header missing</alert>
+  <riskcode>1</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Low (Warning)</riskdesc>
+  <desc>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'.
+	This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type.
+	Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.
+	</desc>
+  <uri>http://localhost:9966/petclinic/resources/images/pets.png;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.
+	If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.
+	</solution>
+  <reference>
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>3</pluginid>
+  <alert>Session ID in URL rewrite</alert>
+  <riskcode>2</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Medium (Warning)</riskdesc>
+  <desc>URL rewrite is used to track user session ID. The session ID may be disclosed in referer header. Besides, the session ID can be stored in browser history or server logs.
+	</desc>
+  <uri>http://localhost:9966/petclinic/resources/images/springsource-logo.png;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param>jsessionid</param>
+  <attack>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</attack>
+  <otherinfo/>
+  <evidence>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</evidence>
+  <solution>For secure content, put session ID in cookie. To be even more secure consider to use a combination of cookie and URL rewrite.
+	</solution>
+  <reference>http://seclists.org/lists/webappsec/2002/Oct-Dec/0111.html
+	</reference>
+  <cweid>200</cweid>
+  <wascid>13</wascid>
+</alertitem>
+<alertitem>
+  <pluginid>10021</pluginid>
+  <alert>X-Content-Type-Options header missing</alert>
+  <riskcode>1</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Low (Warning)</riskdesc>
+  <desc>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'.
+	This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type.
+	Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.
+	</desc>
+  <uri>http://localhost:9966/petclinic/resources/images/springsource-logo.png;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.
+	If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.
+	</solution>
+  <reference>
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>3</pluginid>
+  <alert>Session ID in URL rewrite</alert>
+  <riskcode>2</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Medium (Warning)</riskdesc>
+  <desc>URL rewrite is used to track user session ID. The session ID may be disclosed in referer header. Besides, the session ID can be stored in browser history or server logs.
+	</desc>
+  <uri>http://localhost:9966/petclinic/owners.html;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1?lastName=ZAP</uri>
+  <param>jsessionid</param>
+  <attack>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1?lastName=ZAP</attack>
+  <otherinfo/>
+  <evidence>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1?lastName=ZAP</evidence>
+  <solution>For secure content, put session ID in cookie. To be even more secure consider to use a combination of cookie and URL rewrite.
+	</solution>
+  <reference>http://seclists.org/lists/webappsec/2002/Oct-Dec/0111.html
+	</reference>
+  <cweid>200</cweid>
+  <wascid>13</wascid>
+</alertitem>
+<alertitem>
+  <pluginid>10021</pluginid>
+  <alert>X-Content-Type-Options header missing</alert>
+  <riskcode>1</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Low (Warning)</riskdesc>
+  <desc>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'.
+	This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type.
+	Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.
+	</desc>
+  <uri>http://localhost:9966/petclinic/owners.html;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1?lastName=ZAP</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.
+	If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.
+	</solution>
+  <reference>
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>10020</pluginid>
+  <alert>X-Frame-Options header not set</alert>
+  <riskcode>0</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Informational (Warning)</riskdesc>
+  <desc>X-Frame-Options header is not included in the HTTP response to protect against 'ClickJacking' attacks
+	</desc>
+  <uri>http://localhost:9966/petclinic/owners.html;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1?lastName=ZAP</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Most modern Web browsers support the X-Frame-Options HTTP header. Ensure it's set on all web pages returned by your site (if you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY.  ALLOW-FROM allows specific websites to frame the web page in supported web browsers).
+	</solution>
+  <reference>http://blogs.msdn.com/b/ieinternals/archive/2010/03/30/combating-clickjacking-with-x-frame-options.aspx?Redirected=true
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>3</pluginid>
+  <alert>Session ID in URL rewrite</alert>
+  <riskcode>2</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Medium (Warning)</riskdesc>
+  <desc>URL rewrite is used to track user session ID. The session ID may be disclosed in referer header. Besides, the session ID can be stored in browser history or server logs.
+	</desc>
+  <uri>http://localhost:9966/petclinic/vets.xml;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param>jsessionid</param>
+  <attack>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</attack>
+  <otherinfo/>
+  <evidence>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</evidence>
+  <solution>For secure content, put session ID in cookie. To be even more secure consider to use a combination of cookie and URL rewrite.
+	</solution>
+  <reference>http://seclists.org/lists/webappsec/2002/Oct-Dec/0111.html
+	</reference>
+  <cweid>200</cweid>
+  <wascid>13</wascid>
+</alertitem>
+<alertitem>
+  <pluginid>10021</pluginid>
+  <alert>X-Content-Type-Options header missing</alert>
+  <riskcode>1</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Low (Warning)</riskdesc>
+  <desc>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'.
+	This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type.
+	Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.
+	</desc>
+  <uri>http://localhost:9966/petclinic/vets.xml;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.
+	If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.
+	</solution>
+  <reference>
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>10020</pluginid>
+  <alert>X-Frame-Options header not set</alert>
+  <riskcode>0</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Informational (Warning)</riskdesc>
+  <desc>X-Frame-Options header is not included in the HTTP response to protect against 'ClickJacking' attacks
+	</desc>
+  <uri>http://localhost:9966/petclinic/vets.xml;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Most modern Web browsers support the X-Frame-Options HTTP header. Ensure it's set on all web pages returned by your site (if you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY.  ALLOW-FROM allows specific websites to frame the web page in supported web browsers).
+	</solution>
+  <reference>http://blogs.msdn.com/b/ieinternals/archive/2010/03/30/combating-clickjacking-with-x-frame-options.aspx?Redirected=true
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>3</pluginid>
+  <alert>Session ID in URL rewrite</alert>
+  <riskcode>2</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Medium (Warning)</riskdesc>
+  <desc>URL rewrite is used to track user session ID. The session ID may be disclosed in referer header. Besides, the session ID can be stored in browser history or server logs.
+	</desc>
+  <uri>http://localhost:9966/petclinic/owners/new;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param>jsessionid</param>
+  <attack>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</attack>
+  <otherinfo/>
+  <evidence>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</evidence>
+  <solution>For secure content, put session ID in cookie. To be even more secure consider to use a combination of cookie and URL rewrite.
+	</solution>
+  <reference>http://seclists.org/lists/webappsec/2002/Oct-Dec/0111.html
+	</reference>
+  <cweid>200</cweid>
+  <wascid>13</wascid>
+</alertitem>
+<alertitem>
+  <pluginid>10021</pluginid>
+  <alert>X-Content-Type-Options header missing</alert>
+  <riskcode>1</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Low (Warning)</riskdesc>
+  <desc>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'.
+	This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type.
+	Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.
+	</desc>
+  <uri>http://localhost:9966/petclinic/owners/new;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.
+	If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.
+	</solution>
+  <reference>
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>10020</pluginid>
+  <alert>X-Frame-Options header not set</alert>
+  <riskcode>0</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Informational (Warning)</riskdesc>
+  <desc>X-Frame-Options header is not included in the HTTP response to protect against 'ClickJacking' attacks
+	</desc>
+  <uri>http://localhost:9966/petclinic/owners/new;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Most modern Web browsers support the X-Frame-Options HTTP header. Ensure it's set on all web pages returned by your site (if you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY.  ALLOW-FROM allows specific websites to frame the web page in supported web browsers).
+	</solution>
+  <reference>http://blogs.msdn.com/b/ieinternals/archive/2010/03/30/combating-clickjacking-with-x-frame-options.aspx?Redirected=true
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>10021</pluginid>
+  <alert>X-Content-Type-Options header missing</alert>
+  <riskcode>1</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Low (Warning)</riskdesc>
+  <desc>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'.
+	This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type.
+	Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.
+	</desc>
+  <uri>http://localhost:9966/petclinic/datatablesController/datatables-bootstrap2.css?c=%2Fpetclinic%2Fvets.html%3Bjsessionid%3D622D6EDFD306EEB121CC5A62FBBAD0F1&amp;id=vets</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.
+	If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.
+	</solution>
+  <reference>
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>10020</pluginid>
+  <alert>X-Frame-Options header not set</alert>
+  <riskcode>0</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Informational (Warning)</riskdesc>
+  <desc>X-Frame-Options header is not included in the HTTP response to protect against 'ClickJacking' attacks
+	</desc>
+  <uri>http://localhost:9966/petclinic/datatablesController/datatables-bootstrap2.css?c=%2Fpetclinic%2Fvets.html%3Bjsessionid%3D622D6EDFD306EEB121CC5A62FBBAD0F1&amp;id=vets</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Most modern Web browsers support the X-Frame-Options HTTP header. Ensure it's set on all web pages returned by your site (if you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY.  ALLOW-FROM allows specific websites to frame the web page in supported web browsers).
+	</solution>
+  <reference>http://blogs.msdn.com/b/ieinternals/archive/2010/03/30/combating-clickjacking-with-x-frame-options.aspx?Redirected=true
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>10021</pluginid>
+  <alert>X-Content-Type-Options header missing</alert>
+  <riskcode>1</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Low (Warning)</riskdesc>
+  <desc>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'.
+	This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type.
+	Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.
+	</desc>
+  <uri>http://localhost:9966/petclinic/datatablesController/datatables-85258.js?c=%2Fpetclinic%2Fvets.html%3Bjsessionid%3D622D6EDFD306EEB121CC5A62FBBAD0F1&amp;id=vets&amp;t=main</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.
+	If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.
+	</solution>
+  <reference>
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>10020</pluginid>
+  <alert>X-Frame-Options header not set</alert>
+  <riskcode>0</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Informational (Warning)</riskdesc>
+  <desc>X-Frame-Options header is not included in the HTTP response to protect against 'ClickJacking' attacks
+	</desc>
+  <uri>http://localhost:9966/petclinic/datatablesController/datatables-85258.js?c=%2Fpetclinic%2Fvets.html%3Bjsessionid%3D622D6EDFD306EEB121CC5A62FBBAD0F1&amp;id=vets&amp;t=main</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Most modern Web browsers support the X-Frame-Options HTTP header. Ensure it's set on all web pages returned by your site (if you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY.  ALLOW-FROM allows specific websites to frame the web page in supported web browsers).
+	</solution>
+  <reference>http://blogs.msdn.com/b/ieinternals/archive/2010/03/30/combating-clickjacking-with-x-frame-options.aspx?Redirected=true
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>3</pluginid>
+  <alert>Session ID in URL rewrite</alert>
+  <riskcode>2</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Medium (Warning)</riskdesc>
+  <desc>URL rewrite is used to track user session ID. The session ID may be disclosed in referer header. Besides, the session ID can be stored in browser history or server logs.
+	</desc>
+  <uri>http://localhost:9966/petclinic/vets.atom;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param>jsessionid</param>
+  <attack>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</attack>
+  <otherinfo/>
+  <evidence>jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</evidence>
+  <solution>For secure content, put session ID in cookie. To be even more secure consider to use a combination of cookie and URL rewrite.
+	</solution>
+  <reference>http://seclists.org/lists/webappsec/2002/Oct-Dec/0111.html
+	</reference>
+  <cweid>200</cweid>
+  <wascid>13</wascid>
+</alertitem>
+<alertitem>
+  <pluginid>3</pluginid>
+  <alert>Referer expose session ID</alert>
+  <riskcode>1</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Low (Warning)</riskdesc>
+  <desc>Hyperlink to other host name is found. As session ID URL rewrite is used, it may be disclosed in referer header to external host.
+	</desc>
+  <uri>http://localhost:9966/petclinic/vets.atom;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param>N/A</param>
+  <attack>www.w3.org</attack>
+  <otherinfo/>
+  <evidence>www.w3.org</evidence>
+  <solution>This is a risk if the session ID is sensitive and the hyperlink refer to an external host. For secure content, put session ID in secured session cookie.
+	</solution>
+  <reference>http://seclists.org/lists/webappsec/2002/Oct-Dec/0111.html
+	</reference>
+  <cweid>200</cweid>
+  <wascid>13</wascid>
+</alertitem>
+<alertitem>
+  <pluginid>10021</pluginid>
+  <alert>X-Content-Type-Options header missing</alert>
+  <riskcode>1</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Low (Warning)</riskdesc>
+  <desc>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'.
+	This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type.
+	Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.
+	</desc>
+  <uri>http://localhost:9966/petclinic/vets.atom;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.
+	If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.
+	</solution>
+  <reference>
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>10020</pluginid>
+  <alert>X-Frame-Options header not set</alert>
+  <riskcode>0</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Informational (Warning)</riskdesc>
+  <desc>X-Frame-Options header is not included in the HTTP response to protect against 'ClickJacking' attacks
+	</desc>
+  <uri>http://localhost:9966/petclinic/vets.atom;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1</uri>
+  <param/>
+  <attack/>
+  <otherinfo/>
+  <solution>Most modern Web browsers support the X-Frame-Options HTTP header. Ensure it's set on all web pages returned by your site (if you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY.  ALLOW-FROM allows specific websites to frame the web page in supported web browsers).
+	</solution>
+  <reference>http://blogs.msdn.com/b/ieinternals/archive/2010/03/30/combating-clickjacking-with-x-frame-options.aspx?Redirected=true
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>40018</pluginid>
+  <alert>SQL Injection</alert>
+  <riskcode>3</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>High (Warning)</riskdesc>
+  <desc>SQL injection may be possible
+	</desc>
+  <uri>http://localhost:9966/petclinic/owners.html;jsessionid=622D6EDFD306EEB121CC5A62FBBAD0F1?lastName=ZAP%22+AND+%221%22%3D%221%22+--+</uri>
+  <param>lastName</param>
+  <attack>ZAP" AND "1"="1" -- </attack>
+  <otherinfo>The page results were successfully manipulated using the boolean conditions [ZAP" AND "1"="1" -- ] and [ZAP" AND "1"="2" -- ]
+The parameter value being modified was NOT stripped from the HTML output for the purposes of the comparison
+Data was returned for the original parameter.
+The vulnerability was detected by successfully restricting the data originally returned, by manipulating the parameter</otherinfo>
+  <solution>Do not trust client side input, even if there is client side validation in place.  
+	In general, type check all data on the server side.
+	If the application uses JDBC, use PreparedStatement or CallableStatement, with parameters passed by '?'
+	If the application uses ASP, use ADO Command Objects with strong type checking and parameterized queries.
+	If database Stored Procedures can be used, use them.
+	Do *not* concatenate strings into queries in the stored procedure, or use 'exec', 'exec immediate', or equivalent functionality!
+	Do not create dynamic SQL queries using simple string concatenation.
+	Escape all data received from the client.
+	Apply a 'whitelist' of allowed characters, or a 'blacklist' of disallowed characters in user input.
+	Apply the privilege of least privilege by using the least privileged database user possible.
+	In particular, avoid using the 'sa' or 'db-owner' database users. This does not eliminate SQL injection, but minimizes its impact.
+	Grant the minimum database access that is necessary for the application.
+	</solution>
+  <otherinfo>The page results were successfully manipulated using the boolean conditions [ZAP" AND "1"="1" -- ] and [ZAP" AND "1"="2" -- ]
+	The parameter value being modified was NOT stripped from the HTML output for the purposes of the comparison
+	Data was returned for the original parameter.
+	The vulnerability was detected by successfully restricting the data originally returned, by manipulating the parameter
+	</otherinfo>
+  <reference>https://www.owasp.org/index.php/Top_10_2010-A1
+	https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet
+	</reference>
+  <cweid>89</cweid>
+  <wascid>19</wascid>
+</alertitem>
+</alerts></site></OWASPZAPReport>

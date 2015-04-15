@@ -35,11 +35,11 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * Parses the Microsoft CAT.NET output file.
@@ -59,7 +59,7 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 	// their corresponding regular expressions.
 	// Since we had so many that were the same except for the numbers, we have
 	// stripped the numbers out.
-	private static final Map<String, String> ENTRY_POINT_REGEX_MAP = new HashMap<>();
+	private static final Map<String, String> ENTRY_POINT_REGEX_MAP = map();
 	static {
 		ENTRY_POINT_REGEX_MAP.put("stack := stack.{System.Web.UI.WebControls.TextBox}get_Text()",
 				"[ +=(]([a-zA-Z0-9_]+)\\.Text");
@@ -69,22 +69,21 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 				"Request\\[\\\"?([a-zA-Z0-9_]+)\\\"?\\]");
 	}
 	
-	private static final Map<String, String> SEVERITIES_MAP = new HashMap<>();
-	static {
-		SEVERITIES_MAP.put("ACESEC01", "Critical");
-		SEVERITIES_MAP.put("ACESEC02", "High");
-		SEVERITIES_MAP.put("ACESEC03", "Medium");
-		SEVERITIES_MAP.put("ACESEC04", "Medium");
-		SEVERITIES_MAP.put("ACESEC05", "Critical");
-		SEVERITIES_MAP.put("ACESEC06", "High");
-		SEVERITIES_MAP.put("ACESEC07", "High");
-		SEVERITIES_MAP.put("ACESEC08", "High");		
-	}
+	private static final Map<String, String> SEVERITIES_MAP = map(
+			"ACESEC01", "Critical",
+			"ACESEC02", "High",
+			"ACESEC03", "Medium",
+			"ACESEC04", "Medium",
+			"ACESEC05", "Critical",
+			"ACESEC06", "High",
+			"ACESEC07", "High",
+			"ACESEC08", "High"
+		);
 
 	public CatNetChannelImporter() {
 		super(ScannerType.CAT_NET);
 
-		paramMap = new HashMap<>();
+		paramMap = map();
 	}
 
 	@Override
@@ -112,7 +111,7 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
         private String currentScannerDetail = null;
         private String currentScannerRecommendation = null;
 
-        Map<FindingKey, String> findingMap = new HashMap<>();
+        Map<FindingKey, String> findingMap = map();
         private StringBuffer currentRawFinding	  = new StringBuffer();
 		
 		private String currentDataFlowLineNum  = null;
@@ -163,7 +162,7 @@ public class CatNetChannelImporter extends AbstractChannelImporter {
 			Integer index = null;
 			if (key != null && stringList != null && stringList.size() > 0) {
 				if (paramMap == null) {
-					paramMap = new HashMap<>();
+					paramMap = map();
 				}
 				// if it has the key, use the next item
 				if (paramMap.containsKey(key)) {

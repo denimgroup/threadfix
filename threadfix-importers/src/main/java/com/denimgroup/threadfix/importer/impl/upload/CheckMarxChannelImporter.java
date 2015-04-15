@@ -39,12 +39,12 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import javax.annotation.Nonnull;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  *
@@ -89,7 +89,7 @@ public class CheckMarxChannelImporter extends AbstractChannelImporter {
 
     public class CheckMarxScanParser extends HandlerWithBuilder {
 
-        Map<FindingKey, String> findingMap = new HashMap<>();
+        Map<FindingKey, String> findingMap = map();
         // These are per-Query
         String currentCweId = null,
             currentVulnName = null,
@@ -199,22 +199,22 @@ public class CheckMarxChannelImporter extends AbstractChannelImporter {
 
         public void endElement (String uri, String name, String qName) {
             if (getText) {
-                switch (qName) {
-                    case LINE:      lineNumber = getBuilderText(); break;
-                    case CODE:      lineText   = getBuilderText(); break;
-                    case FILE_NAME: fileName   = getBuilderText(); break;
-                    case NAME:      lineText   = getBuilderText(); break;
+                if (qName.equals(LINE)) {
+                    lineNumber = getBuilderText();
+                } else if (qName.equals(CODE)) {
+                    lineText = getBuilderText();
+                } else if (qName.equals(FILE_NAME)) {
+                    fileName = getBuilderText();
+                } else if (qName.equals(NAME)) {
+                    lineText = getBuilderText();
                 }
                 getText = false;
             } else {
-                switch (qName) {
-                    case PATH_NODE: addDataFlowElement(); break;
-                    case RESULT:
-                    {
-                        currentRawFinding.append("</").append(qName).append(">");
-                        addFinding();
-                        break;
-                    }
+                if (qName.equals(PATH_NODE)) {
+                    addDataFlowElement();
+                } else if (qName.equals(RESULT)) {
+                    currentRawFinding.append("</").append(qName).append(">");
+                    addFinding();
                 }
             }
             if (inFinding){

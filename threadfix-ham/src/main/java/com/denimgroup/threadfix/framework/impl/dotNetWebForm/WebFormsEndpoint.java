@@ -45,7 +45,7 @@ public class WebFormsEndpoint extends AbstractEndpoint {
     final String       urlPath;
     final String       filePath;
 
-    Map<String, List<Integer>> map = newMap();
+    Map<String, List<Integer>> map = map();
     private Set<String> httpMethods;
 
     public WebFormsEndpoint(File aspxRoot, AspxParser aspxParser, AspxCsParser aspxCsParser) {

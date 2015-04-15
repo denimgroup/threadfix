@@ -1,10 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.denimgroup</groupId>
+
+	<parent>
+        <groupId>com.denimgroup.threadfix</groupId>
+        <artifactId>master-pom</artifactId>
+        <version>2.0M1-SNAPSHOT</version>
+    </parent>
+
 	<artifactId>threadfix</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>threadfix</name>
 	<description>ThreadFix is a software vulnerability aggregation and management system that reduces the time it takes to fix software vulnerabilities. ThreadFix imports the results from dynamic, static and manual testing to provide a centralized view of software security defects across development teams and applications. The system allows companies to correlate testing results and streamline software remediation efforts by simplifying feeds to software issue trackers. By auto generating application firewall rules, this tool allows organizations to continue remediation work uninterrupted. ThreadFix empowers managers with vulnerability trending reports that show progress over time, giving them justification for their efforts.
 
@@ -44,11 +49,6 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 			</snapshots>
 		</repository>
 	</repositories>
-
-	<licenses>
-		<license>
-		</license>
-	</licenses>
 
 	<developers>
 		<developer>
@@ -130,6 +130,28 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-install-plugin</artifactId>
+	            <version>2.4</version>
+	            <executions>
+	                <execution>
+	                    <phase>install</phase>
+	                    <goals>
+	                        <goal>install-file</goal>
+	                    </goals>
+	                    <configuration>
+	                        <packaging>jar</packaging>
+	                        <artifactId>${project.artifactId}</artifactId>
+	                        <groupId>${project.groupId}</groupId>
+	                        <version>${project.version}</version>
+	                        <file>
+	                            ${project.build.directory}/${project.artifactId}-${project.version}.jar
+	                        </file>
+	                    </configuration>
+	                </execution>
+	            </executions>
+	        </plugin>
 			<!-- plugin for Tomcat deployment -->
 			<plugin>
 				<groupId>org.codehaus.cargo</groupId>
@@ -429,8 +451,8 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 			<version>${commons.io.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
 			<version>${commons.lang.version}</version>
 		</dependency>
 		<dependency>
@@ -541,13 +563,13 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
-			<version>2.31.0</version>
+			<version>2.35.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-server</artifactId>
-			<version>2.31.0</version>
+			<version>2.35.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hsqldb</groupId>
@@ -579,6 +601,16 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 			<artifactId>org.eclipse.jgit</artifactId>
 			<version>${jgit.version}</version>
 		</dependency>
+		<dependency>
+            <groupId>com.denimgroup.threadfix</groupId>
+            <artifactId>threadfix-cli</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>com.denimgroup.threadfix</groupId>
+            <artifactId>threadfix-ham</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 	</dependencies>
 
 	<profiles>
@@ -648,7 +680,7 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 		<commons.fileupload.version>1.2.2</commons.fileupload.version>
 		<commons.httpclient.version>3.1</commons.httpclient.version>
 		<commons.io.version>1.4</commons.io.version>
-		<commons.lang.version>2.5</commons.lang.version>
+		<commons.lang.version>3.1</commons.lang.version>
 		<commons.validator.version>1.3.1</commons.validator.version>
 		<hibernate.version>3.5.4-Final</hibernate.version>
 		<hibernate-validator.version>4.1.0.Final</hibernate-validator.version>
@@ -673,7 +705,7 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 		<easymock.version>3.0</easymock.version>
 		<hsqldb.version>1.8.0.10</hsqldb.version>
 		<mysql.version>5.1.10</mysql.version>
-		<junit.version>4.8.1</junit.version>
+		<junit.version>4.11</junit.version>
 		<selenium-client.version>1.0.2</selenium-client.version>
 
 		<!-- Plugin versions -->

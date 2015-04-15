@@ -57,7 +57,7 @@ public class RemappingServiceImpl implements RemappingService {
     QueueSender queueSender;
 
     @Override
-    public void remapFindings(ChannelVulnerability vulnerability) {
+    public void remapFindings(ChannelVulnerability vulnerability, String channelName) {
         List<Application> applications = applicationDao.retrieveAllActive();
 
         if (queueSender == null) {
@@ -65,7 +65,7 @@ public class RemappingServiceImpl implements RemappingService {
         }
 
         for (Application application : applications) {
-            boolean shouldUpdate = remapFindings(application, vulnerability);
+            boolean shouldUpdate = remapFindings(application, vulnerability, channelName);
 
             if (queueSender != null && shouldUpdate) {
                 queueSender.updateCachedStatistics(application.getId());
@@ -79,19 +79,20 @@ public class RemappingServiceImpl implements RemappingService {
      * @param type the newly-mapped vulnerability
      * @return whether or not updates were performed
      */
-    private boolean remapFindings(Application application, ChannelVulnerability type) {
-
-        Integer id = type.getChannelType().getId();
+    private boolean remapFindings(Application application, ChannelVulnerability type, String channelName) {
 
         ApplicationChannel channel = null;
 
         for (ApplicationChannel appChannel : application.getChannelList()) {
             ChannelType channelType = appChannel.getChannelType();
-            if (channelType.getId().equals(id)) {
-                channel = appChannel;
-            } else if (channelType.getName().equals("SSVL") && type.getChannelType().getName().equals("Manual")) {
+            if (channelType.getName().equals(channelName)) {
                 channel = appChannel;
             }
+        }
+
+        if (channel == null) {
+            LOG.info("Channel " + channelName + " in application " + application.getName() + " not found.");
+            return false;
         }
 
         VulnerabilityCache
@@ -152,7 +153,7 @@ public class RemappingServiceImpl implements RemappingService {
 
         // collectMaps
         Map<Calendar, Event> scannerEventMap = getScannerEventMap(newVulnerability, channel);
-        Map<Calendar, Scan> scanTimeMap = newMap();
+        Map<Calendar, Scan> scanTimeMap = map();
         for (Scan scan : channel) {
             scanTimeMap.put(scan.getImportTime(), scan);
         }
@@ -264,7 +265,7 @@ public class RemappingServiceImpl implements RemappingService {
 
     private Map<Calendar, Event> getScannerEventMap(Vulnerability newVulnerability,
                                                     ApplicationChannel applicationChannel) {
-        Map<Calendar, Event> scannerEvents = newMap();
+        Map<Calendar, Event> scannerEvents = map();
 
         for (Finding finding : newVulnerability.getFindings()) {
             scannerEvents.put(finding.getScan().getImportTime(), Event.OLD_FINDING);
@@ -286,7 +287,7 @@ public class RemappingServiceImpl implements RemappingService {
     }
 
     private Map<Calendar, ScanCloseVulnerabilityMap> getCloseMap(Vulnerability newVulnerability) {
-        Map<Calendar, ScanCloseVulnerabilityMap> scannerEvents = newMap();
+        Map<Calendar, ScanCloseVulnerabilityMap> scannerEvents = map();
 
         if (newVulnerability.getScanCloseVulnerabilityMaps() != null) {
             for (ScanCloseVulnerabilityMap closeMap : newVulnerability.getScanCloseVulnerabilityMaps()) {
@@ -298,7 +299,7 @@ public class RemappingServiceImpl implements RemappingService {
     }
 
     private Map<Calendar, ScanReopenVulnerabilityMap> getReopenMap(Vulnerability newVulnerability) {
-        Map<Calendar, ScanReopenVulnerabilityMap> scannerEvents = newMap();
+        Map<Calendar, ScanReopenVulnerabilityMap> scannerEvents = map();
 
         if (newVulnerability.getScanReopenVulnerabilityMaps() != null) {
             for (ScanReopenVulnerabilityMap reopenMap : newVulnerability.getScanReopenVulnerabilityMaps()) {

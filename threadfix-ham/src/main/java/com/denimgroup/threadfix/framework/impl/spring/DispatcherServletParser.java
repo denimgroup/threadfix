@@ -23,10 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.spring;
 
-import java.io.*;
-
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+
 import javax.annotation.Nonnull;
+import java.io.*;
 
 public class DispatcherServletParser {
 	
@@ -37,9 +37,11 @@ public class DispatcherServletParser {
 		boolean returnValue = false;
 		
 		if (file.exists()) {
+			BufferedReader reader = null;
 
-			try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"))) {
-			
+			try {
+				reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+
 				String line = reader.readLine();
 				while (line != null) {
 					if (line.contains("annotation-driven") || line.contains("context:component-scan")) {
@@ -50,7 +52,15 @@ public class DispatcherServletParser {
 					line = reader.readLine();
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				log.error("Encountered IOException while trying to read stream.", e);
+			} finally {
+				if (reader != null) {
+					try {
+						reader.close();
+					} catch (IOException e) {
+						log.error("Encountered IOException while trying to close stream.", e);
+					}
+				}
 			}
 		}
 		

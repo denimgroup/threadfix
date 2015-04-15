@@ -30,7 +30,6 @@ import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
-import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
@@ -42,7 +41,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
-import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.*;
+import static com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl.getImpl;
 
 @RemoteProvider(name = "WhiteHat Sentinel")
 public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
@@ -57,7 +57,7 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 	private List<Calendar> scanDateList = null;
 	private Map<Finding, List<DateStatus>> findingDateStatusMap = null;
 
-    RemoteProviderHttpUtils utils = new RemoteProviderHttpUtilsImpl<>(this.getClass());
+    RemoteProviderHttpUtils utils = getImpl(this.getClass());
 
     public WhiteHatRemoteProvider() {
 		super(ScannerType.SENTINEL);
@@ -260,7 +260,7 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 		scan.setFindings(saxFindingList);
 		scan.setApplicationChannel(applicationChannel);
 		
-		if ((date != null) && (date.getTime() != null)) {
+		if (date != null) {
 			LOG.debug("SAX Parser found the scan date: " + date.getTime().toString());
 			scan.setImportTime(date);
 		} else {
@@ -277,7 +277,7 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 
 	public class WhiteHatSitesParser extends HandlerWithBuilder {
 		
-		public Map<String, String> map = new HashMap<>();
+		public Map<String, String> map = map();
 		
 		private String currentId = null;
 		private boolean grabLabel;
@@ -348,11 +348,12 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 		
 		public Finding finding = new Finding();
 		
-		private Map<FindingKey, String> map = new EnumMap<>(FindingKey.class);
+		private Map<FindingKey, String> map = enumMap(FindingKey.class);
 		
 		private boolean creatingVuln = false;
 		
-		private DateStatus dateStatus = null;
+		private DateStatus currentDateStatus = null;
+		private DateStatus initialDateStatus = null;
 
         private String vulnTag = null;
         private boolean inAttackVector = false;
@@ -370,9 +371,10 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 			}
 			
 			if (findingDateStatusMap.containsKey(finding)){
-				findingDateStatusMap.get(finding).add(dateStatus);
+				findingDateStatusMap.get(finding).add(currentDateStatus);
+				findingDateStatusMap.get(finding).add(initialDateStatus);
 			} else {
-				findingDateStatusMap.put(finding, Arrays.asList(dateStatus));
+				findingDateStatusMap.put(finding, Arrays.asList(currentDateStatus, initialDateStatus));
 			}
 		}
 
@@ -391,7 +393,7 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 	    
 	    	if ("vulnerabilities".equals(qName)) {
 	    		scanDateList = list();
-	    		findingDateStatusMap = new HashMap<>();
+	    		findingDateStatusMap = map();
 	    	}
 	    	else if ("vulnerability".equals(qName)) {
                 vulnTag = makeTag(name, qName, atts) + "\n";
@@ -408,19 +410,31 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
                 currentRawFinding.append(makeTag(name, qName , atts));
 	    		map.put(FindingKey.PATH, null);
 	    		map.put(FindingKey.PARAMETER, null);
-	    		dateStatus = new DateStatus();
+
 	    		creatingVuln = true;
-	    		Calendar testedDate = DateUtils.getCalendarFromString("yyyy-MM-dd", atts.getValue("tested"));
-                if (testedDate != null) {
-                    testedDate.set(Calendar.HOUR_OF_DAY, 0);
-                    testedDate.set(Calendar.MINUTE, 0);
-                    testedDate.set(Calendar.SECOND, 0);
-                    testedDate.set(Calendar.MILLISECOND, 0);
-                }
-	    		dateStatus.setDate(testedDate);
-	    		dateStatus.setStatus(atts.getValue("state"));
-	    		if (scanDateList != null && !scanDateList.contains(testedDate))
-	    			scanDateList.add(testedDate);
+				String tested       = atts.getValue("tested");
+				String testedState  = atts.getValue("state");
+				String found        = atts.getValue("found");
+
+				Calendar testedDate = getCalendarAtMidnight(tested);
+				Calendar foundDate  = getCalendarAtMidnight(found);
+
+				currentDateStatus = getDateStatus(testedState, testedDate);
+				initialDateStatus = getDateStatus("open", foundDate);
+
+				if (initialDateStatus.getTimeMillis() ==
+						currentDateStatus.getTimeMillis() &&
+						currentDateStatus.getDate() != null) {
+					//same day. this can mess things up.
+					currentDateStatus.getDate().add(Calendar.DAY_OF_YEAR, 1);
+				}
+
+	    		if (scanDateList != null && !scanDateList.contains(testedDate)) {
+					scanDateList.add(testedDate);
+				}
+				if (scanDateList != null && !scanDateList.contains(foundDate)) {
+					scanDateList.add(foundDate);
+				}
 	    	}
 	    	else if (creatingVuln) {
                 currentRawFinding.append(makeTag(name, qName , atts));
@@ -431,8 +445,15 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 		    	}
 	    	}
 	    }
-	    
-	    @Override
+
+		private DateStatus getDateStatus(String testedState, Calendar testedDate) {
+			DateStatus dateStatus = new DateStatus();
+			dateStatus.setDate(testedDate);
+			dateStatus.setStatus(testedState);
+			return dateStatus;
+		}
+
+		@Override
 	    public void endElement (String uri, String localName, String qName) throws SAXException {
             if (creatingVuln) {
                 currentRawFinding.append("</").append(qName).append(">");
@@ -473,7 +494,7 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 
 		public Finding finding = new Finding();
 
-		private Map<FindingKey, String> map = new EnumMap<>(FindingKey.class);
+		private Map<FindingKey, String> map = enumMap(FindingKey.class);
 
 		private boolean creatingVuln = false;
 
@@ -515,7 +536,7 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 
 	    	if ("vulnerabilities".equals(qName)) {
 	    		scanDateList = list();
-	    		findingDateStatusMap = new HashMap<>();
+	    		findingDateStatusMap = map();
 	    	}
 	    	else if ("vulnerability".equals(qName)) {
                 vulnTag = makeTag(name, qName, atts) + "\n";
@@ -534,13 +555,9 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 	    		map.put(FindingKey.PARAMETER, null);
 	    		creatingVuln = true;
 	    		dateStatus = new DateStatus();
-	    		Calendar testedDate = DateUtils.getCalendarFromString("yyyy-MM-dd", atts.getValue("found"));
-                if (testedDate != null) {
-                    testedDate.set(Calendar.HOUR_OF_DAY, 0);
-                    testedDate.set(Calendar.MINUTE, 0);
-                    testedDate.set(Calendar.SECOND, 0);
-                    testedDate.set(Calendar.MILLISECOND, 0);
-                }
+				String found = atts.getValue("found");
+				String tested = atts.getValue("tested");
+				Calendar testedDate = getCalendarAtMidnight(found);
 	    		dateStatus.setDate(testedDate);
 	    		dateStatus.setStatus(atts.getValue("status"));
 	    		if (scanDateList != null && !scanDateList.contains(testedDate)) {
@@ -573,6 +590,17 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 	    }
 	}
 
+	private Calendar getCalendarAtMidnight(String found) {
+		Calendar testedDate = DateUtils.getCalendarFromString("yyyy-MM-dd", found);
+		if (testedDate != null) {
+            testedDate.set(Calendar.HOUR_OF_DAY, 0);
+            testedDate.set(Calendar.MINUTE, 0);
+            testedDate.set(Calendar.SECOND, 0);
+            testedDate.set(Calendar.MILLISECOND, 0);
+        }
+		return testedDate;
+	}
+
 	public class DateStatus implements Comparable<DateStatus> {
 		
 		private Calendar date;
@@ -592,6 +620,10 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 
 		public void setStatus(String status) {
 			this.status = status;
+		}
+
+		public long getTimeMillis() {
+			return date == null ? 0 : date.getTimeInMillis();
 		}
 
 		@Override

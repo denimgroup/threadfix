@@ -58,8 +58,8 @@ public class WhiteHatApplicationParsingTests {
 
         List<RemoteProviderApplication> applications = provider.fetchApplications();
 
-        assertTrue("Got " + applications.size() + " apps instead of 4.",
-                applications.size() == 4);
+        assertTrue("Got " + applications.size() + " apps instead of 5.",
+                applications.size() == 5);
 
         for (String string : appIds) {
             boolean valid = false;

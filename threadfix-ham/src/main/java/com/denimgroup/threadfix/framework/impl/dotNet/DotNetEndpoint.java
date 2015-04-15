@@ -28,6 +28,9 @@ import com.denimgroup.threadfix.framework.engine.AbstractEndpoint;
 import javax.annotation.Nonnull;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.set;
+
 /**
  * Created by mac on 6/11/14.
  */
@@ -52,7 +55,7 @@ class DotNetEndpoint extends AbstractEndpoint {
     @Nonnull
     @Override
     public Set<String> getHttpMethods() {
-        return new HashSet<>(Arrays.asList(action.getMethod()));
+        return set(action.getMethod());
     }
 
     @Nonnull
@@ -85,7 +88,7 @@ class DotNetEndpoint extends AbstractEndpoint {
     @Nonnull
     @Override
     protected List<String> getLintLine() {
-        List<String> lintLines = new ArrayList<>();
+        List<String> lintLines = list();
 
         if (!action.attributes.contains("HttpPost") && !action.attributes.contains("HttpGet")) {
             lintLines.add("No HTTP method limiting annotation ([HttpGet], [HttpPost]) found.");

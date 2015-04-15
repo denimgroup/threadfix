@@ -55,6 +55,7 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  *
@@ -75,7 +76,7 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
  * @author mcollins
  *
  */
-@Transactional(readOnly = false) // used to be true
+@Transactional(readOnly = true)
 public abstract class AbstractChannelImporter extends SpringBeanAutowiringSupport implements ChannelImporter {
 
     // this.getClass() will turn into the individual importer name at runtime.
@@ -84,7 +85,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
     protected enum FindingKey {
         VULN_CODE, PATH, PARAMETER, SEVERITY_CODE, NATIVE_ID, CVE, CWE, VALUE, REQUEST, RESPONSE, DETAIL,
-        RECOMMENDATION, RAWFINDING, URL_REFERENCE, ISSUE_ID, ATTACK_STRING
+        RECOMMENDATION, RAWFINDING, URL_REFERENCE, ISSUE_ID, ATTACK_STRING, SOURCE_FILE_NAME
     }
 
     // A stream pointing to the scan's contents. Set with either setFile or
@@ -217,8 +218,8 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
      *
      */
     protected void initializeMaps() {
-        channelSeverityMap = new HashMap<>();
-        channelVulnerabilityMap = new HashMap<>();
+        channelSeverityMap = map();
+        channelVulnerabilityMap = map();
     }
 
     /**
@@ -273,7 +274,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
     @Nullable
     protected Finding constructFinding(String url, String parameter,
                                        String channelVulnerabilityCode, String channelSeverityCode) {
-        Map<FindingKey, String> findingMap = new HashMap<>();
+        Map<FindingKey, String> findingMap = map();
         findingMap.put(FindingKey.PATH, url);
         findingMap.put(FindingKey.PARAMETER, parameter);
         findingMap.put(FindingKey.VULN_CODE, channelVulnerabilityCode);
@@ -289,7 +290,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
     @Nullable
     protected Finding constructFinding(String url, String parameter,
                                        String channelVulnerabilityCode, String channelSeverityCode, String cweCode) {
-        Map<FindingKey, String> findingMap = new HashMap<>();
+        Map<FindingKey, String> findingMap = map();
         findingMap.put(FindingKey.PATH, url);
         findingMap.put(FindingKey.PARAMETER, parameter);
         findingMap.put(FindingKey.VULN_CODE, channelVulnerabilityCode);
@@ -314,7 +315,8 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
                 channelVulnerabilityCode = findingMap.get(FindingKey.VULN_CODE),
                 channelSeverityCode = findingMap.get(FindingKey.SEVERITY_CODE),
                 cweCode = findingMap.get(FindingKey.CWE),
-                issueId = findingMap.get(FindingKey.ISSUE_ID);
+                issueId = findingMap.get(FindingKey.ISSUE_ID),
+                sourceFileName = findingMap.get(FindingKey.SOURCE_FILE_NAME);
 
         if (channelVulnerabilityCode == null || channelVulnerabilityCode.isEmpty()) {
             return null;
@@ -418,6 +420,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         }
         finding.setChannelSeverity(channelSeverity);
 
+        finding.setSourceFileLocation(sourceFileName);
         finding.setNativeId(findingMap.get(FindingKey.NATIVE_ID));
 
         return finding;

@@ -29,6 +29,8 @@ import com.denimgroup.threadfix.importer.loader.AnnotationKeyGenerator;
 import com.denimgroup.threadfix.importer.loader.ImplementationLoader;
 import org.springframework.stereotype.Service;
 
+import static com.denimgroup.threadfix.importer.loader.ImplementationLoader.getLoader;
+
 /**
  * @author bbeverly
  * 
@@ -81,7 +83,7 @@ public class RealTimeProtectionGeneratorFactory {
 
     private void init() {
 
-        loader = new ImplementationLoader<>(WebApplicationFirewall.class,
+        loader = getLoader(WebApplicationFirewall.class,
                 RealTimeProtectionGenerator.class,
                 "com.denimgroup.threadfix.service.waf",
                 new AnnotationKeyGenerator<WebApplicationFirewall>() {

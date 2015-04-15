@@ -27,10 +27,11 @@ import com.denimgroup.threadfix.framework.ResourceManager;
 import org.junit.Test;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * Created by mac on 6/11/14.
@@ -114,7 +115,7 @@ public class DotNetControllerParserTests {
                 "GET",
                 "GET",
                 "GET"
-        ), missing = new ArrayList<>(), extra = new ArrayList<>();
+        ), missing = list(), extra = list();
 
         assert expectedActions.size() == expectedMethods.size() :
                 "Expected actions and methods didn't match up.";

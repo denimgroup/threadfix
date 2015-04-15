@@ -32,7 +32,7 @@ import java.io.File;
 import java.util.Map;
 import java.util.Set;
 
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.CollectionUtils.set;
 
 /**
@@ -44,7 +44,7 @@ public class AspxCsParser implements EventBasedTokenizer {
 
     public final File file;
     public final String aspName;
-    public final Map<Integer, Set<String>> lineNumberToParametersMap = newMap();
+    public final Map<Integer, Set<String>> lineNumberToParametersMap = map();
 
     @Nonnull
     public static AspxCsParser parse(@Nonnull File file) {

@@ -36,6 +36,8 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.io.*;
 
+import static com.denimgroup.threadfix.CloseableUtils.closeQuietly;
+
 /**
  * This class is included because it is sometimes useful for these methods to appear
  * outside of the AbstractChannelImporter. For example, when trying to determine the type
@@ -58,7 +60,9 @@ public final class ScanUtils {
 		try {
 			readSAXInput(new DefaultHandler(), inputStream);
             return false;
-		} catch (SAXException | IOException e) {
+		} catch (SAXException e) {
+            STATIC_LOGGER.warn("Trying to read XML returned the error " + e.getMessage(), e);
+        } catch (IOException e) {
             STATIC_LOGGER.warn("Trying to read XML returned the error " + e.getMessage(), e);
         } catch (RestIOException e) {
             STATIC_LOGGER.warn("Invalid XML. Rethrowing as RestInvalidFormatException");
@@ -125,13 +129,19 @@ public final class ScanUtils {
 	}
 
 	public static boolean isZip(String fileName) {
-		try (RandomAccessFile file = new RandomAccessFile(DiskUtils.getScratchFile(fileName), "r")) {
+
+		RandomAccessFile file = null;
+		try {
+			file = new RandomAccessFile(DiskUtils.getScratchFile(fileName), "r");
+
 			// these are the magic bytes for a zip file
 	        return file.readInt() == 0x504B0304;
 		} catch (FileNotFoundException e) {
 			STATIC_LOGGER.warn("The file was not found. Check the usage of this method.", e);
 		} catch (IOException e) {
 			STATIC_LOGGER.warn("Encountered IOException while trying to figure out whether the file is a zip file.", e);
+		} finally {
+			closeQuietly(file);
 		}
 		
 		return false;

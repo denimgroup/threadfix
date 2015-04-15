@@ -31,7 +31,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Map;
 
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * Created by mac on 10/27/14.
@@ -52,7 +52,7 @@ public class MasterPageParser {
             throw new IllegalArgumentException("Can't pass a non-directory file argument to getMasterFileMap()");
         }
 
-        Map<String, AspxParser> parserMap = newMap();
+        Map<String, AspxParser> parserMap = map();
 
         Collection masterFiles = FileUtils.listFiles(rootDirectory,
                 new FileExtensionFileFilter("Master"), TrueFileFilter.INSTANCE);
