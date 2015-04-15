@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -52,6 +53,7 @@ public class DefectTracker extends AuditableEntity {
 
 	private DefectTrackerType defectTrackerType;
 	private List<Application> applications;
+	private List<DefaultDefectProfile> defaultDefectProfiles;
 
 	@Column(length = NAME_LENGTH)
     @JsonView(Object.class) // This means it will be included in all ObjectWriters with Views.
@@ -86,13 +88,23 @@ public class DefectTracker extends AuditableEntity {
 
 	@OneToMany
 	@JoinColumn(name = "defectTrackerId")
-	@JsonIgnore
+	@JsonView(AllViews.DefectTrackerInfos.class)
 	public List<Application> getApplications() {
 		return applications;
 	}
 
 	public void setApplications(List<Application> applications) {
 		this.applications = applications;
+	}
+
+	@JsonView(AllViews.DefectTrackerInfos.class)
+	@OneToMany(mappedBy = "defectTracker", cascade = CascadeType.ALL)
+	public List<DefaultDefectProfile> getDefaultDefectProfiles() {
+		return defaultDefectProfiles;
+	}
+
+	public void setDefaultDefectProfiles(List<DefaultDefectProfile> defaultDefectProfiles) {
+		this.defaultDefectProfiles = defaultDefectProfiles;
 	}
 
 	@Transient

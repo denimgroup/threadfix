@@ -238,6 +238,12 @@
 				protected-regex ^/graphConfig/table$,
 				protected-regex ^/graphConfig/channels$,
                 protected-regex ^/graphConfig/data,
+                protected-regex ^/default/[0-9]+/defectSubmissionForm$,
+                protected-regex ^/default/[0-9]+/update$,
+                protected-regex ^/default/[0-9]+/retrieve/[0-9-]+$,
+                protected-regex ^/default/addProfile$,
+                protected-regex ^/default/profiles/[0-9]+$,
+                protected-regex ^/default/profiles/delete/[0-9]+$,
 
 				protected-regex ^/configuration/defecttrackers/info$
 				protected-regex ^/configuration/filters/map$

@@ -1,22 +1,16 @@
-<script type="text/ng-template" id="submitDefectForm.html">
+<script type="text/ng-template" id="updateDefectDefaultModal.html">
     <div class="modal-header">
         <h4 id="myModalLabel">
-            Submit Defect
+            Set Defect Defaults
         </h4>
     </div>
     <div ng-form="form" class="modal-body">
         <div ng-hide="initialized" class="modal-spinner-div"><span class="spinner dark"></span>Loading</div>
-        <div id="load-profile-defaults" ng-show="initialized && defaultProfiles.length > 0 " >
-            <select ng-options="profile.id as profile.name for profile in defaultProfiles"
-                    ng-model="config.selectedDefaultProfileId"
-                    ng-change="loadProfileDefaults()" >
-                <option value="">Load defaults from profile</option>
-            </select>
-            <span ng-show="loadingProfileDefaults" class="spinner dark"></span>
-        </div>
+
+        <div ng-show="initialized">Available default tag entries: <span ng-repeat="defaultTag in defaultTags"> @{{ defaultTag.name }},</span></div>
 
         <div class="dynamic-defect-form" ng-if="isDynamicForm">
-            <span ng-if="stdFormTemplate && hasFields" class="errors">* required field</span>
+            <span ng-if="stdFormTemplate && hasFields" class="errors">* required for defect submissions</span>
             <dynamic-form ng-if="stdFormTemplate" template="stdFormTemplate"
                           ng-model="fieldsMap">
             </dynamic-form>
@@ -79,7 +73,7 @@
             </table>
         </div>
 
-        <%@ include file="../vulnerabilities/littleVulnTable.jspf" %>
+       <%--@ include file="../vulnerabilities/littleVulnTable.jspf" --%>
     </div>
     <div class="modal-footer">
         <span class="errors" style="float:left">{{ errorMessage }}</span>
@@ -98,6 +92,6 @@
                 class="btn btn-primary"
                 ng-mouseenter="form.summary.$dirty = true"
                 ng-hide="loading"
-                ng-click="ok(form)">Submit Defect</button>
+                ng-click="ok(form)">Update Defaults</button>
     </div>
 </script>

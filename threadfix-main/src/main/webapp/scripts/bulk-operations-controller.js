@@ -114,7 +114,8 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
                 config: function() {
                     return {
                         vulns: filteredVulns,
-                        typeName: getApplication().defectTracker.defectTrackerType.name
+                        typeName: getApplication().defectTracker.defectTrackerType.name,
+                        defectTrackerId: getApplication().defectTracker.id
                     }
                 }
             }

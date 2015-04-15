@@ -56,6 +56,8 @@ public class AllViews {
 
     public static interface RestViewTag {}
 
+    public static interface DefectTrackerInfos {}
+
     // this is just for one property really
     public static interface VulnSearchApplications {}
 
