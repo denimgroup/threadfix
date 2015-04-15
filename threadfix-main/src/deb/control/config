@@ -1,0 +1,15 @@
+#!/bin/sh
+ 
+# Exit on error
+set -e
+ 
+# Source debconf library.
+. /usr/share/debconf/confmodule
+ 
+# Ask questions
+db_input high threadfix/configuration || true
+
+# Show interface
+db_go || true
+
+db_purge || true

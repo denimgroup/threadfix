@@ -1,0 +1,10 @@
+Package: [[name]]
+Version: [[version]]
+Section: misc
+Priority: optional
+Architecture: all
+Pre-Depends: debconf (>= 0.2.17)
+Depends: openjdk-7-jre | java7-runtime, openjdk-7-jre-headless | java7-runtime-headless, tomcat7
+Maintainer: ThreadFix <threadfix@denimgroup.com>
+Description: Application vulnerability management tool
+ ThreadFix is a software vulnerability aggregation and management system that helps organizations aggregate vulnerability data, generate virtual patches, and interact with software defect tracking systems.
