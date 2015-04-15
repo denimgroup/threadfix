@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import java.util.Calendar;
+
 /**
  * Created by mac on 4/17/14.
  */
@@ -31,6 +33,8 @@ public interface LicenseService {
     boolean canAddApps();
 
     boolean hasValidLicense();
+
+    Calendar getExpirationDate();
 
     boolean isLicenseExpired();
 
