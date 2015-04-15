@@ -29,9 +29,10 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 @Entity
 @Table(name = "GenericSeverity")
@@ -48,14 +49,21 @@ public class GenericSeverity extends BaseEntity {
 	/**
 	 * This field is helpful when you need to compare severities numerically.
 	 */
-	public static final Map<String, Integer> NUMERIC_MAP = new HashMap<String, Integer>();
-	static {
-		NUMERIC_MAP.put(INFO, 1);
-		NUMERIC_MAP.put(LOW, 2);
-		NUMERIC_MAP.put(MEDIUM, 3);
-		NUMERIC_MAP.put(HIGH, 4);
-		NUMERIC_MAP.put(CRITICAL, 5);
-	}
+	public static final Map<String, Integer> NUMERIC_MAP = map(
+		INFO, 1,
+		LOW, 2,
+		MEDIUM, 3,
+		HIGH, 4,
+		CRITICAL, 5
+	);
+
+	public static final Map<String, String> REVERSE_MAP = map(
+			"1", INFO,
+			"2", LOW,
+			"3", MEDIUM,
+			"4", HIGH,
+			"5", CRITICAL
+	);
 
 	@NotEmpty(message = "{errors.required}")
 	@Size(max = 50, message = "{errors.maxlength}")

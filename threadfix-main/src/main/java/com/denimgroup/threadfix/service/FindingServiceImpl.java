@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.data.entities.GenericSeverity.REVERSE_MAP;
 import static com.denimgroup.threadfix.webapp.controller.rest.AddFindingRestController.*;
 
 @Service
@@ -197,7 +198,6 @@ public class FindingServiceImpl implements FindingService {
 		
 		Finding finding = new Finding();
 		SurfaceLocation location = new SurfaceLocation();
-		ChannelSeverity channelSeverity = new ChannelSeverity();
 		ChannelVulnerability channelVulnerability = new ChannelVulnerability();
 				
 		finding.setSurfaceLocation(location);
@@ -213,7 +213,7 @@ public class FindingServiceImpl implements FindingService {
 		}
 		
 		String severity = request.getParameter("severity");
-		channelSeverity.setId(IntegerUtils.getPrimitive(severity));
+		ChannelSeverity channelSeverity = getChannelSeverity(severity);
 		finding.setChannelSeverity(channelSeverity);
 		
 		String nativeId = request.getParameter("nativeId");
@@ -281,10 +281,7 @@ public class FindingServiceImpl implements FindingService {
 		String severity = request.getParameter("severity");
 		ChannelSeverity channelSeverity = null;
 		if (severity != null) {
-			channelSeverity = channelSeverityDao
-				.retrieveByCode(
-						channelTypeDao.retrieveByName(ScannerType.MANUAL.getFullName()),
-						severity);
+			channelSeverity = getChannelSeverity(severity);
 		}
 
 		if (severity == null || channelSeverity == null) {
@@ -293,7 +290,14 @@ public class FindingServiceImpl implements FindingService {
 		
 		return PASSED_CHECK;
 	}
-	
+
+	private ChannelSeverity getChannelSeverity(String severity) {
+		return channelSeverityDao
+            .retrieveByCode(
+					channelTypeDao.retrieveByName(ScannerType.MANUAL.getFullName()),
+					REVERSE_MAP.get(severity));
+	}
+
 	/**
 	 * This method just wraps the try / catch MalformedURLException of URL()
 	 * to ease String parsing.
