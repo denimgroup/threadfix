@@ -91,7 +91,7 @@ public class EditOrganizationController {
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug("The Organization " + organization.getName() + " (id=" + organization.getId() + ") has been edited by user " + user);
 			
-            return RestResponse.success(organization);
+            return RestResponse.success(organizationService.loadById(orgId));
 		}
 	}
 
