@@ -52,6 +52,7 @@ import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.importer.util.IntegerUtils.getPrimitive;
 
 @ScanImporter(
         scannerName = ScannerDatabaseNames.SSVL_DB_NAME,
@@ -79,15 +80,15 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 		private boolean getText = false, inFinding = false;
 		private String description = null, longDescription = null;
 
-		private List<DataFlowElement> dataFlowElementList = list();
-		private DataFlowElement lastDataFlowElement = null;
+		List<DataFlowElement> currentDataFlowElements = list();
+		DataFlowElement currentDataFlowElement = new DataFlowElement();
+		boolean getLineText = false;
 		
 		private Map<FindingKey, String> findingMap = map();
 		StringBuilder currentFindingText = new StringBuilder();
 					    
 	    public void add(Finding finding) {
 			if (finding != null) {
-	    		finding.setIsStatic(false);
 	    		saxFindingList.add(finding);
     		}
 	    }
@@ -95,7 +96,6 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 	    ////////////////////////////////////////////////////////////////////
 	    // Event handlers.
 	    ////////////////////////////////////////////////////////////////////
-	    
 	    @Override
 		public void startElement (String uri, String name,
 				      String qName, Attributes atts)
@@ -113,6 +113,13 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 				getText = true;
 			} else if (qName.equals("LongDescription")) {
 				getText = true;
+			} else if (qName.equals("DataFlowElement")) {
+				currentDataFlowElement.setSourceFileName(atts.getValue("SourceFileName"));
+				currentDataFlowElement.setLineNumber(getPrimitive(atts.getValue("LineNumber")));
+				currentDataFlowElement.setColumnNumber(getPrimitive(atts.getValue("ColumnNumber")));
+				currentDataFlowElement.setSequence(getPrimitive(atts.getValue("Sequence")));
+			} else if (qName.equals("LineText")) {
+				getLineText = true;
 			}
 
 			if (inFinding) {
@@ -170,14 +177,18 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 			if (qName.equals("Finding")) {
 				finalizeFinding();
 				inFinding = false;
-			} else if (qName.equals("LineText")) {
-				addLineText();
-			} else if (qName.equals("DataFlowElement")) {
-				finalizeDataFlowElement();
 			} else if (qName.equals("LongDescription")) {
 				addLongDescription();
 			} else if (qName.equals("FindingDescription")) {
 				addDescription();
+			} else if (qName.equals("LineText")) {
+				String builderText = getBuilderText();
+				builderText = builderText == null ? null : builderText.trim();
+				currentDataFlowElement.setLineText(builderText);
+				getLineText = false;
+			} else if (qName.equals("DataFlowElement")) {
+				currentDataFlowElements.add(currentDataFlowElement);
+				currentDataFlowElement = new DataFlowElement();
 			}
 	    }
 
@@ -186,21 +197,6 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 			getText = false;
 		}
 
-		private void finalizeDataFlowElement() {
-			if (lastDataFlowElement != null) {
-				lastDataFlowElement.setLineText(getBuilderText());
-				dataFlowElementList.add(lastDataFlowElement);
-			}
-		}
-
-		private void addLineText() {
-			if (lastDataFlowElement != null) {
-				lastDataFlowElement.setLineText(getBuilderText());
-			}
-			
-			getText = false;
-		}
-		
 		private void addDescription() {
 			description = getBuilderText();
 			getText = false;
@@ -223,15 +219,19 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 				currentFindingText.setLength(0);
 			
 				Finding finding = constructFinding(findingMap);
+
                 if (finding != null) {
+					if (!currentDataFlowElements.isEmpty()) {
+						finding.setDataFlowElements(currentDataFlowElements);
+						currentDataFlowElements = list();
+						finding.setIsStatic(true);
+					} else {
+						finding.setIsStatic(false);
+					}
+
 					finding.setScannedDate(lastDate);
 					finding.setNativeId(findingMap.get(FindingKey.NATIVE_ID));
 
-                    if (!dataFlowElementList.isEmpty()) {
-                        finding.setIsStatic(true);
-                        finding.setDataFlowElements(dataFlowElementList);
-                        dataFlowElementList = list();
-                    }
                     if (longDescription != null) {
                         finding.setLongDescription(longDescription);
                     }
@@ -250,7 +250,7 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 
 		@Override
 		public void characters (char ch[], int start, int length) {
-	    	if (getText) {
+	    	if (getText || getLineText) {
 	    		addTextToBuilder(ch, start, length);
 	    	}
 

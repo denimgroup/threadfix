@@ -26,8 +26,6 @@ package com.denimgroup.threadfix.importer.util;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 
-import javax.annotation.Nonnull;
-
 /**
  * Created by mac on 12/18/13.
  */
@@ -69,7 +67,12 @@ public class IntegerUtils {
      * @param input String representation of an integer
      * @return the parsed number, or null on failure
      */
-    public static Integer getIntegerOrNull(@Nonnull String input) {
+    public static Integer getIntegerOrNull(String input) {
+
+        if (input == null) {
+            log.debug("Null passed to getInteger or null.");
+            return null;
+        }
 
         if (!input.matches("^[0-9]+$")) {
             log.warn("Non-numeric String encountered: " + input);
