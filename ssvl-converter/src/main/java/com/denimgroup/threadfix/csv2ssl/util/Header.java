@@ -37,7 +37,10 @@ public enum Header {
     LONG_DESCRIPTION(Strings.LONG_DESCRIPTION, "Long Description"),
     ISSUE_ID(Strings.ISSUE_ID, "Issue ID(Jira, TFS, etc. ID format)"),
     FINDING_DATE(Strings.FINDING_DATE, "Finding Date (Must be in the format " + Strings.DATE_FORMAT + ")"),
-    SOURCE_FILE_NAME(Strings.SOURCE_FILE_NAME, "Source File (String, ex. testFile.jsp)");
+    SOURCE_FILE_NAME(Strings.SOURCE_FILE_NAME, "Source File (String, ex. testFile.jsp)"),
+    LINE_NUMBER(Strings.LINE_NUMBER, "Line Number (Integer, ex. 64)"),
+    COLUMN_NUMBER(Strings.COLUMN_NUMBER, "Column Number (Integer, ex. 15)"),
+    LINE_TEXT(Strings.LINE_TEXT, "Line Text (String, ex. 'sql = \"select * from Users where id=\" + parameter + \";\"')");
 
     public final String text, description;
 

@@ -102,6 +102,9 @@ public class ExcelParserTests {
                         "skip\n" +
                         "skip\n" +
                         "skip\n" +
+                        "skip\n" +
+                        "skip\n" +
+                        "skip\n" +
                         "n\n" +
                         "stdout\n";
 
