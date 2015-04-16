@@ -35,6 +35,7 @@ import com.denimgroup.threadfix.importer.exception.ScanFileUnavailableException;
 import com.denimgroup.threadfix.importer.interop.ChannelImporter;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.DefaultConfigService;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -110,6 +111,8 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
     public ChannelTypeDao channelTypeDao;
     @Autowired
     public GenericVulnerabilityDao genericVulnerabilityDao;
+    @Autowired
+    private DefaultConfigService defaultConfigService;
 
     protected String channelTypeCode;
 
@@ -187,13 +190,17 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
     public void deleteScanFile() {
 
         closeInputStream(inputStream);
+        DefaultConfiguration defaultConfig = defaultConfigService.loadCurrentConfiguration();
 
-        if (shouldDeleteAfterParsing && inputFileName != null) {
-            File file = new File(inputFileName);
-            if (file.exists()) {
-                if (!file.delete()) {
-                    log.warn("Scan file deletion failed, calling deleteOnExit()");
-                    file.deleteOnExit();
+        if(defaultConfig.shouldDeleteUploadedFile()) {
+
+            if (shouldDeleteAfterParsing && inputFileName != null) {
+                File file = new File(inputFileName);
+                if (file.exists()) {
+                    if (!file.delete()) {
+                        log.warn("Scan file deletion failed, calling deleteOnExit()");
+                        file.deleteOnExit();
+                    }
                 }
             }
         }

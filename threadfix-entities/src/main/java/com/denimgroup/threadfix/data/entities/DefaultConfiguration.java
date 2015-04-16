@@ -95,6 +95,11 @@ public class DefaultConfiguration extends BaseEntity {
         }
     }
 
+    @Transient
+    public boolean shouldDeleteUploadedFile() {
+        return fileUploadLocation == null || fileUploadLocation.isEmpty();
+    }
+
     @OneToOne
     @JoinColumn(name = "teamTopLeftId")
     public Report getTeamTopLeft() {
