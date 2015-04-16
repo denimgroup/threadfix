@@ -21,23 +21,32 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.importer.parser;
 
-import java.util.Calendar;
+import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.importer.utils.ParserUtils;
+import org.junit.Test;
 
 /**
- * Created by mac on 4/17/14.
+ * Created by mcollins on 4/16/15.
  */
-public interface LicenseService {
+public class SSVLDataFlowTests {
 
-    boolean canAddApps();
+    @Test
+    public void testParsesDataFlow() {
+        Scan scan = ParserUtils.getScan("Manual/SSVL/example1.ssvl");
 
-    boolean hasValidLicense();
+        boolean hasDataFlowElements = false;
+        for (Finding finding : scan) {
 
-    Calendar getExpirationDate();
+            if (finding.getDataFlowElements() != null) {
+                hasDataFlowElements = true;
+            }
+        }
 
-    boolean isLicenseExpired();
+        assert hasDataFlowElements : "No DataFlowElements found.";
+    }
 
-    int getAppLimit();
 
 }
