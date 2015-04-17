@@ -88,8 +88,7 @@
                                         cssClass="focus wide"
                                         size="60"
                                         maxlength="255"
-                                        ng-model="object.activeDirectoryBase"
-                                        ng-required="true"/>
+                                        ng-model="object.activeDirectoryBase"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
                             <form:errors path="activeDirectoryBase" cssClass="errors" />
@@ -107,8 +106,7 @@
                                         cssClass="wide"
                                         size="60"
                                         maxlength="255"
-                                        ng-model="object.activeDirectoryUsername"
-                                        ng-required="true"/>
+                                        ng-model="object.activeDirectoryUsername"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
                             <form:errors path="activeDirectoryUsername" cssClass="errors" />
@@ -125,8 +123,7 @@
                                         cssClass="wide"
                                         size="60"
                                         maxlength="255"
-                                        ng-model="object.activeDirectoryCredentials"
-                                        ng-required="true"/>
+                                        ng-model="object.activeDirectoryCredentials"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
                             <form:errors path="activeDirectoryCredentials" cssClass="errors" />
@@ -142,8 +139,7 @@
                                         cssClass="wide"
                                         size="60"
                                         maxlength="255"
-                                        ng-model="object.activeDirectoryURL"
-                                        ng-required="true"/>
+                                        ng-model="object.activeDirectoryURL"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
                             <form:errors path="activeDirectoryURL" cssClass="errors" />
@@ -152,153 +148,153 @@
                 </table>
                 <a class="btn"
                    id="checkLDAPSettings"
-                   ng-class="{ disabled : form.$invalid }"
+                   ng-class="{ disabled : shouldDisable() }"
                    ng-click="ok(form.$valid)">
                     Check Connection
                 </a>
             </div>
         </div>
         <div class="panel panel-default">
-                <div id="proxySettingsPanel" class="panel-heading pointer" style="width:150px"
-                     ng-click="configureProxySettings = !configureProxySettings">
-                    <h3 class="panel-title">
-                        <span ng-hide="configureProxySettings" class="icon icon-chevron-right"></span>
-                        <span ng-show="configureProxySettings" class="icon icon-chevron-down"></span>
-                        Proxy Settings
-                    </h3>
-                </div>
-                <div class="panel-body" ng-show="configureProxySettings">
-                    <table class="even-sized-rows">
-                        <tr>
-                            <td style="width:150px" class="no-color">Proxy Host</td>
-                            <td class="no-color">
-                                <form:input id="proxyHost" path="proxyHost" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.proxyHost }"/>
-                            </td>
-                            <td class="no-color" style="padding-left: 5px" >
-                                <form:errors path="activeDirectoryUsername" id="proxyHostErrors" cssClass="errors" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="no-color">Proxy Port</td>
-                            <td class="no-color">
-                                <form:input id="proxyPort"
-                                            path="proxyPort"
-                                            type="number"
+            <div id="proxySettingsPanel" class="panel-heading pointer" style="width:150px"
+                 ng-click="configureProxySettings = !configureProxySettings">
+                <h3 class="panel-title">
+                    <span ng-hide="configureProxySettings" class="icon icon-chevron-right"></span>
+                    <span ng-show="configureProxySettings" class="icon icon-chevron-down"></span>
+                    Proxy Settings
+                </h3>
+            </div>
+            <div class="panel-body" ng-show="configureProxySettings">
+                <table class="even-sized-rows">
+                    <tr>
+                        <td style="width:150px" class="no-color">Proxy Host</td>
+                        <td class="no-color">
+                            <form:input id="proxyHost" path="proxyHost" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.proxyHost }"/>
+                        </td>
+                        <td class="no-color" style="padding-left: 5px" >
+                            <form:errors path="activeDirectoryUsername" id="proxyHostErrors" cssClass="errors" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no-color">Proxy Port</td>
+                        <td class="no-color">
+                            <form:input id="proxyPort"
+                                        path="proxyPort"
+                                        type="number"
+                                        cssClass="focus"
+                                        size="60"
+                                        maxlength="255"
+                                        value="${ defaultConfiguration.proxyPort }"/>
+                        </td>
+                        <td class="no-color" style="padding-left: 5px">
+                            <form:errors path="proxyPort" id="proxyPortErrors" cssClass="errors" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Use Proxy Credentials</td>
+                        <td ng-init="shouldUseProxyCredentials = <c:out value="${ defaultConfiguration.shouldUseProxyCredentials }"/>">
+                            <form:checkbox path="shouldUseProxyCredentials" ng-model="shouldUseProxyCredentials"
+                                           value="${ defaultConfiguration.shouldUseProxyCredentials }"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no-color">Proxy Username</td>
+                        <td class="no-color">
+                            <c:if test="${ empty defaultConfiguration.proxyUsernameEncrypted }">
+                                <form:input ng-disabled="!shouldUseProxyCredentials"
+                                            id="proxyUsername"
+                                            path="proxyUsername"
                                             cssClass="focus"
                                             size="60"
                                             maxlength="255"
-                                            value="${ defaultConfiguration.proxyPort }"/>
-                            </td>
-                            <td class="no-color" style="padding-left: 5px">
-                                <form:errors path="proxyPort" id="proxyPortErrors" cssClass="errors" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Use Proxy Credentials</td>
-                            <td ng-init="shouldUseProxyCredentials = <c:out value="${ defaultConfiguration.shouldUseProxyCredentials }"/>">
-                                <form:checkbox path="shouldUseProxyCredentials" ng-model="shouldUseProxyCredentials"
-                                               value="${ defaultConfiguration.shouldUseProxyCredentials }"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="no-color">Proxy Username</td>
-                            <td class="no-color">
-                                <c:if test="${ empty defaultConfiguration.proxyUsernameEncrypted }">
-                                    <form:input ng-disabled="!shouldUseProxyCredentials"
-                                                id="proxyUsername"
-                                                path="proxyUsername"
-                                                cssClass="focus"
-                                                size="60"
-                                                maxlength="255"
-                                                value="${ defaultConfiguration.proxyUsername }"/>
-                                </c:if>
-                                <c:if test="${ not empty defaultConfiguration.proxyUsernameEncrypted }">
-                                    <form:input ng-disabled="!shouldUseProxyCredentials"
-                                                id="proxyUsername"
-                                                path="proxyUsername"
-                                                cssClass="focus"
-                                                size="60"
-                                                maxlength="255"
-                                                value=""
-                                                placeholder="Use configured username"/>
-                                </c:if>
-                            </td>
-                            <td class="no-color" style="padding-left: 5px">
-                                <form:errors path="proxyUsername" id="proxyUsernameErrors" cssClass="errors" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="no-color">Proxy Password</td>
-                            <td class="no-color">
-                                <c:if test="${ empty defaultConfiguration.proxyPasswordEncrypted }">
-                                    <form:input ng-disabled="!shouldUseProxyCredentials"
-                                                id="proxyPassword"
-                                                type="password"
-                                                path="proxyPassword"
-                                                cssClass="focus"
-                                                size="60"
-                                                maxlength="255"
-                                                value="${ defaultConfiguration.proxyPassword }"/>
-                                </c:if>
-                                <c:if test="${ not empty defaultConfiguration.proxyPasswordEncrypted }">
-                                    <form:input ng-disabled="!shouldUseProxyCredentials"
-                                                id="proxyPassword"
-                                                type="password"
-                                                path="proxyPassword"
-                                                cssClass="focus"
-                                                size="60"
-                                                maxlength="255"
-                                                value=""
-                                                placeholder="Use configured password"/>
-                                </c:if>
-                            </td>
-                            <td class="no-color" style="padding-left: 5px">
-                                <form:errors path="proxyPassword" id="proxyPasswordErrors" cssClass="errors" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Qualys</td>
-                            <td><form:checkbox path="shouldProxyQualys" value="${ defaultConfiguration.shouldProxyQualys }"/></td>
-                        </tr>
-                        <tr>
-                            <td>Veracode</td>
-                            <td><form:checkbox path="shouldProxyVeracode" value="${ defaultConfiguration.shouldProxyVeracode }"/></td>
-                        </tr>
-                        <tr>
-                            <td>WhiteHat Sentinel</td>
-                            <td><form:checkbox path="shouldProxyWhiteHat" value="${ defaultConfiguration.shouldProxyWhiteHat }"/></td>
-                        </tr>
-                        <tr>
-                            <td>Trustwave Hailstorm</td>
-                            <td><form:checkbox path="shouldProxyTrustwaveHailstorm" value="${ defaultConfiguration.shouldProxyTrustwaveHailstorm }"/></td>
-                        </tr>
-                        <tr>
-                            <td>Contrast</td>
-                            <td><form:checkbox path="shouldProxyContrast" value="${ defaultConfiguration.shouldProxyContrast }"/></td>
-                        </tr>
-                        <tr>
-                            <td>TFS</td>
-                            <td><form:checkbox path="shouldProxyTFS" value="${ defaultConfiguration.shouldProxyTFS }"/></td>
-                        </tr>
-                        <tr>
-                            <td>Bugzilla</td>
-                            <td><form:checkbox path="shouldProxyBugzilla" value="${ defaultConfiguration.shouldProxyBugzilla }"/></td>
-                        </tr>
-                        <tr>
-                            <td>Jira</td>
-                            <td><form:checkbox path="shouldProxyJira" value="${ defaultConfiguration.shouldProxyJira }"/></td>
-                        </tr>
-                        <tr>
-                            <td>Version One</td>
-                            <td><form:checkbox path="shouldProxyVersionOne" value="${ defaultConfiguration.shouldProxyVersionOne }"/></td>
-                        </tr>
-                        <tr>
-                            <td>HP Quality Center</td>
-                            <td><form:checkbox path="shouldProxyHPQC" value="${ defaultConfiguration.shouldProxyHPQC }"/></td>
-                        </tr>
-                    </table>
-                </div>
+                                            value="${ defaultConfiguration.proxyUsername }"/>
+                            </c:if>
+                            <c:if test="${ not empty defaultConfiguration.proxyUsernameEncrypted }">
+                                <form:input ng-disabled="!shouldUseProxyCredentials"
+                                            id="proxyUsername"
+                                            path="proxyUsername"
+                                            cssClass="focus"
+                                            size="60"
+                                            maxlength="255"
+                                            value=""
+                                            placeholder="Use configured username"/>
+                            </c:if>
+                        </td>
+                        <td class="no-color" style="padding-left: 5px">
+                            <form:errors path="proxyUsername" id="proxyUsernameErrors" cssClass="errors" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no-color">Proxy Password</td>
+                        <td class="no-color">
+                            <c:if test="${ empty defaultConfiguration.proxyPasswordEncrypted }">
+                                <form:input ng-disabled="!shouldUseProxyCredentials"
+                                            id="proxyPassword"
+                                            type="password"
+                                            path="proxyPassword"
+                                            cssClass="focus"
+                                            size="60"
+                                            maxlength="255"
+                                            value="${ defaultConfiguration.proxyPassword }"/>
+                            </c:if>
+                            <c:if test="${ not empty defaultConfiguration.proxyPasswordEncrypted }">
+                                <form:input ng-disabled="!shouldUseProxyCredentials"
+                                            id="proxyPassword"
+                                            type="password"
+                                            path="proxyPassword"
+                                            cssClass="focus"
+                                            size="60"
+                                            maxlength="255"
+                                            value=""
+                                            placeholder="Use configured password"/>
+                            </c:if>
+                        </td>
+                        <td class="no-color" style="padding-left: 5px">
+                            <form:errors path="proxyPassword" id="proxyPasswordErrors" cssClass="errors" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Qualys</td>
+                        <td><form:checkbox path="shouldProxyQualys" value="${ defaultConfiguration.shouldProxyQualys }"/></td>
+                    </tr>
+                    <tr>
+                        <td>Veracode</td>
+                        <td><form:checkbox path="shouldProxyVeracode" value="${ defaultConfiguration.shouldProxyVeracode }"/></td>
+                    </tr>
+                    <tr>
+                        <td>WhiteHat Sentinel</td>
+                        <td><form:checkbox path="shouldProxyWhiteHat" value="${ defaultConfiguration.shouldProxyWhiteHat }"/></td>
+                    </tr>
+                    <tr>
+                        <td>Trustwave Hailstorm</td>
+                        <td><form:checkbox path="shouldProxyTrustwaveHailstorm" value="${ defaultConfiguration.shouldProxyTrustwaveHailstorm }"/></td>
+                    </tr>
+                    <tr>
+                        <td>Contrast</td>
+                        <td><form:checkbox path="shouldProxyContrast" value="${ defaultConfiguration.shouldProxyContrast }"/></td>
+                    </tr>
+                    <tr>
+                        <td>TFS</td>
+                        <td><form:checkbox path="shouldProxyTFS" value="${ defaultConfiguration.shouldProxyTFS }"/></td>
+                    </tr>
+                    <tr>
+                        <td>Bugzilla</td>
+                        <td><form:checkbox path="shouldProxyBugzilla" value="${ defaultConfiguration.shouldProxyBugzilla }"/></td>
+                    </tr>
+                    <tr>
+                        <td>Jira</td>
+                        <td><form:checkbox path="shouldProxyJira" value="${ defaultConfiguration.shouldProxyJira }"/></td>
+                    </tr>
+                    <tr>
+                        <td>Version One</td>
+                        <td><form:checkbox path="shouldProxyVersionOne" value="${ defaultConfiguration.shouldProxyVersionOne }"/></td>
+                    </tr>
+                    <tr>
+                        <td>HP Quality Center</td>
+                        <td><form:checkbox path="shouldProxyHPQC" value="${ defaultConfiguration.shouldProxyHPQC }"/></td>
+                    </tr>
+                </table>
             </div>
+        </div>
 
         <div class="panel panel-default">
             <div id="defaultSessionTimeoutPermissionsPanel" class="panel-heading pointer" style="width:200px"
@@ -337,6 +333,7 @@
             </div>
             <div class="panel-body" ng-show="editLicenseInformationPanel">
                 <c:out value="${ applicationCount }"/> applications used out of <c:out value="${ licenseCount }"/> available for the license. License expires on
+                <fmt:formatDate value="${ licenseExpirationDate }" pattern="MM-dd-yyyy" />
             </div>
         </div>
         </security:authorize>
