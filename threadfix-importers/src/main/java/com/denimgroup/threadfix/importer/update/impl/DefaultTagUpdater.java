@@ -45,7 +45,7 @@ public class DefaultTagUpdater extends SpringBeanAutowiringSupport implements Up
 					tag.setName(splitLine[0]);
 					tag.setFullClassName(splitLine[1]);
 					defaultTagDao.saveOrUpdate(tag);
-					LOG.info("Created a Defect Tracker with name "
+					LOG.info("Created a default tag with name "
 							+ splitLine[0]);
 
 				} else {

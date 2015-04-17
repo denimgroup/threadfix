@@ -69,7 +69,7 @@ public class DefaultTagMappingServiceImpl extends AbstractNamedObjectService<Def
 	}
 
 	@Override
-	GenericNamedObjectDao<DefaultTag> getDao() {
+	public GenericNamedObjectDao<DefaultTag> getDao() {
 		return defaultTagDao;
 	}
 }

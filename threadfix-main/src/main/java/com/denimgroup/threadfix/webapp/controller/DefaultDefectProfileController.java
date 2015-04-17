@@ -1,6 +1,6 @@
 package com.denimgroup.threadfix.webapp.controller;
 
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 import java.util.Map;
 
@@ -40,7 +40,7 @@ public class DefaultDefectProfileController {
 	@RequestMapping(value = "profiles/{defectTrackerId}", method = RequestMethod.GET)
 	public @ResponseBody RestResponse<Map<String, Object>> getDefaultProfiles(
 			@PathVariable("defectTrackerId") int defectTrackerId) {
-		Map<String, Object> map = newMap();
+		Map<String, Object> map = map();
 		DefectTracker defectTracker = defectTrackerService.loadDefectTracker(defectTrackerId);
 		map.put("defaultProfiles", defectTracker.getDefaultDefectProfiles());
 		return RestResponse.success(map);
@@ -53,7 +53,7 @@ public class DefaultDefectProfileController {
 		log.info("Deleting a profile based on id");
 		DefaultDefectProfile defaultProfile = defaultDefectProfileService.loadDefaultProfile(defaultProfileId);
 		if (defaultProfile != null) {
-			defaultDefectProfiledao.deleteById(defaultProfileId);
+			defaultDefectProfileService.deleteProfileById(defaultProfileId);
 			return RestResponse.success("Default defect profile was successfully deleted.");
 		} else {
 			return RestResponse.failure("Could not delete, bad request");

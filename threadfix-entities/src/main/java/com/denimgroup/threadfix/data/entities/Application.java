@@ -106,6 +106,7 @@ public class Application extends AuditableEntity {
 	@Size(max = 50, message = "{errors.maxlength} 50.")
 	private String component;
 	private DefectTracker defectTracker;
+	private DefaultDefectProfile mainDefaultDefectProfile;
 
 	private GRCTool grcTool;
 
@@ -273,6 +274,17 @@ public class Application extends AuditableEntity {
 
 	public void setDefectTracker(DefectTracker defectTracker) {
 		this.defectTracker = defectTracker;
+	}
+
+	@ManyToOne
+	@JoinColumn(name = "mainDefaultDefectProfileId")
+	@JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
+	public DefaultDefectProfile getMainDefaultDefectProfile() {
+		return mainDefaultDefectProfile;
+	}
+
+	public void setMainDefaultDefectProfile(DefaultDefectProfile mainDefaultDefectProfile) {
+		this.mainDefaultDefectProfile = mainDefaultDefectProfile;
 	}
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })

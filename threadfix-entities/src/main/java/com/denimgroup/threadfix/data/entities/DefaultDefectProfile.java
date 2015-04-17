@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -23,6 +24,7 @@ public class DefaultDefectProfile extends AuditableEntity {
 	private List<DefaultDefectField> defaultDefectFields;
 	private DefectTracker defectTracker;
 	private Application referenceApplication;
+	private List<Application> applicationsWithMainProfile;
 
 	@Column(length = 25, nullable = false)
         @JsonView(Object.class) // This means it will be included in all ObjectWriters with Views.
@@ -47,7 +49,7 @@ public class DefaultDefectProfile extends AuditableEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "applicationId")
-	@JsonView(Object.class)
+	@JsonView(AllViews.DefectTrackerInfos.class)
 	public Application getReferenceApplication() {
 		return referenceApplication;
 	}
@@ -64,5 +66,16 @@ public class DefaultDefectProfile extends AuditableEntity {
 
 	public void setDefaultDefectFields(List<DefaultDefectField> defaultDefectFields) {
 		this.defaultDefectFields = defaultDefectFields;
+	}
+
+	@OneToMany(mappedBy = "mainDefaultDefectProfile")
+	@JsonIgnore
+	public List<Application> getApplicationsWithMainProfile() {
+		return applicationsWithMainProfile;
+	}
+
+	public void setApplicationsWithMainProfile(
+			List<Application> applicationsWithMainProfile) {
+		this.applicationsWithMainProfile = applicationsWithMainProfile;
 	}
 }

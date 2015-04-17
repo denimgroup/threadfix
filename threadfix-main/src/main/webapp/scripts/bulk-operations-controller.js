@@ -114,9 +114,14 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
                 config: function() {
                     return {
                         vulns: filteredVulns,
-                        typeName: getApplication().defectTracker.defectTrackerType.name,
-                        defectTrackerId: getApplication().defectTracker.id
+                        typeName: getApplication().defectTracker.defectTrackerType.name
                     }
+                },
+                defectDefaultsConfig: function() {
+                    return {
+                        defectTrackerId : getApplication().defectTracker.id,
+                        mainDefaultProfile : getApplication().mainDefaultDefectProfile // may be null
+                    };
                 }
             }
         });

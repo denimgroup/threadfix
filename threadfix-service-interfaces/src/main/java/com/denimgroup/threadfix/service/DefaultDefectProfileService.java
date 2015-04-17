@@ -31,4 +31,6 @@ public interface DefaultDefectProfileService {
 	 */
 	public void updateDefaultFields(DefaultDefectProfile defaultDefectProfile, List<DefaultDefectField> newDefaults);
 
+	public void deleteProfileById(Integer defaultProfileId);
+
 }
