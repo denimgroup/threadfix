@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
 import org.codehaus.jackson.JsonNode;
@@ -126,7 +126,7 @@ public class DefaultDefectFieldServiceImpl implements DefaultDefectFieldService 
 			parsedDefaultDefectField.setDynamicDefault(true);
 
 			List<String> validKeys = tagMappingService.getTagKeysOrNull(tagName);
-			Map<String,String> valueMappingMap = newMap();
+			Map<String,String> valueMappingMap = map();
 
 			Iterator<String> keys = valueMapping.getFieldNames();
 			while(keys.hasNext()){

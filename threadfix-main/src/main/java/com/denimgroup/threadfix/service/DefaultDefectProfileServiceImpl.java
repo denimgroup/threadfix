@@ -1,6 +1,6 @@
 package com.denimgroup.threadfix.service;
 
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 import java.util.List;
 import java.util.Map;
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.denimgroup.threadfix.data.dao.DefaultDefectProfileDao;
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefaultDefectField;
 import com.denimgroup.threadfix.data.entities.DefaultDefectProfile;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
@@ -27,7 +28,7 @@ public class DefaultDefectProfileServiceImpl implements DefaultDefectProfileServ
 	@Override
 	public Map<String, Object> getAllDefaultValuesForVulns(DefaultDefectProfile defaultDefectProfile, List<Vulnerability> vulnerabilities) {
 		List<DefaultDefectField> defaultDefectFields = defaultDefectProfile.getDefaultDefectFields();
-		Map<String,Object> defaultValuesMap = newMap();
+		Map<String,Object> defaultValuesMap = map();
 		for (DefaultDefectField defaultField : defaultDefectFields){
 			String DefaultValue = defaultDefectFieldService.getDefaultValueForVulns(defaultField, vulnerabilities);
 			if(DefaultValue != null){
@@ -65,5 +66,15 @@ public class DefaultDefectProfileServiceImpl implements DefaultDefectProfileServ
 	@Override
 	public void storeDefaultDefectProfile(DefaultDefectProfile defaultDefectProfile) {
 		defaultDefectProfileDao.saveOrUpdate(defaultDefectProfile);
+	}
+
+	@Override
+	public void deleteProfileById(Integer defaultProfileId) {
+		DefaultDefectProfile defaultProfile = this.loadDefaultProfile(defaultProfileId);
+		List<Application> applicationsWithMainProfile = defaultProfile.getApplicationsWithMainProfile();
+		for (Application application : applicationsWithMainProfile){
+			application.setMainDefaultDefectProfile(null);
+		}
+		defaultDefectProfileDao.deleteById(defaultProfileId);
 	}
 }

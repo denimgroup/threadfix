@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix');
 
-myAppModule.controller('DefectSubmissionModalController', function ($scope, $rootScope, $modalInstance, $http, threadFixModalService, object, config, configUrl, url, timeoutService, tfEncoder) {
+myAppModule.controller('DefectSubmissionModalController', function ($scope, $rootScope, $modalInstance, $http, threadFixModalService, object, config, configUrl, url, defectDefaultsConfig, timeoutService, tfEncoder) {
 
     $scope.focusInput = true;
 
@@ -9,6 +9,7 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
     $scope.hasFields = true;
 
     $scope.config = config;
+    $scope.defectDefaultsConfig = defectDefaultsConfig;
 
     $scope.initialized = false;
     $scope.vulns = config.vulns;
@@ -50,6 +51,7 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                     $scope.object.severity = $scope.config.severities[0];
                 } else {
                     createSubmitForm();
+                    loadMainProfileDefaults();
                 }
             } else {
 
@@ -66,10 +68,10 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
             $scope.errorMessage = "Failure. HTTP status was " + status;
         });
 
-    if ("defectTrackerId" in $scope.config){
-        var profilesUrl = tfEncoder.encode("/default/profiles/" + $scope.config.defectTrackerId);
-        $http.get(profilesUrl)
-        .success(function(data, status, headers, config){
+    //load existing default profiles for this defectTracker
+    var profilesUrl = tfEncoder.encode("/default/profiles/" + $scope.defectDefaultsConfig.defectTrackerId);
+    $http.get(profilesUrl).
+        success(function(data, status, headers, config){
             if (data.success) {
                 $scope.defaultProfiles = data.object.defaultProfiles;
             }
@@ -80,8 +82,6 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
         error(function(data, status, headers, config) {
             $scope.errorMessage = "Couldn't load default profiles. HTTP status was " + status;
         });
-    }
-
 
     $scope.ok = function (form) {
 
@@ -165,14 +165,20 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
         $scope.requiredErrorMap[pathSegment1] = Object.keys($scope.fieldsMap[pathSegment1]).length === 0;
     };
 
+    var loadMainProfileDefaults = function() {
+        if ($scope.defectDefaultsConfig.mainDefaultProfile){
+            $scope.defectDefaultsConfig.selectedDefaultProfileId = $scope.defectDefaultsConfig.mainDefaultProfile.id;
+            $scope.loadProfileDefaults();
+        }
+    };
+
     //here load default when different default is selected
     $scope.loadProfileDefaults = function(){
-        if (!$scope.config.selectedDefaultProfileId) return; //if select goes on first field which gives empty value
+        if (!$scope.defectDefaultsConfig.selectedDefaultProfileId) return; //if select goes on first field which gives empty value
         var vulnerabilityIds = $scope.vulns.map(function(vuln) {
             return vuln.id;
         });
-        var defaultsUrl = tfEncoder.encode("/default/" + $scope.config.selectedDefaultProfileId + "/retrieve/" + vulnerabilityIds.join("-"));
-        console.log(defaultsUrl);
+        var defaultsUrl = tfEncoder.encode("/default/" + $scope.defectDefaultsConfig.selectedDefaultProfileId + "/retrieve/" + vulnerabilityIds.join("-"));
         $scope.loadingProfileDefaults = true;
 
         $http.get(defaultsUrl)

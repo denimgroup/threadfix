@@ -97,7 +97,7 @@ public class DefectTracker extends AuditableEntity {
 		this.applications = applications;
 	}
 
-	@JsonView(AllViews.DefectTrackerInfos.class)
+	@JsonView(Object.class)
 	@OneToMany(mappedBy = "defectTracker", cascade = CascadeType.ALL)
 	public List<DefaultDefectProfile> getDefaultDefectProfiles() {
 		return defaultDefectProfiles;

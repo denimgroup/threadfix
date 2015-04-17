@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
 import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
@@ -107,7 +106,7 @@ public class DefectDefaultController {
 	public @ResponseBody RestResponse<Map<String, Object>> getDefectDefaultsConfig(
 			@PathVariable("defaultProfileId") int defaultProfileId){
 
-		Map<String, Object> map = newMap();
+		Map<String, Object> map = map();
 		DefaultDefectProfile defaultProfile = defaultDefectProfileService.loadDefaultProfile(defaultProfileId);
 		map.put("defaultTags", defaultTagMappingService.getTagsWithValueMappingFields());
 		map.put("defaultDefectFields", defaultProfile.getDefaultDefectFields());

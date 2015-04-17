@@ -19,6 +19,7 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefaultDefectProfileService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
+import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -45,7 +46,7 @@ public class AddDefaultDefectProfileController {
 		model.addAttribute(new DefaultDefectProfile());
 	}
 
-	@JsonView(Object.class)
+	@JsonView(AllViews.DefectTrackerInfos.class)
 	@RequestMapping(method = RequestMethod.POST)
 	public @ResponseBody Object createNewDefaultDefectProfile(@Valid @ModelAttribute DefaultDefectProfile defaultDefectProfile,
 			BindingResult result) {
