@@ -7,7 +7,10 @@
     <div ng-form="form" class="modal-body">
         <div ng-hide="initialized" class="modal-spinner-div"><span class="spinner dark"></span>Loading</div>
 
-        <div ng-show="initialized">Available default tag entries: <span ng-repeat="defaultTag in defaultTags"> @{{ defaultTag.name }},</span></div>
+        <div ng-show="initialized" id="available-tags-div">Available default tags
+            <a class="btn" popover="Copy a tag into a text field to set a dynamic default for defect submissions. Some of the tags support value mapping for the select fields. Without a tag, a default will be statically saved." popover-placement="bottom" popover-append-to-body="true">?</a>
+            <span ng-repeat="defaultTag in defaultTags" class="default-tag" popover="{{ defaultTag.description }}" popover-trigger="mouseenter" popover-append-to-body="true">@{{ defaultTag.name }}</span>
+        </div>
 
         <div class="dynamic-defect-form" ng-if="isDynamicForm">
             <span ng-if="stdFormTemplate && hasFields" class="errors">* required for defect submissions</span>

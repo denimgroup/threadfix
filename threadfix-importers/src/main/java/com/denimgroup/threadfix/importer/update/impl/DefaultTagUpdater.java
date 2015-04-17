@@ -36,7 +36,7 @@ public class DefaultTagUpdater extends SpringBeanAutowiringSupport implements Up
 		while (line != null) {
 			String[] splitLine = StringUtils.split(line, ',');
 
-			if (splitLine.length == 2) {
+			if (splitLine.length == 3) {
 				DefaultTag tag = defaultTagDao.retrieveByName(splitLine[0]);
 
 				if (tag == null) {
@@ -44,6 +44,7 @@ public class DefaultTagUpdater extends SpringBeanAutowiringSupport implements Up
 					tag = new DefaultTag();
 					tag.setName(splitLine[0]);
 					tag.setFullClassName(splitLine[1]);
+					tag.setDescription(splitLine[2]);
 					defaultTagDao.saveOrUpdate(tag);
 					LOG.info("Created a default tag with name "
 							+ splitLine[0]);
@@ -51,12 +52,13 @@ public class DefaultTagUpdater extends SpringBeanAutowiringSupport implements Up
 				} else {
 					LOG.info("Already had an entry for " + splitLine[0]);
 					tag.setFullClassName(splitLine[1]);
+					tag.setDescription(splitLine[2]);
 					defaultTagDao.saveOrUpdate(tag);
 				}
 
 			} else {
 				LOG.error("Line had " + splitLine.length
-						+ " sections instead of 2: " + line);
+						+ " sections instead of 3: " + line);
 			}
 			line = reader.readLine();
 		}
