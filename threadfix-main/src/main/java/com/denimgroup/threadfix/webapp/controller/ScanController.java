@@ -123,6 +123,25 @@ public class ScanController {
 		
 		return RestResponse.success("Successfully deleted scan.");
 	}
+
+	@RequestMapping(value = "/{scanId}/download", method = RequestMethod.POST)
+	public @ResponseBody RestResponse<String> downloadScan(@PathVariable("orgId") Integer orgId,
+			@PathVariable("appId") Integer appId,
+			@PathVariable("scanId") Integer scanId) {
+
+		if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
+			return RestResponse.failure("You do not have permission to download scans.");
+		}
+
+		if (scanId != null) {
+			Scan scan = scanService.loadScan(scanId);
+			if (scan != null) {
+				scanService.downloadScan(scan);
+			}
+		}
+
+		return RestResponse.success("Successfully downloaded scan.");
+	}
 	
 	@RequestMapping(value = "/{scanId}/table", method = RequestMethod.POST)
 	public @ResponseBody Object scanTable(

@@ -53,6 +53,11 @@ public interface ScanService {
 	void storeScan(Scan scan);
 
 	/**
+	 * @param scan
+	 */
+	void downloadScan(Scan scan);
+
+	/**
 	 * Save a scan file and add a request to the queue with the appropriate
 	 * filename and ApplicationChannel id.
 	 * 

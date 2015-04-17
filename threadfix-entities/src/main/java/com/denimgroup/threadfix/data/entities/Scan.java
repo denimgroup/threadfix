@@ -112,6 +112,8 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
     private String filePathRoot;
     @Size(max = 255, message = "{errors.maxlength} 255.")
     private String urlPathRoot;
+    @Size(max = 32, message = "{errors.maxlength} 32.")
+    private String somethingRandomHere;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "applicationChannelId")
@@ -183,6 +185,14 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 
     public void setUrlPathRoot(String urlPathRoot) {
         this.urlPathRoot = urlPathRoot;
+    }
+
+    public String getSomethingRandomHere() {
+        return somethingRandomHere;
+    }
+
+    public void setSomethingRandomHere(String somethingRandomHere) {
+        this.somethingRandomHere = somethingRandomHere;
     }
 
     @OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)

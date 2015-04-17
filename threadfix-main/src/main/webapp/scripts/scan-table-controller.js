@@ -1,4 +1,4 @@
-var myAppModule = angular.module('threadfix')
+var myAppModule = angular.module('threadfix');
 
 myAppModule.controller('ScanTableController', function ($scope, $window, $http, $log, $rootScope, tfEncoder) {
 
@@ -47,6 +47,27 @@ myAppModule.controller('ScanTableController', function ($scope, $window, $http, 
                     $scope.errorMessage = "Request to server failed. Got " + status + " response code.";
                 });
         }
+    };
+
+    $scope.downloadScan = function(scan) {
+
+        scan.downloading = true;
+
+        $http.post(tfEncoder.encode(currentUrl + '/scans/' + scan.id + '/download')).
+            success(function(data, status, headers, config) {
+
+                scan.downloading = false;
+
+                if (!data.success) {
+                    $scope.errorMessage = "Something went wrong. " + data.message;
+                }
+            }).
+            error(function(data, status, headers, config) {
+                $log.info("HTTP request for form objects failed.");
+                // TODO improve error handling and pass something back to the users
+                scan.downloading = false;
+                $scope.errorMessage = "Request to server failed. Got " + status + " response code.";
+            });
     };
 
     $scope.viewScan = function(scan) {

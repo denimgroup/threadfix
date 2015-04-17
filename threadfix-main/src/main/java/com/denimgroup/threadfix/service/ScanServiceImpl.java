@@ -87,6 +87,12 @@ public class ScanServiceImpl implements ScanService {
     }
 
     @Override
+    public void downloadScan(Scan scan) {
+
+//        scan.getApplicationChannel()
+    }
+
+    @Override
     @Transactional(readOnly = false)
     public void addFileToQueue(@Nonnull Integer channelId, @Nonnull String fileName, @Nonnull Calendar scanDate) {
 

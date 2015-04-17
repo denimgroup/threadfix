@@ -699,6 +699,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
 
         Scan scan = new Scan();
+//        scan.setFileName(inputFileName);
         scan.setFindings(saxFindingList);
         scan.setApplicationChannel(applicationChannel);
 

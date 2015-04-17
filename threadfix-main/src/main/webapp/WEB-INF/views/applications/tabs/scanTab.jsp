@@ -19,7 +19,8 @@
                 <c:if test="${ canUploadScans }">
                     <th class="medium"></th>
                 </c:if>
-                <th class="medium"></th>
+                <th style="width:100px"></th>
+                <th style="width:180px"></th>
             </tr>
         </thead>
         <tbody>
@@ -45,6 +46,13 @@
                 </c:if>
                 <td>
                     <a class="pointer" ng-click="viewScan(scan)">View Scan</a>
+                </td>
+                <td>
+                    <a ng-hide="scan.downloading" class="btn btn-primary" ng-click="downloadScan(scan)">Download Scan</a>
+                    <a ng-show="scan.downloading" class="btn btn-primary" ng-disabled>
+                        <span class="spinner"></span>
+                        Dowloading
+                    </a>
                 </td>
             </tr>
         </tbody>
