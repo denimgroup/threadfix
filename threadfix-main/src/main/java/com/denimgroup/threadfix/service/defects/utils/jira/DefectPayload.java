@@ -52,12 +52,12 @@ public class DefectPayload {
 
             IssueType issueType = metadata.getIssueTypeOrNull();
 
-            if (objectMap.containsKey("timetracking_remainingestimate") &&
-                    objectMap.containsKey("timetracking_originalestimate")) {
+            Object remainingEstimate = objectMap.get("timetracking_remainingestimate");
+            Object originalEstimate = objectMap.get("timetracking_originalestimate");
+            if (remainingEstimate != null &&
+                    originalEstimate != null ) {
                 fields.put("timetracking",
-                        new TimeTracking(
-                                objectMap.get("timetracking_originalestimate"),
-                                objectMap.get("timetracking_remainingestimate")));
+                        new TimeTracking(originalEstimate, remainingEstimate));
             }
 
             for (Map.Entry<String, Field> entry : issueType.getFields().entrySet()) {
