@@ -101,6 +101,7 @@ public class DefectDefaultController {
 		return RestResponse.success("Updating the defaults for the defect tracker");
 	}
 
+	//Retrieve all the existing defaults tags and default fields for this profile
 	@JsonView(Object.class)
 	@RequestMapping(value = "update", method = RequestMethod.GET)
 	public @ResponseBody RestResponse<Map<String, Object>> getDefectDefaultsConfig(

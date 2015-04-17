@@ -39,7 +39,7 @@ public class DefaultTagMappingServiceImpl extends AbstractNamedObjectService<Def
 		List<DefaultTag> defaultTags = defaultTagDao.retrieveAll();
 
 		for (DefaultTag tag : defaultTags) {
-			Map<String,Object> tagWithFields = map("name", (Object) tag.getName());
+			Map<String,Object> tagWithFields = map("name", (Object) tag.getName(), "description", (Object) tag.getDescription());
 			AbstractDefaultTagMapper tagMapper = defaultTagMapperFactory.getTagMapperFromDefaultTag(tag);
 			if(tagMapper.isSupportingValueMapping()){
 				tagWithFields.put("valueMapping", true);
