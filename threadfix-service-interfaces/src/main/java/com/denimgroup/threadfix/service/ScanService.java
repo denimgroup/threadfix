@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.entities.Scan;
 
 import javax.annotation.Nonnull;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Calendar;
 import java.util.List;
 
@@ -55,7 +56,7 @@ public interface ScanService {
 	/**
 	 * @param scan
 	 */
-	void downloadScan(Scan scan);
+	String downloadScan(Scan scan, String fullFilePath, HttpServletResponse response);
 
 	/**
 	 * Save a scan file and add a request to the queue with the appropriate

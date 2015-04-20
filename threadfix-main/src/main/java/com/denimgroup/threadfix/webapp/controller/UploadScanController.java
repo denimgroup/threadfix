@@ -128,7 +128,7 @@ public class UploadScanController {
 
             DefaultConfiguration defaultConfig = defaultConfigService.loadCurrentConfiguration();
 
-            if(defaultConfig.shouldDeleteUploadedFile()) {
+            if(!defaultConfig.fileUploadLocationExists()) {
 
                 File diskFile = DiskUtils.getScratchFile(fileName);
 

@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Scan;
@@ -42,6 +43,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,6 +67,8 @@ public class ScanController {
     private ApplicationService applicationService;
     @Autowired
     private GenericVulnerabilityService genericVulnerabilityService;
+    @Autowired
+    private DefaultConfigService defaultConfigService;
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
@@ -127,17 +132,36 @@ public class ScanController {
 	@RequestMapping(value = "/{scanId}/download", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<String> downloadScan(@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId,
-			@PathVariable("scanId") Integer scanId) {
+			@PathVariable("scanId") Integer scanId,
+            HttpServletResponse response) {
 
 		if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return RestResponse.failure("You do not have permission to download scans.");
 		}
 
-		if (scanId != null) {
+        DefaultConfiguration defaultConfiguration = defaultConfigService.loadCurrentConfiguration();
+
+        if (!defaultConfiguration.fileUploadLocationExists()) {
+            return RestResponse.failure("There is no place to download scans from.");
+        }
+
+        if (scanId != null) {
 			Scan scan = scanService.loadScan(scanId);
 			if (scan != null) {
-				scanService.downloadScan(scan);
-			}
+
+                if (scan.getFileName()== null || scan.getFileName().isEmpty()){
+                    return RestResponse.failure("There is no scan file uploaded associated with this Scan .");
+                }
+
+                String fullFilePath = defaultConfiguration.getFullFilePath(scan);
+                String failureMessage = scanService.downloadScan(scan, fullFilePath, response);
+
+                if (failureMessage != null) {
+                    return RestResponse.failure(failureMessage);
+                }
+			} else {
+                return RestResponse.failure("There is no valid scan file.");
+            }
 		}
 
 		return RestResponse.success("Successfully downloaded scan.");

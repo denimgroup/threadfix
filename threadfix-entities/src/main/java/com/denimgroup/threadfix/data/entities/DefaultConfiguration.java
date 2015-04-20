@@ -25,6 +25,7 @@
 package com.denimgroup.threadfix.data.entities;
 
 import javax.persistence.*;
+import java.io.File;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -96,8 +97,13 @@ public class DefaultConfiguration extends BaseEntity {
     }
 
     @Transient
-    public boolean shouldDeleteUploadedFile() {
-        return fileUploadLocation == null || fileUploadLocation.isEmpty();
+    public boolean fileUploadLocationExists() {
+        return fileUploadLocation != null && !fileUploadLocation.isEmpty();
+    }
+
+    @Transient
+    public String getFullFilePath(Scan scan) {
+        return fileUploadLocation + File.separator + scan.getFileName();
     }
 
     @OneToOne

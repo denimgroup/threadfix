@@ -51,6 +51,8 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -192,7 +194,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         closeInputStream(inputStream);
         DefaultConfiguration defaultConfig = defaultConfigService.loadCurrentConfiguration();
 
-        if(defaultConfig.shouldDeleteUploadedFile()) {
+        if(!defaultConfig.fileUploadLocationExists()) {
 
             if (shouldDeleteAfterParsing && inputFileName != null) {
                 File file = new File(inputFileName);
@@ -678,6 +680,19 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
                 .getSurfaceLocation().getParameter());
     }
 
+    protected Scan createScanWithFileName() {
+        Scan scan = new Scan();
+
+        if (inputFileName != null){
+            Pattern p = Pattern.compile("(.*)(scan-file-[0-9]+-[0-9]+)");
+            Matcher m = p.matcher(inputFileName);
+            if(m.matches()) {
+                scan.setFileName(m.group(2));
+            }
+        }
+        return scan;
+    }
+
     /**
      * This method wraps a lot of functionality that was previously seen in multiple importers
      * into one method to reduce duplication. It sets up the relationship between the subclassed
@@ -698,8 +713,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
         ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
 
-        Scan scan = new Scan();
-//        scan.setFileName(inputFileName);
+        Scan scan = createScanWithFileName();
         scan.setFindings(saxFindingList);
         scan.setApplicationChannel(applicationChannel);
 
@@ -740,7 +754,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
         //ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
 
-        Scan scan = new Scan();
+        Scan scan = createScanWithFileName();
         scan.setFindings(saxFindingList);
         scan.setApplicationChannel(applicationChannel);
 

@@ -29,21 +29,21 @@ import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.dao.EmptyScanDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.EmptyScan;
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.interop.ChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ChannelImporterFactory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.queue.QueueSender;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.File;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
@@ -69,6 +69,8 @@ public class ScanServiceImpl implements ScanService {
     private PermissionService      permissionService      = null;
     @Autowired
     private ChannelImporterFactory channelImporterFactory = null;
+    @Autowired
+    private DefaultConfigService defaultConfigService;
 
     @Override
     public List<Scan> loadAll() {
@@ -87,9 +89,33 @@ public class ScanServiceImpl implements ScanService {
     }
 
     @Override
-    public void downloadScan(Scan scan) {
+    public String downloadScan(Scan scan, String fullFilePath, HttpServletResponse response) {
 
-//        scan.getApplicationChannel()
+        File scanFile = new File(fullFilePath);
+
+        response.addHeader("Content-Disposition", "attachment; filename=\""+scan.getFileName()+"\"");
+        response.addHeader("Content-Type", "application/force-download");
+//        response.addHeader("Content-Transfer-Encoding", "binary");
+        response.setContentLength((int)scanFile.length());
+        response.setContentType("application/octet-stream");
+
+        try {
+            InputStream in = new FileInputStream(scanFile);
+            ServletOutputStream out = response.getOutputStream();
+            IOUtils.copy(in, out);
+            in.close();
+            out.flush();
+            out.close();
+
+        } catch (FileNotFoundException e) {
+            return "File was not found at " + fullFilePath;
+
+        } catch (IOException e) {
+            return "There was an error reading the uploaded scan file.";
+        }
+
+        return null;
+
     }
 
     @Override
