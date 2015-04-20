@@ -21,23 +21,29 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.csv2ssl;
 
-import java.util.Calendar;
+import org.junit.Test;
+
+import static com.denimgroup.threadfix.csv2ssl.DialogUtils.testDialog;
 
 /**
- * Created by mac on 4/17/14.
+ * Created by mcollins on 4/16/15.
  */
-public interface LicenseService {
+public class DataFlowElementTests {
+    @Test
+    public void testWithHeaderInFile() {
 
-    boolean canAddApps();
+        String dialog = "n\n" +
+                        "y\n" +
+                        ResourceLoader.getFilePath("dataflow.csv") + "\n" +
+                        "y\n" +
+                        "n\n" +
+                        "stdout\n";
 
-    boolean hasValidLicense();
+        String result = testDialog(dialog);
 
-    Calendar getExpirationDate();
+        assert result.contains("<DataFlowElement") : "Didn't have <DataFlowElement";
 
-    boolean isLicenseExpired();
-
-    int getAppLimit();
-
+    }
 }

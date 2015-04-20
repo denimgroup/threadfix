@@ -9,4 +9,4 @@ versionOne.includeAll=true
 #csvExportFields=CWE ID, CWE Name, Path, Parameter, Severity, Open Date, Description, Defect ID, Application Name, Team Name, Payload, Attack Surface Path
 
 # Where to store temporary files
-#threadfix.scratchFolder=/etc/threadfix/scratch
+threadfix.scratchFolder=/etc/threadfix/scratch

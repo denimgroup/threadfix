@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import static com.denimgroup.threadfix.csv2ssl.util.CollectionUtils.map;
+import static com.denimgroup.threadfix.csv2ssl.util.Strings.HEADER_NAMES;
 
 /**
  * Created by mcollins on 1/21/15.
@@ -65,7 +66,7 @@ public class Configuration {
     private Map<String, String> getBasicHeaderMap() {
         Map<String, String> returnMap = map();
 
-        for (String headerName : Strings.HEADER_NAMES) {
+        for (String headerName : HEADER_NAMES) {
             returnMap.put(headerName, headerName);
         }
 

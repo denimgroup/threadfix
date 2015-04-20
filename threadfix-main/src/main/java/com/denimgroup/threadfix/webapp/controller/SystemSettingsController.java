@@ -25,6 +25,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
@@ -176,7 +177,7 @@ public class SystemSettingsController {
 
 		model.addAttribute("applicationCount", applicationService.getApplicationCount());
 		model.addAttribute("licenseCount", licenseService == null ? 0 : licenseService.getAppLimit());
-		model.addAttribute("licenseExpirationDate", licenseService == null ? 0 : licenseService.getAppLimit());
+		model.addAttribute("licenseExpirationDate", licenseService == null ? new Date() : licenseService.getExpirationDate().getTime());
 
 		model.addAttribute("defaultConfiguration", configuration);
 		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));

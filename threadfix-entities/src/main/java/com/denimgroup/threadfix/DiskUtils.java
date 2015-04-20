@@ -25,6 +25,7 @@ package com.denimgroup.threadfix;
 
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.util.RawPropertiesHolder;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +40,11 @@ public class DiskUtils {
     private DiskUtils(){}
 
     public static String getRootPath() {
-        return System.getProperty("threadfix.scratchFolder");
+        String rootPath = System.getProperty("threadfix.scratchFolder");
+        if (rootPath == null || rootPath.trim().equals("")) {
+            rootPath = RawPropertiesHolder.getProperty("threadfix.scratchFolder");
+        }
+        return rootPath;
     }
 
     public static File getScratchFile(String path) {
