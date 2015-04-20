@@ -94,8 +94,6 @@ public class ScanServiceImpl implements ScanService {
         File scanFile = new File(fullFilePath);
 
         response.addHeader("Content-Disposition", "attachment; filename=\""+scan.getFileName()+"\"");
-        response.addHeader("Content-Type", "application/force-download");
-//        response.addHeader("Content-Transfer-Encoding", "binary");
         response.setContentLength((int)scanFile.length());
         response.setContentType("application/octet-stream");
 
