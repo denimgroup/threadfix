@@ -150,7 +150,7 @@ public class ScanController {
 			if (scan != null) {
 
                 if (scan.getFileName()== null || scan.getFileName().isEmpty()){
-                    return RestResponse.failure("There is no scan file uploaded associated with this Scan .");
+                    return RestResponse.failure("There is no scan file uploaded associated with this Scan.");
                 }
 
                 String fullFilePath = defaultConfiguration.getFullFilePath(scan);

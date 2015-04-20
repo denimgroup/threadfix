@@ -156,6 +156,8 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
     protected boolean doSAXExceptionCheck = true;
 
+    protected Pattern scanFileRegex = Pattern.compile("(.*)(scan-file-[0-9]+-[0-9]+)");
+
     @Override
     public void setChannel(ApplicationChannel applicationChannel) {
         this.applicationChannel = applicationChannel;
@@ -684,8 +686,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         Scan scan = new Scan();
 
         if (inputFileName != null){
-            Pattern p = Pattern.compile("(.*)(scan-file-[0-9]+-[0-9]+)");
-            Matcher m = p.matcher(inputFileName);
+            Matcher m = scanFileRegex.matcher(inputFileName);
             if(m.matches()) {
                 scan.setFileName(m.group(2));
             }
