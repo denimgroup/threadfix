@@ -534,11 +534,13 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage checkVulnerabilitiesByCategory(String category) {
+        sleep(5000);
         driver.findElementById("checkCategory" + category).click();
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage checkVulnerabilityByType(String type) {
+        sleep(5000);
         driver.findElementById("checkbox" + type).click();
         return this;
     }
