@@ -16,7 +16,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
 
     $scope.numberToShow = 50;
 
-    var reloadList = function() {
+    var reloadList = function(callBack) {
         $scope.initialized = false;
 
         $http.get(tfEncoder.encode('/configuration/users/map/page/' + $scope.page + '/' + $scope.numberToShow)).
@@ -35,6 +35,9 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                         $scope.teams.forEach(function(team) {
                             team.applications.sort(nameCompare);
                         });
+
+                        // allow undefined
+                        callBack && callBack();
 
                     } else {
 
@@ -88,7 +91,9 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         });
 
         modalInstance.result.then(function (newUser) {
-            reloadList();
+            reloadList(function() {
+                selectUserWithId(newUser.id);
+            });
 
             $scope.successMessage = "Successfully created user " + newUser.name;
 
@@ -101,7 +106,6 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     //                     Setting current user + updating data
     ////////////////////////////////////////////////////////////////////////////////
 
-    // TODO consider "just adding this"
     var addMapsToUser = function(user) {
         $http.get(tfEncoder.encode('/configuration/users/' + user.id + '/permissions/map')).
             success(function(data) {
@@ -132,6 +136,10 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
             });
     };
 
+    $scope.clearMessage = function() {
+        $scope.successMessage = undefined;
+    };
+
     $scope.updatePage = function(page) {
         $scope.page = page;
         reloadList();
@@ -144,10 +152,25 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
             $scope.currentUser = angular.copy(user);
             addMapsToUser($scope.currentUser);
             user.formUser = $scope.currentUser;
+            if (!$scope.currentUser.globalRole) {
+                $scope.currentUser.globalRole = { id: 0 };
+            }
             user.wasSelected = true;
         }
         $scope.userId = $scope.currentUser.id;
     };
+
+    function selectUserWithId(targetId) {
+        var index = 0, targetIndex = -1;
+        $scope.users.forEach(function (listUser) {
+            if (listUser.id === targetId) {
+                targetIndex = index;
+            }
+            index = index + 1;
+        });
+
+        $scope.setCurrentUser($scope.users[targetIndex]);
+    }
 
     ////////////////////////////////////////////////////////////////////////////////
     //                              Update (Save Edits)
@@ -158,6 +181,8 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
             return;
         }
 
+        $scope.currentUser.hasGlobalGroupAccess = $scope.currentUser.globalRole.id != -1;
+
         $http.post(tfEncoder.encode("/configuration/users/" + $scope.currentUser.id + "/edit"), $scope.currentUser).
             success(function(data) {
 
@@ -166,15 +191,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
 
                     $scope.users = data.object;
 
-                    var index = 0, targetIndex = -1;
-                    $scope.users.forEach(function(listUser) {
-                        if (listUser.id === $scope.currentUser.id) {
-                            targetIndex = index;
-                        }
-                        index = index + 1;
-                    });
-
-                    $scope.setCurrentUser($scope.users[targetIndex]);
+                    selectUserWithId($scope.currentUser.id);
                 } else {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
                 }

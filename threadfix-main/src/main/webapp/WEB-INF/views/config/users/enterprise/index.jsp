@@ -18,7 +18,10 @@
 
 	<tabset>
 		<tab heading="Manage Users" select="rolesActive = false">
-			<%@ include file="/WEB-INF/views/successMessage.jspf" %>
+			<div ng-show="successMessage" class="alert alert-success">
+				<button class="close" ng-click="clearMessage()" type="button">&times;</button>
+				{{ successMessage }}
+			</div>
 			<%@ include file="/WEB-INF/views/errorMessage.jsp" %>
 
 			<div class="row">
