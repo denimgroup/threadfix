@@ -274,7 +274,7 @@ public class ApplicationRestController extends TFRestController {
         ScanCheckResultBean returnValue = scanService.checkFile(myChannelId, fileName);
 
         if (ScanImportStatus.SUCCESSFUL_SCAN == returnValue.getScanCheckResult()) {
-            Scan scan = scanMergeService.saveRemoteScanAndRun(myChannelId, fileName);
+            Scan scan = scanMergeService.saveRemoteScanAndRun(myChannelId, fileName, file.getOriginalFilename());
             return RestResponse.success(scan);
         } else {
             return failure(returnValue.getScanCheckResult().toString());

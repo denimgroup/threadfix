@@ -57,6 +57,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import static com.denimgroup.threadfix.CollectionUtils.join;
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
 
@@ -145,6 +146,8 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
     @Nullable
     protected String inputFileName;
 
+    protected String originalFileName;
+
     protected ZipFile zipFile;
     protected File diskZipFile;
 
@@ -156,7 +159,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
     protected boolean doSAXExceptionCheck = true;
 
-    protected Pattern scanFileRegex = Pattern.compile("(.*)(scan-file-[0-9]+-[0-9]+)");
+    private Pattern scanFileRegex = Pattern.compile("(.*)(scan-file-[0-9]+-[0-9]+)");
 
     @Override
     public void setChannel(ApplicationChannel applicationChannel) {
@@ -183,6 +186,11 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
             log.warn("It appears that the scan file did not save correctly and is " +
                     "therefore not available to the scan file parser", e);
         }
+    }
+
+    @Override
+    public void setOriginalFileName(String originalFileName) {
+        this.originalFileName = originalFileName;
     }
 
     @Override
@@ -682,18 +690,6 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
                 .getSurfaceLocation().getParameter());
     }
 
-    protected Scan createScanWithFileName() {
-        Scan scan = new Scan();
-
-        if (inputFileName != null){
-            Matcher m = scanFileRegex.matcher(inputFileName);
-            if(m.matches()) {
-                scan.setFileName(m.group(2));
-            }
-        }
-        return scan;
-    }
-
     /**
      * This method wraps a lot of functionality that was previously seen in multiple importers
      * into one method to reduce duplication. It sets up the relationship between the subclassed
@@ -714,7 +710,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
         ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
 
-        Scan scan = createScanWithFileName();
+        Scan scan = createScanWithFileNames();
         scan.setFindings(saxFindingList);
         scan.setApplicationChannel(applicationChannel);
 
@@ -738,6 +734,18 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         return scan;
     }
 
+    protected Scan createScanWithFileNames() {
+        Scan scan = new Scan();
+        scan.setOriginalFileName(originalFileName);
+
+        Matcher m = scanFileRegex.matcher(inputFileName);
+        if (m.matches()) {
+            scan.setFileName(m.group(2));
+        }
+
+        return scan;
+    }
+
     /**
      * TODO probably remove this unless default SAX parsing is insufficient for HTML
      * @param handler
@@ -755,7 +763,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
         //ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
 
-        Scan scan = createScanWithFileName();
+        Scan scan = createScanWithFileNames();
         scan.setFindings(saxFindingList);
         scan.setApplicationChannel(applicationChannel);
 

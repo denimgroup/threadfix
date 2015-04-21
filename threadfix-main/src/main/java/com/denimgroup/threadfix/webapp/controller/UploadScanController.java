@@ -113,7 +113,7 @@ public class UploadScanController {
             ScanCheckResultBean returnValue = scanService.checkFile(myChannelId, fileName);
 
             if (ScanImportStatus.SUCCESSFUL_SCAN == returnValue.getScanCheckResult()) {
-                Scan scan = scanMergeService.saveRemoteScanAndRun(myChannelId, fileName);
+                Scan scan = scanMergeService.saveRemoteScanAndRun(myChannelId, fileName, file.getOriginalFilename());
 
                 if (scan != null) {
                     Organization organization = organizationService.loadById(orgId);

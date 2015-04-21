@@ -130,8 +130,8 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 		}
 
         Map<FindingKey, String> findingMap = map();
-		Scan scan = createScanWithFileName();
-		scan.setFindings(new ArrayList<Finding>());
+        Scan scan = createScanWithFileNames();
+        scan.setFindings(new ArrayList<Finding>());
 		scan.setApplicationChannel(applicationChannel);
 		
 		boolean isVersion2 = false;

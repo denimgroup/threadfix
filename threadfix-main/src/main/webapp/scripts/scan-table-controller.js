@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix');
 
-myAppModule.controller('ScanTableController', function ($scope, $window, $http, $log, $rootScope, tfEncoder) {
+myAppModule.controller('ScanTableController', function ($scope, $window, $http, $log, $rootScope, tfEncoder, reportExporter) {
 
     var currentUrl = "/organizations/" + $scope.$parent.teamId + "/applications/" + $scope.$parent.appId;
 
@@ -55,18 +55,14 @@ myAppModule.controller('ScanTableController', function ($scope, $window, $http, 
 
         $http.post(tfEncoder.encode(currentUrl + '/scans/' + scan.id + '/download')).
             success(function(data, status, headers, config) {
-
                 scan.downloading = false;
+                reportExporter.exportScan(data, "application/octet-stream", scan.originalFileName);
 
-                if (!data.success) {
-                    $scope.errorMessage = "Something went wrong. " + data.message;
-                }
             }).
             error(function(data, status, headers, config) {
                 $log.info("HTTP request for form objects failed.");
-                // TODO improve error handling and pass something back to the users
+                $scope.errorMessage = "Failed to retrieve uploaded scan file. HTTP status was " + status;
                 scan.downloading = false;
-                $scope.errorMessage = "Request to server failed. Got " + status + " response code.";
             });
     };
 

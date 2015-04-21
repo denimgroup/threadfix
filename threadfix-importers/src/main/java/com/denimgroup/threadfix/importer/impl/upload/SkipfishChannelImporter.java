@@ -114,7 +114,7 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 
             List<Finding> findings = getFindingsFromMap(map);
 
-            Scan scan = createScanWithFileName();
+            Scan scan = createScanWithFileNames();
             scan.setFindings(findings);
 
             scan.setApplicationChannel(applicationChannel);

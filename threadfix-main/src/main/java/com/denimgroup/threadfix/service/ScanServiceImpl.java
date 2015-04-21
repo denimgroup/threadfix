@@ -100,7 +100,15 @@ public class ScanServiceImpl implements ScanService {
         try {
             InputStream in = new FileInputStream(scanFile);
             ServletOutputStream out = response.getOutputStream();
-            IOUtils.copy(in, out);
+            byte[] outputByteBuffer = new byte[65535];
+
+            int remainingSize = in.read(outputByteBuffer, 0, 65535);
+
+            // copy binary content to output stream
+            while (remainingSize != -1) {
+                out.write(outputByteBuffer, 0, remainingSize);
+                remainingSize = in.read(outputByteBuffer, 0, 65535);
+            }
             in.close();
             out.flush();
             out.close();
