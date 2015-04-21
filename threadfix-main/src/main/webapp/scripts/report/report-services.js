@@ -71,6 +71,8 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
             /MSIE [1-9]\./.test(navigator.userAgent));
     };
 
+    reportExporter.checkOldIE = checkOldIE;
+
     var selectSvg = function(svgId) {
         var svg = d3.select("svg");
         d3.selectAll("svg").each(function(d, i) {

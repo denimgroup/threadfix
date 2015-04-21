@@ -44,6 +44,9 @@ public final class Strings {
             URL = getParameter("fields.url"),
             PARAMETER = getParameter("fields.parameter"),
             NATIVE_ID = getParameter("fields.nativeId"),
+            LINE_NUMBER = getParameter("fields.lineNumber"),
+            COLUMN_NUMBER = getParameter("fields.columnNumber"),
+            LINE_TEXT = getParameter("fields.lineText"),
             LONG_DESCRIPTION = getParameter("fields.longDescription"),
             SHORT_DESCRIPTION = getParameter("fields.shortDescription"),
             ISSUE_ID = getParameter("fields.issueID"),
@@ -90,7 +93,10 @@ public final class Strings {
             LONG_DESCRIPTION,
             SHORT_DESCRIPTION,
             ISSUE_ID, FINDING_DATE,
-            SOURCE_FILE_NAME
+            SOURCE_FILE_NAME,
+            LINE_NUMBER,
+            LINE_TEXT,
+            COLUMN_NUMBER
     );
 
     private static Properties properties = null;

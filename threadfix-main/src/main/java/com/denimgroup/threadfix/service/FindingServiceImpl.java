@@ -28,7 +28,6 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
-import com.denimgroup.threadfix.webapp.controller.rest.AddFindingRestController;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -46,6 +45,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.data.entities.GenericSeverity.REVERSE_MAP;
+import static com.denimgroup.threadfix.webapp.controller.rest.AddFindingRestController.*;
 
 @Service
 @Transactional(readOnly = false) // used to be true
@@ -197,7 +198,6 @@ public class FindingServiceImpl implements FindingService {
 		
 		Finding finding = new Finding();
 		SurfaceLocation location = new SurfaceLocation();
-		ChannelSeverity channelSeverity = new ChannelSeverity();
 		ChannelVulnerability channelVulnerability = new ChannelVulnerability();
 				
 		finding.setSurfaceLocation(location);
@@ -213,7 +213,7 @@ public class FindingServiceImpl implements FindingService {
 		}
 		
 		String severity = request.getParameter("severity");
-		channelSeverity.setId(IntegerUtils.getPrimitive(severity));
+		ChannelSeverity channelSeverity = getChannelSeverity(severity);
 		finding.setChannelSeverity(channelSeverity);
 		
 		String nativeId = request.getParameter("nativeId");
@@ -262,7 +262,7 @@ public class FindingServiceImpl implements FindingService {
 		String longDescription = request.getParameter("longDescription");
 		if (longDescription == null || longDescription.trim().equals("") || 
 				longDescription.length() > Finding.LONG_DESCRIPTION_LENGTH) {
-			return AddFindingRestController.INVALID_DESCRIPTION;
+			return INVALID_DESCRIPTION;
 		}
 		
 		String vulnType = request.getParameter("vulnType");
@@ -275,12 +275,29 @@ public class FindingServiceImpl implements FindingService {
 		}
 		
 		if (vulnType == null || channelVulnerability == null) {
-			return AddFindingRestController.INVALID_VULN_NAME;
+			return INVALID_VULN_NAME;
+		}
+
+		String severity = request.getParameter("severity");
+		ChannelSeverity channelSeverity = null;
+		if (severity != null) {
+			channelSeverity = getChannelSeverity(severity);
+		}
+
+		if (severity == null || channelSeverity == null) {
+			return INVALID_SEVERITY;
 		}
 		
-		return AddFindingRestController.PASSED_CHECK;
+		return PASSED_CHECK;
 	}
-	
+
+	private ChannelSeverity getChannelSeverity(String severity) {
+		return channelSeverityDao
+            .retrieveByCode(
+					channelTypeDao.retrieveByName(ScannerType.MANUAL.getFullName()),
+					REVERSE_MAP.get(severity));
+	}
+
 	/**
 	 * This method just wraps the try / catch MalformedURLException of URL()
 	 * to ease String parsing.
