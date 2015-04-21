@@ -20,7 +20,7 @@
       <%@ include file="../common/userList.jspf" %>
     </div>
     <div class="span8">
-      <%@ include file="../common/basicDetails.jspf" %>
+      <%@ include file="../common/userDetails.jspf" %>
     </div>
   </div>
 </body>

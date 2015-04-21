@@ -106,7 +106,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     //                     Setting current user + updating data
     ////////////////////////////////////////////////////////////////////////////////
 
-    var addMapsToUser = function(user) {
+    var addMapsToUser = function(user, callback) {
         $http.get(tfEncoder.encode('/configuration/users/' + user.id + '/permissions/map')).
             success(function(data) {
 
@@ -124,6 +124,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                         }
                     });
 
+                    callback && callback();
                 } else {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
                 }
@@ -150,14 +151,27 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
             $scope.currentUser = user.formUser;
         } else {
             $scope.currentUser = angular.copy(user);
-            addMapsToUser($scope.currentUser);
-            user.formUser = $scope.currentUser;
-            if (!$scope.currentUser.globalRole) {
-                $scope.currentUser.globalRole = { id: 0 };
-            }
+            addMapsToUser($scope.currentUser, function() {
+                user.formUser = $scope.currentUser;
+                if (!$scope.currentUser.globalRole) {
+                    $scope.currentUser.globalRole = { id: "0" };
+                } else {
+                    $scope.currentUser.globalRole.id = "" + $scope.currentUser.globalRole.id;
+                }
+                if (!$scope.currentUser.displayName) {
+                    $scope.currentUser.displayName = "";
+                }
+                $scope.currentUser.unencryptedPassword = "";
+                $scope.currentUser.passwordConfirm = "";
+                user.baseUser = angular.copy($scope.currentUser);
+            });
             user.wasSelected = true;
         }
         $scope.userId = $scope.currentUser.id;
+    };
+
+    $scope.compare = function(form, user) {
+        return !form.$dirty || form.$invalid || angular.equals($scope.currentUser, user.baseUser)
     };
 
     function selectUserWithId(targetId) {

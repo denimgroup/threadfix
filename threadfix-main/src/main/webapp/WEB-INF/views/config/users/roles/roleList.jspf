@@ -1,0 +1,12 @@
+<%@ include file="/WEB-INF/views/config/roles/newForm.jsp" %>
+
+<h4>Role List <a id="newRoleModalLink" class="btn" ng-click="openNewModal()">Create Role</a></h4>
+
+<ul class="nav nav-pills">
+  <li ng-repeat="role in roles"
+      id="roleList"
+      class="span2"
+      ng-class="{ active: currentRole.id === role.id }">
+    <a href="#" class="no-underline" ng-click="setCurrentRole(role)">{{ role.displayName }}</a>
+  </li>
+</ul>

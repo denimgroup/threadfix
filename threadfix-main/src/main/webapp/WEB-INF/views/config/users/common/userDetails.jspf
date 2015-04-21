@@ -64,8 +64,8 @@
             <label for="roleSelect">Global Role</label>
             <select id="roleSelect" name="globalRole.id" ng-model="currentUser.globalRole.id">
                 <option ng-selected="!currentUser.hasGlobalGroupAccess" value="-1" label="No Global Access">No Global Access</option>
-                <option ng-selected="currentUser.hasGlobalGroupAccess && currentUser.globalRole.id === 0" value="0" label="Read Access">Read Access</option>
-                <option ng-selected="role.id === currentUser.globalRole.id" ng-repeat="role in roles" value="{{ role.id }}">
+                <option ng-selected="currentUser.hasGlobalGroupAccess && currentUser.globalRole.id === '0'" value="0" label="Read Access">Read Access</option>
+                <option ng-selected="role.id === '' + currentUser.globalRole.id" ng-repeat="role in roles" value="{{ role.id }}">
                     {{ role.displayName }}
                 </option>
             </select>
@@ -82,7 +82,7 @@
             Submitting
         </button>
         <button id="submit"
-                ng-class="{ disabled : !form.$dirty || form.$invalid || angular.equals(currentUser, user) }"
+                ng-class="{ disabled : compare(form, user) }"
                 class="btn btn-primary"
                 ng-hide="loading"
                 ng-click="submitUpdate(form.$valid)">Save Changes</button>
