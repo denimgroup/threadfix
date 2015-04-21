@@ -102,11 +102,13 @@ public class ScanController {
 		}
 		
 		long numFindings = scanService.getFindingCount(scanId);
-		
+
 		ModelAndView mav = new ModelAndView("scans/detail");
 		mav.addObject("totalFindings", numFindings);
 		mav.addObject(scan);
 		mav.addObject("vulnData", scan.getReportList());
+        PermissionUtils.addPermissions(mav, orgId, appId, Permission.CAN_UPLOAD_SCANS);
+
 		return mav;
 	}
 	

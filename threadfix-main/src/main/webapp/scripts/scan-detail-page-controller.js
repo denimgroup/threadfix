@@ -52,8 +52,12 @@ myAppModule.controller('ScanDetailPageController', function ($scope, $window, $h
         $http.post(tfEncoder.encode($scope.currentUrl + '/download')).
             success(function(data, status, headers, config) {
                 scan.downloading = false;
-                reportExporter.exportScan(data, "application/octet-stream", scan.originalFileName);
 
+                if (data.success == false) {
+                    $scope.errorMessage = data.message;
+                } else {
+                    reportExporter.exportScan(data, "application/octet-stream", scan.originalFileName);
+                }
             }).
             error(function(data, status, headers, config) {
                 $log.info("HTTP request for form objects failed.");

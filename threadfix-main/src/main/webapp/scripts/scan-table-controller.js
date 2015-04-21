@@ -56,7 +56,12 @@ myAppModule.controller('ScanTableController', function ($scope, $window, $http, 
         $http.post(tfEncoder.encode(currentUrl + '/scans/' + scan.id + '/download')).
             success(function(data, status, headers, config) {
                 scan.downloading = false;
-                reportExporter.exportScan(data, "application/octet-stream", scan.originalFileName);
+
+                if (data.success == false) {
+                    $rootScope.$broadcast('downloadScanFail', data.message);
+                } else {
+                    reportExporter.exportScan(data, "application/octet-stream", scan.originalFileName);
+                }
 
             }).
             error(function(data, status, headers, config) {
