@@ -49,6 +49,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.denimgroup.threadfix.remote.response.RestResponse.success;
+
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans")
 public class ScanController {
@@ -251,6 +253,22 @@ public class ScanController {
 
         return RestResponse.success(responseMap);
 	}
+
+    @RequestMapping(value = "/{scanId}/objects")
+    public @ResponseBody Object getBaseObjects(@PathVariable("scanId") Integer scanId) throws IOException {
+        Map<String, Object> map = new HashMap<>();
+
+        Scan scan = scanService.loadScan(scanId);
+        if (scan == null) {
+            log.warn(ResourceNotFoundException.getLogMessage("Scan", scanId));
+            throw new ResourceNotFoundException();
+        }
+
+        // basic information
+        map.put("scan", scan);
+
+        return success(map);
+    }
 
 	@JsonView(AllViews.TableRow.class)
 	@RequestMapping(value = "/{scanId}/cwe", method = RequestMethod.GET)

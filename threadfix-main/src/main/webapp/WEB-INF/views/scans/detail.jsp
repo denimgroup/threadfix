@@ -35,6 +35,11 @@
 			<a ng-click="showStatistic = !showStatistic" id="statisticButton" class="btn header-button" >{{ showStatistic ? "Hide Statistics" : "Show Statistics" }}</a>
 			<c:if test="${ canUploadScans }">
                 <a ng-click="deleteScan()" class="btn btn-danger header-button">Delete Scan</a>
+                <a ng-hide="scan.downloading" class="btn btn-primary header-button" ng-click="downloadScan(scan)">Download Scan</a>
+                <a ng-show="scan.downloading" class="btn btn-primary header-button" ng-disabled>
+                    <span class="spinner"></span>
+                    Dowloading
+                </a>
             </c:if>
 		</span>
 	</h2>
