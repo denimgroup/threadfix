@@ -546,6 +546,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage expandCommentSection(String level) {
+        sleep(5000);
         driver.findElementById("commentsButton" + level).click();
         return new ApplicationDetailPage(driver);
     }
