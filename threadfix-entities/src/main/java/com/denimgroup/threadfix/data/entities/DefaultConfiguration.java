@@ -88,12 +88,7 @@ public class DefaultConfiguration extends BaseEntity {
     }
 
     public void setFileUploadLocation(String fileUploadLocation) {
-
-        if (fileUploadLocation.isEmpty()) {
-            this.fileUploadLocation = null;
-        } else {
-            this.fileUploadLocation = fileUploadLocation;
-        }
+        this.fileUploadLocation = fileUploadLocation;
     }
 
     @Transient
