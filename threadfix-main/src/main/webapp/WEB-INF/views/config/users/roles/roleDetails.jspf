@@ -2,294 +2,229 @@
 
 <div ng-hide="currentRole">No Role Selected</div>
 
-<div ng-repeat="role in roles"
-     ng-if="role.wasSelected"
-     ng-show="currentRole.id === role.id"
+<div ng-if="currentRole"
      class="user-page"
-     ng-form="form">
+     ng-form="roleForm">
 
-<table class="dataTable">
-  <tbody>
-  <tr>
-    <td>Name</td>
-    <td class="inputValue">
-      <input id="roleNameInput" type="text" name="displayName" focus-on="focusInput" ng-model="currentRole.displayName"
-             size="70" maxlength="25" value="${ displayName }" required/>
-    </td>
-    <td>
-        <span id="roleNameInputRequiredError" class="errors" ng-show="form.displayName.$dirty && form.displayName.$error.required">Name is required.</span>
-        <span id="roleNameInputLengthError" class="errors" ng-show="form.displayName.$dirty && form.displayName.$error.maxlength">Maximum length is 25.</span>
-        <span id="roleNameInputNameError" class="errors" ng-show="currentRole.displayName_error"> {{ currentRole.displayName_error }}</span>
-    </td>
-  </tr>
-  </tbody>
-</table>
-
-    <%@include file="roleButton.jspf"%>
-    <a class="btn" ng-click="setAll('true')">Select All</a>
-    <a class="btn" ng-click="setAll('false')">Select None</a>
-
-<table class="table" style="margin-top: 5px">
-  <thead>
-  <tr>
-    <th class="long first">Permission</th>
-    <th class="short" style="text-align: center;">Yes</th>
-    <th class="short last" style="text-align: center;">No</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr>
-    <td>Generate Reports</td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"
-                                                              id="canGenerateReportsTrue" name="canGenerateReports" ng-model="currentRole.canGenerateReports"
-                                                              value="true" /></td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"
-                                                              id="canGenerateReportsFalse" name="canGenerateReports" ng-model="currentRole.canGenerateReports"
-                                                              value="false" /></td>
-    <td style="border: 0 solid black; background-color: white; padding-left: 5px">
-      <form:errors id="canGenerateReportsError"
-                   name="canGenerateReports" cssClass="errors" />
-    </td>
-  </tr>
-  <tr>
-    <td>Generate WAF Rules</td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"
-                                                              id="canGenerateWafRulesTrue" name="canGenerateWafRules" ng-model="currentRole.canGenerateWafRules"
-                                                              value="true" /></td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"
-                                                              id="canGenerateWafRulesFalse" name="canGenerateWafRules" ng-model="currentRole.canGenerateWafRules"
-                                                              value="false" /></td>
-    <td
-            style="border: 0 solid black; background-color: white; padding-left: 5px">
-      <form:errors id="canGenerateWafRulesError"
-                   name="canGenerateWafRules" cssClass="errors" />
-    </td>
-  </tr>
-  <tr>
-    <td>Manage API Keys</td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="currentRole.canManageApiKeys"
-                                                              id="canManageApiKeysTrue" name="canManageApiKeys" value="true" />
-    </td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="currentRole.canManageApiKeys"
-                                                              id="canManageApiKeysFalse" name="canManageApiKeys" value="false" />
-    </td>
-    <td
-            style="border: 0 solid black; background-color: white; padding-left: 5px">
-      <form:errors id="canManageApiKeysError" name="canManageApiKeys"
-                   cssClass="errors" />
-    </td>
-  </tr>
-  <tr>
-    <td>Manage Applications</td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"
-                                                              id="canManageApplicationsTrue" name="canManageApplications" ng-model="currentRole.canManageApplications"
-                                                              value="true" /></td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"
-                                                              id="canManageApplicationsFalse" name="canManageApplications" ng-model="currentRole.canManageApplications"
-                                                              value="false" /></td>
-    <td
-            style="border: 0 solid black; background-color: white; padding-left: 5px">
-      <form:errors id="canManageApplicationsError"
-                   name="canManageApplications" cssClass="errors" />
-    </td>
-  </tr>
-  <tr>
-    <td>Manage GRC Tools</td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"
-                                                              id="canManageGrcToolsTrue" name="canManageGrcTools" ng-model="currentRole.canManageGrcTools"
-                                                              value="true" /></td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"
-                                                              id="canManageGrcToolsFalse" name="canManageGrcTools" ng-model="currentRole.canManageGrcTools"
-                                                              value="false" /></td>
-    <td
-            style="border: 0 solid black; background-color: white; padding-left: 5px">
-      <form:errors id="canManageGrcToolsError"
-                   name="canManageGrcTools" cssClass="errors" />
-    </td>
-  </tr>
-  <tr>
-    <td>Manage Defect Trackers</td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"
-                                                              id="canManageDefectTrackersTrue" name="canManageDefectTrackers" ng-model="currentRole.canManageDefectTrackers"
-                                                              value="true" /></td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"
-                                                              id="canManageDefectTrackersFalse" name="canManageDefectTrackers" ng-model="currentRole.canManageDefectTrackers"
-                                                              value="false" /></td>
-    <td
-            style="border: 0 solid black; background-color: white; padding-left: 5px">
-      <form:errors id="canManageDefectTrackersError"
-                   name="canManageDefectTrackers" cssClass="errors" />
-    </td>
-  </tr>
-  <tr>
-    <td>Manage Remote Providers</td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"
-                                                              id="canManageRemoteProvidersTrue" name="canManageRemoteProviders" ng-model="currentRole.canManageRemoteProviders"
-                                                              value="true" /></td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"
-                                                              id="canManageRemoteProvidersFalse" ng-model="currentRole.canManageRemoteProviders"
-                                                              name="canManageRemoteProviders" value="false" /></td>
-    <td
-            style="border: 0 solid black; background-color: white; padding-left: 5px">
-      <form:errors id="canManageRemoteProvidersError"
-                   name="canManageRemoteProviders" cssClass="errors" />
-    </td>
-  </tr>
-  <tr>
-    <td>Manage Scan Agents</td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"
-                                                              id="canManageScanAgentsTrue" name="canManageScanAgents" ng-model="currentRole.canManageScanAgents"
-                                                              value="true" /></td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"
-                                                              id="canManageScanAgentsFalse" ng-model="currentRole.canManageScanAgents"
-                                                              name="canManageScanAgents" value="false" /></td>
-    <td style="border: 0 solid black; background-color: white; padding-left: 5px">
-      <form:errors id="canManageScanAgentsError"
-                   name="canManageScanAgents" cssClass="errors" />
-    </td>
-  </tr>
-  <tr>
-    <td>Manage System Settings</td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"
-                                                              id="canManageSystemSettingsTrue" name="canManageSystemSettings" ng-model="currentRole.canManageSystemSettings"
-                                                              value="true" /></td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"
-                                                              id="canManageSystemSettingsFalse" ng-model="currentRole.canManageSystemSettings"
-                                                              name="canManageSystemSettings" value="false" /></td>
-    <td style="border: 0 solid black; background-color: white; padding-left: 5px">
-      <form:errors id="canManageSystemSettingsError"
-                   name="canManageSystemSettings" cssClass="errors" />
-    </td>
-  </tr>
-  <tr>
-    <td>Manage Roles</td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="currentRole.canManageRoles"
-                                                              id="canManageRolesTrue" name="canManageRoles" value="true" /></td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="currentRole.canManageRoles"
-                                                              id="canManageRolesFalse" name="canManageRoles" value="false" /></td>
-    <td style="border: 0 solid black; background-color: white; padding-left: 5px">
-      <form:errors id="canManageRolesError" name="canManageRoles"
-                   cssClass="errors" />
-    </td>
-  </tr>
-  <tr>
-    <td>Manage Tags</td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="currentRole.canManageTags"
-                                                              id="canManageTagsTrue" name="canManageTags" value="true" /></td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="currentRole.canManageTags"
-                                                              id="canManageTagsFalse" name="canManageTags" value="false" /></td>
-    <td
-            style="border: 0 solid black; background-color: white; padding-left: 5px">
-      <form:errors id="canManageTagsError" name="canManageTags"
-                   cssClass="errors" />
-    </td>
-  </tr>
-  <tr>
-    <td>Manage Teams</td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="currentRole.canManageTeams"
-                                                              id="canManageTeamsTrue" name="canManageTeams" value="true" /></td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="currentRole.canManageTeams"
-                                                              id="canManageTeamsFalse" name="canManageTeams" value="false" /></td>
-    <td style="border: 0 solid black; background-color: white; padding-left: 5px">
-      <form:errors id="canManageTeamsError" name="canManageTeams" cssClass="errors" />
-    </td>
-  </tr>
-  <tr>
-    <td>Manage Users</td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="currentRole.canManageUsers"
-                                                              id="canManageUsersTrue" name="canManageUsers" value="true" /></td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="currentRole.canManageUsers"
-                                                              id="canManageUsersFalse" name="canManageUsers" value="false" /></td>
-    <td
-            style="border: 0 solid black; background-color: white; padding-left: 5px">
-      <form:errors id="canManageUsersError" name="canManageUsers"
-                   cssClass="errors" />
-    </td>
-  </tr>
-  <tr>
-    <td>Manage WAFs</td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="currentRole.canManageWafs"
-                                                              id="canManageWafsTrue" name="canManageWafs" value="true" /></td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="currentRole.canManageWafs"
-                                                              id="canManageWafsFalse" name="canManageWafs" value="false" /></td>
-    <td
-            style="border: 0 solid black; background-color: white; padding-left: 5px">
-      <form:errors id="canManageWafsError" name="canManageWafs"
-                   cssClass="errors" />
-    </td>
-  </tr>
-  <tr>
-    <td>Modify Vulnerabilities</td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="currentRole.canModifyVulnerabilities"
-                                                              id="canModifyVulnerabilitiesTrue" name="canModifyVulnerabilities"
-                                                              value="true" /></td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"
-                                                              id="canModifyVulnerabilitiesFalse" ng-model="currentRole.canModifyVulnerabilities"
-                                                              name="canModifyVulnerabilities" value="false" /></td>
-    <td style="border: 0 solid black; background-color: white; padding-left: 5px">
-      <form:errors id="canModifyVulnerabilitiesError"
-                   name="canModifyVulnerabilities" cssClass="errors" />
-    </td>
-  </tr>
-  <tr>
-    <td>Comment On Vulnerabilities</td>
-    <td class="inputValue" style="text-align: center;">
-      <input type="radio"
-             ng-model="currentRole.canSubmitComments"
-             id="canSubmitCommentsTrue"
-             name="canSubmitComments"
-             value="true" />
-    </td>
-    <td class="inputValue" style="text-align: center;">
-      <input type="radio"
-             ng-model="currentRole.canSubmitComments"
-             id="canSubmitCommentsFalse"
-             name="canSubmitComments"
-             value="false" />
-    </td>
-  </tr>
-  <tr>
-    <td>Manage Vulnerability Filters</td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="currentRole.canManageVulnFilters"
-                                                              id="canManageVulnFiltersTrue" name="canManageVulnFilters"
-                                                              value="true" /></td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"
-                                                              id="canManageVulnFiltersFalse" ng-model="currentRole.canManageVulnFilters"
-                                                              name="canManageVulnFilters" value="false" /></td>
-    <td
-            style="border: 0 solid black; background-color: white; padding-left: 5px">
-      <form:errors id="canManageVulnFiltersError"
-                   name="canManageVulnFilters" cssClass="errors" />
-    </td>
-  </tr>
-  <tr>
-    <td>Submit Defects</td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="currentRole.canSubmitDefects"
-                                                              id="canSubmitDefectsTrue" name="canSubmitDefects" value="true" />
-    </td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="currentRole.canSubmitDefects"
-                                                              id="canSubmitDefectsFalse" name="canSubmitDefects" value="false" />
-    </td>
-  </tr>
-  <tr>
-    <td>Upload Scans</td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="currentRole.canUploadScans"
-                                                              id="canUploadScansTrue" name="canUploadScans" value="true" /></td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="currentRole.canUploadScans"
-                                                              id="canUploadScansFalse" name="canUploadScans" value="false" /></td>
-  </tr>
-  <tr>
-    <td>View Error Logs</td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="currentRole.canViewErrorLogs"
-                                                              id="canViewErrorLogsTrue" name="canViewErrorLogs" value="true" />
-    </td>
-    <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="currentRole.canViewErrorLogs"
-                                                              id="canViewErrorLogsFalse" name="canViewErrorLogs" value="false" />
-    </td>
-  </tr>
-  </tbody>
-</table>
+    <table class="dataTable">
+      <tbody>
+      <tr>
+        <td><label>Name</label></td>
+        <td class="inputValue">
+          <input id="roleNameInput" type="text" name="displayName" focus-on="focusInput" ng-model="currentRole.displayName"
+                 size="70" maxlength="25" required/>
+        </td>
+        <td>
+            <span id="roleNameInputRequiredError" class="errors" ng-show="roleForm.displayName.$dirty && roleForm.displayName.$error.required">Name is required.</span>
+            <span id="roleNameInputLengthError" class="errors" ng-show="roleForm.displayName.$dirty && roleForm.displayName.$error.maxlength">Maximum length is 25.</span>
+            <span id="roleNameInputNameError" class="errors" ng-show="currentRole.displayName_error"> {{ currentRole.displayName_error }}</span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
 
     <%@include file="roleButton.jspf"%>
+    <a class="btn" ng-click="setAll(true)">Select All</a>
+    <a class="btn" ng-click="setAll(false)">Select None</a>
+
+    <table class="table perms-table" style="margin-top: 5px">
+      <thead>
+      <tr>
+        <th class="long first">Permission</th>
+        <th class="short" style="text-align: center;">Yes</th>
+        <th class="short last" style="text-align: center;">No</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td><label>Generate Reports</label></td>
+        <td><input type="radio" id="canGenerateReportsTrue" name="canGenerateReports" ng-model="currentRole.canGenerateReports" ng-value="true" /></td>
+        <td><input type="radio" id="canGenerateReportsFalse" name="canGenerateReports" ng-model="currentRole.canGenerateReports" ng-value="false" /></td>
+        <td style="border: 0 solid black; background-color: white; padding-left: 5px">
+          <form:errors id="canGenerateReportsError"
+                       name="canGenerateReports" cssClass="errors" />
+        </td>
+      </tr>
+      <tr>
+        <td><label>Generate WAF Rules</label></td>
+        <td><input type="radio" id="canGenerateWafRulesTrue" name="canGenerateWafRules" ng-model="currentRole.canGenerateWafRules" ng-value="true" /></td>
+        <td><input type="radio" id="canGenerateWafRulesFalse" name="canGenerateWafRules" ng-model="currentRole.canGenerateWafRules" ng-value="false" /></td>
+        <td style="border: 0 solid black; background-color: white; padding-left: 5px">
+          <form:errors id="canGenerateWafRulesError"
+                       name="canGenerateWafRules" cssClass="errors" />
+        </td>
+      </tr>
+      <tr>
+        <td><label>Manage API Keys</label></td>
+        <td><input type="radio"  ng-model="currentRole.canManageApiKeys" id="canManageApiKeysTrue" name="canManageApiKeys" ng-value="true" />
+        </td>
+        <td><input type="radio"  ng-model="currentRole.canManageApiKeys" id="canManageApiKeysFalse" name="canManageApiKeys" ng-value="false" />
+        </td>
+         <td style="border: 0 solid black; background-color: white; padding-left: 5px">
+          <form:errors id="canManageApiKeysError" name="canManageApiKeys"
+                       cssClass="errors" />
+        </td>
+      </tr>
+      <tr>
+        <td><label>Manage Applications</label></td>
+        <td><input type="radio" id="canManageApplicationsTrue" name="canManageApplications" ng-model="currentRole.canManageApplications" ng-value="true" /></td>
+        <td><input type="radio" id="canManageApplicationsFalse" name="canManageApplications" ng-model="currentRole.canManageApplications" ng-value="false" /></td>
+         <td style="border: 0 solid black; background-color: white; padding-left: 5px">
+          <form:errors id="canManageApplicationsError"
+                       name="canManageApplications" cssClass="errors" />
+        </td>
+      </tr>
+      <tr>
+        <td><label>Manage GRC Tools</label></td>
+        <td><input type="radio" id="canManageGrcToolsTrue" name="canManageGrcTools" ng-model="currentRole.canManageGrcTools" ng-value="true" /></td>
+        <td><input type="radio" id="canManageGrcToolsFalse" name="canManageGrcTools" ng-model="currentRole.canManageGrcTools" ng-value="false" /></td>
+         <td style="border: 0 solid black; background-color: white; padding-left: 5px">
+          <form:errors id="canManageGrcToolsError"
+                       name="canManageGrcTools" cssClass="errors" />
+        </td>
+      </tr>
+      <tr>
+        <td><label>Manage Defect Trackers</label></td>
+        <td><input type="radio" id="canManageDefectTrackersTrue" name="canManageDefectTrackers" ng-model="currentRole.canManageDefectTrackers" ng-value="true" /></td>
+        <td><input type="radio" id="canManageDefectTrackersFalse" name="canManageDefectTrackers" ng-model="currentRole.canManageDefectTrackers" ng-value="false" /></td>
+         <td style="border: 0 solid black; background-color: white; padding-left: 5px">
+          <form:errors id="canManageDefectTrackersError"
+                       name="canManageDefectTrackers" cssClass="errors" />
+        </td>
+      </tr>
+      <tr>
+        <td><label>Manage Remote Providers</label></td>
+        <td><input type="radio" id="canManageRemoteProvidersTrue" name="canManageRemoteProviders" ng-model="currentRole.canManageRemoteProviders" ng-value="true" /></td>
+        <td><input type="radio" id="canManageRemoteProvidersFalse" ng-model="currentRole.canManageRemoteProviders" name="canManageRemoteProviders" ng-value="false" /></td>
+         <td style="border: 0 solid black; background-color: white; padding-left: 5px">
+          <form:errors id="canManageRemoteProvidersError"
+                       name="canManageRemoteProviders" cssClass="errors" />
+        </td>
+      </tr>
+      <tr>
+        <td><label>Manage Scan Agents</label></td>
+        <td><input type="radio" id="canManageScanAgentsTrue" name="canManageScanAgents" ng-model="currentRole.canManageScanAgents" ng-value="true" /></td>
+        <td><input type="radio" id="canManageScanAgentsFalse" ng-model="currentRole.canManageScanAgents" name="canManageScanAgents" ng-value="false" /></td>
+        <td style="border: 0 solid black; background-color: white; padding-left: 5px">
+          <form:errors id="canManageScanAgentsError"
+                       name="canManageScanAgents" cssClass="errors" />
+        </td>
+      </tr>
+      <tr>
+        <td><label>Manage System Settings</label></td>
+        <td><input type="radio" id="canManageSystemSettingsTrue" name="canManageSystemSettings" ng-model="currentRole.canManageSystemSettings" ng-value="true" /></td>
+        <td><input type="radio" id="canManageSystemSettingsFalse" ng-model="currentRole.canManageSystemSettings" name="canManageSystemSettings" ng-value="false" /></td>
+        <td style="border: 0 solid black; background-color: white; padding-left: 5px">
+          <form:errors id="canManageSystemSettingsError"
+                       name="canManageSystemSettings" cssClass="errors" />
+        </td>
+      </tr>
+      <tr>
+        <td><label>Manage Roles</label></td>
+        <td><input type="radio"  ng-model="currentRole.canManageRoles" id="canManageRolesTrue" name="canManageRoles" ng-value="true" /></td>
+        <td><input type="radio"  ng-model="currentRole.canManageRoles" id="canManageRolesFalse" name="canManageRoles" ng-value="false" /></td>
+        <td style="border: 0 solid black; background-color: white; padding-left: 5px">
+          <form:errors id="canManageRolesError" name="canManageRoles"
+                       cssClass="errors" />
+        </td>
+      </tr>
+      <tr>
+        <td><label>Manage Tags</label></td>
+        <td><input type="radio"  ng-model="currentRole.canManageTags" id="canManageTagsTrue" name="canManageTags" ng-value="true" /></td>
+        <td><input type="radio"  ng-model="currentRole.canManageTags" id="canManageTagsFalse" name="canManageTags" ng-value="false" /></td>
+         <td style="border: 0 solid black; background-color: white; padding-left: 5px">
+          <form:errors id="canManageTagsError" name="canManageTags"
+                       cssClass="errors" />
+        </td>
+      </tr>
+      <tr>
+        <td><label>Manage Teams</label></td>
+        <td><input type="radio"  ng-model="currentRole.canManageTeams" id="canManageTeamsTrue" name="canManageTeams" ng-value="true" /></td>
+        <td><input type="radio"  ng-model="currentRole.canManageTeams" id="canManageTeamsFalse" name="canManageTeams" ng-value="false" /></td>
+        <td style="border: 0 solid black; background-color: white; padding-left: 5px">
+          <form:errors id="canManageTeamsError" name="canManageTeams" cssClass="errors" />
+        </td>
+      </tr>
+      <tr>
+        <td><label>Manage Users</label></td>
+        <td><input type="radio"  ng-model="currentRole.canManageUsers" id="canManageUsersTrue" name="canManageUsers" ng-value="true" /></td>
+        <td><input type="radio"  ng-model="currentRole.canManageUsers" id="canManageUsersFalse" name="canManageUsers" ng-value="false" /></td>
+         <td style="border: 0 solid black; background-color: white; padding-left: 5px">
+          <form:errors id="canManageUsersError" name="canManageUsers"
+                       cssClass="errors" />
+        </td>
+      </tr>
+      <tr>
+        <td><label>Manage WAFs</label></td>
+        <td><input type="radio"  ng-model="currentRole.canManageWafs" id="canManageWafsTrue" name="canManageWafs" ng-value="true" /></td>
+        <td><input type="radio"  ng-model="currentRole.canManageWafs" id="canManageWafsFalse" name="canManageWafs" ng-value="false" /></td>
+         <td style="border: 0 solid black; background-color: white; padding-left: 5px">
+          <form:errors id="canManageWafsError" name="canManageWafs"
+                       cssClass="errors" />
+        </td>
+      </tr>
+      <tr>
+        <td><label>Modify Vulnerabilities</label></td>
+        <td><input type="radio"  ng-model="currentRole.canModifyVulnerabilities" id="canModifyVulnerabilitiesTrue" name="canModifyVulnerabilities" ng-value="true" /></td>
+        <td><input type="radio" id="canModifyVulnerabilitiesFalse" ng-model="currentRole.canModifyVulnerabilities" name="canModifyVulnerabilities" ng-value="false" /></td>
+        <td style="border: 0 solid black; background-color: white; padding-left: 5px">
+          <form:errors id="canModifyVulnerabilitiesError"
+                       name="canModifyVulnerabilities" cssClass="errors" />
+        </td>
+      </tr>
+      <tr>
+        <td><label>Comment On Vulnerabilities</label></td>
+        <td>
+          <input type="radio"
+                 ng-model="currentRole.canSubmitComments"
+                 id="canSubmitCommentsTrue"
+                 name="canSubmitComments"
+                 ng-value="true" />
+        </td>
+        <td>
+          <input type="radio"
+                 ng-model="currentRole.canSubmitComments"
+                 id="canSubmitCommentsFalse"
+                 name="canSubmitComments"
+                 ng-value="false" />
+        </td>
+      </tr>
+      <tr>
+        <td><label>Manage Vulnerability Filters</label></td>
+        <td><input type="radio"  ng-model="currentRole.canManageVulnFilters" id="canManageVulnFiltersTrue" name="canManageVulnFilters" ng-value="true" /></td>
+        <td><input type="radio" id="canManageVulnFiltersFalse" ng-model="currentRole.canManageVulnFilters" name="canManageVulnFilters" ng-value="false" /></td>
+         <td style="border: 0 solid black; background-color: white; padding-left: 5px">
+          <form:errors id="canManageVulnFiltersError"
+                       name="canManageVulnFilters" cssClass="errors" />
+        </td>
+      </tr>
+      <tr>
+        <td><label>Submit Defects</label></td>
+        <td><input type="radio"  ng-model="currentRole.canSubmitDefects" id="canSubmitDefectsTrue" name="canSubmitDefects" ng-value="true" /></td>
+        <td><input type="radio"  ng-model="currentRole.canSubmitDefects" id="canSubmitDefectsFalse" name="canSubmitDefects" ng-value="false" /></td>
+      </tr>
+      <tr>
+        <td><label>Upload Scans</label></td>
+        <td><input type="radio"  ng-model="currentRole.canUploadScans" id="canUploadScansTrue" name="canUploadScans" ng-value="true" /></td>
+        <td><input type="radio"  ng-model="currentRole.canUploadScans" id="canUploadScansFalse" name="canUploadScans" ng-value="false" /></td>
+      </tr>
+      <tr>
+        <td><label>View Error Logs</label></td>
+        <td><input type="radio"  ng-model="currentRole.canViewErrorLogs" id="canViewErrorLogsTrue" name="canViewErrorLogs" ng-value="true" /></td>
+        <td><input type="radio"  ng-model="currentRole.canViewErrorLogs" id="canViewErrorLogsFalse" name="canViewErrorLogs" ng-value="false" /></td>
+      </tr>
+      </tbody>
+    </table>
+
+    <%@include file="roleButton.jspf"%>
+
+
+    {{ currentRole | json }}
+
+    <br>
+
+    {{ role | json }}
+
+    <br>
 
 </div>

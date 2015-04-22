@@ -6,8 +6,8 @@
   Submitting
 </button>
 <button id="submit"
-        ng-class="{ disabled : valid(form, role) }"
+        ng-class="{ disabled : valid(roleForm, role) }"
         class="btn btn-primary"
-        ng-mouseenter="form.name.$dirty = true"
+        ng-mouseenter="roleForm.name.$dirty = true"
         ng-hide="loading"
-        ng-click="ok(form.$valid)">Save Changes</button>
+        ng-click="ok(roleForm.$valid)">Save Changes</button>

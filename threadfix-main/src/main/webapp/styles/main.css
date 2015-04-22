@@ -1351,3 +1351,7 @@ h4 a {
 .center, .table td.center {
 	text-align: center;
 }
+
+.perms-table td + td {
+	text-align:center
+}
