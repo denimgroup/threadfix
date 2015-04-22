@@ -24,45 +24,25 @@
 
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.dao.UserDao;
 import com.denimgroup.threadfix.data.dao.EventDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.Event;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Nullable;
-import java.util.Date;
-
 @Service
 @Transactional
 public class EventServiceImpl implements EventService {
 
-	private final SanitizedLogger log = new SanitizedLogger(EventService.class);
+    private final SanitizedLogger log = new SanitizedLogger(EventService.class);
 
     @Autowired
     private EventDao eventDao;
-    @Autowired
-    private VulnerabilityDao vulnerabilityDao;
-    @Autowired
-	private UserDao userDao;
-    @Autowired(required = false)
-    @Nullable
-    private PermissionService permissionService;
 
-	@Override
-	public String createEvent() {
-		Event newEvent = new Event();
-		eventDao.saveOrUpdate(newEvent);
-
-		return VALID;
-	}
-
-	@Override
+    @Override
     public void saveEvent(Event event) {
-		eventDao.saveOrUpdate(event);
+        eventDao.saveOrUpdate(event);
     }
 
     @Override

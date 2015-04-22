@@ -26,18 +26,10 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.Event;
 
-import java.util.List;
-
 public interface EventService {
-	
-	String VALID = "Valid Comment.", LENGTH = "The comment was too long.",
-			EMPTY = "The comment cannot be empty.", VULN = "The submitted vuln was invalid.",
-			USER = "The session's user was invalid. Please let the ThreadFix team know about this.";
-
-	String createEvent();
 
     void saveEvent(Event vulnerabilityComment);
 
-	Event loadEventById(int eventId);
+    Event loadEventById(int eventId);
 
 }
