@@ -47,6 +47,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -338,7 +339,11 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 
         map.put("description", description);
 
-        String payload = getPayload(map);
+        return attemptSubmission(map, new ArrayList<String>(), null);
+	}
+
+    private String attemptSubmission(Map<String, Object> map, List<String> errorFieldList, String lastError) {
+        String payload = getPayload(map, errorFieldList);
         log.info("Payload: " + payload);
 
         String result, id = null;
@@ -351,9 +356,17 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 
             // Trying to send request to Jira one more time, remove all error fields if any
             String errorResponseMsg = restUtils.getPostErrorResponse();
-            List<String> errorFieldList = getErrorFieldList(errorResponseMsg);
+
+            if (errorResponseMsg != null && errorResponseMsg.equals(lastError)) {
+                throw e;
+            }
+
+            List<String> newErrorFields = getErrorFieldList(errorResponseMsg);
             log.info("Trying to send request one more time to Jira without fields: " + errorFieldList.toString());
-            result = restUtils.postUrlAsString(getUrlWithRest() + "issue", payload, getUsername(), getPassword(), CONTENT_TYPE);
+
+            errorFieldList.addAll(newErrorFields);
+
+            result = attemptSubmission(map, errorFieldList, errorResponseMsg);
 
             // if we got a result then it was a success, otherwise let's rethrow the exception
             if (result == null) {
@@ -365,8 +378,32 @@ public class JiraDefectTracker extends AbstractDefectTracker {
             id = JsonUtils.getStringProperty(result, "key");
         }
 
-		return id;
-	}
+        return id;
+    }
+
+    private String getPayload(Map<String, Object> objectMap, List<String> errorFieldList) {
+        Object issueType = objectMap.get("issuetype");
+
+        DefectPayload payload;
+        if (issueType != null) {
+            payload = new DefectPayload(objectMap, getJiraMetadata(issueType.toString()));
+        } else {
+            // if we're missing a value, default to old behavior
+            payload = new DefectPayload(objectMap, getJiraMetadata("1"));
+        }
+
+        for (String field : errorFieldList) {
+            if (payload.getFields().containsKey(field)) {
+                payload.getFields().remove(field);
+            }
+        }
+
+        try {
+            return new ObjectMapper().writeValueAsString(payload);
+        } catch (IOException e) {
+            throw new DefectTrackerFormatException(e, "We were unable to serialize object as JSON");
+        }
+    }
 
     private List<String> getErrorFieldList(String errorResponseMsg) {
         List<String> errorFieldList = list();
@@ -389,23 +426,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
     }
 
     private String getPayload(Map<String, Object> objectMap) {
-
-        Object issueType = objectMap.get("issuetype");
-
-        DefectPayload payload;
-        if (issueType != null) {
-            payload = new DefectPayload(objectMap, getJiraMetadata(issueType.toString()));
-        } else {
-            // if we're missing a value, default to old behavior
-            payload = new DefectPayload(objectMap, getJiraMetadata("1"));
-        }
-
-
-        try {
-            return new ObjectMapper().writeValueAsString(payload);
-        } catch (IOException e) {
-            throw new DefectTrackerFormatException(e, "We were unable to serialize object as JSON");
-        }
+        return getPayload(objectMap, new ArrayList<String>());
     }
 
 	@Override
