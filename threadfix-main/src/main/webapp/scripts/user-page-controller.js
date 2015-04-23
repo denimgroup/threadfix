@@ -379,8 +379,29 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     //                            Deletion
     ////////////////////////////////////////////////////////////////////////////////
 
+    $scope.deleteUser = function() {
+        if (confirm("Are you sure you want to delete this user?")) {
+            $http.post(tfEncoder.encode('/configuration/users/' + $scope.userId + '/delete')).
+                success(function(data, status, headers, config) {
+                    if (data.success) {
+                        // this will cause the user to be logged out if the session is invalid
+                        reloadList();
+                        $scope.successMessage = "User was successfully deleted.";
+                    } else {
+                        $scope.errorMessage = "Failure: " + data.message;
+                    }
+
+                    $scope.initialized = true;
+                }).
+                error(function(data, status, headers, config) {
+                    $scope.initialized = true;
+                    $scope.errorMessage = "Failed to delete. HTTP status was " + status;
+                });
+        }
+    };
+
     var makeDeleteRequest = function(url) {
-        if (confirm("Are you sure you want to delete this entry?")) {
+        if (confirm("Are you sure you want to delete this user?")) {
             $http.post(tfEncoder.encode('/configuration/users/' + $scope.userId + url)).
                 success(function(data, status, headers, config) {
                     if (data.success) {
@@ -394,7 +415,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 }).
                 error(function(data, status, headers, config) {
                     $scope.initialized = true;
-                    $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
+                    $scope.errorMessage = "Failed to delete permission. HTTP status was " + status;
                 });
         }
     };

@@ -31,14 +31,13 @@
 				<div class="span8">
 					<%@ include file="../common/userDetails.jspf" %>
 					<%@ include file="rolesTables.jspf" %>
+					<a id="deleteRoleLink" ng-show="currentUser" class="btn btn-danger" ng-click="deleteUser()">Delete User</a>
 				</div>
 			</div>
 		</tab>
 		<tab ng-controller="RolesPageController"
 			 heading="Manage Roles"
 			 active="rolesActive">
-			<h2>Manage Roles</h2>
-
 			<%@ include file="/WEB-INF/views/config/roles/form.jsp" %>
 
 			<div id="helpText">

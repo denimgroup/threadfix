@@ -1,6 +1,8 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<h4>Basic Details</h4>
+<h4>
+    User Details
+</h4>
 
 <div ng-hide="currentUser">No User Selected</div>
 

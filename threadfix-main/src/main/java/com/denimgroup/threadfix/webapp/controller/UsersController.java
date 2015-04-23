@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.UserService;
@@ -49,6 +50,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 
 /**
@@ -144,13 +146,14 @@ public class UsersController {
     }
 
 	@RequestMapping("/configuration/users/{userId}/delete")
-	public String deleteUser(@PathVariable("userId") int userId, 
+	@ResponseBody
+	public RestResponse<String> deleteUser(@PathVariable("userId") int userId,
 			HttpServletRequest request, SessionStatus status) {
 		User user = userService.loadUser(userId);
 		
 		if (user != null) {
 			String userName = user.getName();
-			
+
 			if (userService.canDelete(user)) {
 				
 				status.setComplete();
@@ -162,14 +165,14 @@ public class UsersController {
 				userService.delete(user);
 				
 				if (isThisUser) {
-					return "redirect:/j_spring_security_logout";
+					SecurityContextHolder.clearContext();
+
+					return success("You have deleted yourself.");
 				} else {
-					ControllerUtils.addSuccessMessage(request, "User " + userName + " was deleted successfully.");
-					return "redirect:/configuration/users";
+					return success("You have successfully deleted " + userName);
 				}
 			} else {
-				ControllerUtils.addErrorMessage(request, "User " + userName + " cannot be deleted.");
-				return "redirect:/configuration/users";
+				return failure("Unable to delete the user.");
 			}
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("User", userId));

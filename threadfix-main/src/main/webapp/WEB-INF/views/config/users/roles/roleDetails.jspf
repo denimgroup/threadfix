@@ -1,4 +1,4 @@
-<h2>Role Details</h2>
+<h4>Role Details</h4>
 
 <div ng-hide="currentRole">No Role Selected</div>
 
@@ -218,13 +218,6 @@
 
     <%@include file="roleButton.jspf"%>
 
-
-    {{ currentRole | json }}
-
-    <br>
-
-    {{ role | json }}
-
-    <br>
+    <a id="deleteRoleLink" class="btn btn-danger" ng-click="showDeleteDialog(currentRole)">Delete</a>
 
 </div>

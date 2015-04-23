@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/views/config/roles/newForm.jsp" %>
 
-<h4>Role List <a id="newRoleModalLink" class="btn" ng-click="openNewModal()">Create Role</a></h4>
+<h4>Role List <a id="newRoleModalLink" class="btn" ng-click="openNewRoleModal()">Create Role</a></h4>
 
 <ul class="nav nav-pills">
   <li ng-repeat="role in roles"
