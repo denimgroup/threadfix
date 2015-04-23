@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.Waf;
+import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
@@ -336,7 +337,7 @@ public class ApplicationRestController extends TFRestController {
 
             application.setWaf(waf);
             applicationService.updateWafRules(application, oldWafId);
-            applicationService.storeApplication(application);
+            applicationService.storeApplication(application, EventAction.APPLICATION_EDIT);
             return RestResponse.success(application);
         }
     }
@@ -366,7 +367,7 @@ public class ApplicationRestController extends TFRestController {
             return failure(APPLICATION_LOOKUP_FAILED);
         } else {
             application.setUrl(url);
-            applicationService.storeApplication(application);
+            applicationService.storeApplication(application, EventAction.APPLICATION_EDIT);
             return RestResponse.success(application);
         }
     }

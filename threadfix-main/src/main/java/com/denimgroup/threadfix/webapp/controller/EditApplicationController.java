@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
@@ -156,7 +157,7 @@ public class EditApplicationController {
 
 		} else {
 			application.setOrganization(organizationService.loadById(application.getOrganization().getId()));
-			applicationService.storeApplication(application);
+			applicationService.storeApplication(application, EventAction.APPLICATION_EDIT);
             vulnerabilityService.updateOrgsVulnerabilityReport();
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			
@@ -209,7 +210,7 @@ public class EditApplicationController {
 					}
 				}
 				
-				applicationService.storeApplication(databaseApplication);
+				applicationService.storeApplication(databaseApplication, EventAction.APPLICATION_EDIT);
 				String user = SecurityContextHolder.getContext().getAuthentication().getName();
 				log.debug("The Application " + application.getName() + " (id=" + application.getId() + ") has been edited by user " + user);
 				model.addAttribute("application", databaseApplication);
@@ -253,7 +254,7 @@ public class EditApplicationController {
 		} else {
             PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS);
 
-			applicationService.storeApplication(application);
+			applicationService.storeApplication(application, EventAction.APPLICATION_EDIT);
 
 			defectService.updateScannerSuppliedStatuses(appId);
 
@@ -281,7 +282,7 @@ public class EditApplicationController {
                 return FormRestResponse.failure("Invalid data.");
             }
             dbApplication.setTags(newTags);
-            applicationService.storeApplication(dbApplication);
+            applicationService.storeApplication(dbApplication, EventAction.APPLICATION_SET_TAGS);
 
             return RestResponse.success(newTags);
 

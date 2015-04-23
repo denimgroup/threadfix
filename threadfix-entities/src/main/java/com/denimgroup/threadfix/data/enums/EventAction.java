@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 public enum EventAction {
     APPLICATION_CREATE("Create Application"),
     APPLICATION_EDIT("Edit Application"),
+    APPLICATION_SET_TAGS("Set Application Tags"),
     APPLICATION_SCAN_UPLOADED("Upload Application Scan");
 
     EventAction(String displayName) {

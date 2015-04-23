@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafType;
+import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
@@ -109,7 +110,7 @@ public class AddWafController {
             // remove any outdated vuln -> waf rule links
             applicationService.updateWafRules(application, 0);
 			application.setWaf(waf);
-			applicationService.storeApplication(application);
+			applicationService.storeApplication(application, EventAction.APPLICATION_EDIT);
 		}
 
         return RestResponse.success(waf);

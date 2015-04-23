@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.dao.*;
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -125,7 +126,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
 	@Transactional(readOnly = false)
-	public void storeApplication(Application application) {
+	public void storeApplication(Application application, EventAction eventAction) {
 		if (application != null) {
             // Set default for Application Type is Detect
             if (application.getFrameworkType().equals(FrameworkType.NONE.toString()))
@@ -549,7 +550,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 			scanMergeService.updateSurfaceLocation(app);
 			scanMergeService.updateVulnerabilities(app);
 							
-			storeApplication(app);
+			storeApplication(app, EventAction.APPLICATION_EDIT);
 		}
 	}
 	

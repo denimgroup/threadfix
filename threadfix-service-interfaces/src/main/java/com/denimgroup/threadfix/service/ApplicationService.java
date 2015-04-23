@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.service;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
 import org.springframework.validation.BindingResult;
 
@@ -70,7 +71,7 @@ public interface ApplicationService {
     /**
 	 * @param application
 	 */
-	void storeApplication(Application application);
+	void storeApplication(Application application, EventAction eventAction);
 
 	/**
 	 * Prepare the application for deletion.
