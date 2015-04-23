@@ -1,12 +1,12 @@
 Railsgoat::Application.routes.draw do
 
-  get "login" => "sessions#new"
+  get  
+	"login" => "sessions#new"
   get "signup" => "users#new"
   get "logout" => "sessions#destroy"
   match "forgot_password" => "password_resets#forgot_password"
   get "password_resets" => "password_resets#confirm_token"
   post "password_resets" => "password_resets#reset_password"
-
 
   resources :sessions do
   end
@@ -39,29 +39,6 @@ Railsgoat::Application.routes.draw do
         post "update_dd_info"
         post "decrypted_bank_acct_num"
       end
-    end
-
-  end
-
-  resource :user do
-    get "account_settings"
-
-    resources :retirement do
-    end
-
-    resources :paid_time_off do
-    end
-
-    resources :work_info do
-    end
-
-    resources :performance do
-    end
-
-    resource :benefit_form do
-    end
-
-    resources :message do
     end
 
   end

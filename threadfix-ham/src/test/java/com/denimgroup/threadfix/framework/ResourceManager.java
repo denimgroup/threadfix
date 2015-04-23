@@ -53,4 +53,9 @@ public class ResourceManager {
     public static File getDotNetWebFormsFile(String name) {
         return getFile("code.dotNet.webforms/" + name);
     }
+
+    @Nonnull
+    public static File getRailsFile(String name) {
+        return getFile("code.rails/" + name);
+    }
 }
