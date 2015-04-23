@@ -376,6 +376,9 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 
         if (result != null) {
             id = JsonUtils.getStringProperty(result, "key");
+            if (id == null) {
+                log.error("Unable to get key from result: " + id);
+            }
         }
 
         return id;
