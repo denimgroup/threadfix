@@ -428,5 +428,10 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         makeDeleteRequest('/access/team/' + map.id + '/delete')
     };
 
+    $scope.$on('reloadRoles', function() {
+        reloadList(function() {
+            selectUserWithId($scope.userId);
+        });
+    });
 
 });

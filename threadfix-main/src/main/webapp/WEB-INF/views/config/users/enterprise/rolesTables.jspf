@@ -25,7 +25,7 @@
                 </tr>
             </tbody>
             <tbody>
-                <tr ng-repeat="map in currentUser.maps | filter:{ allApps : true }" class="bodyRow">
+                <tr ng-repeat="map in currentUser.maps | filter:{ allApps : true, role : { active : true } }" class="bodyRow">
                     <td id="teamName{{ map.organization.name }}all{{ map.role.displayName }}">{{ map.organization.name }}</td>
                     <td id="roleName{{ map.organization.name }}all{{ map.role.displayName }}">
                         {{ map.role.displayName }}
@@ -66,7 +66,7 @@
 
             <!-- This is a lot of watchers -->
             <tbody ng-repeat="map in currentUser.maps | filter:{ allApps : false }" style="border-top: 0">
-                <tr ng-repeat="appMap in map.accessControlApplicationMaps" ng-show="!map.allApps && appMap.active" class="bodyRow">
+                <tr ng-repeat="appMap in map.accessControlApplicationMaps | filter:{ role : { active : true } }" ng-show="!map.allApps && appMap.active" class="bodyRow">
                     <td id="teamName{{ map.organization.name }}{{ appMap.application.name }}{{ appMap.role.displayName }}">
                         {{ map.organization.name }}
                     </td>
