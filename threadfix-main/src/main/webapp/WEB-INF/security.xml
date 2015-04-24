@@ -21,7 +21,12 @@
 	<bean class="com.denimgroup.threadfix.webapp.config.CustomLoginSuccessHandler" id="customLoginSuccessHandler"/>
 
 	<!-- Configure Spring Security -->
-	<security:http auto-config="true">
+	<security:http auto-config="true" security-context-repository-ref="securityContextRepository">
+
+		<security:session-management>
+			<security:concurrency-control session-registry-alias="sessionRegistry"/>
+		</security:session-management>
+
 		<security:intercept-url pattern="/login*" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 		<security:intercept-url pattern="/styles/*" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 		<security:intercept-url pattern="/v/*/scripts/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
@@ -35,10 +40,18 @@
                 always-use-default-target="true"/>
 		<security:logout success-handler-ref="customLogoutSuccessHandler"/>
 	</security:http>
-	
+
 	<bean id="customAuthenticationProvider" class="com.denimgroup.threadfix.service.LdapAuthenticator">
 	</bean>
-	
+
+	<bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl"/>
+
+	<bean id="securityContextRepository" class="com.denimgroup.threadfix.service.CustomHttpSessionSecurityContextRepository"/>
+
+	<bean id="securityContextPersistenceFilter" class="org.springframework.security.web.context.SecurityContextPersistenceFilter">
+		<constructor-arg index="0" ref="securityContextRepository"/>
+	</bean>
+
     <security:authentication-manager>
     
 	    <security:authentication-provider ref="customAuthenticationProvider"/>	

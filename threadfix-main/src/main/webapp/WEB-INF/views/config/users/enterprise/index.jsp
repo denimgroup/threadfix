@@ -47,6 +47,11 @@
 			<%@ include file="/WEB-INF/views/successMessage.jspf" %>
 			<%@ include file="/WEB-INF/views/errorMessage.jsp" %>
 
+			<div ng-show="errorMessage" class="alert alert-danger">
+				<button class="close" ng-click="errorMessage = undefined" type="button">&times;</button>
+				{{ errorMessage }}
+			</div>
+
 			<div class="row">
 				<div class="span3">
 					<%@ include file="../roles/roleList.jspf" %>

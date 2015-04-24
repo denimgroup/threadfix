@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.RoleService;
+import com.denimgroup.threadfix.service.SessionService;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.service.beans.AccessControlMapModel;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
@@ -40,6 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -68,6 +70,8 @@ public class UsersController {
 	private RoleService roleService = null;
 	@Autowired
 	private OrganizationService organizationService = null;
+	@Autowired
+	private SessionService sessionService;
 
 	private final SanitizedLogger log = new SanitizedLogger(UsersController.class);
 
@@ -148,7 +152,7 @@ public class UsersController {
 	@RequestMapping("/configuration/users/{userId}/delete")
 	@ResponseBody
 	public RestResponse<String> deleteUser(@PathVariable("userId") int userId,
-			HttpServletRequest request, SessionStatus status) {
+			HttpServletRequest request, SessionStatus status, Model model) {
 		User user = userService.loadUser(userId);
 		
 		if (user != null) {
@@ -157,7 +161,9 @@ public class UsersController {
 			if (userService.canDelete(user)) {
 				
 				status.setComplete();
-				
+
+				model.addAttribute("user", new User());
+
 				String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 				
 				boolean isThisUser = currentUser != null && currentUser.equals(user.getName());
@@ -169,6 +175,8 @@ public class UsersController {
 
 					return success("You have deleted yourself.");
 				} else {
+
+					sessionService.invalidateSessions(user);
 					return success("You have successfully deleted " + userName);
 				}
 			} else {
