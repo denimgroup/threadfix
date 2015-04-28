@@ -23,7 +23,7 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
                 $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
             });
 
-        return $scope.refresh(true, false);
+        return $scope.refresh(true, false, true);
     });
 
     $scope.$on('scanUploaded', function() {
@@ -34,7 +34,7 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
         $scope.refresh(true, false);
     });
 
-    $scope.refresh = function(newValue, oldValue) {
+    $scope.refresh = function(newValue, oldValue, isNotNewMappings) {
         if (newValue !== oldValue) {
             $scope.loading = true;
             $http.post(tfEncoder.encode($scope.$parent.currentUrl + "/unmappedTable"), getTableSortBean()).
@@ -52,7 +52,8 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
                         $scope.output = "Failure. Message was : " + data.message;
                     }
 
-                    $rootScope.$broadcast('newMappings');
+                    if (!isNotNewMappings)
+                        $rootScope.$broadcast('newMappings');
 
                     $scope.loading = false;
                 }).
@@ -137,8 +138,8 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
     $scope.goTo = function(finding) {
 
         var url = $scope.$parent.currentUrl.indexOf('scans') == -1 ?
-            $scope.$parent.currentUrl + "/scans/1/findings/" + finding.id :
-            $scope.$parent.currentUrl + "/findings/" + finding.id;
+        $scope.$parent.currentUrl + "/scans/1/findings/" + finding.id :
+        $scope.$parent.currentUrl + "/findings/" + finding.id;
 
         $window.location.href = tfEncoder.encode(url);
     };
