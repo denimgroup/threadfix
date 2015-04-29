@@ -110,16 +110,28 @@ public class WafRestController extends TFRestController {
 	@JsonView(AllViews.RestViewWaf2_1.class)
 	@RequestMapping(headers="Accept=application/json", value="/{wafId}", method=RequestMethod.GET)
 	public Object wafDetail(HttpServletRequest request,
-			@PathVariable("wafId") int wafId) {
+			@PathVariable("wafId") String wafId) {
+		int wafIdInt = 0;
+
+		if (wafId.equals("new")) {
+			return newWaf(request);
+		} else {
+			try {
+				wafIdInt = Integer.parseInt(wafId);
+			} catch (NumberFormatException e) {
+				log.warn("Invalid WAF ID");
+				return failure("Bad rest request.");
+			}
+		}
+
 		log.info("Received REST request for WAF with ID = " + wafId + ".");
 
 		String result = checkKey(request, DETAIL);
 		if (!result.equals(API_KEY_SUCCESS)) {
 			return failure(result);
 		}
-		
-		Waf waf = wafService.loadWaf(wafId);
-		
+
+		Waf waf = wafService.loadWaf(wafIdInt);
 		if (waf == null) {
 			log.warn("Invalid WAF ID.");
 			return failure(LOOKUP_FAILED);
