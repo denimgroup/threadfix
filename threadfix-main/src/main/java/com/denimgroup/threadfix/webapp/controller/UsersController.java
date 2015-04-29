@@ -70,7 +70,7 @@ public class UsersController {
 	private RoleService roleService = null;
 	@Autowired
 	private OrganizationService organizationService = null;
-	@Autowired
+	@Autowired(required = false)
 	private SessionService sessionService;
 
 	private final SanitizedLogger log = new SanitizedLogger(UsersController.class);
@@ -142,7 +142,11 @@ public class UsersController {
         Map<String, Object> returnMap = new HashMap<>();
 
         returnMap.put("users", users);
-        returnMap.put("roles", roleService.loadAll());
+
+		if (EnterpriseTest.isEnterprise()) {
+			returnMap.put("roles", roleService.loadAll());
+		}
+
 		returnMap.put("countUsers", userService.countUsers());
 		returnMap.put("teams", organizationService.loadAllActive());
 
@@ -176,7 +180,9 @@ public class UsersController {
 					return success("You have deleted yourself.");
 				} else {
 
-					sessionService.invalidateSessions(user);
+					if (sessionService != null) {
+						sessionService.invalidateSessions(user);
+					}
 					return success("You have successfully deleted " + userName);
 				}
 			} else {

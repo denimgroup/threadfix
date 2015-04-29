@@ -107,6 +107,13 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     ////////////////////////////////////////////////////////////////////////////////
 
     var addMapsToUser = function(user, callback) {
+
+        // if there are no roles, we shouldn't try to get permissions.
+        if (!$scope.roles) {
+            callback && callback();
+            return;
+        }
+
         $http.get(tfEncoder.encode('/configuration/users/' + user.id + '/permissions/map')).
             success(function(data) {
 
@@ -153,7 +160,9 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
             $scope.currentUser = angular.copy(user);
             addMapsToUser($scope.currentUser, function() {
                 user.formUser = $scope.currentUser;
-                if (!$scope.currentUser.globalRole) {
+                if (!$scope.currentUser.hasGlobalGroupAccess) {
+                    $scope.currentUser.globalRole = { id: "-1"};
+                } else if (!$scope.currentUser.globalRole) {
                     $scope.currentUser.globalRole = { id: "0" };
                 } else {
                     $scope.currentUser.globalRole.id = "" + $scope.currentUser.globalRole.id;

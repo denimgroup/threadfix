@@ -12,7 +12,10 @@
 
   <h2>Manage Users</h2>
 
-  <%@ include file="/WEB-INF/views/successMessage.jspf" %>
+  <div ng-show="successMessage" class="alert alert-success">
+    <button class="close" ng-click="clearMessage()" type="button">&times;</button>
+    {{ successMessage }}
+  </div>
   <%@ include file="/WEB-INF/views/errorMessage.jsp" %>
 
   <div class="row">
