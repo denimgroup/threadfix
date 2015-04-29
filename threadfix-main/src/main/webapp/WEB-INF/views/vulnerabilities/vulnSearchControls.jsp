@@ -29,7 +29,9 @@
                                 <li ng-repeat="genericSeverity in genericSeverityList" ng-click="changeSeverity(genericSeverity)"><a class="pointer">{{genericSeverity.name}}</a></li>
                             </ul>
                         </li>
-
+                        <c:if test="${ canSubmitComments }">
+                            <li><a class="pointer" id="addBatchCommentBtn" ng-click="addBatchComment(tags)">Add Batch Comment</a></li>
+                        </c:if>
                     </c:if>
                 </ul>
 
