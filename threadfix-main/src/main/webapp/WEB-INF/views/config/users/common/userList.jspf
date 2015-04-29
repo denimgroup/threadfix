@@ -1,0 +1,12 @@
+<%@ include file="/WEB-INF/views/config/users/form.jsp" %>
+
+<h4>User List <a id="newUserModalLink" class="btn" ng-click="openNewModal()">Create User</a></h4>
+
+<ul class="nav nav-pills">
+  <li ng-repeat="user in users"
+      id="lastYearReport"
+      class="span2"
+      ng-class="{ active: currentUser.id === user.id }">
+    <a href="#" class="no-underline" ng-click="setCurrentUser(user)">{{ user.name }}</a>
+  </li>
+</ul>

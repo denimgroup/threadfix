@@ -21,52 +21,18 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+package com.denimgroup.threadfix.webapp.controller.rest;
 
-package com.denimgroup.threadfix.data.dao;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.denimgroup.threadfix.data.entities.AccessControlApplicationMap;
-import com.denimgroup.threadfix.data.entities.AccessControlTeamMap;
+import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 
-import java.util.List;
+@RestController
+public class UnknownRestController extends TFRestController {
 
-public interface AccessControlMapDao {
-
-	/**
-	 * @param id
-	 * @return
-	 */
-	AccessControlTeamMap retrieveTeamMapById(int id);
-	
-	/**
-	 * @param id
-	 * @return
-	 */
-	AccessControlApplicationMap retrieveAppMapById(int id);
-	
-	/**
-	 * 
-	 * @param organizationId
-	 * @param roleId
-	 * @return
-	 */
-	AccessControlTeamMap retrieveTeamMapByUserTeamAndRole(int userId, int organizationId, int roleId);
-
-	/**
-	 * 
-	 * @param applicationId
-	 * @param roleId
-	 * @return
-	 */
-	AccessControlApplicationMap retrieveAppMapByUserAppAndRole(int userId, int applicationId, int roleId);
-	
-	/**
-	 * @param id
-	 * @return
-	 */
-	List<AccessControlTeamMap> retrieveAllMapsForUser(Integer id);
-
-	void saveOrUpdate(AccessControlTeamMap map);
-	
-	void saveOrUpdate(AccessControlApplicationMap map);
-
+    @RequestMapping("/rest/**")
+    public Object badRestRequest() {
+        return failure("Bad rest request");
+    }
 }
