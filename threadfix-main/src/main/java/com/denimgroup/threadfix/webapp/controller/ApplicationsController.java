@@ -103,6 +103,8 @@ public class ApplicationsController {
     private DefaultConfigService defaultConfigService;
     @Autowired
     private CacheBustService cacheBustService;
+    @Autowired
+    private GenericSeverityService genericSeverityService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -191,8 +193,12 @@ public class ApplicationsController {
         map.put("defectTrackerList", defectTrackerService.loadAllDefectTrackers());
         map.put("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
 
+        // waf
         map.put("wafList", wafService.loadAll());
         map.put("wafTypeList", wafService.loadAllWafTypes());
+
+        // Generic Severities
+        map.put("genericSeverityList", genericSeverityService.loadAll());
 
         // basic information
         map.put("application", application);

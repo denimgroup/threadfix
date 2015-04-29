@@ -181,7 +181,7 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
         });
     };
 
-    var bulkOperation = function(urlExtension, messageExtension) {
+    var bulkOperation = function(urlExtension, messageExtension, refreshReport) {
 
         $scope.submitting = true;
 
@@ -198,8 +198,10 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
                 if (data.success) {
                     $parent.successMessage = object.vulnerabilityIds.length + " vulnerabilities successfully " + messageExtension + ".";
                     $parent.refresh();
+                    if (refreshReport)
+                        $rootScope.$broadcast('severityChanged');
                 } else {
-                    $scope.errorMessage = "Failure. Message was : " + data.message;
+                    $parent.errorMessage = "Failure. Message was : " + data.message;
                 }
                 $scope.submitting = false;
 
@@ -224,6 +226,10 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
 
     $scope.unmarkFalsePositives = function() {
         bulkOperation("/falsePositives/unmark", "unmarked false positive");
+    };
+
+    $scope.changeSeverity = function(genericSeverity) {
+        bulkOperation("/severity/change/" + genericSeverity.id, "changed severities", true);
     };
 
 });
