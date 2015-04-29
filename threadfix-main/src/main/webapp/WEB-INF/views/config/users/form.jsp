@@ -54,32 +54,6 @@
                     </td>
                 </tr>
                 </c:if>
-                <security:authorize ifAllGranted="ROLE_ENTERPRISE">
-                <tr>
-                    <td class="no-color">Global Access</td>
-                    <td class="no-color" style="text-align: left;">
-                        <input type="checkbox"
-                            id="hasGlobalGroupAccessCheckbox"
-                            class="globalAccessCheckBox"
-                            name="hasGlobalGroupAccess"
-                            ng-model="user.hasGlobalGroupAccess"/>
-                    </td>
-                </tr>
-                <tr ng-show="user.hasGlobalGroupAccess">
-                    <td class="no-color">Global Role</td>
-                    <td class="no-color" style="text-align: left;">
-                        <select id="roleSelect" name="globalRole.id" ng-model="user.globalRole.id">
-                            <option value="0" label="Read Access">Read Access</option>
-                            <option ng-selected="role.id === user.globalRole.id" ng-repeat="role in roles" value="{{ role.id }}">
-                                {{ role.displayName }}
-                            </option>
-                        </select>
-                    </td>
-                    <td class="no-color" style="border: 0 solid black; background-color: white; padding-left: 5px">
-                        <errors id="hasGlobalGroupAccessErrors" path="hasGlobalGroupAccess" cssClass="errors" ></errors>
-                    </td>
-                </tr>
-                </security:authorize>
             </tbody>
         </table>
     </div>

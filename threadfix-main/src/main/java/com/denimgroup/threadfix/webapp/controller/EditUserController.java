@@ -144,7 +144,7 @@ public class EditUserController {
             // clear user details from session attribute
 			model.addAttribute("user", new User());
 
-			return RestResponse.success(userName);
+			return RestResponse.success(userService.loadAllUsers());
 		}
 	}
 }

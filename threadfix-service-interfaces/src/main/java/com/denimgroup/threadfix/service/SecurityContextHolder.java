@@ -21,52 +21,13 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+package com.denimgroup.threadfix.service;
 
-package com.denimgroup.threadfix.data.dao;
+import org.springframework.security.core.context.SecurityContext;
 
-import com.denimgroup.threadfix.data.entities.AccessControlApplicationMap;
-import com.denimgroup.threadfix.data.entities.AccessControlTeamMap;
-
-import java.util.List;
-
-public interface AccessControlMapDao {
-
-	/**
-	 * @param id
-	 * @return
-	 */
-	AccessControlTeamMap retrieveTeamMapById(int id);
-	
-	/**
-	 * @param id
-	 * @return
-	 */
-	AccessControlApplicationMap retrieveAppMapById(int id);
-	
-	/**
-	 * 
-	 * @param organizationId
-	 * @param roleId
-	 * @return
-	 */
-	AccessControlTeamMap retrieveTeamMapByUserTeamAndRole(int userId, int organizationId, int roleId);
-
-	/**
-	 * 
-	 * @param applicationId
-	 * @param roleId
-	 * @return
-	 */
-	AccessControlApplicationMap retrieveAppMapByUserAppAndRole(int userId, int applicationId, int roleId);
-	
-	/**
-	 * @param id
-	 * @return
-	 */
-	List<AccessControlTeamMap> retrieveAllMapsForUser(Integer id);
-
-	void saveOrUpdate(AccessControlTeamMap map);
-	
-	void saveOrUpdate(AccessControlApplicationMap map);
-
+/**
+ * Created by mcollins on 4/28/15.
+ */
+public interface SecurityContextHolder {
+    SecurityContext getSecurityContext(Integer id);
 }
