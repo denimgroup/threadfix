@@ -38,7 +38,7 @@ echo
 
 ping -n 10 127.0.0.1 > NUL:
 
-START "" "http://localhost:8080/threadfix/login.jsp"
+START "" "https://localhost:8443/threadfix"
 
 goto END
 
