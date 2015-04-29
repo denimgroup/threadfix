@@ -50,6 +50,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.*;
 import java.util.Map.Entry;
@@ -89,8 +90,14 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
         String fullFilePath = TEMP_FILE_NAME;
 
         if(defaultConfig.fileUploadLocationExists()) {
-            File fileUploaded = new File(fileUploadLocation + File.separator + TEMP_FILE_NAME);
-            fullFilePath = fileUploaded.getPath();
+            File directory = new File(fileUploadLocation);
+
+            if (directory.exists()){
+                File fileUploaded = new File(fileUploadLocation + File.separator + TEMP_FILE_NAME);
+                fullFilePath = fileUploaded.getPath();
+            } else {
+                throw new RestIOException("Directory at path:  " + fileUploadLocation + " does not exist.", -1);
+            }
         }
 
 		saveFile(fullFilePath,file);
