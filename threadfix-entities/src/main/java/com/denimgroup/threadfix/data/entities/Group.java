@@ -40,6 +40,7 @@ public class Group extends AuditableEntity {
     private List<User> users;
     private List<AccessControlTeamMap> accessControlTeamMaps;
     private Role globalRole;
+    private Boolean hasGlobalAccess = true;
     private String name;
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -83,5 +84,15 @@ public class Group extends AuditableEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Column
+    @JsonView(AllViews.TableRow.class)
+    public Boolean getHasGlobalAccess() {
+        return hasGlobalAccess;
+    }
+
+    public void setHasGlobalAccess(Boolean hasGlobalAccess) {
+        this.hasGlobalAccess = hasGlobalAccess;
     }
 }
