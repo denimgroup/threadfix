@@ -35,6 +35,7 @@ public class AccessControlTeamMap extends AuditableEntity {
 
 	private static final long serialVersionUID = -5845429359590418319L;
 	private User user;
+	private Group group;
 	private Organization organization;
 	private Role role;
 	private List<AccessControlApplicationMap> accessControlApplicationMaps;
@@ -42,7 +43,7 @@ public class AccessControlTeamMap extends AuditableEntity {
 	private Boolean allApps;
 	
 	@ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "userId", nullable = true)
     @JsonView(Object.class)
 	public User getUser() {
 		return user;
@@ -51,7 +52,18 @@ public class AccessControlTeamMap extends AuditableEntity {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
+
+	@ManyToOne
+	@JoinColumn(name = "groupId", nullable = true)
+	@JsonView(Object.class)
+	public Group getGroup() {
+		return group;
+	}
+
+	public void setGroup(Group group) {
+		this.group = group;
+	}
+
 	@OneToMany(mappedBy = "accessControlTeamMap", cascade = CascadeType.ALL)
     @JsonView(Object.class)
 	public List<AccessControlApplicationMap> getAccessControlApplicationMaps() {

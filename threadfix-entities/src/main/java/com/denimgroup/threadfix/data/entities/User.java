@@ -64,6 +64,7 @@ public class User extends AuditableEntity {
 	private Role globalRole;
 
     private List<AccessControlTeamMap> accessControlTeamMaps;
+    private List<Group> groups;
 
     @Column(length = NAME_LENGTH, nullable = false)
     @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
@@ -248,6 +249,16 @@ public class User extends AuditableEntity {
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    @ManyToMany(mappedBy = "users")
+    @JsonIgnore
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
     }
 
     @Transient

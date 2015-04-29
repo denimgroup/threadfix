@@ -23,14 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.data.entities.Group;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.RoleService;
-import com.denimgroup.threadfix.service.SessionService;
-import com.denimgroup.threadfix.service.UserService;
+import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.beans.AccessControlMapModel;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
@@ -72,6 +70,8 @@ public class UsersController {
 	private OrganizationService organizationService = null;
 	@Autowired(required = false)
 	private SessionService sessionService;
+	@Autowired
+	private GroupService groupService;
 
 	private final SanitizedLogger log = new SanitizedLogger(UsersController.class);
 
@@ -118,6 +118,8 @@ public class UsersController {
 
 		if (EnterpriseTest.isEnterprise()) {
 			model.addAttribute("accessControlMapModel", new AccessControlMapModel());
+			model.addAttribute("group", new Group());
+			model.addAttribute("editGroup", new Group());
 			model.addAttribute("role", new Role());
 			model.addAttribute("editRole", new Role());
 			return "config/users/enterprise/index";
@@ -145,6 +147,7 @@ public class UsersController {
 
 		if (EnterpriseTest.isEnterprise()) {
 			returnMap.put("roles", roleService.loadAll());
+			returnMap.put("groups", groupService.loadAllActive());
 		}
 
 		returnMap.put("countUsers", userService.countUsers());

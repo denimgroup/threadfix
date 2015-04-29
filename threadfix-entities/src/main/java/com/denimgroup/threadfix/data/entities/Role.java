@@ -44,6 +44,7 @@ public class Role extends AuditableEntity {
 	public static final int DISPLAY_NAME_LENGTH = 25;
 
     private List<User> users;
+    private List<Group> groups;
 
 	private static final long serialVersionUID = -1609499610449048270L;
 	
@@ -390,6 +391,16 @@ public class Role extends AuditableEntity {
 
     public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    @OneToMany(mappedBy = "globalRole")
+    @JsonIgnore
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
     }
 }
 
