@@ -239,30 +239,30 @@
 				protected-regex ^/graphConfig/channels$,
                 protected-regex ^/graphConfig/data,
 
-				protected-regex ^/configuration/defecttrackers/info$
-				protected-regex ^/configuration/filters/map$
-				protected-regex ^/configuration/keys/list$
-				protected-regex ^/configuration/logs/page/[0-9]+/[0-9]+$
-				protected-regex ^/configuration/remoteproviders/getMap$
-				protected-regex ^/configuration/roles/list$
-				protected-regex ^/reports/snapshot$
-				protected-regex ^/reports/trendingScans$
-				protected-regex ^/scans/table/[0-9]+$
+				protected-regex ^/configuration/defecttrackers/info$,
+				protected-regex ^/configuration/filters/map$,
+				protected-regex ^/configuration/keys/list$,
+				protected-regex ^/configuration/logs/page/[0-9]+/[0-9]+$,
+				protected-regex ^/configuration/remoteproviders/getMap$,
+				protected-regex ^/configuration/roles/list$,
+				protected-regex ^/reports/snapshot$,
+				protected-regex ^/reports/trendingScans$,
+				protected-regex ^/scans/table/[0-9]+$,
 
-				protected-regex ^/configuration/filters/severityFilter/set$
-				protected-regex ^/configuration/grctools/[0-9]+/edit$
-				protected-regex ^/configuration/grctools/scheduledUpdates/addUpdate$
-				protected-regex ^/configuration/remoteproviders/[0-9]+/importAll$
-				protected-regex ^/configuration/remoteproviders/[0-9]+/update$
-				protected-regex ^/configuration/remoteproviders/scheduledImports/import/[0-9]+/delete$
-				protected-regex ^/configuration/roles/[0-9]+/delete$
-				protected-regex ^/organizations/[0-9]+/applications/[0-9]+/controls/update$
-				protected-regex ^/organizations/[0-9]+/applications/[0-9]+/defects/merge$
-				protected-regex ^/organizations/[0-9]+/applications/[0-9]+/defects/update$
-				protected-regex ^/organizations/[0-9]+/applications/[0-9]+/defectSubmission$
-				protected-regex ^/organizations/[0-9]+/applications/[0-9]+/edit/setTagsEndpoint$
-				protected-regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/vulnComments/[0-9]+/update$
-				protected-regex ^/reports/filter/delete/[0-9]+$
+				protected-regex ^/configuration/filters/severityFilter/set$,
+				protected-regex ^/configuration/grctools/[0-9]+/edit$,
+				protected-regex ^/configuration/grctools/scheduledUpdates/addUpdate$,
+				protected-regex ^/configuration/remoteproviders/[0-9]+/importAll$,
+				protected-regex ^/configuration/remoteproviders/[0-9]+/update$,
+				protected-regex ^/configuration/remoteproviders/scheduledImports/import/[0-9]+/delete$,
+				protected-regex ^/configuration/roles/[0-9]+/delete$,
+				protected-regex ^/organizations/[0-9]+/applications/[0-9]+/controls/update$,
+				protected-regex ^/organizations/[0-9]+/applications/[0-9]+/defects/merge$,
+				protected-regex ^/organizations/[0-9]+/applications/[0-9]+/defects/update$,
+				protected-regex ^/organizations/[0-9]+/applications/[0-9]+/defectSubmission$,
+				protected-regex ^/organizations/[0-9]+/applications/[0-9]+/edit/setTagsEndpoint$,
+				protected-regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/vulnComments/[0-9]+/update$,
+				protected-regex ^/reports/filter/delete/[0-9]+$,
 				protected-regex ^/reports/search/export/csv$
         	</param-value>
 		</init-param>
