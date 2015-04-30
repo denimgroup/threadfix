@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.dao.*;
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.merge.ApplicationMerger;
 import com.denimgroup.threadfix.service.merge.ScanCleanerUtils;
@@ -186,6 +187,14 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		scan.setNumberTotalVulnerabilities(scan.getNumberTotalVulnerabilities() + 1);
 		finding.setScan(scan);
         scanCleanerUtils.clean(scan);
+
+		EventAction eventAction = EventAction.VULNERABILTIY_OTHER;
+		Vulnerability vuln = finding.getVulnerability();
+		if (vuln.isNew()) {
+			eventAction = EventAction.APPLICATION_CREATE;
+		}
+		vulnerabilityService.storeVulnerability(vuln, eventAction);
+
 		scanDao.saveOrUpdate(scan);
 		log.debug("Manual Finding submission was successful.");
 		log.debug(userName + " has added a new finding to the Application " + 

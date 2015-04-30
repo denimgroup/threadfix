@@ -25,10 +25,10 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.DocumentDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Document;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,17 +51,17 @@ public class DocumentServiceImpl implements DocumentService {
 	private final SanitizedLogger log = new SanitizedLogger(DocumentService.class);
 	
 	private ApplicationDao applicationDao;
-	private VulnerabilityDao vulnerabilityDao;
+	private VulnerabilityService vulnerabilityService;
 	private DocumentDao documentDao;
 	private ContentTypeServiceImpl contentTypeService = new ContentTypeServiceImpl();
 	
 	@Autowired
 	public DocumentServiceImpl(DocumentDao documentDao,
 			ApplicationDao applicationDao,
-			VulnerabilityDao vulnerabilityDao) {
+			VulnerabilityService vulnerabilityService) {
 		this.documentDao = documentDao;
 		this.applicationDao = applicationDao;
-		this.vulnerabilityDao = vulnerabilityDao;
+		this.vulnerabilityService = vulnerabilityService;
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class DocumentServiceImpl implements DocumentService {
 			return null;
 		}
 		
-		Vulnerability vulnerability = vulnerabilityDao.retrieveById(vulnId);
+		Vulnerability vulnerability = vulnerabilityService.loadVulnerability(vulnId);
 		
 		if (vulnerability == null) {
 			log.warn("Unable to retrieve Vulnerability - document save failed.");
@@ -177,7 +177,7 @@ public class DocumentServiceImpl implements DocumentService {
 			appDocs.add(doc);
 			
 			documentDao.saveOrUpdate(doc);
-			vulnerabilityDao.saveOrUpdate(vulnerability);
+			vulnerabilityService.storeVulnerability(vulnerability, EventAction.VULNERABILTIY_OTHER);
 
 		} catch (SQLException | IOException e) {
 			log.warn("Unable to save document - exception occurs.");
@@ -205,11 +205,11 @@ public class DocumentServiceImpl implements DocumentService {
 		}
 		
 		if (document.getVulnerability() != null && document.getVulnerability().getId() != null ) {
-			Vulnerability vulnerability = vulnerabilityDao.retrieveById(document.getVulnerability().getId());
+			Vulnerability vulnerability = vulnerabilityService.loadVulnerability(document.getVulnerability().getId());
 			vulnerability.getDocuments().remove(document);
 			document.setVulnerability(null);
 			documentDao.delete(document);
-			vulnerabilityDao.saveOrUpdate(vulnerability);
+			vulnerabilityService.storeVulnerability(vulnerability, EventAction.VULNERABILTIY_OTHER);
 			return "redirect:/organizations/" + vulnerability.getApplication().getOrganization().getId() + "/applications/" + vulnerability.getApplication().getId() + "/vulnerabilities/" + vulnerability.getId();
 		}
 		

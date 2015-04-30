@@ -29,7 +29,9 @@ package com.denimgroup.threadfix.service.merge;
 
 import com.denimgroup.threadfix.data.dao.*;
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.queue.QueueSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -50,7 +52,7 @@ public class RemappingServiceImpl implements RemappingService {
     @Autowired
     ApplicationChannelDao applicationChannelDao;
     @Autowired
-    VulnerabilityDao vulnerabilityDao;
+    VulnerabilityService vulnerabilityService;
     @Autowired
     ScanCloseReopenMappingDao scanCloseReopenMappingDao;
     @Autowired(required = false) // not all environments have a queue
@@ -129,8 +131,17 @@ public class RemappingServiceImpl implements RemappingService {
         }
 
         for (Vulnerability vulnerability : vulnerabilitiesToUpdate) {
+            boolean wasActive = vulnerability.isActive();
             fixStateAndMappings(channel, vulnerability);
-            vulnerabilityDao.saveOrUpdate(vulnerability);
+            EventAction eventAction = EventAction.VULNERABILTIY_OTHER;
+            if (newVulnerabilities.contains(vulnerability)) {
+                eventAction = EventAction.VULNERABILTIY_CREATE;
+            } else if (wasActive && !vulnerability.isActive()) {
+                eventAction = EventAction.VULNERABILTIY_CLOSE;
+            } else if (!wasActive && vulnerability.isActive()) {
+                eventAction = EventAction.VULNERABILTIY_REOPEN;
+            }
+            vulnerabilityService.storeVulnerability(vulnerability, eventAction);
         }
 
         return !vulnerabilitiesToUpdate.isEmpty();

@@ -43,12 +43,12 @@ public class Event extends AuditableEntity {
 
     Boolean apiAction = false;
 
-    private Application application;
-    private User user;
-    private Vulnerability vulnerability;
-    private Scan scan;
-    private Defect defect;
-    private VulnerabilityComment comment;
+    private Integer applicationId;
+    private Integer userId;
+    private Integer vulnerabilityId;
+    private Integer scanId;
+    private Integer defectId;
+    private Integer commentId;
 
     @Column(length = ENUM_LENGTH)
     @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
@@ -75,69 +75,63 @@ public class Event extends AuditableEntity {
         this.apiAction = apiAction;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "applicationId")
-    @JsonIgnore
-    public Application getApplication() {
-        return application;
+    @Column
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class})
+    public Integer getApplicationId() {
+        return applicationId;
     }
 
-    public void setApplication(Application application) {
-        this.application = application;
+    public void setApplicationId(Integer applicationId) {
+        this.applicationId = applicationId;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "userId")
-    @JsonIgnore
-    public User getUser() {
-        return user;
+    @Column
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class})
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "vulnerabilityId")
-    @JsonIgnore
-    public Vulnerability getVulnerability() {
-        return vulnerability;
+    @Column
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class})
+    public Integer getVulnerabilityId() {
+        return vulnerabilityId;
     }
 
-    public void setVulnerability(Vulnerability vulnerability) {
-        this.vulnerability = vulnerability;
+    public void setVulnerabilityId(Integer vulnerabilityId) {
+        this.vulnerabilityId = vulnerabilityId;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "scanId")
-    @JsonIgnore
-    public Scan getScan() {
-        return scan;
+    @Column
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class})
+    public Integer getScanId() {
+        return scanId;
     }
 
-    public void setScan(Scan scan) {
-    this.scan = scan;
-        }
-
-    @ManyToOne
-    @JoinColumn(name = "defectId")
-    @JsonIgnore
-    public Defect getDefect() {
-        return defect;
+    public void setScanId(Integer scanId) {
+        this.scanId = scanId;
     }
 
-    public void setDefect(Defect defect) {
-        this.defect = defect;
+    @Column
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class})
+    public Integer getDefectId() {
+        return defectId;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "commentId")
-    @JsonIgnore
-    public VulnerabilityComment getVulnerabilityComment() {
-        return comment;
+    public void setDefectId(Integer defectId) {
+        this.defectId = defectId;
     }
 
-    public void setVulnerabilityComment(VulnerabilityComment comment) {
-        this.comment = comment;
+    @Column
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class})
+    public Integer getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(Integer commentId) {
+        this.commentId = commentId;
     }
 }

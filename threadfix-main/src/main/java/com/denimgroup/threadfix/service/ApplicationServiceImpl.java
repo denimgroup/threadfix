@@ -69,6 +69,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Autowired private WafRuleDao wafRuleDao;
 	@Autowired private WafDao wafDao;
 	@Autowired private VulnerabilityDao vulnerabilityDao;
+	@Autowired private VulnerabilityService vulnerabilityService;
 	@Autowired private AccessControlMapService accessControlMapService;
 	@Autowired private ApplicationCriticalityDao applicationCriticalityDao;
 	@Autowired private DefectDao defectDao;
@@ -372,7 +373,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 					}
 					vulnerability.setWafRuleGeneratedTime(null);
 					vulnerability.setWafRules(new ArrayList<WafRule>());
-					vulnerabilityDao.saveOrUpdate(vulnerability);
+					vulnerabilityService.storeVulnerability(vulnerability, EventAction.VULNERABILTIY_OTHER);
 				}
 			}
 		}
@@ -525,7 +526,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 			if (vulns != null) {
 				for (Vulnerability vuln : vulns) {
 					vuln.setDefect(null);
-					vulnerabilityDao.saveOrUpdate(vuln);
+					vulnerabilityService.storeVulnerability(vuln, EventAction.VULNERABILTIY_OTHER);
 				}
 			}
 		}
@@ -548,8 +549,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 			Application app = loadApplication(application.getId());
 			
 			scanMergeService.updateSurfaceLocation(app);
-			scanMergeService.updateVulnerabilities(app);
-							
+			scanMergeService.updateVulnerabilities(app, true);
+
 			storeApplication(app, EventAction.APPLICATION_EDIT);
 		}
 	}

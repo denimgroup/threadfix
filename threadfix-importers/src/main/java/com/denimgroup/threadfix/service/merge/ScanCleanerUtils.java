@@ -23,9 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.merge;
 
-import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.VulnerabilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,7 +43,7 @@ import static com.denimgroup.threadfix.CollectionUtils.set;
 public class ScanCleanerUtils {
 	
 	@Autowired
-	private VulnerabilityDao vulnerabilityDao;
+	private VulnerabilityService vulnerabilityService;
 	
     private static final SanitizedLogger log = new SanitizedLogger("ScanCleanerUtils");
 
@@ -50,7 +51,7 @@ public class ScanCleanerUtils {
             Collections.unmodifiableSet(set(GenericVulnerability.VULNS_WITH_PARAMS));
 
     public void clean(Scan scan) {
-        assert vulnerabilityDao != null : "vulnerabilityDao was null. Fix your Spring configuration.";
+        assert vulnerabilityService != null : "vulnerabilityService was null. Fix your Spring configuration.";
         ensureCorrectRelationships(scan);
         ensureSafeFieldLengths(scan);
     }
@@ -127,7 +128,7 @@ public class ScanCleanerUtils {
                         finding.getScan().getApplication());
 
 				if (finding.getVulnerability().getId() == null) {
-					vulnerabilityDao.saveOrUpdate(finding.getVulnerability());
+					vulnerabilityService.storeVulnerability(finding.getVulnerability(), EventAction.VULNERABILTIY_CREATE);
 				}
                 finding.getScan().getApplication().addVulnerability(finding.getVulnerability());
 

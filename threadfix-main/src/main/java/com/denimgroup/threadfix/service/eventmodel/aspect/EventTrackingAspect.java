@@ -43,9 +43,9 @@ import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
-public class EventTrackingAspect implements ApplicationEventPublisherAware {
+public abstract class EventTrackingAspect implements ApplicationEventPublisherAware {
 
-    private final SanitizedLogger log = new SanitizedLogger(EventTrackingAspect.class);
+    protected SanitizedLogger log = new SanitizedLogger(EventTrackingAspect.class);
 
     ApplicationEventPublisher eventPublisher;
 
@@ -54,65 +54,6 @@ public class EventTrackingAspect implements ApplicationEventPublisherAware {
 
     @Autowired
     UserService userService;
-
-    @Around("execution(* com.denimgroup.threadfix.service.ApplicationService.storeApplication(..)) && args(application, eventAction)")
-    public Object emitStoreApplicationEvent(ProceedingJoinPoint joinPoint, Application application, EventAction eventAction) throws Throwable {
-        Object proceed = joinPoint.proceed();
-        try {
-            if ((eventAction == EventAction.APPLICATION_CREATE) || (eventAction == EventAction.APPLICATION_EDIT)) {
-                Event event = generateStoreApplicationEvent(application, eventAction);
-                publishEventTrackingEvent(event);
-            }
-        } catch (Exception e) {
-            log.error("Error while logging Event: " + eventAction, e);
-        } finally {
-            return proceed;
-        }
-    }
-
-    @Pointcut("execution(* com.denimgroup.threadfix.service.ScanMergeService.saveRemoteScanAndRun(Integer, String))")
-    private void saveRemoteScanAndRun() {}
-
-    @Pointcut("execution(* com.denimgroup.threadfix.service.ScanMergeService.processScan(Integer, String, ..))")
-    private void processScan() {}
-
-    @Pointcut("saveRemoteScanAndRun() || processScan()")
-    private void processScanFile() {}
-
-    @Around("processScanFile() && args(channelId, fileName)")
-    public Object emitUploadApplicationScanEvent(ProceedingJoinPoint joinPoint, Integer channelId, String fileName) throws Throwable {
-        Object proceed = joinPoint.proceed();
-        try {
-            Scan scan = (Scan) proceed;
-            Event event = generateUploadScanEvent(scan);
-            publishEventTrackingEvent(event);
-        } catch (Exception e) {
-            log.error("Error while logging Event: " + EventAction.APPLICATION_SCAN_UPLOADED, e);
-        } finally {
-            return proceed;
-        }
-    }
-
-    protected Event generateStoreApplicationEvent(Application application, EventAction eventAction) {
-        Event event = new EventBuilder()
-                .setUser(userService.getCurrentUser())
-                .setEventAction(eventAction)
-                .setApplication(application)
-                .generateEvent();
-        eventService.saveEvent(event);
-        return event;
-    }
-
-    private Event generateUploadScanEvent(Scan scan) {
-        Event event = new EventBuilder()
-                .setUser(userService.getCurrentUser())
-                .setEventAction(EventAction.APPLICATION_SCAN_UPLOADED)
-                .setApplication(scan.getApplication())
-                .setScan(scan)
-                .generateEvent();
-        eventService.saveEvent(event);
-        return event;
-    }
 
     protected void publishEventTrackingEvent(Event event) {
         eventPublisher.publishEvent(new EventTrackingEvent(event));

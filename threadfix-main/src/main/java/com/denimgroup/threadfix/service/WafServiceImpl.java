@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.dao.*;
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.waf.RealTimeProtectionGenerator;
 import com.denimgroup.threadfix.service.waf.RealTimeProtectionGeneratorFactory;
@@ -52,7 +53,7 @@ public class WafServiceImpl implements WafService {
     @Autowired
     private       WafRuleDirectiveDao                wafRuleDirectiveDao = null;
     @Autowired
-    private       VulnerabilityDao                   vulnerabilityDao    = null;
+    private       VulnerabilityService               vulnerabilityService= null;
     private final RealTimeProtectionGeneratorFactory factory             = new RealTimeProtectionGeneratorFactory();
 
     @Override
@@ -200,7 +201,7 @@ public class WafServiceImpl implements WafService {
 
 				Vulnerability vuln = wafRule.getVulnerability();
 				vuln.setWafRuleGeneratedTime(now);
-				vulnerabilityDao.saveOrUpdate(vuln);
+				vulnerabilityService.storeVulnerability(vuln, EventAction.VULNERABILTIY_OTHER);
 			}
 		}
 	}

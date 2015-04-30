@@ -23,9 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.merge;
 
-import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.VulnerabilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
@@ -37,7 +38,7 @@ public class ChannelMerger {
     private static final SanitizedLogger LOG = new SanitizedLogger(ChannelMerger.class);
 
     @Autowired
-    private VulnerabilityDao vulnerabilityDao;
+    private VulnerabilityService vulnerabilityService;
     private Scan scan;
     private ApplicationChannel applicationChannel;
 
@@ -54,11 +55,11 @@ public class ChannelMerger {
      * This is the first round of scan merge that only considers scans from the same scanner
      * as the incoming scan.
      *
-     * @param vulnerabilityDao TODO this is a shim to get around autowiring problems so we can unit test this.
+     * @param vulnerabilityService TODO this is a shim to get around autowiring problems so we can unit test this.
      * @param scan recent scan to merge
      * @param applicationChannel context information about the scan
      */
-    public static void channelMerge(VulnerabilityDao vulnerabilityDao, Scan scan, ApplicationChannel applicationChannel) {
+    public static void channelMerge(VulnerabilityService vulnerabilityService, Scan scan, ApplicationChannel applicationChannel) {
         if (scan == null || applicationChannel == null) {
             LOG.warn("Insufficient data to complete Application Channel-wide merging process.");
             return;
@@ -68,13 +69,13 @@ public class ChannelMerger {
 
         merger.scan = scan;
         merger.applicationChannel = applicationChannel;
-        merger.vulnerabilityDao = vulnerabilityDao;
+        merger.vulnerabilityService = vulnerabilityService;
 
         merger.performMerge();
     }
 
     private void performMerge() {
-        assert vulnerabilityDao != null : "vulnerabilityDao was null. Spring autowiring failed, fix the code.";
+        assert vulnerabilityService != null : "vulnerabilityService was null. Spring autowiring failed, fix the code.";
 
         if (scan.getFindings() == null) {
             scan.setFindings(listOf(Finding.class));
@@ -134,7 +135,7 @@ public class ChannelMerger {
                     oldNativeIdVulnHash.get(nativeId).closeVulnerability(scan,
                             Calendar.getInstance());
                 }
-                vulnerabilityDao.saveOrUpdate(oldNativeIdVulnHash.get(nativeId));
+                vulnerabilityService.storeVulnerability(oldNativeIdVulnHash.get(nativeId), EventAction.VULNERABILTIY_CLOSE);
                 closed += 1;
             }
         }
@@ -192,7 +193,7 @@ public class ChannelMerger {
             resurfaced += 1;
             vulnerability.reopenVulnerability(scan,
                     scan.getImportTime());
-            vulnerabilityDao.saveOrUpdate(vulnerability);
+            vulnerabilityService.storeVulnerability(vulnerability, EventAction.VULNERABILTIY_REOPEN);
         }
     }
 
@@ -210,8 +211,8 @@ public class ChannelMerger {
             oldFinding.setMarkedFalsePositive(true);
             if (oldFinding.getVulnerability() != null) {
                 oldFinding.getVulnerability().setIsFalsePositive(true);
-                vulnerabilityDao.saveOrUpdate(oldFinding
-                        .getVulnerability());
+                vulnerabilityService.storeVulnerability(oldFinding
+                        .getVulnerability(), EventAction.VULNERABILTIY_MARK_FALSE_POSITIVE);
             }
         }
         // If the finding has had its false positive status removed, update
@@ -224,8 +225,8 @@ public class ChannelMerger {
             oldFinding.setMarkedFalsePositive(false);
             if (oldFinding.getVulnerability() != null) {
                 oldFinding.getVulnerability().setIsFalsePositive(false);
-                vulnerabilityDao.saveOrUpdate(oldFinding
-                        .getVulnerability());
+                vulnerabilityService.storeVulnerability(oldFinding
+                        .getVulnerability(), EventAction.VULNERABILTIY_UNMARK_FALSE_POSITIVE);
             }
         }
 

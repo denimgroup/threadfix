@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.dao.UserDao;
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.importer.interop.ChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ChannelImporterFactory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -120,7 +121,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public void updateVulnerabilities(Application application) {
+	public void updateVulnerabilities(Application application, boolean shouldSaveVulnerabilites) {
 		List<Vulnerability> vulnerabilities = application.getVulnerabilities();
 		
 		FindingMatcher matcher = new FindingMatcher(null);
@@ -145,6 +146,9 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 							// good method, but deleting it will cause cascading
 							// problems
 							vulnerabilities.get(j).setActive(false);
+							if (shouldSaveVulnerabilites) {
+								vulnerabilityService.storeVulnerability(vulnerabilities.get(j), EventAction.VULNERABILTIY_CLOSE);
+							}
 						}
 					}
 				}

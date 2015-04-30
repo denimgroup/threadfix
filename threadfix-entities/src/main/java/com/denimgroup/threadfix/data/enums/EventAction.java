@@ -29,7 +29,14 @@ public enum EventAction {
     APPLICATION_CREATE("Create Application"),
     APPLICATION_EDIT("Edit Application"),
     APPLICATION_SET_TAGS("Set Application Tags"),
-    APPLICATION_SCAN_UPLOADED("Upload Application Scan");
+    APPLICATION_SCAN_UPLOADED("Upload Application Scan"),
+    VULNERABILTIY_CREATE("Create Vulnerability"),
+    VULNERABILTIY_CLOSE("Close Vulnerability"),
+    VULNERABILTIY_REOPEN("Reopen Vulnerability"),
+    VULNERABILTIY_MARK_FALSE_POSITIVE("Mark Vulnerability False Positive"),
+    VULNERABILTIY_UNMARK_FALSE_POSITIVE("Unmark Vulnerability False Positive"),
+    VULNERABILTIY_COMMENT("Create Vulnerability Comment"),
+    VULNERABILTIY_OTHER("Other Vulnerability");
 
     EventAction(String displayName) {
         this.displayName = displayName;

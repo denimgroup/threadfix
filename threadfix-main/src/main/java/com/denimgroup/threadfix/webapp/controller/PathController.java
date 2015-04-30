@@ -123,7 +123,7 @@ public class PathController {
 		app.setProjectRoot(application.getProjectRoot());
 		applicationService.storeApplication(app, EventAction.APPLICATION_EDIT);
 		scanMergeService.updateSurfaceLocation(app);
-		scanMergeService.updateVulnerabilities(app);
+		scanMergeService.updateVulnerabilities(app, false);
 		status.setComplete();
 		return "redirect:/organizations/" + String.valueOf(orgId) + "/applications/"
 				+ String.valueOf(appId);

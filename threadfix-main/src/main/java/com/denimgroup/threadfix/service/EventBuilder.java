@@ -43,33 +43,33 @@ public class EventBuilder {
     }
 
     public EventBuilder setApplication(Application application) {
-        event.setApplication(application);
+        event.setApplicationId(application.getId());
         return this;
     }
 
     public EventBuilder setUser(User user) {
-        event.setUser(user);
+        event.setUserId(user.getId());
         event.setApiAction(user == null);
         return this;
     }
 
     public EventBuilder setVulnerability(Vulnerability vulnerability) {
-        event.setVulnerability(vulnerability);
+        event.setVulnerabilityId(vulnerability.getId());
         return this;
     }
 
     public EventBuilder setScan(Scan scan) {
-        event.setScan(scan);
+        event.setScanId(scan.getId());
         return this;
     }
 
     public EventBuilder setDefect(Defect defect) {
-        event.setDefect(defect);
+        event.setDefectId(defect.getId());
         return this;
     }
 
     public EventBuilder setVulnerabilityComment(VulnerabilityComment comment) {
-        event.setVulnerabilityComment(comment);
+        event.setCommentId(comment.getId());
         return this;
     }
 }
