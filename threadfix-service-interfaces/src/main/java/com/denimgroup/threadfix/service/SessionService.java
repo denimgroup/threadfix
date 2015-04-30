@@ -21,52 +21,31 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+package com.denimgroup.threadfix.service;
 
-package com.denimgroup.threadfix.data.dao;
+import com.denimgroup.threadfix.data.entities.Role;
+import com.denimgroup.threadfix.data.entities.User;
+import org.springframework.ldap.core.DirContextOperations;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import com.denimgroup.threadfix.data.entities.AccessControlApplicationMap;
-import com.denimgroup.threadfix.data.entities.AccessControlTeamMap;
+import java.util.Collection;
 
-import java.util.List;
+/**
+ * Created by mcollins on 4/23/15.
+ */
+public interface SessionService {
 
-public interface AccessControlMapDao {
+    void reloadSession(Role role);
 
-	/**
-	 * @param id
-	 * @return
-	 */
-	AccessControlTeamMap retrieveTeamMapById(int id);
-	
-	/**
-	 * @param id
-	 * @return
-	 */
-	AccessControlApplicationMap retrieveAppMapById(int id);
-	
-	/**
-	 * 
-	 * @param organizationId
-	 * @param roleId
-	 * @return
-	 */
-	AccessControlTeamMap retrieveTeamMapByUserTeamAndRole(int userId, int organizationId, int roleId);
+    void invalidateSessions(User user);
 
-	/**
-	 * 
-	 * @param applicationId
-	 * @param roleId
-	 * @return
-	 */
-	AccessControlApplicationMap retrieveAppMapByUserAppAndRole(int userId, int applicationId, int roleId);
-	
-	/**
-	 * @param id
-	 * @return
-	 */
-	List<AccessControlTeamMap> retrieveAllMapsForUser(Integer id);
+    void reloadSession(User user);
 
-	void saveOrUpdate(AccessControlTeamMap map);
-	
-	void saveOrUpdate(AccessControlApplicationMap map);
+    UserDetails mapUserFromContext(DirContextOperations arg0,
+                                   String userName, Collection<? extends GrantedAuthority> arg2);
 
+    Authentication createSuccessfulAuthentication(Authentication authentication,
+                                                  UserDetails user);
 }

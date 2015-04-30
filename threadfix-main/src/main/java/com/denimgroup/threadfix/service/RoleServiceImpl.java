@@ -42,14 +42,10 @@ public class RoleServiceImpl implements RoleService {
 	
 	protected final SanitizedLogger log = new SanitizedLogger(RoleServiceImpl.class);
 	
-	private RoleDao roleDao;
-	private UserDao userDao;
-	
 	@Autowired
-	public RoleServiceImpl(RoleDao roleDao, UserDao userDao) {
-		this.roleDao = roleDao;
-		this.userDao = userDao;
-	}
+	private RoleDao roleDao;
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	public List<Role> loadAll() {

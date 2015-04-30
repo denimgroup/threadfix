@@ -340,15 +340,25 @@ public class JiraDefectTracker extends AbstractDefectTracker {
         map.put("description", description);
 
         return attemptSubmission(map, new ArrayList<String>(), null);
-	}
+    }
 
     private String attemptSubmission(Map<String, Object> map, List<String> errorFieldList, String lastError) {
         String payload = getPayload(map, errorFieldList);
         log.info("Payload: " + payload);
 
-        String result, id = null;
+        String returnResult = null;
+
         try {
-            result = restUtils.postUrlAsString(getUrlWithRest() + "issue", payload, getUsername(), getPassword(), CONTENT_TYPE);
+            String result = restUtils.postUrlAsString(getUrlWithRest() + "issue", payload, getUsername(), getPassword(), CONTENT_TYPE);
+
+            if (result != null) {
+                String id = JsonUtils.getStringProperty(result, "key");
+                if (id == null) {
+                    log.error("Unable to get key from result: " + result);
+                }
+
+                returnResult = id;
+            }
         } catch (RestIOException e) {
             // This exception will be thrown if Jira has fields that aren't allowed.
             log.info("Received RestIOException with message " + e.getMessage() +
@@ -366,19 +376,15 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 
             errorFieldList.addAll(newErrorFields);
 
-            result = attemptSubmission(map, errorFieldList, errorResponseMsg);
+            returnResult = attemptSubmission(map, errorFieldList, errorResponseMsg);
 
             // if we got a result then it was a success, otherwise let's rethrow the exception
-            if (result == null) {
+            if (returnResult == null) {
                 throw e;
             }
         }
 
-        if (result != null) {
-            id = JsonUtils.getStringProperty(result, "key");
-        }
-
-        return id;
+        return returnResult;
     }
 
     private String getPayload(Map<String, Object> objectMap, List<String> errorFieldList) {

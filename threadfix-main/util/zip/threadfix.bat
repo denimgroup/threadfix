@@ -15,9 +15,9 @@ set PWD=%cd%
 set CATALINA_HOME=%PWD%\tomcat
 set CATALINA_OPTS=-Xms512m -Xmx1536m -XX:PermSize=256m -XX:MaxPermSize=256m
 if DEFINED JAVA_HOME (
-	"%JAVA_HOME%"\bin\java -version:1.7 -version > nul 2>&1
-	if NOT %ERRORLEVEL% == 0 (
-		echo Local JAVA_HOME is not Java 7, switching to threadfix JAVA_HOME
+	"%JAVA_HOME%\bin\java" -version:1.8 -version > nul 2>&1
+	if NOT ERRORLEVEL == 0 (
+		echo Local JAVA_HOME is not Java 8, switching to threadfix JAVA_HOME
 		set JAVA_HOME=%PWD%\java
 	)
 ) else (
