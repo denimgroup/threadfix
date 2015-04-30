@@ -10,23 +10,24 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.annotations.ReportLocation;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Report;
-import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.views.AllViews;
+import com.denimgroup.threadfix.webapp.config.FormRestResponse;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
@@ -80,121 +81,102 @@ public class SystemSettingsController {
 
 	}
 
-	@ModelAttribute
-	public List<Role> populateRoles() {
-		return roleService.loadAll();
-	}
-
-	@ModelAttribute("dashboardReports")
-	public List<Report> populateDashboardReportTypes() {
-		return reportService.loadByLocationType(ReportLocation.DASHBOARD);
-	}
-
-	@ModelAttribute("applicationReports")
-	public List<Report> populateApplicationReportTypes() {
-		return reportService.loadByLocationType(ReportLocation.APPLICATION);
-	}
-
-	@ModelAttribute("teamReports")
-	public List<Report> populateTeamReportTypes() {
-		return reportService.loadByLocationType(ReportLocation.TEAM);
-	}
-
-	@RequestMapping(method = RequestMethod.GET)
-	public String setupForm(Model model, HttpServletRequest request) {
-		addModelAttributes(model, request);
-		return "config/systemSettings";
-	}
-
-	@ResponseBody
-	@RequestMapping(value="getLDAPSettings", method = RequestMethod.GET)
-	public RestResponse<DefaultConfiguration> getLDAPSettings(@ModelAttribute DefaultConfiguration configModel, HttpServletRequest request)
-	{
-		return success(defaultConfigurationWithMaskedPasswords());
-	}
-
-	@ResponseBody
-    @RequestMapping(value = "/checkLDAP", method = RequestMethod.POST)
-    public RestResponse<String> checkLDAP(@ModelAttribute DefaultConfiguration configModel,
-                            Model model,
-                            HttpServletRequest request) {
-		addModelAttributes(model, request);
-
-		long startTime = System.currentTimeMillis();
-        if (ldapService.innerAuthenticate(configModel)) {
-			long endTime = System.currentTimeMillis();
-			return success("LDAP settings are valid. LDAP validation took: " + (endTime - startTime) + "ms.");
-		} else {
-			return failure("Unable to verify LDAP settings.");
-		}
+    @RequestMapping(method = RequestMethod.GET)
+    public String setupForm() {
+        return "config/systemSettings";
     }
 
-	@RequestMapping(method = RequestMethod.POST)
-	public String processForm(@ModelAttribute DefaultConfiguration configModel,
-							  BindingResult bindingResult,
-							  Model model,
-							  HttpServletRequest request) {
-		addModelAttributes(model, request);
+    @JsonView(AllViews.FormInfo.class)
+    @RequestMapping("/objects")
+    public @ResponseBody Object getBaseObjects() {
+        return success(addMapAttributes());
+    }
 
-        List<String> errors = list();
+    @JsonView(AllViews.FormInfo.class)
+    @RequestMapping(value = "/checkLDAP", method = RequestMethod.POST)
+    public @ResponseBody RestResponse<String> checkLDAP(@ModelAttribute DefaultConfiguration config) {
+        long startTime = System.currentTimeMillis();
+        if (ldapService.innerAuthenticate(config)) {
+            long endTime = System.currentTimeMillis();
+            return success("LDAP settings are valid. LDAP validation took: " + (endTime - startTime) + "ms.");
+        } else {
+            return failure("Unable to verify LDAP settings.");
+        }
+    }
 
-        if(defaultConfigService.reportDuplicateExists(configModel.getDashboardReports())) {
-            errors.add("Cannot set more than one Dashboard report placement to the same report.");
+    @JsonView(AllViews.FormInfo.class)
+    @RequestMapping(method = RequestMethod.POST)
+    public @ResponseBody Object processForm(@ModelAttribute DefaultConfiguration config, BindingResult bindingResult) {
+        Map<String, Object> map = addMapAttributes();
+
+        if (config.getSessionTimeout() != null && config.getSessionTimeout() > 30) {
+            bindingResult.reject("sessionTimeout", null, "30 is the maximum.");
         }
 
-        if(defaultConfigService.reportDuplicateExists(configModel.getApplicationReports())) {
-            errors.add("Cannot set more than one Application report placement to the same report.");
-        }
-
-        if(defaultConfigService.reportDuplicateExists(configModel.getTeamReports())) {
-            errors.add("Cannot set more than one Team report placement to the same report.");
-        }
-
-		if (configModel.getSessionTimeout() != null && configModel.getSessionTimeout() > 30) {
-			bindingResult.reject("sessionTimeout", null, "30 is the maximum.");
-		}
-
-        model.addAttribute("errors", errors);
+        List<String> errors = addReportErrors(config);
+        map.put("errors", errors);
+        map.put("showErrors", errors.size() > 0);
 
         if (bindingResult.hasErrors() || errors.size() > 0) {
 
-			// TODO look into this
-			if (bindingResult.hasFieldErrors("proxyPort")) {
-				bindingResult.reject("proxyPort", new Object[]{}, "Please enter a valid port number.");
-			}
+            // TODO look into this
+            if (bindingResult.hasFieldErrors("proxyPort")) {
+                bindingResult.reject("proxyPort", new Object[]{}, "Please enter a valid port number.");
+            }
 
-			return "config/systemSettings";
-		} else {
-			defaultConfigService.saveConfiguration(configModel);
-			ControllerUtils.addSuccessMessage(request, "Configuration was saved successfully.");
+            return FormRestResponse.failure("Unable save System Settings. Try again.", bindingResult);
+        } else {
+            defaultConfigService.saveConfiguration(config);
+            map.put("successMessage", "Configuration was saved successfully.");
+            return success(map);
+        }
 
-			return "redirect:/configuration/settings";
-		}
+    }
 
-	}
+    private List<String> addReportErrors(DefaultConfiguration config) {
+        List<String> errors = list();
 
-	private void addModelAttributes(Model model, HttpServletRequest request) {
-		DefaultConfiguration configuration = defaultConfigurationWithMaskedPasswords();
+        if(defaultConfigService.reportDuplicateExists(config.getDashboardReports())) {
+            errors.add("Cannot set more than one Dashboard report placement to the same report.");
+        }
 
-		model.addAttribute("applicationCount", applicationService.getApplicationCount());
-		model.addAttribute("licenseCount", licenseService == null ? 0 : licenseService.getAppLimit());
-		model.addAttribute("licenseExpirationDate", licenseService == null ? new Date() : licenseService.getExpirationDate().getTime());
+        if(defaultConfigService.reportDuplicateExists(config.getApplicationReports())) {
+            errors.add("Cannot set more than one Application report placement to the same report.");
+        }
 
-		model.addAttribute("defaultConfiguration", configuration);
-		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
-	}
+        if(defaultConfigService.reportDuplicateExists(config.getTeamReports())) {
+            errors.add("Cannot set more than one Team report placement to the same report.");
+        }
 
-	private DefaultConfiguration defaultConfigurationWithMaskedPasswords() {
-		DefaultConfiguration configuration = defaultConfigService.loadCurrentConfiguration();
+        return errors;
+    }
 
-		if (configuration.getProxyPassword() != null && !configuration.getProxyPassword().isEmpty()) {
-			configuration.setProxyPassword(DefaultConfiguration.MASKED_PASSWORD);
-		}
-		if (configuration.getActiveDirectoryCredentials() != null && !configuration.getActiveDirectoryCredentials().isEmpty()) {
-			configuration.setActiveDirectoryCredentials(DefaultConfiguration.MASKED_PASSWORD);
-		}
+    private Map<String, Object> addMapAttributes() {
+        Map<String, Object> map = new HashMap<>();
+        DefaultConfiguration configuration = defaultConfigurationWithMaskedPasswords();
 
-		return configuration;
-	}
+        map.put("roleList", roleService.loadAll());
+        map.put("applicationCount", applicationService.getApplicationCount());
+        map.put("licenseCount", licenseService == null ? 0 : licenseService.getAppLimit());
+        map.put("licenseExpirationDate", licenseService == null ? new Date() : licenseService.getExpirationDate().getTime());
+        map.put("defaultConfiguration", configuration);
+        map.put("dashboardReports", reportService.loadByLocationType(ReportLocation.DASHBOARD));
+        map.put("applicationReports", reportService.loadByLocationType(ReportLocation.APPLICATION));
+        map.put("teamReports", reportService.loadByLocationType(ReportLocation.TEAM));
 
+        return map;
+    }
+
+    private DefaultConfiguration defaultConfigurationWithMaskedPasswords() {
+        DefaultConfiguration configuration = defaultConfigService.loadCurrentConfiguration();
+
+        if (configuration.getProxyPassword() != null && !configuration.getProxyPassword().isEmpty()) {
+            configuration.setProxyPassword(DefaultConfiguration.MASKED_PASSWORD);
+        }
+        if (configuration.getActiveDirectoryCredentials() != null && !configuration.getActiveDirectoryCredentials().isEmpty()) {
+            configuration.setActiveDirectoryCredentials(DefaultConfiguration.MASKED_PASSWORD);
+        }
+
+        return configuration;
+    }
 }
