@@ -348,7 +348,7 @@ public class ApplicationRestController extends TFRestController {
      *
      */
     @RequestMapping(headers="Accept=application/json", value="/{appId}/addUrl", method=RequestMethod.POST)
-    @JsonView
+    @JsonView(AllViews.RestViewApplication2_1.class)
     public Object setUrl(HttpServletRequest request,
                          @PathVariable("appId") int appId) throws IOException {
 
@@ -359,6 +359,7 @@ public class ApplicationRestController extends TFRestController {
             return failure(result);
         }
 
+        
         Application application = applicationService.loadApplication(appId);
 
         if (application == null) {
