@@ -1,6 +1,6 @@
-var myAppModule = angular.module('threadfix')
+var myAppModule = angular.module('threadfix');
 
-myAppModule.controller('ScanTableController', function ($scope, $window, $http, $log, $rootScope, tfEncoder) {
+myAppModule.controller('ScanTableController', function ($scope, $window, $http, $log, $rootScope, tfEncoder, reportExporter) {
 
     var currentUrl = "/organizations/" + $scope.$parent.teamId + "/applications/" + $scope.$parent.appId;
 
@@ -47,6 +47,28 @@ myAppModule.controller('ScanTableController', function ($scope, $window, $http, 
                     $scope.errorMessage = "Request to server failed. Got " + status + " response code.";
                 });
         }
+    };
+
+    $scope.downloadScan = function(scan) {
+
+        scan.downloading = true;
+
+        $http.post(tfEncoder.encode(currentUrl + '/scans/' + scan.id + '/download')).
+            success(function(data, status, headers, config) {
+                scan.downloading = false;
+
+                if (data.success == false) {
+                    $rootScope.$broadcast('downloadScanFail', data.message);
+                } else {
+                    reportExporter.exportScan(data, "application/octet-stream", scan.originalFileName);
+                }
+
+            }).
+            error(function(data, status, headers, config) {
+                $log.info("HTTP request for form objects failed.");
+                $scope.errorMessage = "Failed to retrieve uploaded scan file. HTTP status was " + status;
+                scan.downloading = false;
+            });
     };
 
     $scope.viewScan = function(scan) {

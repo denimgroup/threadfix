@@ -26,11 +26,13 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
+import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.service.ScanService;
@@ -60,11 +62,13 @@ public class UploadScanController {
     @Autowired
     private ScanTypeCalculationService scanTypeCalculationService;
     @Autowired
-    private ScanService                scanService;
+    private ScanService                 scanService;
     @Autowired
-    private ScanMergeService           scanMergeService;
+    private ScanMergeService            scanMergeService;
     @Autowired
-    private OrganizationService        organizationService;
+    private OrganizationService         organizationService;
+    @Autowired
+    private DefaultConfigService        defaultConfigService;
 
     @RequestMapping(value = "/organizations/{orgId}/applications/{appId}/upload/remote", method = RequestMethod.POST, produces = "text/plain")
     @JsonView(AllViews.TableRow.class)
@@ -75,9 +79,8 @@ public class UploadScanController {
         Object o = uploadScan(appId, orgId, request, file);
 
         ObjectWriter mapper = new CustomJacksonObjectMapper().writerWithView(AllViews.TableRow.class);
-        String s = mapper.writeValueAsString(o);
 
-        return s;
+        return mapper.writeValueAsString(o);
     }
 
     /**
@@ -110,7 +113,7 @@ public class UploadScanController {
             ScanCheckResultBean returnValue = scanService.checkFile(myChannelId, fileName);
 
             if (ScanImportStatus.SUCCESSFUL_SCAN == returnValue.getScanCheckResult()) {
-                Scan scan = scanMergeService.saveRemoteScanAndRun(myChannelId, fileName);
+                Scan scan = scanMergeService.saveRemoteScanAndRun(myChannelId, fileName, file.getOriginalFilename());
 
                 if (scan != null) {
                     Organization organization = organizationService.loadById(orgId);
@@ -122,16 +125,22 @@ public class UploadScanController {
                 return failure(returnValue.getScanCheckResult().toString());
             }
         } finally { // error recovery code
-            File diskFile = DiskUtils.getScratchFile(fileName);
 
-            if (diskFile.exists()) {
-                LOG.info("After scan upload, file is still present. Attempting to delete.");
-                boolean deletedSuccessfully = diskFile.delete();
+            DefaultConfiguration defaultConfig = defaultConfigService.loadCurrentConfiguration();
 
-                if (deletedSuccessfully) {
-                    LOG.info("Successfully deleted scan file.");
-                } else {
-                    LOG.error("Unable to delete file.");
+            if(!defaultConfig.fileUploadLocationExists()) {
+
+                File diskFile = DiskUtils.getScratchFile(fileName);
+
+                if (diskFile.exists()) {
+                    LOG.info("After scan upload, file is still present. Attempting to delete.");
+                    boolean deletedSuccessfully = diskFile.delete();
+
+                    if (deletedSuccessfully) {
+                        LOG.info("Successfully deleted scan file.");
+                    } else {
+                        LOG.error("Unable to delete file.");
+                    }
                 }
             }
         }

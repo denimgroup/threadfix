@@ -25,6 +25,8 @@
 package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.annotations.ReportLocation;
+import com.denimgroup.threadfix.views.AllViews;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Column;
@@ -53,7 +55,6 @@ public class Report extends BaseEntity {
     private String jsFilePath;
     private ReportLocation location;
 
-
     public Boolean getAvailable() {
         return available != null && available;
     }
@@ -72,6 +73,7 @@ public class Report extends BaseEntity {
 
     @Column(nullable = false)
     @Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
+    @JsonView(AllViews.FormInfo.class)
     public String getDisplayName() {
         return displayName;
     }
