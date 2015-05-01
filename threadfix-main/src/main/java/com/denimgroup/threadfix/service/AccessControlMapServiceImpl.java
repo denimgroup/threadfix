@@ -91,10 +91,13 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 					accessControlMapDao.retrieveTeamMapByUserTeamAndRole(
 							map.getUser().getId(), org.getId(), role.getId()) != null) {
 				return "That team / role combination already exists for this user.";
-			} else if (map.getGroup() != null && map.getGroup().getId() != null &&
-					accessControlMapDao.retrieveTeamMapByUserTeamAndRole(
-							map.getGroup().getId(), org.getId(), role.getId()) != null) {
-				return "That team / role combination already exists for this group.";
+			} else if (map.getGroup() != null && map.getGroup().getId() != null) {
+
+				AccessControlTeamMap dbMap = accessControlMapDao.retrieveTeamMapByGroupTeamAndRole(
+						map.getGroup().getId(), org.getId(), role.getId());
+				if (dbMap != null && dbMap.getId().equals(mapId)) {
+					return "That team / role combination already exists for this group.";
+				}
 			}
 		} else {
 			map.setRole(null);
@@ -312,6 +315,9 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 					deactivate(appMap);
 				}
 			}
+
+			map.setGroup(null);
+			map.setUser(null);
 			
 			store(map);
 		}
