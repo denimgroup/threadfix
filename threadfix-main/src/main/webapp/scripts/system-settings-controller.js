@@ -9,6 +9,19 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
         $http.get(url).
             success(function(data) {
 
+                function shouldDisable() {
+                    var returnValue = true;
+
+                    if ($scope.config) {
+                        returnValue = !($scope.config.activeDirectoryBase &&
+                        $scope.config.activeDirectoryUsername &&
+                        $scope.config.activeDirectoryCredentials &&
+                        $scope.config.activeDirectoryURL);
+                    }
+
+                    return returnValue;
+                }
+
                 if (data.success) {
                     $scope.config = data.object.defaultConfiguration;
                     $scope.roleList = data.object.roleList;
@@ -18,7 +31,7 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
                     $scope.dashboardReports = data.object.dashboardReports;
                     $scope.applicationReports = data.object.applicationReports;
                     $scope.teamReports = data.object.teamReports;
-                    $scope.successMessage = data.object.successMessage;
+                    $scope.shouldDisable = shouldDisable();
 
                     prevFileUploadLocation = $scope.config.fileUploadLocation;
 
@@ -37,7 +50,7 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
     });
 
     $scope.submit = function (valid) {
-        var url = tfEncoder.encode('/configuration/settings/');
+        var url = tfEncoder.encode('/configuration/settings');
 
         if (valid) {
             $scope.loading = true;
@@ -47,18 +60,26 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
                     $scope.loading = false;
 
                     if (data.success) {
-                        $scope.LDAPSuccessMessage = data.object;
+                        $scope.successMessage = "Configuration was saved successfully.";
+                        $scope.config = data.object;
                     } else {
-                        $scope.error = "Failure: " + data.message;
+                        $scope.errorMessage = "Failure: " + data.message;
+
+                        if (data.errorMap) {
+                            for (var index in data.errorMap) {
+                                if (data.errorMap.hasOwnProperty(index)) {
+                                    $scope.object[index + "_error"] = data.errorMap[index];
+                                }
+                            }
+                        }
                     }
                 }).
                 error(function(data, status) {
                     $scope.loading = false;
-                    $scope.error = "Failure. HTTP status was " + status;
+                    $scope.errorMessage = "Failure. HTTP status was " + status;
                 });
         }
     };
-
 
     $scope.shouldDeleteUploadedFiles = function(e, fileUploadLocation) {
 
@@ -66,19 +87,6 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
             $scope.deleteUploadedFiles = !!confirm("You've cleared the File Upload Location field. " +
             "Would you like to delete the files residing in that directory?");
         }
-    };
-
-    $scope.shouldDisable = function() {
-        var returnValue = true;
-
-        if ($scope.config) {
-            returnValue = !($scope.config.activeDirectoryBase &&
-            $scope.config.activeDirectoryUsername &&
-            $scope.config.activeDirectoryCredentials &&
-            $scope.config.activeDirectoryURL);
-        }
-
-        return returnValue;
     };
 
     $scope.ok = function (valid) {
@@ -103,5 +111,4 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
                 });
         }
     };
-
 });

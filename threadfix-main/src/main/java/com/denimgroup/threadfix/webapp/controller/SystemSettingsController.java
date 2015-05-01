@@ -9,7 +9,6 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.annotations.ReportLocation;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
-import com.denimgroup.threadfix.data.entities.Report;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
@@ -20,10 +19,12 @@ import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -58,9 +59,9 @@ public class SystemSettingsController {
 	public void setAllowedFields(WebDataBinder dataBinder) {
 
 		String[] reports = {
-				"dashboardTopLeft.id",
-				"dashboardTopRight.id", "dashboardBottomLeft.id", "dashboardBottomRight.id",
-				"applicationTopLeft.id", "applicationTopRight.id", "teamTopLeft.id", "teamTopRight.id",
+				"dashboardTopLeft",
+				"dashboardTopRight", "dashboardBottomLeft", "dashboardBottomRight",
+				"applicationTopLeft", "applicationTopRight", "teamTopLeft", "teamTopRight",
                 "fileUploadLocation"
 		};
 
@@ -82,7 +83,8 @@ public class SystemSettingsController {
 	}
 
     @RequestMapping(method = RequestMethod.GET)
-    public String setupForm() {
+    public String setupForm(Model model) {
+        model.addAttribute("defaultConfiguration", defaultConfigService.loadCurrentConfiguration());
         return "config/systemSettings";
     }
 
@@ -106,16 +108,21 @@ public class SystemSettingsController {
 
     @JsonView(AllViews.FormInfo.class)
     @RequestMapping(method = RequestMethod.POST)
-    public @ResponseBody Object processForm(@ModelAttribute DefaultConfiguration config, BindingResult bindingResult) {
-        Map<String, Object> map = addMapAttributes();
+    public @ResponseBody Object processSubmit(@ModelAttribute DefaultConfiguration defaultConfiguration,
+                                              BindingResult bindingResult) {
 
-        if (config.getSessionTimeout() != null && config.getSessionTimeout() > 30) {
+        if (defaultConfiguration.getSessionTimeout() != null && defaultConfiguration.getSessionTimeout() > 30) {
             bindingResult.reject("sessionTimeout", null, "30 is the maximum.");
         }
 
-        List<String> errors = addReportErrors(config);
-        map.put("errors", errors);
-        map.put("showErrors", errors.size() > 0);
+        if(defaultConfiguration.fileUploadLocationExists()) {
+            File directory = new File(defaultConfiguration.getFileUploadLocation());
+            if (!directory.exists()){
+                bindingResult.rejectValue("fileUploadLocation", "Directory does not exist.");
+            }
+        }
+
+        List<String> errors = addReportErrors(defaultConfiguration);
 
         if (bindingResult.hasErrors() || errors.size() > 0) {
 
@@ -124,13 +131,11 @@ public class SystemSettingsController {
                 bindingResult.reject("proxyPort", new Object[]{}, "Please enter a valid port number.");
             }
 
-            return FormRestResponse.failure("Unable save System Settings. Try again.", bindingResult);
+            return FormRestResponse.failure("Unable save System Settings. Try again.", bindingResult, errors);
         } else {
-            defaultConfigService.saveConfiguration(config);
-            map.put("successMessage", "Configuration was saved successfully.");
-            return success(map);
+            defaultConfigService.saveConfiguration(defaultConfiguration);
+            return success(defaultConfiguration);
         }
-
     }
 
     private List<String> addReportErrors(DefaultConfiguration config) {

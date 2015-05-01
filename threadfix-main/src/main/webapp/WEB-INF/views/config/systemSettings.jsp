@@ -12,14 +12,8 @@
     <%@ include file="/WEB-INF/views/successMessage.jspf"%>
     <%@ include file="/WEB-INF/views/errorMessage.jspf"%>
 
-    <%--<div ng-show="showErrors" class="alert alert-error">--%>
-        <%--<button class="close" ng-click="showErrors = false" type="button">&times;</button>--%>
-        <%--<c:forEach items="${ errors }}" var="error">--%>
-            <%--<c:out value="${ error }}"/><br/>--%>
-        <%--</c:forEach>--%>
-    <%--</div>--%>
-	
-	<div ng-form="form" name="formEditUser">
+	<div ng-form="configForm" name="form">
+
         <security:authorize ifAnyGranted="ROLE_ENTERPRISE">
             <div class="panel panel-default">
                 <div id="defaultPermissionsPanel" class="panel-heading pointer" style="width:200px"
@@ -41,13 +35,13 @@
                                     <input type="checkbox" id="globalGroupEnabledCheckbox" name="globalGroupEnabled" ng-model="config.globalGroupEnabled"/>
                                 </td>
                                 <td class="inputValue">
-                                    <select id="roleSelect" ng-model="config.defaultRoleId" name="defaultRoleId" ng-disabled="!config.globalGroupEnabled">
+                                    <select id="roleSelect" ng-model="config.defaultRoleId" name="defaultRoleId" ng-disabled="!config.globalGroupEnabled" required>
                                         <option ng-repeat="role in roleList" value="{{ role.id }}">{{ role.displayName }}</option>
                                     </select>
                                 </td>
                                 <td style="border: 0 solid black; background-color: white; padding-left: 5px">
                                     <a class="btn" popover="When LDAP users log in, ThreadFix can assign them a default role. If no role is selected here, the user will be unable to access any data in ThreadFix. To configure per-team and per-application permissions for an LDAP user, create a ThreadFix user with the same username.">?</a>
-                                    <form:errors id="globalGroupEnabledErrors" path="globalGroupEnabled" cssClass="errors" />
+                                    <span id="globalGroupEnabledServerError" class="errors" ng-show="object.globalGroupEnabled_error"> {{ object.globalGroupEnabled_error }} </span>
                                 </td>
                             </tr>
                         </security:authorize>
@@ -87,7 +81,8 @@
                                        ng-model="config.activeDirectoryBase"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
-                                <form:errors path="activeDirectoryBase" cssClass="errors" />
+                                <span id="activeDirectoryBaseCharacterLimitError" class="errors" ng-show="form.activeDirectoryBase.$dirty && form.activeDirectoryBase.$error.maxlength">Over 255 characters limit!</span>
+                                <span id="activeDirectoryBaseServerError" class="errors" ng-show="object.activeDirectoryBase_error"> {{ object.activeDirectoryUsername_error }}</span>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
                                 <a class="btn" style="margin-bottom: 10px; " popover="If you only need to search a particular organizational unit (OU) simply preface the search base with the OU. For example, if you the only unit that requires access to ThreadFix is named 'tfusers', then preface the search base with OU=tfusers.">?</a>
@@ -106,7 +101,8 @@
                                        ng-model="config.activeDirectoryUsername"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
-                                <form:errors path="activeDirectoryUsername" cssClass="errors" />
+                                <span id="activeDirectoryUsernameCharacterLimitError" class="errors" ng-show="form.activeDirectoryUsername.$dirty && form.activeDirectoryUsername.$error.maxlength">Over 255 characters limit!</span>
+                                <span id="activeDirectoryUsernameServerError" class="errors" ng-show="object.activeDirectoryUsername_error"> {{ object.activeDirectoryUsername_error }}</span>
                             </td>
                         </tr>
                         <tr>
@@ -122,7 +118,8 @@
                                        ng-model="config.activeDirectoryCredentials"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
-                                <form:errors path="activeDirectoryCredentials" cssClass="errors" />
+                                <span id="activeDirectoryCredentialsCharacterLimitError" class="errors" ng-show="form.activeDirectoryCredentials.$dirty && form.activeDirectoryCredentials.$error.maxlength">Over 255 characters limit!</span>
+                                <span id="activeDirectoryCredentialsServerError" class="errors" ng-show="object.activeDirectoryCredentials_error"> {{ object.activeDirectoryCredentials_error }}</span>
                             </td>
                         </tr>
                         <tr>
@@ -138,13 +135,15 @@
                                        ng-model="config.activeDirectoryURL"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
-                                <form:errors path="activeDirectoryURL" cssClass="errors" />
+                                <span id="activeDirectoryURLCharacterLimitError" class="errors" ng-show="form.activeDirectoryURL.$dirty && form.activeDirectoryURL.$error.maxlength">Over 255 characters limit!</span>
+                                <span id="activeDirectoryURLServerError" class="errors" ng-show="object.activeDirectoryURL_error"> {{ object.activeDirectoryURL }}</span>
                             </td>
                         </tr>
                     </table>
-                    <a class="btn" id="checkLDAPSettings" ng-class="{ disabled : shouldDisable() }}" ng-click="ok(form.$valid)">
+
+                    <button id="checkLDAPSettings" ng-disabled="shouldDisable" class="btn" ng-click="ok(form.$valid)">
                         Check Connection
-                    </a>
+                    </button>
                 </div>
             </div>
 
@@ -171,7 +170,8 @@
                                        ng-model="config.proxyHost"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
-                                <form:errors path="activeDirectoryUsername" id="proxyHostErrors" cssClass="errors" />
+                                <span id="proxyHostCharacterLimitError" class="errors" ng-show="form.proxyHost.$dirty && form.proxyHost.$error.maxlength">Over 255 characters limit!</span>
+                                <span id="proxyHostServerError" class="errors" ng-show="object.proxyHost_error"> {{ object.proxyHost_error }}</span>
                             </td>
                         </tr>
                         <tr>
@@ -186,7 +186,8 @@
                                        ng-model="config.proxyPort"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
-                                <form:errors path="proxyPort" id="proxyPortErrors" cssClass="errors" />
+                                <span id="proxyPortServerError" class="errors" ng-show="object.proxyPort_error"> {{ object.proxyPort_error }}</span>
+                                <span id="proxyPortCharacterLimitError" class="errors" ng-show="form.proxyPort.$dirty && form.proxyPort.$error.maxlength">Over 255 characters limit!</span>
                             </td>
                         </tr>
                         <tr>
@@ -219,7 +220,8 @@
                                        placeholder="Use configured username"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
-                                <form:errors path="proxyUsername" id="proxyUsernameErrors" cssClass="errors" />
+                                <span id="proxyUsernameCharacterLimitError" class="errors" ng-show="form.proxyUsername.$dirty && form.proxyUsername.$error.maxlength">Over 255 characters limit!</span>
+                                <span id="proxyUsernameServerError" class="errors" ng-show="object.proxyUsername_error"> {{ object.proxyUsername_error }}</span>
                             </td>
                         </tr>
                         <tr>
@@ -246,7 +248,8 @@
                                        placeholder="Use configured password"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
-                                <form:errors path="proxyPassword" id="proxyPasswordErrors" cssClass="errors" />
+                                <span id="proxyPasswordCharacterLimitError" class="errors" ng-show="form.proxyPassword.$dirty && form.proxyPassword.$error.maxlength">Over 255 characters limit!</span>
+                                <span id="proxyPasswordServerError" class="errors" ng-show="object.proxyPassword_error"> {{ object.proxyPassword_error }}</span>
                             </td>
                         </tr>
                         <tr>
@@ -319,7 +322,9 @@
                                        ng-model="config.sessionTimeout"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
-                                <form:errors path="sessionTimeout" cssClass="errors" />
+                                <span id="sessionTimeoutNumberLimitError" class="errors" ng-show="form.sessionTimeout.$dirty && form.sessionTimeout.$error.max">Max value is 30 seconds.</span>
+                                <span id="sessionTimeoutValidNumberError" class="errors" ng-show="form.sessionTimeout.$dirty && form.sessionTimeout.$error.number">Not valid number!</span>
+                                <span id="sessionTimeoutServerError" class="errors" ng-show="object.sessionTimeout_error"> {{ object.sessionTimeout_error }}</span>
                             </td>
                         </tr>
                     </table>
@@ -360,7 +365,8 @@
                                         maxlength="1024" ng-model="config.fileUploadLocation"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
-                            <form:errors id="fileUploadLocationErrors" path="fileUploadLocation" cssClass="errors"/>
+                            <span id="fileUploadLocationCharacterLimitError" class="errors" ng-show="form.fileUploadLocation.$dirty && form.fileUploadLocation.$error.maxlength">Over 1024 characters limit!</span>
+                            <span id="fileUploadLocationServerError" class="errors" ng-show="object.fileUploadLocation_error"> {{ object.fileUploadLocation_error }}</span>
                         </td>
                     </tr>
                 </table>
@@ -487,8 +493,11 @@
             </div>
         </div>
 
-        <a class="btn btn-primary" id="updateDefaultsButton" ng-disabled="configForm.$invalid" ng-click="submit(configForm.$valid)">
-            Save Changes
-        </a>
+        <button id="submit"
+                ng-class="{ disabled : form.$invalid }"
+                class="btn btn-primary"
+                ng-mouseenter="form.$dirty = true"
+                ng-hide="loading"
+                ng-click="submit(form.$valid)">Save Changes</button>
 	</div>
 </body>
