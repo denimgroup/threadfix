@@ -1076,9 +1076,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public boolean isDefectTrackerAttached() {
-        if (driver.findElementById("defectTrackerName").isEnabled())
-            return true;
-        return false;
+        return driver.findElementById("defectTrackerName").isEnabled();
     }
 
     public boolean isActionButtonPresent() {

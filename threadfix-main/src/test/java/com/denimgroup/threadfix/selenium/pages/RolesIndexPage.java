@@ -27,9 +27,11 @@ package com.denimgroup.threadfix.selenium.pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class RolesIndexPage extends BasePage {
 
@@ -40,7 +42,13 @@ public class RolesIndexPage extends BasePage {
 	public RolesIndexPage clickDeleteButton(String roleName) {
 		clickEditLink(roleName);
 		sleep(2000);
-		driver.findElementById("deleteRoleLink").click();
+        List<WebElement> deleteButtons = driver.findElementsById("deleteRoleLink");
+        for (WebElement button : deleteButtons) {
+            if (button.isDisplayed()) {
+                button.click();
+                break;
+            }
+        }
 		handleAlert();
 		return new RolesIndexPage(driver);
 	}
@@ -145,6 +153,11 @@ public class RolesIndexPage extends BasePage {
 	}
 	
 	public boolean isNamePresent(String roleName){
-        return driver.findElementByXPath("//li[@id=\'roleList\']/a[text()=\'"+ roleName + "\']") != null;
+        try {
+            driver.findElementByXPath("//li[@id=\'roleList\']/a[text()=\'"+ roleName + "\']");
+        } catch (org.openqa.selenium.NoSuchElementException e) {
+            return false;
+        }
+        return true;
 	}
 }
