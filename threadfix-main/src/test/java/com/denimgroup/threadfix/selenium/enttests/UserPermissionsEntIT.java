@@ -43,15 +43,12 @@ public class UserPermissionsEntIT extends BaseDataTest{
     public void testBasicNavigation() {
         String userName = createRegularUser();
 
-        UserPermissionsPage userPermissionsPage = loginPage.defaultLogin()
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
-                .clickEditPermissions(userName);
+                .clickUserLink(userName);
 
-        assertTrue("Unable to navigate to users permissions page.", userPermissionsPage.isUserNamePresent(userName));
-
-        userPermissionsPage.clickAddPermissionsLink();
-
-        assertTrue("Add permissions modal is not present.", userPermissionsPage.isPermissionsModalPresent());
+        assertTrue("Team Role Configuration is not present.", userIndexPage.isTeamRoleConfigurationPresent());
+        assertTrue("Application role configuration is not present.", userIndexPage.isApplicationRoleConfigurationPresent());
     }
 
     @Test
@@ -63,16 +60,16 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
         DatabaseUtils.createUser(userName, role);
 
-        UserPermissionsPage userPermissionsPage = loginPage.defaultLogin()
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
-                .clickEditPermissions(userName)
-                .clickAddPermissionsLink()
+                .clickUserLink(userName)
+                .clickAddTeamRole()
                 .setTeam(teamName)
                 .setTeamRole(role)
                 .clickModalSubmit();
 
         assertTrue("Permissions were not added properly.",
-                userPermissionsPage.isPermissionPresent(teamName, "all", role));
+                userIndexPage.isTeamRolePresent(teamName, role));
     }
 
     @Test

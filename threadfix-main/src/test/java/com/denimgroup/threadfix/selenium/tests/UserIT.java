@@ -135,7 +135,7 @@ public class UserIT extends BaseDataTest {
         String password = "testDeleteUser";
 
         userIndexPage.createUser(userName,"",password)
-                .clickEditLink(userName)
+                .clickUserLink(userName)
                 .clickDelete(userName);
 
         assertTrue("Deletion Message not displayed.", userIndexPage.isSuccessDisplayed(userName));
@@ -309,14 +309,14 @@ public class UserIT extends BaseDataTest {
 
 		// Test submission with no changes
 		userIndexPage = userIndexPage.clickManageUsersLink()
-                .clickEditLink(baseUserName)
+                .clickUserLink(baseUserName)
                 .clickUpdateUserBtn();
 		assertTrue("User name was not present in the table.",userIndexPage.isUserNamePresent(baseUserName));
 
         userIndexPage = userIndexPage.clickManageUsersLink();
 
 		// Test Empty
-		userIndexPage = userIndexPage.clickEditLink(baseUserName)
+		userIndexPage = userIndexPage.clickUserLink(baseUserName)
                 .setName("")
                 .setPassword("")
                 .setConfirmPassword("")
@@ -390,7 +390,7 @@ public class UserIT extends BaseDataTest {
         String password = getName();
 
         userIndexPage.createUser(userName,displayName,password)
-                .clickEditLink(userName)
+                .clickUserLink(userName)
                 .toggleGlobalAccess()
                 .getGlobalAccessRole("Administrator")
                 .clickUpdateUserBtn();

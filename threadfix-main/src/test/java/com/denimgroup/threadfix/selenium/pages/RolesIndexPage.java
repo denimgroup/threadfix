@@ -25,13 +25,12 @@
 package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class RolesIndexPage extends BasePage {
 
@@ -155,7 +154,7 @@ public class RolesIndexPage extends BasePage {
 	public boolean isNamePresent(String roleName){
         try {
             driver.findElementByXPath("//li[@id=\'roleList\']/a[text()=\'"+ roleName + "\']");
-        } catch (org.openqa.selenium.NoSuchElementException e) {
+        } catch (NoSuchElementException e) {
             return false;
         }
         return true;

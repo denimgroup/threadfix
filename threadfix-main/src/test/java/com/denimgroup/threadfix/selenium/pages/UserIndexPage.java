@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -37,7 +38,7 @@ public class UserIndexPage extends BasePage {
     /*------------------------------------ Action Methods ------------------------------------*/
 
     public UserIndexPage clickDeleteButton(String roleName) {
-		clickEditLink(roleName);
+		clickUserLink(roleName);
 		sleep(500);
 		driver.findElementById("delete" + (roleName)).click();
 		handleAlert();
@@ -50,6 +51,7 @@ public class UserIndexPage extends BasePage {
         return new UserIndexPage(driver);
     }
 
+    //TODO: Delete this method after updating user tests.
 	public UserPermissionsPage clickEditPermissions(String name){
 		driver.findElementById("editPermissions" + name).click();
 		//waitForElement(driver.findElementById("addPermissionButton"));
@@ -147,13 +149,11 @@ public class UserIndexPage extends BasePage {
         return new UserIndexPage(driver);
 	}
 
-	public UserIndexPage clickEditLink(String userName) {
-        waitForElement(driver.findElementById("editUserModal"+userName));
-		driver.findElementById("editUserModal"+userName).click();
-		sleep(1000);
-        waitForElement(driver.findElementById("myModalLabel"));
-		return new UserIndexPage(driver);
-	}
+    public UserIndexPage clickUserLink(String userName) {
+        driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']").click();
+        waitForElement(driver.findElementById("submit"));
+        return new UserIndexPage(driver);
+    }
 	
 	public String getNameError(){
         String returnval;
@@ -199,13 +199,46 @@ public class UserIndexPage extends BasePage {
     }
 
     public UserIndexPage editUser(String user, String newName, String disp, String pass) {
-        clickEditLink(user);
+        clickUserLink(user);
         setName(newName);
         setDisplayName(disp);
         setPassword(pass);
         setConfirmPassword(pass);
         clickUpdateUserBtn();
         return new UserIndexPage(driver);
+    }
+
+    public UserIndexPage clickAddTeamRole() {
+        driver.findElementById("addPermissionButton").click();
+        return new UserIndexPage(driver);
+    }
+
+    public UserIndexPage clickAddApplicationRole() {
+        driver.findElementById("addApplicationRoleButton").click();
+        return new UserIndexPage(driver);
+    }
+
+    public UserIndexPage setTeam(String team) {
+        try {
+            new Select(driver.findElementById("orgSelect")).selectByVisibleText(team);
+        } catch (NoSuchElementException e) {
+            driver.findElementByLinkText("Close").click();
+            this.refreshPage();
+            sleep(2000);
+            this.clickAddTeamRole();
+            this.setTeamNoCatch(team);
+        }
+        return this;
+    }
+
+    public UserIndexPage setTeamNoCatch(String teamName) {
+        new Select(driver.findElementById("orgSelect")).selectByVisibleText(teamName);
+        return this;
+    }
+
+    public UserIndexPage setTeamRole(String role) {
+        new Select(driver.findElementById("roleSelectTeam")).selectByVisibleText(role);
+        return this;
     }
 
     /*----------------------------------- Boolean Methods -----------------------------------*/
@@ -246,5 +279,50 @@ public class UserIndexPage extends BasePage {
 
     public boolean isSaveChangesButtonClickable(String name) {
         return isClickable("submit");
+    }
+
+    public boolean isTeamRoleConfigurationPresent() {
+        return driver.findElementById("addPermissionButton").isDisplayed();
+    }
+
+    public boolean isApplicationRoleConfigurationPresent() {
+        return driver.findElementById("addApplicationRoleButton").isDisplayed();
+    }
+
+    public boolean isTeamRolePresent(String teamName, String role) {
+        WebElement cell;
+        try {
+            cell = driver.findElementByXPath("//td[@id=\'teamName" + teamName + "\']/following-sibling::td");
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+        return cell.getText() == role;
+    }
+
+    public boolean isApplicationRolePresent(String teamName, String appName, String role) {
+        try {
+            if (!driver.findElementById("teamName" + teamName + appName + role).getText().contains(teamName)) {
+                return false;
+            }
+
+            if (appName.equals("all")) {
+                if (!driver.findElementById("applicationName" + teamName + appName + role).getText().contains("All")) {
+                    return false;
+                }
+            } else {
+                if (!driver.findElementById("applicationName" + teamName + appName + role).getText().contains(appName)) {
+                    return false;
+                }
+            }
+
+            if (!driver.findElementById("roleName" + teamName + appName + role).getText().contains(role)) {
+                return false;
+            }
+        } catch (NoSuchElementException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+
+        return true;
     }
 }
