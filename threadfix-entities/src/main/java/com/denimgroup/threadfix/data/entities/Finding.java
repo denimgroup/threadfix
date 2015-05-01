@@ -123,6 +123,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	private boolean isStatic;
 	private boolean isFirstFindingForVuln;
 	private boolean isMarkedFalsePositive = false;
+	private Boolean foundHAMEndpoint = false;
 
 	private User user;
 
@@ -428,6 +429,15 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	public void setMarkedFalsePositive(boolean isMarkedFalsePositive) {
 		this.isMarkedFalsePositive = isMarkedFalsePositive;
+	}
+
+	@Column
+	public Boolean getFoundHAMEndpoint() {
+		return foundHAMEndpoint;
+	}
+
+	public void setFoundHAMEndpoint(Boolean foundHAMEndpoint) {
+		this.foundHAMEndpoint = foundHAMEndpoint;
 	}
 
 	@OneToOne(cascade = CascadeType.ALL)
