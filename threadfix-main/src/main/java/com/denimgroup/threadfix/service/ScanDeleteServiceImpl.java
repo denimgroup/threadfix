@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.service;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -63,6 +64,8 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 	private DefectDao defectDao;
 	@Autowired
 	private EndpointPermissionService endpointPermissionService;
+    @Autowired
+    private DefaultConfigService defaultConfigService;
 	
 	/**
 	 * Deleting a scan requires a lot of code to check and make sure that all mappings
@@ -172,7 +175,22 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 		correctScanStatistics(appScanList, scan);
 		
 		scanDao.deleteFindingsAndScan(scan);
-		
+
+        // If file upload location exists and file associated with scan exists, delete file
+        DefaultConfiguration defaultConfiguration = defaultConfigService.loadCurrentConfiguration();
+
+        if (defaultConfiguration.fileUploadLocationExists()) {
+            String filePath = defaultConfiguration.getFullFilePath(scan);
+            File file = new File(filePath);
+            if (file.exists() && !file.delete()) {
+                log.warn("Something went wrong trying to delete the file.");
+
+                file.deleteOnExit();
+            } else {
+                log.info("Deleted file at location: " + filePath);
+            }
+        }
+
 		log.info("The scan deletion has finished.");
 	}
 	
