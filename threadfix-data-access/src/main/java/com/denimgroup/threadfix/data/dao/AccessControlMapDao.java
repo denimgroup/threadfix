@@ -69,4 +69,9 @@ public interface AccessControlMapDao {
 	
 	void saveOrUpdate(AccessControlApplicationMap map);
 
+	AccessControlTeamMap retrieveTeamMapByGroupTeamAndRole(int groupId,
+														   int organizationId, int roleId);
+
+	AccessControlApplicationMap retrieveAppMapByGroupAppAndRole(int groupId,
+																int applicationId, int roleId);
 }

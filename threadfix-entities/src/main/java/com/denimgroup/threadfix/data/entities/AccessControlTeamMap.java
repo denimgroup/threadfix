@@ -55,7 +55,6 @@ public class AccessControlTeamMap extends AuditableEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "groupId", nullable = true)
-	@JsonView(Object.class)
 	public Group getGroup() {
 		return group;
 	}

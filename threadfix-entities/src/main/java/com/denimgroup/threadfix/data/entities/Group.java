@@ -34,7 +34,7 @@ import java.util.List;
  * Created by mcollins on 4/29/15.
  */
 @Entity
-@Table(name = "Groups")
+@Table(name = "Groups") // Group is a reserved keyword :(
 public class Group extends AuditableEntity {
 
     private List<User> users;
@@ -56,7 +56,7 @@ public class Group extends AuditableEntity {
     }
 
     @OneToMany(mappedBy = "group")
-    @JsonIgnore
+    @JsonView(AllViews.TableRow.class)
     public List<AccessControlTeamMap> getAccessControlTeamMaps() {
         return accessControlTeamMaps;
     }

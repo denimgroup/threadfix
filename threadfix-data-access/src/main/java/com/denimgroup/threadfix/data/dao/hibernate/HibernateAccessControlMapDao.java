@@ -24,17 +24,17 @@
 
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.AccessControlMapDao;
+import com.denimgroup.threadfix.data.entities.AccessControlApplicationMap;
+import com.denimgroup.threadfix.data.entities.AccessControlTeamMap;
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.denimgroup.threadfix.data.dao.AccessControlMapDao;
-import com.denimgroup.threadfix.data.entities.AccessControlApplicationMap;
-import com.denimgroup.threadfix.data.entities.AccessControlTeamMap;
+import java.util.List;
 
 @Repository
 public class HibernateAccessControlMapDao implements AccessControlMapDao {
@@ -98,31 +98,58 @@ public class HibernateAccessControlMapDao implements AccessControlMapDao {
 	@Override
 	public AccessControlTeamMap retrieveTeamMapByUserTeamAndRole(int userId,
 			int organizationId, int roleId) {
-		return (AccessControlTeamMap) sessionFactory.getCurrentSession()
-				 .createCriteria(AccessControlTeamMap.class)
+		return (AccessControlTeamMap)
+				getLookupCriteriaBase(AccessControlTeamMap.class, roleId)
 				 .createAlias("organization", "orgAlias")
-				 .createAlias("role", "roleAlias")
 				 .createAlias("user", "userAlias")
 				 .add(Restrictions.eq("userAlias.id",userId))
-				 .add(Restrictions.eq("roleAlias.id",roleId))
 				 .add(Restrictions.eq("orgAlias.id",organizationId))
-				 .add(Restrictions.eq("active",true))
 				 .uniqueResult();
 	}
 
 	@Override
 	public AccessControlApplicationMap retrieveAppMapByUserAppAndRole(int userId,
 			int applicationId, int roleId) {
-		return (AccessControlApplicationMap) sessionFactory.getCurrentSession()
-				 .createCriteria(AccessControlApplicationMap.class)
+		return (AccessControlApplicationMap)
+				getLookupCriteriaBase(AccessControlApplicationMap.class, roleId)
 				 .createAlias("application", "appAlias")
-				 .createAlias("role", "roleAlias")
 				 .createAlias("accessControlTeamMap", "parentMap")
 				 .createAlias("parentMap.user", "userAlias")
 				 .add(Restrictions.eq("userAlias.id",userId))
-				 .add(Restrictions.eq("roleAlias.id",roleId))
 				 .add(Restrictions.eq("appAlias.id",applicationId))
-				 .add(Restrictions.eq("active",true))
 				 .uniqueResult();
+	}
+
+	@Override
+	public AccessControlTeamMap retrieveTeamMapByGroupTeamAndRole(int groupId,
+																  int organizationId, int roleId) {
+		return (AccessControlTeamMap)
+				getLookupCriteriaBase(AccessControlTeamMap.class, roleId)
+				 .createAlias("group", "groupAlias")
+				 .createAlias("organization", "orgAlias")
+				 .add(Restrictions.eq("groupAlias.id", groupId))
+				 .add(Restrictions.eq("orgAlias.id",organizationId))
+				 .uniqueResult();
+	}
+
+	@Override
+	public AccessControlApplicationMap retrieveAppMapByGroupAppAndRole(int groupId,
+																	   int applicationId, int roleId) {
+		return (AccessControlApplicationMap)
+				getLookupCriteriaBase(AccessControlApplicationMap.class, roleId)
+				 .createAlias("application", "appAlias")
+				 .createAlias("accessControlTeamMap", "parentMap")
+				 .createAlias("parentMap.group", "groupAlias")
+				 .add(Restrictions.eq("groupAlias.id",groupId))
+				 .add(Restrictions.eq("appAlias.id",applicationId))
+				 .uniqueResult();
+	}
+
+	private Criteria getLookupCriteriaBase(Class<?> targetClass, Integer roleId) {
+		return sessionFactory.getCurrentSession()
+				.createCriteria(targetClass)
+				.createAlias("role", "roleAlias")
+				.add(Restrictions.eq("roleAlias.id",roleId))
+				.add(Restrictions.eq("active",true));
 	}
 }

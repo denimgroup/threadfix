@@ -4,7 +4,7 @@ var myAppModule = angular.module('threadfix')
 myAppModule.value('deleteUrl', null);
 
 
-myAppModule.controller('UserPageController', function ($scope, $modal, $http, $log, tfEncoder) {
+myAppModule.controller('UserPageController', function ($scope, $modal, $http, $log, $rootScope, tfEncoder) {
 
     ////////////////////////////////////////////////////////////////////////////////
     //             Basic Page Functionality + $on(rootScopeInitialized)
@@ -35,6 +35,9 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                         $scope.teams.forEach(function(team) {
                             team.applications.sort(nameCompare);
                         });
+
+                        $rootScope.$broadcast("teams", $scope.teams);
+                        $rootScope.$broadcast("roles", $scope.roles);
 
                         // allow undefined
                         callBack && callBack();
