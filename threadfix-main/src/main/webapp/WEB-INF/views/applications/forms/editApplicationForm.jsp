@@ -114,6 +114,9 @@
                     <input type="radio" name="repositoryType" ng-model="object.repositoryType" value="GIT"> Git
                     <input type="radio" name="repositoryType" ng-model="object.repositoryType" value="SVN"> SVN
                 </td>
+                <td>
+                    <span id="repositoryTypeServerError" class="errors" ng-show="object.repositoryType_error"> {{ object.repositoryType_error }}</span>
+                </td>
             </tr>
             <tr ng-show="sourceCodeDisplay">
                 <td class="right-align">Source Code URL</td>

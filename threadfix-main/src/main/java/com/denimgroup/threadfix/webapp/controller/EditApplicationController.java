@@ -140,6 +140,11 @@ public class EditApplicationController {
 			result.rejectValue("name", null, null, "This field cannot be blank");
 		}
 
+        if (application.getRepositoryUrl() != null && !application.getRepositoryUrl().isEmpty() &&
+                application.getRepositoryType() == null) {
+            result.rejectValue("repositoryType", null, null, "Choose either Git or SVN");
+        }
+
 		if (result.hasErrors()) {
             PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_DEFECT_TRACKERS,
 					Permission.CAN_MANAGE_WAFS);
