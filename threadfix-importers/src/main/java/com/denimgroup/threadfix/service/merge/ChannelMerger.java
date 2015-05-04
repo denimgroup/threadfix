@@ -200,6 +200,12 @@ public class ChannelMerger {
         Finding oldFinding = oldNativeIdFindingHash.get(nativeId),
                 newFinding = scanHash.get(nativeId);
 
+        // Set Found HAM Endpoint flag
+        if (newFinding.getFoundHAMEndpoint()) {
+            oldFinding.setCalculatedFilePath(newFinding.getCalculatedFilePath());
+            oldFinding.setFoundHAMEndpoint(newFinding.getFoundHAMEndpoint());
+            oldFinding.getVulnerability().setFoundHAMEndpoint(newFinding.getFoundHAMEndpoint());
+        }
         // If the finding has been newly marked a false positive, update
         // the existing finding / vuln
         if (newFinding.isMarkedFalsePositive()

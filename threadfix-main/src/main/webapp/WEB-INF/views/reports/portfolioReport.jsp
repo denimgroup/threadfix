@@ -10,23 +10,23 @@
 		</thead>
 		<tbody>
 		<tr>
-			<td>Team:</td>
+			<td>Team</td>
 			<td class="inputValue">{{title.teams}}</td>
 		</tr>
 		<tr>
-			<td>Application:</td>
+			<td>Application</td>
 			<td class="inputValue">{{title.apps}}</td>
 		</tr>
 		<tr>
-			<td>Tag:</td>
+			<td>Tag</td>
 			<td class="inputValue">{{title.tags}}</td>
 		</tr>
 		<tr>
-			<td>Number of Applications:</td>
+			<td>Number of Applications</td>
 			<td class="inputValue">{{filterPortfolioApps.length}}</td>
 		</tr>
 		<tr>
-			<td>Number of Scans:</td>
+			<td>Number of Scans</td>
 			<td class="inputValue">{{noOfScans}}</td>
 		</tr>
 		</tbody>

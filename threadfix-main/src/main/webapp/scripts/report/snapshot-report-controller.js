@@ -1,7 +1,7 @@
 var module = angular.module('threadfix');
 
 module.controller('SnapshotReportController', function($scope, $rootScope, $window, $http, tfEncoder, vulnSearchParameterService,
-                                                       vulnTreeTransformer, reportUtilities, reportExporter) {
+                                                       reportUtilities, reportExporter) {
 
     $scope.parameters = {};
     $scope.noData = false;
@@ -13,6 +13,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     $scope.OWASP_Report_Id = 11;
     $scope.Portfolio_Report_Id = 12;
     $scope.DISA_STIG_Report_Id = 13;
+    $scope.Scan_Comparison_Summary_Id = 14;
 
     $scope.snapshotOptions = [
         { name: "Point in Time", id: $scope.PIT_Report_Id },
@@ -20,7 +21,8 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         { name: "Most Vulnerable Applications", id: $scope.MVA_Report_Id },
         { name: "OWASP Top 10", id: $scope.OWASP_Report_Id },
         { name: "Portfolio", id: $scope.Portfolio_Report_Id },
-        { name: "DISA STIG", id: $scope.DISA_STIG_Report_Id }
+        { name: "DISA STIG", id: $scope.DISA_STIG_Report_Id },
+        { name: "Scan Comparison Summary", id: $scope.Scan_Comparison_Summary_Id }
     ];
 
     $scope.graphIdMap = {
@@ -35,6 +37,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     $scope.htmlElementIdMap[$scope.PBV_Report_Id] = "progressVulnsDiv";
     $scope.htmlElementIdMap[$scope.Portfolio_Report_Id] = "portfolioDiv";
     $scope.htmlElementIdMap[$scope.DISA_STIG_Report_Id] = "pointInTimeTablePdf";
+    $scope.htmlElementIdMap[$scope.Scan_Comparison_Summary_Id] = "scanComparisonDiv";
 
     $scope.titleMap = {};
     $scope.titleMap[$scope.PIT_Report_Id] = "Point_In_Time";
@@ -43,6 +46,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     $scope.titleMap[$scope.MVA_Report_Id] = "Most_Vulnerable_Applications";
     $scope.titleMap[$scope.Portfolio_Report_Id] = "Portfolio";
     $scope.titleMap[$scope.DISA_STIG_Report_Id] = "DISA STIG";
+    $scope.titleMap[$scope.Scan_Comparison_Summary_Id] = "Scan_Comparison_Summary";
 
 
     $scope.OWASP_TOP10 = [
@@ -441,6 +445,9 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             processOWASPData();
         } else if ($scope.reportId === $scope.DISA_STIG_Report_Id) {
             processDisaStigData();
+        } else if ($scope.reportId === $scope.Scan_Comparison_Summary_Id) {
+            $scope.filterVulns = filterByTag(filterByTeamAndApp($scope.allComparisonVulns));
+            processScanComparisonData($scope.filterVulns);
         }
     });
 
@@ -467,6 +474,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             $scope.parameters.endDate = undefined;
         }
 
+        // Progress By Vulnerability report
         if ($scope.reportId === $scope.PBV_Report_Id) {
             if (!$scope.allCWEvulns) {
                 $scope.allCWEvulns = $scope.allVulns.filter(function (vuln) {
@@ -488,7 +496,9 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
                 filterPBVBySeverity($scope.filterVulns);
                 processPBVData($scope.filterVulns);
             }
-        } else if ($scope.reportId === $scope.PIT_Report_Id) {
+        }
+        // Point In Time report
+        else if ($scope.reportId === $scope.PIT_Report_Id) {
 
             if (!$scope.allPointInTimeVulns) {
                 $scope.noData = true;
@@ -498,15 +508,27 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
                 processPITData();
                 filterPITBySeverity();
             }
-        } else if ($scope.reportId === $scope.MVA_Report_Id) {
+        }
+        // Most Vulnerable Applications report
+        else if ($scope.reportId === $scope.MVA_Report_Id) {
             processMVAData();
-        } else if ($scope.reportId === $scope.OWASP_Report_Id) {
+        }
+        // OWASP Top 10 report
+        else if ($scope.reportId === $scope.OWASP_Report_Id) {
             processOWASPData();
-        }  else if ($scope.reportId === $scope.DISA_STIG_Report_Id) {
+        }
+        // Disa Stig report
+        else if ($scope.reportId === $scope.DISA_STIG_Report_Id) {
             processDisaStigData();
-        } else if ($scope.reportId === $scope.Portfolio_Report_Id) {
+        }
+        // Portfolio report
+        else if ($scope.reportId === $scope.Portfolio_Report_Id) {
             $scope.filterPortfolioApps = filterByTag(filterByTeamAndApp($scope.allPortfolioApps));
             processPortfolioData();
+        }
+        // Scan Comparison (including HAM Effectiveness) report
+        else if ($scope.reportId === $scope.Scan_Comparison_Summary_Id) {
+            loadScannerComparison();
         }
     };
 
@@ -574,37 +596,33 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     }
 
     var refresh = function(){
+        reportUtilities.createTeamAppNames($scope);
+
         if ($scope.reportId === $scope.PIT_Report_Id) {
             $scope.filterVulns = filterByTag(filterByTeamAndApp($scope.allPointInTimeVulns));
             updateTree();
+            processPITData();
+            filterPITBySeverity();
         } else if ($scope.reportId === $scope.PBV_Report_Id) {
             $scope.filterVulns = filterByTag(filterByTeamAndApp($scope.allCWEvulns));
+            filterPBVBySeverity($scope.filterVulns);
+            processPBVData($scope.filterVulns);
         } else if ($scope.reportId === $scope.MVA_Report_Id) {
             processMVAData();
-            reportUtilities.createTeamAppNames($scope);
         } else if ($scope.reportId === $scope.OWASP_Report_Id) {
             processOWASPData();
         } else if ($scope.reportId === $scope.Portfolio_Report_Id) {
             $scope.filterPortfolioApps = filterByTag(filterByTeamAndApp($scope.allPortfolioApps));
+            processPortfolioData();
         } else if ($scope.reportId === $scope.DISA_STIG_Report_Id) {
             processDisaStigData();
+        } else if ($scope.reportId === $scope.Scan_Comparison_Summary_Id) {
+            $scope.filterVulns = filterByTag(filterByTeamAndApp($scope.allComparisonVulns));
+            processScanComparisonData($scope.filterVulns);
         }
 
         $scope.noData = $scope.filterVulns.length === 0;
-        updateDisplayData();
-    };
 
-    var updateDisplayData = function(){
-        reportUtilities.createTeamAppNames($scope);
-        if ($scope.reportId === $scope.PIT_Report_Id) {
-            processPITData();
-            filterPITBySeverity();
-        } else if ($scope.reportId === $scope.PBV_Report_Id) {
-            filterPBVBySeverity($scope.filterVulns);
-            processPBVData($scope.filterVulns);
-        }  else if ($scope.reportId === $scope.Portfolio_Report_Id) {
-            processPortfolioData();
-        }
     };
 
     var processPITData = function() {
@@ -831,9 +849,6 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
     };
 
-    var appCriticalityMap = {"Critical" : 0, "High" : 1, "Medium" : 2, "Low" : 3};
-    var appMonthsMap = {"Criticality": 0, "1 Month" : 1, "2 Months" : 2, "3 Months" : 3, "6 Months" : 4, "9 Months": 5, "12 Months" : 6, "12+ Months" : 7, "Never": 8, "Total" : 9};
-
     var processPortfolioData = function() {
         var now = new Date(), latestScanTime, temp, monthsOld, index;
         if (!$scope.filterPortfolioApps) return;
@@ -950,6 +965,75 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         })
     };
 
+    var loadScannerComparison = function(){
+        if (!$scope.allComparisonVulns) {
+            $scope.allComparisonVulns = $scope.allVulns.filter(function (vuln) {
+                if (!vuln || (!vuln.isFalsePositive && !vuln.hidden && !vuln.active))
+                    return false;
+                else
+                    return true;
+            });
+
+            if (!$scope.allComparisonVulns) {
+                $scope.noData = true;
+            } else {
+                $scope.filterVulns = filterByTag(filterByTeamAndApp($scope.allComparisonVulns));
+                filterPBVBySeverity($scope.filterVulns);
+                processScanComparisonData($scope.filterVulns);
+            }
+        } else {
+            $scope.filterVulns = filterByTag(filterByTeamAndApp($scope.allComparisonVulns));
+            processScanComparisonData($scope.filterVulns);
+        }
+    };
+
+    var processScanComparisonData = function(allScanComparisonvulns) {
+        $scope.scannerComparisonData = [];
+        $scope.totalVuln = 0;
+        var scannerFPCountMap = {}, scannerVulnCountMap = {}, scannerHAMCountMap = {};
+
+        filterPBVBySeverity(allScanComparisonvulns);
+
+        $scope.filterVulns.forEach(function(vuln) {
+            if (!vuln.isFalsePositive)
+                $scope.totalVuln++;
+            vuln.channelNames.unique().forEach(function(channel) {
+                if (!scannerVulnCountMap[channel]) {
+                    scannerFPCountMap[channel] = 0;
+                    scannerVulnCountMap[channel] = 0;
+                    scannerHAMCountMap[channel] = 0;
+                }
+                if (vuln.isFalsePositive)
+                    scannerFPCountMap[channel] = scannerFPCountMap[channel] + 1;
+                else {
+                    scannerVulnCountMap[channel] = scannerVulnCountMap[channel] + 1;
+                    if (vuln.foundHAMEndpoint)
+                        scannerHAMCountMap[channel] = scannerHAMCountMap[channel] + 1;
+                }
+            });
+        });
+
+        var allChannels = Object.keys(scannerVulnCountMap);
+        allChannels.sort(function(c1, c2){
+            return scannerVulnCountMap[c2] - scannerVulnCountMap[c1];
+        });
+
+        allChannels.forEach(function(channel){
+            var channelEntry = {
+                channnelName: channel,
+                foundCount: scannerVulnCountMap[channel],
+                foundPercent: getPercent(scannerVulnCountMap[channel]/$scope.totalVuln),
+                fpCount: scannerFPCountMap[channel],
+                fpPercent: getPercent(scannerFPCountMap[channel]/scannerVulnCountMap[channel]),
+                HAMCount: scannerHAMCountMap[channel],
+                HAMPercent: getPercent(scannerHAMCountMap[channel]/$scope.totalVuln)
+            };
+            $scope.scannerComparisonData.push(channelEntry);
+        });
+
+    };
+
+
     var getTotalVulns = function (app){
         return app.Critical + app.High + app.Medium + app.Low + app.Info;
     };
@@ -960,6 +1044,16 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
     var beginsWith = function(str, prefix) {
         return str.indexOf(prefix) == 0;
+    };
+
+    Array.prototype.unique = function() {
+        var arr = [];
+        for(var i = 0; i < this.length; i++) {
+            if(arr.indexOf(this[i]) === -1) {
+                arr.push(this[i]);
+            }
+        }
+        return arr;
     };
 
     $scope.exportPNG = function(isPDF){
@@ -1024,5 +1118,5 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         });
         return csvArray.join("\n");
     };
-
+    var appCriticalityMap = {"Critical" : 0, "High" : 1, "Medium" : 2, "Low" : 3};
 });
