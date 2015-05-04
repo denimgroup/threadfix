@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.service.repository;
 import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.GitService;
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.*;
@@ -34,8 +35,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.errors.EncryptionException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -45,6 +45,8 @@ import java.io.IOException;
 public class GitServiceImpl implements GitService {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(GitServiceImpl.class);
+
+    @Autowired private ApplicationService applicationService;
 
     @Override
     public boolean testGitConfiguration(Application application) throws GitAPIException {
@@ -82,7 +84,6 @@ public class GitServiceImpl implements GitService {
 
         return null;
     }
-
 
     // Cursory testing indicates that this works.
     @Override
@@ -161,24 +162,11 @@ public class GitServiceImpl implements GitService {
     private UsernamePasswordCredentialsProvider getApplicationCredentials(Application application) {
         if (application.getRepositoryEncryptedUserName() != null
                 && application.getRepositoryEncryptedPassword() != null) {
-            decryptRepositoryCredentials(application);
+            applicationService.decryptRepositoryCredentials(application);
             return new UsernamePasswordCredentialsProvider(application.getRepositoryUserName(),
                     application.getRepositoryPassword());
         }
         return null;
-    }
-
-    private static Application decryptRepositoryCredentials(Application application) {
-        try {
-            if (application != null && application.getRepositoryEncryptedPassword() != null &&
-                    application.getRepositoryEncryptedUserName() != null) {
-                application.setRepositoryPassword(ESAPI.encryptor().decrypt(application.getRepositoryEncryptedPassword()));
-                application.setRepositoryUserName(ESAPI.encryptor().decrypt(application.getRepositoryEncryptedUserName()));
-            }
-        } catch (EncryptionException e) {
-            e.printStackTrace();
-        }
-        return application;
     }
 
     // TODO move this somewhere central
