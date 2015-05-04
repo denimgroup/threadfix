@@ -66,7 +66,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
                 .clickAddTeamRole()
                 .setTeam(teamName)
                 .setTeamRole(role)
-                .clickModalSubmit();
+                .clickSaveMap();
 
         assertTrue("Permissions were not added properly.",
                 userIndexPage.isTeamRolePresent(teamName, role));
@@ -78,24 +78,25 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
         String userName = createRegularUser();
 
-        String noTeamRoleError = "Failure. Message was : You must pick a Role.";
-        String noApplicationRoleSelectedError = "Failure. Message was : You must select at least one application.";
+        String noTeamRoleError = "You must pick a Role.";
+        String noApplicationRoleSelectedError = "You must select at least one application.";
 
-        UserPermissionsPage userPermissionsPage = loginPage.defaultLogin()
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
-                .clickEditPermissions(userName)
-                .clickAddPermissionsLink()
+                .clickUserLink(userName)
+                .clickAddTeamRole()
                 .setTeam(teamName)
-                .clickModalSubmitInvalid();
+                .clickSaveMap();
 
         assertTrue("Error message indicating a role must be selected is not present.",
-                userPermissionsPage.isErrorPresent(noTeamRoleError));
+                userIndexPage.isErrorPresent(noTeamRoleError));
 
-        userPermissionsPage.toggleAllApps()
-                .clickModalSubmitInvalid();
+        userIndexPage.clickCloseButton()
+                .clickAddApplicationRole()
+                .clickSaveMap();
 
         assertTrue("Error message indicating an application must be selected is present.",
-                userPermissionsPage.isErrorPresent(noApplicationRoleSelectedError));
+                userIndexPage.isErrorPresent(noApplicationRoleSelectedError));
 
     }
 
@@ -108,24 +109,24 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
         String duplicateErrorMessage = "Failure. Message was : That team / role combo already exists for this user.";
 
-        UserPermissionsPage userPermissionsPage = loginPage.defaultLogin()
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
-                .clickEditPermissions(userName)
-                .clickAddPermissionsLink()
+                .clickUserLink(userName)
+                .clickAddTeamRole()
                 .setTeam(teamName)
                 .setTeamRole(teamRole)
-                .clickModalSubmit();
+                .clickSaveMap();
 
         assertTrue("Permissions were not added properly.",
-                userPermissionsPage.isPermissionPresent(teamName, "all", teamRole));
+                userIndexPage.isTeamRolePresent(teamName, teamRole));
 
-        userPermissionsPage.clickAddPermissionsLink()
+        userIndexPage.clickAddTeamRole()
                 .setTeam(teamName)
                 .setTeamRole(teamRole)
-                .clickModalSubmitInvalid();
+                .clickSaveMap();
 
         assertTrue("Duplicate team/role combinations should not be allowed.",
-                userPermissionsPage.isErrorPresent(duplicateErrorMessage));
+                userIndexPage.isErrorPresent(duplicateErrorMessage));
     }
 
     @Test
@@ -138,26 +139,26 @@ public class UserPermissionsEntIT extends BaseDataTest{
         String role1 = "Administrator";
         String role2 = "User";
 
-        UserPermissionsPage userPermissionsPage = loginPage.defaultLogin()
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
-                .clickEditPermissions(userName)
-                .clickAddPermissionsLink()
+                .clickUserLink(userName)
+                .clickAddTeamRole()
                 .setTeam(teamName1)
                 .setTeamRole(role1)
-                .clickModalSubmit();
+                .clickSaveMap();
 
         assertTrue("Permissions were not added properly.",
-                userPermissionsPage.isPermissionPresent(teamName1, "all", role1));
+                userIndexPage.isTeamRolePresent(teamName1, role1));
 
-        userPermissionsPage.clickAddPermissionsLink()
+        userIndexPage.clickAddTeamRole()
                 .setTeam(teamName2)
                 .setTeamRole(role2)
-                .clickModalSubmit();
+                .clickSaveMap();
 
         assertTrue("Permissions were not added properly.",
-                userPermissionsPage.isPermissionPresent(teamName2, "all", role2));
+                userIndexPage.isTeamRolePresent(teamName2, role2));
 
-        TeamIndexPage teamIndexPage = userPermissionsPage.logout()
+        TeamIndexPage teamIndexPage = userIndexPage.logout()
                 .login(userName, testPassword)
                 .clickOrganizationHeaderLink();
 
@@ -178,31 +179,31 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void testDeletePermissions() {
+    public void testDeleteTeamRole() {
         initializeTeamAndApp();
 
         String userName = createRegularUser();
         String role = "Administrator";
 
-        UserPermissionsPage userPermissionsPage = loginPage.defaultLogin()
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
-                .clickEditPermissions(userName)
-                .clickAddPermissionsLink()
+                .clickUserLink(userName)
+                .clickAddTeamRole()
                 .setTeam(teamName)
                 .setTeamRole(role)
-                .clickModalSubmit();
+                .clickSaveMap();
 
         assertTrue("Permissions were not added properly.",
-                userPermissionsPage.isPermissionPresent(teamName, "all", role));
+                userIndexPage.isTeamRolePresent(teamName, role));
 
-        userPermissionsPage.clickDeleteButton(teamName, "all", role);
+        userIndexPage.deleteTeamRole(teamName, role);
 
         assertFalse("Permissions were not properly deleted.",
-                userPermissionsPage.isPermissionPresent(teamName, "all", role));
+                userIndexPage.isTeamRolePresent(teamName, role));
     }
 
     @Test
-    public void testDeletePermissionsValidation() {
+    public void testDeleteRolesValidation() {
         String teamName1 = createTeam();
         String teamName2 = createTeam();
         String appName = getName();
@@ -210,20 +211,20 @@ public class UserPermissionsEntIT extends BaseDataTest{
         String userName = createRegularUser();
         String role = "Administrator";
 
-        UserPermissionsPage userPermissionsPage = loginPage.defaultLogin()
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
-                .clickEditPermissions(userName)
-                .clickAddPermissionsLink()
+                .clickUserLink(userName)
+                .clickAddTeamRole()
                 .setTeam(teamName1)
                 .setTeamRole(role)
-                .clickModalSubmit();
+                .clickSaveMap();
 
-        userPermissionsPage.clickAddPermissionsLink()
+        userIndexPage.clickAddTeamRole()
                 .setTeam(teamName2)
                 .setTeamRole(role)
-                .clickModalSubmit();
+                .clickSaveMap();
 
-        TeamIndexPage teamIndexPage = userPermissionsPage.logout()
+        TeamIndexPage teamIndexPage = userIndexPage.logout()
                 .login(userName, testPassword)
                 .clickOrganizationHeaderLink();
 
@@ -237,14 +238,14 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
         assertTrue("User was unable to add an application.", teamDetailPage.isAppPresent(appName));
 
-        UserIndexPage userIndexPage = teamDetailPage.logout()
+        userIndexPage = teamDetailPage.logout()
                 .defaultLogin()
                 .clickManageUsersLink();
 
-        userPermissionsPage = userIndexPage.clickEditPermissions(userName)
-                .clickDeleteButton(teamName1, "all", role);
+        userIndexPage = userIndexPage.clickUserLink(userName)
+                .deleteTeamRole(teamName1, role);
 
-        teamIndexPage = userPermissionsPage.logout()
+        teamIndexPage = userIndexPage.logout()
                 .login(userName, testPassword)
                 .clickOrganizationHeaderLink();
 
@@ -266,11 +267,11 @@ public class UserPermissionsEntIT extends BaseDataTest{
         UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink();
 
-        UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName)
-                .clickAddPermissionsLink()
+        userIndexPage.clickUserLink(userName)
+                .clickAddTeamRole()
                 .expandTeamName();
 
-        assertTrue("The applications are sorted", userPermissionsPage.compareOrderOfSelector(firstTeamName, secondTeamName));
+        assertTrue("The applications are sorted", userIndexPage.compareOrderOfSelector(firstTeamName, secondTeamName));
     }
 
     @Ignore
@@ -552,7 +553,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void testManageAPIKeysPermission() {
+    public void testManageApiKeysPermission() {
         createRestrictedUser("canManageApiKeys");
 
         DashboardPage dashboardPage = loginPage.login(userName, testPassword);
@@ -563,7 +564,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void testGenerateWAFRulesPermission() {
+    public void testGenerateWafRulesPermission() {
         initializeTeamAndAppWithIbmScan();
 
         createRestrictedUser("canGenerateWafRules");
@@ -666,41 +667,31 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
-    public void testUserPermissionsNavigation() {
-        UserPermissionsPage userPermissionsPage = loginPage.defaultLogin()
-                .clickManageUsersLink()
-                .clickEditPermissions("user");
-
-        assertTrue("Edit Permissions button didn't navigate correclty", userPermissionsPage.isUserNamePresent("user"));
-    }
-
-    @Test
-    public void testAddAppPermissions() {
+    public void testAddAppRole() {
         String teamName1 = createTeam();
         String appName1 = createApplication(teamName1);
         String teamName2 = createTeam();
         String appName2 = createApplication(teamName2);
+        String user = createRegularUser();
 
-        UserPermissionsPage userPermissionsPage = loginPage.defaultLogin()
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
-                .clickEditPermissions("user")
-                .clickAddPermissionsLink()
+                .clickUserLink(user)
+                .clickAddApplicationRole()
                 .setTeam(teamName1)
-                .toggleAllApps()
-                .setApplicationRole(appName1,"User")
-                .clickModalSubmit();
+                .setApplicationRole(appName1, "User")
+                .clickSaveMap();
 
-        boolean checkPermissions1 = userPermissionsPage.isPermissionPresent(teamName1,appName1,"User");
+        boolean checkPermissions1 = userIndexPage.isApplicationRolePresent(teamName1, appName1, "User");
 
         assertTrue("Failed to add permissions separate from Global permissions", checkPermissions1);
 
-        userPermissionsPage.clickAddPermissionsLink()
+        userIndexPage.clickAddApplicationRole()
                 .setTeam(teamName2)
-                .toggleAllApps()
-                .setApplicationRole(appName2,"User")
-                .clickModalSubmit();
+                .setApplicationRole(appName2, "User")
+                .clickSaveMap();
 
-        boolean checkPermissions2 = userPermissionsPage.isPermissionPresent(teamName2,appName2,"User");
+        boolean checkPermissions2 = userIndexPage.isApplicationRolePresent(teamName2, appName2, "User");
 
         assertTrue("Failed to add more permissions", checkPermissions2);
     }
@@ -711,21 +702,21 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
         String role1 = "User";
         String role2 = "Administrator";
+        String user = createRegularUser();
 
-        UserPermissionsPage userPermissionsPage = loginPage.defaultLogin()
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
-                .clickEditPermissions("user")
-                .clickAddPermissionsLink()
+                .clickUserLink(user)
+                .clickAddApplicationRole()
                 .setTeam(teamName)
-                .toggleAllApps()
                 .setApplicationRole(appName,role1)
-                .clickModalSubmit();
+                .clickSaveMap();
 
-        userPermissionsPage.editSpecificPermissions(teamName,appName,role1)
-                .setApplicationRole(appName,role2)
-                .clickModalSubmit();
+        userIndexPage.editSpecificPermissions(teamName, appName, role1)
+                .setApplicationRole(appName, role2)
+                .clickSaveEdits();
 
-        assertTrue("Could not edit permissions", userPermissionsPage.isPermissionPresent(teamName, appName, role2));
+        assertTrue("Could not edit permissions", userIndexPage.isApplicationRolePresent(teamName, appName, role2));
     }
 
     @Test

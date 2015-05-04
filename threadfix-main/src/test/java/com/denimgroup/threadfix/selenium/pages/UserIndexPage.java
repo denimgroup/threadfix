@@ -29,6 +29,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
+import java.util.List;
+
 public class UserIndexPage extends BasePage {
 
     public UserIndexPage(WebDriver webdriver) {
@@ -47,6 +49,12 @@ public class UserIndexPage extends BasePage {
 
     public UserIndexPage clickDelete(String user){
         driver.findElementById("delete" + user).click();
+        handleAlert();
+        return new UserIndexPage(driver);
+    }
+
+    public UserIndexPage deleteTeamRole(String teamName, String roleName) {
+        driver.findElementById("deleteAppMap" + teamName + "all" + roleName).click();
         handleAlert();
         return new UserIndexPage(driver);
     }
@@ -137,6 +145,24 @@ public class UserIndexPage extends BasePage {
 		sleep(1000);
 		return new UserIndexPage(driver);
 	}
+
+    public UserIndexPage expandTeamName() {
+        driver.findElementById("orgSelect").click();
+        return new UserIndexPage(driver);
+    }
+
+    public boolean compareOrderOfSelector(String firstTeam, String secondTeam) {
+        int firstTeamValue;
+        int secondTeamValue;
+
+        this.setTeam(firstTeam);
+        firstTeamValue = Integer.parseInt(new Select(driver.findElementById("orgSelect")).getFirstSelectedOption().getAttribute("value"));
+
+        this.setTeam(secondTeam);
+        secondTeamValue = Integer.parseInt(new Select(driver.findElementById("orgSelect")).getFirstSelectedOption().getAttribute("value"));
+
+        return secondTeamValue > firstTeamValue;
+    }
 	
 	public UserIndexPage clickUpdateUserBtnInvalid(String name){
 		waitForElement(driver.findElementById("submit"));
@@ -149,14 +175,28 @@ public class UserIndexPage extends BasePage {
         return new UserIndexPage(driver);
     }
 	
-	public UserIndexPage getGlobalAccessRole(String name){
-		driver.findElementById("roleSelect").sendKeys(name);
-        return new UserIndexPage(driver);
+	public String getGlobalAccessRole(){
+		return driver.findElementById("roleSelect").getText();
 	}
 
     public UserIndexPage clickUserLink(String userName) {
         driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']").click();
         waitForElement(driver.findElementById("submit"));
+        return new UserIndexPage(driver);
+    }
+
+    public UserIndexPage clickSaveMap() {
+        driver.findElementByXPath("//button[text()='Save Map']").click();
+        return new UserIndexPage(driver);
+    }
+
+    public UserIndexPage clickSaveEdits() {
+        driver.findElementByXPath("//button[text()='Save Edits']").click();
+        return new UserIndexPage(driver);
+    }
+
+    public UserIndexPage clickCloseButton() {
+        driver.findElementByXPath("//a[text()='Close']").click();
         return new UserIndexPage(driver);
     }
 	
@@ -246,6 +286,16 @@ public class UserIndexPage extends BasePage {
         return this;
     }
 
+    public UserIndexPage setApplicationRole(String app, String role) {
+        new Select(driver.findElementById("roleSelectApp" + app)).selectByVisibleText(role);
+        return this;
+    }
+
+    public UserIndexPage editSpecificPermissions(String teamName, String appName, String role) {
+        driver.findElementById("editAppMap" + teamName + appName + role).click();
+        return new UserIndexPage(driver);
+    }
+
     /*----------------------------------- Boolean Methods -----------------------------------*/
 
     public boolean isPasswordFieldPresent() {
@@ -294,25 +344,40 @@ public class UserIndexPage extends BasePage {
         return driver.findElementById("addApplicationRoleButton").isDisplayed();
     }
 
-    public boolean isTeamRolePresent(String teamName, String role) {
-        WebElement cell;
+    public boolean isTeamRolePresent(String teamName, String roleName) {
         try {
-            cell = driver.findElementByXPath("//td[@id=\'teamName" + teamName + "\']/following-sibling::td");
+            driver.findElementById("teamName" + teamName + "all" + roleName);
+            driver.findElementById(("roleName" + teamName + "all" + roleName));
         } catch (NoSuchElementException e) {
             return false;
         }
-        return cell.getText() == role;
+        return true;
     }
 
-    public boolean isApplicationRolePresent(String teamName, String appName, String role) {
-        WebElement applicationCell;
-        WebElement roleCell;
+    public boolean isApplicationRolePresent(String teamName, String appName, String roleName) {
         try {
-            applicationCell = driver.findElementByXPath("//td[@id=\'teamName" + teamName + "\']/following-sibling::td");
-            roleCell = driver.findElementByXPath("//td[@id=\'applicationName" + appName + "\']/following-sibling::td");
+            driver.findElementById("teamName" + teamName + appName + roleName);
+            driver.findElementById(("roleName" + teamName + appName + roleName));
+            driver.findElementById("applicationName" + teamName + appName + roleName);
         } catch (NoSuchElementException e) {
             return false;
         }
-        return applicationCell.getText() == appName && roleCell.getText() == role;
+        return true;
+    }
+
+    public boolean isErrorPresent(String errorMessage) {
+        WebElement element = null;
+        List<WebElement> elementList = driver.findElementsByClassName("errors");
+        for (WebElement e : elementList) {
+            if (e.isDisplayed()) {
+                element = e;
+                break;
+            }
+        }
+        if (element == null) {
+            System.out.println("No error message found.");
+            return false;
+        }
+        return element.getText().contains(errorMessage);
     }
 }
