@@ -121,10 +121,10 @@ public class UserEntIT extends BaseDataTest {
 				.setName(userName)
 				.setPassword(testPassword)
 				.setConfirmPassword(testPassword)
-                .toggleGlobalAccess()
-                .chooseRoleForGlobalAccess("User")
 				.clickAddNewUserBtn()
-				.clickUserLink(userName);
+				.clickUserLink(userName)
+                .chooseRoleForGlobalAccess("User")
+                .clickSaveChanges();
 
 
 

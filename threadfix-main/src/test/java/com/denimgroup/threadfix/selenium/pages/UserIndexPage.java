@@ -143,6 +143,11 @@ public class UserIndexPage extends BasePage {
 		driver.findElementById("submit").click();
 		return new UserIndexPage(driver);
 	}
+
+    public UserIndexPage clickSaveChanges() {
+        driver.findElementById("submit").click();
+        return new UserIndexPage(driver);
+    }
 	
 	public UserIndexPage getGlobalAccessRole(String name){
 		driver.findElementById("roleSelect").sendKeys(name);
@@ -300,29 +305,14 @@ public class UserIndexPage extends BasePage {
     }
 
     public boolean isApplicationRolePresent(String teamName, String appName, String role) {
+        WebElement applicationCell;
+        WebElement roleCell;
         try {
-            if (!driver.findElementById("teamName" + teamName + appName + role).getText().contains(teamName)) {
-                return false;
-            }
-
-            if (appName.equals("all")) {
-                if (!driver.findElementById("applicationName" + teamName + appName + role).getText().contains("All")) {
-                    return false;
-                }
-            } else {
-                if (!driver.findElementById("applicationName" + teamName + appName + role).getText().contains(appName)) {
-                    return false;
-                }
-            }
-
-            if (!driver.findElementById("roleName" + teamName + appName + role).getText().contains(role)) {
-                return false;
-            }
+            applicationCell = driver.findElementByXPath("//td[@id=\'teamName" + teamName + "\']/following-sibling::td");
+            roleCell = driver.findElementByXPath("//td[@id=\'applicationName" + appName + "\']/following-sibling::td");
         } catch (NoSuchElementException e) {
-            System.err.println(e.getMessage());
             return false;
         }
-
-        return true;
+        return applicationCell.getText() == appName && roleCell.getText() == role;
     }
 }
