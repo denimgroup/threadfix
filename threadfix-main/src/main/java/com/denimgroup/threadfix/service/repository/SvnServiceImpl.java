@@ -56,8 +56,6 @@ public class SvnServiceImpl implements SvnService {
     @Override
     public boolean testSvnConfiguration(Application application) throws SVNException {
 
-        applicationService.decryptRepositoryCredentials(application);
-
         setupLibrary();
 
         SVNURL svnurl = SVNURL.parseURIEncoded(application.getRepositoryUrl());
