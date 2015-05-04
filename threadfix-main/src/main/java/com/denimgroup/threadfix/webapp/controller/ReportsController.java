@@ -128,6 +128,7 @@ public class ReportsController {
     }
 
     @RequestMapping(value="/snapshot", method = RequestMethod.POST)
+	@JsonView(AllViews.VulnSearchApplications.class)
     public @ResponseBody RestResponse<Map<String, Object>> processSnapShot(@ModelAttribute ReportParameters reportParameters,
                                                                            HttpServletRequest request) throws IOException {
         log.info("Generating snapshot report");
@@ -135,9 +136,7 @@ public class ReportsController {
                 request);
         map.put("tags", tagService.loadAll());
         return RestResponse.success(map);
-
     }
-
 
     @RequestMapping(value="/getTopApps", method = RequestMethod.POST)
     public @ResponseBody RestResponse<Map<String, Object>> processTopApps(@ModelAttribute VulnerabilitySearchParameters reportParameters,

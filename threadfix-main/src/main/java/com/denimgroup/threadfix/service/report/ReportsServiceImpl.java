@@ -128,20 +128,28 @@ public class ReportsServiceImpl implements ReportsService {
             log.info("No applications found.");
             return map;
         }
-        map.put("vulnList", vulnerabilityDao.retrieveMapByApplicationIdList(applicationIdList));
+        map.put("vulnList", vulnerabilityDao.retrieveByApplicationIdList(applicationIdList));
 
+        // Portfolio report
         List<Map<String, Object>> appList = list();
         for (Application application: applicationDao.retrieveAllActive()) {
             if (application.getScans() != null && application.getScans().size() > 0)
-                appList.add(CollectionUtils.<String, Object>map("appId", application.getId(), "appName", application.getName(),
+                appList.add(CollectionUtils.<String, Object>map(
+                        "appId", application.getId(),
+                        "appName", application.getName(),
                         "criticality", application.getApplicationCriticality().getName(),
-                        "teamId", application.getOrganization().getId(), "teamName", application.getOrganization().getName(),
-                        "noOfScans", application.getScans().size(), "latestScanTime", application.getScans().get(0).getImportTime(),
+                        "teamId", application.getOrganization().getId(),
+                        "teamName", application.getOrganization().getName(),
+                        "noOfScans", application.getScans().size(),
+                        "latestScanTime", application.getScans().get(0).getImportTime(),
                         "tags", application.getTags()));
             else {
-                appList.add(CollectionUtils.<String, Object>map("appId", application.getId(), "appName", application.getName(),
+                appList.add(CollectionUtils.<String, Object>map(
+                        "appId", application.getId(),
+                        "appName", application.getName(),
                         "criticality", application.getApplicationCriticality().getName(),
-                        "teamId", application.getOrganization().getId(), "teamName", application.getOrganization().getName(),
+                        "teamId", application.getOrganization().getId(),
+                        "teamName", application.getOrganization().getName(),
                         "tags", application.getTags()));
             }
         }

@@ -97,6 +97,7 @@ class FullSourceFindingProcessor implements FindingProcessor {
         if (endpoint != null) {
             finding.setCalculatedFilePath(endpoint.getFilePath());
             finding.setCalculatedUrlPath(endpoint.getUrlPath());
+            finding.setFoundHAMEndpoint(true);
 
             if (parameter != null) {
                 finding.setEntryPointLineNumber(endpoint.getLineNumberForParameter(parameter));

@@ -24,6 +24,9 @@
 
             <!-- Portfolio report -->
             <%@ include file="portfolioReport.jsp"%>
+
+            <!-- Scanner Comparison report -->
+            <%@ include file="scannerComparison.jsp"%>
         </div>
     </div>
 
