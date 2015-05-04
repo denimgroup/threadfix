@@ -54,6 +54,9 @@ public class RemoteProviderApplication extends AuditableEntity  {
 
 	@Size(max = NATIVE_NAME_LENGTH, message = "{errors.maxlength} " + NATIVE_NAME_LENGTH + ".")
 	private String reportUrl;
+
+	@Size(max = 80, message = "{errors.maxlength} 80.")
+	private String assetType;
 	
 	private RemoteProviderType remoteProviderType;
 	
@@ -144,5 +147,15 @@ public class RemoteProviderApplication extends AuditableEntity  {
 
 	public void setReportUrl(String reportUrl) {
 		this.reportUrl = reportUrl;
+	}
+
+	@Column
+	@JsonView(AllViews.TableRow.class)
+	public String getAssetType() {
+		return assetType;
+	}
+
+	public void setAssetType(String assetType) {
+		this.assetType = assetType;
 	}
 }
