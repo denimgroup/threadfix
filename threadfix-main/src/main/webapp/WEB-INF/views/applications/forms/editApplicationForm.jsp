@@ -109,8 +109,15 @@
                 </td>
             </tr>
             <tr ng-show="sourceCodeDisplay">
+                <td class="right-align">Source Code Repository Type</td>
+                <td class="left-align">
+                    <input type="radio" name="repositoryType" ng-model="object.repositoryType" value="GIT"> Git
+                    <input type="radio" name="repositoryType" ng-model="object.repositoryType" value="SVN"> SVN
+                </td>
+            </tr>
+            <tr ng-show="sourceCodeDisplay">
                 <td class="right-align">Source Code URL</td>
-                <td class="left-align" >
+                <td class="left-align">
                     <input name="repositoryUrl"
                            type='url' id="repositoryUrl"
                            maxlength="255" ng-model="object.repositoryUrl"/>
