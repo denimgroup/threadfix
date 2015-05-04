@@ -392,7 +392,7 @@ public class UserIT extends BaseDataTest {
         userIndexPage.createUser(userName,displayName,password)
                 .clickUserLink(userName)
                 .toggleGlobalAccess()
-                .getGlobalAccessRole("Administrator")
+                .chooseRoleForGlobalAccess("Administrator")
                 .clickUpdateUserBtn();
 
         ApplicationDetailPage applicationDetailPage = userIndexPage.logout()

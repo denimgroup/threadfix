@@ -93,14 +93,24 @@ public class UserIndexPage extends BasePage {
     }
 
     public UserIndexPage setPassword(String password) {
-        driver.findElementById("password").clear();
-        driver.findElementById("password").sendKeys(password);
+        List<WebElement> elementList = driver.findElementsById("password");
+        for (WebElement e : elementList) {
+            if (e.isDisplayed()) {
+                e.sendKeys(password);
+                break;
+            }
+        }
         return this;
     }
 
     public UserIndexPage setConfirmPassword(String password) {
-        driver.findElementById("confirm").clear();
-        driver.findElementById("confirm").sendKeys(password);
+        List<WebElement> elementList = driver.findElementsById("passwordConfirm");
+        for (WebElement e : elementList) {
+            if (e.isDisplayed()) {
+                e.sendKeys(password);
+                break;
+            }
+        }
         return this;
     }
 
@@ -298,16 +308,25 @@ public class UserIndexPage extends BasePage {
 
     /*----------------------------------- Boolean Methods -----------------------------------*/
 
-    public boolean isPasswordFieldPresent() {
-        return driver.findElementsById("password").size() != 0;
+    public boolean isPasswordFieldEnabled() {
+        try {
+            return driver.findElementById("password").isEnabled();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 
-    public boolean isLDAPSelected() {
+    public boolean isLdapSelected() {
         return driver.findElementById("isLdapUserCheckbox").isSelected();
     }
 
     public boolean isUserNamePresent(String userName) {
-        return driver.findElementsById("editUserModal" + userName).size() != 0;
+        try {
+            driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']");
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+        return true;
     }
 
     public boolean isSuccessDisplayed(String name){

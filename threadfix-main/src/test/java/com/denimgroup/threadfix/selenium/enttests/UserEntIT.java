@@ -44,7 +44,8 @@ public class UserEntIT extends BaseDataTest {
                 .createUser(userName,"",testPassword);
                 //.clickEditLink(userName);
 
-        assertFalse("Global Access was selected when it should not have been.", userIndexPage.isGlobalAccessSelected());
+        assertFalse("Global Access was selected when it should not have been.",
+                userIndexPage.getGlobalAccessRole() == "No Global Access");
 
         DashboardPage dashboardPage = userIndexPage.logout()
                 .login(userName, testPassword);
@@ -62,12 +63,9 @@ public class UserEntIT extends BaseDataTest {
                 .setName(userName)
                 .setPassword(testPassword)
                 .setConfirmPassword(testPassword)
-                .toggleGlobalAccess()
-                .chooseRoleForGlobalAccess("Administrator")
                 .clickAddNewUserBtn()
-                .clickUserLink(userName);
-
-        assertTrue("Global Access was not selected as it should have been.", userIndexPage.isGlobalAccessSelected());
+                .clickUserLink(userName)
+                .chooseRoleForGlobalAccess("Administrator");
 
         DashboardPage dashboardPage = userIndexPage.clickAddNewUserBtn()
                 .logout()
@@ -85,72 +83,56 @@ public class UserEntIT extends BaseDataTest {
                 .clickAddUserLink()
                 .setName(userName)
 				.toggleLDAP();
-        assertFalse("Password fields are still present.", userIndexPage.isPasswordFieldPresent());
+        assertFalse("Password fields are still present.", userIndexPage.isPasswordFieldEnabled());
 
         userIndexPage.clickAddNewUserBtn();
         assertTrue("LDAP user is not present in the user list.", userIndexPage.isUserNamePresent(userName));
 
 	    userIndexPage.clickUserLink(userName);
-		assertTrue("LDAP did not remain selected on creation.", userIndexPage.isLDAPSelected());
+		assertTrue("LDAP did not remain selected on creation.", userIndexPage.isLdapSelected());
 
 		//turn ldap off
 		userIndexPage = userIndexPage.toggleLDAP();
         assertTrue("Password fields are not present when switching from a LDAP user to regular user.",
-                userIndexPage.isPasswordFieldPresent());
+                userIndexPage.isPasswordFieldEnabled());
 
         userIndexPage.setPassword(testPassword)
                 .setConfirmPassword(testPassword)
                 .clickUpdateUserBtn()
                 .clickUserLink(userName);
-		assertFalse("LDAP remained selected after editing.", userIndexPage.isLDAPSelected());
+		assertFalse("LDAP remained selected after editing.", userIndexPage.isLdapSelected());
 
 		//turn ldap on
 		userIndexPage = userIndexPage.toggleLDAP()
                 .clickUpdateUserBtn()
                 .clickUserLink(userName);
-		assertTrue("LDAP did not remain selected after editing.", userIndexPage.isLDAPSelected());
+		assertTrue("LDAP did not remain selected after editing.", userIndexPage.isLdapSelected());
 	}
 
 	@Test
-	public void testEditUserRole(){
-		String userName = getName();
+	public void testEditUserRole() {
+        String userName = getName();
 
-		UserIndexPage userIndexPage = loginPage.defaultLogin()
-				.clickManageUsersLink()
-				.clickAddUserLink()
-				.setName(userName)
-				.setPassword(testPassword)
-				.setConfirmPassword(testPassword)
-				.clickAddNewUserBtn()
-				.clickUserLink(userName)
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
+                .clickManageUsersLink()
+                .clickAddUserLink()
+                .setName(userName)
+                .setPassword(testPassword)
+                .setConfirmPassword(testPassword)
+                .clickAddNewUserBtn()
+                .clickUserLink(userName)
                 .chooseRoleForGlobalAccess("User")
                 .clickSaveChanges();
 
 
-
-		assertTrue("User role was not selected",userIndexPage.isRoleSelected(userName, "User"));
+        assertTrue("User role was not selected", userIndexPage.isRoleSelected(userName, "User"));
 
         // Change role to 'Read Access'
-		userIndexPage = userIndexPage.chooseRoleForGlobalAccess("Read Access")
-				.clickUpdateUserBtn()
-				.clickUserLink(userName);
-		assertTrue("Read Access role was not selected",userIndexPage.isRoleSelected(userName, "Read Access"));
-
-        // Revoke Global Access
-		userIndexPage = userIndexPage.chooseRoleForGlobalAccess("Administrator")
-				.clickUpdateUserBtn()
-				.clickUserLink(userName)
-				.toggleGlobalAccess()
-				.clickUpdateUserBtn()
-				.clickUserLink(userName);
-		assertFalse("Global Access was not revoked", userIndexPage.isGlobalAccessSelected());
-
-        // Reinstate Global Access
-		userIndexPage = userIndexPage.toggleGlobalAccess()
+        userIndexPage = userIndexPage.chooseRoleForGlobalAccess("Read Access")
                 .clickUpdateUserBtn()
                 .clickUserLink(userName);
-		assertTrue("Global Access was not Added", userIndexPage.isGlobalAccessSelected());
-	}
+        assertTrue("Read Access role was not selected", userIndexPage.isSuccessDisplayed("Edit succeeded."));
+    }
 
     //If this test fails it can cascade and cause several other tests to fail
     // TODO this test will not run correctly because of bugs involved with user creation
