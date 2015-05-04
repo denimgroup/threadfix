@@ -89,4 +89,39 @@
                 ng-hide="loading"
                 ng-click="submitUpdate(form.$valid)">Save Changes</button>
     </div>
+
+    <security:authorize ifAllGranted="ROLE_ENTERPRISE">
+        <div id="groups">
+
+            <h4>Groups</h4>
+
+            <div ng-if="groups.length">
+                <input id="groupTypeahead"
+                   type="text"
+                   class="form-control no-bottom-margin"
+                   ng-model="groupToAdd"
+                   typeahead="group as group.name for group in groups | filter:$viewValue | limitTo:10"/>
+                <a class="btn" ng-click="addGroup(groupToAdd)" ng-class="{ disabled : !groupToAdd || !groupToAdd.name }">Add Group</a>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Group</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody ng-if="!currentUser.groups.length">
+                    <tr>
+                        <td colspan="2" class="center">No Entries</td>
+                    </tr>
+                </tbody>
+                <tbody ng-if="currentUser.groups">
+                    <tr ng-repeat="group in currentUser.groups">
+                        <td>{{ group.name }}</td>
+                        <td><a class="btn btn-danger" ng-click="removeGroup(group)">Remove</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </security:authorize>
 </div>
