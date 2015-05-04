@@ -25,10 +25,15 @@ package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * Created by mcollins on 4/29/15.
@@ -47,6 +52,7 @@ public class Group extends AuditableEntity {
     @JoinTable(name="User_Group",
             joinColumns={ @JoinColumn(name="User_Id") },
             inverseJoinColumns={ @JoinColumn(name="Group_Id") })
+    @JsonIgnore
     public List<User> getUsers() {
         return users;
     }
@@ -95,4 +101,23 @@ public class Group extends AuditableEntity {
     public void setHasGlobalAccess(Boolean hasGlobalAccess) {
         this.hasGlobalAccess = hasGlobalAccess;
     }
+
+    @JsonView(AllViews.TableRow.class)
+    @JsonProperty("users")
+    @Transient
+    public List<Map<?,?>> getUsersJSON() {
+        List<Map<?, ?>> users = list();
+
+        if (this.users != null) {
+            for (User user : this.users) {
+                users.add(map(
+                        "name", user.getName(),
+                        "id", user.getId()
+                ));
+            }
+        }
+
+        return users;
+    }
+
 }
