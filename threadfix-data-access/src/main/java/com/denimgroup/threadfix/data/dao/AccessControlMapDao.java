@@ -31,6 +31,9 @@ import java.util.List;
 
 public interface AccessControlMapDao {
 
+	@SuppressWarnings("unchecked")
+	List<AccessControlTeamMap> retrieveAllMapsForGroup(Integer id);
+
 	/**
 	 * @param id
 	 * @return

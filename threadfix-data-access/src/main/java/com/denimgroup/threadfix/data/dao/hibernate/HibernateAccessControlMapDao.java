@@ -58,6 +58,18 @@ public class HibernateAccessControlMapDao implements AccessControlMapDao {
 				 .addOrder(Order.asc("orgAlias.name"))
 				 .list();
 	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<AccessControlTeamMap> retrieveAllMapsForGroup(Integer id) {
+		return sessionFactory.getCurrentSession()
+				 .createCriteria(AccessControlTeamMap.class)
+				 .createAlias("organization", "orgAlias")
+				 .createAlias("group", "groupAlias")
+				 .add(Restrictions.eq("groupAlias.id",id))
+				 .add(Restrictions.eq("active",true))
+				 .addOrder(Order.asc("orgAlias.name"))
+				 .list();
+	}
 	
 	@Override
 	public AccessControlTeamMap retrieveTeamMapById(int id) {

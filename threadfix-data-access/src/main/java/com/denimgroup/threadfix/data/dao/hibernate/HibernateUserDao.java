@@ -99,6 +99,20 @@ public class HibernateUserDao
 				.setProjection(Projections.rowCount())
 				.uniqueResult();
 
+		if (result == null || result == 0) {
+			// we also need to do a lookup on groups
+			result += (Long) sessionFactory.getCurrentSession()
+					.createCriteria(User.class)
+					.createAlias("groups", "groupAlias")
+					.createAlias("groupAlias.globalRole", "roleAlias")
+					.add(Restrictions.eq("active", true))
+					.add(Restrictions.eq("groupAlias.active", true))
+					.add(Restrictions.eq("roleAlias." + string, true))
+					.add(Restrictions.ne("id", id))
+					.setProjection(Projections.rowCount())
+					.uniqueResult();
+		}
+
 		return result != null && result > 0;
 	}
 
@@ -169,5 +183,34 @@ public class HibernateUserDao
 		return (Long) getActiveUserCriteria()
 				.setProjection(Projections.rowCount())
 				.uniqueResult();
+	}
+
+	@Override
+	public boolean canRemovePermissionFromUserAndGroup(Integer userId, Integer groupId, String string) {
+		Long result = (Long) sessionFactory.getCurrentSession()
+				.createCriteria(User.class)
+				.createAlias("globalRole", "roleAlias")
+				.add(Restrictions.eq("active", true))
+				.add(Restrictions.eq("roleAlias." + string, true))
+				.add(Restrictions.ne("id", userId))
+				.setProjection(Projections.rowCount())
+				.uniqueResult();
+
+		if (result == null || result == 0) {
+			// we also need to do a lookup on groups
+			result += (Long) sessionFactory.getCurrentSession()
+					.createCriteria(User.class)
+					.createAlias("groups", "groupAlias")
+					.createAlias("groupAlias.globalRole", "roleAlias")
+					.add(Restrictions.eq("active", true))
+					.add(Restrictions.eq("groupAlias.active", true))
+					.add(Restrictions.ne("groupAlias.id", groupId))
+					.add(Restrictions.eq("roleAlias." + string, true))
+					.add(Restrictions.ne("id", userId))
+					.setProjection(Projections.rowCount())
+					.uniqueResult();
+		}
+
+		return result != null && result > 0;
 	}
 }

@@ -716,47 +716,6 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
     }
 
     /**
-     * TODO probably remove this unless default SAX parsing is insufficient for HTML
-     * @param handler
-     * @return
-     */
-    @Nonnull
-    protected Scan parseHTMLInput(DefaultHandler handler) {
-        log.debug("Starting HTML Parsing.");
-
-        if (inputStream == null) {
-            throw new IllegalStateException("InputStream was null. Can't parse HTML input. This is probably a coding error.");
-        }
-
-        saxFindingList = list();
-
-        //ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
-
-        Scan scan = new Scan();
-        scan.setFindings(saxFindingList);
-        scan.setApplicationChannel(applicationChannel);
-
-        if (date != null && date.getTime() != null) {
-            log.debug("SAX Parser found the scan date: " + date.getTime().toString());
-            scan.setImportTime(date);
-        } else {
-            log.warn("SAX Parser did not find the date.");
-        }
-
-        if (scan.getFindings() != null && scan.getFindings().size() != 0) {
-            log.debug("SAX Parsing successfully parsed " + scan.getFindings().size() +" Findings.");
-        } else {
-            log.warn("SAX Parsing did not find any Findings.");
-        }
-
-        if (shouldDeleteAfterParsing) {
-            deleteScanFile();
-        }
-
-        return scan;
-    }
-
-    /**
      * This method wraps a lot of functionality that was previously seen in multiple importers
      * into one method to reduce duplication. It sets up the relationship between the subclassed
      * handler and the main importer, cleans and wraps the file in an InputSource, and parses it.
