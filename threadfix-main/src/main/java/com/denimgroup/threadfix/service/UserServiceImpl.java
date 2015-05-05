@@ -56,6 +56,8 @@ public class UserServiceImpl implements UserService {
     private ThreadFixPasswordEncoder encoder = new ThreadFixPasswordEncoder();
     private Authentication authentication;
 
+	private static final SanitizedLogger LOG = new SanitizedLogger(UserServiceImpl.class);
+
     /**
      * Transactional(readOnly = false) here means that false will be put in to
      * the LDAP user field and update correctly.
@@ -392,42 +394,6 @@ public class UserServiceImpl implements UserService {
 		if (appId != null && orgId != null) resultList = userDao.retrieveAppPermissibleUsers(orgId, appId);			
 		return resultList;
 	}
-
-    @Override
-    public boolean shouldReloadUserIfRoleChanged(Role role) {
-
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        if (name == null) {
-            assert false;
-            return true;
-        }
-
-        User user = loadUser(name);
-
-        if (user == null) {
-            assert false;
-            return true;
-        }
-
-        if (user.getGlobalRole() != null && user.getGlobalRole().getId().equals(role.getId())) {
-            return true;
-        }
-
-        for (AccessControlTeamMap map : user.getAccessControlTeamMaps()) {
-            if (map.isActive() && map.getRole().getId().equals(role.getId())) {
-                return true;
-            }
-
-            for (AccessControlApplicationMap applicationMapping : map.getAccessControlApplicationMaps()) {
-                if (applicationMapping.isActive() && applicationMapping.getRole().getId().equals(role.getId())) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
 
 	@Override
 	public void setRoleCommunity(User user) {

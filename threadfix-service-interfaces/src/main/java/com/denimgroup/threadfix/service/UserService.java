@@ -138,13 +138,6 @@ public interface UserService {
 	 */
 	List<User> getPermissibleUsers(Integer orgId, Integer appId);
 
-    /**
-     *
-     * @param role
-     * @return
-     */
-    boolean shouldReloadUserIfRoleChanged(Role role);
-
 	void setRoleCommunity(User user);
 
 	List<User> retrievePage(int page, int numberToShow);
