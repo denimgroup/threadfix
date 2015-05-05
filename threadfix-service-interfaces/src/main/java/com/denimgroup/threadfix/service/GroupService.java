@@ -36,4 +36,8 @@ public interface GroupService extends GenericNamedObjectService<Group> {
     boolean canRemoveUserFromGroup(int groupId, int userId);
 
     boolean canChangeRoleTo(int groupId, int roleId);
+
+    boolean canDeleteGroup(Group group);
+
+    void deleteGroup(Group group);
 }
