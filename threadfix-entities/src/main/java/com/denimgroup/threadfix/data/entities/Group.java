@@ -29,10 +29,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.listOf;
 import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
@@ -40,7 +42,7 @@ import static com.denimgroup.threadfix.CollectionUtils.map;
  */
 @Entity
 @Table(name = "Groups") // Group is a reserved keyword :(
-public class Group extends AuditableEntity {
+public class Group extends AuditableEntity implements Iterable<User> {
 
     private List<User> users;
     private List<AccessControlTeamMap> accessControlTeamMaps;
@@ -120,4 +122,8 @@ public class Group extends AuditableEntity {
         return users;
     }
 
+    @Override
+    public Iterator<User> iterator() {
+        return users == null ? listOf(User.class).iterator() : users.iterator();
+    }
 }

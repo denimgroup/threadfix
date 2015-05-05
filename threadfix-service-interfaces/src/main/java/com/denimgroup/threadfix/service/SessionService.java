@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.Group;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import org.springframework.ldap.core.DirContextOperations;
@@ -42,7 +41,7 @@ public interface SessionService {
 
     void reloadSession(User user);
 
-    void reloadSession(Group group);
+    void reloadSession(Iterable<User> users);
 
     void invalidateSessions(User user);
 
