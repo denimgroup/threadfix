@@ -70,11 +70,18 @@ public class CustomHttpSessionSecurityContextRepository
         if (authentication instanceof UsernamePasswordAuthenticationToken) {
             UsernamePasswordAuthenticationToken principal = (UsernamePasswordAuthenticationToken) authentication;
 
+            Object threadfixPrincipal = principal.getPrincipal();
 
-            User user  = userService.loadUser(principal.getName());
-            LOG.debug("Adding SecurityContext for user " + user.getName());
-            contextMap.put(user.getId(), context);
-            seenIds.add(context.getAuthentication().hashCode());
+            if (threadfixPrincipal instanceof ThreadFixUserDetails) {
+                User user  = userService.loadUser(((ThreadFixUserDetails) threadfixPrincipal).getUserId());
+                if (user == null) {
+                    LOG.error("Unable to look up user");
+                    return;
+                }
+                LOG.debug("Adding SecurityContext for user " + user.getName());
+                contextMap.put(user.getId(), context);
+                seenIds.add(context.getAuthentication().hashCode());
+            }
         }
     }
 }
