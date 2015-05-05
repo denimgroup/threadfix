@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.rails.model;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +31,19 @@ import java.util.List;
  * Created by sgerick on 4/30/2015.
  */
 public class RailsController {
+    private File controllerFile;
     private String controllerName;
+    private String controllerField;
     private List<RailsControllerMethod> controllerMethods;
+
+
+    public File getControllerFile() {
+        return controllerFile;
+    }
+
+    public void setControllerFile(File controllerFile) {
+        this.controllerFile = controllerFile;
+    }
 
     public String getControllerName() {
         return controllerName;
@@ -39,6 +51,13 @@ public class RailsController {
 
     public void setControllerName(String controllerName) {
         this.controllerName = controllerName;
+        this.controllerField = controllerName;
+        this.controllerField = this.controllerField.replaceAll("([a-z])([A-Z]+)","$1_$2").toLowerCase();
+
+    }
+
+    public String getControllerField() {
+        return controllerField;
     }
 
     public List<RailsControllerMethod> getControllerMethods() {

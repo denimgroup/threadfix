@@ -97,6 +97,7 @@ public class RailsControllerParser implements EventBasedTokenizer {
             if (parser.currentRailsController != null
                     && parser.currentRailsController.getControllerMethods() != null
                     && parser.currentRailsController.getControllerMethods().size() > 0) {
+                parser.currentRailsController.setControllerFile(rootFile);
                 parser.railsControllers.add(parser.currentRailsController);
             }
         }
