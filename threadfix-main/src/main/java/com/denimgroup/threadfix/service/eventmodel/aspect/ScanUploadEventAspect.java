@@ -42,14 +42,14 @@ public class ScanUploadEventAspect implements ApplicationEventPublisherAware {
     ApplicationEventPublisher eventPublisher;
 
     @AfterReturning(
-            pointcut = "saveRemoteScanAndRun(Integer, String)",
+            pointcut = "saveRemoteScanAndRun(Integer, String, String)",
             returning = "scan")
     public void emitEvent(Scan scan) {
         eventPublisher.publishEvent(new ScanUploadedEvent(scan));
     }
 
-    @Pointcut("execution(* com.denimgroup.threadfix.service.ScanMergeService.saveRemoteScanAndRun(Integer, String)) && args(channelId, fileName)")
-    private Scan saveRemoteScanAndRun(Integer channelId, String fileName) {
+    @Pointcut("execution(* com.denimgroup.threadfix.service.ScanMergeService.saveRemoteScanAndRun(Integer, String, String)) && args(channelId, fileName, originalFileName)")
+    private Scan saveRemoteScanAndRun(Integer channelId, String fileName, String originalFileName) {
         return null;
     }
 

@@ -79,9 +79,8 @@ public class ClangChannelImporter extends AbstractChannelImporter {
     public Scan parseInput() {
 	    zipFile = unpackZipStream();
 
-	    Scan scan = new Scan();
-
-	    scan.setImportTime( getImportTime() );
+        Scan scan = createScanWithFileNames();
+        scan.setImportTime( getImportTime() );
 
         Map<String, InputStream> reports = getReportFiles();
         List<Finding> findings = list();

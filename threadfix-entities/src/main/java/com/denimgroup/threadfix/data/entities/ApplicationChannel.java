@@ -107,7 +107,7 @@ public class ApplicationChannel extends AuditableEntity implements Iterable<Scan
     }
 
     public static boolean matchesFileHandleFormat(String fileName) {
-        return fileName.matches("scan-file-[0-9]+-[0-9]+");
+        return fileName.matches("(.*)scan-file-[0-9]+-[0-9]+");
     }
 
 	@Override
