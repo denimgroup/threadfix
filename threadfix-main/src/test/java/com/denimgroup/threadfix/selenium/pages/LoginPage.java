@@ -69,12 +69,13 @@ public class LoginPage extends BasePage {
 	
     public DashboardPage login(String user, String password) {
         setUsername(user).setPassword(password);
+        System.out.println("Password is \"" + password + "\"");
 
         driver.findElementById("login").click();
 
-        if (!isElementPresent("tab-dashboard")) {
-            driver.findElementById("password").sendKeys(Keys.ENTER);
-        }
+//        if (!isElementPresent("tab-dashboard")) {
+//            driver.findElementById("password").sendKeys(Keys.ENTER);
+//        }
 
         try {
             WebDriverWait waitForHeader = new WebDriverWait(driver, 45);

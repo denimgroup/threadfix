@@ -107,7 +107,6 @@ public class RemoteProvidersIT extends BaseDataTest {
                 remoteProvidersIndexPage.getErrorMessage().contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
     }
 
-    @Ignore
 	@Test
 	public void testConfigureWhiteHat() {
         remoteProvidersIndexPage.clickConfigureWhiteHat()
@@ -207,7 +206,6 @@ public class RemoteProvidersIT extends BaseDataTest {
                 remoteProvidersIndexPage.successAlert().contains("Veracode configuration was cleared successfully."));
     }
 
-    @Ignore
     @Test
     public void testEditWhiteHatMapping() {
         remoteProvidersIndexPage.clickConfigureWhiteHat()
@@ -224,7 +222,6 @@ public class RemoteProvidersIT extends BaseDataTest {
                 remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
     }
 
-    @Ignore
     @Test
     public void testImportWhiteHatScan() {
         remoteProvidersIndexPage.clickConfigureWhiteHat()
@@ -295,7 +292,6 @@ public class RemoteProvidersIT extends BaseDataTest {
                 remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS configuration was cleared successfully."));
     }
 
-    @Ignore
     @Test
     public void testVulnerabilityCountAfterImport() {
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
@@ -340,7 +336,6 @@ public class RemoteProvidersIT extends BaseDataTest {
                 remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
     }
 
-    @Ignore
     @Test
     public void testDeletedApplicationOnList() {
         ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickOrganizationHeaderLink()
@@ -365,7 +360,6 @@ public class RemoteProvidersIT extends BaseDataTest {
                 remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
     }
 
-    @Ignore
     @Test
     public void testDeletedTeamOnList() {
         TeamDetailPage teamDetailPage = remoteProvidersIndexPage.clickOrganizationHeaderLink()
@@ -422,7 +416,6 @@ public class RemoteProvidersIT extends BaseDataTest {
                 remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
     }
 
-    @Ignore
     @Test
     public void testTeamExistsAfterDeleted() {
         remoteProvidersIndexPage.clickConfigureWhiteHat()
@@ -446,7 +439,6 @@ public class RemoteProvidersIT extends BaseDataTest {
                 remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
     }
 
-    @Ignore
     @Test
     public void testApplicationExistsAfterDeleted(){
         remoteProvidersIndexPage.clickConfigureWhiteHat()

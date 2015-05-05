@@ -113,7 +113,7 @@ public class SystemSettingsPage extends BasePage {
 
 
 	public SystemSettingsPage clickSaveChanges() {
-		driver.findElementById("updateDefaultsButton").click();
+		driver.findElementByXPath("//button[text()='Save Changes']").click();
 		return new SystemSettingsPage(driver);
 	}
 

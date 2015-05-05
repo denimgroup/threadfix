@@ -23,10 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
 
 import java.util.List;
@@ -80,38 +77,62 @@ public class UserIndexPage extends BasePage {
 	}
 
     public UserIndexPage setName(String username) {
-        WebElement nameField = driver.findElementById("name");
+        WebElement nameField = null;
+        try {
+            nameField = driver.findElementById("name");
+        } catch (ElementNotVisibleException e) {
+            List<WebElement> elementList = driver.findElementsById("name");
+            for (WebElement element : elementList) {
+                if (element.isDisplayed()) {
+                    nameField = element;
+                    break;
+                }
+            }
+        }
         nameField.clear();
         nameField.sendKeys(username);
         return this;
     }
 
     public UserIndexPage setDisplayName(String displayName) {
-        driver.findElementByCssSelector("input#displayName").clear();
-        driver.findElementByCssSelector("input#displayName").sendKeys(displayName);
-        return this;
+        WebElement displayNameField = null;
+        try {
+            displayNameField = driver.findElementByCssSelector("input#displayName");
+        } catch (ElementNotVisibleException e) {
+            List<WebElement> elementList = driver.findElementsByCssSelector("input#displayName");
+            for (WebElement element : elementList) {
+                if (element.isDisplayed()) {
+                    displayNameField = element;
+                    break;
+                }
+            }
+        }
+        displayNameField.clear();
+        displayNameField.sendKeys(displayName);
+        return new UserIndexPage(driver);
     }
 
     public UserIndexPage setPassword(String password) {
-        List<WebElement> elementList = driver.findElementsById("password");
-        for (WebElement e : elementList) {
-            if (e.isDisplayed()) {
-                e.sendKeys(password);
-                break;
+        try {
+            driver.findElementById("password").sendKeys(password);
+        } catch (ElementNotVisibleException e) {
+            List<WebElement> elementList = driver.findElementsById("password");
+            for (WebElement element : elementList) {
+                if (element.isDisplayed()) {
+                    element.sendKeys(password);
+                    break;
+                }
             }
         }
-        return this;
+        return new UserIndexPage(driver);
     }
 
     public UserIndexPage setConfirmPassword(String password) {
-        List<WebElement> elementList = driver.findElementsById("passwordConfirm");
-        for (WebElement e : elementList) {
-            if (e.isDisplayed()) {
-                e.sendKeys(password);
-                break;
-            }
-        }
-        return this;
+        String elementId = driver.findElementById("confirm").isDisplayed() ? "confirm" : "passwordConfirm";
+        WebElement confirmField = driver.findElementById(elementId);
+        confirmField.clear();
+        confirmField.sendKeys(password);
+        return new UserIndexPage(driver);
     }
 
     public UserIndexPage toggleLDAP() {
@@ -130,8 +151,7 @@ public class UserIndexPage extends BasePage {
     }
 	
 	public UserIndexPage clickAddNewUserBtn() {
-        waitForElement(driver.findElementById("submit"));
-		driver.findElementById("submit").click();
+		driver.findElementByClassName("modal").findElement(By.id("submit")).click();
 		sleep(5000);
 		return new UserIndexPage(driver);
 	}
@@ -191,7 +211,7 @@ public class UserIndexPage extends BasePage {
 
     public UserIndexPage clickUserLink(String userName) {
         driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']").click();
-        waitForElement(driver.findElementById("submit"));
+        sleep(5000);
         return new UserIndexPage(driver);
     }
 
@@ -211,14 +231,15 @@ public class UserIndexPage extends BasePage {
     }
 	
 	public String getNameError(){
-        String returnval;
-		returnval = driver.findElementById("name.errors").getText().trim();
-        return returnval;
+        if (driver.findElementByClassName("modal").isDisplayed()) {
+            return driver.findElementByClassName("modal").findElement(By.id("name.errors")).getText().trim();
+        } else {
+            return driver.findElementById("name.errors").getText().trim();
+        }
 	}
+
     public String getRequiredNameError(){
-        String returnval;
-        returnval = driver.findElementById("name.errors.required").getText().trim();
-        return returnval;
+        return driver.findElementById("name.errors.required").getText().trim();
     }
 	
 	public String getPasswordLengthError(){
@@ -259,7 +280,7 @@ public class UserIndexPage extends BasePage {
         setDisplayName(disp);
         setPassword(pass);
         setConfirmPassword(pass);
-        clickUpdateUserBtn();
+        clickSaveChanges();
         return new UserIndexPage(driver);
     }
 
@@ -398,5 +419,25 @@ public class UserIndexPage extends BasePage {
             return false;
         }
         return element.getText().contains(errorMessage);
+    }
+
+    /*------------------------------------ Modal Methods ------------------------------------*/
+
+    public UserIndexPage setNameModal(String username) {
+        WebElement modal = driver.findElementByClassName("modal");
+        WebElement nameField = modal.findElement(By.id("name"));
+        nameField.clear();
+        nameField.sendKeys(username);
+        return new UserIndexPage(driver);
+    }
+
+    public UserIndexPage setPasswordModal(String password) {
+        driver.findElementByClassName("modal").findElement(By.id("password")).sendKeys(password);
+        return new UserIndexPage(driver);
+    }
+
+    public UserIndexPage setConfirmPasswordModal(String password) {
+        driver.findElementByClassName("modal").findElement(By.id("confirm")).sendKeys(password);
+        return new UserIndexPage(driver);
     }
 }
