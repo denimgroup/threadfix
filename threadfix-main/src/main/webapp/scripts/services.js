@@ -260,6 +260,17 @@ threadfixModule.factory('vulnSearchParameterService', function() {
             });
         }
 
+        if (parameters.isDISASTIG) {
+            parameters.genericVulnerabilities = [];
+            $scope.DISA_STIG.forEach(function(cat){
+                cat.members.forEach(function(stig){
+                    stig.cweIds.forEach(function(cweId){
+                        parameters.genericVulnerabilities.push({id: cweId});
+                    });
+                });
+            });
+        }
+
         var date;
 
         if (parameters.endDate) {

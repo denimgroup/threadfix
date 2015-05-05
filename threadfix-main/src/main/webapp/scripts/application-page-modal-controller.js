@@ -48,6 +48,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                    });
 
                    $scope.config.trackerTypes = $scope.config.defectTrackerTypeList;
+                   $scope.$parent.genericSeverityList = $scope.config.genericSeverityList;
 
                    $rootScope.$broadcast('seeMoreExtension', "/" + $scope.config.application.team.id + "/" + $scope.config.application.id);
 

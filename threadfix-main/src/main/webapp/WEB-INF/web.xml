@@ -184,6 +184,8 @@
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/falsePositives/mark$,
                 protected-regex ^/organizations/[0-9]+/applications/[0-9]+/closed/falsePositives/mark$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/falsePositives/unmark$,
+				protected-regex ^/organizations/[0-9]+/applications/[0-9]+/severity/change/[0-9]+$,
+				protected-regex ^/organizations/[0-9]+/applications/[0-9]+/addBatchComment$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/filters/new$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/filters/tab$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/filters/[0-9]+/edit$,
