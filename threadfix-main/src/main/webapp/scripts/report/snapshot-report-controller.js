@@ -1078,6 +1078,10 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         if ($scope.reportId == $scope.OWASP_Report_Id)
             parameters.owasp = parameters.selectedOwasp;
 
+        if ($scope.reportId == $scope.DISA_STIG_Report_Id) {
+            parameters.isDISASTIG = true;
+        }
+
         $scope.exportInfo = {};
         $scope.exportInfo.tableId = $scope.htmlElementIdMap[$scope.reportId];
         $scope.exportInfo.svgId = $scope.graphIdMap[$scope.reportId];
@@ -1086,10 +1090,12 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         $scope.exportInfo.teams = $scope.title.teams;
         $scope.exportInfo.apps = $scope.title.apps;
 
-        if ($scope.reportId === $scope.PIT_Report_Id || $scope.reportId === $scope.OWASP_Report_Id)
+        if ($scope.reportId === $scope.PIT_Report_Id || $scope.reportId === $scope.OWASP_Report_Id || $scope.DISA_STIG_Report_Id)
             reportExporter.exportPDFTable($scope, parameters, $scope.exportInfo);
         else
             reportExporter.exportPDFTableFromId($scope, $scope.exportInfo);
+
+        parameters.isDISASTIG = false;
 
     };
 
