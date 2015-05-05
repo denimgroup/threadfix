@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.framework.impl.rails;
 
 import com.denimgroup.threadfix.framework.impl.rails.model.RailsResource;
+import com.denimgroup.threadfix.framework.impl.rails.model.RailsRoute;
 import com.denimgroup.threadfix.framework.impl.rails.model.ResourceState;
 import com.denimgroup.threadfix.framework.impl.rails.model.ResourceType;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
@@ -31,22 +32,20 @@ import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
 
 import javax.annotation.Nonnull;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Created by sgerick on 3/9/2015.
  */
 public class RailsRoutesParser implements EventBasedTokenizer {
 
-    private List<String> mappings = new ArrayList<>();
+//    private List<String> mappings = new ArrayList<>();
+    private Map<String, RailsRoute> mappings = new HashMap<>();
 
     private Stack<RailsResource> resourceStack = new Stack<>();
     private RailsResource currentRailsResource = new RailsResource();
 
-    public static List parse(@Nonnull File file) {
+    public static Map parse(@Nonnull File file) {
         RailsRoutesParser parser = new RailsRoutesParser();
 //        System.err.println("stackSizeStart = " + parser.resourceStack.size());
         EventBasedTokenizerRunner.runRails(file, parser);
@@ -612,8 +611,15 @@ public class RailsRoutesParser implements EventBasedTokenizer {
         if (url.length() > 1 && url.endsWith("/")) {
             url = url.substring(0, url.length()-1);
         }
-        String m = method + ": " + url;
-        mappings.add(m);
+        // String m = method + ": " + url;
+        RailsRoute route = mappings.get(url);
+        if (route == null) {
+            route = new RailsRoute(url, method);
+        } else {
+            route.addMethod(method);
+        }
+        //mappings.add(m);
+        mappings.put(url, route);
     }
 
 }

@@ -1,10 +1,12 @@
 package com.denimgroup.threadfix.framework.impl.rails;
 
 import com.denimgroup.threadfix.framework.ResourceManager;
+import com.denimgroup.threadfix.framework.impl.rails.model.RailsRoute;
 import org.junit.Test;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertTrue;
 
@@ -631,11 +633,11 @@ public class RailsRoutesParserTest {
         {"GET", "/*url", "permalinks#show"}
     };
 
-    private static final String[][] GITLAB_BLOB_ROUTES = new String [][]{
-            {"GET", "/{namespace_id}/{project_id}/blob/*id/diff"},
-            {"GET", "/{namespace_id}/{project_id}/blob/*id"},
-            {"DELETE", "/{namespace_id}/{project_id}/blob/*id"},
-    };
+//    private static final String[][] GITLAB_BLOB_ROUTES = new String [][]{
+//            {"GET", "/{namespace_id}/{project_id}/blob/*id/diff"},
+//            {"GET", "/{namespace_id}/{project_id}/blob/*id"},
+//            {"DELETE", "/{namespace_id}/{project_id}/blob/*id"},
+//    };
 
     private static final String[][] GITLAB_ROUTES = new String [][]{
       //{"Verb", "URI"},
@@ -964,7 +966,7 @@ public class RailsRoutesParserTest {
         assert(f.exists());
 
         //System.err.println("parsing "+f.getAbsolutePath() );
-        List<String> mappings = RailsRoutesParser.parse(f);
+        Map<String, RailsRoute> mappings = RailsRoutesParser.parse(f);
         //System.err.println( System.lineSeparator() + "Parse done." + System.lineSeparator());
         /* for (String s : mappings) {
             System.err.println(s);
@@ -977,7 +979,7 @@ public class RailsRoutesParserTest {
         File f = ResourceManager.getRailsFile("discourse_routes.rb");
         assert(f.exists());
         // System.err.println("parsing "+f.getAbsolutePath() );
-        List<String> mappings = RailsRoutesParser.parse(f);
+        Map<String, RailsRoute> mappings = RailsRoutesParser.parse(f);
         // System.err.println( System.lineSeparator() + "Parse done." + System.lineSeparator());
         // for (String s : mappings) {
         //     System.err.println(s);
@@ -990,7 +992,7 @@ public class RailsRoutesParserTest {
         File f = ResourceManager.getRailsFile("gitlab_routes.rb");
         assert(f.exists());
 //        System.err.println("parsing "+f.getAbsolutePath() );
-        List<String> mappings = RailsRoutesParser.parse(f);
+        Map<String, RailsRoute> mappings = RailsRoutesParser.parse(f);
 //        for (String s : mappings) {
 //            System.err.println(s);
 //        }
@@ -998,61 +1000,24 @@ public class RailsRoutesParserTest {
       compareRoutes(GITLAB_ROUTES, mappings);
     }
 
-//    @Test
-//    public void testGitlabBlobRoutesParser() throws Exception {
-//        File f = new File("C:\\vm_share\\gitlab\\blobtest_routes.rb");
-//        assert(f.exists());
-//        //System.err.println("parsing "+f.getAbsolutePath() );
-//        List<String> mappings = RailsRoutesParser.parse(f);
-//        //for (String s : mappings) {
-//        //    System.err.println(s);
-//        //}
-//        //System.err.println( System.lineSeparator() + "Parse done." + System.lineSeparator());
-//        compareRoutes(GITLAB_BLOB_ROUTES, mappings);
-//    }
-
-    private void compareRoutes( String[][] testData, List<String> list) {
+    private void compareRoutes( String[][] testData, Map<String, RailsRoute> routeMap) {
         boolean found;
         for (String[] testRoute : testData) {
             found = false;
-            for (String foundRoute : list) {
-                if ( (testRoute[0] + ": " + testRoute[1]).equals(foundRoute) ) {
-                    found = true;
-                    break;
+            for (RailsRoute route : routeMap.values()) {
+                String url = route.getUrl();
+                for (String method : route.getMethods()) {
+                    String foundRoute = method + ": " + url;
+                    if ( (testRoute[0] + ": " + testRoute[1]).equals(foundRoute) ) {
+                        found = true;
+                        break;
+                    }
                 }
+
             }
             assertTrue("testRoute not found in returned list: " + testRoute[0] + ": " + testRoute[1], found);
         }
     }
-
-//    private void compareCount( String[][] testData, List<String> list) {
-//        int tot=0, numF=0, numNF=0;
-//        boolean found;
-//        for (String[] testRoute : testData) {
-//            found = false;
-//            tot++;
-//            for (String foundRoute : list) {
-//                if ( (testRoute[0] + ": " + testRoute[1]).equals(foundRoute) ) {
-//                    found = true;
-//                    break;
-//                }
-//            }
-//            if (found){
-//                numF++;
-//                System.out.println("found = " + testRoute[0] + ": " + testRoute[1]);
-//            }
-//            else {
-//                numNF++;
-//                System.out.println("NOTfd = " + testRoute[0] + ": " + testRoute[1]);
-//            }
-//        }
-//        System.out.println();
-//        System.out.println("total = " + tot);
-//        System.out.println("found = " + numF);
-//        System.out.println("notFd = " + numNF);
-//        assertTrue(tot == numF + numNF);
-//        assertTrue(numNF + " test cases not found", numNF == 0);
-//    }
 
 
 }
