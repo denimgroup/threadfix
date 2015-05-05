@@ -250,7 +250,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
         $scope.endDateOpened = false;
     };
 
-    $scope.exportCSV = function(reportId) {
+    $scope.exportCSV = function(reportId, DISA_STIG) {
 
         if (reportId === 3) {
             // Progress By Vulnerability report
@@ -273,6 +273,17 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
                 });
             }
 
+            // DISA STIG report
+            if (reportId === 13) {
+                parameters.genericVulnerabilities = [];
+                DISA_STIG.forEach(function(cat){
+                    cat.members.forEach(function(stig){
+                        stig.cweIds.forEach(function(cweId){
+                            parameters.genericVulnerabilities.push({id: cweId});
+                        });
+                    });
+                });
+            }
 
             if (reportExporter.checkOldIE()) {
                 window.location.href = tfEncoder.encode("/reports/search/export/csv");
