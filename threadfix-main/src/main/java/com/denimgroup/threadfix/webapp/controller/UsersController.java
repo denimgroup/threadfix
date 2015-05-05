@@ -70,7 +70,7 @@ public class UsersController {
 	private OrganizationService organizationService = null;
 	@Autowired(required = false)
 	private SessionService sessionService;
-	@Autowired
+	@Autowired(required = false)
 	private GroupService groupService;
 
 	private final SanitizedLogger log = new SanitizedLogger(UsersController.class);
@@ -147,7 +147,11 @@ public class UsersController {
 
 		if (EnterpriseTest.isEnterprise()) {
 			returnMap.put("roles", roleService.loadAll());
-			returnMap.put("groups", groupService.loadAllActive());
+
+			List<Group> groups = groupService == null ?
+					null :
+					groupService.loadAllActive();
+			returnMap.put("groups", groups);
 		}
 
 		returnMap.put("countUsers", userService.countUsers());
