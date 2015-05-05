@@ -57,7 +57,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
-import static com.denimgroup.threadfix.CollectionUtils.join;
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
 
@@ -738,9 +737,12 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         Scan scan = new Scan();
         scan.setOriginalFileName(originalFileName);
 
-        Matcher m = scanFileRegex.matcher(inputFileName);
-        if (m.matches()) {
-            scan.setFileName(m.group(2));
+        // Remote Providers won't have an inputFileName
+        if (inputFileName != null) {
+            Matcher m = scanFileRegex.matcher(inputFileName);
+            if (m.matches()) {
+                scan.setFileName(m.group(2));
+            }
         }
 
         return scan;
