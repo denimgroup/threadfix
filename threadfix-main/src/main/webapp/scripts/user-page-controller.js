@@ -40,7 +40,9 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                         $rootScope.$broadcast("roles", $scope.roles);
 
                         // allow undefined
-                        callBack && callBack();
+                        if ($scope.userId) {
+                            selectUserWithId($scope.userId);
+                        }
 
                     } else {
 
@@ -65,6 +67,10 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
 
     $scope.$on('rootScopeInitialized', function() {
         $scope.page = 1;
+        reloadList();
+    });
+
+    $scope.$on('refreshUsers', function() {
         reloadList();
     });
 
@@ -94,9 +100,8 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         });
 
         modalInstance.result.then(function (newUser) {
-            reloadList(function() {
-                selectUserWithId(newUser.id);
-            });
+            $scope.userId = newUser.id;
+            reloadList();
 
             $scope.successMessage = "Successfully created user " + newUser.name;
 
@@ -398,6 +403,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                     if (data.success) {
                         // this will cause the user to be logged out if the session is invalid
                         reloadList();
+                        $rootScope.$broadcast('refreshGroups');
                         $scope.successMessage = "User was successfully deleted.";
                     } else {
                         $scope.errorMessage = "Failure: " + data.message;
@@ -441,9 +447,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     };
 
     $scope.$on('reloadRoles', function() {
-        reloadList(function() {
-            selectUserWithId($scope.userId);
-        });
+        reloadList();
     });
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -458,9 +462,8 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         $http.post(tfEncoder.encode('/groups/' + group.id + '/addUser/' + $scope.userId)).
             success(function(data) {
                 if (data.success) {
-                    reloadList(function() {
-                        selectUserWithId($scope.userId);
-                    });
+                    reloadList();
+                    $rootScope.$broadcast('refreshGroups');
                     $scope.successMessage = "Added user to group " + group.name + ".";
                 } else {
                     $scope.errorMessage = "Failure. " + data.message;
@@ -479,9 +482,8 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
             $http.post(tfEncoder.encode('/groups/' + group.id + '/removeUser/' + $scope.userId)).
                 success(function(data) {
                     if (data.success) {
-                        reloadList(function() {
-                            selectUserWithId($scope.userId);
-                        });
+                        reloadList();
+                        $rootScope.$broadcast('refreshGroups');
                         $scope.successMessage = "Removed user from group " + group.name;
                     } else {
                         $scope.errorMessage = "Failure. " + data.message;
