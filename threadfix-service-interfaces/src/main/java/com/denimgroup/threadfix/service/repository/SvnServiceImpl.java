@@ -25,11 +25,14 @@
 package com.denimgroup.threadfix.service.repository;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.ExceptionLog;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.SvnService;
+import com.denimgroup.threadfix.service.ExceptionLogService;
+import com.denimgroup.threadfix.service.RepositoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 import org.tmatesoft.svn.core.SVNDepth;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNNodeKind;
@@ -52,12 +55,12 @@ import java.io.File;
  */
 
 @Service
-public class SvnServiceImpl extends RepositoryServiceImpl implements SvnService {
+public class SvnServiceImpl extends RepositoryServiceImpl implements RepositoryService {
 
     protected final SanitizedLogger log = new SanitizedLogger(RepositoryServiceImpl.class);
 
-    @Autowired
-    private ApplicationService applicationService;
+    @Autowired private ApplicationService applicationService;
+    @Autowired private ExceptionLogService exceptionLogService;
 
     @Override
     public boolean testConfiguration(Application application) throws SVNException {
@@ -90,6 +93,22 @@ public class SvnServiceImpl extends RepositoryServiceImpl implements SvnService 
         }
 
         return true;
+    }
+
+    @Override
+    public void handleException(Exception e, Application application, BindingResult result) {
+
+        if (e instanceof SVNException) {
+            if (e.getMessage().contains("Authentication required for")) {
+                result.rejectValue("repositoryUrl", null, null, "Authorization failed.");
+            }
+
+            log.info("Got an error from the SVN server, logging to database (visible under View Error Messages)");
+            exceptionLogService.storeExceptionLog(new ExceptionLog(e));
+        } else {
+            log.info("Got an error, logging to database (visible under View Error Messages)");
+            exceptionLogService.storeExceptionLog(new ExceptionLog(e));
+        }
     }
 
     @Override

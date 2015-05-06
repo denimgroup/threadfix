@@ -34,23 +34,30 @@ import com.denimgroup.threadfix.framework.engine.framework.FrameworkCalculator;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.RepositoryService;
 import com.denimgroup.threadfix.service.repository.RepositoryServiceFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 
+@Component
 class FindingProcessorFactory extends SpringBeanAutowiringSupport {
-
-    private RepositoryService repositoryService;
 
     private static final SanitizedLogger LOG = new SanitizedLogger(FindingProcessorFactory.class);
 
+    @Autowired private RepositoryServiceFactory repositoryServiceFactory;
+
+    private RepositoryService repositoryService;
+
     @Nonnull
-    public static FindingProcessor getProcessor(@Nonnull Application application,
+    public FindingProcessor getProcessor(@Nonnull Application application,
                                                 @Nonnull Scan scan) {
 
         LOG.info("Determining proper FindingProcesser implementation for application " + application.getName() + " and new scan.");
+
+        repositoryService = repositoryServiceFactory.getRepositoryService(application);
 
         SourceCodeAccessLevel accessLevel = getSourceCodeAccessLevel(application, scan);
         File rootFile = getRootFile(application);
@@ -118,8 +125,6 @@ class FindingProcessorFactory extends SpringBeanAutowiringSupport {
 	private static File getRootFile(Application application) {
 
         FindingProcessorFactory factory = new FindingProcessorFactory();
-
-        factory.repositoryService = RepositoryServiceFactory.getRepositoryService(application);
 
         if (factory.repositoryService == null) {
             LOG.info("RepositoryService was null. " +

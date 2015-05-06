@@ -25,9 +25,11 @@ package com.denimgroup.threadfix.service.repository;
 
 import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.ExceptionLog;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.GitService;
+import com.denimgroup.threadfix.service.ExceptionLogService;
+import com.denimgroup.threadfix.service.RepositoryService;
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.*;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
@@ -37,16 +39,18 @@ import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import java.io.File;
 import java.io.IOException;
 
 @Service
-public class GitServiceImpl extends RepositoryServiceImpl implements GitService {
+public class GitServiceImpl extends RepositoryServiceImpl implements RepositoryService {
 
-    private static final SanitizedLogger LOG = new SanitizedLogger(GitServiceImpl.class);
+    private static final SanitizedLogger log = new SanitizedLogger(GitServiceImpl.class);
 
     @Autowired private ApplicationService applicationService;
+    @Autowired private ExceptionLogService exceptionLogService;
 
     @Override
     public boolean testConfiguration(Application application) throws GitAPIException {
@@ -75,6 +79,42 @@ public class GitServiceImpl extends RepositoryServiceImpl implements GitService 
     }
 
     @Override
+    public void handleException(Exception e, Application application, BindingResult result) {
+        if (e instanceof GitAPIException || e instanceof JGitInternalException) {
+
+            boolean shouldLog = true;
+
+            if (e instanceof JGitInternalException) {
+                result.rejectValue("repositoryUrl", null, null, "Unable to connect to this URL.");
+            }
+
+            if (e.getMessage().contains("not authorized")) {
+                result.rejectValue("repositoryUrl", null, null, "Authorization failed.");
+            }
+
+            if (application.getRepositoryBranch() != null) {
+                String missingBranchError = "Remote does not have " + application.getRepositoryBranch() + " available for fetch";
+                if (e.getMessage().contains(missingBranchError)) {
+                    result.rejectValue("repositoryUrl", null, null, "Supplied branch wasn't found.");
+                }
+            } else if (e.getMessage().contains("Remote does not have fakebranch available for fetch")) {
+                // this is expected behavior, let's not return an error.
+                shouldLog = false;
+            } else {
+                result.rejectValue("repositoryUrl", null, null, "Unable to clone repository");
+            }
+
+            if (shouldLog) {
+                log.info("Got an error from the Git server, logging to database (visible under View Error Messages)");
+                exceptionLogService.storeExceptionLog(new ExceptionLog(e));
+            }
+        } else {
+            log.info("Got an error, logging to database (visible under View Error Messages)");
+            exceptionLogService.storeExceptionLog(new ExceptionLog(e));
+        }
+    }
+
+    @Override
 	public File cloneRepoToDirectory(Application application, File dirLocation) {
 
 		if (dirLocation.exists()) {
@@ -96,22 +136,22 @@ public class GitServiceImpl extends RepositoryServiceImpl implements GitService 
 					return git.getRepository().getWorkTree();
 				}
 			} catch (JGitInternalException e) {
-				LOG.error("Exception", e);
+				log.error("Exception", e);
 			} catch (IOException e) {
-				LOG.error("Exception", e);
+				log.error("Exception", e);
 			}
 		} else {
 			try {
-                LOG.info("Attempting to clone application from repository.");
+                log.info("Attempting to clone application from repository.");
                 Git result = clone(application, dirLocation);
 				if (result != null) {
-                    LOG.info("Application was successfully cloned from repository.");
+                    log.info("Application was successfully cloned from repository.");
 					return result.getRepository().getWorkTree();
 				}
-                LOG.error("Failed to clone application from repository.");
+                log.error("Failed to clone application from repository.");
 			} catch (JGitInternalException e) {
 				e.printStackTrace();
-                LOG.error("Failed to clone application from repository.", e);
+                log.error("Failed to clone application from repository.", e);
 			}
 		}
 		return null;

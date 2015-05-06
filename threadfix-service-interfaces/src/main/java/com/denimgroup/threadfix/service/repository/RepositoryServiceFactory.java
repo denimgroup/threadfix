@@ -28,17 +28,23 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.SourceCodeRepoType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.RepositoryService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author zabdisubhan
  */
+@Component
 public final class RepositoryServiceFactory {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(RepositoryServiceFactory.class);
 
-    public static RepositoryService getRepositoryService(@Nonnull Application application) {
+    @Autowired private GitServiceImpl gitService;
+    @Autowired private SvnServiceImpl svnService;
+
+    public RepositoryService getRepositoryService(@Nonnull Application application) {
 
         LOG.info("Determining proper RepositoryService implementation for application " + application.getName() + " and new scan.");
 
@@ -47,10 +53,10 @@ public final class RepositoryServiceFactory {
 
         if (repoType == SourceCodeRepoType.GIT) {
             LOG.info("Source code is being stored in Git. Returning GitService.");
-            repositoryService = new GitServiceImpl();
+            repositoryService = gitService;
         } else if (repoType == SourceCodeRepoType.SVN) {
             LOG.info("Source code is being stored in SVN. Returning SvnService.");
-            repositoryService = new SvnServiceImpl();
+            repositoryService = svnService;
         }
 
         return repositoryService;

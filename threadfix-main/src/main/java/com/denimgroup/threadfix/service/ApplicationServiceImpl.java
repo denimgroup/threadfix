@@ -31,6 +31,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
+import com.denimgroup.threadfix.service.repository.RepositoryServiceFactory;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
@@ -74,9 +75,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Autowired private DefectDao defectDao;
 	@Autowired private ScanMergeService scanMergeService;
     @Autowired private GenericVulnerabilityDao genericVulnerabilityDao;
-	@Autowired private GitService gitService;
-	@Autowired private SvnService svnService;
-	@Autowired private ExceptionLogService exceptionLogService;
     @Autowired private ScheduledScanDao scheduledScanDao;
 
     @Nullable
@@ -91,7 +89,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Autowired(required = false)
     private ScanQueueService scanQueueService;
 
-	@Override
+    @Autowired
+    private RepositoryServiceFactory repositoryServiceFactory;
+
+    @Override
 	public List<Application> loadAllActive() {
 		return applicationDao.retrieveAllActive();
 	}
@@ -600,62 +601,14 @@ public class ApplicationServiceImpl implements ApplicationService {
         if (application.getRepositoryUrl() != null && !application.getRepositoryUrl().isEmpty()
                 && application.getRepositoryType() != null) {
 
-            if (SourceCodeRepoType.getType(application.getRepositoryType()) == SourceCodeRepoType.GIT) {
+            RepositoryService repositoryService = repositoryServiceFactory.getRepositoryService(application);
 
-                try {
-                    if (!gitService.testConfiguration(application)) {
-                        result.rejectValue("repositoryUrl", null, null, "Unable to clone repository");
-                    }
-                } catch (GitAPIException | JGitInternalException e) {
-
-                    boolean shouldLog = true;
-
-                    if (e instanceof JGitInternalException) {
-                        result.rejectValue("repositoryUrl", null, null, "Unable to connect to this URL.");
-                    }
-
-                    if (e.getMessage().contains("not authorized")) {
-                        result.rejectValue("repositoryUrl", null, null, "Authorization failed.");
-                    }
-
-                    if (application.getRepositoryBranch() != null) {
-                        String missingBranchError = "Remote does not have " + application.getRepositoryBranch() + " available for fetch";
-                        if (e.getMessage().contains(missingBranchError)) {
-                            result.rejectValue("repositoryUrl", null, null, "Supplied branch wasn't found.");
-                        }
-                    } else if (e.getMessage().contains("Remote does not have fakebranch available for fetch")) {
-                        // this is expected behavior, let's not return an error.
-                        shouldLog = false;
-                    } else {
-                        result.rejectValue("repositoryUrl", null, null, "Unable to clone repository");
-                    }
-
-                    if (shouldLog) {
-                        log.info("Got an error from the Git server, logging to database (visible under View Error Messages)");
-                        exceptionLogService.storeExceptionLog(new ExceptionLog(e));
-                    }
-                } catch (Exception e) {
-                    log.info("Got an error, logging to database (visible under View Error Messages)");
-                    exceptionLogService.storeExceptionLog(new ExceptionLog(e));
+            try {
+                if (!repositoryService.testConfiguration(application)) {
+                    result.rejectValue("repositoryUrl", null, null, "Unable to clone repository");
                 }
-            } else if (SourceCodeRepoType.getType(application.getRepositoryType()) == SourceCodeRepoType.SVN) {
-
-                try {
-                    if (!svnService.testConfiguration(application)) {
-                        result.rejectValue("repositoryUrl", null, null, "Unable to clone repository");
-                    }
-                } catch (SVNException e) {
-
-                    if (e.getMessage().contains("Authentication required for")) {
-                        result.rejectValue("repositoryUrl", null, null, "Authorization failed.");
-                    }
-
-                    log.info("Got an error from the SVN server, logging to database (visible under View Error Messages)");
-                    exceptionLogService.storeExceptionLog(new ExceptionLog(e));
-                } catch (Exception e) {
-                    log.info("Got an error, logging to database (visible under View Error Messages)");
-                    exceptionLogService.storeExceptionLog(new ExceptionLog(e));
-                }
+            } catch (Exception e) {
+                repositoryService.handleException(e, application, result);
             }
         }
     }

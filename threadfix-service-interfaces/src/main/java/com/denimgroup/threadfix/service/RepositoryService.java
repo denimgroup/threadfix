@@ -25,6 +25,7 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import org.springframework.validation.BindingResult;
 
 import java.io.File;
 
@@ -38,4 +39,6 @@ public interface RepositoryService {
     File cloneRepoToDirectory(Application application, File dirLocation);
 
     File getWorkTree(Application application);
+
+    void handleException(Exception e, Application application, BindingResult result);
 }
