@@ -49,15 +49,11 @@ class FindingProcessorFactory extends SpringBeanAutowiringSupport {
 
     @Autowired private RepositoryServiceFactory repositoryServiceFactory;
 
-    private RepositoryService repositoryService;
-
     @Nonnull
     public FindingProcessor getProcessor(@Nonnull Application application,
                                                 @Nonnull Scan scan) {
 
         LOG.info("Determining proper FindingProcesser implementation for application " + application.getName() + " and new scan.");
-
-        repositoryService = repositoryServiceFactory.getRepositoryService(application);
 
         SourceCodeAccessLevel accessLevel = getSourceCodeAccessLevel(application, scan);
         File rootFile = getRootFile(application);
@@ -122,11 +118,13 @@ class FindingProcessorFactory extends SpringBeanAutowiringSupport {
 	private static final String baseDirectory = "scratch/";
 	
 	@Nullable
-	private static File getRootFile(Application application) {
+	private File getRootFile(Application application) {
 
         FindingProcessorFactory factory = new FindingProcessorFactory();
 
-        if (factory.repositoryService == null) {
+        RepositoryService repositoryService = factory.repositoryServiceFactory.getRepositoryService(application);
+
+        if (repositoryService == null) {
             LOG.info("RepositoryService was null. " +
                      "Either we're not in a Spring context or no implementation was in the container.");
         } else {
@@ -135,10 +133,10 @@ class FindingProcessorFactory extends SpringBeanAutowiringSupport {
 
 		File applicationDirectory = DiskUtils.getScratchFile(baseDirectory + application.getId());
 
-		if (factory.repositoryService != null &&
+		if (repositoryService != null &&
                 application.getRepositoryUrl() != null &&
                 !application.getRepositoryUrl().trim().isEmpty()) {
-			File file = factory.repositoryService.cloneRepoToDirectory(application, applicationDirectory);
+			File file = repositoryService.cloneRepoToDirectory(application, applicationDirectory);
 
 			if (file != null && file.exists()) {
 				return file;
