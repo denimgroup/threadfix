@@ -42,15 +42,14 @@ import java.io.File;
 import java.io.IOException;
 
 @Service
-public class GitServiceImpl implements GitService {
+public class GitServiceImpl extends RepositoryServiceImpl implements GitService {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(GitServiceImpl.class);
 
     @Autowired private ApplicationService applicationService;
 
     @Override
-    public boolean testGitConfiguration(Application application) throws GitAPIException {
-
+    public boolean testConfiguration(Application application) throws GitAPIException {
         InitCommand initCommand = new InitCommand();
         File applicationDirectory = DiskUtils.getScratchFile(baseDirectory + application.getId() + "-test");
         initCommand.setDirectory(applicationDirectory);
@@ -75,25 +74,14 @@ public class GitServiceImpl implements GitService {
         return true;
     }
 
-    private CredentialsProvider getUnencryptedApplicationCredentials(Application application) {
-        if (application.getRepositoryUserName() != null
-                && application.getRepositoryPassword() != null) {
-            return new UsernamePasswordCredentialsProvider(application.getRepositoryUserName(),
-                    application.getRepositoryPassword());
-        }
-
-        return null;
-    }
-
-    // Cursory testing indicates that this works.
     @Override
-	public File cloneGitTreeToDirectory(Application application, File fileLocation) {
-		
-		if (fileLocation.exists()) {
+	public File cloneRepoToDirectory(Application application, File dirLocation) {
+
+		if (dirLocation.exists()) {
 			try {
-				File gitDirectoryFile = new File(fileLocation.getAbsolutePath() + File.separator + ".git");
+				File gitDirectoryFile = new File(dirLocation.getAbsolutePath() + File.separator + ".git");
 				if (!gitDirectoryFile.exists()) {
-                    Git newRepo = clone(application, fileLocation);
+                    Git newRepo = clone(application, dirLocation);
                     if (newRepo != null)
                         return newRepo.getRepository().getWorkTree();
 				} else {
@@ -107,13 +95,15 @@ public class GitServiceImpl implements GitService {
 //                    }
 					return git.getRepository().getWorkTree();
 				}
-			} catch (IOException | JGitInternalException e) {
+			} catch (JGitInternalException e) {
+				LOG.error("Exception", e);
+			} catch (IOException e) {
 				LOG.error("Exception", e);
 			}
 		} else {
 			try {
                 LOG.info("Attempting to clone application from repository.");
-                Git result = clone(application, fileLocation);
+                Git result = clone(application, dirLocation);
 				if (result != null) {
                     LOG.info("Application was successfully cloned from repository.");
 					return result.getRepository().getWorkTree();
@@ -127,12 +117,12 @@ public class GitServiceImpl implements GitService {
 		return null;
 	}
 
-    private Git clone(Application application, File fileLocation) {
+    private Git clone(Application application, File dirLocation) {
         Git git = null;
         try {
             CloneCommand clone = Git.cloneRepository();
             clone.setURI(application.getRepositoryUrl())
-                    .setDirectory(fileLocation);
+                    .setDirectory(dirLocation);
 
             clone.setCredentialsProvider(getApplicationCredentials(application));
 
@@ -147,16 +137,33 @@ public class GitServiceImpl implements GitService {
             } else {
                 git = clone.call();
             }
-        } catch (WrongRepositoryStateException | InvalidConfigurationException | DetachedHeadException |
-                InvalidRemoteException | CanceledException | RefNotFoundException | NoHeadException |
-                RefAlreadyExistsException | CheckoutConflictException | InvalidRefNameException |
-                TransportException e) {
+        } catch (WrongRepositoryStateException  e) {
             e.printStackTrace();
-        } catch (GitAPIException e) {
+        } catch (InvalidConfigurationException  e) {
+            e.printStackTrace();
+        } catch (DetachedHeadException          e) {
+            e.printStackTrace();
+        } catch (InvalidRemoteException         e) {
+            e.printStackTrace();
+        } catch (CanceledException              e) {
+            e.printStackTrace();
+        } catch (RefNotFoundException           e) {
+            e.printStackTrace();
+        } catch (NoHeadException                e) {
+            e.printStackTrace();
+        } catch (RefAlreadyExistsException      e) {
+            e.printStackTrace();
+        } catch (CheckoutConflictException      e) {
+            e.printStackTrace();
+        } catch (InvalidRefNameException        e) {
+            e.printStackTrace();
+        } catch (TransportException             e) {
+            e.printStackTrace();
+        } catch (GitAPIException                e) {
             e.printStackTrace();
         }
-        return git;
 
+        return git;
     }
 
     private UsernamePasswordCredentialsProvider getApplicationCredentials(Application application) {
@@ -169,33 +176,14 @@ public class GitServiceImpl implements GitService {
         return null;
     }
 
-    // TODO move this somewhere central
-    private static final String baseDirectory = "scratch/";
-
-    // TODO move to some sort of repository manager instead of tying to the Git implementation.
-    @Override
-    public File getWorkTree(Application application) {
-
-        File applicationDirectory = DiskUtils.getScratchFile(baseDirectory + application.getId());
-
-        if (application.getRepositoryUrl() != null && !application.getRepositoryUrl().trim().isEmpty()) {
-            File repo = cloneGitTreeToDirectory(application, applicationDirectory);
-
-            if (repo != null && repo.exists()) {
-                return repo;
-            } else {
-                return applicationDirectory;
-            }
-        } else if (application.getRepositoryFolder() != null && !application.getRepositoryFolder().trim().isEmpty()) {
-            File file = new File(application.getRepositoryFolder().trim());
-            if (!file.exists() || !file.isDirectory()) {
-                return applicationDirectory;
-            } else {
-                return file;
-            }
+    private CredentialsProvider getUnencryptedApplicationCredentials(Application application) {
+        if (application.getRepositoryUserName() != null
+                && application.getRepositoryPassword() != null) {
+            return new UsernamePasswordCredentialsProvider(application.getRepositoryUserName(),
+                    application.getRepositoryPassword());
         }
 
-        return applicationDirectory;
+        return null;
     }
 
 }

@@ -21,8 +21,21 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+
 package com.denimgroup.threadfix.service;
 
-public interface GitService extends RepositoryService {
+import com.denimgroup.threadfix.data.entities.Application;
 
+import java.io.File;
+
+/**
+ * @author zabdisubhan
+ */
+public interface RepositoryService {
+
+    boolean testConfiguration(Application application) throws Exception;
+
+    File cloneRepoToDirectory(Application application, File dirLocation);
+
+    File getWorkTree(Application application);
 }

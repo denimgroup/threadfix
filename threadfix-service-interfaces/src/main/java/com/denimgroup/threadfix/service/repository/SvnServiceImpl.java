@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.SvnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.tmatesoft.svn.core.SVNDepth;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNNodeKind;
 import org.tmatesoft.svn.core.SVNURL;
@@ -39,22 +40,29 @@ import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
 import org.tmatesoft.svn.core.internal.io.svn.SVNRepositoryFactoryImpl;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
+import org.tmatesoft.svn.core.wc.SVNClientManager;
+import org.tmatesoft.svn.core.wc.SVNRevision;
+import org.tmatesoft.svn.core.wc.SVNUpdateClient;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
+
+import java.io.File;
 
 /**
  * @author zabdisubhan
  */
 
 @Service
-public class SvnServiceImpl implements SvnService {
+public class SvnServiceImpl extends RepositoryServiceImpl implements SvnService {
 
-    protected final SanitizedLogger log = new SanitizedLogger(SvnServiceImpl.class);
+    protected final SanitizedLogger log = new SanitizedLogger(RepositoryServiceImpl.class);
 
     @Autowired
     private ApplicationService applicationService;
 
     @Override
-    public boolean testSvnConfiguration(Application application) throws SVNException {
+    public boolean testConfiguration(Application application) throws SVNException {
+
+        applicationService.decryptRepositoryCredentials(application);
 
         setupLibrary();
 
@@ -83,6 +91,65 @@ public class SvnServiceImpl implements SvnService {
 
         return true;
     }
+
+    @Override
+    public File cloneRepoToDirectory(Application application, File dirLocation) {
+
+        if (dirLocation.exists()) {
+            try {
+                SVNURL svnurl = SVNURL.parseURIEncoded(application.getRepositoryUrl());
+                SVNRepository svnRepository = SVNRepositoryFactory.create(svnurl);
+                SVNRevision svnRevision = SVNRevision.HEAD;
+
+                applicationService.decryptRepositoryCredentials(application);
+
+                if (application.getRepositoryUserName() != null && application.getRepositoryPassword() != null) {
+                    ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager(
+                            application.getRepositoryUserName(), application.getRepositoryPassword());
+                    svnRepository.setAuthenticationManager(authManager);
+                }
+
+                if (application.getRepositoryBranch() != null && !application.getRepositoryBranch().isEmpty()) {
+                    try {
+                        Long svnRevisionNum = Long.parseLong(application.getRepositoryBranch());
+                        if (svnRevisionNum > 0)
+                            svnRevision = SVNRevision.create(svnRevisionNum);
+                    } catch (NumberFormatException e) {
+                        log.error("Revision value provided was not a valid number.");
+                    }
+                }
+
+                log.info("Attempting to clone application from repository.");
+                long revision = checkout(svnurl, svnRepository, svnRevision, dirLocation);
+                if (revision > 0) {
+                    log.info("Application was successfully cloned from repository.");
+                } else {
+                    log.error("Failed to clone application from repository.");
+                }
+            } catch (SVNException e) {
+                log.error("Failed to clone application from repository.", e);
+            }
+
+            return dirLocation;
+        }
+
+         return null;
+    }
+
+    private long checkout(SVNURL svnurl, SVNRepository svnRepository, SVNRevision svnRevision, File destPath) throws SVNException {
+
+        SVNClientManager clientManager = SVNClientManager.newInstance(null,
+                svnRepository.getAuthenticationManager());
+        SVNUpdateClient updateClient = clientManager.getUpdateClient();
+        updateClient.setIgnoreExternals(false);
+
+        /*
+         * returns the number of the revision at which the working copy is
+         */
+        return updateClient.doCheckout(svnurl, destPath, svnRevision, svnRevision,
+                SVNDepth.getInfinityOrEmptyDepth(true), false);
+    }
+
 
     private static void setupLibrary() {
         /*

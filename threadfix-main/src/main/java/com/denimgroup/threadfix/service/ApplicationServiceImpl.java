@@ -603,7 +603,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             if (SourceCodeRepoType.getType(application.getRepositoryType()) == SourceCodeRepoType.GIT) {
 
                 try {
-                    if (!gitService.testGitConfiguration(application)) {
+                    if (!gitService.testConfiguration(application)) {
                         result.rejectValue("repositoryUrl", null, null, "Unable to clone repository");
                     }
                 } catch (GitAPIException | JGitInternalException e) {
@@ -634,11 +634,14 @@ public class ApplicationServiceImpl implements ApplicationService {
                         log.info("Got an error from the Git server, logging to database (visible under View Error Messages)");
                         exceptionLogService.storeExceptionLog(new ExceptionLog(e));
                     }
+                } catch (Exception e) {
+                    log.info("Got an error, logging to database (visible under View Error Messages)");
+                    exceptionLogService.storeExceptionLog(new ExceptionLog(e));
                 }
             } else if (SourceCodeRepoType.getType(application.getRepositoryType()) == SourceCodeRepoType.SVN) {
 
                 try {
-                    if (!svnService.testSvnConfiguration(application)) {
+                    if (!svnService.testConfiguration(application)) {
                         result.rejectValue("repositoryUrl", null, null, "Unable to clone repository");
                     }
                 } catch (SVNException e) {
@@ -648,6 +651,9 @@ public class ApplicationServiceImpl implements ApplicationService {
                     }
 
                     log.info("Got an error from the SVN server, logging to database (visible under View Error Messages)");
+                    exceptionLogService.storeExceptionLog(new ExceptionLog(e));
+                } catch (Exception e) {
+                    log.info("Got an error, logging to database (visible under View Error Messages)");
                     exceptionLogService.storeExceptionLog(new ExceptionLog(e));
                 }
             }

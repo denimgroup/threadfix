@@ -24,12 +24,9 @@
 
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import org.tmatesoft.svn.core.SVNException;
-
 /**
  * @author zabdisubhan
  */
-public interface SvnService {
-    boolean testSvnConfiguration(Application application) throws SVNException;
+public interface SvnService extends RepositoryService {
+
 }
