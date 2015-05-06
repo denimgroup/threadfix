@@ -104,7 +104,7 @@ public class Group extends AuditableEntity implements Iterable<User> {
         this.hasGlobalAccess = hasGlobalAccess;
     }
 
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
     @JsonProperty("users")
     @Transient
     public List<Map<?,?>> getUsersJSON() {
