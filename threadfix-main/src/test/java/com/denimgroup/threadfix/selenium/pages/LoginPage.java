@@ -69,7 +69,6 @@ public class LoginPage extends BasePage {
 	
     public DashboardPage login(String user, String password) {
         setUsername(user).setPassword(password);
-        System.out.println("Password is \"" + password + "\"");
 
         driver.findElementById("login").click();
 
