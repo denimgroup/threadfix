@@ -50,7 +50,7 @@ class FindingProcessorFactory extends SpringBeanAutowiringSupport {
     @Autowired private RepositoryServiceFactory repositoryServiceFactory;
 
     @Nonnull
-    public FindingProcessor getProcessor(@Nonnull Application application,
+    public static FindingProcessor getProcessor(@Nonnull Application application,
                                                 @Nonnull Scan scan) {
 
         LOG.info("Determining proper FindingProcesser implementation for application " + application.getName() + " and new scan.");
@@ -118,7 +118,7 @@ class FindingProcessorFactory extends SpringBeanAutowiringSupport {
 	private static final String baseDirectory = "scratch/";
 	
 	@Nullable
-	private File getRootFile(Application application) {
+	private static File getRootFile(Application application) {
 
         FindingProcessorFactory factory = new FindingProcessorFactory();
 
