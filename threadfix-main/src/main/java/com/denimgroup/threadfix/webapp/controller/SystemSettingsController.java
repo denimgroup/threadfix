@@ -118,7 +118,7 @@ public class SystemSettingsController {
         if(defaultConfiguration.fileUploadLocationExists()) {
             File directory = new File(defaultConfiguration.getFileUploadLocation());
             if (!directory.exists()){
-                bindingResult.rejectValue("fileUploadLocation", "Directory does not exist.");
+                bindingResult.rejectValue("fileUploadLocation", null, null, "Directory does not exist.");
             }
         }
 

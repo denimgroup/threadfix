@@ -23,7 +23,7 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
                 }
 
                 if (data.success) {
-                    $scope.config = data.object.defaultConfiguration;
+                    $scope.object = data.object.defaultConfiguration;
                     $scope.roleList = data.object.roleList;
                     $scope.applicationCount = data.object.applicationCount;
                     $scope.licenseCount = data.object.licenseCount;
@@ -33,7 +33,7 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
                     $scope.teamReports = data.object.teamReports;
                     $scope.shouldDisable = shouldDisable();
 
-                    prevFileUploadLocation = $scope.config.fileUploadLocation;
+                    prevFileUploadLocation = $scope.object.fileUploadLocation;
 
                     $scope.roleList.unshift({id: 0, displayName: "Read Access"});
 
@@ -55,13 +55,13 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
         if (valid) {
             $scope.loading = true;
 
-            $http.post(url, $scope.config).
+            $http.post(url, $scope.object).
                 success(function(data) {
                     $scope.loading = false;
 
                     if (data.success) {
                         $scope.successMessage = "Configuration was saved successfully.";
-                        $scope.config = data.object;
+                        $scope.object = data.object;
                     } else {
                         $scope.errorMessage = "Failure: " + data.message;
 
@@ -95,7 +95,7 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
         if (valid) {
             $scope.loading = true;
 
-            $http.post(url, $scope.config).
+            $http.post(url, $scope.object).
                 success(function(data) {
                     $scope.loading = false;
 
