@@ -21,8 +21,12 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+
 package com.denimgroup.threadfix.service;
 
-public interface GitService extends RepositoryService {
+/**
+ * @author zabdisubhan
+ */
+public interface SvnService extends RepositoryService {
 
 }
