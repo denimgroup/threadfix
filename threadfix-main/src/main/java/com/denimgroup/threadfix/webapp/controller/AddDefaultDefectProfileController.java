@@ -26,7 +26,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 @Controller
 @RequestMapping("/default/addProfile")
-@SessionAttributes("defaultDefectProfile")
 public class AddDefaultDefectProfileController {
 
 	@Autowired
@@ -41,14 +40,9 @@ public class AddDefaultDefectProfileController {
 		dataBinder.setAllowedFields("name", "defectTracker.id", "referenceApplication.id");
 	}
 
-	@ModelAttribute
-	public void populateDefaultDefectProfile(Model model) {
-		model.addAttribute(new DefaultDefectProfile());
-	}
-
 	@JsonView(AllViews.DefectTrackerInfos.class)
 	@RequestMapping(method = RequestMethod.POST)
-	public @ResponseBody Object createNewDefaultDefectProfile(@Valid @ModelAttribute DefaultDefectProfile defaultDefectProfile,
+	public @ResponseBody RestResponse<DefaultDefectProfile> createNewDefaultDefectProfile(@Valid @ModelAttribute DefaultDefectProfile defaultDefectProfile,
 			BindingResult result) {
 
 		if (defaultDefectProfile.getName().trim().equals("") && !result.hasFieldErrors("name")) {
