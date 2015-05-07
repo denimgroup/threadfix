@@ -139,4 +139,15 @@ public class Defect extends AuditableEntity {
         return "icn_bug_" + color + "_stroke.png";
     }
 
+    @Transient
+    @JsonIgnore
+    public boolean isClosed() {
+        return CLOSED_CODES.contains(status);
+    }
+
+    @Transient
+    @JsonIgnore
+    public boolean isOpen() {
+        return OPEN_CODES.contains(status);
+    }
 }

@@ -37,7 +37,8 @@ public class Event extends AuditableEntity {
     private static final long serialVersionUID = 1L;
 
     public static final int
-            ENUM_LENGTH = 50;
+            ENUM_LENGTH = 50,
+            STATUS_LENGTH = 255;
 
     String eventAction = null;
 
@@ -49,6 +50,7 @@ public class Event extends AuditableEntity {
     private Integer scanId;
     private Integer defectId;
     private Integer commentId;
+    private String status;
 
     @Column(length = ENUM_LENGTH)
     @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
@@ -133,5 +135,15 @@ public class Event extends AuditableEntity {
 
     public void setCommentId(Integer commentId) {
         this.commentId = commentId;
+    }
+
+    @Column(length = STATUS_LENGTH)
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

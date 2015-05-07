@@ -38,38 +38,72 @@ public class EventBuilder {
     }
 
     public EventBuilder setEventAction(EventAction eventAction) {
-        event.setEventAction(eventAction.toString());
+        if (eventAction != null) {
+            event.setEventAction(eventAction.toString());
+        } else {
+            event.setEventAction(null);
+        }
         return this;
     }
 
     public EventBuilder setApplication(Application application) {
-        event.setApplicationId(application.getId());
+        if (application != null) {
+            event.setApplicationId(application.getId());
+        } else {
+            event.setApplicationId(null);
+        }
         return this;
     }
 
     public EventBuilder setUser(User user) {
-        event.setUserId(user.getId());
-        event.setApiAction(user == null);
+        if (user != null) {
+            event.setUserId(user.getId());
+            event.setApiAction(false);
+        } else {
+            event.setUserId(null);
+            event.setApiAction(true);
+        }
         return this;
     }
 
     public EventBuilder setVulnerability(Vulnerability vulnerability) {
-        event.setVulnerabilityId(vulnerability.getId());
+        if (vulnerability != null) {
+            event.setVulnerabilityId(vulnerability.getId());
+        } else {
+            event.setVulnerabilityId(null);
+        }
         return this;
     }
 
     public EventBuilder setScan(Scan scan) {
-        event.setScanId(scan.getId());
+        if (scan != null) {
+            event.setScanId(scan.getId());
+        } else {
+            event.setScanId(null);
+        }
         return this;
     }
 
     public EventBuilder setDefect(Defect defect) {
-        event.setDefectId(defect.getId());
+        if (defect != null) {
+            event.setDefectId(defect.getId());
+        } else {
+            event.setDefectId(null);
+        }
         return this;
     }
 
     public EventBuilder setVulnerabilityComment(VulnerabilityComment comment) {
-        event.setCommentId(comment.getId());
+        if (comment != null) {
+            event.setCommentId(comment.getId());
+        } else {
+            event.setCommentId(null);
+        }
+        return this;
+    }
+
+    public EventBuilder setStatus(String status) {
+        event.setStatus(status);
         return this;
     }
 }

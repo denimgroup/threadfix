@@ -59,6 +59,8 @@ public class DefectServiceImpl implements DefectService {
     private DefectSubmissionServiceImpl defectSubmissionService;
 	@Autowired
 	private ApplicationDao applicationDao;
+	@Autowired
+	private UserService userService;
 
 	private final SanitizedLogger log = new SanitizedLogger(DefectService.class);
 
@@ -304,9 +306,9 @@ public class DefectServiceImpl implements DefectService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public boolean updateVulnsFromDefectTracker(Integer appId) {
+	public boolean updateVulnsFromDefectTracker(Integer applicationId, Integer userId) {
 		
-		Application application = applicationService.loadApplication(appId);
+		Application application = applicationService.loadApplication(applicationId);
 		
 		int numUpdated = 0;
 		
@@ -446,7 +448,14 @@ public class DefectServiceImpl implements DefectService {
 
 		if (needsUpdate) {
 			log.debug("Created new defects, getting status updates from the server.");
-			updateVulnsFromDefectTracker(appId);
+			Integer userId = null;
+			try {
+				User user = userService.getCurrentUser();
+				if (user != null) {
+					userId = user.getId();
+				}
+			} catch (Exception e) {}
+			updateVulnsFromDefectTracker(appId, userId);
 		} else {
 			log.debug("Didn't find any scanner-supplied defect IDs, exiting.");
 		}

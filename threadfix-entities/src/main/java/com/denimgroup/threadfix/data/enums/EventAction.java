@@ -36,7 +36,11 @@ public enum EventAction {
     VULNERABILTIY_MARK_FALSE_POSITIVE("Mark Vulnerability False Positive"),
     VULNERABILTIY_UNMARK_FALSE_POSITIVE("Unmark Vulnerability False Positive"),
     VULNERABILTIY_COMMENT("Create Vulnerability Comment"),
-    VULNERABILTIY_OTHER("Other Vulnerability");
+    VULNERABILTIY_OTHER("Other Vulnerability"),
+    DEFECT_SUBMIT("Submit Defect"),
+    DEFECT_STATUS_UPDATED("Update Defect Status"),
+    DEFECT_CLOSED("Close Defect"),
+    DEFECT_APPEARED_AFTER_CLOSED("Appeared In Scan After Defect Closed");
 
     EventAction(String displayName) {
         this.displayName = displayName;
