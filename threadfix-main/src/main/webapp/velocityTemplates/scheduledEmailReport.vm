@@ -1,0 +1,48 @@
+#set ( $severities = ["Critical", "High", "Medium", "Low", "Info"])
+#set ( $styles = {} )
+#set ( $styles.colors = {"Critical":"background-color: #f7280c;",
+                    "High":"background-color: #f27421;",
+                    "Medium":"background-color: #efd20a;",
+                    "Low":"background-color: #458a37;",
+                    "Info":"background-color: #014b6e;"} )
+<html>
+<body>
+<p>Report of new vulnerabilities since #if($frequency=="Daily")yesterday#{else}last week#{end}.</p>
+#if(! $blockedEmailAddresses.isEmpty())
+    <p>WARNING while sending this email the following addresses didn't match the filters and were blocked: 
+    #foreach($blockedEmailAddress in $blockedEmailAddresses)$blockedEmailAddress #end
+#end
+#foreach( $organization in $organizations )
+    #foreach( $application in $organization.applications )
+        <h3><u>$organization.name - $application.name</u><span style="font-weight:normal; margin-left: 15px;">#if($application.url)($application.url)#{end}</span></h3>
+        <div style="margin-left:15px; margin-bottom:45px;">
+        #foreach ( $severity in $severities )
+            #if ( $application.severityTree.containsKey($severity) )
+                #set ( $tree = $application.severityTree.get($severity) )
+                <!--h2>New $severity vulnerabilities</h2-->
+                #foreach( $treeElement in $tree )
+                    <h4 style="margin-top:25px; margin-bottom:10px;">
+                        <span style="$styles.colors.get($severity) color:white; padding:3px; border-radius:3px; margin-right:10px;">$severity</span>
+                        $treeElement.numResults - $treeElement.genericVulnerability.name
+                        <a href="http://cwe.mitre.org/data/definitions/${treeElement.genericVulnerability.displayId}.html">(CWE entry)</a>
+                    </h4>
+                    <ol style="border-left: 1px solid grey; margin-left:30px; padding-left:30px; margin-top:0;">
+                        #foreach ( $vulnerability in $treeElement.vulnerabilities )
+                            #set ( $finding = $vulnerability.findings.get(0))
+                            <li style="margin-bottom:7px;">$finding.channelVulnerability.name ($finding.scan.applicationChannel.channelType.name)<br>
+                                $vulnerability.surfaceLocation.getUrl()
+                                </li>
+                        #end
+                    </ol>
+                    #if ( $treeElement.numResults > 10 )
+                        #set ( $numberOmitted = $treeElement.numResults - 10 )
+                        <p style="margin-left: 30px;">... ($numberOmitted others omitted)</p>
+                    #end
+                #end
+            #end
+        #end
+        </div>
+    #end
+#end
+</body>
+<html>

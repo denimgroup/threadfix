@@ -76,6 +76,12 @@
 						    	<a id="apiKeysLink" href="<spring:url value="/configuration/keys" htmlEscape="true"/>">API Keys</a>
 						    </li>
 					    </security:authorize>
+                        <%--Didn't know how to add properly new permissions so use API keys permissions for the moment--%>
+                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_API_KEYS">
+                            <li class="normalLinks">
+                                <a id="scheduledEmailReportsLink" href="<spring:url value="/configuration/scheduledEmailReports" htmlEscape="true"/>">Scheduled Email Reports</a>
+                            </li>
+                        </security:authorize>
                         <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_DEFECT_TRACKERS">
                             <li class="normalLinks">
                                 <a id="defectTrackersLink" href="<spring:url value="/configuration/defecttrackers" htmlEscape="true"/>">Defect Trackers</a>

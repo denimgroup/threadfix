@@ -98,6 +98,7 @@ public abstract class ScheduledJob extends AuditableEntity {
     }
 
     @Transient
+    @JsonView(Object.class)
     public String getScheduledDate(){
         String scheduledDate;
 

@@ -310,6 +310,8 @@
         <log4j.version>1.2.17</log4j.version>
         <persistence.version>1.0.2</persistence.version>
         <quartz.version>2.2.1</quartz.version>
+        <javamail.version>1.4</javamail.version>
+        <velocity.version>1.7</velocity.version>
         <selenium.version>2.38.0</selenium.version>
         <servlet-api.version>3.1.0</servlet-api.version>
         <sitemesh.version>2.4.2</sitemesh.version>
