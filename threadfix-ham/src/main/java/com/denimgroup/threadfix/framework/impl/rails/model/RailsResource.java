@@ -23,8 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.rails.model;
 
-import java.util.ArrayList;
 import java.util.List;
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * Created by sgerick on 4/8/2015.
@@ -87,7 +87,7 @@ public class RailsResource {
     }
 
     public void initIncludeList() {
-        this.includeList = new ArrayList<>();
+        this.includeList = list();
     }
 
 //    public void setIncludeList(List<String> includeList) {
@@ -106,7 +106,7 @@ public class RailsResource {
     }
 
     public void initExcludeList() {
-        this.excludeList = new ArrayList<>();
+        this.excludeList = list();
     }
 
 //    public void setExcludeList(List<String> excludeList) {

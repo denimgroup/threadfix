@@ -33,6 +33,8 @@ import java.io.File;
 import java.io.StreamTokenizer;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  * Created by sgerick on 4/23/2015.
  */
@@ -46,7 +48,7 @@ public class RailsModelParser implements EventBasedTokenizer {
 
     private Map<String, List<String>> models = new HashMap<>();
     private String modelName = new String();
-    private List<String> modelAttributes = new ArrayList<String>();
+    private List<String> modelAttributes = list();
 
     private ModelState currentModelState = ModelState.INIT;
 
