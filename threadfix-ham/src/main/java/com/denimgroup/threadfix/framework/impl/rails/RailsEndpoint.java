@@ -26,13 +26,33 @@ package com.denimgroup.threadfix.framework.impl.rails;
 import com.denimgroup.threadfix.framework.engine.AbstractEndpoint;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.setFrom;
 
 /**
  * Created by sgerick on 5/5/2015.
  */
 public class RailsEndpoint extends AbstractEndpoint {
+
+    private String filePath;
+    private String urlPath;
+
+    private Set<String> httpMethods;
+    private Set<String> parameters;
+
+    public RailsEndpoint(String filePath, String urlPath,
+                          Collection<String> httpMethods, Collection<String> parameters) {
+        this.filePath = filePath;
+        this.urlPath = urlPath;
+        if (httpMethods != null)
+            this.httpMethods = setFrom(httpMethods);
+        if (parameters != null)
+            this.parameters = setFrom(parameters);
+    }
+
     @Nonnull
     @Override
     protected List<String> getLintLine() {
@@ -42,25 +62,25 @@ public class RailsEndpoint extends AbstractEndpoint {
     @Nonnull
     @Override
     public Set<String> getParameters() {
-        return null;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+        return parameters;
     }
 
     @Nonnull
     @Override
     public Set<String> getHttpMethods() {
-        return null;
+        return httpMethods;
     }
 
     @Nonnull
     @Override
     public String getUrlPath() {
-        return null;
+        return urlPath;
     }
 
     @Nonnull
     @Override
     public String getFilePath() {
-        return null;
+        return filePath;
     }
 
     @Override
