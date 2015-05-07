@@ -24,8 +24,9 @@
 package com.denimgroup.threadfix.framework.impl.rails.model;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * Created by sgerick on 4/30/2015.
@@ -66,8 +67,16 @@ public class RailsController {
 
     public void addControllerMethod(RailsControllerMethod controllerMethod) {
         if (this.controllerMethods == null)
-            this.controllerMethods = new ArrayList<>();
+            this.controllerMethods = list();
         this.controllerMethods.add(controllerMethod);
     }
 
+    public List<String> getParameters() {
+        List<String> p = list();
+        for (RailsControllerMethod rcm : controllerMethods) {
+            if (rcm.getMethodParams() != null)
+                p.addAll(rcm.getMethodParams());
+        }
+        return p;
+    }
 }

@@ -38,6 +38,8 @@ import java.io.FileNotFoundException;
 import java.io.StreamTokenizer;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  * Created by sgerick on 4/23/2015.
  */
@@ -78,7 +80,7 @@ public class RailsControllerParser implements EventBasedTokenizer {
 
         RailsControllerParser parser = new RailsControllerParser();
         parser.modelMap = RailsModelParser.parse(rootFile);
-        parser.railsControllers = new ArrayList<>();
+        parser.railsControllers = list();
 
         for (File rubyFile : rubyFiles) {
             parser._continue = true;
@@ -97,7 +99,7 @@ public class RailsControllerParser implements EventBasedTokenizer {
             if (parser.currentRailsController != null
                     && parser.currentRailsController.getControllerMethods() != null
                     && parser.currentRailsController.getControllerMethods().size() > 0) {
-                parser.currentRailsController.setControllerFile(rootFile);
+                parser.currentRailsController.setControllerFile(rubyFile);
                 parser.railsControllers.add(parser.currentRailsController);
             }
         }

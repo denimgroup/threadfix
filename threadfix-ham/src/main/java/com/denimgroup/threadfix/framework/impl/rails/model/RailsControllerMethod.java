@@ -23,8 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.rails.model;
 
-import java.util.ArrayList;
 import java.util.List;
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
 * Created by sgerick on 4/30/2015.
@@ -47,7 +47,7 @@ public class RailsControllerMethod {
 
     public void addMethodParam(String methodParam) {
         if (this.methodParams == null)
-            this.methodParams = new ArrayList<>();
+            this.methodParams = list();
         this.methodParams.add(methodParam);
     }
 
