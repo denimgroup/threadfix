@@ -195,9 +195,22 @@ public class WafRestController extends TFRestController {
 			return failure("Invalid WAF ID.");
 		}
 
+		List<Application> wafApplications = waf.getApplications();
+
+		if (wafApplications.isEmpty()) {
+			log.warn("You need to attach an Application to this WAF before you can start to generate rules.");
+			return failure("You need to attach an Application to this WAF before you can start to generate rules.");
+		}
+
         Application application = null;
         if (wafAppId != -1) {
             application = applicationService.loadApplication(wafAppId);
+
+			if (!wafApplications.contains(application)) {
+				log.warn("This application is not attached to this WAF.");
+				return failure("This application is not attached to this WAF.");
+			}
+
             if (application == null
                     || application.getWaf() == null
                     || application.getWaf().getId() != wafId) {
@@ -209,7 +222,7 @@ public class WafRestController extends TFRestController {
         List<WafRule> ruleList = wafService.generateWafRules(waf, waf.getLastWafRuleDirective(), application);
         String ruleStr = wafService.getRulesText(waf, ruleList);
         if (ruleStr == null || ruleStr.isEmpty()) {
-            return failure("No Rules generated for WAF.");
+            return failure("No Rules generated for WAF. It is possible none of the vulnerability types are supported by the WAF.");
         } else {
             return success(ruleStr);
         }
