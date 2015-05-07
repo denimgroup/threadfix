@@ -32,10 +32,10 @@
                                     Default role enabled for LDAP users
                                 </td>
                                 <td class="inputValue" style="text-align: left;">
-                                    <input type="checkbox" id="globalGroupEnabledCheckbox" name="globalGroupEnabled" ng-model="config.globalGroupEnabled"/>
+                                    <input type="checkbox" id="globalGroupEnabledCheckbox" name="globalGroupEnabled" ng-model="object.globalGroupEnabled"/>
                                 </td>
                                 <td class="inputValue">
-                                    <select id="roleSelect" ng-model="config.defaultRoleId" name="defaultRoleId" ng-disabled="!config.globalGroupEnabled" required>
+                                    <select id="roleSelect" ng-model="object.defaultRoleId" name="defaultRoleId" ng-disabled="!object.globalGroupEnabled" required>
                                         <option ng-repeat="role in roleList" value="{{ role.id }}">{{ role.displayName }}</option>
                                     </select>
                                 </td>
@@ -78,7 +78,7 @@
                                        class="focus wide"
                                        size="60"
                                        maxlength="255"
-                                       ng-model="config.activeDirectoryBase"/>
+                                       ng-model="object.activeDirectoryBase"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
                                 <span id="activeDirectoryBaseCharacterLimitError" class="errors" ng-show="form.activeDirectoryBase.$dirty && form.activeDirectoryBase.$error.maxlength">Over 255 characters limit!</span>
@@ -98,7 +98,7 @@
                                        class="wide"
                                        size="60"
                                        maxlength="255"
-                                       ng-model="config.activeDirectoryUsername"/>
+                                       ng-model="object.activeDirectoryUsername"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
                                 <span id="activeDirectoryUsernameCharacterLimitError" class="errors" ng-show="form.activeDirectoryUsername.$dirty && form.activeDirectoryUsername.$error.maxlength">Over 255 characters limit!</span>
@@ -115,7 +115,7 @@
                                        name="activeDirectoryCredentials"
                                        size="60"
                                        maxlength="255"
-                                       ng-model="config.activeDirectoryCredentials"/>
+                                       ng-model="object.activeDirectoryCredentials"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
                                 <span id="activeDirectoryCredentialsCharacterLimitError" class="errors" ng-show="form.activeDirectoryCredentials.$dirty && form.activeDirectoryCredentials.$error.maxlength">Over 255 characters limit!</span>
@@ -132,7 +132,7 @@
                                        class="wide"
                                        size="60"
                                        maxlength="255"
-                                       ng-model="config.activeDirectoryURL"/>
+                                       ng-model="object.activeDirectoryURL"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
                                 <span id="activeDirectoryURLCharacterLimitError" class="errors" ng-show="form.activeDirectoryURL.$dirty && form.activeDirectoryURL.$error.maxlength">Over 255 characters limit!</span>
@@ -167,7 +167,7 @@
                                        class="focus"
                                        size="60"
                                        maxlength="255"
-                                       ng-model="config.proxyHost"/>
+                                       ng-model="object.proxyHost"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
                                 <span id="proxyHostCharacterLimitError" class="errors" ng-show="form.proxyHost.$dirty && form.proxyHost.$error.maxlength">Over 255 characters limit!</span>
@@ -183,7 +183,7 @@
                                        class="focus"
                                        size="60"
                                        maxlength="255"
-                                       ng-model="config.proxyPort"/>
+                                       ng-model="object.proxyPort"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
                                 <span id="proxyPortServerError" class="errors" ng-show="object.proxyPort_error"> {{ object.proxyPort_error }}</span>
@@ -193,31 +193,31 @@
                         <tr>
                             <td>Use Proxy Credentials</td>
                             <td>
-                                <input type="checkbox" name="shouldUseProxyCredentials" ng-model="config.shouldUseProxyCredentials"/>
+                                <input type="checkbox" name="shouldUseProxyCredentials" ng-model="object.shouldUseProxyCredentials"/>
                             </td>
                         </tr>
                         <tr>
                             <td class="no-color">Proxy Username</td>
                             <td class="no-color">
-                                <input ng-show="!config.proxyUsernameEncrypted"
-                                       ng-disabled="!config.shouldUseProxyCredentials"
+                                <input ng-show="!object.proxyUsernameEncrypted"
+                                       ng-disabled="!object.shouldUseProxyCredentials"
                                        id="proxyUsername"
                                        name="proxyUsername"
                                        class="focus"
                                        size="60"
                                        type="text"
                                        maxlength="255"
-                                       ng-model="config.proxyUsername"/>
-                                <input ng-show="config.proxyUsernameEncrypted"
-                                       ng-disabled="!config.shouldUseProxyCredentials"
+                                       ng-model="object.proxyUsername"/>
+                                <input ng-show="object.proxyUsernameEncrypted"
+                                       ng-disabled="!object.shouldUseProxyCredentials"
                                        id="proxyUsername"
                                        name="proxyUsername"
                                        class="focus"
                                        size="60"
                                        type="text"
                                        maxlength="255"
-                                       ng-model="config.proxyUsername"
-                                       placeholder="Use configured username"/>
+                                       ng-model="object.proxyUsername"
+                                       placeholder="Use object username"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
                                 <span id="proxyUsernameCharacterLimitError" class="errors" ng-show="form.proxyUsername.$dirty && form.proxyUsername.$error.maxlength">Over 255 characters limit!</span>
@@ -227,24 +227,24 @@
                         <tr>
                             <td class="no-color">Proxy Password</td>
                             <td class="no-color">
-                                <input ng-show="!config.proxyPasswordEncrypted"
-                                       ng-disabled="!config.shouldUseProxyCredentials"
+                                <input ng-show="!object.proxyPasswordEncrypted"
+                                       ng-disabled="!object.shouldUseProxyCredentials"
                                        id="proxyPassword"
                                        type="password"
                                        name="proxyPassword"
                                        class="focus"
                                        size="60"
                                        maxlength="255"
-                                       ng-model="config.proxyPassword"/>
-                                <input ng-show="config.proxyPasswordEncrypted"
-                                       ng-disabled="!config.shouldUseProxyCredentials"
+                                       ng-model="object.proxyPassword"/>
+                                <input ng-show="object.proxyPasswordEncrypted"
+                                       ng-disabled="!object.shouldUseProxyCredentials"
                                        id="proxyPassword"
                                        type="password"
                                        name="proxyPassword"
                                        cssClass="focus"
                                        size="60"
                                        maxlength="255"
-                                       ng-model="config.proxyPassword"
+                                       ng-model="object.proxyPassword"
                                        placeholder="Use configured password"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
@@ -254,43 +254,43 @@
                         </tr>
                         <tr>
                             <td>Qualys</td>
-                            <td><input type="checkbox" name="shouldProxyQualys" ng-model="config.shouldProxyQualys"/></td>
+                            <td><input type="checkbox" name="shouldProxyQualys" ng-model="object.shouldProxyQualys"/></td>
                         </tr>
                         <tr>
                             <td>Veracode</td>
-                            <td><input type="checkbox" name="shouldProxyVeracode" ng-model="config.shouldProxyVeracode"/></td>
+                            <td><input type="checkbox" name="shouldProxyVeracode" ng-model="object.shouldProxyVeracode"/></td>
                         </tr>
                         <tr>
                             <td>WhiteHat Sentinel</td>
-                            <td><input type="checkbox" name="shouldProxyWhiteHat" ng-model="config.shouldProxyWhiteHat"/></td>
+                            <td><input type="checkbox" name="shouldProxyWhiteHat" ng-model="object.shouldProxyWhiteHat"/></td>
                         </tr>
                         <tr>
                             <td>Trustwave Hailstorm</td>
-                            <td><input type="checkbox" name="shouldProxyTrustwaveHailstorm" ng-model="config.shouldProxyTrustwaveHailstorm"/></td>
+                            <td><input type="checkbox" name="shouldProxyTrustwaveHailstorm" ng-model="object.shouldProxyTrustwaveHailstorm"/></td>
                         </tr>
                         <tr>
                             <td>Contrast</td>
-                            <td><input type="checkbox" name="shouldProxyContrast" ng-model="config.shouldProxyContrast"/></td>
+                            <td><input type="checkbox" name="shouldProxyContrast" ng-model="object.shouldProxyContrast"/></td>
                         </tr>
                         <tr>
                             <td>TFS</td>
-                            <td><input type="checkbox" name="shouldProxyTFS" ng-model="config.shouldProxyTFS"/></td>
+                            <td><input type="checkbox" name="shouldProxyTFS" ng-model="object.shouldProxyTFS"/></td>
                         </tr>
                         <tr>
                             <td>Bugzilla</td>
-                            <td><input type="checkbox" name="shouldProxyBugzilla" ng-model="config.shouldProxyBugzilla"/></td>
+                            <td><input type="checkbox" name="shouldProxyBugzilla" ng-model="object.shouldProxyBugzilla"/></td>
                         </tr>
                         <tr>
                             <td>Jira</td>
-                            <td><input type="checkbox" name="shouldProxyJira" ng-model="config.shouldProxyJira"/></td>
+                            <td><input type="checkbox" name="shouldProxyJira" ng-model="object.shouldProxyJira"/></td>
                         </tr>
                         <tr>
                             <td>Version One</td>
-                            <td><input type="checkbox" name="shouldProxyVersionOne" ng-model="config.shouldProxyVersionOne"/></td>
+                            <td><input type="checkbox" name="shouldProxyVersionOne" ng-model="object.shouldProxyVersionOne"/></td>
                         </tr>
                         <tr>
                             <td>HP Quality Center</td>
-                            <td><input type="checkbox" name="shouldProxyHPQC" ng-model="config.shouldProxyHPQC"/></td>
+                            <td><input type="checkbox" name="shouldProxyHPQC" ng-model="object.shouldProxyHPQC"/></td>
                         </tr>
                     </table>
                 </div>
@@ -319,7 +319,7 @@
                                        class="focus"
                                        size="60"
                                        maxlength="255"
-                                       ng-model="config.sessionTimeout"/>
+                                       ng-model="object.sessionTimeout"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
                                 <span id="sessionTimeoutNumberLimitError" class="errors" ng-show="form.sessionTimeout.$dirty && form.sessionTimeout.$error.max">Max value is 30 seconds.</span>
@@ -362,7 +362,7 @@
                         <td style="width:150px" class="no-color">File Upload Location</td>
                         <td class="no-color">
                             <input id="fileUploadLocation" type="text" name="fileUploadLocation" class="focus" size="60"
-                                        maxlength="1024" ng-model="config.fileUploadLocation"/>
+                                        maxlength="1024" ng-model="object.fileUploadLocation"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
                             <span id="fileUploadLocationCharacterLimitError" class="errors" ng-show="form.fileUploadLocation.$dirty && form.fileUploadLocation.$error.maxlength">Over 1024 characters limit!</span>
@@ -390,7 +390,7 @@
                             </div>
                             <div>
                                 <select ng-options="dashboardReport.displayName for dashboardReport in dashboardReports track by dashboardReport.id"
-                                        id="dashboardTopLeftSelect" name="dashboardTopLeft" ng-model="config.dashboardTopLeft" ></select>
+                                        id="dashboardTopLeftSelect" name="dashboardTopLeft" ng-model="object.dashboardTopLeft" ></select>
                             </div>
                         </td>
                         <td style="padding-left: 5px">
@@ -399,7 +399,7 @@
                             </div>
                             <div>
                                 <select ng-options="dashboardReport.displayName for dashboardReport in dashboardReports track by dashboardReport.id"
-                                        id="dashboardTopRightSelect" name="dashboardTopRight" ng-model="config.dashboardTopRight" ></select>
+                                        id="dashboardTopRightSelect" name="dashboardTopRight" ng-model="object.dashboardTopRight" ></select>
                             </div>
                         </td>
                         <td style="padding-left: 5px">
@@ -408,7 +408,7 @@
                             </div>
                             <div>
                                 <select ng-options="dashboardReport.displayName for dashboardReport in dashboardReports track by dashboardReport.id"
-                                        id="dashboardBottomLeftSelect" name="dashboardBottomLeft" ng-model="config.dashboardBottomLeft" ></select>
+                                        id="dashboardBottomLeftSelect" name="dashboardBottomLeft" ng-model="object.dashboardBottomLeft" ></select>
                             </div>
                         </td>
                         <td style="padding-left: 5px">
@@ -417,7 +417,7 @@
                             </div>
                             <div>
                                 <select ng-options="dashboardReport.displayName for dashboardReport in dashboardReports track by dashboardReport.id"
-                                        id="dashboardBottomRightSelect" name="dashboardBottomRight" ng-model="config.dashboardBottomRight" ></select>
+                                        id="dashboardBottomRightSelect" name="dashboardBottomRight" ng-model="object.dashboardBottomRight" ></select>
                             </div>
                         </td>
                     </tr>
@@ -443,7 +443,7 @@
                             </div>
                             <div>
                                 <select ng-options="applicationReport.displayName for applicationReport in applicationReports track by applicationReport.id"
-                                        id="applicationTopLeftSelect" name="applicationTopLeft" ng-model="config.applicationTopLeft" ></select>
+                                        id="applicationTopLeftSelect" name="applicationTopLeft" ng-model="object.applicationTopLeft" ></select>
                             </div>
                         </td>
                         <td style="padding-left: 5px">
@@ -452,7 +452,7 @@
                             </div>
                             <div>
                                 <select ng-options="applicationReport.displayName for applicationReport in applicationReports track by applicationReport.id"
-                                        id="applicationTopRightSelect" name="applicationTopRight" ng-model="config.applicationTopRight" ></select>
+                                        id="applicationTopRightSelect" name="applicationTopRight" ng-model="object.applicationTopRight" ></select>
                             </div>
                         </td>
                 </table>
@@ -477,7 +477,7 @@
                             </div>
                             <div>
                                 <select ng-options="teamReport.displayName for teamReport in teamReports track by teamReport.id"
-                                        id="teamTopLeftSelect" name="teamTopLeft" ng-model="config.teamTopLeft" ></select>
+                                        id="teamTopLeftSelect" name="teamTopLeft" ng-model="object.teamTopLeft" ></select>
                             </div>
                         </td>
                         <td style="padding-left: 5px">
@@ -486,7 +486,7 @@
                             </div>
                             <div>
                                 <select ng-options="teamReport.displayName for teamReport in teamReports track by teamReport.id"
-                                        id="teamTopRightSelect" name="teamTopRight" ng-model="config.teamTopRight"></select>
+                                        id="teamTopRightSelect" name="teamTopRight" ng-model="object.teamTopRight"></select>
                             </div>
                         </td>
                 </table>
