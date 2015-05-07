@@ -36,7 +36,7 @@
                                 </td>
                                 <td class="inputValue">
                                     <select id="roleSelect" ng-model="object.defaultRoleId" name="defaultRoleId" ng-disabled="!object.globalGroupEnabled" required>
-                                        <option ng-repeat="role in roleList" value="{{ role.id }}">{{ role.displayName }}</option>
+                                        <option ng-repeat="role in roleList" ng-selected="selectedRole(role.id)" value="{{ role.id }}">{{ role.displayName }}</option>
                                     </select>
                                 </td>
                                 <td style="border: 0 solid black; background-color: white; padding-left: 5px">
