@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.data.entities.Group;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
@@ -100,16 +101,7 @@ public class UsersController {
 	}
 
 	private String indexInner(ModelMap model, HttpServletRequest request, String defaultTab) {
-		List<User> users = userService.loadAllUsers();
-
-		String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-
-		for (User user : users) {
-			user.setIsDeletable(userService.canDelete(user));
-			user.setIsThisUser(currentUser != null && currentUser.equals(user.getName()));
-		}
 		model.addAttribute("ldap_plugin", EnterpriseTest.isEnterprise());
-		model.addAttribute("users", users);
 
 		model.addAttribute("startingTab", defaultTab);
 		model.addAttribute("user", new User());
@@ -154,10 +146,30 @@ public class UsersController {
 			returnMap.put("groups", groups);
 		}
 
-		returnMap.put("countUsers", userService.countUsers());
+		returnMap.put("countUsers", userService.countUsers(null));
 		returnMap.put("teams", organizationService.loadAllActive());
 
 		return success(returnMap);
+    }
+
+	@RequestMapping(value = "/configuration/users/search", method = RequestMethod.POST)
+	@JsonView(AllViews.TableRow.class)
+	@ResponseBody
+	public Object search(HttpServletRequest request) {
+
+		List<User> users = userService.search(request);
+
+        String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        for (User user : users) {
+            user.setIsDeletable(userService.canDelete(user));
+            user.setIsThisUser(currentUser != null && currentUser.equals(user.getName()));
+        }
+
+		return success(CollectionUtils.map(
+				"users", users,
+				"countUsers", userService.countUsers(request.getParameter("searchString"))
+		));
     }
 
 	@RequestMapping("/configuration/users/{userId}/delete")

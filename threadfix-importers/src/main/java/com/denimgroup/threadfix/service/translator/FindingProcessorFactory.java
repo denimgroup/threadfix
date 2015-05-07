@@ -32,20 +32,22 @@ import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.framework.engine.ProjectConfig;
 import com.denimgroup.threadfix.framework.engine.framework.FrameworkCalculator;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.GitService;
+import com.denimgroup.threadfix.service.RepositoryService;
+import com.denimgroup.threadfix.service.repository.RepositoryServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 
+@Component
 class FindingProcessorFactory extends SpringBeanAutowiringSupport {
 
-    @Autowired(required = false)
-    private GitService gitService;
-
     private static final SanitizedLogger LOG = new SanitizedLogger(FindingProcessorFactory.class);
+
+    @Autowired private RepositoryServiceFactory repositoryServiceFactory;
 
     @Nonnull
     public static FindingProcessor getProcessor(@Nonnull Application application,
@@ -120,19 +122,21 @@ class FindingProcessorFactory extends SpringBeanAutowiringSupport {
 
         FindingProcessorFactory factory = new FindingProcessorFactory();
 
-        if (factory.gitService == null) {
-            LOG.info("GitService was null. " +
+        RepositoryService repositoryService = factory.repositoryServiceFactory.getRepositoryService(application);
+
+        if (repositoryService == null) {
+            LOG.info("RepositoryService was null. " +
                      "Either we're not in a Spring context or no implementation was in the container.");
         } else {
-            LOG.info("Successfully found GitService.");
+            LOG.info("Successfully found RepositoryService.");
         }
 
 		File applicationDirectory = DiskUtils.getScratchFile(baseDirectory + application.getId());
 
-		if (factory.gitService != null &&
+		if (repositoryService != null &&
                 application.getRepositoryUrl() != null &&
                 !application.getRepositoryUrl().trim().isEmpty()) {
-			File file = factory.gitService.cloneGitTreeToDirectory(application, applicationDirectory);
+			File file = repositoryService.cloneRepoToDirectory(application, applicationDirectory);
 
 			if (file != null && file.exists()) {
 				return file;

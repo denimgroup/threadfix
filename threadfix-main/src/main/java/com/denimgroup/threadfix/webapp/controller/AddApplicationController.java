@@ -74,7 +74,8 @@ public class AddApplicationController {
 		dataBinder.setAllowedFields("name", "url", "defectTracker.id", "uniqueId",
                 "userName", "password", "waf.id", "projectName", "applicationCriticality.id",
                 "frameworkType", "repositoryUrl", "repositoryBranch",
-                "repositoryUserName", "repositoryPassword", "repositoryFolder", "skipApplicationMerge", "tags[*].id", "tags[*].name");
+                "repositoryUserName", "repositoryPassword", "repositoryFolder", "repositoryType",
+                "skipApplicationMerge", "tags[*].id", "tags[*].name");
 	}
 
 	public AddApplicationController(){}
@@ -158,6 +159,11 @@ public class AddApplicationController {
         }
 
         applicationService.validateAfterCreate(application, result);
+
+        if (application.getRepositoryUrl() != null && !application.getRepositoryUrl().isEmpty() &&
+                application.getRepositoryType() == null) {
+            result.rejectValue("repositoryType", null, null, "Choose either Git or SVN");
+        }
 
         if (result.hasErrors()) {
             PermissionUtils.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS,

@@ -85,8 +85,11 @@ public interface UserDao extends GenericNamedObjectDao<User> {
 	/**
 	 * Return total number of users in system
 	 * @return
+	 * @param searchString
 	 */
-	Long countUsers();
+	Long countUsers(String searchString);
 
 	boolean canRemovePermissionFromUserAndGroup(Integer userId, Integer groupId, String camelCase);
+
+	List<User> getSearchResults(String searchString, int number, int page);
 }

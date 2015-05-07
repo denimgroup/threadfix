@@ -1359,3 +1359,7 @@ h4 a {
 input.no-bottom-margin {
 	margin-bottom: 0 !important;
 }
+
+.side-list-width {
+	width: 166px !important;
+}

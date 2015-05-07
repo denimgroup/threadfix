@@ -21,8 +21,33 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
 
-public interface GitService extends RepositoryService {
+package com.denimgroup.threadfix.data.entities;
 
+/**
+ * @author zabdisubhan
+ */
+public enum SourceCodeRepoType {
+
+    GIT("Git"),
+    SVN("SVN");
+
+    private String repoType;
+
+    public String getRepoType() {
+        return this.repoType;
+    }
+
+    private SourceCodeRepoType(String repoType) {
+        this.repoType = repoType;
+    }
+
+    public static SourceCodeRepoType getType(String keyword) {
+        for (SourceCodeRepoType t: values()) {
+            if (keyword.equalsIgnoreCase(t.getRepoType())) {
+                return t;
+            }
+        }
+        return null;
+    }
 }

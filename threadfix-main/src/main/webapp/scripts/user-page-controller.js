@@ -14,7 +14,11 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         return a.name.localeCompare(b.name);
     };
 
-    $scope.numberToShow = 50;
+    var lastSearchString = undefined;
+    var lastNumber = 0;
+    var lastPage = 0;
+
+    $scope.numberToShow = 20;
 
     var reloadList = function(callBack) {
         $scope.initialized = false;
@@ -25,8 +29,8 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 if (data.success) {
                     $scope.countUsers = data.object.countUsers;
                     if (data.object.users.length > 0) {
-                        $scope.users = data.object.users;
                         $scope.roles = data.object.roles;
+                        $scope.users = data.object.users;
                         $scope.users.sort(nameCompare);
 
                         $scope.teams = data.object.teams;
@@ -156,9 +160,9 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         $scope.successMessage = undefined;
     };
 
-    $scope.updatePage = function(page) {
+    $scope.updatePage = function(page, searchString) {
         $scope.page = page;
-        reloadList();
+        $scope.searchUsers(searchString);
     };
 
     $scope.setCurrentUser = function(user) {
@@ -191,7 +195,55 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         return !form.$dirty || form.$invalid || angular.equals($scope.currentUser, user.baseUser)
     };
 
+    $scope.selectUser = function(user) {
+        selectUserWithId(user.id);
+    };
+
+    $scope.searchUsers = function(searchText) {
+
+        if (lastSearchString && lastSearchString === searchText &&
+                lastNumber === $scope.numberToShow &&
+                lastPage === $scope.page) {
+            return;
+        }
+
+        var users = [];
+
+        var searchObject = {
+            "searchString" : searchText,
+            "page" : $scope.page,
+            "number" : $scope.numberToShow
+        };
+
+        $http.post(tfEncoder.encode("/configuration/users/search"), searchObject).
+            then(function(response) {
+
+                var data = response.data;
+
+                if (data.success) {
+                    $scope.countUsers = data.object.countUsers;
+                    users = data.object.users;
+                    lastSearchString = searchText;
+                    lastNumber = $scope.numberToShow;
+                    lastPage = $scope.page;
+                    $scope.users = users;
+                    $scope.users.sort(nameCompare);
+                    selectUserWithId($scope.userId);
+                } else {
+                    $scope.errorMessage = "Failed to receive search results. Message was : " + data.message;
+                }
+
+                return users;
+            });
+
+    };
+
     function selectUserWithId(targetId) {
+        if (!targetId) {
+            $scope.currentUser = undefined;
+            return;
+        }
+
         var index = 0, targetIndex = -1;
         $scope.users.forEach(function (listUser) {
             if (listUser.id === targetId) {
@@ -199,6 +251,11 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
             }
             index = index + 1;
         });
+
+        if (targetIndex === -1) {
+            $scope.currentUser = undefined;
+            return;
+        }
 
         $scope.setCurrentUser($scope.users[targetIndex]);
     }

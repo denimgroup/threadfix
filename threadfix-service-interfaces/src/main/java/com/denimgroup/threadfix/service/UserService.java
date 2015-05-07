@@ -32,6 +32,8 @@ import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author bbeverly
  * 
@@ -142,5 +144,9 @@ public interface UserService {
 
 	List<User> retrievePage(int page, int numberToShow);
 
-	Long countUsers();
+	Long countUsers(String searchString);
+
+	List<User> search(String searchString, int numResults, int page);
+
+	List<User> search(HttpServletRequest request);
 }
