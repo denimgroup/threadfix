@@ -26,20 +26,22 @@ package com.denimgroup.threadfix.framework.impl.rails.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  * Created by sgerick on 5/5/2015.
  */
 public class RailsRoute {
     private String url;
-    private List<String> methods;
-    private String controller;
+    private List<String> httpMethods;
+    //private String controller;
 
     public RailsRoute() {
     }
 
     public RailsRoute(String url, String method) {
         this.setUrl(url);
-        this.addMethod(method);
+        this.addHttpMethod(method);
     }
 
     public String getUrl() {
@@ -50,24 +52,24 @@ public class RailsRoute {
         this.url = url;
     }
 
-    public List<String> getMethods() {
-        return methods;
+    public List<String> getHttpMethods() {
+        return httpMethods;
     }
 
-    public void addMethod(String method) {
-        if (this.methods == null)
-            this.methods = new ArrayList<>();
-        if (!methods.contains(method)) {
-            this.methods.add(method);
+    public void addHttpMethod(String method) {
+        if (this.httpMethods == null)
+            this.httpMethods = list();
+        if (!httpMethods.contains(method)) {
+            this.httpMethods.add(method);
         }
     }
 
-    public String getController() {
-        return controller;
-    }
-
-    public void setController(String controller) {
-        this.controller = controller;
-    }
+//    public String getController() {
+//        return controller;
+//    }
+//
+//    public void setController(String controller) {
+//        this.controller = controller;
+//    }
 
 }

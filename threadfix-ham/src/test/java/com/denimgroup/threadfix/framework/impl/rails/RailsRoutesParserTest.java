@@ -5,7 +5,6 @@ import com.denimgroup.threadfix.framework.impl.rails.model.RailsRoute;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertTrue;
@@ -1006,7 +1005,7 @@ public class RailsRoutesParserTest {
             found = false;
             for (RailsRoute route : routeMap.values()) {
                 String url = route.getUrl();
-                for (String method : route.getMethods()) {
+                for (String method : route.getHttpMethods()) {
                     String foundRoute = method + ": " + url;
                     if ( (testRoute[0] + ": " + testRoute[1]).equals(foundRoute) ) {
                         found = true;

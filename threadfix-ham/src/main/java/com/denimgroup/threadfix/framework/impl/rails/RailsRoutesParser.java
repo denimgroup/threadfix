@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.framework.impl.rails.model.ResourceState;
 import com.denimgroup.threadfix.framework.impl.rails.model.ResourceType;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 import javax.annotation.Nonnull;
 import java.io.*;
@@ -39,13 +40,19 @@ import java.util.*;
  */
 public class RailsRoutesParser implements EventBasedTokenizer {
 
-//    private List<String> mappings = new ArrayList<>();
+    private static final SanitizedLogger LOG = new SanitizedLogger("RailsParser");
+
     private Map<String, RailsRoute> mappings = new HashMap<>();
 
     private Stack<RailsResource> resourceStack = new Stack<>();
     private RailsResource currentRailsResource = new RailsResource();
 
     public static Map parse(@Nonnull File file) {
+        if (!file.exists()) {
+            LOG.error("File not found. Exiting. " + file.getName());
+            return null;
+        }
+
         RailsRoutesParser parser = new RailsRoutesParser();
 //        System.err.println("stackSizeStart = " + parser.resourceStack.size());
         EventBasedTokenizerRunner.runRails(file, parser);
@@ -616,7 +623,7 @@ public class RailsRoutesParser implements EventBasedTokenizer {
         if (route == null) {
             route = new RailsRoute(url, method);
         } else {
-            route.addMethod(method);
+            route.addHttpMethod(method);
         }
         //mappings.add(m);
         mappings.put(url, route);
