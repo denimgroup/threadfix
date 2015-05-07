@@ -13,7 +13,7 @@
      ng-form="form">
 
     <div class="form-group">
-        <label for="name">User</label>
+        <label for="name">Name</label>
         <input ng-model="currentUser.name" required type="text" name="name" id="name"/>
         <span id="name.errors.required" class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
         <span id="name.errors" class="errors" ng-show="user.name_error"> {{ user.name_error }}</span>
@@ -123,5 +123,9 @@
                 </tbody>
             </table>
         </div>
+
+
+
+
     </security:authorize>
 </div>

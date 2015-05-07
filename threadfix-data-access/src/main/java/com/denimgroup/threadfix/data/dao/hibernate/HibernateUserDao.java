@@ -23,9 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import java.util.List;
-
 import com.denimgroup.threadfix.data.dao.AbstractNamedObjectDao;
+import com.denimgroup.threadfix.data.dao.UserDao;
+import com.denimgroup.threadfix.data.entities.User;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
@@ -34,15 +34,13 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.denimgroup.threadfix.data.dao.UserDao;
-import com.denimgroup.threadfix.data.entities.User;
+import java.util.List;
 
 /**
  * Hibernate User DAO implementation. Most basic methods are implemented in the
  * AbstractGenericDao
  *
  * @author dshannon
- * @see AbstractGenericDao
  */
 @Repository
 public class HibernateUserDao
@@ -193,9 +191,18 @@ public class HibernateUserDao
 	}
 
 	@Override
-	public Long countUsers() {
-		return (Long) getActiveUserCriteria()
-				.setProjection(Projections.rowCount())
+	public Long countUsers(String searchString) {
+		Criteria criteria = getActiveUserCriteria()
+				.setProjection(Projections.rowCount());
+
+		if (searchString != null) {
+			criteria.add(Restrictions.or(
+					Restrictions.like("name", "%" + searchString + "%"),
+					Restrictions.like("displayName", "%" + searchString + "%")
+			));
+		}
+
+		return (Long) criteria
 				.uniqueResult();
 	}
 
@@ -226,5 +233,17 @@ public class HibernateUserDao
 		}
 
 		return result != null && result > 0;
+	}
+
+	@Override
+	public List<User> getSearchResults(String searchString, int number, int page) {
+		return (List<User>) getSession().createCriteria(User.class)
+				.add(Restrictions.eq("active", true))
+				.add(Restrictions.or(
+						Restrictions.like("name", "%" + searchString + "%"),
+						Restrictions.like("displayName", "%" + searchString + "%")
+				)).setMaxResults(number)
+				.setFirstResult((page - 1) * number)
+				.list();
 	}
 }

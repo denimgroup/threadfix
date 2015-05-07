@@ -35,11 +35,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.set;
+import static com.denimgroup.threadfix.importer.util.IntegerUtils.getIntegerOrNull;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -415,8 +417,40 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Long countUsers() {
-		return userDao.countUsers();
+	public Long countUsers(String searchString) {
+		return userDao.countUsers(searchString);
 	}
 
+	@Override
+	public List<User> search(String searchString, int numResults, int page) {
+		return userDao.getSearchResults(searchString, numResults, page);
+	}
+
+	@Override
+	public List<User> search(HttpServletRequest request) {
+
+
+		String searchString = request.getParameter("searchString");
+		if (searchString == null) {
+			searchString = "";
+		}
+		Long count = countUsers(searchString);
+
+		Integer page = getIntegerOrNull(request.getParameter("page")),
+				number = getIntegerOrNull(request.getParameter("number"));
+
+		if (page == null || page < 1) {
+			page = 1;
+		}
+
+		if (number == null || number < 1) {
+			number = 1;
+		}
+
+		if ((page - 1) * number > count) {
+			page = 1;
+		}
+
+		return search(searchString, number, page);
+	}
 }
