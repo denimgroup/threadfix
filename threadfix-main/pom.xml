@@ -123,6 +123,20 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>Base64-to-classes</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <copy file="${project.build.directory}/unpacked-jars/org/apache/commons/codec/binary/Base64.class"
+                                      tofile="target/classes/org/apache/commons/codec/binary/Base64.class" />
+                                <delete dir="target/unpacked-jars" includeemptydirs="true"/>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>Copy Downloads</id>
                         <phase>prepare-package</phase>
                         <goals>
