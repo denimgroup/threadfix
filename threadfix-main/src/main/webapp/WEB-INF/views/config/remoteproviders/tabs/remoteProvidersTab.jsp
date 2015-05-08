@@ -124,7 +124,6 @@
                 <c:if test="${ canManageRemoteProviders }">
                     <th class="medium"></th>
                 </c:if>
-                <th ng-if="provider.supportedDynamicStatic">Asset Type</th>
                 <th class="medium">Team</th>
                 <th class="medium">Application</th>
                 <c:if test="${ canManageRemoteProviders }">
@@ -144,7 +143,6 @@
                         <a id="provider{{ provider.id }}updateName{{ $index }}" class="btn" ng-click="openNameModal(provider, app)">Edit Name</a>
                     </td>
                 </c:if>
-                <td ng-if="provider.supportedDynamicStatic">{{app.assetType}}</td>
                 <td id="provider{{ provider.id }}tfteamname{{ $index }}">
                     <div ng-show="app.application" style="word-wrap: break-word;max-width:170px;text-align:left;">
                         <a class="pointer" ng-click="goToTeam(app.application.team)">

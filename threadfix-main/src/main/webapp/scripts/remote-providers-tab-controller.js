@@ -55,14 +55,6 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
         provider.hasCredentials = hasCredentials ? 'Yes' : 'No';
     };
 
-    var checkDynamicStaticSupported = function(provider) {
-
-        // White Hat is supported
-        if (provider.name === 'WhiteHat Sentinel')
-            provider.supportedDynamicStatic = true;
-
-    };
-
     $scope.$on('rootScopeInitialized', function() {
         $http.get(tfEncoder.encode('/configuration/remoteproviders/getMap')).
             success(function(data, status, headers, config) {
@@ -82,8 +74,6 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                     $scope.providers.forEach(calculateShowImportAll);
 
                     $scope.providers.forEach(setCredentialsMatrix);
-
-                    $scope.providers.forEach(checkDynamicStaticSupported);
 
                     $rootScope.$broadcast('scheduledImports', $scope.scheduledImports);
 
