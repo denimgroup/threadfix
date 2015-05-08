@@ -33,6 +33,7 @@ import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.impl.dotNet.DotNetMappings;
 import com.denimgroup.threadfix.framework.impl.dotNetWebForm.WebFormsEndpointGenerator;
 import com.denimgroup.threadfix.framework.impl.jsp.JSPMappings;
+import com.denimgroup.threadfix.framework.impl.rails.RailsEndpointMappings;
 import com.denimgroup.threadfix.framework.impl.spring.SpringControllerMappings;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 
@@ -116,6 +117,7 @@ public class EndpointDatabaseFactory {
             case NONE:
             case DETECT:      break;
             case JSP:         generator = new JSPMappings(rootFile);              break;
+            case RAILS:       generator = new RailsEndpointMappings(rootFile);    break;
 			case SPRING_MVC:  generator = new SpringControllerMappings(rootFile); break;
 			case DOT_NET_MVC: generator = new DotNetMappings(rootFile);           break;
             case DOT_NET_WEB_FORMS: generator = new WebFormsEndpointGenerator(rootFile); break;

@@ -28,6 +28,8 @@ import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
 import com.denimgroup.threadfix.framework.impl.dotNet.DotNetFrameworkChecker;
 import com.denimgroup.threadfix.framework.impl.dotNetWebForm.WebFormsFrameworkChecker;
+import com.denimgroup.threadfix.framework.impl.rails.RailsFrameworkChecker;
+import com.denimgroup.threadfix.framework.impl.rails.model.RailsController;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
@@ -67,6 +69,7 @@ public class FrameworkCalculator {
         register(new JavaAndJspFrameworkChecker());
         register(new DotNetFrameworkChecker());
         register(new WebFormsFrameworkChecker());
+        register(new RailsFrameworkChecker());
     }
 
     public static void register(FrameworkChecker checker) {
