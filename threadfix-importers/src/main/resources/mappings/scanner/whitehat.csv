@@ -1,4 +1,4 @@
-8/6/2014 11:45:00
+5/8/2015 11:45:00
 type.info,,
 WhiteHat Sentinel
 type.vulnerabilities,,
@@ -173,3 +173,22 @@ Persistent Session Cookie,Persistent Session Cookie,539
 Insufficient Cross-domain Configuration,Insufficient Cross-domain Configuration,352
 Invalid HTTP Method Usage,Invalid HTTP Method Usage,16
 Personally Identifiable Information,Personally Identifiable Information,359
+Insecure Data Storage: Unencrypted Password,Insecure Data Storage: Unencrypted Password,311
+Insecure Data Storage: Unencrypted SSN,Insecure Data Storage: Unencrypted SSN,311
+Disclosure: Hardcoded Password,Disclosure: Hardcoded Password,259
+Injection: Unknown Interpreter,Injection: Unknown Interpreter,74
+Injection: HTTP Response Splitting,Injection: HTTP Response Splitting,113
+Cryptography: Insecure Digest,Cryptography: Insecure Digest,327
+Insecure Data Storage: Unencrypted CCN,Insecure Data Storage: Unencrypted CCN,311
+Cryptography: Improper Pseudo-Random Number Generator Usage,Cryptography: Improper Pseudo-Random Number Generator Usage,327
+Injection: Mail Command,Injection: Mail Command,88
+Insufficient Authentication: Basic Authentication Usage,Insufficient Authentication: Basic Authentication Usage,592
+Disclosure: Cleartext Password,Disclosure: Cleartext Password,312
+Application Misconfiguration: Global Error Handling Disabled,Application Misconfiguration: Global Error Handling Disabled,388
+Application Misconfiguration: Exposed Axis Administration Servlet,Application Misconfiguration: Exposed Axis Administration Servlet,16
+type.severities,,,
+note,note,1,1
+critical,critical,5,5
+high,high,4,4
+medium,medium,3,3
+low,low,2,2
