@@ -48,6 +48,10 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
         return returnValue;
     };
 
+    $scope.selectedRole = function(roleId) {
+        return $scope.object.defaultRoleId == roleId;
+    };
+
     $scope.submit = function (valid) {
         var url = tfEncoder.encode('/configuration/settings');
 
@@ -61,6 +65,7 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
                     if (data.success) {
                         $scope.successMessage = "Configuration was saved successfully.";
                         $scope.object = data.object;
+                        window.scrollTo(0, 0);
                     } else {
                         $scope.errorMessage = "Failure: " + data.message;
 

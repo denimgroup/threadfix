@@ -281,7 +281,8 @@ public class DefaultConfiguration extends BaseEntity {
 		this.activeDirectoryUsername = activeDirectoryUsername;
 	}
 
-	public String getActiveDirectoryCredentials() {
+    @JsonView(AllViews.FormInfo.class)
+    public String getActiveDirectoryCredentials() {
 		return activeDirectoryCredentials == null ? "" : activeDirectoryCredentials;
 	}
 

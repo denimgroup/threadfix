@@ -54,10 +54,11 @@ public class FormRestResponse<T> extends RestResponse<T> {
         return failure(response, result, null);
     }
 
-    public static <T> FormRestResponse<T> failure(String response, BindingResult result, List<String> errors) {
+    public static <T> FormRestResponse<T> failure(String response, BindingResult result, Map<String,String> errors) {
         FormRestResponse<T> restResponse = new FormRestResponse<T>();
 
-        Map<String, String> resultMap = null;
+        Map<String, String> resultMap = map();
+        resultMap.putAll(errors);
         if (result != null) {
             if (result.getFieldErrors() != null && result.getFieldErrors().size() > 0) {
                 resultMap = map();
@@ -69,15 +70,8 @@ public class FormRestResponse<T> extends RestResponse<T> {
             }
         }
 
-        String fullResponse = response;
-
-        if (errors != null && !errors.isEmpty()) {
-            for (String error: errors)
-                fullResponse += fullResponse + "\n" + error;
-        }
-
         restResponse.errorMap = resultMap;
-        restResponse.message = fullResponse;
+        restResponse.message = response;
         return restResponse;
     }
 
