@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('VulnSearchTreeController', function($log, $scope, $rootScope, $window, $http, tfEncoder, $modal, $log,
+module.controller('VulnSearchTreeController', function($log, $scope, $rootScope, $window, $http, tfEncoder, $modal,
                                                        vulnSearchParameterService, vulnTreeTransformer) {
 
     $scope.loadingTree = true;

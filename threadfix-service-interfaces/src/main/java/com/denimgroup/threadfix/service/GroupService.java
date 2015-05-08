@@ -24,32 +24,16 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.Group;
-import com.denimgroup.threadfix.data.entities.Role;
-import com.denimgroup.threadfix.data.entities.User;
-import org.springframework.ldap.core.DirContextOperations;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
 
 /**
- * Created by mcollins on 4/23/15.
+ * Created by mcollins on 4/29/15.
  */
-public interface SessionService {
+public interface GroupService extends GenericNamedObjectService<Group> {
+    void ensureGroupContainsUser(int groupId, int userId);
 
-    void reloadSession(Role role);
+    void removeUserFromGroup(int groupId, int userId);
 
-    void reloadSession(User user);
+    boolean canRemoveUserFromGroup(int groupId, int userId);
 
-    void reloadSession(Group group);
-
-    void invalidateSessions(User user);
-
-
-    UserDetails mapUserFromContext(DirContextOperations arg0,
-                                   String userName, Collection<? extends GrantedAuthority> arg2);
-
-    Authentication createSuccessfulAuthentication(Authentication authentication,
-                                                  UserDetails user);
+    boolean canChangeRoleTo(int groupId, int roleId);
 }

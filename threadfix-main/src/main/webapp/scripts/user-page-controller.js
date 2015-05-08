@@ -1,10 +1,10 @@
-var myAppModule = angular.module('threadfix')
+var myAppModule = angular.module('threadfix');
 
 // this is a shim for optional dependencies
 myAppModule.value('deleteUrl', null);
 
 
-myAppModule.controller('UserPageController', function ($scope, $modal, $http, $log, tfEncoder) {
+myAppModule.controller('UserPageController', function ($scope, $modal, $http, $log, $rootScope, tfEncoder) {
 
     ////////////////////////////////////////////////////////////////////////////////
     //             Basic Page Functionality + $on(rootScopeInitialized)
@@ -35,6 +35,9 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                         $scope.teams.forEach(function(team) {
                             team.applications.sort(nameCompare);
                         });
+
+                        $rootScope.$broadcast("teams", $scope.teams);
+                        $rootScope.$broadcast("roles", $scope.roles);
 
                         // allow undefined
                         callBack && callBack();
@@ -442,5 +445,55 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
             selectUserWithId($scope.userId);
         });
     });
+
+    ////////////////////////////////////////////////////////////////////////////////
+    //                            Groups
+    ////////////////////////////////////////////////////////////////////////////////
+
+    $scope.$on('groups', function(event, groups) {
+        $scope.groups = groups;
+    });
+
+    $scope.addGroup = function(group) {
+        $http.post(tfEncoder.encode('/groups/' + group.id + '/addUser/' + $scope.userId)).
+            success(function(data) {
+                if (data.success) {
+                    reloadList(function() {
+                        selectUserWithId($scope.userId);
+                    });
+                    $scope.successMessage = "Added user to group " + group.name + ".";
+                } else {
+                    $scope.errorMessage = "Failure. " + data.message;
+                }
+
+                $scope.initialized = true;
+            }).
+            error(function(data, status) {
+                $scope.initialized = true;
+                $scope.errorMessage = "Failed to add user to group. HTTP status was " + status;
+            });
+    };
+
+    $scope.removeGroup = function(group) {
+        if (confirm("Are you sure you want to remove user from group " + group.name + "?")) {
+            $http.post(tfEncoder.encode('/groups/' + group.id + '/removeUser/' + $scope.userId)).
+                success(function(data) {
+                    if (data.success) {
+                        reloadList(function() {
+                            selectUserWithId($scope.userId);
+                        });
+                        $scope.successMessage = "Removed user from group " + group.name;
+                    } else {
+                        $scope.errorMessage = "Failure. " + data.message;
+                    }
+
+                    $scope.initialized = true;
+                }).
+                error(function(data, status) {
+                    $scope.initialized = true;
+                    $scope.errorMessage = "Failed to remove user from group. HTTP status was " + status;
+                });
+        }
+    };
 
 });

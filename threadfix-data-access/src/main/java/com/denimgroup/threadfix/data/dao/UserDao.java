@@ -88,4 +88,5 @@ public interface UserDao extends GenericNamedObjectDao<User> {
 	 */
 	Long countUsers();
 
+	boolean canRemovePermissionFromUserAndGroup(Integer userId, Integer groupId, String camelCase);
 }

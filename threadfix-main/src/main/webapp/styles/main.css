@@ -1355,3 +1355,7 @@ h4 a {
 .perms-table td + td {
 	text-align:center
 }
+
+input.no-bottom-margin {
+	margin-bottom: 0 !important;
+}

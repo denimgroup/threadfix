@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.login.CustomUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -82,18 +83,18 @@ public class CustomUserDetailServiceImpl implements UserDetailsService, CustomUs
 
             if (permissionService != null) { // then we've autowired the dependency in successfully
 
-                Set<Permission> permissions = userService.getGlobalPermissions(id);
+                Set<Permission> permissions = userService.getGlobalPermissions(user.getId());
+
+                if (EnterpriseTest.isEnterprise()) {
+                    permissions.add(Permission.ENTERPRISE);
+                }
 
                 for (Permission permission : permissions) {
                     grantedAuthorities.add(new SimpleGrantedAuthority(permission.getText()));
                 }
 
-                if (user.getHasGlobalGroupAccess()) {
-                    grantedAuthorities.add(new SimpleGrantedAuthority(Permission.READ_ACCESS.getText()));
-                }
-
-                orgMap = userService.getOrganizationPermissions(id);
-                appMap = userService.getApplicationPermissions(id);
+                orgMap = userService.getOrganizationPermissions(user);
+                appMap = userService.getApplicationPermissions(user);
 
                 if (hasReportsOnAnyObject(orgMap) || hasReportsOnAnyObject(appMap)) {
                     grantedAuthorities.add(new SimpleGrantedAuthority(Permission.CAN_GENERATE_REPORTS.getText()));

@@ -77,6 +77,7 @@ myAppModule.controller('LeftReportController', function ($scope, $window, thread
     };
 
     $scope.$on('scanUploaded', reload);
+    $scope.$on('severityChanged', reload);
     $scope.$on('scanDeleted', function(event, shouldReload) {
         if (shouldReload) {
             reload();

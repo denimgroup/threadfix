@@ -103,9 +103,8 @@ public class EditUserController {
 
 		new UserValidator(roleService).validate(user, result);
 
-		if (userService.hasRemovedAdminPermissions(user) && !userService.canDelete(user)) {
-			result.rejectValue("hasGlobalGroupAccess", null, null,
-					"This would leave users unable to access the user management portion of ThreadFix.");
+		if (userService.hasRemovedAdminPermissions(user) && !userService.canRemoveAdminPermissions(user)) {
+			return RestResponse.failure("This would leave users unable to access the user management portion of ThreadFix.");
 		}
 
 		if (result.hasErrors()) {
