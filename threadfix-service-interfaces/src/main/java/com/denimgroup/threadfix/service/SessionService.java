@@ -39,9 +39,12 @@ public interface SessionService {
 
     void reloadSession(Role role);
 
+    void reloadSession(User user);
+
+    void reloadSession(Iterable<User> users);
+
     void invalidateSessions(User user);
 
-    void reloadSession(User user);
 
     UserDetails mapUserFromContext(DirContextOperations arg0,
                                    String userName, Collection<? extends GrantedAuthority> arg2);

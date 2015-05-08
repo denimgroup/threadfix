@@ -1,10 +1,10 @@
-var myAppModule = angular.module('threadfix')
+var myAppModule = angular.module('threadfix');
 
 // this is a shim for optional dependencies
 myAppModule.value('deleteUrl', null);
 
 
-myAppModule.controller('UserPageController', function ($scope, $modal, $http, $log, tfEncoder) {
+myAppModule.controller('UserPageController', function ($scope, $modal, $http, $log, $rootScope, tfEncoder) {
 
     ////////////////////////////////////////////////////////////////////////////////
     //             Basic Page Functionality + $on(rootScopeInitialized)
@@ -14,7 +14,11 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         return a.name.localeCompare(b.name);
     };
 
-    $scope.numberToShow = 50;
+    var lastSearchString = undefined;
+    var lastNumber = 0;
+    var lastPage = 0;
+
+    $scope.numberToShow = 20;
 
     var reloadList = function(callBack) {
         $scope.initialized = false;
@@ -25,8 +29,8 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 if (data.success) {
                     $scope.countUsers = data.object.countUsers;
                     if (data.object.users.length > 0) {
-                        $scope.users = data.object.users;
                         $scope.roles = data.object.roles;
+                        $scope.users = data.object.users;
                         $scope.users.sort(nameCompare);
 
                         $scope.teams = data.object.teams;
@@ -36,8 +40,13 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                             team.applications.sort(nameCompare);
                         });
 
+                        $rootScope.$broadcast("teams", $scope.teams);
+                        $rootScope.$broadcast("roles", $scope.roles);
+
                         // allow undefined
-                        callBack && callBack();
+                        if ($scope.userId) {
+                            selectUserWithId($scope.userId);
+                        }
 
                     } else {
 
@@ -62,6 +71,10 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
 
     $scope.$on('rootScopeInitialized', function() {
         $scope.page = 1;
+        reloadList();
+    });
+
+    $scope.$on('refreshUsers', function() {
         reloadList();
     });
 
@@ -91,9 +104,8 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         });
 
         modalInstance.result.then(function (newUser) {
-            reloadList(function() {
-                selectUserWithId(newUser.id);
-            });
+            $scope.userId = newUser.id;
+            reloadList();
 
             $scope.successMessage = "Successfully created user " + newUser.name;
 
@@ -148,9 +160,9 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         $scope.successMessage = undefined;
     };
 
-    $scope.updatePage = function(page) {
+    $scope.updatePage = function(page, searchString) {
         $scope.page = page;
-        reloadList();
+        $scope.searchUsers(searchString);
     };
 
     $scope.setCurrentUser = function(user) {
@@ -183,7 +195,55 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         return !form.$dirty || form.$invalid || angular.equals($scope.currentUser, user.baseUser)
     };
 
+    $scope.selectUser = function(user) {
+        selectUserWithId(user.id);
+    };
+
+    $scope.searchUsers = function(searchText) {
+
+        if (lastSearchString && lastSearchString === searchText &&
+                lastNumber === $scope.numberToShow &&
+                lastPage === $scope.page) {
+            return;
+        }
+
+        var users = [];
+
+        var searchObject = {
+            "searchString" : searchText,
+            "page" : $scope.page,
+            "number" : $scope.numberToShow
+        };
+
+        $http.post(tfEncoder.encode("/configuration/users/search"), searchObject).
+            then(function(response) {
+
+                var data = response.data;
+
+                if (data.success) {
+                    $scope.countUsers = data.object.countUsers;
+                    users = data.object.users;
+                    lastSearchString = searchText;
+                    lastNumber = $scope.numberToShow;
+                    lastPage = $scope.page;
+                    $scope.users = users;
+                    $scope.users.sort(nameCompare);
+                    selectUserWithId($scope.userId);
+                } else {
+                    $scope.errorMessage = "Failed to receive search results. Message was : " + data.message;
+                }
+
+                return users;
+            });
+
+    };
+
     function selectUserWithId(targetId) {
+        if (!targetId) {
+            $scope.currentUser = undefined;
+            return;
+        }
+
         var index = 0, targetIndex = -1;
         $scope.users.forEach(function (listUser) {
             if (listUser.id === targetId) {
@@ -191,6 +251,11 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
             }
             index = index + 1;
         });
+
+        if (targetIndex === -1) {
+            $scope.currentUser = undefined;
+            return;
+        }
 
         $scope.setCurrentUser($scope.users[targetIndex]);
     }
@@ -395,6 +460,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                     if (data.success) {
                         // this will cause the user to be logged out if the session is invalid
                         reloadList();
+                        $rootScope.$broadcast('refreshGroups');
                         $scope.successMessage = "User was successfully deleted.";
                     } else {
                         $scope.errorMessage = "Failure: " + data.message;
@@ -438,9 +504,55 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     };
 
     $scope.$on('reloadRoles', function() {
-        reloadList(function() {
-            selectUserWithId($scope.userId);
-        });
+        reloadList();
     });
+
+    ////////////////////////////////////////////////////////////////////////////////
+    //                            Groups
+    ////////////////////////////////////////////////////////////////////////////////
+
+    $scope.$on('groups', function(event, groups) {
+        $scope.groups = groups;
+    });
+
+    $scope.addGroup = function(group) {
+        $http.post(tfEncoder.encode('/groups/' + group.id + '/addUser/' + $scope.userId)).
+            success(function(data) {
+                if (data.success) {
+                    reloadList();
+                    $rootScope.$broadcast('refreshGroups');
+                    $scope.successMessage = "Added user to group " + group.name + ".";
+                } else {
+                    $scope.errorMessage = "Failure. " + data.message;
+                }
+
+                $scope.initialized = true;
+            }).
+            error(function(data, status) {
+                $scope.initialized = true;
+                $scope.errorMessage = "Failed to add user to group. HTTP status was " + status;
+            });
+    };
+
+    $scope.removeGroup = function(group) {
+        if (confirm("Are you sure you want to remove user from group " + group.name + "?")) {
+            $http.post(tfEncoder.encode('/groups/' + group.id + '/removeUser/' + $scope.userId)).
+                success(function(data) {
+                    if (data.success) {
+                        reloadList();
+                        $rootScope.$broadcast('refreshGroups');
+                        $scope.successMessage = "Removed user from group " + group.name;
+                    } else {
+                        $scope.errorMessage = "Failure. " + data.message;
+                    }
+
+                    $scope.initialized = true;
+                }).
+                error(function(data, status) {
+                    $scope.initialized = true;
+                    $scope.errorMessage = "Failed to remove user from group. HTTP status was " + status;
+                });
+        }
+    };
 
 });

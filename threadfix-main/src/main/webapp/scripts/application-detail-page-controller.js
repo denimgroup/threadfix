@@ -1,4 +1,4 @@
-var myAppModule = angular.module('threadfix')
+var myAppModule = angular.module('threadfix');
 
 myAppModule.controller('ApplicationDetailPageController', function ($scope, $window, $rootScope, tfEncoder) {
 
@@ -13,6 +13,10 @@ myAppModule.controller('ApplicationDetailPageController', function ($scope, $win
 
     $scope.$on('dragOn', function() {
         $scope.dragEnabled = true;
+    });
+
+    $scope.$on('downloadScanFail', function(event, errorMessage) {
+        $scope.errorMessage = errorMessage;
     });
 
     $scope.onFileSelect = function($files) {

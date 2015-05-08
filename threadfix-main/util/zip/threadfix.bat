@@ -13,7 +13,7 @@ SET lib=
 @REM \. on their path
 set PWD=%cd%
 set CATALINA_HOME=%PWD%\tomcat
-set CATALINA_OPTS=-Xms512m -Xmx1536m -XX:PermSize=256m -XX:MaxPermSize=256m
+set CATALINA_OPTS=-Xms512m -Xmx1536m -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=256m
 if DEFINED JAVA_HOME (
 	"%JAVA_HOME%\bin\java" -version:1.8 -version > nul 2>&1
 	if NOT ERRORLEVEL == 0 (

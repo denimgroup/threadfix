@@ -87,10 +87,17 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 			}
 			map.setRole(role);
 			
-			if (map.getUser().getId() != null &&
+			if (map.getUser() != null && map.getUser().getId() != null &&
 					accessControlMapDao.retrieveTeamMapByUserTeamAndRole(
 							map.getUser().getId(), org.getId(), role.getId()) != null) {
-				return "That team / role combo already exists for this user.";
+				return "That team / role combination already exists for this user.";
+			} else if (map.getGroup() != null && map.getGroup().getId() != null) {
+
+				AccessControlTeamMap dbMap = accessControlMapDao.retrieveTeamMapByGroupTeamAndRole(
+						map.getGroup().getId(), org.getId(), role.getId());
+				if (dbMap != null && dbMap.getId().equals(mapId)) {
+					return "That team / role combination already exists for this group.";
+				}
 			}
 		} else {
 			map.setRole(null);
@@ -123,13 +130,23 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 				}
 				appMap.setRole(role);
 				
-				if (map.getUser().getId() != null) {
+				if (map.getUser() != null && map.getUser().getId() != null) {
 					AccessControlApplicationMap duplicateMap = accessControlMapDao.retrieveAppMapByUserAppAndRole(
 							map.getUser().getId(), appMap.getApplication().getId(), role.getId());
 					if (duplicateMap != null && (mapId == null ||
 							!duplicateMap.getAccessControlTeamMap().getId().equals(mapId))) {
 						return "You have a duplicate application / role entry for this user.";
 					}
+
+				} else if (map.getGroup() != null && map.getGroup().getId() != null) {
+					AccessControlApplicationMap duplicateMap = accessControlMapDao.retrieveAppMapByGroupAppAndRole(
+							map.getGroup().getId(), appMap.getApplication().getId(), role.getId());
+					if (duplicateMap != null && (mapId == null ||
+							!duplicateMap.getAccessControlTeamMap().getId().equals(mapId))) {
+						return "You have a duplicate application / role entry for this group.";
+					}
+				} else {
+					return "Neither User nor Group was found.";
 				}
 			}
 			
@@ -160,6 +177,11 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 		if (map.getUserId() != null && map.getUserId() > 0) {
 			returnMap.setUser(new User());
 			returnMap.getUser().setId(map.getUserId());
+		}
+
+		if (map.getGroupId() != null && map.getGroupId() > 0) {
+			returnMap.setGroup(new Group());
+			returnMap.getGroup().setId(map.getGroupId());
 		}
 		
 		returnMap.setAllApps(map.isAllApps());
@@ -193,8 +215,11 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 				returnMap.getAccessControlApplicationMaps().add(childMap);
 			}
 		}
+
+		if (returnMap.getUser() == null && returnMap.getGroup() == null) {
+			return Option.failure();
+		}
 		
-		// TODO Auto-generated method stub
 		return Option.success(returnMap);
 	}
 
@@ -290,6 +315,9 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 					deactivate(appMap);
 				}
 			}
+
+			map.setGroup(null);
+			map.setUser(null);
 			
 			store(map);
 		}

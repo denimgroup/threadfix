@@ -32,6 +32,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
+import com.denimgroup.threadfix.service.repository.RepositoryServiceFactory;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
@@ -41,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
+import org.tmatesoft.svn.core.SVNException;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -75,8 +77,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Autowired private DefectDao defectDao;
 	@Autowired private ScanMergeService scanMergeService;
     @Autowired private GenericVulnerabilityDao genericVulnerabilityDao;
-	@Autowired private GitService gitService;
-	@Autowired private ExceptionLogService exceptionLogService;
     @Autowired private ScheduledScanDao scheduledScanDao;
 
     @Nullable
@@ -91,7 +91,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Autowired(required = false)
     private ScanQueueService scanQueueService;
 
-	@Override
+    @Autowired
+    private RepositoryServiceFactory repositoryServiceFactory;
+
+    @Override
 	public List<Application> loadAllActive() {
 		return applicationDao.retrieveAllActive();
 	}
@@ -397,41 +400,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 			}
 		}
 
-		if (application.getRepositoryUrl() != null && !"".equals(application.getRepositoryUrl())) {
-			try {
-				if (!gitService.testGitConfiguration(application)) {
-                    result.rejectValue("repositoryUrl", null, null, "Unable to clone repository");
-                }
-			} catch (GitAPIException | JGitInternalException e) {
-
-				boolean shouldLog = true;
-
-				if (e instanceof JGitInternalException) {
-					result.rejectValue("repositoryUrl", null, null, "Unable to connect to this URL.");
-				}
-
-				if (e.getMessage().contains("not authorized")) {
-					result.rejectValue("repositoryUrl", null, null, "Authorization failed.");
-				}
-
-				if (application.getRepositoryBranch() != null) {
-					String missingBranchError = "Remote does not have " + application.getRepositoryBranch() + " available for fetch";
-					if (e.getMessage().contains(missingBranchError)) {
-						result.rejectValue("repositoryUrl", null, null, "Supplied branch wasn't found.");
-					}
-				} else if (e.getMessage().contains("Remote does not have fakebranch available for fetch")) {
-					// this is expected behavior, let's not return an error.
-					shouldLog = false;
-				} else {
-					result.rejectValue("repositoryUrl", null, null, "Unable to clone repository");
-				}
-
-				if (shouldLog) {
-					log.info("Got an error from the Git server, logging to database (visible under View Error Messages)");
-					exceptionLogService.storeExceptionLog(new ExceptionLog(e));
-				}
-			}
-		}
+        testRepositoryConnections(application, result);
 
 		Application databaseApplication = decryptCredentials(loadApplication(application.getName().trim(),
                 application.getOrganization().getId()));
@@ -590,7 +559,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 			canManageDefectTrackers = permissionService.isAuthorized(Permission.CAN_MANAGE_DEFECT_TRACKERS,
 					application.getOrganization().getId(), application.getId());
 		}
-		
+
+        testRepositoryConnections(application, result);
+
 		Application databaseApplication = loadApplication(application.getName().trim(), application.getOrganization().getId());
 
         if (databaseApplication != null) {
@@ -627,6 +598,22 @@ public class ApplicationServiceImpl implements ApplicationService {
 		validateApplicationDefectTracker(application, result);
         encryptRepositoryCredentials(application);
 	}
+
+    private void testRepositoryConnections(Application application, BindingResult result) {
+        if (application.getRepositoryUrl() != null && !application.getRepositoryUrl().isEmpty()
+                && application.getRepositoryType() != null) {
+
+            RepositoryService repositoryService = repositoryServiceFactory.getRepositoryService(application);
+
+            try {
+                if (!repositoryService.testConfiguration(application)) {
+                    result.rejectValue("repositoryUrl", null, null, "Unable to clone repository");
+                }
+            } catch (Exception e) {
+                repositoryService.handleException(e, application, result);
+            }
+        }
+    }
 
 	@Override
 	public List<Vulnerability> getVulnTable(int appId, TableSortBean bean) {

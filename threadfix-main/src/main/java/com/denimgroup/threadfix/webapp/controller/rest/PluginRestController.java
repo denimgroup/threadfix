@@ -32,7 +32,8 @@ import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.GitService;
+import com.denimgroup.threadfix.service.RepositoryService;
+import com.denimgroup.threadfix.service.repository.RepositoryServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,10 +49,10 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 public class PluginRestController extends TFRestController {
 
     @Autowired
-    private GitService         gitService;
-    @Autowired
     private ApplicationService applicationService;
 
+    @Autowired
+    private RepositoryServiceFactory repositoryServiceFactory;
     /**
      *
      * @see com.denimgroup.threadfix.remote.PluginClient#getVulnerabilityMarkers(String)
@@ -144,9 +145,12 @@ public class PluginRestController extends TFRestController {
 	}
 
     public ProjectConfig getProjectConfig(Application application) {
+
+        RepositoryService repositoryService = repositoryServiceFactory.getRepositoryService(application);
+
         return new ProjectConfig(application.getFrameworkTypeEnum(),
                 application.getSourceCodeAccessLevelEnum(),
-                gitService.getWorkTree(application),
+                repositoryService.getWorkTree(application),
                 application.getProjectRoot()
         );
     }

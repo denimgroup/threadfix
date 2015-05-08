@@ -69,7 +69,7 @@ public interface ScanMergeService {
 	 * @param fileName
 	 * @return
 	 */
-	Scan saveRemoteScanAndRun(Integer channelId, String fileName);
+	Scan saveRemoteScanAndRun(Integer channelId, String fileName, String originalFileName);
 	
 	/**
 	 * 

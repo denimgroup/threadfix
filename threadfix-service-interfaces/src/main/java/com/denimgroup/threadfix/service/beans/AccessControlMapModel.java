@@ -30,7 +30,7 @@ public class AccessControlMapModel {
 
 	private List<Integer> applicationIds;
 	private boolean allApps;
-	private Integer teamId, roleId, userId;
+	private Integer teamId, roleId, userId, groupId;
 	private List<String> roleIdMapList; // This is weird but I can't think of a better way to handle it
 	
 	public List<Integer> getApplicationIds() {
@@ -79,6 +79,14 @@ public class AccessControlMapModel {
 
 	public void setUserId(Integer userId) {
 		this.userId = userId;
+	}
+	
+	public Integer getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(Integer groupId) {
+		this.groupId = groupId;
 	}
 
 }

@@ -82,6 +82,8 @@ public class Application extends AuditableEntity {
     @Size(max = 1024, message = "{errors.maxlength} 1024.")
     private String repositoryEncryptedUserName;
 
+    private String repositoryType;
+
 	@URL(message = "{errors.url}")
 	@Size(min = 0, max = URL_LENGTH, message = "{errors.maxlength} " + URL_LENGTH + ".")
 	private String url;
@@ -712,6 +714,16 @@ public class Application extends AuditableEntity {
 
 	public void setRepositoryFolder(String repositoryFolder) {
 		this.repositoryFolder = repositoryFolder;
+	}
+
+    @Column
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
+    public String getRepositoryType() {
+        return repositoryType;
+    }
+
+    public void setRepositoryType(String repositoryType) {
+        this.repositoryType = repositoryType;
 	}
 
 	@Transient

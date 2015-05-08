@@ -35,8 +35,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.set;
+import static com.denimgroup.threadfix.importer.util.IntegerUtils.getIntegerOrNull;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -52,6 +57,8 @@ public class UserServiceImpl implements UserService {
 
     private ThreadFixPasswordEncoder encoder = new ThreadFixPasswordEncoder();
     private Authentication authentication;
+
+	private static final SanitizedLogger LOG = new SanitizedLogger(UserServiceImpl.class);
 
     /**
      * Transactional(readOnly = false) here means that false will be put in to
@@ -159,16 +166,34 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional(readOnly = false) // used to be true
 	public Set<Permission> getGlobalPermissions(Integer userId) {
-		Set<Permission> returnList = new HashSet<>();
+		Set<Permission> returnList = set();
 
-		// for now
 		User user = loadUser(userId);
-		
+
 		if (user != null && user.getHasGlobalGroupAccess() && user.getGlobalRole() != null) {
-            user.getGlobalRole().setEnterprise(EnterpriseTest.isEnterprise());
 			returnList.addAll(user.getGlobalRole().getPermissions());
+			returnList.add(Permission.READ_ACCESS);
 		}
-		
+
+		returnList.addAll(getGroupPermissions(userId));
+
+		return returnList;
+	}
+
+	public Set<Permission> getGroupPermissions(Integer userId) {
+		Set<Permission> returnList = set();
+
+		User user = loadUser(userId);
+
+		if (user != null && user.getGroups() != null && user.getGroups().size() != 0) {
+			for (Group group : user.getGroups()) {
+				if (group.isActive() && group.getHasGlobalAccess() && group.getGlobalRole() != null) {
+					returnList.addAll(group.getGlobalRole().getPermissions());
+					returnList.add(Permission.READ_ACCESS);
+				}
+			}
+		}
+
 		return returnList;
 	}
 
@@ -191,91 +216,101 @@ public class UserServiceImpl implements UserService {
 		
 		return canDelete;
 	}
-	
+
 	@Override
 	@Transactional(readOnly = false) // used to be true
-	public boolean canSetRoles(int userId, List<Integer> objectIds) {
-		boolean canSetRoles = true;
-		
-		Set<Permission> oldPermissions = getGlobalPermissions(userId);
-		Set<Permission> newPermissions = new HashSet<>();
-		
-		if (objectIds != null) {
-			for (Integer integer : objectIds) {
-				Role role = roleDao.retrieveById(integer);
-				
-				if (role != null) {
-					newPermissions.addAll(role.getPermissions());
-				}
-			}
+	public boolean canRemoveAdminPermissions(User user) {
+		boolean canRemove = true;
+
+		Set<Permission>
+				permissions      = getGlobalPermissions(user.getId()),
+				groupPermissions = getGroupPermissions(user.getId());
+
+		if (permissions.contains(Permission.CAN_MANAGE_USERS) &&
+				!groupPermissions.contains(Permission.CAN_MANAGE_USERS) &&
+				!userDao.canRemovePermissionFromUser(user.getId(), "canManageUsers")) {
+			canRemove = false;
 		}
-		
-		if (oldPermissions.contains(Permission.CAN_MANAGE_USERS) &&
-				!newPermissions.contains(Permission.CAN_MANAGE_USERS) &&
-				!userDao.canRemovePermissionFromUser(userId, "canManageUsers")) {
-			canSetRoles = false;
+
+		if (canRemove && permissions.contains(Permission.CAN_MANAGE_ROLES) &&
+				!groupPermissions.contains(Permission.CAN_MANAGE_ROLES) &&
+				!userDao.canRemovePermissionFromUser(user.getId(), "canManageRoles")) {
+			canRemove = false;
 		}
-		
-		if (canSetRoles && oldPermissions.contains(Permission.CAN_MANAGE_ROLES) &&
-				!newPermissions.contains(Permission.CAN_MANAGE_ROLES) &&
-				!userDao.canRemovePermissionFromUser(userId, "canManageRoles")) {
-			canSetRoles = false;
-		}
-		
-		return canSetRoles;
+
+		return canRemove;
 	}
+
+
 
 	@Override
 	@Transactional(readOnly = false) // used to be true
 	public Map<Integer, Set<Permission>> getApplicationPermissions(
-			Integer userId) {
+			User user) {
 		
 		Map<Integer, Set<Permission>> applicationPermissions = new HashMap<>();
-		List<AccessControlTeamMap> maps = accessControlMapDao.retrieveAllMapsForUser(userId);
+		List<AccessControlTeamMap> maps = getMapsForUser(user.getId());
 		
-		if (maps != null) {
-			for (AccessControlTeamMap teamMap : maps) {
-				if (teamMap != null && teamMap.getAccessControlApplicationMaps() != null) {
-					for (AccessControlApplicationMap appMap : teamMap.getAccessControlApplicationMaps()) {
-						if (appMap != null && appMap.getApplication() != null && 
-								appMap.getApplication().getId() != null && 
-								appMap.getRole() != null && 
-								appMap.getRole().getPermissions() != null) {
-							applicationPermissions.put(appMap.getApplication().getId(), 
-									appMap.getRole().getPermissions());
-							applicationPermissions.get(appMap.getApplication().getId()).add(Permission.READ_ACCESS);
-						}
+		for (AccessControlTeamMap teamMap : maps) {
+			if (teamMap != null && teamMap.getAccessControlApplicationMaps() != null) {
+				for (AccessControlApplicationMap appMap : teamMap.getAccessControlApplicationMaps()) {
+					if (appMap != null && appMap.getApplication() != null &&
+							appMap.getApplication().getId() != null &&
+							appMap.getRole() != null &&
+							appMap.getRole().getPermissions() != null) {
+						applicationPermissions.put(appMap.getApplication().getId(),
+								appMap.getRole().getPermissions());
+						applicationPermissions.get(appMap.getApplication().getId()).add(Permission.READ_ACCESS);
 					}
 				}
 			}
 		}
-		
+
 		return applicationPermissions;
 	}
 
 	@Override
 	@Transactional(readOnly = false) // used to be true
 	public Map<Integer, Set<Permission>> getOrganizationPermissions(
-			Integer userId) {
+			User user) {
 		Map<Integer, Set<Permission>> organizationPermissions = new HashMap<>();
-		List<AccessControlTeamMap> maps = accessControlMapDao.retrieveAllMapsForUser(userId);
-		
-		if (maps != null) {
-			for (AccessControlTeamMap map : maps) {
-				if (map != null && map.getOrganization() != null && 
-						map.getOrganization().getId() != null && 
-						map.getRole() != null && 
-						map.getRole().getPermissions() != null) {
-					organizationPermissions.put(map.getOrganization().getId(), 
-							map.getRole().getPermissions());
-					organizationPermissions.get(map.getOrganization().getId()).add(Permission.READ_ACCESS);
-				}
+		List<AccessControlTeamMap> maps = getMapsForUser(user.getId());
+
+		for (AccessControlTeamMap map : maps) {
+			if (map != null && map.getOrganization() != null &&
+					map.getOrganization().getId() != null &&
+					map.getRole() != null &&
+					map.getRole().getPermissions() != null) {
+				organizationPermissions.put(map.getOrganization().getId(),
+						map.getRole().getPermissions());
+				organizationPermissions.get(map.getOrganization().getId()).add(Permission.READ_ACCESS);
 			}
 		}
-		
+
 		return organizationPermissions;
 	}
-	
+
+	private List<AccessControlTeamMap> getMapsForUser(Integer userId) {
+		List<AccessControlTeamMap> maps = list();
+
+		User user = loadUser(userId);
+
+		List<AccessControlTeamMap> userMaps = accessControlMapDao.retrieveAllMapsForUser(user.getId());
+
+		if (userMaps != null) {
+			maps.addAll(userMaps);
+		}
+
+		for (Group group : user.getGroups()) {
+			List<AccessControlTeamMap> tempMaps = accessControlMapDao.retrieveAllMapsForGroup(group.getId());
+			if (tempMaps != null) {
+				maps.addAll(tempMaps);
+			}
+		}
+
+		return maps;
+	}
+
 	@Override
 	@Transactional(readOnly = false) // used to be true
 	public boolean hasRemovedAdminPermissions(User user) {
@@ -362,42 +397,6 @@ public class UserServiceImpl implements UserService {
 		return resultList;
 	}
 
-    @Override
-    public boolean shouldReloadUserIfRoleChanged(Role role) {
-
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        if (name == null) {
-            assert false;
-            return true;
-        }
-
-        User user = loadUser(name);
-
-        if (user == null) {
-            assert false;
-            return true;
-        }
-
-        if (user.getGlobalRole() != null && user.getGlobalRole().getId().equals(role.getId())) {
-            return true;
-        }
-
-        for (AccessControlTeamMap map : user.getAccessControlTeamMaps()) {
-            if (map.isActive() && map.getRole().getId().equals(role.getId())) {
-                return true;
-            }
-
-            for (AccessControlApplicationMap applicationMapping : map.getAccessControlApplicationMaps()) {
-                if (applicationMapping.isActive() && applicationMapping.getRole().getId().equals(role.getId())) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
 	@Override
 	public void setRoleCommunity(User user) {
 
@@ -418,8 +417,40 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Long countUsers() {
-		return userDao.countUsers();
+	public Long countUsers(String searchString) {
+		return userDao.countUsers(searchString);
 	}
 
+	@Override
+	public List<User> search(String searchString, int numResults, int page) {
+		return userDao.getSearchResults(searchString, numResults, page);
+	}
+
+	@Override
+	public List<User> search(HttpServletRequest request) {
+
+
+		String searchString = request.getParameter("searchString");
+		if (searchString == null) {
+			searchString = "";
+		}
+		Long count = countUsers(searchString);
+
+		Integer page = getIntegerOrNull(request.getParameter("page")),
+				number = getIntegerOrNull(request.getParameter("number"));
+
+		if (page == null || page < 1) {
+			page = 1;
+		}
+
+		if (number == null || number < 1) {
+			number = 1;
+		}
+
+		if ((page - 1) * number > count) {
+			page = 1;
+		}
+
+		return search(searchString, number, page);
+	}
 }

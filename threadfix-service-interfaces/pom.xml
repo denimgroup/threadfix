@@ -363,6 +363,11 @@
             </exclusions>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.tmatesoft.svnkit</groupId>
+            <artifactId>svnkit</artifactId>
+            <version>${svnkit.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

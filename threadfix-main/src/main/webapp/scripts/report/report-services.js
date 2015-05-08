@@ -5,6 +5,34 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
     var reportExporter = {};
     var browerErrMsg = "Sorry, your browser does not support this feature. Please upgrade IE version or change to Chrome which is recommended.";
 
+    reportExporter.exportScan = function(data, contentType, fileName) {
+
+        $timeout(function() {
+            var blob = new Blob([data], { type: contentType });
+
+            // IE <10, FileSaver.js is explicitly unsupported
+            if (checkOldIE()) {
+                var success = false;
+                if (document.execCommand) {
+                    var oWin = window.open("about:blank", "_blank");
+            //        oWin.document.open("application/csv", "replace");
+                    oWin.document.charset = "utf-8";
+                    oWin.document.write('sep=,\r\n' + data);
+                    oWin.document.close();
+                    success = oWin.document.execCommand('SaveAs', true, fileName);
+                    oWin.close();
+                }
+
+                if (!success)
+                    alert(browerErrMsg);
+                return;
+            }
+
+            // Else, using saveAs of FileSaver.js
+            saveAs(blob, fileName);
+        }, 200);
+    };
+
     reportExporter.exportCSV = function(data, contentType, fileName) {
 
         $timeout(function() {
@@ -55,7 +83,7 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
             $log.info(d3.select(this).attr("id"));
         });
         return svg;
-    }
+    };
 
     reportExporter.exportPDFSvg = function(d3, svg, width, height, name, isPDF) {
         var node = svg
@@ -125,6 +153,7 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
 
         //Retrieving table data
         vulnSearchParameterService.updateParameters($scope, parameters);
+        var isDISASTIG = parameters.isDISASTIG;
 
         $http.post(tfEncoder.encode("/reports/search/export/pdf"), parameters).
             success(function(data, status, headers, config) {
@@ -137,7 +166,7 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
                         element.vulnCount = info.vulnCount;
                         exportList.push(element);
                     });
-                    $scope.exportVulnTree = vulnTreeTransformer.transform(exportList, parameters.owasp);
+                    $scope.exportVulnTree = vulnTreeTransformer.transform(exportList, parameters.owasp, isDISASTIG ? $scope.DISA_STIG : undefined);
                     //$scope.$apply();
 
                     reportExporter.exportPDFTableFromId($scope, exportInfo, null, function() {

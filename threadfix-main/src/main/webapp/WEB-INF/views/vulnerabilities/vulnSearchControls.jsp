@@ -23,6 +23,15 @@
                         <li ng-show="parameters.showClosed"><a class="pointer" id="openVulnsButton" ng-click="openVulnerabilities()">Open Vulnerabilities</a></li>
                         <li ng-hide="parameters.showFalsePositive"><a class="pointer" id="markFalsePositivesButton" ng-click="markFalsePositives()">Mark as False Positive</a></li>
                         <li ng-show="parameters.showFalsePositive"><a class="pointer" id="unmarkFalsePositivesButton" ng-click="unmarkFalsePositives()">Unmark as False Positive</a></li>
+                        <li class="dropdown-submenu">
+                            <a tabindex="-1" href="#" id="changeSeverityButton">Change Severity</a>
+                            <ul class="dropdown-menu">
+                                <li ng-repeat="genericSeverity in genericSeverityList" ng-click="changeSeverity(genericSeverity)"><a class="pointer">{{genericSeverity.name}}</a></li>
+                            </ul>
+                        </li>
+                        <c:if test="${ canSubmitComments }">
+                            <li><a class="pointer" id="addBatchCommentBtn" ng-click="addBatchComment(tags)">Add Batch Comment</a></li>
+                        </c:if>
                     </c:if>
                 </ul>
 
