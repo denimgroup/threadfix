@@ -26,10 +26,6 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.Event;
 
-public interface EventService {
-
-    void saveEvent(Event vulnerabilityComment);
-
-    Event loadEventById(int eventId);
+public interface EventService extends GenericObjectService<Event> {
 
 }

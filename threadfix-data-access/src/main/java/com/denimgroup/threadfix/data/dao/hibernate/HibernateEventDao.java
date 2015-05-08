@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.data.dao.hibernate;
 
+import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.EventDao;
 import com.denimgroup.threadfix.data.entities.Event;
 import org.hibernate.Criteria;
@@ -36,42 +37,17 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 
 @Repository
-public class HibernateEventDao implements EventDao {
+public class HibernateEventDao extends AbstractObjectDao<Event> implements EventDao {
 
     private SessionFactory sessionFactory;
 
     @Autowired
     public HibernateEventDao(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
-    
-    @Override
-    public void saveOrUpdate(Event event) {
-        sessionFactory.getCurrentSession().save(event);
-    }
-    
-    @Override
-    public void delete(Event event) {
-        event.setActive(false);
-        event.setModifiedDate(new Date());
-        saveOrUpdate(event);
-    }
-    
-    
-    @Override
-    public Event retrieveById(int id) {
-        return (Event)sessionFactory.getCurrentSession()
-                .createCriteria(Event.class)
-                .add(Restrictions.eq("id", id))
-                .uniqueResult();
-    }
-    
-    private Criteria getVulnCriteria(int number) {
-        return sessionFactory.getCurrentSession()
-                .createCriteria(Event.class)
-                .add(Restrictions.eq("active", true))
-                .addOrder(Order.desc("id"))
-                .setMaxResults(number);
+        super(sessionFactory);
     }
 
+    @Override
+    protected Class<Event> getClassReference() {
+        return Event.class;
+    }
 }

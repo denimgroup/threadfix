@@ -25,6 +25,7 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.dao.EventDao;
+import com.denimgroup.threadfix.data.dao.GenericObjectDao;
 import com.denimgroup.threadfix.data.entities.Event;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class EventServiceImpl implements EventService {
+public class EventServiceImpl extends AbstractGenericObjectService<Event> implements EventService {
 
     private final SanitizedLogger log = new SanitizedLogger(EventService.class);
 
@@ -41,12 +42,7 @@ public class EventServiceImpl implements EventService {
     private EventDao eventDao;
 
     @Override
-    public void saveEvent(Event event) {
-        eventDao.saveOrUpdate(event);
-    }
-
-    @Override
-    public Event loadEventById(int eventId) {
-        return eventDao.retrieveById(eventId);
+    GenericObjectDao<Event> getDao() {
+        return eventDao;
     }
 }

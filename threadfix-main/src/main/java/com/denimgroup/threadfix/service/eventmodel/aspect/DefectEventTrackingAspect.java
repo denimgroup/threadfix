@@ -178,7 +178,7 @@ public class DefectEventTrackingAspect extends EventTrackingAspect {
         eventBuilder.setScan(scan);
         eventBuilder.setStatus(defect.getStatus());
         Event event = eventBuilder.generateEvent();
-        eventService.saveEvent(event);
+        eventService.saveOrUpdate(event);
         return event;
     }
 }

@@ -62,7 +62,7 @@ public class ApplicationEventTrackingAspect extends EventTrackingAspect {
                 .setEventAction(eventAction)
                 .setApplication(application)
                 .generateEvent();
-        eventService.saveEvent(event);
+        eventService.saveOrUpdate(event);
         return event;
     }
 
@@ -96,7 +96,7 @@ public class ApplicationEventTrackingAspect extends EventTrackingAspect {
                 .setApplication(scan.getApplication())
                 .setScan(scan)
                 .generateEvent();
-        eventService.saveEvent(event);
+        eventService.saveOrUpdate(event);
         return event;
     }
 }

@@ -26,12 +26,6 @@ package com.denimgroup.threadfix.data.dao;
 
 import com.denimgroup.threadfix.data.entities.Event;
 
-public interface EventDao {
-
-	void saveOrUpdate(Event event);
-
-	void delete(Event event);
-
-	Event retrieveById(int id);
+public interface EventDao extends GenericObjectDao<Event> {
 
 }
