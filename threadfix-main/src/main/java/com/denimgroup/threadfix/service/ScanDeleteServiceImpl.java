@@ -235,7 +235,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 							nextScan.getImportTime());
 					closeMapsToRemove.add(closeMap);
 					nextScan.getScanCloseVulnerabilityMaps().add(closeMap);
-					vulnerabilityService.storeVulnerability(closeMap.getVulnerability(), EventAction.VULNERABILTIY_CLOSE);
+					vulnerabilityService.storeVulnerability(closeMap.getVulnerability(), EventAction.VULNERABILITY_CLOSE);
 					scanDao.saveOrUpdate(nextScan);
 				}
 			}
@@ -272,7 +272,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					// TODO maybe down the road change this to resurface time or something
 					reopenMap.getVulnerability().setOpenTime(
 							nextScan.getImportTime());
-					vulnerabilityService.storeVulnerability(reopenMap.getVulnerability(), EventAction.VULNERABILTIY_REOPEN);
+					vulnerabilityService.storeVulnerability(reopenMap.getVulnerability(), EventAction.VULNERABILITY_REOPEN);
 				}
 			}
 		}
@@ -338,7 +338,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					if (map.getVulnerability().isFoundByScanner()) {
 						vuln.openVulnerability(map.getVulnerability().getOpenTime());
 					}
-					vulnerabilityService.storeVulnerability(vuln, EventAction.VULNERABILTIY_REOPEN);
+					vulnerabilityService.storeVulnerability(vuln, EventAction.VULNERABILITY_REOPEN);
 				}
 			}
 		}
@@ -351,7 +351,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 						map.getVulnerability().closeVulnerability(null, null);
 					}
 					map.getVulnerability().getScanReopenVulnerabilityMaps().remove(map);
-					vulnerabilityService.storeVulnerability(map.getVulnerability(), EventAction.VULNERABILTIY_CLOSE);
+					vulnerabilityService.storeVulnerability(map.getVulnerability(), EventAction.VULNERABILITY_CLOSE);
 				}
 			}
 		}
@@ -434,7 +434,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					earliestFinding.getSurfaceLocation());
 			earliestFinding.setFirstFindingForVuln(true);
 			findingDao.saveOrUpdate(earliestFinding);
-			vulnerabilityService.storeVulnerability(earliestFinding.getVulnerability(), EventAction.VULNERABILTIY_OTHER);
+			vulnerabilityService.storeVulnerability(earliestFinding.getVulnerability(), EventAction.VULNERABILITY_OTHER);
 		
 			if (finding != null && !earliestFinding.getId().equals(finding.getId())) {
 				// set it to be the first finding
@@ -541,7 +541,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					scan.getScanCloseVulnerabilityMaps().remove(map);
 					map.getVulnerability().getScanCloseVulnerabilityMaps().remove(map);
 					scanDao.deleteMap(map);
-					vulnerabilityService.storeVulnerability(map.getVulnerability(), EventAction.VULNERABILTIY_OTHER);
+					vulnerabilityService.storeVulnerability(map.getVulnerability(), EventAction.VULNERABILITY_OTHER);
 				}
 				scanDao.saveOrUpdate(scan);
 			}
@@ -551,7 +551,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					scan.getScanReopenVulnerabilityMaps().remove(map);
 					map.getVulnerability().getScanReopenVulnerabilityMaps().remove(map);
 					scanDao.deleteMap(map);
-					vulnerabilityService.storeVulnerability(map.getVulnerability(), EventAction.VULNERABILTIY_OTHER);
+					vulnerabilityService.storeVulnerability(map.getVulnerability(), EventAction.VULNERABILITY_OTHER);
 				}
 				scanDao.saveOrUpdate(scan);
 			}
@@ -645,7 +645,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					updateFirstFindingForVuln(null,vuln);
 				}
 				// be sure to save in case there's any updated state
-				vulnerabilityService.storeVulnerability(vuln, EventAction.VULNERABILTIY_OTHER);
+				vulnerabilityService.storeVulnerability(vuln, EventAction.VULNERABILITY_OTHER);
 			}
 		}
 		
@@ -797,11 +797,11 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 				}
 			}
 			vuln.setOpenTime(newOpenTime);
-			EventAction eventAction = EventAction.VULNERABILTIY_OTHER;
+			EventAction eventAction = EventAction.VULNERABILITY_OTHER;
 			if (openingVuln) {
-				eventAction = EventAction.VULNERABILTIY_REOPEN;
+				eventAction = EventAction.VULNERABILITY_REOPEN;
 			} else if (closingVuln) {
-				eventAction = EventAction.VULNERABILTIY_CLOSE;
+				eventAction = EventAction.VULNERABILITY_CLOSE;
 			}
 			vulnerabilityService.storeVulnerability(vuln, eventAction);
 		}
@@ -862,11 +862,11 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			vuln.closeVulnerability(null, newCloseTime);
 			closingVuln = true;
 		}
-		EventAction eventAction = EventAction.VULNERABILTIY_OTHER;
+		EventAction eventAction = EventAction.VULNERABILITY_OTHER;
 		if (openingVuln) {
-			eventAction = EventAction.VULNERABILTIY_REOPEN;
+			eventAction = EventAction.VULNERABILITY_REOPEN;
 		} else if (closingVuln) {
-			eventAction = EventAction.VULNERABILTIY_CLOSE;
+			eventAction = EventAction.VULNERABILITY_CLOSE;
 		}
 		vulnerabilityService.storeVulnerability(vuln, eventAction);
 	}

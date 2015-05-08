@@ -142,7 +142,7 @@ public class FindingsController {
 			if (finding.getVulnerability() != null && 
 					finding.getVulnerability().getFindings().size() == 1) {
 				finding.getVulnerability().closeVulnerability(null, Calendar.getInstance());
-				vulnerabilityService.storeVulnerability(finding.getVulnerability(), EventAction.VULNERABILTIY_OTHER);
+				vulnerabilityService.storeVulnerability(finding.getVulnerability(), EventAction.VULNERABILITY_OTHER);
 			}
 			
 			finding.setVulnerability(vulnerability);

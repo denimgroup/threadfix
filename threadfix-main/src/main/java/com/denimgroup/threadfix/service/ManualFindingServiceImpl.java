@@ -188,7 +188,7 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		finding.setScan(scan);
         scanCleanerUtils.clean(scan);
 
-		EventAction eventAction = EventAction.VULNERABILTIY_OTHER;
+		EventAction eventAction = EventAction.VULNERABILITY_OTHER;
 		Vulnerability vuln = finding.getVulnerability();
 		if (vuln.isNew()) {
 			eventAction = EventAction.APPLICATION_CREATE;

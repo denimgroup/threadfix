@@ -147,7 +147,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 							// problems
 							vulnerabilities.get(j).setActive(false);
 							if (shouldSaveVulnerabilites) {
-								vulnerabilityService.storeVulnerability(vulnerabilities.get(j), EventAction.VULNERABILTIY_CLOSE);
+								vulnerabilityService.storeVulnerability(vulnerabilities.get(j), EventAction.VULNERABILITY_CLOSE);
 							}
 						}
 					}

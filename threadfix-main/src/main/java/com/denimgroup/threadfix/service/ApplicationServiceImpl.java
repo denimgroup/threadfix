@@ -34,15 +34,12 @@ import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 import com.denimgroup.threadfix.service.repository.RepositoryServiceFactory;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
-import org.tmatesoft.svn.core.SVNException;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -376,7 +373,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 					}
 					vulnerability.setWafRuleGeneratedTime(null);
 					vulnerability.setWafRules(new ArrayList<WafRule>());
-					vulnerabilityService.storeVulnerability(vulnerability, EventAction.VULNERABILTIY_OTHER);
+					vulnerabilityService.storeVulnerability(vulnerability, EventAction.VULNERABILITY_OTHER);
 				}
 			}
 		}
@@ -495,7 +492,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 			if (vulns != null) {
 				for (Vulnerability vuln : vulns) {
 					vuln.setDefect(null);
-					vulnerabilityService.storeVulnerability(vuln, EventAction.VULNERABILTIY_OTHER);
+					vulnerabilityService.storeVulnerability(vuln, EventAction.VULNERABILITY_OTHER);
 				}
 			}
 		}

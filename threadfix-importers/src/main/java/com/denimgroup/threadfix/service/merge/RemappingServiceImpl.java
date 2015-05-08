@@ -133,13 +133,13 @@ public class RemappingServiceImpl implements RemappingService {
         for (Vulnerability vulnerability : vulnerabilitiesToUpdate) {
             boolean wasActive = vulnerability.isActive();
             fixStateAndMappings(channel, vulnerability);
-            EventAction eventAction = EventAction.VULNERABILTIY_OTHER;
+            EventAction eventAction = EventAction.VULNERABILITY_OTHER;
             if (newVulnerabilities.contains(vulnerability)) {
-                eventAction = EventAction.VULNERABILTIY_CREATE;
+                eventAction = EventAction.VULNERABILITY_CREATE;
             } else if (wasActive && !vulnerability.isActive()) {
-                eventAction = EventAction.VULNERABILTIY_CLOSE;
+                eventAction = EventAction.VULNERABILITY_CLOSE;
             } else if (!wasActive && vulnerability.isActive()) {
-                eventAction = EventAction.VULNERABILTIY_REOPEN;
+                eventAction = EventAction.VULNERABILITY_REOPEN;
             }
             vulnerabilityService.storeVulnerability(vulnerability, eventAction);
         }

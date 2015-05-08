@@ -135,7 +135,7 @@ public class ChannelMerger {
                     oldNativeIdVulnHash.get(nativeId).closeVulnerability(scan,
                             Calendar.getInstance());
                 }
-                vulnerabilityService.storeVulnerability(oldNativeIdVulnHash.get(nativeId), EventAction.VULNERABILTIY_CLOSE);
+                vulnerabilityService.storeVulnerability(oldNativeIdVulnHash.get(nativeId), EventAction.VULNERABILITY_CLOSE);
                 closed += 1;
             }
         }
@@ -193,7 +193,7 @@ public class ChannelMerger {
             resurfaced += 1;
             vulnerability.reopenVulnerability(scan,
                     scan.getImportTime());
-            vulnerabilityService.storeVulnerability(vulnerability, EventAction.VULNERABILTIY_REOPEN);
+            vulnerabilityService.storeVulnerability(vulnerability, EventAction.VULNERABILITY_REOPEN);
         }
     }
 
@@ -218,7 +218,7 @@ public class ChannelMerger {
             if (oldFinding.getVulnerability() != null) {
                 oldFinding.getVulnerability().setIsFalsePositive(true);
                 vulnerabilityService.storeVulnerability(oldFinding
-                        .getVulnerability(), EventAction.VULNERABILTIY_MARK_FALSE_POSITIVE);
+                        .getVulnerability(), EventAction.VULNERABILITY_MARK_FALSE_POSITIVE);
             }
         }
         // If the finding has had its false positive status removed, update
@@ -232,7 +232,7 @@ public class ChannelMerger {
             if (oldFinding.getVulnerability() != null) {
                 oldFinding.getVulnerability().setIsFalsePositive(false);
                 vulnerabilityService.storeVulnerability(oldFinding
-                        .getVulnerability(), EventAction.VULNERABILTIY_UNMARK_FALSE_POSITIVE);
+                        .getVulnerability(), EventAction.VULNERABILITY_UNMARK_FALSE_POSITIVE);
             }
         }
 

@@ -214,7 +214,7 @@ public class DefectServiceImpl implements DefectService {
 			for (Vulnerability vulnerability : vulnsWithoutDefects) {
 				vulnerability.setDefect(defect);
 				vulnerability.setDefectSubmittedTime(Calendar.getInstance());
-				vulnerabilityService.storeVulnerability(vulnerability, EventAction.VULNERABILTIY_OTHER);
+				vulnerabilityService.storeVulnerability(vulnerability, EventAction.VULNERABILITY_OTHER);
 			}
 
 			if (defectTrackerName != null) {
@@ -352,7 +352,7 @@ public class DefectServiceImpl implements DefectService {
 							!defectOpenStatus) {
 						if (vuln.getDefectClosedTime() == null) {
 							vuln.setDefectClosedTime(Calendar.getInstance());
-							vulnerabilityService.storeVulnerability(vuln, EventAction.VULNERABILTIY_OTHER);
+							vulnerabilityService.storeVulnerability(vuln, EventAction.VULNERABILITY_OTHER);
 							numUpdated += 1;
 						}
 					}
@@ -421,7 +421,7 @@ public class DefectServiceImpl implements DefectService {
 		for (Vulnerability vulnerability : vulnerabilities) {
 			vulnerability.setDefect(defect);
 			vulnerability.setDefectSubmittedTime(Calendar.getInstance());
-			vulnerabilityService.storeVulnerability(vulnerability, EventAction.VULNERABILTIY_OTHER);
+			vulnerabilityService.storeVulnerability(vulnerability, EventAction.VULNERABILITY_OTHER);
 		}
 
 		log.info("Successfully added vulns to Defect ID " + id + ".");
@@ -487,7 +487,7 @@ public class DefectServiceImpl implements DefectService {
 
 						hadAnyStatuses = true;
 						defectDao.saveOrUpdate(defect);
-						vulnerabilityService.storeVulnerability(vulnerability, EventAction.VULNERABILTIY_OTHER);
+						vulnerabilityService.storeVulnerability(vulnerability, EventAction.VULNERABILITY_OTHER);
 					}
 				}
 			}
