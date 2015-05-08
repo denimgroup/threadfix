@@ -52,6 +52,7 @@ public enum ScannerType {
     APPSCAN_ENTERPRISE("appscanenterprise", "IBM Rational AppScan Enterprise", APPSCAN_ENTERPRISE_DB_NAME),
     QUALYSGUARD_WAS("qualysguard", "QualysGuard WAS", QUALYSGUARD_WAS_DB_NAME),
     SENTINEL("whitehat", "WhiteHat Sentinel", SENTINEL_DB_NAME, "https://source.whitehatsec.com/site_vuln_detail.html"),
+    SENTINEL_SOURCE("whitehatsource", "WhiteHat Sentinel Source", SENTINEL_DB_NAME, "https://source.whitehatsec.com/application_findings_detail.html"),
     SSVL("ssvl", "SSVL", SSVL_DB_NAME),
     VERACODE("veracode", "Veracode", VERACODE_DB_NAME),
     MANUAL("manual", "Manual", MANUAL_DB_NAME),

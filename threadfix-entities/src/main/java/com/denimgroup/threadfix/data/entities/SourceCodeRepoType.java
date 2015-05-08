@@ -44,7 +44,7 @@ public enum SourceCodeRepoType {
 
     public static SourceCodeRepoType getType(String keyword) {
         for (SourceCodeRepoType t: values()) {
-            if (keyword.equalsIgnoreCase(t.getRepoType())) {
+            if (t.getRepoType().equalsIgnoreCase(keyword)) {
                 return t;
             }
         }

@@ -97,7 +97,6 @@ public class DefaultConfigServiceImpl implements DefaultConfigService {
 
             if (!config.getActiveDirectoryUsername().trim().isEmpty()) {
                 config.setActiveDirectoryUsernameEncrypted(ESAPI.encryptor().encrypt(config.getActiveDirectoryUsername()));
-                config.setActiveDirectoryUsername(null);
             } else {
                 config.setActiveDirectoryUsernameEncrypted(null);
             }
@@ -106,7 +105,7 @@ public class DefaultConfigServiceImpl implements DefaultConfigService {
                 if (!config.getActiveDirectoryCredentials().equals(DefaultConfiguration.MASKED_PASSWORD)) {
                     config.setActiveDirectoryCredentialsEncrypted(ESAPI.encryptor().encrypt(config.getActiveDirectoryCredentials()));
                 }
-                config.setActiveDirectoryCredentials(null);
+                config.setActiveDirectoryCredentials(DefaultConfiguration.MASKED_PASSWORD);
             } else {
                 config.setActiveDirectoryCredentialsEncrypted(null);
             }
