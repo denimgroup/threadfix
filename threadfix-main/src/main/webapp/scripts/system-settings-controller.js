@@ -59,6 +59,11 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
         if (valid) {
             $scope.loading = true;
 
+            if (prevFileUploadLocation !== '' && $scope.object.fileUploadLocation === '') {
+                $scope.object.deleteUploadedFiles = confirm("You've cleared the File Upload Location field. " +
+                "Would you like to delete the files residing in that directory?");
+            }
+
             $http.post(url, $scope.object).
                 success(function(data) {
                     $scope.loading = false;
@@ -66,6 +71,7 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
                     if (data.success) {
                         $scope.successMessage = "Configuration was saved successfully.";
                         $scope.object = data.object;
+                        prevFileUploadLocation = $scope.object.fileUploadLocation;
                         window.scrollTo(0, 0);
                     } else {
                         $scope.errorMessage = "Failure: " + data.message;
@@ -83,14 +89,6 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
                     $scope.loading = false;
                     $scope.errorMessage = "Failure. HTTP status was " + status;
                 });
-        }
-    };
-
-    $scope.shouldDeleteUploadedFiles = function(e, fileUploadLocation) {
-
-        if (prevFileUploadLocation !== '' && fileUploadLocation === '') {
-            $scope.deleteUploadedFiles = !!confirm("You've cleared the File Upload Location field. " +
-            "Would you like to delete the files residing in that directory?");
         }
     };
 

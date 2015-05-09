@@ -9,6 +9,7 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.annotations.ReportLocation;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
+import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
@@ -53,6 +54,8 @@ public class SystemSettingsController {
 	private ApplicationService applicationService;
 	@Autowired(required = false)
     LicenseService licenseService;
+    @Autowired
+    private ScanService scanService;
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
@@ -61,7 +64,7 @@ public class SystemSettingsController {
 				"dashboardTopLeft.id",
 				"dashboardTopRight.id", "dashboardBottomLeft.id", "dashboardBottomRight.id",
 				"applicationTopLeft.id", "applicationTopRight.id", "teamTopLeft.id", "teamTopRight.id",
-                "fileUploadLocation"
+                "fileUploadLocation", "deleteUploadedFiles"
 		};
 
 		String[] otherSections = {
@@ -109,6 +112,15 @@ public class SystemSettingsController {
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody Object processSubmit(@ModelAttribute DefaultConfiguration defaultConfiguration,
                                               BindingResult bindingResult) {
+
+        if (defaultConfiguration.getDeleteUploadedFiles()) {
+            try {
+                scanService.deleteScanFileLocations();
+                defaultConfiguration.setDeleteUploadedFiles(false);
+            } catch (RestIOException e) {
+
+            }
+        }
 
         if (defaultConfiguration.getSessionTimeout() != null && defaultConfiguration.getSessionTimeout() > 30) {
             bindingResult.reject("sessionTimeout", null, "30 is the maximum.");
