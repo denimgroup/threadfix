@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
@@ -636,6 +637,16 @@ public class Application extends AuditableEntity {
 
 	public void setSourceCodeAccessLevel(String sourceCodeAccessLevel) {
 		this.sourceCodeAccessLevel = sourceCodeAccessLevel;
+	}
+
+    @Transient
+	public String getSvnRepositoryUrl() {
+        if (StringUtils.containsIgnoreCase(repositoryUrl, "/trunk") ||
+                StringUtils.containsIgnoreCase(repositoryUrl, "/branches")){
+            return repositoryUrl;
+        } else {
+            return repositoryUrl + "/trunk";
+        }
 	}
 
 	@Column(length = URL_LENGTH)

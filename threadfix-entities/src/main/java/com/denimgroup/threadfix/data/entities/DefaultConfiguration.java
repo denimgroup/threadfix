@@ -65,6 +65,7 @@ public class DefaultConfiguration extends BaseEntity {
             applicationTopLeft, applicationTopRight, teamTopLeft, teamTopRight;
 
     private String fileUploadLocation = null;
+    private Boolean deleteUploadedFiles = false;
 
     public static DefaultConfiguration getInitialConfig() {
         DefaultConfiguration config = new DefaultConfiguration();
@@ -443,6 +444,16 @@ public class DefaultConfiguration extends BaseEntity {
         teamReports.add(getTeamTopRight());
 
         return teamReports;
+    }
+
+    @Transient
+    @JsonView(AllViews.FormInfo.class)
+    public Boolean getDeleteUploadedFiles() {
+        return deleteUploadedFiles;
+    }
+
+    public void setDeleteUploadedFiles(Boolean deleteUploadedFiles) {
+        this.deleteUploadedFiles = deleteUploadedFiles;
     }
 
     Boolean shouldProxyVeracode = false;

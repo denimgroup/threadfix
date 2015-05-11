@@ -41,8 +41,8 @@ public final class RepositoryServiceFactory {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(RepositoryServiceFactory.class);
 
-    @Autowired private GitServiceImpl gitService;
-    @Autowired private SvnServiceImpl svnService;
+    @Autowired private GitServiceImpl gitServiceImpl;
+    @Autowired private SvnServiceImpl svnServiceImpl;
 
     public RepositoryService getRepositoryService(@Nonnull Application application) {
 
@@ -52,11 +52,11 @@ public final class RepositoryServiceFactory {
         SourceCodeRepoType repoType = SourceCodeRepoType.getType(application.getRepositoryType());
 
         if (repoType == SourceCodeRepoType.GIT) {
-            LOG.info("Source code is being stored in Git. Returning GitService.");
-            repositoryService = gitService;
+            LOG.info("Source code is being stored in Git. Returning GitServiceImpl.");
+            repositoryService = gitServiceImpl;
         } else if (repoType == SourceCodeRepoType.SVN) {
-            LOG.info("Source code is being stored in SVN. Returning SvnService.");
-            repositoryService = svnService;
+            LOG.info("Source code is being stored in SVN. Returning SvnServiceImpl.");
+            repositoryService = svnServiceImpl;
         }
 
         return repositoryService;

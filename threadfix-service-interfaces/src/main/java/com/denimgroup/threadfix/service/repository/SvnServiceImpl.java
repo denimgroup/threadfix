@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.service.repository;
 
+import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ExceptionLog;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -69,7 +70,7 @@ public class SvnServiceImpl extends RepositoryServiceImpl implements RepositoryS
 
         setupLibrary();
 
-        SVNURL svnurl = SVNURL.parseURIEncoded(application.getRepositoryUrl());
+        SVNURL svnurl = SVNURL.parseURIEncoded(application.getSvnRepositoryUrl());
         SVNRepository svnRepository = SVNRepositoryFactory.create(svnurl);
 
         if (application.getRepositoryUserName() != null && application.getRepositoryPassword() != null) {
@@ -82,13 +83,13 @@ public class SvnServiceImpl extends RepositoryServiceImpl implements RepositoryS
 
         // If node at repoUrl is anything besides a directory, return false
         if (nodeKind == SVNNodeKind.NONE) {
-            log.error("There is no entry at '" + application.getRepositoryUrl() + "'.");
+            log.error("There is no entry at '" + application.getSvnRepositoryUrl() + "'.");
             return false;
         } else if (nodeKind == SVNNodeKind.FILE) {
-            log.error("The entry at '" + application.getRepositoryUrl() + "' is a file while a directory was expected.");
+            log.error("The entry at '" + application.getSvnRepositoryUrl() + "' is a file while a directory was expected.");
             return false;
         } else if (nodeKind == SVNNodeKind.UNKNOWN) {
-            log.error("The entry at '" + application.getRepositoryUrl() + "' is unknown while a directory was expected.");
+            log.error("The entry at '" + application.getSvnRepositoryUrl() + "' is unknown while a directory was expected.");
             return false;
         }
 
@@ -114,45 +115,49 @@ public class SvnServiceImpl extends RepositoryServiceImpl implements RepositoryS
     @Override
     public File cloneRepoToDirectory(Application application, File dirLocation) {
 
-        if (dirLocation.exists()) {
-            try {
-                SVNURL svnurl = SVNURL.parseURIEncoded(application.getRepositoryUrl());
-                SVNRepository svnRepository = SVNRepositoryFactory.create(svnurl);
-                SVNRevision svnRevision = SVNRevision.HEAD;
+        if (!dirLocation.exists()) {
+            if (dirLocation.mkdir()) {
+                log.info("Created directory location at: " + dirLocation);
+            } else {
+                log.error("Failed to create directory at: " + dirLocation);
+                return null;
+            }
+        }
+        try {
+            SVNURL svnurl = SVNURL.parseURIEncoded(application.getSvnRepositoryUrl());
+            SVNRepository svnRepository = SVNRepositoryFactory.create(svnurl);
+            SVNRevision svnRevision = SVNRevision.HEAD;
 
-                applicationService.decryptRepositoryCredentials(application);
+            applicationService.decryptRepositoryCredentials(application);
 
-                if (application.getRepositoryUserName() != null && application.getRepositoryPassword() != null) {
-                    ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager(
-                            application.getRepositoryUserName(), application.getRepositoryPassword());
-                    svnRepository.setAuthenticationManager(authManager);
-                }
-
-                if (application.getRepositoryBranch() != null && !application.getRepositoryBranch().isEmpty()) {
-                    try {
-                        Long svnRevisionNum = Long.parseLong(application.getRepositoryBranch());
-                        if (svnRevisionNum > 0)
-                            svnRevision = SVNRevision.create(svnRevisionNum);
-                    } catch (NumberFormatException e) {
-                        log.error("Revision value provided was not a valid number.");
-                    }
-                }
-
-                log.info("Attempting to clone application from repository.");
-                long revision = checkout(svnurl, svnRepository, svnRevision, dirLocation);
-                if (revision > 0) {
-                    log.info("Application was successfully cloned from repository.");
-                } else {
-                    log.error("Failed to clone application from repository.");
-                }
-            } catch (SVNException e) {
-                log.error("Failed to clone application from repository.", e);
+            if (application.getRepositoryUserName() != null && application.getRepositoryPassword() != null) {
+                ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager(
+                        application.getRepositoryUserName(), application.getRepositoryPassword());
+                svnRepository.setAuthenticationManager(authManager);
             }
 
-            return dirLocation;
+            if (application.getRepositoryBranch() != null && !application.getRepositoryBranch().isEmpty()) {
+                try {
+                    Long svnRevisionNum = Long.parseLong(application.getRepositoryBranch());
+                    if (svnRevisionNum > 0)
+                        svnRevision = SVNRevision.create(svnRevisionNum);
+                } catch (NumberFormatException e) {
+                    log.error("Revision value provided was not a valid number.");
+                }
+            }
+
+            log.info("Attempting to clone application from repository.");
+            long revision = checkout(svnurl, svnRepository, svnRevision, dirLocation);
+            if (revision > 0) {
+                log.info("Application was successfully cloned from repository.");
+            } else {
+                log.error("Failed to clone application from repository.");
+            }
+        } catch (SVNException e) {
+            log.error("Failed to clone application from repository.", e);
         }
 
-         return null;
+        return dirLocation;
     }
 
     private long checkout(SVNURL svnurl, SVNRepository svnRepository, SVNRevision svnRevision, File destPath) throws SVNException {

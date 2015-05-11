@@ -94,6 +94,12 @@ public class UsersController {
 		return indexInner(model, request, "roles");
 	}
 
+	@PreAuthorize("hasRole('ROLE_ENTERPRISE')")
+	@RequestMapping(value="/configuration/groups")
+	public String groupsIndex(ModelMap model, HttpServletRequest request) {
+		return indexInner(model, request, "groups");
+	}
+
 	@RequestMapping(value="/configuration/users", method = RequestMethod.GET)
 	public String index(ModelMap model, HttpServletRequest request) {
 
