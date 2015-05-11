@@ -118,7 +118,7 @@ public class SystemSettingsController {
                 scanService.deleteScanFileLocations();
                 defaultConfiguration.setDeleteUploadedFiles(false);
             } catch (RestIOException e) {
-
+                return RestResponse.failure("Unable to delete files in 'File Upload Location' directory." + e.getMessage());
             }
         }
 
