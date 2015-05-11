@@ -99,8 +99,8 @@ threadfixModule.directive('passwordValidate', function() {
         link: function(scope, elm, attrs, ctrl) {
             ctrl.$parsers.unshift(function(viewValue) {
 
-                scope.pwdValidLength = (viewValue && viewValue.length >= 12 ? 'valid' : undefined);
-                scope.lengthRemaining = (viewValue && viewValue.length < 12 ? 12 - viewValue.length : undefined)
+                scope.pwdValidLength = (viewValue && (viewValue.length >= 12 || viewValue.length === 0) ? 'valid' : undefined);
+                scope.lengthRemaining = (viewValue && viewValue.length < 12 ? 12 - viewValue.length : undefined);
 
                 scope.matchError = (viewValue && scope.pwdValidLength && attrs.passwordValidate === viewValue);
 
@@ -108,9 +108,9 @@ threadfixModule.directive('passwordValidate', function() {
                     if (scope.pwdValidLength) {
                         ctrl.$setValidity('matches', scope.pwdValidLength && attrs.passwordValidate === viewValue);
                     }
-                })
+                });
 
-                if(scope.pwdValidLength) {
+                if (scope.pwdValidLength) {
                     ctrl.$setValidity('passwordLength', true);
                     ctrl.$setValidity('matches', attrs.passwordValidate === viewValue);
                     return viewValue;

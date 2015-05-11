@@ -114,7 +114,6 @@ public class DashboardPage extends BasePage{
             return driver.findElementByClassName("alert-error").getText()
                     .contains("You don't have permission to access any ThreadFix applications or to create one for yourself.");
         } catch (NoSuchElementException e) {
-            System.err.println("Alert was not displayed." + e.getMessage());
             return false;
         }
     }

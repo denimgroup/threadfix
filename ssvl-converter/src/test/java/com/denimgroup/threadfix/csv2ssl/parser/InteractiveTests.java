@@ -94,6 +94,9 @@ public class InteractiveTests {
                 "skip\n" +
                 "skip\n" +
                 "skip\n" +
+                "skip\n" +
+                "skip\n" +
+                "skip\n" +
                 "n\n" +
                 ResourceLoader.getFilePath("basic.csv") + "\n" +
                 "stdout\n";
@@ -166,6 +169,9 @@ public class InteractiveTests {
                 "Injection Point\n" +
                 "ID\n" +
                 "Text\n" +
+                "skip\n" +
+                "skip\n" +
+                "skip\n" +
                 "skip\n" +
                 "skip\n" +
                 "skip\n" +

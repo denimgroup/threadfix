@@ -24,7 +24,11 @@
 
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
+import com.fasterxml.jackson.annotation.JsonView;
+
 import javax.persistence.*;
+import java.io.File;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -35,11 +39,11 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 @Entity
 @Table(name="DefaultConfiguration")
 public class DefaultConfiguration extends BaseEntity {
-	
+
 	private static final long serialVersionUID = 2584623185996706729L;
 
     public static final String MASKED_PASSWORD = "dbnH3rDuZC2Nib";
-	
+
 	private Boolean globalGroupEnabled = null;
     private Boolean hasAddedScheduledImports = null;
     private Boolean hasAddedScheduledDefectTrackerUpdates = null;
@@ -56,9 +60,12 @@ public class DefaultConfiguration extends BaseEntity {
     private Calendar lastScannerMappingsUpdate;
 
     private Integer sessionTimeout = null;
-    
+
     private Report dashboardTopLeft, dashboardTopRight, dashboardBottomLeft,dashboardBottomRight,
             applicationTopLeft, applicationTopRight, teamTopLeft, teamTopRight;
+
+    private String fileUploadLocation = null;
+    private Boolean deleteUploadedFiles = false;
 
     public static DefaultConfiguration getInitialConfig() {
         DefaultConfiguration config = new DefaultConfiguration();
@@ -71,6 +78,7 @@ public class DefaultConfiguration extends BaseEntity {
     }
 
     @Column
+    @JsonView(AllViews.FormInfo.class)
     public Integer getSessionTimeout() {
         return sessionTimeout;
     }
@@ -79,8 +87,29 @@ public class DefaultConfiguration extends BaseEntity {
         this.sessionTimeout = sessionTimeout;
     }
 
+    @JsonView(AllViews.FormInfo.class)
+    @Column(length = 1024, nullable = true)
+    public String getFileUploadLocation() {
+        return fileUploadLocation;
+    }
+
+    public void setFileUploadLocation(String fileUploadLocation) {
+        this.fileUploadLocation = fileUploadLocation;
+    }
+
+    @Transient
+    public boolean fileUploadLocationExists() {
+        return fileUploadLocation != null && !fileUploadLocation.isEmpty();
+    }
+
+    @Transient
+    public String getFullFilePath(Scan scan) {
+        return fileUploadLocation + File.separator + scan.getFileName();
+    }
+
     @OneToOne
     @JoinColumn(name = "teamTopLeftId")
+    @JsonView(AllViews.FormInfo.class)
     public Report getTeamTopLeft() {
         return teamTopLeft;
     }
@@ -91,6 +120,7 @@ public class DefaultConfiguration extends BaseEntity {
 
     @OneToOne
     @JoinColumn(name = "teamTopRightId")
+    @JsonView(AllViews.FormInfo.class)
     public Report getTeamTopRight() {
         return teamTopRight;
     }
@@ -101,6 +131,7 @@ public class DefaultConfiguration extends BaseEntity {
 
     @OneToOne
     @JoinColumn(name = "applicationTopLeftId")
+    @JsonView(AllViews.FormInfo.class)
     public Report getApplicationTopLeft() {
         return applicationTopLeft;
     }
@@ -111,6 +142,7 @@ public class DefaultConfiguration extends BaseEntity {
 
     @OneToOne
     @JoinColumn(name = "applicationTopRightId")
+    @JsonView(AllViews.FormInfo.class)
     public Report getApplicationTopRight() {
         return applicationTopRight;
     }
@@ -121,6 +153,7 @@ public class DefaultConfiguration extends BaseEntity {
 
     @OneToOne
     @JoinColumn(name = "dashboardTopLeftId")
+    @JsonView(AllViews.FormInfo.class)
     public Report getDashboardTopLeft() {
         return dashboardTopLeft;
     }
@@ -131,6 +164,7 @@ public class DefaultConfiguration extends BaseEntity {
 
     @OneToOne
     @JoinColumn(name = "dashboardTopRightId")
+    @JsonView(AllViews.FormInfo.class)
     public Report getDashboardTopRight() {
         return dashboardTopRight;
     }
@@ -141,6 +175,7 @@ public class DefaultConfiguration extends BaseEntity {
 
     @OneToOne
     @JoinColumn(name = "dashboardBottomLeftId")
+    @JsonView(AllViews.FormInfo.class)
     public Report getDashboardBottomLeft() {
         return dashboardBottomLeft;
     }
@@ -151,6 +186,7 @@ public class DefaultConfiguration extends BaseEntity {
 
     @OneToOne
     @JoinColumn(name = "dashboardBottomRightId")
+    @JsonView(AllViews.FormInfo.class)
     public Report getDashboardBottomRight() {
         return dashboardBottomRight;
     }
@@ -196,6 +232,7 @@ public class DefaultConfiguration extends BaseEntity {
     }
 
     @Column
+    @JsonView(AllViews.FormInfo.class)
     public Integer getDefaultRoleId() {
         return defaultRoleId;
     }
@@ -205,6 +242,7 @@ public class DefaultConfiguration extends BaseEntity {
     }
 
     @Column
+    @JsonView(AllViews.FormInfo.class)
     public Boolean getGlobalGroupEnabled() {
         return globalGroupEnabled != null && globalGroupEnabled;
     }
@@ -217,28 +255,41 @@ public class DefaultConfiguration extends BaseEntity {
 	public void setActiveDirectoryBase(String activeDirectoryBase) {
 		this.activeDirectoryBase = activeDirectoryBase;
 	}
-	
+
+    @Column(length=256)
+    @JsonView(AllViews.FormInfo.class)
 	public String getActiveDirectoryURL() {
         return activeDirectoryURL == null ? "" : activeDirectoryURL;
 	}
-	
-	@Column(length=256)
+
 	public void setActiveDirectoryURL(String activeDirectoryURL) {
 		this.activeDirectoryURL = activeDirectoryURL;
 	}
 
+    @Column(length=256)
+    @JsonView(AllViews.FormInfo.class)
 	public String getActiveDirectoryUsername() {
 		return activeDirectoryUsername == null ? "" : activeDirectoryUsername;
 	}
 
 	@Column(length=256)
+    @JsonView(AllViews.FormInfo.class)
+    public String getActiveDirectoryBase() {
+        return activeDirectoryBase == null ? "" : activeDirectoryBase;
+    }
+
 	public void setActiveDirectoryUsername(String activeDirectoryUsername) {
 		this.activeDirectoryUsername = activeDirectoryUsername;
 	}
 
-	public String getActiveDirectoryCredentials() {
+    @JsonView(AllViews.FormInfo.class)
+    public String getActiveDirectoryCredentials() {
 		return activeDirectoryCredentials == null ? "" : activeDirectoryCredentials;
 	}
+
+    public void setActiveDirectoryCredentials(String activeDirectoryCredentials) {
+        this.activeDirectoryCredentials = activeDirectoryCredentials;
+    }
 
     @Column(length = 1024)
     public String getActiveDirectoryUsernameEncrypted() {
@@ -258,25 +309,17 @@ public class DefaultConfiguration extends BaseEntity {
         this.activeDirectoryCredentialsEncrypted = activeDirectoryCredentialsEncrypted;
     }
 
-    	@Column(length=256)
-	public void setActiveDirectoryCredentials(String activeDirectoryCredentials) {
-		this.activeDirectoryCredentials = activeDirectoryCredentials;
-	}
-	
-	public String getActiveDirectoryBase() {
-		return activeDirectoryBase == null ? "" : activeDirectoryBase;
-	}
+    @Column
+    public Calendar getLastScannerMappingsUpdate() {
+        return lastScannerMappingsUpdate;
+    }
 
-	@Column
-	public Calendar getLastScannerMappingsUpdate() {
-		return lastScannerMappingsUpdate;
-	}
-
-	public void setLastScannerMappingsUpdate(Calendar lastScannerMappingsUpdate) {
-		this.lastScannerMappingsUpdate = lastScannerMappingsUpdate;
-	}
+    public void setLastScannerMappingsUpdate(Calendar lastScannerMappingsUpdate) {
+        this.lastScannerMappingsUpdate = lastScannerMappingsUpdate;
+    }
 
     @Transient
+    @JsonView(AllViews.FormInfo.class)
     public String getProxyUsername() {
         return proxyUsername;
     }
@@ -286,6 +329,7 @@ public class DefaultConfiguration extends BaseEntity {
     }
 
     @Transient
+    @JsonView(AllViews.FormInfo.class)
     public String getProxyPassword() {
         return proxyPassword;
     }
@@ -294,16 +338,8 @@ public class DefaultConfiguration extends BaseEntity {
         this.proxyPassword = proxyPassword;
     }
 
-    @Column
-    public Integer getProxyPort() {
-        return proxyPort;
-    }
-
-    public void setProxyPort(Integer proxyPort) {
-        this.proxyPort = proxyPort;
-    }
-
     @Column(length = 1024)
+    @JsonView(AllViews.FormInfo.class)
     public String getProxyUsernameEncrypted() {
         return proxyUsernameEncrypted;
     }
@@ -313,6 +349,7 @@ public class DefaultConfiguration extends BaseEntity {
     }
 
     @Column(length = 1024)
+    @JsonView(AllViews.FormInfo.class)
     public String getProxyPasswordEncrypted() {
         return proxyPasswordEncrypted;
     }
@@ -321,7 +358,18 @@ public class DefaultConfiguration extends BaseEntity {
         this.proxyPasswordEncrypted = proxyPasswordEncrypted;
     }
 
+    @Column
+    @JsonView(AllViews.FormInfo.class)
+    public Integer getProxyPort() {
+        return proxyPort;
+    }
+
+    public void setProxyPort(Integer proxyPort) {
+        this.proxyPort = proxyPort;
+    }
+
     @Column(length = 1024)
+    @JsonView(AllViews.FormInfo.class)
     public String getProxyHost() {
         return proxyHost;
     }
@@ -398,85 +446,14 @@ public class DefaultConfiguration extends BaseEntity {
         return teamReports;
     }
 
-    @Column
-    public Boolean getShouldProxyWhiteHat() {
-        return shouldProxyWhiteHat == null || shouldProxyWhiteHat;
+    @Transient
+    @JsonView(AllViews.FormInfo.class)
+    public Boolean getDeleteUploadedFiles() {
+        return deleteUploadedFiles;
     }
 
-    public void setShouldProxyWhiteHat(Boolean shouldProxyWhiteHat) {
-        this.shouldProxyWhiteHat = shouldProxyWhiteHat;
-    }
-
-    @Column
-    public Boolean getShouldProxyVeracode() {
-        return shouldProxyVeracode == null || shouldProxyVeracode;
-    }
-
-    public void setShouldProxyVeracode(Boolean shouldProxyVeracode) {
-        this.shouldProxyVeracode = shouldProxyVeracode;
-    }
-
-    @Column
-    public Boolean getShouldProxyQualys() {
-        return shouldProxyQualys == null || shouldProxyQualys;
-    }
-
-    public void setShouldProxyQualys(Boolean shouldProxyQualys) {
-        this.shouldProxyQualys = shouldProxyQualys;
-    }
-
-    @Column
-    public Boolean getShouldProxyTFS() {
-        return shouldProxyTFS == null || shouldProxyTFS;
-    }
-
-    public void setShouldProxyTFS(Boolean shouldProxyTFS) {
-        this.shouldProxyTFS = shouldProxyTFS;
-    }
-
-    @Column
-    public Boolean getShouldProxyBugzilla() {
-        return shouldProxyBugzilla == null || shouldProxyBugzilla;
-    }
-
-    public void setShouldProxyBugzilla(Boolean shouldProxyBugzilla) {
-        this.shouldProxyBugzilla = shouldProxyBugzilla;
-    }
-
-    @Column
-    public Boolean getShouldProxyJira() {
-        return shouldProxyJira == null || shouldProxyJira;
-    }
-
-    public void setShouldProxyJira(Boolean shouldProxyJira) {
-        this.shouldProxyJira = shouldProxyJira;
-    }
-
-    @Column
-    public Boolean getShouldProxyVersionOne() {
-        return shouldProxyVersionOne == null || shouldProxyVersionOne;
-    }
-
-    public void setShouldProxyVersionOne(Boolean shouldProxyVersionOne) {
-        this.shouldProxyVersionOne = shouldProxyVersionOne;
-    }
-
-    @Column
-    public Boolean getShouldProxyHPQC() {
-        return shouldProxyHPQC == null || shouldProxyHPQC;
-    }
-
-    public void setShouldProxyHPQC(Boolean shouldProxyHPQC) {
-        this.shouldProxyHPQC = shouldProxyHPQC;
-    }
-
-    @Column
-    public Boolean getShouldUseProxyCredentials() {
-        return shouldUseProxyCredentials;
-    }
-
-    public void setShouldUseProxyCredentials(Boolean shouldUseProxyCredentials) {
-        this.shouldUseProxyCredentials = shouldUseProxyCredentials;
+    public void setDeleteUploadedFiles(Boolean deleteUploadedFiles) {
+        this.deleteUploadedFiles = deleteUploadedFiles;
     }
 
     Boolean shouldProxyVeracode = false;
@@ -489,8 +466,100 @@ public class DefaultConfiguration extends BaseEntity {
     Boolean shouldProxyWhiteHat = false;
     Boolean shouldUseProxyCredentials = false;
     Boolean shouldProxyTrustwaveHailstorm = false;
+    Boolean shouldProxyContrast = false;
 
     @Column
+    @JsonView(AllViews.FormInfo.class)
+    public Boolean getShouldProxyWhiteHat() {
+        return shouldProxyWhiteHat == null || shouldProxyWhiteHat;
+    }
+
+    public void setShouldProxyWhiteHat(Boolean shouldProxyWhiteHat) {
+        this.shouldProxyWhiteHat = shouldProxyWhiteHat;
+    }
+
+    @Column
+    @JsonView(AllViews.FormInfo.class)
+    public Boolean getShouldProxyVeracode() {
+        return shouldProxyVeracode == null || shouldProxyVeracode;
+    }
+
+    public void setShouldProxyVeracode(Boolean shouldProxyVeracode) {
+        this.shouldProxyVeracode = shouldProxyVeracode;
+    }
+
+    @Column
+    @JsonView(AllViews.FormInfo.class)
+    public Boolean getShouldProxyQualys() {
+        return shouldProxyQualys == null || shouldProxyQualys;
+    }
+
+    public void setShouldProxyQualys(Boolean shouldProxyQualys) {
+        this.shouldProxyQualys = shouldProxyQualys;
+    }
+
+    @Column
+    @JsonView(AllViews.FormInfo.class)
+    public Boolean getShouldProxyTFS() {
+        return shouldProxyTFS == null || shouldProxyTFS;
+    }
+
+    public void setShouldProxyTFS(Boolean shouldProxyTFS) {
+        this.shouldProxyTFS = shouldProxyTFS;
+    }
+
+    @Column
+    @JsonView(AllViews.FormInfo.class)
+    public Boolean getShouldProxyBugzilla() {
+        return shouldProxyBugzilla == null || shouldProxyBugzilla;
+    }
+
+    public void setShouldProxyBugzilla(Boolean shouldProxyBugzilla) {
+        this.shouldProxyBugzilla = shouldProxyBugzilla;
+    }
+
+    @Column
+    @JsonView(AllViews.FormInfo.class)
+    public Boolean getShouldProxyJira() {
+        return shouldProxyJira == null || shouldProxyJira;
+    }
+
+    public void setShouldProxyJira(Boolean shouldProxyJira) {
+        this.shouldProxyJira = shouldProxyJira;
+    }
+
+    @Column
+    @JsonView(AllViews.FormInfo.class)
+    public Boolean getShouldProxyVersionOne() {
+        return shouldProxyVersionOne == null || shouldProxyVersionOne;
+    }
+
+    public void setShouldProxyVersionOne(Boolean shouldProxyVersionOne) {
+        this.shouldProxyVersionOne = shouldProxyVersionOne;
+    }
+
+    @Column
+    @JsonView(AllViews.FormInfo.class)
+    public Boolean getShouldProxyHPQC() {
+        return shouldProxyHPQC == null || shouldProxyHPQC;
+    }
+
+    public void setShouldProxyHPQC(Boolean shouldProxyHPQC) {
+        this.shouldProxyHPQC = shouldProxyHPQC;
+    }
+
+    @Column
+    @JsonView(AllViews.FormInfo.class)
+    public Boolean getShouldUseProxyCredentials() {
+        return shouldUseProxyCredentials;
+    }
+
+    public void setShouldUseProxyCredentials(Boolean shouldUseProxyCredentials) {
+        this.shouldUseProxyCredentials = shouldUseProxyCredentials;
+    }
+
+    @Column
+    @JsonView(AllViews.FormInfo.class)
     public Boolean getShouldProxyTrustwaveHailstorm() {
         return shouldProxyTrustwaveHailstorm == null || shouldProxyTrustwaveHailstorm;
     }
@@ -498,10 +567,9 @@ public class DefaultConfiguration extends BaseEntity {
     public void setShouldProxyTrustwaveHailstorm(Boolean shouldProxyTrustwaveHailstorm) {
         this.shouldProxyTrustwaveHailstorm = shouldProxyTrustwaveHailstorm;
     }
-    
-    Boolean shouldProxyContrast = false;
 
     @Column
+    @JsonView(AllViews.FormInfo.class)
     public Boolean getShouldProxyContrast() {
         return shouldProxyContrast == null || shouldProxyContrast;
     }

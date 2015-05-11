@@ -1,0 +1,34 @@
+<%@ include file="/WEB-INF/views/config/users/form.jsp" %>
+
+<h4>User List <a id="newUserModalLink" class="btn" ng-click="openNewModal()">Create User</a></h4>
+
+<input id="userSelectTypeahead"
+       type="text"
+       class="form-control side-list-width"
+       ng-model="goToUser"
+       placeholder="User Search (press Enter)"
+       ng-enter="searchUsers(goToUser)"/>
+
+<div ng-show="countUsers > numberToShow" class="pagination" ng-init="page = 1">
+    <pagination id="userPagination"
+                class="no-margin"
+                total-items="countUsers / numberToShow * 10"
+                max-size="3"
+                page="page"
+                first-text="&laquo;"
+                last-text="&raquo;"
+                boundary-links="true"
+                direction-links="false"
+                ng-model="page"
+                ng-click="updatePage(page, goToUser)"></pagination>
+
+</div>
+
+<ul class="nav nav-pills">
+  <li ng-repeat="user in users"
+      id="lastYearReport"
+      class="span2"
+      ng-class="{ active: currentUser.id === user.id }">
+    <a href="#" class="no-underline" ng-click="setCurrentUser(user)">{{ user.name }}</a>
+  </li>
+</ul>

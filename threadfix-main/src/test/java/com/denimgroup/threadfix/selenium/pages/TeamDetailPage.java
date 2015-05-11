@@ -491,7 +491,6 @@ public class TeamDetailPage extends BasePage {
         try {
             return driver.findElementById("addApplicationModalButton").isDisplayed();
         } catch (org.openqa.selenium.NoSuchElementException e) {
-            System.err.println(e.getMessage());
             return false;
         }
     }

@@ -172,4 +172,17 @@ public interface ScanDao extends GenericObjectDao<Scan> {
 	 * 
 	 */
 	Map<String, Object> getCountsForScans(List<Integer> ids);
+
+    /**
+     *
+     */
+    int deleteScanFileLocations();
+
+
+    /**
+     *
+     * @return List<Scan>
+     */
+    List<String> loadScanFilenames();
 }
+

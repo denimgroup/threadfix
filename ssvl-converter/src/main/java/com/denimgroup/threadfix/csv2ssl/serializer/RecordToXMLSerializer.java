@@ -28,7 +28,6 @@ import com.denimgroup.threadfix.csv2ssl.util.DateUtils;
 import com.denimgroup.threadfix.csv2ssl.util.Strings;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -37,6 +36,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.csv2ssl.util.CollectionUtils.map;
+import static org.apache.commons.lang3.StringEscapeUtils.escapeXml;
 
 /**
  * Created by mac on 12/2/14.
@@ -127,12 +127,12 @@ public class RecordToXMLSerializer {
             return;
         }
 
-        String sourceScanner = get(map, Strings.SOURCE);
-        String sourceFileName = get(map, Strings.SOURCE_FILE_NAME);
-        String severity = get(map, Strings.SEVERITY);
-        String cweId = get(map, Strings.CWE);
-        String urlString = get(map, Strings.URL);
-        String issueId = get(map, Strings.ISSUE_ID);
+        String sourceScanner = get(map, Strings.SOURCE),
+            sourceFileName = get(map, Strings.SOURCE_FILE_NAME),
+            severity = get(map, Strings.SEVERITY),
+            cweId = get(map, Strings.CWE),
+            urlString = get(map, Strings.URL),
+            issueId = get(map, Strings.ISSUE_ID);
 
         String parameterString = get(map, Strings.PARAMETER);
         parameterString = parameterString == null ? "" : parameterString;
@@ -150,52 +150,94 @@ public class RecordToXMLSerializer {
         }
 
         builder.append("\t<Vulnerability ")
-                .append("CWE=\"").append(StringEscapeUtils.escapeXml(cweId)).append("\" ");
+                .append("CWE=\"").append(escapeXml(cweId)).append("\" ");
 
         if (issueId != null) {
-            builder.append("IssueID=\"").append(StringEscapeUtils.escapeXml(issueId)).append("\" ");
+            builder.append("IssueID=\"").append(escapeXml(issueId)).append("\" ");
         }
 
-        builder.append("Severity=\"").append(StringEscapeUtils.escapeXml(severity)).append("\">\n");
+        builder.append("Severity=\"").append(escapeXml(severity)).append("\">\n");
 
         appendTagIfPresent(map, builder, "ShortDescription", Strings.SHORT_DESCRIPTION);
         appendTagIfPresent(map, builder, "LongDescription", Strings.LONG_DESCRIPTION);
 
-        builder.append("\t\t<Finding NativeID=\"").append(StringEscapeUtils.escapeXml(nativeId)).append("\"");
+        appendFindingStart(builder, nativeId, sourceScanner, sourceFileName, dateString);
+        appendSurfaceLocation(builder, urlString, parameterString);
+        appendDataFlowElements(builder, map);
+        builder.append("\n\t\t</Finding>\n");
+
+        builder.append("\t</Vulnerability>\n");
+    }
+
+    private static void appendFindingStart(StringBuilder builder, String nativeId, String sourceScanner, String sourceFileName, String dateString) {
+        builder.append("\t\t<Finding NativeID=\"").append(escapeXml(nativeId)).append("\"");
 
         if (sourceScanner != null) {
-            builder.append(" Source=\"").append(StringEscapeUtils.escapeXml(sourceScanner)).append("\"");
+            builder.append(" Source=\"").append(escapeXml(sourceScanner)).append("\"");
         }
 
         if (sourceFileName != null) {
-            builder.append(" SourceFileName=\"").append(StringEscapeUtils.escapeXml(sourceFileName)).append("\"");
+            builder.append(" SourceFileName=\"").append(escapeXml(sourceFileName)).append("\"");
         }
 
         if (dateString != null) {
             String newDate = DateUtils.toOurFormat(dateString);
             if (newDate != null) {
-                builder.append(" IdentifiedTimestamp=\"").append(StringEscapeUtils.escapeXml(newDate)).append("\"");
+                builder.append(" IdentifiedTimestamp=\"").append(escapeXml(newDate)).append("\"");
             }
         }
 
-        builder.append(">\n")
-                .append("\t\t\t<SurfaceLocation url=\"").append(StringEscapeUtils.escapeXml(urlString)).append("\"");
+        builder.append(">");
+    }
 
-        if (!"".equals(parameterString)) {
-            builder.append(" source=\"Parameter\" value=\"").append(StringEscapeUtils.escapeXml(parameterString)).append("\"");
+    private static void appendSurfaceLocation(StringBuilder builder, String urlString, String parameterString) {
+        if (urlString != null || !parameterString.trim().equals("")) {
+            builder.append("\n\t\t\t<SurfaceLocation url=\"").append(escapeXml(urlString)).append("\"");
+
+            if (!"".equals(parameterString)) {
+                builder.append(" source=\"Parameter\" value=\"").append(escapeXml(parameterString)).append("\"");
+            }
+
+            builder.append("/>");
         }
+    }
 
-        builder.append("/>\n\t\t</Finding>\n");
+    private static void appendDataFlowElements(StringBuilder builder, Map<String, String> map) {
 
-        builder.append("\t</Vulnerability>\n");
+        String sourceFileName = get(map, Strings.SOURCE_FILE_NAME),
+                columnNumber = get(map, Strings.COLUMN_NUMBER),
+                lineNumber = get(map, Strings.LINE_NUMBER),
+                lineText = get(map, Strings.LINE_TEXT);
+
+        if (columnNumber != null || lineNumber != null || lineText != null || sourceFileName != null) {
+            builder.append("\n").append("\t\t\t<DataFlowElement");
+
+            if (sourceFileName != null) {
+                builder.append(" SourceFileName=\"").append(escapeXml(sourceFileName)).append("\"");
+            }
+            if (lineNumber != null) {
+                builder.append(" LineNumber=\"").append(escapeXml(lineNumber)).append("\"");
+            }
+            if (columnNumber != null) {
+                builder.append(" ColumnNumber=\"").append(escapeXml(columnNumber)).append("\"");
+            }
+            builder.append(">\n");
+
+            lineText = lineText == null ? "" : lineText;
+            builder.append("\t\t\t\t<LineText>\n\t\t\t\t\t")
+                    .append(escapeXml(lineText))
+                    .append("\n\t\t\t\t</LineText>\n");
+
+            builder.append("\t\t\t</DataFlowElement>");
+        }
     }
 
     private static void appendTagIfPresent(Map<String, String> map, StringBuilder builder, String name, String key) {
         String value = get(map, key);
         if (value != null && !"".equals(value.trim())) {
-            builder.append("\t\t<").append(StringEscapeUtils.escapeXml(name)).append(">\n\t\t\t")
-                    .append(StringEscapeUtils.escapeXml(value)).append("\n")
-                    .append("\t\t</").append(StringEscapeUtils.escapeXml(name)).append(">\n");
+            builder.append("\t\t<").append(escapeXml(name)).append(">\n\t\t\t")
+                    .append(escapeXml(value)).append("\n")
+                    .append("\t\t</").append(escapeXml(name)).append(">\n");
         }
     }
 

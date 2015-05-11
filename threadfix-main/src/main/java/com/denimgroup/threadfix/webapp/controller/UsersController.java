@@ -23,12 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.CollectionUtils;
+import com.denimgroup.threadfix.data.entities.Group;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.RoleService;
-import com.denimgroup.threadfix.service.UserService;
+import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.beans.AccessControlMapModel;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
@@ -39,6 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -49,13 +51,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
+import static com.denimgroup.threadfix.remote.response.RestResponse.success;
+
 /**
  * @author dshannon
  * @author mcollins
  */
 @Controller
-@SessionAttributes("user")
-@RequestMapping("/configuration/users")
+@SessionAttributes({"user", "role", "editRole"})
 @PreAuthorize("hasRole('ROLE_CAN_MANAGE_USERS')")
 public class UsersController {
 
@@ -63,6 +67,12 @@ public class UsersController {
 	private UserService userService = null;
 	@Autowired
 	private RoleService roleService = null;
+	@Autowired
+	private OrganizationService organizationService = null;
+	@Autowired(required = false)
+	private SessionService sessionService;
+	@Autowired(required = false)
+	private GroupService groupService;
 
 	private final SanitizedLogger log = new SanitizedLogger(UsersController.class);
 
@@ -78,31 +88,48 @@ public class UsersController {
 		return roleService.loadAll();
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
-	public String index(ModelMap model, HttpServletRequest request) {
-		
-		List<User> users = userService.loadAllUsers();
-		
-		String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-		
-		for (User user : users) {
-			user.setIsDeletable(userService.canDelete(user));
-			user.setIsThisUser(currentUser != null && currentUser.equals(user.getName()));
-		}
-		model.addAttribute("ldap_plugin", EnterpriseTest.isEnterprise());
-		model.addAttribute("users", users);
-		
-		model.addAttribute("user", new User());
-		model.addAttribute("accessControlMapModel", new AccessControlMapModel());
-		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
-		model.addAttribute("errorMessage", ControllerUtils.getErrorMessage(request));
-		
-		return "config/users/index";
+	@PreAuthorize("hasRole('ROLE_ENTERPRISE')")
+	@RequestMapping(value="/configuration/roles")
+	public String rolesIndex(ModelMap model, HttpServletRequest request) {
+		return indexInner(model, request, "roles");
 	}
 
-    @RequestMapping(value = "/map/page/{page}/{numberToShow}", method = RequestMethod.GET)
+	@PreAuthorize("hasRole('ROLE_ENTERPRISE')")
+	@RequestMapping(value="/configuration/groups")
+	public String groupsIndex(ModelMap model, HttpServletRequest request) {
+		return indexInner(model, request, "groups");
+	}
+
+	@RequestMapping(value="/configuration/users", method = RequestMethod.GET)
+	public String index(ModelMap model, HttpServletRequest request) {
+
+		return indexInner(model, request, "users");
+	}
+
+	private String indexInner(ModelMap model, HttpServletRequest request, String defaultTab) {
+		model.addAttribute("ldap_plugin", EnterpriseTest.isEnterprise());
+
+		model.addAttribute("startingTab", defaultTab);
+		model.addAttribute("user", new User());
+		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
+		model.addAttribute("errorMessage", ControllerUtils.getErrorMessage(request));
+
+		if (EnterpriseTest.isEnterprise()) {
+			model.addAttribute("accessControlMapModel", new AccessControlMapModel());
+			model.addAttribute("group", new Group());
+			model.addAttribute("editGroup", new Group());
+			model.addAttribute("role", new Role());
+			model.addAttribute("editRole", new Role());
+			return "config/users/enterprise/index";
+		} else {
+			return "config/users/community/index";
+		}
+	}
+
+	@RequestMapping(value = "/configuration/users/map/page/{page}/{numberToShow}", method = RequestMethod.GET)
 	@JsonView(AllViews.TableRow.class)
-    public @ResponseBody Object map(@PathVariable int page, @PathVariable int numberToShow) {
+	@ResponseBody
+	public Object map(@PathVariable int page, @PathVariable int numberToShow) {
         List<User> users = userService.retrievePage(page, numberToShow);
 
         String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -115,24 +142,57 @@ public class UsersController {
         Map<String, Object> returnMap = new HashMap<>();
 
         returnMap.put("users", users);
-        returnMap.put("roles", roleService.loadAll());
-		returnMap.put("countUsers", userService.countUsers());
 
-		return RestResponse.success(returnMap);
+		if (EnterpriseTest.isEnterprise()) {
+			returnMap.put("roles", roleService.loadAll());
+
+			List<Group> groups = groupService == null ?
+					null :
+					groupService.loadAllActive();
+			returnMap.put("groups", groups);
+		}
+
+		returnMap.put("countUsers", userService.countUsers(null));
+		returnMap.put("teams", organizationService.loadAllActive());
+
+		return success(returnMap);
     }
 
-	@RequestMapping("/{userId}/delete")
-	public String deleteUser(@PathVariable("userId") int userId, 
-			HttpServletRequest request, SessionStatus status) {
+	@RequestMapping(value = "/configuration/users/search", method = RequestMethod.POST)
+	@JsonView(AllViews.TableRow.class)
+	@ResponseBody
+	public Object search(HttpServletRequest request) {
+
+		List<User> users = userService.search(request);
+
+        String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        for (User user : users) {
+            user.setIsDeletable(userService.canDelete(user));
+            user.setIsThisUser(currentUser != null && currentUser.equals(user.getName()));
+        }
+
+		return success(CollectionUtils.map(
+				"users", users,
+				"countUsers", userService.countUsers(request.getParameter("searchString"))
+		));
+    }
+
+	@RequestMapping("/configuration/users/{userId}/delete")
+	@ResponseBody
+	public RestResponse<String> deleteUser(@PathVariable("userId") int userId,
+			HttpServletRequest request, SessionStatus status, Model model) {
 		User user = userService.loadUser(userId);
 		
 		if (user != null) {
 			String userName = user.getName();
-			
+
 			if (userService.canDelete(user)) {
 				
 				status.setComplete();
-				
+
+				model.addAttribute("user", new User());
+
 				String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 				
 				boolean isThisUser = currentUser != null && currentUser.equals(user.getName());
@@ -140,14 +200,18 @@ public class UsersController {
 				userService.delete(user);
 				
 				if (isThisUser) {
-					return "redirect:/j_spring_security_logout";
+					SecurityContextHolder.clearContext();
+
+					return success("You have deleted yourself.");
 				} else {
-					ControllerUtils.addSuccessMessage(request, "User " + userName + " was deleted successfully.");
-					return "redirect:/configuration/users";
+
+					if (sessionService != null) {
+						sessionService.invalidateSessions(user);
+					}
+					return success("You have successfully deleted " + userName);
 				}
 			} else {
-				ControllerUtils.addErrorMessage(request, "User " + userName + " cannot be deleted.");
-				return "redirect:/configuration/users";
+				return failure("Unable to delete the user.");
 			}
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("User", userId));

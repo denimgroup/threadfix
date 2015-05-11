@@ -1356,3 +1356,53 @@ input.wide {
 	-ms-text-overflow: ellipsis;
 	width:172px;
 }
+
+.form-group label {
+	margin-top: 5px;
+	float:left;
+}
+
+.form-group input, .form-group select {
+	margin-left: 10px;
+}
+
+.form-group input[type="checkbox"] {
+	margin-left: 10px;
+	margin-top: 8px;
+}
+
+.user-page .form-group label {
+	width:150px;
+}
+
+.input-padding-left {
+	margin-left:10px;
+}
+
+.label-height {
+	margin-top:5px;
+}
+
+a.no-underline {
+	text-decoration:none;
+}
+
+h4 a {
+	font-weight: normal;
+}
+
+.center, .table td.center {
+	text-align: center;
+}
+
+.perms-table td + td {
+	text-align:center
+}
+
+input.no-bottom-margin {
+	margin-bottom: 0 !important;
+}
+
+.side-list-width {
+	width: 166px !important;
+}

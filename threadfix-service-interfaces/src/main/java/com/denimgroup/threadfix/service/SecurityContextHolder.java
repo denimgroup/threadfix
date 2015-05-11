@@ -23,21 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import org.eclipse.jgit.api.errors.GitAPIException;
-
-import java.io.File;
+import org.springframework.security.core.context.SecurityContext;
 
 /**
- * Created by mac on 7/29/14.
+ * Created by mcollins on 4/28/15.
  */
-public interface GitService {
-
-    boolean testGitConfiguration(Application application) throws GitAPIException;
-
-    // Cursory testing indicates that this works.
-    File cloneGitTreeToDirectory(Application application, File fileLocation);
-
-    // TODO move to some sort of repository manager instead of tying to the Git implementation.
-    File getWorkTree(Application application);
+public interface SecurityContextHolder {
+    SecurityContext getSecurityContext(Integer id);
 }

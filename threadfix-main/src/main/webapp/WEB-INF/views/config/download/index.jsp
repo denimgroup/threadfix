@@ -81,7 +81,7 @@
                 </tr>
                 <tr>
                     <td>SSVLConverter</td>
-                    <td><a target="_blank" href="https://github.com/denimgroup/threadfix/wiki/SSVLConverter">
+                    <td><a target="_blank" href="https://github.com/denimgroup/threadfix/wiki/SSVL-Converter">
                         Wiki
                         </a></td>
                     <td><a href="<spring:url value="/configuration/download/ssvl-converter" htmlEscape="true"/>">

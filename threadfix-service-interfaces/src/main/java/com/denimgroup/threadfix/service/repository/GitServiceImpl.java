@@ -25,8 +25,11 @@ package com.denimgroup.threadfix.service.repository;
 
 import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.ExceptionLog;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.GitService;
+import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.ExceptionLogService;
+import com.denimgroup.threadfix.service.RepositoryService;
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.*;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
@@ -34,21 +37,23 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.errors.EncryptionException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import java.io.File;
 import java.io.IOException;
 
 @Service
-public class GitServiceImpl implements GitService {
+public class GitServiceImpl extends RepositoryServiceImpl implements RepositoryService {
 
-    private static final SanitizedLogger LOG = new SanitizedLogger(GitServiceImpl.class);
+    private static final SanitizedLogger log = new SanitizedLogger(GitServiceImpl.class);
+
+    @Autowired private ApplicationService applicationService;
+    @Autowired private ExceptionLogService exceptionLogService;
 
     @Override
-    public boolean testGitConfiguration(Application application) throws GitAPIException {
-
+    public boolean testConfiguration(Application application) throws GitAPIException {
         InitCommand initCommand = new InitCommand();
         File applicationDirectory = DiskUtils.getScratchFile(baseDirectory + application.getId() + "-test");
         initCommand.setDirectory(applicationDirectory);
@@ -73,26 +78,50 @@ public class GitServiceImpl implements GitService {
         return true;
     }
 
-    private CredentialsProvider getUnencryptedApplicationCredentials(Application application) {
-        if (application.getRepositoryUserName() != null
-                && application.getRepositoryPassword() != null) {
-            return new UsernamePasswordCredentialsProvider(application.getRepositoryUserName(),
-                    application.getRepositoryPassword());
-        }
+    @Override
+    public void handleException(Exception e, Application application, BindingResult result) {
+        if (e instanceof GitAPIException || e instanceof JGitInternalException) {
 
-        return null;
+            boolean shouldLog = true;
+
+            if (e instanceof JGitInternalException) {
+                result.rejectValue("repositoryUrl", null, null, "Unable to connect to this URL.");
+            }
+
+            if (e.getMessage().contains("not authorized")) {
+                result.rejectValue("repositoryUrl", null, null, "Authorization failed.");
+            }
+
+            if (application.getRepositoryBranch() != null) {
+                String missingBranchError = "Remote does not have " + application.getRepositoryBranch() + " available for fetch";
+                if (e.getMessage().contains(missingBranchError)) {
+                    result.rejectValue("repositoryUrl", null, null, "Supplied branch wasn't found.");
+                }
+            } else if (e.getMessage().contains("Remote does not have fakebranch available for fetch")) {
+                // this is expected behavior, let's not return an error.
+                shouldLog = false;
+            } else {
+                result.rejectValue("repositoryUrl", null, null, "Unable to clone repository");
+            }
+
+            if (shouldLog) {
+                log.info("Got an error from the Git server, logging to database (visible under View Error Messages)");
+                exceptionLogService.storeExceptionLog(new ExceptionLog(e));
+            }
+        } else {
+            log.info("Got an error, logging to database (visible under View Error Messages)");
+            exceptionLogService.storeExceptionLog(new ExceptionLog(e));
+        }
     }
 
-
-    // Cursory testing indicates that this works.
     @Override
-	public File cloneGitTreeToDirectory(Application application, File fileLocation) {
-		
-		if (fileLocation.exists()) {
+	public File cloneRepoToDirectory(Application application, File dirLocation) {
+
+		if (dirLocation.exists()) {
 			try {
-				File gitDirectoryFile = new File(fileLocation.getAbsolutePath() + File.separator + ".git");
+				File gitDirectoryFile = new File(dirLocation.getAbsolutePath() + File.separator + ".git");
 				if (!gitDirectoryFile.exists()) {
-                    Git newRepo = clone(application, fileLocation);
+                    Git newRepo = clone(application, dirLocation);
                     if (newRepo != null)
                         return newRepo.getRepository().getWorkTree();
 				} else {
@@ -106,32 +135,34 @@ public class GitServiceImpl implements GitService {
 //                    }
 					return git.getRepository().getWorkTree();
 				}
-			} catch (IOException | JGitInternalException e) {
-				LOG.error("Exception", e);
+			} catch (JGitInternalException e) {
+				log.error("Exception", e);
+			} catch (IOException e) {
+				log.error("Exception", e);
 			}
 		} else {
 			try {
-                LOG.info("Attempting to clone application from repository.");
-                Git result = clone(application, fileLocation);
+                log.info("Attempting to clone application from repository.");
+                Git result = clone(application, dirLocation);
 				if (result != null) {
-                    LOG.info("Application was successfully cloned from repository.");
+                    log.info("Application was successfully cloned from repository.");
 					return result.getRepository().getWorkTree();
 				}
-                LOG.error("Failed to clone application from repository.");
+                log.error("Failed to clone application from repository.");
 			} catch (JGitInternalException e) {
 				e.printStackTrace();
-                LOG.error("Failed to clone application from repository.", e);
+                log.error("Failed to clone application from repository.", e);
 			}
 		}
 		return null;
 	}
 
-    private Git clone(Application application, File fileLocation) {
+    private Git clone(Application application, File dirLocation) {
         Git git = null;
         try {
             CloneCommand clone = Git.cloneRepository();
             clone.setURI(application.getRepositoryUrl())
-                    .setDirectory(fileLocation);
+                    .setDirectory(dirLocation);
 
             clone.setCredentialsProvider(getApplicationCredentials(application));
 
@@ -146,68 +177,53 @@ public class GitServiceImpl implements GitService {
             } else {
                 git = clone.call();
             }
-        } catch (WrongRepositoryStateException | InvalidConfigurationException | DetachedHeadException |
-                InvalidRemoteException | CanceledException | RefNotFoundException | NoHeadException |
-                RefAlreadyExistsException | CheckoutConflictException | InvalidRefNameException |
-                TransportException e) {
+        } catch (WrongRepositoryStateException  e) {
             e.printStackTrace();
-        } catch (GitAPIException e) {
+        } catch (InvalidConfigurationException  e) {
+            e.printStackTrace();
+        } catch (DetachedHeadException          e) {
+            e.printStackTrace();
+        } catch (InvalidRemoteException         e) {
+            e.printStackTrace();
+        } catch (CanceledException              e) {
+            e.printStackTrace();
+        } catch (RefNotFoundException           e) {
+            e.printStackTrace();
+        } catch (NoHeadException                e) {
+            e.printStackTrace();
+        } catch (RefAlreadyExistsException      e) {
+            e.printStackTrace();
+        } catch (CheckoutConflictException      e) {
+            e.printStackTrace();
+        } catch (InvalidRefNameException        e) {
+            e.printStackTrace();
+        } catch (TransportException             e) {
+            e.printStackTrace();
+        } catch (GitAPIException                e) {
             e.printStackTrace();
         }
-        return git;
 
+        return git;
     }
 
     private UsernamePasswordCredentialsProvider getApplicationCredentials(Application application) {
         if (application.getRepositoryEncryptedUserName() != null
                 && application.getRepositoryEncryptedPassword() != null) {
-            decryptRepositoryCredentials(application);
+            applicationService.decryptRepositoryCredentials(application);
             return new UsernamePasswordCredentialsProvider(application.getRepositoryUserName(),
                     application.getRepositoryPassword());
         }
         return null;
     }
 
-    private static Application decryptRepositoryCredentials(Application application) {
-        try {
-            if (application != null && application.getRepositoryEncryptedPassword() != null &&
-                    application.getRepositoryEncryptedUserName() != null) {
-                application.setRepositoryPassword(ESAPI.encryptor().decrypt(application.getRepositoryEncryptedPassword()));
-                application.setRepositoryUserName(ESAPI.encryptor().decrypt(application.getRepositoryEncryptedUserName()));
-            }
-        } catch (EncryptionException e) {
-            e.printStackTrace();
-        }
-        return application;
-    }
-
-    // TODO move this somewhere central
-    private static final String baseDirectory = "scratch/";
-
-    // TODO move to some sort of repository manager instead of tying to the Git implementation.
-    @Override
-    public File getWorkTree(Application application) {
-
-        File applicationDirectory = DiskUtils.getScratchFile(baseDirectory + application.getId());
-
-        if (application.getRepositoryUrl() != null && !application.getRepositoryUrl().trim().isEmpty()) {
-            File repo = cloneGitTreeToDirectory(application, applicationDirectory);
-
-            if (repo != null && repo.exists()) {
-                return repo;
-            } else {
-                return applicationDirectory;
-            }
-        } else if (application.getRepositoryFolder() != null && !application.getRepositoryFolder().trim().isEmpty()) {
-            File file = new File(application.getRepositoryFolder().trim());
-            if (!file.exists() || !file.isDirectory()) {
-                return applicationDirectory;
-            } else {
-                return file;
-            }
+    private CredentialsProvider getUnencryptedApplicationCredentials(Application application) {
+        if (application.getRepositoryUserName() != null
+                && application.getRepositoryPassword() != null) {
+            return new UsernamePasswordCredentialsProvider(application.getRepositoryUserName(),
+                    application.getRepositoryPassword());
         }
 
-        return applicationDirectory;
+        return null;
     }
 
 }

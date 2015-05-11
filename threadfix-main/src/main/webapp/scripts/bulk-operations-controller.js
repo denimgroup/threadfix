@@ -187,7 +187,7 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
         });
     };
 
-    var bulkOperation = function(urlExtension, messageExtension) {
+    var bulkOperation = function(urlExtension, messageExtension, refreshReport) {
 
         $scope.submitting = true;
 
@@ -204,8 +204,10 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
                 if (data.success) {
                     $parent.successMessage = object.vulnerabilityIds.length + " vulnerabilities successfully " + messageExtension + ".";
                     $parent.refresh();
+                    if (refreshReport)
+                        $rootScope.$broadcast('severityChanged');
                 } else {
-                    $scope.errorMessage = "Failure. Message was : " + data.message;
+                    $parent.errorMessage = "Failure. Message was : " + data.message;
                 }
                 $scope.submitting = false;
 
@@ -230,6 +232,48 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
 
     $scope.unmarkFalsePositives = function() {
         bulkOperation("/falsePositives/unmark", "unmarked false positive");
+    };
+
+    $scope.changeSeverity = function(genericSeverity) {
+        bulkOperation("/severity/change/" + genericSeverity.id, "changed severities", true);
+    };
+
+    $scope.addBatchComment = function(tags) {
+
+        var filteredVulns = getFilteredVulns();
+        var modalInstance = $modal.open({
+            templateUrl: 'vulnCommentForm.html',
+            controller: 'ModalControllerWithConfig',
+            resolve: {
+                url: function() {
+                    return tfEncoder.encode(getAppUrlBase() + "/addBatchComment");
+                },
+                object: function () {
+                    return {vulnerabilityIds : filteredVulns.map(function(vuln) {
+                        return vuln.id;
+                    })};
+                },
+                config: function() {
+                    return {tags: tags};
+                },
+                buttonText: function() {
+                    return "Add Comment";
+                }
+            }
+        });
+
+        $scope.currentModal = modalInstance;
+
+        modalInstance.result.then(function (comment) {
+            filteredVulns.forEach(function(vuln){
+               if (!vuln.vulnerabilityComments)
+                   vuln.vulnerabilityComments = [];
+                vuln.vulnerabilityComments.push(comment);
+            });
+            $log.info("Successfully added comment.");
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
     };
 
 });

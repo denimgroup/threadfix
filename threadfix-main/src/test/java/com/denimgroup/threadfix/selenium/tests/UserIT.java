@@ -135,7 +135,7 @@ public class UserIT extends BaseDataTest {
         String password = "testDeleteUser";
 
         userIndexPage.createUser(userName,"",password)
-                .clickEditLink(userName)
+                .clickUserLink(userName)
                 .clickDelete(userName);
 
         assertTrue("Deletion Message not displayed.", userIndexPage.isSuccessDisplayed(userName));
@@ -152,11 +152,32 @@ public class UserIT extends BaseDataTest {
         String changedName = getName();
         String displayCssId = "displayName" + changedName;
 
-        userIndexPage.createUser(userName1, "", password1)
-                .createUser(userName2, "", password2);
+        userIndexPage.clickAddUserLink()
+                .setNameModal(userName1)
+                .setPasswordModal(password1)
+                .setConfirmPasswordModal(password1)
+                .clickAddNewUserBtn();
 
-        userIndexPage.editUser(userName1, userName1,changedName,password1)
-                .editUser(userName2, userName2,"",changedPassword);
+        userIndexPage.clickAddUserLink()
+                .setNameModal(userName2)
+                .setPasswordModal(password2)
+                .setConfirmPasswordModal(password2)
+                .clickAddNewUserBtn();
+
+        userIndexPage.clickUserLink(userName1)
+                .setName(userName1)
+                .setDisplayName(changedName)
+                .setPassword(password1)
+                .setConfirmPassword(password1)
+                .clickSaveChanges();
+
+        sleep(5000);
+
+        userIndexPage.clickUserLink(userName2)
+                .setName(userName2)
+                .setPassword(changedPassword)
+                .setConfirmPassword(changedPassword)
+                .clickSaveChanges();
 
         assertTrue("Second user's display name was changed to the first user's name when attempting to change only password.",
                 driver.findElements(By.id(displayCssId)).size() < 2);
@@ -309,14 +330,14 @@ public class UserIT extends BaseDataTest {
 
 		// Test submission with no changes
 		userIndexPage = userIndexPage.clickManageUsersLink()
-                .clickEditLink(baseUserName)
+                .clickUserLink(baseUserName)
                 .clickUpdateUserBtn();
 		assertTrue("User name was not present in the table.",userIndexPage.isUserNamePresent(baseUserName));
 
         userIndexPage = userIndexPage.clickManageUsersLink();
 
 		// Test Empty
-		userIndexPage = userIndexPage.clickEditLink(baseUserName)
+		userIndexPage = userIndexPage.clickUserLink(baseUserName)
                 .setName("")
                 .setPassword("")
                 .setConfirmPassword("")
@@ -364,12 +385,21 @@ public class UserIT extends BaseDataTest {
     @Test
     public void testEditUserValidationUnique(){
         String userName = getName();
-        String passWord = getName();
+        String password = getName();
 
-        userIndexPage.createUser(userName,"",passWord)
-                .createUser(userName, "", "lengthy password 2");
+        userIndexPage.clickAddUserLink()
+                .setNameModal(userName)
+                .setPasswordModal(password)
+                .setConfirmPasswordModal(password)
+                .clickAddNewUserBtn();
 
-		assertTrue("Name uniqueness error is not correct.", userIndexPage.getNameError().equals("That name is already taken."));
+        userIndexPage.clickAddUserLink()
+                .setNameModal(userName)
+                .setPasswordModal("lengthy password 2")
+                .setConfirmPasswordModal("lengthy password 2")
+                .clickAddNewUserBtn();
+
+        assertTrue("Name uniqueness error is not correct.", userIndexPage.getNameError().equals("That name is already taken."));
 		
 	}
 
@@ -390,9 +420,9 @@ public class UserIT extends BaseDataTest {
         String password = getName();
 
         userIndexPage.createUser(userName,displayName,password)
-                .clickEditLink(userName)
+                .clickUserLink(userName)
                 .toggleGlobalAccess()
-                .getGlobalAccessRole("Administrator")
+                .chooseRoleForGlobalAccess("Administrator")
                 .clickUpdateUserBtn();
 
         ApplicationDetailPage applicationDetailPage = userIndexPage.logout()

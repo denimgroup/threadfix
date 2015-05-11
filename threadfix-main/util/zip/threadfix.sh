@@ -36,7 +36,7 @@ fi
 case "$1" in
 	start)
 		mkdir $CATALINA_HOME/logs
-		export CATALINA_OPTS="-Xms64m -Xmx1536m -XX:PermSize=256m -XX:MaxPermSize=256m"
+		export CATALINA_OPTS="-Xms64m -Xmx1536m -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=256m"
 		$CATALINA_HOME/bin/startup.sh
 		tail -f $CATALINA_HOME/logs/catalina.out
 	;;

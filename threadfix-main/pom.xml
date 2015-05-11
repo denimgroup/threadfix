@@ -123,6 +123,20 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>Base64-to-classes</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <copy file="${project.build.directory}/unpacked-jars/org/apache/commons/codec/binary/Base64.class"
+                                      tofile="target/classes/org/apache/commons/codec/binary/Base64.class" />
+                                <delete dir="target/unpacked-jars" includeemptydirs="true"/>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>Copy Downloads</id>
                         <phase>prepare-package</phase>
                         <goals>
@@ -603,9 +617,9 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.sourceclear.headlines</groupId>
-            <artifactId>complete</artifactId>
-            <version>0.1.6</version>
+            <groupId>org.tmatesoft.svnkit</groupId>
+            <artifactId>svnkit</artifactId>
+            <version>${svnkit.version}</version>
         </dependency>
 
         <!-- the core, which includes Streaming API, shared low-level abstractions (but NOT data-binding) -->

@@ -47,12 +47,12 @@ myAppModule.controller('CheckLDAPController', function ($scope, $http, tfEncoder
             if (data.success) {
               $scope.LDAPSuccessMessage = data.object;
             } else {
-              $scope.error = "Failure: " + data.message;
+              $scope.LDAPError = "Failure: " + data.message;
             }
           }).
           error(function(data, status) {
             $scope.loading = false;
-            $scope.error = "Failure. HTTP status was " + status;
+            $scope.LDAPError = "Failure. HTTP status was " + status;
           });
     }
   };

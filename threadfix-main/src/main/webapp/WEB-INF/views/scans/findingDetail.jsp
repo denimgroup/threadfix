@@ -52,7 +52,7 @@
 			<c:if test="${ not empty finding.urlReference }">
 				<tr>
 					<td class="bold">Link</td>
-					<td class="inputValue"><a id="sourceUrl" href="<c:out value="${ finding.urlReference }"/>"><c:out value="${ finding.urlReference }"/></a></td>
+					<td class="inputValue"><a id="sourceUrl" href="<c:out value="${ finding.urlReference }"/>" target="_blank"><c:out value="${ finding.urlReference }"/></a></td>
 				</tr>
 			</c:if>
 			<tr>

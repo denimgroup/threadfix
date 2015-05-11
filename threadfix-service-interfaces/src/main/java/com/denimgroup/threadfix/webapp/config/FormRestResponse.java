@@ -30,6 +30,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
@@ -50,9 +51,14 @@ public class FormRestResponse<T> extends RestResponse<T> {
     }
 
     public static <T> FormRestResponse<T> failure(String response, BindingResult result) {
+        return failure(response, result, null);
+    }
+
+    public static <T> FormRestResponse<T> failure(String response, BindingResult result, Map<String,String> errors) {
         FormRestResponse<T> restResponse = new FormRestResponse<T>();
 
-        Map<String, String> resultMap = null;
+        Map<String, String> resultMap = map();
+        resultMap.putAll(errors);
         if (result != null) {
             if (result.getFieldErrors() != null && result.getFieldErrors().size() > 0) {
                 resultMap = map();

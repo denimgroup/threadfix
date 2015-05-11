@@ -35,6 +35,7 @@ import com.denimgroup.threadfix.importer.exception.ScanFileUnavailableException;
 import com.denimgroup.threadfix.importer.interop.ChannelImporter;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.DefaultConfigService;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,6 +51,8 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -110,6 +113,8 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
     public ChannelTypeDao channelTypeDao;
     @Autowired
     public GenericVulnerabilityDao genericVulnerabilityDao;
+    @Autowired
+    private DefaultConfigService defaultConfigService;
 
     protected String channelTypeCode;
 
@@ -140,6 +145,8 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
     @Nullable
     protected String inputFileName;
 
+    protected String originalFileName;
+
     protected ZipFile zipFile;
     protected File diskZipFile;
 
@@ -150,6 +157,8 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
     protected Calendar testDate = null;
 
     protected boolean doSAXExceptionCheck = true;
+
+    private Pattern scanFileRegex = Pattern.compile("(.*)(scan-file-[0-9]+-[0-9]+)");
 
     @Override
     public void setChannel(ApplicationChannel applicationChannel) {
@@ -179,6 +188,11 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
     }
 
     @Override
+    public void setOriginalFileName(String originalFileName) {
+        this.originalFileName = originalFileName;
+    }
+
+    @Override
     public void setInputStream(InputStream inputStream) {
         this.inputStream = inputStream;
     }
@@ -187,13 +201,17 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
     public void deleteScanFile() {
 
         closeInputStream(inputStream);
+        DefaultConfiguration defaultConfig = defaultConfigService.loadCurrentConfiguration();
 
-        if (shouldDeleteAfterParsing && inputFileName != null) {
-            File file = new File(inputFileName);
-            if (file.exists()) {
-                if (!file.delete()) {
-                    log.warn("Scan file deletion failed, calling deleteOnExit()");
-                    file.deleteOnExit();
+        if(!defaultConfig.fileUploadLocationExists()) {
+
+            if (shouldDeleteAfterParsing && inputFileName != null) {
+                File file = new File(inputFileName);
+                if (file.exists()) {
+                    if (!file.delete()) {
+                        log.warn("Scan file deletion failed, calling deleteOnExit()");
+                        file.deleteOnExit();
+                    }
                 }
             }
         }
@@ -691,7 +709,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
         ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
 
-        Scan scan = new Scan();
+        Scan scan = createScanWithFileNames();
         scan.setFindings(saxFindingList);
         scan.setApplicationChannel(applicationChannel);
 
@@ -715,42 +733,16 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         return scan;
     }
 
-    /**
-     * TODO probably remove this unless default SAX parsing is insufficient for HTML
-     * @param handler
-     * @return
-     */
-    @Nonnull
-    protected Scan parseHTMLInput(DefaultHandler handler) {
-        log.debug("Starting HTML Parsing.");
-
-        if (inputStream == null) {
-            throw new IllegalStateException("InputStream was null. Can't parse HTML input. This is probably a coding error.");
-        }
-
-        saxFindingList = list();
-
-        //ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
-
+    protected Scan createScanWithFileNames() {
         Scan scan = new Scan();
-        scan.setFindings(saxFindingList);
-        scan.setApplicationChannel(applicationChannel);
+        scan.setOriginalFileName(originalFileName);
 
-        if (date != null && date.getTime() != null) {
-            log.debug("SAX Parser found the scan date: " + date.getTime().toString());
-            scan.setImportTime(date);
-        } else {
-            log.warn("SAX Parser did not find the date.");
-        }
-
-        if (scan.getFindings() != null && scan.getFindings().size() != 0) {
-            log.debug("SAX Parsing successfully parsed " + scan.getFindings().size() +" Findings.");
-        } else {
-            log.warn("SAX Parsing did not find any Findings.");
-        }
-
-        if (shouldDeleteAfterParsing) {
-            deleteScanFile();
+        // Remote Providers won't have an inputFileName
+        if (inputFileName != null) {
+            Matcher m = scanFileRegex.matcher(inputFileName);
+            if (m.matches()) {
+                scan.setFileName(m.group(2));
+            }
         }
 
         return scan;

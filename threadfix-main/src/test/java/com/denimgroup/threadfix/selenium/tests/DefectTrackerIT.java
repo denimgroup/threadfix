@@ -237,10 +237,12 @@ public class DefectTrackerIT extends BaseDataTest {
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickApplicationName(appName)
-                .addDefectTracker(defectTrackerName, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, "QA Testing");
+                .addDefectTracker(defectTrackerName, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLA_PROJECTNAME);
 
         assertTrue("Defect tracker wasn't attached correctly",
                 applicationDetailPage.clickEditDeleteBtn().isDefectTrackerAttached());
+
+        applicationDetailPage.clickCloseModalButton();
 
         defectTrackerIndexPage.clickDefectTrackersLink()
                 .clickEditLink(defectTrackerName)

@@ -25,6 +25,7 @@
 package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -39,14 +40,20 @@ public class RolesIndexPage extends BasePage {
 		
 	public RolesIndexPage clickDeleteButton(String roleName) {
 		clickEditLink(roleName);
-		sleep(1000);
-		driver.findElementById("deleteLink").click();
+		sleep(2000);
+        List<WebElement> deleteButtons = driver.findElementsById("deleteRoleLink");
+        for (WebElement button : deleteButtons) {
+            if (button.isDisplayed()) {
+                button.click();
+                break;
+            }
+        }
 		handleAlert();
 		return new RolesIndexPage(driver);
 	}
 	
 	public RolesIndexPage clickCreateRole(){
-		driver.findElementById("createRoleModalLink").click();
+		driver.findElementById("newRoleModalLink").click();
 		waitForElement(driver.findElementById("submit"));
 		return new RolesIndexPage(driver);
 	}
@@ -74,9 +81,9 @@ public class RolesIndexPage extends BasePage {
 	}
 
 	public RolesIndexPage clickEditLink(String roleName) {
-		driver.findElementById("editModalLink" + roleName).click();
+        driver.findElementByXPath("//li[@id=\'roleList\']/a[text()=\'" + roleName + "\']").click();
 		waitForElement(driver.findElementById("submit"));
-		return new RolesIndexPage(driver);
+        return new RolesIndexPage(driver);
 	}
 
 	public String getEditRoleError() {
@@ -130,20 +137,26 @@ public class RolesIndexPage extends BasePage {
 		driver.findElementByClassName("modal-footer").findElement(By.className("btn")).click();
 		return new RolesIndexPage(driver);
 	}
-	
+
+    //TODO: Specify validation text
 	public boolean isCreateValidationPresent(String role){
-		return driver.findElementByClassName("alert-success").getText().contains("Successfully created role " + role);
+        return driver.findElementByClassName("alert-success") != null;
 	}
 	
 	public boolean isEditValidationPresent(String role){
-		return driver.findElementByClassName("alert-success").getText().contains("Successfully edited role " + role);
+        return driver.findElementByClassName("alert-success") != null;
 	}
 	
 	public boolean isDeleteValidationPresent(String role){
-		return driver.findElementByClassName("alert-success").getText().contains("Role deletion was successful for Role " + role);
+        return driver.findElementByClassName("alert-success") != null;
 	}
 	
 	public boolean isNamePresent(String roleName){
-		return driver.findElementsById("role" + roleName).size() != 0;
+        try {
+            driver.findElementByXPath("//li[@id=\'roleList\']/a[text()=\'"+ roleName + "\']");
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+        return true;
 	}
 }
