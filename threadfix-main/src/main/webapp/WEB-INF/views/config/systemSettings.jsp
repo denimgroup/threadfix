@@ -141,7 +141,7 @@
                         </tr>
                     </table>
 
-                    <button id="checkLDAPSettings" ng-disabled="shouldDisable" class="btn" ng-click="ok(form.$valid)">
+                    <button id="checkLDAPSettings" ng-disabled="shouldDisable()" class="btn" ng-click="ok(form.$valid)">
                         Check Connection
                     </button>
                 </div>
