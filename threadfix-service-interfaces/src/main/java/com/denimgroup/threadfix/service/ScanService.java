@@ -130,4 +130,9 @@ public interface ScanService {
 	 */
 	List<Scan> getTableScans(Integer page);
 
+    /**
+     *
+     */
+    int deleteScanFileLocations();
+
 }
