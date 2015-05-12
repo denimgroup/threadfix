@@ -52,7 +52,7 @@ public class Role extends AuditableEntity {
 			canManageRemoteProviders, canManageRoles, canManageTeams,
 			canManageUsers, canManageWafs, canManageVulnFilters, canModifyVulnerabilities,
 			canSubmitDefects, canUploadScans, canViewErrorLogs, canManageScanAgents, canManageSystemSettings,
-            canViewJobStatuses, enterprise, canManageTags, canSubmitComments;
+            canViewJobStatuses, enterprise, canManageTags, canSubmitComments, canManageCustomCweText;
 
     public static final String[] PROTECTED_PERMISSIONS = {
             "canManageRoles", "canManageUsers"
@@ -63,7 +63,7 @@ public class Role extends AuditableEntity {
             "canManageVulnFilters", "canModifyVulnerabilities", "canUploadScans", "canViewErrorLogs", "canSubmitDefects",
             "canManageWafs", "canGenerateWafRules", "canManageApiKeys", "canManageRemoteProviders",
             "canGenerateReports", "canManageApplications", "enterprise", "canManageScanAgents",
-            "canManageSystemSettings", "canManageTags", "canSubmitComments"
+            "canManageSystemSettings", "canManageTags", "canSubmitComments", "canManageCustomCweText"
     };
 
     @NotEmpty(message = "{errors.required}")
@@ -300,6 +300,16 @@ public class Role extends AuditableEntity {
         this.canSubmitComments = canSubmitComments;
     }
 
+    @Column
+    @JsonView(AllViews.TableRow.class)
+    public Boolean getCanManageCustomCweText() {
+        return canManageCustomCweText;
+    }
+
+    public void setCanManageCustomCweText(Boolean canManageCustomCweText) {
+        this.canManageCustomCweText = canManageCustomCweText;
+    }
+
     @Transient
 	public Set<Permission> getPermissions() {
 		Set<Permission> permissions = new HashSet<Permission>();
@@ -366,6 +376,10 @@ public class Role extends AuditableEntity {
 
         if (getCanSubmitComments() != null && getCanSubmitComments())
             permissions.add(Permission.CAN_SUBMIT_COMMENTS);
+
+        if(getCanManageCustomCweText() != null && getCanManageCustomCweText()){
+            permissions.add(Permission.CAN_MANAGE_CUSTOM_CWE_TEXT);
+        }
 
 		return permissions;
 	}

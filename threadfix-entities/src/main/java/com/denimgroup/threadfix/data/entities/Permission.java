@@ -46,7 +46,8 @@ public enum Permission {
 	ENTERPRISE("ROLE_ENTERPRISE","enterprise"),
 	READ_ACCESS("ROLE_READ_ACCESS","readAccess"),
     CAN_MANAGE_TAGS("ROLE_CAN_MANAGE_TAGS","canManageTags"),
-    CAN_SUBMIT_COMMENTS("ROLE_CAN_SUBMIT_COMMENTS","canSubmitComments");
+    CAN_SUBMIT_COMMENTS("ROLE_CAN_SUBMIT_COMMENTS","canSubmitComments"),
+    CAN_MANAGE_CUSTOM_CWE_TEXT("ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT", "canManageCustomCweText");
 
 	private String text, camelCase;
 	
