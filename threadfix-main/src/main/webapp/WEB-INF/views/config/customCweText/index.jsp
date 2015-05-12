@@ -13,8 +13,7 @@
 
         <%@ include file="/WEB-INF/views/successMessage.jspf" %>
         <%@ include file="/WEB-INF/views/errorMessage.jsp" %>
-        <%@ include file="newForm.jsp" %>
-        <%@ include file="editForm.jsp" %>
+        <%@ include file="form.jsp" %>
 
         <div id="helpText">
             Custom CWE Test can be used to add additional text to a defect tracker defect.
@@ -33,14 +32,14 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-hide="customCweTextList.length || loading">
+                <tr ng-hide="genericVulnerabilitiesWithCustomText.length || loading">
                     <td colspan="3" style="text-align:center;">No Custom CWE Text found.</td>
                 </tr>
-                <tr ng-repeat="customCweText in customCweTextList">
-                    <td id="cwe{{customCweText.id}}">{{customCweText.genericVulnerability.name}}</td>
-                    <td id="customText{{customCweText.id}}">{{customCweText.customText}}</td>
+                <tr ng-repeat="genericVulnerability in genericVulnerabilitiesWithCustomText">
+                    <td id="cwe{{genericVulnerability.id}}">CWE {{genericVulnerability.displayId}}: {{genericVulnerability.name}}</td>
+                    <td id="customText{{genericVulnerability.id}}">{{genericVulnerability.customText}}</td>
                     <td class="centered">
-                        <button class="btn" id="editKeyModal{{customCweText.id}}" ng-click="openEditModal(customCweText)">Edit / Delete</button>
+                        <button class="btn" id="editKeyModal{{genericVulnerability.id}}" ng-click="openEditModal(genericVulnerability)">Edit / Delete</button>
                     </td>
                 </tr>
             </tbody>
