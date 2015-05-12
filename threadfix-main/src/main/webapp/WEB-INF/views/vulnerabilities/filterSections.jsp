@@ -384,9 +384,9 @@
 
 <!-- Export buttons -->
 <security:authorize ifAnyGranted="ROLE_CAN_GENERATE_REPORTS">
-    <div class="accordion-group" ng-show="treeTeam || vulnSearch || treeApplication || reportId === 3 || reportId === 11">
+    <div class="accordion-group" ng-show="treeTeam || vulnSearch || treeApplication || reportId === 3 || reportId === 11 || reportId === 13">
         <div class="accordion-heading" style="text-align:center">
-            <a id="exportCSVButton" ng-click="exportCSV(reportId)" class="btn">Export CSV</a>
+            <a id="exportCSVButton" ng-click="exportCSV(reportId, DISA_STIG)" class="btn">Export CSV</a>
         </div>
     </div>
 
