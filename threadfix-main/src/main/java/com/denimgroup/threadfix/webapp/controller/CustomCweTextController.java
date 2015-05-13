@@ -74,6 +74,10 @@ public class CustomCweTextController {
             return failure("You do not have permission to do that.");
         }
 
+        if(genericVulnerability.getCustomText() == null || genericVulnerability.getCustomText().isEmpty()){
+            result.rejectValue("customText", null, "Cannot be empty");
+        }
+
         GenericVulnerability databaseGenericVulnerability = genericVulnerabilityService.loadByName(genericVulnerability.getName());
 
         if(databaseGenericVulnerability == null){
@@ -86,17 +90,9 @@ public class CustomCweTextController {
 
         if(databaseGenericVulnerability != null){
 
-            if(genericVulnerability.getCustomText() == null || genericVulnerability.getCustomText().isEmpty()){
-                databaseGenericVulnerability.setCustomText(null);
+            databaseGenericVulnerability.setCustomText(genericVulnerability.getCustomText());
 
-                genericVulnerabilityService.store(databaseGenericVulnerability);
-
-                return success(null);
-            }else{
-                databaseGenericVulnerability.setCustomText(genericVulnerability.getCustomText());
-
-                genericVulnerabilityService.store(databaseGenericVulnerability);
-            }
+            genericVulnerabilityService.store(databaseGenericVulnerability);
         }
 
         return success(databaseGenericVulnerability);
