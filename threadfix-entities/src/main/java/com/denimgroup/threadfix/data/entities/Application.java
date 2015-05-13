@@ -69,6 +69,9 @@ public class Application extends AuditableEntity {
     private  String repositoryUrl;
 
     @Size(max = 80, message = "{errors.maxlength} 80.")
+    private String repositoryRevision;
+
+    @Size(max = 80, message = "{errors.maxlength} 80.")
     private String repositoryBranch, repositoryDBBranch;
 
     @Size(max = 80, message = "{errors.maxlength} 80.")
@@ -666,6 +669,15 @@ public class Application extends AuditableEntity {
 
     public void setRepositoryBranch(String repositoryBranch) {
         this.repositoryBranch = repositoryBranch;
+    }
+
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
+    public String getRepositoryRevision() {
+        return repositoryRevision;
+    }
+
+    public void setRepositoryRevision(String repositoryRevision) {
+        this.repositoryRevision = repositoryRevision;
     }
 
     @JsonIgnore
