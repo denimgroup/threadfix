@@ -185,9 +185,8 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 		if (response.isValid()) {
             parse(response.getInputStream(), parser);
         } else {
-			message = message + response.getStatus();
-			LOG.error(message);
-			throw new RestIOException(message, -1);
+			LOG.error(message + response.getStatus());
+			throw new RestIOException(message, response.getStatus());
         }
 
 		int totalSitesAvailable = parser.getTotalSites();
@@ -201,9 +200,8 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
             if (response.isValid()) {
                 parse(response.getInputStream(), parser);
             } else {
-				message = message + response.getStatus();
-				LOG.error(message);
-				throw new RestIOException(message, -1);
+				LOG.error(message + response.getStatus());
+				throw new RestIOException(message, response.getStatus();
             }
         }
 		return parser;
