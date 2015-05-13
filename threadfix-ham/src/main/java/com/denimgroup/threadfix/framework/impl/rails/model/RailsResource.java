@@ -128,15 +128,15 @@ public class RailsResource {
 //        this.hasId = hasId;
 //    }
 
-    public String getId() {
-        String id = "id";
-        String url = getName();
-        if (url.length() > 1 && url.toLowerCase().endsWith("s")) {
-            id = url.substring(0, url.length()-1);
-            id = id.concat("_id");
-        }
-        return id;
-    }
+//    public String getId() {
+//        String id = "id";
+//        String url = getName();
+//        if (url.length() > 1 && url.toLowerCase().endsWith("s")) {
+//            id = url.substring(0, url.length()-1);
+//            id = id.concat("_id");
+//        }
+//        return id;
+//    }
 
     public String getUrl() {
         String url = this.getPath();

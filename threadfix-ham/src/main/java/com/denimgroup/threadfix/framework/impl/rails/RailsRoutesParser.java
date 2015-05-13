@@ -221,9 +221,10 @@ public class RailsRoutesParser implements EventBasedTokenizer {
                 }
                 if (ResourceType.RESOURCES.equals(block)
                         && !(ResourceType.COLLECTION.equals(nextBlock))) {
-                    urlPrefix = urlPrefix + "{"
-                            + resourceStack.elementAt(i).getId()
-                            + "}/";
+//                    urlPrefix = urlPrefix + "{"
+//                            + resourceStack.elementAt(i).getId()
+//                            + "}/";
+                    urlPrefix += "{id}/";
                 }
             }
 
@@ -304,9 +305,11 @@ public class RailsRoutesParser implements EventBasedTokenizer {
                         }
                         if (ResourceType.RESOURCES.equals(block)
                                 && !(ResourceType.COLLECTION.equals(nextBlock))) {
-                            urlPrefix = urlPrefix + "{"
-                                    + resourceStack.elementAt(i).getId()
-                                    + "}/";
+//                            urlPrefix = urlPrefix + "{"
+//                                    + resourceStack.elementAt(i).getId()
+//                                    + "}/";
+                            urlPrefix += "{id}/";
+
                         }
                     }
 
@@ -320,7 +323,7 @@ public class RailsRoutesParser implements EventBasedTokenizer {
                         urlPrefix = urlPrefix.substring(0, endIndex);
                     }
                 }
-                String id = currentRailsResource.getId();
+                String id = "id";
                 if (currentRailsResource.getIncludeList() != null) {
                     // ONLY
                     for (String only : currentRailsResource.getIncludeList()) {
@@ -444,9 +447,11 @@ public class RailsRoutesParser implements EventBasedTokenizer {
                         }
                         if (ResourceType.RESOURCES.equals(block)
                                 && !(ResourceType.COLLECTION.equals(nextBlock))) {
-                            urlPrefix = urlPrefix + "{"
-                                    + resourceStack.elementAt(i).getId()
-                                    + "}/";
+//                            urlPrefix = urlPrefix + "{"
+//                                    + resourceStack.elementAt(i).getId()
+//                                    + "}/";
+                            urlPrefix += "{id}/";
+
                         }
                     }
 
