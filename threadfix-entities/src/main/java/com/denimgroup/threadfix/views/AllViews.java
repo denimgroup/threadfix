@@ -59,4 +59,6 @@ public class AllViews {
     // this is just for one property really
     public static interface VulnSearchApplications {}
 
+    public static interface RestCweView{}
+
 }
