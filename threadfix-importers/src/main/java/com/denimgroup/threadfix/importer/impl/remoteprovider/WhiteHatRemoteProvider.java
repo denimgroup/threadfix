@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
 import com.denimgroup.threadfix.importer.util.DateUtils;
@@ -174,6 +175,7 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 
 	private WhiteHatSitesParser getParserWithAllApps() {
 		int pageOffset = 0;
+		String message = "Unable to retrieve applications. WhiteHat response status: ";
 		String paginationSettings = "&page:limit=" + PAGE_LIMIT + "&page:offset=" + pageOffset;
 
 		WhiteHatSitesParser parser = new WhiteHatSitesParser();
@@ -183,9 +185,8 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 		if (response.isValid()) {
             parse(response.getInputStream(), parser);
         } else {
-            LOG.error("Unable to retrieve applications due to " + response.getStatus() +
-                    " response status from WhiteHat servers.");
-			return null;
+			LOG.error(message + response.getStatus());
+			throw new RestIOException(message, response.getStatus());
         }
 
 		int totalSitesAvailable = parser.getTotalSites();
@@ -199,9 +200,8 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
             if (response.isValid()) {
                 parse(response.getInputStream(), parser);
             } else {
-                LOG.error("Unable to retrieve applications due to " + response.getStatus() +
-                        " response status from WhiteHat servers.");
-				return null;
+				LOG.error(message + response.getStatus());
+				throw new RestIOException(message, response.getStatus());
             }
         }
 		return parser;
