@@ -201,7 +201,7 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
                 parse(response.getInputStream(), parser);
             } else {
 				LOG.error(message + response.getStatus());
-				throw new RestIOException(message, response.getStatus();
+				throw new RestIOException(message, response.getStatus());
             }
         }
 		return parser;
