@@ -100,8 +100,9 @@ public class RailsEndpointMappings implements EndpointGenerator {
                 File f = railsController.getControllerFile();
                 filePath = getRelativePath(f);
                 parameters = railsController.getParameters();
+                mappings.add(new RailsEndpoint(filePath, urlPath, httpMethods, parameters));
+//              mappings.add(new RailsEndpoint(urlPath + ".html.erb", urlPath, httpMethods, parameters));
             }
-            mappings.add(new RailsEndpoint(filePath, urlPath, httpMethods, parameters));
         }
         return mappings;
     }
@@ -109,7 +110,8 @@ public class RailsEndpointMappings implements EndpointGenerator {
     public String getRelativePath(File f) {
         int rootLength = rootDirectory.getAbsolutePath().length();
         String absFileName = f.getAbsolutePath();
-        String relFileName = absFileName.substring(rootLength + 1);
+        String relFileName = absFileName.substring(rootLength);
+        relFileName = relFileName.replace('\\','/');
         return relFileName;
     }
 

@@ -24,7 +24,13 @@
 package com.denimgroup.threadfix.framework.rails;
 
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.enums.InformationSourceType;
+import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.TestConstants;
+import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
+import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
+import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
+import com.denimgroup.threadfix.framework.engine.full.EndpointQueryBuilder;
 import com.denimgroup.threadfix.importer.ScanLocationManager;
 import com.denimgroup.threadfix.importer.merge.Merger;
 import com.denimgroup.threadfix.importer.utils.ParserUtils;
@@ -39,6 +45,8 @@ public class EndToEndTests {
 
     private final String RAILS_ZAP_DYNAMIC = "SBIR/railsgoat_zapscan_dynamic.xml";
     private final String RAILS_CHECKMARX_STATIC = "SBIR/railsgoat_checkmarx_static.xml";
+    private final String RAILS_BURP_DYNAMIC = "SBIR/railsgoat_burpscan_dynamic.xml";
+    private final String RAILS_BRAKEMAN_STATIC = "SBIR/railsgoat_brakeman_static.json";
 
     private final String RAILS_SOURCE_LOCATION = "C:\\SourceCode\\railsgoat-master";
 
@@ -51,6 +59,63 @@ public class EndToEndTests {
     @Test
     public void assertStaticScanHasXSS() {
         testHasXSS(RAILS_CHECKMARX_STATIC);
+    }
+
+    @Test
+    public void testBurpBrake() {
+        testHasXSS(RAILS_BURP_DYNAMIC);
+        testHasXSS(RAILS_BRAKEMAN_STATIC);
+    }
+
+    @Test
+    public void testStaticFindingMatchesEndpoint() {
+        EndpointDatabase database = EndpointDatabaseFactory.getDatabase(RAILS_SOURCE_LOCATION);
+
+        EndpointQuery query = EndpointQueryBuilder.start()
+                .setInformationSourceType(InformationSourceType.STATIC)
+                .setStaticPath("railsgoat/app/controllers/password_resets_controller.rb")
+                .generateQuery();
+
+        Endpoint match = database.findBestMatch(query);
+
+        assert match != null : "Didn't find match for file password_resets_controller.rb";
+    }
+
+    @Test
+    public void testDynamicFindingMatchesEndpoint() {
+        EndpointDatabase database = EndpointDatabaseFactory.getDatabase(RAILS_SOURCE_LOCATION);
+
+        EndpointQuery query = EndpointQueryBuilder.start()
+                .setDynamicPath("/forgot_password")
+                .generateQuery();
+
+        Endpoint match = database.findBestMatch(query);
+
+        assert match != null : "Didn't find match for url /forgot_password";
+    }
+
+    @Test
+    public void testStaticStaticMerge() {
+        Application application = Merger.mergeFromDifferentScanners(RAILS_SOURCE_LOCATION,  // TestConstants.RAILS_SOURCE_LOCATION
+                RAILS_BRAKEMAN_STATIC,
+                RAILS_CHECKMARX_STATIC);
+
+        List<Scan> scans = application.getScans();
+        assert scans.size() == 2 : "Got " + scans.size() + " scans instead of 2.";
+
+        boolean hasMergedVuln = false;
+        int countXSS = 0;
+
+        for (Vulnerability vulnerability : application.getVulnerabilities()) {
+
+            if (vulnerability.getFindings().size() > 1) {
+                hasMergedVuln = true;
+                System.out.println("vulnerability = " + vulnerability);
+                System.out.println(" # of finding = " + vulnerability.getFindings().size());
+            }
+        }
+
+        assert hasMergedVuln : "Didn't find a merged vulnerability.";
     }
 
     @Test
@@ -67,19 +132,10 @@ public class EndToEndTests {
 
         for (Vulnerability vulnerability : application.getVulnerabilities()) {
 
-            if (vulnerability.getFindings().size() > 1) {
-                System.out.println("vulnerability = " + vulnerability);
-                System.out.println("    vuln.size = " + vulnerability.getFindings().size());
-            }
+
 
             if (vulnerability.getGenericVulnerability().getDisplayId().equals(79)) {
                 countXSS++;
-
-                System.out.println();
-                System.out.println(vulnerability.getVulnerabilityName());
-                System.out.println(vulnerability.getSurfaceLocation());
-                System.out.println(vulnerability.getCalculatedFilePath());
-                System.out.println(vulnerability.getCalculatedUrlPath());
 
                 if (vulnerability.getFindings().size() == 2) {
                     hasMergedXSSVuln = true;
@@ -90,9 +146,6 @@ public class EndToEndTests {
                 }
             }
         }
-
-        System.err.println("countXSS = " + countXSS );
-        System.err.println("hasMergedXSSVuln is " + hasMergedXSSVuln);
 
         assert hasMergedXSSVuln : "Didn't find a merged vulnerability.";
     }
@@ -106,12 +159,12 @@ public class EndToEndTests {
         for (Finding finding : scan) {
             Integer genericId = null;
 
+            System.out.println(finding);
+
             GenericVulnerability genericVulnerability = finding.getChannelVulnerability().getGenericVulnerability();
 
             if (genericVulnerability != null) {
                 genericId = genericVulnerability.getId();
-                System.out.println("genericVulnerability = " + genericVulnerability);
-                System.out.println("genericVulnerability.getName() = " + genericVulnerability.getName());
             }
 
             if (genericId != null && genericId.equals(79)) {
