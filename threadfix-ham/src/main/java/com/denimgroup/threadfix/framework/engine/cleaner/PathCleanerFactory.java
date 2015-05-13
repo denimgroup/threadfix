@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.impl.dotNetWebForm.WebFormsPathCleaner;
 import com.denimgroup.threadfix.framework.impl.jsp.JSPPathCleaner;
+import com.denimgroup.threadfix.framework.impl.rails.RailsPathCleaner;
 import com.denimgroup.threadfix.framework.impl.spring.SpringPathCleaner;
 
 import javax.annotation.Nonnull;
@@ -49,6 +50,8 @@ public class PathCleanerFactory {
             returnCleaner = new JSPPathCleaner(partialMappings);
         } else if (frameworkType == FrameworkType.DOT_NET_WEB_FORMS) {
             returnCleaner = new WebFormsPathCleaner(partialMappings);
+        } else if (frameworkType == FrameworkType.RAILS) {
+            returnCleaner = new RailsPathCleaner(partialMappings);
 		} else {
 			returnCleaner = new DefaultPathCleaner(partialMappings);
 		}
