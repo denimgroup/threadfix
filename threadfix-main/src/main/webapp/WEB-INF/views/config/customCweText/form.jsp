@@ -2,6 +2,9 @@
     <div class="modal-header">
         <h4 id="myModalLabel">
             Set Custom Text
+            <span class="delete-span" ng-show="config.edit">
+                <a id="deleteButton" class="btn btn-danger header-button" type="submit" ng-click="showDeleteDialog('Custom CWE Text')">Delete</a>
+            </span>
         </h4>
     </div>
 
@@ -17,7 +20,8 @@
                            name="genericVulnerabilityName"
                            ng-model="object.name"
                            typeahead="(vulnerability.name + ' (CWE ' + vulnerability.displayId + ')') for vulnerability in config.genericVulnerabilities | filter:$viewValue | limitTo:10"
-                           class="form-control">
+                           class="form-control"
+                           ng-disabled="config.edit">
                 </td>
                 <td>
                         <span id="vulnerabilityNameServerError" class="errors" ng-show="object.vulnerabilityName_error">

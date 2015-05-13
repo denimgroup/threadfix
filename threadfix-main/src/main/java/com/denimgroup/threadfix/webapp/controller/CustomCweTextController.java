@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
@@ -54,9 +55,14 @@ public class CustomCweTextController {
 
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     public @ResponseBody RestResponse<Map<String, Object>> info(){
+
+        List<GenericVulnerability> genericVulnerabilities = genericVulnerabilityService.loadAll();
+        List<GenericVulnerability> genericVulnerabilitiesWithCustomText = genericVulnerabilityService.loadAllWithCustomText();
+        genericVulnerabilities.removeAll(genericVulnerabilitiesWithCustomText);
+
         Map<String, Object> map = new HashMap<>();
-        map.put("genericVulnerabilities", genericVulnerabilityService.loadAll());
-        map.put("genericVulnerabilitiesWithCustomText", genericVulnerabilityService.loadAllWithCustomText());
+        map.put("genericVulnerabilities", genericVulnerabilities);
+        map.put("genericVulnerabilitiesWithCustomText", genericVulnerabilitiesWithCustomText);
         return success(map);
     }
 
@@ -78,12 +84,39 @@ public class CustomCweTextController {
             return FormRestResponse.failure("Found some errors.", result);
         }
 
-        if(databaseGenericVulnerability == null){
-            databaseGenericVulnerability.setCustomText(genericVulnerability.getCustomText());
+        if(databaseGenericVulnerability != null){
 
-            genericVulnerabilityService.store(databaseGenericVulnerability);
+            if(genericVulnerability.getCustomText() == null || genericVulnerability.getCustomText().isEmpty()){
+                databaseGenericVulnerability.setCustomText(null);
+
+                genericVulnerabilityService.store(databaseGenericVulnerability);
+
+                return success(null);
+            }else{
+                databaseGenericVulnerability.setCustomText(genericVulnerability.getCustomText());
+
+                genericVulnerabilityService.store(databaseGenericVulnerability);
+            }
         }
 
         return success(databaseGenericVulnerability);
+    }
+
+    @RequestMapping(value = "/{genericVulnerabilityId}/delete", method = RequestMethod.POST)
+    public @ResponseBody RestResponse<String> delete(@PathVariable("genericVulnerabilityId") Integer genericVulnerabilityId){
+
+        if(!PermissionUtils.hasGlobalPermission(Permission.CAN_MANAGE_CUSTOM_CWE_TEXT)){
+            return failure("You do not have permission to do that.");
+        }
+
+        GenericVulnerability genericVulnerability = genericVulnerabilityService.loadById(genericVulnerabilityId);
+
+        if(genericVulnerability != null){
+            genericVulnerability.setCustomText(null);
+
+            genericVulnerabilityService.store(genericVulnerability);
+        }
+
+        return RestResponse.success("Custom CWE text deleted successfully.");
     }
 }
