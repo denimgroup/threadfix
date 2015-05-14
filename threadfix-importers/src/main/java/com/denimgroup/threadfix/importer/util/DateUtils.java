@@ -80,6 +80,7 @@ public class DateUtils {
     public static Calendar getCalendarFromStringAndMultipleFormats(String dateString, @Nonnull String... dateFormats) {
         DateValidator dateValidator = new DateValidator();
         SimpleDateFormat simpleDateFormat = null;
+
         for (int i = 0; i < dateFormats.length; i++) {
             simpleDateFormat = new SimpleDateFormat(dateFormats[i], Locale.US);
             if (dateValidator.validate(dateString, simpleDateFormat.toPattern()) != null) {

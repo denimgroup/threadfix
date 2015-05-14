@@ -37,7 +37,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
-import java.text.SimpleDateFormat;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.enumMap;
