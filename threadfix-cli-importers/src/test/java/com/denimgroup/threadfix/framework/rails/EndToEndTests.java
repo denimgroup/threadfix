@@ -48,9 +48,6 @@ public class EndToEndTests {
     private final String RAILS_BURP_DYNAMIC = "SBIR/railsgoat_burpscan_dynamic.xml";
     private final String RAILS_BRAKEMAN_STATIC = "SBIR/railsgoat_brakeman_static.json";
 
-    private final String RAILS_SOURCE_LOCATION = "C:\\SourceCode\\railsgoat-master";
-
-
     @Test
     public void assertDynamicScanHasXSS() {
         testHasXSS(RAILS_ZAP_DYNAMIC);
@@ -69,7 +66,7 @@ public class EndToEndTests {
 
     @Test
     public void testStaticFindingMatchesEndpoint() {
-        EndpointDatabase database = EndpointDatabaseFactory.getDatabase(RAILS_SOURCE_LOCATION);
+        EndpointDatabase database = EndpointDatabaseFactory.getDatabase(TestConstants.RAILSGOAT_SOURCE_LOCATION);
 
         EndpointQuery query = EndpointQueryBuilder.start()
                 .setInformationSourceType(InformationSourceType.STATIC)
@@ -83,7 +80,7 @@ public class EndToEndTests {
 
     @Test
     public void testDynamicFindingMatchesEndpoint() {
-        EndpointDatabase database = EndpointDatabaseFactory.getDatabase(RAILS_SOURCE_LOCATION);
+        EndpointDatabase database = EndpointDatabaseFactory.getDatabase(TestConstants.RAILSGOAT_SOURCE_LOCATION);
 
         EndpointQuery query = EndpointQueryBuilder.start()
                 .setDynamicPath("/forgot_password")
@@ -96,7 +93,7 @@ public class EndToEndTests {
 
     @Test
     public void testStaticStaticMerge() {
-        Application application = Merger.mergeFromDifferentScanners(RAILS_SOURCE_LOCATION,  // TestConstants.RAILS_SOURCE_LOCATION
+        Application application = Merger.mergeFromDifferentScanners(TestConstants.RAILSGOAT_SOURCE_LOCATION,
                 RAILS_BRAKEMAN_STATIC,
                 RAILS_CHECKMARX_STATIC);
 
@@ -120,7 +117,7 @@ public class EndToEndTests {
 
     @Test
     public void testXSSVulnsMerge() {
-        Application application = Merger.mergeFromDifferentScanners(RAILS_SOURCE_LOCATION,  // TestConstants.RAILS_SOURCE_LOCATION
+        Application application = Merger.mergeFromDifferentScanners(TestConstants.RAILSGOAT_SOURCE_LOCATION,
                                                                     RAILS_ZAP_DYNAMIC,
                                                                     RAILS_CHECKMARX_STATIC);
 
