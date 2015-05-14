@@ -36,7 +36,7 @@
                                 </td>
                                 <td class="inputValue">
                                     <select id="roleSelect" ng-model="object.defaultRoleId" name="defaultRoleId" ng-disabled="!object.globalGroupEnabled" required>
-                                        <option ng-repeat="role in roleList" value="{{ role.id }}">{{ role.displayName }}</option>
+                                        <option ng-repeat="role in roleList" ng-selected="selectedRole(role.id)" value="{{ role.id }}">{{ role.displayName }}</option>
                                     </select>
                                 </td>
                                 <td style="border: 0 solid black; background-color: white; padding-left: 5px">
@@ -141,7 +141,7 @@
                         </tr>
                     </table>
 
-                    <button id="checkLDAPSettings" ng-disabled="shouldDisable" class="btn" ng-click="ok(form.$valid)">
+                    <button id="checkLDAPSettings" ng-disabled="shouldDisable()" class="btn" ng-click="ok(form.$valid)">
                         Check Connection
                     </button>
                 </div>
@@ -383,6 +383,11 @@
             </div>
             <div class="panel-body" ng-show="editDashboardSettings">
                 <table>
+                    <tr ng-show="object.dashboardReport_error">
+                        <td style="padding: 0 0 5px 5px" colspan="4">
+                            <span id="dashboardReportServerError" class="errors" ng-show="object.dashboardReport_error">{{ object.dashboardReport_error }}</span>
+                        </td>
+                    </tr>
                     <tr>
                         <td style="padding-left: 5px">
                             <div>
@@ -436,6 +441,11 @@
             </div>
             <div class="panel-body" ng-show="editApplicationDetailPageSettings">
                 <table>
+                    <tr ng-show="object.applicationReport_error">
+                        <td style="padding: 0 0 5px 5px" colspan="4">
+                            <span id="applicationReportServerError" class="errors" ng-show="object.applicationReport_error">{{ object.applicationReport_error }}</span>
+                        </td>
+                    </tr>
                     <tr>
                         <td style="padding-left: 5px">
                             <div>
@@ -455,6 +465,7 @@
                                         id="applicationTopRightSelect" name="applicationTopRight" ng-model="object.applicationTopRight" ></select>
                             </div>
                         </td>
+                    </tr>
                 </table>
             </div>
         </div>
@@ -470,6 +481,11 @@
             </div>
             <div class="panel-body" ng-show="editTeamDetailPageSettings">
                 <table>
+                    <tr ng-show="object.teamReport_error">
+                        <td style="padding: 0 0 5px 5px" colspan="4">
+                            <div id="teamReportServerError" class="errors" ng-show="object.teamReport_error">{{ object.teamReport_error }}</div>
+                        </td>
+                    </tr>
                     <tr>
                         <td style="padding-left: 5px">
                             <div>
@@ -489,6 +505,7 @@
                                         id="teamTopRightSelect" name="teamTopRight" ng-model="object.teamTopRight"></select>
                             </div>
                         </td>
+                    </tr>
                 </table>
             </div>
         </div>

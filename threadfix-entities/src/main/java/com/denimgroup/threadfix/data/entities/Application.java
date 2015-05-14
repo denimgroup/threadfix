@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
@@ -66,6 +67,9 @@ public class Application extends AuditableEntity {
     @URL(message = "{errors.url}")
     @Size(min = 0, max = URL_LENGTH, message = "{errors.maxlength} " + URL_LENGTH + ".")
     private  String repositoryUrl;
+
+    @Size(max = 80, message = "{errors.maxlength} 80.")
+    private String repositoryRevision;
 
     @Size(max = 80, message = "{errors.maxlength} 80.")
     private String repositoryBranch, repositoryDBBranch;
@@ -638,6 +642,16 @@ public class Application extends AuditableEntity {
 		this.sourceCodeAccessLevel = sourceCodeAccessLevel;
 	}
 
+    @Transient
+	public String getSvnRepositoryUrl() {
+        if (StringUtils.containsIgnoreCase(repositoryUrl, "/trunk") ||
+                StringUtils.containsIgnoreCase(repositoryUrl, "/branches")){
+            return repositoryUrl;
+        } else {
+            return repositoryUrl + "/trunk";
+        }
+	}
+
 	@Column(length = URL_LENGTH)
     @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
 	public String getRepositoryUrl() {
@@ -655,6 +669,15 @@ public class Application extends AuditableEntity {
 
     public void setRepositoryBranch(String repositoryBranch) {
         this.repositoryBranch = repositoryBranch;
+    }
+
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
+    public String getRepositoryRevision() {
+        return repositoryRevision;
+    }
+
+    public void setRepositoryRevision(String repositoryRevision) {
+        this.repositoryRevision = repositoryRevision;
     }
 
     @JsonIgnore

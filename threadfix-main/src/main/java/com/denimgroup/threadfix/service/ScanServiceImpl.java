@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.dao.EmptyScanDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.importer.interop.ChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ChannelImporterFactory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -329,4 +330,35 @@ public class ScanServiceImpl implements ScanService {
         }
     }
 
+    @Override
+    public int deleteScanFileLocations() {
+
+        List<String> scanFilenames = scanDao.loadScanFilenames();
+        DefaultConfiguration defaultConfig = defaultConfigService.loadCurrentConfiguration();
+        String fileUploadLocation = defaultConfig.getFileUploadLocation();
+
+        for (String scanFilename : scanFilenames) {
+
+            if (defaultConfig.fileUploadLocationExists()) {
+                File directory = new File(fileUploadLocation);
+
+                if (directory.exists()) {
+                    File fileUploaded = new File(fileUploadLocation + File.separator + scanFilename);
+                    deleteFile(fileUploaded.getPath());
+                } else {
+                    throw new RestIOException("Directory at path:  " + fileUploadLocation + " does not exist.", -1);
+                }
+            }
+        }
+
+        return scanDao.deleteScanFileLocations();
+    }
+
+    private void deleteFile(String fileName) {
+        File file = new File(fileName);
+        if (file.exists() && !file.delete()) {
+            LOG.warn("Something went wrong trying to delete: " + fileName);
+            file.deleteOnExit();
+        }
+    }
 }

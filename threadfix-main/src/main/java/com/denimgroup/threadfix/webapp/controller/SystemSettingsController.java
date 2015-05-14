@@ -9,6 +9,7 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.annotations.ReportLocation;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
+import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
@@ -27,10 +28,9 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 
@@ -54,15 +54,17 @@ public class SystemSettingsController {
 	private ApplicationService applicationService;
 	@Autowired(required = false)
     LicenseService licenseService;
+    @Autowired
+    private ScanService scanService;
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
 
 		String[] reports = {
-				"dashboardTopLeft",
-				"dashboardTopRight", "dashboardBottomLeft", "dashboardBottomRight",
-				"applicationTopLeft", "applicationTopRight", "teamTopLeft", "teamTopRight",
-                "fileUploadLocation"
+				"dashboardTopLeft.id",
+				"dashboardTopRight.id", "dashboardBottomLeft.id", "dashboardBottomRight.id",
+				"applicationTopLeft.id", "applicationTopRight.id", "teamTopLeft.id", "teamTopRight.id",
+                "fileUploadLocation", "deleteUploadedFiles"
 		};
 
 		String[] otherSections = {
@@ -111,6 +113,15 @@ public class SystemSettingsController {
     public @ResponseBody Object processSubmit(@ModelAttribute DefaultConfiguration defaultConfiguration,
                                               BindingResult bindingResult) {
 
+        if (defaultConfiguration.getDeleteUploadedFiles()) {
+            try {
+                scanService.deleteScanFileLocations();
+                defaultConfiguration.setDeleteUploadedFiles(false);
+            } catch (RestIOException e) {
+                return RestResponse.failure("Unable to delete files in 'File Upload Location' directory." + e.getMessage());
+            }
+        }
+
         if (defaultConfiguration.getSessionTimeout() != null && defaultConfiguration.getSessionTimeout() > 30) {
             bindingResult.reject("sessionTimeout", null, "30 is the maximum.");
         }
@@ -122,7 +133,7 @@ public class SystemSettingsController {
             }
         }
 
-        List<String> errors = addReportErrors(defaultConfiguration);
+        Map<String,String> errors = addReportErrors(defaultConfiguration);
 
         if (bindingResult.hasErrors() || errors.size() > 0) {
 
@@ -138,19 +149,19 @@ public class SystemSettingsController {
         }
     }
 
-    private List<String> addReportErrors(DefaultConfiguration config) {
-        List<String> errors = list();
+    private Map<String,String> addReportErrors(DefaultConfiguration config) {
+        Map<String,String> errors = map();
 
         if(defaultConfigService.reportDuplicateExists(config.getDashboardReports())) {
-            errors.add("Cannot set more than one Dashboard report placement to the same report.");
+            errors.put("dashboardReport", "Cannot set more than one Dashboard report placement to the same report.");
         }
 
         if(defaultConfigService.reportDuplicateExists(config.getApplicationReports())) {
-            errors.add("Cannot set more than one Application report placement to the same report.");
+            errors.put("applicationReport", "Cannot set more than one Application report placement to the same report.");
         }
 
         if(defaultConfigService.reportDuplicateExists(config.getTeamReports())) {
-            errors.add("Cannot set more than one Team report placement to the same report.");
+            errors.put("teamReport", "Cannot set more than one Team report placement to the same report.");
         }
 
         return errors;

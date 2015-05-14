@@ -74,7 +74,7 @@ public class AddApplicationController {
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		dataBinder.setAllowedFields("name", "url", "defectTracker.id", "uniqueId",
                 "userName", "password", "waf.id", "projectName", "applicationCriticality.id",
-                "frameworkType", "repositoryUrl", "repositoryBranch",
+                "frameworkType", "repositoryUrl", "repositoryBranch", "repositoryRevision",
                 "repositoryUserName", "repositoryPassword", "repositoryFolder", "repositoryType",
                 "skipApplicationMerge", "tags[*].id", "tags[*].name");
 	}

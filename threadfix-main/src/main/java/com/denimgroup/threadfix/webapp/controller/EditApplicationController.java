@@ -103,8 +103,8 @@ public class EditApplicationController {
 		dataBinder.setAllowedFields("name", "url", "defectTracker.id", "userName",
                 "password", "waf.id", "projectName", "projectRoot", "applicationCriticality.id",
                 "uniqueId", "organization.id", "frameworkType", "repositoryUrl", "repositoryBranch",
-                "repositoryUserName", "repositoryPassword", "repositoryFolder", "repositoryType",
-                "skipApplicationMerge");
+                "repositoryRevision", "repositoryUserName", "repositoryPassword", "repositoryFolder",
+                "repositoryType", "skipApplicationMerge");
 	}
 
 	@JsonView(AllViews.FormInfo.class)
