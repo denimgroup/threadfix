@@ -13,10 +13,10 @@ import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.denimgroup.threadfix.service.EmailBuilderService;
+import com.denimgroup.threadfix.service.TemplateBuilderService;
 
 @Service
-public class EmailBuilderServiceImpl implements EmailBuilderService {
+public class TemplateBuilderServiceImpl implements TemplateBuilderService {
 
 	@Autowired
 	private VelocityEngine velocityEngine;
@@ -31,6 +31,8 @@ public class EmailBuilderServiceImpl implements EmailBuilderService {
 		for (String key : model.keySet()){
 			context.put(key, model.get(key));
 		}
+		context.put("br","\n");
+		context.put("sp"," ");
 
 		Template template = null;
 		try {

@@ -41,7 +41,7 @@ public class EmailReportServiceImpl implements EmailReportService {
 	@Autowired
 	private JavaMailSender javaMailSender;
 	@Autowired
-	private EmailBuilderService emailBuilderService;
+	private TemplateBuilderService templateBuilderService;
 	@Autowired
 	private EmailConfiguration emailConfiguration;
 	@Autowired
@@ -124,7 +124,7 @@ public class EmailReportServiceImpl implements EmailReportService {
 		Object blockedEmailAddresses = emailFilterService.getBlockedEmailAddresses(scheduledEmailReport.getEmailAddresses());
 		model.put("blockedEmailAddresses", blockedEmailAddresses);
 		model.put("frequency", scheduledEmailReport.getFrequency());
-		return emailBuilderService.prepareMessageFromTemplate(model, "scheduledEmailReport.vm");
+		return templateBuilderService.prepareMessageFromTemplate(model, "scheduledEmailReport.vm");
 	}
 
 	@Override
