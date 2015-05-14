@@ -76,7 +76,7 @@ public class EmailServicesSetup {
 	public VelocityEngine velocityEngine() {
 		VelocityEngine velocityEngine = new VelocityEngine();
 		velocityEngine.addProperty(RuntimeConstants.RESOURCE_LOADER, "webapp");
-		velocityEngine.addProperty("webapp.resource.loader.class", "org.apache.velocity.tools.view.WebappResourceLoader");
+		velocityEngine.addProperty("webapp.resource.loader.class", "com.denimgroup.threadfix.service.email.StructuredGlobbingResourceLoader");
 		velocityEngine.addProperty("webapp.resource.loader.path", "/velocityTemplates/");
 		velocityEngine.setApplicationAttribute("javax.servlet.ServletContext", servletContext);
 		try {
