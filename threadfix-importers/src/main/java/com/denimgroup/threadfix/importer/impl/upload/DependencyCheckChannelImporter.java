@@ -37,6 +37,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.enumMap;
@@ -283,6 +284,9 @@ public class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	    		String tempDateString = getBuilderText();
 
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
+					testDate = DateUtils.getCalendarFromStringAndMultipleFormats(tempDateString,
+							"MMM dd, yyyy kk:mm:ss aa",
+							"yyyy-MM-dd'T'HH:");
 	    			testDate = DateUtils.getCalendarFromString("MMM dd, yyyy kk:mm:ss aa", tempDateString);
 	    		}
 	    		
