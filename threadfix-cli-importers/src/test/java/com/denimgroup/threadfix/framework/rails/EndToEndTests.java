@@ -92,6 +92,29 @@ public class EndToEndTests {
     }
 
     @Test
+    public void testFindingsMatchEndpoint() {
+        EndpointDatabase database = EndpointDatabaseFactory.getDatabase(TestConstants.RAILSGOAT_SOURCE_LOCATION);
+
+        EndpointQuery staticQuery = EndpointQueryBuilder.start()
+                .setInformationSourceType(InformationSourceType.STATIC)
+                .setStaticPath("railsgoat/app/controllers/password_resets_controller.rb")
+                .setParameter("email")
+                .generateQuery();
+
+        Endpoint staticMatch = database.findBestMatch(staticQuery);
+
+        EndpointQuery dynamicQuery = EndpointQueryBuilder.start()
+                .setDynamicPath("/forgot_password")
+                .generateQuery();
+
+        Endpoint dynamicMatch = database.findBestMatch(dynamicQuery);
+
+        assert staticMatch != null : "Didn't find match for file password_resets_controller.rb";
+        assert dynamicMatch != null : "Didn't find match for url /forgot_password";
+
+    }
+
+    @Test
     public void testStaticStaticMerge() {
         Application application = Merger.mergeFromDifferentScanners(TestConstants.RAILSGOAT_SOURCE_LOCATION,
                 RAILS_BRAKEMAN_STATIC,
