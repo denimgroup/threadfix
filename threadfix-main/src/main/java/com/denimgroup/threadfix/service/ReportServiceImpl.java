@@ -78,6 +78,11 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
+    public List<Report> loadAllNonNativeReportsByLocationType(ReportLocation location) {
+        return reportDao.retrieveAllNonNativeReportsByLocationType(location);
+    }
+
+    @Override
     public List<Report> loadByLocationType(ReportLocation location) {
         return reportDao.retrieveReportsByLocation(location);
     }
