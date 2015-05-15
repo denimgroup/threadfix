@@ -39,6 +39,7 @@ public class DefectDescriptionBuilder {
 
     private DefectDescriptionBuilder(){}
 
+    //with the template engine in place, this function is not used anymore
     public static String makeDescription(List<Vulnerability> vulnerabilities, DefectMetadata metadata) {
         StringBuilder stringBuilder = new StringBuilder();
 

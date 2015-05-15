@@ -9,6 +9,7 @@
 #if( $metadata.preamble && $metadata.preamble != "" )
     #header("General information")$br
     $metadata.preamble$br
+    $br
 #end
 #set( $vulnIndex=0 )
 #if( $vulnerabilities )
@@ -57,7 +58,9 @@
     #if($defectTrackerName=="Jira")
         {code}${codeContent}{code}
     #else
-        $codeContent
+        ---$br
+        $codeContent$br
+        ---
     #end
 #end
 
@@ -76,10 +79,10 @@
 #macro( addDataFlow $finding )
     #if( $finding.dataFlowElements && ! $finding.dataFlowElements.isEmpty() )
         $br
-        #header("Data Flow")$br
+        #header("Data Flow")${br}
         #foreach( $dataflowElement in $finding.dataFlowElements )
-            $dataFlowElement.sourceFileName line $dataFlowElement.lineNumber$br
-            #code($dataflowElement.lineText)$br
+            $dataflowElement.sourceFileName line $dataflowElement.lineNumber$br
+            #code($dataflowElement.lineText)${br}
         #end
     #end
 #end
