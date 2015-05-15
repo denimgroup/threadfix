@@ -19,7 +19,7 @@
                            type="text"
                            name="genericVulnerabilityName"
                            ng-model="object.name"
-                           typeahead="(vulnerability.name + ' (CWE ' + vulnerability.cweId + ')') for vulnerability in config.genericVulnerabilities | filter:$viewValue | limitTo:10"
+                           typeahead="(vulnerability.name + ' (CWE ' + vulnerability.displayId + ')') for vulnerability in config.genericVulnerabilities | filter:$viewValue | limitTo:10"
                            class="form-control"
                            ng-disabled="config.edit">
                 </td>

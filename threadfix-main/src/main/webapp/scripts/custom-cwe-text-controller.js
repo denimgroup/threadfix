@@ -6,7 +6,7 @@ module.controller('CustomCweTextController', function($scope, $http, $modal, $lo
     $scope.genericVulnerabilities = [];
 
     var compare = function(a, b){
-        return a.cweId - b.cweId;
+        return a.displayId - b.displayId;
     };
 
     $scope.$on('rootScopeInitialized', function() {
@@ -87,7 +87,7 @@ module.controller('CustomCweTextController', function($scope, $http, $modal, $lo
                 },
                 object: function() {
                     var genericVulnerabilityCopy = angular.copy(genericVulnerability);
-                    genericVulnerabilityCopy.name = genericVulnerabilityCopy.name + ' (CWE ' + genericVulnerabilityCopy.cweId + ')';
+                    genericVulnerabilityCopy.name = genericVulnerabilityCopy.name + ' (CWE ' + genericVulnerabilityCopy.displayId + ')';
                     return genericVulnerabilityCopy;
                 },
                 buttonText: function() {
