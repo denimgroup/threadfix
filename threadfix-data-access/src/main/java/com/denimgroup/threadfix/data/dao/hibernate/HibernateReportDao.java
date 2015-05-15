@@ -122,6 +122,14 @@ public class HibernateReportDao
     }
 
     @Override
+    public List<Report> retrieveAllNonNativeReportsByLocationType(ReportLocation location) {
+        return (List<Report>) getAvailableCriteria()
+                .add(Restrictions.eq("location", location))
+                .add(Restrictions.eq("nativeReport", false))
+                .list();
+    }
+
+    @Override
     protected Class<Report> getClassReference() {
         return Report.class;
     }

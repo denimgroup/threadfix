@@ -88,6 +88,10 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
             });
     });
 
+    $scope.selectCustomReport = function(reportId){
+        $scope.selectedReport = reportId;
+    }
+
     $scope.loadVulnSearch = function() {
         $scope.vulnSearch = true;
         $scope.trendingActive = false;
@@ -95,6 +99,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         $scope.complianceActive = false;
         $scope.filterParameters = undefined;
         $scope.remediationEnterpriseActive = false;
+        $scope.customActive = false;
         $scope.$broadcast('loadVulnerabilitySearchTable');
     }
 
@@ -104,6 +109,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         $scope.complianceActive = false;
         $scope.vulnSearch = false;
         $scope.remediationEnterpriseActive = false;
+        $scope.customActive = false;
         $scope.$broadcast('loadTrendingReport');
 
     };
@@ -114,6 +120,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         $scope.complianceActive = true;
         $scope.vulnSearch = false;
         $scope.remediationEnterpriseActive = false;
+        $scope.customActive = false;
         $scope.$broadcast('loadComplianceReport');
 
     };
@@ -124,6 +131,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         $scope.complianceActive = false;
         $scope.vulnSearch = false;
         $scope.remediationEnterpriseActive = false;
+        $scope.customActive = false;
         $scope.$broadcast('loadSnapshotReport');
 
     };
@@ -134,7 +142,19 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         $scope.snapshotActive = false;
         $scope.complianceActive = false;
         $scope.vulnSearch = false;
+        $scope.customActive = false;
         $scope.$broadcast('loadComplianceReport');
+
+    };
+
+    $scope.loadCustom = function() {
+        $scope.customActive = true;
+        $scope.remediationEnterpriseActive = false;
+        $scope.trendingActive = false;
+        $scope.snapshotActive = false;
+        $scope.complianceActive = false;
+        $scope.vulnSearch = false;
+        $scope.$broadcast('loadCustomReport');
 
     };
 
