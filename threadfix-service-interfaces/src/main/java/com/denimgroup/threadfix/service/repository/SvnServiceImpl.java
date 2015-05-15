@@ -136,9 +136,9 @@ public class SvnServiceImpl extends RepositoryServiceImpl implements RepositoryS
                 svnRepository.setAuthenticationManager(authManager);
             }
 
-            if (application.getRepositoryBranch() != null && !application.getRepositoryBranch().isEmpty()) {
+            if (application.getRepositoryRevision() != null && !application.getRepositoryRevision().isEmpty()) {
                 try {
-                    Long svnRevisionNum = Long.parseLong(application.getRepositoryBranch());
+                    Long svnRevisionNum = Long.parseLong(application.getRepositoryRevision());
                     if (svnRevisionNum > 0)
                         svnRevision = SVNRevision.create(svnRevisionNum);
                 } catch (NumberFormatException e) {

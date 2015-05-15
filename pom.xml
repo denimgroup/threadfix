@@ -393,6 +393,7 @@
         <maven-failsafe.version>2.17</maven-failsafe.version>
         <surefire-junit47.version>2.17</surefire-junit47.version>
         <jacoco.version>0.7.0.201403182114</jacoco.version>
+        <jsoup.version>1.8.2</jsoup.version>
 
         <!-- Testing Properties -->
         <regression.category>com.denimgroup.threadfix.CommunityTests</regression.category>
