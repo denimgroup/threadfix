@@ -32,8 +32,9 @@ import com.denimgroup.threadfix.service.EventBuilder;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
+
+import java.util.*;
 
 @Aspect
 @Component
@@ -66,16 +67,16 @@ public class ApplicationEventTrackingAspect extends EventTrackingAspect {
         return event;
     }
 
-    @Pointcut("execution(* com.denimgroup.threadfix.service.ScanMergeService.saveRemoteScanAndRun(Integer, String))")
-    protected void saveRemoteScanAndRun() {}
+    @Around("execution(* com.denimgroup.threadfix.service.ScanMergeService.saveRemoteScanAndRun(Integer, String, String)) && args(channelId, fileName, originalFileName)")
+    public Object processSaveRemoteScanAndRunEvent(ProceedingJoinPoint joinPoint, Integer channelId, String fileName, String originalFileName) throws Throwable {
+        return emitUploadApplicationScanEvent(joinPoint, channelId, fileName);
+    }
 
-    @Pointcut("execution(* com.denimgroup.threadfix.service.ScanMergeService.processScan(Integer, String, ..))")
-    protected void processScan() {}
+    @Around("execution(* com.denimgroup.threadfix.service.ScanMergeService.processScan(Integer, String, Integer, String)) && args(channelId, fileName, statusId, userName)")
+    public Object processProcessScanEvent(ProceedingJoinPoint joinPoint, Integer channelId, String fileName, Integer statusId, String userName) throws Throwable {
+        return emitUploadApplicationScanEvent(joinPoint, channelId, fileName);
+    }
 
-    @Pointcut("saveRemoteScanAndRun() || processScan()")
-    protected void processScanFile() {}
-
-    @Around("processScanFile() && args(channelId, fileName)")
     public Object emitUploadApplicationScanEvent(ProceedingJoinPoint joinPoint, Integer channelId, String fileName) throws Throwable {
         Object proceed = joinPoint.proceed();
         try {
@@ -98,5 +99,16 @@ public class ApplicationEventTrackingAspect extends EventTrackingAspect {
                 .generateEvent();
         eventService.saveOrUpdate(event);
         return event;
+    }
+
+    @Around("execution(* com.denimgroup.threadfix.data.dao.hibernate.HibernateScanDao.deleteFindingsAndScan(com.denimgroup.threadfix.data.entities.Scan)) && args(scan)")
+    public void updateEventForScanDeletion(ProceedingJoinPoint joinPoint, Scan scan) throws Throwable {
+        List<Event> eventList = eventService.loadAllByScan(scan);
+
+        for (Event event: eventList) {
+            event.setScan(null);
+            eventService.saveOrUpdate(event);
+        }
+        joinPoint.proceed();
     }
 }

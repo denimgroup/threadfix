@@ -24,8 +24,18 @@
 
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Event;
+import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.Vulnerability;
+
+import java.util.List;
 
 public interface EventService extends GenericObjectService<Event> {
 
+    List<Event> loadAllByScan(Scan scan);
+
+    List<Event> loadAllByVulnerability(Vulnerability vulnerability);
+
+    List<Event> loadAllByDefect(Defect defect);
 }

@@ -318,8 +318,7 @@ public class HibernateScanDao
 			}
 		}
 		
-		sessionFactory.getCurrentSession().save(new DeletedScan(scan));
-		sessionFactory.getCurrentSession().delete(scan);
+		delete(scan);
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -26,11 +26,16 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.dao.EventDao;
 import com.denimgroup.threadfix.data.dao.GenericObjectDao;
+import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Event;
+import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -44,5 +49,20 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
     @Override
     GenericObjectDao<Event> getDao() {
         return eventDao;
+    }
+
+    @Override
+    public List<Event> loadAllByScan(Scan scan) {
+        return eventDao.retrieveAllByScan(scan);
+    }
+
+    @Override
+    public List<Event> loadAllByVulnerability(Vulnerability vulnerability) {
+        return eventDao.retrieveAllByVulnerability(vulnerability);
+    }
+
+    @Override
+    public List<Event> loadAllByDefect(Defect defect) {
+        return eventDao.retrieveAllByDefect(defect);
     }
 }

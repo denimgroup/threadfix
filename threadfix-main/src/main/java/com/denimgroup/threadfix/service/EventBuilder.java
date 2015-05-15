@@ -47,58 +47,37 @@ public class EventBuilder {
     }
 
     public EventBuilder setApplication(Application application) {
-        if (application != null) {
-            event.setApplicationId(application.getId());
-        } else {
-            event.setApplicationId(null);
-        }
+        event.setApplication(application);
         return this;
     }
 
     public EventBuilder setUser(User user) {
+        event.setUser(user);
         if (user != null) {
-            event.setUserId(user.getId());
             event.setApiAction(false);
         } else {
-            event.setUserId(null);
             event.setApiAction(true);
         }
         return this;
     }
 
     public EventBuilder setVulnerability(Vulnerability vulnerability) {
-        if (vulnerability != null) {
-            event.setVulnerabilityId(vulnerability.getId());
-        } else {
-            event.setVulnerabilityId(null);
-        }
+        event.setVulnerability(vulnerability);
         return this;
     }
 
     public EventBuilder setScan(Scan scan) {
-        if (scan != null) {
-            event.setScanId(scan.getId());
-        } else {
-            event.setScanId(null);
-        }
+        event.setScan(scan);
         return this;
     }
 
     public EventBuilder setDefect(Defect defect) {
-        if (defect != null) {
-            event.setDefectId(defect.getId());
-        } else {
-            event.setDefectId(null);
-        }
+        event.setDefect(defect);
         return this;
     }
 
     public EventBuilder setVulnerabilityComment(VulnerabilityComment comment) {
-        if (comment != null) {
-            event.setCommentId(comment.getId());
-        } else {
-            event.setCommentId(null);
-        }
+        event.setVulnerabilityComment(comment);
         return this;
     }
 

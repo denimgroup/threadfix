@@ -116,16 +116,16 @@ public class DefectEventTrackingAspect extends EventTrackingAspect {
         }
     }
 
-    @Pointcut("execution(* com.denimgroup.threadfix.service.ScanMergeService.saveRemoteScanAndRun(Integer, String))")
-    protected void saveRemoteScanAndRun() {}
+    @Around("execution(* com.denimgroup.threadfix.service.ScanMergeService.saveRemoteScanAndRun(Integer, String, String)) && args(channelId, fileName, originalFileName)")
+    public Object processSaveRemoteScanAndRunEvent(ProceedingJoinPoint joinPoint, Integer channelId, String fileName, String originalFileName) throws Throwable {
+        return emitUploadApplicationScanEvent(joinPoint, channelId, fileName);
+    }
 
-    @Pointcut("execution(* com.denimgroup.threadfix.service.ScanMergeService.processScan(Integer, String, ..))")
-    protected void processScan() {}
+    @Around("execution(* com.denimgroup.threadfix.service.ScanMergeService.processScan(Integer, String, Integer, String)) && args(channelId, fileName, statusId, userName)")
+    public Object processProcessScanEvent(ProceedingJoinPoint joinPoint, Integer channelId, String fileName, Integer statusId, String userName) throws Throwable {
+        return emitUploadApplicationScanEvent(joinPoint, channelId, fileName);
+    }
 
-    @Pointcut("saveRemoteScanAndRun() || processScan()")
-    protected void processScanFile() {}
-
-    @Around("processScanFile() && args(channelId, fileName)")
     public Object emitUploadApplicationScanEvent(ProceedingJoinPoint joinPoint, Integer channelId, String fileName) throws Throwable {
         Object proceed = joinPoint.proceed();
         try {
@@ -180,5 +180,16 @@ public class DefectEventTrackingAspect extends EventTrackingAspect {
         Event event = eventBuilder.generateEvent();
         eventService.saveOrUpdate(event);
         return event;
+    }
+
+    @Around("execution(* com.denimgroup.threadfix.data.dao.hibernate.HibernateDefectDao.delete(..)) && args(defect)")
+    public void updateEventForDefectDeletion(ProceedingJoinPoint joinPoint, Defect defect) throws Throwable {
+        List<Event> eventList = eventService.loadAllByDefect(defect);
+
+        for (Event event: eventList) {
+            event.setDefect(null);
+            eventService.saveOrUpdate(event);
+        }
+        joinPoint.proceed();
     }
 }

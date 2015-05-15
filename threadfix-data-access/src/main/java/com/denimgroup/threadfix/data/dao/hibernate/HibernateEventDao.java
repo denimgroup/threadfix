@@ -26,7 +26,10 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 
 import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.EventDao;
+import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Event;
+import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.Vulnerability;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
@@ -35,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public class HibernateEventDao extends AbstractObjectDao<Event> implements EventDao {
@@ -49,5 +53,53 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
     @Override
     protected Class<Event> getClassReference() {
         return Event.class;
+    }
+
+    @Override
+    public List<Event> retrieveAllByScan(Scan scan) {
+
+        Criteria criteria = getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.eq("scan", scan));
+
+        Order order = getOrder();
+        if (order != null) {
+            criteria.addOrder(order);
+        }
+
+        return criteria.list();
+    }
+
+    @Override
+    public List<Event> retrieveAllByVulnerability(Vulnerability vulnerability) {
+
+        Criteria criteria = getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.eq("vulnerability", vulnerability));
+
+        Order order = getOrder();
+        if (order != null) {
+            criteria.addOrder(order);
+        }
+
+        return criteria.list();
+    }
+
+    @Override
+    public List<Event> retrieveAllByDefect(Defect defect) {
+
+        Criteria criteria = getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.eq("defect", defect));
+
+        Order order = getOrder();
+        if (order != null) {
+            criteria.addOrder(order);
+        }
+
+        return criteria.list();
     }
 }

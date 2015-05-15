@@ -682,7 +682,9 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 				}
 				if (!keepIt) {
 					log.debug("Deleting orphaned defect with ID " + vuln.getDefect().getId() + ".");
-					defectDao.delete(vuln.getDefect());
+					Defect defect = vuln.getDefect();
+					vuln.setDefect(null);
+					defectDao.delete(defect);
 				}
 			}
 			
