@@ -1,6 +1,5 @@
 package com.denimgroup.threadfix.service.email;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
 
@@ -54,7 +53,7 @@ public class TemplateBuilderServiceImpl implements TemplateBuilderService {
 			e.printStackTrace();
 		} catch (MethodInvocationException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
