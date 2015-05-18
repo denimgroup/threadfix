@@ -43,10 +43,10 @@ import java.util.List;
  */
 public class EndToEndTests {
 
-    private final String RAILS_ZAP_DYNAMIC = "SBIR/railsgoat_zapscan_dynamic.xml";
-    private final String RAILS_CHECKMARX_STATIC = "SBIR/railsgoat_checkmarx_static.xml";
-    private final String RAILS_BURP_DYNAMIC = "SBIR/railsgoat_burpscan_dynamic.xml";
-    private final String RAILS_BRAKEMAN_STATIC = "SBIR/railsgoat_brakeman_static.json";
+    private final String RAILS_ZAP_DYNAMIC = "SBIR/railsgoat_zapscan.xml";
+    private final String RAILS_CHECKMARX_STATIC = "SBIR/railsgoat_checkmarx.xml";
+    private final String RAILS_BURP_DYNAMIC = "SBIR/railsgoat_burpscan.xml";
+    private final String RAILS_BRAKEMAN_STATIC = "SBIR/railsgoat_brakeman.json";
 
     @Test
     public void assertDynamicScanHasXSS() {
