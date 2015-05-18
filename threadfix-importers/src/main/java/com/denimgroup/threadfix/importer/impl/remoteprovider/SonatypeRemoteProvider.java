@@ -117,9 +117,12 @@ public class SonatypeRemoteProvider extends AbstractRemoteProvider {
                 }
 
             } else {
-                String body = response.getBodyAsString();
-                log.info("Contents: " + body);
-
+                if (response.getInputStream() == null) {
+                    log.info("Bad response.");
+                } else {
+                    String body = response.getBodyAsString();
+                    log.info("Contents: " + body);
+                }
                 throw new RestIOException("Invalid response " + response.getStatus() + " received from Sonatype servers, check the logs for more details.", response.getStatus());
             }
 
