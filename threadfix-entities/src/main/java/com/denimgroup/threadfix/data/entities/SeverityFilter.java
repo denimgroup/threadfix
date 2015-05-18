@@ -23,13 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.data.interfaces.MultiLevelFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "SeverityFilter")
-public class SeverityFilter extends BaseEntity {
+public class SeverityFilter extends BaseEntity implements MultiLevelFilter {
 
 	private static final long serialVersionUID = -203648283130654134L;
 

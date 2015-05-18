@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.StatisticsCounterDao;
 import com.denimgroup.threadfix.data.entities.StatisticsCounter;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -73,25 +74,39 @@ public class HibernateStatisticsCounterDao
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Map<String, Object>> getFindingSeverityMap() {
+    public List<Map<String, Object>> getFindingSeverityMap(List<Integer> filteredSeverities, List<Integer> filteredVulnerabilities) {
 
-        String hql = "select new map (count(*) as total, counter.scanId as scanId, counter.currentGenericSeverityId as genericSeverityId) from StatisticsCounter counter group by counter.scanId, counter.currentGenericSeverityId";
+        String hql = "select new map (" +
+                    "count(*) as total, " +
+                    "counter.scanId as scanId, " +
+                    "counter.currentGenericSeverityId as genericSeverityId) " +
+                "from StatisticsCounter counter ";
 
-//        String selectStart = "(select count(*) from StatisticsCounter counter where counter.scanId =  and counter.currentGenericSeverityId = ";
-//        String vulnIds = ")";
-//        String fromClause = "from StatisticsCounter outerCounter group by outerCounter.scanId";
-//
-//        Object idsMap = sessionFactory.getCurrentSession().createQuery(
-//                "select new map( scan.id as id, " +
-//                        selectStart + "1" + vulnIds + " as info, " +
-//                        selectStart + "2" + vulnIds + " as low, " +
-//                        selectStart + "3" + vulnIds + " as medium, " +
-//                        selectStart + "4" + vulnIds + " as high, " +
-//                        selectStart + "5" + vulnIds + " as critical) " +
-//                        fromClause
-//        ).list();
+        if (!filteredSeverities.isEmpty() || !filteredVulnerabilities.isEmpty()) {
+            hql += "where ";
+        }
+        if (!filteredSeverities.isEmpty()) {
+            hql += "counter.currentGenericSeverityId not in (:filteredSeverities) ";
+            if (!filteredVulnerabilities.isEmpty()) {
+                hql += "and ";
+            }
+        }
+        if (!filteredVulnerabilities.isEmpty()) {
+            hql += "counter.genericVulnerabilityId not in (:filteredVulnerabilities) ";
+        }
 
-        Object idsMap = getSession().createQuery(hql).list();
+        hql += "group by counter.scanId, counter.currentGenericSeverityId";
+
+        Query query = getSession().createQuery(hql);
+
+        if (!filteredSeverities.isEmpty()) {
+            query.setParameterList("filteredSeverities", filteredSeverities);
+        }
+        if (!filteredVulnerabilities.isEmpty()) {
+            query.setParameterList("filteredVulnerabilities", filteredVulnerabilities);
+        }
+
+        Object idsMap = query.list();
         return (List<Map<String, Object>>) idsMap;
     }
 }

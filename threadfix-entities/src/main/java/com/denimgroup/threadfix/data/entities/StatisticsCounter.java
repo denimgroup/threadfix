@@ -39,6 +39,7 @@ public class StatisticsCounter extends BaseEntity {
             vulnerabilityId,
             originalGenericSeverityId,
             currentGenericSeverityId,
+            genericVulnerabilityId,
             channelSeverityId,
             channelVulnerabilityId;
 
@@ -130,6 +131,16 @@ public class StatisticsCounter extends BaseEntity {
         this.channelVulnerabilityId = channelVulnerabilityId;
     }
 
+    @Column
+    @Index(name="genericVulnerabilityId")
+    public Integer getGenericVulnerabilityId() {
+        return genericVulnerabilityId;
+    }
+
+    public void setGenericVulnerabilityId(Integer genericVulnerabilityId) {
+        this.genericVulnerabilityId = genericVulnerabilityId;
+    }
+
     public static StatisticsCounter getStatisticsCounter(Finding finding) {
         if (finding != null &&
                 finding.getVulnerability() != null &&
@@ -137,7 +148,8 @@ public class StatisticsCounter extends BaseEntity {
                 finding.getChannelSeverity() != null &&
                 finding.getChannelVulnerability() != null &&
                 finding.getScan() != null &&
-                finding.getVulnerability().getGenericSeverity() != null) {
+                finding.getVulnerability().getGenericSeverity() != null &&
+                finding.getVulnerability().getGenericVulnerability() != null) {
 
             StatisticsCounter counter = new StatisticsCounter();
 
@@ -146,6 +158,7 @@ public class StatisticsCounter extends BaseEntity {
             counter.channelSeverityId         = finding.getChannelSeverity().getId();
             counter.channelVulnerabilityId    = finding.getChannelVulnerability().getId();
             counter.currentGenericSeverityId  = finding.getVulnerability().getGenericSeverity().getId();
+            counter.genericVulnerabilityId = finding.getVulnerability().getGenericVulnerability().getId();
             counter.originalGenericSeverityId = counter.currentGenericSeverityId;
             counter.finding = finding;
 

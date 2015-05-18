@@ -23,20 +23,17 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.dao.FindingDao;
-import com.denimgroup.threadfix.data.dao.ScanDao;
-import com.denimgroup.threadfix.data.dao.StatisticsCounterDao;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
-import com.denimgroup.threadfix.data.entities.StatisticsCounter;
+import com.denimgroup.threadfix.data.dao.*;
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.interfaces.MultiLevelFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.CollectionUtils.*;
 import static com.denimgroup.threadfix.data.entities.StatisticsCounter.getStatisticsCounter;
 
 /**
@@ -51,6 +48,10 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
     StatisticsCounterDao statisticsCounterDao;
     @Autowired
     FindingDao findingDao;
+    @Autowired
+    SeverityFilterService severityFilterService;
+    @Autowired
+    VulnerabilityFilterDao vulnerabilityFilterDao;
 
     @Override
     public void updateStatistics(List<Scan> scans) {
@@ -127,7 +128,67 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
         long start = System.currentTimeMillis();
 
-        List<Map<String, Object>> totalMap = statisticsCounterDao.getFindingSeverityMap();
+        // TODO use existing filters when calculating these statistics
+
+        Set<Integer> appsWithTheirOwnFilters = getAppsWithTheirOwnFilters();
+
+        List<Scan> useGlobal = list();
+        Map<Application, List<Scan>> appToScanMap = map();
+
+        for (Scan scan : scans) {
+            if (scan == null || scan.getApplication() == null) {
+                continue;
+            }
+
+            if (appsWithTheirOwnFilters.contains(scan.getApplication().getId())) {
+                if (!appToScanMap.containsKey(scan.getApplication())) {
+                    appToScanMap.put(scan.getApplication(), list(scan));
+                } else {
+                    appToScanMap.get(scan.getApplication()).add(scan);
+                }
+            } else {
+                useGlobal.add(scan);
+            }
+        }
+
+        processScans(-1, -1, useGlobal);
+
+        for (Map.Entry<Application, List<Scan>> entry : appToScanMap.entrySet()) {
+            processScans(entry.getKey().getOrganization().getId(), entry.getKey().getId(), entry.getValue());
+        }
+
+        System.out.println("Critical/High/Medium/Low/Info calculated in " + (System.currentTimeMillis() - start) + " ms.");
+
+    }
+
+    private Set<Integer> getAppsWithTheirOwnFilters() {
+        Set<Integer> appsWithTheirOwnFilters = set();
+        List<SeverityFilter> severityFilters = severityFilterService.loadAllFilters();
+        List<VulnerabilityFilter> vulnerabilityFilters = vulnerabilityFilterDao.retrieveAll();
+
+        List<MultiLevelFilter> filters = list();
+        filters.addAll(severityFilters);
+        filters.addAll(vulnerabilityFilters);
+
+        for (MultiLevelFilter filter : filters) {
+            if (filter.getOrganization() != null) {
+                for (Application application : filter.getOrganization().getApplications()) {
+                    appsWithTheirOwnFilters.add(application.getId());
+                }
+            } else if (filter.getApplication() != null) {
+                appsWithTheirOwnFilters.add(filter.getApplication().getId());
+            }
+        }
+        return appsWithTheirOwnFilters;
+    }
+
+    private void processScans(int orgID, int appID, List<Scan> scans) {
+
+        List<Integer> filteredSeverities = getFilteredSeverities(orgID, appID),
+                filteredVulnerabilities = getFilteredVulnerabilities(orgID, appID);
+
+        List<Map<String, Object>> totalMap =
+                statisticsCounterDao.getFindingSeverityMap(filteredSeverities, filteredVulnerabilities);
 
         Map<Integer, Long[]> scanStatsMap = map();
 
@@ -158,9 +219,43 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
                 System.out.print("(");
             }
         }
+    }
 
-        System.out.println("Critical/High/Medium/Low/Info calculated in " + (System.currentTimeMillis() - start) + " ms.");
+    private List<Integer> getFilteredSeverities(int orgID, int appID) {
 
+        List<Integer> severityIds = list();
+
+        SeverityFilter severityFilter = severityFilterService.loadFilter(orgID, appID);
+
+        if (!severityFilter.getShowInfo()) {
+            severityIds.add(1);
+        }
+        if (!severityFilter.getShowLow()) {
+            severityIds.add(2);
+        }
+        if (!severityFilter.getShowMedium()) {
+            severityIds.add(3);
+        }
+        if (!severityFilter.getShowHigh()) {
+            severityIds.add(4);
+        }
+        if (!severityFilter.getShowCritical()) {
+            severityIds.add(5);
+        }
+
+        return severityIds;
+    }
+
+    private List<Integer> getFilteredVulnerabilities(int orgID, int appID) {
+        List<VulnerabilityFilter> vulnerabilityFilters = vulnerabilityFilterDao.retrieveAllEffective(orgID, appID);
+
+        List<Integer> filteredIds = list();
+
+        for (VulnerabilityFilter vulnerabilityFilter : vulnerabilityFilters) {
+            filteredIds.add(vulnerabilityFilter.getId());
+        }
+
+        return filteredIds;
     }
 
 }

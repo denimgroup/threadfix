@@ -21,20 +21,19 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.data.dao;
+package com.denimgroup.threadfix.data.interfaces;
 
-import com.denimgroup.threadfix.data.entities.StatisticsCounter;
-
-import java.util.List;
-import java.util.Map;
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Organization;
 
 /**
- * Created by mcollins on 5/13/15.
+ * Created by mcollins on 5/18/15.
  */
-public interface StatisticsCounterDao extends GenericObjectDao<StatisticsCounter> {
+public interface MultiLevelFilter {
 
-    Long getCountForSeverity(int scanId, int severity);
+    boolean getGlobal();
+    Application getApplication();
+    Organization getOrganization();
 
-    @SuppressWarnings("unchecked")
-    List<Map<String, Object>> getFindingSeverityMap(List<Integer> filteredSeverities, List<Integer> filteredVulnerabilities);
+
 }
