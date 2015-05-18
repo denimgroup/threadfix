@@ -5,6 +5,10 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.GenericVulnerabilityService;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,7 +50,24 @@ public class CweRestController extends TFRestController{
             genericVulnerabilityService.store(genericVulnerability);
 
         }
-        return RestResponse.success(genericVulnerability);
+        Object response = RestResponse.success(genericVulnerability);
+
+        //Removing redundant 'object.displayId' property from REST Response (We already have object.CweId)
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String serialized = objectMapper.writeValueAsString(response);
+            JSONObject jsonObject = new JSONObject(serialized);
+            jsonObject.getJSONObject("object").remove("displayId");
+            return jsonObject.toString();
+
+        }catch(JsonProcessingException e){
+            log.warn("Exception occurred during parsing/generating JSON");
+            e.printStackTrace();
+        }catch(JSONException e){
+            log.warn("JSON Exception occurred");
+            e.printStackTrace();
+        }
+        return response;
     }
 
 }
