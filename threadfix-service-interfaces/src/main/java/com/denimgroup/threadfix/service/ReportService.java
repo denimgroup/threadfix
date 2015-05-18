@@ -67,6 +67,11 @@ public interface ReportService {
     /**
      * @return List<Report>
      */
+    List<Report> loadAllNonNativeReportsByLocationType(ReportLocation location);
+
+    /**
+     * @return List<Report>
+     */
     @Transactional
     List<Report> loadByLocationType(ReportLocation location);
 

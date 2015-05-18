@@ -23,12 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.annotations.ReportLocation;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.TagService;
-import com.denimgroup.threadfix.service.VulnerabilityService;
+import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
@@ -47,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 @Controller
 @RequestMapping("/reports")
@@ -63,6 +63,10 @@ public class ReportsController {
 	private VulnerabilityService vulnerabilityService;
     @Autowired
     private TagService tagService;
+	@Autowired
+	private ReportService reportService;
+	@Autowired
+	private CacheBustService cacheBustService;
 
 	@ModelAttribute("organizationList")
 	public List<Organization> getOrganizations() {
@@ -91,9 +95,16 @@ public class ReportsController {
         model.addAttribute("isEnterprise", isEnterprise);
         PermissionUtils.addPermissions(model, null, null, Permission.CAN_MANAGE_TAGS);
 
+		// Return custom report entities
+		List<Report> reports = reportService.loadAllNonNativeReportsByLocationType(ReportLocation.ANALYTIC);
+		if (reports != null && reports.size() > 0) {
+			model.addAttribute("reportJsPaths", cacheBustService.notCachedJsPaths(request, reports));
+			model.addAttribute("customReports", reports);
+		}
+
 		return "reports/index";
 	}
-	
+
 	@RequestMapping(value="/{reportId}", method = RequestMethod.GET)
 	public String toReport(@PathVariable("reportId") int reportId, HttpServletRequest request) {
 		ControllerUtils.addItem(request, "reportId", reportId);
