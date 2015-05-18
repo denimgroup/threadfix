@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.dao.StatisticsCounterDao;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
 import com.denimgroup.threadfix.data.entities.StatisticsCounter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,13 +54,46 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
     @Override
     public void updateStatistics(List<Scan> scans) {
-        ensureScanHasStatisticsCounters();
+        checkStatisticsCounters();
 
         runQueries(scans);
     }
 
-    private void ensureScanHasStatisticsCounters() {
+    private void checkStatisticsCounters() {
 
+        addMissingFindingCounters();
+        addMissingMapCounters();
+    }
+
+    private void addMissingMapCounters() {
+        Long total = scanDao.totalMapsThatNeedCounters();
+
+        System.out.println("Total: " + total);
+
+        int current = total.intValue() / 100;
+
+        while (current >= 0) {
+
+            System.out.print(".");
+
+            List<ScanRepeatFindingMap> mapsThatNeedCounters = scanDao.getMapsThatNeedCounters(current);
+
+            for (ScanRepeatFindingMap map : mapsThatNeedCounters) {
+                if (!map.getFinding().isFirstFindingForVuln()) {
+                    continue;
+                }
+
+                StatisticsCounter statisticsCounter = getStatisticsCounter(map);
+                if (statisticsCounter != null) {
+                    System.out.print("-");
+                    statisticsCounterDao.saveOrUpdate(statisticsCounter);
+                }
+            }
+            current --;
+        }
+    }
+
+    private void addMissingFindingCounters() {
         Long total = scanDao.totalFindingsThatNeedCounters();
 
         System.out.println("Total: " + total);

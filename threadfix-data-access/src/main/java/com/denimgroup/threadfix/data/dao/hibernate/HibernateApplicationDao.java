@@ -138,11 +138,6 @@ public class HibernateApplicationDao implements ApplicationDao {
             ints.add((int) result);
         }
 
-        sessionFactory.getCurrentSession().createQuery("select new map(count(*) as total, genericSeverity.intValue as severity)" +
-                " where application = :app and active = true and hidden = false and isFalsePositive = false")
-                .setInteger("app", application.getId())
-                .list();
-
         long result = (Long) sessionFactory.getCurrentSession()
                 .createQuery("select count(*) from Vulnerability vuln " +
                         "where application = :app and active = true and hidden = false and isFalsePositive = false")

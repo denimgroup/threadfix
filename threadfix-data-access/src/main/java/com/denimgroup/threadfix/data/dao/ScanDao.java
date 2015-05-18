@@ -23,11 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
+import com.denimgroup.threadfix.data.entities.*;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import com.denimgroup.threadfix.data.entities.*;
 
 /**
  * Basic DAO class for the Scan entity.
@@ -185,5 +185,10 @@ public interface ScanDao extends GenericObjectDao<Scan> {
 	Long totalFindingsThatNeedCounters();
 
 	List<Finding> getFindingsThatNeedCounters(int page);
+
+	List<ScanRepeatFindingMap> getMapsThatNeedCounters(int current);
+
+	Long totalMapsThatNeedCounters();
+
 }
 

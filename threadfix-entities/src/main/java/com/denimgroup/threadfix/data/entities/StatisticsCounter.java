@@ -44,6 +44,8 @@ public class StatisticsCounter extends BaseEntity {
 
     Finding finding;
 
+    ScanRepeatFindingMap scanRepeatFindingMap;
+
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "findingId")
@@ -54,6 +56,18 @@ public class StatisticsCounter extends BaseEntity {
 
     public void setFinding(Finding finding) {
         this.finding = finding;
+    }
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "scanRepeatFindingMapId")
+    @Index(name="scanRepeatFindingMapId")
+    public ScanRepeatFindingMap getScanRepeatFindingMap() {
+        return scanRepeatFindingMap;
+    }
+
+    public void setScanRepeatFindingMap(ScanRepeatFindingMap scanRepeatFindingMap) {
+        this.scanRepeatFindingMap = scanRepeatFindingMap;
     }
 
     @Column
@@ -145,7 +159,11 @@ public class StatisticsCounter extends BaseEntity {
 
         if (map != null && map.getFinding() != null && map.getScan() != null) {
             StatisticsCounter statisticsCounter = getStatisticsCounter(map.getFinding());
+            if (statisticsCounter == null) {
+                return null;
+            }
             statisticsCounter.scanId = map.getScan().getId();
+            statisticsCounter.setScanRepeatFindingMap(map);
             return statisticsCounter;
         } else {
             return null;

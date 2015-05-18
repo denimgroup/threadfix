@@ -505,4 +505,22 @@ public class HibernateScanDao
 	public Long totalFindingsThatNeedCounters() {
 		return (Long) getBaseCounterCriteria().setProjection(rowCount()).uniqueResult();
 	}
+
+	@Override
+	public List<ScanRepeatFindingMap> getMapsThatNeedCounters(int page) {
+		return getBasicMapCriteria()
+				.setMaxResults(100)
+				.setFirstResult(page * 100)
+				.list();	}
+
+	@Override
+	public Long totalMapsThatNeedCounters() {
+		return (Long) getBasicMapCriteria().setProjection(rowCount()).uniqueResult();
+	}
+
+	private Criteria getBasicMapCriteria() {
+		return sessionFactory.getCurrentSession().createCriteria(ScanRepeatFindingMap.class)
+				.add(isEmpty("statisticsCounters"))
+				;
+	}
 }
