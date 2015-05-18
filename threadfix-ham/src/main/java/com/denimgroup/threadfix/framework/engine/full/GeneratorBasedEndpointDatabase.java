@@ -39,7 +39,7 @@ import static com.denimgroup.threadfix.CollectionUtils.set;
 import static com.denimgroup.threadfix.CollectionUtils.setFrom;
 
 class GeneratorBasedEndpointDatabase implements EndpointDatabase {
-	
+
 	@Nonnull
     private final List<Endpoint> endpoints;
 
@@ -48,26 +48,26 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 
     @Nonnull
 	private final FrameworkType frameworkType;
-	
+
 	private final Map<String, Set<Endpoint>>
 		dynamicMap = new HashMap<>(),
 		staticMap  = new HashMap<>(),
 		parameterMap = new HashMap<>(),
 		httpMethodMap = new HashMap<>();
-	
+
 	protected final static SanitizedLogger log = new SanitizedLogger(GeneratorBasedEndpointDatabase.class);
 
 	public GeneratorBasedEndpointDatabase(@Nonnull EndpointGenerator endpointGenerator,
                                           @Nonnull PathCleaner pathCleaner,
                                           @Nonnull FrameworkType frameworkType) {
-		
+
 		log.info("Using generic EndpointGenerator-based translator.");
-		
+
         endpoints = endpointGenerator.generateEndpoints();
 
 		this.frameworkType = frameworkType;
 		this.pathCleaner = pathCleaner;
-		
+
 		buildMappings();
 	}
 
@@ -76,16 +76,16 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 		for (Endpoint endpoint : endpoints) {
 			addToMap(dynamicMap, endpoint.getUrlPath(), endpoint);
 			addToMap(staticMap, endpoint.getFilePath(), endpoint);
-			
+
 			for (String method : endpoint.getHttpMethods()) {
 				addToMap(httpMethodMap, method, endpoint);
-				
+
 				// If non-standard methods are used, add post because that's what scanners might have
 				if (!"POST".equals(method) && !"GET".equals(method)) {
 					addToMap(httpMethodMap, "POST", endpoint);
 				}
 			}
-			
+
 			if (endpoint.getParameters().isEmpty()) {
 				addToMap(parameterMap, "null", endpoint);
 			} else {
@@ -96,7 +96,7 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 		}
 		log.info("Done building mappings. Static keys: " + staticMap.size() + ", dynamic keys: " + dynamicMap.size());
 	}
-	
+
 	private void addToMap(@Nonnull Map<String, Set<Endpoint>> map,
                           @Nonnull String value, @Nonnull Endpoint endpoint) {
         if (!map.containsKey(value)) {
@@ -105,18 +105,18 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 
         map.get(value).add(endpoint);
 	}
-	
+
 	@Override
 	public Endpoint findBestMatch(@Nonnull EndpointQuery query) {
-		
+
 		Endpoint returnEndpoint = null;
-		
+
 		Set<Endpoint> endpoints = findAllMatches(query);
-		
+
 		if (!endpoints.isEmpty()) {
 			returnEndpoint = endpoints.iterator().next();
 		}
-		
+
 		return returnEndpoint;
 	}
 

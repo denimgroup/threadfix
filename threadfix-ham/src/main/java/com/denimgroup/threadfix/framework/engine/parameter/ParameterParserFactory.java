@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.framework.engine.parameter;
 import com.denimgroup.threadfix.framework.engine.ProjectConfig;
 import com.denimgroup.threadfix.framework.impl.dotNetWebForm.WebFormsParameterParser;
 import com.denimgroup.threadfix.framework.impl.jsp.JSPDataFlowParser;
+import com.denimgroup.threadfix.framework.impl.rails.RailsParameterParser;
 import com.denimgroup.threadfix.framework.impl.spring.SpringDataFlowParser;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 
@@ -49,6 +50,9 @@ public class ParameterParserFactory {
                 break;
             case DOT_NET_WEB_FORMS:
                 parser = new WebFormsParameterParser();
+                break;
+            case RAILS:
+                parser = new RailsParameterParser();
                 break;
             default:
                 LOG.info("Didn't have parser for " + projectConfig.getFrameworkType());
