@@ -27,10 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScanCloseVulnerabilityMap;
-import com.denimgroup.threadfix.data.entities.ScanReopenVulnerabilityMap;
-import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
+import com.denimgroup.threadfix.data.entities.*;
 
 /**
  * Basic DAO class for the Scan entity.
@@ -184,5 +181,9 @@ public interface ScanDao extends GenericObjectDao<Scan> {
      * @return List<Scan>
      */
     List<String> loadScanFilenames();
+
+	Long totalFindingsThatNeedCounters();
+
+	List<Finding> getFindingsThatNeedCounters(int page);
 }
 

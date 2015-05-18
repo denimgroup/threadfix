@@ -42,6 +42,8 @@ import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.CollectionUtils.set;
+import static org.hibernate.criterion.Projections.rowCount;
+import static org.hibernate.criterion.Restrictions.*;
 
 /**
  * Hibernate Scan DAO implementation. Most basic methods are implemented in the
@@ -154,16 +156,16 @@ public class HibernateScanDao
 		Long actualFindings = (Long) sessionFactory.getCurrentSession()
 			 .createCriteria(Finding.class)
 			 .add(Restrictions.isNotNull("vulnerability"))
-			 .add(Restrictions.eq("scan.id", scanId))
-			 .setProjection(Projections.rowCount())
+			 .add(eq("scan.id", scanId))
+			 .setProjection(rowCount())
 			 .uniqueResult();
 		
 		Long mappings = (Long) sessionFactory.getCurrentSession()
 			 .createCriteria(ScanRepeatFindingMap.class)
 			 .createAlias("finding", "finding")
 			 .add(Restrictions.isNotNull("finding.vulnerability"))
-			 .add(Restrictions.eq("scan.id", scanId))
-			 .setProjection(Projections.rowCount())
+			 .add(eq("scan.id", scanId))
+			 .setProjection(rowCount())
 			 .uniqueResult();
 		
 		return actualFindings + mappings;
@@ -173,17 +175,17 @@ public class HibernateScanDao
 	public long getFindingCountUnmapped(Integer scanId) {
 		Long actualFindings = (Long) sessionFactory.getCurrentSession()
 			 .createCriteria(Finding.class)
-			 .add(Restrictions.isNull("vulnerability"))
-			 .add(Restrictions.eq("scan.id", scanId))
-			 .setProjection(Projections.rowCount())
+			 .add(isNull("vulnerability"))
+			 .add(eq("scan.id", scanId))
+			 .setProjection(rowCount())
 			 .uniqueResult();
 		
 		Long mappings = (Long) sessionFactory.getCurrentSession()
 			 .createCriteria(ScanRepeatFindingMap.class)
 			 .createAlias("finding", "finding")
-			 .add(Restrictions.isNull("finding.vulnerability"))
-			 .add(Restrictions.eq("scan.id", scanId))
-			 .setProjection(Projections.rowCount())
+			 .add(isNull("finding.vulnerability"))
+			 .add(eq("scan.id", scanId))
+			 .setProjection(rowCount())
 			 .uniqueResult();
 		
 		return actualFindings + mappings;
@@ -221,9 +223,9 @@ public class HibernateScanDao
 	public long getNumberWithoutChannelVulns(Integer scanId) {
 		return (Long) sessionFactory.getCurrentSession()
 				 .createCriteria(Finding.class)
-				 .add(Restrictions.isNull("channelVulnerability"))
-				 .add(Restrictions.eq("scan.id", scanId))
-				 .setProjection(Projections.rowCount())
+				 .add(isNull("channelVulnerability"))
+				 .add(eq("scan.id", scanId))
+				 .setProjection(rowCount())
 				 .uniqueResult();
 	}
 
@@ -233,8 +235,8 @@ public class HibernateScanDao
 				 .createCriteria(Finding.class)
 				 .createAlias("channelVulnerability", "vuln")
 				 .add(Restrictions.isEmpty( "vuln.vulnerabilityMaps" ))
-				 .add(Restrictions.eq("scan.id", scanId))
-				 .setProjection(Projections.rowCount())
+				 .add(eq("scan.id", scanId))
+				 .setProjection(rowCount())
 				 .uniqueResult();
 	}
 	
@@ -243,15 +245,15 @@ public class HibernateScanDao
 		long numUniqueVulnerabilities = (Long) sessionFactory.getCurrentSession()
 				 .createCriteria(Finding.class)
 				 .createAlias("vulnerability", "vuln")
-				 .add(Restrictions.eq("scan.id", scanId))
+				 .add(eq("scan.id", scanId))
 				 .setProjection(Projections.countDistinct("vuln.id"))
 				 .uniqueResult();
 		
 		long numFindingsWithVulnerabilities = (Long) sessionFactory.getCurrentSession()
 				 .createCriteria(Finding.class)
 				 .add(Restrictions.isNotNull("vulnerability"))
-				 .add(Restrictions.eq("scan.id", scanId))
-				 .setProjection(Projections.rowCount())
+				 .add(eq("scan.id", scanId))
+				 .setProjection(rowCount())
 				 .uniqueResult();
 		
 		return numFindingsWithVulnerabilities - numUniqueVulnerabilities;
@@ -410,7 +412,7 @@ public class HibernateScanDao
 	public int getScanCount() {
 
 		Long result = (Long) getBaseScanCriteria()
-			.setProjection(Projections.rowCount())
+			.setProjection(rowCount())
 			.uniqueResult();
 		
 		return safeLongToInt(result);
@@ -420,7 +422,7 @@ public class HibernateScanDao
 	public int getScanCount(Set<Integer> authenticatedAppIds, Set<Integer> authenticatedTeamIds) {
 
 		Criteria criteria = getBaseScanCriteria()
-			.setProjection(Projections.rowCount());
+			.setProjection(rowCount());
 		
 		
 		Criteria filteredCriteria = addFiltering(criteria, authenticatedTeamIds, authenticatedAppIds);
@@ -432,7 +434,7 @@ public class HibernateScanDao
 		return sessionFactory.getCurrentSession()
 				.createCriteria(Scan.class)
 				.createAlias("application", "app")
-				.add(Restrictions.eq("app.active", true));
+				.add(eq("app.active", true));
 	}
 
     @Nonnull
@@ -455,18 +457,18 @@ public class HibernateScanDao
 		
 		if (useAppIds && useTeamIds) {
 			criteria.createAlias("app.organization", "team")
-				.add(Restrictions.eq("team.active", true))
-				.add(Restrictions.or(
+				.add(eq("team.active", true))
+				.add(or(
 						Restrictions.in("app.id", appIds),
 						Restrictions.in("team.id", teamIds)
-						));
+				));
 		} else if (useAppIds) {
 			criteria
 				.add(Restrictions.in("app.id", appIds));
 		} else {
 			criteria.createAlias("app.organization", "team")
 				.add(Restrictions.in("team.id", teamIds))
-				.add(Restrictions.eq("team.active", true));
+				.add(eq("team.active", true));
 		}
 		return criteria;
 	}
@@ -484,4 +486,23 @@ public class HibernateScanDao
         return sessionFactory.getCurrentSession()
                 .createQuery("select s.fileName from Scan s where s.fileName is not null").list();
     }
+
+	@Override
+	public List<Finding> getFindingsThatNeedCounters(int page) {
+		return getBaseCounterCriteria()
+				.setMaxResults(100)
+				.setFirstResult(page * 100)
+				.list();
+	}
+
+	private Criteria getBaseCounterCriteria() {
+		return sessionFactory.getCurrentSession().createCriteria(Finding.class)
+				.add(isEmpty("statisticsCounters"))
+				;
+	}
+
+	@Override
+	public Long totalFindingsThatNeedCounters() {
+		return (Long) getBaseCounterCriteria().setProjection(rowCount()).uniqueResult();
+	}
 }

@@ -21,20 +21,20 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.webapp.controller;
+package com.denimgroup.threadfix.data.dao;
 
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.denimgroup.threadfix.data.entities.StatisticsCounter;
+
+import java.util.List;
+import java.util.Map;
 
 /**
- * Created by mcollins on 2/17/15.
+ * Created by mcollins on 5/13/15.
  */
-public class CustomJacksonObjectMapper extends ObjectMapper {
+public interface StatisticsCounterDao extends GenericObjectDao<StatisticsCounter> {
 
-    public CustomJacksonObjectMapper() {
-        configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false);
-    }
+    Long getCountForSeverity(int scanId, int severity);
 
-
-
+    @SuppressWarnings("unchecked")
+    List<Map<String, Object>> getFindingSeverityMap();
 }

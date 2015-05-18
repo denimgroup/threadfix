@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Index;
 
 import javax.annotation.Nullable;
 import javax.persistence.*;
@@ -123,6 +124,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	private boolean isStatic;
 	private boolean isFirstFindingForVuln;
 	private boolean isMarkedFalsePositive = false;
+	private Boolean hasStatisticsCounter = false;
 	private Boolean foundHAMEndpoint = false;
 
 	private User user;
@@ -412,7 +414,8 @@ public class Finding extends AuditableEntity implements FindingLike {
 	public void setRawFinding(String rawFinding) {
 		this.rawFinding = rawFinding;
 	}
-	
+
+	@Index(name = "firstFinding")
 	@Column(nullable = false)
 	public boolean isFirstFindingForVuln() {
 		return isFirstFindingForVuln;
@@ -481,6 +484,29 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	public void setAuthenticationRequired(AuthenticationRequired authenticationRequired) {
 		this.authenticationRequired = authenticationRequired;
+	}
+
+	List<StatisticsCounter> statisticsCounters = list();
+
+	@OneToMany(mappedBy = "finding")
+	@Cascade({ org.hibernate.annotations.CascadeType.ALL })
+	@JsonIgnore
+	public List<StatisticsCounter> getStatisticsCounters() {
+		return statisticsCounters;
+	}
+
+	public void setStatisticsCounters(List<StatisticsCounter> statisticsCounters) {
+		this.statisticsCounters = statisticsCounters;
+	}
+
+	@Column
+	@Index(name = "statsCounter")
+	public Boolean getHasStatisticsCounter() {
+		return hasStatisticsCounter != null && hasStatisticsCounter;
+	}
+
+	public void setHasStatisticsCounter(Boolean hasStatisticsCounter) {
+		this.hasStatisticsCounter = hasStatisticsCounter;
 	}
 
 	@Transient

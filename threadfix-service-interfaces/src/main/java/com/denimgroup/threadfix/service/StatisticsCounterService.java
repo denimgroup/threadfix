@@ -21,20 +21,17 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.webapp.controller;
+package com.denimgroup.threadfix.service;
 
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.denimgroup.threadfix.data.entities.Scan;
+
+import java.util.List;
 
 /**
- * Created by mcollins on 2/17/15.
+ * Created by mcollins on 5/13/15.
  */
-public class CustomJacksonObjectMapper extends ObjectMapper {
+public interface StatisticsCounterService {
 
-    public CustomJacksonObjectMapper() {
-        configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false);
-    }
-
-
+    void updateStatistics(List<Scan> scan);
 
 }
