@@ -39,7 +39,6 @@ local.properties
 # TeXlipse plugin
 .texlipse
 
-
 # IntelliJ IDEA #
 
 *.iml

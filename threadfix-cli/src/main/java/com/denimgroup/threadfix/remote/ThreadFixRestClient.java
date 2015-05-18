@@ -82,6 +82,30 @@ public interface ThreadFixRestClient {
     public RestResponse<ScanQueueTask> completeTask(String scanQueueTaskId, String filePath, String secureTaskKey);
     public RestResponse<String> failTask(String scanQueueTaskId, String message, String secureTaskKey);
 
+
+    // QA only
+    public RestResponse<User> trap();
+
+    // QA only
+    public RestResponse<User> createUser(String username, String globalRoleName);
+    // QA only
+    public RestResponse<User> createUser(String username);
+    // QA only
+    public RestResponse<User> addUserTeamAppPermission(String userName, String roleName, String teamName, String appName);
+
+
+    // QA only
+    public RestResponse<Role> createRole(String roleName, Boolean allPermissions);
+    // QA only
+    public RestResponse<Role> createSpecificPermissionRole(String roleName, String permission);
+    // QA only
+    public RestResponse<Role> removePermission(String roleName, String permission);
+
+    // QA only
+    public RestResponse<Tag> createTag(String tagname);
+    // QA only
+    public RestResponse<Tag> attachAppToTag(String tagname, String appname, String teamname);
+
     public RestResponse<Finding> addDynamicFinding(String applicationId, String vulnType, String severity,
                                     String nativeId, String parameter, String longDescription,
                                     String fullUrl, String path);

@@ -1,0 +1,1406 @@
+<?xml version="1.1"?>
+<!-- NOTE: Any NULL bytes in requests and responses are preserved within this output, even though this strictly breaks the XML syntax. If your XML parser rejects the NULL bytes then you will need to remove or replace these bytes before parsing. -->
+<!DOCTYPE issues [
+<!ELEMENT issues (issue*)>
+<!ATTLIST issues burpVersion CDATA "">
+<!ATTLIST issues exportTime CDATA "">
+<!ELEMENT issue (serialNumber, type, name, host, path, location, severity, confidence, issueBackground?, remediationBackground?, issueDetail?, remediationDetail?, requestresponse*)>
+<!ELEMENT serialNumber (#PCDATA)>
+<!ELEMENT type (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT host (#PCDATA)>
+<!ATTLIST host ip CDATA "">
+<!ELEMENT path (#PCDATA)>
+<!ELEMENT location (#PCDATA)>
+<!ELEMENT severity (#PCDATA)>
+<!ELEMENT confidence (#PCDATA)>
+<!ELEMENT issueBackground (#PCDATA)>
+<!ELEMENT remediationBackground (#PCDATA)>
+<!ELEMENT issueDetail (#PCDATA)>
+<!ELEMENT remediationDetail (#PCDATA)>
+<!ELEMENT requestresponse (request?, response?, responseRedirected?)>
+<!ELEMENT request (#PCDATA)>
+<!ELEMENT response (#PCDATA)>
+<!ELEMENT responseRedirected (#PCDATA)>
+]>
+<issues burpVersion="1.4" exportTime="Mon Jun 13 14:52:47 CDT 2011">
+  <issue>
+    <serialNumber>6245572582880674816</serialNumber>
+    <type>8389632</type>
+    <name>Content type incorrectly stated</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/DirectoryIndexing/admin.txt]]></path>
+    <location><![CDATA[/demo/DirectoryIndexing/admin.txt]]></location>
+    <severity>Information</severity>
+    <confidence>Firm</confidence>
+    <issueBackground><![CDATA[If a web response specifies an incorrect content type, then browsers may process the response in unexpected ways. If the specified content type is a renderable text-based format, then the browser will usually attempt to parse and render the response in that format. If the specified type is an image format, then the browser will usually detect the anomaly and will analyse the actual content and attempt to determine its MIME type. Either case can lead to unexpected results, and if the content contains any user-controllable data may lead to cross-site scripting or other client-side vulnerabilities.<br><br>In most cases, the presence of an incorrect content type statement does not constitute a security flaw, particularly if the response contains static content. You should review the contents of the response and the context in which it appears to determine whether any vulnerability exists.]]></issueBackground>
+    <remediationBackground><![CDATA[For every response containing a message body, the application should include a single Content-type header which correctly and unambiguously states the MIME type of the content in the response body.]]></remediationBackground>
+    <issueDetail><![CDATA[The response contains the following Content-type statement:<ul><li>Content-Type: text/plain</li></ul>The response states that it contains <b>plain text</b>. However, it actually appears to contain <b>HTML</b>.]]></issueDetail>
+    <requestresponse>
+      <request><![CDATA[GET /demo/DirectoryIndexing/admin.txt HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+Referer: http://tftarget/demo/DirectoryIndexing/
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:52 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+Last-Modified: Wed, 01 Jun 2011 19:59:54 GMT
+ETag: "1000000023445-e2-4a4abf6cf8280"
+Accept-Ranges: bytes
+Content-Length: 226
+Connection: close
+Content-Type: text/plain
+
+admin.txt
+
+MySQL config
+username: root
+password: root
+
+var;%20%0D%0AContent-Length:%200%0D%0A%0D%0AHTTP/1.1%20200%20OK%0D%0AContent-Type:%20text/html%0D%0AContent-Length:%2031%0D%0A<html>Hacked%20by%20yehg.org</html>
+
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>1546251653222968320</serialNumber>
+    <type>6291712</type>
+    <name>Directory listing</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/DirectoryIndexing/]]></path>
+    <location><![CDATA[/demo/DirectoryIndexing/]]></location>
+    <severity>Information</severity>
+    <confidence>Firm</confidence>
+    <issueBackground><![CDATA[Directory listings do not necessarily constitute a security vulnerability. Any sensitive resources within your web root should be properly access-controlled in any case, and should not be accessible by an unauthorised party who happens to know the URL. Nevertheless, directory listings can aid an attacker by enabling them to quickly identify the resources at a given path, and proceed directly to analysing and attacking them.]]></issueBackground>
+    <remediationBackground><![CDATA[There is not usually any good reason to provide directory listings, and disabling them may place additional hurdles in the path of an attacker. This can normally be achieved in two ways:<ul><li>Configure your web server to prevent directory listings for all paths beneath the web root; </li><li>Place into each directory a default file (such as index.htm) which the web server will display instead of returning a directory listing.</li></ul>]]></remediationBackground>
+    <requestresponse>
+      <request><![CDATA[GET /demo/DirectoryIndexing/ HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+Referer: http://tftarget/demo/
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:48 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+Content-Length: 297
+Connection: close
+Content-Type: text/html;charset=UTF-8
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+ <head>
+  <title>Index of /demo/DirectoryIndexing</title>
+ </head>
+ <body>
+<h1>Index of /demo/DirectoryIndexing</h1>
+<ul><li><a href="/demo/"> Parent Directory</a></li>
+<li><a href="admin.txt"> admin.txt</a></li>
+</ul>
+</body></html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>5052297586238244864</serialNumber>
+    <type>8389120</type>
+    <name>HTML does not specify charset</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/OSCommandInjection2.php]]></path>
+    <location><![CDATA[/demo/OSCommandInjection2.php]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[If a web response states that it contains HTML content but does not specify a character set, then the browser may analyse the HTML and attempt to determine which character set it appears to be using. Even if the majority of the HTML actually employs a standard character set such as UTF-8, the presence of non-standard characters anywhere in the response may cause the browser to interpret the content using a different character set. This can have unexpected results, and can lead to cross-site scripting vulnerabilities in which non-standard encodings like UTF-7 can be used to bypass the application's defensive filters.<br><br>In most cases, the absence of a charset directive does not constitute a security flaw, particularly if the response contains static content. You should review the contents of the response and the context in which it appears to determine whether any vulnerability exists.]]></issueBackground>
+    <remediationBackground><![CDATA[For every response containing HTML content, the application should include within the Content-type header a directive specifying a standard recognised character set, for example <b>charset=ISO-8859-1</b>.]]></remediationBackground>
+    <requestresponse>
+      <request><![CDATA[GET /demo/OSCommandInjection2.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:44:01 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 366
+Connection: close
+Content-Type: text/html
+
+<!-- OS Command Injection 2  -->
+<!-- This page realizes an OS Command Injection vulnerability. -->
+
+<html>
+	<head>
+		<title>OS Command Injection</title>
+	</head>
+	<body>
+		<pre>
+			
+Notice: Undefined index: fileName in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\OSCommandInjection2.php on line 12
+1		</pre>
+	</body>
+</html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>4636012210865943552</serialNumber>
+    <type>8389632</type>
+    <name>Content type incorrectly stated</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/PathTraversal.php]]></path>
+    <location><![CDATA[/demo/PathTraversal.php]]></location>
+    <severity>Information</severity>
+    <confidence>Firm</confidence>
+    <issueBackground><![CDATA[If a web response specifies an incorrect content type, then browsers may process the response in unexpected ways. If the specified content type is a renderable text-based format, then the browser will usually attempt to parse and render the response in that format. If the specified type is an image format, then the browser will usually detect the anomaly and will analyse the actual content and attempt to determine its MIME type. Either case can lead to unexpected results, and if the content contains any user-controllable data may lead to cross-site scripting or other client-side vulnerabilities.<br><br>In most cases, the presence of an incorrect content type statement does not constitute a security flaw, particularly if the response contains static content. You should review the contents of the response and the context in which it appears to determine whether any vulnerability exists.]]></issueBackground>
+    <remediationBackground><![CDATA[For every response containing a message body, the application should include a single Content-type header which correctly and unambiguously states the MIME type of the content in the response body.]]></remediationBackground>
+    <issueDetail><![CDATA[The response contains the following Content-type statement:<ul><li>Content-Type: text/html</li></ul>The response states that it contains <b>HTML</b>. However, it actually appears to contain <b>plain text</b>.]]></issueDetail>
+    <requestresponse>
+      <request><![CDATA[GET /demo/PathTraversal.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:48 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 147
+Connection: close
+Content-Type: text/html
+
+
+Parse error: syntax error, unexpected ';' in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\PathTraversal.php on line 10
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>3295474588815328256</serialNumber>
+    <type>2097920</type>
+    <name>Cross-site scripting (reflected)</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/EvalInjection2.php]]></path>
+    <location><![CDATA[/demo/EvalInjection2.php [command parameter]]]></location>
+    <severity>High</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[Reflected cross-site scripting vulnerabilities arise when data is copied from a request and echoed into the application's immediate response in an unsafe way. An attacker can use the vulnerability to construct a request which, if issued by another application user, will cause JavaScript code supplied by the attacker to execute within the user's browser in the context of that user's session with the application.<br><br>The attacker-supplied code can perform a wide variety of actions, such as stealing the victim's session token or login credentials, performing arbitrary actions on the victim's behalf, and logging their keystrokes.<br><br>Users can be induced to issue the attacker's crafted request in various ways. For example, the attacker can send a victim a link containing a malicious URL in an email or instant message. They can submit the link to popular web sites that allow content authoring, for example in blog comments. And they can create an innocuous looking web site which causes anyone viewing it to make arbitrary cross-domain requests to the vulnerable application (using either the GET or the POST method).<br><br>The security impact of cross-site scripting vulnerabilities is dependent upon the nature of the vulnerable application, the kinds of data and functionality which it contains, and the other applications which belong to the same domain and organisation. If the application is used only to display non-sensitive public content, with no authentication or access control functionality, then a cross-site scripting flaw may be considered low risk. However, if the same application resides on a domain which can access cookies for other more security-critical applications, then the vulnerability could be used to attack those other applications, and so may be considered high risk. Similarly, if the organisation which owns the application is a likely target for phishing attacks, then the vulnerability could be leveraged to lend credibility to such attacks, by injecting Trojan functionality into the vulnerable application, and exploiting users' trust in the organisation in order to capture credentials for other applications which it owns. In many kinds of application, such as those providing online banking functionality, cross-site scripting should always be considered high risk.]]></issueBackground>
+    <remediationBackground><![CDATA[In most situations where user-controllable data is copied into application responses, cross-site scripting attacks can be prevented using two layers of defences:<ul><li>Input should be validated as strictly as possible on arrival, given the kind of content which it is expected to contain. For example, personal names should consist of alphabetical and a small range of typographical characters, and be relatively short; a year of birth should consist of exactly four numerals; email addresses should match a well-defined regular expression. Input which fails the validation should be rejected, not sanitised.</li><li>User input should be HTML-encoded at any point where it is copied into application responses. All HTML metacharacters, including &lt; &gt; " ' and =, should be replaced with the corresponding HTML entities (&amp;lt; &amp;gt; etc).</li></ul>In cases where the application's functionality allows users to author content using a restricted subset of HTML tags and attributes (for example, blog comments which allow limited formatting and linking), it is necessary to parse the supplied HTML to validate that it does not use any dangerous syntax; this is a non-trivial task.]]></remediationBackground>
+    <issueDetail><![CDATA[The value of the command request parameter is copied into the HTML document as plain text between tags. The payload <b>7b65f&lt;script&gt;alert(1)&lt;<wbr>/script&gt;bd443a2a95d</b> was submitted in the command parameter. This input was echoed unmodified in the application's response.<br><br>This proof-of-concept attack demonstrates that it is possible to inject arbitrary JavaScript into the application's response.]]></issueDetail>
+    <requestresponse>
+      <request><![CDATA[POST /demo/EvalInjection2.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+Referer: http://tftarget/demo/EvalInjection.php
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 32
+
+command=555-555-0199@example.com7b65f<script>alert(1)</script>bd443a2a95d]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:44:02 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 260
+Connection: close
+Content-Type: text/html
+
+<!-- Eval Injection 2  -->
+<!-- This page realizes an Eval Injection vulnerability. -->
+
+<html>
+	<head>
+		<title>Eval Injection</title>
+	</head>
+	<body>
+		<pre>555-555-0199@example.com7b65f<script>alert(1)</script>bd443a2a95d</pre>
+	</body>
+</html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>4583408969376884736</serialNumber>
+    <type>8389120</type>
+    <name>HTML does not specify charset</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/SQLI.php]]></path>
+    <location><![CDATA[/demo/SQLI.php]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[If a web response states that it contains HTML content but does not specify a character set, then the browser may analyse the HTML and attempt to determine which character set it appears to be using. Even if the majority of the HTML actually employs a standard character set such as UTF-8, the presence of non-standard characters anywhere in the response may cause the browser to interpret the content using a different character set. This can have unexpected results, and can lead to cross-site scripting vulnerabilities in which non-standard encodings like UTF-7 can be used to bypass the application's defensive filters.<br><br>In most cases, the absence of a charset directive does not constitute a security flaw, particularly if the response contains static content. You should review the contents of the response and the context in which it appears to determine whether any vulnerability exists.]]></issueBackground>
+    <remediationBackground><![CDATA[For every response containing HTML content, the application should include within the Content-type header a directive specifying a standard recognised character set, for example <b>charset=ISO-8859-1</b>.]]></remediationBackground>
+    <requestresponse>
+      <request><![CDATA[GET /demo/SQLI.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+Referer: http://tftarget/demo/
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:48 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 608
+Connection: close
+Content-Type: text/html
+
+<!--
+SQL Injection test page
+This page's intended use is to show unauthorized password retrieval using SQL Injection.
+This is the submission form.
+-->
+
+<html>
+	<head>
+		<title>SQL Injection Test</title>
+	</head>
+	<body>
+	<h2> User Search </h2>
+	Possible payloads (in progress) :
+	<ul>
+		<li>Jimmy"; SELECT id, password as name FROM users where name = "Jimmy</li>
+		<li>John"; SELECT id, password as name FROM users where name = "John</li>
+	</ul>
+	<form action="SQLI2.php" method="post">
+		Name: <input type="text" name="username" />
+		<input type="submit" />
+	</form>
+	</body>
+</html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>3993330662501398528</serialNumber>
+    <type>1049088</type>
+    <name>SQL injection</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/SQLI2.php]]></path>
+    <location><![CDATA[/demo/SQLI2.php [username parameter]]]></location>
+    <severity>High</severity>
+    <confidence>Firm</confidence>
+    <issueBackground><![CDATA[SQL injection vulnerabilities arise when user-controllable data is incorporated into database SQL queries in an unsafe manner. An attacker can supply crafted input to break out of the data context in which their input appears and interfere with the structure of the surrounding query.<br><br>Various attacks can be delivered via SQL injection, including reading or modifying critical application data, interfering with application logic, escalating privileges within the database and executing operating system commands.]]></issueBackground>
+    <remediationBackground><![CDATA[The most effective way to prevent SQL injection attacks is to use parameterised queries (also known as prepared statements) for all database access. This method uses two steps to incorporate potentially tainted data into SQL queries: first, the application specifies the structure of the query, leaving placeholders for each item of user input; second, the application specifies the contents of each placeholder. Because the structure of the query has already defined in the first step, it is not possible for malformed data in the second step to interfere with the query structure. You should review the documentation for your database and application platform to determine the appropriate APIs which you can use to perform parameterised queries. It is strongly recommended that you parameterise <i>every</i> variable data item that is incorporated into database queries, even if it is not obviously tainted, to prevent oversights occurring and avoid vulnerabilities being introduced by changes elsewhere within the code base of the application.<br><br>You should be aware that some commonly employed and recommended mitigations for SQL injection vulnerabilities are not always effective:<ul><li>One common defence is to double up any single quotation marks appearing within user input before incorporating that input into a SQL query. This defence is designed to prevent malformed data from terminating the string in which it is inserted. However, if the data being incorporated into queries is numeric, then the defence may fail, because numeric data may not be encapsulated within quotes, in which case only a space is required to break out of the data context and interfere with the query. Further, in second-order SQL injection attacks, data that has been safely escaped when initially inserted into the database is subsequently read from the database and then passed back to it again. Quotation marks that have been doubled up initially will return to their original form when the data is reused, allowing the defence to be bypassed.</li><li>Another often cited defence is to use stored procedures for database access. While stored procedures can provide security benefits, they are not guaranteed to prevent SQL injection attacks. The same kinds of vulnerabilities that arise within standard dynamic SQL queries can arise if any SQL is dynamically constructed within stored procedures. Further, even if the procedure is sound, SQL injection can arise if the procedure is invoked in an unsafe manner using user-controllable data.</li></ul>]]></remediationBackground>
+    <issueDetail><![CDATA[The username parameter appears to be vulnerable to SQL injection attacks. The payload <b>"</b> was submitted in the username parameter, and a database error message was returned. You should review the contents of the error message, and the application's handling of other input, to confirm whether a vulnerability is present.<br><br>The database appears to be MySQL.]]></issueDetail>
+    <remediationDetail><![CDATA[The application should handle errors gracefully and prevent SQL error messages from being returned in responses. ]]></remediationDetail>
+    <requestresponse>
+      <request><![CDATA[POST /demo/SQLI2.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+Referer: http://tftarget/demo/SQLI.php
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 21
+
+username=Peter+Wiener"]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:55 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 527
+Connection: close
+Content-Type: text/html
+
+<!--
+SQL Injection test page
+This page's intended use is to show unauthorized password retrieval using SQL Injection.
+This is the submission form.
+Jimmy"; SELECT id, password as name FROM users where name = "Jimmy
+-->
+
+<html>
+	<head>
+		<title>SQL Injection Test</title>
+	</head>
+	<body>
+	<h2> Search Result </h2>
+		Error Message: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '"Peter Wiener""' at line 1
+ 
+	</body>
+</html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>6606573814891010048</serialNumber>
+    <type>8389120</type>
+    <name>HTML does not specify charset</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/SQLI2.php]]></path>
+    <location><![CDATA[/demo/SQLI2.php]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[If a web response states that it contains HTML content but does not specify a character set, then the browser may analyse the HTML and attempt to determine which character set it appears to be using. Even if the majority of the HTML actually employs a standard character set such as UTF-8, the presence of non-standard characters anywhere in the response may cause the browser to interpret the content using a different character set. This can have unexpected results, and can lead to cross-site scripting vulnerabilities in which non-standard encodings like UTF-7 can be used to bypass the application's defensive filters.<br><br>In most cases, the absence of a charset directive does not constitute a security flaw, particularly if the response contains static content. You should review the contents of the response and the context in which it appears to determine whether any vulnerability exists.]]></issueBackground>
+    <remediationBackground><![CDATA[For every response containing HTML content, the application should include within the Content-type header a directive specifying a standard recognised character set, for example <b>charset=ISO-8859-1</b>.]]></remediationBackground>
+    <requestresponse>
+      <request><![CDATA[GET /demo/SQLI2.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:53 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 481
+Connection: close
+Content-Type: text/html
+
+<!--
+SQL Injection test page
+This page's intended use is to show unauthorized password retrieval using SQL Injection.
+This is the submission form.
+Jimmy"; SELECT id, password as name FROM users where name = "Jimmy
+-->
+
+<html>
+	<head>
+		<title>SQL Injection Test</title>
+	</head>
+	<body>
+	<h2> Search Result </h2>
+		
+Notice: Undefined index: username in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\SQLI2.php on line 16
+ 
+	</body>
+</html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>9002034926150259712</serialNumber>
+    <type>8389120</type>
+    <name>HTML does not specify charset</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/]]></path>
+    <location><![CDATA[/demo/]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[If a web response states that it contains HTML content but does not specify a character set, then the browser may analyse the HTML and attempt to determine which character set it appears to be using. Even if the majority of the HTML actually employs a standard character set such as UTF-8, the presence of non-standard characters anywhere in the response may cause the browser to interpret the content using a different character set. This can have unexpected results, and can lead to cross-site scripting vulnerabilities in which non-standard encodings like UTF-7 can be used to bypass the application's defensive filters.<br><br>In most cases, the absence of a charset directive does not constitute a security flaw, particularly if the response contains static content. You should review the contents of the response and the context in which it appears to determine whether any vulnerability exists.]]></issueBackground>
+    <remediationBackground><![CDATA[For every response containing HTML content, the application should include within the Content-type header a directive specifying a standard recognised character set, for example <b>charset=ISO-8859-1</b>.]]></remediationBackground>
+    <requestresponse>
+      <request><![CDATA[GET /demo/ HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:48 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+Last-Modified: Thu, 09 Jun 2011 14:24:57 GMT
+ETag: "2000000023431-384-4a54837b0b761"
+Accept-Ranges: bytes
+Content-Length: 900
+Connection: close
+Content-Type: text/html
+
+<!-- XSS TEST - STORED -->
+<!-- The goal is to pull the payload from the database. After that we'll see. -->
+
+<html>
+	<head>
+		<title>Threadfix Vulnerability Demos</title>
+	</head>
+	<body>
+	<h2> Demo List </h2>
+	<ol>
+		<li><a href="XSS.php">XSS</a><br/></li>
+		<li><a href="SQLI.php">SQL Injection</a><br/></li>
+		<li><a href="PredictableResource.php">Predictable Resource Location</a><br/></li>
+		<li><a href="PathTraversal.php?action=PathTraversal.php">Path Traversal</a></li>
+		<li><a href="DirectoryIndexing/">Directory Indexing</a></li>
+		<li><a href="XPathInjection.php">XPath Injection</a></li>
+		<li><a href="LDAPInjection.php">LDAP Injection</a></li>
+		<li><a href="FormatString.php">Format String Injection</a></li>
+		<li><a href="OSCommandInjection.php">OS Command Injection</a></li>
+		<li><a href="EvalInjection.php">Eval Injection</a></li>
+	</ol>
+	</body>
+</html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>8932068351221153792</serialNumber>
+    <type>8389120</type>
+    <name>HTML does not specify charset</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/XPathInjection.php]]></path>
+    <location><![CDATA[/demo/XPathInjection.php]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[If a web response states that it contains HTML content but does not specify a character set, then the browser may analyse the HTML and attempt to determine which character set it appears to be using. Even if the majority of the HTML actually employs a standard character set such as UTF-8, the presence of non-standard characters anywhere in the response may cause the browser to interpret the content using a different character set. This can have unexpected results, and can lead to cross-site scripting vulnerabilities in which non-standard encodings like UTF-7 can be used to bypass the application's defensive filters.<br><br>In most cases, the absence of a charset directive does not constitute a security flaw, particularly if the response contains static content. You should review the contents of the response and the context in which it appears to determine whether any vulnerability exists.]]></issueBackground>
+    <remediationBackground><![CDATA[For every response containing HTML content, the application should include within the Content-type header a directive specifying a standard recognised character set, for example <b>charset=ISO-8859-1</b>.]]></remediationBackground>
+    <requestresponse>
+      <request><![CDATA[GET /demo/XPathInjection.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+Referer: http://tftarget/demo/
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:52 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 588
+Connection: close
+Content-Type: text/html
+
+<!-- XPath Injection  -->
+<!-- This page demonstrates an XPath Injection vulnerability. -->
+<html>
+	<head>
+		<title>XPath Injection</title>
+	</head>
+	<body>
+	<h2> XPath Injection </h2>
+	This is a login created to be vulnerable to XPath Injection.<br/>
+	This payload in the user field enables you to login with no security credentials.<br/>
+	' or 1=1 or ''='
+	
+	<form action="XPathInjection2.php" method="post">
+		Name: <input type="text" name="username" /><br/>
+		Password: <input type="text" name="password" /><br/>
+		<input type="submit" />
+	</form>
+	</body>
+</html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>2132573365222095872</serialNumber>
+    <type>8389120</type>
+    <name>HTML does not specify charset</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/XSS-cookie.php]]></path>
+    <location><![CDATA[/demo/XSS-cookie.php]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[If a web response states that it contains HTML content but does not specify a character set, then the browser may analyse the HTML and attempt to determine which character set it appears to be using. Even if the majority of the HTML actually employs a standard character set such as UTF-8, the presence of non-standard characters anywhere in the response may cause the browser to interpret the content using a different character set. This can have unexpected results, and can lead to cross-site scripting vulnerabilities in which non-standard encodings like UTF-7 can be used to bypass the application's defensive filters.<br><br>In most cases, the absence of a charset directive does not constitute a security flaw, particularly if the response contains static content. You should review the contents of the response and the context in which it appears to determine whether any vulnerability exists.]]></issueBackground>
+    <remediationBackground><![CDATA[For every response containing HTML content, the application should include within the Content-type header a directive specifying a standard recognised character set, for example <b>charset=ISO-8859-1</b>.]]></remediationBackground>
+    <requestresponse>
+      <request><![CDATA[GET /demo/XSS-cookie.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+Referer: http://tftarget/demo/XSS.php
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:57 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 923
+Connection: close
+Content-Type: text/html
+
+<!--
+Response Splitting
+Injecting a newline into a cookie allows you to return any http response you want.
+This page exhibits this vulnerability.
+
+value2;%0d%0aContent-Length:%200%0d%0a%0d%0aHTTP/1.1%20302%20Moved%20Temporarily%0d%0aContent-Type:%20text/html%0d%0aContent-Length%2026%0d%0a%0d%0a<html><h2>DONE</h2></html>
+302%20Moved%20Temporarily
+-->
+
+
+Notice: Undefined index: username in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\XSS-cookie.php on line 11
+
+<html>
+	<head>
+		<title>Response Splitting</title>
+	</head>
+	<body>
+		<h2> Response Splitting </h2>
+		The cookie's value is 
+Notice: Undefined index: vuln in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\XSS-cookie.php on line 26
+		<form action="ResponseSplitting.php" method="post">
+			Name: <input type="text" name="username" />
+			<input type="submit" />
+		</form>
+	</body>
+</html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>6800421540366612480</serialNumber>
+    <type>8389120</type>
+    <name>HTML does not specify charset</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/OSCommandInjection.php]]></path>
+    <location><![CDATA[/demo/OSCommandInjection.php]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[If a web response states that it contains HTML content but does not specify a character set, then the browser may analyse the HTML and attempt to determine which character set it appears to be using. Even if the majority of the HTML actually employs a standard character set such as UTF-8, the presence of non-standard characters anywhere in the response may cause the browser to interpret the content using a different character set. This can have unexpected results, and can lead to cross-site scripting vulnerabilities in which non-standard encodings like UTF-7 can be used to bypass the application's defensive filters.<br><br>In most cases, the absence of a charset directive does not constitute a security flaw, particularly if the response contains static content. You should review the contents of the response and the context in which it appears to determine whether any vulnerability exists.]]></issueBackground>
+    <remediationBackground><![CDATA[For every response containing HTML content, the application should include within the Content-type header a directive specifying a standard recognised character set, for example <b>charset=ISO-8859-1</b>.]]></remediationBackground>
+    <requestresponse>
+      <request><![CDATA[GET /demo/OSCommandInjection.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+Referer: http://tftarget/demo/
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:52 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 641
+Connection: close
+Content-Type: text/html
+
+<!-- OS Command Injection  -->
+<!-- This page demonstrates an OS Command Injection vulnerability. -->
+<html>
+	<head>
+		<title>OS Command Injection</title>
+	</head>
+	<body>
+	<h2> OS Command Injection </h2>
+	This is a submission page created to be vulnerable to OS Command Injection.<br/>
+	The input is prefaced by the Windows type command. You can view file contents.<br/>
+	I edited w3af to find a real vulnerability instead of an informational finding here.<br/>
+	
+	<form action="OSCommandInjection2.php" method="post">
+		File: <input type="text" name="fileName" /><br/>
+		<input type="submit" />
+	</form>
+	</body>
+</html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>885313499681931264</serialNumber>
+    <type>8389120</type>
+    <name>HTML does not specify charset</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/PredictableResource.php]]></path>
+    <location><![CDATA[/demo/PredictableResource.php]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[If a web response states that it contains HTML content but does not specify a character set, then the browser may analyse the HTML and attempt to determine which character set it appears to be using. Even if the majority of the HTML actually employs a standard character set such as UTF-8, the presence of non-standard characters anywhere in the response may cause the browser to interpret the content using a different character set. This can have unexpected results, and can lead to cross-site scripting vulnerabilities in which non-standard encodings like UTF-7 can be used to bypass the application's defensive filters.<br><br>In most cases, the absence of a charset directive does not constitute a security flaw, particularly if the response contains static content. You should review the contents of the response and the context in which it appears to determine whether any vulnerability exists.]]></issueBackground>
+    <remediationBackground><![CDATA[For every response containing HTML content, the application should include within the Content-type header a directive specifying a standard recognised character set, for example <b>charset=ISO-8859-1</b>.]]></remediationBackground>
+    <requestresponse>
+      <request><![CDATA[GET /demo/PredictableResource.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+Referer: http://tftarget/demo/
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:48 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 375
+Connection: close
+Content-Type: text/html
+
+<!-- Predictable Resource
+     This file tells you where the (hopefully) poorly hidden files are. -->
+	 
+<html>
+	<head>
+		<title>Predictable Resource Location</title>
+	</head>
+	<body>
+	<h2> Predictable Resource Location </h2>
+
+	<ul>
+		<li>There is a backup of this file at http://192.168.1.30:8080/demo/PredictableResource.php.bak</li>
+	</ul>
+	</body>
+</html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>4718065776296858624</serialNumber>
+    <type>8389120</type>
+    <name>HTML does not specify charset</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/XSS.php]]></path>
+    <location><![CDATA[/demo/XSS.php]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[If a web response states that it contains HTML content but does not specify a character set, then the browser may analyse the HTML and attempt to determine which character set it appears to be using. Even if the majority of the HTML actually employs a standard character set such as UTF-8, the presence of non-standard characters anywhere in the response may cause the browser to interpret the content using a different character set. This can have unexpected results, and can lead to cross-site scripting vulnerabilities in which non-standard encodings like UTF-7 can be used to bypass the application's defensive filters.<br><br>In most cases, the absence of a charset directive does not constitute a security flaw, particularly if the response contains static content. You should review the contents of the response and the context in which it appears to determine whether any vulnerability exists.]]></issueBackground>
+    <remediationBackground><![CDATA[For every response containing HTML content, the application should include within the Content-type header a directive specifying a standard recognised character set, for example <b>charset=ISO-8859-1</b>.]]></remediationBackground>
+    <requestresponse>
+      <request><![CDATA[GET /demo/XSS.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+Referer: http://tftarget/demo/
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:48 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 322
+Connection: close
+Content-Type: text/html
+
+<!-- XSS  -->
+<!-- This page just links to the two XSS pages. -->
+<html>
+	<head>
+		<title>XSS</title>
+	</head>
+	<body>
+	<h2> XSS Demo List </h2>
+		<a href="XSS-reflected.php">Reflected XSS</a><br/>
+		<a href="XSS-stored.php">Stored XSS</a><br/>
+		<a href="XSS-cookie.php">Cookie XSS</a><br/>
+	</body>
+</html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>5616851221970018304</serialNumber>
+    <type>1048832</type>
+    <name>OS command injection</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/OSCommandInjection2.php]]></path>
+    <location><![CDATA[/demo/OSCommandInjection2.php [fileName parameter]]]></location>
+    <severity>High</severity>
+    <confidence>Firm</confidence>
+    <issueBackground><![CDATA[Operating system command injection vulnerabilities arise when an application incorporates user-controllable data into a command that is processed by a shell command interpreter. If the user data is not strictly validated, an attacker can use shell metacharacters to modify the command to be executed, and inject arbitrary further commands that will be executed by the server.<br><br>OS command injection vulnerabilities are usually very serious and may lead to compromise of the server hosting the application, or of the application's own data and functionality. The exact potential for exploitation may depend upon the security context in which the command is executed, and the privileges which this context has regarding sensitive resources on the server.]]></issueBackground>
+    <remediationBackground><![CDATA[If possible, applications should avoid incorporating user-controllable data into operating system commands. In almost every situation, there are safer alternative methods of performing server-level tasks, which cannot be manipulated to perform additional commands than the one intended.<br><br>If it is considered unavoidable to incorporate user-supplied data into operating system commands, the following two layers of defence should be used to prevent attacks:<ul><li>The user data should be strictly validated. Ideally, a whitelist of specific accepted values should be used. Otherwise, only short alphanumeric strings should be accepted. Input containing any other data, including any conceivable shell metacharacter or whitespace, should be rejected.</li><li>The application should use command APIs that launch a specific process via its name and command-line parameters, rather than passing a command string to a shell interpreter that supports command chaining and redirection. For example, the Java API Runtime.exec and the ASP.NET API Process.Start do not support shell metacharacters. This defence can mitigate the impact of an attack even in the event that an attacker circumvents the input validation defences.</li></ul>]]></remediationBackground>
+    <issueDetail><![CDATA[The fileName parameter appears to be vulnerable to OS command injection attacks. It is possible to use  the ampersand character (&)  to inject arbitrary OS commands and retrieve the output in the application's responses.<br><br>The payload <b>%26echo%20a1cf3d1ff8<wbr>804333%20b37eb3f2418e5a53<wbr>%26</b> was submitted in the fileName parameter. The application's response appears to contain the output from the injected command, indicating that the command was executed.]]></issueDetail>
+    <requestresponse>
+      <request><![CDATA[POST /demo/OSCommandInjection2.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+Referer: http://tftarget/demo/OSCommandInjection.php
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 21
+
+fileName=Peter+Wiener%26echo%20a1cf3d1ff8804333%20b37eb3f2418e5a53%26]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:44:04 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 256
+Connection: close
+Content-Type: text/html
+
+<!-- OS Command Injection 2  -->
+<!-- This page realizes an OS Command Injection vulnerability. -->
+
+<html>
+	<head>
+		<title>OS Command Injection</title>
+	</head>
+	<body>
+		<pre>
+			a1cf3d1ff8804333 b37eb3f2418e5a53
+0		</pre>
+	</body>
+</html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>3314671521517694976</serialNumber>
+    <type>8389120</type>
+    <name>HTML does not specify charset</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/LDAPInjection2.php]]></path>
+    <location><![CDATA[/demo/LDAPInjection2.php]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[If a web response states that it contains HTML content but does not specify a character set, then the browser may analyse the HTML and attempt to determine which character set it appears to be using. Even if the majority of the HTML actually employs a standard character set such as UTF-8, the presence of non-standard characters anywhere in the response may cause the browser to interpret the content using a different character set. This can have unexpected results, and can lead to cross-site scripting vulnerabilities in which non-standard encodings like UTF-7 can be used to bypass the application's defensive filters.<br><br>In most cases, the absence of a charset directive does not constitute a security flaw, particularly if the response contains static content. You should review the contents of the response and the context in which it appears to determine whether any vulnerability exists.]]></issueBackground>
+    <remediationBackground><![CDATA[For every response containing HTML content, the application should include within the Content-type header a directive specifying a standard recognised character set, for example <b>charset=ISO-8859-1</b>.]]></remediationBackground>
+    <requestresponse>
+      <request><![CDATA[GET /demo/LDAPInjection2.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:57 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 344
+Connection: close
+Content-Type: text/html
+
+<!-- LDAP Injection 2  -->
+<!-- This page realizes an LDAP Injection vulnerability. -->
+
+<html>
+	<head>
+		<title>LDAP Injection2</title>
+	</head>
+	<body>
+	
+	
+Notice: Undefined index: username in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\LDAPInjection2.php on line 25
+Login failed.<br>
+	</body>
+</html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>7585287139193964544</serialNumber>
+    <type>8389120</type>
+    <name>HTML does not specify charset</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/XSS-stored.php]]></path>
+    <location><![CDATA[/demo/XSS-stored.php]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[If a web response states that it contains HTML content but does not specify a character set, then the browser may analyse the HTML and attempt to determine which character set it appears to be using. Even if the majority of the HTML actually employs a standard character set such as UTF-8, the presence of non-standard characters anywhere in the response may cause the browser to interpret the content using a different character set. This can have unexpected results, and can lead to cross-site scripting vulnerabilities in which non-standard encodings like UTF-7 can be used to bypass the application's defensive filters.<br><br>In most cases, the absence of a charset directive does not constitute a security flaw, particularly if the response contains static content. You should review the contents of the response and the context in which it appears to determine whether any vulnerability exists.]]></issueBackground>
+    <remediationBackground><![CDATA[For every response containing HTML content, the application should include within the Content-type header a directive specifying a standard recognised character set, for example <b>charset=ISO-8859-1</b>.]]></remediationBackground>
+    <requestresponse>
+      <request><![CDATA[GET /demo/XSS-stored.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+Referer: http://tftarget/demo/XSS.php
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:55 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 284
+Connection: close
+Content-Type: text/html
+
+<!-- XSS TEST - STORED -->
+<!-- The goal is to pull the payload from the database. After that we'll see. -->
+<html>
+	<head>
+		<title>XSS Test</title>
+	</head>
+	<body>
+	<h2> Users List </h2>
+		1 Jimmy<br />2 <script>alert('XSS')</script><br />3 John<br /> 
+	</body>
+</html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>3349744853421256704</serialNumber>
+    <type>8389120</type>
+    <name>HTML does not specify charset</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/FormatString2.php]]></path>
+    <location><![CDATA[/demo/FormatString2.php]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[If a web response states that it contains HTML content but does not specify a character set, then the browser may analyse the HTML and attempt to determine which character set it appears to be using. Even if the majority of the HTML actually employs a standard character set such as UTF-8, the presence of non-standard characters anywhere in the response may cause the browser to interpret the content using a different character set. This can have unexpected results, and can lead to cross-site scripting vulnerabilities in which non-standard encodings like UTF-7 can be used to bypass the application's defensive filters.<br><br>In most cases, the absence of a charset directive does not constitute a security flaw, particularly if the response contains static content. You should review the contents of the response and the context in which it appears to determine whether any vulnerability exists.]]></issueBackground>
+    <remediationBackground><![CDATA[For every response containing HTML content, the application should include within the Content-type header a directive specifying a standard recognised character set, for example <b>charset=ISO-8859-1</b>.]]></remediationBackground>
+    <requestresponse>
+      <request><![CDATA[GET /demo/FormatString2.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:54 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 342
+Connection: close
+Content-Type: text/html
+
+<!-- String Format Injection 2  -->
+<!-- This page realizes an String Format Injection vulnerability. -->
+
+
+Notice: Undefined index: name in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\FormatString2.php on line 6
+<html><head>
+<title>500 Internal Server Error</title>
+</head><body>
+<h1>Internal Server Error</h1>]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>7525811108987363328</serialNumber>
+    <type>8389120</type>
+    <name>HTML does not specify charset</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/FormatString.php]]></path>
+    <location><![CDATA[/demo/FormatString.php]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[If a web response states that it contains HTML content but does not specify a character set, then the browser may analyse the HTML and attempt to determine which character set it appears to be using. Even if the majority of the HTML actually employs a standard character set such as UTF-8, the presence of non-standard characters anywhere in the response may cause the browser to interpret the content using a different character set. This can have unexpected results, and can lead to cross-site scripting vulnerabilities in which non-standard encodings like UTF-7 can be used to bypass the application's defensive filters.<br><br>In most cases, the absence of a charset directive does not constitute a security flaw, particularly if the response contains static content. You should review the contents of the response and the context in which it appears to determine whether any vulnerability exists.]]></issueBackground>
+    <remediationBackground><![CDATA[For every response containing HTML content, the application should include within the Content-type header a directive specifying a standard recognised character set, for example <b>charset=ISO-8859-1</b>.]]></remediationBackground>
+    <requestresponse>
+      <request><![CDATA[GET /demo/FormatString.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+Referer: http://tftarget/demo/
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:52 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 528
+Connection: close
+Content-Type: text/html
+
+<!-- Format String Injection  -->
+<!-- This page demonstrates an Format String Injection vulnerability. -->
+<html>
+	<head>
+		<title>Format String Injection</title>
+	</head>
+	<body>
+	<h2> Format String Injection </h2>
+	This is a login created to be vulnerable to Format String Injection.<br/>
+	It throws an error when % characters are used. <br/>
+	
+	<form action="FormatString2.php" method="post">
+		Name: <input type="text" name="name" /><br/>
+		<input type="submit" value="Say Hi!"/>
+	</form>
+	</body>
+</html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>2436621143556105216</serialNumber>
+    <type>8389120</type>
+    <name>HTML does not specify charset</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/EvalInjection2.php]]></path>
+    <location><![CDATA[/demo/EvalInjection2.php]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[If a web response states that it contains HTML content but does not specify a character set, then the browser may analyse the HTML and attempt to determine which character set it appears to be using. Even if the majority of the HTML actually employs a standard character set such as UTF-8, the presence of non-standard characters anywhere in the response may cause the browser to interpret the content using a different character set. This can have unexpected results, and can lead to cross-site scripting vulnerabilities in which non-standard encodings like UTF-7 can be used to bypass the application's defensive filters.<br><br>In most cases, the absence of a charset directive does not constitute a security flaw, particularly if the response contains static content. You should review the contents of the response and the context in which it appears to determine whether any vulnerability exists.]]></issueBackground>
+    <remediationBackground><![CDATA[For every response containing HTML content, the application should include within the Content-type header a directive specifying a standard recognised character set, for example <b>charset=ISO-8859-1</b>.]]></remediationBackground>
+    <requestresponse>
+      <request><![CDATA[GET /demo/EvalInjection2.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:57 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 473
+Connection: close
+Content-Type: text/html
+
+<!-- Eval Injection 2  -->
+<!-- This page realizes an Eval Injection vulnerability. -->
+
+<html>
+	<head>
+		<title>Eval Injection</title>
+	</head>
+	<body>
+		<pre>
+Notice: Undefined index: command in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\EvalInjection2.php on line 10
+
+Notice: Undefined index: command in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\EvalInjection2.php on line 14
+</pre>
+	</body>
+</html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>1469436927779449856</serialNumber>
+    <type>8389120</type>
+    <name>HTML does not specify charset</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/XPathInjection2.php]]></path>
+    <location><![CDATA[/demo/XPathInjection2.php]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[If a web response states that it contains HTML content but does not specify a character set, then the browser may analyse the HTML and attempt to determine which character set it appears to be using. Even if the majority of the HTML actually employs a standard character set such as UTF-8, the presence of non-standard characters anywhere in the response may cause the browser to interpret the content using a different character set. This can have unexpected results, and can lead to cross-site scripting vulnerabilities in which non-standard encodings like UTF-7 can be used to bypass the application's defensive filters.<br><br>In most cases, the absence of a charset directive does not constitute a security flaw, particularly if the response contains static content. You should review the contents of the response and the context in which it appears to determine whether any vulnerability exists.]]></issueBackground>
+    <remediationBackground><![CDATA[For every response containing HTML content, the application should include within the Content-type header a directive specifying a standard recognised character set, for example <b>charset=ISO-8859-1</b>.]]></remediationBackground>
+    <requestresponse>
+      <request><![CDATA[POST /demo/XPathInjection2.php HTTP/1.1
+Accept: */*
+Referer: http://tftarget/demo/XPathInjection.php
+Accept-Language: en-us
+Content-Type: application/x-www-form-urlencoded
+UA-CPU: x86
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30; .NET CLR 3.0.04506.648; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)
+Proxy-Connection: Keep-Alive
+Content-Length: 48
+Host: tftarget
+Pragma: no-cache
+
+username=%27+or+1%3D1+or+%27%27%3D%27+&password=]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:06 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 227
+Content-Type: text/html
+
+<!-- XPath Injection 2  -->
+<!-- This page realizes an XPath Injection vulnerability. -->
+
+<html>
+	<head>
+		<title>XPath Injection</title>
+	</head>
+	<body>
+	
+	You have logged in as Jimmy with id 1.
+	</body>
+</html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>3498317858268278784</serialNumber>
+    <type>8389120</type>
+    <name>HTML does not specify charset</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/EvalInjection.php]]></path>
+    <location><![CDATA[/demo/EvalInjection.php]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[If a web response states that it contains HTML content but does not specify a character set, then the browser may analyse the HTML and attempt to determine which character set it appears to be using. Even if the majority of the HTML actually employs a standard character set such as UTF-8, the presence of non-standard characters anywhere in the response may cause the browser to interpret the content using a different character set. This can have unexpected results, and can lead to cross-site scripting vulnerabilities in which non-standard encodings like UTF-7 can be used to bypass the application's defensive filters.<br><br>In most cases, the absence of a charset directive does not constitute a security flaw, particularly if the response contains static content. You should review the contents of the response and the context in which it appears to determine whether any vulnerability exists.]]></issueBackground>
+    <remediationBackground><![CDATA[For every response containing HTML content, the application should include within the Content-type header a directive specifying a standard recognised character set, for example <b>charset=ISO-8859-1</b>.]]></remediationBackground>
+    <requestresponse>
+      <request><![CDATA[GET /demo/EvalInjection.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+Referer: http://tftarget/demo/
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:52 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 526
+Connection: close
+Content-Type: text/html
+
+<!-- Eval Injection  -->
+<!-- This page demonstrates an Eval Injection vulnerability. -->
+<html>
+	<head>
+		<title>Eval Injection</title>
+	</head>
+	<body>
+	<h2> Eval Injection </h2>
+	This is a submission page created to be vulnerable to Eval Injection.<br/>
+	<pre>One example payload is 
+	thisbroke";sleep(5);"
+which executes the sleep command.</pre>
+	
+	<form action="EvalInjection2.php" method="post">
+		Command: <input type="text" name="command" /><br/>
+		<input type="submit" />
+	</form>
+	</body>
+</html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>3666771622552669184</serialNumber>
+    <type>8389120</type>
+    <name>HTML does not specify charset</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/PathTraversal.php]]></path>
+    <location><![CDATA[/demo/PathTraversal.php]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[If a web response states that it contains HTML content but does not specify a character set, then the browser may analyse the HTML and attempt to determine which character set it appears to be using. Even if the majority of the HTML actually employs a standard character set such as UTF-8, the presence of non-standard characters anywhere in the response may cause the browser to interpret the content using a different character set. This can have unexpected results, and can lead to cross-site scripting vulnerabilities in which non-standard encodings like UTF-7 can be used to bypass the application's defensive filters.<br><br>In most cases, the absence of a charset directive does not constitute a security flaw, particularly if the response contains static content. You should review the contents of the response and the context in which it appears to determine whether any vulnerability exists.]]></issueBackground>
+    <remediationBackground><![CDATA[For every response containing HTML content, the application should include within the Content-type header a directive specifying a standard recognised character set, for example <b>charset=ISO-8859-1</b>.]]></remediationBackground>
+    <requestresponse>
+      <request><![CDATA[GET /demo/PathTraversal.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:48 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 147
+Connection: close
+Content-Type: text/html
+
+
+Parse error: syntax error, unexpected ';' in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\PathTraversal.php on line 10
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>2979686476518700032</serialNumber>
+    <type>8389120</type>
+    <name>HTML does not specify charset</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/LDAPInjection.php]]></path>
+    <location><![CDATA[/demo/LDAPInjection.php]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[If a web response states that it contains HTML content but does not specify a character set, then the browser may analyse the HTML and attempt to determine which character set it appears to be using. Even if the majority of the HTML actually employs a standard character set such as UTF-8, the presence of non-standard characters anywhere in the response may cause the browser to interpret the content using a different character set. This can have unexpected results, and can lead to cross-site scripting vulnerabilities in which non-standard encodings like UTF-7 can be used to bypass the application's defensive filters.<br><br>In most cases, the absence of a charset directive does not constitute a security flaw, particularly if the response contains static content. You should review the contents of the response and the context in which it appears to determine whether any vulnerability exists.]]></issueBackground>
+    <remediationBackground><![CDATA[For every response containing HTML content, the application should include within the Content-type header a directive specifying a standard recognised character set, for example <b>charset=ISO-8859-1</b>.]]></remediationBackground>
+    <requestresponse>
+      <request><![CDATA[GET /demo/LDAPInjection.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+Referer: http://tftarget/demo/
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:52 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 546
+Connection: close
+Content-Type: text/html
+
+<!-- LDAP Injection  -->
+<!-- This page demonstrates an LDAP Injection vulnerability. -->
+<html>
+	<head>
+		<title>LDAP Injection</title>
+	</head>
+	<body>
+	<h2> LDAP Injection </h2>
+	This is a login created to be vulnerable to LDAP Injection.<br/>
+	Submitting * for the username will log you in as the first user.<br/>
+	
+	<form action="LDAPInjection2.php" method="post">
+		Name: <input type="text" name="username" /><br/>
+		Password: <input type="text" name="password" /><br/>
+		<input type="submit" />
+	</form>
+	</body>
+</html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>5377296584001723392</serialNumber>
+    <type>6292224</type>
+    <name>Private IP addresses disclosed</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/PredictableResource.php]]></path>
+    <location><![CDATA[/demo/PredictableResource.php]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[RFC 1918 specifies ranges of IP addresses that are reserved for use in private networks and cannot be routed on the public Internet. Although various methods exist by which an attacker can determine the public IP addresses in use by an organisation, the private addresses used internally cannot usually be determined in the same ways.<br><br>Discovering the private addresses used within an organisation can help an attacker in carrying out network-layer attacks aiming to penetrate the organisation's internal infrastructure.]]></issueBackground>
+    <remediationBackground><![CDATA[There is not usually any good reason to disclose the internal IP addresses used within an organisation's infrastructure. If these are being returned in service banners or debug messages, then the relevant services should be configured to mask the private addresses. If they are being used to track back-end servers for load balancing purposes, then the addresses should be rewritten with innocuous identifiers from which an attacker cannot infer any useful information about the infrastructure.]]></remediationBackground>
+    <issueDetail><![CDATA[The following RFC 1918 IP address was disclosed in the response:<ul><li>192.168.1.30</li></ul>]]></issueDetail>
+    <requestresponse>
+      <request><![CDATA[GET /demo/PredictableResource.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+Referer: http://tftarget/demo/
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:48 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 375
+Connection: close
+Content-Type: text/html
+
+<!-- Predictable Resource
+     This file tells you where the (hopefully) poorly hidden files are. -->
+	 
+<html>
+	<head>
+		<title>Predictable Resource Location</title>
+	</head>
+	<body>
+	<h2> Predictable Resource Location </h2>
+
+	<ul>
+		<li>There is a backup of this file at http://192.168.1.30:8080/demo/PredictableResource.php.bak</li>
+	</ul>
+	</body>
+</html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>4563171744274440192</serialNumber>
+    <type>5245440</type>
+    <name>TRACE method is enabled</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/]]></path>
+    <location><![CDATA[/]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[The TRACE method is designed for diagnostic purposes. If enabled, the web server will respond to requests which use the TRACE method by echoing in its response the exact request which was received.<br><br>Although this behaviour is apparently harmless in itself, it can sometimes be leveraged to support attacks against other application users. If an attacker can find a way of causing a user to make a TRACE request, and can retrieve the response to that request, then the attacker will be able to capture any sensitive data which is included in the request by the user's browser, for example session cookies or credentials for platform-level authentication. This may exacerbate the impact of other vulnerabilities, such as cross-site scripting.]]></issueBackground>
+    <remediationBackground><![CDATA[The TRACE method should be disabled on the web server.]]></remediationBackground>
+    <requestresponse>
+      <request><![CDATA[TRACE / HTTP/1.0
+Host: tftarget
+Cookie: 274ef754a182e499
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:06 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+Connection: close
+Content-Type: message/http
+
+TRACE / HTTP/1.0
+Host: tftarget
+Cookie: 274ef754a182e499
+
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>5622104472001593344</serialNumber>
+    <type>8389120</type>
+    <name>HTML does not specify charset</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/XSS-reflected2.php]]></path>
+    <location><![CDATA[/demo/XSS-reflected2.php]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[If a web response states that it contains HTML content but does not specify a character set, then the browser may analyse the HTML and attempt to determine which character set it appears to be using. Even if the majority of the HTML actually employs a standard character set such as UTF-8, the presence of non-standard characters anywhere in the response may cause the browser to interpret the content using a different character set. This can have unexpected results, and can lead to cross-site scripting vulnerabilities in which non-standard encodings like UTF-7 can be used to bypass the application's defensive filters.<br><br>In most cases, the absence of a charset directive does not constitute a security flaw, particularly if the response contains static content. You should review the contents of the response and the context in which it appears to determine whether any vulnerability exists.]]></issueBackground>
+    <remediationBackground><![CDATA[For every response containing HTML content, the application should include within the Content-type header a directive specifying a standard recognised character set, for example <b>charset=ISO-8859-1</b>.]]></remediationBackground>
+    <requestresponse>
+      <request><![CDATA[GET /demo/XSS-reflected2.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:44:01 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 369
+Connection: close
+Content-Type: text/html
+
+<!-- XSS2.php - Reflected
+     This file accepts the payload from XSS.php. -->
+	 
+<html>
+	<head>
+		<title>XSS Test - Reflected</title>
+	</head>
+	<body>
+	<h2> Reflected XSS </h2>
+
+		Welcome 
+Notice: Undefined index: username in C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\demo\XSS-reflected2.php on line 12
+!<br />
+
+	</body>
+</html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>8043348113233281024</serialNumber>
+    <type>8389120</type>
+    <name>HTML does not specify charset</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/XSS-reflected.php]]></path>
+    <location><![CDATA[/demo/XSS-reflected.php]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[If a web response states that it contains HTML content but does not specify a character set, then the browser may analyse the HTML and attempt to determine which character set it appears to be using. Even if the majority of the HTML actually employs a standard character set such as UTF-8, the presence of non-standard characters anywhere in the response may cause the browser to interpret the content using a different character set. This can have unexpected results, and can lead to cross-site scripting vulnerabilities in which non-standard encodings like UTF-7 can be used to bypass the application's defensive filters.<br><br>In most cases, the absence of a charset directive does not constitute a security flaw, particularly if the response contains static content. You should review the contents of the response and the context in which it appears to determine whether any vulnerability exists.]]></issueBackground>
+    <remediationBackground><![CDATA[For every response containing HTML content, the application should include within the Content-type header a directive specifying a standard recognised character set, for example <b>charset=ISO-8859-1</b>.]]></remediationBackground>
+    <requestresponse>
+      <request><![CDATA[GET /demo/XSS-reflected.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+Referer: http://tftarget/demo/XSS.php
+
+]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:43:55 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 489
+Connection: close
+Content-Type: text/html
+
+<!-- XSS TEST -->
+<!-- The goal is to be able to pop up an alert through script tags injected into the username field. -->
+
+<html>
+ <head>
+  <title>XSS Test - Reflected</title>
+ </head>
+ <body>
+ <h2> Reflected XSS </h2>
+ A simple &#60;script&#62;alert('XSS')&#60;/script&#62; will work, along with any other JavaScript.
+ <form action="XSS-reflected2.php" method="post">
+  Name: <input type="text" name="username" />
+  <input type="submit" />
+ </form>
+
+ 
+ </body>
+</html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+  <issue>
+    <serialNumber>3382053426657538048</serialNumber>
+    <type>2097920</type>
+    <name>Cross-site scripting (reflected)</name>
+    <host ip="10.2.10.111">http://tftarget</host>
+    <path><![CDATA[/demo/XSS-reflected2.php]]></path>
+    <location><![CDATA[/demo/XSS-reflected2.php [username parameter]]]></location>
+    <severity>High</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[Reflected cross-site scripting vulnerabilities arise when data is copied from a request and echoed into the application's immediate response in an unsafe way. An attacker can use the vulnerability to construct a request which, if issued by another application user, will cause JavaScript code supplied by the attacker to execute within the user's browser in the context of that user's session with the application.<br><br>The attacker-supplied code can perform a wide variety of actions, such as stealing the victim's session token or login credentials, performing arbitrary actions on the victim's behalf, and logging their keystrokes.<br><br>Users can be induced to issue the attacker's crafted request in various ways. For example, the attacker can send a victim a link containing a malicious URL in an email or instant message. They can submit the link to popular web sites that allow content authoring, for example in blog comments. And they can create an innocuous looking web site which causes anyone viewing it to make arbitrary cross-domain requests to the vulnerable application (using either the GET or the POST method).<br><br>The security impact of cross-site scripting vulnerabilities is dependent upon the nature of the vulnerable application, the kinds of data and functionality which it contains, and the other applications which belong to the same domain and organisation. If the application is used only to display non-sensitive public content, with no authentication or access control functionality, then a cross-site scripting flaw may be considered low risk. However, if the same application resides on a domain which can access cookies for other more security-critical applications, then the vulnerability could be used to attack those other applications, and so may be considered high risk. Similarly, if the organisation which owns the application is a likely target for phishing attacks, then the vulnerability could be leveraged to lend credibility to such attacks, by injecting Trojan functionality into the vulnerable application, and exploiting users' trust in the organisation in order to capture credentials for other applications which it owns. In many kinds of application, such as those providing online banking functionality, cross-site scripting should always be considered high risk.]]></issueBackground>
+    <remediationBackground><![CDATA[In most situations where user-controllable data is copied into application responses, cross-site scripting attacks can be prevented using two layers of defences:<ul><li>Input should be validated as strictly as possible on arrival, given the kind of content which it is expected to contain. For example, personal names should consist of alphabetical and a small range of typographical characters, and be relatively short; a year of birth should consist of exactly four numerals; email addresses should match a well-defined regular expression. Input which fails the validation should be rejected, not sanitised.</li><li>User input should be HTML-encoded at any point where it is copied into application responses. All HTML metacharacters, including &lt; &gt; " ' and =, should be replaced with the corresponding HTML entities (&amp;lt; &amp;gt; etc).</li></ul>In cases where the application's functionality allows users to author content using a restricted subset of HTML tags and attributes (for example, blog comments which allow limited formatting and linking), it is necessary to parse the supplied HTML to validate that it does not use any dangerous syntax; this is a non-trivial task.]]></remediationBackground>
+    <issueDetail><![CDATA[The value of the username request parameter is copied into the HTML document as plain text between tags. The payload <b>1951f&lt;script&gt;alert(1)&lt;<wbr>/script&gt;578bb19c374</b> was submitted in the username parameter. This input was echoed unmodified in the application's response.<br><br>This proof-of-concept attack demonstrates that it is possible to inject arbitrary JavaScript into the application's response.]]></issueDetail>
+    <requestresponse>
+      <request><![CDATA[POST /demo/XSS-reflected2.php HTTP/1.1
+Host: tftarget
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)
+Connection: close
+Referer: http://tftarget/demo/XSS-reflected.php
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 21
+
+username=Peter+Wiener1951f<script>alert(1)</script>578bb19c374]]></request>
+      <response><![CDATA[HTTP/1.1 200 OK
+Date: Mon, 13 Jun 2011 19:44:02 GMT
+Server: Apache/2.2.19 (Win32) PHP/5.3.6
+X-Powered-By: PHP/5.3.6
+Content-Length: 282
+Connection: close
+Content-Type: text/html
+
+<!-- XSS2.php - Reflected
+     This file accepts the payload from XSS.php. -->
+	 
+<html>
+	<head>
+		<title>XSS Test - Reflected</title>
+	</head>
+	<body>
+	<h2> Reflected XSS </h2>
+
+		Welcome Peter Wiener1951f<script>alert(1)</script>578bb19c374!<br />
+
+	</body>
+</html>
+]]></response>
+      <responseRedirected>false</responseRedirected>
+    </requestresponse>
+  </issue>
+</issues>

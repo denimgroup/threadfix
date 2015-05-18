@@ -101,6 +101,19 @@ public class QueueSenderImpl implements QueueSender {
 		send(QueueConstants.IMPORT_SCANS_REQUEST);
 	}
 
+	@Override
+	public void startEmailReport(Integer scheduledEmailReportId){
+		MapMessage emailReportMap = new ActiveMQMapMessage();
+		try {
+			emailReportMap.setInt("scheduledEmailReportId", scheduledEmailReportId);
+			emailReportMap.setString("type", QueueConstants.SEND_EMAIL_REPORT);
+		} catch (JMSException e) {
+			log.error(jmsErrorString);
+			addExceptionLog(e);
+		}
+		sendMap(emailReportMap);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

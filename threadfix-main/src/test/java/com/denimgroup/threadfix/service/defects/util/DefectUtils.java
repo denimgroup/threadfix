@@ -70,13 +70,17 @@ public class DefectUtils {
             // TODO create default field map
             return new DefectMetadata("test", "test", null, null, null, null, null, new HashMap<String, Object>());
         } else {
-            return new DefectMetadata("Dummy Description", "simple preamble",
+            DefectMetadata defectMetadata = new DefectMetadata("Dummy Description", "simple preamble",
                     projectMetadata.getComponents().get(0),
                     projectMetadata.getVersions().get(0),
                     projectMetadata.getSeverities().get(0),
                     projectMetadata.getPriorities().get(0),
                     projectMetadata.getStatuses().get(0));
+            defectMetadata.setFullDescription("Test");
+
+            return defectMetadata;
         }
+
     }
 
     public static List<String> getProductsFromString(List<String> projects) {

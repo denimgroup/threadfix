@@ -1,0 +1,61 @@
+/datatablesController/datatables-42721.js,c,550,b2c4c06e9b4ccb22ef387f2e6065d7a6,,,Fortify didn't have any findings in javascript files
+/datatablesController/datatables-42721.js,id,550,6897d3a24ec6c91f08d402c8d9e6a580,,,Fortify didn't have any findings in javascript files
+/datatablesController/datatables-42721.js,t,550,bc24ebfbf2db1d83b502cc87daeb5745,,,Fortify didn't have any findings in javascript files
+/datatablesController/datatables-74056.js,c,550,e6740676fa6a366afbe7a2126bd4e527,,,Fortify didn't have any findings in javascript files
+/datatablesController/datatables-74056.js,id,550,295a625b3a1b90e3866ad84e163c9dba,,,Fortify didn't have any findings in javascript files
+/datatablesController/datatables-74056.js,t,550,d2cee4d477f4cf25f397e8b935416e74,,,Fortify didn't have any findings in javascript files
+/datatablesController/datatables-74403.js,c,550,7f4fdb853e7b09c2310b2e123a058fe4,,,Fortify didn't have any findings in javascript files
+/datatablesController/datatables-74403.js,id,550,134986389d44cd55d8967a2b6ae5fa71,,,Fortify didn't have any findings in javascript files
+/datatablesController/datatables-74403.js,t,550,9c9df71883af6a5a24b424439fd05428,,,Fortify didn't have any findings in javascript files
+/datatablesController/datatables-87982.js,c,550,dc002c953a6b50c68f807ad5398e4413,,,Fortify didn't have any findings in javascript files
+/datatablesController/datatables-87982.js,id,550,65f95b774b46497cc60b9f110e5fc47f,,,Fortify didn't have any findings in javascript files
+/datatablesController/datatables-87982.js,t,550,1938420bc0b9cd0e33b66ab57af151db,,,Fortify didn't have any findings in javascript files
+/owners.html,dti,550,a20742b0283c6c4a9c883fee8927452d,,,This is a PDF download not an error
+/owners.html,dtt,550,7d86a1d0bea9569f5e1a0a13b36fd784,,,This is a PDF download not an error
+/owners.html,lastName,550,36dcaa4017ed01020cfaa2b929dbef37,D720DF2A39E943FBEB8F3D7913C145FB,,The same exception JSP is displayed across all these pages
+/owners/1/edit.html,lastName,89,d7dc65c1dd13dff059580ec67013b6e6,,b56ce6005b384a52fc340b6a6a278ef5,Fortify only found SQL Injection on other pages
+/owners/1/pets/new.html,birthDate,89,9c15ddd09ff1dfd9cedad4b5e6be8b5d,,,Fortify only found SQL Injection on other pages
+/owners/10/pets/12/visits/new,description,89,1a07468c95c11f782dee9ab5b7fb6c05,,4054c867b8edad825d4e4468b3e7ac9a,Fortify only found SQL Injection on other pages
+/owners/3/pets/4/edit,name,89,b1f7e40c6738db858f64edcd6e79f47a,,cea13a6fe64236b5b897c4e1487ecd84,Fortify only found SQL Injection on other pages
+/owners/4/pets/5/visits/new,description,89,4054c867b8edad825d4e4468b3e7ac9a,,1a07468c95c11f782dee9ab5b7fb6c05,Fortify only found SQL Injection on other pages
+/owners/5/edit.html,firstName,89,de3788e457ed989ea63fd2cdbce7cb33,,fdc1ec26bc6363ef99a51fd955346e09;3ecc9827cb89de2f30b0fe1eae47399f,Fortify only found SQL Injection on other pages
+/owners/6/edit.html,firstName,89,fdc1ec26bc6363ef99a51fd955346e09,,de3788e457ed989ea63fd2cdbce7cb33;3ecc9827cb89de2f30b0fe1eae47399f,Fortify only found SQL Injection on other pages
+/owners/7/edit.html,firstName,89,3ecc9827cb89de2f30b0fe1eae47399f,,de3788e457ed989ea63fd2cdbce7cb33;fdc1ec26bc6363ef99a51fd955346e09,Fortify only found SQL Injection on other pages
+/owners/7/edit.html,lastName,89,b56ce6005b384a52fc340b6a6a278ef5,,d7dc65c1dd13dff059580ec67013b6e6,Fortify only found SQL Injection on other pages
+/owners/8/pets/10/edit,name,89,cea13a6fe64236b5b897c4e1487ecd84,,b1f7e40c6738db858f64edcd6e79f47a,Fortify only found SQL Injection on other pages
+/owners/8/pets/10/edit,type,89,7505e59d0912a09c6019a72eae9c0d4,,,Fortify only found SQL Injection on other pages
+/owners/9/pets/new.html,type,89,77aa749edf66125a36ae30c79c047b01,,,Fortify only found SQL Injection on other pages
+/webjars/jquery-ui/1.9.2/js/jquery-ui-1.9.2.custom.js,null,602,644ace1c9127a3a81eb6c2bac84e6279,,,Fortify didn't have any findings in javascript files
+/webjars/jquery-ui/1.9.2/js/jquery-ui-1.9.2.custom.js;jsessionid=7BEA0FAF69F461980789EA444BF2237B,null,602,4e489330ca54a4578969aff452ea20fd,,,Fortify didn't have any findings in javascript files
+/owners.html,lastName,79,177544467ecaab91ea649bc56e0eee7b,,,Fortify didn't find any XSS
+/owners/1/pets/1/visits/new,null,79,651dc832d30d31ec072b552f05d322a1,,,Fortify didn't find any XSS
+/owners/6/pets/8/edit,name,79,396c4557ad116336f602bd2407356485,,,Fortify didn't find any XSS
+/owners.html,null,209,90463efa44dfefb4502818e69416135c,D720DF2A39E943FBEB8F3D7913C145FB,,The same exception JSP is displayed across all these pages. This one will be hard to identify because 
+/oups.html;jsessionid=7BEA0FAF69F461980789EA444BF2237B,null,615,8feb7b901ad151039c72f20d52e60ee0,D720DF2A39E943FBEB8F3D7913C145FB,,The same exception JSP is displayed across all these pages
+/owners/10/pets/12/visits/new,null,615,4f5a864a087f087f91bac176f638ae8f,D720DF2A39E943FBEB8F3D7913C145FB,,The same exception JSP is displayed across all these pages
+/owners/6/pets/7/visits/new,null,615,c0f83838cc54f755215391fc7f4065bd,D720DF2A39E943FBEB8F3D7913C145FB,d5946b75f84e935cb5344f6360e9b457;f5ba3388b9162bc7054dd189886af0b1,The same exception JSP is displayed across all these pages
+/owners/6/pets/8/visits/new,null,615,d5946b75f84e935cb5344f6360e9b457,D720DF2A39E943FBEB8F3D7913C145FB,c0f83838cc54f755215391fc7f4065bd;f5ba3388b9162bc7054dd189886af0b1,The same exception JSP is displayed across all these pages
+/owners/7/pets/9/visits/new,null,615,f5ba3388b9162bc7054dd189886af0b1,D720DF2A39E943FBEB8F3D7913C145FB,c0f83838cc54f755215391fc7f4065bd;d5946b75f84e935cb5344f6360e9b457,The same exception JSP is displayed across all these pages
+/owners/8/pets/10/edit,null,615,f109071384834fe26a0c3206b9b84e8a,D720DF2A39E943FBEB8F3D7913C145FB,,The same exception JSP is displayed across all these pages
+/owners/9/pets/new.html,null,615,25c66f273e67d903c09fbc6f4b19804b,D720DF2A39E943FBEB8F3D7913C145FB,,The same exception JSP is displayed across all these pages
+/owners/10/pets/12/visits/new,null,TODO Appscan didn't have a CWE - figure out the type,2ace6aa89187c1537e6b1332ec62c403,,,Fortify didn't have any findings in javascript files. Appscan doesn't list a CWE
+/owners/3/pets/4/visits/new,null,TODO Appscan didn't have a CWE - figure out the type,ece0e59c5f7f0be032b0798d7e104d91,,,Fortify didn't have any findings in javascript files. Appscan doesn't list a CWE
+/owners/4/pets/5/visits/new,null,TODO Appscan didn't have a CWE - figure out the type,f13e3c13296fd1c16dbd4a3b011712c1,,,Fortify didn't have any findings in javascript files. Appscan doesn't list a CWE
+/owners/6,null,TODO Appscan didn't have a CWE - figure out the type,b7fe51d33c9e0d26dadd6535c64731ef,,,Fortify didn't have any findings in javascript files. Appscan doesn't list a CWE
+/owners/6/pets/7/visits/new,null,TODO Appscan didn't have a CWE - figure out the type,986415ff0e17003a34aca6414bc5d3d1,,,Fortify didn't have any findings in javascript files. Appscan doesn't list a CWE
+/owners/6/pets/8/visits/new,null,TODO Appscan didn't have a CWE - figure out the type,54012c738ab786b93640b38ac5d6d49f,,,Fortify didn't have any findings in javascript files. Appscan doesn't list a CWE
+/owners/7/pets/9/visits/new,null,TODO Appscan didn't have a CWE - figure out the type,bb578aff2c63cdaf8a1f2ebf8e0f4f3b,,,Fortify didn't have any findings in javascript files. Appscan doesn't list a CWE
+/owners/9,null,TODO Appscan didn't have a CWE - figure out the type,7ba2a94fa120e6bceb723a67a0e43cef,,,Fortify didn't have any findings in javascript files. Appscan doesn't list a CWE
+/owners/9/pets/11/visits/new,null,TODO Appscan didn't have a CWE - figure out the type,3d53c3015a3ac89ab3f4f321f95935ea,,,Fortify didn't have any findings in javascript files. Appscan doesn't list a CWE
+/owners.html,lastName,74,676bc41e2c7e8be7699c2cb9461795cb,3B26AC0415FAF39019A9F5F1B07304DF,,I think this is the same one but I'm not 100% sure
+/owners/10/pets/12/visits/new,null,TODO Appscan only had CVE-1999-0758 listed,bd5f67b11f3d91fa4d49017d39f0f73e,,,Fortify didn't have any findings in javascript files
+/owners/3/pets/4/visits/new,null,TODO Appscan only had CVE-1999-0758 listed,35c4f2b15c7609afdf7cc8ffa18bc916,,,Fortify didn't have any findings in javascript files
+/owners/4/pets/5/visits/new,null,TODO Appscan only had CVE-1999-0758 listed,7fe02f3ada40c621a5928e9144f38572,,,Fortify didn't have any findings in javascript files
+/owners/6,null,TODO Appscan only had CVE-1999-0758 listed,b6570aa2b7f1c6ac4b27d661616613fa,,,Fortify didn't have any findings in javascript files
+/owners/6/pets/7/visits/new,null,TODO Appscan only had CVE-1999-0758 listed,62c7b4dc7ef64ee7466e1faa44a43e8f,,,Fortify didn't have any findings in javascript files
+/owners/6/pets/8/visits/new,null,TODO Appscan only had CVE-1999-0758 listed,6a40bc8300145a281c3bf064f84449d7,,,Fortify didn't have any findings in javascript files
+/owners/7/pets/9/visits/new,null,TODO Appscan only had CVE-1999-0758 listed,662b79f245c2245532c834e42b7099ba,,,Fortify didn't have any findings in javascript files
+/owners/9,null,TODO Appscan only had CVE-1999-0758 listed,59a569fd87cecd869fbda98e67402b97,,,Fortify didn't have any findings in javascript files
+/owners/9/pets/11/visits/new,null,TODO Appscan only had CVE-1999-0758 listed,4736a9870445615c958faa3c83be84e,,,Fortify didn't have any findings in javascript files
+/owners.html,lastName,79,ee00391b41b90e02a133bd02d2d625bd,,,Fortify doesn't have anything for this
+/owners.html,lastName,89,f95c1cfa0701fe2847ec90937156f640,F4B239E280210E3ADF7044526BBE3F13;7FB3F7B4BF0EBD97F3BA5FEA8BC0E682,,Both of these correspond to /owners.html and lastName

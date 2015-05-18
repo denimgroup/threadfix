@@ -79,7 +79,7 @@ import static com.denimgroup.threadfix.CollectionUtils.map;
  * @author mcollins
  *
  */
-@Transactional(readOnly = false) // used to be true
+@Transactional(readOnly = true)
 public abstract class AbstractChannelImporter extends SpringBeanAutowiringSupport implements ChannelImporter {
 
     // this.getClass() will turn into the individual importer name at runtime.

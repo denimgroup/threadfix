@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?><report>
+Report generated at Fri, 23 Sep 2011 16:31:41.
+<alertitem>
+  <pluginid>0</pluginid>
+  <alert>Directory Browsing</alert>
+  <riskcode>2</riskcode>
+  <reliability>2</reliability>
+  <riskdesc>Medium (Warning)</riskdesc>
+  <desc>It is possible to view the directory listing.  Directory listing may reveal hidden scripts, include files , backup source files etc which be accessed to read sensitive information.
+	</desc>
+  <uri>http://192.168.1.30/demo/DirectoryIndexing/</uri>
+  <param/>
+  <otherinfo/>
+  <uri>http://192.168.1.30/demo/DirectoryIndexing/</uri>
+  <param/>
+  <otherinfo/>
+  <uri>http://192.168.1.30/demo/DirectoryIndexing/</uri>
+  <param/>
+  <otherinfo/>
+  <uri>http://192.168.1.30/demo/DirectoryIndexing/</uri>
+  <param/>
+  <otherinfo/>
+  <solution>Disable directory browsing.  If this is required, make sure the listed files does not induce risks.
+	</solution>
+  <reference>For IIS, turn off directory browsing.
+	For Apache, use the 'Options -Indexes' directive to disable indexes in directory or via .htaccess:
+	. http://httpd.apache.org/docs/mod/core.html#options
+	. http://alamo.satlug.org/pipermail/satlug/2002-February/000053.html
+	. or create a default index.html for each directory.
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>40000</pluginid>
+  <alert>Cross site scripting</alert>
+  <riskcode>3</riskcode>
+  <reliability>1</reliability>
+  <riskdesc>High (Suspicious)</riskdesc>
+  <desc>Cross-site scripting or HTML injection is possible.  Malicious script may be injected into the browser which appeared to be genuine content from the original site.  These scripts can be used to execute arbitrary code or steal customer sensitive information such as user password or cookies.
+	Very often this is in the form of a hyperlink with the injected script embeded in the query strings.  However, XSS is possible via FORM POST data, cookies, user data sent from another user or shared data retrieved from database.
+	Currently this check does not verify XSS from cookie or database.  They should be checked manually if the application retrieve database records from another user's input.
+	</desc>
+  <uri>http://192.168.1.30/demo/XSS-reflected2.php</uri>
+  <param>username=&lt;SCRIPT&gt;alert("OWASP ZAP");&lt;/SCRIPT&gt;</param>
+  <otherinfo/>
+  <uri>http://192.168.1.30/demo/XPathInjection2.php</uri>
+  <param>password=&lt;SCRIPT&gt;alert("OWASP ZAP");&lt;/SCRIPT&gt;</param>
+  <otherinfo/>
+  <uri>http://192.168.1.30/demo/XPathInjection2.php</uri>
+  <param>username=&lt;SCRIPT&gt;alert("OWASP ZAP");&lt;/SCRIPT&gt;</param>
+  <otherinfo/>
+  <uri>http://192.168.1.30/demo/EvalInjection2.php</uri>
+  <param>command=&lt;SCRIPT&gt;alert('OWASP ZAP');&lt;/SCRIPT&gt;</param>
+  <otherinfo/>
+  <uri>http://192.168.1.30/demo/XSS-reflected2.php</uri>
+  <param>username=&lt;SCRIPT&gt;alert("OWASP ZAP");&lt;/SCRIPT&gt;</param>
+  <otherinfo/>
+  <uri>http://192.168.1.30/demo/XPathInjection2.php</uri>
+  <param>password=&lt;SCRIPT&gt;alert('OWASP ZAP');&lt;/SCRIPT&gt;</param>
+  <otherinfo/>
+  <uri>http://192.168.1.30/demo/XPathInjection2.php</uri>
+  <param>username=&lt;SCRIPT&gt;alert('OWASP ZAP');&lt;/SCRIPT&gt;</param>
+  <otherinfo/>
+  <uri>http://192.168.1.30/demo/EvalInjection2.php</uri>
+  <param>command=&lt;SCRIPT&gt;alert('OWASP ZAP');&lt;/SCRIPT&gt;</param>
+  <otherinfo/>
+  <solution>Do not trust client side input even if there is client side validation.  Sanitize potentially danger characters in the server side.  Very often filtering the &lt;, &gt;, " characters prevented injected script to be executed in most cases.  However, sometimes other danger meta-characters such as ' , (, ), /, &amp;, ; etc are also needed.
+	In addition (or if these characters are needed), HTML encode meta-characters in the response.  For example, encode &lt; as &amp;lt;
+	
+	</solution>
+  <reference>The OWASP guide at http://www.owasp.org/documentation/guide
+	http://www.technicalinfo.net/papers/CSS.html
+	http://www.cgisecurity.org/articles/xss-faq.shtml
+	http://www.cert.org/tech_tips/malicious_code_FAQ.html
+	http://sandsprite.com/Sleuth/papers/RealWorld_XSS_1.html
+	
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>40001</pluginid>
+  <alert>Cross site scripting in SCRIPT section</alert>
+  <riskcode>3</riskcode>
+  <reliability>1</reliability>
+  <riskdesc>High (Suspicious)</riskdesc>
+  <desc>Cross-site scripting or HTML injection is possible within javascript &lt;SCRIPT&gt; and &lt;/SCRIPT&gt; section.
+	Malicious javacript can be injected into the browser even if the server filtered certain specail characters such as double quotes and &lt;&gt;.
+	It will appear to be genuine content from the original site.  These scripts can be used to execute arbitrary code or steal customer sensitive information such as user password or cookies.
+	Very often this is in the form of a hyperlink with the injected script embeded in the query strings.  However, XSS is possible via FORM POST data, cookies, user data sent from another user or shared data retrieved from database.
+	Currently this check does not verify XSS from cookie or database.  They should be checked manually if the application retrieve database records from another user's input.
+	</desc>
+  <uri>http://192.168.1.30/demo/XPathInjection2.php</uri>
+  <param>username=alert('OWASP ZAP');</param>
+  <otherinfo/>
+  <solution>You should check manually if this is exactly cross-site script in this case.Do not embed dynamic content within &lt;SCRIPT&gt;&lt;/SCRIPT&gt; sections.  Do not trust client side input even if there is client side validation.  Sanitize potentially danger characters in the server side.  Very often filtering the &lt;, &gt;, " characters prevented injected script to be executed in most cases.  However, sometimes other danger meta-characters such as ' , (, ), /, &amp;, ; etc are also needed.
+	In addition (or if these characters are needed), HTML encode meta-characters in the response.  For example, encode &lt; as &amp;lt;
+	
+	</solution>
+  <reference>The OWASP guide at http://www.owasp.org/documentation/guide
+	http://www.technicalinfo.net/papers/CSS.html
+	http://www.cgisecurity.org/articles/xss-faq.shtml
+	http://www.cert.org/tech_tips/malicious_code_FAQ.html
+	http://sandsprite.com/Sleuth/papers/RealWorld_XSS_1.html
+	
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>40004</pluginid>
+  <alert>SQL Injection Fingerprinting</alert>
+  <riskcode>3</riskcode>
+  <reliability>1</reliability>
+  <riskdesc>High (Suspicious)</riskdesc>
+  <desc>SQL injection may be possible.
+	</desc>
+  <uri>http://192.168.1.30/demo/SQLI2.php</uri>
+  <param>username=1%252527INJECTED_PARAM%2527INJECTED_PARAM%27INJECTED_PARAM</param>
+  <otherinfo>SQL</otherinfo>
+  <uri>http://192.168.1.30/demo/SQLI2.php</uri>
+  <param>username=1%27INJECTED_PARAM</param>
+  <otherinfo>SQL</otherinfo>
+  <solution>Do not trust client side input even if there is client side validation.  In general, If the input string is numeric, type check it.
+	If the application used JDBC, use PreparedStatement or CallableStatement with parameters passed by '?'
+	If the application used ASP, use ADO Command Objects with strong type checking and parameterized query.
+	If stored procedure or bind variables can be used, use it for parameter passing into query.  Do not just concatenate string into query in the stored procedure!
+	Do not create dynamic SQL query by simple string concatentation.
+	Use minimum database user privilege for the application.  This does not eliminate SQL injection but minimize its damage.  Eg if the application require reading one table only, grant such access to the application.  Avoid using 'sa' or 'db-owner'.
+	
+	</solution>
+  <otherinfo>SQL
+	</otherinfo>
+  <reference>The OWASP guide at http://www.owasp.org/documentation/guide
+	http://www.sqlsecurity.com/DesktopDefault.aspx?tabid=23
+	http://www.spidynamics.com/whitepapers/WhitepaperSQLInjection.pdf
+	For Oracle database, refer to http://www.integrigy.com/info/IntegrigyIntrotoSQLInjectionAttacks.pdf
+	
+	</reference>
+</alertitem>
+<alertitem>
+  <pluginid>40005</pluginid>
+  <alert>SQL Injection</alert>
+  <riskcode>3</riskcode>
+  <reliability>1</reliability>
+  <riskdesc>High (Suspicious)</riskdesc>
+  <desc>SQL injection is possible.  User parameters submitted will be formulated into a SQL query for database processing.  If the query is built by simple 'string concatenation', it is possible to modify the meaning of the query by carefully crafting the parameters.  Depending on the access right and type of database used, tampered query can be used to retrieve sensitive information from the database or execute arbitrary code.  MS SQL and PostGreSQL, which supports multiple statements, may be exploited if the database access right is more powerful.
+	This can occur in URL query strings, POST paramters or even cookies.  Currently check on cookie is not supported by Paros.  You should check SQL injection manually as well as some blind SQL injection areas cannot be discovered by this check.
+	</desc>
+  <uri>http://192.168.1.30/demo/SQLI2.php</uri>
+  <param>username=1%25252527INJECTED_PARAM%252527INJECTED_PARAM%2527INJECTED_PARAM%27INJECTED_PARAM</param>
+  <otherinfo>SQL</otherinfo>
+  <uri>http://192.168.1.30/demo/SQLI2.php</uri>
+  <param>username=1%2527INJECTED_PARAM%27INJECTED_PARAM</param>
+  <otherinfo>SQL</otherinfo>
+  <solution>Do not trust client side input even if there is client side validation.  In general, If the input string is numeric, type check it.
+	If the application used JDBC, use PreparedStatement or CallableStatement with parameters passed by '?'
+	If the application used ASP, use ADO Command Objects with strong type checking and parameterized query.
+	If stored procedure or bind variables can be used, use it for parameter passing into query.  Do not just concatenate string into query in the stored procedure!
+	Do not create dynamic SQL query by simple string concatentation.
+	Use minimum database user privilege for the application.  This does not eliminate SQL injection but minimize its damage.  Eg if the application require reading one table only, grant such access to the application.  Avoid using 'sa' or 'db-owner'.
+	
+	</solution>
+  <otherinfo>SQL
+	</otherinfo>
+  <reference>The OWASP guide at http://www.owasp.org/documentation/guide
+	http://www.sqlsecurity.com/DesktopDefault.aspx?tabid=23
+	http://www.spidynamics.com/whitepapers/WhitepaperSQLInjection.pdf
+	For Oracle database, refer to http://www.integrigy.com/info/IntegrigyIntrotoSQLInjectionAttacks.pdf
+	
+	</reference>
+</alertitem>
+</report>

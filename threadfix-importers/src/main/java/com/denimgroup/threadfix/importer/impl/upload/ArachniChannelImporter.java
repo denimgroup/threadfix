@@ -73,10 +73,10 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
         "cwe", FindingKey.CWE,
         "severity", FindingKey.SEVERITY_CODE
     );
-	
-	private StringBuffer currentRawFinding = new StringBuffer();
-	String requestMethod = null;
-	boolean getMethodText = false;
+
+    private StringBuffer currentRawFinding = new StringBuffer();
+    String requestMethod = null;
+    boolean getMethodText = false;
 	// Since the severity mappings are static and not included in the XML output,
 	// these have been reverse engineered from the code
 	private static Map<String, String> severityMap = map();

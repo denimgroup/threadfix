@@ -55,24 +55,14 @@ import static com.denimgroup.threadfix.CollectionUtils.map;
         }
 )
 public class NTOSpiderChannelImporter extends AbstractChannelImporter {
-
 	private static Map<String, FindingKey> tagMap = map();
-	static { 
+	static {
 		tagMap.put("vulntype",      FindingKey.VULN_CODE);
 		tagMap.put("attackscore",   FindingKey.SEVERITY_CODE);
 		tagMap.put("parametername", FindingKey.PARAMETER);
 		tagMap.put("normalizedurl", FindingKey.PATH);
-		tagMap.put("attackvalue",   FindingKey.VALUE);
-		tagMap.put("request", 	    FindingKey.REQUEST);
-		tagMap.put("response",	    FindingKey.RESPONSE);
-		tagMap.put("description",   FindingKey.DETAIL);
-		tagMap.put("recommendation", FindingKey.RECOMMENDATION);
-		tagMap.put("cweid",			FindingKey.CWE);
-		tagMap.put("rawfinding",    FindingKey.RAWFINDING);  //there is no element rawfinding, this is just a placeholder
 	}
 
-	private StringBuilder currentRawFinding = new StringBuilder();
-	
 	private static final String VULN_TAG = "vuln", SCAN_DATE = "scandate",
 			DATE_PATTERN = "yyyy-MM-dd kk:mm:ss", N_A = "n/a", VULN_LIST = "vulnlist",
 			VULN_SUMMARY = "VulnSummary";
@@ -117,18 +107,11 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	    		inFinding = true;
 	    	} else if (inFinding && tagMap.containsKey(qName.toLowerCase())) {
 	    		itemKey = tagMap.get(qName.toLowerCase());
-	    		getBuilderText(); //resets the stringbuffer
-	    	}
-	    	if (inFinding){
-	    		currentRawFinding.append(makeTag(name, qName, atts));
 	    	}
 	    }
 	    
 	    public void endElement (String uri, String name, String qName)
 	    {
-	    	if (inFinding)	    		
-	    		currentRawFinding.append("</").append(qName).append(">");
-	    	
 	    	if (VULN_TAG.equalsIgnoreCase(qName)) {
 	    		
 	    		if (findingMap.get(FindingKey.PARAMETER) != null && 
@@ -136,28 +119,17 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	    			findingMap.remove(FindingKey.PARAMETER);
 	    		}
 	    		
-	    		findingMap.put(FindingKey.RAWFINDING, currentRawFinding.toString());
 	    		Finding finding = constructFinding(findingMap);
 	    		
 	    		add(finding);
 	    		findingMap = null;
 	    		inFinding = false;
-	    		currentRawFinding.setLength(0);
 	    	} else if (inFinding && itemKey != null) {
 	    		String currentItem = getBuilderText();
-	    		if (currentItem != null && 
-    				("REQUEST".equals(itemKey.toString()) || "RESPONSE".equals(itemKey.toString()))){
-    				//these are base64 encoded in the xml
-    				currentItem = new String(javax.xml.bind.DatatypeConverter.parseBase64Binary(currentItem));
-    			}
-    					    		
-	    		//NTO vulnerabilities have multiple attack details per vulnerability, with an extra attackvalue sent at the beginning
-	    		//because of this we allow them to be overwritten in the findingMap to grab the last instance
-	    		if (currentItem != null ){ // && findingMap.get(itemKey) == null) {
-    					  findingMap.put(itemKey, currentItem);
+	    		if (currentItem != null && findingMap.get(itemKey) == null) {
+	    			findingMap.put(itemKey, currentItem);
 	    		}
 	    		itemKey = null;
-	    		
 	    	} else if (getDate) {
 	    		String tempDateString = getBuilderText();
 
@@ -166,15 +138,11 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	    		}
 	    		getDate = false;
 	    	}
-
 	    }
 
 	    public void characters (char ch[], int start, int length) {
 	    	if (getDate || itemKey != null) {
 	    		addTextToBuilder(ch, start, length);
-	    	}
-	    	if (inFinding){
-	    		currentRawFinding.append(ch, start, length);
 	    	}
 	    }
 	}

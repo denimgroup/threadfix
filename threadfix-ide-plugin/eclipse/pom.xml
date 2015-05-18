@@ -15,7 +15,27 @@
             <url>http://download.eclipse.org/releases/kepler</url>
         </repository>
     </repositories>
-
+    
   <artifactId>com.denimgroup.threadfix.plugin.eclipse.views.VulnerabilitiesView</artifactId>
   <packaging>eclipse-plugin</packaging>
+  <profiles>
+      <profile>
+        	<id>dependencycheck</id>
+        	<build>
+        		<plugins>
+        			<plugin>
+        				<groupId>org.owasp</groupId>
+        				<artifactId>dependency-check-maven</artifactId>
+        			</plugin>
+        		</plugins>
+        	</build>
+        </profile>
+  </profiles>
+  <dependencies>
+      <dependency>
+        	<groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>1.2.1</version>
+        </dependency>
+  </dependencies>
 </project>

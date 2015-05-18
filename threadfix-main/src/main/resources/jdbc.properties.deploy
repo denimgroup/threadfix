@@ -9,13 +9,5 @@ jdbc.password=
 hibernate.dialect=org.hibernate.dialect.HSQLDialect
 hibernate.hbm2ddl.auto=update
 
-#MYSQL
-#jdbc.driverClassName=com.mysql.jdbc.Driver
-#jdbc.url=jdbc:mysql://localhost:3306/stonemill?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&jdbcCompliantTruncation=false
-#jdbc.username=smuser
-#jdbc.password=password
-#hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
-#hibernate.hbm2ddl.auto=update
-
 hibernate.show_sql=false
-hibernate.format_sql=true
+hibernate.format_sql=truegit ad

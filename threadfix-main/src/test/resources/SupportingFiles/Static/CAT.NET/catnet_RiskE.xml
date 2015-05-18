@@ -1,0 +1,715 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Analysis>
+    <AnalysisEngineVersion>1.0.3455.36250</AnalysisEngineVersion>
+    <StartTimeStamp>Wednesday, December 02, 2009 4:15:03 PM</StartTimeStamp>
+    <StopTimeStamp>Wednesday, December 02, 2009 4:15:04 PM</StopTimeStamp>
+    <ElapsedTime>00:00:01.1875608</ElapsedTime>
+    <User>DOMAIN\user</User>
+    <DataFlowSuperGraph>
+      <Nodes>2930</Nodes>
+      <Edges>3744</Edges>
+    </DataFlowSuperGraph>
+    <Targets>
+      <Target>C:\Documents and Settings\user\Application Data\CATNet\PAC\6D062B07\bin\App_Web_3t9ihg5a.dll</Target>
+      <Target>C:\Project_Archive\Ziggurat\ZigguratUtility\TestApp\bin\Debug\TestApp.exe</Target>
+      <Target>C:\Project_Archive\Ziggurat\ZigguratUtility\SecondApp\bin\Debug\SecondApp.exe</Target>
+      <Target>C:\Documents and Settings\user\Application Data\CATNet\PAC\6D062B07\bin\App_Web_iidpmcva.dll</Target>
+      <Target>C:\Documents and Settings\user\Application Data\CATNet\PAC\6D062B07\bin\App_Code.dll</Target>
+    </Targets>
+  </Analysis>
+  <Rules>
+    <Rule>
+      <Name>Process Command Execution</Name>
+      <Identifier>ACESEC02</Identifier>
+      <TotalResults>0</TotalResults>
+      <Results />
+    </Rule>
+    <Rule>
+      <Name>File Canonicalization</Name>
+      <Identifier>ACESEC03</Identifier>
+      <TotalResults>0</TotalResults>
+      <Results />
+    </Rule>
+    <Rule>
+      <Name>Exception Information</Name>
+      <Identifier>ACESEC04</Identifier>
+      <TotalResults>0</TotalResults>
+      <Results />
+    </Rule>
+    <Rule>
+      <Name>LDAP Injection</Name>
+      <Identifier>ACESEC08</Identifier>
+      <TotalResults>0</TotalResults>
+      <Results />
+    </Rule>
+    <Rule>
+      <Name>XPath Injection</Name>
+      <Identifier>ACESEC07</Identifier>
+      <TotalResults>0</TotalResults>
+      <Results />
+    </Rule>
+    <Rule>
+      <Name>SQL Injection</Name>
+      <Identifier>ACESEC01</Identifier>
+      <TotalResults>4</TotalResults>
+      <Results>
+        <Result>
+          <Identifier>d5d89e60-b074-4363-8d1d-67997dbbb77f</Identifier>
+          <ResulstHash>RtTpETPkFZ10F5RTycAnLOsQUtc=</ResulstHash>
+          <Color>4</Color>
+          <Vector>WebRequest</Vector>
+          <EntryPoint>stack1 := stack1.{System.Web.HttpRequest}get_Item(stack2)</EntryPoint>
+          <EntryVariable>stack1</EntryVariable>
+          <ConfidenceReason />
+          <ConfidenceLevel>High</ConfidenceLevel>
+          <Suppressed>false</Suppressed>
+          <SuppressionType>None</SuppressionType>
+          <Resolution>Use parameterized SQL instead of dynamic SQL.</Resolution>
+          <ProblemDescription>A SQL injection vulnerability was found through
+		a user controlled variable that enters the application at
+		ViewStatement.aspx.cs:17 through the variable stack1 which
+		eventually leads to a SQL injection issue at
+		DBUtil.cs:52.</ProblemDescription>
+          <Transformations>
+            <Origin line="17" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\ViewStatement.aspx.cs">
+              <StatementMethod>ViewStatement.Page_Load</StatementMethod>
+              <Statement>string sql = "SELECT * FROM Statement WHERE StatementID = " + Request["StatementID"];</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack1</OutputVariable>
+            </Origin>
+            <CallResult line="17" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\ViewStatement.aspx.cs">
+              <StatementMethod>ViewStatement.Page_Load</StatementMethod>
+              <Statement>string sql = "SELECT * FROM Statement WHERE StatementID = " + Request["StatementID"];</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>sql</OutputVariable>
+              <InputVariable>stack1</InputVariable>
+              <ActualInputVariable>Return from HttpRequest.get_Item</ActualInputVariable>
+              <Method>System.String.Concat</Method>
+              <Argument>stack1</Argument>
+            </CallResult>
+            <MethodBoundary line="19" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\ViewStatement.aspx.cs">
+              <StatementMethod>ViewStatement.Page_Load</StatementMethod>
+              <Statement>SqlDataReader reader = DBUtil.ExecuteDataReader(con, sql);</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack1</OutputVariable>
+              <InputVariable>sql</InputVariable>
+              <ActualInputVariable>sql</ActualInputVariable>
+              <Method>DBUtil.ExecuteDataReader</Method>
+            </MethodBoundary>
+            <MethodBoundary line="52" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\App_Code\DBUtil.cs">
+              <StatementMethod>DBUtil.ExecuteDataReader</StatementMethod>
+              <Statement>cmd = new SqlCommand(sql);</Statement>
+              <StatementType>ExpressionStatement</StatementType>
+              <OutputVariable>stack0</OutputVariable>
+              <InputVariable>stack1</InputVariable>
+              <ActualInputVariable>sql</ActualInputVariable>
+              <Method>System.Data.SqlClient.SqlCommand..ctor</Method>
+            </MethodBoundary>
+          </Transformations>
+        </Result>
+        <Result>
+          <Identifier>2264a008-c823-45a8-af1c-09e148c46696</Identifier>
+          <ResulstHash>VgJQByBcElki8Jqz2mwkcY4XA0k=</ResulstHash>
+          <Color>5</Color>
+          <Vector>WebRequest</Vector>
+          <EntryPoint>stack0 := stack0.{System.Web.UI.WebControls.TextBox}get_Text()</EntryPoint>
+          <EntryVariable>stack0</EntryVariable>
+          <ConfidenceReason />
+          <ConfidenceLevel>High</ConfidenceLevel>
+          <Suppressed>false</Suppressed>
+          <SuppressionType>None</SuppressionType>
+          <Resolution>Use parameterized SQL instead of dynamic SQL.</Resolution>
+          <ProblemDescription>A SQL injection vulnerability was found through
+		a user controlled variable that enters the application at
+		MakePayment.aspx.cs:31 through the variable stack0 which
+		eventually leads to a SQL injection issue at
+		DBUtil.cs:64.</ProblemDescription>
+          <Transformations>
+            <Origin line="31" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>decimal paymentAmount = Convert.ToDecimal(txtAmount.Text);</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack0</OutputVariable>
+            </Origin>
+            <CallResult line="31" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>decimal paymentAmount = Convert.ToDecimal(txtAmount.Text);</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>paymentAmount</OutputVariable>
+              <InputVariable>stack0</InputVariable>
+              <ActualInputVariable>Return from TextBox.get_Text</ActualInputVariable>
+              <Method>System.Convert.ToDecimal</Method>
+              <Argument>stack0</Argument>
+            </CallResult>
+            <CallResult line="34" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>myCustomer._Balance -= paymentAmount;</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack1</OutputVariable>
+              <InputVariable>paymentAmount</InputVariable>
+              <ActualInputVariable>paymentAmount</ActualInputVariable>
+              <Method>System.Decimal.op_Subtraction</Method>
+              <Argument>stack2</Argument>
+            </CallResult>
+            <PropertyIndirection line="34" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>myCustomer._Balance -= paymentAmount;</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>Customer._Balance</OutputVariable>
+              <InputVariable>stack1</InputVariable>
+              <ActualInputVariable>Return from Decimal.op_Subtraction</ActualInputVariable>
+            </PropertyIndirection>
+            <CallResult line="35" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>string sql = "UPDATE [User] SET Balance = " + myCustomer._Balance + " WHERE UserID = " + myCustomer._ID;</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>sql</OutputVariable>
+              <InputVariable>Customer._Balance</InputVariable>
+              <ActualInputVariable>Customer._Balance</ActualInputVariable>
+              <Method>System.String.Concat</Method>
+              <Argument>stack0</Argument>
+            </CallResult>
+            <MethodBoundary line="36" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>DBUtil.ExecuteUpdate(sql);</Statement>
+              <StatementType>ExpressionStatement</StatementType>
+              <OutputVariable>stack0</OutputVariable>
+              <InputVariable>sql</InputVariable>
+              <ActualInputVariable>sql</ActualInputVariable>
+              <Method>DBUtil.ExecuteUpdate</Method>
+            </MethodBoundary>
+            <MethodBoundary line="64" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\App_Code\DBUtil.cs">
+              <StatementMethod>DBUtil.ExecuteUpdate</StatementMethod>
+              <Statement>cmd = new SqlCommand(sql);</Statement>
+              <StatementType>ExpressionStatement</StatementType>
+              <OutputVariable>stack0</OutputVariable>
+              <InputVariable>stack0</InputVariable>
+              <ActualInputVariable>sql</ActualInputVariable>
+              <Method>System.Data.SqlClient.SqlCommand..ctor</Method>
+            </MethodBoundary>
+          </Transformations>
+        </Result>
+        <Result>
+          <Identifier>0a01e1a7-95c6-4732-8623-911a805fc1b2</Identifier>
+          <ResulstHash>/ula+I9sI+49bj1aJwgpJD9U08Y=</ResulstHash>
+          <Color>8</Color>
+          <Vector>WebRequest</Vector>
+          <EntryPoint>stack2 := stack2.{System.Web.UI.WebControls.TextBox}get_Text()</EntryPoint>
+          <EntryVariable>stack2</EntryVariable>
+          <ConfidenceReason />
+          <ConfidenceLevel>High</ConfidenceLevel>
+          <Suppressed>false</Suppressed>
+          <SuppressionType>None</SuppressionType>
+          <Resolution>Use parameterized SQL instead of dynamic SQL.</Resolution>
+          <ProblemDescription>A SQL injection vulnerability was found through
+		a user controlled variable that enters the application at
+		LoginPage.aspx.cs:21 through the variable stack2 which
+		eventually leads to a SQL injection issue at
+		LoginPage.aspx.cs:28.</ProblemDescription>
+          <Transformations>
+            <Origin line="21" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\LoginPage.aspx.cs">
+              <StatementMethod>LoginPage.btnLogin_Click</StatementMethod>
+              <Statement>string sql = @"SELECT * FROM [User] WHERE Username = '" + txtUsername.Text + @"' AND Password = '" + txtPassword.Text + @"'";</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack2</OutputVariable>
+            </Origin>
+            <CallResult line="21" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\LoginPage.aspx.cs">
+              <StatementMethod>LoginPage.btnLogin_Click</StatementMethod>
+              <Statement>string sql = @"SELECT * FROM [User] WHERE Username = '" + txtUsername.Text + @"' AND Password = '" + txtPassword.Text + @"'";</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>sql</OutputVariable>
+              <InputVariable>stack2</InputVariable>
+              <ActualInputVariable>stack2</ActualInputVariable>
+              <Method>System.String.Concat</Method>
+              <Argument>stack0</Argument>
+            </CallResult>
+            <MethodBoundary line="28" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\LoginPage.aspx.cs">
+              <StatementMethod>LoginPage.btnLogin_Click</StatementMethod>
+              <Statement>cmd = new SqlCommand(sql);</Statement>
+              <StatementType>ExpressionStatement</StatementType>
+              <OutputVariable>stack0</OutputVariable>
+              <InputVariable>sql</InputVariable>
+              <ActualInputVariable>sql</ActualInputVariable>
+              <Method>System.Data.SqlClient.SqlCommand..ctor</Method>
+            </MethodBoundary>
+          </Transformations>
+        </Result>
+        <Result>
+          <Identifier>139a9c32-2123-4a41-8b58-2a4025675eaa</Identifier>
+          <ResulstHash>/ula+I9sI+49bj1aJwgpJD9U08Y=</ResulstHash>
+          <Color>7</Color>
+          <Vector>WebRequest</Vector>
+          <EntryPoint>stack2 := stack2.{System.Web.UI.WebControls.TextBox}get_Text()</EntryPoint>
+          <EntryVariable>stack2</EntryVariable>
+          <ConfidenceReason />
+          <ConfidenceLevel>High</ConfidenceLevel>
+          <Suppressed>false</Suppressed>
+          <SuppressionType>None</SuppressionType>
+          <Resolution>Use parameterized SQL instead of dynamic SQL.</Resolution>
+          <ProblemDescription>A SQL injection vulnerability was found through
+		a user controlled variable that enters the application at
+		LoginPage.aspx.cs:21 through the variable stack2 which
+		eventually leads to a SQL injection issue at
+		LoginPage.aspx.cs:28.</ProblemDescription>
+          <Transformations>
+            <Origin line="21" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\LoginPage.aspx.cs">
+              <StatementMethod>LoginPage.btnLogin_Click</StatementMethod>
+              <Statement>string sql = @"SELECT * FROM [User] WHERE Username = '" + txtUsername.Text + @"' AND Password = '" + txtPassword.Text + @"'";</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack2</OutputVariable>
+            </Origin>
+            <CallResult line="21" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\LoginPage.aspx.cs">
+              <StatementMethod>LoginPage.btnLogin_Click</StatementMethod>
+              <Statement>string sql = @"SELECT * FROM [User] WHERE Username = '" + txtUsername.Text + @"' AND Password = '" + txtPassword.Text + @"'";</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>sql</OutputVariable>
+              <InputVariable>stack2</InputVariable>
+              <ActualInputVariable>stack2</ActualInputVariable>
+              <Method>System.String.Concat</Method>
+              <Argument>stack0</Argument>
+            </CallResult>
+            <MethodBoundary line="28" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\LoginPage.aspx.cs">
+              <StatementMethod>LoginPage.btnLogin_Click</StatementMethod>
+              <Statement>cmd = new SqlCommand(sql);</Statement>
+              <StatementType>ExpressionStatement</StatementType>
+              <OutputVariable>stack0</OutputVariable>
+              <InputVariable>sql</InputVariable>
+              <ActualInputVariable>sql</ActualInputVariable>
+              <Method>System.Data.SqlClient.SqlCommand..ctor</Method>
+            </MethodBoundary>
+          </Transformations>
+        </Result>
+      </Results>
+    </Rule>
+    <Rule>
+      <Name>Redirection to User Controlled Site</Name>
+      <Identifier>ACESEC06</Identifier>
+      <TotalResults>0</TotalResults>
+      <Results />
+    </Rule>
+    <Rule>
+      <Name>Cross-Site Scripting</Name>
+      <Identifier>ACESEC05</Identifier>
+      <TotalResults>8</TotalResults>
+      <Results>
+        <Result>
+          <Identifier>4b469de0-8dc6-4416-a5b9-b42714663293</Identifier>
+          <ResulstHash>tOhdbpprPCbLePC3zLtuQlLlwto=</ResulstHash>
+          <Color>2</Color>
+          <Vector>WebRequest</Vector>
+          <EntryPoint>stack0 := stack0.{System.Web.HttpRequest}get_Item(stack1)</EntryPoint>
+          <EntryVariable>stack0</EntryVariable>
+          <ConfidenceReason />
+          <ConfidenceLevel>High</ConfidenceLevel>
+          <Suppressed>false</Suppressed>
+          <SuppressionType>None</SuppressionType>
+          <Resolution>Use the Anti-XSS library to properly encode the data before rendering it</Resolution>
+          <ProblemDescription>A cross-site scripting vulnerability was found through
+		a user controlled variable that enters the application at
+		Message.aspx:28 through the variable stack0 which
+		eventually leads to a cross-site scripting issue at
+		Message.aspx:28.</ProblemDescription>
+          <Transformations>
+            <Origin line="28" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\Message.aspx">
+              <StatementMethod>ASP.message_aspx.__Renderform1</StatementMethod>
+              <Statement>&lt;%= Request["Msg"] %&gt;</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack0</OutputVariable>
+            </Origin>
+            <MethodBoundary line="28" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\Message.aspx">
+              <StatementMethod>ASP.message_aspx.__Renderform1</StatementMethod>
+              <Statement>&lt;%= Request["Msg"] %&gt;</Statement>
+              <StatementType>ExpressionStatement</StatementType>
+              <OutputVariable>stack0</OutputVariable>
+              <InputVariable>stack0</InputVariable>
+              <ActualInputVariable>Return from HttpRequest.get_Item</ActualInputVariable>
+              <Method>System.IO.TextWriter.Write</Method>
+            </MethodBoundary>
+          </Transformations>
+        </Result>
+        <Result>
+          <Identifier>be9c039b-f2a0-49d6-a61b-c36e17142341</Identifier>
+          <ResulstHash>PgxrkCJOT2ug9JKbZ4zbl5iakHM=</ResulstHash>
+          <Color>6</Color>
+          <Vector>WebRequest</Vector>
+          <EntryPoint>stack2 := stack2.{System.Web.UI.WebControls.TextBox}get_Text()</EntryPoint>
+          <EntryVariable>stack2</EntryVariable>
+          <ConfidenceReason />
+          <ConfidenceLevel>High</ConfidenceLevel>
+          <Suppressed>false</Suppressed>
+          <SuppressionType>None</SuppressionType>
+          <Resolution>Use the Anti-XSS library to properly encode the data before rendering it</Resolution>
+          <ProblemDescription>A cross-site scripting vulnerability was found through
+		a user controlled variable that enters the application at
+		MakePayment.aspx.cs:38 through the variable stack2 which
+		eventually leads to a cross-site scripting issue at
+		MakePayment.aspx.cs:39.</ProblemDescription>
+          <Transformations>
+            <Origin line="38" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>string msg = String.Format(@"A charge of {0:c} was applied to credit card account {1}.  Your new balance is {2:c}.", paymentAmount, txtCardNumber.Text, myCustomer._Balance);</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack2</OutputVariable>
+            </Origin>
+            <CallResult line="38" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>string msg = String.Format(@"A charge of {0:c} was applied to credit card account {1}.  Your new balance is {2:c}.", paymentAmount, txtCardNumber.Text, myCustomer._Balance);</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>msg</OutputVariable>
+              <InputVariable>stack2</InputVariable>
+              <ActualInputVariable>Return from TextBox.get_Text</ActualInputVariable>
+              <Method>System.String.Format</Method>
+              <Argument>stack2</Argument>
+            </CallResult>
+            <MethodBoundary line="39" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>lblStatus.Text = msg;</Statement>
+              <StatementType>ExpressionStatement</StatementType>
+              <OutputVariable>stack1</OutputVariable>
+              <InputVariable>msg</InputVariable>
+              <ActualInputVariable>msg</ActualInputVariable>
+              <Method>System.Web.UI.WebControls.Label.set_Text</Method>
+            </MethodBoundary>
+          </Transformations>
+        </Result>
+        <Result>
+          <Identifier>d629f770-7455-4890-abf8-c06e5ca5edad</Identifier>
+          <ResulstHash>nHxVkzNMRnNhimqLyxG+DtJznhU=</ResulstHash>
+          <Color>5</Color>
+          <Vector>WebRequest</Vector>
+          <EntryPoint>stack0 := stack0.{System.Web.UI.WebControls.TextBox}get_Text()</EntryPoint>
+          <EntryVariable>stack0</EntryVariable>
+          <ConfidenceReason />
+          <ConfidenceLevel>High</ConfidenceLevel>
+          <Suppressed>false</Suppressed>
+          <SuppressionType>None</SuppressionType>
+          <Resolution>Use the Anti-XSS library to properly encode the data before rendering it</Resolution>
+          <ProblemDescription>A cross-site scripting vulnerability was found through
+		a user controlled variable that enters the application at
+		MakePayment.aspx.cs:31 through the variable stack0 which
+		eventually leads to a cross-site scripting issue at
+		MakePayment.aspx.cs:39.</ProblemDescription>
+          <Transformations>
+            <Origin line="31" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>decimal paymentAmount = Convert.ToDecimal(txtAmount.Text);</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack0</OutputVariable>
+            </Origin>
+            <CallResult line="31" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>decimal paymentAmount = Convert.ToDecimal(txtAmount.Text);</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>paymentAmount</OutputVariable>
+              <InputVariable>stack0</InputVariable>
+              <ActualInputVariable>Return from TextBox.get_Text</ActualInputVariable>
+              <Method>System.Convert.ToDecimal</Method>
+              <Argument>stack0</Argument>
+            </CallResult>
+            <CallResult line="38" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>string msg = String.Format(@"A charge of {0:c} was applied to credit card account {1}.  Your new balance is {2:c}.", paymentAmount, txtCardNumber.Text, myCustomer._Balance);</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>msg</OutputVariable>
+              <InputVariable>paymentAmount</InputVariable>
+              <ActualInputVariable>paymentAmount</ActualInputVariable>
+              <Method>System.String.Format</Method>
+              <Argument>stack1</Argument>
+            </CallResult>
+            <MethodBoundary line="39" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>lblStatus.Text = msg;</Statement>
+              <StatementType>ExpressionStatement</StatementType>
+              <OutputVariable>stack1</OutputVariable>
+              <InputVariable>msg</InputVariable>
+              <ActualInputVariable>msg</ActualInputVariable>
+              <Method>System.Web.UI.WebControls.Label.set_Text</Method>
+            </MethodBoundary>
+          </Transformations>
+        </Result>
+        <Result>
+          <Identifier>9708d090-657a-4eac-8ecc-ed36e9850335</Identifier>
+          <ResulstHash>7N9/eLyyU+qm6EIqoMWahjsPiAE=</ResulstHash>
+          <Color>5</Color>
+          <Vector>WebRequest</Vector>
+          <EntryPoint>stack0 := stack0.{System.Web.UI.WebControls.TextBox}get_Text()</EntryPoint>
+          <EntryVariable>stack0</EntryVariable>
+          <ConfidenceReason />
+          <ConfidenceLevel>High</ConfidenceLevel>
+          <Suppressed>false</Suppressed>
+          <SuppressionType>None</SuppressionType>
+          <Resolution>Use the Anti-XSS library to properly encode the data before rendering it</Resolution>
+          <ProblemDescription>A cross-site scripting vulnerability was found through
+		a user controlled variable that enters the application at
+		MakePayment.aspx.cs:31 through the variable stack0 which
+		eventually leads to a cross-site scripting issue at
+		MakePayment.aspx.cs:39.</ProblemDescription>
+          <Transformations>
+            <Origin line="31" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>decimal paymentAmount = Convert.ToDecimal(txtAmount.Text);</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack0</OutputVariable>
+            </Origin>
+            <CallResult line="31" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>decimal paymentAmount = Convert.ToDecimal(txtAmount.Text);</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>paymentAmount</OutputVariable>
+              <InputVariable>stack0</InputVariable>
+              <ActualInputVariable>Return from TextBox.get_Text</ActualInputVariable>
+              <Method>System.Convert.ToDecimal</Method>
+              <Argument>stack0</Argument>
+            </CallResult>
+            <CallResult line="34" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>myCustomer._Balance -= paymentAmount;</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack1</OutputVariable>
+              <InputVariable>paymentAmount</InputVariable>
+              <ActualInputVariable>paymentAmount</ActualInputVariable>
+              <Method>System.Decimal.op_Subtraction</Method>
+              <Argument>stack2</Argument>
+            </CallResult>
+            <PropertyIndirection line="34" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>myCustomer._Balance -= paymentAmount;</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>Customer._Balance</OutputVariable>
+              <InputVariable>stack1</InputVariable>
+              <ActualInputVariable>Return from Decimal.op_Subtraction</ActualInputVariable>
+            </PropertyIndirection>
+            <CallResult line="38" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>string msg = String.Format(@"A charge of {0:c} was applied to credit card account {1}.  Your new balance is {2:c}.", paymentAmount, txtCardNumber.Text, myCustomer._Balance);</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>msg</OutputVariable>
+              <InputVariable>Customer._Balance</InputVariable>
+              <ActualInputVariable>Customer._Balance</ActualInputVariable>
+              <Method>System.String.Format</Method>
+              <Argument>stack3</Argument>
+            </CallResult>
+            <MethodBoundary line="39" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>lblStatus.Text = msg;</Statement>
+              <StatementType>ExpressionStatement</StatementType>
+              <OutputVariable>stack1</OutputVariable>
+              <InputVariable>msg</InputVariable>
+              <ActualInputVariable>msg</ActualInputVariable>
+              <Method>System.Web.UI.WebControls.Label.set_Text</Method>
+            </MethodBoundary>
+          </Transformations>
+        </Result>
+        <Result>
+          <Identifier>aedf83f0-9a28-440f-abea-7b828b757805</Identifier>
+          <ResulstHash>VZKLGwHnH/EIaRu275qlLX+Fs04=</ResulstHash>
+          <Color>5</Color>
+          <Vector>WebRequest</Vector>
+          <EntryPoint>stack0 := stack0.{System.Web.UI.WebControls.TextBox}get_Text()</EntryPoint>
+          <EntryVariable>stack0</EntryVariable>
+          <ConfidenceReason />
+          <ConfidenceLevel>High</ConfidenceLevel>
+          <Suppressed>false</Suppressed>
+          <SuppressionType>None</SuppressionType>
+          <Resolution>Use the Anti-XSS library to properly encode the data before rendering it</Resolution>
+          <ProblemDescription>A cross-site scripting vulnerability was found through
+		a user controlled variable that enters the application at
+		MakePayment.aspx.cs:31 through the variable stack0 which
+		eventually leads to a cross-site scripting issue at
+		MakePayment.aspx.cs:40.</ProblemDescription>
+          <Transformations>
+            <Origin line="31" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>decimal paymentAmount = Convert.ToDecimal(txtAmount.Text);</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack0</OutputVariable>
+            </Origin>
+            <CallResult line="31" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>decimal paymentAmount = Convert.ToDecimal(txtAmount.Text);</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>paymentAmount</OutputVariable>
+              <InputVariable>stack0</InputVariable>
+              <ActualInputVariable>Return from TextBox.get_Text</ActualInputVariable>
+              <Method>System.Convert.ToDecimal</Method>
+              <Argument>stack0</Argument>
+            </CallResult>
+            <CallResult line="34" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>myCustomer._Balance -= paymentAmount;</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack1</OutputVariable>
+              <InputVariable>paymentAmount</InputVariable>
+              <ActualInputVariable>paymentAmount</ActualInputVariable>
+              <Method>System.Decimal.op_Subtraction</Method>
+              <Argument>stack2</Argument>
+            </CallResult>
+            <PropertyIndirection line="34" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>myCustomer._Balance -= paymentAmount;</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>Customer._Balance</OutputVariable>
+              <InputVariable>stack1</InputVariable>
+              <ActualInputVariable>Return from Decimal.op_Subtraction</ActualInputVariable>
+            </PropertyIndirection>
+            <CallResult line="40" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>lblBalance.Text = String.Format("{0:c}", myCustomer._Balance);</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack1</OutputVariable>
+              <InputVariable>Customer._Balance</InputVariable>
+              <ActualInputVariable>Customer._Balance</ActualInputVariable>
+              <Method>System.String.Format</Method>
+              <Argument>stack2</Argument>
+            </CallResult>
+            <MethodBoundary line="40" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\MakePayment.aspx.cs">
+              <StatementMethod>MakePayment.btnMakePayment_Click</StatementMethod>
+              <Statement>lblBalance.Text = String.Format("{0:c}", myCustomer._Balance);</Statement>
+              <StatementType>ExpressionStatement</StatementType>
+              <OutputVariable>stack1</OutputVariable>
+              <InputVariable>stack1</InputVariable>
+              <ActualInputVariable>Return from String.Format</ActualInputVariable>
+              <Method>System.Web.UI.WebControls.Label.set_Text</Method>
+            </MethodBoundary>
+          </Transformations>
+        </Result>
+        <Result>
+          <Identifier>f3206c56-f774-46ab-b78f-561ff08dc2b9</Identifier>
+          <ResulstHash>yYDBuWsldIArv7I5O0yAwem1cP0=</ResulstHash>
+          <Color>10</Color>
+          <Vector>WebRequest</Vector>
+          <EntryPoint>stack3 := stack3.{System.Web.UI.WebControls.TextBox}get_Text()</EntryPoint>
+          <EntryVariable>stack3</EntryVariable>
+          <ConfidenceReason />
+          <ConfidenceLevel>High</ConfidenceLevel>
+          <Suppressed>false</Suppressed>
+          <SuppressionType>None</SuppressionType>
+          <Resolution>Use the Anti-XSS library to properly encode the data before rendering it</Resolution>
+          <ProblemDescription>A cross-site scripting vulnerability was found through
+		a user controlled variable that enters the application at
+		ContactUs.aspx.cs:20 through the variable stack3 which
+		eventually leads to a cross-site scripting issue at
+		ContactUs.aspx.cs:20.</ProblemDescription>
+          <Transformations>
+            <Origin line="20" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\ContactUs.aspx.cs">
+              <StatementMethod>ContactUs.Button1_Click</StatementMethod>
+              <Statement>lblMessage.Text = "Message sent to " + Request["email"] + " with subject " + txtSubject.Text + " and content " + txtMessage.Text;</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack3</OutputVariable>
+            </Origin>
+            <CallResult line="20" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\ContactUs.aspx.cs">
+              <StatementMethod>ContactUs.Button1_Click</StatementMethod>
+              <Statement>lblMessage.Text = "Message sent to " + Request["email"] + " with subject " + txtSubject.Text + " and content " + txtMessage.Text;</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack1</OutputVariable>
+              <InputVariable>stack3</InputVariable>
+              <ActualInputVariable>stack3</ActualInputVariable>
+              <Method>System.String.Concat</Method>
+              <Argument>stack1</Argument>
+            </CallResult>
+            <MethodBoundary line="20" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\ContactUs.aspx.cs">
+              <StatementMethod>ContactUs.Button1_Click</StatementMethod>
+              <Statement>lblMessage.Text = "Message sent to " + Request["email"] + " with subject " + txtSubject.Text + " and content " + txtMessage.Text;</Statement>
+              <StatementType>ExpressionStatement</StatementType>
+              <OutputVariable>stack1</OutputVariable>
+              <InputVariable>stack1</InputVariable>
+              <ActualInputVariable>Return from String.Concat</ActualInputVariable>
+              <Method>System.Web.UI.WebControls.Label.set_Text</Method>
+            </MethodBoundary>
+          </Transformations>
+        </Result>
+        <Result>
+          <Identifier>77aeebb4-7eec-4b7e-88bc-323d3bd531ca</Identifier>
+          <ResulstHash>yYDBuWsldIArv7I5O0yAwem1cP0=</ResulstHash>
+          <Color>9</Color>
+          <Vector>WebRequest</Vector>
+          <EntryPoint>stack3 := stack3.{System.Web.UI.WebControls.TextBox}get_Text()</EntryPoint>
+          <EntryVariable>stack3</EntryVariable>
+          <ConfidenceReason />
+          <ConfidenceLevel>High</ConfidenceLevel>
+          <Suppressed>false</Suppressed>
+          <SuppressionType>None</SuppressionType>
+          <Resolution>Use the Anti-XSS library to properly encode the data before rendering it</Resolution>
+          <ProblemDescription>A cross-site scripting vulnerability was found through
+		a user controlled variable that enters the application at
+		ContactUs.aspx.cs:20 through the variable stack3 which
+		eventually leads to a cross-site scripting issue at
+		ContactUs.aspx.cs:20.</ProblemDescription>
+          <Transformations>
+            <Origin line="20" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\ContactUs.aspx.cs">
+              <StatementMethod>ContactUs.Button1_Click</StatementMethod>
+              <Statement>lblMessage.Text = "Message sent to " + Request["email"] + " with subject " + txtSubject.Text + " and content " + txtMessage.Text;</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack3</OutputVariable>
+            </Origin>
+            <CallResult line="20" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\ContactUs.aspx.cs">
+              <StatementMethod>ContactUs.Button1_Click</StatementMethod>
+              <Statement>lblMessage.Text = "Message sent to " + Request["email"] + " with subject " + txtSubject.Text + " and content " + txtMessage.Text;</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack1</OutputVariable>
+              <InputVariable>stack3</InputVariable>
+              <ActualInputVariable>stack3</ActualInputVariable>
+              <Method>System.String.Concat</Method>
+              <Argument>stack1</Argument>
+            </CallResult>
+            <MethodBoundary line="20" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\ContactUs.aspx.cs">
+              <StatementMethod>ContactUs.Button1_Click</StatementMethod>
+              <Statement>lblMessage.Text = "Message sent to " + Request["email"] + " with subject " + txtSubject.Text + " and content " + txtMessage.Text;</Statement>
+              <StatementType>ExpressionStatement</StatementType>
+              <OutputVariable>stack1</OutputVariable>
+              <InputVariable>stack1</InputVariable>
+              <ActualInputVariable>Return from String.Concat</ActualInputVariable>
+              <Method>System.Web.UI.WebControls.Label.set_Text</Method>
+            </MethodBoundary>
+          </Transformations>
+        </Result>
+        <Result>
+          <Identifier>d1048002-fe71-4703-bba2-14806a52fa0d</Identifier>
+          <ResulstHash>Clhx8B/UgbPRATk2NkKG/tSDygA=</ResulstHash>
+          <Color>3</Color>
+          <Vector>WebRequest</Vector>
+          <EntryPoint>stack3 := stack3.{System.Web.HttpRequest}get_Item(stack4)</EntryPoint>
+          <EntryVariable>stack3</EntryVariable>
+          <ConfidenceReason />
+          <ConfidenceLevel>High</ConfidenceLevel>
+          <Suppressed>false</Suppressed>
+          <SuppressionType>None</SuppressionType>
+          <Resolution>Use the Anti-XSS library to properly encode the data before rendering it</Resolution>
+          <ProblemDescription>A cross-site scripting vulnerability was found through
+		a user controlled variable that enters the application at
+		ContactUs.aspx.cs:20 through the variable stack3 which
+		eventually leads to a cross-site scripting issue at
+		ContactUs.aspx.cs:20.</ProblemDescription>
+          <Transformations>
+            <Origin line="20" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\ContactUs.aspx.cs">
+              <StatementMethod>ContactUs.Button1_Click</StatementMethod>
+              <Statement>lblMessage.Text = "Message sent to " + Request["email"] + " with subject " + txtSubject.Text + " and content " + txtMessage.Text;</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack3</OutputVariable>
+            </Origin>
+            <CallResult line="20" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\ContactUs.aspx.cs">
+              <StatementMethod>ContactUs.Button1_Click</StatementMethod>
+              <Statement>lblMessage.Text = "Message sent to " + Request["email"] + " with subject " + txtSubject.Text + " and content " + txtMessage.Text;</Statement>
+              <StatementType>AssignmentStatement</StatementType>
+              <OutputVariable>stack1</OutputVariable>
+              <InputVariable>stack3</InputVariable>
+              <ActualInputVariable>stack3</ActualInputVariable>
+              <Method>System.String.Concat</Method>
+              <Argument>stack1</Argument>
+            </CallResult>
+            <MethodBoundary line="20" file="c:\Project_Archive\Ziggurat\ZigguratUtility\ZigguratUtilityWeb\ContactUs.aspx.cs">
+              <StatementMethod>ContactUs.Button1_Click</StatementMethod>
+              <Statement>lblMessage.Text = "Message sent to " + Request["email"] + " with subject " + txtSubject.Text + " and content " + txtMessage.Text;</Statement>
+              <StatementType>ExpressionStatement</StatementType>
+              <OutputVariable>stack1</OutputVariable>
+              <InputVariable>stack1</InputVariable>
+              <ActualInputVariable>Return from String.Concat</ActualInputVariable>
+              <Method>System.Web.UI.WebControls.Label.set_Text</Method>
+            </MethodBoundary>
+          </Transformations>
+        </Result>
+      </Results>
+    </Rule>
+  </Rules>
+</Report>

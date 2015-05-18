@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<netsparker generated="12/10/2009 9:49:50 AM">
+
+	<target>
+		<url><![CDATA[http://satoffice044/RiskE/]]></url>
+	</target>
+
+	<vulnerability>
+		<url><![CDATA[http://satoffice044/RiskE/]]></url>
+		<extracteddata></extracteddata>
+		<type>IISVersion</type>
+	</vulnerability>
+
+	<vulnerability>
+		<url><![CDATA[http://satoffice044/RiskE/]]></url>
+		<extracteddata></extracteddata>
+		<type>ASPNETVersionDisclosure</type>
+	</vulnerability>
+
+	<vulnerability>
+		<url><![CDATA[http://satoffice044/RiskE/Images/]]></url>
+		<extracteddata></extracteddata>
+		<type>ForbiddenResource</type>
+	</vulnerability>
+
+	<vulnerability>
+		<url><![CDATA[http://satoffice044/RiskE/LoginPage.aspx]]></url>
+		<extracteddata></extracteddata>
+		<type>AutoCompleteEnabled</type>
+	</vulnerability>
+
+	<vulnerability>
+		<url><![CDATA[http://satoffice044/RiskE/LoginPage.aspx]]></url>
+		<extracteddata></extracteddata>
+		<type>PasswordOverHTTP</type>
+	</vulnerability>
+
+	<vulnerability>
+		<url><![CDATA[http://satoffice044/RiskE/ContactUs.aspx]]></url>
+		<extracteddata></extracteddata>
+		<type>EmailDisclosure</type>
+	</vulnerability>
+
+	<vulnerability>
+		<url><![CDATA[http://satoffice044/RiskE/LoginPage.aspx]]></url>
+		<extracteddata></extracteddata>
+		<type>InternalServerError</type>
+	</vulnerability>
+
+	<vulnerability>
+		<url><![CDATA[http://satoffice044/RiskE/LoginPage.aspx]]></url>
+		<extracteddata></extracteddata>
+		<type>PossibleInternalWindowsPathLeakage</type>
+	</vulnerability>
+
+	<vulnerability>
+		<url><![CDATA[http://satoffice044/RiskE/LoginPage.aspx]]></url>
+		<extracteddata></extracteddata>
+		<type>ASPNETStackTrace</type>
+	</vulnerability>
+
+	<vulnerability>
+		<url><![CDATA[http://satoffice044/RiskE/Default.aspx?netsparker="><script>netsparker(0x000018)</script>]]></url>
+		<extracteddata></extracteddata>
+		<type>PossibleInternalWindowsPathLeakage</type>
+	</vulnerability>
+
+	<vulnerability>
+		<url><![CDATA[http://satoffice044/RiskE/ContactUs.aspx?netsparker="><script>netsparker(0x000016)</script>]]></url>
+		<extracteddata></extracteddata>
+		<type>PossibleInternalWindowsPathLeakage</type>
+	</vulnerability>
+
+	<vulnerability>
+		<url><![CDATA[http://satoffice044/RiskE/?netsparker="><script>netsparker(0x000025)</script>]]></url>
+		<extracteddata></extracteddata>
+		<type>PossibleInternalWindowsPathLeakage</type>
+	</vulnerability>
+
+	<vulnerability>
+		<url><![CDATA[http://satoffice044/RiskE/LoginPage.aspx/"onmouseover="netsparker(0x000031)/"onmouseover="netsparker(0x000031)]]></url>
+		<extracteddata></extracteddata>
+		<type>PossibleInternalWindowsPathLeakage</type>
+	</vulnerability>
+
+	<vulnerability>
+		<url><![CDATA[http://satoffice044/RiskE/LoginPage.aspx/"onmouseover="netsparker(0x000040)]]></url>
+		<extracteddata></extracteddata>
+		<type>PossibleInternalWindowsPathLeakage</type>
+	</vulnerability>
+
+	<vulnerability>
+		<url><![CDATA[http://satoffice044/RiskE/Message.aspx?Msg="><script>netsparker(0x00009E)</script>]]></url>
+		<extracteddata></extracteddata>
+		<type>XSS</type>
+	</vulnerability>
+
+	<vulnerability>
+		<url><![CDATA[http://satoffice044/RiskE/Message.aspx?Msg="><script>netsparker(0x0000B1)</script>]]></url>
+		<extracteddata></extracteddata>
+		<type>XSS</type>
+	</vulnerability>
+
+	<vulnerability>
+		<url><![CDATA[http://satoffice044/RiskE/LoginPage.aspx]]></url>
+		<extracteddata></extracteddata>
+		<type>PossibleSqlInjection</type>
+	</vulnerability>
+
+	<vulnerability>
+		<url><![CDATA[http://satoffice044/RiskE/LoginPage.aspx]]></url>
+		<extracteddata></extracteddata>
+		<type>PossibleSqlInjection</type>
+	</vulnerability>
+
+	<vulnerability>
+		<url><![CDATA[http://satoffice044/RiskE/LoginPage.aspx]]></url>
+		<extracteddata></extracteddata>
+		<type>MSSQLIdentified</type>
+	</vulnerability>
+
+	<vulnerability>
+		<url><![CDATA[http://satoffice044/RiskE/LoginPage.aspx]]></url>
+		<extracteddata></extracteddata>
+		<type>DBConnectedAsAdmin</type>
+	</vulnerability>
+
+	<vulnerability>
+		<url><![CDATA[http://satoffice044/RiskE/LoginPage.aspx]]></url>
+		<extracteddata></extracteddata>
+		<type>ConfirmedSQLInjection</type>
+	</vulnerability>
+
+	<vulnerability>
+		<url><![CDATA[http://satoffice044/RiskE/LoginPage.aspx]]></url>
+		<extracteddata></extracteddata>
+		<type>ConfirmedSQLInjection</type>
+	</vulnerability>
+
+	<vulnerability>
+		<url><![CDATA[http://satoffice044/RiskE/LoginPage.aspx]]></url>
+		<extracteddata></extracteddata>
+		<type>PossibleSqlInjection</type>
+	</vulnerability>
+
+</netsparker>
+

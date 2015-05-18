@@ -64,6 +64,25 @@
       </plugin>
     </plugins>
   </build>
-
+  <dependencies>
+  <dependency>
+        	<groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>1.2.3</version>
+        </dependency>
+  </dependencies>
+  <profiles>
+  <profile>
+        	<id>dependencycheck</id>
+        	<build>
+        		<plugins>
+        			<plugin>
+        				<groupId>org.owasp</groupId>
+        				<artifactId>dependency-check-maven</artifactId>
+        			</plugin>
+        		</plugins>
+        	</build>
+        </profile>
+  </profiles>
 </project>
 

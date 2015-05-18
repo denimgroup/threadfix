@@ -1,0 +1,1193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<report>
+  <control>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>964</issue_id>
+      <issue_type_name>Blind SQL Injection</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/account.aspx</test_url>
+      <security_entity_element>listAccounts</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>966</issue_id>
+      <issue_type_name>Cross-Site Scripting</issue_type_name>
+      <test_url>http://www.altoromutual.com/search.aspx</test_url>
+      <security_entity_element>txtSearch</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>967</issue_id>
+      <issue_type_name>Cross-Site Scripting</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transfer.aspx</test_url>
+      <security_entity_element>creditAccount</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>968</issue_id>
+      <issue_type_name>Cross-Site Scripting</issue_type_name>
+      <test_url>http://demo.testfire.net/comment.aspx</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>969</issue_id>
+      <issue_type_name>Cross-Site Scripting</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/apply.aspx</test_url>
+      <security_entity_element>amCreditOffer</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>970</issue_id>
+      <issue_type_name>Cross-Site Scripting</issue_type_name>
+      <test_url>http://demo.testfire.net/bank/apply.aspx</test_url>
+      <security_entity_element>amCreditOffer</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>971</issue_id>
+      <issue_type_name>Cross-Site Scripting</issue_type_name>
+      <test_url>http://demo.testfire.net/comment.aspx</test_url>
+      <security_entity_element>name</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>976</issue_id>
+      <issue_type_name>SQL Injection</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transaction.aspx</test_url>
+      <security_entity_element>amUserId</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>977</issue_id>
+      <issue_type_name>SQL Injection</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/ws.asmx</test_url>
+      <security_entity_element>[SOAP] debitAccount_1</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>978</issue_id>
+      <issue_type_name>SQL Injection</issue_type_name>
+      <test_url>http://demo.testfire.net/bank/transaction.aspx</test_url>
+      <security_entity_element>amUserId</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>979</issue_id>
+      <issue_type_name>SQL Injection</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transfer.aspx</test_url>
+      <security_entity_element>creditAccount</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>980</issue_id>
+      <issue_type_name>SQL Injection</issue_type_name>
+      <test_url>http://demo.testfire.net/bank/transfer.aspx</test_url>
+      <security_entity_element>amUserId</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>981</issue_id>
+      <issue_type_name>SQL Injection</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transaction.aspx</test_url>
+      <security_entity_element>after</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>991</issue_id>
+      <issue_type_name>DOM Based Cross-Site Scripting</issue_type_name>
+      <test_url>http://www.altoromutual.com/disclaimer.htm</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1974</issue_id>
+      <issue_type_name>Cross-Site Scripting</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/customize.aspx</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1975</issue_id>
+      <issue_type_name>Cross-Site Scripting</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/customize.aspx</test_url>
+      <security_entity_element>lang</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1976</issue_id>
+      <issue_type_name>Cross-Site Scripting</issue_type_name>
+      <test_url>http://www.altoromutual.com/comment.aspx</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1977</issue_id>
+      <issue_type_name>Cross-Site Scripting</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transfer.aspx</test_url>
+      <security_entity_element>debitAccount</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1981</issue_id>
+      <issue_type_name>Unencrypted Login Request</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/apply.aspx</test_url>
+      <security_entity_element>passwd</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It may be possible to steal user login information such as usernames and passwords that are sent unencrypted</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1983</issue_id>
+      <issue_type_name>SQL Injection</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/ws.asmx</test_url>
+      <security_entity_element>[SOAP] creditAccount_2</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1984</issue_id>
+      <issue_type_name>SQL Injection</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transaction.aspx</test_url>
+      <security_entity_element>before</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2979</issue_id>
+      <issue_type_name>Cross-Site Scripting</issue_type_name>
+      <test_url>http://www.altoromutual.com/comment.aspx</test_url>
+      <security_entity_element>name</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2980</issue_id>
+      <issue_type_name>Cross-Site Scripting</issue_type_name>
+      <test_url>http://demo.testfire.net/bank/customize.aspx</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2982</issue_id>
+      <issue_type_name>Poison Null Byte Windows Files Retrieval</issue_type_name>
+      <test_url>http://www.altoromutual.com/default.aspx</test_url>
+      <security_entity_element>content</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view the contents of any file (for example, databases, user information or configuration files) on the web server (under the permission restrictions of the web server user)</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2983</issue_id>
+      <issue_type_name>SQL Injection</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transfer.aspx</test_url>
+      <security_entity_element>amUserId</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2984</issue_id>
+      <issue_type_name>SQL Injection</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/account.aspx</test_url>
+      <security_entity_element>amUserId</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2988</issue_id>
+      <issue_type_name>XPath Injection</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/queryxpath.aspx</test_url>
+      <security_entity_element>_ctl0:_ctl0:Content:Main:TextBox1</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to access information stored in a sensitive data resource</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>3313</issue_id>
+      <issue_type_name>SQL Injection</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transfer.aspx</test_url>
+      <security_entity_element>debitAccount</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>High</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>3314</issue_id>
+      <issue_type_name>SQL Injection</issue_type_name>
+      <test_url>http://demo.testfire.net/bank/account.aspx</test_url>
+      <security_entity_element>amUserId</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>965</issue_id>
+      <issue_type_name>Cross-Site Request Forgery</issue_type_name>
+      <test_url>http://demo.testfire.net/bank/transfer.aspx</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>973</issue_id>
+      <issue_type_name>HTTP Response Splitting</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/customize.aspx</test_url>
+      <security_entity_element>lang</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>973</issue_id>
+      <issue_type_name>HTTP Response Splitting</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/customize.aspx</test_url>
+      <security_entity_element>lang</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to deface the site content through web-cache poisoning</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>974</issue_id>
+      <issue_type_name>Link Injection (facilitates Cross-Site Request Forgery)</issue_type_name>
+      <test_url>http://demo.testfire.net/comment.aspx</test_url>
+      <security_entity_element>name</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>974</issue_id>
+      <issue_type_name>Link Injection (facilitates Cross-Site Request Forgery)</issue_type_name>
+      <test_url>http://demo.testfire.net/comment.aspx</test_url>
+      <security_entity_element>name</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to upload, modify or delete web pages, scripts and files on the web server</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>974</issue_id>
+      <issue_type_name>Link Injection (facilitates Cross-Site Request Forgery)</issue_type_name>
+      <test_url>http://demo.testfire.net/comment.aspx</test_url>
+      <security_entity_element>name</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to persuade a naive user to supply sensitive information such as username, password, credit card number, social security number etc.</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>997</issue_id>
+      <issue_type_name>Phishing Through Frames</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transfer.aspx</test_url>
+      <security_entity_element>creditAccount</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to persuade a naive user to supply sensitive information such as username, password, credit card number, social security number etc.</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>998</issue_id>
+      <issue_type_name>Phishing Through Frames</issue_type_name>
+      <test_url>http://demo.testfire.net/comment.aspx</test_url>
+      <security_entity_element>name</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to persuade a naive user to supply sensitive information such as username, password, credit card number, social security number etc.</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>999</issue_id>
+      <issue_type_name>Phishing Through Frames</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transfer.aspx</test_url>
+      <security_entity_element>debitAccount</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to persuade a naive user to supply sensitive information such as username, password, credit card number, social security number etc.</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1000</issue_id>
+      <issue_type_name>Phishing Through Frames</issue_type_name>
+      <test_url>http://www.altoromutual.com/comment.aspx</test_url>
+      <security_entity_element>name</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to persuade a naive user to supply sensitive information such as username, password, credit card number, social security number etc.</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1972</issue_id>
+      <issue_type_name>Cross-Site Request Forgery</issue_type_name>
+      <test_url>http://demo.testfire.net/bank/ws.asmx</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1973</issue_id>
+      <issue_type_name>Cross-Site Request Forgery</issue_type_name>
+      <test_url>http://demo.testfire.net/comment.aspx</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1978</issue_id>
+      <issue_type_name>Link Injection (facilitates Cross-Site Request Forgery)</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transfer.aspx</test_url>
+      <security_entity_element>creditAccount</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1978</issue_id>
+      <issue_type_name>Link Injection (facilitates Cross-Site Request Forgery)</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transfer.aspx</test_url>
+      <security_entity_element>creditAccount</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to upload, modify or delete web pages, scripts and files on the web server</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1978</issue_id>
+      <issue_type_name>Link Injection (facilitates Cross-Site Request Forgery)</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transfer.aspx</test_url>
+      <security_entity_element>creditAccount</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to persuade a naive user to supply sensitive information such as username, password, credit card number, social security number etc.</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1979</issue_id>
+      <issue_type_name>Link Injection (facilitates Cross-Site Request Forgery)</issue_type_name>
+      <test_url>http://www.altoromutual.com/search.aspx</test_url>
+      <security_entity_element>txtSearch</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1979</issue_id>
+      <issue_type_name>Link Injection (facilitates Cross-Site Request Forgery)</issue_type_name>
+      <test_url>http://www.altoromutual.com/search.aspx</test_url>
+      <security_entity_element>txtSearch</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to upload, modify or delete web pages, scripts and files on the web server</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1979</issue_id>
+      <issue_type_name>Link Injection (facilitates Cross-Site Request Forgery)</issue_type_name>
+      <test_url>http://www.altoromutual.com/search.aspx</test_url>
+      <security_entity_element>txtSearch</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to persuade a naive user to supply sensitive information such as username, password, credit card number, social security number etc.</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1980</issue_id>
+      <issue_type_name>Link Injection (facilitates Cross-Site Request Forgery)</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transfer.aspx</test_url>
+      <security_entity_element>debitAccount</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1980</issue_id>
+      <issue_type_name>Link Injection (facilitates Cross-Site Request Forgery)</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transfer.aspx</test_url>
+      <security_entity_element>debitAccount</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to upload, modify or delete web pages, scripts and files on the web server</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1980</issue_id>
+      <issue_type_name>Link Injection (facilitates Cross-Site Request Forgery)</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transfer.aspx</test_url>
+      <security_entity_element>debitAccount</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to persuade a naive user to supply sensitive information such as username, password, credit card number, social security number etc.</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2977</issue_id>
+      <issue_type_name>Cross-Site Request Forgery</issue_type_name>
+      <test_url>http://demo.testfire.net/bank/account.aspx</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2978</issue_id>
+      <issue_type_name>Cross-Site Request Forgery</issue_type_name>
+      <test_url>http://demo.testfire.net/bank/customize.aspx</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2981</issue_id>
+      <issue_type_name>Link Injection (facilitates Cross-Site Request Forgery)</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/customize.aspx</test_url>
+      <security_entity_element>lang</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2981</issue_id>
+      <issue_type_name>Link Injection (facilitates Cross-Site Request Forgery)</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/customize.aspx</test_url>
+      <security_entity_element>lang</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to upload, modify or delete web pages, scripts and files on the web server</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2981</issue_id>
+      <issue_type_name>Link Injection (facilitates Cross-Site Request Forgery)</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/customize.aspx</test_url>
+      <security_entity_element>lang</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to persuade a naive user to supply sensitive information such as username, password, credit card number, social security number etc.</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2998</issue_id>
+      <issue_type_name>Open Redirect</issue_type_name>
+      <test_url>http://www.altoromutual.com/disclaimer.htm</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It is possible for an attacker to use the web server to attack other sites, which increases his or her anonymity</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2999</issue_id>
+      <issue_type_name>Phishing Through Frames</issue_type_name>
+      <test_url>http://www.altoromutual.com/search.aspx</test_url>
+      <security_entity_element>txtSearch</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to persuade a naive user to supply sensitive information such as username, password, credit card number, social security number etc.</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>3000</issue_id>
+      <issue_type_name>Phishing Through Frames</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/customize.aspx</test_url>
+      <security_entity_element>lang</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to persuade a naive user to supply sensitive information such as username, password, credit card number, social security number etc.</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>3311</issue_id>
+      <issue_type_name>Cross-Site Request Forgery</issue_type_name>
+      <test_url>http://demo.testfire.net/bank/transaction.aspx</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>3312</issue_id>
+      <issue_type_name>Link Injection (facilitates Cross-Site Request Forgery)</issue_type_name>
+      <test_url>http://www.altoromutual.com/comment.aspx</test_url>
+      <security_entity_element>name</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>3312</issue_id>
+      <issue_type_name>Link Injection (facilitates Cross-Site Request Forgery)</issue_type_name>
+      <test_url>http://www.altoromutual.com/comment.aspx</test_url>
+      <security_entity_element>name</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to upload, modify or delete web pages, scripts and files on the web server</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Medium</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>3312</issue_id>
+      <issue_type_name>Link Injection (facilitates Cross-Site Request Forgery)</issue_type_name>
+      <test_url>http://www.altoromutual.com/comment.aspx</test_url>
+      <security_entity_element>name</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to persuade a naive user to supply sensitive information such as username, password, credit card number, social security number etc.</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>988</issue_id>
+      <issue_type_name>Unencrypted __VIEWSTATE Parameter</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/queryxpath.aspx</test_url>
+      <security_entity_element>__VIEWSTATE</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to gather sensitive information about the web application such as usernames, passwords, machine name and/or sensitive file locations</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>989</issue_id>
+      <issue_type_name>Unencrypted __VIEWSTATE Parameter</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transaction.aspx</test_url>
+      <security_entity_element>__VIEWSTATE</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to gather sensitive information about the web application such as usernames, passwords, machine name and/or sensitive file locations</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>990</issue_id>
+      <issue_type_name>Unsigned __VIEWSTATE Parameter</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/queryxpath.aspx</test_url>
+      <security_entity_element>__VIEWSTATE</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It might be possible to undermine application logic</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>993</issue_id>
+      <issue_type_name>Database Error Pattern Found</issue_type_name>
+      <test_url>http://www.altoromutual.com/subscribe.aspx</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>994</issue_id>
+      <issue_type_name>Database Error Pattern Found</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transfer.aspx</test_url>
+      <security_entity_element>amUserId</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>995</issue_id>
+      <issue_type_name>Database Error Pattern Found</issue_type_name>
+      <test_url>http://demo.testfire.net/bank/transaction.aspx</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>996</issue_id>
+      <issue_type_name>Database Error Pattern Found</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/ws.asmx</test_url>
+      <security_entity_element>[SOAP] creditAccount_2</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1982</issue_id>
+      <issue_type_name>Missing HttpOnly Attribute in Session Cookie</issue_type_name>
+      <test_url>http://www.altoromutual.com/</test_url>
+      <security_entity_element>amSessionId</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to steal or manipulate customer session and cookies, which might be used to impersonate a legitimate user, allowing the hacker to view or alter user records, and to perform transactions as that user</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1988</issue_id>
+      <issue_type_name>Unsigned __VIEWSTATE Parameter</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/customize.aspx</test_url>
+      <security_entity_element>__VIEWSTATE</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It might be possible to undermine application logic</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1989</issue_id>
+      <issue_type_name>Unsigned __VIEWSTATE Parameter</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transaction.aspx</test_url>
+      <security_entity_element>__VIEWSTATE</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It might be possible to undermine application logic</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1990</issue_id>
+      <issue_type_name>Autocomplete HTML Attribute Not Disabled for Password Field</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/apply.aspx</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It may be possible to bypass the web application's authentication mechanism</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1991</issue_id>
+      <issue_type_name>Autocomplete HTML Attribute Not Disabled for Password Field</issue_type_name>
+      <test_url>http://demo.testfire.net/bank/login.aspx</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It may be possible to bypass the web application's authentication mechanism</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1992</issue_id>
+      <issue_type_name>Autocomplete HTML Attribute Not Disabled for Password Field</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/login.aspx</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It may be possible to bypass the web application's authentication mechanism</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1997</issue_id>
+      <issue_type_name>Database Error Pattern Found</issue_type_name>
+      <test_url>http://demo.testfire.net/bank/transaction.aspx</test_url>
+      <security_entity_element>amUserId</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1998</issue_id>
+      <issue_type_name>Database Error Pattern Found</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transfer.aspx</test_url>
+      <security_entity_element>debitAccount</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1999</issue_id>
+      <issue_type_name>Database Error Pattern Found</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transaction.aspx</test_url>
+      <security_entity_element>after</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2000</issue_id>
+      <issue_type_name>Database Error Pattern Found</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transaction.aspx</test_url>
+      <security_entity_element>before</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2989</issue_id>
+      <issue_type_name>Autocomplete HTML Attribute Not Disabled for Password Field</issue_type_name>
+      <test_url>http://demo.testfire.net/bank/apply.aspx</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It may be possible to bypass the web application's authentication mechanism</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2992</issue_id>
+      <issue_type_name>Database Error Pattern Found</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transaction.aspx</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2993</issue_id>
+      <issue_type_name>Database Error Pattern Found</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/account.aspx</test_url>
+      <security_entity_element>amUserId</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2994</issue_id>
+      <issue_type_name>Database Error Pattern Found</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/ws.asmx</test_url>
+      <security_entity_element>[SOAP] debitAccount_1</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2995</issue_id>
+      <issue_type_name>Database Error Pattern Found</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transaction.aspx</test_url>
+      <security_entity_element>amUserId</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2996</issue_id>
+      <issue_type_name>Database Error Pattern Found</issue_type_name>
+      <test_url>http://demo.testfire.net/bank/transfer.aspx</test_url>
+      <security_entity_element>amUserId</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2997</issue_id>
+      <issue_type_name>Database Error Pattern Found</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transfer.aspx</test_url>
+      <security_entity_element>creditAccount</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>3315</issue_id>
+      <issue_type_name>Unencrypted __VIEWSTATE Parameter</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/customize.aspx</test_url>
+      <security_entity_element>__VIEWSTATE</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to gather sensitive information about the web application such as usernames, passwords, machine name and/or sensitive file locations</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Low</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>3316</issue_id>
+      <issue_type_name>Database Error Pattern Found</issue_type_name>
+      <test_url>http://demo.testfire.net/bank/account.aspx</test_url>
+      <security_entity_element>amUserId</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to view, modify or delete database entries and tables</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Information</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>975</issue_id>
+      <issue_type_name>HTML Comments Sensitive Information Disclosure</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/login.aspx</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to gather sensitive information about the web application such as usernames, passwords, machine name and/or sensitive file locations</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Information</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>982</issue_id>
+      <issue_type_name>Application Error</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transfer.aspx</test_url>
+      <security_entity_element>debitAccount</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to gather sensitive debugging information</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Information</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>983</issue_id>
+      <issue_type_name>Application Error</issue_type_name>
+      <test_url>http://demo.testfire.net/comment.aspx</test_url>
+      <security_entity_element>cfile</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to gather sensitive debugging information</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Information</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>984</issue_id>
+      <issue_type_name>Application Error</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/ws.asmx</test_url>
+      <security_entity_element>[SOAP] transferDate</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to gather sensitive debugging information</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Information</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>985</issue_id>
+      <issue_type_name>Application Error</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transfer.aspx</test_url>
+      <security_entity_element>creditAccount</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to gather sensitive debugging information</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Information</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>986</issue_id>
+      <issue_type_name>Application Error</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/queryxpath.aspx</test_url>
+      <security_entity_element>_ctl0:_ctl0:Content:Main:TextBox1</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to gather sensitive debugging information</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Information</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>987</issue_id>
+      <issue_type_name>Application Error</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transaction.aspx</test_url>
+      <security_entity_element>before</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to gather sensitive debugging information</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Information</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>992</issue_id>
+      <issue_type_name>Possible Server Path Disclosure Pattern Found</issue_type_name>
+      <test_url>http://demo.testfire.net/comment.aspx</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to retrieve the absolute path of the web server installation, which might help an attacker to develop further attacks and to gain information about the file system structure of the web application</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Information</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1985</issue_id>
+      <issue_type_name>Application Error</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/ws.asmx</test_url>
+      <security_entity_element>[SOAP] debitAccount_1</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to gather sensitive debugging information</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Information</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1986</issue_id>
+      <issue_type_name>Application Error</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transaction.aspx</test_url>
+      <security_entity_element>after</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to gather sensitive debugging information</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Information</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1987</issue_id>
+      <issue_type_name>Application Error</issue_type_name>
+      <test_url>http://www.altoromutual.com/comment.aspx</test_url>
+      <security_entity_element>cfile</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to gather sensitive debugging information</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Information</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1993</issue_id>
+      <issue_type_name>Possible Server Path Disclosure Pattern Found</issue_type_name>
+      <test_url>http://www.altoromutual.com/comment.aspx</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to retrieve the absolute path of the web server installation, which might help an attacker to develop further attacks and to gain information about the file system structure of the web application</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Information</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1994</issue_id>
+      <issue_type_name>Possible Server Path Disclosure Pattern Found</issue_type_name>
+      <test_url>http://www.altoromutual.com/subscribe.aspx</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to retrieve the absolute path of the web server installation, which might help an attacker to develop further attacks and to gain information about the file system structure of the web application</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Information</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1995</issue_id>
+      <issue_type_name>Possible Server Path Disclosure Pattern Found</issue_type_name>
+      <test_url>http://demo.testfire.net/feedback.aspx</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to retrieve the absolute path of the web server installation, which might help an attacker to develop further attacks and to gain information about the file system structure of the web application</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Information</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>1996</issue_id>
+      <issue_type_name>Possible Server Path Disclosure Pattern Found</issue_type_name>
+      <test_url>http://www.altoromutual.com/feedback.aspx</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to retrieve the absolute path of the web server installation, which might help an attacker to develop further attacks and to gain information about the file system structure of the web application</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Information</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2985</issue_id>
+      <issue_type_name>Application Error</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/transfer.aspx</test_url>
+      <security_entity_element>transferAmount</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to gather sensitive debugging information</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Information</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2986</issue_id>
+      <issue_type_name>Application Error</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/ws.asmx</test_url>
+      <security_entity_element>[SOAP] transferAmount_3</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to gather sensitive debugging information</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Information</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2987</issue_id>
+      <issue_type_name>Application Error</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/ws.asmx</test_url>
+      <security_entity_element>[SOAP] creditAccount_2</security_entity_element>
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to gather sensitive debugging information</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Information</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2990</issue_id>
+      <issue_type_name>Email Address Pattern Found</issue_type_name>
+      <test_url>http://demo.testfire.net/bank/mozxpath.js</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to gather sensitive information about the web application such as usernames, passwords, machine name and/or sensitive file locations</risk_category_name>
+    </row>
+    <row>
+      <issue_severity>Information</issue_severity>
+      <issue_status>Open</issue_status>
+      <issue_id>2991</issue_id>
+      <issue_type_name>Email Address Pattern Found</issue_type_name>
+      <test_url>http://www.altoromutual.com/bank/mozxpath.js</test_url>
+      <security_entity_element />
+      <source_file />
+      <api />
+      <risk_category_name>It is possible to gather sensitive information about the web application such as usernames, passwords, machine name and/or sensitive file locations</risk_category_name>
+    </row>
+  </control>
+</report>

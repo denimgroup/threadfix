@@ -270,7 +270,79 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 				new String[] { scanQueueTaskId,	  message,   secureTaskKey }, String.class);
 	}
 
-	public RestResponse<Finding> addDynamicFinding(String applicationId, String vulnType, String severity,
+    // QA only
+    @Override
+    public RestResponse<User> trap() {
+        return httpRestUtils.httpPost("user/trap",
+                new String[] {},
+                new String[] {}, User.class);
+    }
+
+    // QA only
+    @Override
+    public RestResponse<User> createUser(String username, String globalRoleName) {
+        return httpRestUtils.httpPost("/user/create",
+                new String[] {"username", "globalRoleName" },
+                new String[] { username, globalRoleName }, User.class);
+    }
+
+    // QA only
+    @Override
+    public RestResponse<User> createUser(String username) {
+        return httpRestUtils.httpPost("/user/create",
+                new String[] {"username"},
+                new String[] { username}, User.class);
+    }
+
+    // QA only
+    @Override
+    public RestResponse<User> addUserTeamAppPermission(String userName, String roleName, String teamName, String appName) {
+        return httpRestUtils.httpPost("/user/permission",
+                new String[] {"username", "rolename", "teamname", "appname"},
+                new String[] {userName, roleName, teamName, appName}, User.class);
+    }
+
+    // QA only
+    @Override
+    public RestResponse<Role> createRole(String roleName, Boolean allPermissions) {
+        return httpRestUtils.httpPost("/role/create",
+                new String[] {"roleName", "allPermissions"},
+                new String[] {roleName, allPermissions.toString()}, Role.class);
+    }
+
+    // QA only
+    @Override
+    public RestResponse<Role> createSpecificPermissionRole(String roleName, String permission) {
+        return httpRestUtils.httpPost("/role/create/specific",
+                new String[] {"roleName", "permission"},
+                new String[] {roleName, permission}, Role.class);
+    }
+
+    //QA only
+    @Override
+    public RestResponse<Role> removePermission(String roleName, String permission) {
+        return httpRestUtils.httpPost("/role/edit",
+                new String[] {"roleName", "permission"},
+                new String[] {roleName, permission}, Role.class);
+    }
+
+    //QA only
+    @Override
+    public RestResponse<Tag> createTag(String tagname) {
+        return httpRestUtils.httpPost("/tag/create",
+                new String[] {"tagname"},
+                new String[] {tagname}, Tag.class);
+    }
+
+    //QA only
+    @Override
+    public RestResponse<Tag> attachAppToTag(String tagname, String appname, String teamname) {
+        return httpRestUtils.httpPost("/tag/attach",
+                new String[] {"tagname", "appname", "teamname"},
+                new String[] {tagname, appname, teamname}, Tag.class);
+    }
+
+    public RestResponse<Finding> addDynamicFinding(String applicationId, String vulnType, String severity,
 		String nativeId, String parameter, String longDescription,
 		String fullUrl, String path) {
 		return httpRestUtils.httpPost("/applications/" + applicationId +

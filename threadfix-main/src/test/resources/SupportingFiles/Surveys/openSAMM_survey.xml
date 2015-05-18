@@ -1,0 +1,671 @@
+﻿<!--
+	This adaptation of OpenSAMM is based on the OpenSAMM specification <http://www.opensamm.org/>
+	originally developed by Pravir Chandra as well as SAMM interview templates developed by
+	Nick Coblentz <http://nickcoblentz.blogspot.com/2009/06/samm-inteview-template-version-10.html>
+	
+	It was created to be used with the Vulnerability Manager application developed and released by
+	Denim Group, Ltd. <http://www.denimgroup.com>.  Vulnerability Manager is distributed in the
+	hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+	of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	
+	Questions about the adaptation can be sent to <mailto:dan@denimgroup.com>  Questions about
+	the original source material should be directed to the respective authors.
+	
+	This work is licensed under the Creative Commons Attribution-Share Alike 3.0 License. To view
+	a copy of this license, visit http://creativecommons.org/licenses/by-sa/3.0/ or send a letter
+	to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+-->
+
+<survey>
+	<name>OpenSAMM Maturity Survey</name>
+	<level number="1">Initial understanding and ad hoc provision of Security Practice</level>
+	<level number="2">Increase efficiency and/or effectiveness of the Security Practice</level>
+	<level number="3">Comprehensive mastery of the Security Practice at scale</level>
+	
+	<section name="Governance" color="#0B5679" lightColor="#E5ECF4">
+		<practice name="Strategy &amp; Metrics">
+			<objective level="1">
+				<description>Establish unified strategic roadmap for software security within the organization</description>
+				<question>
+					Is there a software security assurance program already in place?
+					<assertion>Assurance program is documented and accessible to staff.</assertion>
+					<assertion>Assurance program has been used in recent development efforts.</assertion>
+					<assertion>Staff receives training against assurance program and responsibilities.</assertion>
+				</question>
+				<question>
+					Is most of your development staff aware of future plans for the assurance program?
+					<assertion>Assurance program goals are documented and accessible to staff.</assertion>
+					<assertion>Assurance program goals have been presented to staff.</assertion>
+					<assertion>A plan has been put in place to reach those goals in a specific period of time.</assertion>
+				</question>
+				<question>
+					Do most of the business stakeholders understand your organization’s risk profile?
+					<assertion>Organization has documented motivation behind creating a software security assurance program.</assertion>
+					<assertion>Assurance program has been customized to align with the organization's motivation and goals.</assertion>
+					<assertion>Worst-case scenarios for organization's application and data assets have been collected and documented.</assertion>
+					<assertion>Scenarios, contributing factors, and mitigating factors have been reviewed with business owners and other stakeholders.</assertion>
+				</question>
+			</objective>
+			
+			<objective level="2">
+				<description>Measure relative value of data and software assets and choose risk tolerance</description>
+				<question>
+					Are most of your applications and resources categorized by risk?
+					<assertion>A data and application risk classification system has been documented.</assertion>
+					<assertion>An evaluation criteria has been created to apply the classification system to data and applications.</assertion>
+					<assertion>Staff receives training in how to apply evaluation criteria to application and data assets.</assertion>
+					<assertion>Most applications and data have been categorized using this evaluation criteria.</assertion>
+				</question>
+				<question>
+					Are risk ratings used to tailor the required assurance activities?
+					<assertion>The assurance program is customized based on data and application risk classification.</assertion>
+				</question>
+				<question>
+					Does most of the organization know about what’s required based on risk ratings?
+					<assertion>Staff receives training according to documented assurance program and risk classifications.</assertion>
+				</question>
+			</objective>
+			
+			<objective level="3">
+				<description>Align security expenditure with relevant business indicators and asset value</description>
+				<question>
+					Is per-project data for cost of assurance activities collected?
+					<assertion>Statistics are collect for spending related to security incidents or breaches.</assertion>
+					<assertion>Baseline security costs are estimated based on each project based on it's assigned security assurance road map and risk category.</assertion>
+					<assertion>Actual security spending is tracked for each project.</assertion>
+					<assertion>Actual spending vs. estimated spending is evaluated on a quarterly basis.</assertion>
+					<assertion>Spending statistics and historical data are used to make case-by-case decisions on security expenditures.</assertion>
+					<assertion>Security spending decisions are made on a per project basis with consideration for expense versus loss potential.</assertion>
+				</question>
+				<question>
+					Does your organization regularly compare your security spending with other organizations?
+					<assertion>Statistics regarding similar organization's security spending is collected regularly.</assertion>
+					<assertion>Compare potential cost savings by purchasing products or switching vendors for security tools.</assertion>
+					<assertion>Security cost-comparison exercises are conducted at least annually.</assertion>
+				</question>
+			</objective>
+		</practice>
+		
+		<practice name="Policy &amp; Compliance">
+			<objective level="1">
+				<description>Understand relevant governance and compliance drivers to the organization</description>
+				<question>
+					Do most project stakeholders know their project’s compliance status?
+					<assertion>Project stakeholders review project's compliance status biannually.</assertion>
+				</question>
+				<question>
+					Are compliance requirements specifically considered by project teams?
+					<assertion>External, third-party regulatory or compliance requirements have been identified.</assertion>
+					<assertion>A consolidated list of regulatory and compliance requirements has been mapped to security requirements.</assertion>
+					<assertion>Control statements or responses have been created for each security requirement indicating how the organization will meet the requirement.</assertion>
+					<assertion>Security requirements are added to each project based on applicable regulatory and compliance standards.</assertion>
+					<assertion>The organization researches and updates regulatory or compliance requirements biannually.</assertion>
+				</question>
+			</objective>
+			
+			<objective level="2">
+				<description>Establish security and compliance baseline and understand per-project risks</description>
+				<question>
+					Does the organization utilize a set of policies and standards to control software development?
+					<assertion>A set of security policies has been created based on compliance drivers.</assertion>
+					<assertion>Optional or recommended compliance items have been added to security policies.</assertion>
+					<assertion>Requirements based on known business drivers for security have been added to security policies.</assertion>
+					<assertion>Common or similar policies have been grouped, generalized, and rewritten to satisfy compliance and security requirements.</assertion>
+					<assertion>Security policies do not include requirements that are too costly or difficult for project teams to comply.</assertion>
+					<assertion>Awareness programs have been created to advertise and spread awareness of security policies.</assertion>
+				</question>
+				<question>
+					Are project teams able to request an audit for compliance with policies and standards?
+					<assertion>A process has been created for project teams to request an audit against security policies and compliance requirements.</assertion>
+					<assertion>Internal audits are prioritized based on business risk indicators.</assertion>
+					<assertion>Each project undergoes an audit at least biannually.</assertion>
+					<assertion>Awareness programs have been created to advertise and spread awareness of the organization's audit process.</assertion>
+					<assertion>Audit results are reviewed by project stakeholders including per requirement pass/fail status, impact, and remediation.</assertion>
+				</question>
+			</objective>
+			
+			<objective level="3">
+				<description>Require compliance and measure projects against organization-wide policies and standards</description>
+				<question>
+					Are projects periodically audited to ensure a baseline of compliance with policies and standards?
+					<assertion>Compliance and security gates are established throughout the development process.</assertion>
+					<assertion>An exception approval process has been created for legacy or other specialized projects.</assertion>
+					<assertion>Automated tools (code review, penetration testing, etc) are used to assist in identifying non-compliance prior to the audit process.</assertion>
+				</question>
+				<question>
+					Does the organization systematically use audits to collect and control compliance evidence?
+					<assertion>An automated system is used to capture, organize, and display audit data and documentation.</assertion>
+					<assertion>Access to audit data is controlled based on a need to know</assertion>
+					<assertion>Instructions and procedures for accessing audit data are published and advertised to project groups.</assertion>
+				</question>
+			</objective>
+		</practice>
+		
+		<practice name="Education &amp; Guidance">
+			<objective level="1">
+				<description>Offer development staff access to resources around the topics of secure programming and deployment</description>
+				<question>
+					Have most developers been given high-level security awareness training?
+					<assertion>Application security awareness training is provided to all developers.</assertion>
+					<assertion>Training covers topics such as common vulnerabilities and best practice recommendations for eliminating vulnerabilities.</assertion>
+					<assertion>Training is conducted at least annually as well as on demand based on need.</assertion>
+				</question>
+				<question>
+					Does each project team have access to secure development best practices and guidance?
+					<assertion>Resources regarding secure development practices have been assembled and made available to developers.</assertion>
+					<assertion>Management informs development groups that they are expected to utilize secure development resources.</assertion>
+					<assertion>A checklist based on the secure development resources has been created to ensure guidelines are met during development.</assertion>
+				</question>
+			</objective>
+			
+			<objective level="2">
+				<description>Educate all personnel in the software life-cycle with role-specific guidance on secure development</description>
+				<question>
+					Are most roles in the development process given role-specific training and guidance?
+					<assertion>Role specific application security training is given to developers, architects, QA, etc.</assertion>
+					<assertion>Managers and requirements specifiers receive training in security requirements planning, vulnerability and incident management, threat modeling, and misuse/abuse case design.</assertion>
+					<assertion>Testers and auditors receive training in code review, architecture and design analysis, runtime analysis, and effective security test planning.</assertion>
+					<assertion>Developer training includes security design patterns, tool-specific training, threat modeling and software assessment techniques.</assertion>
+					<assertion>Role specific training is provided at least annually as well as on demand based on need.</assertion>
+				</question>
+				<question>
+					Are most roles in the development process given role-specific training and guidance?
+					<assertion>Internal or external security experts are available to project teams for consultation.</assertion>
+					<assertion>The process for requesting these experts is advertised to project teams.</assertion>
+					<assertion>A set security analysts or security-savvy developers have been selected as security coaches.</assertion>
+				</question>
+			</objective>
+			
+			<objective level="3">
+				<description>Mandate comprehensive security training and certify personnel for baseline knowledge</description>
+				<question>
+					Is security-related guidance centrally controlled and consistently distributed throughout the organization?
+					<assertion>A centralized repository has been created to organize secure development information, resources, and processes.</assertion>
+					<assertion>An approval board and change control management process is in place to control modification of information in this repository.</assertion>
+					<assertion>A method for collaboration and communication of secure development topics has been provided.</assertion>
+					<assertion>Content is searchable based on common factors like platform, language, library, life-cycle stage, etc.</assertion>
+				</question>
+				<question>
+					Are most people tested to ensure a baseline skillset for secure development practices?
+					<assertion>Exams are used to verify retention of security knowledge in a per training module or per role context.</assertion>
+					<assertion>Exams are given to staff at least biannually.</assertion>
+					<assertion>Staff are organized or ranked based on exam scores.</assertion>
+					<assertion>Some security activities or gates require staff of a certain rank to sign off before the item is marked as complete.</assertion>
+				</question>
+			</objective>
+		</practice>
+	</section>
+	
+	<section name="Construction" color="#7F350E"  lightColor="#F6E6DA">
+		<practice name="Threat Assessment">
+			<objective level="1">
+				<description>Identify and understand high-level threats to the organization and individual projects</description>
+				<question>
+					Do most projects in your organization consider and document likely threats?
+					<assertion>Likely worst-case scenarios are documented for each project based on its business risk profile.</assertion>
+					<assertion>Attack trees or a threat model is created for each project tracing the preconditions necessary for a worst-case scenario to be realized.</assertion>
+					<assertion>Attack trees or threat models are expanded to include potential security failures in current and historical functional requirements.</assertion>
+					<assertion>When new features are added to a project, attack trees or threat models are updated.</assertion>
+				</question>
+				<question>
+					Does your organization understand and document the types of attackers it faces?
+					<assertion>Potential external threat agents and their motivations are documented for each project.</assertion>
+					<assertion>Potential internal threat agents, their associated roles, and damage potential are documented for each project or architecture type.</assertion>
+					<assertion>A common set of threat agents, motivations, and other information is collected at the organization level and re-used within projects.</assertion>					
+				</question>
+			</objective>
+			
+			<objective level="2">
+				<description>Increase accuracy of threat assessment and improve granularity of perproject understanding</description>
+				<question>
+					Do project teams regularly analyze functional requirements for likely abuses?
+					<assertion>Each project derives abuse-cases from its use-cases.</assertion>
+					<assertion>As project requirements or features are added, abuse-cases are updated.</assertion>
+				</question>
+				<question>
+					Do project teams use a method of rating threats for relative comparison?
+					<assertion>A documented weighting system based on documented threat agents, exploit value, technical difficulty, and other factors is used to rank threats.</assertion>
+					<assertion>Remediation of vulnerabilities is prioritized based on the weighting system.</assertion>
+				</question>
+				<question>
+					Are stakeholders aware of relevant threats and ratings?
+					<assertion>Potential threats and ratings are reviewed with project stakeholders.</assertion>
+				</question>
+			</objective>
+			
+			<objective level="3">
+				<description>Concretely tie compensating controls to each threat against internal and third-party software</description>
+				<question>
+					Do project teams specifically consider risk from external software?
+					<assertion>Third-party, external libraries and code used in each project are clearly identified and documented for each project.</assertion>
+					<assertion>Project threat models are updated based on identified threat agents and motivations for third party libraries and code.</assertion>
+				</question>
+				<question>
+					Are all protection mechanisms and controls captured and mapped back to threats?
+					<assertion>An assessment for each project has been conducted to identify mitigating controls that prevent preconditions identified in attack trees or threat models.</assertion>
+					<assertion>This assessment is updated each time new features or requirements are introduced or the attack tree is modified.</assertion>
+					<assertion>Mitigating controls have been documented within the attack tree or threat model.</assertion>
+					<assertion>Mitigating controls or security requirements have been added to each project to address any preconditions that still lead to a successful attack within attack trees.</assertion>
+				</question>
+			</objective>
+		</practice>
+		
+		<practice name="Security Requirements">
+			<objective level="1">
+				<description>Consider security explicitly during the software requirements process</description>
+				<question>
+					Do most project teams specify some security requirements during development?
+					<assertion>Security requirements are derived from functional requirements and customer/organization concerns.</assertion>
+					<assertion>A security auditor leads specification of security requirements within each project.</assertion>
+					<assertion>Security requirements are specific, measurable, and reasonable.</assertion>
+					<assertion>Security requirements are documented for each project.</assertion>
+				</question>
+				<question>
+					Do project teams pull requirements from best practices and compliance guidance?
+					<assertion>Industry best practices are used to derive additional security requirements.</assertion>
+					<assertion>Existing code bases are analyzed by a security auditor for opportunities to add security requirements.</assertion>
+					<assertion>	Plans to refactor existing code to implement security requirements are prioritized by project stakeholders including risk management, senior developers, and architects.</assertion>
+				</question>
+			</objective>
+			
+			<objective level="2">
+				<description>Increase granularity of security requirements derived from business logic and known risks</description>
+				<question>
+					Are most stakeholders reviewing access control matrices for relevant projects?
+					<assertion>Users, roles, and privileges are identified in each project.</assertion>
+					<assertion>Resources and capabilities are identified in each project.</assertion>
+					<assertion>A matrix of roles and capabilities is documented for each project.</assertion>
+					<assertion>As new features are introduced, the matrix documentation is updated.</assertion>
+					<assertion>The matrix is reviewed with project stakeholders prior to release.</assertion>
+				</question>
+				<question>
+					Are project teams specifying requirements based on feedback from other security activities?
+					<assertion>Additional security requirements are created based on feedback from code reviews, penetration tests, risk assessments, or other security activities.</assertion>
+				</question>
+			</objective>
+			
+			<objective level="3">
+				<description>Mandate security requirements process for all software projects and third-party dependencies</description>
+				<question>
+					Are most stakeholders reviewing vendor agreements for security requirements?
+					<assertion>During the creation of third-party agreements, specific security requirements, activities, and processes are considered for inclusion.</assertion>
+				</question>
+				<question>
+					Are the security requirements specified by project teams being audited?
+					<assertion>Audits are routinely performed to ensure security requirements have been specified for all functional requirements.</assertion>
+					<assertion>Audits also verify attack trees are constructed and mitigating controls are annotated.</assertion>
+					<assertion>A list of unfulfilled security requirements and their projected implementation date is documented.</assertion>
+					<assertion>Security requirement audits is performed on every development iteration prior to the implementation of code.</assertion>
+				</question>
+			</objective>
+		</practice>
+		
+		<practice name="Secure Architecture">
+			<objective level="1">
+				<description>Insert consideration of proactive security guidance into the software design process</description>
+				<question>
+					Are project teams provided with a list of recommended third-party components?
+					<assertion>A weighted list of commonly used third-party libraries and code is collected and documented across the organization.</assertion>
+					<assertion>The libraries are informally evaluated for security based on past incidents, responses to identified issues, complexity, and appropriateness to the organization. Risk associated with these components are documented.</assertion>
+					<assertion>A list of approved third-party libraries for use within development projects is published.</assertion>
+				</question>
+				<question>
+					Are most project teams aware of secure design principles and applying them?
+					<assertion>A list of secure design principles (such as defense in depth) have been collected and documented.</assertion>
+					<assertion>These principles are used as a checklist during the design phase of each project.</assertion>
+				</question>
+			</objective>
+			
+			<objective level="2">
+				<description>Direct the software design process toward knownsecure services and secureby-default designs</description>
+				<question>
+					Do you advertise shared security services with guidance for project teams?
+					<assertion>A list of reusable resources is collected and categorized based on the security mechanisms they fulfill (LDAP server, single sign-on server, etc.).</assertion>
+					<assertion>The organization has selected a set of reusable resources to standardize on.</assertion>
+					<assertion>These resources have been thoroughly audited for security issues.</assertion>
+					<assertion>Design guidance has been created for secure integration of each component within a project.</assertion>
+					<assertion>Project groups receive training regarding the proper use and integration of these components.</assertion>
+				</question>
+				<question>
+					Are project teams provided with prescriptive design patterns based on their application architecture?
+					<assertion>Each project is categorized based on architecture (client-server, web application, thick client, etc.).</assertion>
+					<assertion>A set of design patterns is documented for each architecture (Risk-based authentication system, single sign-on, centralized logging, etc.).</assertion>
+					<assertion>Architects, senior developers, or other project stakeholders identify applicable and appropriate patterns for each project during the design phase.</assertion>
+				</question>
+			</objective>
+			
+			<objective level="3">
+				<description>Formally control the software design process and validate utilization of secure components</description>
+				<question>
+					Are project teams building software from centrally controlled platforms and frameworks?
+					<assertion>Reusable code components based on established design patterns and shared security services have been created for used within projects across the organization.</assertion>
+					<assertion>Reusable code components are regularly maintained, updated, and assessed for risk.</assertion>
+				</question>
+				<question>
+					Are project teams being audited for usage of secure architecture components?
+					<assertion>Audits include evaluation of usage of recommended frameworks, design patterns, shared security services, and reference platforms.</assertion>
+					<assertion>Results are used to determine if additional frameworks, resources, or guidance need to be specified as well as the quality of guidance provided to project teams.</assertion>
+				</question>
+			</objective>
+		</practice>
+	</section>
+	
+	<section name="Verification" color="#007C3A" lightColor="#EAF6EA">
+		<practice name="Design Review">
+			<objective level="1">
+				<description>Support ad hoc reviews of software design to ensure baseline mitigations for known risks</description>
+				<question>
+					Do project teams document the attack perimeter of software designs?
+					<assertion>Each project group creates a simplified one-page architecture diagram representing high-level modules.</assertion>
+					<assertion>Each component in the diagram is analyzed in terms of accessibility of the interface from authorized users, anonymous users, operators, application-specific roles, etc.</assertion>
+					<assertion>Interfaces and components with similar accessibility profiles are grouped and documented as the software attack surface.</assertion>
+					<assertion>One-page architecture diagram is annotated with security-related functionality.</assertion>
+					<assertion>Grouped interface designs are evaluated to determine whether security-related functionality is applied consistently.</assertion>
+					<assertion>Architecture diagrams and attack surface analysis is updated when an application's design is altered.</assertion>
+				</question>
+				<question>
+					Do project teams check software designs against known security risks?
+					<assertion>Each project group documents a list of assumptions the software relies on for safe execution.</assertion>
+					<assertion>Each project group documents a list of security requirements for the application.</assertion>
+					<assertion>Each project's one-page architecture diagram is evaluated for security requirements and assumptions. Missing items are documented as findings.</assertion>
+					<assertion>Evaluations are repeated when security requirements are added or the high-level system design changes occur within a project.</assertion>
+				</question>
+			</objective>
+			
+			<objective level="2">
+				<description>Offer assessment services to review software design against comprehensive best practices for security</description>
+				<question>
+					Do most project teams specifically analyze design elements for security mechanisms?
+					<assertion>Each interface within the high-level architecture diagram is formally inspected for security mechanisms (includes internal and external application tiers).</assertion>
+					<assertion>Analysis includes the following minimum categories: authentication, authorization, input validation, output encoding, error handling, logging, cryptography, and session management.</assertion>
+					<assertion>Each software release is required to undergo a design review.</assertion>
+				</question>
+				<question>
+					Are most project stakeholders aware of how to obtain a formal design review?
+					<assertion>A process for requesting a formal design review is created and advertised to project stakeholders.</assertion>
+					<assertion>The design review process is centralized and requests are prioritized based on the organization's business risk profile.</assertion>
+					<assertion>Design reviews include verification of software's attack surface, security requirements, and security mechanisms within module interfaces.</assertion>
+				</question>
+			</objective>
+			
+			<objective level="3">
+				<description>Require assessments and validate artifacts to develop detailed understanding of protection mechanisms</description>
+				<question>
+					Does the design review process incorporate detailed data-level analysis?
+					<assertion>Project teams identify details on system behavior around high-risk functionality (such as CRUD of sensitive data).</assertion>
+					<assertion>Project teams document relevant software modules, data sources, actors, and messages that flow between data sources or business functions.</assertion>
+					<assertion>Utilizing the data flow diagram, project teams identify software modules that handle data or functionality with differing sensitivity levels.</assertion>
+				</question>
+				<question>
+					Does routine project audit require a baseline for design review results?
+					<assertion>A consistent design review program has been established.</assertion>
+					<assertion>A criteria is created to determine whether a project passes the design review process (for example no high-risk findings).</assertion>
+					<assertion>Release gates are used within the development process to ensure projects cannot advance to the next step until the project succesfully completes a design review.</assertion>
+					<assertion>A process is established for handling design review results in legacy projects, including a requirement to establish a time frame for successfully completing the design review process.</assertion>
+				</question>
+			</objective>
+		</practice>
+		
+		<practice name="Code Review">
+			<objective level="1">
+				<description>Opportunistically find basic code-level vulnerabilities and other high-risk security issues</description>
+				<question>
+					Do most project teams have review checklists based on common problems?
+					<assertion>The organization has derived a light-weight code review checklist based on previously identified security requirements.</assertion>
+					<assertion>Developers receive training regarding their role and the goals of the checklist.</assertion>
+				</question>
+				<question>
+					Are project teams generally performing review of selected high-risk code?
+					<assertion>High-risk software components are prioritized above other code during the review process.</assertion>
+					<assertion>Security auditors or code review tools are utilized to perform the checklist based code review.</assertion>
+					<assertion>Remediation of findings in high-risk components are prioritized appropriately.</assertion>
+				</question>				
+			</objective>
+			
+			<objective level="2">
+				<description>Make code review during development more accurate and efficient through automation</description>
+				<question>
+					Can most project teams access automated code analysis tools to find security problems?
+					<assertion>The organization has reviewed open source, commercial, and other solution for performing automated code reviews and selected a solution that will best fit the organization.</assertion>
+					<assertion>Automated code analysis has been integrated within the development process (at code check-in for example).</assertion>
+				</question>
+				<question>
+					Do most stakeholders consistently require and review results from code reviews?
+					<assertion>Project stakeholders review and accept any risks that they choose not to address.</assertion>
+					<assertion>Project stakeholders have created a plan for addressing findings in legacy code.</assertion>
+				</question>
+			</objective>
+			
+			<objective level="3">
+				<description>Mandate comprehensive code review process to discover language-level and application-specific risks</description>
+				<question>
+					Do project teams utilize automation to check code against application-specific coding standards?
+					<assertion>Automated code review tools are customized to perform additional API checks, verify organization coding standards, etc. (including the addition of custom rules).</assertion>
+				</question>
+				<question>
+					Does routine project audit require a baseline for code review results prior to release?
+					<assertion>Each project contains a checkpoint in the development process that requires a specific level of code review results to be met before release.</assertion>
+					<assertion>The organization has established an exception process for legacy code, which requires a certain level of assurance to be met within a specific time period.</assertion>
+				</question>
+			</objective>
+		</practice>
+		
+		<practice name="Security Testing">
+			<objective level="1">
+				<description>Establish process to perform basic security tests based on implementation and software requirements</description>
+				<question>
+					Are projects specifying some security tests based on requirements?
+					<assertion>The organization has documented general test cases based on security requirements and common vulnerabilities.</assertion>
+					<assertion>Each project has documented test cases for security requirements specific to that project.</assertion>
+					<assertion>Staff ensures test cases are applicable, feasible, and can be executed by relevant development, security, and quality assurance staff.</assertion>
+				</question>
+				<question>
+					Do most projects perform penetration tests prior to release?
+					<assertion>Project teams engage security auditors to perform penetration testing.</assertion>
+					<assertion>Penetration testing covers security requirements and test cases at a minimum.</assertion>
+					<assertion>Penetration testing issues are resolved to an acceptable level of risk prior to release.</assertion>
+				</question>
+				<question>
+					Are most stakeholders aware of the security test status prior to release?
+					<assertion>Penetration testing issues are reviewed with project stakeholders.</assertion>
+					<assertion>Project stakeholders select issues to remediate prior to release.</assertion>
+					<assertion>Project stakeholders set a time line for addressing identified issues or accept outstanding risks.</assertion>
+				</question>
+			</objective>
+			
+			<objective level="2">
+				<description>Make security testing during development more complete and efficient through automation</description>
+				<question>
+					Are projects using automation to evaluate security test cases?
+					<assertion>The organization has reviewed open source, commercial, and other solution for performing automated security testing and selected a solution that will best fit the organization.</assertion>
+					<assertion>Automated security testing has been integrated within the development process.</assertion>
+				</question>
+				<question>
+					Do most projects follow a consistent process to evaluate and report on security tests to stakeholders?
+					<assertion>Automated security testing occurs across projects on a regular, scheduled basis.</assertion>
+					<assertion>A process has been created for reviewing security testing results with project stakeholders and remediating risk.</assertion>
+				</question>
+			</objective>
+			
+			<objective level="3">
+				<description>Require application-specific security testing to ensure baseline security before deployment</description>
+				<question>
+					Are security test cases comprehensively generated for application-specific logic?
+					<assertion>Using automated tools, unit tests, or other similar methods, a comprehensive set of security test cases is constructed and evaluated for each project.</assertion>
+				</question>
+				<question>
+					Do routine project audits demand minimum standard results from security testing?
+					<assertion>Each project contains a checkpoint in the development process that requires a specific level of security testing results to be met before release.</assertion>
+					<assertion>The organization has established an exception process for handling security testing results in legacy projects, which requires a certain level of assurance to be met within a specific time period</assertion>
+				</question>
+			</objective>
+		</practice>
+	</section>
+	
+	<section name="Deployment" color="#83000D" lightColor="#F7E0D8">
+		<practice name="Vulnerability Management">
+			<objective level="1">
+				<description>Understand high-level plan for responding to vulnerability reports or incidents</description>
+				<question>
+					Do most projects have a point of contact for security issues?
+					<assertion>Each project or development group has assigned a security-savvy developer to be the point of contact for security issues.</assertion>
+					<assertion>The organization maintains a centralized list of applications, projects, and points of contact regarding security issues.</assertion>
+				</question>
+				<question>
+					Does your organization have an assigned security response team?
+					<assertion>The organization has defined a centralized security response team responsible for managing incidents, vulnerability reports, remediation, and reporting.</assertion>
+					<assertion>During an incident, the security response team provides briefings and upward communication.</assertion>
+				</question>
+				<question>
+					Are most project teams aware of their security point(s) of contact and response team(s)?
+					<assertion>The security response team meets with project groups at least annually to brief individuals on the incident response process.</assertion>
+				</question>
+			</objective>
+			
+			<objective level="2">
+				<description>Elaborate expectations for response process to improve consistency and communications</description>
+				<question>
+					Does the organization utilize a consistent process for incident reporting and handling?
+					<assertion>The organization has a documented process for incident handling and reporting, including team members' roles and responsibilities.</assertion>
+					<assertion>The incident response team receives training at least annually.</assertion>
+					<assertion>The incident response process includes items such as triage to prevent additional damage, change management and patch application, managing project personnel and others involved in the incident, forensic evidence collection and preservation, limiting communication about the incident to stakeholders, well-defined reporting to stakeholders and/or communications trees, etc.</assertion>
+					<assertion>The organization has adopted and documented a security issue disclosure process.</assertion>
+					<assertion>The organization has adopted and documented a patch release process.</assertion>
+					<assertion>The organization has adopted and documented a process for collaborating with individuals exercising responsible disclosure.</assertion>
+					<assertion>The organization advertises a process for handling issues disclosed responsibly by third-parties.</assertion>
+					<assertion>The organization has adopted and documented a practice for disclosing incidents to the public (if necessary and in compliance of state and federal laws).</assertion>
+				</question>
+				<question>
+					Are most project stakeholders aware of relevant security disclosures related to their software projects?
+					<assertion>A formal, documented process has been established for tracking, handling, and communicating incidents internally.</assertion>
+				</question>
+			</objective>
+			
+			<objective level="3">
+				<description>Improve analysis and data gathering within response process for feedback into proactive planning</description>
+				<question>
+					Are most incidents inspected for root causes to generate further recommendations?
+					<assertion>Incident response teams investigate root causes of security failures leading to an incident or security issue.</assertion>
+					<assertion>The root cause is used to analyze the project or software for additional potential failures.</assertion>
+					<assertion>The root cause is compared to security requirements and existing processes to determine how to improve security assurance efforts.</assertion>
+					<assertion>The root cause is reviewed with project stakeholders and management to determine a mitigation process and time frame.</assertion>
+				</question>
+				<question>
+					Do most projects consistently collect and report data and metrics related to incidents?
+					<assertion>The organization's centralized incident response process is expanded to collect and record metrics.</assertion>
+					<assertion>Metrics such as frequency of software projects affected by incidents, system downtime and cost from loss of use, human resources taken in handling and cleanup of the incident, estimates of long-term costs such as regulatory fines or brand damage, etc. are collected.</assertion>
+					<assertion>Past security incidents are recorded and reviewed every six months and recommendations to improve the organization or software assurance process are made.</assertion>
+				</question>
+			</objective>
+		</practice>
+		
+		<practice name="Environment Hardening">
+			<objective level="1">
+				<description>Understand baseline operational environment for applications and software components</description>
+				<question>
+					Do the majority of projects document some requirements for the operational environment?
+					<assertion>The organization documents and maintains a set of baseline operating platforms.</assertion>
+					<assertion>project teams expand on existing, approved baseline operating platforms to meet project requirements.</assertion>
+					<assertion>Project teams document assumptions made about operating environments during development.</assertion>
+					<assertion>Organization and project operating platforms are reviewed at least every six months.</assertion>
+				</question>
+				<question>
+					Do most projects check for security updates to third-party software components?
+					<assertion>Project teams or the operations team regularly monitors software components for security updates.</assertion>
+					<assertion>Project teams or the operations team apply critical software component updates once identified.</assertion>
+				</question>
+			</objective>
+			
+			<objective level="2">
+				<description>Improve confidence in application operations by hardening the operating environment</description>
+				<question>
+					Is a consistent process used to apply upgrades and patches to critical dependencies?
+					<assertion>A documented ongoing process has been created at the organization level to consistently identify and apply security patches.</assertion>
+					<assertion>The patch management process requires security patches to be applied within a specific time window based on risk.</assertion>
+					<assertion>Project teams share a list of third-party components and a source for updates with the operations team.</assertion>
+				</question>
+				<question>
+					Do most project leverage automation to check application and environment health?
+					<assertion>The organization has reviewed open source, commercial, and other solution for performing automated monitoring and patch management and has selected a solution that will best fit the organization.</assertion>
+					<assertion>Automated monitoring and patch management tools and processes has been integrated within the organization's operational environments.</assertion>
+					<assertion>Project teams and the operations team document and implement application-level heath checks.	</assertion>
+					<assertion>The automated monitoring and patch management tools generate alerts and a documented process for handling and responding to these alerts has been established.</assertion>
+					<assertion>Project teams and the operations team reviews configuration changes and alerts at least quarterly in order to improve current processes.</assertion>
+				</question>
+			</objective>
+			
+			<objective level="3">
+				<description>Validate application health and status of operational environment against known best practices</description>
+				<question>
+					Are stakeholders aware of options for additional tools to protect software while running in operations?
+					<assertion>The security team or operations team reviews optional tools for protecting software with project stakeholders.</assertion>
+					<assertion>Appropriate solutions such as a WAF, IPS, HIDS, etc. are adopted for each project's operational environment.</assertion>
+				</question>
+				<question>
+					Does routine audit check most projects for baseline environment health?
+					<assertion>Project-level audits include analysis and testing of the operational environment in which the software resides.</assertion>
+					<assertion>Audits include verification of compliance with the organization's patch management process.</assertion>
+					<assertion>Operational environment audits occur at least every six months.</assertion>
+					<assertion>The organization has established an exception process for legacy operational environments, which requires a certain level of assurance to be met within a specific time period.</assertion>
+				</question>
+			</objective>
+		</practice>
+		
+		<practice name="Operational Enablement">
+			<objective level="1">
+				<description>Enable communications between development teams and operators for critical security-relevant data</description>
+				<question>
+					Do you deliver security notes with the majority of software releases?
+					<assertion>Project teams document security-relevant configuration and operations information and provide documentation to users and operators.</assertion>
+					<assertion>Project teams document a list of security features built into the software, options for configuration, security impacts, and include a secure default.</assertion>
+					<assertion>Project stakeholders review security documentation prior to release.</assertion>
+					<assertion>Project teams update security documentation at least every six months.</assertion>
+				</question>
+				<question>
+					Are security-related alerts and error conditions documented for most projects?
+					<assertion>Project teams document important security-related alerts and error conditions and provide the documentation to the operations team.</assertion>
+					<assertion>Project teams update alerts and error conditions documentation at least every six months.</assertion>
+					<assertion>Project teams document an automated or manual process for monitoring and responding to application alerts and errors.</assertion>
+					<assertion>Operations team regularly monitors and responds to application alerts and errors based on provided documentation.</assertion>
+				</question>
+			</objective>
+			
+			<objective level="2">
+				<description>Improve expectations for continuous secure operations through provision of detailed procedures</description>
+				<question>
+					Are most project utilizing a change management process that’s well understood?	
+					<assertion>The organization has documented and implemented a change management process.</assertion>
+					<assertion>The development process includes steps intended to collect installation or upgrade related information.</assertion>
+					<assertion>Project teams document first-time installation and upgrade instructions.</assertion>
+					<assertion>Project teams review installation and upgrade instructions for completeness and accuracy prior to release.</assertion>
+					<assertion>Project teams communicate Installation and upgrade instructions to the operations team during for release cycle.</assertion>
+				</question>
+				<question>
+					Do project teams deliver an operational security guide with each product release?	
+					<assertion>Project teams develop an operational security guide starting with information documented about security-related alerts and errors.</assertion>
+					<assertion>Guides include all security information needed by users and operators.</assertion>
+					<assertion>Guides include items such as: security-related configuration options, event handling procedures, installation and upgrade guides, operational environment specifications, security-related assumptions about the deployment environment, etc.</assertion>
+					<assertion>Project teams work with project stakeholders to determine an appropriate level of detail for the operational security guide.</assertion>
+					<assertion>Project teams update the operational security guide with each release.</assertion>
+				</question>
+			</objective>
+			
+			<objective level="3">
+				<description>Mandate communication of security information and validate artifact for completeness</description>
+				<question>
+					Are most projects being audited to check each release for appropriate operational security information?
+					<assertion>The audit process includes verification that projects' operational security guides are complete, contain sufficient details, and are up-to-date.</assertion>
+					<assertion>The organization has established an exception process for legacy projects, which requires a certain level of assurance within the software's operational environment to be met within a specific time period.</assertion>
+				</question>
+				<question>
+					Is code signing routinely performed on software components using a consistent process?
+					<assertion>Code signing is used to ensure and verify the authenticity of developed code.</assertion>
+					<assertion>A code signing and key management process has been documented for the organization.</assertion>
+					<assertion>Project teams work with security auditors to determine which components warrant including within the code signing process.</assertion>
+					<assertion>List of included code components is reviewed and updated regularly.</assertion>
+				</question>
+			</objective>
+		</practice>
+	</section>
+	
+</survey>

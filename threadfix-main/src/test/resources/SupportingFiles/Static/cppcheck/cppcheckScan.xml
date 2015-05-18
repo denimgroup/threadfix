@@ -1,0 +1,843 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<results version="2">
+    <cppcheck version="1.67"/>
+    <errors>
+        <error id="uselessAssignmentPtrArg" severity="warning" msg="Assignment of function parameter has no effect outside the function. Did you forget dereferencing it?" verbose="Assignment of function parameter has no effect outside the function. Did you forget dereferencing it?">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascBuildCfg.cpp" line="298"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;pbBuffer&apos; can be reduced." verbose="The scope of the variable &apos;pbBuffer&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascBuildCfg.cpp" line="390"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;nError&apos; can be reduced." verbose="The scope of the variable &apos;nError&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascBuildCfg.cpp" line="392"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;pbVarBegin&apos; can be reduced." verbose="The scope of the variable &apos;pbVarBegin&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascBuildCfg.cpp" line="692"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;pbVarBegin&apos; can be reduced." verbose="The scope of the variable &apos;pbVarBegin&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascBuildCfg.cpp" line="749"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;szAgentFile&apos; can be reduced." verbose="The scope of the variable &apos;szAgentFile&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascBuildCfg.cpp" line="833"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;szInfoFile&apos; can be reduced." verbose="The scope of the variable &apos;szInfoFile&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascBuildCfg.cpp" line="834"/>
+        </error>
+        <error id="invalidPrintfArgType_int" severity="warning" msg="%lx in format string (no. 4) requires &apos;unsigned long&apos; but the argument type is &apos;unsigned int&apos;." verbose="%lx in format string (no. 4) requires &apos;unsigned long&apos; but the argument type is &apos;unsigned int&apos;.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascDumpData.cpp" line="144"/>
+        </error>
+        <error id="invalidPrintfArgType_int" severity="warning" msg="%lx in format string (no. 3) requires &apos;unsigned long&apos; but the argument type is &apos;unsigned int&apos;." verbose="%lx in format string (no. 3) requires &apos;unsigned long&apos; but the argument type is &apos;unsigned int&apos;.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascDumpData.cpp" line="165"/>
+        </error>
+        <error id="invalidPrintfArgType_int" severity="warning" msg="%lx in format string (no. 2) requires &apos;unsigned long&apos; but the argument type is &apos;unsigned int&apos;." verbose="%lx in format string (no. 2) requires &apos;unsigned long&apos; but the argument type is &apos;unsigned int&apos;.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascDumpData.cpp" line="247"/>
+        </error>
+        <error id="invalidPrintfArgType_int" severity="warning" msg="%X in format string (no. 2) requires &apos;unsigned int&apos; but the argument type is &apos;unsigned long long&apos;." verbose="%X in format string (no. 2) requires &apos;unsigned int&apos; but the argument type is &apos;unsigned long long&apos;.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascDumpData.cpp" line="456"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascDumpData.cpp" line="284"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;pRootEntry&apos; can be reduced." verbose="The scope of the variable &apos;pRootEntry&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascDumpData.cpp" line="60"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;szFileName1&apos; can be reduced." verbose="The scope of the variable &apos;szFileName1&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascDumpData.cpp" line="64"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;szFileName2&apos; can be reduced." verbose="The scope of the variable &apos;szFileName2&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascDumpData.cpp" line="65"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;EntryIndex&apos; can be reduced." verbose="The scope of the variable &apos;EntryIndex&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascDumpData.cpp" line="127"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;szMd5&apos; can be reduced." verbose="The scope of the variable &apos;szMd5&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascDumpData.cpp" line="128"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;szFileName&apos; can be reduced." verbose="The scope of the variable &apos;szFileName&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascDumpData.cpp" line="221"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;szMd5&apos; can be reduced." verbose="The scope of the variable &apos;szMd5&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascDumpData.cpp" line="223"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;Value&apos; can be reduced." verbose="The scope of the variable &apos;Value&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascDumpData.cpp" line="297"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;szLastEntry&apos; can be reduced." verbose="The scope of the variable &apos;szLastEntry&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascDumpData.cpp" line="325"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;szNameBuff&apos; can be reduced." verbose="The scope of the variable &apos;szNameBuff&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascDumpData.cpp" line="366"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;pMndxEntry&apos; can be reduced." verbose="The scope of the variable &apos;pMndxEntry&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascDumpData.cpp" line="401"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;szMd5&apos; can be reduced." verbose="The scope of the variable &apos;szMd5&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascDumpData.cpp" line="403"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;szIndexKey&apos; can be reduced." verbose="The scope of the variable &apos;szIndexKey&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascDumpData.cpp" line="428"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;FileNameArray&apos; can be reduced." verbose="The scope of the variable &apos;FileNameArray&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascDumpData.cpp" line="468"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;fp&apos; can be reduced." verbose="The scope of the variable &apos;fp&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascDumpData.cpp" line="469"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;Buffer&apos; can be reduced." verbose="The scope of the variable &apos;Buffer&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascDumpData.cpp" line="498"/>
+        </error>
+        <error id="memleak" severity="error" msg="Memory leak: ppIndexEntries" verbose="Memory leak: ppIndexEntries">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascDumpData.cpp" line="277"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;pRootEntry&apos; can be reduced." verbose="The scope of the variable &apos;pRootEntry&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascFindFile.cpp" line="205"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascMndxRoot.cpp" line="3172"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;NewMaxItemCount&apos; can be reduced." verbose="The scope of the variable &apos;NewMaxItemCount&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascMndxRoot.cpp" line="509"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;NewMaxItemCount&apos; can be reduced." verbose="The scope of the variable &apos;NewMaxItemCount&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascMndxRoot.cpp" line="535"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;szPathFragment&apos; can be reduced." verbose="The scope of the variable &apos;szPathFragment&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascMndxRoot.cpp" line="1201"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;FragmentOffset&apos; can be reduced." verbose="The scope of the variable &apos;FragmentOffset&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascMndxRoot.cpp" line="2365"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;cbToAllocate&apos; can be reduced." verbose="The scope of the variable &apos;cbToAllocate&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascMndxRoot.cpp" line="2763"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;szStrippedName&apos; can be reduced." verbose="The scope of the variable &apos;szStrippedName&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascMndxRoot.cpp" line="2893"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;nError&apos; can be reduced." verbose="The scope of the variable &apos;nError&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascMndxRoot.cpp" line="2894"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;cbToAllocate&apos; can be reduced." verbose="The scope of the variable &apos;cbToAllocate&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascMndxRoot.cpp" line="2932"/>
+        </error>
+        <error id="unusedStructMember" severity="style" msg="struct or union member &apos;_FILE_MAR_INFO::MarIndex&apos; is never used." verbose="struct or union member &apos;_FILE_MAR_INFO::MarIndex&apos; is never used.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascMndxRoot.cpp" line="35"/>
+        </error>
+        <error id="unusedStructMember" severity="style" msg="struct or union member &apos;_FILE_MAR_INFO::MarDataSizeHi&apos; is never used." verbose="struct or union member &apos;_FILE_MAR_INFO::MarDataSizeHi&apos; is never used.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascMndxRoot.cpp" line="37"/>
+        </error>
+        <error id="unusedStructMember" severity="style" msg="struct or union member &apos;_FILE_MAR_INFO::MarDataOffsetHi&apos; is never used." verbose="struct or union member &apos;_FILE_MAR_INFO::MarDataOffsetHi&apos; is never used.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascMndxRoot.cpp" line="39"/>
+        </error>
+        <error id="memleak" severity="error" msg="Memory leak: pMndxInfo" verbose="Memory leak: pMndxInfo">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascMndxRoot.cpp" line="2956"/>
+        </error>
+        <error id="duplicateExpression" severity="style" msg="Same expression on both sides of &apos;==&apos;." verbose="Finding the same expression on both sides of an operator is suspicious and might indicate a cut and paste or logic error. Please examine this code carefully to determine if it is correct.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascMndxRoot.cpp" line="3329"/>
+            <location file="c:\TrinitySource\dep\CascLib\src\CascMndxRoot.cpp" line="3329"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;nLength&apos; can be reduced." verbose="The scope of the variable &apos;nLength&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascMndxRoot.cpp" line="3432"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;szFileName&apos; can be reduced." verbose="The scope of the variable &apos;szFileName&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascMndxRoot.cpp" line="3433"/>
+        </error>
+        <error id="nullPointer" severity="warning" msg="Possible null pointer dereference: pEncodingEntry - otherwise it is redundant to check it against null." verbose="Possible null pointer dereference: pEncodingEntry - otherwise it is redundant to check it against null.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenFile.cpp" line="245"/>
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenFile.cpp" line="253"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;pEncodingEntry&apos; can be reduced." verbose="The scope of the variable &apos;pEncodingEntry&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenFile.cpp" line="41"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;MidlEntry&apos; can be reduced." verbose="The scope of the variable &apos;MidlEntry&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenFile.cpp" line="43"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;nResult&apos; can be reduced." verbose="The scope of the variable &apos;nResult&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenFile.cpp" line="45"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;pThatEntry&apos; can be reduced." verbose="The scope of the variable &apos;pThatEntry&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenFile.cpp" line="124"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;pENUSEntry&apos; can be reduced." verbose="The scope of the variable &apos;pENUSEntry&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenFile.cpp" line="125"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;pENGBEntry&apos; can be reduced." verbose="The scope of the variable &apos;pENGBEntry&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenFile.cpp" line="126"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;pEndEntry&apos; can be reduced." verbose="The scope of the variable &apos;pEndEntry&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenFile.cpp" line="128"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;FileNameHash&apos; can be reduced." verbose="The scope of the variable &apos;FileNameHash&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenFile.cpp" line="130"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;hf&apos; can be reduced." verbose="The scope of the variable &apos;hf&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenFile.cpp" line="212"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;hf&apos; can be reduced." verbose="The scope of the variable &apos;hf&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenFile.cpp" line="240"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;nError&apos; can be reduced." verbose="The scope of the variable &apos;nError&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenFile.cpp" line="241"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;pPackage&apos; can be reduced." verbose="The scope of the variable &apos;pPackage&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenFile.cpp" line="322"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;szStrippedName&apos; can be reduced." verbose="The scope of the variable &apos;szStrippedName&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenFile.cpp" line="325"/>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &apos;pEndEntry&apos; is assigned a value that is never used." verbose="Variable &apos;pEndEntry&apos; is assigned a value that is never used.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenFile.cpp" line="139"/>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &apos;nError&apos; is assigned a value that is never used." verbose="Variable &apos;nError&apos; is assigned a value that is never used.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenFile.cpp" line="246"/>
+        </error>
+        <error id="redundantAssignment" severity="performance" msg="Variable &apos;pIndexHeader&apos; is reassigned a value before the old one has been used." verbose="Variable &apos;pIndexHeader&apos; is reassigned a value before the old one has been used.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenStorage.cpp" line="428"/>
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenStorage.cpp" line="417"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;dwHeaderHash&apos; can be reduced." verbose="The scope of the variable &apos;dwHeaderHash&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenStorage.cpp" line="200"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;nEntries&apos; can be reduced." verbose="The scope of the variable &apos;nEntries&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenStorage.cpp" line="617"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;dwSegmentPos&apos; can be reduced." verbose="The scope of the variable &apos;dwSegmentPos&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenStorage.cpp" line="671"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;dwNumSegments&apos; can be reduced." verbose="The scope of the variable &apos;dwNumSegments&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenStorage.cpp" line="672"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;i&apos; can be reduced." verbose="The scope of the variable &apos;i&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenStorage.cpp" line="745"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;pEncodingEntry&apos; can be reduced." verbose="The scope of the variable &apos;pEncodingEntry&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenStorage.cpp" line="778"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;nRootIndex&apos; can be reduced." verbose="The scope of the variable &apos;nRootIndex&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenStorage.cpp" line="870"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;FileSignature&apos; can be reduced." verbose="The scope of the variable &apos;FileSignature&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenStorage.cpp" line="948"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;i&apos; can be reduced." verbose="The scope of the variable &apos;i&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenStorage.cpp" line="999"/>
+        </error>
+        <error id="unusedStructMember" severity="style" msg="struct or union member &apos;_FILE_ENCODING_HEADER::Magic&apos; is never used." verbose="struct or union member &apos;_FILE_ENCODING_HEADER::Magic&apos; is never used.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenStorage.cpp" line="62"/>
+        </error>
+        <error id="unusedStructMember" severity="style" msg="struct or union member &apos;_FILE_ENCODING_HEADER::field_2&apos; is never used." verbose="struct or union member &apos;_FILE_ENCODING_HEADER::field_2&apos; is never used.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenStorage.cpp" line="63"/>
+        </error>
+        <error id="unusedStructMember" severity="style" msg="struct or union member &apos;_FILE_ENCODING_HEADER::field_3&apos; is never used." verbose="struct or union member &apos;_FILE_ENCODING_HEADER::field_3&apos; is never used.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenStorage.cpp" line="64"/>
+        </error>
+        <error id="unusedStructMember" severity="style" msg="struct or union member &apos;_FILE_ENCODING_HEADER::field_4&apos; is never used." verbose="struct or union member &apos;_FILE_ENCODING_HEADER::field_4&apos; is never used.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenStorage.cpp" line="65"/>
+        </error>
+        <error id="unusedStructMember" severity="style" msg="struct or union member &apos;_FILE_ENCODING_HEADER::field_5&apos; is never used." verbose="struct or union member &apos;_FILE_ENCODING_HEADER::field_5&apos; is never used.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenStorage.cpp" line="66"/>
+        </error>
+        <error id="unusedStructMember" severity="style" msg="struct or union member &apos;_FILE_ENCODING_HEADER::field_7&apos; is never used." verbose="struct or union member &apos;_FILE_ENCODING_HEADER::field_7&apos; is never used.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenStorage.cpp" line="67"/>
+        </error>
+        <error id="unusedStructMember" severity="style" msg="struct or union member &apos;_FILE_ENCODING_HEADER::field_D&apos; is never used." verbose="struct or union member &apos;_FILE_ENCODING_HEADER::field_D&apos; is never used.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenStorage.cpp" line="69"/>
+        </error>
+        <error id="unusedStructMember" severity="style" msg="struct or union member &apos;_FILE_ENCODING_HEADER::field_11&apos; is never used." verbose="struct or union member &apos;_FILE_ENCODING_HEADER::field_11&apos; is never used.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenStorage.cpp" line="70"/>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &apos;nError&apos; is assigned a value that is never used." verbose="Variable &apos;nError&apos; is assigned a value that is never used.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascOpenStorage.cpp" line="564"/>
+        </error>
+       <error id="unreadVariable" severity="style" msg="Variable &apos;nError&apos; is assigned a value that is never used." verbose="Variable &apos;nError&apos; is assigned a value that is never used.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascReadFile.cpp" line="193"/>
+        </error>
+        <error id="invalidPrintfArgType_uint" severity="warning" msg="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;DWORD {aka unsigned long}&apos;." verbose="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;DWORD {aka unsigned long}&apos;.">
+            <location file="c:\TrinitySource\dep\CascLib\src\CascReadFile.cpp" line="59"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;nLength&apos; can be reduced." verbose="The scope of the variable &apos;nLength&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\common\Common.cpp" line="119"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;nLength&apos; can be reduced." verbose="The scope of the variable &apos;nLength&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\common\Common.cpp" line="138"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;dir_entry&apos; can be reduced." verbose="The scope of the variable &apos;dir_entry&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\dep\CascLib\src\common\Directory.cpp" line="82"/>
+        </error>
+        <error id="uselessAssignmentPtrArg" severity="warning" msg="Assignment of function parameter has no effect outside the function. Did you forget dereferencing it?" verbose="Assignment of function parameter has no effect outside the function. Did you forget dereferencing it?">
+            <location file="c:\TrinitySource\dep\CascLib\src\common\FileStream.cpp" line="683"/>
+        </error>
+        <error id="uselessAssignmentPtrArg" severity="warning" msg="Assignment of function parameter has no effect outside the function. Did you forget dereferencing it?" verbose="Assignment of function parameter has no effect outside the function. Did you forget dereferencing it?">
+            <location file="c:\TrinitySource\dep\CascLib\src\common\FileStream.cpp" line="756"/>
+        </error>
+        <error id="uselessAssignmentPtrArg" severity="warning" msg="Assignment of function parameter has no effect outside the function. Did you forget dereferencing it?" verbose="Assignment of function parameter has no effect outside the function. Did you forget dereferencing it?">
+            <location file="c:\TrinitySource\dep\CascLib\src\common\FileStream.cpp" line="757"/>
+        </error>
+        <error id="uselessAssignmentPtrArg" severity="warning" msg="Assignment of function parameter has no effect outside the function. Did you forget dereferencing it?" verbose="Assignment of function parameter has no effect outside the function. Did you forget dereferencing it?">
+            <location file="c:\TrinitySource\dep\CascLib\src\common\FileStream.cpp" line="758"/>
+        </error>
+        <error id="uselessAssignmentArg" severity="style" msg="Assignment of function parameter has no effect outside the function." verbose="Assignment of function parameter has no effect outside the function.">
+            <location file="c:\TrinitySource\dep\CascLib\src\common\FileStream.cpp" line="759"/>
+        </error>
+         <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\src\server\game\Scripting\ScriptMgr.cpp" line="607"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\src\server\game\Scripting\ScriptMgr.cpp" line="611"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\src\server\game\Scripting\ScriptMgr.cpp" line="625"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\src\server\game\Scripting\ScriptMgr.cpp" line="629"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\src\server\game\Scripting\ScriptMgr.cpp" line="642"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\src\server\game\Scripting\ScriptMgr.cpp" line="646"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;pTempSpell&apos; can be reduced." verbose="The scope of the variable &apos;pTempSpell&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\game\Scripting\ScriptMgr.cpp" line="247"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;WorldPacket::_compressionStream&apos; is not initialized in the constructor." verbose="Member variable &apos;WorldPacket::_compressionStream&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\game\Server\WorldPacket.h" line="32"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;WorldPacket::_compressionStream&apos; is not initialized in the constructor." verbose="Member variable &apos;WorldPacket::_compressionStream&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\game\Server\WorldPacket.h" line="36"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;WorldPacket::_compressionStream&apos; is not initialized in the constructor." verbose="Member variable &apos;WorldPacket::_compressionStream&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\game\Server\WorldPacket.h" line="38"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;WorldPacket::_compressionStream&apos; is not initialized in the constructor." verbose="Member variable &apos;WorldPacket::_compressionStream&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\game\Server\WorldPacket.h" line="42"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;WorldPacket::_compressionStream&apos; is not initialized in the constructor." verbose="Member variable &apos;WorldPacket::_compressionStream&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\game\Server\WorldPacket.h" line="57"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\src\server\game\Server\WorldSession.cpp" line="1068"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\src\server\game\Spells\Auras\SpellAuras.h" line="106"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\src\server\game\Spells\Auras\SpellAuras.h" line="107"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\src\server\game\Spells\Auras\SpellAuras.cpp" line="318"/>
+        </error>
+        <error id="unusedPrivateFunction" severity="style" msg="Unused private function: &apos;AuraApplication::_Remove&apos;" verbose="Unused private function: &apos;AuraApplication::_Remove&apos;">
+            <location file="c:\TrinitySource\src\server\game\Spells\Auras\SpellAuras.h" line="59"/>
+        </error>
+        <error id="unusedPrivateFunction" severity="style" msg="Unused private function: &apos;AuraApplication::_HandleEffect&apos;" verbose="Unused private function: &apos;AuraApplication::_HandleEffect&apos;">
+            <location file="c:\TrinitySource\src\server\game\Spells\Auras\SpellAuras.h" line="62"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;hit&apos; can be reduced." verbose="The scope of the variable &apos;hit&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\game\Spells\Spell.cpp" line="4656"/>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &apos;distSq&apos; is assigned a value that is never used." verbose="Variable &apos;distSq&apos; is assigned a value that is never used.">
+            <location file="c:\TrinitySource\src\server\game\Spells\Spell.cpp" line="1625"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;SpellEffectInfo::MaxRadiusEntry&apos; is not initialized in the constructor." verbose="Member variable &apos;SpellEffectInfo::MaxRadiusEntry&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\game\Spells\SpellInfo.h" line="261"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;SpellEffectInfo::ScalingMultiplier&apos; is not initialized in the constructor." verbose="Member variable &apos;SpellEffectInfo::ScalingMultiplier&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\game\Spells\SpellInfo.h" line="261"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;SpellEffectInfo::DeltaScalingMultiplier&apos; is not initialized in the constructor." verbose="Member variable &apos;SpellEffectInfo::DeltaScalingMultiplier&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\game\Spells\SpellInfo.h" line="261"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;SpellEffectInfo::ComboScalingMultiplier&apos; is not initialized in the constructor." verbose="Member variable &apos;SpellEffectInfo::ComboScalingMultiplier&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\game\Spells\SpellInfo.h" line="261"/>
+        </error>
+        <error id="noConstructor" severity="style" msg="The class &apos;SpellScript&apos; does not have a constructor." verbose="The class &apos;SpellScript&apos; does not have a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior.">
+            <location file="c:\TrinitySource\src\server\game\Spells\SpellScript.h" line="151"/>
+        </error>
+        <error id="noCopyConstructor" severity="style" msg="&apos;struct WorldObjectSpellTargetCheck&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory." verbose="&apos;struct WorldObjectSpellTargetCheck&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory.">
+            <location file="c:\TrinitySource\src\server\game\Spells\Spell.h" line="711"/>
+        </error>
+        <error id="stlSize" severity="performance" msg="Possible inefficient checking for &apos;m_loadedScripts&apos; emptiness." verbose="Checking for &apos;m_loadedScripts&apos; emptiness might be inefficient. Using m_loadedScripts.empty() instead of m_loadedScripts.size() can be faster. m_loadedScripts.size() can take linear time but m_loadedScripts.empty() is guaranteed to take constant time.">
+            <location file="c:\TrinitySource\src\server\game\Spells\Spell.cpp" line="7171"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;item&apos; can be reduced." verbose="The scope of the variable &apos;item&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\game\Spells\SpellEffects.cpp" line="3428"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\src\server\game\Spells\SpellMgr.cpp" line="3016"/>
+        </error>
+        <error id="redundantCopy" severity="performance" msg="Buffer &apos;temp&apos; is being written before its old content has been used." verbose="Buffer &apos;temp&apos; is being written before its old content has been used.">
+            <location file="c:\TrinitySource\src\server\game\Warden\WardenCheckMgr.cpp" line="127"/>
+            <location file="c:\TrinitySource\src\server\game\Warden\WardenCheckMgr.cpp" line="126"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;rs&apos; can be reduced." verbose="The scope of the variable &apos;rs&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\game\Warden\WardenWin.cpp" line="367"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;zprint&apos; can be reduced." verbose="The scope of the variable &apos;zprint&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\game\World\World.cpp" line="2726"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;callbackArg&apos; can be reduced." verbose="The scope of the variable &apos;callbackArg&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\game\World\World.cpp" line="2727"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;ZMQTask::_inproc&apos; is not initialized in the constructor." verbose="Member variable &apos;ZMQTask::_inproc&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\ipc\ZMQTask.cpp" line="22"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;ZMQTask::_thread&apos; is not initialized in the constructor." verbose="Member variable &apos;ZMQTask::_thread&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\ipc\ZMQTask.cpp" line="22"/>
+        </error>
+        <error id="noCopyConstructor" severity="style" msg="&apos;class ZMQTask&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory." verbose="&apos;class ZMQTask&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory.">
+            <location file="c:\TrinitySource\src\server\ipc\ZMQTask.h" line="30"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;ZmqWorker::_results&apos; is not initialized in the constructor." verbose="Member variable &apos;ZmqWorker::_results&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\ipc\ZmqWorker.cpp" line="21"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;ZmqWorker::_taskQueue&apos; is not initialized in the constructor." verbose="Member variable &apos;ZmqWorker::_taskQueue&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\ipc\ZmqWorker.cpp" line="21"/>
+        </error>
+        <error id="unusedVariable" severity="style" msg="Unused variable: email" verbose="Unused variable: email">
+            <location file="c:\TrinitySource\src\server\scripts\Commands\cs_battlenet_account.cpp" line="69"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;a8&apos; can be reduced." verbose="The scope of the variable &apos;a8&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\scripts\Commands\cs_wp.cpp" line="346"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;a9&apos; can be reduced." verbose="The scope of the variable &apos;a9&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\scripts\Commands\cs_wp.cpp" line="346"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;a10&apos; can be reduced." verbose="The scope of the variable &apos;a10&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\scripts\Commands\cs_wp.cpp" line="346"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;a11&apos; can be reduced." verbose="The scope of the variable &apos;a11&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\scripts\Commands\cs_wp.cpp" line="346"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;a7&apos; can be reduced." verbose="The scope of the variable &apos;a7&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\scripts\Commands\cs_wp.cpp" line="347"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;boss_alizabalAI::_hate&apos; is not initialized in the constructor." verbose="Member variable &apos;boss_alizabalAI::_hate&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\scripts\EasternKingdoms\BaradinHold\boss_alizabal.cpp" line="84"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;boss_alizabalAI::_skewer&apos; is not initialized in the constructor." verbose="Member variable &apos;boss_alizabalAI::_skewer&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\scripts\EasternKingdoms\BaradinHold\boss_alizabal.cpp" line="84"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;npc_twilight_sadistAI::_combatPhase&apos; is not initialized in the constructor." verbose="Member variable &apos;npc_twilight_sadistAI::_combatPhase&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\scripts\EasternKingdoms\BlackrockMountain\BlackrockCaverns\blackrock_caverns.cpp" line="355"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;boss_corlaAI::combatPhase&apos; is not initialized in the constructor." verbose="Member variable &apos;boss_corlaAI::combatPhase&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\scripts\EasternKingdoms\BlackrockMountain\BlackrockCaverns\boss_corla.cpp" line="55"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;rune&apos; can be reduced." verbose="The scope of the variable &apos;rune&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\scripts\EasternKingdoms\BlackrockMountain\BlackrockSpire\instance_blackrock_spire.cpp" line="418"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;target&apos; can be reduced." verbose="The scope of the variable &apos;target&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\scripts\EasternKingdoms\SunwellPlateau\boss_eredar_twins.cpp" line="269"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;temp&apos; can be reduced." verbose="The scope of the variable &apos;temp&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\scripts\EasternKingdoms\SunwellPlateau\boss_eredar_twins.cpp" line="270"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;angle&apos; can be reduced." verbose="The scope of the variable &apos;angle&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\scripts\EasternKingdoms\ZulGurub\boss_mandokir.cpp" line="584"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;x&apos; can be reduced." verbose="The scope of the variable &apos;x&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\scripts\EasternKingdoms\ZulGurub\boss_mandokir.cpp" line="585"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;y&apos; can be reduced." verbose="The scope of the variable &apos;y&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\scripts\EasternKingdoms\ZulGurub\boss_mandokir.cpp" line="585"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;z&apos; can be reduced." verbose="The scope of the variable &apos;z&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\scripts\EasternKingdoms\ZulGurub\boss_mandokir.cpp" line="585"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;boss_mandokirAI::_ohganotSoFast&apos; is not initialized in the constructor." verbose="Member variable &apos;boss_mandokirAI::_ohganotSoFast&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\scripts\EasternKingdoms\ZulGurub\boss_mandokir.cpp" line="110"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;boss_mandokirAI::_reanimateOhganCooldown&apos; is not initialized in the constructor." verbose="Member variable &apos;boss_mandokirAI::_reanimateOhganCooldown&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\scripts\EasternKingdoms\ZulGurub\boss_mandokir.cpp" line="110"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;npc_whisperwind_lasherAI::lasher_clicked&apos; is not initialized in the constructor." verbose="Member variable &apos;npc_whisperwind_lasherAI::lasher_clicked&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\scripts\Kalimdor\zone_felwood.cpp" line="50"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;mob&apos; can be reduced." verbose="The scope of the variable &apos;mob&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\scripts\Kalimdor\zone_silithus.cpp" line="657"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;groupMember&apos; can be reduced." verbose="The scope of the variable &apos;groupMember&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\scripts\Kalimdor\zone_silithus.cpp" line="965"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;target&apos; can be reduced." verbose="The scope of the variable &apos;target&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\scripts\Northrend\CrusadersColiseum\TrialOfTheCrusader\boss_faction_champions.cpp" line="669"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;target&apos; can be reduced." verbose="The scope of the variable &apos;target&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\scripts\Northrend\CrusadersColiseum\TrialOfTheCrusader\boss_faction_champions.cpp" line="684"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;instance_violet_hold_InstanceMapScript::bWiped&apos; is not initialized in the constructor." verbose="Member variable &apos;instance_violet_hold_InstanceMapScript::bWiped&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\scripts\Northrend\VioletHold\instance_violet_hold.cpp" line="115"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;pTrap&apos; can be reduced." verbose="The scope of the variable &apos;pTrap&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\scripts\Northrend\zone_borean_tundra.cpp" line="1963"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;pTrap&apos; can be reduced." verbose="The scope of the variable &apos;pTrap&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\scripts\Northrend\zone_borean_tundra.cpp" line="2002"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\src\server\scripts\OutdoorPvP\OutdoorPvPHP.cpp" line="166"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\src\server\scripts\OutdoorPvP\OutdoorPvPZM.cpp" line="60"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\src\server\scripts\OutdoorPvP\OutdoorPvPZM.cpp" line="65"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\src\server\scripts\OutdoorPvP\OutdoorPvPZM.cpp" line="66"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\src\server\scripts\OutdoorPvP\OutdoorPvPZM.cpp" line="74"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\src\server\scripts\OutdoorPvP\OutdoorPvPZM.cpp" line="76"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\src\server\scripts\OutdoorPvP\OutdoorPvPZM.cpp" line="83"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\src\server\scripts\OutdoorPvP\OutdoorPvPZM.cpp" line="85"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;moveSpeed&apos; can be reduced." verbose="The scope of the variable &apos;moveSpeed&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\scripts\Outland\BlackTemple\boss_shade_of_akama.cpp" line="249"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;pMember&apos; can be reduced." verbose="The scope of the variable &apos;pMember&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\scripts\Outland\BlackTemple\illidari_council.cpp" line="260"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;Advisor&apos; can be reduced." verbose="The scope of the variable &apos;Advisor&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\scripts\Outland\TempestKeep\Eye\boss_kaelthas.cpp" line="705"/>
+        </error>
+        <error id="noConstructor" severity="style" msg="The class &apos;spell_mage_polymorph_AuraScript&apos; does not have a constructor." verbose="The class &apos;spell_mage_polymorph_AuraScript&apos; does not have a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior.">
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_mage.cpp" line="1068"/>
+        </error>
+        <error id="noConstructor" severity="style" msg="The class &apos;spell_mage_ring_of_frost_AuraScript&apos; does not have a constructor." verbose="The class &apos;spell_mage_ring_of_frost_AuraScript&apos; does not have a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior.">
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_mage.cpp" line="1226"/>
+        </error>
+        <error id="noConstructor" severity="style" msg="The class &apos;spell_mage_water_elemental_freeze_SpellScript&apos; does not have a constructor." verbose="The class &apos;spell_mage_water_elemental_freeze_SpellScript&apos; does not have a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior.">
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_mage.cpp" line="1420"/>
+        </error>
+        <error id="postfixOperator" severity="performance" msg="Prefer prefix ++/-- operators for non-primitive types." verbose="Prefix ++/-- operators should be preferred for non-primitive types. Pre-increment/decrement can be more efficient than post-increment/decrement. Post-increment/decrement usually involves keeping a copy of the previous value around and adds a little extra code.">
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_mage.cpp" line="1260"/>
+        </error>
+        <error id="redundantAssignment" severity="performance" msg="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used." verbose="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used.">
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="397"/>
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="395"/>
+        </error>
+        <error id="redundantAssignment" severity="performance" msg="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used." verbose="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used.">
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="449"/>
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="448"/>
+        </error>
+        <error id="redundantAssignment" severity="performance" msg="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used." verbose="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used.">
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="461"/>
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="460"/>
+        </error>
+        <error id="redundantAssignment" severity="performance" msg="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used." verbose="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used.">
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="508"/>
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="507"/>
+        </error>
+        <error id="redundantAssignment" severity="performance" msg="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used." verbose="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used.">
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="520"/>
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="519"/>
+        </error>
+        <error id="redundantAssignment" severity="performance" msg="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used." verbose="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used.">
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="532"/>
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="531"/>
+        </error>
+        <error id="redundantAssignment" severity="performance" msg="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used." verbose="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used.">
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="574"/>
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="573"/>
+        </error>
+        <error id="redundantAssignment" severity="performance" msg="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used." verbose="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used.">
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="1048"/>
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="1046"/>
+        </error>
+        <error id="redundantAssignment" severity="performance" msg="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used." verbose="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used.">
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="1067"/>
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="1065"/>
+        </error>
+        <error id="redundantAssignment" severity="performance" msg="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used." verbose="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used.">
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="1086"/>
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="1084"/>
+        </error>
+        <error id="redundantAssignment" severity="performance" msg="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used." verbose="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used.">
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="1135"/>
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="1133"/>
+        </error>
+        <error id="redundantAssignment" severity="performance" msg="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used." verbose="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used.">
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="1154"/>
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="1152"/>
+        </error>
+        <error id="redundantAssignment" severity="performance" msg="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used." verbose="Variable &apos;ownerBonus&apos; is reassigned a value before the old one has been used.">
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="1173"/>
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_pet.cpp" line="1171"/>
+        </error>
+        <error id="noConstructor" severity="style" msg="The class &apos;spell_warl_soul_swap_override_AuraScript&apos; does not have a constructor." verbose="The class &apos;spell_warl_soul_swap_override_AuraScript&apos; does not have a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior.">
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_warlock.cpp" line="1203"/>
+        </error>
+        <error id="noConstructor" severity="style" msg="The class &apos;spell_warr_vigilance_AuraScript&apos; does not have a constructor." verbose="The class &apos;spell_warr_vigilance_AuraScript&apos; does not have a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior.">
+            <location file="c:\TrinitySource\src\server\scripts\Spells\spell_warrior.cpp" line="969"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;pTrap&apos; can be reduced." verbose="The scope of the variable &apos;pTrap&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\scripts\World\item_scripts.cpp" line="344"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;item&apos; can be reduced." verbose="The scope of the variable &apos;item&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\server\scripts\World\npc_professions.cpp" line="243"/>
+        </error>
+        <error id="invalidPointerCast" severity="portability" msg="Casting between integer* and float* which have an incompatible binary data representation." verbose="Casting between integer* and float* which have an incompatible binary data representation.">
+            <location file="c:\TrinitySource\src\server\shared\DataStores\DB2FileLoader.h" line="39"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;DB2FileLoader::stringTable&apos; is not initialized in the constructor." verbose="Member variable &apos;DB2FileLoader::stringTable&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\shared\DataStores\DB2FileLoader.cpp" line="25"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;DB2FileLoader::unk1&apos; is not initialized in the constructor." verbose="Member variable &apos;DB2FileLoader::unk1&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\shared\DataStores\DB2FileLoader.cpp" line="25"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;DB2FileLoader::minIndex&apos; is not initialized in the constructor." verbose="Member variable &apos;DB2FileLoader::minIndex&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\shared\DataStores\DB2FileLoader.cpp" line="25"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;DB2FileLoader::maxIndex&apos; is not initialized in the constructor." verbose="Member variable &apos;DB2FileLoader::maxIndex&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\shared\DataStores\DB2FileLoader.cpp" line="25"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;DB2FileLoader::locale&apos; is not initialized in the constructor." verbose="Member variable &apos;DB2FileLoader::locale&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\shared\DataStores\DB2FileLoader.cpp" line="25"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;DB2FileLoader::unk5&apos; is not initialized in the constructor." verbose="Member variable &apos;DB2FileLoader::unk5&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\server\shared\DataStores\DB2FileLoader.cpp" line="25"/>
+        </error>
+        <error id="invalidPointerCast" severity="portability" msg="Casting between integer* and float* which have an incompatible binary data representation." verbose="Casting between integer* and float* which have an incompatible binary data representation.">
+            <location file="c:\TrinitySource\src\server\shared\DataStores\DBCFileLoader.h" line="39"/>
+        </error>
+        <error id="noCopyConstructor" severity="style" msg="&apos;class DatabaseWorkerPool&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory." verbose="&apos;class DatabaseWorkerPool&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory.">
+            <location file="c:\TrinitySource\src\server\shared\Database\DatabaseWorkerPool.h" line="46"/>
+        </error>
+        <error id="publicAllocationError" severity="warning" msg="Possible leak in public function. The pointer &apos;_connectionInfo&apos; is not deallocated before it is allocated." verbose="Possible leak in public function. The pointer &apos;_connectionInfo&apos; is not deallocated before it is allocated.">
+            <location file="c:\TrinitySource\src\server\shared\Database\DatabaseWorkerPool.h" line="78"/>
+        </error>
+        <error id="noCopyConstructor" severity="style" msg="&apos;class DatabaseWorkerPool&lt;WorldDatabaseConnection&gt;&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory." verbose="&apos;class DatabaseWorkerPool&lt;WorldDatabaseConnection&gt;&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory.">
+            <location file="c:\TrinitySource\src\server\shared\Database\DatabaseWorkerPool.h" line="46"/>
+        </error>
+        <error id="noCopyConstructor" severity="style" msg="&apos;class DatabaseWorkerPool&lt;CharacterDatabaseConnection&gt;&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory." verbose="&apos;class DatabaseWorkerPool&lt;CharacterDatabaseConnection&gt;&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory.">
+            <location file="c:\TrinitySource\src\server\shared\Database\DatabaseWorkerPool.h" line="46"/>
+        </error>
+        <error id="noCopyConstructor" severity="style" msg="&apos;class DatabaseWorkerPool&lt;LoginDatabaseConnection&gt;&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory." verbose="&apos;class DatabaseWorkerPool&lt;LoginDatabaseConnection&gt;&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory.">
+            <location file="c:\TrinitySource\src\server\shared\Database\DatabaseWorkerPool.h" line="46"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\src\server\shared\Logging\Log.cpp" line="379"/>
+        </error>
+        <error id="useInitializationList" severity="performance" msg="Variable &apos;m_logsTimestamp&apos; is assigned in constructor body. Consider performing initialization in initialization list." verbose="When an object of a class is created, the constructors of all member variables are called consecutively in the order the variables are declared, even if you don&apos;t explicitly write them to the initialization list. You could avoid assigning &apos;m_logsTimestamp&apos; a value by passing the value to the constructor in the initialization list.">
+            <location file="c:\TrinitySource\src\server\shared\Logging\Log.cpp" line="34"/>
+        </error>
+        <error id="noCopyConstructor" severity="style" msg="&apos;class Tokenizer&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory." verbose="&apos;class Tokenizer&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory.">
+            <location file="c:\TrinitySource\src\server\shared\Utilities\Util.h" line="41"/>
+        </error>
+        <error id="invalidPrintfArgType_uint" severity="warning" msg="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;DWORD {aka unsigned long}&apos;." verbose="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;DWORD {aka unsigned long}&apos;.">
+            <location file="c:\TrinitySource\src\server\shared\Utilities\Util.cpp" line="283"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\src\server\worldserver\TCSoap\TCSoap.h" line="59"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts.">
+            <location file="c:\TrinitySource\src\server\worldserver\TCSoap\TCSoap.cpp" line="129"/>
+        </error>
+        <error id="invalidPointerCast" severity="portability" msg="Casting between integer* and float* which have an incompatible binary data representation." verbose="Casting between integer* and float* which have an incompatible binary data representation.">
+            <location file="c:\TrinitySource\src\tools\map_extractor\dbcfile.h" line="59"/>
+        </error>
+        <error id="noConstructor" severity="style" msg="The class &apos;adt_MCVT&apos; does not have a constructor." verbose="The class &apos;adt_MCVT&apos; does not have a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior.">
+            <location file="c:\TrinitySource\src\tools\map_extractor\adt.h" line="48"/>
+        </error>
+        <error id="noConstructor" severity="style" msg="The class &apos;adt_MCLQ&apos; does not have a constructor." verbose="The class &apos;adt_MCLQ&apos; does not have a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior.">
+            <location file="c:\TrinitySource\src\tools\map_extractor\adt.h" line="62"/>
+        </error>
+        <error id="noConstructor" severity="style" msg="The class &apos;adt_MCNK&apos; does not have a constructor." verbose="The class &apos;adt_MCNK&apos; does not have a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior.">
+            <location file="c:\TrinitySource\src\tools\map_extractor\adt.h" line="90"/>
+        </error>
+        <error id="noConstructor" severity="style" msg="The class &apos;wdt_MAIN&apos; does not have a constructor." verbose="The class &apos;wdt_MAIN&apos; does not have a constructor although it has private member variables. Member variables of builtin types are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior.">
+            <location file="c:\TrinitySource\src\tools\map_extractor\wdt.h" line="31"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;DBCFile::_recordSize&apos; is not initialized in the constructor." verbose="Member variable &apos;DBCFile::_recordSize&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\map_extractor\dbcfile.cpp" line="23"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;DBCFile::_recordCount&apos; is not initialized in the constructor." verbose="Member variable &apos;DBCFile::_recordCount&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\map_extractor\dbcfile.cpp" line="23"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;DBCFile::_fieldCount&apos; is not initialized in the constructor." verbose="Member variable &apos;DBCFile::_fieldCount&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\map_extractor\dbcfile.cpp" line="23"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;DBCFile::_stringSize&apos; is not initialized in the constructor." verbose="Member variable &apos;DBCFile::_stringSize&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\map_extractor\dbcfile.cpp" line="23"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;MapChunkHeader::LowQualityTextureMap&apos; is not initialized in the constructor." verbose="Member variable &apos;MapChunkHeader::LowQualityTextureMap&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\Utils.h" line="86"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;DoodadInstance::QuatW&apos; is not initialized in the constructor." verbose="Member variable &apos;DoodadInstance::QuatW&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\Utils.h" line="215"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;DoodadInstance::QuatX&apos; is not initialized in the constructor." verbose="Member variable &apos;DoodadInstance::QuatX&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\Utils.h" line="215"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;DoodadInstance::QuatY&apos; is not initialized in the constructor." verbose="Member variable &apos;DoodadInstance::QuatY&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\Utils.h" line="215"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;DoodadInstance::QuatZ&apos; is not initialized in the constructor." verbose="Member variable &apos;DoodadInstance::QuatZ&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\Utils.h" line="215"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;DoodadInstance::Scale&apos; is not initialized in the constructor." verbose="Member variable &apos;DoodadInstance::Scale&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\Utils.h" line="215"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;LiquidData::HeightMap&apos; is not initialized in the constructor." verbose="Member variable &apos;LiquidData::HeightMap&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\Utils.h" line="258"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;LiquidData::RenderFlags&apos; is not initialized in the constructor." verbose="Member variable &apos;LiquidData::RenderFlags&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\Utils.h" line="258"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;H2OInformation::HeightLevel1&apos; is not initialized in the constructor." verbose="Member variable &apos;H2OInformation::HeightLevel1&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\Utils.h" line="310"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;H2OInformation::HeightLevel2&apos; is not initialized in the constructor." verbose="Member variable &apos;H2OInformation::HeightLevel2&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\Utils.h" line="310"/>
+        </error>
+        <error id="noCopyConstructor" severity="style" msg="&apos;class ADT&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory." verbose="&apos;class ADT&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\ADT.h" line="27"/>
+        </error>
+        <error id="operatorEqVarError" severity="warning" msg="Member variable &apos;MPQFile::eof&apos; is not assigned a value in &apos;MPQFile::operator=&apos;." verbose="Member variable &apos;MPQFile::eof&apos; is not assigned a value in &apos;MPQFile::operator=&apos;.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\MPQ.h" line="78"/>
+        </error>
+        <error id="operatorEqVarError" severity="warning" msg="Member variable &apos;MPQFile::buffer&apos; is not assigned a value in &apos;MPQFile::operator=&apos;." verbose="Member variable &apos;MPQFile::buffer&apos; is not assigned a value in &apos;MPQFile::operator=&apos;.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\MPQ.h" line="78"/>
+        </error>
+        <error id="invalidPrintfArgType_uint" severity="warning" msg="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;int&apos;." verbose="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;int&apos;.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\ContinentBuilder.cpp" line="52"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;ContinentBuilder::bmin&apos; is not initialized in the constructor." verbose="Member variable &apos;ContinentBuilder::bmin&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\ContinentBuilder.h" line="27"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;ContinentBuilder::bmax&apos; is not initialized in the constructor." verbose="Member variable &apos;ContinentBuilder::bmax&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\ContinentBuilder.h" line="27"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;BuilderThread::X&apos; is not initialized in the constructor." verbose="Member variable &apos;BuilderThread::X&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\ContinentBuilder.cpp" line="36"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;BuilderThread::Y&apos; is not initialized in the constructor." verbose="Member variable &apos;BuilderThread::Y&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\ContinentBuilder.cpp" line="36"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;BuilderThread::MapId&apos; is not initialized in the constructor." verbose="Member variable &apos;BuilderThread::MapId&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\ContinentBuilder.cpp" line="36"/>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &apos;magic&apos; is assigned a value that is never used." verbose="Variable &apos;magic&apos; is assigned a value that is never used.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\DBC.cpp" line="27"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;DBC::RecordSize&apos; is not initialized in the constructor." verbose="Member variable &apos;DBC::RecordSize&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\DBC.cpp" line="22"/>
+        </error>
+        <error id="noCopyConstructor" severity="style" msg="&apos;class DBC&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory." verbose="&apos;class DBC&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\DBC.h" line="26"/>
+        </error>
+        <error id="memleak" severity="error" msg="Memory leak: heights" verbose="Memory leak: heights">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\LiquidHandler.cpp" line="80"/>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &apos;fileName&apos; is assigned a value that is never used." verbose="Variable &apos;fileName&apos; is assigned a value that is never used.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\MPQManager.cpp" line="64"/>
+        </error>
+        <error id="resourceLeak" severity="error" msg="Resource leak: file" verbose="Resource leak: file">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\MPQManager.cpp" line="73"/>
+        </error>
+        <error id="clarifyCalculation" severity="style" msg="Clarify calculation precedence for &apos;%&apos; and &apos;?&apos;." verbose="Suspicious calculation. Please use parentheses to clarify the code. The code &apos;&apos;a%b?c:d&apos;&apos; should be written as either &apos;&apos;(a%b)?c:d&apos;&apos; or &apos;&apos;a%(b?c:d)&apos;&apos;.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\MapChunk.cpp" line="74"/>
+        </error>
+        <error id="invalidPrintfArgType_uint" severity="warning" msg="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;size_t {aka unsigned long}&apos;." verbose="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;size_t {aka unsigned long}&apos;.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\MeshExtractor.cpp" line="40"/>
+        </error>
+        <error id="redundantAssignment" severity="performance" msg="Variable &apos;status&apos; is reassigned a value before the old one has been used." verbose="Variable &apos;status&apos; is reassigned a value before the old one has been used.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\MeshExtractor.cpp" line="474"/>
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\MeshExtractor.cpp" line="467"/>
+        </error>
+        <error id="resourceLeak" severity="error" msg="Resource leak: f" verbose="Resource leak: f">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\MeshExtractor.cpp" line="353"/>
+        </error>
+        <error id="memleak" severity="error" msg="Memory leak: nav" verbose="Memory leak: nav">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\MeshExtractor.cpp" line="357"/>
+        </error>
+        <error id="invalidPrintfArgType_uint" severity="warning" msg="%u in format string (no. 2) requires &apos;unsigned int&apos; but the argument type is &apos;int&apos;." verbose="%u in format string (no. 2) requires &apos;unsigned int&apos; but the argument type is &apos;int&apos;.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\TileBuilder.cpp" line="394"/>
+        </error>
+        <error id="invalidPrintfArgType_uint" severity="warning" msg="%u in format string (no. 3) requires &apos;unsigned int&apos; but the argument type is &apos;int&apos;." verbose="%u in format string (no. 3) requires &apos;unsigned int&apos; but the argument type is &apos;int&apos;.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\TileBuilder.cpp" line="394"/>
+        </error>
+        <error id="noCopyConstructor" severity="style" msg="&apos;class TileBuilder&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory." verbose="&apos;class TileBuilder&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\TileBuilder.h" line="29"/>
+        </error>
+        <error id="memleak" severity="error" msg="Memory leak: data" verbose="Memory leak: data">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\Utils.cpp" line="206"/>
+        </error>
+        <error id="noCopyConstructor" severity="style" msg="&apos;class WDT&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory." verbose="&apos;class WDT&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\WDT.h" line="28"/>
+        </error>
+        <error id="noCopyConstructor" severity="style" msg="&apos;class WorldModelGroup&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory." verbose="&apos;class WorldModelGroup&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\WorldModelGroup.h" line="23"/>
+        </error>
+        <error id="incorrectStringBooleanError" severity="warning" msg="Conversion of string literal &quot;normalCount is different than the Vertices count&quot; to bool always evaluates to true." verbose="Conversion of string literal &quot;normalCount is different than the Vertices count&quot; to bool always evaluates to true.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\WorldModelGroup.cpp" line="58"/>
+        </error>
+        <error id="incorrectStringBooleanError" severity="warning" msg="Conversion of string literal &quot;triangleCount != TriangleFlags.size()&quot; to bool always evaluates to true." verbose="Conversion of string literal &quot;triangleCount != TriangleFlags.size()&quot; to bool always evaluates to true.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\WorldModelGroup.cpp" line="97"/>
+        </error>
+        <error id="noCopyConstructor" severity="style" msg="&apos;class WorldModelRoot&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory." verbose="&apos;class WorldModelRoot&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\WorldModelRoot.h" line="27"/>
+        </error>
+        <error id="incorrectStringBooleanError" severity="warning" msg="Conversion of string literal &quot;chunk.Length / 32 == Header.CountSets&quot; to bool always evaluates to true." verbose="Conversion of string literal &quot;chunk.Length / 32 == Header.CountSets&quot; to bool always evaluates to true.">
+            <location file="c:\TrinitySource\src\tools\mesh_extractor\WorldModelRoot.cpp" line="58"/>
+        </error>
+        <error id="clarifyCondition" severity="style" msg="Boolean result is used in bitwise operation. Clarify expression with parentheses." verbose="Suspicious expression. Boolean result is used in bitwise operation. The operator &apos;!&apos; and the comparison operators have higher precedence than bitwise operators. It is recommended that the expression is clarified with parentheses.">
+            <location file="c:\TrinitySource\src\tools\mmaps_generator\IntermediateValues.cpp" line="112"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;dp&apos; can be reduced." verbose="The scope of the variable &apos;dp&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\tools\mmaps_generator\PathCommon.h" line="115"/>
+        </error>
+        <error id="noCopyConstructor" severity="style" msg="&apos;class MapBuilder&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory." verbose="&apos;class MapBuilder&apos; does not have a copy constructor which is recommended since the class contains a pointer to allocated memory.">
+            <location file="c:\TrinitySource\src\tools\mmaps_generator\MapBuilder.h" line="76"/>
+        </error>
+        <error id="stlSize" severity="performance" msg="Possible inefficient checking for &apos;tiles&apos; emptiness." verbose="Checking for &apos;tiles&apos; emptiness might be inefficient. Using tiles.empty() instead of tiles.size() can be faster. tiles.size() can take linear time but tiles.empty() is guaranteed to take constant time.">
+            <location file="c:\TrinitySource\src\tools\mmaps_generator\MapBuilder.cpp" line="370"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;coord&apos; can be reduced." verbose="The scope of the variable &apos;coord&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level.">
+            <location file="c:\TrinitySource\src\tools\mmaps_generator\TerrainBuilder.cpp" line="303"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;ADTFile::nWMO&apos; is not initialized in the constructor." verbose="Member variable &apos;ADTFile::nWMO&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\vmap4_extractor\adtfile.cpp" line="82"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;ADTFile::nMDX&apos; is not initialized in the constructor." verbose="Member variable &apos;ADTFile::nMDX&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\vmap4_extractor\adtfile.cpp" line="82"/>
+        </error>
+        <error id="invalidPointerCast" severity="portability" msg="Casting between integer* and float* which have an incompatible binary data representation." verbose="Casting between integer* and float* which have an incompatible binary data representation.">
+            <location file="c:\TrinitySource\src\tools\vmap4_extractor\dbcfile.h" line="59"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;DBCFile::_recordSize&apos; is not initialized in the constructor." verbose="Member variable &apos;DBCFile::_recordSize&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\vmap4_extractor\dbcfile.cpp" line="23"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;DBCFile::_recordCount&apos; is not initialized in the constructor." verbose="Member variable &apos;DBCFile::_recordCount&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\vmap4_extractor\dbcfile.cpp" line="23"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;DBCFile::_fieldCount&apos; is not initialized in the constructor." verbose="Member variable &apos;DBCFile::_fieldCount&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\vmap4_extractor\dbcfile.cpp" line="23"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;DBCFile::_stringSize&apos; is not initialized in the constructor." verbose="Member variable &apos;DBCFile::_stringSize&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\vmap4_extractor\dbcfile.cpp" line="23"/>
+        </error>
+        <error id="memsetClassFloat" severity="portability" msg="Using memset() on struct which contains a floating point number." verbose="Using memset() on struct which contains a floating point number. This is not portable because memset() sets each byte of a block of memory to a specific value and the actual representation of a floating-point value is implementation defined.">
+            <location file="c:\TrinitySource\src\tools\vmap4_extractor\model.cpp" line="31"/>
+        </error>
+        <error id="invalidPrintfArgType_uint" severity="warning" msg="%u in format string (no. 2) requires &apos;unsigned int&apos; but the argument type is &apos;int&apos;." verbose="%u in format string (no. 2) requires &apos;unsigned int&apos; but the argument type is &apos;int&apos;.">
+            <location file="c:\TrinitySource\src\tools\vmap4_extractor\mpqfile.cpp" line="15"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &apos;WDTFile::gnWMO&apos; is not initialized in the constructor." verbose="Member variable &apos;WDTFile::gnWMO&apos; is not initialized in the constructor.">
+            <location file="c:\TrinitySource\src\tools\vmap4_extractor\wdtfile.cpp" line="35"/>
+        </error>
+        <error id="unusedFunction" severity="style" msg="The function &apos;AddKnownCurrency&apos; is never used." verbose="The function &apos;AddKnownCurrency&apos; is never used.">
+            <location file="c:\TrinitySource\src\server\game\Entities\Player\Player.cpp" line="26148"/>
+        </error>
+        <error id="unusedFunction" severity="style" msg="The function &apos;zmq_version&apos; is never used." verbose="The function &apos;zmq_version&apos; is never used.">
+            <location file="c:\TrinitySource\dep\zmqpp\zmqpp\zmqpp.cpp" line="23"/>
+        </error>
+    </errors>
+</results>

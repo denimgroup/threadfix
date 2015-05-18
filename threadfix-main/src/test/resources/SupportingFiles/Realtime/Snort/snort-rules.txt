@@ -1,0 +1,30 @@
+# This rule pattern is useful when you need to protect a known address and a known parameter with a known payload.
+# Threadfix currently creates rules for Eval Injection, SQL Injection, OS Command Injection, XSS, LDAP Injection, Format String, and XPath Injection vulns,
+# although rules could theoretically be generated for any type of injection flaw.
+
+# The rule is separated into several parts.
+
+# The first is the directive (alert, drop, deny).
+# Snort allows a lot of flexibility in its rule generation - tcp, $EXTERNAL_NET, any, $HTTP_SERVERS, and $HTTP_PORTS are all configurable, and several other options exist. There's more info in the manual.
+# classtype: is self-explanatory, and sid is an ID which can be useful for a lot of things. I use it in Threadfix to match events from a WAF log to generated rules, so that you can see how often a vulnerability is being exploited.
+
+# The URI filter is in the uricontent: portion, and is not a regex but is matched exactly (I am pretty sure, may want to verify from a manual)
+# The parameter is matched in the pcre: (Perl compatible regex) section, which includes both the name of the parameter and the payload.
+alert tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (uricontent:"/demo/EvalInjection2.php"; msg:"SQL Injection attempt"; flow: to_server,established; pcre:"/(\n|^|\?|\&)(command=[^\&|\n]*('|\%27|\"|\%22|--|\%2D\%2D))/i"; classtype:Web-application-attack; sid:100016;)
+alert tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (uricontent:"/demo/SQLI2.php"; msg:"SQL Injection attempt"; flow: to_server,established; pcre:"/(\n|^|\?|\&)(username=[^\&|\n]*('|\%27|\"|\%22|--|\%2D\%2D))/i"; classtype:Web-application-attack; sid:100017;)
+alert tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (uricontent:"/demo/LDAPInjection2.php"; msg:"SQL Injection attempt"; flow: to_server,established; pcre:"/(\n|^|\?|\&)(username=[^\&|\n]*('|\%27|\"|\%22|--|\%2D\%2D))/i"; classtype:Web-application-attack; sid:100018;)
+alert tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (uricontent:"/demo/PathTraversal.php"; msg:"Path Traversal attempt"; flow: to_server,established; pcre:"/(\n|^|\?|\&)(action=[^\&|\n]*(.|\%2e))/i"; classtype:Web-application-attack; sid:100019;)
+alert tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (uricontent:"/demo/OSCommandInjection2.php"; msg:"OS Command Injection attempt"; flow: to_server,established; pcre:"/(\n|^|\?|\&)(fileName=[^\&|\n]*(&|\||\;|%7C|%26|%3B))/i"; classtype:Web-application-attack; sid:100020;)
+alert tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (uricontent:"/demo/XSS-cookie.php"; msg:"Cross-site Scripting attempt"; flow: to_server,established; pcre:"/(\n|^|\?|\&)(cookie=[^\&|\n]*(<|\%3C|>|\%3E))/i"; classtype:Web-application-attack; sid:100021;)
+alert tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (uricontent:"/demo/XSS-reflected2.php"; msg:"Cross-site Scripting attempt"; flow: to_server,established; pcre:"/(\n|^|\?|\&)(username=[^\&|\n]*(<|\%3C|>|\%3E))/i"; classtype:Web-application-attack; sid:100022;)
+alert tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (uricontent:"/demo/LDAPInjection2.php"; msg:"LDAP Injection attempt"; flow: to_server,established; pcre:"/(\n|^|\?|\&)(username=[^\&|\n]*(\\|\(|\)|\*|\%5c|\%2a|\%28|\%29))/i"; classtype:Web-application-attack; sid:100023;)
+alert tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (uricontent:"/demo/EvalInjection2.php"; msg:"Eval Injection attempt"; flow: to_server,established; pcre:"/(\n|^|\?|\&)(command=[^\&|\n]*(\;|\%3b))/i"; classtype:Web-application-attack; sid:100024;)
+alert tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (uricontent:"/demo/EvalInjection2.php"; msg:"Cross-site Scripting attempt"; flow: to_server,established; pcre:"/(\n|^|\?|\&)(command=[^\&|\n]*(<|\%3C|>|\%3E))/i"; classtype:Web-application-attack; sid:100026;)
+alert tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (uricontent:"/demo/FormatString2.php"; msg:"Format String Injection attempt"; flow: to_server,established; pcre:"/(\n|^|\?|\&)(name=[^\&|\n]*(\%|\%25))/i"; classtype:Web-application-attack; sid:100027;)
+alert tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (uricontent:"/demo/XPathInjection2.php"; msg:"XPath Injection attempt"; flow: to_server,established; pcre:"/(\n|^|\?|\&)(username=[^\&|\n]*('|\%27|\"|\%22))/i"; classtype:Web-application-attack; sid:100028;)
+alert tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (uricontent:"/demo/XPathInjection2.php"; msg:"XPath Injection attempt"; flow: to_server,established; pcre:"/(\n|^|\?|\&)(password=[^\&|\n]*('|\%27|\"|\%22))/i"; classtype:Web-application-attack; sid:100029;)
+
+# These parameters just use the pcre: section (you might want to look up the real name for those, I doubt it's sections). It looks for the path and a terminating character.
+alert tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (pcre:"/\/demo\/PredictableResource\.php\.bak( |%20|\n|$|\?|\/\?|\/\n|\/$|\/ |\/%20)/i";msg:"Direct Request attempt"; flow: to_server,established;classtype:Web-application-attack; sid:100030;)
+alert tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (pcre:"/\/demo\.zip( |%20|\n|$|\?|\/\?|\/\n|\/$|\/ |\/%20)/i";msg:"Direct Request attempt"; flow: to_server,established;classtype:Web-application-attack; sid:100031;)
+alert tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (pcre:"/\/demo\/DirectoryIndexing\/( |%20|\n|$|\?|\/\?|\/\n|\/$|\/ |\/%20)/i";msg:"Directory Indexing attempt"; flow: to_server,established;classtype:Web-application-attack; sid:100025;)

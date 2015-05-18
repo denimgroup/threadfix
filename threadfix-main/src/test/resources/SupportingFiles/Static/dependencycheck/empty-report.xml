@@ -1,0 +1,2281 @@
+<?xml version="1.0"?>
+<analysis xmlns="https://www.owasp.org/index.php/OWASP_Dependency_Check#1.2">
+    <scanInfo>
+        <engineVersion>1.2.3</engineVersion>
+        <dataSource>
+            <name>NVD CVE 2002</name>
+            <timestamp>11/02/2015 20:51:06</timestamp>
+        </dataSource>
+        <dataSource>
+            <name>NVD CVE 2003</name>
+            <timestamp>11/02/2015 20:04:43</timestamp>
+        </dataSource>
+        <dataSource>
+            <name>NVD CVE 2004</name>
+            <timestamp>11/02/2015 19:52:51</timestamp>
+        </dataSource>
+        <dataSource>
+            <name>NVD CVE 2005</name>
+            <timestamp>11/02/2015 19:34:04</timestamp>
+        </dataSource>
+        <dataSource>
+            <name>NVD CVE 2006</name>
+            <timestamp>11/02/2015 18:58:40</timestamp>
+        </dataSource>
+        <dataSource>
+            <name>NVD CVE 2007</name>
+            <timestamp>11/02/2015 18:07:30</timestamp>
+        </dataSource>
+        <dataSource>
+            <name>NVD CVE 2008</name>
+            <timestamp>11/02/2015 17:33:46</timestamp>
+        </dataSource>
+        <dataSource>
+            <name>NVD CVE 2009</name>
+            <timestamp>11/02/2015 16:52:39</timestamp>
+        </dataSource>
+        <dataSource>
+            <name>NVD CVE 2010</name>
+            <timestamp>24/02/2015 02:44:32</timestamp>
+        </dataSource>
+        <dataSource>
+            <name>NVD CVE 2011</name>
+            <timestamp>11/02/2015 16:11:26</timestamp>
+        </dataSource>
+        <dataSource>
+            <name>NVD CVE 2012</name>
+            <timestamp>25/02/2015 03:05:09</timestamp>
+        </dataSource>
+        <dataSource>
+            <name>NVD CVE 2013</name>
+            <timestamp>25/02/2015 02:44:59</timestamp>
+        </dataSource>
+        <dataSource>
+            <name>NVD CVE 2014</name>
+            <timestamp>25/02/2015 02:22:59</timestamp>
+        </dataSource>
+        <dataSource>
+            <name>NVD CVE 2015</name>
+            <timestamp>25/02/2015 02:01:52</timestamp>
+        </dataSource>
+        <dataSource>
+            <name>NVD CVE Modified</name>
+            <timestamp>04/03/2015 15:01:18</timestamp>
+        </dataSource>
+    </scanInfo>
+    <projectInfo>
+        <name>Zap-Plugin</name>
+        <reportDate>2015-03-07T07:35:01.153-0600</reportDate>
+        <credits>This report contains data retrieved from the National Vulnerability Database: http://nvd.nist.gov</credits>
+    </projectInfo>
+    <dependencies>
+        <dependency>
+            <fileName>antlr-2.7.6.jar</fileName>
+            <filePath>/var/lib/jenkins/.m2/repository/antlr/antlr/2.7.6/antlr-2.7.6.jar</filePath>
+            <md5>97C6BB68108A3D68094EAB0F67157962</md5>
+            <sha1>CF4F67DAE5DF4F9932AE7810F4548EF3E14DD35E</sha1>
+            <evidenceCollected>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>2.7.6</value>
+                </evidence>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>antlr-2.7.6</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>antlr</value>
+                </evidence>
+            </evidenceCollected>
+        </dependency>
+        <dependency>
+            <fileName>classmate-1.0.0.jar</fileName>
+            <filePath>/var/lib/jenkins/.m2/repository/com/fasterxml/classmate/1.0.0/classmate-1.0.0.jar</filePath>
+            <md5>302E84CE2112B147818C62A807C54999</md5>
+            <sha1>434EFEF28C81162B17C540E634CFFA3BD9B09B4C</sha1>
+            <description>Library for introspecting types with full generic information
+        including resolving of field and method types.
+    </description>
+            <license>The Apache Software License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0.txt</license>
+            <evidenceCollected>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>1.0.0</value>
+                </evidence>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>classmate-1.0.0</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>classmate</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>fasterxml</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>types</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>bundle-docurl</name>
+                    <value>http://fasterxml.com</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Name</name>
+                    <value>ClassMate</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>bundle-symbolicname</name>
+                    <value>classmate</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Vendor</name>
+                    <value>fasterml.com</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Version</name>
+                    <value>1.0.0</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>artifactid</name>
+                    <value>classmate</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>description</name>
+                    <value>Library for introspecting types with full generic information including resolving of field and method types.</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>groupid</name>
+                    <value>fasterxml</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>name</name>
+                    <value>ClassMate</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>organization name</name>
+                    <value>fasterxml.com</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-artifactid</name>
+                    <value>oss-parent</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-groupid</name>
+                    <value>org.sonatype.oss</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-version</name>
+                    <value>1.0.0</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>version</name>
+                    <value>1.0.0</value>
+                </evidence>
+            </evidenceCollected>
+            <identifiers>
+                <identifier type="maven" confidence="LOW">
+                    <name>(com.fasterxml:classmate:1.0.0)</name>
+                </identifier>
+            </identifiers>
+        </dependency>
+        <dependency>
+            <fileName>commons-cli-1.2.jar</fileName>
+            <filePath>/var/lib/jenkins/.m2/repository/commons-cli/commons-cli/1.2/commons-cli-1.2.jar</filePath>
+            <md5>BFDCAE1FF93F0C07D733F03BDCE28C9E</md5>
+            <sha1>2BF96B7AA8B611C177D329452AF1DC933E14501C</sha1>
+            <description>
+    Commons CLI provides a simple API for presenting, processing and validating a command line interface.
+  </description>
+            <license>http://www.apache.org/licenses/LICENSE-2.0.txt</license>
+            <evidenceCollected>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>1.2</value>
+                </evidence>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>commons-cli-1.2</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>apache</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>cli</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>commons</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>bundle-docurl</name>
+                    <value>http://commons.apache.org/cli/</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Name</name>
+                    <value>Commons CLI</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>bundle-symbolicname</name>
+                    <value>org.apache.commons.cli</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Vendor</name>
+                    <value>The Apache Software Foundation</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Version</name>
+                    <value>1.2</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Title</name>
+                    <value>Commons CLI</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Vendor</name>
+                    <value>The Apache Software Foundation</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Vendor-Id</name>
+                    <value>org.apache</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Version</name>
+                    <value>1.2</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-title</name>
+                    <value>Commons CLI</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-vendor</name>
+                    <value>The Apache Software Foundation</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-version</name>
+                    <value>1.2</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>artifactid</name>
+                    <value>commons-cli</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>description</name>
+                    <value>Commons CLI provides a simple API for presenting, processing and validating a command line interface.</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>groupid</name>
+                    <value>commons-cli</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>name</name>
+                    <value>Commons CLI</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-artifactid</name>
+                    <value>commons-parent</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-groupid</name>
+                    <value>org.apache.commons</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-version</name>
+                    <value>1.2</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>version</name>
+                    <value>1.2</value>
+                </evidence>
+            </evidenceCollected>
+            <identifiers>
+                <identifier type="maven" confidence="LOW">
+                    <name>(commons-cli:commons-cli:1.2)</name>
+                </identifier>
+            </identifiers>
+        </dependency>
+        <dependency>
+            <fileName>commons-io-1.4.jar</fileName>
+            <filePath>/var/lib/jenkins/.m2/repository/commons-io/commons-io/1.4/commons-io-1.4.jar</filePath>
+            <md5>B6A50C8A15ECE8753E37CBE5700BF84F</md5>
+            <sha1>A8762D07E76CFDE2395257A5DA47BA7C1DBD3DCE</sha1>
+            <description>
+        Commons-IO contains utility classes, stream implementations, file filters, file comparators and endian classes.
+  </description>
+            <license>http://www.apache.org/licenses/LICENSE-2.0.txt</license>
+            <evidenceCollected>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>1.4</value>
+                </evidence>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>commons-io-1.4</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>apache</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>commons</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>comparator</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>io</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Name</name>
+                    <value>Apache Commons IO Bundle</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>bundle-symbolicname</name>
+                    <value>org.apache.commons.io</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Vendor</name>
+                    <value>The Apache Software Foundation</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Version</name>
+                    <value>1.4</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Title</name>
+                    <value>Commons IO</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Vendor</name>
+                    <value>The Apache Software Foundation</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Vendor-Id</name>
+                    <value>org.apache</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Version</name>
+                    <value>1.4</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-title</name>
+                    <value>Commons IO</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-vendor</name>
+                    <value>The Apache Software Foundation</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-version</name>
+                    <value>1.4</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>artifactid</name>
+                    <value>commons-io</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>description</name>
+                    <value>Commons-IO contains utility classes, stream implementations, file filters, file comparators and endian classes.</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>groupid</name>
+                    <value>commons-io</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>name</name>
+                    <value>Commons IO</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-artifactid</name>
+                    <value>commons-parent</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-groupid</name>
+                    <value>org.apache.commons</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-version</name>
+                    <value>1.4</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>version</name>
+                    <value>1.4</value>
+                </evidence>
+            </evidenceCollected>
+            <identifiers>
+                <identifier type="maven" confidence="LOW">
+                    <name>(commons-io:commons-io:1.4)</name>
+                </identifier>
+            </identifiers>
+        </dependency>
+        <dependency>
+            <fileName>commons-lang3-3.3.2.jar</fileName>
+            <filePath>/var/lib/jenkins/.m2/repository/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar</filePath>
+            <md5>3128BF75A2549EBE38663401191BACAB</md5>
+            <sha1>90A3822C38EC8C996E84C16A3477EF632CBC87A3</sha1>
+            <description>
+  Apache Commons Lang, a package of Java utility classes for the
+  classes that are in java.lang&apos;s hierarchy, or are considered to be so
+  standard as to justify existence in java.lang.
+</description>
+            <license>http://www.apache.org/licenses/LICENSE-2.0.txt</license>
+            <evidenceCollected>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>3.3.2</value>
+                </evidence>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>commons-lang3-3.3.2</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>apache</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>commons</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>lang3</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>bundle-docurl</name>
+                    <value>http://commons.apache.org/proper/commons-lang/</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Name</name>
+                    <value>Apache Commons Lang</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>bundle-symbolicname</name>
+                    <value>org.apache.commons.lang3</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Vendor</name>
+                    <value>The Apache Software Foundation</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Version</name>
+                    <value>3.3.2</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>implementation-build</name>
+                    <value>tags/LANG_3_3_2_RC1@r1585295; 2014-04-06 14:18:52+0200</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Title</name>
+                    <value>Apache Commons Lang</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Vendor</name>
+                    <value>The Apache Software Foundation</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Vendor-Id</name>
+                    <value>org.apache</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Version</name>
+                    <value>3.3.2</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-title</name>
+                    <value>Apache Commons Lang</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-vendor</name>
+                    <value>The Apache Software Foundation</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-version</name>
+                    <value>3.3.2</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>artifactid</name>
+                    <value>commons-lang3</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>description</name>
+                    <value>Apache Commons Lang, a package of Java utility classes for the classes that are in java.lang&apos;s hierarchy, or are considered to be so standard as to justify existence in java.lang.</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>groupid</name>
+                    <value>apache.commons</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>name</name>
+                    <value>Apache Commons Lang</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-artifactid</name>
+                    <value>commons-parent</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-groupid</name>
+                    <value>org.apache.commons</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-version</name>
+                    <value>3.3.2</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>version</name>
+                    <value>3.3.2</value>
+                </evidence>
+            </evidenceCollected>
+            <identifiers>
+                <identifier type="maven" confidence="LOW">
+                    <name>(org.apache.commons:commons-lang3:3.3.2)</name>
+                </identifier>
+            </identifiers>
+        </dependency>
+        <dependency>
+            <fileName>dom4j-1.6.1.jar</fileName>
+            <filePath>/var/lib/jenkins/.m2/repository/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar</filePath>
+            <md5>4D8F51D3FE3900EFC6E395BE48030D6D</md5>
+            <sha1>5D3CCC056B6F056DBF0DDDFDF43894B9065A8F94</sha1>
+            <evidenceCollected>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>1.6.1</value>
+                </evidence>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>dom4j-1.6.1</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>dom</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>dom4j</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>extension-name</name>
+                    <value>dom4j</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Title</name>
+                    <value>org.dom4j</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Vendor</name>
+                    <value>MetaStuff Ltd.</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Version</name>
+                    <value>1.6.1</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-title</name>
+                    <value>dom4j : XML framework for Java</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-vendor</name>
+                    <value>MetaStuff Ltd.</value>
+                </evidence>
+            </evidenceCollected>
+        </dependency>
+        <dependency>
+            <fileName>gson-2.2.4.jar</fileName>
+            <filePath>/var/lib/jenkins/.m2/repository/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar</filePath>
+            <md5>2F54FC24807A4CAD7297012DD8CEBF3D</md5>
+            <sha1>A60A5E993C98C864010053CB901B7EAB25306568</sha1>
+            <description>Google Gson library</description>
+            <evidenceCollected>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>2.2.4</value>
+                </evidence>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>gson-2.2.4</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>google</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>gson</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>internal</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>bundle-contactaddress</name>
+                    <value>http://code.google.com/p/google-gson/</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Name</name>
+                    <value>Gson</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>bundle-requiredexecutionenvironment</name>
+                    <value>J2SE-1.5</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>bundle-symbolicname</name>
+                    <value>com.google.gson</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Vendor</name>
+                    <value>Google Gson Project</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Version</name>
+                    <value>2.2.4</value>
+                </evidence>
+            </evidenceCollected>
+        </dependency>
+        <dependency>
+            <fileName>hibernate-commons-annotations-3.2.0.Final.jar</fileName>
+            <filePath>/var/lib/jenkins/.m2/repository/org/hibernate/hibernate-commons-annotations/3.2.0.Final/hibernate-commons-annotations-3.2.0.Final.jar</filePath>
+            <md5>8AE1EA6C2A3D854C6436F6F70E04F699</md5>
+            <sha1>CE990611448FC2865469E3B68D2FE76B050E3C4F</sha1>
+            <description>Common reflection code used in support of annotation processing</description>
+            <license>GNU LESSER GENERAL PUBLIC LICENSE: http://www.gnu.org/licenses/lgpl.txt</license>
+            <evidenceCollected>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>3.2.0</value>
+                </evidence>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>hibernate-commons-annotations-3.2.0.Final</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>annotations</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>common</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>hibernate</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>reflection</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>artifactid</name>
+                    <value>hibernate-commons-annotations</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>description</name>
+                    <value>Common reflection code used in support of annotation processing</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>groupid</name>
+                    <value>hibernate</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>name</name>
+                    <value>Hibernate Commons Annotations</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>organization name</name>
+                    <value>Hibernate.org</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>version</name>
+                    <value>3.2.0.Final</value>
+                </evidence>
+            </evidenceCollected>
+            <identifiers>
+                <identifier type="maven" confidence="LOW">
+                    <name>(org.hibernate:hibernate-commons-annotations:3.2.0.Final)</name>
+                </identifier>
+            </identifiers>
+        </dependency>
+        <dependency>
+            <fileName>hibernate-core-3.6.10.Final.jar</fileName>
+            <filePath>/var/lib/jenkins/.m2/repository/org/hibernate/hibernate-core/3.6.10.Final/hibernate-core-3.6.10.Final.jar</filePath>
+            <md5>CDC5EB67414EB75F69382BBE637151C0</md5>
+            <sha1>6B36A1EEF76CBCCC2757F22A795B5E12AB56B3D5</sha1>
+            <description>The core functionality of Hibernate</description>
+            <evidenceCollected>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>3.6.10</value>
+                </evidence>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>hibernate-core-3.6.10.Final</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>function</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>hibernate</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>parent</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Title</name>
+                    <value>Hibernate Core</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>implementation-url</name>
+                    <value>http://hibernate.org</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Vendor</name>
+                    <value>Hibernate.org</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Vendor-Id</name>
+                    <value>org.hibernate</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Version</name>
+                    <value>3.6.10.Final</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-title</name>
+                    <value>Hibernate Core</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-vendor</name>
+                    <value>Hibernate.org</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-version</name>
+                    <value>3.6.10.Final</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>artifactid</name>
+                    <value>hibernate-core</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>description</name>
+                    <value>The core functionality of Hibernate</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>groupid</name>
+                    <value>hibernate</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>name</name>
+                    <value>Hibernate Core</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-artifactid</name>
+                    <value>hibernate-parent</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-groupid</name>
+                    <value>org.hibernate</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>version</name>
+                    <value>3.6.10.Final</value>
+                </evidence>
+            </evidenceCollected>
+            <identifiers>
+                <identifier type="maven" confidence="LOW">
+                    <name>(org.hibernate:hibernate-core:3.6.10.Final)</name>
+                </identifier>
+            </identifiers>
+        </dependency>
+        <dependency>
+            <fileName>hibernate-jpa-2.0-api-1.0.1.Final.jar</fileName>
+            <filePath>/var/lib/jenkins/.m2/repository/org/hibernate/javax/persistence/hibernate-jpa-2.0-api/1.0.1.Final/hibernate-jpa-2.0-api-1.0.1.Final.jar</filePath>
+            <md5>D7E7D8F60FC44A127BA702D43E71ABEC</md5>
+            <sha1>3306A165AFA81938FC3D8A0948E891DE9F6B192B</sha1>
+            <description>
+        Hibernate definition of the Java Persistence 2.0 (JSR 317) API.
+    </description>
+            <license>license.txt</license>
+            <evidenceCollected>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>hibernate-jpa-2.0-api-1.0.1.Final</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>javax</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>persistence</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>version</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Title</name>
+                    <value>JPA API</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Vendor</name>
+                    <value>hibernate.org</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Version</name>
+                    <value>1.0.1.Final</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-title</name>
+                    <value>Java Persistence API, Version 2.0</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-vendor</name>
+                    <value>Sun Microsystems, Inc.</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-version</name>
+                    <value>1.0.1.Final</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>artifactid</name>
+                    <value>hibernate-jpa-2.0-api</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>description</name>
+                    <value>Hibernate definition of the Java Persistence 2.0 (JSR 317) API.</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>groupid</name>
+                    <value>hibernate.javax.persistence</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>name</name>
+                    <value>JPA 2.0 API</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>organization name</name>
+                    <value>Hibernate.org</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>version</name>
+                    <value>1.0.1.Final</value>
+                </evidence>
+            </evidenceCollected>
+            <identifiers>
+                <identifier type="maven" confidence="LOW">
+                    <name>(org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.1.Final)</name>
+                </identifier>
+            </identifiers>
+        </dependency>
+        <dependency>
+            <fileName>hibernate-validator-5.1.3.Final.jar</fileName>
+            <filePath>/var/lib/jenkins/.m2/repository/org/hibernate/hibernate-validator/5.1.3.Final/hibernate-validator-5.1.3.Final.jar</filePath>
+            <md5>3A399752F68A1B6C04C9487CB8C80CF8</md5>
+            <sha1>334D46A93CF095160CE06D8382594B904933C808</sha1>
+            <description>Hibernate&apos;s Bean Validation (JSR-303) reference implementation.</description>
+            <license>http://www.apache.org/licenses/LICENSE-2.0.txt</license>
+            <evidenceCollected>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>5.1.3</value>
+                </evidence>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>hibernate-validator-5.1.3.Final</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>ean</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>engine</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>hibernate</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>validator</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Name</name>
+                    <value>Hibernate Validator Engine</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>bundle-symbolicname</name>
+                    <value>org.hibernate.validator</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Version</name>
+                    <value>5.1.3.Final</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Title</name>
+                    <value>hibernate-validator</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>implementation-url</name>
+                    <value>http://validator.hibernate.org</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Vendor</name>
+                    <value>org.hibernate</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Vendor-Id</name>
+                    <value>org.hibernate</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Version</name>
+                    <value>5.1.3.Final</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-title</name>
+                    <value>Bean Validation</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-version</name>
+                    <value>1.1</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>artifactid</name>
+                    <value>hibernate-validator</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>description</name>
+                    <value>Hibernate&apos;s Bean Validation (JSR-303) reference implementation.</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>groupid</name>
+                    <value>hibernate</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>name</name>
+                    <value>Hibernate Validator Engine</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-artifactid</name>
+                    <value>hibernate-validator-parent</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-groupid</name>
+                    <value>org.hibernate</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>version</name>
+                    <value>5.1.3.Final</value>
+                </evidence>
+            </evidenceCollected>
+            <identifiers>
+                <identifier type="cpe" confidence="LOW">
+                    <name>(cpe:/a:hibernate:hibernate_validator:5.1.3)</name>
+                </identifier>
+                <identifier type="maven" confidence="LOW">
+                    <name>(org.hibernate:hibernate-validator:5.1.3.Final)</name>
+                </identifier>
+            </identifiers>
+        </dependency>
+        <dependency>
+            <fileName>jackson-annotations-2.5.1.jar</fileName>
+            <filePath>/var/lib/jenkins/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.5.1/jackson-annotations-2.5.1.jar</filePath>
+            <md5>74E2DA8A48BE8F73301D28A96FDE2828</md5>
+            <sha1>71C1992C0CF5E0CE62574E96009572062BA0F4D9</sha1>
+            <description>Core annotations used for value types, used by Jackson data binding package.
+  </description>
+            <license>http://www.apache.org/licenses/LICENSE-2.0.txt</license>
+            <evidenceCollected>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>2.5.1</value>
+                </evidence>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>jackson-annotations-2.5.1</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>annotation</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>fasterxml</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>jackson</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>bundle-docurl</name>
+                    <value>http://github.com/FasterXML/jackson</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Name</name>
+                    <value>Jackson-annotations</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>bundle-symbolicname</name>
+                    <value>com.fasterxml.jackson.core.jackson-annotations</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Vendor</name>
+                    <value>FasterXML</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Version</name>
+                    <value>2.5.1</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>implementation-build-date</name>
+                    <value>2015-02-06 16:04:49-0800</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Title</name>
+                    <value>Jackson-annotations</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Vendor</name>
+                    <value>FasterXML</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Vendor-Id</name>
+                    <value>com.fasterxml.jackson.core</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Version</name>
+                    <value>2.5.1</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>require-capability</name>
+                    <value>osgi.ee;filter:=&quot;(&amp;(osgi.ee=JavaSE)(version=1.6))&quot;</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-title</name>
+                    <value>Jackson-annotations</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-vendor</name>
+                    <value>FasterXML</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-version</name>
+                    <value>2.5.1</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>artifactid</name>
+                    <value>jackson-annotations</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>description</name>
+                    <value>Core annotations used for value types, used by Jackson data binding package.</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>groupid</name>
+                    <value>fasterxml.jackson.core</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>name</name>
+                    <value>Jackson-annotations</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-artifactid</name>
+                    <value>jackson-parent</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-groupid</name>
+                    <value>com.fasterxml.jackson</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-version</name>
+                    <value>2.5.1</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>version</name>
+                    <value>2.5.1</value>
+                </evidence>
+            </evidenceCollected>
+            <identifiers>
+                <identifier type="maven" confidence="LOW">
+                    <name>(com.fasterxml.jackson.core:jackson-annotations:2.5.1)</name>
+                </identifier>
+            </identifiers>
+        </dependency>
+        <dependency>
+            <fileName>jackson-core-2.5.1.jar</fileName>
+            <filePath>/var/lib/jenkins/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.5.1/jackson-core-2.5.1.jar</filePath>
+            <md5>35E7F4A5419CAFF472C240FBED3F3416</md5>
+            <sha1>E2A00AD1D7E540EC395E9296A34DA484C8888D4D</sha1>
+            <description>Core Jackson abstractions, basic JSON streaming API implementation
+  </description>
+            <license>http://www.apache.org/licenses/LICENSE-2.0.txt</license>
+            <evidenceCollected>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>2.5.1</value>
+                </evidence>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>jackson-core-2.5.1</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>core</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>fasterxml</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>io</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>jackson</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>json</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>version</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>bundle-docurl</name>
+                    <value>https://github.com/FasterXML/jackson</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Name</name>
+                    <value>Jackson-core</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>bundle-symbolicname</name>
+                    <value>com.fasterxml.jackson.core.jackson-core</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Vendor</name>
+                    <value>FasterXML</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Version</name>
+                    <value>2.5.1</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>implementation-build-date</name>
+                    <value>2015-02-06 16:05:41-0800</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Title</name>
+                    <value>Jackson-core</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Vendor</name>
+                    <value>FasterXML</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Vendor-Id</name>
+                    <value>com.fasterxml.jackson.core</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Version</name>
+                    <value>2.5.1</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>require-capability</name>
+                    <value>osgi.ee;filter:=&quot;(&amp;(osgi.ee=JavaSE)(version=1.6))&quot;</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-title</name>
+                    <value>Jackson-core</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-vendor</name>
+                    <value>FasterXML</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-version</name>
+                    <value>2.5.1</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>artifactid</name>
+                    <value>jackson-core</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>description</name>
+                    <value>Core Jackson abstractions, basic JSON streaming API implementation</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>groupid</name>
+                    <value>fasterxml.jackson.core</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>name</name>
+                    <value>Jackson-core</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-artifactid</name>
+                    <value>jackson-parent</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-groupid</name>
+                    <value>com.fasterxml.jackson</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-version</name>
+                    <value>2.5.1</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>version</name>
+                    <value>2.5.1</value>
+                </evidence>
+            </evidenceCollected>
+            <identifiers>
+                <identifier type="maven" confidence="LOW">
+                    <name>(com.fasterxml.jackson.core:jackson-core:2.5.1)</name>
+                </identifier>
+            </identifiers>
+        </dependency>
+        <dependency>
+            <fileName>jboss-logging-3.1.3.GA.jar</fileName>
+            <filePath>/var/lib/jenkins/.m2/repository/org/jboss/logging/jboss-logging/3.1.3.GA/jboss-logging-3.1.3.GA.jar</filePath>
+            <md5>1CB9780E7B361DD456429019B5455B6E</md5>
+            <sha1>64499E907F19E5E1B3FDC02F81440C1832FE3545</sha1>
+            <description>The JBoss Logging Framework</description>
+            <license>Apache License, version 2.0: http://www.apache.org/licenses/LICENSE-2.0.txt</license>
+            <evidenceCollected>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>3.1.3</value>
+                </evidence>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>jboss-logging-3.1.3.GA</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>jboss</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>logging</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>build-timestamp</name>
+                    <value>2013</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>build-timestamp</name>
+                    <value>5</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>build-timestamp</name>
+                    <value>Tue, 5 Mar 2013 22:01:06 -0600</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>bundle-docurl</name>
+                    <value>http://www.jboss.org</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Name</name>
+                    <value>JBoss Logging 3</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>bundle-symbolicname</name>
+                    <value>org.jboss.logging.jboss-logging</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Vendor</name>
+                    <value>JBoss by Red Hat</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Version</name>
+                    <value>3.1.3.GA</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Title</name>
+                    <value>JBoss Logging 3</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>implementation-url</name>
+                    <value>http://www.jboss.org</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Vendor</name>
+                    <value>JBoss by Red Hat</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Vendor-Id</name>
+                    <value>org.jboss.logging</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Version</name>
+                    <value>3.1.3.GA</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>java-vendor</name>
+                    <value>Sun Microsystems Inc.</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>java-version</name>
+                    <value>1.6.0_30</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>originally-created-by</name>
+                    <value>1.6.0_30 (Sun Microsystems Inc.)</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>os-name</name>
+                    <value>Linux</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>os-version</name>
+                    <value>3.7.6-201.fc18.x86_64</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-title</name>
+                    <value>JBoss Logging 3</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-vendor</name>
+                    <value>JBoss by Red Hat</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-version</name>
+                    <value>3.1.3.GA</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>artifactid</name>
+                    <value>jboss-logging</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>description</name>
+                    <value>The JBoss Logging Framework</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>groupid</name>
+                    <value>jboss.logging</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>name</name>
+                    <value>JBoss Logging 3</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-artifactid</name>
+                    <value>jboss-parent</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-groupid</name>
+                    <value>org.jboss</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-version</name>
+                    <value>3.1.3.GA</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>version</name>
+                    <value>3.1.3.GA</value>
+                </evidence>
+            </evidenceCollected>
+            <identifiers>
+                <identifier type="maven" confidence="LOW">
+                    <name>(org.jboss.logging:jboss-logging:3.1.3.GA)</name>
+                </identifier>
+            </identifiers>
+        </dependency>
+        <dependency>
+            <fileName>jsr305-2.0.3.jar</fileName>
+            <filePath>/var/lib/jenkins/.m2/repository/com/google/code/findbugs/jsr305/2.0.3/jsr305-2.0.3.jar</filePath>
+            <md5>195D5DB8981FBEC5FA18D5DF9FAD95ED</md5>
+            <sha1>5871FB60DC68D67DA54A663C3FD636A10A532948</sha1>
+            <evidenceCollected>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>2.0.3</value>
+                </evidence>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>jsr305-2.0.3</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>annotation</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>javax</value>
+                </evidence>
+            </evidenceCollected>
+        </dependency>
+        <dependency>
+            <fileName>jta-1.1.jar</fileName>
+            <filePath>/var/lib/jenkins/.m2/repository/javax/transaction/jta/1.1/jta-1.1.jar</filePath>
+            <md5>82A10CE714F411B28F13850059DE09EE</md5>
+            <sha1>2CA09F0B36CA7D71B762E14EA2FF09D5EAC57558</sha1>
+            <evidenceCollected>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>1.1</value>
+                </evidence>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>jta-1.1</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>javax</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>transaction</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>extension-name</name>
+                    <value>javax.transaction</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-title</name>
+                    <value>Java Transaction API Specification</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-vendor</name>
+                    <value>Sun Microsystems, Inc.</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-version</name>
+                    <value>1.1</value>
+                </evidence>
+            </evidenceCollected>
+        </dependency>
+        <dependency>
+            <fileName>persistence-api-1.0.2.jar</fileName>
+            <filePath>/var/lib/jenkins/.m2/repository/javax/persistence/persistence-api/1.0.2/persistence-api-1.0.2.jar</filePath>
+            <md5>28207037C346F11BC2CB40085488477C</md5>
+            <sha1>8A7F96961047DA52A53B7347B6A919C6FBC6D7FA</sha1>
+            <evidenceCollected>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>1.0.2</value>
+                </evidence>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>persistence-api-1.0.2</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>javax</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>persistence</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>extension-name</name>
+                    <value>javax.persistence</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Title</name>
+                    <value>javax.persistence</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Vendor</name>
+                    <value>Sun Microsystems, Inc., Oracle Corp.</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Vendor-Id</name>
+                    <value>javax.persistence</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Version</name>
+                    <value>1.0.2</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-title</name>
+                    <value>Java(TM) Persistence API Specification</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-vendor</name>
+                    <value>Sun Microsystems, Inc., Oracle Corp.</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>specification-version</name>
+                    <value>1.0</value>
+                </evidence>
+            </evidenceCollected>
+        </dependency>
+        <dependency>
+            <fileName>slf4j-api-1.6.1.jar</fileName>
+            <filePath>/var/lib/jenkins/.m2/repository/org/slf4j/slf4j-api/1.6.1/slf4j-api-1.6.1.jar</filePath>
+            <md5>BFF6016DA57E19FB736D0F5742CE60AC</md5>
+            <sha1>6F3B8A24BF970F17289B234284C94F43EB42F0E4</sha1>
+            <description>The slf4j API</description>
+            <evidenceCollected>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>1.6.1</value>
+                </evidence>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>slf4j-api-1.6.1</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>slf4j</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Name</name>
+                    <value>slf4j-api</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>bundle-requiredexecutionenvironment</name>
+                    <value>J2SE-1.3</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>bundle-symbolicname</name>
+                    <value>slf4j.api</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Vendor</name>
+                    <value>SLF4J.ORG</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Version</name>
+                    <value>1.6.1</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Title</name>
+                    <value>slf4j-api</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Implementation-Version</name>
+                    <value>1.6.1</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>artifactid</name>
+                    <value>slf4j-api</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>description</name>
+                    <value>The slf4j API</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>groupid</name>
+                    <value>slf4j</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>name</name>
+                    <value>SLF4J API Module</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-artifactid</name>
+                    <value>slf4j-parent</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-groupid</name>
+                    <value>org.slf4j</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>version</name>
+                    <value>1.6.1</value>
+                </evidence>
+            </evidenceCollected>
+            <identifiers>
+                <identifier type="maven" confidence="LOW">
+                    <name>(org.slf4j:slf4j-api:1.6.1)</name>
+                </identifier>
+            </identifiers>
+        </dependency>
+        <dependency>
+            <fileName>threadfix-cli-2.2-SNAPSHOT.jar</fileName>
+            <filePath>/var/lib/jenkins/workspace/ThreadFix_Dependency_Check/threadfix-cli/target/threadfix-cli-2.2-SNAPSHOT.jar</filePath>
+            <md5>1442A1D4374F8AFF70663B508544F32C</md5>
+            <sha1>EBDEFE2AE162BB6A1F129FF0D99F12B0B4D0E028</sha1>
+            <description>
+        This module contains library classes for accessing the ThreadFix REST API.
+
+        The ThreadFix IDE plugins use this library to retrieve application and vulnerability
+        marker information, and in the ThreadFix scanner plugins to get endpoint information and
+        upload scans to ThreadFix applications.
+
+        The easiest way to start using the library is with the PluginClient or ThreadFixRestClient
+        classes. Both have constructors that take a PropertiesManager instance, which holds the ThreadFix
+        API key and url information. The default PropertiesManager implementation stores these properties
+        in threadfix.properties, but the ThreadFix plugins extend the default PropertiesManager class
+        to override this behavior for the target platform.
+    </description>
+            <evidenceCollected>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>2.2</value>
+                </evidence>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>threadfix-cli-2.2-SNAPSHOT</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>cli</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>denimgroup</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>pluginclient</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>properties</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>propertiesmanager</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>remote</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>threadfix</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>threadfixrestclient</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>artifactid</name>
+                    <value>threadfix-cli</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>description</name>
+                    <value>This module contains library classes for accessing the ThreadFix REST API. The ThreadFix IDE plugins use this library to retrieve application and vulnerability marker information, and in the ThreadFix scanner plugins to get endpoint information and upload scans to ThreadFix applications. The easiest way to start using the library is with the PluginClient or ThreadFixRestClient classes. Both have constructors that take a PropertiesManager instance, which holds the ThreadFix API key and url information. The default PropertiesManager implementation stores these properties in threadfix.properties, but the ThreadFix plugins extend the default PropertiesManager class to override this behavior for the target platform.</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>groupid</name>
+                    <value>denimgroup.threadfix</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-artifactid</name>
+                    <value>master-pom</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-groupid</name>
+                    <value>com.denimgroup.threadfix</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>version</name>
+                    <value>2.2-SNAPSHOT</value>
+                </evidence>
+            </evidenceCollected>
+            <identifiers>
+                <identifier type="maven" confidence="LOW">
+                    <name>(com.denimgroup.threadfix:threadfix-cli:2.2-SNAPSHOT)</name>
+                </identifier>
+            </identifiers>
+        </dependency>
+        <dependency>
+            <fileName>threadfix-entities-2.2-SNAPSHOT.jar</fileName>
+            <filePath>/var/lib/jenkins/workspace/ThreadFix_Dependency_Check/threadfix-entities/target/threadfix-entities-2.2-SNAPSHOT.jar</filePath>
+            <md5>2036ADB901690C882EC7090A54B29BFD</md5>
+            <sha1>73CC7ED00444F6C4356B4E6E8243365841DFE649</sha1>
+            <description>This module contains domain classes used by all of the other modules.</description>
+            <evidenceCollected>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>2.2</value>
+                </evidence>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>threadfix-entities-2.2-SNAPSHOT</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>data</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>denimgroup</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>entities</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>threadfix</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>artifactid</name>
+                    <value>threadfix-entities</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>description</name>
+                    <value>This module contains domain classes used by all of the other modules.</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>groupid</name>
+                    <value>denimgroup.threadfix</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-artifactid</name>
+                    <value>master-pom</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-groupid</name>
+                    <value>com.denimgroup.threadfix</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>version</name>
+                    <value>2.2-SNAPSHOT</value>
+                </evidence>
+            </evidenceCollected>
+            <identifiers>
+                <identifier type="maven" confidence="LOW">
+                    <name>(com.denimgroup.threadfix:threadfix-entities:2.2-SNAPSHOT)</name>
+                </identifier>
+            </identifiers>
+        </dependency>
+        <dependency>
+            <fileName>threadfix-ham-2.2-SNAPSHOT.jar</fileName>
+            <filePath>/var/lib/jenkins/workspace/ThreadFix_Dependency_Check/threadfix-ham/target/threadfix-ham-2.2-SNAPSHOT.jar</filePath>
+            <md5>FFB95F1AA444E95C6323298ACA1FF4F5</md5>
+            <sha1>8B0F45CB5E8F3FCDDF67BE4BE3A9491948EB06C7</sha1>
+            <description>
+        HAM stands for Hybrid Analysis Mapping. The module originated in research done for DHS to
+        improve static-to-dynamic vulnerabilty matching. It is now a generalized system primarily for
+        parsing source code into Endpoint objects and performing lookups based on partial information.
+
+        This code is most easily accessed by creating an EndpointDatabase with
+        EndpointDatabaseFactory.getDatabase. The database can be searched using queries created with
+        EndpointQueryBuilder.
+    </description>
+            <evidenceCollected>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>2.2</value>
+                </evidence>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>threadfix-ham-2.2-SNAPSHOT</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>denimgroup</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>framework</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>impl</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>threadfix</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>artifactid</name>
+                    <value>threadfix-ham</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>description</name>
+                    <value>HAM stands for Hybrid Analysis Mapping. The module originated in research done for DHS to improve static-to-dynamic vulnerabilty matching. It is now a generalized system primarily for parsing source code into Endpoint objects and performing lookups based on partial information. This code is most easily accessed by creating an EndpointDatabase with EndpointDatabaseFactory.getDatabase. The database can be searched using queries created with EndpointQueryBuilder.</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>groupid</name>
+                    <value>denimgroup.threadfix</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>name</name>
+                    <value>threadfix-ham</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-artifactid</name>
+                    <value>master-pom</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>parent-groupid</name>
+                    <value>com.denimgroup.threadfix</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>version</name>
+                    <value>2.2-SNAPSHOT</value>
+                </evidence>
+            </evidenceCollected>
+            <identifiers>
+                <identifier type="maven" confidence="LOW">
+                    <name>(com.denimgroup.threadfix:threadfix-ham:2.2-SNAPSHOT)</name>
+                </identifier>
+            </identifiers>
+        </dependency>
+        <dependency>
+            <fileName>validation-api-1.1.0.Final.jar</fileName>
+            <filePath>/var/lib/jenkins/.m2/repository/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final.jar</filePath>
+            <md5>4C257F52462860B62AB3CDAB45F53082</md5>
+            <sha1>8613AE82954779D518631E05DAA73A6A954817D5</sha1>
+            <description>
+        Bean Validation API
+    </description>
+            <license>The Apache Software License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0.txt</license>
+            <evidenceCollected>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>1.1.0</value>
+                </evidence>
+                <evidence>
+                    <source>file</source>
+                    <name>name</name>
+                    <value>validation-api-1.1.0.Final</value>
+                </evidence>
+                <evidence>
+                    <source>hint analyzer</source>
+                    <name>product</name>
+                    <value>springsource_spring_framework</value>
+                </evidence>
+                <evidence>
+                    <source>hint analyzer</source>
+                    <name>vendor</name>
+                    <value>vmware</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>javax</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>valid</value>
+                </evidence>
+                <evidence>
+                    <source>jar</source>
+                    <name>package name</name>
+                    <value>validation</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Name</name>
+                    <value>Bean Validation API</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>bundle-symbolicname</name>
+                    <value>javax.validation.api</value>
+                </evidence>
+                <evidence>
+                    <source>Manifest</source>
+                    <name>Bundle-Version</name>
+                    <value>1.1.0.Final</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>artifactid</name>
+                    <value>validation-api</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>description</name>
+                    <value>Bean Validation API</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>groupid</name>
+                    <value>javax.validation</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>name</name>
+                    <value>Bean Validation API</value>
+                </evidence>
+                <evidence>
+                    <source>pom</source>
+                    <name>version</name>
+                    <value>1.1.0.Final</value>
+                </evidence>
+            </evidenceCollected>
+            <identifiers>
+                <identifier type="maven" confidence="LOW">
+                    <name>(javax.validation:validation-api:1.1.0.Final)</name>
+                </identifier>
+            </identifiers>
+        </dependency>
+    </dependencies>
+</analysis>

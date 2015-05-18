@@ -3,7 +3,7 @@ from fabric.api import *
 from fabric.contrib.console import confirm
 import datetime, re
 
-source_code_loc='https://code.google.com/p/threadfix'
+source_code_loc='https://github.com/denimgroup/threadfix.git'
 local_working_folder_loc = '/home/vagrant/threadfix_1_2_vm_upgrade' #where fabfile is running from
 server_base_loc = '/home/vagrant/artifacts' #where to deploy to
 local_path = 'threadfix/threadfix-main/src/main/resources' #path to .deploy files

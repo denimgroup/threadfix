@@ -32,6 +32,19 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+        	<id>dependencycheck</id>
+        	<build>
+        		<plugins>
+        			<plugin>
+        				<groupId>org.owasp</groupId>
+        				<artifactId>dependency-check-maven</artifactId>
+        			</plugin>
+        		</plugins>
+        	</build>
+        </profile>
+    </profiles>
 
     <parent>
         <groupId>com.denimgroup.threadfix</groupId>

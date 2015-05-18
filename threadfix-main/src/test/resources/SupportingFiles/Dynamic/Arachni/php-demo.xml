@@ -1,0 +1,1206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<arachni_report>
+<title>Web Application Security Report - Arachni Framework</title>
+
+<generated_on>2011-10-20 14:54:49 -0700</generated_on>
+
+<report_false_positives>http://github.com/Zapotek/arachni/issues</report_false_positives>
+
+<system>
+<version>0.3</version>
+
+<revision>0.2.3</revision>
+
+<start_datetime>Thu Oct 20 14:49:41 2011</start_datetime>
+
+<finish_datetime>Thu Oct 20 14:51:32 2011</finish_datetime>
+
+<delta_time>00:01:50</delta_time>
+
+<url>http://10.2.10.17/demo/</url>
+
+<user_agent>Arachni/0.3</user_agent>
+
+<audited_elements>
+<element>links</element>
+
+<element>forms</element>
+
+<element>cookies</element>
+</audited_elements>
+
+<modules><module name="unencrypted_password_forms" /><module name="xst" /><module name="cvs_svn_users" /><module name="credit_card" /><module name="private_ip" /><module name="ssn" /><module name="html_objects" /><module name="captcha" /><module name="emails" /><module name="interesting_responses" /><module name="http_put" /><module name="backup_files" /><module name="webdav" /><module name="common_directories" /><module name="common_files" /><module name="allowed_methods" /><module name="backdoors" /><module name="htaccess_limit" /><module name="directory_listing" /><module name="sqli_blind_rdiff" /><module name="xss_uri" /><module name="os_cmd_injection" /><module name="xss" /><module name="xss_tag" /><module name="sqli_blind_timing" /><module name="os_cmd_injection_timing" /><module name="code_injection_timing" /><module name="ldapi" /><module name="xss_event" /><module name="trainer" /><module name="xss_path" /><module name="code_injection" /><module name="sqli" /><module name="unvalidated_redirect" /><module name="xpath" /><module name="path_traversal" /><module name="rfi" /><module name="response_splitting" /><module name="csrf" /><module name="xss_script_tag" /></modules>
+
+<filters>
+<exclude></exclude>
+
+<include>
+<regexp>(?-mix:.*)</regexp>
+</include>
+
+<redundant></redundant>
+</filters>
+
+<cookies><cookie name="vuln" value="" /></cookies>
+</system>
+
+<issues>
+<issue>
+<name>Cross-Site Scripting (XSS)</name>
+
+<url>http://10.2.10.17/demo/EvalInjection2.php</url>
+
+<element>form</element>
+
+<method>POST</method>
+
+<tags><tag name="xss" /><tag name="regexp" /><tag name="injection" /><tag name="script" /></tags>
+
+<variable>command</variable>
+
+<description>Client-side code (like JavaScript) can
+                    be injected into the web application which is then returned to the user's browser.
+                    This can lead to a compromise of the client's system or serve as a pivoting point for other attacks.</description>
+
+<manual_verification>false</manual_verification>
+
+<references><reference name="ha.ckers" url="http://ha.ckers.org/xss.html" /><reference name="Secunia" url="http://secunia.com/advisories/9716/" /></references>
+
+<variations>
+<variation>
+<url>http://10.2.10.17/demo/EvalInjection2.php</url>
+
+<id>%3Carachni_xss_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</id>
+
+<injected>1%3Carachni_xss_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d%00</injected>
+
+<regexp>&lt;arachni_xss_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</regexp>
+
+<regexp_match>&lt;arachni_xss_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</regexp_match>
+
+<headers>
+<request><field name="cookie" value="" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /></request>
+
+<response><field name="Date" value="Thu, 20 Oct 2011 21:49:37 GMT" /><field name="Server" value="Apache/2.2.19 (Win32) PHP/5.3.6" /><field name="X-Powered-By" value="PHP/5.3.6" /><field name="Content-Length" value="276" /><field name="Content-Type" value="text/html" /></response>
+</headers>
+
+<html>PCEtLSBFdmFsIEluamVjdGlvbiAyICAtLT4NCjwhLS0gVGhpcyBwYWdlIHJl
+YWxpemVzIGFuIEV2YWwgSW5qZWN0aW9uIHZ1bG5lcmFiaWxpdHkuIA0KLS0+
+DQoNCjxodG1sPg0KCTxoZWFkPg0KCQk8dGl0bGU+RXZhbCBJbmplY3Rpb248
+L3RpdGxlPg0KCTwvaGVhZD4NCgk8Ym9keT4NCgkJPHByZT4xPGFyYWNobmlf
+eHNzX2MyNGNjNGM5MGQ5YzI0YjBjZGNkNDY1NDUxZWU1NDZlOGYwYWQ0MjE5
+YmMwN2I0ZTNlNzNmNzEyMTcxZmNkMmQAPC9wcmU+DQoJPC9ib2R5Pg0KPC9o
+dG1sPg0K
+</html>
+</variation>
+</variations>
+</issue>
+
+<issue>
+<name>LDAP Injection</name>
+
+<url>http://10.2.10.17/demo/LDAPInjection2.php</url>
+
+<element>form</element>
+
+<method>POST</method>
+
+<tags><tag name="ldap" /><tag name="injection" /><tag name="regexp" /></tags>
+
+<variable>username</variable>
+
+<description>LDAP queries can be injected into the web application
+                    which can be used to disclose sensitive data of affect the execution flow.</description>
+
+<manual_verification>false</manual_verification>
+
+<references><reference name="WASC" url="http://projects.webappsec.org/w/page/13246947/LDAP-Injection" /><reference name="OWASP" url="http://www.owasp.org/index.php/LDAP_injection" /></references>
+
+<variations>
+<variation>
+<url>http://10.2.10.17/demo/LDAPInjection2.php</url>
+
+<id>Search:%20Bad%20search%20filter</id>
+
+<injected>arachni_name%23%5E($!@$)(()))******</injected>
+
+<regexp>Search: Bad search filter</regexp>
+
+<regexp_match>Search: Bad search filter</regexp_match>
+
+<headers>
+<request><field name="cookie" value="" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /></request>
+
+<response><field name="Date" value="Thu, 20 Oct 2011 21:49:43 GMT" /><field name="Server" value="Apache/2.2.19 (Win32) PHP/5.3.6" /><field name="X-Powered-By" value="PHP/5.3.6" /><field name="Content-Length" value="527" /><field name="Content-Type" value="text/html" /></response>
+</headers>
+
+<html>PCEtLSBMREFQIEluamVjdGlvbiAyICAtLT4NCjwhLS0gVGhpcyBwYWdlIHJl
+YWxpemVzIGFuIExEQVAgSW5qZWN0aW9uIHZ1bG5lcmFiaWxpdHkuIA0KSW4g
+b3JkZXIgdG8gc2V0IHRoaXMgdXAsIHlvdSBuZWVkIGFuIGFwcHJvcHJpYXRl
+IHNlcnZlciB0aGF0IHJlY29nbml6ZXMgTERBUCBhdCBsb2NhbGhvc3Qgb24g
+cG9ydCAxMDM4OS4NCkp1c3QgbWFrZSBzdXJlIGl0IGNvbXBsaWVzIHdpdGgg
+dGhlIGJlbG93IGNvZGUgKG9yIG1vZGlmeSBpdCBpZiB5b3Ugd2FudCkuDQot
+LT4NCg0KPGh0bWw+DQoJPGhlYWQ+DQoJCTx0aXRsZT5MREFQIEluamVjdGlv
+bjI8L3RpdGxlPg0KCTwvaGVhZD4NCgk8Ym9keT4NCgkNCgkKV2FybmluZzog
+bGRhcF9zZWFyY2goKTogU2VhcmNoOiBCYWQgc2VhcmNoIGZpbHRlciBpbiBD
+OlxQcm9ncmFtIEZpbGVzICh4ODYpXEFwYWNoZSBTb2Z0d2FyZSBGb3VuZGF0
+aW9uXEFwYWNoZTIuMlxodGRvY3NcZGVtb1xMREFQSW5qZWN0aW9uMi5waHAg
+b24gbGluZSAyNQoNCgk8L2JvZHk+DQo8L2h0bWw+DQo=
+</html>
+</variation>
+</variations>
+</issue>
+
+<issue>
+<name>XPath Injection</name>
+
+<url>http://10.2.10.17/demo/XPathInjection2.php</url>
+
+<element>form</element>
+
+<method>POST</method>
+
+<tags><tag name="xpath" /><tag name="database" /><tag name="error" /><tag name="injection" /><tag name="regexp" /></tags>
+
+<variable>password</variable>
+
+<description>XPath queries can be injected into the web application.</description>
+
+<manual_verification>false</manual_verification>
+
+<references><reference name="OWASP" url="http://www.owasp.org/index.php/XPATH_Injection" /></references>
+
+<variations>
+<variation>
+<url>http://10.2.10.17/demo/XPathInjection2.php</url>
+
+<id>Incompatible%20XPath%20key</id>
+
+<injected>5543!%25arachni_secret'%22</injected>
+
+<regexp>Incompatible XPath key</regexp>
+
+<regexp_match>Incompatible XPath key</regexp_match>
+
+<headers>
+<request><field name="cookie" value="" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /></request>
+
+<response><field name="Date" value="Thu, 20 Oct 2011 21:49:45 GMT" /><field name="Server" value="Apache/2.2.19 (Win32) PHP/5.3.6" /><field name="X-Powered-By" value="PHP/5.3.6" /><field name="Content-Length" value="565" /><field name="Content-Type" value="text/html" /></response>
+</headers>
+
+<html>PCEtLSBYUGF0aCBJbmplY3Rpb24gMiAgLS0+DQo8IS0tIFRoaXMgcGFnZSBy
+ZWFsaXplcyBhbiBYUGF0aCBJbmplY3Rpb24gdnVsbmVyYWJpbGl0eS4gLS0+
+DQoNCjxodG1sPg0KCTxoZWFkPg0KCQk8dGl0bGU+WFBhdGggSW5qZWN0aW9u
+PC90aXRsZT4NCgk8L2hlYWQ+DQoJPGJvZHk+DQoJDQoJCldhcm5pbmc6IERP
+TVhQYXRoOjpxdWVyeSgpOiBJbnZhbGlkIHByZWRpY2F0ZSBpbiBDOlxQcm9n
+cmFtIEZpbGVzICh4ODYpXEFwYWNoZSBTb2Z0d2FyZSBGb3VuZGF0aW9uXEFw
+YWNoZTIuMlxodGRvY3NcZGVtb1xYUGF0aEluamVjdGlvbjIucGhwIG9uIGxp
+bmUgMTkKCldhcm5pbmc6IERPTVhQYXRoOjpxdWVyeSgpOiBJbnZhbGlkIGV4
+cHJlc3Npb24gaW4gQzpcUHJvZ3JhbSBGaWxlcyAoeDg2KVxBcGFjaGUgU29m
+dHdhcmUgRm91bmRhdGlvblxBcGFjaGUyLjJcaHRkb2NzXGRlbW9cWFBhdGhJ
+bmplY3Rpb24yLnBocCBvbiBsaW5lIDE5CkluY29tcGF0aWJsZSBYUGF0aCBr
+ZXksIGVpdGhlciBhcmFjaG5pX25hbWUgb3IgNTU0MyElYXJhY2huaV9zZWNy
+ZXQnIg0KCTwvYm9keT4NCjwvaHRtbD4NCg==
+</html>
+</variation>
+</variations>
+</issue>
+
+<issue>
+<name>XPath Injection</name>
+
+<url>http://10.2.10.17/demo/XPathInjection2.php</url>
+
+<element>form</element>
+
+<method>POST</method>
+
+<tags><tag name="xpath" /><tag name="database" /><tag name="error" /><tag name="injection" /><tag name="regexp" /></tags>
+
+<variable>username</variable>
+
+<description>XPath queries can be injected into the web application.</description>
+
+<manual_verification>false</manual_verification>
+
+<references><reference name="OWASP" url="http://www.owasp.org/index.php/XPATH_Injection" /></references>
+
+<variations>
+<variation>
+<url>http://10.2.10.17/demo/XPathInjection2.php</url>
+
+<id>Incompatible%20XPath%20key</id>
+
+<injected>arachni_name'%22</injected>
+
+<regexp>Incompatible XPath key</regexp>
+
+<regexp_match>Incompatible XPath key</regexp_match>
+
+<headers>
+<request><field name="cookie" value="" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /></request>
+
+<response><field name="Date" value="Thu, 20 Oct 2011 21:49:45 GMT" /><field name="Server" value="Apache/2.2.19 (Win32) PHP/5.3.6" /><field name="X-Powered-By" value="PHP/5.3.6" /><field name="Content-Length" value="565" /><field name="Content-Type" value="text/html" /></response>
+</headers>
+
+<html>PCEtLSBYUGF0aCBJbmplY3Rpb24gMiAgLS0+DQo8IS0tIFRoaXMgcGFnZSBy
+ZWFsaXplcyBhbiBYUGF0aCBJbmplY3Rpb24gdnVsbmVyYWJpbGl0eS4gLS0+
+DQoNCjxodG1sPg0KCTxoZWFkPg0KCQk8dGl0bGU+WFBhdGggSW5qZWN0aW9u
+PC90aXRsZT4NCgk8L2hlYWQ+DQoJPGJvZHk+DQoJDQoJCldhcm5pbmc6IERP
+TVhQYXRoOjpxdWVyeSgpOiBJbnZhbGlkIHByZWRpY2F0ZSBpbiBDOlxQcm9n
+cmFtIEZpbGVzICh4ODYpXEFwYWNoZSBTb2Z0d2FyZSBGb3VuZGF0aW9uXEFw
+YWNoZTIuMlxodGRvY3NcZGVtb1xYUGF0aEluamVjdGlvbjIucGhwIG9uIGxp
+bmUgMTkKCldhcm5pbmc6IERPTVhQYXRoOjpxdWVyeSgpOiBJbnZhbGlkIGV4
+cHJlc3Npb24gaW4gQzpcUHJvZ3JhbSBGaWxlcyAoeDg2KVxBcGFjaGUgU29m
+dHdhcmUgRm91bmRhdGlvblxBcGFjaGUyLjJcaHRkb2NzXGRlbW9cWFBhdGhJ
+bmplY3Rpb24yLnBocCBvbiBsaW5lIDE5CkluY29tcGF0aWJsZSBYUGF0aCBr
+ZXksIGVpdGhlciBhcmFjaG5pX25hbWUnIiBvciA1NTQzISVhcmFjaG5pX3Nl
+Y3JldA0KCTwvYm9keT4NCjwvaHRtbD4NCg==
+</html>
+</variation>
+</variations>
+</issue>
+
+<issue>
+<name>Cross-Site Scripting (XSS)</name>
+
+<url>http://10.2.10.17/demo/XPathInjection2.php</url>
+
+<element>form</element>
+
+<method>POST</method>
+
+<tags><tag name="xss" /><tag name="regexp" /><tag name="injection" /><tag name="script" /></tags>
+
+<variable>password</variable>
+
+<description>Client-side code (like JavaScript) can
+                    be injected into the web application which is then returned to the user's browser.
+                    This can lead to a compromise of the client's system or serve as a pivoting point for other attacks.</description>
+
+<manual_verification>false</manual_verification>
+
+<references><reference name="ha.ckers" url="http://ha.ckers.org/xss.html" /><reference name="Secunia" url="http://secunia.com/advisories/9716/" /></references>
+
+<variations>
+<variation>
+<url>http://10.2.10.17/demo/XPathInjection2.php</url>
+
+<id>%3Carachni_xss_'%22;_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</id>
+
+<injected>5543!%25arachni_secret%3Carachni_xss_'%22;_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d%00</injected>
+
+<regexp>&lt;arachni_xss_'&quot;;_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</regexp>
+
+<regexp_match>&lt;arachni_xss_'&quot;;_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</regexp_match>
+
+<headers>
+<request><field name="cookie" value="" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /></request>
+
+<response><field name="Date" value="Thu, 20 Oct 2011 21:49:45 GMT" /><field name="Server" value="Apache/2.2.19 (Win32) PHP/5.3.6" /><field name="X-Powered-By" value="PHP/5.3.6" /><field name="Content-Length" value="645" /><field name="Content-Type" value="text/html" /></response>
+</headers>
+
+<html>PCEtLSBYUGF0aCBJbmplY3Rpb24gMiAgLS0+DQo8IS0tIFRoaXMgcGFnZSBy
+ZWFsaXplcyBhbiBYUGF0aCBJbmplY3Rpb24gdnVsbmVyYWJpbGl0eS4gLS0+
+DQoNCjxodG1sPg0KCTxoZWFkPg0KCQk8dGl0bGU+WFBhdGggSW5qZWN0aW9u
+PC90aXRsZT4NCgk8L2hlYWQ+DQoJPGJvZHk+DQoJDQoJCldhcm5pbmc6IERP
+TVhQYXRoOjpxdWVyeSgpOiBJbnZhbGlkIHByZWRpY2F0ZSBpbiBDOlxQcm9n
+cmFtIEZpbGVzICh4ODYpXEFwYWNoZSBTb2Z0d2FyZSBGb3VuZGF0aW9uXEFw
+YWNoZTIuMlxodGRvY3NcZGVtb1xYUGF0aEluamVjdGlvbjIucGhwIG9uIGxp
+bmUgMTkKCldhcm5pbmc6IERPTVhQYXRoOjpxdWVyeSgpOiBJbnZhbGlkIGV4
+cHJlc3Npb24gaW4gQzpcUHJvZ3JhbSBGaWxlcyAoeDg2KVxBcGFjaGUgU29m
+dHdhcmUgRm91bmRhdGlvblxBcGFjaGUyLjJcaHRkb2NzXGRlbW9cWFBhdGhJ
+bmplY3Rpb24yLnBocCBvbiBsaW5lIDE5CkluY29tcGF0aWJsZSBYUGF0aCBr
+ZXksIGVpdGhlciBhcmFjaG5pX25hbWUgb3IgNTU0MyElYXJhY2huaV9zZWNy
+ZXQ8YXJhY2huaV94c3NfJyI7X2MyNGNjNGM5MGQ5YzI0YjBjZGNkNDY1NDUx
+ZWU1NDZlOGYwYWQ0MjE5YmMwN2I0ZTNlNzNmNzEyMTcxZmNkMmQADQoJPC9i
+b2R5Pg0KPC9odG1sPg0K
+</html>
+</variation>
+
+<variation>
+<url>http://10.2.10.17/demo/XPathInjection2.php</url>
+
+<id>%3Carachni_xss_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</id>
+
+<injected>5543!%25arachni_secret%3Carachni_xss_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d%00</injected>
+
+<regexp>&lt;arachni_xss_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</regexp>
+
+<regexp_match>&lt;arachni_xss_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</regexp_match>
+
+<headers>
+<request><field name="cookie" value="" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /></request>
+
+<response><field name="Date" value="Thu, 20 Oct 2011 21:49:45 GMT" /><field name="Server" value="Apache/2.2.19 (Win32) PHP/5.3.6" /><field name="X-Powered-By" value="PHP/5.3.6" /><field name="Content-Length" value="642" /><field name="Content-Type" value="text/html" /></response>
+</headers>
+
+<html>PCEtLSBYUGF0aCBJbmplY3Rpb24gMiAgLS0+DQo8IS0tIFRoaXMgcGFnZSBy
+ZWFsaXplcyBhbiBYUGF0aCBJbmplY3Rpb24gdnVsbmVyYWJpbGl0eS4gLS0+
+DQoNCjxodG1sPg0KCTxoZWFkPg0KCQk8dGl0bGU+WFBhdGggSW5qZWN0aW9u
+PC90aXRsZT4NCgk8L2hlYWQ+DQoJPGJvZHk+DQoJDQoJCldhcm5pbmc6IERP
+TVhQYXRoOjpxdWVyeSgpOiBVbmZpbmlzaGVkIGxpdGVyYWwgaW4gQzpcUHJv
+Z3JhbSBGaWxlcyAoeDg2KVxBcGFjaGUgU29mdHdhcmUgRm91bmRhdGlvblxB
+cGFjaGUyLjJcaHRkb2NzXGRlbW9cWFBhdGhJbmplY3Rpb24yLnBocCBvbiBs
+aW5lIDE5CgpXYXJuaW5nOiBET01YUGF0aDo6cXVlcnkoKTogSW52YWxpZCBl
+eHByZXNzaW9uIGluIEM6XFByb2dyYW0gRmlsZXMgKHg4NilcQXBhY2hlIFNv
+ZnR3YXJlIEZvdW5kYXRpb25cQXBhY2hlMi4yXGh0ZG9jc1xkZW1vXFhQYXRo
+SW5qZWN0aW9uMi5waHAgb24gbGluZSAxOQpJbmNvbXBhdGlibGUgWFBhdGgg
+a2V5LCBlaXRoZXIgYXJhY2huaV9uYW1lIG9yIDU1NDMhJWFyYWNobmlfc2Vj
+cmV0PGFyYWNobmlfeHNzX2MyNGNjNGM5MGQ5YzI0YjBjZGNkNDY1NDUxZWU1
+NDZlOGYwYWQ0MjE5YmMwN2I0ZTNlNzNmNzEyMTcxZmNkMmQADQoJPC9ib2R5
+Pg0KPC9odG1sPg0K
+</html>
+</variation>
+</variations>
+</issue>
+
+<issue>
+<name>Cross-Site Scripting (XSS)</name>
+
+<url>http://10.2.10.17/demo/XPathInjection2.php</url>
+
+<element>form</element>
+
+<method>POST</method>
+
+<tags><tag name="xss" /><tag name="regexp" /><tag name="injection" /><tag name="script" /></tags>
+
+<variable>username</variable>
+
+<description>Client-side code (like JavaScript) can
+                    be injected into the web application which is then returned to the user's browser.
+                    This can lead to a compromise of the client's system or serve as a pivoting point for other attacks.</description>
+
+<manual_verification>false</manual_verification>
+
+<references><reference name="ha.ckers" url="http://ha.ckers.org/xss.html" /><reference name="Secunia" url="http://secunia.com/advisories/9716/" /></references>
+
+<variations>
+<variation>
+<url>http://10.2.10.17/demo/XPathInjection2.php</url>
+
+<id>%3Carachni_xss_'%22;_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</id>
+
+<injected>arachni_name%3Carachni_xss_'%22;_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d%00</injected>
+
+<regexp>&lt;arachni_xss_'&quot;;_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</regexp>
+
+<regexp_match>&lt;arachni_xss_'&quot;;_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</regexp_match>
+
+<headers>
+<request><field name="cookie" value="" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /></request>
+
+<response><field name="Date" value="Thu, 20 Oct 2011 21:49:45 GMT" /><field name="Server" value="Apache/2.2.19 (Win32) PHP/5.3.6" /><field name="X-Powered-By" value="PHP/5.3.6" /><field name="Content-Length" value="645" /><field name="Connection" value="close" /><field name="Content-Type" value="text/html" /></response>
+</headers>
+
+<html>PCEtLSBYUGF0aCBJbmplY3Rpb24gMiAgLS0+DQo8IS0tIFRoaXMgcGFnZSBy
+ZWFsaXplcyBhbiBYUGF0aCBJbmplY3Rpb24gdnVsbmVyYWJpbGl0eS4gLS0+
+DQoNCjxodG1sPg0KCTxoZWFkPg0KCQk8dGl0bGU+WFBhdGggSW5qZWN0aW9u
+PC90aXRsZT4NCgk8L2hlYWQ+DQoJPGJvZHk+DQoJDQoJCldhcm5pbmc6IERP
+TVhQYXRoOjpxdWVyeSgpOiBJbnZhbGlkIHByZWRpY2F0ZSBpbiBDOlxQcm9n
+cmFtIEZpbGVzICh4ODYpXEFwYWNoZSBTb2Z0d2FyZSBGb3VuZGF0aW9uXEFw
+YWNoZTIuMlxodGRvY3NcZGVtb1xYUGF0aEluamVjdGlvbjIucGhwIG9uIGxp
+bmUgMTkKCldhcm5pbmc6IERPTVhQYXRoOjpxdWVyeSgpOiBJbnZhbGlkIGV4
+cHJlc3Npb24gaW4gQzpcUHJvZ3JhbSBGaWxlcyAoeDg2KVxBcGFjaGUgU29m
+dHdhcmUgRm91bmRhdGlvblxBcGFjaGUyLjJcaHRkb2NzXGRlbW9cWFBhdGhJ
+bmplY3Rpb24yLnBocCBvbiBsaW5lIDE5CkluY29tcGF0aWJsZSBYUGF0aCBr
+ZXksIGVpdGhlciBhcmFjaG5pX25hbWU8YXJhY2huaV94c3NfJyI7X2MyNGNj
+NGM5MGQ5YzI0YjBjZGNkNDY1NDUxZWU1NDZlOGYwYWQ0MjE5YmMwN2I0ZTNl
+NzNmNzEyMTcxZmNkMmQAIG9yIDU1NDMhJWFyYWNobmlfc2VjcmV0DQoJPC9i
+b2R5Pg0KPC9odG1sPg0K
+</html>
+</variation>
+
+<variation>
+<url>http://10.2.10.17/demo/XPathInjection2.php</url>
+
+<id>%3Carachni_xss_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</id>
+
+<injected>arachni_name%3Carachni_xss_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d%00</injected>
+
+<regexp>&lt;arachni_xss_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</regexp>
+
+<regexp_match>&lt;arachni_xss_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</regexp_match>
+
+<headers>
+<request><field name="cookie" value="" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /></request>
+
+<response><field name="Date" value="Thu, 20 Oct 2011 21:49:45 GMT" /><field name="Server" value="Apache/2.2.19 (Win32) PHP/5.3.6" /><field name="X-Powered-By" value="PHP/5.3.6" /><field name="Content-Length" value="642" /><field name="Content-Type" value="text/html" /></response>
+</headers>
+
+<html>PCEtLSBYUGF0aCBJbmplY3Rpb24gMiAgLS0+DQo8IS0tIFRoaXMgcGFnZSBy
+ZWFsaXplcyBhbiBYUGF0aCBJbmplY3Rpb24gdnVsbmVyYWJpbGl0eS4gLS0+
+DQoNCjxodG1sPg0KCTxoZWFkPg0KCQk8dGl0bGU+WFBhdGggSW5qZWN0aW9u
+PC90aXRsZT4NCgk8L2hlYWQ+DQoJPGJvZHk+DQoJDQoJCldhcm5pbmc6IERP
+TVhQYXRoOjpxdWVyeSgpOiBVbmZpbmlzaGVkIGxpdGVyYWwgaW4gQzpcUHJv
+Z3JhbSBGaWxlcyAoeDg2KVxBcGFjaGUgU29mdHdhcmUgRm91bmRhdGlvblxB
+cGFjaGUyLjJcaHRkb2NzXGRlbW9cWFBhdGhJbmplY3Rpb24yLnBocCBvbiBs
+aW5lIDE5CgpXYXJuaW5nOiBET01YUGF0aDo6cXVlcnkoKTogSW52YWxpZCBl
+eHByZXNzaW9uIGluIEM6XFByb2dyYW0gRmlsZXMgKHg4NilcQXBhY2hlIFNv
+ZnR3YXJlIEZvdW5kYXRpb25cQXBhY2hlMi4yXGh0ZG9jc1xkZW1vXFhQYXRo
+SW5qZWN0aW9uMi5waHAgb24gbGluZSAxOQpJbmNvbXBhdGlibGUgWFBhdGgg
+a2V5LCBlaXRoZXIgYXJhY2huaV9uYW1lPGFyYWNobmlfeHNzX2MyNGNjNGM5
+MGQ5YzI0YjBjZGNkNDY1NDUxZWU1NDZlOGYwYWQ0MjE5YmMwN2I0ZTNlNzNm
+NzEyMTcxZmNkMmQAIG9yIDU1NDMhJWFyYWNobmlfc2VjcmV0DQoJPC9ib2R5
+Pg0KPC9odG1sPg0K
+</html>
+</variation>
+</variations>
+</issue>
+
+<issue>
+<name>Cross-Site Scripting (XSS)</name>
+
+<url>http://10.2.10.17/demo/XSS-reflected2.php</url>
+
+<element>form</element>
+
+<method>POST</method>
+
+<tags><tag name="xss" /><tag name="regexp" /><tag name="injection" /><tag name="script" /></tags>
+
+<variable>username</variable>
+
+<description>Client-side code (like JavaScript) can
+                    be injected into the web application which is then returned to the user's browser.
+                    This can lead to a compromise of the client's system or serve as a pivoting point for other attacks.</description>
+
+<manual_verification>false</manual_verification>
+
+<references><reference name="ha.ckers" url="http://ha.ckers.org/xss.html" /><reference name="Secunia" url="http://secunia.com/advisories/9716/" /></references>
+
+<variations>
+<variation>
+<url>http://10.2.10.17/demo/XSS-reflected2.php</url>
+
+<id>%3Carachni_xss_'%22;_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</id>
+
+<injected>arachni_name%3Carachni_xss_'%22;_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d%00</injected>
+
+<regexp>&lt;arachni_xss_'&quot;;_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</regexp>
+
+<regexp_match>&lt;arachni_xss_'&quot;;_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</regexp_match>
+
+<headers>
+<request><field name="cookie" value="vuln=1;" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /></request>
+
+<response><field name="Date" value="Thu, 20 Oct 2011 21:49:52 GMT" /><field name="Server" value="Apache/2.2.19 (Win32) PHP/5.3.6" /><field name="X-Powered-By" value="PHP/5.3.6" /><field name="Content-Length" value="323" /><field name="Content-Type" value="text/html" /></response>
+</headers>
+
+<html>PCEtLSBYU1MyLnBocCAtIFJlZmxlY3RlZA0KICAgICBUaGlzIGZpbGUgYWNj
+ZXB0cyB0aGUgcGF5bG9hZCBmcm9tIFhTUy5waHAuIC0tPg0KCSANCjxodG1s
+Pg0KCTxoZWFkPg0KCQk8dGl0bGU+WFNTIFRlc3QgLSBSZWZsZWN0ZWQ8L3Rp
+dGxlPg0KCTwvaGVhZD4NCgk8Ym9keT4NCgk8aDI+IFJlZmxlY3RlZCBYU1Mg
+PC9oMj4NCg0KCQlXZWxjb21lIGFyYWNobmlfbmFtZTxhcmFjaG5pX3hzc18n
+IjtfYzI0Y2M0YzkwZDljMjRiMGNkY2Q0NjU0NTFlZTU0NmU4ZjBhZDQyMTli
+YzA3YjRlM2U3M2Y3MTIxNzFmY2QyZAAhPGJyIC8+DQoNCgk8L2JvZHk+DQo8
+L2h0bWw+DQo=
+</html>
+</variation>
+
+<variation>
+<url>http://10.2.10.17/demo/XSS-reflected2.php</url>
+
+<id>%3Carachni_xss_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</id>
+
+<injected>arachni_name%3Carachni_xss_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d%00</injected>
+
+<regexp>&lt;arachni_xss_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</regexp>
+
+<regexp_match>&lt;arachni_xss_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</regexp_match>
+
+<headers>
+<request><field name="cookie" value="vuln=1;" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /></request>
+
+<response><field name="Date" value="Thu, 20 Oct 2011 21:49:52 GMT" /><field name="Server" value="Apache/2.2.19 (Win32) PHP/5.3.6" /><field name="X-Powered-By" value="PHP/5.3.6" /><field name="Content-Length" value="319" /><field name="Content-Type" value="text/html" /></response>
+</headers>
+
+<html>PCEtLSBYU1MyLnBocCAtIFJlZmxlY3RlZA0KICAgICBUaGlzIGZpbGUgYWNj
+ZXB0cyB0aGUgcGF5bG9hZCBmcm9tIFhTUy5waHAuIC0tPg0KCSANCjxodG1s
+Pg0KCTxoZWFkPg0KCQk8dGl0bGU+WFNTIFRlc3QgLSBSZWZsZWN0ZWQ8L3Rp
+dGxlPg0KCTwvaGVhZD4NCgk8Ym9keT4NCgk8aDI+IFJlZmxlY3RlZCBYU1Mg
+PC9oMj4NCg0KCQlXZWxjb21lIGFyYWNobmlfbmFtZTxhcmFjaG5pX3hzc19j
+MjRjYzRjOTBkOWMyNGIwY2RjZDQ2NTQ1MWVlNTQ2ZThmMGFkNDIxOWJjMDdi
+NGUzZTczZjcxMjE3MWZjZDJkACE8YnIgLz4NCg0KCTwvYm9keT4NCjwvaHRt
+bD4NCg==
+</html>
+</variation>
+</variations>
+</issue>
+
+<issue>
+<name>Operating system command injection (timing attack)</name>
+
+<url>http://10.2.10.17/demo/OSCommandInjection2.php</url>
+
+<element>form</element>
+
+<method>POST</method>
+
+<tags><tag name="os" /><tag name="command" /><tag name="code" /><tag name="injection" /><tag name="timing" /><tag name="blind" /></tags>
+
+<variable>fileName</variable>
+
+<description>The web application allows an attacker to
+                    execute arbitrary OS commands even though it does not return
+                    the command output in the HTML body.
+                    (This issue was discovered using a timing attack; timing attacks
+                    can result in false positives in cases where the server takes
+                    an abnormally long time to respond.
+                    Either case, these issues will require further investigation
+                    even if they are false positives.)</description>
+
+<manual_verification>true</manual_verification>
+
+<references><reference name="OWASP" url="http://www.owasp.org/index.php/OS_Command_Injection" /></references>
+
+<variations>
+<variation>
+<url>http://10.2.10.17/demo/OSCommandInjection2.php</url>
+
+<injected>%7C%20ping%20-n%2020%20localhost</injected>
+
+<headers>
+<request><field name="cookie" value="vuln=;" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /></request>
+
+<response></response>
+</headers>
+</variation>
+</variations>
+</issue>
+
+<issue>
+<name>Blind SQL Injection (timing attack)</name>
+
+<url>http://10.2.10.17/demo/SQLI2.php</url>
+
+<element>form</element>
+
+<method>POST</method>
+
+<tags><tag name="sql" /><tag name="blind" /><tag name="timing" /><tag name="injection" /><tag name="database" /></tags>
+
+<variable>username</variable>
+
+<description>SQL code can be injected into the web application
+                    even though it may not be obvious due to suppression of error messages.
+                    (This issue was discovered using a timing attack; timing attacks
+                    can result in false positives in cases where the server takes
+                    an abnormally long time to respond.
+                    Either case, these issues will require further investigation
+                    even if they are false positives.)</description>
+
+<manual_verification>true</manual_verification>
+
+<references><reference name="OWASP" url="http://www.owasp.org/index.php/Blind_SQL_Injection" /><reference name="MITRE - CAPEC" url="http://capec.mitre.org/data/definitions/7.html" /></references>
+
+<variations>
+<variation>
+<url>http://10.2.10.17/demo/SQLI2.php</url>
+
+<injected>%22%20or%20sleep(8)%23</injected>
+
+<headers>
+<request><field name="cookie" value="vuln=;" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /></request>
+
+<response></response>
+</headers>
+</variation>
+</variations>
+</issue>
+
+<issue>
+<name>The TRACE HTTP method is enabled.</name>
+
+<url>HTTP://10.2.10.17</url>
+
+<element>server</element>
+
+<method>TRACE</method>
+
+<tags><tag name="xst" /><tag name="methods" /><tag name="trace" /><tag name="server" /></tags>
+
+<description>This type of attack can occur when the there
+                    is an XSS vulnerability and the server supports HTTP TRACE. </description>
+
+<manual_verification>false</manual_verification>
+
+<references><reference name="CAPEC" url="http://capec.mitre.org/data/definitions/107.html" /><reference name="OWASP" url="http://www.owasp.org/index.php/Cross_Site_Tracing" /></references>
+
+<variations>
+<variation>
+<url>HTTP://10.2.10.17</url>
+
+<headers>
+<request><field name="cookie" value="" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /></request>
+
+<response><field name="Date" value="Thu, 20 Oct 2011 21:49:33 GMT" /><field name="Server" value="Apache/2.2.19 (Win32) PHP/5.3.6" /><field name="Transfer-Encoding" value="chunked" /><field name="Content-Type" value="message/http" /></response>
+</headers>
+
+<html>VFJBQ0UgLyBIVFRQLzEuMQ0KSG9zdDogMTAuMi4xMC4xNw0KQWNjZXB0LUVu
+Y29kaW5nOiBkZWZsYXRlLCBnemlwDQpBY2NlcHQ6IHRleHQvaHRtbCxhcHBs
+aWNhdGlvbi94aHRtbCt4bWwsYXBwbGljYXRpb24veG1sO3E9MC45LCovKjtx
+PTAuOA0KVXNlci1BZ2VudDogQXJhY2huaS8wLjMNCg0K
+</html>
+</variation>
+</variations>
+</issue>
+
+<issue>
+<name>A common directory exists on the server.</name>
+
+<url>http://10.2.10.17/demo/</url>
+
+<element>path</element>
+
+<tags><tag name="path" /><tag name="directory" /><tag name="common" /></tags>
+
+<description></description>
+
+<manual_verification>false</manual_verification>
+
+<references></references>
+
+<variations>
+<variation>
+<url>http://10.2.10.17/demo/?c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d=</url>
+
+<id>demo</id>
+
+<injected>demo</injected>
+
+<headers>
+<request><field name="cookie" value="vuln=1;" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /></request>
+
+<response><field name="Date" value="Thu, 20 Oct 2011 21:49:54 GMT" /><field name="Server" value="Apache/2.2.19 (Win32) PHP/5.3.6" /><field name="Last-Modified" value="Thu, 09 Jun 2011 14:24:57 GMT" /><field name="ETag" value="&quot;2000000023431-384-4a54837b0b761&quot;" /><field name="Accept-Ranges" value="bytes" /><field name="Content-Length" value="900" /><field name="Content-Type" value="text/html" /></response>
+</headers>
+
+<html>PCEtLSBYU1MgVEVTVCAtIFNUT1JFRCAtLT4NCjwhLS0gVGhlIGdvYWwgaXMg
+dG8gcHVsbCB0aGUgcGF5bG9hZCBmcm9tIHRoZSBkYXRhYmFzZS4gQWZ0ZXIg
+dGhhdCB3ZSdsbCBzZWUuIC0tPg0KDQo8aHRtbD4NCgk8aGVhZD4NCgkJPHRp
+dGxlPlRocmVhZGZpeCBWdWxuZXJhYmlsaXR5IERlbW9zPC90aXRsZT4NCgk8
+L2hlYWQ+DQoJPGJvZHk+DQoJPGgyPiBEZW1vIExpc3QgPC9oMj4NCgk8b2w+
+DQoJCTxsaT48YSBocmVmPSJYU1MucGhwIj5YU1M8L2E+PGJyLz48L2xpPg0K
+CQk8bGk+PGEgaHJlZj0iU1FMSS5waHAiPlNRTCBJbmplY3Rpb248L2E+PGJy
+Lz48L2xpPg0KCQk8bGk+PGEgaHJlZj0iUHJlZGljdGFibGVSZXNvdXJjZS5w
+aHAiPlByZWRpY3RhYmxlIFJlc291cmNlIExvY2F0aW9uPC9hPjxici8+PC9s
+aT4NCgkJPGxpPjxhIGhyZWY9IlBhdGhUcmF2ZXJzYWwucGhwP2FjdGlvbj1Q
+YXRoVHJhdmVyc2FsLnBocCI+UGF0aCBUcmF2ZXJzYWw8L2E+PC9saT4NCgkJ
+PGxpPjxhIGhyZWY9IkRpcmVjdG9yeUluZGV4aW5nLyI+RGlyZWN0b3J5IElu
+ZGV4aW5nPC9hPjwvbGk+DQoJCTxsaT48YSBocmVmPSJYUGF0aEluamVjdGlv
+bi5waHAiPlhQYXRoIEluamVjdGlvbjwvYT48L2xpPg0KCQk8bGk+PGEgaHJl
+Zj0iTERBUEluamVjdGlvbi5waHAiPkxEQVAgSW5qZWN0aW9uPC9hPjwvbGk+
+DQoJCTxsaT48YSBocmVmPSJGb3JtYXRTdHJpbmcucGhwIj5Gb3JtYXQgU3Ry
+aW5nIEluamVjdGlvbjwvYT48L2xpPg0KCQk8bGk+PGEgaHJlZj0iT1NDb21t
+YW5kSW5qZWN0aW9uLnBocCI+T1MgQ29tbWFuZCBJbmplY3Rpb248L2E+PC9s
+aT4NCgkJPGxpPjxhIGhyZWY9IkV2YWxJbmplY3Rpb24ucGhwIj5FdmFsIElu
+amVjdGlvbjwvYT48L2xpPg0KCTwvb2w+DQoJPC9ib2R5Pg0KPC9odG1sPg0K
+</html>
+</variation>
+</variations>
+</issue>
+
+<issue>
+<name>Interesting server response.</name>
+
+<url>http://10.2.10.17/demo/Arachni-c24cc</url>
+
+<element>server</element>
+
+<method>PUT</method>
+
+<tags><tag name="interesting" /><tag name="response" /><tag name="server" /></tags>
+
+<description>The server responded with a non 200 (OK) code. </description>
+
+<manual_verification>false</manual_verification>
+
+<references></references>
+
+<variations>
+<variation>
+<url>http://10.2.10.17/demo/Arachni-c24cc</url>
+
+<id>Code:%20405</id>
+
+<headers>
+<request><field name="cookie" value="" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /><field name="Transfer-Encoding" value="" /><field name="Expect" value="" /></request>
+
+<response><field name="Date" value="Thu, 20 Oct 2011 21:49:33 GMT" /><field name="Server" value="Apache/2.2.19 (Win32) PHP/5.3.6" /><field name="Allow" value="GET,HEAD,POST,OPTIONS,TRACE" /><field name="Content-Length" value="239" /><field name="Content-Type" value="text/html; charset=iso-8859-1" /></response>
+</headers>
+
+<html>PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9JRVRGLy9EVEQgSFRNTCAyLjAv
+L0VOIj4KPGh0bWw+PGhlYWQ+Cjx0aXRsZT40MDUgTWV0aG9kIE5vdCBBbGxv
+d2VkPC90aXRsZT4KPC9oZWFkPjxib2R5Pgo8aDE+TWV0aG9kIE5vdCBBbGxv
+d2VkPC9oMT4KPHA+VGhlIHJlcXVlc3RlZCBtZXRob2QgUFVUIGlzIG5vdCBh
+bGxvd2VkIGZvciB0aGUgVVJMIC9kZW1vL0FyYWNobmktYzI0Y2MuPC9wPgo8
+L2JvZHk+PC9odG1sPgo=
+</html>
+</variation>
+</variations>
+</issue>
+
+<issue>
+<name>Interesting server response.</name>
+
+<url>http://10.2.10.17/demo//%3Carachni_xss_path_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</url>
+
+<element>server</element>
+
+<method>GET</method>
+
+<tags><tag name="interesting" /><tag name="response" /><tag name="server" /></tags>
+
+<description>The server responded with a non 200 (OK) code. </description>
+
+<manual_verification>false</manual_verification>
+
+<references></references>
+
+<variations>
+<variation>
+<url>http://10.2.10.17/demo//%3Carachni_xss_path_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d?c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d=</url>
+
+<id>Code:%20403</id>
+
+<headers>
+<request><field name="cookie" value="" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /></request>
+
+<response><field name="Date" value="Thu, 20 Oct 2011 21:49:34 GMT" /><field name="Server" value="Apache/2.2.19 (Win32) PHP/5.3.6" /><field name="Content-Length" value="293" /><field name="Content-Type" value="text/html; charset=iso-8859-1" /></response>
+</headers>
+
+<html>PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9JRVRGLy9EVEQgSFRNTCAyLjAv
+L0VOIj4KPGh0bWw+PGhlYWQ+Cjx0aXRsZT40MDMgRm9yYmlkZGVuPC90aXRs
+ZT4KPC9oZWFkPjxib2R5Pgo8aDE+Rm9yYmlkZGVuPC9oMT4KPHA+WW91IGRv
+bid0IGhhdmUgcGVybWlzc2lvbiB0byBhY2Nlc3MgL2RlbW8vLyZsdDthcmFj
+aG5pX3hzc19wYXRoX2MyNGNjNGM5MGQ5YzI0YjBjZGNkNDY1NDUxZWU1NDZl
+OGYwYWQ0MjE5YmMwN2I0ZTNlNzNmNzEyMTcxZmNkMmQKb24gdGhpcyBzZXJ2
+ZXIuPC9wPgo8L2JvZHk+PC9odG1sPgo=
+</html>
+</variation>
+</variations>
+</issue>
+
+<issue>
+<name>Interesting server response.</name>
+
+<url>http://10.2.10.17/demo//%3Carachni_xss_uri_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</url>
+
+<element>server</element>
+
+<method>GET</method>
+
+<tags><tag name="interesting" /><tag name="response" /><tag name="server" /></tags>
+
+<description>The server responded with a non 200 (OK) code. </description>
+
+<manual_verification>false</manual_verification>
+
+<references></references>
+
+<variations>
+<variation>
+<url>http://10.2.10.17/demo//%3Carachni_xss_uri_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d?c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d=</url>
+
+<id>Code:%20403</id>
+
+<headers>
+<request><field name="cookie" value="" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /></request>
+
+<response><field name="Date" value="Thu, 20 Oct 2011 21:49:34 GMT" /><field name="Server" value="Apache/2.2.19 (Win32) PHP/5.3.6" /><field name="Content-Length" value="292" /><field name="Content-Type" value="text/html; charset=iso-8859-1" /></response>
+</headers>
+
+<html>PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9JRVRGLy9EVEQgSFRNTCAyLjAv
+L0VOIj4KPGh0bWw+PGhlYWQ+Cjx0aXRsZT40MDMgRm9yYmlkZGVuPC90aXRs
+ZT4KPC9oZWFkPjxib2R5Pgo8aDE+Rm9yYmlkZGVuPC9oMT4KPHA+WW91IGRv
+bid0IGhhdmUgcGVybWlzc2lvbiB0byBhY2Nlc3MgL2RlbW8vLyZsdDthcmFj
+aG5pX3hzc191cmlfYzI0Y2M0YzkwZDljMjRiMGNkY2Q0NjU0NTFlZTU0NmU4
+ZjBhZDQyMTliYzA3YjRlM2U3M2Y3MTIxNzFmY2QyZApvbiB0aGlzIHNlcnZl
+ci48L3A+CjwvYm9keT48L2h0bWw+Cg==
+</html>
+</variation>
+</variations>
+</issue>
+
+<issue>
+<name>Allowed HTTP methods</name>
+
+<url>HTTP://10.2.10.17</url>
+
+<element>server</element>
+
+<method>OPTIONS</method>
+
+<tags><tag name="http" /><tag name="methods" /><tag name="options" /></tags>
+
+<description>The webserver claims that it supports the logged methods.</description>
+
+<manual_verification>false</manual_verification>
+
+<references></references>
+
+<variations>
+<variation>
+<url>HTTP://10.2.10.17</url>
+
+<regexp_match>GET,HEAD,POST,OPTIONS,TRACE</regexp_match>
+
+<headers>
+<request><field name="cookie" value="" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /></request>
+
+<response><field name="Date" value="Thu, 20 Oct 2011 21:49:34 GMT" /><field name="Server" value="Apache/2.2.19 (Win32) PHP/5.3.6" /><field name="Allow" value="GET,HEAD,POST,OPTIONS,TRACE" /><field name="Content-Length" value="0" /><field name="Content-Type" value="text/html" /></response>
+</headers>
+</variation>
+</variations>
+</issue>
+
+<issue>
+<name>Interesting server response.</name>
+
+<url>http://10.2.10.17/demo/DirectoryIndexing//%3Carachni_xss_path_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</url>
+
+<element>server</element>
+
+<method>GET</method>
+
+<tags><tag name="interesting" /><tag name="response" /><tag name="server" /></tags>
+
+<description>The server responded with a non 200 (OK) code. </description>
+
+<manual_verification>false</manual_verification>
+
+<references></references>
+
+<variations>
+<variation>
+<url>http://10.2.10.17/demo/DirectoryIndexing//%3Carachni_xss_path_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d?c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d=</url>
+
+<id>Code:%20403</id>
+
+<headers>
+<request><field name="cookie" value="" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /></request>
+
+<response><field name="Date" value="Thu, 20 Oct 2011 21:49:46 GMT" /><field name="Server" value="Apache/2.2.19 (Win32) PHP/5.3.6" /><field name="Content-Length" value="311" /><field name="Content-Type" value="text/html; charset=iso-8859-1" /></response>
+</headers>
+
+<html>PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9JRVRGLy9EVEQgSFRNTCAyLjAv
+L0VOIj4KPGh0bWw+PGhlYWQ+Cjx0aXRsZT40MDMgRm9yYmlkZGVuPC90aXRs
+ZT4KPC9oZWFkPjxib2R5Pgo8aDE+Rm9yYmlkZGVuPC9oMT4KPHA+WW91IGRv
+bid0IGhhdmUgcGVybWlzc2lvbiB0byBhY2Nlc3MgL2RlbW8vRGlyZWN0b3J5
+SW5kZXhpbmcvLyZsdDthcmFjaG5pX3hzc19wYXRoX2MyNGNjNGM5MGQ5YzI0
+YjBjZGNkNDY1NDUxZWU1NDZlOGYwYWQ0MjE5YmMwN2I0ZTNlNzNmNzEyMTcx
+ZmNkMmQKb24gdGhpcyBzZXJ2ZXIuPC9wPgo8L2JvZHk+PC9odG1sPgo=
+</html>
+</variation>
+</variations>
+</issue>
+
+<issue>
+<name>Interesting server response.</name>
+
+<url>http://10.2.10.17/demo/DirectoryIndexing//%3Carachni_xss_uri_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</url>
+
+<element>server</element>
+
+<method>GET</method>
+
+<tags><tag name="interesting" /><tag name="response" /><tag name="server" /></tags>
+
+<description>The server responded with a non 200 (OK) code. </description>
+
+<manual_verification>false</manual_verification>
+
+<references></references>
+
+<variations>
+<variation>
+<url>http://10.2.10.17/demo/DirectoryIndexing//%3Carachni_xss_uri_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d?c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d=</url>
+
+<id>Code:%20403</id>
+
+<headers>
+<request><field name="cookie" value="" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /></request>
+
+<response><field name="Date" value="Thu, 20 Oct 2011 21:49:46 GMT" /><field name="Server" value="Apache/2.2.19 (Win32) PHP/5.3.6" /><field name="Content-Length" value="310" /><field name="Content-Type" value="text/html; charset=iso-8859-1" /></response>
+</headers>
+
+<html>PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9JRVRGLy9EVEQgSFRNTCAyLjAv
+L0VOIj4KPGh0bWw+PGhlYWQ+Cjx0aXRsZT40MDMgRm9yYmlkZGVuPC90aXRs
+ZT4KPC9oZWFkPjxib2R5Pgo8aDE+Rm9yYmlkZGVuPC9oMT4KPHA+WW91IGRv
+bid0IGhhdmUgcGVybWlzc2lvbiB0byBhY2Nlc3MgL2RlbW8vRGlyZWN0b3J5
+SW5kZXhpbmcvLyZsdDthcmFjaG5pX3hzc191cmlfYzI0Y2M0YzkwZDljMjRi
+MGNkY2Q0NjU0NTFlZTU0NmU4ZjBhZDQyMTliYzA3YjRlM2U3M2Y3MTIxNzFm
+Y2QyZApvbiB0aGlzIHNlcnZlci48L3A+CjwvYm9keT48L2h0bWw+Cg==
+</html>
+</variation>
+</variations>
+</issue>
+
+<issue>
+<name>Interesting server response.</name>
+
+<url>http://10.2.10.17/demo/DirectoryIndexing/Arachni-c24cc</url>
+
+<element>server</element>
+
+<method>PUT</method>
+
+<tags><tag name="interesting" /><tag name="response" /><tag name="server" /></tags>
+
+<description>The server responded with a non 200 (OK) code. </description>
+
+<manual_verification>false</manual_verification>
+
+<references></references>
+
+<variations>
+<variation>
+<url>http://10.2.10.17/demo/DirectoryIndexing/Arachni-c24cc</url>
+
+<id>Code:%20405</id>
+
+<headers>
+<request><field name="cookie" value="" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /><field name="Transfer-Encoding" value="" /><field name="Expect" value="" /></request>
+
+<response><field name="Date" value="Thu, 20 Oct 2011 21:49:46 GMT" /><field name="Server" value="Apache/2.2.19 (Win32) PHP/5.3.6" /><field name="Allow" value="GET,HEAD,POST,OPTIONS,TRACE" /><field name="Content-Length" value="257" /><field name="Content-Type" value="text/html; charset=iso-8859-1" /></response>
+</headers>
+
+<html>PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9JRVRGLy9EVEQgSFRNTCAyLjAv
+L0VOIj4KPGh0bWw+PGhlYWQ+Cjx0aXRsZT40MDUgTWV0aG9kIE5vdCBBbGxv
+d2VkPC90aXRsZT4KPC9oZWFkPjxib2R5Pgo8aDE+TWV0aG9kIE5vdCBBbGxv
+d2VkPC9oMT4KPHA+VGhlIHJlcXVlc3RlZCBtZXRob2QgUFVUIGlzIG5vdCBh
+bGxvd2VkIGZvciB0aGUgVVJMIC9kZW1vL0RpcmVjdG9yeUluZGV4aW5nL0Fy
+YWNobmktYzI0Y2MuPC9wPgo8L2JvZHk+PC9odG1sPgo=
+</html>
+</variation>
+</variations>
+</issue>
+
+<issue>
+<name>Interesting server response.</name>
+
+<url>http://10.2.10.17/demo/XSS-cookie.php</url>
+
+<element>server</element>
+
+<method>POST</method>
+
+<tags><tag name="interesting" /><tag name="response" /><tag name="server" /></tags>
+
+<description>The server responded with a non 200 (OK) code. </description>
+
+<manual_verification>false</manual_verification>
+
+<references></references>
+
+<variations>
+<variation>
+<url>http://10.2.10.17/demo/XSS-cookie.php</url>
+
+<id>Code:%20302</id>
+
+<headers>
+<request><field name="cookie" value="" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /></request>
+
+<response><field name="Date" value="Thu, 20 Oct 2011 21:49:49 GMT" /><field name="Server" value="Apache/2.2.19 (Win32) PHP/5.3.6" /><field name="X-Powered-By" value="PHP/5.3.6" /><field name="Set-Cookie" value="vuln=" /><field name="Location" value="/demo/XSS-cookie.php" /><field name="Content-Length" value="629" /><field name="Content-Type" value="text/html" /></response>
+</headers>
+
+<html>PCEtLQ0KQw0KSW5qZWN0aW5nIGEgbmV3bGluZSBpbnRvIGEgY29va2llIGFs
+bG93cyB5b3UgdG8gcmV0dXJuIGFueSBodHRwIHJlc3BvbnNlIHlvdSB3YW50
+Lg0KVGhpcyBwYWdlIGV4aGliaXRzIHRoaXMgdnVsbmVyYWJpbGl0eS4NCg0K
+dmFsdWUyOyUwZCUwYUNvbnRlbnQtTGVuZ3RoOiUyMDAlMGQlMGElMGQlMGFI
+VFRQLzEuMSUyMDMwMiUyME1vdmVkJTIwVGVtcG9yYXJpbHklMGQlMGFDb250
+ZW50LVR5cGU6JTIwdGV4dC9odG1sJTBkJTBhQ29udGVudC1MZW5ndGglMjAy
+NiUwZCUwYSUwZCUwYTxodG1sPjxoMj5ET05FPC9oMj48L2h0bWw+DQozMDIl
+MjBNb3ZlZCUyMFRlbXBvcmFyaWx5DQotLT4NCg0KDQo8aHRtbD4NCgk8aGVh
+ZD4NCgkJPHRpdGxlPlhTUyAtIGNvb2tpZTwvdGl0bGU+DQoJPC9oZWFkPg0K
+CTxib2R5Pg0KCQk8aDI+IFhTUyAtIGNvb2tpZSA8L2gyPg0KCQlUaGUgY29v
+a2llJ3MgdmFsdWUgaXMgCQk8Zm9ybSBhY3Rpb249IlhTUy1jb29raWUucGhw
+IiBtZXRob2Q9InBvc3QiPg0KCQkJTmV3IENvb2tpZSB2YWx1ZTogPGlucHV0
+IHR5cGU9InRleHQiIG5hbWU9ImNvb2tpZSIgLz4NCgkJCTxpbnB1dCB0eXBl
+PSJzdWJtaXQiIC8+DQoJCTwvZm9ybT4NCgk8L2JvZHk+DQo8L2h0bWw+DQo=
+</html>
+</variation>
+</variations>
+</issue>
+
+<issue>
+<name>Interesting server response.</name>
+
+<url>http://10.2.10.17/Arachni-c24cc</url>
+
+<element>server</element>
+
+<method>PUT</method>
+
+<tags><tag name="interesting" /><tag name="response" /><tag name="server" /></tags>
+
+<description>The server responded with a non 200 (OK) code. </description>
+
+<manual_verification>false</manual_verification>
+
+<references></references>
+
+<variations>
+<variation>
+<url>http://10.2.10.17/Arachni-c24cc</url>
+
+<id>Code:%20405</id>
+
+<headers>
+<request><field name="cookie" value="vuln=1;" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /><field name="Transfer-Encoding" value="" /><field name="Expect" value="" /></request>
+
+<response><field name="Date" value="Thu, 20 Oct 2011 21:49:53 GMT" /><field name="Server" value="Apache/2.2.19 (Win32) PHP/5.3.6" /><field name="Allow" value="GET,HEAD,POST,OPTIONS,TRACE" /><field name="Content-Length" value="234" /><field name="Content-Type" value="text/html; charset=iso-8859-1" /></response>
+</headers>
+
+<html>PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9JRVRGLy9EVEQgSFRNTCAyLjAv
+L0VOIj4KPGh0bWw+PGhlYWQ+Cjx0aXRsZT40MDUgTWV0aG9kIE5vdCBBbGxv
+d2VkPC90aXRsZT4KPC9oZWFkPjxib2R5Pgo8aDE+TWV0aG9kIE5vdCBBbGxv
+d2VkPC9oMT4KPHA+VGhlIHJlcXVlc3RlZCBtZXRob2QgUFVUIGlzIG5vdCBh
+bGxvd2VkIGZvciB0aGUgVVJMIC9BcmFjaG5pLWMyNGNjLjwvcD4KPC9ib2R5
+PjwvaHRtbD4K
+</html>
+</variation>
+</variations>
+</issue>
+
+<issue>
+<name>Interesting server response.</name>
+
+<url>http://10.2.10.17//%3Carachni_xss_path_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d</url>
+
+<element>server</element>
+
+<method>GET</method>
+
+<tags><tag name="interesting" /><tag name="response" /><tag name="server" /></tags>
+
+<description>The server responded with a non 200 (OK) code. </description>
+
+<manual_verification>false</manual_verification>
+
+<references></references>
+
+<variations>
+<variation>
+<url>http://10.2.10.17//%3Carachni_xss_path_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d?c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d=</url>
+
+<id>Code:%20403</id>
+
+<headers>
+<request><field name="cookie" value="vuln=1;" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /></request>
+
+<response><field name="Date" value="Thu, 20 Oct 2011 21:49:54 GMT" /><field name="Server" value="Apache/2.2.19 (Win32) PHP/5.3.6" /><field name="Content-Length" value="287" /><field name="Content-Type" value="text/html; charset=iso-8859-1" /></response>
+</headers>
+
+<html>PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9JRVRGLy9EVEQgSFRNTCAyLjAv
+L0VOIj4KPGh0bWw+PGhlYWQ+Cjx0aXRsZT40MDMgRm9yYmlkZGVuPC90aXRs
+ZT4KPC9oZWFkPjxib2R5Pgo8aDE+Rm9yYmlkZGVuPC9oMT4KPHA+WW91IGRv
+bid0IGhhdmUgcGVybWlzc2lvbiB0byBhY2Nlc3MgLyZsdDthcmFjaG5pX3hz
+c19wYXRoX2MyNGNjNGM5MGQ5YzI0YjBjZGNkNDY1NDUxZWU1NDZlOGYwYWQ0
+MjE5YmMwN2I0ZTNlNzNmNzEyMTcxZmNkMmQKb24gdGhpcyBzZXJ2ZXIuPC9w
+Pgo8L2JvZHk+PC9odG1sPgo=
+</html>
+</variation>
+</variations>
+</issue>
+
+<issue>
+<name>Interesting server response.</name>
+
+<url>http://10.2.10.17/cgi-bin/</url>
+
+<element>server</element>
+
+<method>GET</method>
+
+<tags><tag name="interesting" /><tag name="response" /><tag name="server" /></tags>
+
+<description>The server responded with a non 200 (OK) code. </description>
+
+<manual_verification>false</manual_verification>
+
+<references></references>
+
+<variations>
+<variation>
+<url>http://10.2.10.17/cgi-bin/?c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d=</url>
+
+<id>Code:%20403</id>
+
+<headers>
+<request><field name="cookie" value="vuln=1;" /><field name="From" value="" /><field name="Accept" value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" /><field name="User-Agent" value="Arachni/0.3" /></request>
+
+<response><field name="Date" value="Thu, 20 Oct 2011 21:49:56 GMT" /><field name="Server" value="Apache/2.2.19 (Win32) PHP/5.3.6" /><field name="Content-Length" value="210" /><field name="Content-Type" value="text/html; charset=iso-8859-1" /></response>
+</headers>
+
+<html>PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9JRVRGLy9EVEQgSFRNTCAyLjAv
+L0VOIj4KPGh0bWw+PGhlYWQ+Cjx0aXRsZT40MDMgRm9yYmlkZGVuPC90aXRs
+ZT4KPC9oZWFkPjxib2R5Pgo8aDE+Rm9yYmlkZGVuPC9oMT4KPHA+WW91IGRv
+bid0IGhhdmUgcGVybWlzc2lvbiB0byBhY2Nlc3MgL2NnaS1iaW4vCm9uIHRo
+aXMgc2VydmVyLjwvcD4KPC9ib2R5PjwvaHRtbD4K
+</html>
+</variation>
+</variations>
+</issue>
+</issues>
+
+<plugins>
+<metamodules>
+<description>Performs high-level meta-analysis on the results of the scan using abstract meta-modules.
+                Before reviewing the scan results you are strongly encouraged to take full advantage of the data gathered via meta-analysis.
+                They will help you shed light into the inner workings of the web application and even caution you about possible false positives and/or inconclusive test results.</description>
+
+<results>
+<uniformity>
+<description>The same issue(s) persist(s) across different pages.
+                This is usually a sign for a lack of a central/single point of input
+                sanitization, a bad coding practise.</description>
+
+<results><uniformals id="form:username:xss"><issue index="6" hash="0926a61f456341c222301ef5d326b4f8" /><issue index="7" hash="7b85f2f96f04d975475fa21e5106c4f6" /></uniformals>
+</results>
+</uniformity>
+</results>
+</metamodules>
+
+<content_types>
+<description>Logs content-types of server responses.
+                It can help you categorize and identify publicly available file-types
+                which in turn can help you identify accidentally leaked files.</description>
+
+<results><content_type name="message/http">
+<response>
+<url>HTTP://10.2.10.17</url>
+
+<method>TRACE</method>
+</response>
+</content_type><content_type name="httpd/unix-directory">
+<response>
+<url>http://10.2.10.17/demo/DirectoryIndexing/</url>
+
+<method>OPTIONS</method>
+</response>
+</content_type></results>
+</content_types>
+
+<healthmap>
+<description>Generates a simple list of safe/unsafe URLs.</description>
+
+<results>
+<map><entry state="unsafe" url="http://10.2.10.17/demo/" /><entry state="safe" url="http://10.2.10.17/demo/DirectoryIndexing/" /><entry state="safe" url="http://10.2.10.17/demo/DirectoryIndexing/admin.txt" /><entry state="safe" url="http://10.2.10.17/demo/EvalInjection.php" /><entry state="unsafe" url="http://10.2.10.17/demo/EvalInjection2.php" /><entry state="safe" url="http://10.2.10.17/demo/FormatString.php" /><entry state="safe" url="http://10.2.10.17/demo/FormatString2.php" /><entry state="safe" url="http://10.2.10.17/demo/LDAPInjection.php" /><entry state="unsafe" url="http://10.2.10.17/demo/LDAPInjection2.php" /><entry state="safe" url="http://10.2.10.17/demo/OSCommandInjection.php" /><entry state="unsafe" url="http://10.2.10.17/demo/OSCommandInjection2.php" /><entry state="safe" url="http://10.2.10.17/demo/PathTraversal.php" /><entry state="safe" url="http://10.2.10.17/demo/PredictableResource.php" /><entry state="safe" url="http://10.2.10.17/demo/SQLI.php" /><entry state="unsafe" url="http://10.2.10.17/demo/SQLI2.php" /><entry state="safe" url="http://10.2.10.17/demo/XPathInjection.php" /><entry state="unsafe" url="http://10.2.10.17/demo/XPathInjection2.php" /><entry state="unsafe" url="http://10.2.10.17/demo/XSS-cookie.php" /><entry state="safe" url="http://10.2.10.17/demo/XSS-reflected.php" /><entry state="unsafe" url="http://10.2.10.17/demo/XSS-reflected2.php" /><entry state="safe" url="http://10.2.10.17/demo/XSS.php" /><entry state="safe" url="http://10.2.10.17/sitemap.xml" /><entry state="safe" url="http://10.2.10.17/sitemap.xml.gz" /><entry state="unsafe" url="HTTP://10.2.10.17" /><entry state="unsafe" url="http://10.2.10.17/demo/Arachni-c24cc" /><entry state="unsafe" url="http://10.2.10.17/demo//%3Carachni_xss_path_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d" /><entry state="unsafe" url="http://10.2.10.17/demo//%3Carachni_xss_uri_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d" /><entry state="unsafe" url="http://10.2.10.17/demo/DirectoryIndexing//%3Carachni_xss_path_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d" /><entry state="unsafe" url="http://10.2.10.17/demo/DirectoryIndexing//%3Carachni_xss_uri_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d" /><entry state="unsafe" url="http://10.2.10.17/demo/DirectoryIndexing/Arachni-c24cc" /><entry state="unsafe" url="http://10.2.10.17/Arachni-c24cc" /><entry state="unsafe" url="http://10.2.10.17//%3Carachni_xss_path_c24cc4c90d9c24b0cdcd465451ee546e8f0ad4219bc07b4e3e73f712171fcd2d" /><entry state="unsafe" url="http://10.2.10.17/cgi-bin/" /></map>
+
+<stats>
+<total>33</total>
+
+<safe>15</safe>
+
+<unsafe>18</unsafe>
+
+<issue_percentage>55</issue_percentage>
+</stats>
+</results>
+</healthmap>
+</plugins>
+</arachni_report>
