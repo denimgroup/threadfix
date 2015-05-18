@@ -23,14 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.rails;
 
-import com.denimgroup.threadfix.framework.impl.rails.model.RailsController;
-import com.denimgroup.threadfix.framework.impl.rails.model.RailsControllerMethod;
+import com.denimgroup.threadfix.data.interfaces.Endpoint;
+import com.denimgroup.threadfix.framework.TestConstants;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.List;
-
-import static org.junit.Assert.assertTrue;
+import java.util.*;
 
 /**
  * Created by sgerick on 5/5/2015.
@@ -39,19 +37,52 @@ public class RailsEndpointMappingsTest {
 
     @Test
     public void testRailsGoatControllerParser() {
-        File f = new File("C:\\SourceCode\\railsgoat-master");
-        assert(f.exists());
-        assert(f.isDirectory());
+        File f = new File (TestConstants.RAILSGOAT_SOURCE_LOCATION);
 
-        System.err.println("parsing "+f.getAbsolutePath() );
+        assert f.exists() : "Source code location does not exist. " + TestConstants.RAILSGOAT_SOURCE_LOCATION;
+        assert f.isDirectory() : "Source code location is not folder. " + TestConstants.RAILSGOAT_SOURCE_LOCATION;
 
+        // System.err.println("parsing "+f.getAbsolutePath() );
         RailsEndpointMappings mappings = new RailsEndpointMappings(f);
+        //  System.err.println(System.lineSeparator() + "Parse done." + System.lineSeparator());
 
-        System.err.println(System.lineSeparator() + "Parse done." + System.lineSeparator());
+        List<Endpoint> endpoints = mappings.generateEndpoints();
+
+        assert !endpoints.isEmpty() : "Got empty endpoints for " + TestConstants.RAILSGOAT_SOURCE_LOCATION;
+
+        Endpoint testEndpoint = new RailsEndpoint(
+                "/app/controllers/password_resets_controller.rb",   // filePath
+                "/forgot_password",                                 // urlPath
+                new HashSet<>(Arrays.asList(                        // httpMethods
+                        new String[]{"GET"}
+                )),
+                new HashSet<>(Arrays.asList(                        // parameters
+                        new String[]{"confirm_password", "email", "token", "password", "user"}
+                )));
+
+        confirmEndpointExistsIn(testEndpoint, endpoints);
 
     }
 
+    private void confirmEndpointExistsIn(Endpoint testEndpoint, List<Endpoint> endpoints) {
+        boolean endpointFound = false;
+        String filePath = testEndpoint.getFilePath();
+        String urlPath = testEndpoint.getUrlPath();
+        Set<String> httpMethods = testEndpoint.getHttpMethods();
+        Set<String> parameters = testEndpoint.getParameters();
 
+        for (Endpoint endpoint : endpoints) {
+            if (filePath.equals(endpoint.getFilePath())
+                    && urlPath.equals(endpoint.getUrlPath())
+                    && endpoint.getHttpMethods().containsAll(httpMethods)
+                    && endpoint.getParameters().containsAll(parameters) ) {
+                endpointFound = true;
+                break;
+            }
+        }
+
+        assert endpointFound : "Endpoint " + testEndpoint + " not found in endpoints.";
+    }
 
 }
 
