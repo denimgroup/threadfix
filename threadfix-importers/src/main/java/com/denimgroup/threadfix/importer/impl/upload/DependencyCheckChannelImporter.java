@@ -283,7 +283,9 @@ public class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	    		String tempDateString = getBuilderText();
 
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
-	    			testDate = DateUtils.getCalendarFromString("MMM dd, yyyy kk:mm:ss aa", tempDateString);
+					testDate = DateUtils.getCalendarFromStringAndMultipleFormats(tempDateString,
+							"MMM dd, yyyy kk:mm:ss aa",
+							"yyyy-MM-dd'T'HH:mm:ss.SSS-Z");
 	    		}
 	    		
 	    		hasDate = testDate != null;
