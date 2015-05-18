@@ -30,7 +30,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
@@ -51,7 +51,7 @@ public class FormRestResponse<T> extends RestResponse<T> {
     }
 
     public static <T> FormRestResponse<T> failure(String response, BindingResult result) {
-        return failure(response, result, null);
+        return failure(response, result, new HashMap<String, String>()); // Java 8 will be able to figure this out
     }
 
     public static <T> FormRestResponse<T> failure(String response, BindingResult result, Map<String,String> errors) {
