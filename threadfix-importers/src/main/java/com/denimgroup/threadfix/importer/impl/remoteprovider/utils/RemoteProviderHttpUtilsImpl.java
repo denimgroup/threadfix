@@ -44,6 +44,10 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
     @Autowired(required = false)
     private ProxyService proxyService;
 
+    public static <T> RemoteProviderHttpUtilsImpl<T> getImpl(Class<T> targetClass) {
+        return new RemoteProviderHttpUtilsImpl<T>(targetClass);
+    }
+
     public RemoteProviderHttpUtilsImpl(Class<T> targetClass) {
         assert targetClass != null;
         classInstance = targetClass;

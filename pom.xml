@@ -17,7 +17,7 @@
 
     <modules>
         <module>threadfix-entities</module>
-        <module>csv2ssvl</module>
+        <module>ssvl-converter</module>
         <module>threadfix-data-access</module>
         <module>threadfix-cli</module>
         <module>threadfix-ham</module>
@@ -328,6 +328,7 @@
         <zap.version>2.2.2</zap.version>
         <zaphelp.version>2.2.2</zaphelp.version>
         <dependencycheck.version>1.2.3</dependencycheck.version>
+        <svnkit.version>1.8.7</svnkit.version>
 
         <!-- Testing dependency versions -->
         <easymock.version>3.0</easymock.version>
@@ -345,6 +346,7 @@
         <maven-failsafe.version>2.17</maven-failsafe.version>
         <surefire-junit47.version>2.17</surefire-junit47.version>
         <jacoco.version>0.7.0.201403182114</jacoco.version>
+        <jsoup.version>1.8.2</jsoup.version>
 
         <!-- Testing Properties -->
         <regression.category>com.denimgroup.threadfix.CommunityTests</regression.category>

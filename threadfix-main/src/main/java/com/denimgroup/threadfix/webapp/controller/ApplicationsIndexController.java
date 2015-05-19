@@ -47,7 +47,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 
 
@@ -106,7 +106,7 @@ public class ApplicationsIndexController {
         if (organizations == null) {
             return failure("No organizations found.");
         } else {
-            Map<String, Object> map = newMap();
+            Map<String, Object> map = map();
 
             map.put("teams", organizations);
             map.put("canEditIds", PermissionUtils.getIdsWithPermission(Permission.CAN_MANAGE_APPLICATIONS, organizations));

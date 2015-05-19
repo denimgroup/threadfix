@@ -29,7 +29,6 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
-import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl;
 import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,9 +37,8 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.Map;
 
-import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.map;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.*;
+import static com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl.getImpl;
 import static com.denimgroup.threadfix.importer.util.JsonUtils.getJSONObject;
 import static com.denimgroup.threadfix.importer.util.JsonUtils.toJSONObjectIterable;
 
@@ -59,13 +57,13 @@ public class SonatypeRemoteProvider extends AbstractRemoteProvider {
 
     private static final String APP_PATTERN = "api/v2/applications/(.*)/reports/";
 
-    private Map<String, String>  appsMap = newMap();
+    private Map<String, String>  appsMap = map();
 
     public SonatypeRemoteProvider() {
         super(ScannerType.SONATYPE);
     }
 
-    RemoteProviderHttpUtils httpUtils = new RemoteProviderHttpUtilsImpl<>(SonatypeRemoteProvider.class);
+    RemoteProviderHttpUtils httpUtils = getImpl(SonatypeRemoteProvider.class);
 
     ////////////////////////////////////////////////////////////////////////
     //                     Get Applications
@@ -119,9 +117,12 @@ public class SonatypeRemoteProvider extends AbstractRemoteProvider {
                 }
 
             } else {
-                String body = response.getBodyAsString();
-                log.info("Contents: " + body);
-
+                if (response.getInputStream() == null) {
+                    log.info("Bad response.");
+                } else {
+                    String body = response.getBodyAsString();
+                    log.info("Contents: " + body);
+                }
                 throw new RestIOException("Invalid response " + response.getStatus() + " received from Sonatype servers, check the logs for more details.", response.getStatus());
             }
 

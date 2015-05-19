@@ -29,5 +29,5 @@ import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
  * Created by mcollins on 2/9/15.
  */
 public interface RemappingService {
-    void remapFindings(ChannelVulnerability vulnerability);
+    void remapFindings(ChannelVulnerability vulnerability, String channelName);
 }

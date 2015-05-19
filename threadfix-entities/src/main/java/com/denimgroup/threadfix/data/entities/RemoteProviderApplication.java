@@ -54,7 +54,7 @@ public class RemoteProviderApplication extends AuditableEntity  {
 
 	@Size(max = NATIVE_NAME_LENGTH, message = "{errors.maxlength} " + NATIVE_NAME_LENGTH + ".")
 	private String reportUrl;
-	
+
 	private RemoteProviderType remoteProviderType;
 	
 	private Application application;

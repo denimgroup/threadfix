@@ -174,19 +174,21 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
 
         RemoteProviderAuthenticationField field = new RemoteProviderAuthenticationField();
 
-        switch (split[1]) {
-            case "true":  field.setSecret(true);  break;
-            case "false": field.setSecret(false); break;
-            default:
-                throw new IllegalArgumentException("The second section in " + line + " should be true or false.");
+        if (split[1].equals("true")) {
+            field.setSecret(true);
+        } else if (split[1].equals("false")) {
+            field.setSecret(false);
+        } else {
+            throw new IllegalArgumentException("The second section in " + line + " should be true or false.");
         }
 
         if (split.length > 2)
-            switch (split[2]) {
-                case "true":  field.setRequired(true);  break;
-                case "false": field.setRequired(false); break;
-                default:
-                    throw new IllegalArgumentException("The third section in " + line + " should be true or false.");
+            if (split[2].equals("true")) {
+                field.setRequired(true);
+            } else if (split[2].equals("false")) {
+                field.setRequired(false);
+            } else {
+                throw new IllegalArgumentException("The third section in " + line + " should be true or false.");
             }
 
         field.setName(split[0]);

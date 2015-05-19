@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.annotations.ReportLocation;
 import com.denimgroup.threadfix.data.entities.Report;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -66,6 +67,12 @@ public interface ReportService {
     /**
      * @return List<Report>
      */
+    List<Report> loadAllNonNativeReportsByLocationType(ReportLocation location);
+
+    /**
+     * @return List<Report>
+     */
+    @Transactional
     List<Report> loadByLocationType(ReportLocation location);
 
     /**

@@ -38,6 +38,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  * Created by sgerick on 11/12/2014.
  */
@@ -64,7 +66,7 @@ public class StrutsXmlParser {
 	}
 
 	private static class XmlParser extends DefaultHandler {
-		List<StrutsPackage> strutsPackages = new ArrayList<>();
+		List<StrutsPackage> strutsPackages = list();
 		boolean bPackage = false;
 		boolean bAction = false;
 		boolean bResult = false;

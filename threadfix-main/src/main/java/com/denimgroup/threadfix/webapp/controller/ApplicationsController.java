@@ -62,6 +62,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.*;
+import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
+import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 
 
 @Controller
@@ -101,6 +103,8 @@ public class ApplicationsController {
     private DefaultConfigService defaultConfigService;
     @Autowired
     private CacheBustService cacheBustService;
+    @Autowired
+    private GenericSeverityService genericSeverityService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -189,8 +193,12 @@ public class ApplicationsController {
         map.put("defectTrackerList", defectTrackerService.loadAllDefectTrackers());
         map.put("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
 
+        // waf
         map.put("wafList", wafService.loadAll());
         map.put("wafTypeList", wafService.loadAllWafTypes());
+
+        // Generic Severities
+        map.put("genericSeverityList", genericSeverityService.loadAll());
 
         // basic information
         map.put("application", application);
@@ -222,7 +230,7 @@ public class ApplicationsController {
             map.put(permission.getCamelCase(), PermissionUtils.hasGlobalPermission(permission));
         }
 
-        return RestResponse.success(map);
+        return success(map);
     }
 
     private String getActiveTab(HttpServletRequest request, long falsePositiveCount, long numClosedVulns) {
@@ -355,9 +363,9 @@ public class ApplicationsController {
 		Map<String, Object> returnMap = addDefectModelAttributes(appId, orgId, false);
 
         if (returnMap.get(ERROR_MSG) != null) {
-            return RestResponse.failure(returnMap.get(ERROR_MSG).toString());
+            return failure(returnMap.get(ERROR_MSG).toString());
         } else {
-            return RestResponse.success(returnMap);
+            return success(returnMap);
         }
 	}
 
@@ -369,9 +377,9 @@ public class ApplicationsController {
 		Map<String, Object> returnMap = addDefectModelAttributes(appId, orgId, true);
 
         if (returnMap.get(ERROR_MSG) != null) {
-            return RestResponse.failure(returnMap.get(ERROR_MSG).toString());
+            return failure(returnMap.get(ERROR_MSG).toString());
         } else {
-            return RestResponse.success(returnMap);
+            return success(returnMap);
         }
 	}
 	
@@ -405,11 +413,11 @@ public class ApplicationsController {
                 bean.getUserName(), bean.getPassword());
 		if (dt == null) {
 			log.warn("Incorrect Defect Tracker credentials submitted.");
-			return RestResponse.failure("Authentication failed.");
+			return failure("Authentication failed.");
 		}
 		List<String> result = dt.getProductNames();
 		if (result.isEmpty() || (result.size() == 1 && result.contains("Authentication failed"))) {
-			return RestResponse.failure(JSONObject.quote(dt.getLastError()));
+			return failure(JSONObject.quote(dt.getLastError()));
 		}
 
         // ensure there are no duplicates. There's probably a better idiom
@@ -417,7 +425,7 @@ public class ApplicationsController {
 
         Collections.sort(result);
 
-		return RestResponse.success(result);
+		return success(result);
 	}
 
     @RequestMapping(value = "/{appId}/unmappedTable", method = RequestMethod.POST)
@@ -453,12 +461,12 @@ public class ApplicationsController {
         responseMap.put("numFindings", numFindings);
         responseMap.put("findingList", findingService.getUnmappedFindingTable(bean));
 
-        return RestResponse.success(responseMap);
+        return success(responseMap);
     }
 
     @JsonView(AllViews.TableRow.class)
     @RequestMapping(value = "/{appId}/cwe", method = RequestMethod.GET)
     public @ResponseBody Object getGenericVulnerabilities() throws IOException {
-        return RestResponse.success(genericVulnerabilityService.loadAll());
+        return success(genericVulnerabilityService.loadAll());
     }
 }

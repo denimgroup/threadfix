@@ -37,9 +37,10 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
-import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.enumMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 @ScanImporter(
         scannerName = ScannerDatabaseNames.DEPENDENCY_CHECK_DB_NAME,
@@ -47,12 +48,11 @@ import java.util.Map;
 )
 public class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	
-	private static Map<String, FindingKey> tagMap = new HashMap<>();
-	static {
-		tagMap.put("cwe", FindingKey.VULN_CODE);
-		tagMap.put("severity", FindingKey.SEVERITY_CODE);
-		tagMap.put("name", FindingKey.CVE);
-	}
+	private static Map<String, FindingKey> tagMap = map(
+		"cwe", FindingKey.VULN_CODE,
+		"severity", FindingKey.SEVERITY_CODE,
+		"name", FindingKey.CVE
+	);
 
     private static final String DEFAULT_VULN = "Configuration";
 
@@ -99,7 +99,7 @@ public class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	    	if ("reportDate".equals(qName)) {
 	    		getDate = true;
 	    	} else if ("vulnerability".equals(qName)) {
-	    		findingMap = new EnumMap<>(FindingKey.class);
+	    		findingMap = enumMap(FindingKey.class);
 	    		inFinding = true;
                 inDependency = false;
 	    	} else if (inFinding && tagMap.containsKey(qName)) {
@@ -283,7 +283,9 @@ public class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	    		String tempDateString = getBuilderText();
 
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
-	    			testDate = DateUtils.getCalendarFromString("MMM dd, yyyy kk:mm:ss aa", tempDateString);
+					testDate = DateUtils.getCalendarFromStringAndMultipleFormats(tempDateString,
+							"MMM dd, yyyy kk:mm:ss aa",
+							"yyyy-MM-dd'T'HH:mm:ss.SSS-Z");
 	    		}
 	    		
 	    		hasDate = testDate != null;

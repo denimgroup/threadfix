@@ -36,6 +36,9 @@ import org.xml.sax.helpers.DefaultHandler;
 import javax.annotation.Nonnull;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
+
 /**
  * 
  * @author mcollins
@@ -67,7 +70,7 @@ public class FindBugsChannelImporter extends AbstractChannelImporter {
 	}
 
 	public class FindBugsSAXParser extends HandlerWithBuilder {
-        Map<FindingKey, String> findingMap = new HashMap<>();
+        Map<FindingKey, String> findingMap = map();
 
 		private Boolean inSecurityBug         = false;
 		private Boolean getDataFlowElements   = false;
@@ -138,7 +141,7 @@ public class FindBugsChannelImporter extends AbstractChannelImporter {
 	    		 
 	    		 if ("SOURCE_LINE_GENERATED_AT".equals(atts.getValue("role"))) {
 	    			 getDataFlowElements = true;
-	    			 dataFlowElements = new LinkedList<>();
+	    			 dataFlowElements = list();
 	    			 dataFlowElements.add(getDataFlowElement(atts,0));
 	    			 dataFlowPosition = 1;
 	    		 }

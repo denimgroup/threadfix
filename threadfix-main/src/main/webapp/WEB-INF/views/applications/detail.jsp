@@ -20,6 +20,7 @@
     <cbs:cachebustscript src="/scripts/vuln-search-tree-controller.js"/>
     <cbs:cachebustscript src="/scripts/report/report-filter-controller.js"/>
 	<cbs:cachebustscript src="/scripts/scan-unmapped-finding-table-controller.js"/>
+	<cbs:cachebustscript src="/scripts/add-to-existing-defect-controller.js"/>
     <cbs:cachebustscript src="/scripts/report/vuln-summary-modal-controller.js"/>
     <c:forEach items="${ reportJsPaths }" var="reportJs">
         <script type="text/javascript" src="${ reportJs }"></script>
@@ -27,14 +28,14 @@
 </head>
 
 <body ng-controller="ApplicationDetailPageController"
-      ng-init="empty = <c:out value="${ numVulns }"/> === 0; numVulns = <c:out value="${numVulns}"/>"s
+      ng-init="empty = <c:out value="${ numVulns }"/> === 0; numVulns = <c:out value="${numVulns}"/>"
       ng-file-drop="onFileSelect($files)"
       ng-class="{ 'drag-enabled': dragEnabled }"
       id="apps">
 
     <%@ include file="/WEB-INF/views/angular-init.jspf"%>
 
-    <div class="uploadable" style="padding-top:300px"><div style="opacity:1">Drop files anywhere to upload.</div></div>
+    <div ng-if="enableOverlay" class="uploadable" style="padding-top:300px"><div style="opacity:1">Drop files anywhere to upload.</div></div>
     <div>
 
         <div id="headerDiv">
@@ -89,7 +90,7 @@
     <%@ include file="/WEB-INF/views/config/users/permissibleUsers.jsp" %>
     <%@ include file="/WEB-INF/views/defects/submitDefectForm.jsp" %>
     <%@ include file="/WEB-INF/views/applications/modals/submitGRCControl.jsp" %>
-    <%@ include file="/WEB-INF/views/defects/mergeDefectForm.jsp" %>
+    <%@ include file="/WEB-INF/views/defects/addToExistingDefectForm.jsp" %>
     <%@ include file="/WEB-INF/views/applications/forms/vulnCommentForm.jsp"%>
     <%@ include file="/WEB-INF/views/applications/forms/uploadDocForm.jsp"%>
     <%@ include file="/WEB-INF/views/applications/forms/manualFindingForm.jsp"%>

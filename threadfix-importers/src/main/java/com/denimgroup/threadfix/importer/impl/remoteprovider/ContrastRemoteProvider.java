@@ -1,19 +1,17 @@
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
 import com.denimgroup.threadfix.annotations.RemoteProvider;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
-import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RequestConfigurer;
+import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
 
 import javax.xml.bind.DatatypeConverter;
 import java.util.Calendar;
@@ -22,6 +20,8 @@ import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl.getImpl;
+import static com.denimgroup.threadfix.importer.util.JsonUtils.getJSONObject;
 import static com.denimgroup.threadfix.importer.util.JsonUtils.toJSONObjectIterable;
 
 /**
@@ -35,13 +35,17 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
             SERVICE_KEY = "Service Key",
             USERNAME = "Username",
             APPS_URL = "https://app.contrastsecurity.com/Contrast/api/applications",
-            TRACES_URL = "https://app.contrastsecurity.com/Contrast/api/traces/";
+            TRACES_URL = "https://app.contrastsecurity.com/Contrast/api/traces/",
+            EVENTS_SUMMARY_URL = "https://app.contrastsecurity.com/Contrast/api/ng/traces/",
+            TRACE_WEB_URL = "https://app.contrastsecurity.com/Contrast/static/ng/index.html#/applications/",
+            FILE_PATTERN = "@(.+?):",
+            LINE_PATTERN = ":([0-9]*)";
 
     public ContrastRemoteProvider() {
         super(ScannerType.CONTRAST);
     }
 
-    RemoteProviderHttpUtils httpUtils = new RemoteProviderHttpUtilsImpl<>(ContrastRemoteProvider.class);
+    RemoteProviderHttpUtils httpUtils = getImpl(ContrastRemoteProvider.class);
 
     ////////////////////////////////////////////////////////////////////////
     //                     Get Applications
@@ -110,7 +114,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
                 Scan scan = new Scan();
 
                 for (JSONObject object : toJSONObjectIterable(response.getBodyAsString())) {
-                    findingList.add(getFindingFromObject(object));
+                    findingList.add(getFindingFromObject(object, remoteProviderApplication.getNativeId()));
                 }
 
                 scan.setFindings(findingList);
@@ -137,12 +141,15 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
 
     }
 
-    private Finding getFindingFromObject(JSONObject object) throws JSONException {
+    private Finding getFindingFromObject(JSONObject object, String remoteAppId) throws JSONException {
 
         Map<FindingKey, String> findingMap = map (
-            FindingKey.SEVERITY_CODE, object.getString("severity"),
-            FindingKey.VULN_CODE, object.getString("rule-name")
+                FindingKey.SEVERITY_CODE, object.getString("severity"),
+                FindingKey.VULN_CODE, object.getString("rule-name")
         );
+
+        String traceId = object.getString("uuid");
+
 
         if (object.has("request") && object.getJSONObject("request").has("uri")) {
             findingMap.put(FindingKey.PATH, object.getJSONObject("request").getString("uri"));
@@ -158,9 +165,11 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
 
         Finding finding = constructFinding(findingMap);
 
+        finding.setDataFlowElements(getEventsSummary(traceId));
+
         assert finding != null : "Null finding received from constructFinding";
 
-        finding.setNativeId(object.getString("uuid"));
+        finding.setNativeId(traceId);
 
         finding.setRawFinding(object.toString(2));
 
@@ -170,9 +179,44 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
 
         finding.setAttackRequest(object.getJSONObject("request").toString(2));
 
-        finding.setUrlReference(getUrlReference(object));
+        finding.setUrlReference(TRACE_WEB_URL + remoteAppId + "/traces/default/00001/" + traceId + "/details");
 
         return finding;
+    }
+
+    private List<DataFlowElement> getEventsSummary(String traceId) {
+
+        LOG.warn("About to get trace story/static information for trace Id " + traceId);
+        List<DataFlowElement> dataFlowElementList = list();
+
+        HttpResponse response = makeRequest(EVENTS_SUMMARY_URL + traceId + "/events/summary");
+        if (response.isValid()) {
+            try {
+
+                JSONObject traceObj = getJSONObject(response.getBodyAsString());
+                int seqId = 1;
+                String startLocation, lineNoText;
+                for (JSONObject event: toJSONObjectIterable(traceObj.getString("events"))) {
+                    DataFlowElement element = new DataFlowElement();
+                    element.setSequence(seqId++);
+                    startLocation = event.getString("probableStartLocation");
+                    element.setSourceFileName(RegexUtils.getRegexResult(startLocation, FILE_PATTERN).trim());
+                    lineNoText = RegexUtils.getRegexResult(startLocation, LINE_PATTERN);
+                    if (lineNoText != null)
+                        element.setLineNumber(Integer.valueOf(lineNoText));
+                    element.setLineText(Jsoup.parse(event.getString("rawCodeRecreation")).text());
+                    dataFlowElementList.add(element);
+                }
+            } catch (JSONException e) {
+                LOG.warn("Can't parse trace " + traceId + ". Trace story response isn't valid.");
+                return dataFlowElementList;
+            }
+
+        } else {
+            LOG.warn("Trace story response isn't valid.");
+        }
+
+        return dataFlowElementList;
     }
 
     private String getParamFrom(String title) {
@@ -186,18 +230,6 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
             return null;
         }
     }
-
-    private String getUrlReference(JSONObject object) throws JSONException {
-
-        for (JSONObject link : toJSONObjectIterable(object.getJSONArray("links"))) {
-            if (link.has("rel") && "self".equals(link.get("rel"))) {
-                return link.getString("href");
-            }
-        }
-
-        return null;
-    }
-
 
     ////////////////////////////////////////////////////////////////////////
     //                             Helpers

@@ -425,7 +425,7 @@ public class DefectServiceImpl implements DefectService {
 			vulnerabilityDao.saveOrUpdate(vulnerability);
 		}
 
-		log.info("Successfully merged vulns to Defect ID" + id + ".");
+		log.info("Successfully added vulns to Defect ID " + id + ".");
 
 		return true;
 	}

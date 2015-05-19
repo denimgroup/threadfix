@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.CollectionUtils.set;
 
 /**
@@ -78,6 +79,17 @@ public class HibernateScanDao
 						fromClause
 				).setInteger("scanId", scan.getId()).uniqueResult();
 	}
+
+    @Override
+    public int deleteScanFileLocations() {
+        getSession()
+            .createQuery("update Scan s set s.fileName = null where s.fileName is not null")
+            .executeUpdate();
+
+        return getSession()
+                .createQuery("update Scan s set s.originalFileName = null where s.originalFileName is not null")
+                .executeUpdate();
+    }
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -290,6 +302,12 @@ public class HibernateScanDao
 		for (Finding finding : findings) {
 			sessionFactory.getCurrentSession().save(new DeletedFinding(finding));
 			sessionFactory.getCurrentSession().delete(finding);
+
+			for (EndpointPermission endpointPermission : finding.getEndpointPermissions()) {
+				endpointPermission.getFindingList().remove(finding);
+				sessionFactory.getCurrentSession().save(endpointPermission);
+			}
+
 		}
 		
 		findings = null;
@@ -308,7 +326,7 @@ public class HibernateScanDao
 	@Override
 	public Map<String, Object> getCountsForScans(List<Integer> ids) {
 		if (ids == null || ids.isEmpty()) {
-			return new HashMap<>();
+			return map();
 		}
 		
 		String selectStart = "(select count(*) from Vulnerability vulnerability where vulnerability.isFalsePositive = false and vulnerability.hidden = false and " +
@@ -459,4 +477,11 @@ public class HibernateScanDao
 		}
 		return (int) l;
 	}
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<String> loadScanFilenames() {
+        return sessionFactory.getCurrentSession()
+                .createQuery("select s.fileName from Scan s where s.fileName is not null").list();
+    }
 }

@@ -13,6 +13,8 @@
 
     <%@ include file="/WEB-INF/views/angular-init.jspf"%>
     <%@ include file="createMappingModal.jsp"%>
+    <%@ include file="/WEB-INF/views/successMessage.jspf" %>
+    <%@ include file="/WEB-INF/views/errorMessage.jspf"%>
 
 	<spring:url value="/organizations/{orgId}" var="orgUrl">
 		<spring:param name="orgId" value="${ scan.application.organization.id }" />
@@ -35,6 +37,13 @@
 			<a ng-click="showStatistic = !showStatistic" id="statisticButton" class="btn header-button" >{{ showStatistic ? "Hide Statistics" : "Show Statistics" }}</a>
 			<c:if test="${ canUploadScans }">
                 <a ng-click="deleteScan()" class="btn btn-danger header-button">Delete Scan</a>
+                <span ng-show="scan.fileName">
+                    <a ng-hide="scan.downloading" class="btn btn-primary header-button" ng-click="downloadScan(scan)">Download Scan</a>
+                    <a ng-show="scan.downloading" class="btn btn-primary header-button" ng-disabled>
+                        <span class="spinner"></span>
+                        Dowloading
+                    </a>
+                </span>
             </c:if>
 		</span>
 	</h2>

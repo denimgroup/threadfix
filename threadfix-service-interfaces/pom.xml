@@ -12,6 +12,19 @@
     <artifactId>threadfix-service-interfaces</artifactId>
     <description>Contains empty versions of Enterprise plugins</description>
 
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.activemq</groupId>
@@ -349,6 +362,11 @@
                 </exclusion>
             </exclusions>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.tmatesoft.svnkit</groupId>
+            <artifactId>svnkit</artifactId>
+            <version>${svnkit.version}</version>
         </dependency>
     </dependencies>
 

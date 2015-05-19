@@ -23,8 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload.fortify;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * Created by mcollins on 2/16/15.
@@ -33,8 +34,8 @@ class RegexMaps {
 
     // TODO run through more files and determine whether this method is still valuable
     // or whether we can use only the 'action' parameter and the column parsing.
-    static final Map<String, String> FACT_REGEX_MAP = new HashMap<>();
-    static final Map<String, String> SPECIAL_REGEX_MAP = new HashMap<>();
+    static final Map<String, String> FACT_REGEX_MAP = map();
+    static final Map<String, String> SPECIAL_REGEX_MAP = map();
     static {
         FACT_REGEX_MAP.put("Direct : System.Web.HttpRequest.get_Item",
                 "Request\\[\"([a-zA-Z0-9_]+)\"\\]");

@@ -33,7 +33,7 @@ import javax.validation.constraints.Size;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 @Entity
 @Table(name = "Scan")
@@ -112,6 +112,10 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
     private String filePathRoot;
     @Size(max = 255, message = "{errors.maxlength} 255.")
     private String urlPathRoot;
+    @Size(max = 32, message = "{errors.maxlength} 32.")
+    private String fileName;
+    @Size(max = 255, message = "{errors.maxlength} 255.")
+    private String originalFileName;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "applicationChannelId")
@@ -183,6 +187,24 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 
     public void setUrlPathRoot(String urlPathRoot) {
         this.urlPathRoot = urlPathRoot;
+    }
+
+    @JsonView({AllViews.FormInfo.class, AllViews.RestView2_1.class, AllViews.RestViewScanStatistic.class})
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    @JsonView({AllViews.FormInfo.class, AllViews.RestView2_1.class, AllViews.RestViewScanStatistic.class})
+    public String getOriginalFileName() {
+        return originalFileName;
+    }
+
+    public void setOriginalFileName(String originalFileName) {
+        this.originalFileName = originalFileName;
     }
 
     @OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)
@@ -526,7 +548,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
         List<Map> maps = list();
         List<Tag> tags = getApplication().getTags();
         for (Tag tag: tags) {
-            Map<String, Object> map = newMap();
+            Map<String, Object> map = map();
             map.put("id", tag.getId());
             map.put("name", tag.getName());
             maps.add(map);

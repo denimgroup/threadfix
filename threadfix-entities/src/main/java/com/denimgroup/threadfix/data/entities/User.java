@@ -31,6 +31,10 @@ import com.fasterxml.jackson.annotation.JsonView;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 @Entity
 @Table(name = "User")
@@ -64,6 +68,7 @@ public class User extends AuditableEntity {
 	private Role globalRole;
 
     private List<AccessControlTeamMap> accessControlTeamMaps;
+    private List<Group> groups;
 
     @Column(length = NAME_LENGTH, nullable = false)
     @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
@@ -250,6 +255,16 @@ public class User extends AuditableEntity {
         this.displayName = displayName;
     }
 
+    @ManyToMany(mappedBy = "users")
+    @JsonIgnore
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
+
     @Transient
     @JsonView(AllViews.TableRow.class)
 	public boolean getIsDeletable() {
@@ -285,4 +300,24 @@ public class User extends AuditableEntity {
     public String getBestName() {
         return displayName == null || displayName.isEmpty() ? name : displayName;
     }
+
+    @Transient
+    @JsonProperty("groups")
+    @JsonView(AllViews.TableRow.class)
+    public List<?> getGroupsJSON() {
+        List<Map<?, ?>> users = list();
+
+        if (this.groups != null) {
+            for (Group group : this.groups) {
+                users.add(map(
+                        "name", group.getName(),
+                        "id", group.getId()
+                ));
+            }
+        }
+
+        return users;
+    }
+
+
 }

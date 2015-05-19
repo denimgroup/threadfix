@@ -30,6 +30,9 @@ import java.util.Set;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author bbeverly
@@ -88,7 +91,7 @@ public interface UserService {
 	
 	/**
 	 * 
-	 * @param userId
+	 * @param user
 	 * @return
 	 */
 	Set<Permission> getGlobalPermissions(Integer userId);
@@ -101,27 +104,22 @@ public interface UserService {
 	 */
 	boolean canDelete(User user);
 
+	@Transactional(readOnly = false) // used to be true
+	boolean canRemoveAdminPermissions(User user);
+
 	/**
 	 * 
-	 * @param userId
-	 * @param objectIds
+	 * @param user
 	 * @return
 	 */
-	boolean canSetRoles(int userId, List<Integer> objectIds);
+	Map<Integer, Set<Permission>> getApplicationPermissions(User user);
 	
 	/**
 	 * 
-	 * @param userId
+	 * @param user
 	 * @return
 	 */
-	Map<Integer, Set<Permission>> getApplicationPermissions(Integer userId);
-	
-	/**
-	 * 
-	 * @param userId
-	 * @return
-	 */
-	Map<Integer, Set<Permission>> getOrganizationPermissions(Integer userId);
+	Map<Integer, Set<Permission>> getOrganizationPermissions(User user);
 
 	/**
 	 * 
@@ -142,16 +140,13 @@ public interface UserService {
 	 */
 	List<User> getPermissibleUsers(Integer orgId, Integer appId);
 
-    /**
-     *
-     * @param role
-     * @return
-     */
-    boolean shouldReloadUserIfRoleChanged(Role role);
-
 	void setRoleCommunity(User user);
 
 	List<User> retrievePage(int page, int numberToShow);
 
-	Long countUsers();
+	Long countUsers(String searchString);
+
+	List<User> search(String searchString, int numResults, int page);
+
+	List<User> search(HttpServletRequest request);
 }

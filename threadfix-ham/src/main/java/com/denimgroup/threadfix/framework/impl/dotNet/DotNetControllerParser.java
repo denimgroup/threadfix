@@ -30,10 +30,9 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
+import static com.denimgroup.threadfix.CollectionUtils.set;
 import static com.denimgroup.threadfix.framework.impl.dotNet.DotNetKeywords.*;
 
 /**
@@ -45,9 +44,9 @@ public class DotNetControllerParser implements EventBasedTokenizer {
 
     public static final SanitizedLogger LOG = new SanitizedLogger(DotNetControllerParser.class);
 
-    public static final Set<String> DOT_NET_BUILTIN_CONTROLLERS = new HashSet<>(Arrays.asList(
-        "ApiController", "Controller", "HubController", "HubControllerBase", "AsyncController", "BaseController"
-    ));
+    public static final Set<String> DOT_NET_BUILTIN_CONTROLLERS = set(
+            "ApiController", "Controller", "HubController", "HubControllerBase", "AsyncController", "BaseController"
+    );
 
     @Nonnull
     public static DotNetControllerMappings parse(@Nonnull File file) {
@@ -80,14 +79,14 @@ public class DotNetControllerParser implements EventBasedTokenizer {
 
     State currentState      = State.START;
     AttributeState currentAttributeState = AttributeState.START;
-    Set<String> currentAttributes = new HashSet<>();
+    Set<String> currentAttributes = set();
     String lastAttribute;
     int   currentCurlyBrace = 0, currentParen = 0, classBraceLevel = 0,
             methodBraceLevel = 0, storedParen = 0, methodLineNumber = 0;
     boolean shouldContinue = true;
     String  lastString     = null, methodName = null, twoStringsAgo = null;
-    Set<String> currentParameters = new HashSet<>();
-    Set<ModelField> parametersWithTypes = new HashSet<>();
+    Set<String> currentParameters = set();
+    Set<ModelField> parametersWithTypes = set();
 
     @Override
     public void processToken(int type, int lineNumber, String stringValue) {
@@ -211,9 +210,9 @@ public class DotNetControllerParser implements EventBasedTokenizer {
                     mappings.addAction(
                             methodName, currentAttributes, methodLineNumber,
                             lineNumber, currentParameters, parametersWithTypes);
-                    currentAttributes = new HashSet<>();
-                    currentParameters = new HashSet<>();
-                    parametersWithTypes = new HashSet<>();
+                    currentAttributes = set();
+                    currentParameters = set();
+                    parametersWithTypes = set();
                     methodName = null;
                     currentState = State.BODY;
                 }

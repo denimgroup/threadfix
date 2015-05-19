@@ -241,7 +241,22 @@ public class EditManualFindingController {
                 scanService.storeScan(scan);
             }
 
-        }
+        } else {
+			// this would be better with filter
+
+			boolean allManual = true;
+
+			for (Finding finding : dbFinding.getVulnerability().getFindings()) {
+				if (!ScannerType.MANUAL.getDbName().equals(finding.getChannelNameOrNull())) {
+					allManual = false;
+				}
+			}
+
+			if (allManual) {
+				dbFinding.getVulnerability().setGenericSeverity(
+						dbFinding.getChannelSeverity().getSeverityMap().getGenericSeverity());
+			}
+		}
 
         dbFinding.getVulnerability().setCalculatedUrlPath(dbFinding.getCalculatedUrlPath());
         dbFinding.getVulnerability().setCalculatedFilePath(dbFinding.getCalculatedFilePath());

@@ -36,5 +36,8 @@ public interface ScanMerger {
      */
     @Transactional
 	void merge(Scan scan, ApplicationChannel channel);
-	
+
+    @Transactional
+    void merge(Scan scan, ApplicationChannel applicationChannel, boolean shouldSaveScan);
+
 }

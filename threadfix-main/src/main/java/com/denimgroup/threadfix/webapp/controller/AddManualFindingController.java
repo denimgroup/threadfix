@@ -137,45 +137,11 @@ public class AddManualFindingController {
                 return FormRestResponse.failure("Form Validation failed.", result);
             } else {
                 status.setComplete();
-                return RestResponse.success("A new static manual finding has been added to application");
+                return RestResponse.success("A new " +
+                                           (isStatic ? "static" : "dynamic") +
+                                           " manual finding has been added to application");
             }
         }
     }
-
-	@RequestMapping(value = "/ajax_cwe", method = RequestMethod.POST)
-	@ResponseBody
-	public String readAjaxCWE(@RequestParam String prefix) {
-		if (prefix == null || prefix.equals(""))
-			return "";
-		List<ChannelVulnerability> cVulnList = channelVulnerabilityService.loadSuggested(prefix);
-		if (cVulnList == null)
-			return "";
-
-		StringBuilder buffer = new StringBuilder();
-		for (ChannelVulnerability gVuln : cVulnList) {
-			if (gVuln == null || gVuln.getName() == null || gVuln.getName().trim().equals(""))
-				continue;
-			buffer.append(gVuln.getName()).append('\n');
-		}
-		return buffer.toString();
-	}
-
-	@RequestMapping(value = "/ajax_url", method = RequestMethod.POST)
-	@ResponseBody
-	public String readAjaxURL(@RequestParam String hint,
-			@PathVariable("appId") int appId) {
-		List<String> sourceFileList = findingService.loadSuggested(hint, appId);
-		if (sourceFileList == null || sourceFileList.size() == 0)
-			return "";
-
-        StringBuilder buffer = new StringBuilder();
-		for (String sourceFile : sourceFileList) {
-			if (sourceFile == null || sourceFile.equals(""))
-				continue;
-			buffer.append(sourceFile).append('\n');
-		}
-		return buffer.toString();
-	}
-
 
 }

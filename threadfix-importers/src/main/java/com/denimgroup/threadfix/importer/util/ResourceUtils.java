@@ -75,7 +75,9 @@ public class ResourceUtils {
     public static <T> Iterable<String> getFileNamesInResourceDirectoryFromJarWithClass(Class<T> jarClass, String directoryName) {
         try {
             return getResourceListing(jarClass, directoryName);
-        } catch (URISyntaxException | IOException e) {
+        } catch (URISyntaxException e) {
+            throw new IllegalStateException("Scanner plugin configuration was invalid. Please modify and try again.", e);
+        } catch (IOException e) {
             throw new IllegalStateException("Scanner plugin configuration was invalid. Please modify and try again.", e);
         }
     }

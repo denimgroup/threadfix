@@ -243,6 +243,51 @@
     </div>
 </div>
 
+<!-- Permissions -->
+<div class="accordion-group">
+    <div class="accordion-heading" ng-click="showPermissions = !showPermissions">
+        <span id="showPermissions" class="icon" ng-class="{ 'icon-minus': showPermissions, 'icon-plus': !showPermissions }"></span> Authentication / Authorization
+    </div>
+    <div class="accordion-inner" ng-show="showPermissions">
+        Authentication
+        <ul class="nav nav-pills">
+            <li id="showAuthenticated"
+                ng-class="{ active: parameters.showAuthenticated }">
+                <a ng-click="parameters.showAuthenticated = !parameters.showAuthenticated; refresh()">
+                    Authenticated
+                </a>
+            </li>
+            <li id="showUnauthenticated"
+                ng-class="{ active: parameters.showUnauthenticated }">
+                <a ng-click="parameters.showUnauthenticated = !parameters.showUnauthenticated; refresh()">
+                    Unauthenticated
+                </a>
+            </li>
+            <li id="showUnknown"
+                ng-class="{ active: parameters.showUnknown }">
+                <a ng-click="parameters.showUnknown = !parameters.showUnknown; refresh()">
+                    Unknown
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="accordion-inner" ng-show="showPermissions && treeApplication.endpointPermissions && treeApplication.endpointPermissions.length">
+        Authorization
+        <ul class="nav nav-pills">
+            <li ng-repeat="permission in treeApplication.endpointPermissions"
+                id="showPermissions{{permission.name}}"
+                ng-class="{ active: parameters.permissionsList && parameters.permissionsList.indexOf(permission.name) != -1 }">
+                <a ng-click="togglePermission(permission.name)"
+                   class="endpoint-permission-filter"
+                   tooltip-popup-delay="500"
+                   tooltip="{{ permission.name }}">
+                    {{permission.name}}
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
 <!-- Aging -->
 <div class="accordion-group" ng-hide="snapshotActive">
     <div class="accordion-heading" ng-click="showDateControls = !showDateControls">
@@ -384,9 +429,9 @@
 
 <!-- Export buttons -->
 <security:authorize ifAnyGranted="ROLE_CAN_GENERATE_REPORTS">
-    <div class="accordion-group" ng-show="treeTeam || vulnSearch || treeApplication || reportId === 3 || reportId === 11">
+    <div class="accordion-group" ng-show="treeTeam || vulnSearch || treeApplication || reportId === 3 || reportId === 11 || reportId === 13">
         <div class="accordion-heading" style="text-align:center">
-            <a id="exportCSVButton" ng-click="exportCSV(reportId)" class="btn">Export CSV</a>
+            <a id="exportCSVButton" ng-click="exportCSV(reportId, DISA_STIG)" class="btn">Export CSV</a>
         </div>
     </div>
 

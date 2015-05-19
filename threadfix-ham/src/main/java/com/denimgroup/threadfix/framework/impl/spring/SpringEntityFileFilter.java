@@ -23,12 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.spring;
 
-import java.util.Arrays;
-import java.util.HashSet;
+import com.denimgroup.threadfix.framework.filefilter.ClassAnnotationBasedFileFilter;
+
+import javax.annotation.Nonnull;
 import java.util.Set;
 
-import com.denimgroup.threadfix.framework.filefilter.ClassAnnotationBasedFileFilter;
-import javax.annotation.Nonnull;
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 /**
  * This class can be used with Commons FileUtils to filter for finding Spring Entities.
@@ -44,7 +44,7 @@ class SpringEntityFileFilter extends ClassAnnotationBasedFileFilter {
 	
 	public static final SpringEntityFileFilter INSTANCE = new SpringEntityFileFilter();
 	
-	private static final Set<String> annotations = new HashSet<>(Arrays.asList("Entity", "MappedSuperclass"));
+	private static final Set<String> annotations = set("Entity", "MappedSuperclass");
 	
 	@Nonnull
     @Override

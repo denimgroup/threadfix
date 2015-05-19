@@ -29,21 +29,22 @@ import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.dao.EmptyScanDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.EmptyScan;
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.importer.interop.ChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ChannelImporterFactory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.queue.QueueSender;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.File;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
@@ -69,6 +70,8 @@ public class ScanServiceImpl implements ScanService {
     private PermissionService      permissionService      = null;
     @Autowired
     private ChannelImporterFactory channelImporterFactory = null;
+    @Autowired
+    private DefaultConfigService defaultConfigService;
 
     @Override
     public List<Scan> loadAll() {
@@ -84,6 +87,42 @@ public class ScanServiceImpl implements ScanService {
     @Transactional(readOnly = false)
     public void storeScan(Scan scan) {
         scanDao.saveOrUpdate(scan);
+    }
+
+    @Override
+    public String downloadScan(Scan scan, String fullFilePath, HttpServletResponse response) {
+
+        File scanFile = new File(fullFilePath);
+
+        response.addHeader("Content-Disposition", "attachment; filename=\""+scan.getFileName()+"\"");
+        response.setContentLength((int)scanFile.length());
+        response.setContentType("application/octet-stream");
+
+        try {
+            InputStream in = new FileInputStream(scanFile);
+            ServletOutputStream out = response.getOutputStream();
+            byte[] outputByteBuffer = new byte[65535];
+
+            int remainingSize = in.read(outputByteBuffer, 0, 65535);
+
+            // copy binary content to output stream
+            while (remainingSize != -1) {
+                out.write(outputByteBuffer, 0, remainingSize);
+                remainingSize = in.read(outputByteBuffer, 0, 65535);
+            }
+            in.close();
+            out.flush();
+            out.close();
+
+        } catch (FileNotFoundException e) {
+            return "File was not found at " + fullFilePath;
+
+        } catch (IOException e) {
+            return "There was an error reading the uploaded scan file.";
+        }
+
+        return null;
+
     }
 
     @Override
@@ -291,4 +330,35 @@ public class ScanServiceImpl implements ScanService {
         }
     }
 
+    @Override
+    public int deleteScanFileLocations() {
+
+        List<String> scanFilenames = scanDao.loadScanFilenames();
+        DefaultConfiguration defaultConfig = defaultConfigService.loadCurrentConfiguration();
+        String fileUploadLocation = defaultConfig.getFileUploadLocation();
+
+        for (String scanFilename : scanFilenames) {
+
+            if (defaultConfig.fileUploadLocationExists()) {
+                File directory = new File(fileUploadLocation);
+
+                if (directory.exists()) {
+                    File fileUploaded = new File(fileUploadLocation + File.separator + scanFilename);
+                    deleteFile(fileUploaded.getPath());
+                } else {
+                    throw new RestIOException("Directory at path:  " + fileUploadLocation + " does not exist.", -1);
+                }
+            }
+        }
+
+        return scanDao.deleteScanFileLocations();
+    }
+
+    private void deleteFile(String fileName) {
+        File file = new File(fileName);
+        if (file.exists() && !file.delete()) {
+            LOG.warn("Something went wrong trying to delete: " + fileName);
+            file.deleteOnExit();
+        }
+    }
 }

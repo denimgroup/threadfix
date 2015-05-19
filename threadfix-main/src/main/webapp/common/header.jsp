@@ -140,6 +140,9 @@
                                 <li class="normalLinks">
                                     <a id="manageUsersLink" href="<spring:url value="/configuration/users" htmlEscape="true"/>">Manage Users</a>
                                 </li>
+                                <li class="normalLinks">
+                                    <a id="manageGroupsLink" href="<spring:url value="/configuration/groups" htmlEscape="true"/>">Manage Groups</a>
+                                </li>
 							</security:authorize>
 							<security:authorize ifAnyGranted="ROLE_CAN_VIEW_ERROR_LOGS">
                                 <li class="normalLinks">

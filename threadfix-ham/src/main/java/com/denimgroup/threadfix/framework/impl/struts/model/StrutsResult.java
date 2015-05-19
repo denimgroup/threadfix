@@ -23,8 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.struts.model;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * Created by sgerick on 11/12/2014.
@@ -78,7 +79,7 @@ public class StrutsResult {
 
 	public void addParam(String name, String value) {
 		if (params == null)
-			params = new HashMap<>();
+			params = map();
 		params.put(name, value);
 	}
 

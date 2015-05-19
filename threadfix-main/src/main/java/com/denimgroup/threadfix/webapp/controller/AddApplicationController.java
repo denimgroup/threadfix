@@ -45,7 +45,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 @RestController
 @RequestMapping("/organizations/{orgId}/modalAddApp")
@@ -73,8 +73,9 @@ public class AddApplicationController {
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		dataBinder.setAllowedFields("name", "url", "defectTracker.id", "uniqueId",
                 "userName", "password", "waf.id", "projectName", "applicationCriticality.id",
-                "frameworkType", "repositoryUrl", "repositoryBranch",
-                "repositoryUserName", "repositoryPassword", "repositoryFolder", "skipApplicationMerge", "tags[*].id", "tags[*].name");
+                "frameworkType", "repositoryUrl", "repositoryBranch", "repositoryRevision",
+                "repositoryUserName", "repositoryPassword", "repositoryFolder", "repositoryType",
+                "skipApplicationMerge", "tags[*].id", "tags[*].name");
 	}
 
 	public AddApplicationController(){}
@@ -127,7 +128,7 @@ public class AddApplicationController {
 
             model.addAttribute("application", new Application());
 
-            Map<String, Object> map = newMap();
+            Map<String, Object> map = map();
 
             map.put("application", application);
             map.put("uploadScan", PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId,
@@ -158,6 +159,11 @@ public class AddApplicationController {
         }
 
         applicationService.validateAfterCreate(application, result);
+
+        if (application.getRepositoryUrl() != null && !application.getRepositoryUrl().isEmpty() &&
+                application.getRepositoryType() == null) {
+            result.rejectValue("repositoryType", null, null, "Choose either Git or SVN");
+        }
 
         if (result.hasErrors()) {
             PermissionUtils.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS,

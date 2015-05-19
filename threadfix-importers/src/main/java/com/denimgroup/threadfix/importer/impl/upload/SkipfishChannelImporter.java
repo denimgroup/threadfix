@@ -42,6 +42,7 @@ import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import static com.denimgroup.threadfix.CloseableUtils.closeQuietly;
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
@@ -100,7 +101,11 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 	 */
 	@Override
 	public Scan parseInput() {
-		try (InputStream samplesFileStream = getSampleFileInputStream()) {
+
+		InputStream samplesFileStream = null;
+
+		try {
+			samplesFileStream = getSampleFileInputStream();
 		
             List<?> map = getArrayFromSamplesFile(samplesFileStream);
 
@@ -109,21 +114,19 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 
             List<Finding> findings = getFindingsFromMap(map);
 
-            Scan scan = new Scan();
+            Scan scan = createScanWithFileNames();
             scan.setFindings(findings);
 
             scan.setApplicationChannel(applicationChannel);
             scan.setImportTime(date);
 
             return scan;
-        } catch (IOException e) {
-            log.error("Encountered IOException while parsing Skipfish scan input.", e);
         } finally {
+         	closeQuietly(samplesFileStream);
             deleteZipFile();
             deleteScanFile();
-        }
 
-        return null;
+        }
 	}
 	
 	private InputStream getSampleFileInputStream() {
@@ -385,8 +388,12 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 		if (zipFile == null) {
             return null;
         }
-		
-		try (InputStream requestInputStream = getFileFromZip(folderName + "/" + responseDataAddress + "/response.dat")) {
+
+		InputStream requestInputStream = null;
+
+		try {
+			requestInputStream = getFileFromZip(folderName + "/" + responseDataAddress + "/response.dat");
+
             if (requestInputStream != null) {
                 String responseString = getStringFromInputStream(requestInputStream);
                 if (responseString != null) {
@@ -395,8 +402,14 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
                     return date;
                 }
             }
-		} catch (IOException e) {
-			log.warn("Encountered IOException in attemptToParseDate() in SkipfishChannelImporter.", e);
+		} finally {
+			if (requestInputStream != null) {
+				try {
+					requestInputStream.close();
+				} catch (IOException e) {
+					log.warn("Encountered IOException in attemptToParseDate() in SkipfishChannelImporter.", e);
+				}
+			}
 		}
 
         return null;
@@ -406,15 +419,24 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 		if (zipFile == null)
 			return null;
 
-		try (InputStream requestInputStream = getFileFromZip(folderName + "/" + requestDataAddress + "/request.dat")) {
-            if (requestInputStream != null) {
+		InputStream requestInputStream = null;
+		try {
+			requestInputStream = getFileFromZip(folderName + "/" + requestDataAddress + "/request.dat");
+
+			if (requestInputStream != null) {
                 String requestString = getStringFromInputStream(requestInputStream);
                 if (requestString != null) {
                     return RegexUtils.getRegexResult(requestString, "Host: ([^\\n\\r]+)");
                 }
             }
-		} catch (IOException e) {
-			log.warn("IOException encountered in SkipfishChannelImporter.", e);
+		} finally {
+			if (requestInputStream != null) {
+				try {
+					requestInputStream.close();
+				} catch (IOException e) {
+					log.warn("IOException encountered in SkipfishChannelImporter.", e);
+				}
+			}
 		}
 
         return null;
@@ -468,7 +490,10 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
 	@Nonnull
     @Override
 	public ScanCheckResultBean checkFile() {
-        try (InputStream sampleFileInputStream = getSampleFileInputStream()) {
+		InputStream sampleFileInputStream = null;
+
+		try {
+			sampleFileInputStream = getSampleFileInputStream();
 
             ScanImportStatus returnValue = null;
 
@@ -497,13 +522,19 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
             }
 
             return new ScanCheckResultBean(returnValue, testDate);
-        } catch (IOException e) {
-            log.warn("IOException encountered in SkipfishChannelImporter.", e);
-            return new ScanCheckResultBean(ScanImportStatus.CONFIGURATION_ERROR, null);
         } catch (ScanFileUnavailableException e) {
             log.error("Unable to proceed because the scan file wasn't found.", e);
             return new ScanCheckResultBean(ScanImportStatus.NULL_INPUT_ERROR, null);
         } finally {
+			if (sampleFileInputStream != null) {
+				try {
+					sampleFileInputStream.close();
+				} catch (IOException e) {
+					log.warn("IOException encountered in SkipfishChannelImporter.", e);
+					return new ScanCheckResultBean(ScanImportStatus.CONFIGURATION_ERROR, null);
+				}
+			}
+
             deleteZipFile();
         }
 	}

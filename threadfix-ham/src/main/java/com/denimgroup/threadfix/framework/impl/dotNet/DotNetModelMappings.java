@@ -34,6 +34,8 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.framework.impl.model.FieldSetLookupUtils.addSuperClassFieldsToModels;
 
 /**
@@ -46,13 +48,13 @@ public class DotNetModelMappings {
     private final Collection<ViewModelParser> modelParsers;
 
     @Nonnull
-    private final Map<String, ModelFieldSet> fieldMap = new HashMap<>();
+    private final Map<String, ModelFieldSet> fieldMap = map();
 
     // This version will parse all the Java files in the directory.
     @SuppressWarnings("unchecked")
     public DotNetModelMappings(@Nonnull File rootDirectory) {
 
-        modelParsers = new ArrayList<>();
+        modelParsers = list();
 
         if (rootDirectory.exists() && rootDirectory.isDirectory()) {
 
@@ -75,7 +77,7 @@ public class DotNetModelMappings {
     }
 
     private void collapse() {
-        Map<String, String> superClassMap = new HashMap<>();
+        Map<String, String> superClassMap = map();
 
         for (ViewModelParser parser : modelParsers) {
             for (Map.Entry<String, Set<ModelField>> entry : parser.map.entrySet()) {

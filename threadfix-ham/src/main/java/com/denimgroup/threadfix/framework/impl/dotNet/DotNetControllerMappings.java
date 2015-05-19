@@ -29,6 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.framework.impl.dotNet.Action.action;
 
 /**
@@ -37,7 +38,7 @@ import static com.denimgroup.threadfix.framework.impl.dotNet.Action.action;
 public class DotNetControllerMappings {
 
     private String       controllerName = null;
-    private List<Action> actions        = new ArrayList<>();
+    private List<Action> actions        = list();
 
     public String getFilePath() {
         return filePath;

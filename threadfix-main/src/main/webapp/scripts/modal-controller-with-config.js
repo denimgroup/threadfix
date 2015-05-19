@@ -16,6 +16,8 @@ myAppModule.controller('ModalControllerWithConfig', function ($log, $scope, $roo
 
     $scope.loading = false;
 
+    var currentErrors = [];
+
     $scope.ok = function (valid) {
 
         if (valid) {
@@ -31,12 +33,21 @@ myAppModule.controller('ModalControllerWithConfig', function ($log, $scope, $roo
                         $modalInstance.close(data.object);
                     } else {
                         if (data.errorMap) {
+
+                            // this code will clear out previous errors
+                            currentErrors.forEach(function(errorKey) {
+                                $scope.object[errorKey] = undefined;
+                            });
+
+                            currentErrors = [];
+
                             for (var index in data.errorMap) {
                                 if (data.errorMap.hasOwnProperty(index)) {
 
                                     if (data.errorMap[index] === 'errors.self.certificate') {
                                         $scope.showKeytoolLink = true;
                                     } else {
+                                        currentErrors.push(index + "_error");
                                         $scope.object[index + "_error"] = data.errorMap[index];
                                     }
                                 }

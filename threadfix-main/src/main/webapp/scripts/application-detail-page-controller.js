@@ -1,8 +1,11 @@
-var myAppModule = angular.module('threadfix')
+var myAppModule = angular.module('threadfix');
 
 myAppModule.controller('ApplicationDetailPageController', function ($scope, $window, $rootScope, tfEncoder) {
 
     $scope.dragEnabled = true;
+
+    // too many IE problems
+    $scope.disableOverlay = !~navigator.userAgent.indexOf("ie");
 
     $scope.$on('dragOff', function() {
         $scope.dragEnabled = false;
@@ -10,6 +13,10 @@ myAppModule.controller('ApplicationDetailPageController', function ($scope, $win
 
     $scope.$on('dragOn', function() {
         $scope.dragEnabled = true;
+    });
+
+    $scope.$on('downloadScanFail', function(event, errorMessage) {
+        $scope.errorMessage = errorMessage;
     });
 
     $scope.onFileSelect = function($files) {

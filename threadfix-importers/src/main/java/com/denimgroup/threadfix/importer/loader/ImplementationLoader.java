@@ -30,7 +30,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * Created by mac on 11/18/14.
@@ -39,8 +39,24 @@ public class ImplementationLoader<A extends Annotation, C> {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(ImplementationLoader.class);
 
-    private Map<String, Class<?>> classMap = newMap();
+    private Map<String, Class<?>> classMap = map();
     private final Class<C> concreteClass;
+
+    // convenience method to avoid type annotations
+    // thanks Java
+    public static <A extends Annotation, C> ImplementationLoader<A, C> getLoader(
+            Class<A> annotationClass,
+            Class<C> concreteClass,
+            String packageName,
+            AnnotationKeyGenerator<A> keyGenerator
+    ) {
+        return new ImplementationLoader<A, C>(
+                annotationClass,
+                concreteClass,
+                packageName,
+                keyGenerator
+        );
+    }
 
     public ImplementationLoader(Class<A> annotationClass,
                                 Class<C> concreteClass,
@@ -62,6 +78,7 @@ public class ImplementationLoader<A extends Annotation, C> {
     public C getImplementation(String key) {
         Class<?> channelImporterClass = classMap.get(key);
 
+        Exception exception;
         try {
             if (channelImporterClass == null) {
                 throw new IllegalStateException("Got null class for key " + key);
@@ -79,10 +96,15 @@ public class ImplementationLoader<A extends Annotation, C> {
                 throw new IllegalStateException(maybeClass +
                         " didn't implement " + concreteClass + ". Fix your code and try again.");
             }
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            LOG.error("Encountered exception while loading classes.", e);
-            throw new IllegalStateException(e);
+        } catch (InstantiationException e) {
+            exception = e;
+        } catch (IllegalAccessException e) {
+            exception = e;
+        } catch (InvocationTargetException e) {
+            exception = e;
         }
+        LOG.error("Encountered exception while loading classes.", exception);
+        throw new IllegalStateException(exception);
     }
 
 }

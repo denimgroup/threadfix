@@ -109,8 +109,18 @@
                 </td>
             </tr>
             <tr ng-show="sourceCodeDisplay">
+                <td class="right-align">Source Code Repository Type</td>
+                <td class="left-align">
+                    <input type="radio" name="repositoryType" ng-model="object.repositoryType" value="GIT"> Git
+                    <input type="radio" name="repositoryType" ng-model="object.repositoryType" value="SVN"> SVN
+                </td>
+                <td>
+                    <span id="repositoryTypeServerError" class="errors" ng-show="object.repositoryType_error"> {{ object.repositoryType_error }}</span>
+                </td>
+            </tr>
+            <tr ng-show="sourceCodeDisplay">
                 <td class="right-align">Source Code URL</td>
-                <td class="left-align" >
+                <td class="left-align">
                     <input name="repositoryUrl"
                            type='url' id="repositoryUrl"
                            maxlength="255" ng-model="object.repositoryUrl"/>
@@ -122,12 +132,21 @@
                 </td>
             </tr>
             <tr ng-show="sourceCodeDisplay">
-                <td>Source Code Revision</td>
+                <td>Source Code Branch</td>
                 <td>
-                    <input type="text" id="repositoryBranch" ng-model="object.repositoryBranch" maxlength="250" name="repositoryBranch"/>
+                    <input type="text" id="repositoryBranch" ng-model="object.repositoryBranch" maxlength="80" name="repositoryBranch"/>
                 </td>
                 <td>
-                    <span id="sourceRevisionLengthError" class="errors" ng-show="form.repositoryBranch.$dirty && form.repositoryBranch.$error.maxlength">Maximum length is 250.</span>
+                    <span id="sourceBranchLengthError" class="errors" ng-show="form.repositoryBranch.$dirty && form.repositoryBranch.$error.maxlength">Maximum length is 80.</span>
+                </td>
+            </tr>
+            <tr ng-show="sourceCodeDisplay">
+                <td>Source Code Revision</td>
+                <td>
+                    <input type="text" id="repositoryRevision" ng-model="object.repositoryRevision" maxlength="80" name="repositoryRevision"/>
+                </td>
+                <td>
+                    <span id="sourceRevisionLengthError" class="errors" ng-show="form.repositoryRevision.$dirty && form.repositoryRevision.$error.maxlength">Maximum length is 80.</span>
                 </td>
             </tr>
             <tr ng-show="sourceCodeDisplay">

@@ -5,6 +5,34 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
     var reportExporter = {};
     var browerErrMsg = "Sorry, your browser does not support this feature. Please upgrade IE version or change to Chrome which is recommended.";
 
+    reportExporter.exportScan = function(data, contentType, fileName) {
+
+        $timeout(function() {
+            var blob = new Blob([data], { type: contentType });
+
+            // IE <10, FileSaver.js is explicitly unsupported
+            if (checkOldIE()) {
+                var success = false;
+                if (document.execCommand) {
+                    var oWin = window.open("about:blank", "_blank");
+            //        oWin.document.open("application/csv", "replace");
+                    oWin.document.charset = "utf-8";
+                    oWin.document.write('sep=,\r\n' + data);
+                    oWin.document.close();
+                    success = oWin.document.execCommand('SaveAs', true, fileName);
+                    oWin.close();
+                }
+
+                if (!success)
+                    alert(browerErrMsg);
+                return;
+            }
+
+            // Else, using saveAs of FileSaver.js
+            saveAs(blob, fileName);
+        }, 200);
+    };
+
     reportExporter.exportCSV = function(data, contentType, fileName) {
 
         $timeout(function() {
@@ -41,7 +69,9 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
         // IE <10, unsupported
          return (typeof navigator !== "undefined" &&
             /MSIE [1-9]\./.test(navigator.userAgent));
-    }
+    };
+
+    reportExporter.checkOldIE = checkOldIE;
 
     var selectSvg = function(svgId) {
         var svg = d3.select("svg");
@@ -53,7 +83,7 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
             $log.info(d3.select(this).attr("id"));
         });
         return svg;
-    }
+    };
 
     reportExporter.exportPDFSvg = function(d3, svg, width, height, name, isPDF) {
         var node = svg
@@ -123,6 +153,7 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
 
         //Retrieving table data
         vulnSearchParameterService.updateParameters($scope, parameters);
+        var isDISASTIG = parameters.isDISASTIG;
 
         $http.post(tfEncoder.encode("/reports/search/export/pdf"), parameters).
             success(function(data, status, headers, config) {
@@ -135,7 +166,7 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
                         element.vulnCount = info.vulnCount;
                         exportList.push(element);
                     });
-                    $scope.exportVulnTree = vulnTreeTransformer.transform(exportList, parameters.owasp);
+                    $scope.exportVulnTree = vulnTreeTransformer.transform(exportList, parameters.owasp, isDISASTIG ? $scope.DISA_STIG : undefined);
                     //$scope.$apply();
 
                     reportExporter.exportPDFTableFromId($scope, exportInfo, null, function() {
@@ -267,7 +298,7 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
 
             var table = d3.select("#" + elementId)[0][0];
             pdf.fromHTML(table, 15, 15, {
-                'width': 200,
+                'width': 180,
                 'elementHandlers': specialElementHandlers
             });
         }
@@ -376,8 +407,10 @@ threadfixModule.factory('reportConstants', function() {
 
     var reportConstants = {};
 
-    reportConstants.vulnTypeColorList = ["#014B6E", "#458A37", "#EFD20A", "#F27421", "#F7280C"];
-    reportConstants.vulnTypeTextColorList = ["#688c9d", "#458A37", "#EFD20A", "#F27421", "#F7280C"];
+    reportConstants.vulnTypeColorList = ["#014B6E", "#458A37", "#EFD20A", "#F27421", "#F7280C", "#C2A677",
+        "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd" ];
+    reportConstants.vulnTypeTextColorList = ["#688c9d", "#458A37", "#EFD20A", "#F27421", "#F7280C", "#C2A677",
+        "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd" ];
     reportConstants.vulnTypeList = ["Info", "Low", "Medium", "High", "Critical"];
     reportConstants.vulnTypeColorMap = {
         Info: {
@@ -399,7 +432,28 @@ threadfixModule.factory('reportConstants', function() {
         Critical:  {
             graphColor: reportConstants.vulnTypeColorList[4],
             textColor: reportConstants.vulnTypeTextColorList[4]
+        },
+        Old: {
+            graphColor: reportConstants.vulnTypeColorList[5],
+            textColor: reportConstants.vulnTypeTextColorList[5]
+        },
+        Closed: {
+            graphColor: reportConstants.vulnTypeColorList[6],
+            textColor: reportConstants.vulnTypeTextColorList[6]
+        },
+        Resurfaced: {
+            graphColor: reportConstants.vulnTypeColorList[7],
+            textColor: reportConstants.vulnTypeTextColorList[7]
+        },
+        New: {
+            graphColor: reportConstants.vulnTypeColorList[8],
+            textColor: reportConstants.vulnTypeTextColorList[8]
+        },
+        Total: {
+            graphColor: reportConstants.vulnTypeColorList[9],
+            textColor: reportConstants.vulnTypeTextColorList[9]
         }
+
     };
     reportConstants.reportTypes = {
         trending: {

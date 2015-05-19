@@ -45,7 +45,8 @@ import java.net.URL;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.util.DefectTrackersPropertiesHolder.showField;
 
 /**
  * Created by stran on 3/25/14.
@@ -245,31 +246,44 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
     private List<DynamicFormField> convertToGenericField(List<AttributeDefinition> attributeDefinitions) {
         List<DynamicFormField> dynamicFormFields = list();
         String type;
+        int ignoredFieldslength = 0;
+
         for (AttributeDefinition attr : attributeDefinitions) {
-            DynamicFormField genericField = new DynamicFormField();
-            genericField.setActive(true);
-            genericField.setEditable(!attr.isReadOnly());
-            genericField.setLabel(attr.getName());
-            genericField.setName(attr.getName());
-            type = attr.getRelationType();
-            genericField.setType(type);
-            if ("number".equals(type)) {
-                genericField.setStep("any");
-                genericField.setMinValue(0);
+            if (attr.isRequired() || showField(VersionOneDefectTracker.class, attr.getName())) {
+
+                DynamicFormField genericField = new DynamicFormField();
+                genericField.setActive(true);
+                genericField.setEditable(!attr.isReadOnly());
+                genericField.setLabel(attr.getName());
+                genericField.setName(attr.getName());
+                type = attr.getRelationType();
+                genericField.setType(type);
+                if ("number".equals(type)) {
+                    genericField.setStep("any");
+                    genericField.setMinValue(0);
+                }
+
+                genericField.setRequired(attr.isRequired());
+                genericField.setSupportsMultivalue(attr.isMultiValue());
+                genericField.setOptionsMap(getFieldOptions(attr));
+
+                dynamicFormFields.add(genericField);
+            } else {
+                LOG.debug("Ignoring field " + attr.getName());
+                ignoredFieldslength++;
             }
+        }
 
-            genericField.setRequired(attr.isRequired());
-            genericField.setSupportsMultivalue(attr.isMultiValue());
-            genericField.setOptionsMap(getFieldOptions(attr));
-
-            dynamicFormFields.add(genericField);
+        if (ignoredFieldslength > 0) {
+            LOG.info("Ignored " + ignoredFieldslength + " VersionOne fields due to custom.properties configuration.");
+            LOG.info("To see which fields were ignored, enable debug level logging.");
         }
 
         return dynamicFormFields;
     }
 
     private Map<String, String> getFieldOptions(AttributeDefinition attr) {
-        Map<String, String> optionMap = newMap();
+        Map<String, String> optionMap = map();
         List<String> options;
 
         if (attr.getRelationType() != null && attr.getRelationType().equals("select")) {

@@ -1,4 +1,4 @@
-8/6/2014 11:45:00
+5/8/2015 11:45:00
 type.info,,
 WhiteHat Sentinel
 type.vulnerabilities,,
@@ -24,7 +24,6 @@ Debug Enabled,Debug Enabled,489
 Denial of Service: ReadFile,Denial of Service: ReadFile,400
 Denial of Service: ReadLine,Denial of Service: ReadLine,400
 Denial of Service: Regex,Denial of Service: Regex,400
-Directory Indexing,Directory Indexing,538
 EMail Injection,EMail Injection,74
 Excessive Environment Permissions,Excessive Environment Permissions,276
 General Injection,General Injection,74
@@ -120,9 +119,7 @@ Unsecured Session Cookie,Unsecured Session Cookie,614
 Unvalidated Automatic Library Activation,Unvalidated Automatic Library Activation,470
 Unverified SSL Host,Unverified SSL Host,319
 Url Redirect Abuse,Url Redirect Abuse,601
-Abuse of Functionality,Abuse of Functionality,840
 Brute Force,Brute Force,307
-Credential/Session Prediction,Credential/Session Prediction,384
 Cross-Site Request Forgery,Cross-Site Request Forgery,352
 Denial of Service,Denial of Service,400
 Insecure Indexing,Insecure Indexing,548
@@ -130,14 +127,12 @@ Insufficient Anti-automation,Insufficient Anti-automation,799
 Insufficient Authentication,Insufficient Authentication,287
 Insufficient Authorization,Insufficient Authorization,285
 Insufficient Password Recovery,Insufficient Password Recovery,640
-Insufficient Process Validation,Insufficient Process Validation,841
 Insufficient Session Expiration,Insufficient Session Expiration,613
 Session Fixation,Session Fixation,384
 Application Misconfiguration,Application Misconfiguration,16
 Buffer Overflow,Buffer Overflow,120
 Content Spoofing,Content Spoofing,290
 Cross-Site Scripting,Cross-Site Scripting,79
-Directory Indexing,Directory Indexing,548
 Fingerprinting,Fingerprinting,205
 Format String,Format String,134
 HTTP Request Smuggling,HTTP Request Smuggling,444
@@ -167,7 +162,6 @@ XML Attribute Blowup,XML Attribute Blowup,91
 XML Entity Expansion ,XML Entity Expansion ,91
 XML External Entities,XML External Entities,91
 XML Injection,XML Injection,91
-XPath Injection,XPath Injection,91
 XQuery Injection,XQuery Injection,91
 Autocomplete Attribute,Autocomplete Attribute,525
 Insufficient Password Aging,Insufficient Password Aging,263
@@ -179,3 +173,22 @@ Persistent Session Cookie,Persistent Session Cookie,539
 Insufficient Cross-domain Configuration,Insufficient Cross-domain Configuration,352
 Invalid HTTP Method Usage,Invalid HTTP Method Usage,16
 Personally Identifiable Information,Personally Identifiable Information,359
+Insecure Data Storage: Unencrypted Password,Insecure Data Storage: Unencrypted Password,311
+Insecure Data Storage: Unencrypted SSN,Insecure Data Storage: Unencrypted SSN,311
+Disclosure: Hardcoded Password,Disclosure: Hardcoded Password,259
+Injection: Unknown Interpreter,Injection: Unknown Interpreter,74
+Injection: HTTP Response Splitting,Injection: HTTP Response Splitting,113
+Cryptography: Insecure Digest,Cryptography: Insecure Digest,327
+Insecure Data Storage: Unencrypted CCN,Insecure Data Storage: Unencrypted CCN,311
+Cryptography: Improper Pseudo-Random Number Generator Usage,Cryptography: Improper Pseudo-Random Number Generator Usage,327
+Injection: Mail Command,Injection: Mail Command,88
+Insufficient Authentication: Basic Authentication Usage,Insufficient Authentication: Basic Authentication Usage,592
+Disclosure: Cleartext Password,Disclosure: Cleartext Password,312
+Application Misconfiguration: Global Error Handling Disabled,Application Misconfiguration: Global Error Handling Disabled,388
+Application Misconfiguration: Exposed Axis Administration Servlet,Application Misconfiguration: Exposed Axis Administration Servlet,16
+type.severities,,,
+note,note,1,1
+critical,critical,5,5
+high,high,4,4
+medium,medium,3,3
+low,low,2,2

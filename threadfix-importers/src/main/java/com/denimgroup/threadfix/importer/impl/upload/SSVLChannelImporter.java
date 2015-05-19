@@ -47,11 +47,12 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.importer.util.IntegerUtils.getPrimitive;
 
 @ScanImporter(
         scannerName = ScannerDatabaseNames.SSVL_DB_NAME,
@@ -76,17 +77,18 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 
 		Calendar lastDate = null;
 		
-		private boolean getText = false;
+		private boolean getText = false, inFinding = false;
 		private String description = null, longDescription = null;
 
-		private List<DataFlowElement> dataFlowElementList = list();
-		private DataFlowElement lastDataFlowElement = null;
+		List<DataFlowElement> currentDataFlowElements = list();
+		DataFlowElement currentDataFlowElement = new DataFlowElement();
+		boolean getLineText = false;
 		
-		private Map<FindingKey, String> findingMap = new HashMap<>();
+		private Map<FindingKey, String> findingMap = map();
+		StringBuilder currentFindingText = new StringBuilder();
 					    
 	    public void add(Finding finding) {
 			if (finding != null) {
-	    		finding.setIsStatic(false);
 	    		saxFindingList.add(finding);
     		}
 	    }
@@ -94,19 +96,35 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 	    ////////////////////////////////////////////////////////////////////
 	    // Event handlers.
 	    ////////////////////////////////////////////////////////////////////
-	    
 	    @Override
 		public void startElement (String uri, String name,
 				      String qName, Attributes atts)
 	    {
-	    	switch (qName) {
-	    		case "Vulnerabilities"    : parseDate(atts);            break;
-	    		case "Vulnerability"      : parseTypeAndSeverity(atts); break;
-	    		case "Finding"            : parseNativeId(atts);        break;
-	    		case "SurfaceLocation"    : parseSurfaceLocation(atts); break;
-	    		case "FindingDescription" : getText = true;             break;
-	    		case "LongDescription"    : getText = true;             break;
-	    	}
+			if (qName.equals("Vulnerabilities")) {
+				parseDate(atts);
+			} else if (qName.equals("Vulnerability")) {
+				parseTypeAndSeverity(atts);
+			} else if (qName.equals("Finding")) {
+				parseNativeId(atts);
+				inFinding = true;
+			} else if (qName.equals("SurfaceLocation")) {
+				parseSurfaceLocation(atts);
+			} else if (qName.equals("FindingDescription")) {
+				getText = true;
+			} else if (qName.equals("LongDescription")) {
+				getText = true;
+			} else if (qName.equals("DataFlowElement")) {
+				currentDataFlowElement.setSourceFileName(atts.getValue("SourceFileName"));
+				currentDataFlowElement.setLineNumber(getPrimitive(atts.getValue("LineNumber")));
+				currentDataFlowElement.setColumnNumber(getPrimitive(atts.getValue("ColumnNumber")));
+				currentDataFlowElement.setSequence(getPrimitive(atts.getValue("Sequence")));
+			} else if (qName.equals("LineText")) {
+				getLineText = true;
+			}
+
+			if (inFinding) {
+				currentFindingText.append(makeTag(name, qName, atts));
+			}
 	    }
 	    
 	    private void parseDate(Attributes atts) {
@@ -122,6 +140,7 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 	    private void parseNativeId(Attributes atts) {
 			String nativeID = atts.getValue("NativeID");
 			findingMap.put(FindingKey.NATIVE_ID, nativeID);
+			findingMap.put(FindingKey.SOURCE_FILE_NAME, atts.getValue("SourceFileName"));
 			lastDate = DateUtils.getCalendarFromString(FINDING_DATE_FORMAT, atts.getValue("IdentifiedTimestamp"));
 	    }
 	    
@@ -151,13 +170,26 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 	    @Override
 		public void endElement (String uri, String name, String qName)
 	    {
-	    	switch (qName) {
-	    		case "Finding"            : finalizeFinding();         break;
-	    		case "LineText"           : addLineText();             break;
-	    		case "DataFlowElement"    : finalizeDataFlowElement(); break;
-				case "LongDescription"    : addLongDescription();      break;
-				case "FindingDescription" : addDescription();          break;
-	    	}
+			if (inFinding) {
+				currentFindingText.append(makeEndTag(name, qName));
+			}
+
+			if (qName.equals("Finding")) {
+				finalizeFinding();
+				inFinding = false;
+			} else if (qName.equals("LongDescription")) {
+				addLongDescription();
+			} else if (qName.equals("FindingDescription")) {
+				addDescription();
+			} else if (qName.equals("LineText")) {
+				String builderText = getBuilderText();
+				builderText = builderText == null ? null : builderText.trim();
+				currentDataFlowElement.setLineText(builderText);
+				getLineText = false;
+			} else if (qName.equals("DataFlowElement")) {
+				currentDataFlowElements.add(currentDataFlowElement);
+				currentDataFlowElement = new DataFlowElement();
+			}
 	    }
 
 		private void addLongDescription() {
@@ -165,21 +197,6 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 			getText = false;
 		}
 
-		private void finalizeDataFlowElement() {
-			if (lastDataFlowElement != null) {
-				lastDataFlowElement.setLineText(getBuilderText());
-				dataFlowElementList.add(lastDataFlowElement);
-			}
-		}
-
-		private void addLineText() {
-			if (lastDataFlowElement != null) {
-				lastDataFlowElement.setLineText(getBuilderText());
-			}
-			
-			getText = false;
-		}
-		
 		private void addDescription() {
 			description = getBuilderText();
 			getText = false;
@@ -196,17 +213,25 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 				if (genericVulnerability != null && genericVulnerability.getName() != null) {
 					findingMap.put(FindingKey.VULN_CODE, genericVulnerability.getName());
 				}
+
+				findingMap.put(FindingKey.RAWFINDING, currentFindingText.toString());
+
+				currentFindingText.setLength(0);
 			
 				Finding finding = constructFinding(findingMap);
+
                 if (finding != null) {
+					if (!currentDataFlowElements.isEmpty()) {
+						finding.setDataFlowElements(currentDataFlowElements);
+						currentDataFlowElements = list();
+						finding.setIsStatic(true);
+					} else {
+						finding.setIsStatic(false);
+					}
+
 					finding.setScannedDate(lastDate);
 					finding.setNativeId(findingMap.get(FindingKey.NATIVE_ID));
 
-                    if (!dataFlowElementList.isEmpty()) {
-                        finding.setIsStatic(true);
-                        finding.setDataFlowElements(dataFlowElementList);
-                        dataFlowElementList = list();
-                    }
                     if (longDescription != null) {
                         finding.setLongDescription(longDescription);
                     }
@@ -216,7 +241,7 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 
                     add(finding);
                 }
-				findingMap = new HashMap<>();
+				findingMap = map();
 				description = null;
 				longDescription = null;
 			}
@@ -225,9 +250,13 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 
 		@Override
 		public void characters (char ch[], int start, int length) {
-	    	if (getText) {
+	    	if (getText || getLineText) {
 	    		addTextToBuilder(ch, start, length);
 	    	}
+
+			if (inFinding) {
+				currentFindingText.append(ch, start, length);
+			}
 	    }
 	}
 	
@@ -303,10 +332,11 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 		public void startElement (String uri, String name,
 				      String qName, Attributes atts)
 	    {
-	    	switch (qName) {
-	    		case "Vulnerabilities" : parseDate(atts);    break;
-	    		case "Vulnerability"   : hasFindings = true; break;
-	    	}
+			if (qName.equals("Vulnerabilities")) {
+				parseDate(atts);
+			} else if (qName.equals("Vulnerability")) {
+				hasFindings = true;
+			}
 	    }
 	    
 	    private void parseDate(Attributes atts) {

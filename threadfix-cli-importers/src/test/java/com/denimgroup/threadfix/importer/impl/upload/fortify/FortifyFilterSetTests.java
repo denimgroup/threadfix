@@ -28,7 +28,6 @@ import org.junit.Test;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
 
 /**
  * Created by mcollins on 3/5/15.
@@ -73,7 +72,7 @@ public class FortifyFilterSetTests {
         assert "Low".equals(result) : "Got " + result + " instead of Low.";
     }
 
-    Map<VulnKey, String> emptyMap = newMap();
+    Map<VulnKey, String> emptyMap = map();
 
     @Test
     public void testImpactAndLikelihoodFilters() {

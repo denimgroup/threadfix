@@ -42,6 +42,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.map;
+
 /**
  * This class currently handles JSON output from either the flat JSONArray version
  * or the JSONObject version with the date and other information included.
@@ -64,7 +66,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 	boolean hasFindings = false, correctFormat = false, hasDate = false;
 	
 	// This is a hybrid confidence / vuln type mix. We may not end up keeping this.
-	private static final Map<String, Integer> SEVERITIES_MAP = new HashMap<>();
+	private static final Map<String, Integer> SEVERITIES_MAP = map();
 	static {
 		SEVERITIES_MAP.put("Cross Site Scripting", 3);
 		SEVERITIES_MAP.put("Response Splitting", 2);
@@ -90,7 +92,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 	}
 	
 	// This is a hybrid confidence / vuln type mix. We may not end up keeping this.
-	private static final Map<String, Integer> CONFIDENCE_MAP = new HashMap<>();
+	private static final Map<String, Integer> CONFIDENCE_MAP = map();
 	static {
 		CONFIDENCE_MAP.put("High", 2);
 		CONFIDENCE_MAP.put("Medium", 1);
@@ -127,9 +129,9 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 			return null;
 		}
 
-        Map<FindingKey, String> findingMap = new HashMap<>();
-		Scan scan = new Scan();
-		scan.setFindings(new ArrayList<Finding>());
+        Map<FindingKey, String> findingMap = map();
+        Scan scan = createScanWithFileNames();
+        scan.setFindings(new ArrayList<Finding>());
 		scan.setApplicationChannel(applicationChannel);
 		
 		boolean isVersion2 = false;

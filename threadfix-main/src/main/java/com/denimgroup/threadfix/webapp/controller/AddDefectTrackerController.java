@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.DefectTrackerService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
@@ -33,8 +34,6 @@ import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -57,8 +56,8 @@ public class AddDefectTrackerController {
 	private DefectTrackerService defectTrackerService;
 
 	public AddDefectTrackerController(){}
-	
-	private final Log log = LogFactory.getLog(AddDefectTrackerController.class);
+
+	private static final SanitizedLogger log = new SanitizedLogger(AddDefectTrackerController.class);
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {

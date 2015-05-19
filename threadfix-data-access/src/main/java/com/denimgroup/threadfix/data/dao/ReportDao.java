@@ -49,4 +49,5 @@ public interface ReportDao extends GenericNamedObjectDao<Report> {
 
     void delete(Integer reportId);
 
+    List<Report> retrieveAllNonNativeReportsByLocationType(ReportLocation location);
 }

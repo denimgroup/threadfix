@@ -32,6 +32,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import javax.annotation.Nonnull;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.framework.impl.dotNet.DotNetPathCleaner.cleanStringFromCode;
 
 /**
@@ -42,7 +43,7 @@ public class DotNetEndpointGenerator implements EndpointGenerator {
     private final List<DotNetControllerMappings> dotNetControllerMappings;
     private final DotNetRouteMappings            dotNetRouteMappings;
     private final DotNetModelMappings            dotNetModelMappings;
-    private final List<Endpoint> endpoints = new ArrayList<>();
+    private final List<Endpoint> endpoints = list();
 
     public static final SanitizedLogger LOG = new SanitizedLogger(DotNetEndpointGenerator.class);
 

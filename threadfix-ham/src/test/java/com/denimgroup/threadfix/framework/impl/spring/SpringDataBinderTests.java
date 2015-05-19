@@ -32,11 +32,10 @@ import com.denimgroup.threadfix.framework.util.java.EntityMappings;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
+import static com.denimgroup.threadfix.CollectionUtils.set;
 import static org.junit.Assert.assertTrue;
 
 // TODO add more tests?
@@ -44,9 +43,9 @@ public class SpringDataBinderTests {
 
     File editAppController = ResourceManager.getSpringFile("databinder/EditApplicationController2.java");
 
-    Set<String> defaultParameters = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("name", "url", "defectTracker.id", "userName",
+    Set<String> defaultParameters = Collections.unmodifiableSet(set("name", "url", "defectTracker.id", "userName",
             "password", "waf.id", "projectName", "projectRoot", "applicationCriticality.id",
-            "uniqueId", "organization.id", "frameworkType", "repositoryUrl", "repositoryFolder")));
+            "uniqueId", "organization.id", "frameworkType", "repositoryUrl", "repositoryFolder"));
 
     private SpringDataBinderParser getParser(File file) {
         SpringDataBinderParser parser = new SpringDataBinderParser();
@@ -103,9 +102,9 @@ public class SpringDataBinderTests {
         SpringDataBinderParser dataBinderParser = new SpringDataBinderParser();
         EventBasedTokenizerRunner.run(editAppController, dataBinderParser);
 
-        Set<String> acceptableParameters = new HashSet<>(Arrays.asList("name", "url", "defectTracker.id", "userName",
+        Set<String> acceptableParameters = set("name", "url", "defectTracker.id", "userName",
                 "password", "waf.id", "projectName", "projectRoot", "applicationCriticality.id", "orgId", "appId",
-                "uniqueId", "organization.id", "frameworkType", "repositoryUrl", "repositoryFolder"));
+                "uniqueId", "organization.id", "frameworkType", "repositoryUrl", "repositoryFolder");
 
         for (SpringControllerEndpoint endpoint : endpointSet) {
 

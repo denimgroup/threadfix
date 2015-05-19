@@ -24,11 +24,12 @@
 package com.denimgroup.threadfix.service.waf;
 
 import com.denimgroup.threadfix.annotations.WebApplicationFirewall;
-import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.WafType;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.data.entities.GenericVulnerability.*;
 
 /**
  * @author bbeverly
@@ -56,20 +57,19 @@ public class SnortGenerator extends RealTimeProtectionGenerator {
 	public static final String PAYLOAD_FORMAT_STRING_INJECTION = "\\x25";
 	public static final String PAYLOAD_EVAL_INJECTION = "[\\x3B\\x7C\\x26\\x3E\\x60]";
 
-	protected static final Map<String, String> PAYLOAD_MAP = new HashMap<>();
-	static {
-		PAYLOAD_MAP.put(GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, PAYLOAD_XSS);
-		PAYLOAD_MAP.put(GenericVulnerability.CWE_SQL_INJECTION, PAYLOAD_SQL_INJECTION);
-		PAYLOAD_MAP.put(GenericVulnerability.CWE_PATH_TRAVERSAL, PAYLOAD_PATH_TRAVERSAL);
-		PAYLOAD_MAP.put(GenericVulnerability.CWE_HTTP_RESPONSE_SPLITTING, PAYLOAD_HTTP_RESPONSE_SPLITTING);
-		PAYLOAD_MAP.put(GenericVulnerability.CWE_XPATH_INJECTION, PAYLOAD_XPATH_INJECTION);
-		PAYLOAD_MAP.put(GenericVulnerability.CWE_DIRECTORY_INDEXING, PAYLOAD_DIRECTORY_INDEXING);
-		PAYLOAD_MAP.put(GenericVulnerability.CWE_LDAP_INJECTION, PAYLOAD_LDAP_INJECTION);
-		PAYLOAD_MAP.put(GenericVulnerability.CWE_OS_COMMAND_INJECTION, PAYLOAD_OS_COMMAND_INJECTION);
-		PAYLOAD_MAP.put(GenericVulnerability.CWE_FORMAT_STRING_INJECTION, PAYLOAD_FORMAT_STRING_INJECTION);
-		PAYLOAD_MAP.put(GenericVulnerability.CWE_DIRECT_REQUEST, PAYLOAD_DIRECTORY_INDEXING);
-		PAYLOAD_MAP.put(GenericVulnerability.CWE_EVAL_INJECTION, PAYLOAD_EVAL_INJECTION);
-	}
+	protected static final Map<String, String> PAYLOAD_MAP = map(
+			CWE_CROSS_SITE_SCRIPTING, PAYLOAD_XSS,
+			CWE_SQL_INJECTION, PAYLOAD_SQL_INJECTION,
+			CWE_PATH_TRAVERSAL, PAYLOAD_PATH_TRAVERSAL,
+			CWE_HTTP_RESPONSE_SPLITTING, PAYLOAD_HTTP_RESPONSE_SPLITTING,
+			CWE_XPATH_INJECTION, PAYLOAD_XPATH_INJECTION,
+			CWE_DIRECTORY_INDEXING, PAYLOAD_DIRECTORY_INDEXING,
+			CWE_LDAP_INJECTION, PAYLOAD_LDAP_INJECTION,
+			CWE_OS_COMMAND_INJECTION, PAYLOAD_OS_COMMAND_INJECTION,
+			CWE_FORMAT_STRING_INJECTION, PAYLOAD_FORMAT_STRING_INJECTION,
+			CWE_DIRECT_REQUEST, PAYLOAD_DIRECTORY_INDEXING,
+			CWE_EVAL_INJECTION, PAYLOAD_EVAL_INJECTION
+		);
 	
 	public SnortGenerator(){
 		this.defaultDirective = "drop";
@@ -77,16 +77,16 @@ public class SnortGenerator extends RealTimeProtectionGenerator {
 
 	@Override
 	public String[] getSupportedVulnerabilityTypes() {
-		return new String[] { GenericVulnerability.CWE_CROSS_SITE_SCRIPTING,
-				GenericVulnerability.CWE_SQL_INJECTION, 
-				GenericVulnerability.CWE_DIRECT_REQUEST,
-				GenericVulnerability.CWE_PATH_TRAVERSAL,
-				GenericVulnerability.CWE_XPATH_INJECTION,
-				GenericVulnerability.CWE_DIRECTORY_INDEXING,
-				GenericVulnerability.CWE_LDAP_INJECTION,
-				GenericVulnerability.CWE_OS_COMMAND_INJECTION,
-				GenericVulnerability.CWE_FORMAT_STRING_INJECTION,
-				GenericVulnerability.CWE_EVAL_INJECTION };
+		return new String[] { CWE_CROSS_SITE_SCRIPTING,
+				CWE_SQL_INJECTION, 
+				CWE_DIRECT_REQUEST,
+				CWE_PATH_TRAVERSAL,
+				CWE_XPATH_INJECTION,
+				CWE_DIRECTORY_INDEXING,
+				CWE_LDAP_INJECTION,
+				CWE_OS_COMMAND_INJECTION,
+				CWE_FORMAT_STRING_INJECTION,
+				CWE_EVAL_INJECTION };
 	}
 	
 	@Override

@@ -29,19 +29,19 @@ import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 class JSPIncludeParser implements EventBasedTokenizer {
 	
 	@Nonnull
     private State currentState = State.START;
 	@Nonnull
-    Set<File> returnFiles = new HashSet<>();
+    Set<File> returnFiles = set();
 
     @Nonnull
     final File file;

@@ -34,6 +34,9 @@ import javax.validation.constraints.Size;
 import java.util.Calendar;
 import java.util.List;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.data.entities.AuthenticationRequired.UNKNOWN;
+
 @Entity
 @Table(name = "Finding")
 public class Finding extends AuditableEntity implements FindingLike {
@@ -120,11 +123,14 @@ public class Finding extends AuditableEntity implements FindingLike {
 	private boolean isStatic;
 	private boolean isFirstFindingForVuln;
 	private boolean isMarkedFalsePositive = false;
+	private Boolean foundHAMEndpoint = false;
 
 	private User user;
 
 	private List<DataFlowElement> dataFlowElements;
 	private List<ScanRepeatFindingMap> scanRepeatFindingMaps;
+	private List<EndpointPermission> endpointPermissions = list();
+	private List<String> rawPermissions = list();
 
 	private String calculatedUrlPath = "", calculatedFilePath = "";
 	private Dependency dependency;
@@ -425,6 +431,15 @@ public class Finding extends AuditableEntity implements FindingLike {
 		this.isMarkedFalsePositive = isMarkedFalsePositive;
 	}
 
+	@Column
+	public Boolean getFoundHAMEndpoint() {
+		return foundHAMEndpoint;
+	}
+
+	public void setFoundHAMEndpoint(Boolean foundHAMEndpoint) {
+		this.foundHAMEndpoint = foundHAMEndpoint;
+	}
+
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "dependencyId")
 	@JsonView({ AllViews.TableRow.class, AllViews.RestView2_1.class, AllViews.VulnerabilityDetail.class })
@@ -444,6 +459,28 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	public void setIssueId(String issueId) {
 		this.issueId = issueId;
+	}
+
+	@ManyToMany(mappedBy = "findingList")
+	@JsonIgnore
+	public List<EndpointPermission> getEndpointPermissions() {
+		return endpointPermissions;
+	}
+
+	public void setEndpointPermissions(List<EndpointPermission> endpointPermissions) {
+		this.endpointPermissions = endpointPermissions;
+	}
+
+	AuthenticationRequired authenticationRequired = UNKNOWN;
+
+	@Column
+	@Enumerated
+	public AuthenticationRequired getAuthenticationRequired() {
+		return authenticationRequired;
+	}
+
+	public void setAuthenticationRequired(AuthenticationRequired authenticationRequired) {
+		this.authenticationRequired = authenticationRequired;
 	}
 
 	@Transient
@@ -527,4 +564,14 @@ public class Finding extends AuditableEntity implements FindingLike {
                     getScan().getApplicationChannel().getChannelType().getName() :
                     null;
     }
+
+	@JsonIgnore
+	@Transient
+	public List<String> getRawPermissions() {
+		return rawPermissions;
+	}
+
+	public void setRawPermissions(List<String> rawPermissions) {
+		this.rawPermissions = rawPermissions;
+	}
 }

@@ -40,10 +40,9 @@ import org.xml.sax.SAXException;
 import javax.annotation.Nonnull;
 import java.net.URL;
 import java.util.Calendar;
-import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 
+import static com.denimgroup.threadfix.CollectionUtils.enumMap;
 import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
@@ -80,7 +79,7 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 	boolean getMethodText = false;
 	// Since the severity mappings are static and not included in the XML output,
 	// these have been reverse engineered from the code
-	private static Map<String, String> severityMap = new HashMap<>();
+	private static Map<String, String> severityMap = map();
 	static {
 		severityMap.put("Allowed HTTP methods", "INFORMATIONAL");
 		severityMap.put("A backdoor file exists on the server.", "HIGH");
@@ -189,7 +188,7 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
             if ("finish_datetime".equals(qName)) {
                 getDate = true;
             } else if ("issue".equals(qName)) {
-                findingMap = new EnumMap<>(FindingKey.class);
+                findingMap = enumMap(FindingKey.class);
                 // set the inFinding flag to accumulate elements and character info for raw xml synthesis
                 inFinding = true;
 

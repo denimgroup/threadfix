@@ -24,10 +24,12 @@
 
 package com.denimgroup.threadfix.service;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,17 +41,6 @@ import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityCommentDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ChannelType;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScanCloseVulnerabilityMap;
-import com.denimgroup.threadfix.data.entities.ScanReopenVulnerabilityMap;
-import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.data.entities.VulnerabilityComment;
-import com.denimgroup.threadfix.data.entities.WafRule;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
@@ -71,6 +62,10 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 	private WafRuleDao wafRuleDao;
     @Autowired
 	private DefectDao defectDao;
+	@Autowired
+	private EndpointPermissionService endpointPermissionService;
+    @Autowired
+    private DefaultConfigService defaultConfigService;
 	
 	/**
 	 * Deleting a scan requires a lot of code to check and make sure that all mappings
@@ -180,7 +175,22 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 		correctScanStatistics(appScanList, scan);
 		
 		scanDao.deleteFindingsAndScan(scan);
-		
+
+        // If file upload location exists and file associated with scan exists, delete file
+        DefaultConfiguration defaultConfiguration = defaultConfigService.loadCurrentConfiguration();
+
+        if (defaultConfiguration.fileUploadLocationExists()) {
+            String filePath = defaultConfiguration.getFullFilePath(scan);
+            File file = new File(filePath);
+            if (file.exists() && !file.delete()) {
+                log.warn("Something went wrong trying to delete the file.");
+
+                file.deleteOnExit();
+            } else {
+                log.info("Deleted file at location: " + filePath);
+            }
+        }
+
 		log.info("The scan deletion has finished.");
 	}
 	
@@ -686,6 +696,11 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					scanDao.deleteMap(map);
 					scanDao.saveOrUpdate(map.getScan());
 				}
+			}
+
+			for (EndpointPermission permission : vuln.getEndpointPermissions()) {
+				permission.getVulnerabilityList().remove(vuln);
+				endpointPermissionService.saveOrUpdate(permission);
 			}
 			
 			vulnerabilityDao.delete(vuln);

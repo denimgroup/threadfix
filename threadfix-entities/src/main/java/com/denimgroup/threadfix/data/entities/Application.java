@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
@@ -48,6 +49,7 @@ public class Application extends AuditableEntity {
 	private List<AccessControlApplicationMap> accessControlApplicationMaps;
 	private List<ScanQueueTask> scanQueueTasks;
     private List<ScheduledScan> scheduledScans;
+	private List<EndpointPermission> endpointPermissions;
 
 	public static final int 
 		NAME_LENGTH = 60,
@@ -67,6 +69,9 @@ public class Application extends AuditableEntity {
     private  String repositoryUrl;
 
     @Size(max = 80, message = "{errors.maxlength} 80.")
+    private String repositoryRevision;
+
+    @Size(max = 80, message = "{errors.maxlength} 80.")
     private String repositoryBranch, repositoryDBBranch;
 
     @Size(max = 80, message = "{errors.maxlength} 80.")
@@ -80,6 +85,8 @@ public class Application extends AuditableEntity {
 
     @Size(max = 1024, message = "{errors.maxlength} 1024.")
     private String repositoryEncryptedUserName;
+
+    private String repositoryType;
 
 	@URL(message = "{errors.url}")
 	@Size(min = 0, max = URL_LENGTH, message = "{errors.maxlength} " + URL_LENGTH + ".")
@@ -647,6 +654,16 @@ public class Application extends AuditableEntity {
 		this.sourceCodeAccessLevel = sourceCodeAccessLevel;
 	}
 
+    @Transient
+	public String getSvnRepositoryUrl() {
+        if (StringUtils.containsIgnoreCase(repositoryUrl, "/trunk") ||
+                StringUtils.containsIgnoreCase(repositoryUrl, "/branches")){
+            return repositoryUrl;
+        } else {
+            return repositoryUrl + "/trunk";
+        }
+	}
+
 	@Column(length = URL_LENGTH)
     @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
 	public String getRepositoryUrl() {
@@ -664,6 +681,15 @@ public class Application extends AuditableEntity {
 
     public void setRepositoryBranch(String repositoryBranch) {
         this.repositoryBranch = repositoryBranch;
+    }
+
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
+    public String getRepositoryRevision() {
+        return repositoryRevision;
+    }
+
+    public void setRepositoryRevision(String repositoryRevision) {
+        this.repositoryRevision = repositoryRevision;
     }
 
     @JsonIgnore
@@ -723,6 +749,16 @@ public class Application extends AuditableEntity {
 
 	public void setRepositoryFolder(String repositoryFolder) {
 		this.repositoryFolder = repositoryFolder;
+	}
+
+    @Column
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
+    public String getRepositoryType() {
+        return repositoryType;
+    }
+
+    public void setRepositoryType(String repositoryType) {
+        this.repositoryType = repositoryType;
 	}
 
 	@Transient
@@ -826,11 +862,21 @@ public class Application extends AuditableEntity {
         return map;
     }
 
-    @Column(nullable = true)
-    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
-    public Boolean getSkipApplicationMerge() {
-        return skipApplicationMerge != null && skipApplicationMerge;
-    }
+	@JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
+	@OneToMany(mappedBy = "application")
+	public List<EndpointPermission> getEndpointPermissions() {
+		return endpointPermissions;
+	}
+
+	public void setEndpointPermissions(List<EndpointPermission> endpointPermissions) {
+		this.endpointPermissions = endpointPermissions;
+	}
+
+	@Column(nullable = true)
+	@JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
+	public Boolean getSkipApplicationMerge() {
+		return skipApplicationMerge != null && skipApplicationMerge;
+	}
 
     public void setSkipApplicationMerge(Boolean isSkipApplicationMerge) {
         this.skipApplicationMerge = isSkipApplicationMerge;

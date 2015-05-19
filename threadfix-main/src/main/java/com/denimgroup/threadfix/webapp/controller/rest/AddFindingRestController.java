@@ -51,6 +51,8 @@ public class AddFindingRestController extends TFRestController {
 	
 	public static final String INVALID_VULN_NAME = "The vulnType parameter needs to be " +
 			"set to a valid CWE vulnerability name.";
+
+	public static final String INVALID_SEVERITY = "The severity parameter needs to be one of [1,2,3,4,5].";
 	public static final String PASSED_CHECK = "The request passed the check for Finding parameters.";
 
     @Autowired

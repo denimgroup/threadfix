@@ -152,11 +152,18 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 			if (finding.getChannelSeverity() != null) {
 				final float impact, likelihood;
 
-				switch (finding.getChannelSeverity().getName()) {
-					case "4": impact = 5f; likelihood = 5f; break;
-					case "3": impact = 3f; likelihood = 2f; break;
-					case "2": impact = 2f; likelihood = 3f; break;
-					default : impact = 1f; likelihood = 1f;
+				if (finding.getChannelSeverity().getName().equals("4")) {
+					impact = 5f;
+					likelihood = 5f;
+				} else if (finding.getChannelSeverity().getName().equals("3")) {
+					impact = 3f;
+					likelihood = 2f;
+				} else if (finding.getChannelSeverity().getName().equals("2")) {
+					impact = 2f;
+					likelihood = 3f;
+				} else {
+					impact = 1f;
+					likelihood = 1f;
 				}
 
 				Map<String, Float> map = map("Impact", impact, "Likelihood", likelihood);
@@ -219,8 +226,8 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		// maybe bad idea? Complicated data structure.
 		// the String key is the native ID and the Maps in the List 
 		// have the information for DataFlowElements
-		Map<String, List<DataFlowElementMap>> nativeIdDataFlowElementsMap = new HashMap<>();
-		Map<String, StaticPathInformation> staticPathInformationMap = new HashMap<>();
+		Map<String, List<DataFlowElementMap>> nativeIdDataFlowElementsMap = map();
+		Map<String, StaticPathInformation> staticPathInformationMap = map();
 		
 		List<Map<String,String>> rawFindingList = list();
 		
@@ -228,9 +235,9 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		DataFlowElementMap currentMap = null;
 		StaticPathInformation currentStaticPathInformation = null;
 		
-		Map<String, DataFlowElementMap> nodeSnippetMap = new HashMap<>();
+		Map<String, DataFlowElementMap> nodeSnippetMap = map();
 		
-		Map<String, Map<String, Float>> ruleMap = new HashMap<>();
+		Map<String, Map<String, Float>> ruleMap = map();
 		String currentRuleID = null;
 
 		String currentKingdom = null;
@@ -247,7 +254,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		
 		String nodeId = null;
 		
-		Map<String, String> snippetMap = new HashMap<>();
+		Map<String, String> snippetMap = map();
 		String snippetId = null;
 		int lineCount = 0;
 		boolean getSnippetText = false;
@@ -269,7 +276,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		boolean doneWithVulnerabilities = false;
 		
 	    public void addToList() {
-	    	Map<String,String> findingMap = new HashMap<>();
+	    	Map<String,String> findingMap = map();
 	    	
 	    	if (currentChannelType != null && currentChannelSubtype != null && 
 	    			!currentChannelSubtype.trim().equals("")) {

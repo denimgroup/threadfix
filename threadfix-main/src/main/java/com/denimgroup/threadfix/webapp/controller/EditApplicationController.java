@@ -104,8 +104,8 @@ public class EditApplicationController {
 		dataBinder.setAllowedFields("name", "url", "defectTracker.id", "userName",
                 "password", "waf.id", "projectName", "projectRoot", "applicationCriticality.id",
                 "uniqueId", "organization.id", "frameworkType", "repositoryUrl", "repositoryBranch",
-                "repositoryUserName", "repositoryPassword", "repositoryFolder", "skipApplicationMerge",
-                "mainDefaultDefectProfile.id");
+                "repositoryRevision", "repositoryUserName", "repositoryPassword", "repositoryFolder",
+                "repositoryType", "skipApplicationMerge", "mainDefaultDefectProfile.id");
 	}
 
 	@JsonView(AllViews.FormInfo.class)
@@ -129,8 +129,9 @@ public class EditApplicationController {
 		// TODO split into 3 controllers and use setAllowedFields
 		application.setWaf(databaseApplication.getWaf());
 		application.setDefectTracker(databaseApplication.getDefectTracker());
-		application.setUserName(databaseApplication.getUserName());
-		application.setPassword(databaseApplication.getPassword());
+        application.setUserName(databaseApplication.getUserName());
+        application.setPassword(databaseApplication.getPassword());
+		application.setEndpointPermissions(databaseApplication.getEndpointPermissions());
 		
 		if(!result.hasErrors()) {
 			applicationService.validateAfterEdit(application, result);
@@ -140,6 +141,11 @@ public class EditApplicationController {
 				&& !result.hasFieldErrors("name")) {
 			result.rejectValue("name", null, null, "This field cannot be blank");
 		}
+
+        if (application.getRepositoryUrl() != null && !application.getRepositoryUrl().isEmpty() &&
+                application.getRepositoryType() == null) {
+            result.rejectValue("repositoryType", null, null, "Choose either Git or SVN");
+        }
 
 		if (result.hasErrors()) {
             PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_DEFECT_TRACKERS,

@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * Created by mac on 9/4/14.
@@ -129,8 +129,8 @@ public class WebFormsEndpointGenerator implements EndpointGenerator {
     void collapseToEndpoints(Collection<AspxCsParser> csParsers,
                              Collection<AspxParser> aspxParsers,
                              File rootDirectory) {
-        Map<String, AspxParser> aspxParserMap = newMap();
-        Map<String, AspxCsParser> aspxCsParserMap = newMap();
+        Map<String, AspxParser> aspxParserMap = map();
+        Map<String, AspxCsParser> aspxCsParserMap = map();
 
         File aspxRootDirectory = getAspxRoot(rootDirectory);
 

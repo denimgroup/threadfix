@@ -38,6 +38,8 @@ import java.io.InputStream;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl.getImpl;
 
 @RemoteProvider(name = "Veracode")
 public class VeracodeRemoteProvider extends AbstractRemoteProvider {
@@ -52,7 +54,7 @@ public class VeracodeRemoteProvider extends AbstractRemoteProvider {
 	private String password = null;
 	private String username = null;
 
-    RemoteProviderHttpUtils utils = new RemoteProviderHttpUtilsImpl<>(this.getClass());
+    RemoteProviderHttpUtils utils = getImpl(this.getClass());
 
     public VeracodeRemoteProvider() {
 		super(ScannerType.VERACODE);
@@ -199,8 +201,8 @@ public class VeracodeRemoteProvider extends AbstractRemoteProvider {
 
     public class VeracodeApplicationIdMapParser extends DefaultHandler {
 
-        public Map<String, List<String>> map     = new HashMap<>();
-        public Map<String, Calendar>     dateMap = new HashMap<>();
+        public Map<String, List<String>> map     = map();
+        public Map<String, Calendar>     dateMap = map();
 
         private String currentAppName = null;
         private String currentBuildId = null;
@@ -235,7 +237,7 @@ public class VeracodeRemoteProvider extends AbstractRemoteProvider {
         private boolean mitigationProposed = false;
 
         private String                  rawFlaw    = null;
-        private Map<FindingKey, String> findingMap = new HashMap<>();
+        private Map<FindingKey, String> findingMap = map();
 
         ////////////////////////////////////////////////////////////////////
         // Event handlers.

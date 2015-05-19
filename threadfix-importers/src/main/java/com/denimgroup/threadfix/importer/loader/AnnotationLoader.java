@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.listOf;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * Created by mac on 9/16/14.
@@ -47,7 +47,7 @@ public final class AnnotationLoader<T extends java.lang.annotation.Annotation> {
     private static final SanitizedLogger LOG = new SanitizedLogger(AnnotationLoader.class);
 
     public static <A extends Annotation> Map<Class<?>, A> getMap(Class<A> scanImporterClass, String packageName) {
-        AnnotationLoader<A> loader = new AnnotationLoader<>();
+        AnnotationLoader<A> loader = new AnnotationLoader<A>();
 
         return loader.loadMap(scanImporterClass, packageName);
     }
@@ -83,7 +83,11 @@ public final class AnnotationLoader<T extends java.lang.annotation.Annotation> {
                 }
             }
 
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+        } catch (InstantiationException e) {
+            throw new IllegalStateException("Got exception while instantiating code : ", e);
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException("Got exception while instantiating code : ", e);
+        } catch (InvocationTargetException e) {
             throw new IllegalStateException("Got exception while instantiating code : ", e);
         }
 
@@ -92,7 +96,7 @@ public final class AnnotationLoader<T extends java.lang.annotation.Annotation> {
 
     public Map<Class<?>, T> loadMap(Class<T> annotationClass, String packageName) {
 
-        Map<Class<?>, T> savedMap = newMap();
+        Map<Class<?>, T> savedMap = map();
 
         ClassPathScanningCandidateComponentProvider provider =
                 new ClassPathScanningCandidateComponentProvider(false);

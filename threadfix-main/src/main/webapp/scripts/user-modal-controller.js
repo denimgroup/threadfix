@@ -77,7 +77,7 @@ myAppModule.controller('UserModalController', function ($scope, $modalInstance, 
             error(function(data, status, headers, config) {
                 $scope.error = "Failure. HTTP status was " + status;
             });
-    }
+    };
 
     $scope.clickedDeleteButton = function() {
         if (!$scope.user.isDeletable) {

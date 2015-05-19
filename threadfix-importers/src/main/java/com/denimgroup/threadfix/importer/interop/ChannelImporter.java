@@ -79,6 +79,13 @@ public interface ChannelImporter {
 	 *            The file containing the scan results.
 	 */
 	void setFileName(String fileName);
+
+	/**
+	 * Sets the original filename of the uploaded scan.
+	 *
+	 * @param originalFileName
+	 */
+    void setOriginalFileName(String originalFileName);
 	
 	/**
 	 * Delete the scan file from disk, if it has been saved there.

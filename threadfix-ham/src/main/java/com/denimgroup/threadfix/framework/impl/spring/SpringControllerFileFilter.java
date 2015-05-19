@@ -23,12 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.spring;
 
+import com.denimgroup.threadfix.framework.filefilter.ClassAnnotationBasedFileFilter;
+
+import javax.annotation.Nonnull;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
-import com.denimgroup.threadfix.framework.filefilter.ClassAnnotationBasedFileFilter;
-import javax.annotation.Nonnull;
+import static com.denimgroup.threadfix.CollectionUtils.setFrom;
 
 /**
  * This class can be used with Commons FileUtils to filter for finding Spring @Controllers.
@@ -44,7 +45,7 @@ class SpringControllerFileFilter extends ClassAnnotationBasedFileFilter {
 	
 	public static final SpringControllerFileFilter INSTANCE = new SpringControllerFileFilter();
 	
-	private static final Set<String> annotations = new HashSet<>(Arrays.asList("Controller"));
+	private static final Set<String> annotations = setFrom(Arrays.asList("Controller"));
 	
 	@Nonnull
     @Override

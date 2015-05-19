@@ -32,6 +32,7 @@ import com.denimgroup.threadfix.importer.interop.ChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ChannelImporterFactory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.merge.FindingMatcher;
+import com.denimgroup.threadfix.service.merge.PermissionsHandler;
 import com.denimgroup.threadfix.service.merge.ScanMerger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,22 +68,25 @@ public class ScanMergeServiceImpl implements ScanMergeService {
     private VulnerabilityService vulnerabilityService;
 	@Autowired
 	private DefectService defectService;
+	@Autowired
+	private PermissionsHandler permissionsHandler;
 
 	@Override
-	public Scan saveRemoteScanAndRun(Integer channelId, String fileName) {
-		if (channelId == null || fileName == null) {
+	public Scan saveRemoteScanAndRun(Integer channelId, String fileName, String originalFileName) {
+		if (channelId == null || fileName == null || originalFileName == null) {
 			log.error("Unable to run RPC scan due to null input.");
 			return null;
 		}
 
-		Scan scan = processScanFile(channelId, fileName, null);
+		Scan scan = processScanFile(channelId, fileName, originalFileName, null);
 		if (scan == null) {
 			log.warn("The scan processing failed to produce a scan.");
 			return null;
 		}
 		
 		updateScanCounts(scan);
-		defectService.updateScannerSuppliedStatuses(scan.getApplication().getId());
+		Integer id = scan.getApplication().getId();
+		defectService.updateScannerSuppliedStatuses(id);
 		vulnerabilityFilterService.updateVulnerabilities(scan);
 
 		return scan;
@@ -191,15 +195,22 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 
         scanDao.saveOrUpdate(scan);
 
-        // set numbers correctly
+		// set auth parameters
+		permissionsHandler.setPermissions(scan, scan.getApplicationChannel().getApplication().getId());
+
+		// set numbers correctly
         updateScanCounts(scan);
 	
 		return scan;
 	}
 	
-	private Scan processScanFile(Integer channelId, String fileName,
+	private Scan processScanFile(Integer channelId, String fileName, Integer statusId) {
+        return processScanFile(channelId, fileName, fileName, statusId);
+    }
+
+	private Scan processScanFile(Integer channelId, String fileName, String originalFileName,
 			Integer statusId) {
-		if (channelId == null || fileName == null) {
+		if (channelId == null || fileName == null || originalFileName == null) {
 			log.error("processScanFile() received null input and was unable to finish.");
 			return null;
 		}
@@ -231,6 +242,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 				+ applicationChannel.getChannelType().getName() + ".");
 	
 		importer.setFileName(fileName);
+        importer.setOriginalFileName(originalFileName);
 		
 		Scan scan = importer.parseInput();
 		
