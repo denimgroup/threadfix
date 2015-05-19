@@ -21,6 +21,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.ScheduledEmailReportService;
+import com.denimgroup.threadfix.service.email.EmailFilterService;
 import com.denimgroup.threadfix.service.queue.scheduledjob.ScheduledEmailReportScheduler;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
@@ -38,6 +39,8 @@ public class EditScheduledEmailReportController {
 	private ScheduledEmailReportScheduler scheduledEmailReportScheduler;
 	@Autowired
 	private OrganizationService organizationService;
+	@Autowired
+	private EmailFilterService emailFilterService;
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
@@ -119,6 +122,9 @@ public class EditScheduledEmailReportController {
 		List<String> emailAddresses = scheduledEmailReport.getEmailAddresses();
 		if (emailAddresses.contains(emailAddress)){
 			return RestResponse.failure("Email address already exists.");
+		}
+		if (!emailFilterService.validateEmailAddress(emailAddress)){
+			return RestResponse.failure("Email doesn't comply with filter");
 		}
 		else {
 			emailAddresses.add(emailAddress);
