@@ -35,10 +35,7 @@ import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.MalformedURLException;
@@ -63,7 +60,8 @@ public class TeamRestController extends TFRestController {
     private final static String DETAIL = "teamIDLookup",
             LOOKUP                     = "teamNameLookup",
             NEW                        = "newTeam",
-            INDEX                      = "teamList";
+            INDEX                      = "teamList",
+            UPDATE                     = "putTeam";
 
     // TODO finalize which methods need to be restricted
     static {
@@ -264,5 +262,23 @@ public class TeamRestController extends TFRestController {
 	public Object alsoTeamList(HttpServletRequest request) {
 		return teamList(request);
 	}
+
+    @JsonView(AllViews.RestViewTeam2_1.class)
+    @RequestMapping(method = RequestMethod.PUT, value = "/{teamId}/")
+    public Object putTeam(HttpServletRequest request, @PathVariable("teamId") int teamId, @RequestBody String name){
+
+        log.info("Received REST request to update Team");
+        String result = checkKey(request, UPDATE);
+        if(!result.equals(API_KEY_SUCCESS)) return RestResponse.failure(result);
+        Organization organization = organizationService.loadById(teamId);
+        if(organization == null){
+            return RestResponse.failure(LOOKUP_FAILED);
+        }else {
+            organization.setName(name);
+            organizationService.saveOrUpdate(organization);
+            log.info("REST Request (PUT method) to update Team resource with id " + teamId + " is completed successfully");
+            return RestResponse.success(organization);
+        }
+    }
 
 }
