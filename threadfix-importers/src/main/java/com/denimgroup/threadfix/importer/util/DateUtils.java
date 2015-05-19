@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.importer.util;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import org.apache.commons.validator.routines.DateValidator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -70,6 +71,20 @@ public class DateUtils {
                 return getCalendarFromString(new SimpleDateFormat(formatString, Locale.US), dateString);
             } catch (IllegalArgumentException e) {
                 log.error("An invalid format string was passed to the SimpleDateFormat constructor: " + formatString);
+            }
+        }
+
+        return null;
+    }
+
+    public static Calendar getCalendarFromStringAndMultipleFormats(String dateString, @Nonnull String... dateFormats) {
+        DateValidator dateValidator = new DateValidator();
+        SimpleDateFormat simpleDateFormat = null;
+
+        for (int i = 0; i < dateFormats.length; i++) {
+            simpleDateFormat = new SimpleDateFormat(dateFormats[i], Locale.US);
+            if (dateValidator.validate(dateString, simpleDateFormat.toPattern()) != null) {
+                return getCalendarFromString(dateFormats[i], dateString);
             }
         }
 

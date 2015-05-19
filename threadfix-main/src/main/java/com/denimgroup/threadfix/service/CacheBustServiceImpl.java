@@ -66,7 +66,8 @@ public class CacheBustServiceImpl implements CacheBustService {
 
             if(jsFilePath != null && !jsFilePath.isEmpty()){
                 String filteredJsPath = notCachedAsset(request, jsFilePath);
-                notCachedJs.add(filteredJsPath);
+                if (!notCachedJs.contains(filteredJsPath))
+                    notCachedJs.add(filteredJsPath);
             }
         }
 
