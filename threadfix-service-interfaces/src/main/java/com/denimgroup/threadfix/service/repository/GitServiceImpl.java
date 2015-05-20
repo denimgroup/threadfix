@@ -132,47 +132,59 @@ public class GitServiceImpl extends RepositoryServiceImpl implements RepositoryS
 				} else {
                     Repository localRepo = new FileRepository(gitDirectoryFile);
                     Git git = new Git(localRepo);
-                    List<Ref> refs = git.branchList().setListMode(ListBranchCommand.ListMode.ALL).call();
 
-                    String repoBranch = (application.getRepositoryBranch() != null &&
-                            !application.getRepositoryBranch().isEmpty()) ? application.getRepositoryBranch() : "master";
 
-                    boolean localCheckout = false;
-
-                    for (Ref ref : refs) {
-                        String refName = ref.getName();
-                        if(refName.contains(repoBranch) && !refName.contains(Constants.R_REMOTES)){
-                            localCheckout = true;
-                        }
-                    }
-
-                    String HEAD = localRepo.getFullBranch();
-
-                    if (HEAD.contains(repoBranch)) {
-                        git.pull()
-                                .setRemote("origin")
-                                .setRemoteBranchName(repoBranch)
-                                .setCredentialsProvider(getApplicationCredentials(application))
+                    if (application.getRepositoryRevision() != null && !application.getRepositoryRevision().isEmpty()) {
+                        //remote checkout
+                        git.checkout()
+                                .setCreateBranch(true)
+                                .setStartPoint(application.getRepositoryRevision())
+                                .setName(application.getRepositoryRevision())
                                 .call();
                     } else {
-                        if (localCheckout) {
-                            //local checkout
-                            git.checkout()
-                                    .setName(application.getRepositoryBranch())
-                                    .call();
+
+                        List<Ref> refs = git.branchList().setListMode(ListBranchCommand.ListMode.ALL).call();
+
+                        String repoBranch = (application.getRepositoryBranch() != null &&
+                                !application.getRepositoryBranch().isEmpty()) ? application.getRepositoryBranch() : "master";
+
+                        boolean localCheckout = false;
+
+                        for (Ref ref : refs) {
+                            String refName = ref.getName();
+                            if (refName.contains(repoBranch) && !refName.contains(Constants.R_REMOTES)) {
+                                localCheckout = true;
+                            }
+                        }
+
+                        String HEAD = localRepo.getFullBranch();
+
+                        if (HEAD.contains(repoBranch)) {
                             git.pull()
                                     .setRemote("origin")
                                     .setRemoteBranchName(repoBranch)
                                     .setCredentialsProvider(getApplicationCredentials(application))
                                     .call();
                         } else {
-                            //remote checkout
-                            git.checkout()
-                                    .setCreateBranch(true)
-                                    .setName(repoBranch)
-                                    .setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.SET_UPSTREAM)
-                                    .setStartPoint("origin/"+repoBranch)
-                                    .call();
+                            if (localCheckout) {
+                                //local checkout
+                                git.checkout()
+                                        .setName(application.getRepositoryBranch())
+                                        .call();
+                                git.pull()
+                                        .setRemote("origin")
+                                        .setRemoteBranchName(repoBranch)
+                                        .setCredentialsProvider(getApplicationCredentials(application))
+                                        .call();
+                            } else {
+                                //remote checkout
+                                git.checkout()
+                                        .setCreateBranch(true)
+                                        .setName(repoBranch)
+                                        .setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.SET_UPSTREAM)
+                                        .setStartPoint("origin/" + repoBranch)
+                                        .call();
+                            }
                         }
                     }
 
@@ -232,11 +244,23 @@ public class GitServiceImpl extends RepositoryServiceImpl implements RepositoryS
                     .setDirectory(dirLocation)
                     .setCredentialsProvider(getApplicationCredentials(application));
 
-            if (application.getRepositoryBranch() != null) {
+            if (application.getRepositoryBranch() != null
+                    && !application.getRepositoryBranch().isEmpty()) {
                 clone.setBranch(application.getRepositoryBranch());
             }
 
+            // clone git repo
             git = clone.call();
+
+            // checkout specific revision
+            if (application.getRepositoryRevision() != null
+                    && !application.getRepositoryRevision().isEmpty()) {
+                git.checkout()
+                        .setCreateBranch(true)
+                        .setStartPoint(application.getRepositoryRevision())
+                        .setName(application.getRepositoryRevision())
+                        .call();
+            }
 
         } catch (WrongRepositoryStateException  e) {
             log.error(EXCEPTION_MESSAGE, e);
