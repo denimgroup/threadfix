@@ -118,7 +118,7 @@
                         <span id="sourceUrlValidError" class="errors" ng-show="form.repositoryUrl.$dirty && form.repositoryUrl.$error.url">URL is invalid.</span>
                     </td>
                 </tr>
-                <tr ng-show="sourceCodeDisplay">
+                <tr ng-show="sourceCodeDisplay && !object.repositoryRevision.length">
                     <td>Source Code Branch</td>
                     <td>
                         <input type="text" id="repositoryBranch" ng-model="object.repositoryBranch" maxlength="80" name="repositoryBranch"/>
@@ -127,7 +127,7 @@
                         <span id="sourceBranchLengthError" class="errors" ng-show="form.repositoryBranch.$dirty && form.repositoryBranch.$error.maxlength">Maximum length is 80.</span>
                     </td>
                 </tr>
-                <tr ng-show="sourceCodeDisplay">
+                <tr ng-show="sourceCodeDisplay && !object.repositoryBranch.length">
                     <td>Source Code Revision</td>
                     <td>
                         <input type="text" id="repositoryRevision" ng-model="object.repositoryRevision" maxlength="80" name="repositoryRevision"/>
