@@ -80,16 +80,18 @@ public class UserIndexPage extends BasePage {
         WebElement nameField = null;
         try {
             nameField = driver.findElementById("name");
+            nameField.clear();
         } catch (ElementNotVisibleException e) {
+
             List<WebElement> elementList = driver.findElementsById("name");
             for (WebElement element : elementList) {
                 if (element.isDisplayed()) {
                     nameField = element;
+                    nameField.clear();
                     break;
                 }
             }
         }
-        nameField.clear();
         nameField.sendKeys(username);
         return this;
     }
@@ -98,16 +100,17 @@ public class UserIndexPage extends BasePage {
         WebElement displayNameField = null;
         try {
             displayNameField = driver.findElementByCssSelector("input#displayName");
+            displayNameField.clear();
         } catch (ElementNotVisibleException e) {
             List<WebElement> elementList = driver.findElementsByCssSelector("input#displayName");
             for (WebElement element : elementList) {
                 if (element.isDisplayed()) {
                     displayNameField = element;
+                    displayNameField.clear();
                     break;
                 }
             }
         }
-        displayNameField.clear();
         displayNameField.sendKeys(displayName);
         return new UserIndexPage(driver);
     }
@@ -128,9 +131,31 @@ public class UserIndexPage extends BasePage {
     }
 
     public UserIndexPage setConfirmPassword(String password) {
-        String elementId = driver.findElementById("confirm").isDisplayed() ? "confirm" : "passwordConfirm";
-        WebElement confirmField = driver.findElementById(elementId);
-        confirmField.clear();
+        WebElement confirmField;
+        String elementId;
+        // Checks if Password Confirm field is identified by
+        // #confirm or #passwordConfirm
+        try {
+            elementId = "confirm";
+            confirmField = driver.findElementById(elementId);
+        } catch(NoSuchElementException e) {
+            elementId = "passwordConfirm";
+            confirmField = driver.findElementById(elementId);
+        }
+        // Looks for interactable field if multiple are
+        // present in DOM
+        try {
+            confirmField.clear();
+        } catch(ElementNotVisibleException e) {
+            List<WebElement> elements = driver.findElementsById(elementId);
+            for (WebElement eval : elements) {
+                if (eval.isDisplayed()) {
+                    confirmField = eval;
+                    confirmField.clear();
+                    break;
+                }
+            }
+        }
         confirmField.sendKeys(password);
         return new UserIndexPage(driver);
     }
@@ -201,7 +226,17 @@ public class UserIndexPage extends BasePage {
 	}
 
     public UserIndexPage clickSaveChanges() {
-        driver.findElementById("submit").click();
+
+        try {
+            driver.findElementById("submit").click();
+        } catch(ElementNotVisibleException e) {
+            for (WebElement element : driver.findElementsById("submit")) {
+                if (element.isDisplayed()) {
+                    element.click();
+                    break;
+                }
+            }
+        }
         return new UserIndexPage(driver);
     }
 	
