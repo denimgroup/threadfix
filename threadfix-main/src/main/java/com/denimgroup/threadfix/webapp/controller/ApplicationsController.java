@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -204,7 +205,7 @@ public class ApplicationsController {
         map.put("application", application);
 
         // scans tab
-        map.put("scans", application.getScans());
+        map.put("scans", checkDownloadable(application.getScans()));
 
         // doc tab
         map.put("documents", application.getDocuments());
@@ -231,6 +232,19 @@ public class ApplicationsController {
         }
 
         return success(map);
+    }
+
+    private List<Scan> checkDownloadable(List<Scan> scans) {
+        if (scans != null) {
+            DefaultConfiguration defaultConfiguration = defaultConfigService.loadCurrentConfiguration();
+
+            for (Scan scan: scans) {
+                scan.setDownloadable(defaultConfiguration.fileUploadLocationExists()
+                        && DiskUtils.isFileExists(defaultConfiguration.getFullFilePath(scan)));
+            }
+
+        }
+        return scans;
     }
 
     private String getActiveTab(HttpServletRequest request, long falsePositiveCount, long numClosedVulns) {
