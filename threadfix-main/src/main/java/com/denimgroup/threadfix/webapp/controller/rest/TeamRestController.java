@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/rest/teams")
@@ -56,6 +57,7 @@ public class TeamRestController extends TFRestController {
 
     public static final String CREATION_FAILED = "New Team creation failed.";
     public static final String LOOKUP_FAILED   = "Team Lookup failed.";
+    public static final String INVALID_PARAMS  = "Invalid parameters entered";
 
     private final static String DETAIL = "teamIDLookup",
             LOOKUP                     = "teamNameLookup",
@@ -265,7 +267,7 @@ public class TeamRestController extends TFRestController {
 
     @JsonView(AllViews.RestViewTeam2_1.class)
     @RequestMapping(method = RequestMethod.PUT, value = "/{teamId}/")
-    public Object putTeam(HttpServletRequest request, @PathVariable("teamId") int teamId, @RequestBody String name){
+    public Object putTeam(HttpServletRequest request, @PathVariable("teamId") int teamId, @RequestBody Map<String, String> params){
 
         log.info("Received REST request to update Team");
         String result = checkKey(request, UPDATE);
@@ -274,10 +276,15 @@ public class TeamRestController extends TFRestController {
         if(organization == null){
             return RestResponse.failure(LOOKUP_FAILED);
         }else {
-            organization.setName(name);
-            organizationService.saveOrUpdate(organization);
-            log.info("REST Request (PUT method) to update Team resource with id " + teamId + " is completed successfully");
-            return RestResponse.success(organization);
+            if(params.get("name")!=null && params.get("name")!="") {
+                organization.setName(params.get("name"));
+                organizationService.saveOrUpdate(organization);
+                log.info("REST Request (PUT method) to update Team resource with id " + teamId + " is completed successfully");
+                return RestResponse.success(organization);
+            }else {
+                log.warn("Name parameter in the REST request is invalid. Returning failure response");
+                return RestResponse.failure(INVALID_PARAMS);
+            }
         }
     }
 
