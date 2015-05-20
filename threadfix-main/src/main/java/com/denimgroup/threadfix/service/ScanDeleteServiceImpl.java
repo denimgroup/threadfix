@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
+import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,7 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.data.entities.VulnerabilityComment;
 import com.denimgroup.threadfix.data.entities.WafRule;
 
+import static com.denimgroup.threadfix.CollectionUtils.*;
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Service
@@ -356,39 +358,41 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 		if (scan.getScanRepeatFindingMaps() != null
 				&& scan.getScanRepeatFindingMaps().size() > 0) {
 				List<ScanRepeatFindingMap> mapsToRemove = list();
-				
-				for (ScanRepeatFindingMap map : scan.getScanRepeatFindingMaps()) {
-					if (map != null && map.getFinding() != null 
-							&& map.getFinding().getScan() != null
-							&& map.getFinding().getScan().getId() != null
-							&& map.getFinding().getScan().getId().equals(scanToDelete.getId())) {
-						
-						log.debug("Moving Finding with ID " + map.getFinding().getId() + 
-								" to scan with ID " + scan.getId() + " and deleting mapping.");
-						scan.setNumberRepeatFindings(scan.getNumberRepeatFindings() -1);
-						scan.setNumberRepeatResults(
-								scan.getNumberRepeatResults() - 
-								map.getFinding().getNumberMergedResults());
-						scan.getFindings().add(map.getFinding());
-						map.getFinding().getScan().getFindings().remove(map.getFinding());
-						map.getFinding().setScan(scan);
-						
-						mapsToRemove.add(map);
-						
-						updateFirstFindingForVuln(map.getFinding(), 
-								map.getFinding().getVulnerability());
-					}
-				}
-				
-				scan.getScanRepeatFindingMaps().removeAll(mapsToRemove);
-				for (ScanRepeatFindingMap map : mapsToRemove) {
-					map.getFinding().getScanRepeatFindingMaps().remove(map);
-					map.getScan().getScanRepeatFindingMaps().remove(map);
-					scanDao.saveOrUpdate(map.getScan());
-					findingDao.saveOrUpdate(map.getFinding());
-					scanDao.deleteMap(map);
+
+			List<ScanRepeatFindingMap> scanCopy = listFrom(scan.getScanRepeatFindingMaps());
+
+			for (ScanRepeatFindingMap map : scanCopy) {
+				if (map != null && map.getFinding() != null
+						&& map.getFinding().getScan() != null
+						&& map.getFinding().getScan().getId() != null
+						&& map.getFinding().getScan().getId().equals(scanToDelete.getId())) {
+
+					log.debug("Moving Finding with ID " + map.getFinding().getId() +
+							" to scan with ID " + scan.getId() + " and deleting mapping.");
+					scan.setNumberRepeatFindings(scan.getNumberRepeatFindings() -1);
+					scan.setNumberRepeatResults(
+							scan.getNumberRepeatResults() -
+							map.getFinding().getNumberMergedResults());
+					scan.getFindings().add(map.getFinding());
+					map.getFinding().getScan().getFindings().remove(map.getFinding());
+					map.getFinding().setScan(scan);
+
+					mapsToRemove.add(map);
+
+					updateFirstFindingForVuln(map.getFinding(),
+							map.getFinding().getVulnerability());
 				}
 			}
+				
+			scan.getScanRepeatFindingMaps().removeAll(mapsToRemove);
+			for (ScanRepeatFindingMap map : mapsToRemove) {
+				map.getFinding().getScanRepeatFindingMaps().remove(map);
+				map.getScan().getScanRepeatFindingMaps().remove(map);
+				scanDao.saveOrUpdate(map.getScan());
+				findingDao.saveOrUpdate(map.getFinding());
+				scanDao.deleteMap(map);
+			}
+		}
 	}
 
 	/**
