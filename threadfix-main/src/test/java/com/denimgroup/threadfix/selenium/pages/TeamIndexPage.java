@@ -162,6 +162,7 @@ public class TeamIndexPage extends BasePage {
 
     public TeamIndexPage addRemoteSourceCodeInformation(String url, String revision, String userName, String password) {
         expandSourceCodeFields();
+        selectGitRepositoryType();
         setRepositoryURL(url);
         setRepositoryRevision(revision);
         setRepositoryUserName(userName);
@@ -177,6 +178,7 @@ public class TeamIndexPage extends BasePage {
 
     public TeamIndexPage setRemoteSourceCodeURL(String url) {
         expandSourceCodeFields();
+        selectGitRepositoryType();
         repositoryURL(url);
         return this;
     }
@@ -373,6 +375,10 @@ public class TeamIndexPage extends BasePage {
 
     public void waitForPieWedge(String teamName, String level) {
         waitForElement(driver.findElementById(teamName + level + "Arc"));
+    }
+
+    public void selectGitRepositoryType() {
+        driver.findElementByXPath("//input[@value='GIT']").click();
     }
 }
 

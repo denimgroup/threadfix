@@ -478,6 +478,8 @@ public class ApplicationIT extends BaseDataTest {
                 .setDescription(description)
                 .clickDynamicSubmit();
 
+        applicationDetailPage.refreshPage();
+
         assertTrue("Manual finding was not added to vulnerabilities listing on application detail page.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "1"));
 
@@ -816,6 +818,8 @@ public class ApplicationIT extends BaseDataTest {
         applicationDetailPage.clickEditDeleteBtn()
                 .expandSourceCodeFields();
 
+        sleep(2000);
+
         assertTrue("Repository URL was not saved properly.",
                 applicationDetailPage.isRepositoryURLCorrect(repositoryURLEdited));
         assertTrue("Repository Revision was not saved properly.",
@@ -957,6 +961,8 @@ public class ApplicationIT extends BaseDataTest {
                 .setParameter(parameter)
                 .setDescription(description)
                 .clickDynamicSubmit();
+
+        applicationDetailPage.refreshPage();
 
         applicationDetailPage.expandVulnerabilityByType(appVuln)
                 .expandCommentSection(appVuln + "0")

@@ -24,10 +24,7 @@
 package com.denimgroup.threadfix.selenium.pages;
 
 import com.denimgroup.threadfix.views.AllViews;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
 
 import java.util.ArrayList;
@@ -114,7 +111,12 @@ public class AnalyticsPage extends BasePage {
 
     public AnalyticsPage expandTeamApplicationFilter(String divId) {
         WebElement filterDiv = driver.findElementById(divId);
-        filterDiv.findElement(By.id("expandTeamAndApplicationFilters")).click();
+        try {
+            filterDiv.findElement(By.id("expandTeamAndApplicationFilters")).click();
+        } catch (ElementNotVisibleException e) {
+            sleep(5000);
+            filterDiv.findElement(By.id("expandTeamAndApplicationFilters")).click();
+        }
         waitForElement(filterDiv.findElement(By.id("showApplicationInput")));
         return new AnalyticsPage(driver);
     }

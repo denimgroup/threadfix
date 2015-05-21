@@ -45,7 +45,7 @@ public class UserIndexPage extends BasePage {
 	}
 
     public UserIndexPage clickDelete(String user){
-        driver.findElementById("delete" + user).click();
+        driver.findElementById("deleteRoleLink").click();
         handleAlert();
         return new UserIndexPage(driver);
     }
@@ -64,7 +64,8 @@ public class UserIndexPage extends BasePage {
         return new UserPermissionsPage(driver);
 	}
 
-	public UserIndexPage clickAddUserLink() {
+	public UserIndexPage clickCreateUserButton() {
+        refreshPage();
 		driver.findElementById("newUserModalLink").click();
 		waitForElement(driver.findElementById("submit"));
 		return new UserIndexPage(driver);
@@ -131,30 +132,12 @@ public class UserIndexPage extends BasePage {
     }
 
     public UserIndexPage setConfirmPassword(String password) {
-        WebElement confirmField;
-        String elementId;
-        // Checks if Password Confirm field is identified by
-        // #confirm or #passwordConfirm
-        try {
-            elementId = "confirm";
-            confirmField = driver.findElementById(elementId);
-        } catch(NoSuchElementException e) {
-            elementId = "passwordConfirm";
-            confirmField = driver.findElementById(elementId);
-        }
-        // Looks for interactable field if multiple are
-        // present in DOM
+        WebElement confirmField = driver.findElementById("passwordConfirm");
         try {
             confirmField.clear();
-        } catch(ElementNotVisibleException e) {
-            List<WebElement> elements = driver.findElementsById(elementId);
-            for (WebElement eval : elements) {
-                if (eval.isDisplayed()) {
-                    confirmField = eval;
-                    confirmField.clear();
-                    break;
-                }
-            }
+        } catch (ElementNotVisibleException e) {
+            confirmField = findVisibleElementById("passwordConfirm");
+            confirmField.clear();
         }
         confirmField.sendKeys(password);
         return new UserIndexPage(driver);
@@ -245,6 +228,7 @@ public class UserIndexPage extends BasePage {
 	}
 
     public UserIndexPage clickUserLink(String userName) {
+        refreshPage();
         driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']").click();
         sleep(5000);
         return new UserIndexPage(driver);
@@ -292,6 +276,15 @@ public class UserIndexPage extends BasePage {
     public String getConfirmPasswordRequiredError() {
         return driver.findElementById("confirmPassword.error").getText().trim();
     }
+
+    public String getDisplayName() {
+        WebElement element = driver.findElementById("displayName");
+        if (element.isDisplayed()) {
+            return element.getAttribute("value");
+        } else {
+            return findVisibleElementById("displayName").getAttribute("value");
+        }
+    }
 	
 	public UserIndexPage clickCancel(String name){
 		driver.findElementByClassName("modal-footer").click();
@@ -300,11 +293,11 @@ public class UserIndexPage extends BasePage {
 	}
 
     public UserIndexPage createUser(String user, String disp, String pass) {
-        clickAddUserLink();
+        clickCreateUserButton();
         setName(user);
         setDisplayName(disp);
         setPassword(pass);
-        setConfirmPassword(pass);
+        setConfirmPasswordModal(pass);
         clickAddNewUserBtn();
         return new UserIndexPage(driver);
     }
@@ -385,8 +378,8 @@ public class UserIndexPage extends BasePage {
         return true;
     }
 
-    public boolean isSuccessDisplayed(String name){
-        return driver.findElementByClassName("alert-success").getText().contains(name);
+    public boolean isSuccessDisplayed(String message){
+        return driver.findElementByClassName("alert-success").getText().contains(message);
     }
 
 	public boolean isGlobalAccessErrorPresent(){
@@ -456,6 +449,15 @@ public class UserIndexPage extends BasePage {
         return element.getText().contains(errorMessage);
     }
 
+    public boolean isDisplayNameMatching(String expectedName) {
+        WebElement element = driver.findElementById("displayName");
+        if (element.isDisplayed()) {
+            return element.getText() == expectedName;
+        } else {
+            return findVisibleElementById("displayName").getText() == expectedName;
+        }
+    }
+
     /*------------------------------------ Modal Methods ------------------------------------*/
 
     public UserIndexPage setNameModal(String username) {
@@ -474,5 +476,18 @@ public class UserIndexPage extends BasePage {
     public UserIndexPage setConfirmPasswordModal(String password) {
         driver.findElementByClassName("modal").findElement(By.id("confirm")).sendKeys(password);
         return new UserIndexPage(driver);
+    }
+
+    // Finds all elements on page that have this ID, iterates through them,
+    // and returns the first visible one found.  Used for dealing with modals
+    // that overlap pages with fields using the same element IDs.
+    public WebElement findVisibleElementById(String elementId) {
+        List<WebElement> elements = driver.findElementsById(elementId);
+        for (WebElement element : elements) {
+            if (element.isDisplayed()) {
+                return element;
+            }
+        }
+        throw new NoSuchElementException("Couldn't find visible element with specified ID.");
     }
 }

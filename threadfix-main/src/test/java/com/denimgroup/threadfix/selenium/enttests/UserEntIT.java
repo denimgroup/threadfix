@@ -59,7 +59,7 @@ public class UserEntIT extends BaseDataTest {
 
         UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
-                .clickAddUserLink()
+                .clickCreateUserButton()
                 .setName(userName)
                 .setPassword(testPassword)
                 .setConfirmPassword(testPassword)
@@ -80,7 +80,7 @@ public class UserEntIT extends BaseDataTest {
 
 		UserIndexPage userIndexPage = loginPage.defaultLogin()
 				.clickManageUsersLink()
-                .clickAddUserLink()
+                .clickCreateUserButton()
                 .setName(userName)
 				.toggleLDAP();
         assertFalse("Password fields are still present.", userIndexPage.isPasswordFieldEnabled());
@@ -115,7 +115,7 @@ public class UserEntIT extends BaseDataTest {
 
         UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
-                .clickAddUserLink()
+                .clickCreateUserButton()
                 .setName(userName)
                 .setPassword(testPassword)
                 .setConfirmPassword(testPassword)

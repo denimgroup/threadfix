@@ -92,7 +92,7 @@ public class SlowUserPermissionsIT extends BaseIT{
                 .clickSaveRole();
 
         UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
-                .clickAddUserLink()
+                .clickCreateUserButton()
                 .setName(userName)
                 .setPassword("TestPassword")
                 .setConfirmPassword("TestPassword")

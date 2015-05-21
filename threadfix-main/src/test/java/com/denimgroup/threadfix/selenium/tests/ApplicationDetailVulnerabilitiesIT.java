@@ -63,6 +63,8 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
         TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
 
+        sleep(5000);
+
         assertTrue("The total number is not showing correctly", teamIndexPage.isTeamTotalNumberCorrect(teamName, "43"));
         assertTrue("The total number is not showing correctly",
                 teamIndexPage.isApplicationTotalNumberCorrect(teamName,appName, "43"));
@@ -81,6 +83,8 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
 
         TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
+
+        sleep(5000);
 
         assertTrue("The total number is not showing correctly", teamIndexPage.isTeamTotalNumberCorrect(teamName, "39"));
         assertTrue("The total number is not showing correctly",
@@ -178,6 +182,8 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
         TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
 
+        sleep(5000);
+
         assertTrue("The total number is not showing correctly", teamIndexPage.isTeamTotalNumberCorrect(teamName, "43"));
         assertTrue("The total number is not showing correctly", teamIndexPage.isApplicationTotalNumberCorrect(teamName,appName, "43"));
     }
@@ -233,6 +239,8 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
 
         TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
+
+        sleep(5000);
 
         assertTrue("The total number is not showing correctly", teamIndexPage.isTeamTotalNumberCorrect(teamName, "39"));
         assertTrue("The total number is not showing correctly",

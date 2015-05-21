@@ -75,7 +75,7 @@ public class AnalyticsRemediationIT extends BaseDataTest {
                 .addTagFilter(tagName,"complianceFilterDiv")
                 .expandAgingFilter("complianceFilterDiv")
                 .toggleAgingFilter("Forever", "complianceFilterDiv")
-                .sleepOnArrival(5000);
+                .sleep(5000);
 
         assertTrue("Starting count is incorrect",
                 driver.findElement(By.xpath("//div[@id='complianceTable1']//tr[@id='4']/td[@id='1']")).getText().equals("0"));
@@ -156,6 +156,8 @@ public class AnalyticsRemediationIT extends BaseDataTest {
     @Test
     public void testNumberOfVulnerabilities() {
         initialize();
+
+        sleep(2000);
 
         assertTrue("There aren't enough vulnerabilities shown on the page.",
                 !driver.findElements(By.id("vulnName44")).isEmpty());

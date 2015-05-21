@@ -146,6 +146,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage setRemoteSourceCodeInformation(String url, String revision, String userName, String password) {
+        selectGitRepositoryType();
         setRepositoryURLEdited(url);
         setRepositoryRevisionEdited(revision);
         setRepositoryUserNameEdited(userName);
@@ -154,7 +155,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage setRepositoryURLEdited(String url) {
-
+        selectGitRepositoryType();
         driver.findElementById("repositoryUrl").clear();
         driver.findElementById("repositoryUrl").sendKeys(url);
         return this;
@@ -1431,5 +1432,9 @@ public class ApplicationDetailPage extends BasePage {
 
     public void waitForCWEBar(String teamName, String appName, String vulnerability) {
         waitForElement(driver.findElementById(teamName + appName + vulnerability + "Bar"));
+    }
+
+    public void selectGitRepositoryType() {
+        driver.findElementByXPath("//input[@value='GIT']").click();
     }
 }

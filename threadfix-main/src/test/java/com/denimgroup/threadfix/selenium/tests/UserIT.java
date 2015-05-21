@@ -59,9 +59,10 @@ public class UserIT extends BaseDataTest {
 		userIndexPage.createUser(userName, "", password);
 
         assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
-		assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(userName));
+		assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed("Successfully created user " + userName));
 	}
 
+    //TODO: Add separate methods with no refreshes.
     @Test
     public void testCreateTwoUsersWithoutRefresh() {
         String userName = getName();
@@ -71,13 +72,15 @@ public class UserIT extends BaseDataTest {
 
         userIndexPage.createUser(userName, "", password);
 
+        assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed("Successfully created user " + userName));
+        userIndexPage.refreshPage();
         assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
-        assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(userName));
 
-        userIndexPage.createUser(secondUserName,"",password);
+        userIndexPage.createUser(secondUserName, "", password);
 
+        assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed("Successfully created user " + secondUserName));
+        userIndexPage.refreshPage();
         assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(secondUserName));
-        assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(secondUserName));
         assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
     }
 
@@ -134,11 +137,16 @@ public class UserIT extends BaseDataTest {
         String userName = getName();
         String password = "testDeleteUser";
 
-        userIndexPage.createUser(userName,"",password)
-                .clickUserLink(userName)
+        userIndexPage.clickCreateUserButton()
+                .setName(userName)
+                .setPassword(password)
+                .setConfirmPasswordModal(password)
+                .clickAddNewUserBtn();
+
+        userIndexPage.clickUserLink(userName)
                 .clickDelete(userName);
 
-        assertTrue("Deletion Message not displayed.", userIndexPage.isSuccessDisplayed(userName));
+        assertTrue("Deletion Message not displayed.", userIndexPage.isSuccessDisplayed("User was successfully deleted."));
         assertFalse("User still present in user table.", userIndexPage.isUserNamePresent(userName));
     }
 
@@ -152,13 +160,13 @@ public class UserIT extends BaseDataTest {
         String changedName = getName();
         String displayCssId = "displayName" + changedName;
 
-        userIndexPage.clickAddUserLink()
+        userIndexPage.clickCreateUserButton()
                 .setNameModal(userName1)
                 .setPasswordModal(password1)
                 .setConfirmPasswordModal(password1)
                 .clickAddNewUserBtn();
 
-        userIndexPage.clickAddUserLink()
+        userIndexPage.clickCreateUserButton()
                 .setNameModal(userName2)
                 .setPasswordModal(password2)
                 .setConfirmPasswordModal(password2)
@@ -179,8 +187,13 @@ public class UserIT extends BaseDataTest {
                 .setConfirmPassword(changedPassword)
                 .clickSaveChanges();
 
-        assertTrue("Second user's display name was changed to the first user's name when attempting to change only password.",
-                driver.findElements(By.id(displayCssId)).size() < 2);
+        String displayNameUser1 = userIndexPage.clickUserLink(userName1)
+                .getDisplayName();
+        String displayNameUser2 = userIndexPage.clickUserLink(userName2)
+                .getDisplayName();
+
+        assertFalse("Second user's display name was changed to the first user's name when attempting to change only password.",
+                displayNameUser1.equals(displayNameUser2));
     }
 
     @Test
@@ -192,8 +205,10 @@ public class UserIT extends BaseDataTest {
         userIndexPage.createUser(userName, displayName, password)
                 .refreshPage();
 
+        String checkDisplayName = userIndexPage.clickUserLink(userName)
+                .getDisplayName();
         assertTrue("User with display name was not added correctly.",
-                driver.findElement(By.id("displayName" + displayName)).isDisplayed());
+                displayName.equals(checkDisplayName));
     }
 
     @Test
@@ -202,12 +217,21 @@ public class UserIT extends BaseDataTest {
         String displayName = getName();
         String password = getName();
 
-        userIndexPage.createUser(userName, "", password)
-                .editUser(userName, userName, displayName, password)
-                .refreshPage();
+        userIndexPage.clickCreateUserButton()
+                .setName(userName)
+                .setPassword(password)
+                .setConfirmPasswordModal(password)
+                .clickAddNewUserBtn();
+
+        userIndexPage.clickUserLink(userName)
+                .setDisplayName(displayName)
+                .clickSaveChanges();
+
+        String checkDisplayName = userIndexPage.clickUserLink(userName)
+                .getDisplayName();
 
         assertTrue("User with display name was not added correctly.",
-                driver.findElement(By.id("displayName" + displayName)).isDisplayed());
+                displayName.equals(checkDisplayName));
     }
 
     //===========================================================================================================
@@ -216,7 +240,7 @@ public class UserIT extends BaseDataTest {
 
     @Test
     public void testUserFieldValidation() {
-        userIndexPage.clickAddUserLink()
+        userIndexPage.clickCreateUserButton()
                 .setName("        ")
                 .setPassword("  ")
                 .setConfirmPassword("  ")
@@ -256,7 +280,7 @@ public class UserIT extends BaseDataTest {
         userIndexPage.createUser(userName, "", password);
 
         assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
-        assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(userName));
+        assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed("Successfully created user " + userName));
 
         DashboardPage dashboardPage = userIndexPage.logout()
                 .login(userName, password);
@@ -266,7 +290,7 @@ public class UserIT extends BaseDataTest {
         userIndexPage = dashboardPage.logout()
                 .defaultLogin()
                 .clickManageUsersLink()
-                .clickAddUserLink();
+                .clickCreateUserButton();
         // Test name uniqueness check
 
         userIndexPage.setName(userName);
@@ -365,7 +389,7 @@ public class UserIT extends BaseDataTest {
     public void testEditUserValidationPasswordMatching(){
         String userName = getName();
 
-		userIndexPage.clickAddUserLink()
+		userIndexPage.clickCreateUserButton()
                 .setName(userName)
                 .setPassword("lengthy password 1")
                 .setConfirmPassword("lengthy password 2")
@@ -387,13 +411,13 @@ public class UserIT extends BaseDataTest {
         String userName = getName();
         String password = getName();
 
-        userIndexPage.clickAddUserLink()
+        userIndexPage.clickCreateUserButton()
                 .setNameModal(userName)
                 .setPasswordModal(password)
                 .setConfirmPasswordModal(password)
                 .clickAddNewUserBtn();
 
-        userIndexPage.clickAddUserLink()
+        userIndexPage.clickCreateUserButton()
                 .setNameModal(userName)
                 .setPasswordModal("lengthy password 2")
                 .setConfirmPasswordModal("lengthy password 2")
@@ -421,9 +445,8 @@ public class UserIT extends BaseDataTest {
 
         userIndexPage.createUser(userName,displayName,password)
                 .clickUserLink(userName)
-                .toggleGlobalAccess()
                 .chooseRoleForGlobalAccess("Administrator")
-                .clickUpdateUserBtn();
+                .clickSaveChanges();
 
         ApplicationDetailPage applicationDetailPage = userIndexPage.logout()
                 .login(userName, password)
