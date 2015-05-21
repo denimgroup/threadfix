@@ -231,6 +231,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
                     Finding finding = constructFinding(findingMap);
 
 					if (finding != null) {
+                        finding.setSourceFileLocation(jsonItem.getString("file"));
 						finding.setIsStatic(true);
 						finding.setNativeId(hashFindingInfo(jsonItem.toString(),null,null));
 						
