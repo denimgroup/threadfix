@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.denimgroup.threadfix.framework.TestConstants.RAILSGOAT_SOURCE_LOCATION;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -33,7 +34,7 @@ public class RailsModelParserTest {
 
     @Test
     public void testRailsGoatModelParser() {
-        File f = new File("C:\\SourceCode\\railsgoat-master");
+        File f = new File(RAILSGOAT_SOURCE_LOCATION);
         assert(f.exists());
         assert(f.isDirectory());
 

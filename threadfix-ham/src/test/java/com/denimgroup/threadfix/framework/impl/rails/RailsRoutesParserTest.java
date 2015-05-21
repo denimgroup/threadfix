@@ -975,7 +975,7 @@ public class RailsRoutesParserTest {
 
     @Test
     public void testDiscourseRoutesParser() {
-        File f = ResourceManager.getRailsFile("discourse_routes.rb");
+        File f = ResourceManager.getRailsFile("discource_routes.rb");
         assert(f.exists());
         // System.err.println("parsing "+f.getAbsolutePath() );
         Map<String, RailsRoute> mappings = RailsRoutesParser.parse(f);
