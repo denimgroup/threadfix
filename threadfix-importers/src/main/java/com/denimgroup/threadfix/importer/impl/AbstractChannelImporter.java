@@ -737,8 +737,11 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         Scan scan = new Scan();
         scan.setOriginalFileName(originalFileName);
 
+        DefaultConfiguration defaultConfiguration = defaultConfigService.loadCurrentConfiguration();
+
         // Remote Providers won't have an inputFileName
-        if (inputFileName != null) {
+        // Only set file name for scan when there is upload scan location in System Settings
+        if (inputFileName != null && defaultConfiguration.fileUploadLocationExists()) {
             Matcher m = scanFileRegex.matcher(inputFileName);
             if (m.matches()) {
                 scan.setFileName(m.group(2));

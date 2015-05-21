@@ -20,7 +20,7 @@
                     <th class="medium"></th>
                 </c:if>
                 <th style="width:100px"></th>
-                <th style="width:180px" ng-show="scan.fileName"></th>
+                <th style="width:180px" ng-show="scansToDownload"></th>
             </tr>
         </thead>
         <tbody>
@@ -47,7 +47,7 @@
                 <td>
                     <a class="pointer" ng-click="viewScan(scan)">View Scan</a>
                 </td>
-                <td ng-show="scan.fileName">
+                <td ng-show="scan.downloadable">
                     <a ng-hide="scan.downloading" class="btn btn-primary" ng-click="downloadScan(scan)">Download Scan</a>
                     <a ng-show="scan.downloading" class="btn btn-primary" ng-disabled>
                         <span class="spinner"></span>
