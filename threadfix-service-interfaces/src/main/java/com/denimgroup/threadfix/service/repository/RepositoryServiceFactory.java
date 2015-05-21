@@ -25,40 +25,13 @@
 package com.denimgroup.threadfix.service.repository;
 
 import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.SourceCodeRepoType;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.RepositoryService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
 
 /**
- * @author zabdisubhan
+ * @author mcollins
  */
-@Component
-public final class RepositoryServiceFactory {
-
-    private static final SanitizedLogger LOG = new SanitizedLogger(RepositoryServiceFactory.class);
-
-    @Autowired private GitServiceImpl gitServiceImpl;
-    @Autowired private SvnServiceImpl svnServiceImpl;
-
-    public RepositoryService getRepositoryService(@Nonnull Application application) {
-
-        LOG.info("Determining proper RepositoryService implementation for application " + application.getName() + " and new scan.");
-
-        RepositoryService repositoryService = null;
-        SourceCodeRepoType repoType = SourceCodeRepoType.getType(application.getRepositoryType());
-
-        if (repoType == SourceCodeRepoType.GIT) {
-            LOG.info("Source code is being stored in Git. Returning GitServiceImpl.");
-            repositoryService = gitServiceImpl;
-        } else if (repoType == SourceCodeRepoType.SVN) {
-            LOG.info("Source code is being stored in SVN. Returning SvnServiceImpl.");
-            repositoryService = svnServiceImpl;
-        }
-
-        return repositoryService;
-    }
+public interface RepositoryServiceFactory {
+    public RepositoryService getRepositoryService(@Nonnull Application application);
 }

@@ -85,6 +85,13 @@ myAppModule.controller('ScanTableController', function ($scope, $window, $http, 
             } else {
                 $scope.heading = $scope.scans.length + ' Scans';
             }
+
+            $scope.scansToDownload = false;
+            scans.forEach(function(scan){
+                if (scan.downloadable)
+                    $scope.scansToDownload = true;
+            })
+
         }
 
     });

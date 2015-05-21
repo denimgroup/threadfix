@@ -47,7 +47,8 @@ class FindingProcessorFactory extends SpringBeanAutowiringSupport {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(FindingProcessorFactory.class);
 
-    @Autowired private RepositoryServiceFactory repositoryServiceFactory;
+    @Autowired(required = false)
+	private RepositoryServiceFactory repositoryServiceFactory;
 
     @Nonnull
     public static FindingProcessor getProcessor(@Nonnull Application application,
@@ -122,7 +123,10 @@ class FindingProcessorFactory extends SpringBeanAutowiringSupport {
 
         FindingProcessorFactory factory = new FindingProcessorFactory();
 
-        RepositoryService repositoryService = factory.repositoryServiceFactory.getRepositoryService(application);
+        RepositoryService repositoryService = null;
+		if (factory.repositoryServiceFactory != null) {
+			repositoryService = factory.repositoryServiceFactory.getRepositoryService(application);
+		}
 
         if (repositoryService == null) {
             LOG.info("RepositoryService was null. " +

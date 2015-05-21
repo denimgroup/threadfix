@@ -117,6 +117,8 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
     @Size(max = 255, message = "{errors.maxlength} 255.")
     private String originalFileName;
 
+	private boolean isDownloadable;
+
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "applicationChannelId")
     @JsonIgnore
@@ -619,6 +621,16 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 
 	public void setLockedMetadata(Boolean lockedMetadata) {
 		this.lockedMetadata = lockedMetadata;
+	}
+
+	@Transient
+	@JsonView(AllViews.FormInfo.class)
+	public boolean isDownloadable() {
+		return isDownloadable;
+	}
+
+	public void setDownloadable(boolean isDownloadable) {
+		this.isDownloadable = isDownloadable;
 	}
 
 	@Override
