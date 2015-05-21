@@ -26,24 +26,26 @@ package com.denimgroup.threadfix.data.enums;
 import com.fasterxml.jackson.annotation.JsonView;
 
 public enum FrameworkType {
-	NONE("None"),
+    NONE("None"),
     DETECT("Detect"),
     JSP("JSP"),
+    RAILS("Rails"),
     SPRING_MVC("Spring MVC"),
     STRUTS("Struts"),
     DOT_NET_MVC(".NET MVC"),
     DOT_NET_WEB_FORMS("ASP.NET WebForms");
-	
-	FrameworkType(String displayName) {
-		this.displayName = displayName;
-	}
-	
-	private String displayName;
+
+    FrameworkType(String displayName) {
+        this.displayName = displayName;
+    }
+
+    private String displayName;
+
     @JsonView(Object.class)
-	public String getDisplayName() { return displayName; }
-	
+    public String getDisplayName() { return displayName; }
+
     public static FrameworkType getFrameworkType(String input) {
-		FrameworkType type = DETECT; // default framework type
+        FrameworkType type = DETECT; // default framework type
 
         if (input == null) {
             type = NONE;
@@ -51,21 +53,21 @@ public enum FrameworkType {
             type = DOT_NET_MVC;
         } else if (
                 input.equals("DOT_NET_WEB_FORMS") ||
-                input.equals("ASP.NET_WEB_FORMS") ||
-                input.equals("ASP.NET_WEBFORMS")
+                        input.equals("ASP.NET_WEB_FORMS") ||
+                        input.equals("ASP.NET_WEBFORMS")
                 ) {
             type = DOT_NET_WEB_FORMS;
         } else {
-			for (FrameworkType frameworkType : values()) {
-				if (frameworkType.toString().equals(input) ||
+            for (FrameworkType frameworkType : values()) {
+                if (frameworkType.toString().equals(input) ||
                         frameworkType.displayName.equals(input) ||
                         frameworkType.displayName.replace(' ', '_').equals(input)) {
-					type = frameworkType;
-					break;
-				}
-			}
-		}
-		
-		return type;
-	}
+                    type = frameworkType;
+                    break;
+                }
+            }
+        }
+
+        return type;
+    }
 }
