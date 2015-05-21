@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
+import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.WhiteHatMockHttpUtils;
 import org.junit.Test;
 
@@ -76,8 +77,13 @@ public class WhiteHatApplicationParsingTests {
     public void getApplicationsInvalidCredentials() {
         AbstractRemoteProvider provider = getWhiteHatImporterWithMock(WhiteHatMockHttpUtils.BAD_API_KEY);
 
-        List<RemoteProviderApplication> applications = provider.fetchApplications();
+        try {
+            List<RemoteProviderApplication> applications = provider.fetchApplications();
 
-        assertTrue("Applications were supposed to be null.", applications == null);
+            assert false;
+
+        } catch (RestIOException e) {
+            // good
+        }
     }
 }
