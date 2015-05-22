@@ -23,31 +23,24 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.DiskUtils;
-import com.denimgroup.threadfix.data.ScanCheckResultBean;
-import com.denimgroup.threadfix.data.ScanImportStatus;
-import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.ScanMergeService;
-import com.denimgroup.threadfix.service.ScanService;
+import com.denimgroup.threadfix.service.UploadScanService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.io.IOException;
 
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
-import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 
 /**
  * Created by mac on 9/11/14.
@@ -58,21 +51,15 @@ public class UploadScanController {
     private static final SanitizedLogger LOG = new SanitizedLogger(UploadScanController.class);
 
     @Autowired
-    private ScanTypeCalculationService scanTypeCalculationService;
-    @Autowired
-    private ScanService                scanService;
-    @Autowired
-    private ScanMergeService           scanMergeService;
-    @Autowired
-    private OrganizationService        organizationService;
+    private UploadScanService uploadScanService;
 
     @RequestMapping(value = "/organizations/{orgId}/applications/{appId}/upload/remote", method = RequestMethod.POST, produces = "text/plain")
     @JsonView(AllViews.TableRow.class)
     public String uploadScan2(@PathVariable("appId") int appId,
                              @PathVariable("orgId") int orgId,
                              HttpServletRequest request,
-                             @RequestParam("file") MultipartFile file) throws IOException {
-        Object o = uploadScan(appId, orgId, request, file);
+                             MultipartRequest multiPartRequest) throws IOException {
+        Object o = uploadScan(appId, orgId, request, multiPartRequest);
 
         ObjectWriter mapper = new CustomJacksonObjectMapper().writerWithView(AllViews.TableRow.class);
         String s = mapper.writeValueAsString(o);
@@ -90,50 +77,16 @@ public class UploadScanController {
     public Object uploadScan(@PathVariable("appId") int appId,
                              @PathVariable("orgId") int orgId,
                              HttpServletRequest request,
-                             @RequestParam("file") MultipartFile file) throws IOException {
+                             MultipartRequest multiPartRequest) throws IOException {
 
         LOG.info("Received REST request to upload a scan to application " + appId + ".");
+
 
         if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
             return failure("You don't have permission to upload scans.");
         }
 
-        Integer myChannelId = scanTypeCalculationService.calculateScanType(appId, file, request.getParameter("channelId"));
-
-        if (myChannelId == null) {
-            return failure("Failed to determine the scan type.");
-        }
-
-        String fileName = scanTypeCalculationService.saveFile(myChannelId, file);
-
-        try {
-            ScanCheckResultBean returnValue = scanService.checkFile(myChannelId, fileName);
-
-            if (ScanImportStatus.SUCCESSFUL_SCAN == returnValue.getScanCheckResult()) {
-                Scan scan = scanMergeService.saveRemoteScanAndRun(myChannelId, fileName);
-
-                if (scan != null) {
-                    Organization organization = organizationService.loadById(orgId);
-                    return success(organization);
-                } else {
-                    return failure("Something went wrong while processing the scan.");
-                }
-            } else {
-                return failure(returnValue.getScanCheckResult().toString());
-            }
-        } finally { // error recovery code
-            File diskFile = DiskUtils.getScratchFile(fileName);
-
-            if (diskFile.exists()) {
-                LOG.info("After scan upload, file is still present. Attempting to delete.");
-                boolean deletedSuccessfully = diskFile.delete();
-
-                if (deletedSuccessfully) {
-                    LOG.info("Successfully deleted scan file.");
-                } else {
-                    LOG.error("Unable to delete file.");
-                }
-            }
-        }
+        return uploadScanService.processMultiFileUpload(multiPartRequest.getFileMap().values(),
+                orgId, appId, request.getParameter("channelId"));
     }
 }

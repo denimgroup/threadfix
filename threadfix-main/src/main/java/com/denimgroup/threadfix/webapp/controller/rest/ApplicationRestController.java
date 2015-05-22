@@ -24,9 +24,10 @@
 
 package com.denimgroup.threadfix.webapp.controller.rest;
 
-import com.denimgroup.threadfix.data.ScanCheckResultBean;
-import com.denimgroup.threadfix.data.ScanImportStatus;
-import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.Tag;
+import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
@@ -39,10 +40,13 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 
@@ -77,6 +81,8 @@ public class ApplicationRestController extends TFRestController {
     private OrganizationService organizationService;
     @Autowired
     private TagService tagService;
+    @Autowired
+    private UploadScanService uploadScanService;
 
     private final static String DETAIL = "applicationDetail",
             SET_PARAMS = "setParameters",
@@ -262,7 +268,7 @@ public class ApplicationRestController extends TFRestController {
     @JsonView(AllViews.RestViewScan2_1.class)
     public Object uploadScan(@PathVariable("appId") int appId,
                              HttpServletRequest request,
-                             @RequestParam("file") MultipartFile file) throws IOException {
+                             MultipartRequest multiPartRequest) throws IOException {
         log.info("Received REST request to upload a scan to application " + appId + ".");
 
         String result = checkKey(request, UPLOAD);
@@ -270,22 +276,17 @@ public class ApplicationRestController extends TFRestController {
             return failure(result);
         }
 
-        Integer myChannelId = scanTypeCalculationService.calculateScanType(appId, file, request.getParameter("channelId"));
+        MultiValueMap<String, MultipartFile> fileMap = multiPartRequest.getMultiFileMap();
 
-        if (myChannelId == null) {
-            return failure(SCAN_TYPE_LOOKUP_FAILED);
+        List<MultipartFile> fileList = list();
+
+        if(!fileMap.isEmpty()){
+            for(List<MultipartFile> subList : fileMap.values()){
+                fileList.addAll(subList);
+            }
         }
 
-        String fileName = scanTypeCalculationService.saveFile(myChannelId, file);
-
-        ScanCheckResultBean returnValue = scanService.checkFile(myChannelId, fileName);
-
-        if (ScanImportStatus.SUCCESSFUL_SCAN == returnValue.getScanCheckResult()) {
-            Scan scan = scanMergeService.saveRemoteScanAndRun(myChannelId, fileName);
-            return RestResponse.success(scan);
-        } else {
-            return failure(returnValue.getScanCheckResult().toString());
-        }
+        return uploadScanService.processMultiFileUpload(fileList, null, appId, request.getParameter("channelId"));
     }
 
     /**
