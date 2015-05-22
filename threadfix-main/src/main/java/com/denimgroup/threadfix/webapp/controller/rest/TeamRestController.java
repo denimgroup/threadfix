@@ -267,7 +267,7 @@ public class TeamRestController extends TFRestController {
 		return teamList(request);
 	}
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/{teamId}/", consumes = "application/x-www-form-urlencoded")
+    @RequestMapping(method = RequestMethod.PUT, value = "/{teamId}/update", consumes = "application/x-www-form-urlencoded")
     public Object putTeam(HttpServletRequest request, @PathVariable("teamId") int teamId, @RequestBody MultiValueMap<String, String> params){
 
         log.info("Received REST request to update Team");
