@@ -24,6 +24,11 @@
             <span id="file{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.calculatedFilePath }}</span>
             <br>
         </div>
+        <div ng-if="(vulnerability.path || vulnerability.parameter) && vulnerability.fullUrl">
+            <div class="vuln-tree-label">Full Url</div>
+            <span id="fullUrl{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.fullUrl }}</span>
+            <br>
+        </div>
     </div>
 
     <!-- Dependency -->
