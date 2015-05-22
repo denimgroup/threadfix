@@ -35,8 +35,11 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.beans.ScanParametersBean;
 import com.denimgroup.threadfix.views.AllViews;
+import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.MultiValueMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -74,6 +77,8 @@ public class ApplicationRestController extends TFRestController {
     private WafService wafService;
     @Autowired
     private OrganizationService organizationService;
+    @Autowired
+    private ApplicationCriticalityService applicationCriticalityService;
 
     private final static String DETAIL = "applicationDetail",
             SET_PARAMS = "setParameters",
@@ -82,7 +87,8 @@ public class ApplicationRestController extends TFRestController {
             SET_WAF = "setWaf",
             UPLOAD = "uploadScan",
             ATTACH_FILE = "attachFile",
-            SET_URL = "setUrl";
+            SET_URL = "setUrl",
+            UPDATE = "updateApplication";
 
     // TODO finalize which methods need to be restricted
     static {
@@ -369,6 +375,30 @@ public class ApplicationRestController extends TFRestController {
             application.setUrl(url);
             applicationService.storeApplication(application);
             return RestResponse.success(application);
+        }
+    }
+
+    @RequestMapping(value = "/{appId}/update", method = RequestMethod.PUT, consumes = "application/x-www-form-urlencoded")
+    public Object updateApplication(@PathVariable("appId") Integer appId,
+                                    @RequestBody MultiValueMap<String, String> params,
+                                    Application application,
+                                    BindingResult bindingResult, HttpServletRequest request) {
+
+        log.info("Received REST request for updating Application with id = " + appId + ".");
+
+        String result = checkKey(request, UPDATE);
+        if (!result.equals(API_KEY_SUCCESS)) {
+            return failure(result);
+        }
+
+        if(params == null || params.isEmpty()){
+            return failure("No parameters have been set");
+        }
+
+        try {
+            return applicationService.updateApplicationFromREST(appId, params, bindingResult);
+        }catch (RuntimeException e){
+            return FormRestResponse.failure(e.getMessage(), bindingResult);
         }
     }
 }
