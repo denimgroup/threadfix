@@ -599,6 +599,22 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 		this.lockedMetadata = lockedMetadata;
 	}
 
+    @Transient
+    @JsonView(AllViews.RestViewScan2_1.class)
+    public List<Finding> getUnmappedFindings(){
+        List<Finding> unMappedFindings = list();
+
+        if(findings != null && !findings.isEmpty()){
+            for(Finding finding : findings){
+                if(finding.getVulnerability() == null){
+                    unMappedFindings.add(finding);
+                }
+            }
+        }
+
+        return unMappedFindings;
+    }
+
 	@Override
 	public String toString() {
 		String type = applicationChannel == null ? "no type" : applicationChannel.getChannelType().getName();
