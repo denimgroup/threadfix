@@ -88,7 +88,8 @@ public class ApplicationRestController extends TFRestController {
             SET_URL = "setUrl",
             UPDATE = "updateApplication",
             ADD_TAG = "addTag",
-            REMOVE_TAG = "removeTag";
+            REMOVE_TAG = "removeTag",
+            SCAN_LIST = "scanList";
 
     // TODO finalize which methods need to be restricted
     static {
@@ -392,7 +393,6 @@ public class ApplicationRestController extends TFRestController {
             return failure(result);
         }
 
-
         if(params == null || params.isEmpty()){
             return failure("No parameters have been set");
         }
@@ -410,6 +410,7 @@ public class ApplicationRestController extends TFRestController {
                          HttpServletRequest request){
 
         String result = checkKey(request, ADD_TAG);
+
         if (!result.equals(API_KEY_SUCCESS)) {
             return failure(result);
         }
@@ -470,6 +471,30 @@ public class ApplicationRestController extends TFRestController {
             return success("Tag successfully removed from application");
         }else{
             return failure("Tag no present on this application");
+        }
+    }
+
+    @RequestMapping(headers="Accept=application/json", value="/{appId}/scans", method=RequestMethod.GET)
+    @JsonView(AllViews.RestViewScanList.class)
+    public Object scanList(HttpServletRequest request,
+                           @PathVariable("appId") int appId) throws IOException {
+
+        String result = checkKey(request, SCAN_LIST);
+        if (!result.equals(API_KEY_SUCCESS)) {
+            return failure(result);
+        }
+
+        Application application = applicationService.loadApplication(appId);
+
+        if (application == null) {
+            log.warn("Invalid Application ID.");
+            return failure(APPLICATION_LOOKUP_FAILED);
+        }else if(application.getScans() == null || application.getScans().isEmpty()){
+            String message = "No scans associated with application: " + appId;
+            log.warn(message);
+            return failure(message);
+        }else{
+            return success(application.getScans());
         }
     }
 }

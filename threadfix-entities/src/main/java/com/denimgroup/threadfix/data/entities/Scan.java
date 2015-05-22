@@ -125,7 +125,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
     }
 
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.RestView2_1.class, AllViews.RestViewScanStatistic.class})
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.RestView2_1.class, AllViews.RestViewScanStatistic.class, AllViews.RestViewScanList.class})
 	@Index(name="importTime")
     public Calendar getImportTime() {
         return importTime;
@@ -470,7 +470,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
     // This should get serialized.
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({AllViews.TableRow.class})
     @Transient
     private String getType() {
         String type = getApplicationChannel().getChannelType().getName();
@@ -496,7 +496,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
         return map;
     }
 
-    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.RestView2_1.class, AllViews.RestViewScanStatistic.class })
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.RestView2_1.class, AllViews.RestViewScanStatistic.class, AllViews.RestViewScanList.class })
     @Transient
     private String getScannerName() {
         return getApplicationChannel().getChannelType().getName();
