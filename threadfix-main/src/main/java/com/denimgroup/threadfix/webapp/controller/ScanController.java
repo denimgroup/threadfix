@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Permission;
@@ -57,20 +58,20 @@ public class ScanController {
 
 	private final SanitizedLogger log = new SanitizedLogger(ScanController.class);
 
-    @Autowired
+	@Autowired
 	private ScanService scanService;
-    @Autowired
+	@Autowired
 	private ScanDeleteService scanDeleteService;
-    @Autowired
+	@Autowired
 	private FindingService findingService;
-    @Autowired
-    private VulnerabilityService vulnerabilityService;
-    @Autowired
-    private ApplicationService applicationService;
-    @Autowired
-    private GenericVulnerabilityService genericVulnerabilityService;
-    @Autowired
-    private DefaultConfigService defaultConfigService;
+	@Autowired
+	private VulnerabilityService vulnerabilityService;
+	@Autowired
+	private ApplicationService applicationService;
+	@Autowired
+	private GenericVulnerabilityService genericVulnerabilityService;
+	@Autowired
+	private DefaultConfigService defaultConfigService;
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
@@ -79,13 +80,13 @@ public class ScanController {
 
 	@RequestMapping(value = "/{scanId}", method = RequestMethod.GET)
 	public ModelAndView detailScan(@PathVariable("orgId") Integer orgId,
-			@PathVariable("appId") Integer appId,
-			@PathVariable("scanId") Integer scanId) {
-		
+								   @PathVariable("appId") Integer appId,
+								   @PathVariable("scanId") Integer scanId) {
+
 		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
 			return new ModelAndView("403");
 		}
-		
+
 		Scan scan = null;
 		if (scanId != null) {
 			scan = scanService.loadScan(scanId);
@@ -100,88 +101,88 @@ public class ScanController {
 				return new ModelAndView("redirect:/");
 			}
 		}
-		
+
 		long numFindings = scanService.getFindingCount(scanId);
 
 		ModelAndView mav = new ModelAndView("scans/detail");
 		mav.addObject("totalFindings", numFindings);
 		mav.addObject(scan);
 		mav.addObject("vulnData", scan.getReportList());
-        PermissionUtils.addPermissions(mav, orgId, appId, Permission.CAN_UPLOAD_SCANS);
+		PermissionUtils.addPermissions(mav, orgId, appId, Permission.CAN_UPLOAD_SCANS);
 
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/{scanId}/delete", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<String> deleteScan(@PathVariable("orgId") Integer orgId,
-			@PathVariable("appId") Integer appId,
-			@PathVariable("scanId") Integer scanId) {
-		
+														 @PathVariable("appId") Integer appId,
+														 @PathVariable("scanId") Integer scanId) {
+
 		if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return RestResponse.failure("You do not have permission to delete scans.");
 		}
-		
+
 		if (scanId != null) {
 			Scan scan = scanService.loadScan(scanId);
 			if (scan != null) {
 				scanDeleteService.deleteScan(scan);
-                vulnerabilityService.updateVulnerabilityReport(
-                        applicationService.loadApplication(appId));
+				vulnerabilityService.updateVulnerabilityReport(
+						applicationService.loadApplication(appId));
 			}
 		}
-		
+
 		return RestResponse.success("Successfully deleted scan.");
 	}
 
 	@RequestMapping(value = "/{scanId}/download", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<String> downloadScan(@PathVariable("orgId") Integer orgId,
-			@PathVariable("appId") Integer appId,
-			@PathVariable("scanId") Integer scanId,
-            HttpServletResponse response) {
+														   @PathVariable("appId") Integer appId,
+														   @PathVariable("scanId") Integer scanId,
+														   HttpServletResponse response) {
 
 		if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return RestResponse.failure("You do not have permission to download scans.");
 		}
 
-        DefaultConfiguration defaultConfiguration = defaultConfigService.loadCurrentConfiguration();
+		DefaultConfiguration defaultConfiguration = defaultConfigService.loadCurrentConfiguration();
 
-        if (!defaultConfiguration.fileUploadLocationExists()) {
-            return RestResponse.failure("There is no place to download scans from.");
-        }
+		if (!defaultConfiguration.fileUploadLocationExists()) {
+			return RestResponse.failure("There is no place to download scans from.");
+		}
 
-        if (scanId != null) {
+		if (scanId != null) {
 			Scan scan = scanService.loadScan(scanId);
 			if (scan != null) {
 
-                if (scan.getFileName()== null || scan.getFileName().isEmpty()){
-                    return RestResponse.failure("There is no scan file uploaded associated with this Scan.");
-                }
+				if (scan.getFileName()== null || scan.getFileName().isEmpty()){
+					return RestResponse.failure("There is no scan file uploaded associated with this Scan.");
+				}
 
-                String fullFilePath = defaultConfiguration.getFullFilePath(scan);
-                String failureMessage = scanService.downloadScan(scan, fullFilePath, response);
+				String fullFilePath = defaultConfiguration.getFullFilePath(scan);
+				String failureMessage = scanService.downloadScan(scan, fullFilePath, response);
 
-                if (failureMessage != null) {
-                    return RestResponse.failure(failureMessage);
-                }
+				if (failureMessage != null) {
+					return RestResponse.failure(failureMessage);
+				}
 			} else {
-                return RestResponse.failure("There is no valid scan file.");
-            }
+				return RestResponse.failure("There is no valid scan file.");
+			}
 		}
 
 		return RestResponse.success("Successfully downloaded scan.");
 	}
-	
+
 	@RequestMapping(value = "/{scanId}/table", method = RequestMethod.POST)
 	public @ResponseBody Object scanTable(
 			@ModelAttribute TableSortBean bean,
 			@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId,
 			@PathVariable("scanId") Integer scanId) throws IOException {
-		
+
 		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS,orgId,appId)) {
 			return "403";
 		}
-		
+
 		Scan scan = scanService.loadScan(scanId);
 		if (scan == null) {
 			log.warn(ResourceNotFoundException.getLogMessage("Scan", scanId));
@@ -190,41 +191,41 @@ public class ScanController {
 
 		long numFindings = scanService.getFindingCount(scanId);
 		long numPages = numFindings / Finding.NUMBER_ITEM_PER_PAGE;
-		
+
 		if (numFindings % Finding.NUMBER_ITEM_PER_PAGE == 0) {
 			numPages -= 1;
 		}
-		
+
 		if (bean.getPage() > numPages) {
 			bean.setPage((int) (numPages + 1));
 		}
-		
+
 		if (bean.getPage() < 1) {
 			bean.setPage(1);
 		}
-				
-        Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("numPages", numPages);
-        responseMap.put("page", bean.getPage());
-        responseMap.put("numFindings", numFindings);
-        responseMap.put("findingList", findingService.getFindingTable(scanId, bean));
-        responseMap.put("scan", scan);
 
-        return RestResponse.success(responseMap);
+		Map<String, Object> responseMap = new HashMap<>();
+		responseMap.put("numPages", numPages);
+		responseMap.put("page", bean.getPage());
+		responseMap.put("numFindings", numFindings);
+		responseMap.put("findingList", findingService.getFindingTable(scanId, bean));
+		responseMap.put("scan", scan);
+
+		return RestResponse.success(responseMap);
 	}
 
 	@JsonView(AllViews.TableRow.class)
 	@RequestMapping(value = "/{scanId}/unmappedTable", method = RequestMethod.POST)
 	public @ResponseBody Object unmappedScanTable(Model model,
-			@ModelAttribute TableSortBean bean,
-			@PathVariable("scanId") Integer scanId,
-			@PathVariable("appId") Integer appId,
-			@PathVariable("orgId") Integer orgId) throws IOException {
-		
+												  @ModelAttribute TableSortBean bean,
+												  @PathVariable("scanId") Integer scanId,
+												  @PathVariable("appId") Integer appId,
+												  @PathVariable("orgId") Integer orgId) throws IOException {
+
 		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS,orgId,appId)) {
 			return "403";
 		}
-		
+
 		Scan scan = scanService.loadScan(scanId);
 		if (scan == null) {
 			log.warn(ResourceNotFoundException.getLogMessage("Scan", scanId));
@@ -233,48 +234,53 @@ public class ScanController {
 
 		long numFindings = scanService.getUnmappedFindingCount(scanId);
 		long numPages = numFindings / 100;
-		
+
 		if (numFindings % 100 == 0) {
 			numPages -= 1;
 		}
-		
+
 		if (bean.getPage() >= numPages) {
 			bean.setPage((int) (numPages + 1));
 		}
-		
+
 		if (bean.getPage() < 1) {
 			bean.setPage(1);
 		}
-		
-        Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("numPages", numPages);
-        responseMap.put("page", bean.getPage());
-        responseMap.put("numFindings", numFindings);
-        responseMap.put("findingList", findingService.getUnmappedFindingTable(scanId, bean));
-        responseMap.put("scan", scan);
 
-        return RestResponse.success(responseMap);
+		Map<String, Object> responseMap = new HashMap<>();
+		responseMap.put("numPages", numPages);
+		responseMap.put("page", bean.getPage());
+		responseMap.put("numFindings", numFindings);
+		responseMap.put("findingList", findingService.getUnmappedFindingTable(scanId, bean));
+		responseMap.put("scan", scan);
+
+		return RestResponse.success(responseMap);
 	}
 
-    @RequestMapping(value = "/{scanId}/objects")
-    public @ResponseBody Object getBaseObjects(@PathVariable("scanId") Integer scanId) throws IOException {
-        Map<String, Object> map = new HashMap<>();
+	@RequestMapping(value = "/{scanId}/objects")
+	public @ResponseBody Object getBaseObjects(@PathVariable("scanId") Integer scanId) throws IOException {
+		Map<String, Object> map = new HashMap<>();
 
-        Scan scan = scanService.loadScan(scanId);
-        if (scan == null) {
-            log.warn(ResourceNotFoundException.getLogMessage("Scan", scanId));
-            throw new ResourceNotFoundException();
-        }
+		Scan scan = scanService.loadScan(scanId);
+		if (scan == null) {
+			log.warn(ResourceNotFoundException.getLogMessage("Scan", scanId));
+			throw new ResourceNotFoundException();
+		}
 
-        // basic information
-        map.put("scan", scan);
+		// basic information
+		// check if scan file can be downloaded
+		DefaultConfiguration defaultConfiguration = defaultConfigService.loadCurrentConfiguration();
+		scan.setDownloadable(defaultConfiguration.fileUploadLocationExists()
+				&& DiskUtils.isFileExists(defaultConfiguration.getFullFilePath(scan)));
 
-        return success(map);
-    }
+		map.put("scan", scan);
+
+		return success(map);
+	}
 
 	@JsonView(AllViews.TableRow.class)
 	@RequestMapping(value = "/{scanId}/cwe", method = RequestMethod.GET)
 	public @ResponseBody Object getGenericVulnerabilities() throws IOException {
-        return RestResponse.success(genericVulnerabilityService.loadAll());
+		return RestResponse.success(genericVulnerabilityService.loadAll());
 	}
 }

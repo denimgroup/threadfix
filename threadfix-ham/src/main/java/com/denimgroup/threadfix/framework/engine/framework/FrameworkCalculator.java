@@ -28,6 +28,8 @@ import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
 import com.denimgroup.threadfix.framework.impl.dotNet.DotNetFrameworkChecker;
 import com.denimgroup.threadfix.framework.impl.dotNetWebForm.WebFormsFrameworkChecker;
+import com.denimgroup.threadfix.framework.impl.rails.RailsFrameworkChecker;
+import com.denimgroup.threadfix.framework.impl.rails.model.RailsController;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 import javax.annotation.Nonnull;
@@ -39,17 +41,24 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 // TODO make this more generic
 public class FrameworkCalculator {
 
-	private FrameworkCalculator(){
-        frameworkCheckers.add(new JavaAndJspFrameworkChecker());
-        frameworkCheckers.add(new DotNetFrameworkChecker());
-        frameworkCheckers.add(new WebFormsFrameworkChecker());
-    }
-	
 	private static final SanitizedLogger log = new SanitizedLogger("FrameworkCalculator");
 
     private Collection<FrameworkChecker> frameworkCheckers = list();
 
     private static FrameworkCalculator INSTANCE = new FrameworkCalculator();
+
+    static {
+        // TODO detect language first and use that to narrow down the frameworks
+        // TODO incorporate python code
+        register(new JavaAndJspFrameworkChecker());
+        register(new DotNetFrameworkChecker());
+        register(new WebFormsFrameworkChecker());
+        register(new RailsFrameworkChecker());
+    }
+
+    public static void register(FrameworkChecker checker) {
+        INSTANCE.frameworkCheckers.add(checker);
+    }
 
     @Nonnull
     public static FrameworkType getType(@Nonnull String rootFileString) {
