@@ -52,7 +52,7 @@ public class Role extends AuditableEntity {
 			canManageRemoteProviders, canManageRoles, canManageTeams,
 			canManageUsers, canManageWafs, canManageVulnFilters, canModifyVulnerabilities,
 			canSubmitDefects, canUploadScans, canViewErrorLogs, canManageScanAgents, canManageSystemSettings,
-            canViewJobStatuses, enterprise, canManageTags, canSubmitComments;
+            canViewJobStatuses, enterprise, canManageTags, canSubmitComments, canManageScanResultFilters;
 
     public static final String[] PROTECTED_PERMISSIONS = {
             "canManageRoles", "canManageUsers"
@@ -300,6 +300,16 @@ public class Role extends AuditableEntity {
         this.canSubmitComments = canSubmitComments;
     }
 
+    @Column
+    @JsonView(AllViews.TableRow.class)
+    public Boolean getCanManageScanResultFilters(){
+        return canManageScanResultFilters;
+    }
+
+    public void setCanManageScanResultFilters(Boolean canManageScanResultFilters) {
+        this.canManageScanResultFilters = canManageScanResultFilters;
+    }
+
     @Transient
 	public Set<Permission> getPermissions() {
 		Set<Permission> permissions = new HashSet<Permission>();
@@ -366,6 +376,10 @@ public class Role extends AuditableEntity {
 
         if (getCanSubmitComments() != null && getCanSubmitComments())
             permissions.add(Permission.CAN_SUBMIT_COMMENTS);
+
+        if(getCanManageScanResultFilters() != null && getCanManageScanResultFilters()){
+            permissions.add(Permission.CAN_MANAGE_SCAN_RESULT_FILTERS);
+        }
 
 		return permissions;
 	}

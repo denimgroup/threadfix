@@ -446,4 +446,9 @@ public class FindingServiceImpl implements FindingService {
 	public long getTotalUnmappedFindings() {
 		return findingDao.getTotalUnmappedFindings();
 	}
+
+    @Override
+    public List<Finding> loadByGenericSeverityAndChannelType(GenericSeverity genericSeverity, ChannelType channelType) {
+        return findingDao.retrieveByGenericSeverityAndChannelType(genericSeverity, channelType);
+    }
 }

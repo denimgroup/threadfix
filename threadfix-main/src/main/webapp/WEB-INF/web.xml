@@ -91,6 +91,7 @@
         		/configuration/users/password,/configuration/users,/configuration/roles,/configuration/logs,/configuration/download,
         		/configuration/settings,/configuration/filters,/configuration/scanqueue,/mappings/index,/configuration/tags,/teams,
         		/j_spring_security_check,/j_spring_security_logout,/images/*,/styles/*,/scripts/*,/rest/*,/configuration/download/*,
+                /configuration/scanResultFilters,
         		regex ^/rest/[a-zA-Z0-9/]*$,
                 regex ^/v/[^/]+/scripts/.*$,
                 regex ^/configuration/tags/[0-9]/view+$,
