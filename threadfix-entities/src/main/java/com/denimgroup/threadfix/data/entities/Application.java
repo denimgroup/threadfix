@@ -151,6 +151,9 @@ public class Application extends AuditableEntity {
 
     private List<Tag> tags = new ArrayList<Tag>();
 
+    private Boolean useDefaultCredentials = false;
+    private Boolean useDefaultProject = false;
+
 	@Column(length = NAME_LENGTH, nullable = false)
     @JsonView(Object.class) // This means it will be included in all ObjectWriters with Views.
 	public String getName() {
@@ -838,7 +841,25 @@ public class Application extends AuditableEntity {
         this.tags = tags;
     }
 
-	@Override
+    @Column
+    public Boolean isUseDefaultProject() {
+        return useDefaultProject;
+    }
+
+    public void setUseDefaultProject(Boolean useDefaultProject) {
+        this.useDefaultProject = useDefaultProject;
+    }
+
+    @Column
+    public Boolean isUseDefaultCredentials() {
+        return useDefaultCredentials;
+    }
+
+    public void setUseDefaultCredentials(Boolean useDefaultCredentials) {
+        this.useDefaultCredentials = useDefaultCredentials;
+    }
+
+    @Override
 	public String toString() {
 		return name;
 	}

@@ -46,7 +46,7 @@ module.controller('DefectTrackersTabController', function($scope, $http, $modal,
     $scope.openNewModal = function() {
         var modalInstance = $modal.open({
             templateUrl: 'newTrackerModal.html',
-            controller: 'ModalControllerWithConfig',
+            controller: 'CreateEditDefectTrackerModalController',
             resolve: {
                 url: function() {
                     return tfEncoder.encode("/configuration/defecttrackers/new");
@@ -85,7 +85,7 @@ module.controller('DefectTrackersTabController', function($scope, $http, $modal,
     $scope.openEditModal = function(tracker) {
         var modalInstance = $modal.open({
             templateUrl: 'editTrackerModal.html',
-            controller: 'ModalControllerWithConfig',
+            controller: 'CreateEditDefectTrackerModalController',
             resolve: {
                 url: function() {
                     return tfEncoder.encode("/configuration/defecttrackers/" + tracker.id + "/edit");

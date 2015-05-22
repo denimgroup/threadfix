@@ -40,6 +40,11 @@ public class DefectTracker extends AuditableEntity {
 	
 	public final static int NAME_LENGTH = 50;
 	public final static int URL_LENGTH = 255;
+    public final static int DEFAULT_USERNAME_LENGTH = 50;
+    public final static int DEFAULT_PASSWORD_LENGTH = 50;
+    public final static int ENCRYPTED_DEFAULT_USERNAME_LENGTH = 1024;
+    public final static int ENCRYPTED_DEFAULT_PASSWORD_LENGTH = 1024;
+    public final static int DEFAULT_PRODUCT_NAME_LENGTH = 50;
 
 	@NotEmpty(message = "{errors.required}")
 	@Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
@@ -49,6 +54,21 @@ public class DefectTracker extends AuditableEntity {
 	@NotEmpty(message = "{errors.required}")
 	@Size(max = URL_LENGTH, message = "{errors.maxlength} " + URL_LENGTH + ".")
 	private String url;
+
+    @Size(max = DEFAULT_USERNAME_LENGTH, message = "{errors.maxlength} " + DEFAULT_USERNAME_LENGTH + ".")
+    private String defaultUsername;
+
+    @Size(max = ENCRYPTED_DEFAULT_USERNAME_LENGTH, message = "{errors.maxlength} " + ENCRYPTED_DEFAULT_USERNAME_LENGTH + ".")
+    private String encryptedDefaultUsername;
+
+    @Size(max = DEFAULT_PASSWORD_LENGTH, message = "{errors.maxlength} " + DEFAULT_PASSWORD_LENGTH + ".")
+    private String defaultPassword;
+
+    @Size(max = ENCRYPTED_DEFAULT_PASSWORD_LENGTH, message = "{errors.maxlength} " + ENCRYPTED_DEFAULT_PASSWORD_LENGTH + ".")
+    private String encryptedDefaultPassword;
+
+    @Size(max = DEFAULT_PRODUCT_NAME_LENGTH, message = "{errors.maxlength} " + DEFAULT_PRODUCT_NAME_LENGTH + ".")
+    private String defaultProductName;
 
 	private DefectTrackerType defectTrackerType;
 	private List<Application> applications;
@@ -73,7 +93,57 @@ public class DefectTracker extends AuditableEntity {
 		this.url = url;
 	}
 
-	@ManyToOne
+    @Transient
+    @JsonView(Object.class)
+    public String getDefaultUsername() {
+        return defaultUsername;
+    }
+
+    public void setDefaultUsername(String defaultUsername) {
+        this.defaultUsername = defaultUsername;
+    }
+
+    @Transient
+    @JsonView(Object.class)
+    public String getDefaultPassword() {
+        return defaultPassword;
+    }
+
+    public void setDefaultPassword(String defaultPassword) {
+        this.defaultPassword = defaultPassword;
+    }
+
+    @Column(length = ENCRYPTED_DEFAULT_USERNAME_LENGTH)
+    @JsonIgnore
+    public String getEncryptedDefaultUsername() {
+        return encryptedDefaultUsername;
+    }
+
+    public void setEncryptedDefaultUsername(String encryptedDefaultUsername) {
+        this.encryptedDefaultUsername = encryptedDefaultUsername;
+    }
+
+    @Column(length = ENCRYPTED_DEFAULT_PASSWORD_LENGTH)
+    @JsonIgnore
+    public String getEncryptedDefaultPassword() {
+        return encryptedDefaultPassword;
+    }
+
+    public void setEncryptedDefaultPassword(String encryptedDefaultPassword) {
+        this.encryptedDefaultPassword = encryptedDefaultPassword;
+    }
+
+    @Column(length = DEFAULT_PRODUCT_NAME_LENGTH)
+    @JsonView(Object.class)
+    public String getDefaultProductName() {
+        return defaultProductName;
+    }
+
+    public void setDefaultProductName(String defaultProductName) {
+        this.defaultProductName = defaultProductName;
+    }
+
+    @ManyToOne
 	@JoinColumn(name = "defectTrackerTypeId")
     @JsonView(Object.class)
     public DefectTrackerType getDefectTrackerType() {

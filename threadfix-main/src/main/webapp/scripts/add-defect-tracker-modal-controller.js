@@ -93,4 +93,44 @@ myAppModule.controller('AddDefectTrackerModalController', function ($scope, $htt
         timeoutService.cancel();
         $modalInstance.dismiss('cancel');
     };
+
+    $scope.toggleUseDefaultCredentials = function(){
+
+        if($scope.object.useDefaultCredentials){
+
+            angular.forEach($scope.config.defectTrackerList, function(value, key){
+                if(value.id === parseInt($scope.object.defectTrackerId)){
+                    $scope.object.userName = value.defaultUsername;
+                }
+            });
+
+            $scope.object.password = "*****";
+        }else{
+            $scope.object.userName = "";
+            $scope.object.password = "";
+            $scope.productNames = null;
+            $scope.object.projectName = null;
+        }
+    };
+
+    $scope.toggleUseDefaultProduct = function(){
+
+        if($scope.object.useDefaultProduct){
+
+            angular.forEach($scope.config.defectTrackerList, function(value, key){
+                if(value.id === parseInt($scope.object.defectTrackerId)){
+                    $scope.productNames = [value.defaultProductName];
+                    $scope.object.projectName = $scope.productNames[0];
+                }
+            });
+        }else{
+            $scope.productNames = null;
+            $scope.object.projectName = null;
+        }
+    };
+
+    $scope.updateDefaultCredentialsAndProduct = function(){
+        $scope.toggleUseDefaultCredentials();
+        $scope.toggleUseDefaultProduct();
+    }
 });

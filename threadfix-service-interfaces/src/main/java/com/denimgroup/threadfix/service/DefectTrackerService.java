@@ -44,6 +44,14 @@ public interface DefectTrackerService {
 	 */
 	boolean checkUrl(DefectTracker defectTracker, BindingResult result);
 
+    /**
+     *
+     * @param defectTracker
+     * @param result
+     * @return
+     */
+    boolean checkCredentials(DefectTracker defectTracker, BindingResult result);
+
 	/**
 	 * @return
 	 */
@@ -99,4 +107,16 @@ public interface DefectTrackerService {
 	 * @param defectTrackerType
 	 */
 	void storeDefectTrackerType(DefectTrackerType defectTrackerType);
+
+    /**
+     * @param defectTracker
+     * @return
+     */
+    DefectTracker encryptCredentials(DefectTracker defectTracker);
+
+    /**
+     * @param defectTracker
+     * @return
+     */
+    DefectTracker decryptCredentials(DefectTracker defectTracker);
 }
