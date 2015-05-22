@@ -66,6 +66,8 @@ public class EditApplicationController {
     @Autowired
 	private OrganizationService organizationService;
     @Autowired
+    private DefaultDefectProfileService defaultDefectProfileService;
+    @Autowired
     private VulnerabilityService vulnerabilityService;
     @Autowired
     private TagService tagService;
@@ -103,7 +105,7 @@ public class EditApplicationController {
                 "password", "waf.id", "projectName", "projectRoot", "applicationCriticality.id",
                 "uniqueId", "organization.id", "frameworkType", "repositoryUrl", "repositoryBranch",
                 "repositoryRevision", "repositoryUserName", "repositoryPassword", "repositoryFolder",
-                "repositoryType", "skipApplicationMerge");
+                "repositoryType", "skipApplicationMerge", "mainDefaultDefectProfile.id");
 	}
 
 	@JsonView(AllViews.FormInfo.class)
@@ -161,6 +163,10 @@ public class EditApplicationController {
 			return FormRestResponse.failure("Errors", result);
 
 		} else {
+			if (application.getMainDefaultDefectProfile()==null || application.getMainDefaultDefectProfile().getId()==null) {
+				application.setMainDefaultDefectProfile(null);
+				}
+			else application.setMainDefaultDefectProfile(defaultDefectProfileService.loadDefaultProfile(application.getMainDefaultDefectProfile().getId()));
 			application.setOrganization(organizationService.loadById(application.getOrganization().getId()));
 			applicationService.storeApplication(application);
             vulnerabilityService.updateOrgsVulnerabilityReport();

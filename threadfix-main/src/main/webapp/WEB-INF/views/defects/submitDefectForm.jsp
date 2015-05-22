@@ -5,7 +5,15 @@
         </h4>
     </div>
     <div ng-form="form" class="modal-body">
-        <div ng-hide="initialized" class="modal-spinner-div"><span class="spinner dark"></span>Loading</div><br>
+        <div ng-hide="initialized" class="modal-spinner-div"><span class="spinner dark"></span>Loading</div>
+        <div id="load-profile-defaults" ng-show="initialized && defaultProfiles.length > 0 " >
+            <select ng-options="profile.id as profile.name for profile in defaultProfiles"
+                    ng-model="defectDefaultsConfig.selectedDefaultProfileId"
+                    ng-change="loadProfileDefaults()" >
+                <option value="">Load defaults from profile</option>
+            </select>
+            <span ng-show="loadingProfileDefaults" class="spinner dark"></span>
+        </div>
 
         <div class="dynamic-defect-form" ng-if="isDynamicForm">
             <span ng-if="stdFormTemplate && hasFields" class="errors">* required field</span>

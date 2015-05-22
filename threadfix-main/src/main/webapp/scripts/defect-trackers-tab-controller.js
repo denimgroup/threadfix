@@ -4,6 +4,8 @@ module.controller('DefectTrackersTabController', function($scope, $http, $modal,
 
     $scope.trackers = [];
 
+    $scope.isMissingApplication = {};
+
     $scope.heading = 'Defect Trackers';
 
     $scope.loading = true;
@@ -128,4 +130,91 @@ module.controller('DefectTrackersTabController', function($scope, $http, $modal,
         });
     }
 
+   $scope.openUpdateDefectDefaultsModal = function(defaultDefectProfile) {
+        var modalInstance = $modal.open({
+            windowClass: 'update-defect-defaults',
+            templateUrl: 'updateDefectDefaultModal.html',
+            controller: 'UpdateDefectDefaultsModalController',
+            resolve: {
+                url: function() {
+                    return tfEncoder.encode("/default/" + defaultDefectProfile.id + "/update");
+                },
+                configUrl: function() {
+                    return tfEncoder.encode("/default/" + defaultDefectProfile.id + "/defectSubmissionForm");
+                }
+            }
+        });
+        $scope.currentModal = modalInstance;
+        modalInstance.result.then(function () {
+            $scope.successMessage = "Successfully updated the defaults for the default defect profile: " + defaultDefectProfile.name;
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    }
+
+   $scope.deleteDefaultProfile = function(tracker, defaultDefectProfile) {
+       if (confirm("Are you sure you want to delete this profile " + defaultDefectProfile.name + "?")) {
+           var deleteUrl = tfEncoder.encode("/default/profiles/delete/" + defaultDefectProfile.id);
+           $http.post(deleteUrl).
+               success(function(data, status, headers, config) {
+                         $scope.successMessage = "Successfully deleted tracker default profile " + defaultDefectProfile.name;
+                   threadFixModalService.deleteElement(tracker.defaultDefectProfiles, defaultDefectProfile);
+               }).
+               error(function(data, status, headers, config) {
+                   $scope.error = "Failure. HTTP status was " + status;
+               })
+           threadFixModalService.deleteElement(tracker.defaultDefectProfiles, defaultDefectProfile);
+       }
+   }
+
+    $scope.openCreateProfileModal = function(tracker) {
+        if (tracker.applications == 0){
+            $scope.isMissingApplication[tracker.id] = true;
+            return;
+        }
+        var modalInstance = $modal.open({
+            templateUrl: 'createDefaultProfileModal.html',
+            controller: 'ModalControllerWithConfig',
+            resolve: {
+                url: function() {
+                    return tfEncoder.encode("/default/addProfile");
+                },
+                object: function() {
+                    var referenceApplication = {id : tracker.applications[0].id};
+                    var defectTracker = {id : tracker.id}
+                    return {
+                        referenceApplication : referenceApplication,
+                        defectTracker : defectTracker
+                    };
+                },
+                config: function() {
+                    return {
+                        referenceApplications: tracker.applications
+                    };
+                },
+                buttonText: function() {
+                    return "Add new Default Profile";
+                }
+            }
+        });
+
+        modalInstance.result.then(function (newDefaultProfile) {
+
+            tracker.defaultDefectProfiles.push(newDefaultProfile);
+
+            $scope.successMessage = "Successfully created new tracker default profile " + newDefaultProfile.name;
+
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    }
+
+    $scope.showDefaultProfiles = function(tracker){
+        if  ("showDefaultProfiles" in tracker){
+            tracker.showDefaultProfiles = !tracker.showDefaultProfiles;
+            }
+        else {
+            tracker.showDefaultProfiles = true;
+        }
+    }
 });

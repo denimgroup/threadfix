@@ -32,7 +32,7 @@ public class AllViews {
 
     public static interface GRCToolsPage extends FormInfo {}
 
-    public static interface VulnerabilityDetail {}
+    public static interface VulnerabilityDetail extends FormInfo {}
 
     public static interface VulnSearch {}
 
@@ -55,6 +55,8 @@ public class AllViews {
     public static interface RestViewScanStatistic {}
 
     public static interface RestViewTag {}
+
+    public static interface DefectTrackerInfos {}
 
     // this is just for one property really
     public static interface VulnSearchApplications {}
