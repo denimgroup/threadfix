@@ -26,10 +26,7 @@ package com.denimgroup.threadfix.webapp.controller.rest;
 
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.Waf;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
@@ -59,7 +56,8 @@ public class ApplicationRestController extends TFRestController {
             WAF_LOOKUP_FAILED = "WAF lookup failed. Check your ID.",
             ADD_CHANNEL_FAILED = "Adding an Application Channel failed.",
             SET_WAF_FAILED = "Call to setWaf failed.",
-            SCAN_TYPE_LOOKUP_FAILED = "Unable to determine Scan type";
+            SCAN_TYPE_LOOKUP_FAILED = "Unable to determine Scan type",
+            TAG_LOOKUP_FAILED = "Tag lookup failed. Check your ID.";
 
     @Autowired
     private ApplicationService applicationService;
@@ -78,7 +76,7 @@ public class ApplicationRestController extends TFRestController {
     @Autowired
     private OrganizationService organizationService;
     @Autowired
-    private ApplicationCriticalityService applicationCriticalityService;
+    private TagService tagService;
 
     private final static String DETAIL = "applicationDetail",
             SET_PARAMS = "setParameters",
@@ -88,7 +86,9 @@ public class ApplicationRestController extends TFRestController {
             UPLOAD = "uploadScan",
             ATTACH_FILE = "attachFile",
             SET_URL = "setUrl",
-            UPDATE = "updateApplication";
+            UPDATE = "updateApplication",
+            ADD_TAG = "addTag",
+            REMOVE_TAG = "removeTag";
 
     // TODO finalize which methods need to be restricted
     static {
@@ -387,9 +387,11 @@ public class ApplicationRestController extends TFRestController {
         log.info("Received REST request for updating Application with id = " + appId + ".");
 
         String result = checkKey(request, UPDATE);
+
         if (!result.equals(API_KEY_SUCCESS)) {
             return failure(result);
         }
+
 
         if(params == null || params.isEmpty()){
             return failure("No parameters have been set");
@@ -399,6 +401,75 @@ public class ApplicationRestController extends TFRestController {
             return applicationService.updateApplicationFromREST(appId, params, bindingResult);
         }catch (RuntimeException e){
             return FormRestResponse.failure(e.getMessage(), bindingResult);
+        }
+    }
+
+    @RequestMapping(value = "/{appId}/tags/add/{tagId}", method = RequestMethod.POST, headers="Accept=application/json")
+    @JsonView(AllViews.RestViewTag.class)
+    public Object addTag(@PathVariable("appId") Integer appId, @PathVariable("tagId") Integer tagId,
+                         HttpServletRequest request){
+
+        String result = checkKey(request, ADD_TAG);
+        if (!result.equals(API_KEY_SUCCESS)) {
+            return failure(result);
+        }
+
+        Application application = applicationService.loadApplication(appId);
+
+        if(application == null){
+            log.warn("Invalid Application ID.");
+            return failure(APPLICATION_LOOKUP_FAILED);
+        }
+
+        Tag tag = tagService.loadTag(tagId);
+
+        if(tag == null){
+            log.warn("Invalid Tag ID.");
+            return failure(TAG_LOOKUP_FAILED);
+        }
+
+        if(application.getTags().contains(tag)){
+            log.warn("Tag has already been set on this application");
+            return failure("Tag has already been set on this application");
+        }
+
+        application.getTags().add(tag);
+        applicationService.storeApplication(application);
+
+        return success(application);
+    }
+
+    @RequestMapping(value = "/{appId}/tags/remove/{tagId}", method = RequestMethod.POST, headers="Accept=application/json")
+    public Object removeTag(@PathVariable("appId") Integer appId, @PathVariable("tagId") Integer tagId,
+                            HttpServletRequest request){
+
+        String result = checkKey(request, REMOVE_TAG);
+
+        if (!result.equals(API_KEY_SUCCESS)) {
+            return failure(result);
+        }
+
+        Application application = applicationService.loadApplication(appId);
+
+        if(application == null){
+            log.warn("Invalid Application ID.");
+            return failure(APPLICATION_LOOKUP_FAILED);
+        }
+
+        Tag tag = tagService.loadTag(tagId);
+
+        if(tag == null){
+            log.warn("Invalid Tag ID.");
+            return failure(TAG_LOOKUP_FAILED);
+        }
+
+        if(application.getTags().contains(tag)){
+            application.getTags().remove(tag);
+            applicationService.storeApplication(application);
+
+            return success("Tag successfully removed from application");
+        }else{
+            return failure("Tag no present on this application");
         }
     }
 }

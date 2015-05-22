@@ -175,7 +175,7 @@ public class Application extends AuditableEntity {
 	}
 	
 	@Column(length = 255)
-    @JsonView({AllViews.RestViewApplication2_1.class, AllViews.FormInfo.class, AllViews.TableRow.class})
+    @JsonView({AllViews.RestViewApplication2_1.class, AllViews.FormInfo.class, AllViews.TableRow.class, AllViews.RestViewTag.class})
 	public String getUniqueId() {
 		return uniqueId;
 	}
@@ -433,7 +433,7 @@ public class Application extends AuditableEntity {
 	}	
 
     @OneToOne(mappedBy = "application")
-    @JsonView(Object.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
 	public GRCApplication getGrcApplication() {
 		return grcApplication;
 	}
@@ -832,7 +832,7 @@ public class Application extends AuditableEntity {
     @JoinTable(name="Application_Tag",
             joinColumns={@JoinColumn(name="Application_Id")},
             inverseJoinColumns={@JoinColumn(name="Tag_Id")})
-    @JsonIgnore
+    @JsonView({AllViews.RestViewApplication2_1.class, AllViews.RestViewTag.class})
     public List<Tag> getTags() {
         return tags;
     }

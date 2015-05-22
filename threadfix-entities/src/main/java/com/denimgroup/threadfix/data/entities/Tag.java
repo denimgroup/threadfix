@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -83,7 +84,7 @@ public class Tag extends AuditableEntity {
     }
 
     @Column(nullable = true)
-    @JsonView(Object.class)
+    @JsonView(AllViews.TableRow.class)
     public Boolean getEnterpriseTag() {
         return enterpriseTag;
     }
@@ -93,7 +94,7 @@ public class Tag extends AuditableEntity {
     }
 
     @Column(length = 1024, nullable = true)
-    @JsonView(Object.class)
+    @JsonView(AllViews.VulnSearchApplications.class)
     public String getDefaultJsonFilter() {
         return defaultJsonFilter;
     }
