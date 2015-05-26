@@ -46,6 +46,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
+
 @Controller
 @RequestMapping("/wafs/{wafId}")
 public class WafRuleController {
@@ -90,7 +92,12 @@ public class WafRuleController {
         }
 
         List<WafRule> newWafRuleList = wafService.generateWafRules(waf, wafDirective, application);
+
         String rulesText = wafService.getRulesText(waf, newWafRuleList);
+
+        if (rulesText == null || rulesText.isEmpty()) {
+            return failure("No Rules generated for WAF. It is possible none of the vulnerability types in the applications attached are supported by this WAF.");
+        }
 
         responseMap.put("waf", waf);
         responseMap.put("rulesText", rulesText);
