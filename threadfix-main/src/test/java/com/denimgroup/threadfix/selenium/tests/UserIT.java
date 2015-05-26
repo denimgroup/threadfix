@@ -243,7 +243,7 @@ public class UserIT extends BaseDataTest {
         userIndexPage.clickCreateUserButton()
                 .setName("        ")
                 .setPassword("  ")
-                .setConfirmPassword("  ")
+                .setConfirmPasswordModal("  ")
                 .clickAddNewUserBtnInvalid();
 
         sleep(5000);
@@ -258,7 +258,7 @@ public class UserIT extends BaseDataTest {
         // Test length
         userIndexPage.setName("Test User");
         userIndexPage.setPassword("test");
-        userIndexPage.setConfirmPassword("test");
+        userIndexPage.setConfirmPasswordModal("test");
 
         userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
 
@@ -267,7 +267,7 @@ public class UserIT extends BaseDataTest {
         // Test non-matching passwords
         userIndexPage.setName("new name");
         userIndexPage.setPassword("lengthy password 1");
-        userIndexPage.setConfirmPassword("lengthy password 2");
+        userIndexPage.setConfirmPasswordModal("lengthy password 2");
         userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
         assertTrue("Password matching error is not correct.", userIndexPage.getPasswordMatchError().equals("Passwords do not match."));
     }
@@ -295,7 +295,7 @@ public class UserIT extends BaseDataTest {
 
         userIndexPage.setName(userName);
         userIndexPage.setPassword("dummy password");
-        userIndexPage.setConfirmPassword("dummy password");
+        userIndexPage.setConfirmPasswordModal("dummy password");
 
         userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
         sleep(5000);
@@ -392,7 +392,7 @@ public class UserIT extends BaseDataTest {
 		userIndexPage.clickCreateUserButton()
                 .setName(userName)
                 .setPassword("lengthy password 1")
-                .setConfirmPassword("lengthy password 2")
+                .setConfirmPasswordModal("lengthy password 2")
                 .clickAddNewUserBtn();
 
 		assertTrue("Password matching error is not correct.", userIndexPage.getPasswordMatchError().equals("Passwords do not match."));

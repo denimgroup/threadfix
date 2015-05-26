@@ -127,11 +127,12 @@ public class AnalyticsRemediationIT extends BaseDataTest {
                 .expandTagFilter("complianceFilterDiv")
                 .addTagFilter(tagName,"complianceFilterDiv")
                 .expandAgingFilter("complianceFilterDiv")
-                .toggleAgingFilter("Forever", "complianceFilterDiv");;
+                .toggleAgingFilter("Forever", "complianceFilterDiv");
+
+        int arrayLength = driver.findElements(By.id("vulnName0")).toArray().length;
 
         assertTrue("Closed vulnerability is not displayed.",
-                driver.findElements(By.id("vulnName0")).toArray().length == 2 ||
-                        driver.findElements(By.id("vulnName0")).toArray().length == 4);
+                arrayLength == 2 || arrayLength == 4);
     }
 
     @Test

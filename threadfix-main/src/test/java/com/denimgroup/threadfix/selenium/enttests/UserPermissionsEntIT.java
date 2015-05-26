@@ -107,7 +107,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
         String userName = createRegularUser();
         String teamRole = "Administrator";
 
-        String duplicateErrorMessage = "Failure. Message was : That team / role combo already exists for this user.";
+        String duplicateErrorMessage = "That team / role combination already exists for this user.";
 
         UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
@@ -124,6 +124,9 @@ public class UserPermissionsEntIT extends BaseDataTest{
                 .setTeam(teamName)
                 .setTeamRole(teamRole)
                 .clickSaveMap();
+
+        //Runtime Fix
+        sleep(5000);
 
         assertTrue("Duplicate team/role combinations should not be allowed.",
                 userIndexPage.isErrorPresent(duplicateErrorMessage));
@@ -629,16 +632,16 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
         if (dashboardPage.isViewMoreLinkPresent()) {
 
-            UserPermissionsPage userPermissionsPage = dashboardPage.clickManageUsersLink()
-                    .clickEditPermissions("user");
-            assertTrue("user Permission wasn't available", userPermissionsPage.isAddPermissionClickable());
+            UserIndexPage userIndexPage = dashboardPage.clickManageUsersLink()
+                    .clickUserLink("user");
+            assertFalse("user Permission wasn't available", userIndexPage.isAddTeamRoleButtonDisabled());
         } else {
-            UserPermissionsPage userPermissionsPage1 = dashboardPage.clickManageUsersLink()
-                    .clickEditPermissions("user");
+            UserIndexPage userIndexPage = dashboardPage.clickManageUsersLink()
+                    .clickUserLink("user");
 
-            assertTrue("Add Permission Button is Clickable", userPermissionsPage1.isAddPermissionClickable());
+            assertTrue("Add Permission Button is Clickable", userIndexPage.isAddTeamRoleButtonDisabled());
             assertTrue("There is no Error Message Available",
-                    userPermissionsPage1.errorAlert().contains("Cannot add permissions with no teams."));
+                    userIndexPage.isErrorPresent("Cannot add permissions with no teams."));
         }
     }
 

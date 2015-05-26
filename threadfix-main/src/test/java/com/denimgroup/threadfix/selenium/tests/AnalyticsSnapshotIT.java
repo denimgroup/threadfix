@@ -56,7 +56,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         analyticsPage.expandTeamApplicationFilter("snapshotFilterDiv")
                 .addTeamFilter(teamName, "snapshotFilterDiv");
 
-        analyticsPage.waitForElement(driver.findElement(By.id("totalBadgeCritical")));
+        sleep(5000);
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
@@ -90,7 +90,8 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .addApplicationFilter(appName, "snapshotFilterDiv")
                 .sleepOnArrival(15000);
 
-        analyticsPage.waitForElement(driver.findElement(By.id("totalBadgeCritical")));
+        //Runtime Fix
+        sleep(10000);
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
@@ -140,6 +141,9 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .expandTeamApplicationFilter("snapshotFilterDiv")
                 .addTeamFilter(teamName,"snapshotFilterDiv");
 
+        //Runtime Fix
+        sleep(5000);
+
         analyticsPage.hoverRealOverSVGElement("pointInTimeInfoArc");
         String numTip = driver.findElement(By.id("pointInTimeTip")).getText().split("\\s+")[1];
         String numBadge = driver.findElement(By.id("totalBadgeInfo")).getText().trim();
@@ -160,6 +164,10 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .sleepOnArrival(15000)
                 .expandTeamApplicationFilter("snapshotFilterDiv")
                 .addTeamFilter(teamName,"snapshotFilterDiv");
+
+        //Runtime Fix
+        sleep(5000);
+
         String numLegend = driver.findElement(By.id("legendInfo"))
                 .getText().replace("Info", "").split("\\(")[0];
         String numBadge = driver.findElement(By.id("totalBadgeInfo")).getText().trim();
@@ -176,7 +184,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
                 .clickSnapshotTab(true)
-                .sleepOnArrival(12500);
+                .sleepOnArrival(15500);
 
         analyticsPage.clickSVGElement("pointInTimeInfoArc");
 
@@ -195,6 +203,9 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         analyticsPage.selectDropDownReport("Most Vulnerable Applications")
                 .selectDropDownReport("Point in Time");
+
+        //Runtime Fix
+        sleep(5000);
 
         assertTrue("Did not navigate correctly", driver.findElement(By.id("Point in Time Report_Title"))
                 .getText().equals("Point in Time Report"));
@@ -239,7 +250,8 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .expandTeamApplicationFilter("snapshotFilterDiv")
                 .addTeamFilter(teamName, "snapshotFilterDiv");
 
-        analyticsPage.waitForElement(driver.findElement(By.id("averageTimeToCloseVuln5")));
+        //Runtime Fix
+        sleep(10000);
 
         assertTrue("Time to close is invalid.",
                 Integer.parseInt(driver.findElement(By.id("averageTimeToCloseVuln5")).getText()) >= 0);
@@ -278,7 +290,8 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .expandTeamApplicationFilter("snapshotFilterDiv")
                 .addTeamFilter(teamName, "snapshotFilterDiv");
 
-        analyticsPage.waitForElement(driver.findElement(By.id("totalVuln0")));
+        //Runtime Fix
+        sleep(10000);
 
         assertTrue("Team specific vulnerabilities are not correct.",
                 driver.findElement(By.id("totalVuln0")).getText().equals("1") &&
@@ -313,7 +326,8 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .selectDropDownReport("Progress By Vulnerability")
                 .loadFilter(filterName,"snapshotFilterDiv");
 
-        analyticsPage.waitForElement(driver.findElement(By.id("totalVuln0")));
+        //Runtime Fix
+        sleep(10000);
 
         assertTrue("Team specific vulnerabilities are not correct.",
                 driver.findElement(By.id("totalVuln0")).getText().equals("1") &&
@@ -382,6 +396,9 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .clickSnapshotTab(true);
 
         analyticsPage.selectDropDownReport("Most Vulnerable Applications");
+
+        //Runtime Fix
+        sleep(5000);
 
         assertTrue("Did not navigate correctly", driver.findElement(By.id("Most Vulnerable Applications_Title"))
                 .getText().equals("Most Vulnerable Applications"));

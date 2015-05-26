@@ -168,7 +168,7 @@ public abstract class BasePage {
     public UserIndexPage clickManageUsersLink(){
         clickConfigTab();
         driver.findElementById("manageUsersLink").click();
-        sleep(3000);
+        sleep(6000);
         return new UserIndexPage(driver);
     }
 

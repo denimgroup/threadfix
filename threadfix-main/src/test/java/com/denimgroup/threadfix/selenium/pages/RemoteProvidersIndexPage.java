@@ -202,7 +202,7 @@ public class RemoteProvidersIndexPage extends BasePage {
     }
 
     public RemoteProvidersIndexPage clickEditMappingContrastButton(int row) {
-        driver.findElementById("provider6updateMapping" + row).click();
+        driver.findElementById("provider4updateMapping" + row).click();
         return new RemoteProvidersIndexPage(driver);
     }
 
@@ -251,7 +251,7 @@ public class RemoteProvidersIndexPage extends BasePage {
     }
 
     public ApplicationDetailPage clickContrastImportScan(int appRow) {
-        String elementToClick = "provider6import" + appRow;
+        String elementToClick = "provider4import" + appRow;
         waitForElement(driver.findElementById(elementToClick));
         if (!tryClick(By.id(elementToClick))) {
             throw new ElementNotVisibleException(elementToClick);
@@ -329,7 +329,7 @@ public class RemoteProvidersIndexPage extends BasePage {
     }
 
     public RemoteProvidersIndexPage clearContrast() {
-        driver.findElementById("clearConfig6").click();
+        driver.findElementById("clearConfig4").click();
         handleAlert();
         return new RemoteProvidersIndexPage(driver);
     }

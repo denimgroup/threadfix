@@ -82,9 +82,13 @@ public class TeamEntIT extends BaseDataTest {
         DatabaseUtils.uploadScan(teamName, hiddenApp, ScanContents.SCAN_FILE_MAP.get("WebInspect"));
         DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
 
-        loginPage.defaultLogin()
-                .clickManageUsersLink()
-                .clickEditPermissions(user)
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
+                .clickManageUsersLink();
+
+        //Runtime Fix
+        sleep(5000);
+
+        userIndexPage.clickEditPermissions(user)
                 .editSpecificPermissions(teamName, "all", roleName)
                 .toggleAllApps()
                 .setApplicationRole(appName, roleName)

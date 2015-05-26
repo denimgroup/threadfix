@@ -114,7 +114,7 @@ public class AnalyticsEntIT extends BaseDataTest {
     }
 
     @Test
-    public void testIssue842Part1() {
+    public void  testIssue842Part1() {
         String roleName = createSpecificPermissionRole("canGenerateReports");
         String user = createRegularUser();
         String hiddenTeam = createTeam();

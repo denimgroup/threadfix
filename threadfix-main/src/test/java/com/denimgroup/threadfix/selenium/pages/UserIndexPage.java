@@ -229,7 +229,14 @@ public class UserIndexPage extends BasePage {
 
     public UserIndexPage clickUserLink(String userName) {
         refreshPage();
-        driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']").click();
+        try {
+            driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']").click();
+        } catch (NoSuchElementException e) {
+            sleep(5000);
+            driver.findElementByXPath("//a[text()='2']").click();
+            sleep(2000);
+            driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']").click();
+        }
         sleep(5000);
         return new UserIndexPage(driver);
     }
@@ -373,7 +380,13 @@ public class UserIndexPage extends BasePage {
         try {
             driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']");
         } catch (NoSuchElementException e) {
-            return false;
+            driver.findElementByXPath("//a[text()='2']").click();
+            sleep(2000);
+            try {
+                driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']");
+            } catch (NoSuchElementException ex) {
+                return false;
+            }
         }
         return true;
     }
@@ -456,6 +469,15 @@ public class UserIndexPage extends BasePage {
         } else {
             return findVisibleElementById("displayName").getText() == expectedName;
         }
+    }
+
+    public boolean isAddTeamRoleButtonDisabled() {
+        try {
+            driver.findElementByXPath("//a[text()='Add Team Role' and @class='disabled']");
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+        return true;
     }
 
     /*------------------------------------ Modal Methods ------------------------------------*/

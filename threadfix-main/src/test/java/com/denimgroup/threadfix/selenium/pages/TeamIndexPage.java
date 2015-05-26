@@ -241,6 +241,10 @@ public class TeamIndexPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
+    public TeamIndexPage selectGitRepositoryType() {
+        driver.findElementByXPath("//input[@value='GIT']").click();
+        return new TeamIndexPage(driver);
+    }
 
     /*------------------------------------ Get Methods ----------------------------------------*/
 
@@ -375,10 +379,6 @@ public class TeamIndexPage extends BasePage {
 
     public void waitForPieWedge(String teamName, String level) {
         waitForElement(driver.findElementById(teamName + level + "Arc"));
-    }
-
-    public void selectGitRepositoryType() {
-        driver.findElementByXPath("//input[@value='GIT']").click();
     }
 }
 

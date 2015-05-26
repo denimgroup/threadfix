@@ -44,6 +44,9 @@ public class UserEntIT extends BaseDataTest {
                 .createUser(userName,"",testPassword);
                 //.clickEditLink(userName);
 
+        //Runtime Fix
+        sleep(5000);
+
         assertFalse("Global Access was selected when it should not have been.",
                 userIndexPage.getGlobalAccessRole() == "No Global Access");
 
@@ -62,13 +65,13 @@ public class UserEntIT extends BaseDataTest {
                 .clickCreateUserButton()
                 .setName(userName)
                 .setPassword(testPassword)
-                .setConfirmPassword(testPassword)
+                .setConfirmPasswordModal(testPassword)
                 .clickAddNewUserBtn()
                 .clickUserLink(userName)
-                .chooseRoleForGlobalAccess("Administrator");
+                .chooseRoleForGlobalAccess("Administrator")
+                .clickSaveChanges();
 
-        DashboardPage dashboardPage = userIndexPage.clickAddNewUserBtn()
-                .logout()
+        DashboardPage dashboardPage = userIndexPage.logout()
                 .login(userName, testPassword);
 
         assertFalse("Alert was shown on dashboard page", dashboardPage.isPermissionsAlertDisplayed());
@@ -118,7 +121,7 @@ public class UserEntIT extends BaseDataTest {
                 .clickCreateUserButton()
                 .setName(userName)
                 .setPassword(testPassword)
-                .setConfirmPassword(testPassword)
+                .setConfirmPasswordModal(testPassword)
                 .clickAddNewUserBtn()
                 .clickUserLink(userName)
                 .chooseRoleForGlobalAccess("User")
@@ -131,7 +134,8 @@ public class UserEntIT extends BaseDataTest {
         userIndexPage = userIndexPage.chooseRoleForGlobalAccess("Read Access")
                 .clickUpdateUserBtn()
                 .clickUserLink(userName);
-        assertTrue("Read Access role was not selected", userIndexPage.isSuccessDisplayed("Edit succeeded."));
+        assertTrue("Read Access role was not selected",
+                userIndexPage.getGlobalAccessRole().contains("Read Access"));
     }
 
     //If this test fails it can cascade and cause several other tests to fail

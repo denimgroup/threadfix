@@ -402,6 +402,8 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         TeamDetailPage teamDetailPage = remoteProvidersIndexPage.clickTeamLink(teamName);
 
+        sleep(5000);
+
         assertTrue("Number of Open Vulnerabilities is not correct", teamDetailPage.isNumberOfOpenVulnerabilityCorrect("14", 0));
         assertTrue("Number of Critical Vulnerability is not correct", teamDetailPage.isNumberOfCriticalCorrect("2", 0));
         assertTrue("Number of High Vulnerability is not correct", teamDetailPage.isNumberOfHighCorrect("8", 0));
@@ -689,6 +691,9 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         remoteProvidersIndexPage.clickEditName("1","0");
 
+        //Runtime Fix
+        sleep(5000);
+
         assertTrue("Modal does not contain app name",
                 driver.findElement(By.id("myModalLabel")).getText().contains("Demo Site BE"));
 
@@ -756,10 +761,10 @@ public class RemoteProvidersIT extends BaseDataTest {
                 .setContrastService(CONTRAST_SERVICE_KEY)
                 .saveContrast();
 
-        remoteProvidersIndexPage.clickEditName("6","0").setNewName(newName);
+        remoteProvidersIndexPage.clickEditName("4","0").setNewName(newName);
 
         assertTrue("Application name did not update properly",
-                driver.findElement(By.cssSelector("td[id^=provider6appid]")).getText().equals(newName));
+                driver.findElement(By.cssSelector("td[id^=provider4appid]")).getText().equals(newName));
 
         remoteProvidersIndexPage.clearContrast();
     }

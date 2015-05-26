@@ -48,6 +48,9 @@ public class AnalyticsPage extends BasePage {
     }
 
     public AnalyticsPage clickSnapshotTab(Boolean usingD3) {
+        //Runtime Fix
+        sleep(5000);
+
         driver.findElementByLinkText("Snapshot").click();
         waitForElement(driver.findElementById("snapshotFilterDiv"));
         if(usingD3){
@@ -75,6 +78,9 @@ public class AnalyticsPage extends BasePage {
     }
 
     public AnalyticsPage clickVulnerabilitySearchTab() {
+        //Runtime Fix
+        sleep(5000);
+
         driver.findElementByLinkText("Vulnerability Search").click();
         waitForElement(driver.findElementById("vulnSearchDiv"));
         sleep(2500);
@@ -110,6 +116,9 @@ public class AnalyticsPage extends BasePage {
     }
 
     public AnalyticsPage expandTeamApplicationFilter(String divId) {
+        //Runtime Fix
+        sleep(5000);
+
         WebElement filterDiv = driver.findElementById(divId);
         try {
             filterDiv.findElement(By.id("expandTeamAndApplicationFilters")).click();
