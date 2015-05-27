@@ -228,7 +228,7 @@ public class ApplicationsController {
         map.put("applicationTags", application.getTags());
 
         if (EnterpriseTest.isEnterprise())
-            map.put("scanAgentSupportedList", ScannerType.getScanAgentSupportedList());
+            map.put("scanAgentSupportedList", ScannerType.getScanAgentSupportedListInString());
 
         // permissions
         for (Permission permission : new Permission[]{Permission.CAN_MANAGE_DEFECT_TRACKERS, Permission.CAN_MANAGE_WAFS}) {

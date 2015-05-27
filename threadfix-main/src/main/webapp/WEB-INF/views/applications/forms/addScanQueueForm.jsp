@@ -28,6 +28,7 @@
                                typeahead-editable="true"
                                placeholder="Type file name"
                                class="form-control"/>
+                        <a id="uploadDocQueueScanModalLink${ application.id }" class="btn" ng-click="switchTo('addDocInQueueScanModal')">Upload File</a>
                     </td>
                 </tr>
             </tbody>

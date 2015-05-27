@@ -87,6 +87,7 @@
                            typeahead-editable="true"
                            placeholder="Type file name"
                            class="form-control"/>
+                    <a id="uploadDocScheduledScanModalLink${ application.id }" class="btn" ng-click="switchTo('addDocInScheduledScanModal')">Upload File</a>
                 </td>
             </tr>
         </table>

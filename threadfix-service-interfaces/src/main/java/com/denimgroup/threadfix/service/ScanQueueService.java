@@ -42,15 +42,15 @@ public interface ScanQueueService {
 	
 	Task requestTask(String scanners, String agentConfig, String secureTaskKey) throws ScanQueueTaskConfigException;
 	
-	boolean completeTask(int scanQueueTaskId);
+	void completeTask(int scanQueueTaskId);
 	
-	boolean failTask(int scanQueueTaskId, String message);
+	void failTask(int scanQueueTaskId, String message);
 
 	ScanQueueTask loadTaskById(int taskId);
 
-	String deactivateTask(ScanQueueTask task);
+	void deactivateTask(ScanQueueTask task);
 
-	String deleteTask(ScanQueueTask task);
+	void deleteTask(ScanQueueTask task);
 
 	String validate(ScanQueueTask scanQueueTask);
 

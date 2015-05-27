@@ -138,13 +138,22 @@ public enum ScannerType {
 		return null;
 	}
 
-    public static List<String> getScanAgentSupportedList() {
+    public static List<String> getScanAgentSupportedListInString() {
         List<String> result = CollectionUtils.list();
         for (ScannerType t: values()) {
             if (t.getSupportedScanAgent())
                 result.add(t.getFullName());
         }
         Collections.sort(result);
+        return result;
+    }
+
+    public static List<ScannerType> getScanAgentSupportedList() {
+        List<ScannerType> result = CollectionUtils.list();
+        for (ScannerType t: values()) {
+            if (t.getSupportedScanAgent())
+                result.add(t);
+        }
         return result;
     }
 }
