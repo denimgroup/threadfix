@@ -88,7 +88,8 @@
 			<param-value>
         		,/,/index.jsp,/login.jsp,/organizations,/about,/wafs,/configuration,/reports,/dashboard,/scans,
         		/configuration/keys,/configuration/defecttrackers,/jobs/all,/configuration/remoteproviders,/configuration/grctools,
-        		/configuration/users/password,/configuration/users,/configuration/roles,/configuration/groups,/configuration/logs,/configuration/download,
+        		/configuration/users/password,/configuration/users,/configuration/roles,/configuration/groups,/configuration/logs,
+                /configuration/download,/configuration/acceptcriteria,
         		/configuration/settings,/configuration/filters,/configuration/scanqueue,/mappings/index,/configuration/tags,/teams,
         		/j_spring_security_check,/j_spring_security_logout,/images/*,/styles/*,/scripts/*,/rest/*,/configuration/download/*,
         		regex ^/rest/[a-zA-Z0-9/]*$,
