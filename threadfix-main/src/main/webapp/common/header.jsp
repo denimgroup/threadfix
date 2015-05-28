@@ -86,6 +86,13 @@
                                 <a id="grcToolsLink" href="<spring:url value="/configuration/grctools" htmlEscape="true"/>">GRC Tools</a>
                             </li>
                         </security:authorize>
+
+                        <security:authorize ifAllGranted="ROLE_ENTERPRISE">
+                            <li class="normalLinks">
+                                <a id="acceptCriteriaLink" href="<spring:url value="/configuration/acceptcriteria" htmlEscape="true"/>">Acceptance Criteria</a>
+                            </li>
+                        </security:authorize>
+
                         <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_REMOTE_PROVIDERS">
                             <li class="normalLinks">
                                 <a id="remoteProvidersLink" href="<spring:url value="/configuration/remoteproviders" htmlEscape="true"/>">Remote Providers</a>
