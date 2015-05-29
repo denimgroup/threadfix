@@ -29,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "Event")
@@ -39,6 +40,8 @@ public class Event extends AuditableEntity {
     public static final int
             ENUM_LENGTH = 50,
             STATUS_LENGTH = 255;
+
+    private Date date = new Date();
 
     String eventAction = null;
 
@@ -52,8 +55,19 @@ public class Event extends AuditableEntity {
     private VulnerabilityComment comment;
     private String status;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
+    @JsonView({ AllViews.FormInfo.class})
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     @Column(length = ENUM_LENGTH)
-    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
+    @JsonView({ AllViews.FormInfo.class})
     public String getEventAction() {
         return eventAction;
     }
@@ -90,7 +104,7 @@ public class Event extends AuditableEntity {
 
     @ManyToOne
     @JoinColumn(name = "userId")
-    @JsonIgnore
+    @JsonView({ AllViews.FormInfo.class})
     public User getUser() {
         return user;
     }
@@ -144,7 +158,7 @@ public class Event extends AuditableEntity {
     }
 
     @Column(length = STATUS_LENGTH)
-    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
+    @JsonView({ AllViews.FormInfo.class})
     public String getStatus() {
         return status;
     }

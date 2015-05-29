@@ -38,4 +38,8 @@ public interface EventService extends GenericObjectService<Event> {
     List<Event> loadAllByVulnerability(Vulnerability vulnerability);
 
     List<Event> loadAllByDefect(Defect defect);
+
+    String buildUploadScanString(Scan scan);
+
+    String buildDeleteScanString(Scan scan);
 }

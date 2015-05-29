@@ -30,6 +30,7 @@ public enum EventAction {
     APPLICATION_EDIT("Edit Application"),
     APPLICATION_SET_TAGS("Set Application Tags"),
     APPLICATION_SCAN_UPLOADED("Upload Application Scan"),
+    APPLICATION_SCAN_DELETED("Delete Application Scan"),
     VULNERABILITY_CREATE("Create Vulnerability"),
     VULNERABILITY_CLOSE("Close Vulnerability"),
     VULNERABILITY_REOPEN("Reopen Vulnerability"),
@@ -42,6 +43,13 @@ public enum EventAction {
     DEFECT_CLOSED("Close Defect"),
     DEFECT_APPEARED_AFTER_CLOSED("Appeared In Scan After Defect Closed");
 
+    private static EventAction[] applicationEventActions = { APPLICATION_CREATE, APPLICATION_EDIT,
+            APPLICATION_SET_TAGS, APPLICATION_SCAN_UPLOADED, APPLICATION_SCAN_DELETED };
+
+    private static EventAction[] vulnerabilityEventActions = { VULNERABILITY_CREATE, VULNERABILITY_CLOSE,
+            VULNERABILITY_REOPEN, VULNERABILITY_MARK_FALSE_POSITIVE, VULNERABILITY_UNMARK_FALSE_POSITIVE,
+            VULNERABILITY_COMMENT, VULNERABILITY_OTHER };
+
     EventAction(String displayName) {
         this.displayName = displayName;
     }
@@ -50,6 +58,24 @@ public enum EventAction {
 
     @JsonView(Object.class)
     public String getDisplayName() { return displayName; }
+
+    public boolean isApplicationEventAction() {
+        for (EventAction eventAction: applicationEventActions) {
+            if (eventAction.equals(this)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isVulnerabilityEventAction() {
+        for (EventAction eventAction: vulnerabilityEventActions) {
+            if (eventAction.equals(this)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public static EventAction getEventAction(String input) {
         EventAction action = null; // no default event action

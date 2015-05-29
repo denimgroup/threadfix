@@ -38,6 +38,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 @Entity
 @Table(name = "Application")
 public class Application extends AuditableEntity {
@@ -140,6 +142,7 @@ public class Application extends AuditableEntity {
 
 	private List<ApplicationChannel> channelList;
 	private List<Scan> scans;
+	private List<Event> events;
 	private List<Vulnerability> vulnerabilities;
 	private List<RemoteProviderApplication> remoteProviderApplications;
 	private List<Document> documents;
@@ -383,7 +386,29 @@ public class Application extends AuditableEntity {
 	public void setScans(List<Scan> scans) {
 		this.scans = scans;
 	}
-	
+
+	@OneToMany(mappedBy = "application")
+	@OrderBy("date ASC")
+	@JsonIgnore
+	public List<Event> getEvents() {
+		return events;
+	}
+
+	public void setEvents(List<Event> events) {
+		this.events = events;
+	}
+
+	@Transient
+	public List<Event> getApplicationEvents() {
+		List<Event> applicationEvents = list();
+		for (Event event : getEvents()) {
+			if (event.getEventActionEnum().isApplicationEventAction()) {
+				applicationEvents.add(event);
+			}
+		}
+		return applicationEvents;
+	}
+
 	@OneToMany(mappedBy = "application", cascade = CascadeType.ALL)
 	@JsonIgnore
 	public List<AccessControlApplicationMap> getAccessControlApplicationMaps() {

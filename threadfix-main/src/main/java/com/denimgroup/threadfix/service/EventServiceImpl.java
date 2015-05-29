@@ -26,15 +26,14 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.dao.EventDao;
 import com.denimgroup.threadfix.data.dao.GenericObjectDao;
-import com.denimgroup.threadfix.data.entities.Defect;
-import com.denimgroup.threadfix.data.entities.Event;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
@@ -45,6 +44,8 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
 
     @Autowired
     private EventDao eventDao;
+    @Autowired
+    private UserService userService;
 
     @Override
     GenericObjectDao<Event> getDao() {
@@ -64,5 +65,49 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
     @Override
     public List<Event> loadAllByDefect(Defect defect) {
         return eventDao.retrieveAllByDefect(defect);
+    }
+
+    @Override
+    public String buildUploadScanString(Scan scan) {
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM d, yyyy h:mm:ss a");
+
+        String uploadScanString = getUserName() + " uploaded a " + scan.getApplicationChannel().getChannelType().getName() +
+                " Scan dated " + dateFormatter.format(scan.getImportTime().getTime()) + " with " + scan.getNumberTotalVulnerabilities() +
+                " Vulnerabilities. The scan was uploaded from " + scan.getOriginalFileName() + ".";
+
+        return uploadScanString;
+    }
+
+    @Override
+    public String buildDeleteScanString(Scan scan) {
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM d, yyyy h:mm:ss a");
+
+        Event scanUploadEvent = null;
+        for (Event scanEvent: loadAllByScan(scan)) {
+            if (scanEvent.getEventActionEnum().equals(EventAction.APPLICATION_SCAN_UPLOADED)) {
+                scanUploadEvent = scanEvent;
+                break;
+            }
+        }
+
+        String deleteScanString = getUserName() + " deleted a " + scan.getApplicationChannel().getChannelType().getName() +
+                " Scan dated " + dateFormatter.format(scan.getImportTime().getTime()) + " with " + scan.getNumberTotalVulnerabilities() +
+                " Vulnerabilities. The scan was uploaded from " + scan.getOriginalFileName();
+        if (scanUploadEvent != null) {
+            deleteScanString += " on " + dateFormatter.format(scanUploadEvent.getDate());
+        }
+        deleteScanString += ".";
+
+        return deleteScanString;
+
+    }
+
+    private String getUserName() {
+        String userName = "ThreadFix";
+        User user = userService.getCurrentUser();
+        if (user != null) {
+            userName = user.getName();
+        }
+        return userName;
     }
 }
