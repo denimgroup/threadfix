@@ -41,7 +41,8 @@ public class UserEntIT extends BaseDataTest {
 
         UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
-                .createUser(userName,"",testPassword);
+                .createUser(userName,"",testPassword)
+                .clickUserLink(userName);
                 //.clickEditLink(userName);
 
         //Runtime Fix

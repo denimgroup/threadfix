@@ -232,10 +232,17 @@ public class UserIndexPage extends BasePage {
         try {
             driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']").click();
         } catch (NoSuchElementException e) {
-            sleep(5000);
-            driver.findElementByXPath("//a[text()='2']").click();
-            sleep(2000);
-            driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']").click();
+            try {
+                sleep(5000);
+                driver.findElementByXPath("//a[text()='2']").click();
+                sleep(2000);
+                driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']").click();
+            } catch (NoSuchElementException ex) {
+                sleep(5000);
+                driver.findElementByXPath("//a[text()='3']").click();
+                sleep(2000);
+                driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']").click();
+            }
         }
         sleep(5000);
         return new UserIndexPage(driver);
@@ -380,9 +387,9 @@ public class UserIndexPage extends BasePage {
         try {
             driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']");
         } catch (NoSuchElementException e) {
-            driver.findElementByXPath("//a[text()='2']").click();
-            sleep(2000);
             try {
+                driver.findElementByXPath("//a[text()='2']").click();
+                sleep(2000);
                 driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']");
             } catch (NoSuchElementException ex) {
                 return false;
@@ -399,15 +406,14 @@ public class UserIndexPage extends BasePage {
 		return driver.findElementById("hasGlobalGroupAccessErrors").getText().contains("This would leave users unable to access the user management portion of ThreadFix.");
 	}
 	
-	public boolean isRoleSelected(String oldName,String role){
+	public boolean isRoleSelected(String userName,String role){
 		waitForElement(driver.findElementById("roleSelect"));
-		if(oldName == null){
-			return new Select(driver.findElementById("roleSelect")).getFirstSelectedOption().getText().contains(role);
-		}else{
-			return new Select(driver.findElementById("roleSelect")).getFirstSelectedOption().getText().contains(role);
-		}
-
+        if (userName != null) {
+            clickUserLink(userName);
+        }
+		return new Select(driver.findElementById("roleSelect")).getFirstSelectedOption().getText().contains(role);
 	}
+
     public boolean isGlobalAccessSelected() {
         sleep(3000);
         return driver.findElementById("hasGlobalGroupAccessCheckbox").isSelected();

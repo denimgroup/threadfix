@@ -481,6 +481,9 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .expandTeamApplicationFilter("snapshotFilterDiv")
                 .addTeamFilter(teamName, "snapshotFilterDiv");
 
+        //Runtime Fix
+        sleep(5000);
+
         assertTrue("CAT I node did not contain correct number of vulnerabilities.",
                 analyticsPage.isVulnerabilityCountCorrect("CAT I", "1"));
         assertTrue("CAT II node did not contain correct number of vulnerabilities.",

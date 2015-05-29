@@ -23,12 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
 
 public class FilterPage extends BasePage {
 
@@ -96,7 +96,17 @@ public class FilterPage extends BasePage {
     }
 
     public FilterPage closeSuccessNotification() {
-        driver.findElementByClassName("close").click();
+        try {
+            driver.findElementByClassName("close").click();
+        } catch (ElementNotVisibleException e) {
+            List<WebElement> elements = driver.findElementsByClassName("close");
+            for (WebElement element : elements) {
+                if (element.isDisplayed()) {
+                    element.click();
+                    break;
+                }
+            }
+        }
         return new FilterPage(driver);
     }
 

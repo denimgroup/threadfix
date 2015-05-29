@@ -934,6 +934,8 @@ public class ApplicationIT extends BaseDataTest {
                 .setDescription(description)
                 .clickDynamicSubmit();
 
+        applicationDetailPage.refreshPage();
+
         applicationDetailPage.expandVulnerabilityByType(appVuln);
         sleep(2000);
         applicationDetailPage.collapseVulnerabilityByType(appVuln);
