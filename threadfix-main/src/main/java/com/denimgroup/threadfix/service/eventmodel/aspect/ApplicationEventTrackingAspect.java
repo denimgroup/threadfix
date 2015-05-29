@@ -96,19 +96,39 @@ public class ApplicationEventTrackingAspect extends EventTrackingAspect {
                 .setEventAction(EventAction.APPLICATION_SCAN_UPLOADED)
                 .setApplication(scan.getApplication())
                 .setScan(scan)
+                .setStatus(eventService.buildUploadScanString(scan))
                 .generateEvent();
         eventService.saveOrUpdate(event);
         return event;
     }
 
     @Around("execution(* com.denimgroup.threadfix.data.dao.hibernate.HibernateScanDao.deleteFindingsAndScan(com.denimgroup.threadfix.data.entities.Scan)) && args(scan)")
-    public void updateEventForScanDeletion(ProceedingJoinPoint joinPoint, Scan scan) throws Throwable {
-        List<Event> eventList = eventService.loadAllByScan(scan);
+    public void updateEventForScanDeletionAndEmitDeleteApplicationScanEvent(ProceedingJoinPoint joinPoint, Scan scan) throws Throwable {
+        Application application = scan.getApplication();
+        String eventDescription = eventService.buildDeleteScanString(scan);
 
-        for (Event event: eventList) {
+        for (Event event: eventService.loadAllByScan(scan)) {
             event.setScan(null);
             eventService.saveOrUpdate(event);
         }
+
         joinPoint.proceed();
+        try {
+            Event event = generateDeleteScanEvent(application, eventDescription);
+            publishEventTrackingEvent(event);
+        } catch (Exception e) {
+            log.error("Error while logging Event: " + EventAction.APPLICATION_SCAN_DELETED, e);
+        }
+    }
+
+    protected Event generateDeleteScanEvent(Application application, String scanDescription) {
+        Event event = new EventBuilder()
+                .setUser(userService.getCurrentUser())
+                .setEventAction(EventAction.APPLICATION_SCAN_DELETED)
+                .setApplication(application)
+                .setStatus(scanDescription)
+                .generateEvent();
+        eventService.saveOrUpdate(event);
+        return event;
     }
 }

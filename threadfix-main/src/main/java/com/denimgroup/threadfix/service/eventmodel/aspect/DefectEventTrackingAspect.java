@@ -132,8 +132,11 @@ public class DefectEventTrackingAspect extends EventTrackingAspect {
             Scan scan = (Scan) proceed;
             Set<Finding> findings = new HashSet<Finding>();
             findings.addAll(scan.getFindings());
-            for (ScanRepeatFindingMap scanRepeatFindingMap: scan.getScanRepeatFindingMaps()) {
-                findings.add(scanRepeatFindingMap.getFinding());
+            List<ScanRepeatFindingMap> scanRepeatFindingMaps = scan.getScanRepeatFindingMaps();
+            if (scanRepeatFindingMaps != null) {
+                for (ScanRepeatFindingMap scanRepeatFindingMap : scanRepeatFindingMaps) {
+                    findings.add(scanRepeatFindingMap.getFinding());
+                }
             }
 
             for (Finding finding : findings) {
