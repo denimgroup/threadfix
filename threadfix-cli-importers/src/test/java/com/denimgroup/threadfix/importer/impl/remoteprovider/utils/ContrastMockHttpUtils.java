@@ -21,7 +21,9 @@ public class ContrastMockHttpUtils implements RemoteProviderHttpUtils {
             BAD_SERVICE_KEY = "bad service key",
             GOOD_ENCODING = "dXNlcjpzZXJ2aWNlIGtleQ==", // base64'd GOOD_USERNAME:GOOD_SERVICE_KEY
             APPS_URL = "https://app.contrastsecurity.com/Contrast/api/applications",
-            TRACES_URL = "https://app.contrastsecurity.com/Contrast/api/traces/";
+            TRACES_URL = "https://app.contrastsecurity.com/Contrast/api/traces/",
+            NEW_TRACES_START = "https://app.contrastsecurity.com/Contrast/api/ng/traces/",
+            NEW_TRACES_END = "/events/summary";
 
 
     @Override
@@ -56,9 +58,11 @@ public class ContrastMockHttpUtils implements RemoteProviderHttpUtils {
         } else if (url.startsWith(TRACES_URL)) {
             String endSection = url.substring(url.indexOf(TRACES_URL) + TRACES_URL.length());
             return HttpResponse.success(200, getStream("contrast/" + endSection + ".json"));
+        } else if (url.startsWith(NEW_TRACES_START) && url.endsWith(NEW_TRACES_END)) {
+            return HttpResponse.success(200, getStream("contrast/traces.json"));
         }
 
-        throw new IllegalStateException("A URL other than " + APPS_URL + " and " + TRACES_URL + " was entered: " + url);
+        throw new IllegalStateException("A URL other than " + APPS_URL + " and " + NEW_TRACES_START + " was entered: " + url);
     }
 
     private void testHeader(GetMethod get, String header1, String value1) {

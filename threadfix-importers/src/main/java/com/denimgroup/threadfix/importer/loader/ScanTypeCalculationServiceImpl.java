@@ -50,7 +50,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.*;
 import java.util.Map.Entry;
@@ -80,25 +79,12 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 	private ApplicationChannelDao applicationChannelDao;
     @Autowired
 	private ChannelTypeDao channelTypeDao;
-    @Autowired
+    @Autowired(required = false) // this won't be present in anything but threadfix-main
     private DefaultConfigService defaultConfigService;
 
 	private String getScannerType(MultipartFile file) {
 
-        DefaultConfiguration defaultConfig = defaultConfigService.loadCurrentConfiguration();
-        String fileUploadLocation = defaultConfig.getFileUploadLocation();
-        String fullFilePath = TEMP_FILE_NAME;
-
-        if(defaultConfig.fileUploadLocationExists()) {
-            File directory = new File(fileUploadLocation);
-
-            if (directory.exists()){
-                File fileUploaded = new File(fileUploadLocation + File.separator + TEMP_FILE_NAME);
-                fullFilePath = fileUploaded.getPath();
-            } else {
-                throw new RestIOException("Directory at path:  " + fileUploadLocation + " does not exist.", -1);
-            }
-        }
+		String fullFilePath = getFilePath();
 
 		saveFile(fullFilePath,file);
 
@@ -113,7 +99,29 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
         return returnValue;
 	}
 
-    // package access is for testing
+	private String getFilePath() {
+		String fullFilePath = TEMP_FILE_NAME;
+
+		if (defaultConfigService != null) {
+			DefaultConfiguration defaultConfig = defaultConfigService.loadCurrentConfiguration();
+			String fileUploadLocation = defaultConfig.getFileUploadLocation();
+
+			if (defaultConfig.fileUploadLocationExists()) {
+				File directory = new File(fileUploadLocation);
+
+				if (directory.exists()) {
+					File fileUploaded = new File(fileUploadLocation + File.separator + TEMP_FILE_NAME);
+					fullFilePath = fileUploaded.getPath();
+				} else {
+					throw new RestIOException("Directory at path:  " + fileUploadLocation + " does not exist.", -1);
+				}
+			}
+		}
+
+		return fullFilePath;
+	}
+
+	// package access is for testing
     // the two arguments are needed to reconcile MultipartFile / File difference
     String getScannerType(String originalName, String fileName) {
 
@@ -413,6 +421,10 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 		if (channelId == null || file == null) {
 			log.warn("The scan upload file failed to save, it had null input.");
 			return null;
+		}
+
+		if (defaultConfigService == null) {
+			throw new IllegalStateException("Non-webapp code can't call saveFile()");
 		}
 
         DefaultConfiguration defaultConfig = defaultConfigService.loadCurrentConfiguration();
