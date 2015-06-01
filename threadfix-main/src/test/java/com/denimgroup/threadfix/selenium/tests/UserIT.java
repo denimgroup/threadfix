@@ -143,6 +143,9 @@ public class UserIT extends BaseDataTest {
                 .setConfirmPasswordModal(password)
                 .clickAddNewUserBtn();
 
+        //Runtime Fix
+        sleep(5000);
+
         userIndexPage.clickUserLink(userName)
                 .clickDelete(userName);
 
