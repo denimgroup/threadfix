@@ -186,6 +186,13 @@ public abstract class BasePage {
         return new RolesIndexPage(driver);
     }
 
+    public GroupIndexPage clickManageGroupsLink(){
+        clickConfigTab();
+        driver.findElementById("manageGroupsLink").click();
+        sleep(3000);
+        return new GroupIndexPage(driver);
+    }
+
     public ErrorLogPage clickViewLogsLink(){
         clickConfigTab();
         driver.findElementById("viewLogsLink").click();
