@@ -150,8 +150,7 @@ public class GroupIndexPage extends BasePage {
     public boolean isGroupPresent(String groupName){
         try{
             driver.findElementByXPath("//li[@id=\'groupList\']/a[text()=\'" + groupName + "\']");
-        }
-        catch(NoSuchElementException e){
+        } catch(NoSuchElementException e){
             return false;
         }
         return true;
@@ -160,8 +159,7 @@ public class GroupIndexPage extends BasePage {
     public boolean isUserPresent(String userName){
         try{
             driver.findElementByXPath("//div[@id=\'users\']//td[text()=\'" + userName + "\']");
-        }
-        catch(NoSuchElementException e){
+        } catch(NoSuchElementException e){
             return false;
         }
         return true;
@@ -174,8 +172,7 @@ public class GroupIndexPage extends BasePage {
     public boolean isTeamRolePresent(String teamName, String roleName) {
         try {
             driver.findElementById("teamName" + teamName +"all" + roleName);
-        }
-        catch(NoSuchElementException e){
+        } catch(NoSuchElementException e){
             return false;
         }
         return true;
@@ -184,8 +181,7 @@ public class GroupIndexPage extends BasePage {
     public boolean isApplicationRolePresent(String teamName, String appName, String roleName){
         try{
             driver.findElementById("teamName" + teamName + appName + roleName);
-        }
-        catch(NoSuchElementException e){
+        } catch(NoSuchElementException e){
             return false;
         }
         return true;
@@ -194,8 +190,7 @@ public class GroupIndexPage extends BasePage {
     public boolean isSaveChangesClickable(){
         try{
             driver.findElementByCssSelector("button#submit:not(.disabled)");
-        }
-        catch(NoSuchElementException e){
+        } catch(NoSuchElementException e){
             return false;
         }
         return true;
