@@ -63,7 +63,8 @@ public class TagsController {
     @RequestMapping(value = "/map", method = RequestMethod.GET)
     public @ResponseBody RestResponse<Map<String, Object>> map() {
         Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("tags", tagService.loadAll());
+        responseMap.put("tags", tagService.loadAllApplicationTags());
+        responseMap.put("commentTags", tagService.loadAllCommentTags());
         return RestResponse.success(responseMap);
     }
 
@@ -77,7 +78,11 @@ public class TagsController {
             if (tag.getName().trim().equals("")) {
                 result.rejectValue("name", null, null, "This field cannot be blank");
             } else {
-                Tag databaseTag = tagService.loadTag(tag.getName().trim());
+                Tag databaseTag;
+                if (!tag.getTagForComment())
+                    databaseTag = tagService.loadApplicationTag(tag.getName().trim());
+                else
+                    databaseTag = tagService.loadCommentTag(tag.getName().trim());
                 if (databaseTag != null) {
                     result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
                 }
@@ -94,7 +99,7 @@ public class TagsController {
     }
 
     @RequestMapping(value = "/{tagId}/edit", method = RequestMethod.POST)
-    public @ResponseBody RestResponse<List<Tag>> editSubmit(@PathVariable("tagId") int tagId, @Valid @ModelAttribute Tag tag,
+    public @ResponseBody RestResponse<Map<String, Object>> editSubmit(@PathVariable("tagId") int tagId, @Valid @ModelAttribute Tag tag,
                                                      BindingResult result) {
         if (result.hasErrors()) {
             return FormRestResponse.failure("error", result);
@@ -103,7 +108,7 @@ public class TagsController {
             if (tag.getName().trim().equals("")) {
                 result.rejectValue("name", null, null, "This field cannot be blank");
             } else {
-                databaseTag = tagService.loadTag(tag.getName().trim());
+                databaseTag = tagService.loadApplicationTag(tag.getName().trim());
                 if (databaseTag != null && !databaseTag.getId().equals(tagId)) {
                     result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
                 }
@@ -118,10 +123,13 @@ public class TagsController {
             }
 
             if (databaseTag != null) {
+                Map<String, Object> resultMap = new HashMap<>();
                 log.info("Editing Tag " + databaseTag.getName() + " to " + tag.getName());
                 databaseTag.setName(tag.getName());
                 tagService.storeTag(databaseTag);
-                return RestResponse.success(tagService.loadAll());
+                resultMap.put("tags", tagService.loadAllApplicationTags());
+                resultMap.put("commentTags", tagService.loadAllCommentTags());
+                return RestResponse.success(resultMap);
             } else {
                 return RestResponse.failure("Error occurs.");
             }
@@ -175,6 +183,7 @@ public class TagsController {
         responseMap.put("appList", tag.getApplications());
         responseMap.put("numApps", tag.getApplications().size());
         responseMap.put("commentList", tag.getVulnerabilityComments());
+        responseMap.put("isCommentTag", tag.getTagForComment());
 
         return RestResponse.success(responseMap);
     }

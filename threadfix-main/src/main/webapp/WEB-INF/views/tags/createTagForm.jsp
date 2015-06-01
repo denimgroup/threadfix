@@ -14,6 +14,12 @@
                         <span id="otherNameError" class="errors" ng-show="object.name_error"> {{ object.name_error }}</span>
 					</td>
 				</tr>
+				<tr>
+					<td>Vulnerability Comment Tag</td>
+					<td class="inputValue">
+						<input id="vulnCommentTag" type="checkbox" ng-model="object.tagForComment" name="tagForComment"/>
+					</td>
+				</tr>
 			</tbody>
 		</table>
 	</div>

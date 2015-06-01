@@ -47,6 +47,7 @@ public class Tag extends AuditableEntity {
     private String name;
 
     private Boolean enterpriseTag = false;
+    private Boolean tagForComment = false;
     private String defaultJsonFilter;
 
     private Set<Application> applications = new HashSet<Application>(0);
@@ -122,4 +123,11 @@ public class Tag extends AuditableEntity {
         return applications.size()==0 && getVulnCommentsCount()==0 && !enterpriseTag;
     }
 
+    public Boolean getTagForComment() {
+        return tagForComment;
+    }
+
+    public void setTagForComment(Boolean tagForComment) {
+        this.tagForComment = tagForComment;
+    }
 }

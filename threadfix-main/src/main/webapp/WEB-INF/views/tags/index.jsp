@@ -20,6 +20,8 @@
 
     <a ng-show="initialized" id="createTagModalButton" ng-click="openNewModal()" class="btn">Create Tag</a>
 
+    <h3>Application Tags</h3>
+
     <table ng-show="initialized" class="table table-striped">
         <thead>
             <tr>
@@ -29,7 +31,7 @@
         </thead>
         <tbody id="tagTableBody">
             <tr ng-hide="tags" class="bodyRow">
-                <td colspan="2" style="text-align:center;">No Tags found.</td>
+                <td colspan="2" style="text-align:center;">No Application Tags found.</td>
             </tr>
             <tr ng-show="tags" ng-repeat="tag in tags" class="bodyRow">
                 <td class="details pointer" id="tagName{{ tag.name }}">
@@ -39,6 +41,30 @@
                     <a id="editTagModalButton{{ tag.name }}" ng-click="openEditModal(tag)" class="btn" ng-class="{ disabled : tag.enterpriseTag }">Edit / Delete</a>
                 </td>
             </tr>
+        </tbody>
+    </table>
+
+    <h3>Vulnerability Comment Tags</h3>
+
+    <table ng-show="initialized" class="table table-striped">
+        <thead>
+        <tr>
+            <th class="long first">Name</th>
+            <th class="centered last">Edit / Delete</th>
+        </tr>
+        </thead>
+        <tbody id="commentTagTableBody">
+        <tr ng-hide="tags" class="bodyRow">
+            <td colspan="2" style="text-align:center;">No Vulnerability Comment Tags found.</td>
+        </tr>
+        <tr ng-show="tags" ng-repeat="tag in commentTags" class="bodyRow">
+            <td class="details pointer" id="commentTagName{{ tag.name }}">
+                <a ng-click="goToTag(tag)">{{ tag.name }}</a>
+            </td>
+            <td class="centered">
+                <a id="editCommentTagModalButton{{ tag.name }}" ng-click="openEditModal(tag)" class="btn" ng-class="{ disabled : tag.enterpriseTag }">Edit / Delete</a>
+            </td>
+        </tr>
         </tbody>
     </table>
 </body>
