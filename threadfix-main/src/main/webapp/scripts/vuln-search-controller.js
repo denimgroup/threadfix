@@ -52,6 +52,8 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                         $scope.teams = data.object.teams;
                         $scope.tags = data.object.tags;
                         $scope.commentTags = data.object.commentTags;
+                        $scope.tags.sort(nameCompare);
+                        $scope.commentTags.sort(nameCompare);
                         $scope.scanners = data.object.scanners;
                         $scope.genericVulnerabilities = data.object.vulnTypes;
                         $scope.searchApplications = data.object.applications;
@@ -160,5 +162,9 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         $scope.parameters = angular.copy(parameters);
         $scope.refresh();
     });
+
+    var nameCompare = function(a,b) {
+        return a.name.localeCompare(b.name);
+    };
 
 });
