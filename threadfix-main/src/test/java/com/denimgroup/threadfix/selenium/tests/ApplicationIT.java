@@ -366,6 +366,9 @@ public class ApplicationIT extends BaseDataTest {
 
         Boolean isAppAttachedToTeam1 = teamDetailPage.isAppPresent(appName);
 
+        //Runtime Debug
+        if (isAppAttachedToTeam1) { applicationDetailpage.takeScreenShot(); }
+
         teamDetailPage = teamDetailPage.clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName2);
 
@@ -373,6 +376,9 @@ public class ApplicationIT extends BaseDataTest {
         sleep(5000);
 
         Boolean isAppAttachedToTeam2 = teamDetailPage.isAppPresent(appName);
+
+        //Runtime Debug
+        if (!isAppAttachedToTeam2) { applicationDetailpage.takeScreenShot(); }
 
         assertTrue("The application was not switched properly.", !isAppAttachedToTeam1 && isAppAttachedToTeam2);
     }

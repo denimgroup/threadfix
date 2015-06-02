@@ -132,6 +132,9 @@ public class AnalyticsRemediationIT extends BaseDataTest {
                 .expandAgingFilter("complianceFilterDiv")
                 .toggleAgingFilter("Forever", "complianceFilterDiv");
 
+        //Runtime Fix
+        sleep(10000);
+
         int arrayLength = driver.findElements(By.id("vulnName0")).toArray().length;
 
         assertTrue("Closed vulnerability is not displayed.",
@@ -163,8 +166,8 @@ public class AnalyticsRemediationIT extends BaseDataTest {
 
         sleep(2000);
 
-        assertTrue("There aren't enough vulnerabilities shown on the page.",
-                !driver.findElements(By.id("vulnName44")).isEmpty());
+        assertFalse("There aren't enough vulnerabilities shown on the page.",
+                driver.findElements(By.id("vulnName43")).isEmpty());
         assertTrue("There are too many vulnerabilities shown.", driver.findElements(By.id("vulnName50")).isEmpty());
     }
 }

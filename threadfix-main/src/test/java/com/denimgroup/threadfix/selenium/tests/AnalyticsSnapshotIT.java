@@ -92,6 +92,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         //Runtime Fix
         sleep(10000);
+        analyticsPage.takeScreenShot();
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
@@ -201,14 +202,13 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .clickAnalyticsLink()
                 .clickSnapshotTab(true);
 
-        analyticsPage.selectDropDownReport("Most Vulnerable Applications")
-                .selectDropDownReport("Point in Time");
+        analyticsPage.selectDropDownReport("Point in Time");
 
         //Runtime Fix
         sleep(10000);
 
         assertTrue("Did not navigate correctly", driver.findElement(By.id("Point in Time Report_Title"))
-                .getText().equals("Point in Time Report"));
+                .getText().contains("Point in Time Report"));
     }
 
     //===========================================================================================================
@@ -293,7 +293,8 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .addTeamFilter(teamName, "snapshotFilterDiv");
 
         //Runtime Fix
-        sleep(10000);
+        sleep(15000);
+        analyticsPage.takeScreenShot();
 
         assertTrue("Team specific vulnerabilities are not correct.",
                 driver.findElement(By.id("totalVuln0")).getText().equals("1") &&
@@ -321,6 +322,9 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .addTeamFilter(teamName, "snapshotFilterDiv")
                 .saveCurrentFilter(filterName, "snapshotFilterDiv");
 
+        //Runtime Fix
+        analyticsPage.refreshPage();
+
         analyticsPage.clickAnalyticsLink()
                 .waitForReportTab("snapshot")
                 .clickSnapshotTab(false)
@@ -329,16 +333,16 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .loadFilter(filterName,"snapshotFilterDiv");
 
         //Runtime Fix
-        sleep(10000);
+        sleep(15000);
 
         assertTrue("Team specific vulnerabilities are not correct.",
                 driver.findElement(By.id("totalVuln0")).getText().equals("1") &&
-                        driver.findElement(By.id("totalVuln1")).getText().equals("1") &&
-                        driver.findElement(By.id("totalVuln2")).getText().equals("1") &&
-                        driver.findElement(By.id("totalVuln3")).getText().equals("2") &&
-                        driver.findElement(By.id("totalVuln4")).getText().equals("2") &&
-                        driver.findElement(By.id("totalVuln5")).getText().equals("2") &&
-                        driver.findElement(By.id("totalVuln6")).getText().equals("2"));
+                    driver.findElement(By.id("totalVuln1")).getText().equals("1") &&
+                    driver.findElement(By.id("totalVuln2")).getText().equals("1") &&
+                    driver.findElement(By.id("totalVuln3")).getText().equals("2") &&
+                    driver.findElement(By.id("totalVuln4")).getText().equals("2") &&
+                    driver.findElement(By.id("totalVuln5")).getText().equals("2") &&
+                    driver.findElement(By.id("totalVuln6")).getText().equals("2"));
     }
 
     //===========================================================================================================

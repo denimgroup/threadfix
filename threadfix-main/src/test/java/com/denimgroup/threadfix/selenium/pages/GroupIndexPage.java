@@ -71,6 +71,7 @@ public class GroupIndexPage extends BasePage {
     }
 
     public GroupIndexPage clickEditLink(String groupName){
+        refreshPage();
         driver.findElementByXPath("//li[@id=\'groupList\']/a[text()=\'" + groupName + "\']").click();
         waitForElement(driver.findElementById("submit"));
         return new GroupIndexPage(driver);

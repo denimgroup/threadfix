@@ -387,6 +387,8 @@ public class RemoteProvidersIT extends BaseDataTest {
 
     @Test
     public void testNumberUnderSeverity() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("WhiteHat");
+
         remoteProvidersIndexPage.clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
                 .saveWhiteHat()
@@ -402,13 +404,13 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         TeamDetailPage teamDetailPage = remoteProvidersIndexPage.clickTeamLink(teamName);
 
-        sleep(5000);
+        sleep(10000);
 
-        assertTrue("Number of Open Vulnerabilities is not correct", teamDetailPage.isNumberOfOpenVulnerabilityCorrect("14", 0));
-        assertTrue("Number of Critical Vulnerability is not correct", teamDetailPage.isNumberOfCriticalCorrect("2", 0));
-        assertTrue("Number of High Vulnerability is not correct", teamDetailPage.isNumberOfHighCorrect("8", 0));
-        assertTrue("Number of Medium Vulnerability is not correct", teamDetailPage.isNumberOfMediumCorrect("4", 0));
-        assertTrue("Number of Low Vulnerability is not correct", teamDetailPage.isNumberOfLowCorrect("0", 0));
+        assertTrue("Number of Open Vulnerabilities is not correct", teamDetailPage.isNumberOfOpenVulnerabilityCorrect("52", 0));
+        assertTrue("Number of Critical Vulnerability is not correct", teamDetailPage.isNumberOfCriticalCorrect("10", 0));
+        assertTrue("Number of High Vulnerability is not correct", teamDetailPage.isNumberOfHighCorrect("11", 0));
+        assertTrue("Number of Medium Vulnerability is not correct", teamDetailPage.isNumberOfMediumCorrect("30", 0));
+        assertTrue("Number of Low Vulnerability is not correct", teamDetailPage.isNumberOfLowCorrect("1", 0));
         assertTrue("Number of Info Vulnerability is not correct", teamDetailPage.isNumberOfInfoCorrect("0", 0));
 
         remoteProvidersIndexPage = teamDetailPage.clickRemoteProvidersLink()
@@ -685,6 +687,8 @@ public class RemoteProvidersIT extends BaseDataTest {
 
     @Test
     public void testCheckWhiteHatEditNameModalHeader() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("WhiteHat");
+
         remoteProvidersIndexPage.clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
                 .saveWhiteHat();
@@ -695,9 +699,9 @@ public class RemoteProvidersIT extends BaseDataTest {
         sleep(5000);
 
         assertTrue("Modal does not contain app name",
-                driver.findElement(By.id("myModalLabel")).getText().contains("Demo Site BE"));
+                driver.findElement(By.id("myModalLabel")).getText().contains("DAST App"));
 
-        remoteProvidersIndexPage = remoteProvidersIndexPage.closeModal().clearWhiteHat();
+        remoteProvidersIndexPage.closeModal().clearWhiteHat();
 
         assertTrue("WhiteHat Sentinel configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
@@ -705,6 +709,9 @@ public class RemoteProvidersIT extends BaseDataTest {
     
     @Test
     public void testConfigureContrast() {
+
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("Contrast");
+
         remoteProvidersIndexPage.clickConfigureContrast()
                 .setContrastUser(CONTRAST_USER)
                 .setContrastAPI(CONTRAST_API_KEY)
@@ -729,6 +736,8 @@ public class RemoteProvidersIT extends BaseDataTest {
 
     @Test
     public void testUpdateContrastApplications() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("Contrast");
+
         remoteProvidersIndexPage.clickConfigureContrast()
                 .setContrastUser(CONTRAST_USER)
                 .setContrastAPI(CONTRAST_API_KEY)
@@ -760,6 +769,8 @@ public class RemoteProvidersIT extends BaseDataTest {
     @Test
     public void testEditContrastApplicationName() {
         String newName = getName();
+
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("Contrast");
 
         remoteProvidersIndexPage.clickConfigureContrast()
                 .setContrastUser(CONTRAST_USER)
