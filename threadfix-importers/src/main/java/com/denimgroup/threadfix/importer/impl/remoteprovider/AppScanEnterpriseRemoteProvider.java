@@ -7,11 +7,14 @@ import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RequestConfigurer;
+import org.apache.commons.httpclient.HttpMethodBase;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl.getImpl;
 
 /**
@@ -27,7 +30,8 @@ public class AppScanEnterpriseRemoteProvider extends AbstractRemoteProvider{
                 FEATURE_KEY = "AppScanEnterpriseUser",
                 LOGIN_SERVICE = "login",
                 LOGOUT_SERVICE = "logout",
-                APP_SERVICE = "applications";
+                APP_SERVICE = "applications",
+                SCAN_SERVICE = "issues";
 
     public AppScanEnterpriseRemoteProvider() {
       super(ScannerType.APPSCAN_ENTERPRISE);
@@ -44,7 +48,21 @@ public class AppScanEnterpriseRemoteProvider extends AbstractRemoteProvider{
 
     @Override
     public List<Scan> getScans(RemoteProviderApplication remoteProviderApplication){
-        return null;
+
+        List<Scan> scans = list();
+
+        try{
+            String sessionId = loginToAppScanEnterprise();
+
+            String url = getAuthenticationFieldValue(URL) + BASE_URL + SCAN_SERVICE + "?Application Name=" + remoteProviderApplication.getNativeName();
+
+            HttpResponse response = httpUtils.getUrlWithConfigurer(url, getRequestConfigurer(sessionId));
+
+        }catch (RestIOException e){
+            log.info("Error while retrieving scans from App Scan Enterprise");
+        }
+
+        return scans;
     }
 
     private String loginToAppScanEnterprise(){
@@ -77,5 +95,16 @@ public class AppScanEnterpriseRemoteProvider extends AbstractRemoteProvider{
             throw new RestIOException("Invalid response with following status. Please Check logs for more details", response.getStatus());
         }
 
+    }
+
+    private RequestConfigurer getRequestConfigurer(final String sessionId){
+
+        return new RequestConfigurer() {
+
+            @Override
+            public void configure(HttpMethodBase method) {
+                method.setRequestHeader("asc_xsrf_token", sessionId);
+            }
+        };
     }
 }
