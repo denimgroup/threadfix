@@ -321,6 +321,20 @@ public class AnalyticsPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
+    public AnalyticsPage expandOwaspTopTenFilter(String divId) {
+
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.id("showOwasp")).click();
+        waitForElement(filterDiv.findElement(By.id("owasp2013")));
+        return new AnalyticsPage(driver);
+    }
+
+    public AnalyticsPage selectOwaspYear(String year, String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.cssSelector("li#owasp" + year + " a")).click();
+        return new AnalyticsPage(driver);
+    }
+
     /* _____________________ Set Methods _____________________ */
 
     /* _____________________ Get Methods _____________________ */
@@ -362,6 +376,11 @@ public class AnalyticsPage extends BasePage {
 
     public boolean isVulnerabilityCountCorrect(String level, String expected) {
         return expected.equals(driver.findElementById("totalBadge" + level).getText().trim());
+    }
+
+    public boolean isOwaspCountCorrect(String number, String expected) {
+        return expected.equals(driver.findElementByCssSelector("span[id*=\'totalBadgeA" +
+                number + " \']").getText().trim());
     }
 
     public boolean isTeamDisplayedinTeamDropDownReport(String teamName, String divId) {

@@ -460,6 +460,45 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     //===========================================================================================================
     //TODO: Write OWASP Top 10 Report ITs
 
+    @Test
+    public void testOwaspReportFilterByYear() {
+        initializeTeamAndAppWithAppScanEnterpriseScan();
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
+                .clickAnalyticsLink()
+                .waitForReportTab("snapshot")
+                .clickSnapshotTab(false)
+                .sleepOnArrival(5000)
+                .selectDropDownReport("OWASP Top 10")
+                .expandTeamApplicationFilter("snapshotFilterDiv")
+                .addTeamFilter(teamName, "snapshotFilterDiv");
+
+        String[] owaspThirteen = {"13", "3", "9", "0", "11", "3", "0", "6", "0", "1"};
+        String[] owaspTen = {"10", "9", "0", "0", "6", "11", "3", "0", "2", "1"};
+        String[] owaspSeven = {"9", "13", "0", "0", "6", "14", "5", "2", "2", "0"};
+
+        for(int index = 0; index < 10; index++){
+            assertTrue("OWASP 2013: A" + (index + 1) + " did not contain correct number of vulnerabilities",
+                    analyticsPage.isOwaspCountCorrect(Integer.toString(index + 1), owaspThirteen[index]));
+        }
+
+        analyticsPage.expandOwaspTopTenFilter("snapshotFilterDiv")
+                .selectOwaspYear("2010", "snapshotFilterDiv")
+                .waitForResultsToLoad();
+
+        for(int index = 0; index < 10; index++){
+            assertTrue("OWASP 2010: A" + (index + 1) + " did not contain correct number of vulnerabilities",
+                    analyticsPage.isOwaspCountCorrect(Integer.toString(index + 1), owaspTen[index]));
+        }
+
+        analyticsPage.selectOwaspYear("2007", "snapshotFilterDiv")
+                .waitForResultsToLoad();
+
+        for(int index = 0; index < 10; index++){
+            assertTrue("OWASP 2007: A" + (index + 1) + " did not contain correct number of vulnerabilities",
+                    analyticsPage.isOwaspCountCorrect(Integer.toString(index + 1), owaspSeven[index]));
+        }
+    }
+
     //===========================================================================================================
     // Portfolio Report
     //===========================================================================================================

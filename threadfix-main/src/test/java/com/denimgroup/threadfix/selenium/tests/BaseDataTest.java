@@ -73,6 +73,11 @@ public abstract class BaseDataTest extends BaseIT{
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("WebInspect"));
     }
 
+    protected void initializeTeamAndAppWithAppScanEnterpriseScan() {
+        initializeTeamAndApp();
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
+    }
+
     protected void initializeTeamAndAppWithLargeZapScan() {
         initializeTeamAndApp();
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
