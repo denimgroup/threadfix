@@ -29,8 +29,6 @@ public class AppScanEnterpriseRemoteProvider extends AbstractRemoteProvider{
                 LOGOUT_SERVICE = "logout",
                 APP_SERVICE = "applications";
 
-    public String sessionId = null;
-
     public AppScanEnterpriseRemoteProvider() {
       super(ScannerType.APPSCAN_ENTERPRISE);
     }
@@ -49,21 +47,21 @@ public class AppScanEnterpriseRemoteProvider extends AbstractRemoteProvider{
         return null;
     }
 
-    private void loginToAppScanEnterprise(){
+    private String loginToAppScanEnterprise(){
         assert remoteProviderType != null : "Remote Provider Type is null, Please set it before trying to log in";
 
         HttpResponse response = httpUtils.postUrl(getAuthenticationFieldValue(URL) + BASE_URL + LOGIN_SERVICE, new String[]{"featureKey"}, new String[]{"AppScanEnterpriseUser"}, getAuthenticationFieldValue(USERNAME), getAuthenticationFieldValue(PASSWORD));
         if(response.isValid()){
             JSONObject jsonObject = new JSONObject(response);
             try{
-                sessionId = jsonObject.get("sessionId").toString();
+                return jsonObject.get("sessionId").toString();
             }catch(JSONException e){
                 throw new RestIOException(e, "Invalid response received. May not be JSON");
             }
         }else{
-        String body = response.getBodyAsString();
-        log.info("Rest response from App Scan Enterprise Login Service:" + body);
-        throw new RestIOException("Invalid response with following status. Please Check logs for more details", response.getStatus());
+            String body = response.getBodyAsString();
+            log.info("Rest response from App Scan Enterprise Login Service:" + body);
+            throw new RestIOException("Invalid response with following status. Please Check logs for more details", response.getStatus());
         }
     }
 
