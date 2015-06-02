@@ -359,6 +359,11 @@ public class AnalyticsPage extends BasePage {
         return driver.findElementById("commentText" + commentNumber).getText();
     }
 
+    public String getPortfolioSummaryItem(int itemNumber) {
+        return driver.findElementByCssSelector("div#portfolioDiv tbody tr:nth-of-type(" + itemNumber +
+                ") td.inputValue").getText();
+    }
+
     /* _____________________ Helper Methods _____________________ */
 
     public void waitForResultsToLoad() {

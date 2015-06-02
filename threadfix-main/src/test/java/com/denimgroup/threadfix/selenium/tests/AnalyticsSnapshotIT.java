@@ -458,7 +458,6 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     //===========================================================================================================
     // OWASP Top 10 Report
     //===========================================================================================================
-    //TODO: Write OWASP Top 10 Report ITs
 
     @Test
     public void testOwaspReportFilterByYear() {
@@ -502,7 +501,37 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     //===========================================================================================================
     // Portfolio Report
     //===========================================================================================================
-    //TODO: Write Portfolio Report ITs.
+
+    @Test
+    public void testPortfolioReportSummary() {
+        initializeTeamAndAppWithIbmScan();
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
+                .clickAnalyticsLink()
+                .waitForReportTab("snapshot")
+                .clickSnapshotTab(false)
+                .sleepOnArrival(5000)
+                .selectDropDownReport("Portfolio");
+
+        assertTrue("Default Team filter is incorrect.", analyticsPage.getPortfolioSummaryItem(1).equals("All"));
+        assertTrue("Default Application filter is incorrect.", analyticsPage.getPortfolioSummaryItem(2).equals("All"));
+        assertTrue("Default Tag filter is incorrect.", analyticsPage.getPortfolioSummaryItem(3).equals("All"));
+
+        analyticsPage.expandTeamApplicationFilter("snapshotFilterDiv")
+                .addTeamFilter(teamName, "snapshotFilterDiv");
+
+        assertTrue("Team filter is incorrect.", analyticsPage.getPortfolioSummaryItem(1).equals(teamName));
+        assertTrue("Application filter is incorrect.",analyticsPage.getPortfolioSummaryItem(2).equals(""));
+        assertTrue("Number of Applications is incorrect.", analyticsPage.getPortfolioSummaryItem(4).equals("1"));
+        assertTrue("Number of Scans is incorrect.", analyticsPage.getPortfolioSummaryItem(5).equals("1"));
+
+        analyticsPage.addApplicationFilter(appName, "snapshotFilterDiv");
+
+        assertTrue("Team filter is incorrect.", analyticsPage.getPortfolioSummaryItem(1).equals(teamName));
+        assertTrue("Application filter is incorrect.",
+                analyticsPage.getPortfolioSummaryItem(2).equals(teamName + " / " + appName));
+        assertTrue("Number of Applications is incorrect.", analyticsPage.getPortfolioSummaryItem(4).equals("1"));
+        assertTrue("Number of Scans is incorrect.", analyticsPage.getPortfolioSummaryItem(5).equals("1"));
+    }
 
     //===========================================================================================================
     // DISA STIG
