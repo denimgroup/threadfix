@@ -90,6 +90,9 @@ public class AnalyticsRemediationIT extends BaseDataTest {
 
         analyticsPage.clickAppName(appName);
 
+        //Runtime Fix
+        analyticsPage.refreshPage();
+
         assertTrue("Link did not navigate correctly", driver.findElement(By.id("nameText")).getText().equals(appName));
     }
 

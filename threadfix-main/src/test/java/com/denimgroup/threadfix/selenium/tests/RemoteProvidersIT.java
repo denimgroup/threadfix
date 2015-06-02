@@ -716,6 +716,9 @@ public class RemoteProvidersIT extends BaseDataTest {
         assertTrue("Contrast Sentinel configured message is not correct.",
                 remoteProvidersIndexPage.checkConfigurationMessage(0, "Yes"));
 
+        //Runtime Fix
+        remoteProvidersIndexPage.refreshPage();
+
         remoteProvidersIndexPage.clearContrast();
 
         assertTrue("Contrast configuration was not cleared properly",
@@ -743,6 +746,9 @@ public class RemoteProvidersIT extends BaseDataTest {
         assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
         driver.switchTo().alert().dismiss();
 
+        //Runtime Fix
+        remoteProvidersIndexPage.refreshPage();
+
         remoteProvidersIndexPage.clearContrast();
 
         assertTrue("Contrast configuration was not cleared properly",
@@ -765,6 +771,9 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         assertTrue("Application name did not update properly",
                 driver.findElement(By.cssSelector("td[id^=provider4appid]")).getText().equals(newName));
+
+        //Runtime Fix
+        remoteProvidersIndexPage.refreshPage();
 
         remoteProvidersIndexPage.clearContrast();
     }

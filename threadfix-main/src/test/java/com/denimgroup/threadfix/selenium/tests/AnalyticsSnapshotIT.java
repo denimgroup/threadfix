@@ -56,7 +56,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         analyticsPage.expandTeamApplicationFilter("snapshotFilterDiv")
                 .addTeamFilter(teamName, "snapshotFilterDiv");
 
-        sleep(5000);
+        sleep(10000);
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
@@ -205,7 +205,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .selectDropDownReport("Point in Time");
 
         //Runtime Fix
-        sleep(5000);
+        sleep(10000);
 
         assertTrue("Did not navigate correctly", driver.findElement(By.id("Point in Time Report_Title"))
                 .getText().equals("Point in Time Report"));
@@ -253,8 +253,10 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         //Runtime Fix
         sleep(10000);
 
-        assertTrue("Time to close is invalid.",
-                Integer.parseInt(driver.findElement(By.id("averageTimeToCloseVuln5")).getText()) >= 0);
+        analyticsPage.clickAverageTimeToCloseSortButton(1);
+
+        assertFalse("Average Time to Close did not show a non-zero close time.",
+                ("0").equals(driver.findElement(By.id("averageTimeToCloseVuln0")).getText()));
     }
 
     @Test
@@ -395,10 +397,13 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .clickAnalyticsLink()
                 .clickSnapshotTab(true);
 
+        //Runtime Fix
+        sleep(5000);
+
         analyticsPage.selectDropDownReport("Most Vulnerable Applications");
 
         //Runtime Fix
-        sleep(5000);
+        sleep(10000);
 
         assertTrue("Did not navigate correctly", driver.findElement(By.id("Most Vulnerable Applications_Title"))
                 .getText().equals("Most Vulnerable Applications"));
