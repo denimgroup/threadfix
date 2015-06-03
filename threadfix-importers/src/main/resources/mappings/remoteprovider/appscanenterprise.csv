@@ -4,7 +4,7 @@ IBM Rational AppScan Enterprise,http://www-03.ibm.com/software/products/en/appsc
 type.credentials
 usernamepassword
 type.channelname
-Sonatype
+IBM Rational AppScan Enterprise
 type.authenticationfields
 URL,false,true
 Username,false,true
