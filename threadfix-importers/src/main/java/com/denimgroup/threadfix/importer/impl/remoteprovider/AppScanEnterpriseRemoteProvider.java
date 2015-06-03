@@ -18,6 +18,7 @@ import java.util.List;
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl.getImpl;
 import static com.denimgroup.threadfix.importer.util.JsonUtils.getJSONObject;
+import static com.denimgroup.threadfix.importer.util.JsonUtils.toJSONObjectIterable;
 
 /**
  * Created by skakani on 5/26/2015.
@@ -34,18 +35,42 @@ public class AppScanEnterpriseRemoteProvider extends AbstractRemoteProvider{
                 LOGOUT_SERVICE = "/logout",
                 APP_SERVICE = "/applications",
                 SCAN_SERVICE = "/issues",
-                LOGIN_JSON_FORMAT = "{ \"userId\": \"%s\", \"password\": \"%s\", \"featureKey\": \"AppScanEnterpriseUser\"}";
+                LOGIN_JSON_FORMAT = "{ \"userId\": \"%s\", \"password\": \"%s\", \"featureKey\": \"AppScanEnterpriseUser\"}",
+                SESSION_ID = "asc_xsrf_token";
 
     public AppScanEnterpriseRemoteProvider() {
       super(ScannerType.APPSCAN_ENTERPRISE);
     }
 
     RemoteProviderHttpUtils httpUtils = getImpl(AppScanEnterpriseRemoteProvider.class);
+    private final String EMPTY_URL = "";
 
     @Override
     public List<RemoteProviderApplication> fetchApplications(){
 
-        return null;
+        assert remoteProviderType != null : "Remote Provider Type is null, Please set it before trying to log in";
+        String sessionId = loginToAppScanEnterprise();
+        String url = getAuthenticationFieldValue(URL) + BASE_URL + APP_SERVICE + "?columns=name%2Curl";
+
+        //Add Request Headers - Session id and Range
+        DefaultRequestConfigurer requestConfigurer = getRequestConfigurerWithHeaderSet(new DefaultRequestConfigurer(), new String[]{SESSION_ID,"Range"}, new String[]{sessionId,"items=0-99"});
+        HttpResponse response = httpUtils.getUrlWithConfigurer(url,requestConfigurer);
+
+        if(response.isValid()){
+            List<RemoteProviderApplication> applicationList = list();
+            try {
+                for (JSONObject jsonObject : toJSONObjectIterable(response.getBodyAsString())) {
+                    applicationList.add(getApplication(jsonObject));
+                }
+                logoutFromAppScanEnterprise();
+                return applicationList;
+            }catch(JSONException e){
+                throw new RestIOException(e, "Json Exception occurred");
+            }
+        }else {
+            log.info("Invalid response contents:"+response.getBodyAsString());
+            throw new RestIOException("Invalid response from APP SCAN Enterprise:", response.getStatus());
+        }
 
     }
 
@@ -101,7 +126,7 @@ public class AppScanEnterpriseRemoteProvider extends AbstractRemoteProvider{
         }else{
             String body = response.getBodyAsString();
             log.info("Rest response from App Scan Enterprise Login Service:" + body);
-            throw new RestIOException("Invalid response with following status. Please Check logs for more details", response.getStatus());
+            throw new RestIOException("Invalid response. Please enter correct credentials. Check logs for more details", response.getStatus());
         }
     }
 
@@ -114,8 +139,14 @@ public class AppScanEnterpriseRemoteProvider extends AbstractRemoteProvider{
         }else {
             String body = response.getBodyAsString();
             log.info("Rest response from App Scan Enterprise Logout Service:" + body);
-            throw new RestIOException("Invalid response with following status. Please Check logs for more details", response.getStatus());
+            throw new RestIOException("Invalid response. Please Check logs for more details", response.getStatus());
         }
+
+    }
+
+    private DefaultRequestConfigurer getRequestConfigurerWithHeaderSet(DefaultRequestConfigurer requestConfigurer, String[] headerNames, String[] headerValues){
+        requestConfigurer.withHeaders(headerNames, headerValues);
+        return  requestConfigurer;
 
     }
 
@@ -138,4 +169,13 @@ public class AppScanEnterpriseRemoteProvider extends AbstractRemoteProvider{
                 .withContentType("application/json")
                 .withRequestBody(loginJSON, "application/json");
     }
+
+    private RemoteProviderApplication getApplication(JSONObject object) throws JSONException{
+        RemoteProviderApplication application = new RemoteProviderApplication();
+        application.setNativeName(object.getString("name"));
+        application.setNativeId(object.getString("name"));
+        application.setReportUrl(object.has("url")?object.getString("url"): EMPTY_URL);
+        return application;
+    }
+
 }
