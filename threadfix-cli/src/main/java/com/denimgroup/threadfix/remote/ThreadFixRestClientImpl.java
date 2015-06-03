@@ -33,6 +33,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 
@@ -295,6 +296,38 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 								nativeId, parameter, longDescription,
 								filePath, column, lineText, lineNumber }, Finding.class);
 	}
+
+    @Override
+    public RestResponse<Tag> createTag(String name, Boolean isCommentTag) {
+        return httpRestUtils.httpPost("/tags/new",
+                new String[] { "name", "isCommentTag" },
+                new String[] { name, String.valueOf(isCommentTag) }, Tag.class);
+    }
+
+    @Override
+    public RestResponse<Tag> searchTagById(String id) {
+        return httpRestUtils.httpGet("/tags/" + id, Tag.class);
+    }
+
+    @Override
+    public RestResponse<Tag[]> searchTagsByName(String name) {
+        return httpRestUtils.httpGet("/tags/lookup", "&name=" + name, Tag[].class);
+    }
+
+    @Override
+    public RestResponse<Map> getAllTags() {
+        return httpRestUtils.httpGet("/tags/index", Map.class);
+    }
+
+    @Override
+    public RestResponse<Application> addAppTag(String appId, String tagId) {
+        return httpRestUtils.httpGet("/applications/" + appId + "/addTag/" + tagId, Application.class);
+    }
+
+    @Override
+    public RestResponse<Application> removeAppTag(String appId, String tagId) {
+        return httpRestUtils.httpGet("/applications/" + appId + "/removeTag/" + tagId, Application.class);
+    }
 
     // TODO find a better way to serialize this into a VulnerabilitySearchParameters form.
     @Override

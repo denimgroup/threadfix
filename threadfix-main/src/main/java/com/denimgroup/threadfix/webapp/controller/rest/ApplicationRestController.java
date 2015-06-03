@@ -26,10 +26,7 @@ package com.denimgroup.threadfix.webapp.controller.rest;
 
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.Waf;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
@@ -74,6 +71,8 @@ public class ApplicationRestController extends TFRestController {
     private WafService wafService;
     @Autowired
     private OrganizationService organizationService;
+    @Autowired
+    private TagService tagService;
 
     private final static String DETAIL = "applicationDetail",
             SET_PARAMS = "setParameters",
@@ -82,7 +81,9 @@ public class ApplicationRestController extends TFRestController {
             SET_WAF = "setWaf",
             UPLOAD = "uploadScan",
             ATTACH_FILE = "attachFile",
-            SET_URL = "setUrl";
+            SET_URL = "setUrl",
+            ADD_TAG = "addTag",
+            REMOVE_TAG = "removeTag";
 
     // TODO finalize which methods need to be restricted
     static {
@@ -367,6 +368,80 @@ public class ApplicationRestController extends TFRestController {
             return failure(APPLICATION_LOOKUP_FAILED);
         } else {
             application.setUrl(url);
+            applicationService.storeApplication(application);
+            return RestResponse.success(application);
+        }
+    }
+
+    /**
+     * Add tag to application.
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#addAppTag(String appId, String tagId)
+     *
+     */
+    @RequestMapping(headers="Accept=application/json", value="/{appId}/addTag/{tagId}", method=RequestMethod.GET)
+    @JsonView(AllViews.RestViewApplication2_1.class)
+    public Object addTag(HttpServletRequest request,
+                         @PathVariable("appId") int appId, @PathVariable("tagId") int tagId) throws IOException {
+
+        log.info("Received REST request adding Tag " + tagId + " for Application " + appId + ".");
+        String result = checkKey(request, ADD_TAG);
+        if (!result.equals(API_KEY_SUCCESS)) {
+            return failure(result);
+        }
+
+        Application application = applicationService.loadApplication(appId);
+        Tag tag = tagService.loadTag(tagId);
+
+        String msg;
+        if (application == null || tag == null) {
+            msg = "Invalid Application ID or Tag ID.";
+            log.warn(msg);
+            return failure(msg);
+        } else {
+            if (application.containTag(tag)) {
+                msg = "The tag was already added to application.";
+                log.warn(msg);
+                return failure(msg);
+            }
+
+            application.getTags().add(tag);
+            applicationService.storeApplication(application);
+            return RestResponse.success(application);
+        }
+    }
+
+    /**
+     * Remove tag from application.
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#addAppTag(String appId, String tagId)
+     *
+     */
+    @RequestMapping(headers="Accept=application/json", value="/{appId}/removeTag/{tagId}", method=RequestMethod.GET)
+    @JsonView(AllViews.RestViewApplication2_1.class)
+    public Object removeTag(HttpServletRequest request,
+                         @PathVariable("appId") int appId, @PathVariable("tagId") int tagId) throws IOException {
+
+        log.info("Received REST request removing Tag " + tagId + " from Application " + appId + ".");
+        String result = checkKey(request, REMOVE_TAG);
+        if (!result.equals(API_KEY_SUCCESS)) {
+            return failure(result);
+        }
+
+        Application application = applicationService.loadApplication(appId);
+        Tag tag = tagService.loadTag(tagId);
+
+        String msg;
+        if (application == null || tag == null) {
+            msg = "Invalid Application ID or Tag ID.";
+            log.warn(msg);
+            return failure(msg);
+        } else {
+            if (!application.containTag(tag)) {
+                msg = "The tag wasn't added to application.";
+                log.warn(msg);
+                return failure(msg);
+            }
+
+            application.getTags().remove(tag);
             applicationService.storeApplication(application);
             return RestResponse.success(application);
         }

@@ -870,12 +870,11 @@ public class Application extends AuditableEntity {
         this.skipApplicationMerge = isSkipApplicationMerge;
     }
 
-//    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name="Application_Tag",
             joinColumns={@JoinColumn(name="Application_Id")},
             inverseJoinColumns={@JoinColumn(name="Tag_Id")})
-    @JsonIgnore
+	@JsonView(AllViews.RestViewApplication2_1.class)
     public List<Tag> getTags() {
         return tags;
     }
@@ -887,5 +886,15 @@ public class Application extends AuditableEntity {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	@Transient
+	@JsonIgnore
+	public boolean containTag(Tag tag) {
+		for (Tag appTag: getTags()) {
+			if (appTag.getId().compareTo(tag.getId()) == 0)
+				return true;
+		}
+		return false;
 	}
 }
