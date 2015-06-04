@@ -1,6 +1,7 @@
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
 import com.denimgroup.threadfix.annotations.RemoteProvider;
+import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
@@ -9,15 +10,20 @@ import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.DefaultReques
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RequestConfigurer;
+import com.denimgroup.threadfix.importer.util.DateUtils;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.web.util.HtmlUtils;
 
-import java.util.List;
+import java.util.*;
+import java.util.Map.Entry;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl.getImpl;
 import static com.denimgroup.threadfix.importer.util.JsonUtils.getJSONObject;
+import static com.denimgroup.threadfix.importer.util.JsonUtils.toJSONObjectIterable;
 
 /**
  * Created by skakani on 5/26/2015.
@@ -45,7 +51,11 @@ public class AppScanEnterpriseRemoteProvider extends AbstractRemoteProvider{
     @Override
     public List<RemoteProviderApplication> fetchApplications(){
 
-        return null;
+        RemoteProviderApplication remoteProviderApplication = new RemoteProviderApplication();
+        remoteProviderApplication.setNativeName("One-Stage");
+        remoteProviderApplication.setNativeId("One-Stage");
+
+        return list(remoteProviderApplication);
 
     }
 
@@ -54,33 +64,59 @@ public class AppScanEnterpriseRemoteProvider extends AbstractRemoteProvider{
 
         List<Scan> scans = list();
 
-//        try{
+        try{
             String sessionId = loginToAppScanEnterprise();
-//
-//            String url = getAuthenticationFieldValue(URL) + BASE_URL + SCAN_SERVICE + "?Application Name=" + remoteProviderApplication.getNativeName();
-//
-//            HttpResponse response = httpUtils.getUrlWithConfigurer(url, getRequestConfigurer(sessionId));
-//
-//            if(response.isValid()){
-//                JSONObject json = getJSONObject(response.getBodyAsString());
-//
-//        JSONObject json = getJSONObject(TESTDATA);
-//
-//        List<Finding> findings = list();
-//
-//        for(JSONObject object : toJSONObjectIterable(json.getString("data"))){
 
-//        }
+            String url = getAuthenticationFieldValue(URL) + BASE_URL + SCAN_SERVICE + "?query=Application%20Name%3D" + HtmlUtils.htmlEscape(remoteProviderApplication.getNativeName()) + "%2CStatus%3DOpen";
 
-//            }else{
-//                log.warn("Received a bad response from App Scan Enterprise server, returning null");
-//                return null;
-//            }
-//
-//            logoutFromAppScanEnterprise();
-//        }catch (RestIOException e){
-//            log.info("Error while retrieving scans from App Scan Enterprise");
-//        }
+            HttpResponse response = httpUtils.getUrlWithConfigurer(url, getRequestConfigurer(sessionId));
+
+            if(response.isValid()){
+                String responseBody = response.getBodyAsString();
+
+                JSONObject json = getJSONObject("{\"issues\": " + responseBody + "}");
+
+                Map<Calendar, List<Finding>> findingMap = new TreeMap<Calendar, List<Finding>>();
+
+                for(JSONObject object : toJSONObjectIterable(json.getString("issues"))){
+                    String date = object.getString("18");
+                    Calendar cal = getCalendarAtMidnight(date);
+
+                    if(!findingMap.containsKey(cal)){
+                        findingMap.put(cal, new ArrayList<Finding>());
+                    }
+
+                    Finding finding = getFindingFromObject(object);
+                    findingMap.get(cal).add(finding);
+                }
+
+                for(Calendar cal : findingMap.keySet()){
+                    Scan scan = new Scan();
+                    scan.setImportTime(cal);
+                    scan.setFindings(new ArrayList<Finding>());
+
+                    for(Entry<Calendar, List<Finding>> entry : findingMap.entrySet()){
+                        scan.getFindings().addAll(entry.getValue());
+
+                        if(cal.equals(entry.getKey())){
+                            break;
+                        }
+                    }
+
+                    scans.add(scan);
+                }
+
+            }else{
+                log.warn("Received a bad response from App Scan Enterprise server, returning null");
+                return null;
+            }
+
+            logoutFromAppScanEnterprise();
+        }catch (RestIOException e){
+            log.info("Error while retrieving scans from App Scan Enterprise");
+        } catch (JSONException e) {
+            log.info("Error while retrieving scans from App Scan Enterprise");
+        }
 
         return scans;
     }
@@ -137,5 +173,35 @@ public class AppScanEnterpriseRemoteProvider extends AbstractRemoteProvider{
         return new DefaultRequestConfigurer()
                 .withContentType("application/json")
                 .withRequestBody(loginJSON, "application/json");
+    }
+
+    private Finding getFindingFromObject(JSONObject object){
+        Finding finding = null;
+
+        try{
+            Map<FindingKey, String> findingMap = map(
+                    FindingKey.VULN_CODE, object.getString("3"),
+                    FindingKey.SEVERITY_CODE, object.getString("29"),
+                    FindingKey.NATIVE_ID, object.getString("id"),
+                    FindingKey.PATH, object.getString("10"),
+                    FindingKey.RAWFINDING, object.toString()
+            );
+
+            finding = constructFinding(findingMap);
+        } catch (JSONException e) {
+            throw new RestIOException(e, "Invalid response received.");
+        }
+        return finding;
+    }
+
+    private Calendar getCalendarAtMidnight(String found) {
+        Calendar testedDate = DateUtils.getCalendarFromString("MM/dd/yy hh:mm aa", found);
+        if (testedDate != null) {
+            testedDate.set(Calendar.HOUR_OF_DAY, 0);
+            testedDate.set(Calendar.MINUTE, 0);
+            testedDate.set(Calendar.SECOND, 0);
+            testedDate.set(Calendar.MILLISECOND, 0);
+        }
+        return testedDate;
     }
 }

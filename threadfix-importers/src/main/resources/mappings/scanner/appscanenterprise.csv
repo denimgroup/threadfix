@@ -1,0 +1,23 @@
+6/9/2015 10:22:00
+type.info,,,
+IBM Rational AppScan Enterprise,,
+type.vulnerabilities,,,
+Host allows flash access from any domain,Host allows flash access from any domain,456
+Direct Access to Administration Pages,Direct Access to Administration Pages,306
+Phishing Through URL Redirection,Phishing Through URL Redirection,601
+HTML Comments Sensitive Information Disclosure,HTML Comments Sensitive Information Disclosure,615
+Application Test Script Detected,Application Test Script Detected,531
+Possible Server Path Disclosure Pattern Found,Possible Server Path Disclosure Pattern Found,200
+Cross-Site Scripting,Cross-Site Scripting,79
+Database Error Pattern Found,Database Error Pattern Found,209
+Poison Null Byte Windows Files Retrieval,Poison Null Byte Windows Files Retrieval,626
+SQL Injection,SQL Injection,89
+Unencrypted Login Request,Unencrypted Login Request,523
+Application Error,Application Error,550
+Email Address Pattern Found,Email Address Pattern Found,359
+type.severities,,,
+Information,Information,1,1
+Critical,Critical,5,5
+High,High,4,4
+Medium,Medium,3,3
+Low,Low,2,2
