@@ -83,6 +83,10 @@ public abstract class BaseDataTest extends BaseIT{
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
     }
 
+    protected void uploadScanToApp(String team, String app, String scan){
+        DatabaseUtils.uploadScan(team, app, ScanContents.SCAN_FILE_MAP.get(scan));
+    }
+
     protected void createRestrictedUser(String permission) {
         if (permission != null) {
             roleName = createRole();

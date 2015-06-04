@@ -24,8 +24,7 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
-import com.denimgroup.threadfix.selenium.pages.AnalyticsPage;
-import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
+import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -569,4 +568,36 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 analyticsPage.isVulnerabilityCountCorrect("CAT III", "0"));
 
     }
+
+    //===========================================================================================================
+    // Scan Comparison Summary
+    //===========================================================================================================
+
+    //TODO: FINISH ONCE BUG IS RESOLVED
+//    @Test
+//    public void testScanComparisonSummary() {
+//        initializeTeamAndAppWithIbmScan();
+//        uploadScanToApp(teamName, appName, "w3af");
+//
+//        VulnerabilityDetailPage vulnerabilityDetailPage = loginPage.defaultLogin()
+//                .clickOrganizationHeaderLink()
+//                .expandTeamRowByName(teamName)
+//                .clickViewAppLink(appName, teamName)
+//                .clickScansTab()
+//                .clickViewScan()
+//                .clickViewFinding()
+//                .clickViewVulnerability()
+//                .clickToggleMoreInfoButton()
+//                .clickMarkasFalsePositivebutton();
+//
+//        AnalyticsPage analyticsPage = vulnerabilityDetailPage.clickAnalyticsLink()
+//                .waitForReportTab("snapshot")
+//                .clickSnapshotTab(false)
+//                .sleepOnArrival(5000)
+//                .selectDropDownReport("Scan Comparison Summary")
+//                .expandTeamApplicationFilter("snapshotFilterDiv")
+//                .addTeamFilter(teamName, "snapshotFilterDiv");
+//
+//
+//    }
 }
