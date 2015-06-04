@@ -145,4 +145,18 @@ public class DashboardPage extends BasePage{
     public boolean isCountCorrectInVulnerabilitySummaryModal(String count) {
         return driver.findElementById("header2").getText().contains(count);
     }
+
+    /*---------------------------- Other Methods ----------------------------*/
+
+    public String getMostRecentUploadDate() {
+        return driver.findElementByCssSelector("#wafTableBody .thick-left").getText().trim();
+    }
+
+    public String getMostRecentUploadApp(){
+        return driver.findElementById("scanApplicationLink1").getText();
+    }
+
+    public String getMostRecentUploadName(){
+        return driver.findElementByCssSelector("#wafTableBody .no-top-border td").getText();
+    }
 }
