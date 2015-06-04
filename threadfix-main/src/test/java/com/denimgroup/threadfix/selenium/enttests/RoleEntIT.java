@@ -50,7 +50,7 @@ public class RoleEntIT extends BaseDataTest {
 				.clickSaveRole();
 
 		assertTrue("Role not added.", rolesIndexPage.isNamePresent(roleName));
-		assertTrue("Validation message is Present.",rolesIndexPage.isCreateValidationPresent(roleName));
+		assertTrue("Validation message is not Present.",rolesIndexPage.isValidationPresent());
 	}
 
     @Test
@@ -67,7 +67,7 @@ public class RoleEntIT extends BaseDataTest {
 
         rolesIndexPage = rolesIndexPage.clickDeleteButton(roleName);
 
-        assertTrue("Validation message is Present.",rolesIndexPage.isDeleteValidationPresent(roleName));
+        assertTrue("Validation message is not Present.",rolesIndexPage.isValidationPresent());
         assertFalse("Role not removed.", rolesIndexPage.isNamePresent(roleName));
     }
 
@@ -89,11 +89,11 @@ public class RoleEntIT extends BaseDataTest {
 				.clickSaveRole();
 		
 		assertTrue("Role not Edited Correctly.", rolesIndexPage.isNamePresent(editedRoleName));
-		assertTrue("Validation message not present.",rolesIndexPage.isEditValidationPresent(editedRoleName));
+		assertTrue("Validation message not present.",rolesIndexPage.isValidationPresent());
 		
 		rolesIndexPage = rolesIndexPage.clickDeleteButton(editedRoleName);
 
-		assertTrue("Validation message not present.",rolesIndexPage.isDeleteValidationPresent(editedRoleName));
+		assertTrue("Validation message not present.",rolesIndexPage.isValidationPresent());
 		assertFalse("Role not removed.", rolesIndexPage.isNamePresent(editedRoleName));
 
 	}
@@ -214,7 +214,7 @@ public class RoleEntIT extends BaseDataTest {
                 .clickManageRolesLink()
 				.clickDeleteButton(roleName);
 
-		assertTrue("Validation message is Present.",rolesIndexPage.isDeleteValidationPresent(roleName));
+		assertTrue("Validation message is not Present.",rolesIndexPage.isValidationPresent());
 		assertFalse("Role not removed.", rolesIndexPage.isNamePresent(roleName));
 	}
 
@@ -228,7 +228,7 @@ public class RoleEntIT extends BaseDataTest {
                 .clickDeleteButton(roleName)
                 .clickManageRolesLink();
 
-        assertTrue("Validation message is Present.",rolesIndexPage.isDeleteValidationPresent(roleName));
+        assertTrue("Validation message is not Present.",rolesIndexPage.isValidationPresent());
 		assertFalse("Role was not removed.", rolesIndexPage.isNamePresent(roleName));
 	}
 }

@@ -167,7 +167,12 @@ public class GroupIndexPage extends BasePage {
     }
 
     public boolean isValidationPresent(){
-        return driver.findElementByCssSelector("div.alert-success:not(.ng-hide)") != null;
+        try {
+            driver.findElementByCssSelector("div.alert-success:not(.ng-hide)");
+        } catch (NoSuchElementException e){
+            return false;
+        }
+        return true;
     }
 
     public boolean isTeamRolePresent(String teamName, String roleName) {

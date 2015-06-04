@@ -139,17 +139,14 @@ public class RolesIndexPage extends BasePage {
 	}
 
     //TODO: Specify validation text
-	public boolean isCreateValidationPresent(String role){
-        return driver.findElementByClassName("alert-success") != null;
-	}
-	
-	public boolean isEditValidationPresent(String role){
-        return driver.findElementByClassName("alert-success") != null;
-	}
-	
-	public boolean isDeleteValidationPresent(String role){
-        return driver.findElementByClassName("alert-success") != null;
-	}
+    public boolean isValidationPresent(){
+        try {
+            driver.findElementByCssSelector("div.alert-success:not(.ng-hide)");
+        } catch (NoSuchElementException e){
+            return false;
+        }
+        return true;
+    }
 	
 	public boolean isNamePresent(String roleName){
         try {
