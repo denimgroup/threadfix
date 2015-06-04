@@ -392,7 +392,13 @@ public class UserIndexPage extends BasePage {
                 sleep(2000);
                 driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']");
             } catch (NoSuchElementException ex) {
-                return false;
+                try {
+                    driver.findElementByXPath("//a[text()='3']").click();
+                    sleep(2000);
+                    driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']");
+                } catch (NoSuchElementException exc) {
+                    return false;
+                }
             }
         }
         return true;
@@ -484,6 +490,13 @@ public class UserIndexPage extends BasePage {
             return false;
         }
         return true;
+    }
+
+    /*----------------------------------- Helper Methods -----_------------------------------*/
+
+    public UserIndexPage waitForDeleteUserButton() {
+        waitForElement(driver.findElementByLinkText("Delete User"));
+        return new UserIndexPage(driver);
     }
 
     /*------------------------------------ Modal Methods ------------------------------------*/

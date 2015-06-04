@@ -147,6 +147,7 @@ public class UserIT extends BaseDataTest {
         sleep(5000);
 
         userIndexPage.clickUserLink(userName)
+                .waitForDeleteUserButton()
                 .clickDelete(userName);
 
         assertTrue("Deletion Message not displayed.", userIndexPage.isSuccessDisplayed("User was successfully deleted."));
@@ -288,7 +289,7 @@ public class UserIT extends BaseDataTest {
         DashboardPage dashboardPage = userIndexPage.logout()
                 .login(userName, password);
 
-        assertTrue("user: "+userName+" was not logged in.",dashboardPage.isLoggedInUser(userName));
+        assertTrue("user: "+userName+" was not logged in.", dashboardPage.isLoggedInUser(userName));
 
         userIndexPage = dashboardPage.logout()
                 .defaultLogin()
@@ -448,6 +449,7 @@ public class UserIT extends BaseDataTest {
 
         userIndexPage.createUser(userName,displayName,password)
                 .clickUserLink(userName)
+                .waitForDeleteUserButton()
                 .chooseRoleForGlobalAccess("Administrator")
                 .clickSaveChanges();
 

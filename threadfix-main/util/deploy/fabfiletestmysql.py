@@ -21,5 +21,5 @@ def deploy_war():
     with settings(warn_only=True):
         sudo('rm -rf %s/threadfix' % (server_base_loc))
         sudo('rm -rf %s/threadfix.war' % (server_base_loc))
-    sudo('cp ~/threadfix.war %s/threadfix.war' % (server_base_loc))
+    sudo('mv ~/threadfix.war %s/threadfix.war' % (server_base_loc))
     sudo('service tomcat7 start')  #start tomcat

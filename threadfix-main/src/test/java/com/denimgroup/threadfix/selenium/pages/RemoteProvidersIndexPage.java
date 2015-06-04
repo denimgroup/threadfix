@@ -27,6 +27,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import java.lang.reflect.Method;
 
 import java.rmi.Remote;
 
@@ -409,5 +410,54 @@ public class RemoteProvidersIndexPage extends BasePage {
         } catch (TimeoutException e) {
             throw new RuntimeException("Success message was not shown as it should have been.", e);
         }
+    }
+
+    //Todo: Create clear methods for remaining providers.
+    public RemoteProvidersIndexPage ensureRemoteProviderConfigurationIsCleared(String provider) {
+        String providerKey;
+        switch (provider) {
+            case "Contrast":
+                providerKey = "0";
+                break;
+            case "QualysGuard":
+                providerKey = "1";
+                break;
+            case "Sonatype":
+                providerKey = "2";
+                break;
+            case "Hailstorm":
+                providerKey = "3";
+                break;
+            case "Veracode":
+                providerKey = "4";
+                break;
+            case "WhiteHat":
+                providerKey = "5";
+                break;
+            case "WhiteHat Source":
+                providerKey = "6";
+                break;
+            default:
+                providerKey = null;
+        }
+        if (("Yes").equals(driver.findElementById("apiKey" + providerKey).getText().trim())) {
+            switch (provider) {
+                case ("Contrast"):
+                    clearContrast();
+                    break;
+                case ("QualysGuard"):
+                    clearQualys();
+                    break;
+                case ("Veracode"):
+                    clearVeraCode();
+                    break;
+                case ("WhiteHat"):
+                    clearWhiteHat();
+                    break;
+                default:
+                    System.out.println("Method to clear provider doesn't exist.");
+            }
+        }
+        return new RemoteProvidersIndexPage(driver);
     }
 }

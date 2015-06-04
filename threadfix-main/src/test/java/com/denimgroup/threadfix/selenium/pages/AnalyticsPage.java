@@ -335,6 +335,15 @@ public class AnalyticsPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
+    public AnalyticsPage clickAverageTimeToCloseSortButton(int times) {
+        int count = 0;
+        while (count++ < times) {
+            driver.findElementByCssSelector("th#averageTimeToClose").click();
+            sleep(5000);
+        }
+        return new AnalyticsPage(driver);
+    }
+
     /* _____________________ Set Methods _____________________ */
 
     /* _____________________ Get Methods _____________________ */
