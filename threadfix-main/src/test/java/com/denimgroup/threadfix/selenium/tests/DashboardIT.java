@@ -35,7 +35,6 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.junit.Assert.assertFalse;
@@ -43,8 +42,6 @@ import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
 public class DashboardIT extends BaseDataTest {
-
-    SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/YY");
 
     @Before
     public void initialize() {
@@ -178,14 +175,13 @@ public class DashboardIT extends BaseDataTest {
     //===========================================================================================================
     @Test
     public void testRecentUploadsDisplay(){
-        initializeTeamAndAppWithAppScanEnterpriseScan();
         DashboardPage dashboardPage = loginPage.defaultLogin();
 
         assertFalse("Recent Scan Uploads are not displayed.", dashboardPage.isRecentUploadsNoScanFound());
         assertTrue("Most recent upload date is incorrect.",
-                dashboardPage.getMostRecentUploadDate().equals(dateFormat.format(new Date())));
+                dashboardPage.getMostRecentUploadDate().equals("12/01/14"));
         assertTrue("Most recent upload application is incorrect", dashboardPage.getMostRecentUploadApp().equals(appName));
         assertTrue("Most recent upload results are incorrect.",
-                dashboardPage.getMostRecentUploadName().contains("72 Vulnerabilities from IBM Rational AppScan Enterprise (Dynamic)"));
+                dashboardPage.getMostRecentUploadName().contains("44 Vulnerabilities from IBM Rational AppScan (Dynamic)"));
     }
 }
