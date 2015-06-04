@@ -173,8 +173,9 @@ public class AppScanEnterpriseRemoteProvider extends AbstractRemoteProvider{
     private RemoteProviderApplication getApplication(JSONObject object) throws JSONException{
         RemoteProviderApplication application = new RemoteProviderApplication();
         application.setNativeName(object.getString("name"));
-        application.setNativeId(object.getString("name"));
-        application.setReportUrl(object.has("url")?object.getString("url"): EMPTY_URL);
+        application.setNativeId(object.getString("id"));
+       // application.setReportUrl(object.has("url")?object.getString("url"): EMPTY_URL);
+        application.setRemoteProviderType(remoteProviderType);
         return application;
     }
 
