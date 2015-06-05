@@ -14,7 +14,6 @@ import com.denimgroup.threadfix.importer.util.DateUtils;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.web.util.HtmlUtils;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -86,7 +85,7 @@ public class AppScanEnterpriseRemoteProvider extends AbstractRemoteProvider{
         try{
             String sessionId = loginToAppScanEnterprise();
 
-            String url = getAuthenticationFieldValue(URL) + BASE_URL + SCAN_SERVICE + "?query=Application%20Name%3D" + HtmlUtils.htmlEscape(remoteProviderApplication.getNativeName()) + "%2CStatus%3DOpen";
+            String url = getAuthenticationFieldValue(URL) + BASE_URL + SCAN_SERVICE + "?query=Application%20Name%3D" + remoteProviderApplication.getNativeName().replaceAll(" ","%20") + "%2CStatus%3DOpen";
 
             HttpResponse response = httpUtils.getUrlWithConfigurer(url, getRequestConfigurer(sessionId));
 
