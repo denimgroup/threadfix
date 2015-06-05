@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.data.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 
@@ -49,6 +50,7 @@ public class SeverityMap extends BaseEntity {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "genericSeverityId")
+	@JsonView(Object.class)
 	public GenericSeverity getGenericSeverity() {
 		return genericSeverity;
 	}

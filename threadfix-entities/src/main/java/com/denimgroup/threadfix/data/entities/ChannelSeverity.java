@@ -75,7 +75,7 @@ public class ChannelSeverity extends BaseEntity {
 	}
 
 	@OneToOne(mappedBy = "channelSeverity")
-	@JsonIgnore
+	@JsonView(Object.class)
 	public SeverityMap getSeverityMap() {
 		return severityMap;
 	}

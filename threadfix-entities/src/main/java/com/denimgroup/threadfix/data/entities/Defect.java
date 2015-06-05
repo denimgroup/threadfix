@@ -69,7 +69,7 @@ public class Defect extends AuditableEntity {
      * @return
      */
     @Column(length = 50, nullable = false)
-    @JsonView({AllViews.TableRow.class, AllViews.VulnSearch.class})
+    @JsonView({AllViews.TableRow.class, AllViews.VulnSearch.class, AllViews.VulnerabilityDetail.class})
     public String getNativeId() {
         return nativeId;
     }
@@ -79,7 +79,7 @@ public class Defect extends AuditableEntity {
     }
 
     @Column(length = 255, nullable = false)
-    @JsonView({AllViews.TableRow.class, AllViews.VulnSearch.class})
+    @JsonView({AllViews.TableRow.class, AllViews.VulnSearch.class, AllViews.VulnerabilityDetail.class})
     @Index(name="status")
     public String getStatus() {
         return status;
@@ -96,7 +96,7 @@ public class Defect extends AuditableEntity {
     }
 
     @Column(length = 255)
-    @JsonView({AllViews.TableRow.class, AllViews.VulnSearch.class})
+    @JsonView({AllViews.TableRow.class, AllViews.VulnSearch.class, AllViews.VulnerabilityDetail.class})
     public String getDefectURL() {
         return defectURL;
     }
@@ -131,12 +131,10 @@ public class Defect extends AuditableEntity {
 	}
 
     @Transient
-    @JsonView({AllViews.TableRow.class, AllViews.VulnSearch.class})
-    private String getBugImageName() {
-        String color = OPEN_CODES.contains(status) ? "red" :
-                CLOSED_CODES.contains(status) ? "grn" :
-                "blk";
-        return "icn_bug_" + color + "_stroke.png";
+    @JsonView({AllViews.TableRow.class, AllViews.VulnSearch.class, AllViews.VulnerabilityDetail.class})
+    private boolean isOpened() {
+        if (CLOSED_CODES.contains(status)) return false;
+        else return true;
     }
 
 }

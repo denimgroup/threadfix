@@ -73,6 +73,7 @@ public class SurfaceLocation extends BaseEntity {
 	@Size(max = QUERY_LENGTH, message = "{errors.maxlength}")
 	private String query;
 	private URL url;
+	private String humanLocation;
 
 	@OneToOne(mappedBy = "surfaceLocation")
 	@JsonIgnore
@@ -194,6 +195,25 @@ public class SurfaceLocation extends BaseEntity {
 		return url;
 	}
 
+	@Transient
+	@JsonView(Object.class)
+	public String getHumanLocation() {
+		if (humanLocation==null && path!=null){
+			//probably an url, contruct it fully
+			if (protocol!=null && host!=null){
+				humanLocation = protocol + "://" + host;
+				if (port!=0 && port!=-1){
+					humanLocation += ":" + port;
+				}
+				humanLocation += path;
+			}
+			//probably only a file path
+			else {
+				humanLocation = path;
+			}
+		}
+		return humanLocation;
+	}
 
     private String getRegexResult(String targetString, String regex) {
         if (targetString == null || targetString.isEmpty() || regex == null || regex.isEmpty()) {

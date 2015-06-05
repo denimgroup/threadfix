@@ -345,7 +345,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 		return longDescription;
 	}
 
-    @JsonView(AllViews.RestView2_1.class)
+    @JsonView({AllViews.RestView2_1.class, AllViews.VulnerabilityDetail.class})
     @Column(length = ATTACK_STRING_LENGTH)
 	public String getAttackString() {
 		return attackString;
@@ -376,6 +376,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
     @Column(length = SCANNER_DETAIL_LENGTH)
+	@JsonView(AllViews.VulnerabilityDetail.class)
 	public String getScannerDetail() {
 		return scannerDetail;
 	}
@@ -385,6 +386,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
     @Column(length = SCANNER_RECOMMENDATION_LENGTH)
+	@JsonView(AllViews.VulnerabilityDetail.class)
 	public String getScannerRecommendation() {
 		return scannerRecommendation;
 	}
