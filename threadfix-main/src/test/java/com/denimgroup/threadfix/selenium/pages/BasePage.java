@@ -105,6 +105,12 @@ public abstract class BasePage {
         return new TeamIndexPage(driver);
     }
 
+    public ScanIndexPage clickScansHeaderLink() {
+        driver.findElementById("scansHeader").click();
+        sleep(1000);
+        return new ScanIndexPage(driver);
+    }
+
     public WafIndexPage clickWafsHeaderLink() {
         clickConfigTab();
         driver.findElementById("wafsLink").click();
@@ -602,9 +608,9 @@ public abstract class BasePage {
 
     @SuppressWarnings("unchecked")
     public <T extends BasePage> T clickModalSubmit(Class<T> targetClass) {
-        driver.findElementById("submit").click();
-        sleep(2000);
-        assertTrue("Submit button still present.", driver.findElementsById("submit").size() == 0);
+        WebElement button = driver.findElementById("submit");
+        button.click();
+        waitForInvisibleElement(button);
 
         return (T) this;
     }

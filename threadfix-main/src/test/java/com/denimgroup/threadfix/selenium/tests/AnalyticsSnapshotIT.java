@@ -573,31 +573,51 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     // Scan Comparison Summary
     //===========================================================================================================
 
-    //TODO: FINISH ONCE BUG IS RESOLVED
-//    @Test
-//    public void testScanComparisonSummary() {
-//        initializeTeamAndAppWithIbmScan();
-//        uploadScanToApp(teamName, appName, "w3af");
-//
-//        VulnerabilityDetailPage vulnerabilityDetailPage = loginPage.defaultLogin()
-//                .clickOrganizationHeaderLink()
-//                .expandTeamRowByName(teamName)
-//                .clickViewAppLink(appName, teamName)
-//                .clickScansTab()
-//                .clickViewScan()
-//                .clickViewFinding()
-//                .clickViewVulnerability()
-//                .clickToggleMoreInfoButton()
-//                .clickMarkasFalsePositivebutton();
-//
-//        AnalyticsPage analyticsPage = vulnerabilityDetailPage.clickAnalyticsLink()
-//                .waitForReportTab("snapshot")
-//                .clickSnapshotTab(false)
-//                .sleepOnArrival(5000)
-//                .selectDropDownReport("Scan Comparison Summary")
-//                .expandTeamApplicationFilter("snapshotFilterDiv")
-//                .addTeamFilter(teamName, "snapshotFilterDiv");
-//
-//
-//    }
+    @Test
+    public void testScanComparisonSummary() {
+        initializeTeamAndApp();
+        String repositoryURL = "https://github.com/spring-projects/spring-petclinic.git";
+        String scannerName = "IBM Rational AppScan";
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .expandSourceCodeFields()
+                .setRepositoryURLEdited(repositoryURL)
+                .clickModalSubmit();
+
+        uploadScanToApp(teamName, appName, "Petclinic XML");
+
+        VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage.clickScansHeaderLink()
+                .clickViewScanLink(teamName, appName, scannerName)
+                .clickViewFinding()
+                .clickViewVulnerability()
+                .clickToggleMoreInfoButton()
+                .clickMarkasFalsePositivebutton();
+
+        AnalyticsPage analyticsPage = vulnerabilityDetailPage.clickAnalyticsLink()
+                .waitForReportTab("snapshot")
+                .clickSnapshotTab(false)
+                .sleepOnArrival(5000)
+                .selectDropDownReport("Scan Comparison Summary")
+                .expandTeamApplicationFilter("snapshotFilterDiv")
+                .addTeamFilter(teamName, "snapshotFilterDiv");
+
+        assertTrue("Total Vulnerabilities is incorrect.", analyticsPage.getScanComparisonSummaryItem(4).equals("39"));
+
+        String rowNumber = analyticsPage.getScanComparisonScannerRow(scannerName);
+
+        assertTrue("Number Found is incorrect.", analyticsPage.getScanComparisonFoundCount(rowNumber).equals("39"));
+        assertTrue("Percent Found is incorrect.", analyticsPage.getScanComparisonFoundPercent(rowNumber).equals("100%"));
+        assertTrue("Number of False Positives is incorrect.",
+                analyticsPage.getScanComparisonFalsePostiveCount(rowNumber).equals("1"));
+        assertTrue("Percent of False Positives is incorrect.",
+                analyticsPage.getScanComparisonFalsePositivePercent(rowNumber).equals("2.6%"));
+        assertTrue("Found HAM Endpoint number is incorrect.",
+                analyticsPage.getScanComparisonHAMEndpointCount(rowNumber).equals("26"));
+        assertTrue("Found HAM Endpoint percent is incorrect.",
+                analyticsPage.getScanComparisonHAMEndpointPercent(rowNumber).equals("66.7%"));
+    }
 }

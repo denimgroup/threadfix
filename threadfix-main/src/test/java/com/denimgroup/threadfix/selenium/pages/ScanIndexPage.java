@@ -46,18 +46,13 @@ public class ScanIndexPage extends BasePage {
         return cnt;
     }
 
-    public ScanDetailPage clickViewScanLink(String teamName, String appName, String Scanner) {
+    public ScanDetailPage clickViewScanLink(String teamName, String appName, String scanner) {
         if (getNumScanRows() == 0) {
             return null;
         }
-        for (int i = 1; i <= getNumScanRows(); i++) {
-            if (driver.findElementById("application" + i).getText().equals(appName) &&
-                    driver.findElementById("team" + i).equals(teamName) &&
-                    driver.findElementById("channelType" + i).equals(Scanner)) {
-                driver.findElementsByLinkText("View Scan").get(i - 1).click();
-                break;
-            }
-        }
+        //TODO: Update once this page has ids added
+        driver.findElementByXPath("//tr[td/text() = \'" + appName + "\' and td/text() = \'" + teamName +
+            "\' and td/text() = '" + scanner + "\']//a").click();
         return new ScanDetailPage(driver);
     }
 }

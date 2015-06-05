@@ -373,6 +373,40 @@ public class AnalyticsPage extends BasePage {
                 ") td.inputValue").getText();
     }
 
+    public String getScanComparisonSummaryItem(int itemNumber) {
+        return driver.findElementByCssSelector("div#scanComparisonDiv tbody tr:nth-of-type(" + itemNumber +
+                ") td.inputValue").getText();
+    }
+
+    public String getScanComparisonScannerRow(String scanner) {
+        return driver.findElementByXPath("//td[starts-with(@id, \'scanName\') and text() = \'" + scanner + "\']")
+                .getAttribute("id").substring(8);
+    }
+
+    public String getScanComparisonFoundCount(String rowNumber) {
+        return driver.findElementById("foundCount" + rowNumber).getText();
+    }
+
+    public String getScanComparisonFoundPercent(String rowNumber) {
+        return driver.findElementById("foundPercent" + rowNumber).getText();
+    }
+
+    public String getScanComparisonFalsePostiveCount(String rowNumber) {
+        return driver.findElementById("fpCount" + rowNumber).getText();
+    }
+
+    public String getScanComparisonFalsePositivePercent(String rowNumber) {
+        return driver.findElementById("fpPercent" + rowNumber).getText();
+    }
+
+    public String getScanComparisonHAMEndpointCount(String rowNumber) {
+        return driver.findElementById("foundHAMEndpoint" + rowNumber).getText();
+    }
+
+    public String getScanComparisonHAMEndpointPercent(String rowNumber) {
+        return driver.findElementById("foundHAMEndpointPercent" + rowNumber).getText();
+    }
+
     /* _____________________ Helper Methods _____________________ */
 
     public void waitForResultsToLoad() {

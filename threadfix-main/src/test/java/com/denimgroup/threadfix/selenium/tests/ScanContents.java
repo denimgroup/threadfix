@@ -60,6 +60,8 @@ public class ScanContents extends BaseIT {
         SCAN_FILE_MAP.put("New ZAP Scan", getScanFilePath("Dynamic","ZAP","largepetclinic.xml"));
         SCAN_FILE_MAP.put("CPP Scan", getScanFilePath("Static","cppcheck","cppcheckScan.xml"));
 		SCAN_FILE_MAP.put("Empty Scan", getScanFilePath("Static", "dependencycheck","empty-report.xml"));
+        SCAN_FILE_MAP.put("Petclinic XML", getPetClinicPath("petclinic.xml"));
+        SCAN_FILE_MAP.put("Petclinic FPR", getPetClinicPath("petclinic.fpr"));
 	}
 
     public static String getScanFilePath(String scannerName) {
@@ -80,7 +82,15 @@ public class ScanContents extends BaseIT {
 		}
 		return ScanContents.class.getClassLoader().getResource(string).getPath();
 	}
-	
 
+    private static String getPetClinicPath(String fileName) {
+        String fileSeparator = System.getProperty("file.separator");
+        String string = "SBIR"+ fileSeparator  + fileSeparator + fileName;
+        String urlFromCommandLine = System.getProperty("scanFileBaseLocation");
+        if (urlFromCommandLine != null) {
+            return urlFromCommandLine + string;
+        }
+        return ScanContents.class.getClassLoader().getResource(string).getPath();
+    }
 	
 }
