@@ -245,6 +245,14 @@ public abstract class BasePage {
 		}
 	}
 
+    public boolean isElementPresentByXpath(String xpath) {
+        try {
+            return driver.findElementByXPath(xpath) != null;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
     public boolean isLinkPresent(String linkName) {
         return driver.findElementsByLinkText(linkName).size() != 0;
     }

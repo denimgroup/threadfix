@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openqa.selenium.By;
 
 import javax.validation.constraints.AssertTrue;
 
@@ -909,6 +910,24 @@ public class ApplicationIT extends BaseDataTest {
         assertFalse("Add Application Button is clickable",
                 teamIndexPage.isAddApplicationButtonClickable());
 
+    }
+
+    @Test
+    public void testSetSubversionRepository() {
+        String teamName = createTeam();
+        String appName = getName();
+
+        String repositoryUrl = "https://github.com/spring-projects/spring-petclinic.git";
+
+        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .addNewApplication(teamName, appName, "http://testapp.com", "Low")
+                .setRemoteSourceCodeURL(repositoryUrl)
+                .selectSubversionRepositoryType()
+                .clickModalSubmit();
+
+        assertFalse("The modal did not submit correctly using Subversion as source repo.",
+                teamIndexPage.isElementPresentByXpath("//button[text()=Add Application]"));
     }
 
     //===========================================================================================================
