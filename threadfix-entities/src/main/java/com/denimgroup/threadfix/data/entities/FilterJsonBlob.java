@@ -37,7 +37,7 @@ public class FilterJsonBlob extends AuditableEntity {
     private String json, name;
     private Boolean defaultTrending;
 
-    private AcceptanceCriteria acceptanceCriteria;
+//    private AcceptanceCriteria acceptanceCriteria;
 
     @JsonProperty
     @JsonView(Object.class)
@@ -72,16 +72,16 @@ public class FilterJsonBlob extends AuditableEntity {
         this.defaultTrending = defaultTrending;
     }
 
-    @OneToOne
-    @JoinColumn(name = "acceptanceCriteriaId")
-    @JsonIgnore
-    public AcceptanceCriteria getAcceptanceCriteria() {
-        return acceptanceCriteria;
-    }
-
-    public void setAcceptanceCriteria(AcceptanceCriteria acceptanceCriteria) {
-        this.acceptanceCriteria = acceptanceCriteria;
-    }
+//    @OneToOne
+//    @JoinColumn(name = "acceptanceCriteriaId")
+//    @JsonIgnore
+//    public AcceptanceCriteria getAcceptanceCriteria() {
+//        return acceptanceCriteria;
+//    }
+//
+//    public void setAcceptanceCriteria(AcceptanceCriteria acceptanceCriteria) {
+//        this.acceptanceCriteria = acceptanceCriteria;
+//    }
 
     @Transient
     @Override

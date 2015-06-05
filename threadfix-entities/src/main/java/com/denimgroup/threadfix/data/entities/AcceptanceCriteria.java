@@ -48,9 +48,9 @@ public class AcceptanceCriteria extends AuditableEntity {
     @Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
     private String name;
 
-    private List<Application> applications = new ArrayList<Application>();
+//    private List<Application> applications = new ArrayList<Application>();
 
-    private FilterJsonBlob filterJsonBlob;
+//    private FilterJsonBlob filterJsonBlob;
 
     @Column(length = NAME_LENGTH, nullable = false)
     @JsonView(Object.class) // This means it will be included in all ObjectWriters with Views.
@@ -62,27 +62,28 @@ public class AcceptanceCriteria extends AuditableEntity {
         this.name = name;
     }
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="AcceptanceCriteria_Application",
-            joinColumns={@JoinColumn(name="AcceptanceCriteria_Id")},
-            inverseJoinColumns={@JoinColumn(name="Application_Id")})
-    @JsonIgnore
-    public List<Application> getApplications() {
-        return applications;
-    }
+//    @ManyToMany(cascade = CascadeType.ALL)
+//    @JoinTable(name="AcceptanceCriteria_Application",
+//            joinColumns={@JoinColumn(name="AcceptanceCriteria_Id")},
+//            inverseJoinColumns={@JoinColumn(name="Application_Id")})
+//    @JsonIgnore
+//    public List<Application> getApplications() {
+//        return applications;
+//    }
+//
+//    public void setApplications(List<Application> applications) {
+//        this.applications = applications;
+//    }
 
-    public void setApplications(List<Application> applications) {
-        this.applications = applications;
-    }
-    @OneToOne
-    @JoinColumn(name = "filterJsonBlobId")
-    @JsonIgnore
-    public FilterJsonBlob getFilterJsonBlob() {
-        return filterJsonBlob;
-    }
-
-    public void setFilterJsonBlob(FilterJsonBlob filterJsonBlob) {
-        this.filterJsonBlob = filterJsonBlob;
-    }
+//    @OneToOne
+//    @JoinColumn(name = "filterJsonBlobId")
+//    @JsonIgnore
+//    public FilterJsonBlob getFilterJsonBlob() {
+//        return filterJsonBlob;
+//    }
+//
+//    public void setFilterJsonBlob(FilterJsonBlob filterJsonBlob) {
+//        this.filterJsonBlob = filterJsonBlob;
+//    }
 
 }
