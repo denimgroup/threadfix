@@ -47,6 +47,9 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                        })
                    });
 
+                   $scope.config.tags.sort(nameCompare);
+                   $scope.config.applicationTags.sort(nameCompare);
+
                    $scope.config.trackerTypes = $scope.config.defectTrackerTypeList;
                    $scope.$parent.genericSeverityList = $scope.config.genericSeverityList;
                    $scope.$parent.scanAgentSupportedList = $scope.config.scanAgentSupportedList;

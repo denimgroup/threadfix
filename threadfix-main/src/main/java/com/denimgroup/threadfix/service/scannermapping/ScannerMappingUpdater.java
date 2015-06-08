@@ -24,9 +24,12 @@
 
 package com.denimgroup.threadfix.service.scannermapping;
 
+import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.importer.interop.ScannerMappingsUpdaterService;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.GenericVulnerabilityService;
+import com.denimgroup.threadfix.service.TagService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -50,6 +53,10 @@ public class ScannerMappingUpdater implements ApplicationContextAware {
     private ScannerMappingsUpdaterService scannerMappingsUpdaterService;
     @Autowired
     private GenericVulnerabilityService genericVulnerabilityService;
+    @Autowired
+    private DefaultConfigService defaultConfigService;
+    @Autowired
+    private TagService tagService;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -67,6 +74,21 @@ public class ScannerMappingUpdater implements ApplicationContextAware {
             LOG.info("Scanner mappings are up-to-date, continuing");
         } else {
             LOG.info("No generic vulnerabilities found, skipping updates for now.");
+        }
+
+        updateTags();
+    }
+
+    private void updateTags() {
+
+        LOG.info("Checking if we need to split tags to comment and application tags.");
+        DefaultConfiguration defaultConfiguration = defaultConfigService.loadCurrentConfiguration();
+        if (defaultConfiguration.getHasTagCommentUpdates() == null || !defaultConfiguration.getHasTagCommentUpdates()) {
+            tagService.copyAppTagsToCommentTags();
+            tagService.changeTagInVulnComments();
+
+            defaultConfiguration.setHasTagCommentUpdates(true);
+            defaultConfigService.saveConfiguration(defaultConfiguration);
         }
     }
 }

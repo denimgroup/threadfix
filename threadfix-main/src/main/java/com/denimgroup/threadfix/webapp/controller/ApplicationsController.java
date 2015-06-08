@@ -223,7 +223,7 @@ public class ApplicationsController {
         map.put("teams", organizationService.loadTeams(Permission.CAN_MANAGE_TEAMS, false));
 
         // tagging
-        map.put("tags", tagService.loadAll());
+        map.put("tags", tagService.loadAllApplicationTags());
 
         map.put("applicationTags", application.getTags());
 

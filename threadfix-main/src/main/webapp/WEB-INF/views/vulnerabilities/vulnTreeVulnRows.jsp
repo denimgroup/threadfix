@@ -98,7 +98,7 @@
         <c:if test="${ canSubmitComments || canModifyVulnerabilities }">
             <a id="addCommentButton{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}"
                class="btn margin-bottom"
-               ng-click="showCommentForm(vulnerability, tags)">
+               ng-click="showCommentForm(vulnerability, commentTags)">
                 Add Comment
             </a>
         </c:if>
