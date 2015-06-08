@@ -75,6 +75,21 @@
                     <errors path="scanner" cssClass="errors" />
                 </td>
             </tr>
+            <tr>
+                <td>Scan Config</td>
+                <td>
+                    <input id="defectId"
+                           style="z-index:4000;width:300px"
+                           type="text"
+                           name = "id"
+                           ng-model="object.scanConfig"
+                           typeahead="document as (document.name + '.' + document.type) for document in config.documents | filter:$viewValue | limitTo:10"
+                           typeahead-editable="true"
+                           placeholder="Type file name"
+                           class="form-control"/>
+                    <a id="uploadDocScheduledScanModalLink${ application.id }" class="btn" ng-click="switchTo('addDocInScheduledScanModal')">Upload File</a>
+                </td>
+            </tr>
         </table>
     </div>
     <%@ include file="/WEB-INF/views/modal/footer.jspf" %>
