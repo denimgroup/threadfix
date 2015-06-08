@@ -4,7 +4,7 @@
 		<h4>New Scheduled Scan</h4>
 	</div>
     <div class="modal-body" ng-form="form">
-        <table>
+        <table class="modal-form-table">
             <tr class="left-align">
                 <td style="padding:5px;">Frequency</td>
                 <td style="padding:5px;">
@@ -91,6 +91,7 @@
                 </td>
             </tr>
         </table>
+        <div style="height:200px"></div>
     </div>
     <%@ include file="/WEB-INF/views/modal/footer.jspf" %>
 </script>

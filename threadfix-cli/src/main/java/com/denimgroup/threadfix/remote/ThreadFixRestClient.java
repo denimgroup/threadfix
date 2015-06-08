@@ -77,6 +77,7 @@ public interface ThreadFixRestClient {
     public RestResponse<Application> addAppUrl(String appId, String url);
 
     public RestResponse<ScanQueueTask> queueScan(String applicationId, String scannerType);
+    public RestResponse<ScanQueueTask> queueScan(String applicationId, String scannerType, String scanConfigId);
     public RestResponse<Task> requestTask(String scanners, String agentConfig);
     public RestResponse<String> taskStatusUpdate(String scanQueueTaskId, String message);
     public RestResponse<String> setTaskConfig(String appId, String scannerType, String filePath);

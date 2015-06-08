@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.ScanQueueTask;
 import com.denimgroup.threadfix.data.entities.Task;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
@@ -41,14 +42,19 @@ public interface ScanQueueService {
 	
 	Task requestTask(String scanners, String agentConfig, String secureTaskKey) throws ScanQueueTaskConfigException;
 	
-	boolean completeTask(int scanQueueTaskId);
+	void completeTask(int scanQueueTaskId);
 	
-	boolean failTask(int scanQueueTaskId, String message);
+	void failTask(int scanQueueTaskId, String message);
 
 	ScanQueueTask loadTaskById(int taskId);
 
-	String deactivateTask(ScanQueueTask task);
+	void deactivateTask(ScanQueueTask task);
 
-	String deleteTask(ScanQueueTask task);
+	void deleteTask(ScanQueueTask task);
 
+	String validate(ScanQueueTask scanQueueTask);
+
+	ScanQueueTask queueScanTask(int appId, ScanQueueTask scanQueueTask);
+
+	ScanQueueTask queueScanWithConfig(int appId, String scannerType, String scanConfigId);
 }

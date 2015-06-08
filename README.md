@@ -15,7 +15,7 @@ https://groups.google.com/forum/#!forum/threadfix
 
 Instructions on setting up a development environment can be found here:
 
-https://github.com/denimgroup/threadfix/wiki/Environment-Setup
+https://github.com/denimgroup/threadfix/wiki/Development-Environment-Setup
 
 Further documentation can be found online here:
 
