@@ -1,4 +1,4 @@
-3/27/2015 11:45:00
+6/8/2015 11:45:00
 type.info,,
 Burp Suite,,
 type.vulnerabilities,,
@@ -9,7 +9,6 @@ Long redirection response,4196352,601
 Cookie without HttpOnly flag set,5244416,312
 Base64-encoded data in parameter,7340544,20
 SSL certificate,16777472,298
-Extension-generated issue,134217728,16
 DOM-based open redirection,5243152,601
 File path manipulation,1051392,73
 PHP code injection,1051648,94
@@ -36,4 +35,11 @@ HTML5 storage manipulation (DOM-based),5246720,99
 Link manipulation (DOM-based),5246976,73
 Document domain manipulation (DOM-based),5247232,99
 DOM data manipulation (DOM-based),5247488,99
-Extension generated,134217728,434
+Extension generated,134217728,16
+Python code injection,1052432,94
+SSI injection,1052928,94
+Path-relative style sheet import,2097960,73
+External service interaction (DNS),3146240,435
+External service interaction (HTTP),3146256,435
+Duplicate cookies set,4196864,16
+Private key disclosed,6292816,359
