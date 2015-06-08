@@ -23,10 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.BatchTaggingParameters;
-import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.data.entities.Tag;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
@@ -227,6 +224,10 @@ public class TagsController {
             if (dbApp == null) {
                 log.warn("Unable to find application with ID " + application.getId());
                 RestResponse.failure("Application selected is invalid.");
+            }
+
+            if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, application.getOrganization().getId(), application.getId())) {
+                RestResponse.failure("You do not have permission to manage application " + application.getName() + ".");
             }
 
             List<Tag> allAppTags = tagService.loadAllApplicationTags();
