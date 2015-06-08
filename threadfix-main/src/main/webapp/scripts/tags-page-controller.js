@@ -14,6 +14,10 @@ module.controller('TagsPageController', function($scope, $http, $modal, $log, tf
                         $scope.tags = data.object.tags;
                         $scope.tags.sort(nameCompare);
                     }
+                    if (data.object.commentTags.length > 0) {
+                        $scope.commentTags = data.object.commentTags;
+                        $scope.commentTags.sort(nameCompare);
+                    }
                 } else {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
                 }
@@ -49,11 +53,20 @@ module.controller('TagsPageController', function($scope, $http, $modal, $log, tf
         $scope.currentModal = modalInstance;
 
         modalInstance.result.then(function (tag) {
-            if (!$scope.tags) {
-                $scope.tags = [ tag ];
+            if (tag.tagForComment) {
+                if (!$scope.commentTags) {
+                    $scope.commentTags = [ tag ];
+                } else {
+                    $scope.commentTags.push(tag);
+                    $scope.commentTags.sort(nameCompare);
+                }
             } else {
-                $scope.tags.push(tag);
-                $scope.tags.sort(nameCompare);
+                if (!$scope.tags) {
+                    $scope.tags = [ tag ];
+                } else {
+                    $scope.tags.push(tag);
+                    $scope.tags.sort(nameCompare);
+                }
             }
 
             $scope.successMessage = "Successfully created tag " + tag.name;
@@ -87,21 +100,33 @@ module.controller('TagsPageController', function($scope, $http, $modal, $log, tf
             }
         });
 
-        modalInstance.result.then(function (tags) {
+        modalInstance.result.then(function (tagsMap) {
 
-            if (tags) {
-                $scope.tags = tags;
+            if (tagsMap) {
+                $scope.tags = tagsMap.tags;
+                $scope.commentTags = tagsMap.commentTags;
                 $scope.tags.sort(nameCompare);
+                $scope.commentTags.sort(nameCompare);
                 $scope.errorMessage = "";
                 $scope.successMessage = "Successfully edited tag " + tag.name;
             } else {
                 if (tag.deletable) {
-                    var index = $scope.tags.indexOf(tag);
-                    if (index > -1) {
-                        $scope.tags.splice(index, 1);
-                    }
-                    if ($scope.tags.length === 0) {
-                        $scope.tags = undefined;
+                    if (!tag.tagForComment) {
+                        var index = $scope.tags.indexOf(tag);
+                        if (index > -1) {
+                            $scope.tags.splice(index, 1);
+                        }
+                        if ($scope.tags.length === 0) {
+                            $scope.tags = undefined;
+                        }
+                    } else {
+                        var index = $scope.commentTags.indexOf(tag);
+                        if (index > -1) {
+                            $scope.commentTags.splice(index, 1);
+                        }
+                        if ($scope.commentTags.length === 0) {
+                            $scope.commentTags = undefined;
+                        }
                     }
                     $scope.successMessage = "The deletion was successful for Tag " + tag.name;
                     $scope.errorMessage = "";

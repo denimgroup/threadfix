@@ -12,6 +12,7 @@ myAppModule.controller('TagDetailPageController', function ($scope, $window, $ht
                 if (data.success) {
                     $scope.appList = data.object.appList;
                     $scope.commentList = data.object.commentList;
+                    $scope.isCommentTag = data.object.isCommentTag;
                     getVulnList();
                 } else {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
