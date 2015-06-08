@@ -72,7 +72,7 @@ public class TagRestController {
     public @ResponseBody RestResponse<Tag> attachApp(@RequestParam String tagname,
                                                      @RequestParam String appname,
                                                      @RequestParam String teamname) {
-        Tag tag = tagService.loadTag(tagname);
+        Tag tag = tagService.loadApplicationTag(tagname);
 
         Application application = applicationService.loadApplication(appname, organizationService.loadByName(teamname).getId());
         List<Tag> tagList = application.getTags();
