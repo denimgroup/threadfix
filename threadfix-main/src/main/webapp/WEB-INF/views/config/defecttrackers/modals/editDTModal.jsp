@@ -61,6 +61,57 @@
                         <span id="typeServerError" class="errors" ng-show="object.defectTrackerType_id_error"> {{ object.defectTrackerType_id_error }}</span>
                     </td>
                 </tr>
+                <tr>
+                    <td>Default Username</td>
+                    <td class="inputValue">
+                        <input type="text" focus-on="focusInput" ng-model="object.defaultUsername" id="defaultUsername" name="defaultUsername" size="50" maxlength="50"/>
+                    </td>
+                    <td colspan="2" >
+                        <span class="errors" ng-show="object.defaultUsername_error"> {{ object.defaultUsername_error }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Default Password</td>
+                    <td class="inputValue">
+                        <input type="password" focus-on="focusInput" ng-model="object.defaultPassword" id="defaultPassword" name="defaultPassword" size="50" maxlength="50"/>
+                    </td>
+                    <td colspan="2" >
+                        <span class="errors" ng-show="form.defaultPassword.$dirty && form.defaultPassword.$error.maxlength">Maximum length is 50.</span>
+                        <span class="errors" ng-show="object.defaultPassword"> {{ object.defaultPassword_error }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button id="loadingProductNamesButton"
+                                disabled="disabled"
+                                class="btn btn-primary"
+                                ng-show="loadingProductNames">
+                            <span class="spinner"></span>
+                            Loading Product Names
+                        </button>
+                        <button id="getProductNames"
+                                class="btn btn-primary"
+                                ng-hide="loadingProductNames"
+                                ng-disabled="!(object.url && object.defaultPassword && object.defaultUsername)"
+                                ng-click="getProductNames()">Get Product Names</button>
+                    </td>
+                </tr>
+                <tr ng-show="productNames || object.defaultProductName" class="left-align">
+                    <td id="projectname">Product Name</td>
+                    <td class="inputValue">
+                        <select ng-model="object.defaultProductName" id="productNameSelect" name="productName">
+                            <option ng-repeat="name in productNames"
+                                    ng-selected="object.defaultProductName === name"
+                                    value="{{ name }}">
+                                {{ name }}
+                            </option>
+                        </select>
+                    </td>
+                    <td colspan="2" >
+                        <errors name="productName" cssClass="errors" />
+                        <span class="errors" ng-show="object.defaultProductName_error"> {{ object.defaultProductName_error }}</span>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>

@@ -155,9 +155,15 @@ public final class DefectTrackerFactory {
 
 		tracker.setProjectName(application.getProjectName());
 		tracker.setProjectId(application.getProjectId());
-		tracker.setPassword(application.getPassword());
-		tracker.setUrl(application.getDefectTracker().getUrl());
-		tracker.setUsername(application.getUserName());
+
+        if(application.isUseDefaultCredentials()){
+            tracker.setUsername(application.getDefectTracker().getDefaultUsername());
+            tracker.setPassword(application.getDefectTracker().getDefaultPassword());
+        }else {
+            tracker.setUsername(application.getUserName());
+            tracker.setPassword(application.getPassword());
+        }
+        tracker.setUrl(application.getDefectTracker().getUrl());
 
 		return tracker;
 	}

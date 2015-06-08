@@ -66,7 +66,7 @@ public class AddDefectTrackerController {
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields("name", "url", "defectTrackerType.id");
+		dataBinder.setAllowedFields("name", "url", "defectTrackerType.id", "defaultUsername", "defaultPassword", "defaultProductName");
 	}
 
 	@ModelAttribute
@@ -115,6 +115,11 @@ public class AddDefectTrackerController {
                         result.getFieldError("url").getDefaultMessage().equals(
                                 AbstractDefectTracker.INVALID_CERTIFICATE) ){
                     result.rejectValue("url", null, null, MessageConstants.ERROR_SELF_CERTIFICATE);
+                }
+            } else if((defectTracker.getDefaultUsername() != null || defectTracker.getDefaultPassword() != null)
+                    && !defectTrackerService.checkCredentials(defectTracker, result)){
+                if (!result.hasFieldErrors("defaultUsername")) {
+                    result.rejectValue("defaultUsername", null, null, defectTracker.getDefectTrackerType().getName() + " Credentials are invalid.");
                 }
             }
 			

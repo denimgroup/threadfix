@@ -107,11 +107,6 @@ public class QueueListener implements MessageListener {
 				String type = map.getString("type");
 				
 				switch (type) {
-					case QueueConstants.NORMAL_SCAN_TYPE :
-						processScanRequest(map.getInt("channelId"), map.getString("fileName"),
-								map.getInt("jobStatusId"), map.getString("userName"));
-						break;
-						
 					case QueueConstants.DEFECT_TRACKER_VULN_UPDATE_TYPE:
 						processDefectTrackerUpdateRequest(map.getInt("appId"),
 								map.getInt("jobStatusId"));
@@ -305,60 +300,6 @@ public class QueueListener implements MessageListener {
 		}
 
 		closeJobStatus(jobStatusId, "Defect was created successfully.");
-	}
-
-	/**
-	 */
-	private void processScanRequest(Integer channelId, String fileName, Integer jobStatusId, String userName) {
-		// TODO Move the jobStatus updating to the importer to improve messages
-		// once the messages persist
-		
-		jobStatusService.updateJobStatus(jobStatusId, "Job received");
-		
-		ApplicationChannel appChannel = applicationChannelService.loadApplicationChannel(channelId);
-		
-		boolean fullLog = userName != null && appChannel != null && appChannel.getApplication() != null
-				&& appChannel.getApplication().getName() != null && appChannel.getChannelType() != null
-				&& appChannel.getChannelType().getName() != null;
-			
-		if (fullLog) {
-			log.info("User " + userName + " added a " + appChannel.getChannelType().getName() +
-					" scan to the Application " + appChannel.getApplication().getName() +
-					" (filename " + fileName + ").");
-		}
-		
-		jobStatusService.updateJobStatus(jobStatusId, "Processing Scan from file.");
-		
-		boolean finished = false;
-		
-		try {
-			finished = scanMergeService.processScan(channelId, fileName, jobStatusId, userName);
-		} catch (OutOfMemoryError e) {
-			closeJobStatus(jobStatusId, "Scan encountered an out of memory error and did not complete correctly.");
-			log.warn("Encountered out of memory error. Closing job status and rethrowing exception.",e);
-			throw e;
-		} finally {
-			if (finished) {
-				closeJobStatus(jobStatusId, "Scan completed.");
-
-                if (appChannel != null && appChannel.getApplication() != null) {
-                    queueSender.updateCachedStatistics(appChannel.getApplication().getId());
-                }
-
-				if (fullLog) {
-					log.info("The " + appChannel.getChannelType().getName() + " scan from User "
-						+ userName + " on Application " + appChannel.getApplication().getName()
-						+ " (filename " + fileName + ") completed successfully.");
-				}
-			} else {
-				closeJobStatus(jobStatusId, "Scan encountered an error.");
-				if (fullLog) {
-					log.info("The " + appChannel.getChannelType().getName() + " scan from User "
-						+ userName + " on Application " + appChannel.getApplication().getName()
-						+ " (filename " + fileName + ") did not complete successfully.");
-				}
-			}
-		}
 	}
 
 	/**

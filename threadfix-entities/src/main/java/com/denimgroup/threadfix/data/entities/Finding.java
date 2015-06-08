@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.data.entities;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.sun.scenario.effect.Merge;
 import org.hibernate.annotations.Cascade;
 
 import javax.annotation.Nullable;
@@ -134,6 +135,8 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	private String calculatedUrlPath = "", calculatedFilePath = "";
 	private Dependency dependency;
+
+    private Boolean hidden;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	public Calendar getScannedDate() {
@@ -484,6 +487,16 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Transient
+    @Column
+    public Boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(Boolean hidden) {
+        this.hidden = hidden;
+    }
+
+    @Transient
 	@JsonView({ AllViews.TableRow.class, AllViews.VulnerabilityDetail.class, AllViews.UIVulnSearch.class })
 	private String getScannerName() {
 		return getScan().getApplicationChannel().getChannelType().getName();

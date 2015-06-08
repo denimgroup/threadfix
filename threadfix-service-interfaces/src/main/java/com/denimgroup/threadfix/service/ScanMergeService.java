@@ -26,6 +26,8 @@ package com.denimgroup.threadfix.service;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Scan;
 
+import java.util.List;
+
 /**
  * @author mcollins
  * 
@@ -49,30 +51,30 @@ public interface ScanMergeService {
 	 */
 	void updateVulnerabilities(Application application);
 
+    /**
+     * This method does the actual scan processing work. It is usually called from QueueListener or
+     * one of the RPC methods.
+     *
+     * @param channelId
+     * @param fileNames
+     * @return
+     */
+    boolean processScan(Integer channelId, List<String> fileNames, List<String> originalFileNames, Integer statusId,
+                        String userName);
+
+    /**
+     * This method allows skipping the queue by wrapping all the required functionality into
+     * one method.  A script might time out and cease to function unless it gets its results,
+     * which is why this bypass is available.
+     *
+     * @param channelId
+     * @param fileNames
+     * @return
+     */
+    Scan saveRemoteScanAndRun(Integer channelId, List<String> fileNames, List<String> originalFileNames);
+
 	/**
-	 * This method does the actual scan processing work. It is usually called from QueueListener or
-	 * one of the RPC methods.
-	 * 
-	 * @param channelId
-	 * @param fileName
-	 * @return
-	 */
-	boolean processScan(Integer channelId, String fileName, Integer statusId,
-			String userName);
-	
-	/**
-	 * This method allows skipping the queue by wrapping all the required functionality into
-	 * one method.  A script might time out and cease to function unless it gets its results,
-	 * which is why this bypass is available.
-	 * 
-	 * @param channelId
-	 * @param fileName
-	 * @return
-	 */
-	Scan saveRemoteScanAndRun(Integer channelId, String fileName, String originalFileName);
-	
-	/**
-	 * 
+	 *
 	 * @param scan
 	 * @return
 	 */

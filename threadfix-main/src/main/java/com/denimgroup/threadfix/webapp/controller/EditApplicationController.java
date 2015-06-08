@@ -105,7 +105,8 @@ public class EditApplicationController {
                 "password", "waf.id", "projectName", "projectRoot", "applicationCriticality.id",
                 "uniqueId", "organization.id", "frameworkType", "repositoryUrl", "repositoryBranch",
                 "repositoryRevision", "repositoryUserName", "repositoryPassword", "repositoryFolder",
-                "repositoryType", "skipApplicationMerge", "mainDefaultDefectProfile.id");
+                "repositoryType", "skipApplicationMerge", "mainDefaultDefectProfile.id",
+				"useDefaultCredentials", "useDefaultProject");
 	}
 
 	@JsonView(AllViews.FormInfo.class)

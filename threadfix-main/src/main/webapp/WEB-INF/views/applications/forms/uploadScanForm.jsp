@@ -18,18 +18,18 @@
                 <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
             </div>
             <div ng-hide="isIE">
-                Drag and drop scan file here.
+                Drag and drop scan files here.
             </div>
             <div ng-show="isIE">
-                Select scan file.
+                Select scans file.
             </div>
         </div>
-
+        <span>Scans must be of the same type.</span>
         <progressbar ng-show="uploading" animate="false" value="dynamic" type="success"><b>{{uploadedPercent}}%</b></progressbar>
 	</div>
     <div style="text-align:left" ng-show="ready()" class="modal-body">
         Select Scan
-        <input id="scanFileInput" style="height:auto" type="file" ng-file-select="onFileSelect($files)">
+        <input id="scanFileInput" style="height:auto" type="file" ng-file-select="onFileSelect($files)" multiple="multiple">
     </div>
 	<div class="modal-footer">
 		<span style="float:left;font-size:8;" class="errors">Average file uploads take a few seconds but <br>larger files (2GB+) can take several minutes.</span>
