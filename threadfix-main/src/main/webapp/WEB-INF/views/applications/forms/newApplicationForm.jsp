@@ -115,6 +115,7 @@
                     </td>
                     <td>
                         <span id="sourceUrlLengthError" class="errors" ng-show="form.repositoryUrl.$dirty && form.repositoryUrl.$error.maxlength">Maximum length is 255.</span>
+                        <span id="sourceUrlOtherError" class="errors" ng-show="object.repositoryUrl_error"> {{ object.repositoryUrl_error }}</span>
                         <span id="sourceUrlValidError" class="errors" ng-show="form.repositoryUrl.$dirty && form.repositoryUrl.$error.url">URL is invalid.</span>
                     </td>
                 </tr>
