@@ -122,6 +122,7 @@ public class ScanQueueTask extends AuditableEntity {
 	private int status;
 	private String scanAgentInfo;
 	private String secureKey;
+	private Document scanConfig;
 
 	@Column
 	public int taskId() {
@@ -259,6 +260,16 @@ public class ScanQueueTask extends AuditableEntity {
 
 	public void setSecureKey(String secureKey) {
 		this.secureKey = secureKey;
+	}
+
+	@ManyToOne
+	@JsonView(Object.class)
+	public Document getScanConfig() {
+		return scanConfig;
+	}
+
+	public void setScanConfig(Document scanConfig) {
+		this.scanConfig = scanConfig;
 	}
 
 	public void addScanStatus(ScanStatus status) {
