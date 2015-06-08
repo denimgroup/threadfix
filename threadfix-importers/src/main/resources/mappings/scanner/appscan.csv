@@ -84,4 +84,48 @@ Allaire ColdFusion Path Disclosure,Allaire ColdFusion Path Disclosure,200
 Apache Tomcat Invalid Character Path Disclosure,Apache Tomcat Invalid Character Path Disclosure,200
 Zope Server Empty Upload Information Disclosure,Zope Server Empty Upload Information Disclosure,200
 TYPO3 Cumulus Tagcloud Extension Path Disclosure,TYPO3 Cumulus Tagcloud Extension Path Disclosure,200
+Directory Listing Pattern Found,Directory Listing Pattern Found,548
+Microsoft Windows MHTML Cross-Site Scripting,79
+Microsoft ASP.NET Debugging Enabled,11
+Apache server-status Information Disclosure,200
+Error Page Path Disclosure,200
+Apache Tomcat Example Servlets Path Disclosure,200
+ColdFusion MX Probe.cfm Path Disclosure,200
+Microsoft IIS Non-Existent idq File Path Disclosure,200
+Allaire ColdFusion Path Disclosure,200
+Apache Tomcat Invalid Character Path Disclosure,200
+Zope Server Empty Upload Information Disclosure,200
+TYPO3 Cumulus Tagcloud Extension Path Disclosure,200
+Link to unclassified site,Link to unclassified site,16
+Hidden Directory Detected,Hidden Directory Detected,22
+Client-Side (JavaScript) Cookie References,Client-Side (JavaScript) Cookie References,602
+Flash parameter AllowScriptAccess was set to always,Flash parameter AllowScriptAccess was set to always,456
+Blind SQL Injection,Blind SQL Injection,89
+Cross-Site Request Forgery,Cross-Site Request Forgery,352
+Link Injection (facilitates Cross-Site Request Forgery),Link Injection (facilitates Cross-Site Request Forgery),74
+Directory Listing,Directory Listing,548
+JSPWiki Edit.jsp Path Traversal,JSPWiki Edit.jsp Path Traversal,22
+Query Parameter in SSL Request,Query Parameter in SSL Request,598
+Bash Shell History File Retrieval,Bash Shell History File Retrieval,200
+Apache Geronimo Cross-Site Scripting in Path,Apache Geronimo Cross-Site Scripting in Path,79
+Phorum Multiple Cross-Site Scripting,Phorum Multiple Cross-Site Scripting,79
+Phishing Through Frames,Phishing Through Frames,79
+Vivvo CMS files.php File Retrieval,Vivvo CMS files.php File Retrieval,22
+Missing Secure Attribute in Encrypted Session (SSL) Cookie,Missing Secure Attribute in Encrypted Session (SSL) Cookie,614
+Session Identifier Not Updated,Session Identifier Not Updated,30
+IBM WebSphere Application Server File Disclosure,IBM WebSphere Application Server File Disclosure,200
+IBM WebSphere plugin-cfg.xml Information Leakage,IBM WebSphere plugin-cfg.xml Information Leakage,200
+TRACE and TRACK HTTP Methods Enabled,TRACE and TRACK HTTP Methods Enabled,16
+Missing HttpOnly Attribute in Session Cookie,Missing HttpOnly Attribute in Session Cookie,653
+Permanent Cookie Contains Sensitive Session Information,Permanent Cookie Contains Sensitive Session Information,539
+Autocomplete HTML Attribute Not Disabled for Password Field,Autocomplete HTML Attribute Not Disabled for Password Field,522
+Compressed Directory Found,Compressed Directory Found,540
+Possible Server Path Disclosure Pattern Found,Possible Server Path Disclosure Pattern Found,200
+Web Application Source Code Disclosure Pattern Found,Web Application Source Code Disclosure Pattern Found,540
+Snitz Forums 2000 Database Retrieval,Snitz Forums 2000 Database Retrieval,264
+Potential Registration Information Found,Potential Registration Information Found,200
+Oracle Log File Information Disclosure,Oracle Log File Information Disclosure,200
+IBM BladeCenter Advanced Management Module Information Leakage,IBM BladeCenter Advanced Management Module Information Leakage,200
+Encryption Not Enforced,Encryption Not Enforced,311
+Dblog CMS Open Source Database Retrieval,Dblog CMS Open Source Database Retrieval,264
 
