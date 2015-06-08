@@ -14,6 +14,7 @@ import com.denimgroup.threadfix.importer.util.DateUtils;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -43,7 +44,7 @@ public class AppScanEnterpriseRemoteProvider extends AbstractRemoteProvider{
                 SESSION_ID = "asc_xsrf_token";
 
     public AppScanEnterpriseRemoteProvider() {
-      super(ScannerType.APPSCAN_ENTERPRISE);
+        super(ScannerType.APPSCAN_DYNAMIC);
     }
 
     RemoteProviderHttpUtils httpUtils = getImpl(AppScanEnterpriseRemoteProvider.class);
@@ -85,10 +86,11 @@ public class AppScanEnterpriseRemoteProvider extends AbstractRemoteProvider{
         try{
             String sessionId = loginToAppScanEnterprise();
 
-            String url = getAuthenticationFieldValue(URL) + BASE_URL + SCAN_SERVICE + "?query=Application%20Name%3D" + remoteProviderApplication.getNativeName().replaceAll(" ","%20") + "%2CStatus%3DOpen";
+            UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(getAuthenticationFieldValue(URL) + BASE_URL + SCAN_SERVICE);
+            uriComponentsBuilder.queryParam("query", "Application Name=" + remoteProviderApplication.getNativeName());
+            String url = uriComponentsBuilder.toUriString();
 
             HttpResponse response = httpUtils.getUrlWithConfigurer(url, getRequestConfigurer(sessionId));
-
             if(response.isValid()){
                 String responseBody = response.getBodyAsString();
 
@@ -192,7 +194,12 @@ public class AppScanEnterpriseRemoteProvider extends AbstractRemoteProvider{
 
     private RequestConfigurer getLoginRequestConfigurer(){
 
-        String loginJSON = String.format(LOGIN_JSON_FORMAT, getAuthenticationFieldValue(USERNAME), getAuthenticationFieldValue(PASSWORD));
+        String username = getAuthenticationFieldValue(USERNAME);
+        if(username.contains("\\") && !username.contains("\\\\")){
+            username = username.replace("\\","\\\\");
+        }
+
+        String loginJSON = String.format(LOGIN_JSON_FORMAT, username, getAuthenticationFieldValue(PASSWORD));
 
         return new DefaultRequestConfigurer()
                 .withContentType("application/json")

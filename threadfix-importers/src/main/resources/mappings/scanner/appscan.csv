@@ -1,4 +1,4 @@
-3/27/2015 11:45:00
+6/9/2015 11:47:00
 type.info,,
 IBM Rational AppScan,,
 type.vulnerabilities,,
@@ -49,3 +49,17 @@ Weak SSL Cipher Suites are Supported,WeakCipherSuites,327
 Missing Cross-Frame Scripting Defence,XFS,693
 Cross-Site Scripting through Remote File Inclusion,XSSThroughRFI,73
 Zikula Application Framework index.php Cross-Site Scripting,ZikulaApplicationFrameworkindexphpXSS,79
+Host allows flash access from any domain,Host allows flash access from any domain,456
+Direct Access to Administration Pages,Direct Access to Administration Pages,306
+Phishing Through URL Redirection,Phishing Through URL Redirection,601
+HTML Comments Sensitive Information Disclosure,HTML Comments Sensitive Information Disclosure,615
+Application Test Script Detected,Application Test Script Detected,531
+Possible Server Path Disclosure Pattern Found,Possible Server Path Disclosure Pattern Found,200
+Cross-Site Scripting,Cross-Site Scripting,79
+Database Error Pattern Found,Database Error Pattern Found,209
+Poison Null Byte Windows Files Retrieval,Poison Null Byte Windows Files Retrieval,626
+SQL Injection,SQL Injection,89
+Unencrypted Login Request,Unencrypted Login Request,523
+Application Error,Application Error,550
+Email Address Pattern Found,Email Address Pattern Found,359
+Cacheable SSL Page Found,Cacheable SSL Page Found,525
