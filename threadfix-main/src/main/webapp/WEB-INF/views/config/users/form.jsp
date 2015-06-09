@@ -23,7 +23,7 @@
                     <td>Display Name</td>
                     <td class="inputValue">
                         <input ng-model="user.displayName" type="text" name="displayName" id="displayName"/>
-                        <span id="displayName.errors" class="errors" ng-show="user.name_error"> {{ user.name_error }}</span>
+                        <span id="displayName.errors" class="errors" ng-show="user.display_name_error"> {{ user.display_name_error }}</span>
                     </td>
                 </tr>
                 <tr ng-if="!user.isLdapUser">
