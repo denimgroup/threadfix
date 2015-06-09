@@ -358,6 +358,9 @@
         <persistence.version>1.0.2</persistence.version>
         <quartz.version>2.2.1</quartz.version>
         <selenium.version>2.45.0</selenium.version>
+        <javamail.version>1.4</javamail.version>
+        <velocity.version>1.7</velocity.version>
+        <velocity-tools.version>2.0</velocity-tools.version>
         <servlet-api.version>3.1.0</servlet-api.version>
         <sitemesh.version>2.4.2</sitemesh.version>
         <slf4j.version>1.7.10</slf4j.version>
