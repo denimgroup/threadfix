@@ -174,7 +174,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 		// Now that we have the updated scan, we can check over close and reopen maps and 
 		// make sure they come in an order that makes sense.
 		correctScanStatistics(appScanList, scan);
-		
+
 		scanDao.deleteFindingsAndScan(scan);
 
         // If file upload location exists and file associated with scan exists, delete file
@@ -193,6 +193,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
         }
 
 		log.info("The scan deletion has finished.");
+
 	}
 	
 	/**
