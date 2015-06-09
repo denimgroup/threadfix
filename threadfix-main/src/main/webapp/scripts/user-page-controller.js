@@ -522,6 +522,10 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     });
 
     $scope.addGroup = function(group) {
+        if (!group) {
+            return;
+        }
+        
         $http.post(tfEncoder.encode('/groups/' + group.id + '/addUser/' + $scope.userId)).
             success(function(data) {
                 if (data.success) {
