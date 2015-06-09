@@ -50,6 +50,11 @@ public interface QueueSender {
 	 */
 	void startImportScans();
 
+    /**
+     * @param emailReportJobId
+     */
+	void startEmailReport(Integer emailReportJobId);
+
 	/**
 	 * @param fileName
 	 * @param channelId
