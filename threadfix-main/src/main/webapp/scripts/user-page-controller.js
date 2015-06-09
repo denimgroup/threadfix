@@ -287,7 +287,12 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
 
                     selectUserWithId($scope.currentUser.id);
                 } else {
-                    $scope.errorMessage = "Failure. Message was : " + data.message;
+
+                    if (data.errorMap && data.errorMap.name) {
+                        $scope.errorMessage = "Failure. " + data.errorMap.name;
+                    } else {
+                        $scope.errorMessage = "Failure. Message was : " + data.message;
+                    }
                 }
 
                 $scope.initialized = true;
@@ -525,7 +530,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         if (!group) {
             return;
         }
-        
+
         $http.post(tfEncoder.encode('/groups/' + group.id + '/addUser/' + $scope.userId)).
             success(function(data) {
                 if (data.success) {
