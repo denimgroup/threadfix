@@ -18,6 +18,12 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     var lastNumber = 0;
     var lastPage = 0;
 
+    $scope.activateTab = function(tab) {
+        $scope.active = {}; //reset
+        $scope.active[tab] = true;
+        $rootScope.title = tab[0].toUpperCase() + tab.substr(1);
+    };
+
     $scope.numberToShow = 20;
 
     var reloadList = function(callBack) {
