@@ -1070,6 +1070,25 @@ div.submit-defect-form.modal {
     max-width:700px;
 }
 
+.update-defect-defaults.modal {
+     margin-left:-400px;
+     width: 800px;
+}
+
+.default-tag {
+    background-color: #eeeeee;
+    border: 1px solid #d3d3d3;
+    border-radius: 7px;
+    margin: 3px;
+    padding: 3px;
+    display: inline-block;
+}
+
+#available-tags-div {
+    margin-bottom: 10px;
+    text-align: left;
+}
+
 .uploadable {
     display:none;
 }
@@ -1223,6 +1242,21 @@ div.remote-provider-config-modal a {
     width:200px;
 }
 
+.update-defect-defaults .dynamic-defect-form label {
+    width:145px;
+}
+
+.nested-dynamic-form-wrapper {
+    display: inline-block;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    vertical-align: top;
+}
+
+.nested-dynamic-form-wrapper .defect-form-row:first-of-type {
+    padding: 0;
+}
+
 .defect-form-row {
     text-align:left;
     padding-top: 5px;
@@ -1299,6 +1333,15 @@ input.wide {
 
 .typeaheadPointer ul {
 	cursor: pointer;
+}
+
+#load-profile-defaults {
+    text-align:left;
+}
+
+#load-profile-defaults .spinner {
+    float: none;
+    display: inline-block;
 }
 
 .pdf-data {

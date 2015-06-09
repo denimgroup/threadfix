@@ -5,6 +5,8 @@
     <cbs:cachebustscript src="/scripts/scheduled-defect-tracker-update-tab-controller.js"/>
     <cbs:cachebustscript src="/scripts/defect-trackers-tab-controller.js"/>
     <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
+    <cbs:cachebustscript src="/scripts/update-defect-defaults-modal-controller.js"/>
+    <cbs:cachebustscript src="/scripts/default-value-mapping.js"/>
 </head>
 
 <body id="config">

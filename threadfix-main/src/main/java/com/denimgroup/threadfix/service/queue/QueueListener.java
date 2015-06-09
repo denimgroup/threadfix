@@ -73,6 +73,10 @@ public class QueueListener implements MessageListener {
     private ScanQueueService scanQueueService = null;
     @Autowired
     private VulnerabilityFilterService vulnerabilityFilterService;
+    @Autowired
+    private EmailReportService emailReportService;
+    @Autowired
+    private ScheduledEmailReportService scheduledEmailReportService;
 
 	/*
 	 * (non-Javadoc)
@@ -141,6 +145,8 @@ public class QueueListener implements MessageListener {
                     case QueueConstants.VULNS_FILTER:
                         updateVulnsFilter();
                         break;
+                    case QueueConstants.SEND_EMAIL_REPORT:
+                        processSendEmailReport(map.getInt("scheduledEmailReportId"));
 				}
 			}
 			
@@ -149,6 +155,12 @@ public class QueueListener implements MessageListener {
 			e.printStackTrace();
 		}
 	}
+
+    private void processSendEmailReport(int scheduledEmailReportId) {
+        log.info("Schedule Email Report was called! With scheduledEmailReportId=" + scheduledEmailReportId);
+        ScheduledEmailReport scheduledEmailReport = scheduledEmailReportService.loadById(scheduledEmailReportId);
+        emailReportService.sendEmailReport(scheduledEmailReport);
+    }
 
     private void updateVulnsFilter() {
         log.info("Starting updating all filter vulnerabilities");
