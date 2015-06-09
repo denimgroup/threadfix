@@ -309,7 +309,7 @@ public class HibernateScanDao
 			}
 
 		}
-		
+
 		findings = null;
 
 		if (surfaceLocations != null) {
@@ -317,7 +317,7 @@ public class HibernateScanDao
 				sessionFactory.getCurrentSession().delete(surfaceLocation);
 			}
 		}
-		
+
 		sessionFactory.getCurrentSession().save(new DeletedScan(scan));
 		sessionFactory.getCurrentSession().delete(scan);
 	}
