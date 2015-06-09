@@ -246,6 +246,11 @@ public class TeamIndexPage extends BasePage {
         return new TeamIndexPage(driver);
     }
 
+    public TeamIndexPage selectSubversionRepositoryType() {
+        driver.findElementByXPath("//input[@value='SVN']").click();
+        return new TeamIndexPage(driver);
+    }
+
     /*------------------------------------ Get Methods ----------------------------------------*/
 
     public String getLengthError() {

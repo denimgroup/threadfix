@@ -44,7 +44,6 @@ import java.util.Calendar;
 import java.util.List;
 
 @Controller
-@RequestMapping("/organizations/{orgId}/applications/{appId}/scans/{scanId}/findings/{findingId}")
 public class FindingsController {
 	
 	private final SanitizedLogger log = new SanitizedLogger(FindingsController.class);
@@ -54,7 +53,7 @@ public class FindingsController {
 	@Autowired
     private VulnerabilityService vulnerabilityService;
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value = "/organizations/{orgId}/applications/{appId}/scans/{scanId}/findings/{findingId}", method = RequestMethod.GET)
 	public ModelAndView finding(@PathVariable("findingId") int findingId,
 			@PathVariable("scanId") int scanId, 
 			@PathVariable("orgId") int orgId,
@@ -76,7 +75,7 @@ public class FindingsController {
         return mav;
     }
 
-    @RequestMapping(value = "merge", method = RequestMethod.GET)
+    @RequestMapping(value = "/organizations/{orgId}/applications/{appId}/scans/{scanId}/findings/{findingId}/merge", method = RequestMethod.GET)
     public String merge(@PathVariable("findingId") int findingId,
                         Model model,
                         @PathVariable("orgId") int orgId,
@@ -108,7 +107,7 @@ public class FindingsController {
 		}
 	}
 	
-	@RequestMapping(value = "setVulnerability", method = RequestMethod.POST)
+	@RequestMapping(value = "/organizations/{orgId}/applications/{appId}/scans/{scanId}/findings/{findingId}/setVulnerability", method = RequestMethod.POST)
 	public String setVulnerability(@RequestParam(required = false) String vulnerabilityId,
 			@PathVariable("findingId") int findingId,
 			@PathVariable("orgId") int orgId,
@@ -149,6 +148,28 @@ public class FindingsController {
 		}
 			
 		return "redirect:/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + vulnerabilityId;
+	}
+
+	@RequestMapping(value = "/findings/{findingId}", method = RequestMethod.GET)
+	public String viewFindingFromMapping(@PathVariable("findingId") int findingId) {
+
+		Finding finding = findingService.loadFinding(findingId);
+		if (finding == null ||
+				finding.getScan() == null ||
+				finding.getScan().getApplication() == null ||
+				finding.getScan().getApplication().getOrganization() == null){
+			log.warn(ResourceNotFoundException.getLogMessage("Finding", findingId));
+			throw new ResourceNotFoundException();
+		}
+
+		int orgId = finding.getScan().getApplication().getOrganization().getId();
+		int appId = finding.getScan().getApplication().getId();
+
+		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
+			return "403";
+		}
+
+		return "redirect:/organizations/" + orgId + "/applications/" + appId + "/scans/" + finding.getScan().getId() + "/findings/" + findingId;
 	}
 
 }

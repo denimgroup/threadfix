@@ -30,7 +30,7 @@
                             </ul>
                         </li>
                         <c:if test="${ canSubmitComments }">
-                            <li><a class="pointer" id="addBatchCommentBtn" ng-click="addBatchComment(tags)">Add Batch Comment</a></li>
+                            <li><a class="pointer" id="addBatchCommentBtn" ng-click="addBatchComment(commentTags)">Add Batch Comment</a></li>
                         </c:if>
                     </c:if>
                 </ul>

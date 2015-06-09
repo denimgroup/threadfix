@@ -27,13 +27,11 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
-import javax.annotation.Nullable;
-
-import com.denimgroup.threadfix.service.GRCToolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nullable;
 import javax.jms.*;
 import java.util.List;
 import java.util.Map;
@@ -135,7 +133,7 @@ public class QueueListener implements MessageListener {
 						break;
                     case QueueConstants.SCHEDULED_SCAN_TYPE:
                         processScheduledScan(map.getInt("appId"),
-                                map.getString("scanner"));
+                                map.getString("scanner"), map.getString("scanConfigId"));
                         break;
                     case QueueConstants.STATISTICS_UPDATE:
                         processStatisticsUpdate(map.getInt("appId"));
@@ -398,7 +396,7 @@ public class QueueListener implements MessageListener {
      * @param scanner
      */
     @Transactional(readOnly=false)
-    private void processScheduledScan(int appId, String scanner) {
+    private void processScheduledScan(int appId, String scanner, String scanConfigId) {
         if (scanQueueService == null) {
             return;
         }
@@ -407,7 +405,7 @@ public class QueueListener implements MessageListener {
         if (application == null)
             return;
 
-        ScanQueueTask scanTask = scanQueueService.queueScan(appId, scanner);
+        ScanQueueTask scanTask = scanQueueService.queueScanWithConfig(appId, scanner, scanConfigId);
         if (scanTask == null || scanTask.getId() < 0) {
             log.warn("Adding scan queue task " + scanner +" for application with Id " + appId + " was failed.");
         } else {

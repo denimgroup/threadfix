@@ -48,6 +48,7 @@ public class DefaultConfiguration extends BaseEntity {
     private Boolean hasAddedScheduledImports = null;
     private Boolean hasAddedScheduledDefectTrackerUpdates = null;
     private Boolean hasAddedScheduledGRCToolUpdates = null;
+    private Boolean hasTagCommentUpdates;
     private Integer defaultRoleId = null;
 
     private Boolean hasCachedData = null;
@@ -220,6 +221,15 @@ public class DefaultConfiguration extends BaseEntity {
 
     public void setHasAddedScheduledGRCToolUpdates(Boolean hasAddedScheduledGRCToolUpdates){
         this.hasAddedScheduledGRCToolUpdates = hasAddedScheduledGRCToolUpdates;
+    }
+
+    @Column
+    public Boolean getHasTagCommentUpdates() {
+        return hasTagCommentUpdates;
+    }
+
+    public void setHasTagCommentUpdates(Boolean hasTagCommentUpdates) {
+        this.hasTagCommentUpdates = hasTagCommentUpdates;
     }
 
     @Column
