@@ -48,7 +48,6 @@ public class ChannelMerger {
     Integer closed = 0, resurfaced = 0, total = 0, numberNew = 0, old = 0,
             numberRepeatResults = 0, numberRepeatFindings = 0, oldVulnerabilitiesInitiallyFromThisChannel = 0;
     Map<String, Finding> scanHash;
-    boolean shouldSkipMerging = false;
 
     /**
      * This is the first round of scan merge that only considers scans from the same scanner
@@ -79,8 +78,6 @@ public class ChannelMerger {
         if (scan.getFindings() == null) {
             scan.setFindings(listOf(Finding.class));
         }
-
-        shouldSkipMerging = applicationChannel.getApplication().getSkipApplicationMerge();
 
         LOG.info("Starting Application Channel-wide merging process with "
                 + scan.getFindings().size() + " findings.");
@@ -114,9 +111,7 @@ public class ChannelMerger {
         scan.setNumberRepeatFindings(numberRepeatFindings);
         scan.setNumberOldVulnerabilitiesInitiallyFromThisChannel(oldVulnerabilitiesInitiallyFromThisChannel);
 
-        if (!shouldSkipMerging) {
-            scan.setFindings(newFindings);
-        }
+        scan.setFindings(newFindings);
     }
 
     private void closeMissingVulnerabilities() {
@@ -263,7 +258,7 @@ public class ChannelMerger {
             if (finding != null && finding.getNativeId() != null
                     && !finding.getNativeId().isEmpty()) {
 
-                String key = shouldSkipMerging ? finding.getNonMergingKey() : finding.getNativeId();
+                String key = finding.getNativeId();
 
                 oldNativeIdVulnHash.put(key, finding.getVulnerability());
                 oldNativeIdFindingHash.put(key, finding);
@@ -297,7 +292,7 @@ public class ChannelMerger {
             if (finding != null && finding.getNativeId() != null
                     && !finding.getNativeId().isEmpty()) {
 
-                String key = shouldSkipMerging ? finding.getNonMergingKey() : finding.getNativeId();
+                String key = finding.getNativeId();
 
                 if (scanHash.containsKey(key)) {
                     // Increment the merged results counter in the finding
