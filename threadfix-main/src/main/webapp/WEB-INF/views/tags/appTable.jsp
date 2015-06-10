@@ -1,4 +1,4 @@
-<div>
+<div ng-show="!isCommentTag">
 
 	<h4 style="padding-top:10px">Tagged Applications</h4>
 

@@ -60,6 +60,7 @@ public class EventBasedTokenizerRunner {
     public static void run(@Nullable File file, @Nonnull EventBasedTokenizer... eventBasedTokenizers ) {
         run(file, true, eventBasedTokenizers);
     }
+
 	public static void run(@Nullable File file, boolean javaComments, @Nonnull EventBasedTokenizer... eventBasedTokenizers ) {
 
 		if (file != null && file.exists() && file.isFile()) {
@@ -107,6 +108,55 @@ public class EventBasedTokenizerRunner {
             }
 		}
 	}
+
+    public static void runRails(@Nullable File file, @Nonnull EventBasedTokenizer... eventBasedTokenizers ) {
+        if (file != null && file.exists() && file.isFile()) {
+
+            Reader reader = null;
+            try {
+
+                reader = new InputStreamReader(new FileInputStream(file), "UTF-8");
+
+                StreamTokenizer tokenizer = new StreamTokenizer(reader);
+                tokenizer.eolIsSignificant(false);
+                tokenizer.wordChars(':',':');
+                tokenizer.wordChars('_','_');
+                tokenizer.quoteChar('/');
+                tokenizer.commentChar('#');
+
+                // stop only if all of the tokenizers return false from shouldContinue();
+                boolean keepGoing = true;
+                while (tokenizer.nextToken() != StreamTokenizer.TT_EOF && keepGoing) {
+
+                    log(tokenizer);
+
+                    keepGoing = false;
+                    for (EventBasedTokenizer eventBasedTokenizer : eventBasedTokenizers) {
+                        if (eventBasedTokenizer.shouldContinue()) {
+                            eventBasedTokenizer.processToken(tokenizer.ttype, tokenizer.lineno(), tokenizer.sval);
+                        }
+                        if (!keepGoing) {
+                            keepGoing = eventBasedTokenizer.shouldContinue();
+                        }
+                    }
+                }
+
+            } catch (FileNotFoundException e) {
+                // shouldn't happen, we check to make sure it exists
+                log.error("Encountered FileNotFoundException while looking for file", e);
+            } catch (IOException e) {
+                log.warn("Encountered IOException while tokenizing file.", e);
+            } finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        log.warn("Encountered IOException while tokenizing file.", e);
+                    }
+                }
+            }
+        }
+    }
 
     private static void log(StreamTokenizer tokenizer) {
         if (logEnabled) {

@@ -42,6 +42,7 @@ import com.denimgroup.threadfix.data.dao.VulnerabilityCommentDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
 
+import static com.denimgroup.threadfix.CollectionUtils.*;
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Service
@@ -173,7 +174,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 		// Now that we have the updated scan, we can check over close and reopen maps and 
 		// make sure they come in an order that makes sense.
 		correctScanStatistics(appScanList, scan);
-		
+
 		scanDao.deleteFindingsAndScan(scan);
 
         // If file upload location exists and file associated with scan exists, delete file
@@ -192,6 +193,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
         }
 
 		log.info("The scan deletion has finished.");
+
 	}
 	
 	/**
@@ -366,39 +368,41 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 		if (scan.getScanRepeatFindingMaps() != null
 				&& scan.getScanRepeatFindingMaps().size() > 0) {
 				List<ScanRepeatFindingMap> mapsToRemove = list();
-				
-				for (ScanRepeatFindingMap map : scan.getScanRepeatFindingMaps()) {
-					if (map != null && map.getFinding() != null 
-							&& map.getFinding().getScan() != null
-							&& map.getFinding().getScan().getId() != null
-							&& map.getFinding().getScan().getId().equals(scanToDelete.getId())) {
-						
-						log.debug("Moving Finding with ID " + map.getFinding().getId() + 
-								" to scan with ID " + scan.getId() + " and deleting mapping.");
-						scan.setNumberRepeatFindings(scan.getNumberRepeatFindings() -1);
-						scan.setNumberRepeatResults(
-								scan.getNumberRepeatResults() - 
-								map.getFinding().getNumberMergedResults());
-						scan.getFindings().add(map.getFinding());
-						map.getFinding().getScan().getFindings().remove(map.getFinding());
-						map.getFinding().setScan(scan);
-						
-						mapsToRemove.add(map);
-						
-						updateFirstFindingForVuln(map.getFinding(), 
-								map.getFinding().getVulnerability());
-					}
-				}
-				
-				scan.getScanRepeatFindingMaps().removeAll(mapsToRemove);
-				for (ScanRepeatFindingMap map : mapsToRemove) {
-					map.getFinding().getScanRepeatFindingMaps().remove(map);
-					map.getScan().getScanRepeatFindingMaps().remove(map);
-					scanDao.saveOrUpdate(map.getScan());
-					findingDao.saveOrUpdate(map.getFinding());
-					scanDao.deleteMap(map);
+
+			List<ScanRepeatFindingMap> scanCopy = listFrom(scan.getScanRepeatFindingMaps());
+
+			for (ScanRepeatFindingMap map : scanCopy) {
+				if (map != null && map.getFinding() != null
+						&& map.getFinding().getScan() != null
+						&& map.getFinding().getScan().getId() != null
+						&& map.getFinding().getScan().getId().equals(scanToDelete.getId())) {
+
+					log.debug("Moving Finding with ID " + map.getFinding().getId() +
+							" to scan with ID " + scan.getId() + " and deleting mapping.");
+					scan.setNumberRepeatFindings(scan.getNumberRepeatFindings() -1);
+					scan.setNumberRepeatResults(
+							scan.getNumberRepeatResults() -
+							map.getFinding().getNumberMergedResults());
+					scan.getFindings().add(map.getFinding());
+					map.getFinding().getScan().getFindings().remove(map.getFinding());
+					map.getFinding().setScan(scan);
+
+					mapsToRemove.add(map);
+
+					updateFirstFindingForVuln(map.getFinding(),
+							map.getFinding().getVulnerability());
 				}
 			}
+				
+			scan.getScanRepeatFindingMaps().removeAll(mapsToRemove);
+			for (ScanRepeatFindingMap map : mapsToRemove) {
+				map.getFinding().getScanRepeatFindingMaps().remove(map);
+				map.getScan().getScanRepeatFindingMaps().remove(map);
+				scanDao.saveOrUpdate(map.getScan());
+				findingDao.saveOrUpdate(map.getFinding());
+				scanDao.deleteMap(map);
+			}
+		}
 	}
 
 	/**

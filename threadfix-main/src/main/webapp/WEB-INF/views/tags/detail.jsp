@@ -20,13 +20,13 @@
             <h4>Tag Statistics</h4>
             <table class="dataTable">
                 <tbody>
-                <tr>
+                <tr ng-show="!isCommentTag">
                     <td>Number of Applications</td>
                     <td class="inputValue" id="numApps">
                         <c:out value="${ numApps }"/>
                     </td>
                 </tr>
-                <tr>
+                <tr ng-show="isCommentTag">
                     <td>Number of Vulnerability Comments</td>
                     <td class="inputValue" id="numVulnComments">
                         <c:out value="${ numVulnComments }"/>
@@ -39,7 +39,7 @@
 
     <div>
         <%@ include file="appTable.jsp" %>
-        <div ng-controller="VulnerabilityCommentsTableController">
+        <div ng-controller="VulnerabilityCommentsTableController" ng-show="isCommentTag">
             <h4 style="padding-top:10px">Tagged Vulnerability Comments</h4>
             <%@ include file="commentTable.jsp" %>
         </div>

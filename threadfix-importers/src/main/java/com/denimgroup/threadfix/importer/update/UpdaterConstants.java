@@ -36,6 +36,7 @@ public final class UpdaterConstants {
             SCANNERS_FOLDER = "mappings/scanner",
             WAFS_FOLDER = "mappings/waf",
             REMOTE_PROVIDERS_FOLDER = "mappings/remoteprovider",
+            DEFAULT_TAGS_FOLDER = "mappings/defaultTag",
             DATE_PATTERN = "MM/dd/yyyy hh:mm:ss";
 
 }

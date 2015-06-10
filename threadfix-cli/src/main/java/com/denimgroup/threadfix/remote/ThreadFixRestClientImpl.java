@@ -219,13 +219,18 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 	}
 	
 	public RestResponse<ScanQueueTask> queueScan(String applicationId, String scannerType) {
-		return httpRestUtils.httpPost("/tasks/queueScan",
-				new String[] { "applicationId", "scannerType" },
-				new String[] { applicationId, scannerType },
-                ScanQueueTask.class);
+        return queueScan(applicationId, scannerType, null);
 	}
 
-	public RestResponse<Application> addAppUrl(String appId, String url) {
+    @Override
+    public RestResponse<ScanQueueTask> queueScan(String applicationId, String scannerType, String scanConfigId) {
+        return httpRestUtils.httpPost("/tasks/queueScan",
+                new String[] { "applicationId", "scannerType", "scanConfigId" },
+                new String[] { applicationId, scannerType, scanConfigId },
+                ScanQueueTask.class);
+    }
+
+    public RestResponse<Application> addAppUrl(String appId, String url) {
 		return httpRestUtils.httpPost("/applications/" + appId + "/addUrl",
 				new String[] {"url"},
 				new String[] { url },

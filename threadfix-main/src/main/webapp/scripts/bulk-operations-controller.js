@@ -116,6 +116,12 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
                         vulns: filteredVulns,
                         typeName: getApplication().defectTracker.defectTrackerType.name
                     }
+                },
+                defectDefaultsConfig: function() {
+                    return {
+                        defectTrackerId : getApplication().defectTracker.id,
+                        mainDefaultProfile : getApplication().mainDefaultDefectProfile // may be null
+                    };
                 }
             }
         });

@@ -33,4 +33,10 @@ import java.util.List;
  * @author stran
  */
 public interface TagDao extends GenericNamedObjectDao<Tag> {
+    Tag retrieveAppTagByName(String name);
+    Tag retrieveCommentTagByName(String name);
+
+    List<Tag> retrieveAllCommentTags();
+
+    List<Tag> retrieveAllApplicationTags();
 }

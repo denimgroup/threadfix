@@ -110,4 +110,9 @@ public class DiskUtils {
             }
         }
     }
+
+    public static boolean isFileExists(String fullFilePath) {
+        File f = new File(fullFilePath);
+        return f.exists() && !f.isDirectory();
+    }
 }

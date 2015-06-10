@@ -159,12 +159,13 @@ public class CommandLineParser {
 	
 			} else if (cmd.hasOption("q")) {
 				String[] queueArgs = cmd.getOptionValues("q");
-				if (queueArgs.length != 2) {
+				if (queueArgs.length > 3) {
 					throw new ParseException("Wrong number of arguments.");
 				}
                 if (isInteger(queueArgs[0])) {
                     LOGGER.info("Queueing a scan.");
-                    System.out.println(client.queueScan(queueArgs[0], queueArgs[1]));
+					String scanConfigId = queueArgs.length >= 3 ? queueArgs[2] : null;
+                    System.out.println(client.queueScan(queueArgs[0], queueArgs[1], scanConfigId));
                 } else
                     LOGGER.warn("ApplicationId is not number, not doing anything.");
 

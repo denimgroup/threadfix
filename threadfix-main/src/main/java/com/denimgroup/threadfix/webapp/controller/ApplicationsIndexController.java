@@ -84,7 +84,7 @@ public class ApplicationsIndexController {
 		model.addAttribute("application", new Application());
 		model.addAttribute("organization", new Organization());
         model.addAttribute("applicationTypes", FrameworkType.values());
-        model.addAttribute("tags", tagService.loadAll());
+        model.addAttribute("tags", tagService.loadAllApplicationTags());
 
         if (licenseService != null) {
             model.addAttribute("underEnterpriseLimit", licenseService.canAddApps());

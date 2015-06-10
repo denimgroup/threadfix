@@ -39,6 +39,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import javax.annotation.Nonnull;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -77,6 +78,7 @@ public class CheckMarxChannelImporter extends AbstractChannelImporter {
 
     // sample is                                                 17-Dec-2013 10:39
     static final SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy HH:mm", Locale.US);
+    static final SimpleDateFormat format_EEEE = new SimpleDateFormat("EEEE, MMMMM dd, yyyy hh:mm:ss a", Locale.US);  // Monday, April 06, 2015 5:01:46 PM
 
     public CheckMarxChannelImporter() {
         super(ScannerType.CHECKMARX);
@@ -169,7 +171,7 @@ public class CheckMarxChannelImporter extends AbstractChannelImporter {
 
             // Since we're two lines shorter I think if/else works better here
             if (qName.equals(ROOT_NODE_NAME)) {
-                date = DateUtils.getCalendarFromString(format, atts.getValue(SCAN_START));
+                date = parseDate(atts.getValue(SCAN_START));
 
             } else if (qName.equals(QUERY)) {
                 currentCweId = atts.getValue(CWE_ID);
@@ -267,7 +269,7 @@ public class CheckMarxChannelImporter extends AbstractChannelImporter {
         public void startElement (String uri, String name, String qName, Attributes atts)
                 throws SAXException {
             if (ROOT_NODE_NAME.equals(qName)) {
-                testDate = DateUtils.getCalendarFromString(format, atts.getValue(SCAN_START));
+                testDate = parseDate(atts.getValue(SCAN_START));
                 hasDate = testDate != null;
                 correctFormat = true;
 
@@ -280,5 +282,10 @@ public class CheckMarxChannelImporter extends AbstractChannelImporter {
                 throw new SAXException(FILE_CHECK_COMPLETED);
             }
         }
+    }
+
+    private Calendar parseDate(String dateString) {
+        Calendar date = DateUtils.getCalendarFromString(format, dateString);
+        return date != null? date : DateUtils.getCalendarFromString(format_EEEE, dateString);
     }
 }

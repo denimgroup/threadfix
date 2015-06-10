@@ -131,7 +131,7 @@
                     <span id="sourceUrlValidError" class="errors" ng-show="form.repositoryUrl.$dirty && form.repositoryUrl.$error.url">URL is invalid.</span>
                 </td>
             </tr>
-            <tr ng-show="sourceCodeDisplay">
+            <tr ng-show="sourceCodeDisplay && !object.repositoryRevision.length">
                 <td>Source Code Branch</td>
                 <td>
                     <input type="text" id="repositoryBranch" ng-model="object.repositoryBranch" maxlength="80" name="repositoryBranch"/>
@@ -140,7 +140,7 @@
                     <span id="sourceBranchLengthError" class="errors" ng-show="form.repositoryBranch.$dirty && form.repositoryBranch.$error.maxlength">Maximum length is 80.</span>
                 </td>
             </tr>
-            <tr ng-show="sourceCodeDisplay">
+            <tr ng-show="sourceCodeDisplay && !object.repositoryBranch.length">
                 <td>Source Code Revision</td>
                 <td>
                     <input type="text" id="repositoryRevision" ng-model="object.repositoryRevision" maxlength="80" name="repositoryRevision"/>
@@ -195,6 +195,18 @@
                 </td>
                 <td><button id="addDefectTrackerButton" class="btn" ng-click="switchTo('addDefectTracker')">Set Defect Tracker</button></td>
 			</tr>
+            <tr>
+                <td>Main Default Profile</td>
+                <td ng-show="object.defectTracker">
+                    <select ng-model="object.mainDefaultDefectProfile.id" name="mainDefaultDefectProfile.id">
+                            <option value="" ng-selected="{{!object.mainDefaultDefectProfile.id}}">No main profile</option>
+                            <option ng-repeat="defaultProfile in object.defectTracker.defaultDefectProfiles" value="{{ defaultProfile.id }}"
+                                    ng-selected="{{defaultProfile.id == object.mainDefaultDefectProfile.id}}">
+                                {{defaultProfile.name}}
+                            </option>
+                    </select>
+                </td>
+            </tr>
             <tr>
                 <td>
                     Disable Vulnerability Merging
