@@ -286,6 +286,8 @@ public class ApplicationsController {
 
 		applicationService.decryptCredentials(application);
 
+        defectTrackerService.decryptCredentials(application.getDefectTracker());
+
 		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
 		ProjectMetadata data = null;
 
