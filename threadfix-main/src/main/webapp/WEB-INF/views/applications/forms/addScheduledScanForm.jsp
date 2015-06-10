@@ -4,7 +4,7 @@
 		<h4>New Scheduled Scan</h4>
 	</div>
     <div class="modal-body" ng-form="form">
-        <table>
+        <table class="modal-form-table">
             <tr class="left-align">
                 <td style="padding:5px;">Frequency</td>
                 <td style="padding:5px;">
@@ -75,7 +75,23 @@
                     <errors path="scanner" cssClass="errors" />
                 </td>
             </tr>
+            <tr>
+                <td>Scan Profile</td>
+                <td>
+                    <input id="defectId"
+                           style="z-index:4000;width:300px"
+                           type="text"
+                           name = "id"
+                           ng-model="object.scanConfig"
+                           typeahead="document as (document.name + '.' + document.type) for document in config.documents | filter:$viewValue | limitTo:10"
+                           typeahead-editable="true"
+                           placeholder="Type file name"
+                           class="form-control"/>
+                    <a id="uploadDocScheduledScanModalLink${ application.id }" class="btn" ng-click="switchTo('addDocInScheduledScanModal')">Upload File</a>
+                </td>
+            </tr>
         </table>
+        <div style="height:200px"></div>
     </div>
     <%@ include file="/WEB-INF/views/modal/footer.jspf" %>
 </script>

@@ -24,14 +24,19 @@
 
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.CollectionUtils;
+
+import java.util.Collections;
+import java.util.List;
+
 import static com.denimgroup.threadfix.data.entities.ScannerDatabaseNames.*;
 
 public enum ScannerType {
-    ACUNETIX_WVS("acunetix", "Acunetix WVS", ACUNETIX_WVS_DB_NAME),
-    APPSCAN_DYNAMIC("appscan", "IBM Rational AppScan", APPSCAN_DYNAMIC_DB_NAME),
+    ACUNETIX_WVS("acunetix", "Acunetix WVS", ACUNETIX_WVS_DB_NAME, true),
+    APPSCAN_DYNAMIC("appscan", "IBM Rational AppScan", APPSCAN_DYNAMIC_DB_NAME, true),
     ARACHNI("arachni", "Arachni", ARACHNI_DB_NAME),
     BRAKEMAN("brakeman", "Brakeman", BRAKEMAN_DB_NAME),
-    BURPSUITE("burp", "Burp Suite", BURPSUITE_DB_NAME),
+    BURPSUITE("burp", "Burp Suite", BURPSUITE_DB_NAME, true),
     CLANG("clang", "Clang", CLANG_DB_NAME),
 	CPPCHECK("cppcheck", "Cppcheck", CPPCHECK_DB_NAME),
     CAT_NET("catnet", "Microsoft CAT.NET", CAT_NET_DB_NAME),
@@ -46,8 +51,8 @@ public enum ScannerType {
     NETSPARKER("netsparker", "Mavituna Security Netsparker", NETSPARKER_DB_NAME),
     SKIPFISH("skipfish", "Skipfish", SKIPFISH_DB_NAME),
     W3AF("w3af", "w3af", W3AF_DB_NAME),
-    WEBINSPECT("webinspect", "WebInspect", WEBINSPECT_DB_NAME),
-    ZAPROXY("zap", "OWASP Zed Attack Proxy", ZAPROXY_DB_NAME),
+    WEBINSPECT("webinspect", "WebInspect", WEBINSPECT_DB_NAME, true),
+    ZAPROXY("zap", "OWASP Zed Attack Proxy", ZAPROXY_DB_NAME, true),
     APPSCAN_SOURCE("appscansource", "IBM Rational AppScan Source Edition", APPSCAN_SOURCE_DB_NAME),
     APPSCAN_ENTERPRISE("appscanenterprise", "IBM Rational AppScan Enterprise", APPSCAN_ENTERPRISE_DB_NAME),
     QUALYSGUARD_WAS("qualysguard", "QualysGuard WAS", QUALYSGUARD_WAS_DB_NAME),
@@ -63,6 +68,7 @@ public enum ScannerType {
 	private String shortName;
 	private String dbName;
 	private String baseUrl;
+    private boolean supportedScanAgent;
 
 	public String getFullName() { 
 		return this.fullName; 
@@ -78,6 +84,17 @@ public enum ScannerType {
     
     public String getBaseUrl() {
         return this.baseUrl;
+    }
+
+    public boolean getSupportedScanAgent() {
+        return this.supportedScanAgent;
+    }
+
+    private ScannerType(String shortName, String fullName, String dbName, boolean supportedScanAgent) {
+        this.shortName = shortName;
+        this.fullName = fullName;
+        this.dbName = dbName;
+        this.supportedScanAgent = supportedScanAgent;
     }
 
     private ScannerType(String shortName, String fullName, String dbName, String baseUrl) {
@@ -120,4 +137,23 @@ public enum ScannerType {
 		}
 		return null;
 	}
+
+    public static List<String> getScanAgentSupportedListInString() {
+        List<String> result = CollectionUtils.list();
+        for (ScannerType t: values()) {
+            if (t.getSupportedScanAgent())
+                result.add(t.getFullName());
+        }
+        Collections.sort(result);
+        return result;
+    }
+
+    public static List<ScannerType> getScanAgentSupportedList() {
+        List<ScannerType> result = CollectionUtils.list();
+        for (ScannerType t: values()) {
+            if (t.getSupportedScanAgent())
+                result.add(t);
+        }
+        return result;
+    }
 }

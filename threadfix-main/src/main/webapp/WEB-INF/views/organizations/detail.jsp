@@ -22,6 +22,7 @@
     <%@ include file="/WEB-INF/views/organizations/editTeamForm.jsp" %>
     <%@ include file="/WEB-INF/views/config/users/permissibleUsers.jsp" %>
     <%@ include file="/WEB-INF/views/reports/vulnSummaryModal.jsp" %>
+    <%@ include file="/WEB-INF/views/applications/forms/vulnCommentForm.jsp"%>
 
     <ul class="breadcrumb">
         <li><a href="<spring:url value="/teams"/>">Applications Index</a> <span class="divider">/</span></li>
@@ -35,7 +36,7 @@
                 <ul class="dropdown-menu">
                     <c:if test="${ canManageTeams }">
                         <li>
-                            <a id="teamModalButton" ng-click="openEditModal()">Edit / Delete</a>
+                            <a id="teamModalButton" href="#" ng-click="openEditModal()">Edit / Delete</a>
                         </li>
                     </c:if>
                     <c:if test="${ canManageVulnFilters }">
@@ -49,7 +50,7 @@
                         </li>
                     </c:if>
                     <c:if test="${ canManageUsers && isEnterprise }">
-                        <li><a id="userListModelButton" ng-click="showUsers()">View Permissible Users</a></li>
+                        <li><a id="userListModelButton" href="#" ng-click="showUsers()">View Permissible Users</a></li>
                     </c:if>
                 </ul>
             </div>

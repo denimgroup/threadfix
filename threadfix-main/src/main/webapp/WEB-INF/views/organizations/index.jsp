@@ -14,7 +14,7 @@
 
 	<h2>Teams</h2>
 
-    <div ng-controller="ApplicationsIndexController">
+    <div ng-controller="ApplicationsIndexController" ng-init="successMessage = '<c:out value="${ successMessage }"/>'">
 
         <security:authorize ifNotGranted="ROLE_CAN_MANAGE_TEAMS">
             <div ng-show="teams && teams.length === 0" class="alert alert-error">
@@ -25,12 +25,6 @@
 
         <div ng-hide="initialized" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
 
-        <c:if test="${ not empty successMessage }">
-            <div class="alert alert-success">
-                <button class="close" data-dismiss="alert" type="button">x</button>
-                <c:out value="${ successMessage }"/>
-            </div>
-        </c:if>
         <%@ include file="/WEB-INF/views/successMessage.jspf" %>
 
         <div ng-show="errorMessage" class="alert alert-success">

@@ -62,9 +62,8 @@ public class OptionsHolder {
                 .create("search");
         options.addOption(search);
 
-        Option queueScan = OptionBuilder.withArgName("applicationId> <scannerName")
-                .withValueSeparator(' ')
-                .hasArgs(2)
+        Option queueScan = OptionBuilder.withArgName("applicationId> <scannerName> <[scan profile Id]")
+                .hasArgs(3)
                 .withLongOpt("queueScan")
                 .withDescription("Queue a scan for the given applicationId with the given scanner type")
                 .create("q");

@@ -120,7 +120,7 @@ public class TeamDetailPageController {
             mav.addObject("isEnterprise", EnterpriseTest.isEnterprise());
             mav.addObject("application", new Application());
             mav.addObject("applicationTypes", FrameworkType.values());
-            mav.addObject("tags", tagService.loadAll());
+            mav.addObject("tags", tagService.loadAllApplicationTags());
             mav.addObject("successMessage", ControllerUtils.getSuccessMessage(request));
             if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,null)) {
                 mav.addObject("users", userService.getPermissibleUsers(orgId, null));

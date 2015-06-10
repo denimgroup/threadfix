@@ -12,6 +12,7 @@
             <tr>
                 <th>ID</th>
                 <th>Scanner</th>
+                <th>Profile</th>
                 <th>Time</th>
                 <th>Frequency</th>
                 <c:if test="${ canManageApplications }">
@@ -26,6 +27,7 @@
                 <tr class="bodyRow" ng-repeat="scheduledScan in scheduledScans">
                     <td id="scheduledScanId{{ $index }}"> {{ scheduledScan.id }} </td>
                     <td id="scheduledScanScanner{{ $index }}"> {{ scheduledScan.scanner }} </td>
+                    <td id="scheduledScanScanner{{ $index }}"><span  ng-show="scheduledScan.scanConfig"> {{ scheduledScan.scanConfig.name + '.' + scheduledScan.scanConfig.type }} </span></td>
                     <td id="scheduledScanDay{{ $index }}"> {{ scheduledScan.day }} &nbsp; {{ scheduledScan.hour }}:{{ scheduledScan.extraMinute }}{{ scheduledScan.minute }}
                         &nbsp; {{ scheduledScan.period }} </td>
                     <td id="scheduledScanFrequency{{ $index }}"> {{ scheduledScan.frequency }} </td>
