@@ -29,11 +29,14 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
             if (data.success) {
                 $scope.config = data.object.projectMetadata;
                 $scope.config.typeName = data.object.defectTrackerName;
+
+                // Only Bugzilla is not yet implemented Dynamic form
                 if ($scope.config.typeName === 'HP Quality Center'
                     || $scope.config.typeName === 'Jira'
                     || $scope.config.typeName === 'Version One'
                     || $scope.config.typeName === 'Microsoft TFS')
                     $scope.isDynamicForm = true;
+
                 $scope.config.defectTrackerName = data.object.defectTrackerName;
 
                 $scope.config.defects = data.object.defectList;
@@ -182,30 +185,46 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
         $scope.loadingProfileDefaults = true;
 
         $http.get(defaultsUrl)
-        .success(function(data, status, headers, config){
-            if (data.success) {
-                loadDefaultValues(data.object.defaultValues);
-            }
-            else {
-                $scope.errorMessage = data.message;
-            }
-            $scope.loadingProfileDefaults = false;
-        }).
-        error(function(data, status, headers, config) {
-            $scope.errorMessage = "Couldn't load defaults. HTTP status was " + status;
-            $scope.loadingProfileDefaults = false;
-        });
+            .success(function(data, status, headers, config){
+                if (data.success) {
+                    loadDefaultValues(data.object.defaultValues);
+                }
+                else {
+                    $scope.errorMessage = data.message;
+                }
+                $scope.loadingProfileDefaults = false;
+            }).
+            error(function(data, status, headers, config) {
+                $scope.errorMessage = "Couldn't load defaults. HTTP status was " + status;
+                $scope.loadingProfileDefaults = false;
+            });
 
     };
 
     var loadDefaultValues = function(defaultValues){
-        for (var fieldName in defaultValues){
-            if (fieldName in $scope.validModels){
+        for ( var fieldName in $scope.validModels) {
+            // Set default values from selected profile
+            if (fieldName in defaultValues){
                 if (!(fieldName in $scope.stdFormTemplateOptions)){//check if its not a select field
                     $scope.fieldsMap[fieldName] = defaultValues[fieldName];
                 }
                 else if (defaultValues[fieldName] in $scope.stdFormTemplateOptions[fieldName]) { // check if select field accepts this default value
                     $scope.fieldsMap[fieldName] = defaultValues[fieldName];
+                }
+
+            } else { // For non-default fields, set to initial value, either blank or first item in required options
+                if (!(fieldName in $scope.stdFormTemplateOptions) || !$scope.validModels[fieldName]){
+                    $scope.fieldsMap[fieldName] = undefined;
+                }
+                else {
+                    var scanned = false;
+                    for (var firstItem in $scope.stdFormTemplateOptions[fieldName]) {
+                        $scope.fieldsMap[fieldName] = firstItem;
+                        scanned = true;
+                        break;
+                    }
+                    if (!scanned)
+                        $scope.fieldsMap[fieldName] = undefined;
                 }
             }
         }
@@ -267,7 +286,7 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 fieldForm.readonly = true;
             }
 
-            $scope.validModels[field.name]=true;
+            $scope.validModels[field.name] = field.required; // Save field is required or not for further usage
             $scope.stdFormTemplate.push(fieldForm)
         });
 

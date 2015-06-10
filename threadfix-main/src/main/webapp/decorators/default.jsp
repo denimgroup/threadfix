@@ -1,7 +1,10 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ include file="/common/taglibs.jsp"%>
 
-<html lang="en">
+<html lang="en"
+        ng-app='threadfix'
+        <decorator:getProperty property="html.ng-controller" writeEntireProperty="true"/>
+        >
     <head>
         <%@ include file="/common/meta.jsp" %>
         <title><decorator:title/> | <spring:message code="webapp.name"/></title>
@@ -46,8 +49,7 @@
         <decorator:head/>
     </head>
 
-    <body ng-app='threadfix'
-          <decorator:getProperty property="body.id" writeEntireProperty="true"/>
+    <body <decorator:getProperty property="body.id" writeEntireProperty="true"/>
           <decorator:getProperty property="body.ng-controller" writeEntireProperty="true"/>
           <decorator:getProperty property="body.ng-init" writeEntireProperty="true"/>
           <decorator:getProperty property="body.ng-class" writeEntireProperty="true"/>
