@@ -61,6 +61,8 @@ public class DefectServiceImpl implements DefectService {
 	private ApplicationDao applicationDao;
 	@Autowired
 	private TemplateBuilderService templateBuilderService;
+	@Autowired
+	private DefectTrackerService defectTrackerService;
 
 	private final SanitizedLogger log = new SanitizedLogger(DefectService.class);
 
@@ -118,6 +120,7 @@ public class DefectServiceImpl implements DefectService {
 
 		if (application != null) {
 			applicationService.decryptCredentials(application);
+			defectTrackerService.decryptCredentials(application.getDefectTracker());
 		}
 
 		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
