@@ -161,8 +161,6 @@ public class Application extends AuditableEntity {
 
     private List<Tag> tags = new ArrayList<Tag>();
 
-//    private Set<AcceptanceCriteria> acceptanceCriteriaSet = new HashSet<AcceptanceCriteria>(0);
-
 	@Column(length = NAME_LENGTH, nullable = false)
     @JsonView(Object.class) // This means it will be included in all ObjectWriters with Views.
 	public String getName() {
@@ -902,17 +900,7 @@ public class Application extends AuditableEntity {
         this.tags = tags;
     }
 
-//    @ManyToMany(mappedBy = "applications")
-//    @JsonIgnore
-//    public Set<AcceptanceCriteria> getAcceptanceCriteriaSet() {
-//        return acceptanceCriteriaSet;
-//    }
-//
-//    public void setAcceptanceCriteriaSet(Set<AcceptanceCriteria> acceptanceCriteriaSet) {
-//        this.acceptanceCriteriaSet = acceptanceCriteriaSet;
-//    }
-
-    @Override
+	@Override
 	public String toString() {
 		return name;
 	}
