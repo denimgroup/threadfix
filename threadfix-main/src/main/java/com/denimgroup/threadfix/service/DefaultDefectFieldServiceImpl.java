@@ -38,7 +38,12 @@ public class DefaultDefectFieldServiceImpl implements DefaultDefectFieldService 
 	public String getDefaultValueForVulns(DefaultDefectField defaultDefectField, List<Vulnerability> vulnerabilities) {
 		if (!defaultDefectField.isDynamicDefault()) return defaultDefectField.getStaticValue();
 		else {
-			String findingValueForTag = tagMappingService.evaluateTagValueForVulns(defaultDefectField.getDefaultTag(), vulnerabilities);
+			String findingValueForTag = null;
+			if (defaultDefectField.getDefaultTag() != null)
+				findingValueForTag = tagMappingService.evaluateTagValueForVulns(defaultDefectField.getDefaultTag(), vulnerabilities);
+			else { // instead of hardcore only one default tag for each DefaultDefectField, now we can be flexible by substituting @tag in dynamic values
+				findingValueForTag = tagMappingService.evaluateTagValueForVulnsFromPattern(defaultDefectField.getDynamicValue(), vulnerabilities);
+			}
 			if (!defaultDefectField.isValueMapping()) return findingValueForTag;
 			else {
 				Map<String, String> valueMappingMap = defaultDefectField.getValueMappingMap();
@@ -98,13 +103,9 @@ public class DefaultDefectFieldServiceImpl implements DefaultDefectFieldService 
 		DefaultDefectField parsedDefaultDefectField = new DefaultDefectField();
 		parsedDefaultDefectField.setValueMapping(false);
 
-		if (defaultValue.charAt(0) == TAG_WILDWARD){
-			String tagName = defaultValue.substring(1);
-			if (!tagMappingService.nameExists(tagName)) return null;
-			else {
-				parsedDefaultDefectField.setDynamicDefault(true);
-				parsedDefaultDefectField.setDefaultTag(tagMappingService.loadByName(tagName));
-			}
+		if (defaultValue.indexOf(TAG_WILDWARD) != -1) {
+			parsedDefaultDefectField.setDynamicDefault(true);
+			parsedDefaultDefectField.setDynamicValue(defaultValue);
 		}
 		else{
 			parsedDefaultDefectField.setDynamicDefault(false);
@@ -117,6 +118,7 @@ public class DefaultDefectFieldServiceImpl implements DefaultDefectFieldService 
 		try {
 			String tagName = valueMappingNode.get("tagName").getTextValue(); //will cause null pointer exception if protocol is not respected
 			JsonNode valueMapping = valueMappingNode.get("valueMapping");
+			String staticTagDisplayValue = valueMappingNode.get("staticDisplayValue").getTextValue(); // to maintain original form inputted
 
 			if (!tagMappingService.nameExists(tagName)) return null;
 
@@ -124,6 +126,7 @@ public class DefaultDefectFieldServiceImpl implements DefaultDefectFieldService 
 			parsedDefaultDefectField.setDefaultTag(tagMappingService.loadByName(tagName));
 			parsedDefaultDefectField.setValueMapping(true);
 			parsedDefaultDefectField.setDynamicDefault(true);
+			parsedDefaultDefectField.setStaticValue(staticTagDisplayValue);
 
 			List<String> validKeys = tagMappingService.getTagKeysOrNull(tagName);
 			Map<String,String> valueMappingMap = map();
