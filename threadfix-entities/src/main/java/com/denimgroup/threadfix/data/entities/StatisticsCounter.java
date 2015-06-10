@@ -158,7 +158,7 @@ public class StatisticsCounter extends BaseEntity {
             counter.channelSeverityId         = finding.getChannelSeverity().getId();
             counter.channelVulnerabilityId    = finding.getChannelVulnerability().getId();
             counter.currentGenericSeverityId  = finding.getVulnerability().getGenericSeverity().getId();
-            counter.genericVulnerabilityId = finding.getVulnerability().getGenericVulnerability().getId();
+            counter.genericVulnerabilityId    = finding.getVulnerability().getGenericVulnerability().getId();
             counter.originalGenericSeverityId = counter.currentGenericSeverityId;
             counter.finding = finding;
 

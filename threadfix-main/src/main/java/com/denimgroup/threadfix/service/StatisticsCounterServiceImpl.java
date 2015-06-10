@@ -186,10 +186,11 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
         Map<Integer, Long[]> scanStatsMap = getIntegerMap(orgID, appID);
 
-        applyStatistics(scans, scanStatsMap);
+        Map<Integer, Long> closedMap = getClosedMap(orgID, appID);
+        applyStatistics(scans, scanStatsMap, closedMap);
     }
 
-    private void applyStatistics(List<Scan> scans, Map<Integer, Long[]> scanStatsMap) {
+    private void applyStatistics(List<Scan> scans, Map<Integer, Long[]> scanStatsMap, Map<Integer, Long> closedMap) {
 
         Map<Integer, Long> totalsMap = getTotalsMap();
 
@@ -203,6 +204,13 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
                 scan.setNumberInfoVulnerabilities(stats[0]);
                 Long total = stats[0] + stats[1] + stats[2] + stats[3] + stats[4];
                 scan.setNumberTotalVulnerabilities(total.intValue());
+
+                Long numberClosed = closedMap.get(scan.getId());
+                if (numberClosed != null) {
+                    scan.setNumberClosedVulnerabilities(numberClosed.intValue());
+                } else {
+                    scan.setNumberClosedVulnerabilities(0);
+                }
 
                 Long originalTotal = totalsMap.get(scan.getId());
                 if (originalTotal != null) {
@@ -219,6 +227,13 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
                 scan.setNumberInfoVulnerabilities(0L);
                 scan.setNumberTotalVulnerabilities(0);
 
+                Long numberClosed = closedMap.get(scan.getId());
+                if (numberClosed != null) {
+                    scan.setNumberClosedVulnerabilities(numberClosed.intValue());
+                } else {
+                    scan.setNumberClosedVulnerabilities(0);
+                }
+
                 Long originalTotal = totalsMap.get(scan.getId());
                 if (originalTotal != null) {
                     scan.setNumberHiddenVulnerabilities(originalTotal.intValue());
@@ -230,6 +245,28 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
                 System.out.print("(");
             }
         }
+    }
+
+    private Map<Integer, Long> getClosedMap(int orgID, int appID) {
+
+        List<Integer> filteredSeverities = getFilteredSeverities(orgID, appID),
+                filteredVulnerabilities = getFilteredVulnerabilities(orgID, appID);
+
+        List<Integer> ignoredVulnerabilityIds =
+                vulnerabilityFilterDao.getIgnoredIds(filteredSeverities, filteredVulnerabilities);
+
+        List<Map<String, Object>> rawMap = vulnerabilityFilterDao.getScanClosedVulnerabilitiesMap(ignoredVulnerabilityIds);
+
+        Map<Integer, Long> returnMap = map();
+
+        for (Map<String, Object> innerMap : rawMap) {
+            Integer scanId = (Integer) innerMap.get("scanId");
+            Long    count  = (Long) innerMap.get("total");
+
+            returnMap.put(scanId, count);
+        }
+
+        return returnMap;
     }
 
     private Map<Integer, Long> getTotalsMap() {
