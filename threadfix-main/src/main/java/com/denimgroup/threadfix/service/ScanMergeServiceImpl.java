@@ -40,7 +40,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 // TODO figure out this Transactional stuff
 // TODO reorganize methods - not in a very good order right now.
@@ -278,17 +277,17 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	}
 
 	public void updateScanCounts(Scan scan) {
-		Map<String, Object> mapMap = scanDao.getMapSeverityMap(scan);
-		Map<String, Object> findingMap = scanDao.getFindingSeverityMap(scan);
-		if (mapMap.get("id").equals(scan.getId()) && mapMap.get("id").equals(scan.getId())) {
-			scan.setNumberInfoVulnerabilities((Long)mapMap.get("info") + (Long)findingMap.get("info"));
-			scan.setNumberLowVulnerabilities((Long)mapMap.get("low") + (Long)findingMap.get("low"));
-			scan.setNumberMediumVulnerabilities((Long)mapMap.get("medium") + (Long)findingMap.get("medium"));
-			scan.setNumberHighVulnerabilities((Long)mapMap.get("high") + (Long)findingMap.get("high"));
-			scan.setNumberCriticalVulnerabilities((Long)mapMap.get("critical") + (Long)findingMap.get("critical"));
-			scanDao.saveOrUpdate(scan);
-		} else {
-			log.warn("ID from the database didn't match the scan ID, counts will not be added to the scan.");
-		}
+//		Map<String, Object> mapMap = scanDao.getMapSeverityMap(scan);
+//		Map<String, Object> findingMap = scanDao.getFindingSeverityMap(scan);
+//		if (mapMap.get("id").equals(scan.getId()) && mapMap.get("id").equals(scan.getId())) {
+//			scan.setNumberInfoVulnerabilities((Long)mapMap.get("info") + (Long)findingMap.get("info"));
+//			scan.setNumberLowVulnerabilities((Long)mapMap.get("low") + (Long)findingMap.get("low"));
+//			scan.setNumberMediumVulnerabilities((Long)mapMap.get("medium") + (Long)findingMap.get("medium"));
+//			scan.setNumberHighVulnerabilities((Long)mapMap.get("high") + (Long)findingMap.get("high"));
+//			scan.setNumberCriticalVulnerabilities((Long)mapMap.get("critical") + (Long)findingMap.get("critical"));
+//			scanDao.saveOrUpdate(scan);
+//		} else {
+//			log.warn("ID from the database didn't match the scan ID, counts will not be added to the scan.");
+//		}
 	}
 }

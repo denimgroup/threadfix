@@ -109,4 +109,20 @@ public class HibernateStatisticsCounterDao
         Object idsMap = query.list();
         return (List<Map<String, Object>>) idsMap;
     }
+
+    @Override
+    public List<Map<String, Object>> getRawFindingTotalMap() {
+        String hql = "select new map (" +
+                "count(*) as total, " +
+                "counter.scanId as scanId) " +
+                "from StatisticsCounter counter ";
+
+        hql += "group by counter.scanId";
+
+        Query query = getSession().createQuery(hql);
+
+        Object idsMap = query.list();
+
+        return (List<Map<String, Object>>) idsMap;
+    }
 }

@@ -184,6 +184,70 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
     private void processScans(int orgID, int appID, List<Scan> scans) {
 
+        Map<Integer, Long[]> scanStatsMap = getIntegerMap(orgID, appID);
+
+        applyStatistics(scans, scanStatsMap);
+    }
+
+    private void applyStatistics(List<Scan> scans, Map<Integer, Long[]> scanStatsMap) {
+
+        Map<Integer, Long> totalsMap = getTotalsMap();
+
+        for (Scan scan : scans) {
+            if (scanStatsMap.containsKey(scan.getId())) {
+                Long[] stats = scanStatsMap.get(scan.getId());
+                scan.setNumberCriticalVulnerabilities(stats[4]);
+                scan.setNumberHighVulnerabilities(stats[3]);
+                scan.setNumberMediumVulnerabilities(stats[2]);
+                scan.setNumberLowVulnerabilities(stats[1]);
+                scan.setNumberInfoVulnerabilities(stats[0]);
+                Long total = stats[0] + stats[1] + stats[2] + stats[3] + stats[4];
+                scan.setNumberTotalVulnerabilities(total.intValue());
+
+                Long originalTotal = totalsMap.get(scan.getId());
+                if (originalTotal != null) {
+                    scan.setNumberHiddenVulnerabilities(originalTotal.intValue() - total.intValue());
+                }
+
+                scanDao.saveOrUpdate(scan);
+                System.out.print(")");
+            } else {
+                scan.setNumberCriticalVulnerabilities(0L);
+                scan.setNumberHighVulnerabilities(0L);
+                scan.setNumberMediumVulnerabilities(0L);
+                scan.setNumberLowVulnerabilities(0L);
+                scan.setNumberInfoVulnerabilities(0L);
+                scan.setNumberTotalVulnerabilities(0);
+
+                Long originalTotal = totalsMap.get(scan.getId());
+                if (originalTotal != null) {
+                    scan.setNumberHiddenVulnerabilities(originalTotal.intValue());
+                } else {
+                    scan.setNumberHiddenVulnerabilities(0);
+                }
+
+                scanDao.saveOrUpdate(scan);
+                System.out.print("(");
+            }
+        }
+    }
+
+    private Map<Integer, Long> getTotalsMap() {
+        List<Map<String, Object>> rawTotals =
+                statisticsCounterDao.getRawFindingTotalMap();
+
+        Map<Integer, Long> totalsMap = map();
+
+        for (Map<String, Object> rawTotal : rawTotals) {
+            Integer scanId = (Integer) rawTotal.get("scanId");
+            Long total = (Long) rawTotal.get("total");
+
+            totalsMap.put(scanId, total);
+        }
+        return totalsMap;
+    }
+
+    private Map<Integer, Long[]> getIntegerMap(int orgID, int appID) {
         List<Integer> filteredSeverities = getFilteredSeverities(orgID, appID),
                 filteredVulnerabilities = getFilteredVulnerabilities(orgID, appID);
 
@@ -205,20 +269,7 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
             scanStatsMap.get(scanId)[severity - 1] = total;
         }
 
-        for (Scan scan : scans) {
-            if (scanStatsMap.containsKey(scan.getId())) {
-                Long[] stats = scanStatsMap.get(scan.getId());
-                scan.setNumberCriticalVulnerabilities(stats[4]);
-                scan.setNumberHighVulnerabilities(stats[3]);
-                scan.setNumberMediumVulnerabilities(stats[2]);
-                scan.setNumberLowVulnerabilities(stats[1]);
-                scan.setNumberInfoVulnerabilities(stats[0]);
-                scanDao.saveOrUpdate(scan);
-                System.out.print(")");
-            } else {
-                System.out.print("(");
-            }
-        }
+        return scanStatsMap;
     }
 
     private List<Integer> getFilteredSeverities(int orgID, int appID) {

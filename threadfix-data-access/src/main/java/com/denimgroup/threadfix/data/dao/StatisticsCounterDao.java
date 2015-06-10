@@ -37,4 +37,7 @@ public interface StatisticsCounterDao extends GenericObjectDao<StatisticsCounter
 
     @SuppressWarnings("unchecked")
     List<Map<String, Object>> getFindingSeverityMap(List<Integer> filteredSeverities, List<Integer> filteredVulnerabilities);
+
+    List<Map<String,Object>> getRawFindingTotalMap();
+
 }
