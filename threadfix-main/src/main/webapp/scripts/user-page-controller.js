@@ -18,6 +18,12 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     var lastNumber = 0;
     var lastPage = 0;
 
+    $scope.activateTab = function(tab) {
+        $scope.active = {}; //reset
+        $scope.active[tab] = true;
+        $rootScope.title = tab[0].toUpperCase() + tab.substr(1);
+    };
+
     $scope.numberToShow = 20;
 
     var reloadList = function(callBack) {
@@ -281,7 +287,12 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
 
                     selectUserWithId($scope.currentUser.id);
                 } else {
-                    $scope.errorMessage = "Failure. Message was : " + data.message;
+
+                    if (data.errorMap && data.errorMap.name) {
+                        $scope.errorMessage = "Failure. " + data.errorMap.name;
+                    } else {
+                        $scope.errorMessage = "Failure. Message was : " + data.message;
+                    }
                 }
 
                 $scope.initialized = true;
@@ -516,6 +527,10 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     });
 
     $scope.addGroup = function(group) {
+        if (!group) {
+            return;
+        }
+
         $http.post(tfEncoder.encode('/groups/' + group.id + '/addUser/' + $scope.userId)).
             success(function(data) {
                 if (data.success) {
