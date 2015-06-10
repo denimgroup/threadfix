@@ -50,7 +50,7 @@ public class AcceptanceCriteria extends AuditableEntity {
 
 //    private List<Application> applications = new ArrayList<Application>();
 
-//    private FilterJsonBlob filterJsonBlob;
+    private FilterJsonBlob filterJsonBlob;
 
     @Column(length = NAME_LENGTH, nullable = false)
     @JsonView(Object.class) // This means it will be included in all ObjectWriters with Views.
@@ -75,15 +75,15 @@ public class AcceptanceCriteria extends AuditableEntity {
 //        this.applications = applications;
 //    }
 
-//    @OneToOne
-//    @JoinColumn(name = "filterJsonBlobId")
+    @OneToOne
+    @JoinColumn(name = "filterJsonBlobId")
 //    @JsonIgnore
-//    public FilterJsonBlob getFilterJsonBlob() {
-//        return filterJsonBlob;
-//    }
-//
-//    public void setFilterJsonBlob(FilterJsonBlob filterJsonBlob) {
-//        this.filterJsonBlob = filterJsonBlob;
-//    }
+    public FilterJsonBlob getFilterJsonBlob() {
+        return filterJsonBlob;
+    }
+
+    public void setFilterJsonBlob(FilterJsonBlob filterJsonBlob) {
+        this.filterJsonBlob = filterJsonBlob;
+    }
 
 }
