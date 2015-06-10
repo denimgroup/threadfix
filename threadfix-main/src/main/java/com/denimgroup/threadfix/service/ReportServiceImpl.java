@@ -78,6 +78,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
+    @Transactional(readOnly=false)
     public List<Report> loadByLocationType(ReportLocation location) {
         return reportDao.retrieveReportsByLocation(location);
     }
