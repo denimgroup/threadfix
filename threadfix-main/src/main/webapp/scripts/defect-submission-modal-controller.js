@@ -243,7 +243,7 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 "labelClass" : field.required ? "errors" : null,
                 "options" : calculateOptions(field),
                 "multiple" : field.supportsMultivalue,
-                //"val" : field.value
+                "val" : field.value
             };
 
             if (!field.required) {

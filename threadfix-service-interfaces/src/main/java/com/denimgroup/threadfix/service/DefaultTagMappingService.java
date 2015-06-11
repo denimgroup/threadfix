@@ -16,4 +16,6 @@ public interface DefaultTagMappingService extends GenericNamedObjectService<Defa
 	public List<Object> getTagsWithValueMappingFields();
 
 	public List<String> getTagKeysOrNull(String tagName);
+
+	String evaluateTagValueForVulnsFromPattern(String dynamicPattern, List<Vulnerability> vulnerabilities);
 }

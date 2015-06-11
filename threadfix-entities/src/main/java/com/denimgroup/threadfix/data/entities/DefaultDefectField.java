@@ -21,6 +21,7 @@ public class DefaultDefectField extends AuditableEntity {
 
 	private String fieldName;
 	private String staticValue;
+	private String dynamicValue;
 	private boolean dynamicDefault;
 	private boolean valueMapping;
 
@@ -62,6 +63,16 @@ public class DefaultDefectField extends AuditableEntity {
 
 	public void setStaticValue(String staticValue) {
 		this.staticValue = staticValue;
+	}
+
+	@Column
+	@JsonView(Object.class)
+	public String getDynamicValue() {
+		return dynamicValue;
+	}
+
+	public void setDynamicValue(String dynamicValue) {
+		this.dynamicValue = dynamicValue;
 	}
 
 	@Column(nullable = false)
