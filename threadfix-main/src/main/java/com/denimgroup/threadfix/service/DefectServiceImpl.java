@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.service.DefectDescriptionBuilder.makeDescription;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 @Service
 @Transactional(readOnly = false)
@@ -61,6 +61,8 @@ public class DefectServiceImpl implements DefectService {
 	private ApplicationDao applicationDao;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private TemplateBuilderService templateBuilderService;
 
 	private final SanitizedLogger log = new SanitizedLogger(DefectService.class);
 
@@ -185,7 +187,8 @@ public class DefectServiceImpl implements DefectService {
         DefectMetadata metadata = new DefectMetadata(editedSummary, editedPreamble,
                 component, version, severity, priority, status, fieldsMap);
 
-        String description = makeDescription(vulnsWithoutDefects, metadata);
+        Map<String,Object> templateModel = map("vulnerabilities", vulnsWithoutDefects, "metadata", metadata, "defectTrackerName", defectTrackerName);
+        String description = templateBuilderService.prepareMessageFromTemplate(templateModel, "defectDescription.vm");
         metadata.setFullDescription(description);
 
         String defectId = defectSubmissionService.submitDefect(dt, vulnsWithoutDefects, metadata);

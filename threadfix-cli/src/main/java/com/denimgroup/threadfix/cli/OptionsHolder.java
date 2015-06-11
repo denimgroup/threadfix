@@ -47,14 +47,13 @@ public class OptionsHolder {
         options.addOption(new Option("help", "Print this message" ));
 
         Option set = OptionBuilder.withArgName("property> <value")
-                .withValueSeparator(' ')
                 .hasArgs(2)
                 .withLongOpt("set")
                 .withDescription("Set either the url (ThreadFix base url) or key (ThreadFix API key) properties")
                 .create("s");
         options.addOption(set);
 
-        Option search = OptionBuilder.withValueSeparator(' ')
+        Option search = OptionBuilder
                 .hasOptionalArgs()
                 .withLongOpt("vulnerabilitySearch")
                 .withDescription("Query the vulnerabilities using various optional parameters. More information can " +
@@ -62,16 +61,14 @@ public class OptionsHolder {
                 .create("search");
         options.addOption(search);
 
-        Option queueScan = OptionBuilder.withArgName("applicationId> <scannerName")
-                .withValueSeparator(' ')
-                .hasArgs(2)
+        Option queueScan = OptionBuilder.withArgName("applicationId> <scannerName> <[scan profile Id]")
+                .hasArgs(3)
                 .withLongOpt("queueScan")
                 .withDescription("Queue a scan for the given applicationId with the given scanner type")
                 .create("q");
         options.addOption(queueScan);
 
         Option addAppUrl = OptionBuilder.withArgName("applicationId> <appUrl")
-                .withValueSeparator(' ')
                 .hasArgs(2)
                 .withLongOpt("addAppUrl")
                 .withDescription("Add URL for the given applicationId")
@@ -79,7 +76,6 @@ public class OptionsHolder {
         options.addOption(addAppUrl);
 
         Option setTaskConfig = OptionBuilder.withArgName("applicationId> <scannerName> <file")
-                .withValueSeparator(' ')
                 .hasArgs(3)
                 .withLongOpt("setTaskConfig")
                 .withDescription("Save the scan configuration for the given applicationId with the given scanner type")
@@ -87,7 +83,6 @@ public class OptionsHolder {
         options.addOption(setTaskConfig);
 
         Option setParameters = OptionBuilder.withArgName("appId> <frameworkType> <repositoryUrl")
-                .withValueSeparator(' ')
                 .hasArgs(3)
                 .withLongOpt("setParameters")
                 .withDescription("Set scan parameters. Available parameters can be found with --printScanOptions")
@@ -104,7 +99,6 @@ public class OptionsHolder {
         options.addOption(createTeam);
 
         Option createApp = OptionBuilder.withArgName("teamId> <name> <url")
-                .withValueSeparator(' ')
                 .hasArgs(3)
                 .withLongOpt("create-app")
                 .withDescription("Creates a ThreadFix application and returns its JSON.")
@@ -112,7 +106,6 @@ public class OptionsHolder {
         options.addOption(createApp);
 
         Option createWaf = OptionBuilder.withArgName("name> <wafTypeName")
-                .withValueSeparator(' ')
                 .hasArgs(2)
                 .withLongOpt("create-waf")
                 .withDescription("Creates a ThreadFix WAF and returns its JSON.")
@@ -120,7 +113,6 @@ public class OptionsHolder {
         options.addOption(createWaf);
 
         Option searchTeam = OptionBuilder.withArgName("property> <value")
-                .withValueSeparator(' ')
                 .hasArgs(2)
                 .withLongOpt("search-team")
                 .withDescription("Searches for a ThreadFix team and returns its JSON.")
@@ -128,7 +120,6 @@ public class OptionsHolder {
         options.addOption(searchTeam);
 
         Option searchWaf = OptionBuilder.withArgName("property> <value")
-                .withValueSeparator(' ')
                 .hasArgs(2)
                 .withLongOpt("search-waf")
                 .withDescription("Searches for a ThreadFix WAF and returns its JSON.")
@@ -136,7 +127,6 @@ public class OptionsHolder {
         options.addOption(searchWaf);
 
         Option searchApp = OptionBuilder.withArgName("property> <value1> <value2")
-                .withValueSeparator(' ')
                 .hasArgs(3)
                 .withLongOpt("search-app")
                 .withDescription("Searches for a ThreadFix application and returns its JSON.")
@@ -144,7 +134,6 @@ public class OptionsHolder {
         options.addOption(searchApp);
 
         Option upload = OptionBuilder.withArgName("appId> <file")
-                .withValueSeparator(' ')
                 .hasArgs(2)
                 .withLongOpt("upload")
                 .withDescription("Uploads a scan to the specified application.")

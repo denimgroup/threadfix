@@ -172,7 +172,7 @@ public class AddApplicationController {
 
             model.addAttribute("org",org);
             model.addAttribute("applicationTypes", FrameworkType.values());
-            model.addAttribute("tags", tagService.loadAll());
+            model.addAttribute("tags", tagService.loadAllApplicationTags());
             model.addAttribute("canSetDefectTracker", PermissionUtils.isAuthorized(
                     Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId));
 

@@ -482,6 +482,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Override
 	public void validateDefectTracker(Application application, BindingResult result) {
 		boolean hasNewDefectTracker = validateApplicationDefectTracker(application, result);
+		if (hasNewDefectTracker) application.setMainDefaultDefectProfile(null);
 		
 		if (hasNewDefectTracker || application.getDefectTracker() == null
 				&& application.getDefectList() != null) {

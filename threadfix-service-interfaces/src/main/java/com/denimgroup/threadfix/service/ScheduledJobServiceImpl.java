@@ -53,7 +53,7 @@ public abstract class ScheduledJobServiceImpl<S extends ScheduledJob> implements
         getScheduledJobDao().saveOrUpdate(scheduledJob);
         int scheduledJobId = scheduledJob.getId();
 
-        log.info("Created ScheduledJob with id: " + scheduledJobId);
+        log.info("Created or updated ScheduledJob with id: " + scheduledJobId);
 
         return scheduledJobId;
     }
@@ -109,4 +109,13 @@ public abstract class ScheduledJobServiceImpl<S extends ScheduledJob> implements
             scheduledJob.setDay(null);
         }
     }
+
+    /*
+     * this method should eventually be, but is not set abstract for the moment, because children classes (scheduleDefectTrackerUpdate,
+     * scheduledGRCupdate...) were not updated to use the new abstraction AbstractScheduledJobScheduler so don't need this method yet,
+     * and don't have it overridden in their service class
+     * */
+    public S getDefaultScheduledJob(){
+        return null;
+    };
 }

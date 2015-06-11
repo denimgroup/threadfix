@@ -37,6 +37,7 @@ public class ScheduledScan extends ScheduledJob {
 
 	private Application application;
     private String scanner;
+    private Document scanConfig;
 
 	@ManyToOne
 	@JoinColumn(name = "applicationId")
@@ -59,4 +60,13 @@ public class ScheduledScan extends ScheduledJob {
         this.scanner = scanner;
     }
 
+    @ManyToOne
+    @JsonView(Object.class)
+    public Document getScanConfig() {
+        return scanConfig;
+    }
+
+    public void setScanConfig(Document scanConfig) {
+        this.scanConfig = scanConfig;
+    }
 }

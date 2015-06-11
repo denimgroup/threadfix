@@ -44,4 +44,6 @@ public interface ScheduledJobService<S extends ScheduledJob> {
     public S loadById(int scheduledJobId);
 
     public void validateDate(S scheduledJob, BindingResult result);
+
+    public abstract S getDefaultScheduledJob();
 }
