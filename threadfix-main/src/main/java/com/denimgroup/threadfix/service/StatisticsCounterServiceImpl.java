@@ -186,11 +186,12 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
         Map<Integer, Long[]> scanStatsMap = getIntegerMap(orgID, appID);
 
-        Map<Integer, Long> closedMap = getClosedMap(orgID, appID);
-        applyStatistics(scans, scanStatsMap, closedMap);
+        Map<Integer, Long> closedMap   = getClosedMap(orgID, appID);
+        Map<Integer, Long> reopenedMap = getReopenedMap(orgID, appID);
+        applyStatistics(scans, scanStatsMap, closedMap, reopenedMap);
     }
 
-    private void applyStatistics(List<Scan> scans, Map<Integer, Long[]> scanStatsMap, Map<Integer, Long> closedMap) {
+    private void applyStatistics(List<Scan> scans, Map<Integer, Long[]> scanStatsMap, Map<Integer, Long> closedMap, Map<Integer, Long> reopenedMap) {
 
         Map<Integer, Long> totalsMap = getTotalsMap();
 
@@ -212,9 +213,18 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
                     scan.setNumberClosedVulnerabilities(0);
                 }
 
+                Long numberReopened = reopenedMap.get(scan.getId());
+                if (numberReopened != null) {
+                    scan.setNumberResurfacedVulnerabilities(numberReopened.intValue());
+                } else {
+                    scan.setNumberResurfacedVulnerabilities(0);
+                }
+
                 Long originalTotal = totalsMap.get(scan.getId());
                 if (originalTotal != null) {
                     scan.setNumberHiddenVulnerabilities(originalTotal.intValue() - total.intValue());
+                } else {
+                    scan.setNumberHiddenVulnerabilities(0);
                 }
 
                 scanDao.saveOrUpdate(scan);
@@ -234,6 +244,13 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
                     scan.setNumberClosedVulnerabilities(0);
                 }
 
+                Long numberReopened = reopenedMap.get(scan.getId());
+                if (numberReopened != null) {
+                    scan.setNumberResurfacedVulnerabilities(numberReopened.intValue());
+                } else {
+                    scan.setNumberResurfacedVulnerabilities(0);
+                }
+
                 Long originalTotal = totalsMap.get(scan.getId());
                 if (originalTotal != null) {
                     scan.setNumberHiddenVulnerabilities(originalTotal.intValue());
@@ -249,14 +266,22 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
     private Map<Integer, Long> getClosedMap(int orgID, int appID) {
 
-        List<Integer> filteredSeverities = getFilteredSeverities(orgID, appID),
-                filteredVulnerabilities = getFilteredVulnerabilities(orgID, appID);
-
-        List<Integer> ignoredVulnerabilityIds =
-                vulnerabilityFilterDao.getIgnoredIds(filteredSeverities, filteredVulnerabilities);
+        List<Integer> ignoredVulnerabilityIds = getVulnerabilityIdsToIgnore(orgID, appID);
 
         List<Map<String, Object>> rawMap = vulnerabilityFilterDao.getScanClosedVulnerabilitiesMap(ignoredVulnerabilityIds);
 
+        return condenseMap(rawMap);
+    }
+
+    private Map<Integer, Long> getReopenedMap(int orgID, int appID) {
+        List<Integer> ignoredVulnerabilityIds = getVulnerabilityIdsToIgnore(orgID, appID);
+
+        List<Map<String, Object>> rawMap = vulnerabilityFilterDao.getScanReopenedVulnerabilitiesMap(ignoredVulnerabilityIds);
+
+        return condenseMap(rawMap);
+    }
+
+    private Map<Integer, Long> condenseMap(List<Map<String, Object>> rawMap) {
         Map<Integer, Long> returnMap = map();
 
         for (Map<String, Object> innerMap : rawMap) {
@@ -269,19 +294,18 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
         return returnMap;
     }
 
+    private List<Integer> getVulnerabilityIdsToIgnore(int orgID, int appID) {
+        List<Integer> filteredSeverities = getFilteredSeverities(orgID, appID),
+                filteredVulnerabilities = getFilteredVulnerabilities(orgID, appID);
+
+        return vulnerabilityFilterDao.getIgnoredIds(filteredSeverities, filteredVulnerabilities);
+    }
+
     private Map<Integer, Long> getTotalsMap() {
         List<Map<String, Object>> rawTotals =
                 statisticsCounterDao.getRawFindingTotalMap();
 
-        Map<Integer, Long> totalsMap = map();
-
-        for (Map<String, Object> rawTotal : rawTotals) {
-            Integer scanId = (Integer) rawTotal.get("scanId");
-            Long total = (Long) rawTotal.get("total");
-
-            totalsMap.put(scanId, total);
-        }
-        return totalsMap;
+        return condenseMap(rawTotals);
     }
 
     private Map<Integer, Long[]> getIntegerMap(int orgID, int appID) {
