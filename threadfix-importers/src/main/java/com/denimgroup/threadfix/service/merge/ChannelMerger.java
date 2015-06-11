@@ -123,7 +123,7 @@ public class ChannelMerger {
             Vulnerability vulnerability = entry.getValue();
 
             // if the old ID is not present in the new scan and the vulnerabilty is open, close it
-            if (!scanHash.containsKey(nativeId) && vulnerability.isActive()) {
+            if (vulnerability != null && !scanHash.containsKey(nativeId) && vulnerability.isActive()) {
 
                 // we need to make sure ALL the findings are closed now
                 boolean shouldClose = true;
