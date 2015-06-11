@@ -186,8 +186,10 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
         Map<Integer, Long[]> scanStatsMap = getIntegerMap(orgID, appID);
 
-        Map<Integer, Long> closedMap   = getClosedMap(orgID, appID);
-        Map<Integer, Long> reopenedMap = getReopenedMap(orgID, appID);
+        List<Integer> ignoredVulnerabilityIds = getVulnerabilityIdsToIgnore(orgID, appID);
+
+        Map<Integer, Long> closedMap   = getClosedMap(ignoredVulnerabilityIds);
+        Map<Integer, Long> reopenedMap = getReopenedMap(ignoredVulnerabilityIds);
         applyStatistics(scans, scanStatsMap, closedMap, reopenedMap);
     }
 
@@ -264,18 +266,13 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
         }
     }
 
-    private Map<Integer, Long> getClosedMap(int orgID, int appID) {
-
-        List<Integer> ignoredVulnerabilityIds = getVulnerabilityIdsToIgnore(orgID, appID);
-
+    private Map<Integer, Long> getClosedMap(List<Integer> ignoredVulnerabilityIds) {
         List<Map<String, Object>> rawMap = vulnerabilityFilterDao.getScanClosedVulnerabilitiesMap(ignoredVulnerabilityIds);
 
         return condenseMap(rawMap);
     }
 
-    private Map<Integer, Long> getReopenedMap(int orgID, int appID) {
-        List<Integer> ignoredVulnerabilityIds = getVulnerabilityIdsToIgnore(orgID, appID);
-
+    private Map<Integer, Long> getReopenedMap(List<Integer> ignoredVulnerabilityIds) {
         List<Map<String, Object>> rawMap = vulnerabilityFilterDao.getScanReopenedVulnerabilitiesMap(ignoredVulnerabilityIds);
 
         return condenseMap(rawMap);
@@ -338,6 +335,10 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
         List<Integer> severityIds = list();
 
         SeverityFilter severityFilter = severityFilterService.loadFilter(orgID, appID);
+
+        if (severityFilter == null) {
+            return list();
+        }
 
         if (!severityFilter.getShowInfo()) {
             severityIds.add(1);
