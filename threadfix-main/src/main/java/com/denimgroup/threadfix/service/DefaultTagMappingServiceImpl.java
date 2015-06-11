@@ -1,21 +1,22 @@
 package com.denimgroup.threadfix.service;
 
-import java.util.List;
-import java.util.Map;
-
-import static com.denimgroup.threadfix.CollectionUtils.map;
-import static com.denimgroup.threadfix.CollectionUtils.list;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.denimgroup.threadfix.data.dao.DefaultTagDao;
 import com.denimgroup.threadfix.data.dao.GenericNamedObjectDao;
 import com.denimgroup.threadfix.data.entities.DefaultTag;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.framework.util.RegexUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.defaults.AbstractDefaultTagMapper;
 import com.denimgroup.threadfix.service.defects.defaults.DefaultTagMapperFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 @Service
 public class DefaultTagMappingServiceImpl extends AbstractNamedObjectService<DefaultTag> implements DefaultTagMappingService {
@@ -69,7 +70,20 @@ public class DefaultTagMappingServiceImpl extends AbstractNamedObjectService<Def
 	}
 
 	@Override
+	public String evaluateTagValueForVulnsFromPattern(String dynamicPattern, List<Vulnerability> vulnerabilities) {
+		List<String> tagStrList = RegexUtils.getRegexResults(dynamicPattern, Pattern.compile("@([\\S]+)"));
+		for (String tagStr: tagStrList) {
+			if (nameExists(tagStr)) {
+				String tagValue = evaluateTagValueForVulns(loadByName(tagStr), vulnerabilities);
+				dynamicPattern = dynamicPattern.replaceFirst("@" + tagStr, tagValue);
+			}
+		}
+		return dynamicPattern;
+	}
+
+	@Override
 	public GenericNamedObjectDao<DefaultTag> getDao() {
 		return defaultTagDao;
 	}
+
 }
