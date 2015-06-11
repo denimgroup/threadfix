@@ -73,7 +73,7 @@
                             <td><a class="btn" ng-click="openUpdateProfileModal(tracker,defaultProfile)">Edit/Delete</a></td>
 						</tr>
 						<tr
-							ng-show="tracker.defaultDefectProfiles.length==0 && tracker.showDefaultProfiles">
+							ng-show="(!tracker.defaultDefectProfiles || tracker.defaultDefectProfiles.length==0) && tracker.showDefaultProfiles">
 							<td>No existing profiles</td>
 						</tr>
 						<tr>
