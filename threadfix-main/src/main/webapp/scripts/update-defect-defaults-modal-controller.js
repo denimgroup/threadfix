@@ -100,10 +100,18 @@ myAppModule.controller('UpdateDefectDefaultsModalController', function ($scope, 
                 }
                 else {
                     if (!defaultField.valueMapping){
-                        $scope.fieldsMap[fieldName] = "@" + defaultField.defaultTag.name;
+                        if (defaultField.defaultTag)
+                            $scope.fieldsMap[fieldName] = "@" + defaultField.defaultTag.name;
+                        else
+                            $scope.fieldsMap[fieldName] = defaultField.dynamicValue;
                     }
                     //value mapping fields to populate with existing defaults
                     else {
+
+                        // maintain original form inputted
+                        if (defaultField.staticValue)
+                            $scope.fieldsMap[fieldName] = defaultField.staticValue;
+
                         var tagName = defaultField.defaultTag.name
                         $scope.valueMappingMap[fieldName].selectedTag = tagName;
                         $scope.valueMappingMap[fieldName][tagName] = {};
@@ -127,7 +135,8 @@ myAppModule.controller('UpdateDefectDefaultsModalController', function ($scope, 
             if (selectedTagName){
                 valueMapping = $scope.valueMappingMap[fieldName][selectedTagName];
                 if(Object.keys(valueMapping).length){ //check if the value mapping on the tag is not empty
-                    resultFieldsMap[fieldName] = {"tagName":selectedTagName, "valueMapping":valueMapping};
+                    resultFieldsMap[fieldName] = {"tagName":selectedTagName, "valueMapping":valueMapping,
+                    "staticDisplayValue" : resultFieldsMap[fieldName]};  // "staticDisplayValue" saves this value to maintain original form inputted
                 }
             }
         }
