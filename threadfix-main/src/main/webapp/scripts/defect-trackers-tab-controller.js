@@ -168,7 +168,7 @@ module.controller('DefectTrackersTabController', function($window, $scope, $http
     }
 
     $scope.openCreateProfileModal = function(tracker) {
-        if (tracker.applications == 0){
+        if (!tracker.applications || tracker.applications == 0){
             $scope.isMissingApplication[tracker.id] = true;
             return;
         }
