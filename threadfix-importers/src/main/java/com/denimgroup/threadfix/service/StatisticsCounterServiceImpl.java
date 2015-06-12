@@ -52,22 +52,24 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
     SeverityFilterService severityFilterService;
     @Autowired
     VulnerabilityFilterDao vulnerabilityFilterDao;
+    @Autowired
+    GenericSeverityDao genericSeverityDao;
 
     @Override
     public void updateStatistics(List<Scan> scans) {
-        checkStatisticsCounters();
-
         runQueries(scans);
     }
 
-    private void checkStatisticsCounters() {
-
+    @Override
+    public void checkStatisticsCounters() {
         addMissingFindingCounters();
         addMissingMapCounters();
     }
 
     private void addMissingMapCounters() {
         Long total = scanDao.totalMapsThatNeedCounters();
+
+        long start = System.currentTimeMillis();
 
         System.out.println("Total: " + total);
 
@@ -92,10 +94,14 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
             }
             current --;
         }
+
+        System.out.println("Took " + (System.currentTimeMillis() - start) + " ms to add missing map counters.");
     }
 
     private void addMissingFindingCounters() {
         Long total = scanDao.totalFindingsThatNeedCounters();
+
+        long start = System.currentTimeMillis();
 
         System.out.println("Total: " + total);
 
@@ -122,6 +128,8 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
             }
             current --;
         }
+
+        System.out.println("Took " + (System.currentTimeMillis() - start) + " ms to add missing finding counters.");
     }
 
     private void runQueries(List<Scan> scans) {
@@ -309,6 +317,8 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
         List<Integer> filteredSeverities = getFilteredSeverities(orgID, appID),
                 filteredVulnerabilities = getFilteredVulnerabilities(orgID, appID);
 
+        Map<Integer, Integer> genericSeverityIdToSeverityMap = generateGenericSeverityMap();
+
         List<Map<String, Object>> totalMap =
                 statisticsCounterDao.getFindingSeverityMap(filteredSeverities, filteredVulnerabilities);
 
@@ -324,10 +334,32 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
                 scanStatsMap.put(scanId, new Long[]{ 0L, 0L, 0L, 0L, 0L });
             }
 
-            scanStatsMap.get(scanId)[severity - 1] = total;
+            scanStatsMap.get(scanId)[getSeverityIndex(genericSeverityIdToSeverityMap, severity)] = total;
         }
 
         return scanStatsMap;
+    }
+
+    private int getSeverityIndex(Map<Integer, Integer> genericSeverityIdToSeverityMap, Integer severity) {
+
+        if (genericSeverityIdToSeverityMap.containsKey(severity)) {
+            return genericSeverityIdToSeverityMap.get(severity);
+        } else {
+            throw new IllegalStateException("Got an unrecognized generic severity ID: " + severity);
+        }
+    }
+
+    private Map<Integer, Integer> generateGenericSeverityMap() {
+
+        List<GenericSeverity> severities = genericSeverityDao.retrieveAll();
+
+        Map<Integer, Integer> returnMap = map();
+
+        for (GenericSeverity severity : severities) {
+            returnMap.put(severity.getId(), severity.getIntValue() - 1);
+        }
+
+        return returnMap;
     }
 
     private List<Integer> getFilteredSeverities(int orgID, int appID) {

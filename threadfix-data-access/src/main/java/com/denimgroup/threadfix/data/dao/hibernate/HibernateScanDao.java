@@ -497,6 +497,7 @@ public class HibernateScanDao
 
 	private Criteria getBaseCounterCriteria() {
 		return sessionFactory.getCurrentSession().createCriteria(Finding.class)
+				.add(eq("firstFindingForVuln", true))
 				.add(isEmpty("statisticsCounters"))
 				;
 	}

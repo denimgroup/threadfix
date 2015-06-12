@@ -181,6 +181,7 @@ public class HibernateApplicationDao implements ApplicationDao {
         criteria.createAlias("vulnerabilities", "vulnerability");
         criteria.add(Restrictions.eq("active", true));
         criteria.add(Restrictions.eq("vulnerability.active", true));
+        criteria.add(Restrictions.eq("vulnerability.hidden", false));
         criteria.add(Restrictions.eq("vulnerability.isFalsePositive", false));
 
         if (teamIdList.isEmpty() || applicationIdList.isEmpty()) {

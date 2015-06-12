@@ -34,4 +34,5 @@ public interface StatisticsCounterService {
 
     void updateStatistics(List<Scan> scan);
 
+    void checkStatisticsCounters();
 }
