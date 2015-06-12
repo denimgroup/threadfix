@@ -112,12 +112,12 @@ public class TagDetailPageIT extends BaseDataTest {
                 .addComment("Critical790")
                 .attachTag(tagName)
                 .setComment(teamName + appName)
-                .clickModalSubmit();
+                .clickSubmitComment();
 
         applicationDetailPage.expandCommentSection("Critical791")
                 .addComment("Critical791")
                 .setComment(teamName + appName)
-                .clickModalSubmit();
+                .clickSubmitComment();
 
         TagDetailPage tagDetailPage = applicationDetailPage.clickTagsLink()
                 .clickTagName(tagName);
@@ -168,8 +168,8 @@ public class TagDetailPageIT extends BaseDataTest {
                 .addComment("Critical790")
                 .attachTag(tagName)
                 .setComment(teamName + appName)
-                .clickModalSubmit();
-
+                .clickSubmitComment();
+        //TODO: update rest of test after 1552 is resolved
         TagDetailPage tagDetailPage = applicationDetailPage.clickTagName(tagName);
 
         assertTrue("Comment tag link navigation failed", tagDetailPage.isLinkPresent(appName));
@@ -191,7 +191,7 @@ public class TagDetailPageIT extends BaseDataTest {
                 .addComment("Critical790")
                 .attachTag(tagName)
                 .setComment(teamName + appName)
-                .clickModalSubmit();
+                .clickSubmitComment();
 
         applicationDetailPage.waitForElement(driver.findElement(By.id("viewMoreLinkCritical790")));
 
