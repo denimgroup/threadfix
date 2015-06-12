@@ -1,7 +1,7 @@
 var module = angular.module('threadfix');
 
 //essentially a copy of BulkOperationsController, copy and not factorized to avoid conflicts in the future
-module.controller('VulnOperationsController', function($rootScope, $http, $log, $modal, tfEncoder, $scope) {
+module.controller('VulnOperationsController', function($window, $rootScope, $http, $log, $modal, tfEncoder, $scope) {
 
     var $parent = $scope.$parent;
 
@@ -63,7 +63,7 @@ module.controller('VulnOperationsController', function($rootScope, $http, $log, 
 
         modalInstance.result.then(function (s) {
             $scope.refresh();
-            $rootScope.$broadcast('successMessage', s);
+            $parent.successMessage = s;
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
@@ -120,7 +120,7 @@ module.controller('VulnOperationsController', function($rootScope, $http, $log, 
 
         modalInstance.result.then(function (s) {
             $scope.refresh();
-            $rootScope.$broadcast('successMessage', "Successfully submitted the defect: " + s);
+            $parent.successMessage = "Successfully submitted the defect: " + s;
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
@@ -171,11 +171,52 @@ module.controller('VulnOperationsController', function($rootScope, $http, $log, 
         modalInstance.result.then(function (returnValue) {
 
             $scope.refresh();
-            $rootScope.$broadcast('successMessage', returnValue);
+            $parent.successMessage = returnValue;
+
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
     };
 
-    //Cropping the end that is not necessary for the single vuln
+    $scope.closeVuln = function(){
+        var url = tfEncoder.encode(getAppUrlBase() + "/vulnerabilities/" + $scope.vulnerability.id + "/close");
+        sendGetRequest(url);
+    };
+
+    $scope.openVuln = function(){
+        var url = tfEncoder.encode(getAppUrlBase() + "/vulnerabilities/" + $scope.vulnerability.id + "/open");
+        sendGetRequest(url);
+    };
+
+    $scope.markFalsePositive = function(){
+        var url = tfEncoder.encode(getAppUrlBase() + "/vulnerabilities/" + $scope.vulnerability.id + "/markFalsePositive");
+        sendGetRequest(url);
+    };
+
+    $scope.unmarkFalsePositive = function(){
+        var url = tfEncoder.encode(getAppUrlBase() + "/vulnerabilities/" + $scope.vulnerability.id + "/markNotFalsePositive");
+        sendGetRequest(url);
+    };
+
+    $scope.viewDefect = function(){
+        $window.location.href = tfEncoder.encode(getAppUrlBase() + "/vulnerabilities/" + $scope.vulnerability.id + "/defect");
+
+    };
+
+    var sendGetRequest = function(url) {
+        $http.get(url).
+            success(function(data, status, headers, config) {
+                if (data.success) {
+                    $parent.successMessage = data.object;
+                    $scope.refresh();
+
+                } else {
+                    $parent.errorMessage = "Failure. Message was : " + data.message;
+                }
+            }).
+            error(function(data, status, headers, config) {
+                $parent.errorMessage = "Failed to retrieve waf list. HTTP status was " + status;
+            });
+    }
+
 });
