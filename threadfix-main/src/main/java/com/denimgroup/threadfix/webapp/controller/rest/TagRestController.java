@@ -58,10 +58,11 @@ public class TagRestController {
     OrganizationService organizationService;
 
     @RequestMapping(value = "create", method = RequestMethod.POST)
-    public @ResponseBody RestResponse<Tag> createTag(@RequestParam String tagname) {
+    public @ResponseBody RestResponse<Tag> createTag(@RequestParam String tagname, @RequestParam Boolean commenttag) {
         Tag tag = new Tag();
 
         tag.setName(tagname);
+        tag.setTagForComment(commenttag);
 
         tagService.storeTag(tag);
 

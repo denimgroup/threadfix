@@ -42,7 +42,7 @@ public class TagDetailPageIT extends BaseDataTest {
     @Test
     public void testAttachTagToApp() {
         initializeTeamAndApp();
-        String tagName = createTag();
+        String tagName = createTag(false);
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -63,7 +63,7 @@ public class TagDetailPageIT extends BaseDataTest {
     public void testCorrectNumberOfApps() {
         initializeTeamAndApp();
         String appName2 = createApplication(teamName);
-        String tagName = createTag();
+        String tagName = createTag(false);
         DatabaseUtils.attachAppToTag(tagName,appName,teamName);
         DatabaseUtils.attachAppToTag(tagName,appName2,teamName);
 
@@ -77,7 +77,7 @@ public class TagDetailPageIT extends BaseDataTest {
     @Test
     public void testAttachTagToComment() {
         initializeTeamAndAppWithIbmScan();
-        String tagName = createTag();
+        String tagName = createTag(true);
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -89,7 +89,7 @@ public class TagDetailPageIT extends BaseDataTest {
                 .addComment("Critical790")
                 .attachTag(tagName)
                 .setComment(teamName + appName)
-                .clickModalSubmit();
+                .clickSubmitComment();
 
         TagDetailPage tagDetailPage = applicationDetailPage.clickTagsLink()
                 .clickTagName(tagName);
@@ -100,7 +100,7 @@ public class TagDetailPageIT extends BaseDataTest {
     @Test
     public void testCorrectNumberOfComments() {
         initializeTeamAndAppWithIbmScan();
-        String tagName = createTag();
+        String tagName = createTag(true);
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -128,7 +128,7 @@ public class TagDetailPageIT extends BaseDataTest {
     @Test
     public void testAppLinkNavigation() {
         initializeTeamAndApp();
-        String tagName = createTag();
+        String tagName = createTag(false);
         DatabaseUtils.attachAppToTag(tagName,appName,teamName);
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
@@ -142,7 +142,7 @@ public class TagDetailPageIT extends BaseDataTest {
     @Test
     public void testTeamLinkNavigation() {
         initializeTeamAndApp();
-        String tagName = createTag();
+        String tagName = createTag(false);
         DatabaseUtils.attachAppToTag(tagName,appName,teamName);
 
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
@@ -156,7 +156,7 @@ public class TagDetailPageIT extends BaseDataTest {
     @Test
     public void testCommentTagLinkNavigation() {
         initializeTeamAndAppWithIbmScan();
-        String tagName = createTag();
+        String tagName = createTag(true);
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -178,8 +178,8 @@ public class TagDetailPageIT extends BaseDataTest {
     @Test
     public void testUpdateCommentTag() {
         initializeTeamAndAppWithIbmScan();
-        String tagName = createTag();
-        String tagName2 = createTag();
+        String tagName = createTag(true);
+        String tagName2 = createTag(true);
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -214,7 +214,7 @@ public class TagDetailPageIT extends BaseDataTest {
     @Test
     public void testTagHeaderNavigation() {
         initializeTeamAndApp();
-        String tagName = createTag();
+        String tagName = createTag(false);
         DatabaseUtils.attachAppToTag(tagName,appName,teamName);
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()

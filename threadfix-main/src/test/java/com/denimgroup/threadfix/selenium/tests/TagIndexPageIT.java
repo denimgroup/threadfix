@@ -51,7 +51,7 @@ public class TagIndexPageIT extends BaseDataTest{
 
     @Test
     public void testDeleteTag() {
-        String tagName = createTag();
+        String tagName = createTag(false);
 
         TagIndexPage tagIndexPage = loginPage.defaultLogin()
                 .clickTagsLink()
@@ -62,7 +62,7 @@ public class TagIndexPageIT extends BaseDataTest{
 
     @Test
     public void testEditTag() {
-        String tagName = createTag();
+        String tagName = createTag(false);
         String newName = getName();
 
         TagIndexPage tagIndexPage = loginPage.defaultLogin()
@@ -75,7 +75,7 @@ public class TagIndexPageIT extends BaseDataTest{
 
     @Test
     public void testTagNameNavigation() {
-        String tagName = createTag();
+        String tagName = createTag(false);
 
         loginPage.defaultLogin()
                 .clickTagsLink()

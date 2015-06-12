@@ -563,6 +563,12 @@ public class ApplicationDetailPage extends BasePage {
         return this;
     }
 
+    public ApplicationDetailPage clickSubmitComment() {
+        driver.findElementById("submit").click();
+        sleep(2000);
+        return new ApplicationDetailPage(driver);
+    }
+
     public TagDetailPage clickTagName(String tagName) {
         driver.findElementByLinkText(tagName).click();
         waitForElement(driver.findElementByLinkText("Back to Tags Page"));
@@ -861,6 +867,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage attachTag(String tagName) {
         driver.findElementByXPath("//*[@id=\"tagSelect\"]/button").click();
+        driver.findElementByXPath("//*[@id=\'tagSelect\']//input[contains(@class,'inputFilter')]").sendKeys(tagName);
         driver.findElementById(tagName).click();
         driver.findElementByXPath("//*[@id=\"tagSelect\"]/button").click();
         return this;

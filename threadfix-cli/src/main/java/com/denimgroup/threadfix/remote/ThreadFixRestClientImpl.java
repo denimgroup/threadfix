@@ -333,10 +333,10 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 
     //QA only
     @Override
-    public RestResponse<Tag> createTag(String tagname) {
+    public RestResponse<Tag> createTag(String tagname, Boolean commentTag) {
         return httpRestUtils.httpPost("/tag/create",
-                new String[] {"tagname"},
-                new String[] {tagname}, Tag.class);
+                new String[] {"tagname", "commenttag"},
+                new String[] {tagname, String.valueOf(commentTag)}, Tag.class);
     }
 
     //QA only

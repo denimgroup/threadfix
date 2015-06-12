@@ -103,7 +103,7 @@ public interface ThreadFixRestClient {
     public RestResponse<Role> removePermission(String roleName, String permission);
 
     // QA only
-    public RestResponse<Tag> createTag(String tagname);
+    public RestResponse<Tag> createTag(String tagname, Boolean commentTag);
     // QA only
     public RestResponse<Tag> attachAppToTag(String tagname, String appname, String teamname);
 

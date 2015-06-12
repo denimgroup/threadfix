@@ -168,9 +168,9 @@ public abstract class BaseIT {
         return roleName;
     }
 
-    protected String createTag() {
+    protected String createTag(Boolean commentTag) {
         String tagName = getName();
-        DatabaseUtils.createTag(tagName);
+        DatabaseUtils.createTag(tagName, commentTag);
         return tagName;
     }
 
