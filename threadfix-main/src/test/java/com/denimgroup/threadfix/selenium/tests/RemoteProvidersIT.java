@@ -130,13 +130,13 @@ public class RemoteProvidersIT extends BaseDataTest {
 	public void testInvalidWhiteHat(){
         remoteProvidersIndexPage.clearPreviousWhiteHat()
                 .clickConfigureWhiteHat()
-                .setWhiteHatAPI("This should't Work!")
+                .setWhiteHatAPI("ThisShould'tWork!")
                 .clickSubmitWait();
 
         remoteProvidersIndexPage.sleep(1000);
 
 		assertTrue("Incorrect credentials accepted",
-                remoteProvidersIndexPage.getErrorMessage().contains("Failure. undefined"));
+                remoteProvidersIndexPage.getErrorMessage().contains("Failure. Unable to retrieve applications. WhiteHat response status:"));
 	}
 
 	@Test
@@ -778,10 +778,10 @@ public class RemoteProvidersIT extends BaseDataTest {
                 .setContrastService(CONTRAST_SERVICE_KEY)
                 .saveContrast();
 
-        remoteProvidersIndexPage.clickEditName("4","0").setNewName(newName);
+        remoteProvidersIndexPage.clickEditName("7","0").setNewName(newName);
 
         assertTrue("Application name did not update properly",
-                driver.findElement(By.cssSelector("td[id^=provider4appid]")).getText().equals(newName));
+                driver.findElement(By.cssSelector("td[id^=provider7appid]")).getText().equals(newName));
 
         //Runtime Fix
         remoteProvidersIndexPage.refreshPage();
