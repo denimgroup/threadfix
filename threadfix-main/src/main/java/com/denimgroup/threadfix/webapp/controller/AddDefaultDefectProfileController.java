@@ -37,7 +37,7 @@ public class AddDefaultDefectProfileController {
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields("name", "defectTracker.id", "referenceApplication.id");
+		dataBinder.setAllowedFields("id", "name", "defectTracker.id", "referenceApplication.id");
 	}
 
 	@JsonView(AllViews.DefectTrackerInfos.class)
@@ -51,12 +51,14 @@ public class AddDefaultDefectProfileController {
 
 		if (defaultDefectProfile.getDefectTracker() == null ||
 				defectTrackerService.loadDefectTracker(defaultDefectProfile.getDefectTracker().getId()) == null) {
-			result.rejectValue("defectTracker.id", MessageConstants.ERROR_INVALID);
+			return FormRestResponse.failure("Defect Tracker is invalid.",result);
 		}
 		if (defaultDefectProfile.getReferenceApplication() == null ||
 				applicationService.loadApplication(defaultDefectProfile.getReferenceApplication().getId()) == null) {
-			result.rejectValue("referenceApplication.id", MessageConstants.ERROR_INVALID);
+			result.rejectValue("referenceApplication.id", null, null, "Reference Application is invalid.");
 		}
+
+		defaultDefectProfileService.validateName(defaultDefectProfile, result);
 
 		if (result.hasErrors()) {
 			return FormRestResponse.failure("Found some errors.",result);

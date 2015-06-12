@@ -6,6 +6,7 @@
     <%@ include file="../modals/createDTModal.jsp" %>
     <%@ include file="../modals/updateDefectDefaultModal.jsp" %>
     <%@ include file="../modals/createDefaultProfileModal.jsp" %>
+    <%@ include file="../modals/updateDefaultProfileModal.jsp" %>
 
     <div id="helpText">
         A Defect Tracker is the ThreadFix link that allows the user to bundle and export
@@ -60,19 +61,19 @@
 							<th>Profile</th>
 							<th>Reference Application</th>
 							<th class="centered">Update Defect Defaults</th>
-							<th class="centered">Delete Profile</th>
+							<th class="last">Edit/Delete</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr ng-repeat="defaultProfile in tracker.defaultDefectProfiles">
 							<td>{{ defaultProfile.name }}</td>
-							<td>{{ defaultProfile.referenceApplication.name }}</td>
+							<td><a class="pointer" ng-click="goToApp(defaultProfile.referenceApplication)">{{ defaultProfile.referenceApplication.team.name + ' / ' + defaultProfile.referenceApplication.name }}</a></td>
 							<td><a class="centered btn"	ng-click="openUpdateDefectDefaultsModal(defaultProfile)">Set Defaults</a>
 							</td>
-							<td><a class="centered btn" ng-click="deleteDefaultProfile(tracker,defaultProfile)">Delete Profile</a></td>
+                            <td><a class="btn" ng-click="openUpdateProfileModal(tracker,defaultProfile)">Edit/Delete</a></td>
 						</tr>
 						<tr
-							ng-show="tracker.defaultDefectProfiles.length==0 && tracker.showDefaultProfiles">
+							ng-show="(!tracker.defaultDefectProfiles || tracker.defaultDefectProfiles.length==0) && tracker.showDefaultProfiles">
 							<td>No existing profiles</td>
 						</tr>
 						<tr>
