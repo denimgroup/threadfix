@@ -33,8 +33,6 @@ public class DefaultDefectProfileController {
 	private DefectTrackerService defectTrackerService;
 	@Autowired
 	private DefaultDefectProfileService defaultDefectProfileService;
-	@Autowired
-	private DefaultDefectProfileDao defaultDefectProfiledao;
 
 	@JsonView(Object.class)
 	@RequestMapping(value = "profiles/{defectTrackerId}", method = RequestMethod.GET)

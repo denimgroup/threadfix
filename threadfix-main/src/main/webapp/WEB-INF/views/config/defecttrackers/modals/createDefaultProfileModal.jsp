@@ -1,6 +1,6 @@
 <script type="text/ng-template" id="createDefaultProfileModal.html">
     <div class="modal-header">
-        <h4 id="myModalLabel">New Default Profile</h4>
+        <h4 id="myModalLabel">New Defect Profile</h4>
     </div>
     <div ng-form="form" class="modal-body">
         <table class="modal-form-table">
