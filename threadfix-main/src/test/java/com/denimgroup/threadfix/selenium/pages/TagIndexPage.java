@@ -41,8 +41,25 @@ public class TagIndexPage extends BasePage{
         return new TagIndexPage(driver);
     }
 
+    public TagIndexPage createNewCommentTag(String name) {
+        driver.findElementById("createTagModalButton").click();
+        driver.findElementById("tagCreateNameInput").sendKeys(name);
+        driver.findElementById("vulnCommentTag").click();
+        clickModalSubmit();
+        return new TagIndexPage(driver);
+    }
+
     public TagIndexPage deleteTag(String name) {
         driver.findElementById("editTagModalButton" + name).click();
+        waitForElement(driver.findElementById("deleteTagButton"));
+        driver.findElementById("deleteTagButton").click();
+        driver.switchTo().alert().accept();
+        sleep(1000);
+        return new TagIndexPage(driver);
+    }
+
+    public TagIndexPage deleteCommentTag(String name) {
+        driver.findElementById("editCommentTagModalButton" + name).click();
         waitForElement(driver.findElementById("deleteTagButton"));
         driver.findElementById("deleteTagButton").click();
         driver.switchTo().alert().accept();
@@ -60,6 +77,16 @@ public class TagIndexPage extends BasePage{
         return new TagIndexPage(driver);
     }
 
+    public TagIndexPage editCommentTagName(String tagName, String newName) {
+        driver.findElementById("editCommentTagModalButton" + tagName).click();
+        waitForElement(driver.findElementById("tagCreateNameInput"));
+        driver.findElementById("tagCreateNameInput").clear();
+        driver.findElementById("tagCreateNameInput").sendKeys(newName);
+        driver.findElementById("submit").click();
+        sleep(10000);
+        return new TagIndexPage(driver);
+    }
+
     public TagDetailPage clickTagName(String name) {
         driver.findElementByLinkText(name).click();
         waitForElement(driver.findElementByLinkText("Back to Tags Page"));
@@ -68,5 +95,7 @@ public class TagIndexPage extends BasePage{
 
     /*------------------------------ Boolean Methods ------------------------------*/
 
-    public boolean isTagNameLinkPresent(String name) { return !driver.findElements(By.id("tagName" + name)).isEmpty(); }
+    public boolean isAppTagNameLinkPresent(String name) { return !driver.findElements(By.id("tagName" + name)).isEmpty(); }
+
+    public boolean isCommentTagNameLinkPresent(String name) { return !driver.findElements(By.id("commentTagName" + name)).isEmpty(); }
 }

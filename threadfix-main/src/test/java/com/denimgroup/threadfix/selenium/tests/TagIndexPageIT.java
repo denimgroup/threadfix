@@ -46,7 +46,7 @@ public class TagIndexPageIT extends BaseDataTest{
                 .clickTagsLink()
                 .createNewTag(tagName);
 
-        assertTrue("Tag was not created properly", tagIndexPage.isTagNameLinkPresent(tagName));
+        assertTrue("Tag was not created properly", tagIndexPage.isAppTagNameLinkPresent(tagName));
     }
 
     @Test
@@ -57,7 +57,7 @@ public class TagIndexPageIT extends BaseDataTest{
                 .clickTagsLink()
                 .deleteTag(tagName);
 
-        assertTrue("Tag was not deleted properly", !tagIndexPage.isTagNameLinkPresent(tagName));
+        assertTrue("Tag was not deleted properly", !tagIndexPage.isAppTagNameLinkPresent(tagName));
     }
 
     @Test
@@ -69,8 +69,8 @@ public class TagIndexPageIT extends BaseDataTest{
                 .clickTagsLink()
                 .editTagName(tagName,newName);
 
-        assertTrue("Old tag name was not deleted properly", !tagIndexPage.isTagNameLinkPresent(tagName));
-        assertTrue("New tag name was no added properly ", tagIndexPage.isTagNameLinkPresent(newName));
+        assertTrue("Old tag name was not deleted properly", !tagIndexPage.isAppTagNameLinkPresent(tagName));
+        assertTrue("New tag name was no added properly ", tagIndexPage.isAppTagNameLinkPresent(newName));
     }
 
     @Test
@@ -82,6 +82,53 @@ public class TagIndexPageIT extends BaseDataTest{
                 .clickTagName(tagName);
 
         assertTrue("Tag name did not navigate correctly",
+                driver.findElement(By.linkText("Back to Tags Page")).isEnabled());
+    }
+
+    @Test
+    public void testCreateCommentTag() {
+        String tagName = getName();
+
+        TagIndexPage tagIndexPage = loginPage.defaultLogin()
+                .clickTagsLink()
+                .createNewCommentTag(tagName);
+
+        assertTrue("Comment Tag was not created properly", tagIndexPage.isCommentTagNameLinkPresent(tagName));
+    }
+
+    @Test
+    public void testDeleteCommentTag() {
+        String tagName = createTag(true);
+
+        TagIndexPage tagIndexPage = loginPage.defaultLogin()
+                .clickTagsLink()
+                .deleteCommentTag(tagName);
+
+        assertTrue("Comment Tag was not deleted properly", !tagIndexPage.isCommentTagNameLinkPresent(tagName));
+    }
+
+    @Test
+    public void testEditCommentTag() {
+        String tagName = createTag(true);
+        String newName = getName();
+
+        TagIndexPage tagIndexPage = loginPage.defaultLogin()
+                .clickTagsLink()
+                .editCommentTagName(tagName, newName);
+
+        assertTrue("Old comment tag name was not deleted properly", !tagIndexPage.isCommentTagNameLinkPresent(tagName));
+        assertTrue("New comment tag name was no added properly ", tagIndexPage.isCommentTagNameLinkPresent(newName));
+    }
+
+    @Test
+    public void testCommentTagNameNavigation() {
+        String tagName = createTag(true);
+
+        loginPage.defaultLogin()
+                .clickTagsLink()
+                .clickTagName(tagName);
+
+        assertTrue("Comment Tag name did not navigate correctly",
                 driver.findElement(By.linkText("Back to Tags Page")).isEnabled());
     }
 }

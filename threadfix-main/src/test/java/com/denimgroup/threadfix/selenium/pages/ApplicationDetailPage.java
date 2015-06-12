@@ -563,12 +563,6 @@ public class ApplicationDetailPage extends BasePage {
         return this;
     }
 
-    public ApplicationDetailPage clickSubmitComment() {
-        driver.findElementById("submit").click();
-        sleep(2000);
-        return new ApplicationDetailPage(driver);
-    }
-
     public TagDetailPage clickTagName(String tagName) {
         driver.findElementByLinkText(tagName).click();
         waitForElement(driver.findElementByLinkText("Back to Tags Page"));

@@ -496,9 +496,9 @@ public abstract class BasePage {
         wait.until(ExpectedConditions.elementToBeClickable(e));
     }
 
-	public void waitForInvisibleElement(WebElement e){
+	public void waitForInvisibleElement(String id){
 		WebDriverWait wait = new WebDriverWait(driver,10);
-		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(e.getAttribute("id"))));
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(id)));
 	}
 
     public void takeScreenShot() {
@@ -616,9 +616,8 @@ public abstract class BasePage {
 
     @SuppressWarnings("unchecked")
     public <T extends BasePage> T clickModalSubmit(Class<T> targetClass) {
-        WebElement button = driver.findElementById("submit");
-        button.click();
-        waitForInvisibleElement(button);
+        driver.findElementById("submit").click();
+        waitForInvisibleElement("submit");
 
         return (T) this;
     }

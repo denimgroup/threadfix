@@ -89,7 +89,7 @@ public class TagDetailPageIT extends BaseDataTest {
                 .addComment("Critical790")
                 .attachTag(tagName)
                 .setComment(teamName + appName)
-                .clickSubmitComment();
+                .clickModalSubmit();
 
         TagDetailPage tagDetailPage = applicationDetailPage.clickTagsLink()
                 .clickTagName(tagName);
@@ -112,12 +112,12 @@ public class TagDetailPageIT extends BaseDataTest {
                 .addComment("Critical790")
                 .attachTag(tagName)
                 .setComment(teamName + appName)
-                .clickSubmitComment();
+                .clickModalSubmit();
 
         applicationDetailPage.expandCommentSection("Critical791")
                 .addComment("Critical791")
                 .setComment(teamName + appName)
-                .clickSubmitComment();
+                .clickModalSubmit();
 
         TagDetailPage tagDetailPage = applicationDetailPage.clickTagsLink()
                 .clickTagName(tagName);
@@ -168,7 +168,7 @@ public class TagDetailPageIT extends BaseDataTest {
                 .addComment("Critical790")
                 .attachTag(tagName)
                 .setComment(teamName + appName)
-                .clickSubmitComment();
+                .clickModalSubmit();
         //TODO: update rest of test after 1552 is resolved
         TagDetailPage tagDetailPage = applicationDetailPage.clickTagName(tagName);
 
@@ -191,7 +191,7 @@ public class TagDetailPageIT extends BaseDataTest {
                 .addComment("Critical790")
                 .attachTag(tagName)
                 .setComment(teamName + appName)
-                .clickSubmitComment();
+                .clickModalSubmit();
 
         applicationDetailPage.waitForElement(driver.findElement(By.id("viewMoreLinkCritical790")));
 
