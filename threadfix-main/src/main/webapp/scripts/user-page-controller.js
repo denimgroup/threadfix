@@ -527,7 +527,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     });
 
     $scope.addGroup = function(group) {
-        if (!group) {
+        if (!group || !group.id) {
             return;
         }
 

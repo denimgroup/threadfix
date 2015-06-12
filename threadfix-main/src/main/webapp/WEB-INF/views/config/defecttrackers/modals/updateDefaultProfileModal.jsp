@@ -1,6 +1,10 @@
-<script type="text/ng-template" id="createDefaultProfileModal.html">
+<script type="text/ng-template" id="updateDefaultProfileModal.html">
     <div class="modal-header">
-        <h4 id="myModalLabel">New Default Profile</h4>
+        <h4 id="myModalLabel">Update Default Profile
+        <span class="delete-span">
+                <a id="deleteButton" class="btn btn-danger header-button" type="submit" ng-click="showDeleteDialog('Defect Profile')">Delete</a>
+        </span>
+        </h4>
     </div>
     <div ng-form="form" class="modal-body">
         <table class="modal-form-table">
@@ -22,6 +26,7 @@
                         <select ng-options="application.id as (application.team.name + ' / ' + application.name) for application in config.referenceApplications"
                                 ng-model="object.referenceApplication.id"
                                 id="referenceApplicationSelect"
+                                disabled="disabled"
                                 name="defectTrackerTypeid">
                         </select>
                     </td>

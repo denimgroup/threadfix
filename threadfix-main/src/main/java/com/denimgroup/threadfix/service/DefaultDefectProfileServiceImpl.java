@@ -14,6 +14,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefaultDefectField;
 import com.denimgroup.threadfix.data.entities.DefaultDefectProfile;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import org.springframework.validation.BindingResult;
 
 @Service
 public class DefaultDefectProfileServiceImpl implements DefaultDefectProfileService {
@@ -76,5 +77,24 @@ public class DefaultDefectProfileServiceImpl implements DefaultDefectProfileServ
 			application.setMainDefaultDefectProfile(null);
 		}
 		defaultDefectProfileDao.deleteById(defaultProfileId);
+	}
+
+	@Override
+	public DefaultDefectProfile loadAppDefectProfileByName(String name, Integer appId) {
+		return defaultDefectProfileDao.retrieveDefectProfileByName(name, appId);
+	}
+
+	@Override
+	public void validateName(DefaultDefectProfile defaultDefectProfile, BindingResult result) {
+		DefaultDefectProfile dbProfile = loadAppDefectProfileByName(defaultDefectProfile.getName(), defaultDefectProfile.getReferenceApplication().getId());
+		String msg = "The name is already taken for this application.";
+		// If found that name of same application
+		if (dbProfile != null) {
+			// If default defect profile is new
+			if (defaultDefectProfile.getId() == null)
+				result.rejectValue("name", null, null, msg);
+			else if (defaultDefectProfile.getId() != dbProfile.getId())
+				result.rejectValue("name", null, null, msg);
+		}
 	}
 }
