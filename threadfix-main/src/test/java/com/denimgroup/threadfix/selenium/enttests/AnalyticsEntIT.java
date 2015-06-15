@@ -114,10 +114,12 @@ public class AnalyticsEntIT extends BaseDataTest {
     }
 
     @Test
-    public void  testIssue842Part1() {
+    public void testTrendingReportFilterDisclosure() {
         String roleName = createSpecificPermissionRole("canGenerateReports");
         String user = createRegularUser();
         String hiddenTeam = createTeam();
+        String hiddenApp = createApplication(hiddenTeam);
+        uploadScanToApp(hiddenTeam, hiddenApp, "w3af");
 
         initializeTeamAndApp();
         DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
@@ -127,32 +129,18 @@ public class AnalyticsEntIT extends BaseDataTest {
                 .expandTeamApplicationFilter("trendingFilterDiv");
 
         assertTrue("Team name is displayed and should not be",
-                !analyticsPage.isTeamDisplayedinTeamDropDown(hiddenTeam,"trendingFilterDiv"));
-    }
-
-    @Test
-    public void testIssue842Part2() {
-        String roleName = createSpecificPermissionRole("canGenerateReports");
-        String user = createRegularUser();
-        String hiddenTeam = createTeam();
-        String hiddenApp = createApplication(hiddenTeam);
-
-        initializeTeamAndApp();
-        DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
-
-        AnalyticsPage analyticsPage = loginPage.login(user, "TestPassword")
-                .clickAnalyticsLink()
-                .expandTeamApplicationFilter("trendingFilterDiv");
-
+                !analyticsPage.isTeamDisplayedinTeamDropDown(hiddenTeam, "trendingFilterDiv"));
         assertTrue("Team/App name is displayed and should not be",
                 !analyticsPage.isAppDisplayedinAppDropDown(hiddenTeam, hiddenApp, "trendingFilterDiv"));
     }
 
     @Test
-    public void testIssue845Part1() {
+    public void testPointInTimeReportFilterDisclosure() {
         String roleName = createSpecificPermissionRole("canGenerateReports");
         String user = createRegularUser();
         String hiddenTeam = createTeam();
+        String hiddenApp = createApplication(hiddenTeam);
+        uploadScanToApp(hiddenTeam, hiddenApp, "w3af");
 
         initializeTeamAndApp();
         DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
@@ -163,33 +151,37 @@ public class AnalyticsEntIT extends BaseDataTest {
                 .expandTeamApplicationFilter("snapshotFilterDiv");
 
         assertTrue("Team name is displayed and should not be",
-                !analyticsPage.isTeamDisplayedinTeamDropDown(hiddenTeam,"snapshotFilterDiv"));
+                !analyticsPage.isTeamDisplayedinTeamDropDown(hiddenTeam, "snapshotFilterDiv"));
+        assertTrue("Team/App name is displayed and should not be",
+                !analyticsPage.isAppDisplayedinAppDropDown(hiddenTeam, hiddenApp, "snapshotFilterDiv"));
     }
 
     @Test
-    public void testIssue845Part2() {
+    public void testPointInTimeReportVulnerabilityDisclosure() {
         String roleName = createSpecificPermissionRole("canGenerateReports");
         String user = createRegularUser();
         String hiddenTeam = createTeam();
         String hiddenApp = createApplication(hiddenTeam);
+        uploadScanToApp(hiddenTeam, hiddenApp, "w3af");
 
         initializeTeamAndApp();
         DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
 
         AnalyticsPage analyticsPage = loginPage.login(user, "TestPassword")
                 .clickAnalyticsLink()
-                .clickSnapshotTab(true)
-                .expandTeamApplicationFilter("snapshotFilterDiv");
+                .clickSnapshotTab(true);
 
-        assertTrue("Team/App name is displayed and should not be",
-                !analyticsPage.isAppDisplayedinAppDropDown(hiddenTeam, hiddenApp, "snapshotFilterDiv"));
+        assertTrue("Vulnerabilities are displayed and should not be",
+                analyticsPage.areAllVulnerabilitiesHidden());
     }
 
     @Test
-    public void testIssue841Part1() {
+    public void testVulnerabilitySearchFilterDisclosure() {
         String roleName = createSpecificPermissionRole("canGenerateReports");
         String user = createRegularUser();
         String hiddenTeam = createTeam();
+        String hiddenApp = createApplication(hiddenTeam);
+        uploadScanToApp(hiddenTeam, hiddenApp, "w3af");
 
         initializeTeamAndApp();
         DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
@@ -201,24 +193,34 @@ public class AnalyticsEntIT extends BaseDataTest {
 
         assertTrue("Team name is displayed and should not be",
                 !analyticsPage.isTeamDisplayedinTeamDropDown(hiddenTeam,"vulnSearchDiv"));
+        assertTrue("Team/App name is displayed and should not be",
+                !analyticsPage.isAppDisplayedinAppDropDown(hiddenTeam, hiddenApp, "vulnSearchDiv"));
     }
 
     @Test
-    public void testIssue841Part2() {
+    public void testVulnerabilitySearchVulnerabilityDisclosure() {
         String roleName = createSpecificPermissionRole("canGenerateReports");
         String user = createRegularUser();
         String hiddenTeam = createTeam();
         String hiddenApp = createApplication(hiddenTeam);
+        uploadScanToApp(hiddenTeam, hiddenApp, "w3af");
 
         initializeTeamAndApp();
         DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
 
         AnalyticsPage analyticsPage = loginPage.login(user, "TestPassword")
                 .clickAnalyticsLink()
-                .clickVulnerabilitySearchTab()
-                .expandTeamApplicationFilter("vulnSearchDiv");
+                .clickVulnerabilitySearchTab();
 
-        assertTrue("Team/App name is displayed and should not be",
-                !analyticsPage.isAppDisplayedinAppDropDown(hiddenTeam, hiddenApp, "vulnSearchDiv"));
+        assertTrue("Vulnerabilities are displayed initially and should not be.", analyticsPage.areAllVulnerabilitiesHidden());
+
+        analyticsPage.expandTeamApplicationFilter("vulnSearchDiv");
+
+        if(analyticsPage.isTeamDisplayedinTeamDropDown(hiddenTeam,"vulnSearchDiv")){
+            analyticsPage.clearFilter("vulnSearchDiv")
+                    .addTeamFilter(hiddenTeam, "vulnSearchDiv");
+
+            assertTrue("Vulnerabilities are displayed and should not be.", analyticsPage.areAllVulnerabilitiesHidden());
+        }
     }
 }
