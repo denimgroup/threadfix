@@ -23,6 +23,7 @@
 	<mvc:annotation-driven>
 		<!-- Customize JSON conversion -->
 		<mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
 			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
 				<property name="objectMapper" ref="customObjectMapper"/>
 

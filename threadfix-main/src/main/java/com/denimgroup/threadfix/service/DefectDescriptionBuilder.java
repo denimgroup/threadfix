@@ -52,10 +52,16 @@ public class DefectDescriptionBuilder {
 
         int vulnIndex = 0;
 
+        String customCweText = null;
+
         if (vulnerabilities != null) {
             for (Vulnerability vulnerability : vulnerabilities) {
                 if (vulnerability.getGenericVulnerability() != null &&
                         vulnerability.getSurfaceLocation() != null) {
+
+                    if(customCweText == null){
+                        customCweText = vulnerability.getGenericVulnerability().getCustomText();
+                    }
 
                     stringBuilder
                             .append("Vulnerability[")
@@ -91,6 +97,11 @@ public class DefectDescriptionBuilder {
                 }
             }
         }
+
+        if(customCweText != null){
+            stringBuilder.append(customCweText);
+        }
+
         return stringBuilder.toString();
     }
 
