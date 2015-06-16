@@ -49,6 +49,7 @@ public class TagRestController extends TFRestController {
 
         Tag tag = new Tag();
         tag.setName(tagName);
+        tag.setTagForComment(false);
 
         tagService.storeTag(tag);
 
