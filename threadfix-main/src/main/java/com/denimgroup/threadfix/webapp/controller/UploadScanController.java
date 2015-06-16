@@ -23,15 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.DiskUtils;
-import com.denimgroup.threadfix.data.ScanCheckResultBean;
-import com.denimgroup.threadfix.data.ScanImportStatus;
-import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
-import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.*;
+import com.denimgroup.threadfix.service.UploadScanService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -56,16 +50,6 @@ public class UploadScanController {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(UploadScanController.class);
 
-    @Autowired
-    private ScanTypeCalculationService scanTypeCalculationService;
-    @Autowired
-    private ScanService                 scanService;
-    @Autowired
-    private ScanMergeService            scanMergeService;
-    @Autowired
-    private OrganizationService         organizationService;
-    @Autowired
-    private DefaultConfigService        defaultConfigService;
     @Autowired
     private UploadScanService uploadScanService;
 

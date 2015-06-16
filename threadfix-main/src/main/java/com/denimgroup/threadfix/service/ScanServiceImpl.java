@@ -95,9 +95,19 @@ public class ScanServiceImpl implements ScanService {
 
         File scanFile = new File(fullFilePath);
 
-        response.addHeader("Content-Disposition", "attachment; filename=\""+scan.getFileName()+"\"");
+        List<String> originalFileNames = scan.getOriginalFileNames();
+        String finalName = null;
+
+        if (originalFileNames != null && !originalFileNames.isEmpty()) {
+            finalName = originalFileNames.get(0);
+        } else {
+            finalName = scan.getFileName();
+        }
+
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + finalName + "\"");
+        response.setHeader("Content-Transfer-Encoding", "binary");
         response.setContentLength((int)scanFile.length());
-        response.setContentType("application/octet-stream");
+        response.setContentType("application/xml");
 
         try {
             InputStream in = new FileInputStream(scanFile);
