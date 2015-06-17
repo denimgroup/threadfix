@@ -51,7 +51,8 @@ public class TagIndexPageIT extends BaseDataTest{
 
     @Test
     public void testDeleteTag() {
-        String tagName = createTag(false);
+        String tagName = getName();
+        createTag(tagName);
 
         TagIndexPage tagIndexPage = loginPage.defaultLogin()
                 .clickTagsLink()
@@ -62,7 +63,8 @@ public class TagIndexPageIT extends BaseDataTest{
 
     @Test
     public void testEditTag() {
-        String tagName = createTag(false);
+        String tagName = getName();
+        createTag(tagName);
         String newName = getName();
 
         TagIndexPage tagIndexPage = loginPage.defaultLogin()
@@ -75,7 +77,8 @@ public class TagIndexPageIT extends BaseDataTest{
 
     @Test
     public void testTagNameNavigation() {
-        String tagName = createTag(false);
+        String tagName = getName();
+        createTag(tagName);
 
         loginPage.defaultLogin()
                 .clickTagsLink()
@@ -96,9 +99,11 @@ public class TagIndexPageIT extends BaseDataTest{
         assertTrue("Comment Tag was not created properly", tagIndexPage.isCommentTagNameLinkPresent(tagName));
     }
 
-    @Test
+    @Ignore("pending REST update") @Test
     public void testDeleteCommentTag() {
-        String tagName = createTag(true);
+        //TODO: Update to use REST when ability to create comment tags is added
+        String tagName = getName();
+        createTag(tagName);
 
         TagIndexPage tagIndexPage = loginPage.defaultLogin()
                 .clickTagsLink()
@@ -107,9 +112,11 @@ public class TagIndexPageIT extends BaseDataTest{
         assertTrue("Comment Tag was not deleted properly", !tagIndexPage.isCommentTagNameLinkPresent(tagName));
     }
 
-    @Test
+    @Ignore("pending REST update") @Test
     public void testEditCommentTag() {
-        String tagName = createTag(true);
+        //TODO: Update to use REST when ability to create comment tags is added
+        String tagName = getName();
+        createTag(tagName);
         String newName = getName();
 
         TagIndexPage tagIndexPage = loginPage.defaultLogin()
@@ -120,9 +127,11 @@ public class TagIndexPageIT extends BaseDataTest{
         assertTrue("New comment tag name was no added properly ", tagIndexPage.isCommentTagNameLinkPresent(newName));
     }
 
-    @Test
+    @Ignore("pending REST update") @Test
     public void testCommentTagNameNavigation() {
-        String tagName = createTag(true);
+        //TODO: Update to use REST when ability to create comment tags is added
+        String tagName = getName();
+        createTag(tagName);
 
         loginPage.defaultLogin()
                 .clickTagsLink()

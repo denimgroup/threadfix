@@ -103,9 +103,9 @@ public interface ThreadFixRestClient {
     public RestResponse<Role> removePermission(String roleName, String permission);
 
     // QA only
-    public RestResponse<Tag> createTag(String tagname, Boolean commentTag);
+    public RestResponse<Tag> createTag(String tagname);
     // QA only
-    public RestResponse<Tag> attachAppToTag(String tagname, String appname, String teamname);
+    public RestResponse<Tag> attachAppToTag(String tagId, String appId);
 
     public RestResponse<Finding> addDynamicFinding(String applicationId, String vulnType, String severity,
                                     String nativeId, String parameter, String longDescription,

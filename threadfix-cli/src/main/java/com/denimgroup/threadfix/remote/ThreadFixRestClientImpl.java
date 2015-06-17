@@ -333,18 +333,18 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 
     //QA only
     @Override
-    public RestResponse<Tag> createTag(String tagname, Boolean commentTag) {
-        return httpRestUtils.httpPost("/tag/create",
-                new String[] {"tagname", "commenttag"},
-                new String[] {tagname, String.valueOf(commentTag)}, Tag.class);
+    public RestResponse<Tag> createTag(String tagname) {
+        return httpRestUtils.httpPost("/tags/new",
+                new String[] {"name"},
+                new String[] {tagname}, Tag.class);
     }
 
     //QA only
     @Override
-    public RestResponse<Tag> attachAppToTag(String tagname, String appname, String teamname) {
-        return httpRestUtils.httpPost("/tag/attach",
-                new String[] {"tagname", "appname", "teamname"},
-                new String[] {tagname, appname, teamname}, Tag.class);
+    public RestResponse<Tag> attachAppToTag(String tagId, String appId) {
+        return httpRestUtils.httpPost("/applications/"+appId+"/tags/add/"+tagId,
+                new String[] {},
+                new String[] {}, Tag.class);
     }
 
     public RestResponse<Finding> addDynamicFinding(String applicationId, String vulnType, String severity,

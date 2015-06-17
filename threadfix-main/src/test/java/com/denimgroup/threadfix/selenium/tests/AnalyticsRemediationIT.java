@@ -44,8 +44,9 @@ public class AnalyticsRemediationIT extends BaseDataTest {
 
     public String initialize() {
         initializeTeamAndAppWithIbmScan();
-        String tagName = createTag(false);
-        DatabaseUtils.attachAppToTag(tagName,appName,teamName);
+        String tagName = getName();
+        String tagId = createTag(tagName);
+        DatabaseUtils.attachAppToTag(tagId,appName,teamName);
 
         analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
