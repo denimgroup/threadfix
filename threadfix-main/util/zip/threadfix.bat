@@ -13,17 +13,32 @@ SET lib=
 @REM \. on their path
 set PWD=%cd%
 set CATALINA_HOME=%PWD%\tomcat
-set CATALINA_OPTS=-Xms512m -Xmx1536m -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=256m
-if DEFINED JAVA_HOME (
-	"%JAVA_HOME%\bin\java" -version:1.8 -version > nul 2>&1
-	if NOT ERRORLEVEL == 0 (
-		echo Local JAVA_HOME is not Java 8, switching to threadfix JAVA_HOME
-		set JAVA_HOME=%PWD%\java
+set CATALINA_OPTS=-Xms512m -Xmx1536m
+for /f tokens^=2-5^ delims^=.-_^" %%j in ('java -fullversion 2^>^&1') do set "jver=%%j%%k%%l%%m"
+echo jver is %jver%
+if %jver% GTR 0 (
+	if %jver% LSS 17000 (
+		echo Java version less than 7.  Using folder's Java 8.
+		set JAVA_HOME="%PWD%\java"
+		set CATALINA_OPTS=%CATALINA_OPTS% -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=256m
+		goto :javaisset
 	)
+	if %jver% LSS 18000 (
+		echo JAVA_HOME is Java 7.  Using Java 7.
+		set CATALINA_OPTS=%CATALINA_OPTS% -XX:PermSize=256m -XX:MaxPermSize=256m
+		goto :javaisset
+	)
+	set CATALINA_OPTS=%CATALINA_OPTS% -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=256m
+	echo JAVA_HOME is Java 8.  Using Java 8.
+	goto :javaisset
 ) else (
-	set JAVA_HOME=%PWD%\java
+	echo No Java found.  Using folder's Java 8.
+	set JAVA_HOME="%PWD%\java"
+	set CATALINA_OPTS=%CATALINA_OPTS% -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=256m
 )
 
+
+:javaisset
 if not exist tomcat\keystore echo Generating keystore
 if not exist tomcat\keystore java\bin\keytool -genkeypair -dname "cn=localhost, ou=Self-Signed, o=Threadfix Untrusted Certificate, c=US" -alias localhost -keypass changeit -keystore tomcat\keystore -storepass changeit -keyalg RSA
 if exist tomcat\keystore echo Keystore exists
@@ -31,8 +46,8 @@ if exist tomcat\keystore echo Keystore exists
 @REM Run tomcat: must have quotes incase var has spaces in it
 call "%CATALINA_HOME%\bin\startup.bat" start
 
-echo 
-echo If the Tomcat DOS shell quit immediately, it is likely that 
+echo
+echo If the Tomcat DOS shell quit immediately, it is likely that
 echo there is another service listening on port 8080 or 8443.
 echo
 
