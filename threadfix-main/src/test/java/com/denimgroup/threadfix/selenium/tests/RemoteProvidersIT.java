@@ -778,10 +778,10 @@ public class RemoteProvidersIT extends BaseDataTest {
                 .setContrastService(CONTRAST_SERVICE_KEY)
                 .saveContrast();
 
-        remoteProvidersIndexPage.clickEditName("7","0").setNewName(newName);
+        remoteProvidersIndexPage.clickEditName("4","0").setNewName(newName);
 
         assertTrue("Application name did not update properly",
-                driver.findElement(By.cssSelector("td[id^=provider7appid]")).getText().equals(newName));
+                driver.findElement(By.cssSelector("td[id^=provider4appid]")).getText().equals(newName));
 
         //Runtime Fix
         remoteProvidersIndexPage.refreshPage();
