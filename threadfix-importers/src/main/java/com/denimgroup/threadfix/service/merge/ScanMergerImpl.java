@@ -49,7 +49,7 @@ public class ScanMergerImpl implements ScanMerger {
     private VulnerabilityDao  vulnerabilityDao;
     @Autowired
     private ScanCleanerUtils  scanCleanerUtils;
-    @Autowired
+    @Autowired(required=false) // will be null in offline contexts
     private ScanResultFilterService scanResultFilterService;
 
     @Override
@@ -98,17 +98,20 @@ public class ScanMergerImpl implements ScanMerger {
         scanCleanerUtils.clean(scan);
 	}
 
-    private void filterScanResults(Scan scan, ApplicationChannel applicationChannel){
+    private void filterScanResults(Scan scan, ApplicationChannel applicationChannel) {
 
-        if(scan != null && applicationChannel != null && applicationChannel.getChannelType() != null){
+        if (scan != null && applicationChannel != null && applicationChannel.getChannelType() != null) {
 
-            List<GenericSeverity> filteredSeverities = scanResultFilterService.loadFilteredSeveritiesForChannelType(applicationChannel.getChannelType());
+            List<GenericSeverity> filteredSeverities = list();
+            if (scanResultFilterService != null) {
+                filteredSeverities = scanResultFilterService.loadFilteredSeveritiesForChannelType(applicationChannel.getChannelType());
+            }
 
-            if(filteredSeverities != null && !filteredSeverities.isEmpty()){
+            if (filteredSeverities != null && !filteredSeverities.isEmpty()) {
                 List<Finding> toFilter = list();
 
-                for(Finding finding : scan.getFindings()){
-                    if(filteredSeverities.contains(finding.getChannelSeverity().getSeverityMap().getGenericSeverity())){
+                for (Finding finding : scan.getFindings()) {
+                    if (filteredSeverities.contains(finding.getChannelSeverity().getSeverityMap().getGenericSeverity())) {
                         toFilter.add(finding);
                     }
                 }
