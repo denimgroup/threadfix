@@ -159,14 +159,15 @@ public class CommandLineParser {
 
 			} else if (cmd.hasOption("q")) {
 				String[] queueArgs = cmd.getOptionValues("q");
-				if (queueArgs.length != 2) {
+				if (queueArgs.length > 3) {
 					throw new ParseException("Wrong number of arguments.");
 				}
-				if (isInteger(queueArgs[0])) {
-					LOGGER.info("Queueing a scan.");
-					System.out.println(client.queueScan(queueArgs[0], queueArgs[1]));
-				} else
-					LOGGER.warn("ApplicationId is not number, not doing anything.");
+                if (isInteger(queueArgs[0])) {
+                    LOGGER.info("Queueing a scan.");
+					String scanConfigId = queueArgs.length >= 3 ? queueArgs[2] : null;
+                    System.out.println(client.queueScan(queueArgs[0], queueArgs[1], scanConfigId));
+                } else
+                    LOGGER.warn("ApplicationId is not number, not doing anything.");
 
 			} else if (cmd.hasOption("au")) {
 				String[] addUrlArgs = cmd.getOptionValues("au");
@@ -354,6 +355,26 @@ public class CommandLineParser {
 				printOutput(client.removeAppTag(removeTagArgs[0], removeTagArgs[1]));
 			} else
 				LOGGER.warn("ApplicationID or TagId is not number, not doing anything.");
+		} else if (cmd.hasOption("utg")) {
+			String[] updateTag = cmd.getOptionValues("utg");
+			if (updateTag.length !=2) {
+				throw new ParseException("Wrong number of arguments.'");
+			}
+			if (isInteger(updateTag[0])) {
+				LOGGER.info("Updating name of TagId " + updateTag[0] + " to " + updateTag[1] + ".");
+				printOutput(client.updateTag(updateTag[0], updateTag[1]));
+			} else
+				LOGGER.warn("TagId is not number, not doing anything.");
+		} else if (cmd.hasOption("rtg")) {
+			String[] removeTag = cmd.getOptionValues("rtg");
+			if (removeTag.length !=1) {
+				throw new ParseException("Wrong number of arguments.'");
+			}
+			if (isInteger(removeTag[0])) {
+				LOGGER.info("Removing TagId " + removeTag[0] + ".");
+				printOutput(client.removeTag(removeTag[0]));
+			} else
+				LOGGER.warn("TagId is not number, not doing anything.");
 		}
 	}
 
@@ -362,7 +383,9 @@ public class CommandLineParser {
 				|| cmd.hasOption("stg")
 				|| cmd.hasOption("aat")
 				|| cmd.hasOption("rat")
-				|| cmd.hasOption("tg");
+				|| cmd.hasOption("tg")
+				|| cmd.hasOption("utg")
+				|| cmd.hasOption("rtg");
 	}
 
 	private static boolean isInteger(String inputStr) {

@@ -161,6 +161,7 @@ public class ApplicationsController {
 		model.addAttribute("defectTracker", new DefectTracker());
 		model.addAttribute("waf", new Waf());
 		model.addAttribute("newWaf", new Waf());
+        model.addAttribute("scanQueueTask", new ScanQueueTask());
 		model.addAttribute(new VulnerabilityCollectionModel());
         model.addAttribute("activeTab", getActiveTab(request, falsePositiveCount, numClosedVulns));
 		model.addAttribute(application);
@@ -225,6 +226,9 @@ public class ApplicationsController {
         map.put("tags", tagService.loadAllApplicationTags());
 
         map.put("applicationTags", application.getTags());
+
+        if (EnterpriseTest.isEnterprise())
+            map.put("scanAgentSupportedList", ScannerType.getScanAgentSupportedListInString());
 
         // permissions
         for (Permission permission : new Permission[]{Permission.CAN_MANAGE_DEFECT_TRACKERS, Permission.CAN_MANAGE_WAFS}) {
@@ -305,6 +309,8 @@ public class ApplicationsController {
 		}
 
 		applicationService.decryptCredentials(application);
+
+        defectTrackerService.decryptCredentials(application.getDefectTracker());
 
 		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
 		ProjectMetadata data = null;
@@ -423,8 +429,12 @@ public class ApplicationsController {
 	public @ResponseBody RestResponse<?> readJson(@ModelAttribute DefectTrackerBean bean) {
 		DefectTracker defectTracker = defectTrackerService.loadDefectTracker(bean
 				.getDefectTrackerId());
-		AbstractDefectTracker dt = DefectTrackerFactory.getTrackerByType(defectTracker,
-                bean.getUserName(), bean.getPassword());
+
+        String username = bean.isUseDefaultCredentials() ? defectTracker.getDefaultUsername() : bean.getUserName();
+        String password = bean.isUseDefaultCredentials() ? defectTracker.getDefaultPassword() : bean.getPassword();
+
+		AbstractDefectTracker dt = DefectTrackerFactory.getTrackerByType(defectTracker, username, password);
+
 		if (dt == null) {
 			log.warn("Incorrect Defect Tracker credentials submitted.");
 			return failure("Authentication failed.");

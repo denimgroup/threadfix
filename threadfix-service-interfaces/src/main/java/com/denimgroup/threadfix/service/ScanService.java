@@ -28,7 +28,6 @@ import com.denimgroup.threadfix.data.entities.Scan;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -57,15 +56,6 @@ public interface ScanService {
 	 * @param scan
 	 */
 	String downloadScan(Scan scan, String fullFilePath, HttpServletResponse response);
-
-	/**
-	 * Save a scan file and add a request to the queue with the appropriate
-	 * filename and ApplicationChannel id.
-	 * 
-	 * @param channelId
-	 * @param fileName
-	 */
-	void addFileToQueue(Integer channelId, String fileName, Calendar calendar);
 	
 	/**
 	 * This method delegates the checking to the appropriate importer and returns the code
@@ -76,25 +66,6 @@ public interface ScanService {
 	 */
     @Nonnull
 	ScanCheckResultBean checkFile(Integer channelId, String fileName);
-	
-	/**
-	 * 
-	 * @param channelId
-	 * @return
-	 */
-	Integer saveEmptyScanAndGetId(Integer channelId, String fileName);
-
-	/**
-	 * 
-	 * @param emptyScanId
-	 */
-	void addEmptyScanToQueue(Integer emptyScanId);
-	
-	/**
-	 * 
-	 * @param emptyScanId
-	 */
-	void deleteEmptyScan(Integer emptyScanId);
 
 	/**
 	 * 

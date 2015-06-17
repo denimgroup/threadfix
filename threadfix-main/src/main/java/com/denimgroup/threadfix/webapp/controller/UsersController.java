@@ -188,8 +188,6 @@ public class UsersController {
 			String userName = user.getName();
 
 			if (userService.canDelete(user)) {
-				
-				status.setComplete();
 
 				model.addAttribute("user", new User());
 

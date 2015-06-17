@@ -35,15 +35,14 @@ import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/rest/teams")
@@ -59,11 +58,14 @@ public class TeamRestController extends TFRestController {
 
     public static final String CREATION_FAILED = "New Team creation failed.";
     public static final String LOOKUP_FAILED   = "Team Lookup failed.";
+    public static final String INVALID_PARAMS  = "Invalid parameters entered";
+    public static final String PUT_SUCCESS     = "Fields updated successfully";
 
     private final static String DETAIL = "teamIDLookup",
             LOOKUP                     = "teamNameLookup",
             NEW                        = "newTeam",
-            INDEX                      = "teamList";
+            INDEX                      = "teamList",
+            UPDATE                     = "putTeam";
 
     // TODO finalize which methods need to be restricted
     static {
@@ -264,5 +266,28 @@ public class TeamRestController extends TFRestController {
 	public Object alsoTeamList(HttpServletRequest request) {
 		return teamList(request);
 	}
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/{teamId}/update", consumes = "application/x-www-form-urlencoded")
+    public Object putTeam(HttpServletRequest request, @PathVariable("teamId") int teamId, @RequestBody MultiValueMap<String, String> params){
+
+        log.info("Received REST request to update Team");
+        String result = checkKey(request, UPDATE);
+        if(!result.equals(API_KEY_SUCCESS)) return RestResponse.failure(result);
+        Organization organization = organizationService.loadById(teamId);
+        if(organization == null){
+            return RestResponse.failure(LOOKUP_FAILED);
+        }else {
+            Map<String, String> map = params.toSingleValueMap();
+            if(map.get("name")!=null && !(map.get("name").isEmpty())) {
+                organization.setName(map.get("name"));
+                organizationService.saveOrUpdate(organization);
+                log.info("REST Request (PUT method) to update Team resource with id " + teamId + " is completed successfully");
+                return RestResponse.success(PUT_SUCCESS);
+            }else {
+                log.warn("Name parameter in the REST request is invalid. Returning failure response");
+                return RestResponse.failure(INVALID_PARAMS);
+            }
+        }
+    }
 
 }

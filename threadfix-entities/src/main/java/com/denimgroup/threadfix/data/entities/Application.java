@@ -38,6 +38,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 @Entity
 @Table(name = "Application")
 public class Application extends AuditableEntity {
@@ -113,6 +115,7 @@ public class Application extends AuditableEntity {
 	@Size(max = 50, message = "{errors.maxlength} 50.")
 	private String component;
 	private DefectTracker defectTracker;
+	private DefaultDefectProfile mainDefaultDefectProfile;
 
 	private GRCTool grcTool;
 
@@ -158,6 +161,9 @@ public class Application extends AuditableEntity {
 
     private List<Tag> tags = new ArrayList<Tag>();
 
+    private Boolean useDefaultCredentials = false;
+    private Boolean useDefaultProject = false;
+
 	@Column(length = NAME_LENGTH, nullable = false)
     @JsonView(Object.class) // This means it will be included in all ObjectWriters with Views.
 	public String getName() {
@@ -179,7 +185,7 @@ public class Application extends AuditableEntity {
 	}
 	
 	@Column(length = 255)
-    @JsonView({AllViews.RestViewApplication2_1.class, AllViews.FormInfo.class, AllViews.TableRow.class})
+    @JsonView({AllViews.RestViewApplication2_1.class, AllViews.FormInfo.class, AllViews.TableRow.class, AllViews.RestViewTag.class})
 	public String getUniqueId() {
 		return uniqueId;
 	}
@@ -282,6 +288,17 @@ public class Application extends AuditableEntity {
 		this.defectTracker = defectTracker;
 	}
 
+	@ManyToOne
+	@JoinColumn(name = "mainDefaultDefectProfileId")
+	@JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
+	public DefaultDefectProfile getMainDefaultDefectProfile() {
+		return mainDefaultDefectProfile;
+	}
+
+	public void setMainDefaultDefectProfile(DefaultDefectProfile mainDefaultDefectProfile) {
+		this.mainDefaultDefectProfile = mainDefaultDefectProfile;
+	}
+
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "grcToolId")
     @JsonIgnore
@@ -377,6 +394,8 @@ public class Application extends AuditableEntity {
 	@OrderBy("importTime DESC")
     @JsonView(AllViews.RestViewApplication2_1.class)
     public List<Scan> getScans() {
+		if (scans == null)
+			scans = list();
 		return scans;
 	}
 
@@ -437,13 +456,12 @@ public class Application extends AuditableEntity {
 	}	
 
     @OneToOne(mappedBy = "application")
-    @JsonView(Object.class)
-	public GRCApplication getGrcApplication() {
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class })
+    public GRCApplication getGrcApplication() {
 		return grcApplication;
 	}
 
-	public void setGrcApplication(
-			GRCApplication grcApplication) {
+	public void setGrcApplication(GRCApplication grcApplication) {
 		this.grcApplication = grcApplication;
 	}
 
@@ -821,7 +839,7 @@ public class Application extends AuditableEntity {
 
     // TODO exclude from default ObjectMapper
     @Transient
-    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.VulnSearchApplications.class, AllViews.RestViewTag.class })
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.VulnSearchApplications.class, AllViews.RestViewTag.class, AllViews.DefectTrackerInfos.class })
     private Map<String, Object> getTeam() {
         Organization team = getOrganization();
 
@@ -874,7 +892,7 @@ public class Application extends AuditableEntity {
     @JoinTable(name="Application_Tag",
             joinColumns={@JoinColumn(name="Application_Id")},
             inverseJoinColumns={@JoinColumn(name="Tag_Id")})
-	@JsonView(AllViews.RestViewApplication2_1.class)
+	@JsonView({AllViews.RestViewApplication2_1.class, AllViews.RestViewTag.class})
     public List<Tag> getTags() {
         return tags;
     }
@@ -883,7 +901,25 @@ public class Application extends AuditableEntity {
         this.tags = tags;
     }
 
-	@Override
+    @Column
+    public Boolean isUseDefaultProject() {
+        return useDefaultProject;
+    }
+
+    public void setUseDefaultProject(Boolean useDefaultProject) {
+        this.useDefaultProject = useDefaultProject;
+    }
+
+    @Column
+    public Boolean isUseDefaultCredentials() {
+        return useDefaultCredentials;
+    }
+
+    public void setUseDefaultCredentials(Boolean useDefaultCredentials) {
+        this.useDefaultCredentials = useDefaultCredentials;
+    }
+
+    @Override
 	public String toString() {
 		return name;
 	}

@@ -27,13 +27,11 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
-import javax.annotation.Nullable;
-
-import com.denimgroup.threadfix.service.GRCToolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nullable;
 import javax.jms.*;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +73,10 @@ public class QueueListener implements MessageListener {
     private ScanQueueService scanQueueService = null;
     @Autowired
     private VulnerabilityFilterService vulnerabilityFilterService;
+    @Autowired
+    private EmailReportService emailReportService;
+    @Autowired
+    private ScheduledEmailReportService scheduledEmailReportService;
 
 	/*
 	 * (non-Javadoc)
@@ -105,11 +107,6 @@ public class QueueListener implements MessageListener {
 				String type = map.getString("type");
 				
 				switch (type) {
-					case QueueConstants.NORMAL_SCAN_TYPE :
-						processScanRequest(map.getInt("channelId"), map.getString("fileName"),
-								map.getInt("jobStatusId"), map.getString("userName"));
-						break;
-						
 					case QueueConstants.DEFECT_TRACKER_VULN_UPDATE_TYPE:
 						processDefectTrackerUpdateRequest(map.getInt("appId"),
 								map.getInt("jobStatusId"));
@@ -135,7 +132,7 @@ public class QueueListener implements MessageListener {
 						break;
                     case QueueConstants.SCHEDULED_SCAN_TYPE:
                         processScheduledScan(map.getInt("appId"),
-                                map.getString("scanner"));
+                                map.getString("scanner"), map.getString("scanConfigId"));
                         break;
                     case QueueConstants.STATISTICS_UPDATE:
                         processStatisticsUpdate(map.getInt("appId"));
@@ -143,6 +140,8 @@ public class QueueListener implements MessageListener {
                     case QueueConstants.VULNS_FILTER:
                         updateVulnsFilter();
                         break;
+                    case QueueConstants.SEND_EMAIL_REPORT:
+                        processSendEmailReport(map.getInt("scheduledEmailReportId"));
 				}
 			}
 			
@@ -151,6 +150,12 @@ public class QueueListener implements MessageListener {
 			e.printStackTrace();
 		}
 	}
+
+    private void processSendEmailReport(int scheduledEmailReportId) {
+        log.info("Schedule Email Report was called! With scheduledEmailReportId=" + scheduledEmailReportId);
+        ScheduledEmailReport scheduledEmailReport = scheduledEmailReportService.loadById(scheduledEmailReportId);
+        emailReportService.sendEmailReport(scheduledEmailReport);
+    }
 
     private void updateVulnsFilter() {
         log.info("Starting updating all filter vulnerabilities");
@@ -298,60 +303,6 @@ public class QueueListener implements MessageListener {
 	}
 
 	/**
-	 */
-	private void processScanRequest(Integer channelId, String fileName, Integer jobStatusId, String userName) {
-		// TODO Move the jobStatus updating to the importer to improve messages
-		// once the messages persist
-		
-		jobStatusService.updateJobStatus(jobStatusId, "Job received");
-		
-		ApplicationChannel appChannel = applicationChannelService.loadApplicationChannel(channelId);
-		
-		boolean fullLog = userName != null && appChannel != null && appChannel.getApplication() != null
-				&& appChannel.getApplication().getName() != null && appChannel.getChannelType() != null
-				&& appChannel.getChannelType().getName() != null;
-			
-		if (fullLog) {
-			log.info("User " + userName + " added a " + appChannel.getChannelType().getName() +
-					" scan to the Application " + appChannel.getApplication().getName() +
-					" (filename " + fileName + ").");
-		}
-		
-		jobStatusService.updateJobStatus(jobStatusId, "Processing Scan from file.");
-		
-		boolean finished = false;
-		
-		try {
-			finished = scanMergeService.processScan(channelId, fileName, jobStatusId, userName);
-		} catch (OutOfMemoryError e) {
-			closeJobStatus(jobStatusId, "Scan encountered an out of memory error and did not complete correctly.");
-			log.warn("Encountered out of memory error. Closing job status and rethrowing exception.",e);
-			throw e;
-		} finally {
-			if (finished) {
-				closeJobStatus(jobStatusId, "Scan completed.");
-
-                if (appChannel != null && appChannel.getApplication() != null) {
-                    queueSender.updateCachedStatistics(appChannel.getApplication().getId());
-                }
-
-				if (fullLog) {
-					log.info("The " + appChannel.getChannelType().getName() + " scan from User "
-						+ userName + " on Application " + appChannel.getApplication().getName()
-						+ " (filename " + fileName + ") completed successfully.");
-				}
-			} else {
-				closeJobStatus(jobStatusId, "Scan encountered an error.");
-				if (fullLog) {
-					log.info("The " + appChannel.getChannelType().getName() + " scan from User "
-						+ userName + " on Application " + appChannel.getApplication().getName()
-						+ " (filename " + fileName + ") did not complete successfully.");
-				}
-			}
-		}
-	}
-
-	/**
 	 * @param appId
 	 * @param jobStatusId
 	 */
@@ -398,7 +349,7 @@ public class QueueListener implements MessageListener {
      * @param scanner
      */
     @Transactional(readOnly=false)
-    private void processScheduledScan(int appId, String scanner) {
+    private void processScheduledScan(int appId, String scanner, String scanConfigId) {
         if (scanQueueService == null) {
             return;
         }
@@ -407,7 +358,7 @@ public class QueueListener implements MessageListener {
         if (application == null)
             return;
 
-        ScanQueueTask scanTask = scanQueueService.queueScan(appId, scanner);
+        ScanQueueTask scanTask = scanQueueService.queueScanWithConfig(appId, scanner, scanConfigId);
         if (scanTask == null || scanTask.getId() < 0) {
             log.warn("Adding scan queue task " + scanner +" for application with Id " + appId + " was failed.");
         } else {

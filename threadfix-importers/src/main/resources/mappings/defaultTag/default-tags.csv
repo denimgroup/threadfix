@@ -1,0 +1,3 @@
+6/9/2015 13:00:00
+GenericName,com.denimgroup.threadfix.service.defects.defaults.tags.GenericNameDefaultTagMapper,Evaluates the generic Threadfix name for the first vulnerability in the list
+GenericSeverity,com.denimgroup.threadfix.service.defects.defaults.tags.GenericSeverityDefaultTagMapper,Evaluates the generic Threadfix severity in its literal form (high low...) for the first vulnerability in the list

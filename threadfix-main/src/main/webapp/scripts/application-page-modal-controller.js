@@ -52,6 +52,8 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
                    $scope.config.trackerTypes = $scope.config.defectTrackerTypeList;
                    $scope.$parent.genericSeverityList = $scope.config.genericSeverityList;
+                   $scope.$parent.scanAgentSupportedList = $scope.config.scanAgentSupportedList;
+                   $scope.$parent.documents = $scope.config.documents;
 
                    $rootScope.$broadcast('seeMoreExtension', "/" + $scope.config.application.team.id + "/" + $scope.config.application.id);
 
@@ -371,7 +373,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
     $scope.showCreateDefectTrackerModal = function() {
         var modalInstance = $modal.open({
             templateUrl: 'newTrackerModal.html',
-            controller: 'ModalControllerWithConfig',
+            controller: 'CreateEditDefectTrackerModalController',
             resolve: {
                 url: function() {
                     return tfEncoder.encode("/configuration/defecttrackers/new");

@@ -10,7 +10,8 @@
     <table ng-show="documents" class="table table-striped">
         <thead>
             <tr>
-                <th class="first">File Name</th>
+                <th class="first">ID</th>
+                <th>File Name</th>
                 <th>Type</th>
                 <th>Upload Date</th>
                 <th class="centered">Download</th>
@@ -22,6 +23,7 @@
         </thead>
         <tbody>
             <tr ng-repeat="document in documents" class="bodyRow">
+                <td id="docId{{ $index }}">{{ document.id }}</td>
                 <td id="docName{{ $index }}">{{ document.name }}</td>
                 <td id="type{{ $index }}" >{{ document.type }}</td>
                 <td id="uploadDate{{ $index }}" >

@@ -9,7 +9,7 @@
             <tr class="left-align">
                 <td>Defect Tracker</td>
                 <td class="inputValue">
-                    <select ng-model="object.defectTrackerId" id="defectTrackerId" name="defectTrackerTypeId">
+                    <select ng-model="object.defectTrackerId" id="defectTrackerId" name="defectTrackerTypeId" ng-change="updateDefaultCredentialsAndProduct()">
                         <option ng-repeat="tracker in config.defectTrackerList"
                                 ng-selected="object.defectTracker.id === tracker.id"
                                 value="{{ tracker.id }}">
@@ -28,9 +28,15 @@
                 </td>
             </tr>
             <tr class="left-align">
+                <td>Use Default Credentials</td>
+                <td class="inputValue">
+                    <input type="checkbox" ng-model="object.useDefaultCredentials" id="useDefaultCredentials" ng-change="toggleUseDefaultCredentials()">
+                </td>
+            </tr>
+            <tr class="left-align">
                 <td>Username</td>
                 <td class="inputValue">
-                    <input type="text" ng-model="object.userName" style="margin:5px;" id="username" name="userName" size="50" maxlength="50"/>
+                    <input type="text" ng-model="object.userName" id="username" name="userName" size="50" maxlength="50" ng-disabled="object.useDefaultCredentials"/>
                 </td>
                 <td colspan="2" >
                     <errors name="userName" cssClass="errors" />
@@ -40,7 +46,7 @@
             <tr class="left-align">
                 <td>Password</td>
                 <td class="inputValue">
-                    <input type="password" ng-model="object.password" style="margin:5px;" id="password" showPassword="true" name="password" size="50" maxlength="50"/>
+                    <input type="password" ng-model="object.password" id="password" showPassword="true" name="password" size="50" maxlength="50" ng-disabled="object.useDefaultCredentials"/>
                 </td>
                 <td colspan="2" >
                     <errors name="password" cssClass="errors" />
@@ -48,11 +54,16 @@
                     <span class="errors" ng-show="object.password_error"> {{ object.password_error }}</span>
                 </td>
             </tr>
-            <tr>
+            <tr class="left-align">
+                <td>Use Default Product</td>
+                <td class="inputValue">
+                    <input type="checkbox" ng-model="object.useDefaultProduct" id="useDefaultProduct" ng-change="toggleUseDefaultProduct()">
+                </td>
+            </tr>
             <tr ng-show="productNames" class="left-align">
                 <td id="projectname">Product Name</td>
                 <td class="inputValue">
-                    <select ng-model="object.projectName" id="productNameSelect" name="productName">
+                    <select ng-model="object.projectName" id="productNameSelect" name="productName" ng-disabled="object.useDefaultProduct">
                         <option ng-repeat="name in productNames"
                                 ng-selected="object.projectName === name"
                                 value="{{ name }}">

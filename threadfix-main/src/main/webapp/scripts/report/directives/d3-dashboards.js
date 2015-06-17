@@ -296,6 +296,7 @@ function barGraphData(d3, data, color, isLeftReport, label, reportConstants, tex
     var topVulnsReport = false;
 
     if (keys.indexOf("count") > -1) {
+        color = d3.scale.ordinal().range(topVulnColor);
         color.domain(topVulnMapKeyword);
         topVulnsReport = true;
     }
@@ -335,6 +336,7 @@ function getTime(index) {
 }
 
 var topVulnMapKeyword = ["count"];
+var topVulnColor = ["#F27421"];
 var currentDate = new Date();
 var currentYear = currentDate.getFullYear();
 var currentMonth = currentDate.getMonth();

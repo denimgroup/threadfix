@@ -24,22 +24,29 @@
 
 package com.denimgroup.threadfix.webapp.controller.rest;
 
-import com.denimgroup.threadfix.data.ScanCheckResultBean;
-import com.denimgroup.threadfix.data.ScanImportStatus;
-import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.Tag;
+import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.beans.ScanParametersBean;
 import com.denimgroup.threadfix.views.AllViews;
+import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.MultiValueMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 
@@ -53,7 +60,8 @@ public class ApplicationRestController extends TFRestController {
             WAF_LOOKUP_FAILED = "WAF lookup failed. Check your ID.",
             ADD_CHANNEL_FAILED = "Adding an Application Channel failed.",
             SET_WAF_FAILED = "Call to setWaf failed.",
-            SCAN_TYPE_LOOKUP_FAILED = "Unable to determine Scan type";
+            SCAN_TYPE_LOOKUP_FAILED = "Unable to determine Scan type",
+            TAG_LOOKUP_FAILED = "Tag lookup failed. Check your ID.";
 
     @Autowired
     private ApplicationService applicationService;
@@ -73,6 +81,8 @@ public class ApplicationRestController extends TFRestController {
     private OrganizationService organizationService;
     @Autowired
     private TagService tagService;
+    @Autowired
+    private UploadScanService uploadScanService;
 
     private final static String DETAIL = "applicationDetail",
             SET_PARAMS = "setParameters",
@@ -82,8 +92,10 @@ public class ApplicationRestController extends TFRestController {
             UPLOAD = "uploadScan",
             ATTACH_FILE = "attachFile",
             SET_URL = "setUrl",
+            UPDATE = "updateApplication",
             ADD_TAG = "addTag",
-            REMOVE_TAG = "removeTag";
+            REMOVE_TAG = "removeTag",
+            SCAN_LIST = "scanList";
 
     // TODO finalize which methods need to be restricted
     static {
@@ -256,7 +268,7 @@ public class ApplicationRestController extends TFRestController {
     @JsonView(AllViews.RestViewScan2_1.class)
     public Object uploadScan(@PathVariable("appId") int appId,
                              HttpServletRequest request,
-                             @RequestParam("file") MultipartFile file) throws IOException {
+                             MultipartRequest multiPartRequest) throws IOException {
         log.info("Received REST request to upload a scan to application " + appId + ".");
 
         String result = checkKey(request, UPLOAD);
@@ -264,22 +276,17 @@ public class ApplicationRestController extends TFRestController {
             return failure(result);
         }
 
-        Integer myChannelId = scanTypeCalculationService.calculateScanType(appId, file, request.getParameter("channelId"));
+        MultiValueMap<String, MultipartFile> fileMap = multiPartRequest.getMultiFileMap();
 
-        if (myChannelId == null) {
-            return failure(SCAN_TYPE_LOOKUP_FAILED);
+        List<MultipartFile> fileList = list();
+
+        if (!fileMap.isEmpty()) {
+            for(List<MultipartFile> subList : fileMap.values()){
+                fileList.addAll(subList);
+            }
         }
 
-        String fileName = scanTypeCalculationService.saveFile(myChannelId, file);
-
-        ScanCheckResultBean returnValue = scanService.checkFile(myChannelId, fileName);
-
-        if (ScanImportStatus.SUCCESSFUL_SCAN == returnValue.getScanCheckResult()) {
-            Scan scan = scanMergeService.saveRemoteScanAndRun(myChannelId, fileName, file.getOriginalFilename());
-            return RestResponse.success(scan);
-        } else {
-            return failure(returnValue.getScanCheckResult().toString());
-        }
+        return uploadScanService.processMultiFileUpload(fileList, null, appId, request.getParameter("channelId"));
     }
 
     /**
@@ -373,77 +380,131 @@ public class ApplicationRestController extends TFRestController {
         }
     }
 
-    /**
-     * Add tag to application.
-     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#addAppTag(String appId, String tagId)
-     *
-     */
-    @RequestMapping(headers="Accept=application/json", value="/{appId}/addTag/{tagId}", method=RequestMethod.GET)
-    @JsonView(AllViews.RestViewApplication2_1.class)
-    public Object addTag(HttpServletRequest request,
-                         @PathVariable("appId") int appId, @PathVariable("tagId") int tagId) throws IOException {
+    @RequestMapping(value = "/{appId}/update", method = RequestMethod.PUT, consumes = "application/x-www-form-urlencoded")
+    public Object updateApplication(@PathVariable("appId") Integer appId,
+                                    @RequestBody MultiValueMap<String, String> params,
+                                    Application application,
+                                    BindingResult bindingResult, HttpServletRequest request) {
 
-        log.info("Received REST request adding Tag " + tagId + " for Application " + appId + ".");
+        log.info("Received REST request for updating Application with id = " + appId + ".");
+
+        String result = checkKey(request, UPDATE);
+
+        if (!result.equals(API_KEY_SUCCESS)) {
+            return failure(result);
+        }
+
+        if(params == null || params.isEmpty()){
+            return failure("No parameters have been set");
+        }
+
+        try {
+            return applicationService.updateApplicationFromREST(appId, params, bindingResult);
+        }catch (RuntimeException e){
+            return FormRestResponse.failure(e.getMessage(), bindingResult);
+        }
+    }
+
+
+    @RequestMapping(value = "/{appId}/tags/add/{tagId}", method = RequestMethod.POST, headers="Accept=application/json")
+    @JsonView(AllViews.RestViewTag.class)
+    public Object addTag(@PathVariable("appId") Integer appId, @PathVariable("tagId") Integer tagId,
+                         HttpServletRequest request){
+
+            log.info("Received REST request adding Tag " + tagId + " for Application " + appId + ".");
         String result = checkKey(request, ADD_TAG);
+
         if (!result.equals(API_KEY_SUCCESS)) {
             return failure(result);
         }
 
         Application application = applicationService.loadApplication(appId);
+
+        if(application == null){
+            log.warn("Invalid Application ID.");
+            return failure(APPLICATION_LOOKUP_FAILED);
+        }
+
         Tag tag = tagService.loadTag(tagId);
 
-        String msg;
-        if (application == null || tag == null) {
-            msg = "Invalid Application ID or Tag ID.";
-            log.warn(msg);
-            return failure(msg);
-        } else {
-            if (application.containTag(tag)) {
-                msg = "The tag was already added to application.";
-                log.warn(msg);
-                return failure(msg);
-            }
-
-            application.getTags().add(tag);
-            applicationService.storeApplication(application);
-            return RestResponse.success(application);
+        if(tag == null){
+            log.warn("Invalid Tag ID.");
+            return failure(TAG_LOOKUP_FAILED);
         }
+
+        if(application.containTag(tag)){
+            log.warn("Tag has already been set on this application");
+            return failure("Tag has already been set on this application");
+        }
+
+        application.getTags().add(tag);
+        applicationService.storeApplication(application);
+
+        return success(application);
     }
 
     /**
      * Remove tag from application.
-     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#addAppTag(String appId, String tagId)
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#removeAppTag(String appId, String tagId)
      *
      */
-    @RequestMapping(headers="Accept=application/json", value="/{appId}/removeTag/{tagId}", method=RequestMethod.GET)
+    @RequestMapping(value = "/{appId}/tags/remove/{tagId}", method = RequestMethod.POST, headers="Accept=application/json")
     @JsonView(AllViews.RestViewApplication2_1.class)
     public Object removeTag(HttpServletRequest request,
                          @PathVariable("appId") int appId, @PathVariable("tagId") int tagId) throws IOException {
 
         log.info("Received REST request removing Tag " + tagId + " from Application " + appId + ".");
         String result = checkKey(request, REMOVE_TAG);
+
         if (!result.equals(API_KEY_SUCCESS)) {
             return failure(result);
         }
 
         Application application = applicationService.loadApplication(appId);
+
+        if(application == null){
+            log.warn("Invalid Application ID.");
+            return failure(APPLICATION_LOOKUP_FAILED);
+        }
+
         Tag tag = tagService.loadTag(tagId);
 
-        String msg;
-        if (application == null || tag == null) {
-            msg = "Invalid Application ID or Tag ID.";
-            log.warn(msg);
-            return failure(msg);
-        } else {
-            if (!application.containTag(tag)) {
-                msg = "The tag wasn't added to application.";
-                log.warn(msg);
-                return failure(msg);
-            }
+        if(tag == null){
+            log.warn("Invalid Tag ID.");
+            return failure(TAG_LOOKUP_FAILED);
+        }
 
+        if(application.containTag(tag)){
             application.getTags().remove(tag);
             applicationService.storeApplication(application);
-            return RestResponse.success(application);
+
+            return success("Tag successfully removed from application");
+        }else{
+            return failure("Tag no present on this application");
+        }
+    }
+
+    @RequestMapping(headers="Accept=application/json", value="/{appId}/scans", method=RequestMethod.GET)
+    @JsonView(AllViews.RestViewScanList.class)
+    public Object scanList(HttpServletRequest request,
+                           @PathVariable("appId") int appId) throws IOException {
+
+        String result = checkKey(request, SCAN_LIST);
+        if (!result.equals(API_KEY_SUCCESS)) {
+            return failure(result);
+        }
+
+        Application application = applicationService.loadApplication(appId);
+
+        if (application == null) {
+            log.warn("Invalid Application ID.");
+            return failure(APPLICATION_LOOKUP_FAILED);
+        }else if(application.getScans() == null || application.getScans().isEmpty()){
+            String message = "No scans associated with application: " + appId;
+            log.warn(message);
+            return failure(message);
+        }else{
+            return success(application.getScans());
         }
     }
 }

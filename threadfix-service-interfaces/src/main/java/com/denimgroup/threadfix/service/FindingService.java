@@ -24,7 +24,9 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
+import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
 import org.springframework.validation.BindingResult;
 
@@ -164,4 +166,6 @@ public interface FindingService {
 	List<String> getAllManualUrls(Integer appId);
 
 	long getTotalUnmappedFindings();
+
+    List<Finding> loadByGenericSeverityAndChannelType(GenericSeverity genericSeverity, ChannelType channelType);
 }
