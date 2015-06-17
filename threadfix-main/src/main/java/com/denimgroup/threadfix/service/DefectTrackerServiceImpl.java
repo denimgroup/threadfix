@@ -34,12 +34,16 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Service
 @Transactional(readOnly = false) // used to be true
@@ -61,23 +65,33 @@ public class DefectTrackerServiceImpl implements DefectTrackerService {
 
 	@Override
 	public List<DefectTracker> loadAllDefectTrackers() {
-		return defectTrackerDao.retrieveAll();
+
+        List<DefectTracker> decrypted = list();
+        List<DefectTracker> encrypted = defectTrackerDao.retrieveAll();
+
+        if(encrypted != null && !encrypted.isEmpty()){
+            for(DefectTracker defectTracker : encrypted){
+                decrypted.add(decryptCredentials(defectTracker));
+            }
+        }
+
+		return decrypted;
 	}
 
 	@Override
 	public DefectTracker loadDefectTracker(int defectId) {
-		return defectTrackerDao.retrieveById(defectId);
+		return decryptCredentials(defectTrackerDao.retrieveById(defectId));
 	}
 
 	@Override
 	public DefectTracker loadDefectTracker(String name) {
-		return defectTrackerDao.retrieveByName(name);
+		return decryptCredentials(defectTrackerDao.retrieveByName(name));
 	}
 
 	@Override
 	@Transactional(readOnly = false)
 	public void storeDefectTracker(DefectTracker defectTracker) {
-		defectTrackerDao.saveOrUpdate(defectTracker);
+		defectTrackerDao.saveOrUpdate(encryptCredentials(defectTracker));
 	}
 
 	@Override
@@ -155,4 +169,63 @@ public class DefectTrackerServiceImpl implements DefectTrackerService {
 		
 		return false;
 	}
+
+    @Override
+    public boolean checkCredentials(DefectTracker defectTracker, BindingResult result) {
+
+        if (defectTracker != null && defectTracker.getDefectTrackerType() != null && defectTracker.getUrl() != null
+                && defectTracker.getDefaultUsername() != null && defectTracker.getDefaultPassword() != null) {
+
+            AbstractDefectTracker tracker = DefectTrackerFactory.getTracker(
+                    defectTrackerTypeDao.retrieveById(defectTracker.getDefectTrackerType().getId()));
+
+            if (tracker != null) {
+                tracker.setUrl(defectTracker.getUrl());
+                tracker.setUsername(defectTracker.getDefaultUsername());
+                tracker.setPassword(defectTracker.getDefaultPassword());
+
+                if(tracker.hasValidCredentials()){
+                    return true;
+                }else if(tracker.getLastError() != null){
+                    result.rejectValue("defaultUsername", null, null, tracker.getLastError());
+                }
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public DefectTracker encryptCredentials(DefectTracker defectTracker) {
+
+        try{
+            if(defectTracker != null && defectTracker.getDefaultUsername() != null && !defectTracker.getDefaultUsername().isEmpty()
+                    && defectTracker.getDefaultPassword() != null && !defectTracker.getDefaultPassword().isEmpty()){
+
+                defectTracker.setEncryptedDefaultUsername(ESAPI.encryptor().encrypt(defectTracker.getDefaultUsername()));
+                defectTracker.setEncryptedDefaultPassword(ESAPI.encryptor().encrypt(defectTracker.getDefaultPassword()));
+            }
+        } catch (EncryptionException e) {
+            log.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
+        }
+
+        return defectTracker;
+    }
+
+    @Override
+    public DefectTracker decryptCredentials(DefectTracker defectTracker) {
+
+        try{
+            if(defectTracker != null && defectTracker.getEncryptedDefaultUsername() != null && !defectTracker.getEncryptedDefaultUsername().isEmpty()
+                    && defectTracker.getEncryptedDefaultPassword() != null && !defectTracker.getEncryptedDefaultPassword().isEmpty()){
+
+                defectTracker.setDefaultUsername(ESAPI.encryptor().decrypt(defectTracker.getEncryptedDefaultUsername()));
+                defectTracker.setDefaultPassword(ESAPI.encryptor().decrypt(defectTracker.getEncryptedDefaultPassword()));
+            }
+        } catch (EncryptionException e) {
+            log.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
+        }
+
+        return defectTracker;
+    }
 }

@@ -20,15 +20,12 @@ myAppModule.controller('UploadScanController', function ($scope, $modalInstance,
         $scope.uploading = true;
 
         //$files: an array of files selected, each file has name, size, and type.
-        for (var i = 0; i < $files.length; i++) {
-            var file = $files[i];
             $scope.upload = $upload.upload({
                 url: url,
                 method: "POST",
                 headers: {'Accept': 'application/json'},
                 // withCredentials: true,
-                file: file
-                // file: $files, //upload multiple files, this feature only works in HTML5 FromData browsers
+                file: $files //upload multiple files, this feature only works in HTML5 FromData browsers
                 /* set file formData name for 'Content-Desposition' header. Default: 'file' */
                 //fileFormDataName: myFile, //OR for HTML5 multiple upload only a list: ['name1', 'name2', ...]
                 /* customize how data is added to formData. See #40#issuecomment-28612000 for example */
@@ -54,7 +51,6 @@ myAppModule.controller('UploadScanController', function ($scope, $modalInstance,
                     $scope.uploading = false;
                 }
             });
-        }
     };
 
     $scope.alerts = [];

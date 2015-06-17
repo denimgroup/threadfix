@@ -373,7 +373,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
     $scope.showCreateDefectTrackerModal = function() {
         var modalInstance = $modal.open({
             templateUrl: 'newTrackerModal.html',
-            controller: 'ModalControllerWithConfig',
+            controller: 'CreateEditDefectTrackerModalController',
             resolve: {
                 url: function() {
                     return tfEncoder.encode("/configuration/defecttrackers/new");

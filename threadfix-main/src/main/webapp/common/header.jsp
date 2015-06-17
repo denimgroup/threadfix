@@ -117,6 +117,16 @@
 						    	<a id="wafsLink" href="<spring:url value="/wafs" htmlEscape="true"/>">WAFs</a>
 						    </li>
 					    </security:authorize>
+                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS">
+                            <li class="normalLinks">
+                                <a id="scamResultFiltersLink" href="<spring:url value="/configuration/scanResultFilters" htmlEscape="true"/>">Scan Result Filters</a>
+                            </li>
+                      	</security:authorize>
+                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT">
+                            <li class="normalLinks">
+                                <a id="customCweTextLink" href="<spring:url value="/configuration/customCweText" htmlEscape="true"/>">Custom CWE Text</a>
+                            </li>
+                        </security:authorize>
 						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_CAN_MANAGE_USERS,ROLE_CAN_MANAGE_ROLES,ROLE_CAN_VIEW_ERROR_LOGS">
 							<li class="divider" role="presentation"></li>
                             <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS">

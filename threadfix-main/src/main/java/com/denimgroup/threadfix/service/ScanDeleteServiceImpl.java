@@ -482,7 +482,10 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			List<Vulnerability> vulnsToUpdate = list();
 			
 			if (scan.getScanCloseVulnerabilityMaps() != null) {
-				for (ScanCloseVulnerabilityMap map : scan.getScanCloseVulnerabilityMaps()) {
+
+				List<ScanCloseVulnerabilityMap> scanCloseVulnerabilityMapsCopy = listFrom(scan.getScanCloseVulnerabilityMaps());
+
+				for (ScanCloseVulnerabilityMap map : scanCloseVulnerabilityMapsCopy) {
 					if (map != null && map.getVulnerability() != null &&
 							map.getVulnerability().getOriginalFinding() != null 
 							&& map.getVulnerability().getOriginalFinding().getScan() != null 

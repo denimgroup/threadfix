@@ -56,7 +56,7 @@ myAppModule.controller('ScanDetailPageController', function ($scope, $window, $h
                 if (data.success == false) {
                     $scope.errorMessage = data.message;
                 } else {
-                    reportExporter.exportScan(data, "application/octet-stream", scan.originalFileName);
+                    reportExporter.exportScan(data, "application/octet-stream", scan.originalFileNames[0]);
                 }
             }).
             error(function(data, status, headers, config) {

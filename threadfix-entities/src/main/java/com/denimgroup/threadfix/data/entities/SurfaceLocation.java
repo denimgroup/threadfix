@@ -176,10 +176,10 @@ public class SurfaceLocation extends BaseEntity {
 					url = new URL(protocol, host, tempPort, path + '?' + query);
 				} else if (path != null && host != null) {
 
-                    String HOST_PATTERN = "http://([a-zA-Z0-9_.]*)";
+                    String HOST_PATTERN = "(http|https)://([a-zA-Z0-9_.]*)";
                     String tempHost = getRegexResult(host, HOST_PATTERN);
                     tempHost = (tempHost != null && !tempHost.isEmpty()) ? tempHost : host;
-					url = new URL("http", tempHost, tempPort, path);
+					url = new URL(host.contains("https") ? "https" : "http", tempHost, tempPort, path);
 				} else if (path != null) {
 					url = new URL("http", "localhost", tempPort, path);
 				} else {
@@ -204,7 +204,7 @@ public class SurfaceLocation extends BaseEntity {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(targetString);
 
-        return matcher.find() ? matcher.group(1) : null;
+        return matcher.find() ? matcher.group(2) : null;
     }
 
 	/**

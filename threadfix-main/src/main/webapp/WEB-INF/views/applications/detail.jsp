@@ -4,6 +4,7 @@
 	<title><c:out value="${ application.name }"/></title>
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/dyn-form.css"/>
 	<cbs:cachebustscript src="/scripts/add-defect-tracker-modal-controller.js"/>
+    <cbs:cachebustscript src="/scripts/create-edit-defect-tracker-modal-controller.js"/>
 	<cbs:cachebustscript src="/scripts/application-detail-page-controller.js"/>
 	<cbs:cachebustscript src="/scripts/application-page-modal-controller.js"/>
 	<cbs:cachebustscript src="/scripts/defect-submission-modal-controller.js"/>

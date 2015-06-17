@@ -210,7 +210,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
             // in the main webapp, we need to check whether the user has configured a location to store scan files
             DefaultConfiguration defaultConfig = defaultConfigService.loadCurrentConfiguration();
 
-            if(!defaultConfig.fileUploadLocationExists()) {
+            if (!defaultConfig.fileUploadLocationExists()) {
                 actuallyDelete();
             }
         }
@@ -746,7 +746,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
     protected Scan createScanWithFileNames() {
         Scan scan = new Scan();
-        scan.setOriginalFileName(originalFileName);
+        scan.setOriginalFileNames(list(originalFileName));
 
         if (defaultConfigService != null) {
             DefaultConfiguration defaultConfiguration = defaultConfigService.loadCurrentConfiguration();

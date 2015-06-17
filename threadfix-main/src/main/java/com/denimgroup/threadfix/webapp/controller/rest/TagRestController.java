@@ -1,91 +1,148 @@
-////////////////////////////////////////////////////////////////////////
-//
-//     Copyright (c) 2009-2014 Denim Group, Ltd.
-//
-//     The contents of this file are subject to the Mozilla Public License
-//     Version 2.0 (the "License"); you may not use this file except in
-//     compliance with the License. You may obtain a copy of the License at
-//     http://www.mozilla.org/MPL/
-//
-//     Software distributed under the License is distributed on an "AS IS"
-//     basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
-//     License for the specific language governing rights and limitations
-//     under the License.
-//
-//     The Original Code is ThreadFix.
-//
-//     The Initial Developer of the Original Code is Denim Group, Ltd.
-//     Portions created by Denim Group, Ltd. are Copyright (C)
-//     Denim Group, Ltd. All Rights Reserved.
-//
-//     Contributor(s): Denim Group, Ltd.
-//
-////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller.rest;
 
-import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Tag;
-import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.TagService;
+import com.denimgroup.threadfix.views.AllViews.RestViewTag;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 
-/**
- * This is a QA only class so we can skip steps while testing
- *
- * Created by daniel on 11/24/14.
- */
+@RestController
+@RequestMapping("/rest/tags")
+public class TagRestController extends TFRestController {
 
-@Controller
-@RequestMapping("/rest/tag")
-public class TagRestController {
+    private static final String NEW = "newTag";
+    private static final String LIST = "list";
+    private static final String UPDATE = "updateTag";
+    private static final String DELETE = "deleteTag";
+    private static final String LIST_APPLICATIONS = "listApplications";
 
     @Autowired
-    TagService tagService;
-    @Autowired
-    ApplicationService applicationService;
-    @Autowired
-    OrganizationService organizationService;
+    private TagService tagService;
 
-    @RequestMapping(value = "create", method = RequestMethod.POST)
-    public @ResponseBody RestResponse<Tag> createTag(@RequestParam String tagname, @RequestParam Boolean commenttag) {
+    @RequestMapping(value = "/new", method = RequestMethod.POST, headers = "Accept=application/json")
+    @JsonView(RestViewTag.class)
+    public Object newTag(@RequestParam("name") String tagName, HttpServletRequest request){
+
+        log.info("Received REST request for a new Tag.");
+
+        String result = checkKey(request, NEW);
+        if (!result.equals(API_KEY_SUCCESS)) {
+            return failure(result);
+        }
+
+        if(tagName == null || tagName.trim().isEmpty()){
+            return failure("Name is required");
+        }
+
+        Tag dbTag = tagService.loadApplicationTag(tagName);
+
+        if (dbTag != null){
+            return failure("Name is already taken by another tag");
+        }
+
         Tag tag = new Tag();
-
-        tag.setName(tagname);
-        tag.setTagForComment(commenttag);
+        tag.setName(tagName);
+        tag.setTagForComment(false);
 
         tagService.storeTag(tag);
 
         return success(tag);
     }
 
-    @RequestMapping(value = "attach", method = RequestMethod.POST)
-    public @ResponseBody RestResponse<Tag> attachApp(@RequestParam String tagname,
-                                                     @RequestParam String appname,
-                                                     @RequestParam String teamname) {
-        Tag tag = tagService.loadApplicationTag(tagname);
+    @RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
+    @JsonView(RestViewTag.class)
+    public Object list(HttpServletRequest request){
 
-        Application application = applicationService.loadApplication(appname, organizationService.loadByName(teamname).getId());
-        List<Tag> tagList = application.getTags();
+        log.info("Received REST request for Tag list.");
 
-        if (!tagList.contains(tag)) {
-            tagList.add(tag);
+        String result = checkKey(request, LIST);
+        if (!result.equals(API_KEY_SUCCESS)) {
+            return failure(result);
         }
 
-        application.setTags(tagList);
+        List<Tag> tags = tagService.loadAll();
 
-        applicationService.storeApplication(application);
+        return success(tags);
+    }
+
+    @RequestMapping(value = "/{tagId}/update", method = RequestMethod.POST, headers = "Accept=application/json")
+    @JsonView(RestViewTag.class)
+    public Object updateTag(@PathVariable("tagId") Integer tagId, @RequestParam("name") String tagName, HttpServletRequest request){
+
+        log.info("Received REST request for updating an existing Tag.");
+
+        String result = checkKey(request, UPDATE);
+        if (!result.equals(API_KEY_SUCCESS)) {
+            return failure(result);
+        }
+
+        if(tagName == null || tagName.trim().isEmpty()){
+            return failure("Name is required");
+        }
+
+        Tag existingTag = tagService.loadApplicationTag(tagName);
+
+        if(existingTag != null && !tagId.equals(existingTag.getId())){
+            return failure("Name is already taken by another tag");
+        }
+
+        Tag tag = tagService.loadTag(tagId);
+
+        if(tag == null){
+            return failure("No tag exists for id: " + tagId);
+        }
+
+        tag.setName(tagName);
+
+        tagService.storeTag(tag);
 
         return success(tag);
+    }
+
+    @RequestMapping(value = "/{tagId}/delete", method = RequestMethod.POST, headers = "Accept=application/json")
+    public Object deleteTag(@PathVariable("tagId") Integer tagId, HttpServletRequest request){
+
+        log.info("Received REST request for deleting an existing Tag.");
+
+        String result = checkKey(request, DELETE);
+        if (!result.equals(API_KEY_SUCCESS)) {
+            return failure(result);
+        }
+
+        Tag tag = tagService.loadTag(tagId);
+
+        if(tag != null && tag.getDeletable()){
+            tagService.deleteById(tagId);
+            return success("Tag deleted successfully");
+        }else{
+            return failure("Tag Id is invalid or Tag currently can not be deleted.");
+        }
+    }
+
+    @RequestMapping(value = "/{tagId}/listApplications", method = RequestMethod.GET, headers = "Accept=application/json")
+    @JsonView(RestViewTag.class)
+    public Object listApplications(@PathVariable("tagId") Integer tagId, HttpServletRequest request){
+
+        log.info("Received REST request for listing Applications with a Tag.");
+
+        String result = checkKey(request, LIST_APPLICATIONS);
+        if (!result.equals(API_KEY_SUCCESS)) {
+            return failure(result);
+        }
+
+        Tag tag = tagService.loadTag(tagId);
+
+        if(tag == null){
+            return failure("No tag exists for id: " + tagId);
+        }
+
+        return success(tag.getApplications());
     }
 }

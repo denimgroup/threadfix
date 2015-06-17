@@ -310,6 +310,8 @@ public class ApplicationsController {
 
 		applicationService.decryptCredentials(application);
 
+        defectTrackerService.decryptCredentials(application.getDefectTracker());
+
 		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
 		ProjectMetadata data = null;
 
@@ -427,8 +429,12 @@ public class ApplicationsController {
 	public @ResponseBody RestResponse<?> readJson(@ModelAttribute DefectTrackerBean bean) {
 		DefectTracker defectTracker = defectTrackerService.loadDefectTracker(bean
 				.getDefectTrackerId());
-		AbstractDefectTracker dt = DefectTrackerFactory.getTrackerByType(defectTracker,
-                bean.getUserName(), bean.getPassword());
+
+        String username = bean.isUseDefaultCredentials() ? defectTracker.getDefaultUsername() : bean.getUserName();
+        String password = bean.isUseDefaultCredentials() ? defectTracker.getDefaultPassword() : bean.getPassword();
+
+		AbstractDefectTracker dt = DefectTrackerFactory.getTrackerByType(defectTracker, username, password);
+
 		if (dt == null) {
 			log.warn("Incorrect Defect Tracker credentials submitted.");
 			return failure("Authentication failed.");

@@ -25,8 +25,10 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 
 import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.FindingDao;
+import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.DeletedFinding;
 import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -283,4 +285,17 @@ public class HibernateFindingDao
 				.uniqueResult();
 		return maybeLong == null ? 0 : maybeLong;
 	}
+
+    @Override
+    public List<Finding> retrieveByGenericSeverityAndChannelType(GenericSeverity genericSeverity, ChannelType channelType) {
+
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Finding.class, "finding")
+                .createCriteria("finding.channelVulnerability", "channelVulnerability")
+                .createCriteria("finding.channelSeverity", "channelSeverity")
+                .createCriteria("channelSeverity.severityMap", "severityMap")
+                .add(Restrictions.eq("severityMap.genericSeverity", genericSeverity))
+                .add(Restrictions.eq("channelVulnerability.channelType", channelType));
+
+        return criteria.list();
+    }
 }
