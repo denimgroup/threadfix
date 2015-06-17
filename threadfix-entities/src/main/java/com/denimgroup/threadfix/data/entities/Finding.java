@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.data.entities;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.sun.scenario.effect.Merge;
 import org.hibernate.annotations.Cascade;
 
 import javax.annotation.Nullable;
