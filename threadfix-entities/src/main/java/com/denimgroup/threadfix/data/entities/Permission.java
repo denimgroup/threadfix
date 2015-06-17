@@ -28,7 +28,7 @@ public enum Permission {
 	CAN_GENERATE_REPORTS("ROLE_CAN_GENERATE_REPORTS","canGenerateReports"),
 	CAN_GENERATE_WAF_RULES("ROLE_CAN_GENERATE_WAF_RULES","canGenerateWafRules"),
 	CAN_MANAGE_API_KEYS("ROLE_CAN_MANAGE_API_KEYS","canManageApiKeys"),
-	CAN_MANAGE_EMAIL_REPORTS("ROLE_CAN_MANAGE_API_KEYS","canManageApiKeys"),//didn't know how to add properly permissions, so using a workaround
+	CAN_MANAGE_EMAIL_REPORTS("ROLE_CAN_MANAGE_EMAIL_REPORTS","canManageEmailReports"),
 	CAN_MANAGE_APPLICATIONS("ROLE_CAN_MANAGE_APPLICATIONS","canManageApplications"),
 	CAN_MANAGE_GRC_TOOLS("ROLE_CAN_MANAGE_GRC_TOOLS","canManageGrcTools"),
 	CAN_MANAGE_DEFECT_TRACKERS("ROLE_CAN_MANAGE_DEFECT_TRACKERS","canManageDefectTrackers"),
