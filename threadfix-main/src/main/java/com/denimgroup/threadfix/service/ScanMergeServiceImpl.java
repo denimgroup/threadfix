@@ -280,6 +280,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 
         scanDao.saveOrUpdate(combinedScan);
 
+		applicationChannel.getApplication().getScans().add(scan);
+
         vulnerabilityFilterService.updateVulnerabilities(
 				applicationChannel.getApplication().getOrganization().getId(),
 				applicationChannel.getApplication().getId());
