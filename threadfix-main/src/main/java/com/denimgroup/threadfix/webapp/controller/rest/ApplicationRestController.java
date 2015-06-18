@@ -405,11 +405,13 @@ public class ApplicationRestController extends TFRestController {
         }
     }
 
+
     @RequestMapping(value = "/{appId}/tags/add/{tagId}", method = RequestMethod.POST, headers="Accept=application/json")
     @JsonView(AllViews.RestViewTag.class)
     public Object addTag(@PathVariable("appId") Integer appId, @PathVariable("tagId") Integer tagId,
                          HttpServletRequest request){
 
+            log.info("Received REST request adding Tag " + tagId + " for Application " + appId + ".");
         String result = checkKey(request, ADD_TAG);
 
         if (!result.equals(API_KEY_SUCCESS)) {
@@ -430,7 +432,7 @@ public class ApplicationRestController extends TFRestController {
             return failure(TAG_LOOKUP_FAILED);
         }
 
-        if(application.getTags().contains(tag)){
+        if(application.containTag(tag)){
             log.warn("Tag has already been set on this application");
             return failure("Tag has already been set on this application");
         }
@@ -441,10 +443,17 @@ public class ApplicationRestController extends TFRestController {
         return success(application);
     }
 
+    /**
+     * Remove tag from application.
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#removeAppTag(String appId, String tagId)
+     *
+     */
     @RequestMapping(value = "/{appId}/tags/remove/{tagId}", method = RequestMethod.POST, headers="Accept=application/json")
-    public Object removeTag(@PathVariable("appId") Integer appId, @PathVariable("tagId") Integer tagId,
-                            HttpServletRequest request){
+    @JsonView(AllViews.RestViewApplication2_1.class)
+    public Object removeTag(HttpServletRequest request,
+                         @PathVariable("appId") int appId, @PathVariable("tagId") int tagId) throws IOException {
 
+        log.info("Received REST request removing Tag " + tagId + " from Application " + appId + ".");
         String result = checkKey(request, REMOVE_TAG);
 
         if (!result.equals(API_KEY_SUCCESS)) {
@@ -465,7 +474,7 @@ public class ApplicationRestController extends TFRestController {
             return failure(TAG_LOOKUP_FAILED);
         }
 
-        if(application.getTags().contains(tag)){
+        if(application.containTag(tag)){
             application.getTags().remove(tag);
             applicationService.storeApplication(application);
 

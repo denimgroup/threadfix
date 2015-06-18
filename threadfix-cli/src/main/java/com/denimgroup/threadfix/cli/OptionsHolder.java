@@ -154,6 +154,61 @@ public class OptionsHolder {
                 .create("ra");
         options.addOption(getRulesForApp);
 
+        Option createTag = OptionBuilder.withArgName("name> <[isCommentTag]")
+                .withValueSeparator(' ')
+                .hasArgs(2)
+                .withLongOpt("create-tag")
+                .withDescription("Creates a ThreadFix Tag and returns its JSON. Set true/false for optional isCommentTag parameter.")
+                .create("ctg");
+        options.addOption(createTag);
+
+        Option searchTag = OptionBuilder.withArgName("property> <value")
+                .withValueSeparator(' ')
+                .hasArgs(2)
+                .withLongOpt("search-tag")
+                .withDescription("Searches for ThreadFix Tags by either name or id, and returns their JSON.")
+                .create("stg");
+        options.addOption(searchTag);
+
+
+        Option updateTag = OptionBuilder.withArgName("tagId> <name")
+                .hasArgs(2)
+                .withLongOpt("update-tag")
+                .withDescription("Update ThreadFix Tag, and returns their JSON.")
+                .create("utg");
+        options.addOption(updateTag);
+
+
+        Option removeTag = OptionBuilder.withArgName("tagId")
+                .hasArgs(1)
+                .withLongOpt("remove-tag")
+                .withDescription("Remove ThreadFix Tag, and returns message.")
+                .create("rtg");
+        options.addOption(removeTag);
+
+
+
+        Option tags = OptionBuilder.withLongOpt("tags")
+                .withDescription("Fetches a list of ThreadFix tags.")
+                .create("tg");
+        options.addOption(tags);
+
+        Option addAppTag = OptionBuilder.withArgName("applicationId> <tagId")
+                .withValueSeparator(' ')
+                .hasArgs(2)
+                .withLongOpt("addAppTag")
+                .withDescription("Add Tag for the given applicationId")
+                .create("aat");
+        options.addOption(addAppTag);
+
+        Option removeAppTag = OptionBuilder.withArgName("applicationId> <tagId")
+                .withValueSeparator(' ')
+                .hasArgs(2)
+                .withLongOpt("removeAppTag")
+                .withDescription("Remove Tag for the given applicationId")
+                .create("rat");
+        options.addOption(removeAppTag);
+
         return options;
     }
 
