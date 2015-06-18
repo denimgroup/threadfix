@@ -195,17 +195,18 @@
                 </td>
                 <td><button id="addDefectTrackerButton" class="btn" ng-click="switchTo('addDefectTracker')">Set Defect Tracker</button></td>
 			</tr>
-            <tr>
-                <td>Main Default Profile</td>
-                <td ng-show="object.defectTracker">
+            <tr ng-show="object.defectTracker">
+                <td>Default Defect Profile</td>
+                <td ng-show="object.defectTracker.defaultDefectProfiles">
                     <select ng-model="object.mainDefaultDefectProfile.id" name="mainDefaultDefectProfile.id">
-                            <option value="" ng-selected="{{!object.mainDefaultDefectProfile.id}}">No main profile</option>
+                            <option value="" ng-selected="{{!object.mainDefaultDefectProfile.id}}">Select profile</option>
                             <option ng-repeat="defaultProfile in object.defectTracker.defaultDefectProfiles" value="{{ defaultProfile.id }}"
                                     ng-selected="{{defaultProfile.id == object.mainDefaultDefectProfile.id}}">
                                 {{defaultProfile.name}}
                             </option>
                     </select>
                 </td>
+                <td><button id="addDefectProfileButton" class="btn" ng-click="switchTo('addDefectProfile')">Create Defect Profile</button></td>
             </tr>
             <tr>
                 <td>
