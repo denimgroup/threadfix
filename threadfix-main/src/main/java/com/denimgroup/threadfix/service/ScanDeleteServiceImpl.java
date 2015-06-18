@@ -24,26 +24,20 @@
 
 package com.denimgroup.threadfix.service;
 
-import java.io.File;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.*;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.denimgroup.threadfix.data.dao.DefectDao;
-import com.denimgroup.threadfix.data.dao.FindingDao;
-import com.denimgroup.threadfix.data.dao.ScanDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityCommentDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.WafRuleDao;
+import java.io.File;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 
-import static com.denimgroup.threadfix.CollectionUtils.*;
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.listFrom;
 
 @Service
 @Transactional(readOnly = false)
@@ -808,7 +802,6 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 	 * Sets open and close times for the vuln based on the current set of
 	 * close and reopen maps.
 	 * @param vuln
-	 * @param scanToDelete
 	 */
 	private void updateVulnStatus(Vulnerability vuln) {
 		if (vuln == null || vuln.getFindings() == null ||

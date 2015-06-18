@@ -13,7 +13,7 @@ SET lib=
 @REM \. on their path
 set PWD=%cd%
 set CATALINA_HOME=%PWD%\tomcat
-set CATALINA_OPTS=-Xms512m -Xmx1536m
+set CATALINA_OPTS=-Xms512m -Xmx1536m 		
 for /f tokens^=2-5^ delims^=.-_^" %%j in ('java -fullversion 2^>^&1') do set "jver=%%j%%k%%l%%m"
 echo jver is %jver%
 if %jver% GTR 0 (
@@ -46,8 +46,8 @@ if exist tomcat\keystore echo Keystore exists
 @REM Run tomcat: must have quotes incase var has spaces in it
 call "%CATALINA_HOME%\bin\startup.bat" start
 
-echo
-echo If the Tomcat DOS shell quit immediately, it is likely that
+echo 
+echo If the Tomcat DOS shell quit immediately, it is likely that 
 echo there is another service listening on port 8080 or 8443.
 echo
 
