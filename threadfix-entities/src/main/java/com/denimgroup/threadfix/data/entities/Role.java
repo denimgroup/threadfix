@@ -53,7 +53,7 @@ public class Role extends AuditableEntity {
 			canManageRemoteProviders, canManageRoles, canManageTeams,
 			canManageUsers, canManageWafs, canManageVulnFilters, canModifyVulnerabilities,
 			canSubmitDefects, canUploadScans, canViewErrorLogs, canManageScanAgents, canManageSystemSettings,
-            canViewJobStatuses, enterprise, canManageTags, canSubmitComments, canManageScanResultFilters, canManageCustomCweText;
+            canViewJobStatuses, enterprise, canManageTags, canSubmitComments, canManageScanResultFilters, canManageCustomCweText, canManageEmailReports;
 
     public static final String[] PROTECTED_PERMISSIONS = {
             "canManageRoles", "canManageUsers"
@@ -64,7 +64,7 @@ public class Role extends AuditableEntity {
             "canManageVulnFilters", "canModifyVulnerabilities", "canUploadScans", "canViewErrorLogs", "canSubmitDefects",
             "canManageWafs", "canGenerateWafRules", "canManageApiKeys", "canManageRemoteProviders",
             "canGenerateReports", "canManageApplications", "enterprise", "canManageScanAgents",
-            "canManageSystemSettings", "canManageTags", "canSubmitComments", "canManageCustomCweText"
+            "canManageSystemSettings", "canManageTags", "canSubmitComments", "canManageScanResultFilters", "canManageCustomCweText", "canManageEmailReports"
     };
 
     @NotEmpty(message = "{errors.required}")
@@ -319,6 +319,16 @@ public class Role extends AuditableEntity {
         this.canManageCustomCweText = canManageCustomCweText;
     }
 
+    @Column
+    @JsonView(AllViews.TableRow.class)
+    public Boolean getCanManageEmailReports() {
+        return canManageEmailReports;
+    }
+
+    public void setCanManageEmailReports(Boolean canManageEmailReports) {
+        this.canManageEmailReports = canManageEmailReports;
+    }
+
     @Transient
 	public Set<Permission> getPermissions() {
 		Set<Permission> permissions = new HashSet<Permission>();
@@ -393,6 +403,8 @@ public class Role extends AuditableEntity {
         if(getCanManageCustomCweText() != null && getCanManageCustomCweText()){
             permissions.add(Permission.CAN_MANAGE_CUSTOM_CWE_TEXT);
         }
+        if (getCanManageEmailReports() != null && getCanManageEmailReports())
+            permissions.add(Permission.CAN_MANAGE_EMAIL_REPORTS);
 
 		return permissions;
 	}
