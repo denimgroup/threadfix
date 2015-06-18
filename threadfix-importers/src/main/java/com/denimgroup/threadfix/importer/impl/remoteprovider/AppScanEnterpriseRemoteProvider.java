@@ -219,6 +219,10 @@ public class AppScanEnterpriseRemoteProvider extends AbstractRemoteProvider{
             );
 
             finding = constructFinding(findingMap);
+
+            if(finding != null){
+                finding.getSurfaceLocation().setHost(object.getString("9"));
+            }
         } catch (JSONException e) {
             throw new RestIOException(e, "Invalid response received.");
         }
