@@ -63,7 +63,7 @@ public class Role extends AuditableEntity {
             "canManageVulnFilters", "canModifyVulnerabilities", "canUploadScans", "canViewErrorLogs", "canSubmitDefects",
             "canManageWafs", "canGenerateWafRules", "canManageApiKeys", "canManageRemoteProviders",
             "canGenerateReports", "canManageApplications", "enterprise", "canManageScanAgents",
-            "canManageSystemSettings", "canManageTags", "canSubmitComments", "canManageCustomCweText"
+            "canManageSystemSettings", "canManageTags", "canSubmitComments", "canManageScanResultFilters", "canManageCustomCweText"
     };
 
     @NotEmpty(message = "{errors.required}")
