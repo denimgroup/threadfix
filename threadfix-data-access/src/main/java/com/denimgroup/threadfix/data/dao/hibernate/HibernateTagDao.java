@@ -104,6 +104,16 @@ public class HibernateTagDao
     }
 
     @Override
+    public List<Tag> retrieveTagsByName(String name) {
+        return getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.eq("name", name))
+                .addOrder(getOrder())
+                .list();
+    }
+
+    @Override
     public List<Tag> retrieveAllApplicationTags() {
         return getSession()
                 .createCriteria(getClassReference())

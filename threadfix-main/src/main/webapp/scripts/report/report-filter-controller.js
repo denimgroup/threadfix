@@ -269,7 +269,6 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
     };
 
     $scope.exportCSV = function(reportId, DISA_STIG) {
-
         var reportName = "search_export.csv";
 
         if (reportId === 3) {

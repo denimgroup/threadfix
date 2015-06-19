@@ -32,6 +32,10 @@ import org.hibernate.validator.constraints.URL;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 @Entity
 @Table(name = "DefectTracker")
@@ -158,7 +162,7 @@ public class DefectTracker extends AuditableEntity {
 
 	@OneToMany
 	@JoinColumn(name = "defectTrackerId")
-	@JsonView(AllViews.DefectTrackerInfos.class)
+	@JsonView({AllViews.DefectTrackerInfos.class})
 	public List<Application> getApplications() {
 		return applications;
 	}
@@ -191,6 +195,18 @@ public class DefectTracker extends AuditableEntity {
 			displayName += " (" + defectTrackerType.getName() + ")";
 		}
 		return displayName;
+	}
+
+	@Transient
+	@JsonView({AllViews.FormInfo.class})
+	public List<Map> getAssociatedApplications() {
+		List<Map> apps = list();
+		if (applications != null) {
+			for (Application application: applications) {
+				apps.add(map("id", application.getId(), "name", application.getName(), "team", application.getTeam()));
+			}
+		}
+		return apps;
 	}
 	
 }

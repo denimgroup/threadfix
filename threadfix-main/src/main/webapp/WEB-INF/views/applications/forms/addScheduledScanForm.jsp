@@ -76,7 +76,7 @@
                 </td>
             </tr>
             <tr>
-                <td>Scan Profile</td>
+                <td>Scan Config</td>
                 <td>
                     <input id="defectId"
                            style="z-index:4000;width:300px"

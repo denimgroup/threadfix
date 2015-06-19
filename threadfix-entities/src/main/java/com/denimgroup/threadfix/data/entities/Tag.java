@@ -124,6 +124,8 @@ public class Tag extends AuditableEntity {
         return applications.size()==0 && getVulnCommentsCount()==0 && !enterpriseTag;
     }
 
+    @Column(nullable = true)
+    @JsonView(Object.class)
     public Boolean getTagForComment() {
         return tagForComment;
     }

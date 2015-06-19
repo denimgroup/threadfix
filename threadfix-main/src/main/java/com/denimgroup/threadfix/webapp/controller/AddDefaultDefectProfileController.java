@@ -2,6 +2,7 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import javax.validation.Valid;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +28,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Controller
 @RequestMapping("/default/addProfile")
 public class AddDefaultDefectProfileController {
+
+	private final SanitizedLogger log = new SanitizedLogger(AddDefaultDefectProfileController.class);
 
 	@Autowired
 	private DefaultDefectProfileService defaultDefectProfileService;
@@ -63,6 +66,8 @@ public class AddDefaultDefectProfileController {
 		if (result.hasErrors()) {
 			return FormRestResponse.failure("Found some errors.",result);
 		}
+
+		log.info("Creating new Defect Profile with name " + defaultDefectProfile.getName());
 
 		defaultDefectProfile.setReferenceApplication(applicationService.loadApplication(defaultDefectProfile.getReferenceApplication().getId()));
 		defaultDefectProfile.setDefectTracker(defectTrackerService.loadDefectTracker(defaultDefectProfile.getDefectTracker().getId()));
