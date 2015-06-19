@@ -35,6 +35,7 @@ public interface TagService {
     List<Tag> loadAll();
     Tag loadApplicationTag(String name);
     Tag loadCommentTag(String name);
+    List<Tag> loadTagsByName(String name);
     Tag loadTag(int tagId);
     void storeTag(Tag tag);
     void deleteById(int tagId);

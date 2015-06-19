@@ -6,6 +6,8 @@ module.controller('TagsPageController', function($scope, $http, $modal, $log, tf
         return a.name.localeCompare(b.name);
     };
 
+    $scope.tagChecked = {allChecked: false};
+
     $scope.$on('rootScopeInitialized', function() {
         $http.get(tfEncoder.encode('/configuration/tags/map')).
             success(function(data) {
@@ -30,7 +32,6 @@ module.controller('TagsPageController', function($scope, $http, $modal, $log, tf
     });
 
     $scope.openNewModal = function() {
-
         var modalInstance = $modal.open({
             templateUrl: 'createTagModal.html',
             controller: 'ModalControllerWithConfig',
@@ -51,7 +52,6 @@ module.controller('TagsPageController', function($scope, $http, $modal, $log, tf
         });
 
         $scope.currentModal = modalInstance;
-
         modalInstance.result.then(function (tag) {
             if (tag.tagForComment) {
                 if (!$scope.commentTags) {
@@ -101,7 +101,6 @@ module.controller('TagsPageController', function($scope, $http, $modal, $log, tf
         });
 
         modalInstance.result.then(function (tagsMap) {
-
             if (tagsMap) {
                 $scope.tags = tagsMap.tags;
                 $scope.commentTags = tagsMap.commentTags;
@@ -143,6 +142,39 @@ module.controller('TagsPageController', function($scope, $http, $modal, $log, tf
 
     $scope.goToTag = function(tag) {
         window.location.href = tfEncoder.encode("/configuration/tags/" + tag.id +"/view");
+    }
+
+    $scope.goToBatchTagging = function() {
+        var tagIds = null;
+        $scope.tags.forEach(function(tag){
+            if (tag.checked) {
+                tagIds = tagIds ? (tagIds + "-" + tag.id) : tag.id;
+            }
+        })
+        window.location.href = tfEncoder.encode('/configuration/tags/batchTagging/' + tagIds);
+    }
+
+    $scope.applyAllTagsChecked = function(allChecked) {
+        $scope.allChecked = allChecked;
+        if ($scope.tags) {
+            $scope.tags.forEach(function(tag){
+                tag.checked = allChecked;
+            });
+        }
+    }
+
+    $scope.applyTagChecked = function(tag) {
+        if (!tag.checked) {
+            $scope.tagChecked.allChecked = false;
+        }
+        else {
+            var checked = true;
+            $scope.tags.forEach(function(appTag){
+                if (!appTag.checked)
+                    checked = false;
+            });
+            $scope.tagChecked.allChecked = checked;
+        }
     }
 
 });

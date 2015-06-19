@@ -23,6 +23,8 @@
 	<cbs:cachebustscript src="/scripts/scan-unmapped-finding-table-controller.js"/>
 	<cbs:cachebustscript src="/scripts/add-to-existing-defect-controller.js"/>
     <cbs:cachebustscript src="/scripts/report/vuln-summary-modal-controller.js"/>
+    <cbs:cachebustscript src="/scripts/update-defect-defaults-modal-controller.js"/>
+    <cbs:cachebustscript src="/scripts/default-value-mapping.js"/>
     <c:forEach items="${ reportJsPaths }" var="reportJs">
         <script type="text/javascript" src="${ reportJs }"></script>
     </c:forEach>
@@ -100,4 +102,6 @@
     <%@ include file="/WEB-INF/views/applications/forms/viewApplicationForm.jsp" %>
     <%@ include file="../scans/createMappingModal.jsp" %>
     <%@ include file="/WEB-INF/views/reports/vulnSummaryModal.jsp" %>
+    <%@ include file="../config/defecttrackers/modals/updateDefectDefaultModal.jsp" %>
+    <%@ include file="../config/defecttrackers/modals/createDefaultProfileModal.jsp" %>
 </body>

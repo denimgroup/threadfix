@@ -46,8 +46,6 @@ public class DefectDefaultController {
 	private static final String ERROR_MSG = "error_msg";
 
 	@Autowired
-	private FindingService findingService;
-	@Autowired
 	private VulnerabilityService vulnerabilityService;
 	@Autowired
 	private DefaultDefectFieldService defaultDefectFieldService;
@@ -79,6 +77,8 @@ public class DefectDefaultController {
 			return RestResponse.failure("Bad vulns ids provided");
 		}
 
+		LOG.info("Getting field values based on defect profile template for " + vulnerabilities.size() + " vulnerabilities.");
+
 		if (vulnerabilities.size()!=0){
 			Map<String, Object> result = map("defaultValues", (Object) defaultDefectProfileService.getAllDefaultValuesForVulns(defaultProfile, vulnerabilities));
 			return RestResponse.success(result);
@@ -93,6 +93,7 @@ public class DefectDefaultController {
 			@PathVariable("defaultProfileId") int defaultProfileId,
 			@ModelAttribute DefectViewModel defectViewModel) {
 
+		LOG.info("Updating the defaults for the defect profile with ID " + defaultProfileId);
 		String newDefaultsJson = defectViewModel.getFieldsMapStr();
 		List<DefaultDefectField> newDefaultFields = defaultDefectFieldService.parseDefaultDefectsFields(newDefaultsJson);
 		DefaultDefectProfile defaultProfile = defaultDefectProfileService.loadDefaultProfile(defaultProfileId);

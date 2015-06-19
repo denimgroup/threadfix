@@ -23,10 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.Tag;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.TagService;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
@@ -52,12 +55,24 @@ public class TagsController {
 
     @Autowired
     private TagService tagService;
+    @Autowired
+    private OrganizationService organizationService;
+    @Autowired
+    private ApplicationService applicationService;
 
     private final SanitizedLogger log = new SanitizedLogger(TagsController.class);
 
     @RequestMapping(method = RequestMethod.GET)
-    public String index(Model model) {
+    public String index() {
+        log.info("Directing to tags index page.");
         return "tags/index";
+    }
+
+    @RequestMapping(value = "/batchTagging/{tagIds}", method = RequestMethod.GET)
+    public String batchTagging(@PathVariable("tagIds") String tagIds, Model model) {
+        log.info("Directing to batch tagging page.");
+        model.addAttribute("tagIds", tagIds);
+        return "tags/batchTagging";
     }
 
     @RequestMapping(value = "/map", method = RequestMethod.GET)
@@ -65,6 +80,16 @@ public class TagsController {
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("tags", tagService.loadAllApplicationTags());
         responseMap.put("commentTags", tagService.loadAllCommentTags());
+        return RestResponse.success(responseMap);
+    }
+
+    @JsonView(AllViews.VulnSearchApplications.class)
+    @RequestMapping(value = "/batchTagging/map", method = RequestMethod.GET)
+    public @ResponseBody RestResponse<Map<String, Object>> batchTaggingMap() {
+        Map<String, Object> responseMap = new HashMap<>();
+        List<Organization> teams = organizationService.loadAllActiveFilter();
+        responseMap.put("tags", tagService.loadAllApplicationTags());
+        responseMap.put("applications", PermissionUtils.filterAppsList(teams));
         return RestResponse.success(responseMap);
     }
 
@@ -186,6 +211,50 @@ public class TagsController {
         responseMap.put("isCommentTag", tag.getTagForComment());
 
         return RestResponse.success(responseMap);
+    }
+
+    @RequestMapping(value = "/batchTagging/submit", method = RequestMethod.POST)
+    public @ResponseBody RestResponse<String> submitBatchTagging(@Valid @ModelAttribute BatchTaggingParameters batchTaggingParameters) {
+
+        List<Application> applications = batchTaggingParameters.getApplications();
+        List<Tag> tags = batchTaggingParameters.getTags();
+        log.info("About to add " + tags.size() + " tags to " + applications.size() + " applications.");
+        for (Application application: applications) {
+            Application dbApp = applicationService.loadApplication(application.getId());
+            if (dbApp == null) {
+                log.warn("Unable to find application with ID " + application.getId());
+                RestResponse.failure("Application selected is invalid.");
+            }
+
+            if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, application.getOrganization().getId(), application.getId())) {
+                RestResponse.failure("You do not have permission to manage application " + application.getName() + ".");
+            }
+
+            List<Tag> allAppTags = tagService.loadAllApplicationTags();
+
+            for (Tag tag: tags) {
+                if (!isValidTag(allAppTags, tag)) {
+                    log.warn("Unable to find tag with ID " + tag.getId());
+                    RestResponse.failure("Tag selected is invalid.");
+                }
+                if (!dbApp.containTag(tag)) {
+                    dbApp.getTags().add(tag);
+                    log.info("Add tag " + tag.getName() + " to application " + dbApp.getName() + ".");
+                } else
+                    log.info("Tag " + tag.getName() + " was already added to application " + dbApp.getName() + ".");
+            }
+            applicationService.storeApplication(dbApp);
+        }
+
+        return RestResponse.success("Batch tagging ran successfully.");
+    }
+
+    private boolean isValidTag(List<Tag> tags, Tag tag) {
+        for (Tag appTag: tags) {
+            if (appTag.getId().compareTo(tag.getId()) == 0)
+                return true;
+        }
+        return false;
     }
 
 }

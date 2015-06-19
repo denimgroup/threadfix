@@ -195,17 +195,18 @@
                 </td>
                 <td><button id="addDefectTrackerButton" class="btn" ng-click="switchTo('addDefectTracker')">Set Defect Tracker</button></td>
 			</tr>
-            <tr>
-                <td>Main Default Profile</td>
-                <td ng-show="object.defectTracker">
+            <tr ng-show="object.defectTracker">
+                <td>Default Defect Profile</td>
+                <td ng-show="object.defectTracker.defaultDefectProfiles">
                     <select ng-model="object.mainDefaultDefectProfile.id" name="mainDefaultDefectProfile.id">
-                            <option value="" ng-selected="{{!object.mainDefaultDefectProfile.id}}">No main profile</option>
+                            <option value="" ng-selected="{{!object.mainDefaultDefectProfile.id}}">Select profile</option>
                             <option ng-repeat="defaultProfile in object.defectTracker.defaultDefectProfiles" value="{{ defaultProfile.id }}"
                                     ng-selected="{{defaultProfile.id == object.mainDefaultDefectProfile.id}}">
                                 {{defaultProfile.name}}
                             </option>
                     </select>
                 </td>
+                <td><button id="addDefectProfileButton" class="btn" ng-click="switchTo('addDefectProfile')">Create Defect Profile</button></td>
             </tr>
             <tr>
                 <td>
@@ -213,7 +214,7 @@
                 </td>
                 <td class="inputValue">
                     <input id="skipApplicationMerge" type="checkbox" ng-model="object.skipApplicationMerge" name="skipApplicationMerge"/>
-                    <a class="btn" popover="ThreadFix detects matching scan results and combine them in order to simplify the result set. This can make the number of vulnerabilities in ThreadFix lower than the number of results in a scan. Checking this box disables this behavior.">?</a>
+                    <a class="btn" popover="ThreadFix detects matching scan results and combines them in order to simplify the result set. This can make the number of vulnerabilities in ThreadFix lower than the number of results in a scan. Checking this box disables this behavior.">?</a>
                 </td>
             </tr>
 		</table>

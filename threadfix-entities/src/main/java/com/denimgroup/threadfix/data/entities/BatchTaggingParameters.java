@@ -21,24 +21,38 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.data.dao;
+package com.denimgroup.threadfix.data.entities;
 
-import com.denimgroup.threadfix.data.entities.Tag;
+import com.denimgroup.threadfix.views.AllViews;
+import com.fasterxml.jackson.annotation.JsonView;
 
+import javax.persistence.Column;
+import java.util.Date;
 import java.util.List;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
- * Basic DAO class for the Tag entity.
- *
- * @author stran
+ * Created by stran on 6/5/15.
  */
-public interface TagDao extends GenericNamedObjectDao<Tag> {
-    Tag retrieveAppTagByName(String name);
-    Tag retrieveCommentTagByName(String name);
+public class BatchTaggingParameters {
 
-    List<Tag> retrieveAllCommentTags();
-    List<Tag> retrieveTagsByName(String name);
-    List<Tag> retrieveAllApplicationTags();
+    List<Application> applications = list();
+    List<Tag> tags = list();
 
+    public List<Application> getApplications() {
+        return applications;
+    }
 
+    public void setApplications(List<Application> applications) {
+        this.applications = applications;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
 }

@@ -840,7 +840,7 @@ public class Application extends AuditableEntity {
     // TODO exclude from default ObjectMapper
     @Transient
     @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.VulnSearchApplications.class, AllViews.RestViewTag.class, AllViews.DefectTrackerInfos.class })
-    private Map<String, Object> getTeam() {
+    public Map<String, Object> getTeam() {
         Organization team = getOrganization();
 
         Map<String, Object> map = new HashMap<String, Object>();
@@ -888,12 +888,11 @@ public class Application extends AuditableEntity {
         this.skipApplicationMerge = isSkipApplicationMerge;
     }
 
-//    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name="Application_Tag",
             joinColumns={@JoinColumn(name="Application_Id")},
             inverseJoinColumns={@JoinColumn(name="Tag_Id")})
-    @JsonView({AllViews.RestViewApplication2_1.class, AllViews.RestViewTag.class})
+	@JsonView({AllViews.RestViewApplication2_1.class, AllViews.RestViewTag.class})
     public List<Tag> getTags() {
         return tags;
     }
@@ -923,5 +922,15 @@ public class Application extends AuditableEntity {
     @Override
 	public String toString() {
 		return name;
+	}
+
+	@Transient
+	@JsonIgnore
+	public boolean containTag(Tag tag) {
+		for (Tag appTag: getTags()) {
+			if (appTag.getId().compareTo(tag.getId()) == 0)
+				return true;
+		}
+		return false;
 	}
 }
