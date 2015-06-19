@@ -16,7 +16,7 @@ set CATALINA_HOME=%PWD%\tomcat
 set CATALINA_OPTS=-Xms512m -Xmx1536m 		
 for /f tokens^=2-5^ delims^=.-_^" %%j in ('java -fullversion 2^>^&1') do set "jver=%%j%%k%%l%%m"
 echo jver is %jver%
-if %jver% GTR 0 (
+if DEFINED JAVA_HOME (
 	if %jver% LSS 17000 (
 		echo Java version less than 7.  Using folder's Java 8.
 		set JAVA_HOME="%PWD%\java"
@@ -32,9 +32,8 @@ if %jver% GTR 0 (
 	echo JAVA_HOME is Java 8.  Using Java 8.
 	goto :javaisset
 ) else (
-	echo No Java found.  Using folder's Java 8.
+	echo No JAVA_HOME found.  Using folder's Java 8.
 	set JAVA_HOME="%PWD%\java"
-	set CATALINA_OPTS=%CATALINA_OPTS% -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=256m
 )
 
 
