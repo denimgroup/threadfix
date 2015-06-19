@@ -149,3 +149,30 @@ threadfixModule.directive('dragCss', function() {
         }
     };
 });
+
+threadfixModule.directive('onOffCheckbox', function() {
+    var directive = {};
+    var templateTarget = '';
+
+    directive.restrict = 'E';
+
+    directive.compile = function(element, attributes) {
+        // do one-time configuration of element.
+
+        templateTarget = attributes.target;
+        element.html("<div class=\"btn-group\">" +
+                "<label class=\"btn\" ng-model=\"" + templateTarget + "\" btn-radio=\"true\"> On </label>" +
+                "<label class=\"btn\" ng-model=\"" + templateTarget + "\" btn-radio=\"false\">Off</label>" +
+            "</div>");
+
+        console.log("compiling for " + templateTarget);
+
+        return function($scope, element, attributes) {
+
+        };
+    };
+
+
+
+    return directive;
+});

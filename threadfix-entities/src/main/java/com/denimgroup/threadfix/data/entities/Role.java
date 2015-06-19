@@ -53,19 +53,25 @@ public class Role extends AuditableEntity {
 			canManageRemoteProviders, canManageRoles, canManageTeams,
 			canManageUsers, canManageWafs, canManageVulnFilters, canModifyVulnerabilities,
 			canSubmitDefects, canUploadScans, canViewErrorLogs, canManageScanAgents, canManageSystemSettings,
-            canViewJobStatuses, enterprise, canManageTags, canSubmitComments, canManageScanResultFilters, canManageCustomCweText, canManageEmailReports;
+            canViewJobStatuses, enterprise, canManageTags, canSubmitComments, canManageScanResultFilters,
+            canManageCustomCweText, canManageEmailReports;
 
     public static final String[] PROTECTED_PERMISSIONS = {
             "canManageRoles", "canManageUsers"
     };
 
-    public static final String[] ALL_PERMISSIONS = {
-            "canManageUsers", "canManageRoles", "canManageTeams", "canManageDefectTrackers", "canManageGrcTools",
-            "canManageVulnFilters", "canModifyVulnerabilities", "canUploadScans", "canViewErrorLogs", "canSubmitDefects",
-            "canManageWafs", "canGenerateWafRules", "canManageApiKeys", "canManageRemoteProviders",
-            "canGenerateReports", "canManageApplications", "enterprise", "canManageScanAgents",
-            "canManageSystemSettings", "canManageTags", "canSubmitComments", "canManageScanResultFilters", "canManageCustomCweText", "canManageEmailReports"
-    };
+    public static final String[] ALL_PERMISSIONS;
+
+    // this prevents us from needing to update this string array every time
+    static {
+        Permission[] permissionValues = Permission.values();
+        String[] permissions = new String[permissionValues.length];
+        for (int i = 0; i < permissionValues.length; i++) {
+            permissions[i] = permissionValues[i].getCamelCase();
+        }
+
+        ALL_PERMISSIONS = permissions;
+    }
 
     @NotEmpty(message = "{errors.required}")
     @Size(max = DISPLAY_NAME_LENGTH, message = "{errors.maxlength}" + DISPLAY_NAME_LENGTH)
@@ -304,7 +310,7 @@ public class Role extends AuditableEntity {
     @Column
     @JsonView(AllViews.TableRow.class)
     public Boolean getCanManageScanResultFilters(){
-        return canManageScanResultFilters;
+        return canManageScanResultFilters != null && canManageScanResultFilters;
     }
 
     public void setCanManageScanResultFilters(Boolean canManageScanResultFilters) {
@@ -313,7 +319,7 @@ public class Role extends AuditableEntity {
 
     @Column
     @JsonView(AllViews.TableRow.class)
-    public Boolean getCanManageCustomCweText() { return canManageCustomCweText; }
+    public Boolean getCanManageCustomCweText() { return canManageCustomCweText != null && canManageCustomCweText; }
 
     public void setCanManageCustomCweText(Boolean canManageCustomCweText) {
         this.canManageCustomCweText = canManageCustomCweText;
@@ -322,7 +328,7 @@ public class Role extends AuditableEntity {
     @Column
     @JsonView(AllViews.TableRow.class)
     public Boolean getCanManageEmailReports() {
-        return canManageEmailReports;
+        return canManageEmailReports != null && canManageEmailReports;
     }
 
     public void setCanManageEmailReports(Boolean canManageEmailReports) {
@@ -396,15 +402,16 @@ public class Role extends AuditableEntity {
         if (getCanSubmitComments() != null && getCanSubmitComments())
             permissions.add(Permission.CAN_SUBMIT_COMMENTS);
 
-        if(getCanManageScanResultFilters() != null && getCanManageScanResultFilters()) {
+        if (getCanManageScanResultFilters() != null && getCanManageScanResultFilters()) {
             permissions.add(Permission.CAN_MANAGE_SCAN_RESULT_FILTERS);
         }
 
-        if(getCanManageCustomCweText() != null && getCanManageCustomCweText()){
+        if (getCanManageCustomCweText() != null && getCanManageCustomCweText()) {
             permissions.add(Permission.CAN_MANAGE_CUSTOM_CWE_TEXT);
         }
-        if (getCanManageEmailReports() != null && getCanManageEmailReports())
+        if (getCanManageEmailReports() != null && getCanManageEmailReports()) {
             permissions.add(Permission.CAN_MANAGE_EMAIL_REPORTS);
+        }
 
 		return permissions;
 	}
