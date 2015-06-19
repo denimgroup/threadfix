@@ -725,12 +725,28 @@ public class ApplicationServiceImpl implements ApplicationService {
 	
 	@Override
 	public Application decryptCredentials(Application application) {
+		if (application == null) {
+			return null;
+		}
+
 		try {
-			if (application != null && application.getEncryptedPassword() != null &&
+			if (application.getEncryptedPassword() != null &&
 					application.getEncryptedUserName() != null) {
 				application.setPassword(ESAPI.encryptor().decrypt(application.getEncryptedPassword()));
 				application.setUserName(ESAPI.encryptor().decrypt(application.getEncryptedUserName()));
 			}
+
+			DefectTracker defectTracker = application.getDefectTracker();
+			if (defectTracker != null &&
+					defectTracker.getEncryptedDefaultUsername() != null &&
+					!defectTracker.getEncryptedDefaultUsername().isEmpty()
+					&& defectTracker.getEncryptedDefaultPassword() != null &&
+					!defectTracker.getEncryptedDefaultPassword().isEmpty()){
+
+				defectTracker.setDefaultUsername(ESAPI.encryptor().decrypt(defectTracker.getEncryptedDefaultUsername()));
+				defectTracker.setDefaultPassword(ESAPI.encryptor().decrypt(defectTracker.getEncryptedDefaultPassword()));
+			}
+
 		} catch (EncryptionException e) {
 			log.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
 		}

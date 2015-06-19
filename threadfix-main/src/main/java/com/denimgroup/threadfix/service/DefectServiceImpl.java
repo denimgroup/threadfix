@@ -118,7 +118,6 @@ public class DefectServiceImpl implements DefectService {
 
 		if (application != null) {
 			applicationService.decryptCredentials(application);
-			defectTrackerService.decryptCredentials(application.getDefectTracker());
 		}
 
 		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
