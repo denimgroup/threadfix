@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -48,7 +49,7 @@ public class AcceptanceCriteria extends AuditableEntity {
     @Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
     private String name;
 
-//    private List<Application> applications = new ArrayList<Application>();
+    private List<Application> applications = new ArrayList<Application>();
 
     private FilterJsonBlob filterJsonBlob;
 
@@ -62,22 +63,22 @@ public class AcceptanceCriteria extends AuditableEntity {
         this.name = name;
     }
 
-//    @ManyToMany(cascade = CascadeType.ALL)
-//    @JoinTable(name="AcceptanceCriteria_Application",
-//            joinColumns={@JoinColumn(name="AcceptanceCriteria_Id")},
-//            inverseJoinColumns={@JoinColumn(name="Application_Id")})
-//    @JsonIgnore
-//    public List<Application> getApplications() {
-//        return applications;
-//    }
-//
-//    public void setApplications(List<Application> applications) {
-//        this.applications = applications;
-//    }
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name="AcceptanceCriteria_Application",
+            joinColumns={@JoinColumn(name="AcceptanceCriteria_Id")},
+            inverseJoinColumns={@JoinColumn(name="Application_Id")})
+    @JsonView(AllViews.TableRow.class)
+    public List<Application> getApplications() {
+        return applications;
+    }
+
+    public void setApplications(List<Application> applications) {
+        this.applications = applications;
+    }
 
     @OneToOne
     @JoinColumn(name = "filterJsonBlobId")
-//    @JsonIgnore
+    @JsonView(AllViews.TableRow.class)
     public FilterJsonBlob getFilterJsonBlob() {
         return filterJsonBlob;
     }
