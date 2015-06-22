@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.login.CustomUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -121,6 +122,10 @@ public class CustomUserDetailServiceImpl implements UserDetailsService, CustomUs
     public final UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userService.loadUser(username);
         if (user == null) {
+            if (userService.countUsers() == 0) {
+                log.debug("There appears to be no users in your DBS. Your database might not have been created correctly.");
+                throw new AuthenticationServiceException("Check logs");
+            }
             throw new UsernameNotFoundException("");
         }
 
@@ -140,5 +145,4 @@ public class CustomUserDetailServiceImpl implements UserDetailsService, CustomUs
 		}
 		return false;
 	}
-	
 }
