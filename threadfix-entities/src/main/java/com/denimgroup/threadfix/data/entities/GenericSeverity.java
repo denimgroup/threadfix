@@ -73,6 +73,7 @@ public class GenericSeverity extends BaseEntity {
 
 	private List<SeverityMap> severityMapping;
 	private List<Vulnerability> vulnerabilities;
+	private String customName;
 
 	@Column(length = 50, nullable = false)
     @JsonView(Object.class)
@@ -117,5 +118,15 @@ public class GenericSeverity extends BaseEntity {
 	@Override
 	public String toString() {
 		return getName();
+	}
+
+	@Column(nullable = true)
+	@JsonView(Object.class)
+	public void setCustomName(String customName) {
+		this.customName = customName;
+	}
+
+	public String getCustomName() {
+		return customName;
 	}
 }
