@@ -69,8 +69,8 @@ public class DefectTrackerServiceImpl implements DefectTrackerService {
         List<DefectTracker> decrypted = list();
         List<DefectTracker> encrypted = defectTrackerDao.retrieveAll();
 
-        if(encrypted != null && !encrypted.isEmpty()){
-            for(DefectTracker defectTracker : encrypted){
+        if (encrypted != null && !encrypted.isEmpty()) {
+            for (DefectTracker defectTracker : encrypted) {
                 decrypted.add(decryptCredentials(defectTracker));
             }
         }

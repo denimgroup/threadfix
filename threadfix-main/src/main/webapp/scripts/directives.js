@@ -160,9 +160,18 @@ threadfixModule.directive('onOffCheckbox', function() {
         // do one-time configuration of element.
 
         templateTarget = attributes.target;
+
+        var id;
+        var index = templateTarget.indexOf(".");
+        if (index > -1 && index != templateTarget.length - 1) {
+            id = templateTarget.substr(index + 1);
+        } else {
+            id = templateTarget;
+        }
+
         element.html("<div class=\"btn-group\">" +
-                "<label class=\"btn\" ng-model=\"" + templateTarget + "\" btn-radio=\"true\"> On </label>" +
-                "<label class=\"btn\" ng-model=\"" + templateTarget + "\" btn-radio=\"false\">Off</label>" +
+                "<label id=\"" + id + "True\"  class=\"btn\" ng-model=\"" + templateTarget + "\" btn-radio=\"true\"> On </label>" +
+                "<label id=\"" + id + "False\" class=\"btn\" ng-model=\"" + templateTarget + "\" btn-radio=\"false\">Off</label>" +
             "</div>");
 
         console.log("compiling for " + templateTarget);
