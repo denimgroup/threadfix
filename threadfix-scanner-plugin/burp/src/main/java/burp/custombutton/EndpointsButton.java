@@ -26,9 +26,7 @@ package burp.custombutton;
 
 import burp.IBurpExtenderCallbacks;
 import burp.dialog.ConfigurationDialogs;
-import burp.dialog.SourceDialog;
 import burp.dialog.UrlDialog;
-import burp.extention.RestUtils;
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
 
 import javax.swing.*;
@@ -68,7 +66,7 @@ public abstract class EndpointsButton extends JButton {
                         for (Endpoint.Info endpoint : endpoints) {
                             if (endpoint != null) {
                                 String endpointPath = endpoint.getUrlPath();
-                                if(endpointPath.startsWith("/")){
+                                if (endpointPath.startsWith("/")) {
                                     endpointPath = endpointPath.substring(1);
                                 }
                                 endpointPath = endpointPath.replaceAll(GENERIC_INT_SEGMENT, "1");
@@ -84,7 +82,7 @@ public abstract class EndpointsButton extends JButton {
 
                         if (url != null) { // cancel not pressed
                             try {
-                                if(!url.substring(url.length()-1).equals("/")){
+                                if (!url.substring(url.length() - 1).equals("/")) {
                                     url = url+"/";
                                 }
                                 for (String node: nodes) {

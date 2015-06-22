@@ -121,7 +121,7 @@ public class APIKeyController {
 
         String isRestrictedKeyStr= request.getParameter("isRestrictedKey");
 		
-		boolean restricted = (isRestrictedKeyStr != null && isRestrictedKeyStr.equalsIgnoreCase("true")) ? true : false ;
+		boolean restricted = (isRestrictedKeyStr != null && isRestrictedKeyStr.equalsIgnoreCase("true"));
 		
 		if (note != null) {
 			apiKey.setNote(note);

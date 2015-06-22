@@ -1,33 +1,12 @@
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static com.denimgroup.threadfix.CollectionUtils.map;
-import static com.denimgroup.threadfix.CollectionUtils.list;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefaultDefectField;
 import com.denimgroup.threadfix.data.entities.DefaultDefectProfile;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.DefaultDefectFieldService;
-import com.denimgroup.threadfix.service.DefaultDefectProfileService;
-import com.denimgroup.threadfix.service.DefaultTagMappingService;
-import com.denimgroup.threadfix.service.DefectTrackerService;
-import com.denimgroup.threadfix.service.FindingService;
-import com.denimgroup.threadfix.service.VulnerabilityService;
+import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 import com.denimgroup.threadfix.service.defects.VersionOneDefectTracker;
@@ -36,6 +15,16 @@ import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
 import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 @Controller
 @RequestMapping("/default/{defaultProfileId}")
