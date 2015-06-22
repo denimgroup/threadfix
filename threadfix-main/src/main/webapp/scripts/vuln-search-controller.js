@@ -52,8 +52,10 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                         $scope.teams = data.object.teams;
                         $scope.tags = data.object.tags;
                         $scope.commentTags = data.object.commentTags;
+                        $scope.vulnTags = data.object.vulnTags;
                         $scope.tags.sort(nameCompare);
                         $scope.commentTags.sort(nameCompare);
+                        $scope.vulnTags.sort(nameCompare);
                         $scope.scanners = data.object.scanners;
                         $scope.genericVulnerabilities = data.object.vulnTypes;
                         $scope.searchApplications = data.object.applications;

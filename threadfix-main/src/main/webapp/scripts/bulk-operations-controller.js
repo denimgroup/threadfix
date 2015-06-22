@@ -276,4 +276,42 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
         });
     };
 
+
+    $scope.addBatchTagging = function(tags) {
+
+        var filteredVulns = getFilteredVulns();
+        var modalInstance = $modal.open({
+            templateUrl: 'vulnTaggingForm.html',
+            controller: 'ModalControllerWithConfig',
+            resolve: {
+                url: function() {
+                    return tfEncoder.encode(getAppUrlBase() + "/addBatchVulnTagging");
+                },
+                object: function () {
+                    return {vulnerabilityIds : filteredVulns.map(function(vuln) {
+                        return vuln.id;
+                    })};
+                },
+                config: function() {
+                    return {tags: tags};
+                },
+                buttonText: function() {
+                    return "Batch Tagging";
+                }
+            }
+        });
+
+        $scope.currentModal = modalInstance;
+
+        modalInstance.result.then(function (selectedTags) {
+            filteredVulns.forEach(function(vuln){
+                vuln.tags = selectedTags;
+            });
+            $log.info("Successfully tagged to vulnerabilities.");
+            $scope.successMessage = "Successfully tagged to vulnerabilities.";
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    };
+
 });

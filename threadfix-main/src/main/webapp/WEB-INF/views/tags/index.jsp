@@ -62,6 +62,30 @@
     </tbody>
 </table>
 
+<h3>Vulnerability Tags</h3>
+
+<table ng-show="initialized" class="table table-striped">
+    <thead>
+    <tr>
+        <th class="long first">Name</th>
+        <th class="centered last">Edit / Delete</th>
+    </tr>
+    </thead>
+    <tbody id="vulnTagTableBody">
+    <tr ng-hide="vulnTags" class="bodyRow">
+        <td colspan="2" style="text-align:center;">No Vulnerability Tags found.</td>
+    </tr>
+    <tr ng-show="vulnTags" ng-repeat="tag in vulnTags" class="bodyRow">
+        <td class="details pointer" id="vulnTagName{{ tag.name }}">
+            <a ng-click="goToTag(tag)">{{ tag.name }}</a>
+        </td>
+        <td class="centered">
+            <a id="editVulnTagModalButton{{ tag.name }}" ng-click="openEditModal(tag)" class="btn" ng-class="{ disabled : tag.enterpriseTag }">Edit / Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
 <h3>Vulnerability Comment Tags</h3>
 
 <table ng-show="initialized" class="table table-striped">

@@ -88,9 +88,9 @@ public class TagRestController extends TFRestController {
 
         Tag newTag = new Tag();
         newTag.setName(name);
-        if (isCommentTag != null)
-            newTag.setTagForComment(Boolean.parseBoolean(isCommentTag));
-        else newTag.setTagForComment(false);
+//        if (isCommentTag != null)
+//            newTag.setTagForComment(Boolean.parseBoolean(isCommentTag));
+//        else newTag.setTagForComment(false);
 
         Tag databaseTag;
         if (!newTag.getTagForComment())

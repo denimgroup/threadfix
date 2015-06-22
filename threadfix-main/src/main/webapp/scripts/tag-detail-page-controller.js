@@ -11,8 +11,9 @@ myAppModule.controller('TagDetailPageController', function ($scope, $window, $ht
                 $scope.loading = false;
                 if (data.success) {
                     $scope.appList = data.object.appList;
+                    $scope.vulnListOfVulnTags = data.object.vulnList;
                     $scope.commentList = data.object.commentList;
-                    $scope.isCommentTag = data.object.isCommentTag;
+                    $scope.type = data.object.type;
                     getVulnList();
                 } else {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
@@ -82,6 +83,41 @@ myAppModule.controller('TagDetailPageController', function ($scope, $window, $ht
 
     $scope.goToTeam = function(app) {
         $window.location.href = tfEncoder.encode("/organizations/" + app.team.id);
+    };
+
+    $scope.goToAppFromVuln = function (vuln) {
+        $window.location.href = tfEncoder.encode("/organizations/" + vuln.team.id + "/applications/" + vuln.app.id);
+    }
+
+    $scope.goToTeamFromVuln = function (vuln) {
+        $window.location.href = tfEncoder.encode("/organizations/" + vuln.team.id);
+    }
+
+    $scope.goToTag = function (tag) {
+        window.location.href = tfEncoder.encode("/configuration/tags/" + tag.id + "/view");
+    }
+
+    $scope.goToVuln = function (vuln) {
+        $window.location.href = tfEncoder.encode("/organizations/" + vuln.team.id + "/applications/" + vuln.app.id + "/vulnerabilities/" + vuln.id);
+    };
+
+    $scope.expand = function (vulnList) {
+        vulnList.forEach(function (vuln) {
+            vuln.expanded = true;
+        });
+    };
+
+    $scope.contract = function (vulnList) {
+        vulnList.forEach(function (vuln) {
+            vuln.expanded = false;
+        });
+    };
+
+    $scope.toggle = function (vuln) {
+        if (typeof vuln.expanded === "undefined") {
+            vuln.expanded = false;
+        }
+        vuln.expanded = !vuln.expanded;
     };
 
 });

@@ -54,6 +54,9 @@
     <!-- Scanner Badges -->
     <span id="channel{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}{{ name }}" ng-repeat="name in vulnerability.channelNames" class="badge">{{ name }}</span>
     <br>
+    <!-- Tag Badges -->
+    <span id="tag{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}{{ name }}" ng-repeat="tag in vulnerability.tags" class="badge pointer" ng-class="{'badge-high': true}" ng-click="goToTag(tag)">{{ tag.name }}</span>
+    <br>
     <a id="defectBadge{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}"
        ng-href="{{ vulnerability.defect.defectURL }}"
        target="_blank"

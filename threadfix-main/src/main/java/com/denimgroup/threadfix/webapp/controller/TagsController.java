@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.enums.TagType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
@@ -32,7 +33,6 @@ import com.denimgroup.threadfix.service.TagService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
-import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -79,7 +79,9 @@ public class TagsController {
     public @ResponseBody RestResponse<Map<String, Object>> map() {
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("tags", tagService.loadAllApplicationTags());
+        responseMap.put("vulnTags", tagService.loadAllVulnTags());
         responseMap.put("commentTags", tagService.loadAllCommentTags());
+        responseMap.put("tagTypes", TagType.values());
         return RestResponse.success(responseMap);
     }
 
@@ -100,24 +102,14 @@ public class TagsController {
         if (result.hasErrors()) {
             return FormRestResponse.failure("error", result);
         } else {
-            if (tag.getName().trim().equals("")) {
-                result.rejectValue("name", null, null, "This field cannot be blank");
-            } else {
-                Tag databaseTag;
-                if (!tag.getTagForComment())
-                    databaseTag = tagService.loadApplicationTag(tag.getName().trim());
-                else
-                    databaseTag = tagService.loadCommentTag(tag.getName().trim());
-                if (databaseTag != null) {
-                    result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
-                }
-            }
+
+            tagService.validate(tag, result);
 
             if (result.hasErrors()) {
                 return FormRestResponse.failure("error", result);
             }
 
-            log.info("Saving new Tag " + tag.getName());
+            log.info("Saving new " + tag.getType() + " tag " + tag.getName());
             tagService.storeTag(tag);
             return RestResponse.success(tag);
         }
@@ -129,34 +121,24 @@ public class TagsController {
         if (result.hasErrors()) {
             return FormRestResponse.failure("error", result);
         } else {
-            Tag databaseTag = null;
-            if (tag.getName().trim().equals("")) {
-                result.rejectValue("name", null, null, "This field cannot be blank");
-            } else {
-                databaseTag = tagService.loadApplicationTag(tag.getName().trim());
-                if (databaseTag != null && !databaseTag.getId().equals(tagId)) {
-                    result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
-                }
-                databaseTag = tagService.loadTag(tagId);
-                if (databaseTag == null || (databaseTag.getEnterpriseTag() != null && databaseTag.getEnterpriseTag())) {
-                    result.rejectValue("name", MessageConstants.ERROR_INVALID, new String[]{"Tag Id"}, null);
-                }
-            }
+            tagService.validate(tag, result);
 
             if (result.hasErrors()) {
                 return FormRestResponse.failure("error", result);
             }
 
+            Tag databaseTag = tagService.loadTag(tagId);
             if (databaseTag != null) {
                 Map<String, Object> resultMap = new HashMap<>();
                 log.info("Editing Tag " + databaseTag.getName() + " to " + tag.getName());
                 databaseTag.setName(tag.getName());
                 tagService.storeTag(databaseTag);
                 resultMap.put("tags", tagService.loadAllApplicationTags());
+                resultMap.put("vulnTags", tagService.loadAllVulnTags());
                 resultMap.put("commentTags", tagService.loadAllCommentTags());
                 return RestResponse.success(resultMap);
             } else {
-                return RestResponse.failure("Error occurs.");
+                return RestResponse.failure("Invalid TagId.");
             }
         }
     }
@@ -188,14 +170,15 @@ public class TagsController {
 
         ModelAndView mav = new ModelAndView("tags/detail");
         mav.addObject("numApps", numApps);
+        mav.addObject("numVulns", tag.getVulnerabilities().size());
         mav.addObject("numVulnComments", tag.getVulnCommentsCount());
         mav.addObject(tag);
         return mav;
     }
 
-    @JsonView(AllViews.RestViewTag.class)
+    @JsonView(AllViews.VulnerabilityDetail.class)
     @RequestMapping(value = "/{tagId}/objects", method = RequestMethod.GET)
-    public @ResponseBody Object getAppList(@PathVariable("tagId") int tagId) throws IOException {
+    public @ResponseBody Object getTagList(@PathVariable("tagId") int tagId) throws IOException {
 
         Tag tag = tagService.loadTag(tagId);
 
@@ -207,8 +190,9 @@ public class TagsController {
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("appList", tag.getApplications());
         responseMap.put("numApps", tag.getApplications().size());
+        responseMap.put("vulnList", tag.getVulnerabilities());
         responseMap.put("commentList", tag.getVulnerabilityComments());
-        responseMap.put("isCommentTag", tag.getTagForComment());
+        responseMap.put("type", tag.getType());
 
         return RestResponse.success(responseMap);
     }
@@ -226,7 +210,7 @@ public class TagsController {
                 RestResponse.failure("Application selected is invalid.");
             }
 
-            if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, application.getOrganization().getId(), application.getId())) {
+            if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, dbApp.getOrganization().getId(), dbApp.getId())) {
                 RestResponse.failure("You do not have permission to manage application " + application.getName() + ".");
             }
 
