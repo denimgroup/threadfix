@@ -58,7 +58,7 @@ public class ScanAgentTaskEntIT extends BaseDataTest {
     @Test
     public void testAddScanAgentTask() {
         String scanner = scanAgentMap.get("ZAP");
-        String date;
+        String scanTaskId;
         int scanId;
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
@@ -70,14 +70,14 @@ public class ScanAgentTaskEntIT extends BaseDataTest {
                 .setScanQueueType(scanner)
                 .submitScanQueue();
 
-        date = applicationDetailPage.getScannerDate(0);
+        scanTaskId = applicationDetailPage.getScanTaskId(0);
 
-        assertTrue("Scan Queue Task is not present on the Application Detail Page.", applicationDetailPage.isScanAgentTaskPresent(date));
+        assertTrue("Scan Queue Task is not present on the Application Detail Page.", applicationDetailPage.isScanAgentTaskPresent(scanTaskId));
         assertTrue("Scan Queue Task tab count is incorrect after adding ", 1 == applicationDetailPage.scanQueueCount());
 
         ScanAgentTasksPage scanAgentTasksPage = applicationDetailPage.clickScanAgentTasksLink();
 
-        scanId = scanAgentTasksPage.getScanAgentTaskId(date);
+        scanId = scanAgentTasksPage.getScanAgentTaskElementId(scanTaskId);
 
         assertTrue("Scan Agent Task is not present on the Scan Agent Task page.", scanId >= 0);
     }
@@ -85,7 +85,7 @@ public class ScanAgentTaskEntIT extends BaseDataTest {
     @Test
     public void testDeleteScanAgentTask() {
         String scanner = scanAgentMap.get("ZAP");
-        String date;
+        String scanTaskId;
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -96,20 +96,20 @@ public class ScanAgentTaskEntIT extends BaseDataTest {
                 .setScanQueueType(scanner)
                 .submitScanQueue();
 
-        date = applicationDetailPage.getScannerDate(0);
+        scanTaskId = applicationDetailPage.getScanTaskId(0);
 
-        assertTrue("Scan task was not created.", applicationDetailPage.isScanAgentTaskPresent(date));
+        assertTrue("Scan task was not created.", applicationDetailPage.isScanAgentTaskPresent(scanTaskId));
 
         applicationDetailPage.clickDeleteScanTaskButton("0");
 
-        assertFalse("Scan task was not deleted.", applicationDetailPage.isScanAgentTaskPresent(date));
+        assertFalse("Scan task was not deleted.", applicationDetailPage.isScanAgentTaskPresent(scanTaskId));
     }
 
     //TODO evaluate
     @Test
     public void testDeleteScanFromScanAgentTaskPage() {
         String scanner = scanAgentMap.get("ZAP");
-        String date;
+        String scanTaskId;
         int scanId;
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
@@ -121,28 +121,28 @@ public class ScanAgentTaskEntIT extends BaseDataTest {
                 .setScanQueueType(scanner)
                 .submitScanQueue();
 
-        date = applicationDetailPage.getScannerDate(0);
+        scanTaskId = applicationDetailPage.getScanTaskId(0);
 
         ScanAgentTasksPage scanAgentTasksPage = applicationDetailPage.clickScanAgentTasksLink();
 
-        scanId = scanAgentTasksPage.getScanAgentTaskId(date);
+        scanId = scanAgentTasksPage.getScanAgentTaskElementId(scanTaskId);
 
         scanAgentTasksPage.clickDeleteScan(scanId);
 
-        assertFalse("Scan was not deleted from Scan Agent Task page.", scanAgentTasksPage.isScanAgentTaskPresent(date));
+        assertFalse("Scan was not deleted from Scan Agent Task page.", scanAgentTasksPage.isScanAgentTaskPresent(scanTaskId));
 
         applicationDetailPage = scanAgentTasksPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
                 .clickScanAgentTasksTab(0);
 
-        assertFalse("Scan was not removed from the application detail page.", applicationDetailPage.isScanAgentTaskPresent(date));
+        assertFalse("Scan was not removed from the application detail page.", applicationDetailPage.isScanAgentTaskPresent(scanTaskId));
     }
 
 	@Test
 	public void testAddMultipleScans() throws MalformedURLException {
 		int scanQueueCount  = 0;
-        String date;
+        String scanTaskId;
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -157,11 +157,11 @@ public class ScanAgentTaskEntIT extends BaseDataTest {
                     .setScanQueueType(tempName)
                     .submitScanQueue();
 
-            date = applicationDetailPage.getScannerDate(scanQueueCount);
+            scanTaskId = applicationDetailPage.getScanTaskId(scanQueueCount);
 
 			scanQueueCount++;
 			assertTrue("Scan Queue Task is not present " + mapEntry.getKey(),
-                    applicationDetailPage.isScanAgentTaskPresent(date));
+                    applicationDetailPage.isScanAgentTaskPresent(scanTaskId));
 			assertTrue("Scan Queue Task count is incorrect after adding " + mapEntry.getKey(),
                     scanQueueCount == applicationDetailPage.scanQueueCount());
 		}

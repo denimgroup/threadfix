@@ -480,7 +480,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage setScanQueueType(String scanQueueType) {
-        new Select(driver.findElementById("scanner"))
+        new Select(driver.findElementById("scan"))
                 .selectByVisibleText(scanQueueType);
         return new ApplicationDetailPage(driver);
     }
@@ -998,7 +998,11 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public String getScannerDate(int row) {
-        return driver.findElementById("scanAgentTaskCreateTime" + row).getText().trim();
+        return driver.findElementById("scanAgentTaskStartTime" + row).getText().trim();
+    }
+
+    public String getScanTaskId(int row) {
+        return driver.findElementById("scanAgentTask"+row).getText().trim();
     }
 
     public String[] getFirstScanInfo() {
@@ -1045,15 +1049,15 @@ public class ApplicationDetailPage extends BasePage {
         return specificVulnerabilityCount(level).equals(expected);
     }
 
-    public boolean isScanAgentTaskPresent(String date) {
-        int rowCnt = driver.findElementsByClassName("bodyRow").size();
+    public boolean isScanAgentTaskPresent(String taskId) {
+        int rowCnt = driver.findElementsByCssSelector("tr[ng-repeat=\'task in scanAgentTasks\']").size();
         for (int i = 0; i < rowCnt; i++) {
             try {
-                if (driver.findElementById("scanAgentTaskCreateTime" + i).getText().trim().equals(date)) {
+                if (driver.findElementById("scanAgentTask" + i).getText().trim().equals(taskId)) {
                     return true;
                 }
             } catch (NoSuchElementException e) {
-                System.err.println("Scan Agent Task with date of: " + date + " could not be found. " + e.getMessage());
+                System.err.println("Scan Agent Task with ID of: " + taskId + " could not be found. " + e.getMessage());
                 return false;
             }
         }

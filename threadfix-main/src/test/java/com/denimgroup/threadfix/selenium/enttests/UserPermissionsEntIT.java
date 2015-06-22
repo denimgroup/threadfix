@@ -648,6 +648,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
     @Test
     public void testManageApplicationPermissionScanAgent() {
         initializeTeamAndApp();
+        String scanner = "OWASP Zed Attack Proxy";
 
         createRestrictedUser("canManageApplications");
 
@@ -657,6 +658,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
                 .clickViewAppLink(appName, teamName)
                 .clickScanAgentTasksTab(0)
                 .clickAddNewScanTask()
+                .setScanQueueType(scanner)
                 .submitScanQueue();
 
         LoginPage loginPage = applicationDetailPage.logout();

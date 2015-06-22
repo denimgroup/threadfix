@@ -32,15 +32,15 @@ public class ScanAgentTasksPage extends BasePage{
         super(webdriver);
     }
 
-    public int getScanAgentTaskId(String date) {
+    public int getScanAgentTaskElementId(String taskId) {
         int rowCnt = driver.findElementsByClassName("bodyRow").size();
         for (int i = 0; i < rowCnt; i++) {
             try {
-                if (driver.findElementById("createTime" + i).getText().trim().equals(date)) {
+                if (driver.findElementById("goToTaskLink" + i).getText().trim().equals(taskId)) {
                     return i;
                 }
             } catch (NoSuchElementException e) {
-                System.err.println("Scan Agent Task with date of: " + date + " could not be found. " + e.getMessage());
+                System.err.println("Scan Agent Task with ID of: " + taskId + " could not be found. " + e.getMessage());
                 return -1;
             }
         }
@@ -57,16 +57,20 @@ public class ScanAgentTasksPage extends BasePage{
         return driver.findElementByClassName("alert-success").getText().trim();
     }
 
+    public String getScanTaskId(int scanId){
+        return driver.findElementById("goToTaskLink"+scanId).getText().trim();
+    }
+
     /*________________ Boolean Functions ________________*/
-    public boolean isScanAgentTaskPresent(String date) {
-        int rowCnt = driver.findElementsByClassName("bodyRow").size();
+    public boolean isScanAgentTaskPresent(String taskId) {
+        int rowCnt = driver.findElementsByCssSelector("tr[ng-repeat]").size();
         for (int i = 0; i < rowCnt; i++) {
             try {
-                if (driver.findElementById("scanAgentTaskCreateTime" + i).getText().trim().equals(date)) {
+                if (driver.findElementById("goToTaskLink" + i).getText().trim().equals(taskId)) {
                     return true;
                 }
             } catch (NoSuchElementException e) {
-                System.err.println("Scan Agent Task with date of: " + date + " could not be found. " + e.getMessage());
+                System.err.println("Scan Agent Task with ID of: " + taskId + " could not be found. " + e.getMessage());
                 return false;
             }
         }
