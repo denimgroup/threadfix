@@ -47,19 +47,19 @@ public class RemoteProvidersIndexPage extends BasePage {
     }
 
     public RemoteProvidersIndexPage clickConfigureQualys(){
-		driver.findElementById("configure1").click();
+		driver.findElementById("configure2").click();
 		waitForElement(driver.findElementById("myModalLabel"));
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
 	public RemoteProvidersIndexPage clickConfigureVeracode(){
-		driver.findElementById("configure4").click();
+		driver.findElementById("configure5").click();
 		waitForElement(driver.findElementById("myModalLabel"));
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
 	public RemoteProvidersIndexPage clickConfigureWhiteHat(){
-		driver.findElementById("configure5").click();
+		driver.findElementById("configure6").click();
 		waitForElement(driver.findElementById("myModalLabel"));
 		return new RemoteProvidersIndexPage(driver);
 	}
@@ -90,10 +90,10 @@ public class RemoteProvidersIndexPage extends BasePage {
 		driver.findElementById("submit").click();
         waitForSuccessMessage();
         int i = 1;
-        while(driver.findElements(By.id("clearConfig2")).isEmpty() && i++ < 5) {
+        while(driver.findElements(By.id("clearConfig5")).isEmpty() && i++ < 5) {
             sleep(20000);
         }
-		waitForElement(driver.findElementById("clearConfig2"));
+		waitForElement(driver.findElementById("clearConfig5"));
 		return new RemoteProvidersIndexPage(driver);
 	}
 
@@ -101,10 +101,10 @@ public class RemoteProvidersIndexPage extends BasePage {
         driver.findElementById("submit").click();
         waitForSuccessMessage();
         int i = 1;
-        while(driver.findElements(By.id("clearConfig7")).isEmpty() && i++ < 5) {
+        while(driver.findElements(By.id("clearConfig0")).isEmpty() && i++ < 5) {
             sleep(20000);
         }
-        waitForElement(driver.findElementById("clearConfig7"));
+        waitForElement(driver.findElementById("clearConfig0"));
         return new RemoteProvidersIndexPage(driver);
     }
 
@@ -118,10 +118,10 @@ public class RemoteProvidersIndexPage extends BasePage {
 		driver.findElementById("submit").click();
         waitForSuccessMessage();
         int i = 1;
-        while(driver.findElements(By.id("clearConfig1")).isEmpty() && i++ < 5) {
+        while(driver.findElements(By.id("clearConfig6")).isEmpty() && i++ < 5) {
             sleep(20000);
         }
-        waitForElement(driver.findElementById("clearConfig1"));
+        waitForElement(driver.findElementById("clearConfig6"));
 		return new RemoteProvidersIndexPage(driver);
 	}
 
@@ -203,7 +203,7 @@ public class RemoteProvidersIndexPage extends BasePage {
     }
 
     public RemoteProvidersIndexPage clickEditMappingContrastButton(int row) {
-        driver.findElementById("provider7updateMapping" + row).click();
+        driver.findElementById("provider4updateMapping" + row).click();
         return new RemoteProvidersIndexPage(driver);
     }
 
@@ -252,7 +252,7 @@ public class RemoteProvidersIndexPage extends BasePage {
     }
 
     public ApplicationDetailPage clickContrastImportScan(int appRow) {
-        String elementToClick = "provider7import" + appRow;
+        String elementToClick = "provider4import" + appRow;
         waitForElement(driver.findElementById(elementToClick));
         if (!tryClick(By.id(elementToClick))) {
             throw new ElementNotVisibleException(elementToClick);
@@ -330,7 +330,7 @@ public class RemoteProvidersIndexPage extends BasePage {
     }
 
     public RemoteProvidersIndexPage clearContrast() {
-        driver.findElementById("clearConfig7").click();
+        driver.findElementById("clearConfig4").click();
         handleAlert();
         return new RemoteProvidersIndexPage(driver);
     }
@@ -419,23 +419,26 @@ public class RemoteProvidersIndexPage extends BasePage {
             case "Contrast":
                 providerKey = "0";
                 break;
-            case "QualysGuard":
+            case "AppScanEnterprise":
                 providerKey = "1";
                 break;
-            case "Sonatype":
+            case "QualysGuard":
                 providerKey = "2";
                 break;
-            case "Hailstorm":
+            case "Sonatype":
                 providerKey = "3";
                 break;
-            case "Veracode":
+            case "Hailstorm":
                 providerKey = "4";
                 break;
-            case "WhiteHat":
+            case "Veracode":
                 providerKey = "5";
                 break;
-            case "WhiteHat Source":
+            case "WhiteHat":
                 providerKey = "6";
+                break;
+            case "WhiteHat Source":
+                providerKey = "7";
                 break;
             default:
                 providerKey = null;
