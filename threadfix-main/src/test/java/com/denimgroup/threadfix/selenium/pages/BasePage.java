@@ -448,6 +448,10 @@ public abstract class BasePage {
         return false;
     }
 
+    public boolean isElementActive(WebElement element){
+        return element.getAttribute("class").contains("active");
+    }
+
     /*--------------------------------- Helper Methods ---------------------------------*/
 	public void sleep(int num) {
 		try {
