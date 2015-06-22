@@ -269,6 +269,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
     };
 
     $scope.exportCSV = function(reportId, DISA_STIG) {
+        var reportName = "search_export.csv";
 
         if (reportId === 3) {
             // Progress By Vulnerability report
@@ -289,6 +290,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
 
                     });
                 });
+                reportName = "owasp_top_10_report.csv"
             }
 
             // DISA STIG report
@@ -301,6 +303,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
                         });
                     });
                 });
+                reportName = "disa_stig_report.csv"
             }
 
             if (reportExporter.checkOldIE()) {
@@ -309,7 +312,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
                 $http.post(tfEncoder.encode("/reports/search/export/csv"), parameters).
                     success(function(data, status, headers, config, response)
                     {
-                        reportExporter.exportCSV(data, "application/octet-stream", "search_export.csv");
+                        reportExporter.exportCSV(data, "application/octet-stream", reportName);
                     }).
                     error(function(data, status, headers, config) {
                         $scope.errorMessage = "Failed to retrieve vulnerability report. HTTP status was " + status;

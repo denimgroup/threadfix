@@ -201,17 +201,28 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
     public void deleteScanFile() {
 
         closeInputStream(inputStream);
-        DefaultConfiguration defaultConfig = defaultConfigService.loadCurrentConfiguration();
+        if (defaultConfigService == null) {
+            // we're not in the main webapp; let's delete the file
+            actuallyDelete();
 
-        if(!defaultConfig.fileUploadLocationExists()) {
+        } else {
 
-            if (shouldDeleteAfterParsing && inputFileName != null) {
-                File file = new File(inputFileName);
-                if (file.exists()) {
-                    if (!file.delete()) {
-                        log.warn("Scan file deletion failed, calling deleteOnExit()");
-                        file.deleteOnExit();
-                    }
+            // in the main webapp, we need to check whether the user has configured a location to store scan files
+            DefaultConfiguration defaultConfig = defaultConfigService.loadCurrentConfiguration();
+
+            if (!defaultConfig.fileUploadLocationExists()) {
+                actuallyDelete();
+            }
+        }
+    }
+
+    private void actuallyDelete() {
+        if (shouldDeleteAfterParsing && inputFileName != null) {
+            File file = new File(inputFileName);
+            if (file.exists()) {
+                if (!file.delete()) {
+                    log.warn("Scan file deletion failed, calling deleteOnExit()");
+                    file.deleteOnExit();
                 }
             }
         }
@@ -735,13 +746,18 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
     protected Scan createScanWithFileNames() {
         Scan scan = new Scan();
-        scan.setOriginalFileName(originalFileName);
+        scan.setOriginalFileNames(list(originalFileName));
 
-        // Remote Providers won't have an inputFileName
-        if (inputFileName != null) {
-            Matcher m = scanFileRegex.matcher(inputFileName);
-            if (m.matches()) {
-                scan.setFileName(m.group(2));
+        if (defaultConfigService != null) {
+            DefaultConfiguration defaultConfiguration = defaultConfigService.loadCurrentConfiguration();
+
+            // Remote Providers won't have an inputFileName
+            // Only set file name for scan when there is upload scan location in System Settings
+            if (inputFileName != null && defaultConfiguration.fileUploadLocationExists()) {
+                Matcher m = scanFileRegex.matcher(inputFileName);
+                if (m.matches()) {
+                    scan.setFileName(m.group(2));
+                }
             }
         }
 

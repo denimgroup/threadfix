@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -76,6 +77,7 @@ public interface ThreadFixRestClient {
     public RestResponse<Application> addAppUrl(String appId, String url);
 
     public RestResponse<ScanQueueTask> queueScan(String applicationId, String scannerType);
+    public RestResponse<ScanQueueTask> queueScan(String applicationId, String scannerType, String scanConfigId);
     public RestResponse<Task> requestTask(String scanners, String agentConfig);
     public RestResponse<String> taskStatusUpdate(String scanQueueTaskId, String message);
     public RestResponse<String> setTaskConfig(String appId, String scannerType, String filePath);
@@ -88,4 +90,15 @@ public interface ThreadFixRestClient {
     public RestResponse<Finding> addStaticFinding(String applicationId, String vulnType, String severity,
                                    String nativeId, String parameter, String longDescription,
                                    String filePath, String column, String lineText, String lineNumber);
+
+    public RestResponse<Tag> createTag(String name, Boolean isCommentTag);
+    public RestResponse<Tag> searchTagById(String id);
+    public RestResponse<Tag[]> searchTagsByName(String name);
+    public RestResponse<Map> getAllTags();
+    public RestResponse<Application> addAppTag(String appId, String tagId);
+    public RestResponse<Application> removeAppTag(String appId, String tagId);
+
+    public RestResponse<Tag> updateTag(String tagId, String name);
+
+    public RestResponse<String> removeTag(String tagId);
 }

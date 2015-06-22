@@ -114,7 +114,8 @@ public class Group extends AuditableEntity implements Iterable<User> {
             for (User user : this.users) {
                 users.add(map(
                         "name", user.getName(),
-                        "id", user.getId()
+                        "id", user.getId(),
+                        "active", user.isActive()
                 ));
             }
         }

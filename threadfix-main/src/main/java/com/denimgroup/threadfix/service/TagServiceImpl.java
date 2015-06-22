@@ -23,8 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.data.dao.TagDao;
+import com.denimgroup.threadfix.data.dao.VulnerabilityCommentDao;
 import com.denimgroup.threadfix.data.entities.Tag;
+import com.denimgroup.threadfix.data.entities.VulnerabilityComment;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +43,8 @@ public class TagServiceImpl implements TagService {
 
     @Autowired
     private TagDao tagDao;
+    @Autowired
+    private VulnerabilityCommentDao vulnerabilityCommentDao;
 
     @Override
     public List<Tag> loadAll() {
@@ -47,8 +52,18 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Tag loadTag(String name) {
-        return tagDao.retrieveByName(name);
+    public Tag loadApplicationTag(String name) {
+        return tagDao.retrieveAppTagByName(name);
+    }
+
+    @Override
+    public Tag loadCommentTag(String name) {
+        return tagDao.retrieveCommentTagByName(name);
+    }
+
+    @Override
+    public List<Tag> loadTagsByName(String name) {
+        return tagDao.retrieveTagsByName(name);
     }
 
     @Override
@@ -69,5 +84,65 @@ public class TagServiceImpl implements TagService {
         Tag tag = loadTag(tagId);
         tag.setActive(false);
         tagDao.saveOrUpdate(tag);
+    }
+
+    @Override
+    public void copyAppTagsToCommentTags() {
+        List<Tag> appTags = loadAllApplicationTags();
+        if (appTags == null) {
+            log.info("There is no tags in system.");
+            return;
+        }
+        log.info("About to copy " + appTags.size() + " application tags to comment tags.");
+        for (Tag appTag : appTags) {
+            if (loadCommentTag(appTag.getName()) == null) {
+                log.info("Copying " + appTag.getName());
+                Tag newCommentTag = new Tag();
+                newCommentTag.setName(appTag.getName());
+                newCommentTag.setEnterpriseTag(appTag.getEnterpriseTag());
+                newCommentTag.setDefaultJsonFilter(appTag.getDefaultJsonFilter());
+                newCommentTag.setTagForComment(true);
+                tagDao.saveOrUpdate(newCommentTag);
+            }
+        }
+
+    }
+
+    @Override
+    public void changeTagInVulnComments() {
+        log.info("About to update all tags in Vulnerability Comments from Application Tag to Comment Tag.");
+        List<VulnerabilityComment> vulnerabilityComments = vulnerabilityCommentDao.retrieveAllActive();
+        if (vulnerabilityComments == null) {
+            log.info("There is no vulnerability comments in the system.");
+            return;
+        }
+        log.info("Looking for tags in " + vulnerabilityComments.size() + " vulnerability comments, and change them if found.");
+        for (VulnerabilityComment comment: vulnerabilityComments) {
+            List<Tag> newTags = CollectionUtils.list();
+            for (Tag tag: comment.getTags()) {
+                if (tag.getTagForComment() == null || !tag.getTagForComment()) {
+                    Tag sameTagInComment = loadCommentTag(tag.getName());
+                    if (sameTagInComment != null)
+                        newTags.add(sameTagInComment);
+                    else
+                        log.warn("Can't find comment tag " + tag.getName() + " to change for comment in vulnerability ID " + comment.getVulnerability().getId());
+                } else
+                    newTags.add(tag);
+            }
+            comment.setTags(newTags);
+            vulnerabilityCommentDao.saveOrUpdate(comment);
+        }
+
+
+    }
+
+    @Override
+    public List<Tag> loadAllApplicationTags() {
+        return tagDao.retrieveAllApplicationTags();
+    }
+
+    @Override
+    public List<Tag> loadAllCommentTags() {
+        return tagDao.retrieveAllCommentTags();
     }
 }

@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -47,6 +48,7 @@ public class Tag extends AuditableEntity {
     private String name;
 
     private Boolean enterpriseTag = false;
+    private Boolean tagForComment = false;
     private String defaultJsonFilter;
 
     private Set<Application> applications = new HashSet<Application>(0);
@@ -83,7 +85,7 @@ public class Tag extends AuditableEntity {
     }
 
     @Column(nullable = true)
-    @JsonView(Object.class)
+    @JsonView(AllViews.TableRow.class)
     public Boolean getEnterpriseTag() {
         return enterpriseTag;
     }
@@ -93,7 +95,7 @@ public class Tag extends AuditableEntity {
     }
 
     @Column(length = 1024, nullable = true)
-    @JsonView(Object.class)
+    @JsonView(AllViews.VulnSearchApplications.class)
     public String getDefaultJsonFilter() {
         return defaultJsonFilter;
     }
@@ -122,4 +124,13 @@ public class Tag extends AuditableEntity {
         return applications.size()==0 && getVulnCommentsCount()==0 && !enterpriseTag;
     }
 
+    @Column(nullable = true)
+    @JsonView(Object.class)
+    public Boolean getTagForComment() {
+        return tagForComment;
+    }
+
+    public void setTagForComment(Boolean tagForComment) {
+        this.tagForComment = tagForComment;
+    }
 }

@@ -52,7 +52,8 @@
 
     <c:if test="${ ldap_plugin }">
         <div class="form-group">
-            <label for="isLdapUserCheckbox">LDAP user</label>
+            <label style="margin-left: -149px;"
+                   for="isLdapUserCheckbox">LDAP user</label>
             <input type="checkbox" class="ldapCheckbox"
                    id="isLdapUserCheckbox"
                    name="isLdapUser"
@@ -123,9 +124,6 @@
                 </tbody>
             </table>
         </div>
-
-
-
 
     </security:authorize>
 </div>

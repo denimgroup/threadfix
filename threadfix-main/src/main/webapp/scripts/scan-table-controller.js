@@ -60,7 +60,7 @@ myAppModule.controller('ScanTableController', function ($scope, $window, $http, 
                 if (data.success == false) {
                     $rootScope.$broadcast('downloadScanFail', data.message);
                 } else {
-                    reportExporter.exportScan(data, "application/octet-stream", scan.originalFileName);
+                    reportExporter.exportScan(data, "application/octet-stream", scan.originalFileNames[0]);
                 }
 
             }).
@@ -85,6 +85,13 @@ myAppModule.controller('ScanTableController', function ($scope, $window, $http, 
             } else {
                 $scope.heading = $scope.scans.length + ' Scans';
             }
+
+            $scope.scansToDownload = false;
+            scans.forEach(function(scan){
+                if (scan.downloadable)
+                    $scope.scansToDownload = true;
+            })
+
         }
 
     });

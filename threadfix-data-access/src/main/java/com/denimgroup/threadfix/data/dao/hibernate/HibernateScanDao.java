@@ -115,7 +115,7 @@ public class HibernateScanDao
 	@SuppressWarnings("unchecked")
 	public List<Scan> retrieveByApplicationIdList(List<Integer> applicationIdList) {
 		return sessionFactory.getCurrentSession()
-			.createQuery("from Scan scan where scan.application.id in (:idList)")
+			.createQuery("from Scan scan where scan.application.id in (:idList) and lockedMetadata = false")
 			.setParameterList("idList", applicationIdList)
 			.list();
 	}
@@ -231,8 +231,8 @@ public class HibernateScanDao
 	public long getNumberWithoutGenericMappings(Integer scanId) {
 		return (Long) sessionFactory.getCurrentSession()
 				 .createCriteria(Finding.class)
-				 .createAlias("channelVulnerability", "vuln")
-				 .add(Restrictions.isEmpty( "vuln.vulnerabilityMaps" ))
+				.createAlias("channelVulnerability", "vuln")
+				 .add(Restrictions.isEmpty("vuln.vulnerabilityMaps" ))
 				 .add(Restrictions.eq("scan.id", scanId))
 				 .setProjection(Projections.rowCount())
 				 .uniqueResult();
@@ -309,7 +309,7 @@ public class HibernateScanDao
 			}
 
 		}
-		
+
 		findings = null;
 
 		if (surfaceLocations != null) {
@@ -317,7 +317,7 @@ public class HibernateScanDao
 				sessionFactory.getCurrentSession().delete(surfaceLocation);
 			}
 		}
-		
+
 		sessionFactory.getCurrentSession().save(new DeletedScan(scan));
 		sessionFactory.getCurrentSession().delete(scan);
 	}
@@ -387,8 +387,8 @@ public class HibernateScanDao
 
 		return getBaseScanCriteria()
 			.setFirstResult((page - 1) * 100)
-			.setMaxResults(100)
-			.addOrder(Order.desc("importTime"))
+				.setMaxResults(100)
+				.addOrder(Order.desc("importTime"))
 			.list();
 	}
 	

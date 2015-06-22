@@ -23,19 +23,20 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.dao.EmptyScanDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
-import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.entities.ApplicationChannel;
+import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
+import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.importer.interop.ChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ChannelImporterFactory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.queue.QueueSender;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,9 +95,19 @@ public class ScanServiceImpl implements ScanService {
 
         File scanFile = new File(fullFilePath);
 
-        response.addHeader("Content-Disposition", "attachment; filename=\""+scan.getFileName()+"\"");
+        List<String> originalFileNames = scan.getOriginalFileNames();
+        String finalName = null;
+
+        if (originalFileNames != null && !originalFileNames.isEmpty()) {
+            finalName = originalFileNames.get(0);
+        } else {
+            finalName = scan.getFileName();
+        }
+
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + finalName + "\"");
+        response.setHeader("Content-Transfer-Encoding", "binary");
         response.setContentLength((int)scanFile.length());
-        response.setContentType("application/octet-stream");
+        response.setContentType("application/xml");
 
         try {
             InputStream in = new FileInputStream(scanFile);
@@ -123,26 +134,6 @@ public class ScanServiceImpl implements ScanService {
 
         return null;
 
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void addFileToQueue(@Nonnull Integer channelId, @Nonnull String fileName, @Nonnull Calendar scanDate) {
-
-        if (!ApplicationChannel.matchesFileHandleFormat(fileName)) {
-            String message = "Bad file name (" + fileName + ") passed into addFileToQueue. Exiting.";
-            LOG.error(message);
-            throw new IllegalArgumentException(message);
-        }
-
-        ApplicationChannel applicationChannel = applicationChannelDao
-                .retrieveById(channelId);
-
-        Integer appId = applicationChannel.getApplication().getId();
-        Integer orgId = applicationChannel.getApplication()
-                .getOrganization().getId();
-
-        queueSender.addScanToQueue(fileName, channelId, orgId, appId, scanDate, applicationChannel);
     }
 
     @Override
@@ -190,73 +181,6 @@ public class ScanServiceImpl implements ScanService {
         }
 
         return result;
-    }
-
-    @Override
-    public Integer saveEmptyScanAndGetId(Integer channelId, String fileName) {
-
-        if (fileName == null) {
-            LOG.warn("Saving the empty file failed. Check filesystem permissions.");
-            return null;
-        } else if (!ApplicationChannel.matchesFileHandleFormat(fileName)) {
-            String message = "Bad file name (" + fileName + ") passed into addFileToQueue. Exiting.";
-            LOG.error(message);
-            throw new IllegalArgumentException(message);
-        } else {
-            EmptyScan emptyScan = new EmptyScan();
-            emptyScan.setApplicationChannel(applicationChannelDao.retrieveById(channelId));
-            emptyScan.setAlreadyProcessed(false);
-            emptyScan.setDateUploaded(Calendar.getInstance());
-            emptyScan.setFileName(fileName);
-            emptyScanDao.saveOrUpdate(emptyScan);
-            return emptyScan.getId();
-        }
-    }
-
-    @Override
-    public void addEmptyScanToQueue(Integer emptyScanId) {
-        EmptyScan emptyScan = emptyScanDao.retrieveById(emptyScanId);
-
-        if (emptyScan.getAlreadyProcessed() ||
-                emptyScan.getApplicationChannel() == null ||
-                emptyScan.getApplicationChannel().getId() == null ||
-                emptyScan.getApplicationChannel().getApplication() == null ||
-                emptyScan.getApplicationChannel().getApplication().getId() == null ||
-                emptyScan.getApplicationChannel().getApplication().getOrganization() == null ||
-                emptyScan.getApplicationChannel().getApplication().getOrganization().getId() == null ||
-                emptyScan.getFileName() == null) {
-            LOG.warn("The empty scan was not added to the queue. It was either already processed or incorrectly configured.");
-            return;
-        }
-
-        ApplicationChannel applicationChannel = emptyScan.getApplicationChannel();
-
-        Integer appId = applicationChannel.getApplication().getId();
-        Integer orgId = applicationChannel.getApplication()
-                .getOrganization().getId();
-
-        String fileName = emptyScan.getFileName();
-
-        queueSender.addScanToQueue(fileName, applicationChannel.getId(), orgId, appId, null, applicationChannel);
-
-        emptyScan.setAlreadyProcessed(true);
-        emptyScanDao.saveOrUpdate(emptyScan);
-    }
-
-    @Override
-    public void deleteEmptyScan(Integer emptyScanId) {
-        EmptyScan emptyScan = emptyScanDao.retrieveById(emptyScanId);
-
-        if (emptyScan != null) {
-            emptyScan.setAlreadyProcessed(true);
-            File file = DiskUtils.getScratchFile(emptyScan.getFileName());
-            if (file.exists()) {
-                if (!file.delete())
-                    file.deleteOnExit();
-            }
-
-            emptyScanDao.saveOrUpdate(emptyScan);
-        }
     }
 
     @Override

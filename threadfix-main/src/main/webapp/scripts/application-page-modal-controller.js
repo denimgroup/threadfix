@@ -47,8 +47,13 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                        })
                    });
 
+                   $scope.config.tags.sort(nameCompare);
+                   $scope.config.applicationTags.sort(nameCompare);
+
                    $scope.config.trackerTypes = $scope.config.defectTrackerTypeList;
                    $scope.$parent.genericSeverityList = $scope.config.genericSeverityList;
+                   $scope.$parent.scanAgentSupportedList = $scope.config.scanAgentSupportedList;
+                   $scope.$parent.documents = $scope.config.documents;
 
                    $rootScope.$broadcast('seeMoreExtension', "/" + $scope.config.application.team.id + "/" + $scope.config.application.id);
 
@@ -184,6 +189,13 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             $scope.showCreateDefectTrackerModal();
         } else if (name === 'goToWaf') {
             $scope.goToWaf();
+        } else if (name === 'addDefectProfile') {
+            if (!$scope.config.canManageDefectTrackers) {
+                alert("No defect profiles were found, and you don't have permission to create defect profiles. Please contact your administrator.");
+                return;
+            }
+            $scope.currentModal.dismiss('modalChanged');
+            $scope.showCreateDefectProfileModal();
         }
     });
 
@@ -368,7 +380,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
     $scope.showCreateDefectTrackerModal = function() {
         var modalInstance = $modal.open({
             templateUrl: 'newTrackerModal.html',
-            controller: 'ModalControllerWithConfig',
+            controller: 'CreateEditDefectTrackerModalController',
             resolve: {
                 url: function() {
                     return tfEncoder.encode("/configuration/defecttrackers/new");
@@ -403,6 +415,74 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             $log.info('Modal dismissed at: ' + new Date());
         });
     };
+
+
+    $scope.showCreateDefectProfileModal = function() {
+        var modalInstance = $modal.open({
+            templateUrl: 'createDefaultProfileModal.html',
+            controller: 'ModalControllerWithConfig',
+            resolve: {
+                url: function() {
+                    return tfEncoder.encode("/default/addProfile");
+                },
+                object: function () {
+                    return {
+                        referenceApplication : {id: $scope.config.application.id},
+                        defectTracker : {id: $scope.config.application.defectTracker.id}
+                    };
+                },
+                config: function() {
+                    return {
+                        referenceApplications: $scope.config.application.defectTracker.associatedApplications
+                    };
+                },
+                buttonText: function() {
+                    return "Add new Default Profile";
+                }
+            }
+        });
+
+        $scope.currentModal = modalInstance;
+
+        modalInstance.result.then(function (newDefectProfile) {
+            $scope.config.application.mainDefaultDefectProfile = newDefectProfile;
+            if (!$scope.config.application.defectTracker.defaultDefectProfiles)
+                $scope.config.application.defectTracker.defaultDefectProfiles = [];
+
+            $scope.config.application.defectTracker.defaultDefectProfiles.push(newDefectProfile);
+            $scope.config.application.defectTracker.defaultDefectProfiles.sort(nameCompare);
+
+            $scope.successMessage = "Successfully created new tracker default profile " + newDefectProfile.name;
+
+            $scope.showUpdateDefectDefaultsModal(newDefectProfile);
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    };
+
+    $scope.showUpdateDefectDefaultsModal = function(defaultDefectProfile) {
+        var modalInstance = $modal.open({
+            windowClass: 'update-defect-defaults',
+            templateUrl: 'updateDefectDefaultModal.html',
+            controller: 'UpdateDefectDefaultsModalController',
+            resolve: {
+                url: function() {
+                    return tfEncoder.encode("/default/" + defaultDefectProfile.id + "/update");
+                },
+                configUrl: function() {
+                    return tfEncoder.encode("/default/" + defaultDefectProfile.id + "/defectSubmissionForm");
+                }
+            }
+        });
+        $scope.currentModal = modalInstance;
+        modalInstance.result.then(function () {
+            $scope.successMessage = "Successfully updated the defaults for the new defect profile: " + defaultDefectProfile.name;
+            $scope.showEditModal();
+
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    }
 
     // Handle fileDragged event and upload scan button clicks
     $scope.$on('fileDragged', function(event, $files) {

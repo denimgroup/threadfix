@@ -276,7 +276,7 @@ public class QueueSenderImpl implements QueueSender {
 	}
 
     @Override
-    public void addScheduledScan(int appId, String scanner) {
+    public void addScheduledScan(int appId, String scanner, String scanConfigId) {
         if (appId < 0)
             return;
 
@@ -286,6 +286,7 @@ public class QueueSenderImpl implements QueueSender {
             scheduledScanMap.setInt("appId", appId);
             scheduledScanMap.setString("type", QueueConstants.SCHEDULED_SCAN_TYPE);
             scheduledScanMap.setString("scanner", scanner);
+			scheduledScanMap.setString("scanConfigId", scanConfigId);
         } catch (JMSException e) {
             log.error(jmsErrorString);
             addExceptionLog(e);

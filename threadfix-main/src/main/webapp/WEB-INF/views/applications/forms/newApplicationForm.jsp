@@ -115,10 +115,11 @@
                     </td>
                     <td>
                         <span id="sourceUrlLengthError" class="errors" ng-show="form.repositoryUrl.$dirty && form.repositoryUrl.$error.maxlength">Maximum length is 255.</span>
+                        <span id="sourceUrlOtherError" class="errors" ng-show="object.repositoryUrl_error"> {{ object.repositoryUrl_error }}</span>
                         <span id="sourceUrlValidError" class="errors" ng-show="form.repositoryUrl.$dirty && form.repositoryUrl.$error.url">URL is invalid.</span>
                     </td>
                 </tr>
-                <tr ng-show="sourceCodeDisplay">
+                <tr ng-show="sourceCodeDisplay && !object.repositoryRevision.length">
                     <td>Source Code Branch</td>
                     <td>
                         <input type="text" id="repositoryBranch" ng-model="object.repositoryBranch" maxlength="80" name="repositoryBranch"/>
@@ -127,7 +128,7 @@
                         <span id="sourceBranchLengthError" class="errors" ng-show="form.repositoryBranch.$dirty && form.repositoryBranch.$error.maxlength">Maximum length is 80.</span>
                     </td>
                 </tr>
-                <tr ng-show="sourceCodeDisplay">
+                <tr ng-show="sourceCodeDisplay && !object.repositoryBranch.length">
                     <td>Source Code Revision</td>
                     <td>
                         <input type="text" id="repositoryRevision" ng-model="object.repositoryRevision" maxlength="80" name="repositoryRevision"/>
@@ -170,7 +171,7 @@
                     <td>Disable Vulnerability Merging</td>
                     <td class="inputValue">
                         <input id="skipApplicationMerge" type="checkbox" ng-model="object.skipApplicationMerge" name="skipApplicationMerge"/>
-                        <a class="btn" popover="ThreadFix detects matching scan results and combine them in order to simplify the result set. This can make the number of vulnerabilities in ThreadFix lower than the number of results in a scan. Checking this box disables this behavior.">?</a>
+                        <a class="btn" popover="ThreadFix detects matching scan results and combines them in order to simplify the result set. This can make the number of vulnerabilities in ThreadFix lower than the number of results in a scan. Checking this box disables this behavior.">?</a>
                     </td>
                 </tr>
             </table>

@@ -33,9 +33,15 @@ import java.util.List;
  */
 public interface TagService {
     List<Tag> loadAll();
-    Tag loadTag(String name);
+    Tag loadApplicationTag(String name);
+    Tag loadCommentTag(String name);
+    List<Tag> loadTagsByName(String name);
     Tag loadTag(int tagId);
     void storeTag(Tag tag);
     void deleteById(int tagId);
+    void copyAppTagsToCommentTags();
+    void changeTagInVulnComments();
+    List<Tag> loadAllApplicationTags();
+    List<Tag> loadAllCommentTags();
 
 }

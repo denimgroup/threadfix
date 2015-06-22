@@ -29,8 +29,16 @@ import java.util.List;
 
 /**
  * Basic DAO class for the Tag entity.
- * 
+ *
  * @author stran
  */
 public interface TagDao extends GenericNamedObjectDao<Tag> {
+    Tag retrieveAppTagByName(String name);
+    Tag retrieveCommentTagByName(String name);
+
+    List<Tag> retrieveAllCommentTags();
+    List<Tag> retrieveTagsByName(String name);
+    List<Tag> retrieveAllApplicationTags();
+
+
 }

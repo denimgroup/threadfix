@@ -135,6 +135,8 @@ public class Finding extends AuditableEntity implements FindingLike {
 	private String calculatedUrlPath = "", calculatedFilePath = "";
 	private Dependency dependency;
 
+    private Boolean hidden;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	public Calendar getScannedDate() {
 		return scannedDate;
@@ -486,6 +488,16 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Transient
+    @Column
+    public Boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(Boolean hidden) {
+        this.hidden = hidden;
+    }
+
+    @Transient
 	@JsonView({ AllViews.TableRow.class, AllViews.VulnerabilityDetail.class, AllViews.UIVulnSearch.class })
 	private String getScannerName() {
 		return getScan().getApplicationChannel().getChannelType().getName();

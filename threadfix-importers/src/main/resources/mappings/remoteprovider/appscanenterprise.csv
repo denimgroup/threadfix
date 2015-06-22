@@ -1,0 +1,11 @@
+6/08/2015 15:31:00
+type.name
+IBM Rational AppScan Enterprise,http://www-03.ibm.com/software/products/en/appscan-enterprise,1,Use as a Remote Provider
+type.credentials
+usernamepassword
+type.channelname
+IBM Rational AppScan
+type.authenticationfields
+URL,false,true
+Username,false,true
+Password,true,true

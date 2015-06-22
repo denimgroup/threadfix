@@ -28,7 +28,7 @@ public enum Permission {
 	CAN_GENERATE_REPORTS("ROLE_CAN_GENERATE_REPORTS","canGenerateReports"),
 	CAN_GENERATE_WAF_RULES("ROLE_CAN_GENERATE_WAF_RULES","canGenerateWafRules"),
 	CAN_MANAGE_API_KEYS("ROLE_CAN_MANAGE_API_KEYS","canManageApiKeys"),
-	CAN_MANAGE_EMAIL_REPORTS("ROLE_CAN_MANAGE_API_KEYS","canManageApiKeys"),//didn't know how to add properly permissions, so using a workaround
+	CAN_MANAGE_EMAIL_REPORTS("ROLE_CAN_MANAGE_EMAIL_REPORTS","canManageEmailReports"),
 	CAN_MANAGE_APPLICATIONS("ROLE_CAN_MANAGE_APPLICATIONS","canManageApplications"),
 	CAN_MANAGE_GRC_TOOLS("ROLE_CAN_MANAGE_GRC_TOOLS","canManageGrcTools"),
 	CAN_MANAGE_DEFECT_TRACKERS("ROLE_CAN_MANAGE_DEFECT_TRACKERS","canManageDefectTrackers"),
@@ -47,7 +47,9 @@ public enum Permission {
 	ENTERPRISE("ROLE_ENTERPRISE","enterprise"),
 	READ_ACCESS("ROLE_READ_ACCESS","readAccess"),
     CAN_MANAGE_TAGS("ROLE_CAN_MANAGE_TAGS","canManageTags"),
-    CAN_SUBMIT_COMMENTS("ROLE_CAN_SUBMIT_COMMENTS","canSubmitComments");
+    CAN_SUBMIT_COMMENTS("ROLE_CAN_SUBMIT_COMMENTS","canSubmitComments"),
+    CAN_MANAGE_SCAN_RESULT_FILTERS("ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS", "canManageScanResultFilters"),
+    CAN_MANAGE_CUSTOM_CWE_TEXT("ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT", "canManageCustomCweText");
 
 	private String text, camelCase;
 	

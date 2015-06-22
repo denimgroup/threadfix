@@ -33,6 +33,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 
@@ -219,13 +220,18 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 	}
 	
 	public RestResponse<ScanQueueTask> queueScan(String applicationId, String scannerType) {
-		return httpRestUtils.httpPost("/tasks/queueScan",
-				new String[] { "applicationId", "scannerType" },
-				new String[] { applicationId, scannerType },
-                ScanQueueTask.class);
+        return queueScan(applicationId, scannerType, null);
 	}
 
-	public RestResponse<Application> addAppUrl(String appId, String url) {
+    @Override
+    public RestResponse<ScanQueueTask> queueScan(String applicationId, String scannerType, String scanConfigId) {
+        return httpRestUtils.httpPost("/tasks/queueScan",
+                new String[] { "applicationId", "scannerType", "scanConfigId" },
+                new String[] { applicationId, scannerType, scanConfigId },
+                ScanQueueTask.class);
+    }
+
+    public RestResponse<Application> addAppUrl(String appId, String url) {
 		return httpRestUtils.httpPost("/applications/" + appId + "/addUrl",
 				new String[] {"url"},
 				new String[] { url },
@@ -295,6 +301,52 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 								nativeId, parameter, longDescription,
 								filePath, column, lineText, lineNumber }, Finding.class);
 	}
+
+    @Override
+    public RestResponse<Tag> createTag(String name, Boolean isCommentTag) {
+        return httpRestUtils.httpPost("/tags/new",
+                new String[] { "name", "isCommentTag" },
+                new String[] { name, String.valueOf(isCommentTag) }, Tag.class);
+    }
+
+    @Override
+    public RestResponse<Tag> searchTagById(String id) {
+        return httpRestUtils.httpGet("/tags/" + id, Tag.class);
+    }
+
+    @Override
+    public RestResponse<Tag[]> searchTagsByName(String name) {
+        return httpRestUtils.httpGet("/tags/lookup", "&name=" + name, Tag[].class);
+    }
+
+    @Override
+    public RestResponse<Map> getAllTags() {
+        return httpRestUtils.httpGet("/tags/index", Map.class);
+    }
+
+    @Override
+    public RestResponse<Application> addAppTag(String appId, String tagId) {
+        return httpRestUtils.httpPost("/applications/" + appId + "/tags/add/" + tagId, new String[]{}, new String[]{}, Application.class);
+    }
+
+    @Override
+    public RestResponse<Application> removeAppTag(String appId, String tagId) {
+        return httpRestUtils.httpPost("/applications/" + appId + "/tags/remove/" + tagId, new String[]{}, new String[]{}, Application.class);
+    }
+
+    @Override
+    public RestResponse<Tag> updateTag(String tagId, String name) {
+        return httpRestUtils.httpPost("/tags/" + tagId + "/update",
+                new String[] {"name" },
+                new String[] { name }, Tag.class);
+    }
+
+    @Override
+    public RestResponse<String> removeTag(String tagId) {
+        return httpRestUtils.httpPost("/tags/" + tagId + "/delete",
+                new String[] { },
+                new String[] { }, String.class);
+    }
 
     // TODO find a better way to serialize this into a VulnerabilitySearchParameters form.
     @Override

@@ -48,7 +48,6 @@ public class ChannelMerger {
     Integer closed = 0, resurfaced = 0, total = 0, numberNew = 0, old = 0,
             numberRepeatResults = 0, numberRepeatFindings = 0, oldVulnerabilitiesInitiallyFromThisChannel = 0;
     Map<String, Finding> scanHash;
-    boolean shouldSkipMerging = false;
 
     /**
      * This is the first round of scan merge that only considers scans from the same scanner
@@ -79,8 +78,6 @@ public class ChannelMerger {
         if (scan.getFindings() == null) {
             scan.setFindings(listOf(Finding.class));
         }
-
-        shouldSkipMerging = applicationChannel.getApplication().getSkipApplicationMerge();
 
         LOG.info("Starting Application Channel-wide merging process with "
                 + scan.getFindings().size() + " findings.");
@@ -114,19 +111,36 @@ public class ChannelMerger {
         scan.setNumberRepeatFindings(numberRepeatFindings);
         scan.setNumberOldVulnerabilitiesInitiallyFromThisChannel(oldVulnerabilitiesInitiallyFromThisChannel);
 
-        if (!shouldSkipMerging) {
-            scan.setFindings(newFindings);
-        }
+        scan.setFindings(newFindings);
     }
 
     private void closeMissingVulnerabilities() {
         // for every old native ID
-        for (String nativeId : oldNativeIdVulnHash.keySet()) {
+        String name = scan.getApplicationChannel().getChannelType().getName();
+
+        for (Map.Entry<String, Vulnerability> entry : oldNativeIdVulnHash.entrySet()) {
+            String nativeId = entry.getKey();
+            Vulnerability vulnerability = entry.getValue();
 
             // if the old ID is not present in the new scan and the vulnerabilty is open, close it
-            if (!scanHash.containsKey(nativeId)
-                    && oldNativeIdVulnHash.get(nativeId) != null
-                    && oldNativeIdVulnHash.get(nativeId).isActive()) {
+            if (!scanHash.containsKey(nativeId) && vulnerability != null && vulnerability.isActive()) {
+
+                // we need to make sure ALL the findings are closed now
+                boolean shouldClose = true;
+                for (Finding finding : vulnerability.getFindings()) {
+
+                    // if the finding is from another channel or is contained in the new scan, it's not closed
+                    if (!name.equals(finding.getChannelNameOrNull()) ||
+                            scanHash.containsKey(finding.getNativeId())) {
+                        shouldClose = false;
+                        break;
+                    }
+                }
+
+                if (!shouldClose) {
+                    continue; // this skips to the next entry
+                }
+
                 if (scan.getImportTime() != null) {
                     oldNativeIdVulnHash.get(nativeId).closeVulnerability(scan,
                             scan.getImportTime());
@@ -250,7 +264,7 @@ public class ChannelMerger {
             if (finding != null && finding.getNativeId() != null
                     && !finding.getNativeId().isEmpty()) {
 
-                String key = shouldSkipMerging ? finding.getNonMergingKey() : finding.getNativeId();
+                String key = finding.getNativeId();
 
                 oldNativeIdVulnHash.put(key, finding.getVulnerability());
                 oldNativeIdFindingHash.put(key, finding);
@@ -284,7 +298,7 @@ public class ChannelMerger {
             if (finding != null && finding.getNativeId() != null
                     && !finding.getNativeId().isEmpty()) {
 
-                String key = shouldSkipMerging ? finding.getNonMergingKey() : finding.getNativeId();
+                String key = finding.getNativeId();
 
                 if (scanHash.containsKey(key)) {
                     // Increment the merged results counter in the finding

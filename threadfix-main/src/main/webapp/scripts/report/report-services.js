@@ -47,7 +47,7 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
                     oWin.document.charset = "utf-8";
                     oWin.document.write('sep=,\r\n' + data);
                     oWin.document.close();
-                    success = oWin.document.execCommand('SaveAs', true, fileName)
+                    success = oWin.document.execCommand('SaveAs', true, fileName);
                     oWin.close();
                 }
 

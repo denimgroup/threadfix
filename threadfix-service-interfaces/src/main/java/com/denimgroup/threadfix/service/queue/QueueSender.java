@@ -96,7 +96,7 @@ public interface QueueSender {
      */
     void addRemoteProviderImport(int remoteProviderTypeId);
 
-    void addScheduledScan(int appId, String scanner);
+    void addScheduledScan(int appId, String scanner, String scanConfigId);
 
     void updateCachedStatistics(int appId);
 

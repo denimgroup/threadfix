@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -160,6 +161,7 @@ public class ApplicationsController {
 		model.addAttribute("defectTracker", new DefectTracker());
 		model.addAttribute("waf", new Waf());
 		model.addAttribute("newWaf", new Waf());
+        model.addAttribute("scanQueueTask", new ScanQueueTask());
 		model.addAttribute(new VulnerabilityCollectionModel());
         model.addAttribute("activeTab", getActiveTab(request, falsePositiveCount, numClosedVulns));
 		model.addAttribute(application);
@@ -204,7 +206,7 @@ public class ApplicationsController {
         map.put("application", application);
 
         // scans tab
-        map.put("scans", application.getScans());
+        map.put("scans", checkDownloadable(application.getScans()));
 
         // doc tab
         map.put("documents", application.getDocuments());
@@ -221,9 +223,12 @@ public class ApplicationsController {
         map.put("teams", organizationService.loadTeams(Permission.CAN_MANAGE_TEAMS, false));
 
         // tagging
-        map.put("tags", tagService.loadAll());
+        map.put("tags", tagService.loadAllApplicationTags());
 
         map.put("applicationTags", application.getTags());
+
+        if (EnterpriseTest.isEnterprise())
+            map.put("scanAgentSupportedList", ScannerType.getScanAgentSupportedListInString());
 
         // permissions
         for (Permission permission : new Permission[]{Permission.CAN_MANAGE_DEFECT_TRACKERS, Permission.CAN_MANAGE_WAFS}) {
@@ -231,6 +236,19 @@ public class ApplicationsController {
         }
 
         return success(map);
+    }
+
+    private List<Scan> checkDownloadable(List<Scan> scans) {
+        if (scans != null) {
+            DefaultConfiguration defaultConfiguration = defaultConfigService.loadCurrentConfiguration();
+
+            for (Scan scan: scans) {
+                scan.setDownloadable(defaultConfiguration.fileUploadLocationExists()
+                        && DiskUtils.isFileExists(defaultConfiguration.getFullFilePath(scan)));
+            }
+
+        }
+        return scans;
     }
 
     private String getActiveTab(HttpServletRequest request, long falsePositiveCount, long numClosedVulns) {
@@ -409,8 +427,12 @@ public class ApplicationsController {
 	public @ResponseBody RestResponse<?> readJson(@ModelAttribute DefectTrackerBean bean) {
 		DefectTracker defectTracker = defectTrackerService.loadDefectTracker(bean
 				.getDefectTrackerId());
-		AbstractDefectTracker dt = DefectTrackerFactory.getTrackerByType(defectTracker,
-                bean.getUserName(), bean.getPassword());
+
+        String username = bean.isUseDefaultCredentials() ? defectTracker.getDefaultUsername() : bean.getUserName();
+        String password = bean.isUseDefaultCredentials() ? defectTracker.getDefaultPassword() : bean.getPassword();
+
+		AbstractDefectTracker dt = DefectTrackerFactory.getTrackerByType(defectTracker, username, password);
+
 		if (dt == null) {
 			log.warn("Incorrect Defect Tracker credentials submitted.");
 			return failure("Authentication failed.");

@@ -32,6 +32,7 @@ public class DefectTrackerBean {
 	private String userName;
 	private String password;
 	private String projectName;
+    private boolean useDefaultCredentials;
 
 	@Override
 	public String toString() {
@@ -75,4 +76,11 @@ public class DefectTrackerBean {
 		return projectName;
 	}
 
+    public boolean isUseDefaultCredentials() {
+        return useDefaultCredentials;
+    }
+
+    public void setUseDefaultCredentials(boolean useDefaultCredentials) {
+        this.useDefaultCredentials = useDefaultCredentials;
+    }
 }

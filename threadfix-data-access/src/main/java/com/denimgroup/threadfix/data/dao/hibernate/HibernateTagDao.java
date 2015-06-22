@@ -70,4 +70,56 @@ public class HibernateTagDao
                 .add(Restrictions.eq("name", name))
                 .uniqueResult();
     }
+
+
+    @Override
+    public Tag retrieveAppTagByName(String name) {
+        return (Tag) getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.eq("name", name))
+                .add(Restrictions.or(Restrictions.isNull("tagForComment"), Restrictions.eq("tagForComment", false)))
+                .uniqueResult();
+    }
+
+    @Override
+    public Tag retrieveCommentTagByName(String name) {
+        return (Tag) getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.eq("name", name))
+                .add(Restrictions.eq("tagForComment", true))
+                .uniqueResult();
+    }
+
+    @Override
+    public List<Tag> retrieveAllCommentTags() {
+        return getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.eq("tagForComment", true))
+                .addOrder(getOrder())
+                .list();
+
+    }
+
+    @Override
+    public List<Tag> retrieveTagsByName(String name) {
+        return getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.eq("name", name))
+                .addOrder(getOrder())
+                .list();
+    }
+
+    @Override
+    public List<Tag> retrieveAllApplicationTags() {
+        return getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.or(Restrictions.isNull("tagForComment"), Restrictions.eq("tagForComment", false)))
+                .addOrder(getOrder())
+                .list();
+    }
 }
