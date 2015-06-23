@@ -61,7 +61,7 @@
 				        <c:out value="${ vuln.genericVulnerability.name }"/>
 				    </a>
 				</td>
-				<td><c:out value="${ vuln.genericSeverity.name }"/></td>
+				<td><c:out value="${ vuln.genericSeverity.displayName }"/></td>
 				<td><c:out value="${ vuln.surfaceLocation.path }"/></td>
 				<td><c:out value="${ vuln.surfaceLocation.parameter }"/></td>
 

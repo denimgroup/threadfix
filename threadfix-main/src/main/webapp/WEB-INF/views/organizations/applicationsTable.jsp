@@ -22,11 +22,11 @@
         <th class="long">URL</th>
         <th class="short">Criticality</th>
         <th class="short">Open Vulns</th>
-        <th class="short">Critical</th>
-        <th class="short">High</th>
-        <th class="short">Medium</th>
-        <th class="short">Low</th>
-        <th class="short">Info</th>
+        <th class="short" generic-severity="Critical"></th>
+        <th class="short" generic-severity="High"></th>
+        <th class="short" generic-severity="Medium"></th>
+        <th class="short" generic-severity="Low"></th>
+        <th class="short" generic-severity="Info"></th>
     </tr>
     </thead>
     <tbody id="applicationsTableBody">

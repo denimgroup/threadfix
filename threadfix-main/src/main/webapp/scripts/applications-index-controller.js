@@ -1,7 +1,7 @@
 var myAppModule = angular.module('threadfix')
 
 myAppModule.controller('ApplicationsIndexController',
-    function($scope, $log, $modal, $upload, $window, $rootScope, $timeout, tfEncoder, threadfixAPIService) {
+    function($scope, $log, $modal, $upload, $window, $rootScope, $timeout, tfEncoder, threadfixAPIService, customSeverityService) {
 
     // Initialize
     $scope.initialized = false;
@@ -25,6 +25,8 @@ myAppModule.controller('ApplicationsIndexController',
 
                     $scope.canEditIds = data.object.canEditIds;
                     $scope.canUploadIds = data.object.canUploadIds;
+
+                    customSeverityService.setSeverities(data.object.genericSeverities);
 
                     $scope.teams.forEach(function(team) {
                         team.showEditButton = $scope.canEditIds.indexOf(team.id) !== -1;

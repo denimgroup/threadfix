@@ -41,7 +41,7 @@
                         {{filter.channelType.name}}
                     </td>
                     <td id="scannerType{{filter.genericSeverity.name}}">
-                        {{filter.genericSeverity.name}}
+                        {{filter.genericSeverity.displayName}}
                     </td>
                     <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS">
                         <td class="centered">
