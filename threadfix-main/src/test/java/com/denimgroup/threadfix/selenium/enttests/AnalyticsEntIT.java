@@ -40,7 +40,8 @@ public class AnalyticsEntIT extends BaseDataTest {
     @Test
     public void testUtilsAttachPciTag() {
         initializeTeamAndAppWithIbmScan();
-        DatabaseUtils.attachAppToTag("PCI",appName,teamName);
+        int tagId = DatabaseUtils.getTagId("PCI", true);
+        DatabaseUtils.attachAppToTag(String.valueOf(tagId),appName,teamName);
 
         loginPage.defaultLogin()
                 .clickAnalyticsLink()
@@ -51,7 +52,8 @@ public class AnalyticsEntIT extends BaseDataTest {
     @Test
     public void testUtilsAttachHipaaTag() {
         initializeTeamAndAppWithIbmScan();
-        DatabaseUtils.attachAppToTag("HIPAA",appName,teamName);
+        int tagId = DatabaseUtils.getTagId("HIPAA", true);
+        DatabaseUtils.attachAppToTag(String.valueOf(tagId),appName,teamName);
 
         loginPage.defaultLogin()
                 .clickAnalyticsLink()

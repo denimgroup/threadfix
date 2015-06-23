@@ -85,6 +85,18 @@ public class DatabaseUtils {
         return response.object.getId();
     }
 
+    public static int getTagId(String tagName, boolean isAppTag) {
+        RestResponse<Tag[]> response = CLIENT.searchTagsByName(tagName);
+        for(Tag tag: response.object){
+            if(isAppTag && !tag.getTagForComment()){
+                return tag.getId();
+            } else if (!isAppTag && tag.getTagForComment()){
+                return tag.getId();
+            }
+        }
+        return -1;
+    }
+
     public static void attachAppToTag(String tagId, String appName, String teamName) {
         RestResponse<Application> response = CLIENT.searchForApplicationByName(appName, teamName);
         assertTrue("Request for Application was unsuccessful. Message:" + response.message, response.success);
