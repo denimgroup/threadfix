@@ -873,6 +873,24 @@ public class ApplicationDetailPage extends BasePage {
         return new TagDetailPage(driver);
     }
 
+    public ApplicationDetailPage clickFilesTab() {
+        driver.findElement(By.xpath("//a[contains(text(), ' Files')]")).click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage clickAddFileButton() {
+        driver.findElementByLinkText("Add File").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage uploadFile(String file) {
+        sleep(2000);
+        driver.findElementById("docFileInput").sendKeys(file);
+        waitForElement(driver.findElementByXPath("//a[text()='Download']"));
+        sleep(1000);
+        return new ApplicationDetailPage(driver);
+    }
+
     /*________________________________________ Get Methods ________________________________________*/
     public String checkWafName() {
         waitForElement(driver.findElementById("wafNameText"));
@@ -1426,6 +1444,10 @@ public class ApplicationDetailPage extends BasePage {
 
     public boolean isVulnerabilitySummaryElementCorrect(String element, String expected) {
         return driver.findElementById(element).getText().contains(expected);
+    }
+
+    public boolean isUploadedFilePresent(String fileName) {
+        return driver.findElementByCssSelector("td#docName0").getText().contains(fileName);
     }
 
     /*___________________Void Methods__________________*/

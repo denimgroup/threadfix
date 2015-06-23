@@ -235,6 +235,24 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
+    public void testUploadFileToApplication() {
+        initializeTeamAndApp();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(appName);
+
+        applicationDetailPage.clickFilesTab()
+                .clickAddFileButton()
+                .uploadFile(ScanContents.getScanFilePath("Snort Log"));
+
+        assertTrue("File was not uploaded successfully.",
+                applicationDetailPage.isUploadedFilePresent("snort_log"));
+
+    }
+
+    @Test
     public void testCreateDefectTrackerViaAppDetailPage() {
         initializeTeamAndApp();
 
