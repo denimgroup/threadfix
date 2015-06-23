@@ -575,7 +575,7 @@ public class DefectTrackerIT extends BaseDataTest {
 
         assertTrue("New Schedule wasn't Created", defectTrackerSchedulePage.isNewSchedulePresent("_9_30_AM"));
 
-        defectTrackerSchedulePage.clickOrganizationHeaderLink()
+        defectTrackerSchedulePage.clickDashboardLink()
                 .clickDefectTrackersLink()
                 .clickScheduleUpdateTab();
 
@@ -604,7 +604,7 @@ public class DefectTrackerIT extends BaseDataTest {
 
         assertTrue("New Schedule wasn't Created", defectTrackerSchedulePage.isNewSchedulePresent("Sunday_8_30_PM"));
 
-        defectTrackerSchedulePage.clickOrganizationHeaderLink()
+        defectTrackerSchedulePage.clickDashboardLink()
                 .clickDefectTrackersLink()
                 .clickScheduleUpdateTab();
 
