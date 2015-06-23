@@ -109,6 +109,8 @@ public class RemoteProvidersIT extends BaseDataTest {
 
 	@Test
 	public void testConfigureWhiteHat() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("WhiteHat");
+
         remoteProvidersIndexPage.clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
                 .saveWhiteHat();
@@ -141,6 +143,8 @@ public class RemoteProvidersIT extends BaseDataTest {
 
 	@Test
 	public void testConfigureVeracode() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("Veracode");
+
         remoteProvidersIndexPage.clickConfigureVeracode()
                 .setVeraUsername(VERACODE_USER)
                 .setVeraPassword(VERACODE_PASSWORD)
@@ -191,6 +195,8 @@ public class RemoteProvidersIT extends BaseDataTest {
 
     @Test
     public void testEditVeracodeMapping() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("Veracode");
+
         remoteProvidersIndexPage.clickConfigureVeracode()
                 .setVeraUsername(VERACODE_USER)
                 .setVeraPassword(VERACODE_PASSWORD)
@@ -208,6 +214,8 @@ public class RemoteProvidersIT extends BaseDataTest {
 
     @Test
     public void testEditWhiteHatMapping() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("WhiteHat");
+
         remoteProvidersIndexPage.clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
                 .saveWhiteHat();
@@ -245,6 +253,8 @@ public class RemoteProvidersIT extends BaseDataTest {
 
     @Test
     public void testImportVeracodeScan() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("Veracode");
+
         remoteProvidersIndexPage.clickConfigureVeracode()
                 .setVeraUsername(VERACODE_USER)
                 .setVeraPassword(VERACODE_PASSWORD)
@@ -296,6 +306,8 @@ public class RemoteProvidersIT extends BaseDataTest {
     public void testVulnerabilityCountAfterImport() {
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("WhiteHat");
+
         remoteProvidersIndexPage.clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
                 .saveWhiteHat();
@@ -338,6 +350,8 @@ public class RemoteProvidersIT extends BaseDataTest {
 
     @Test
     public void testDeletedApplicationOnList() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("WhiteHat");
+
         ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
@@ -362,6 +376,8 @@ public class RemoteProvidersIT extends BaseDataTest {
 
     @Test
     public void testDeletedTeamOnList() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("WhiteHat");
+
         TeamDetailPage teamDetailPage = remoteProvidersIndexPage.clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName);
 
@@ -422,6 +438,8 @@ public class RemoteProvidersIT extends BaseDataTest {
 
     @Test
     public void testTeamExistsAfterDeleted() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("WhiteHat");
+
         remoteProvidersIndexPage.clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
                 .saveWhiteHat()
@@ -445,6 +463,8 @@ public class RemoteProvidersIT extends BaseDataTest {
 
     @Test
     public void testApplicationExistsAfterDeleted(){
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("WhiteHat");
+
         remoteProvidersIndexPage.clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
                 .saveWhiteHat()
@@ -668,6 +688,8 @@ public class RemoteProvidersIT extends BaseDataTest {
 
     @Test
     public void testVeracodeEditNameModalHeader() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("Veracode");
+
         remoteProvidersIndexPage.clickConfigureVeracode()
                 .setVeraUsername(VERACODE_USER)
                 .setVeraPassword(VERACODE_PASSWORD)
