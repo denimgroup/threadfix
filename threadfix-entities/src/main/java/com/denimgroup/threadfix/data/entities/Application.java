@@ -846,7 +846,7 @@ public class Application extends AuditableEntity {
 
     @Column
     public Boolean isUseDefaultProject() {
-        return useDefaultProject;
+        return useDefaultProject != null && useDefaultProject;
     }
 
     public void setUseDefaultProject(Boolean useDefaultProject) {
@@ -855,7 +855,7 @@ public class Application extends AuditableEntity {
 
     @Column
     public Boolean isUseDefaultCredentials() {
-        return useDefaultCredentials;
+        return useDefaultCredentials != null && useDefaultCredentials;
     }
 
     public void setUseDefaultCredentials(Boolean useDefaultCredentials) {
