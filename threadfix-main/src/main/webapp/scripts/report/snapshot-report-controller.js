@@ -1,7 +1,7 @@
 var module = angular.module('threadfix');
 
 module.controller('SnapshotReportController', function($scope, $rootScope, $window, $http, tfEncoder, vulnSearchParameterService,
-                                                       reportUtilities, reportExporter) {
+                                                       reportUtilities, reportExporter, customSeverityService) {
 
     $scope.parameters = {};
     $scope.noData = false;
@@ -626,37 +626,43 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     };
 
     var processPITData = function() {
-        $scope.data = {
-            Critical: {
-                Severity: 'Critical',
-                Count: 0,
-                Avg_Age: 0,
-                Percentage: '0%'
-            },
-            High: {
-                Severity: 'High',
-                Count: 0,
-                Avg_Age: 0,
-                Percentage: '0%'
-            },
-            Medium: {
-                Severity: 'Medium',
-                Count: 0,
-                Avg_Age: 0,
-                Percentage: '0%'
-            },
-            Low: {
-                Severity: 'Low',
-                Count: 0,
-                Avg_Age: 0,
-                Percentage: '0%'
-            },
-            Info: {
-                Severity: 'Info',
-                Count: 0,
-                Avg_Age: 0,
-                Percentage: '0%'
-            }
+
+        var customCritical = customSeverityService.getCustomSeverity('Critical');
+        var customHigh = customSeverityService.getCustomSeverity('High');
+        var customMedium = customSeverityService.getCustomSeverity('Medium');
+        var customLow = customSeverityService.getCustomSeverity('Low');
+        var customInfo = customSeverityService.getCustomSeverity('Info');
+
+        $scope.data = {};
+        $scope.data[customCritical] = {
+            Severity: customCritical,
+            Count: 0,
+            Avg_Age: 0,
+            Percentage: '0%'
+        };
+        $scope.data[customHigh] = {
+            Severity: customHigh,
+            Count: 0,
+            Avg_Age: 0,
+            Percentage: '0%'
+        };
+        $scope.data[customMedium] = {
+            Severity: customMedium,
+            Count: 0,
+            Avg_Age: 0,
+            Percentage: '0%'
+        };
+        $scope.data[customLow] = {
+            Severity: customLow,
+            Count: 0,
+            Avg_Age: 0,
+            Percentage: '0%'
+        };
+        $scope.data[customInfo] = {
+            Severity: customInfo,
+            Count: 0,
+            Avg_Age: 0,
+            Percentage: '0%'
         };
 
         var highAgeSum = 0,
@@ -664,75 +670,87 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             criticalAgeSum = 0,
             lowAgeSum = 0,
             infoAgeSum = 0,
-            totalCount;
+            totalCount = 0;
 
         var now = (new Date()).getTime();
 
         $scope.filterVulns.forEach(function(vuln){
             if ("High" === vuln.severity) {
-                $scope.data.High.Count += 1;
+                $scope.data[customHigh].Count += 1;
                 highAgeSum += getDates(now, vuln.importTime);
             } else if ("Medium" === vuln.severity) {
-                $scope.data.Medium.Count += 1;
+                $scope.data[customMedium].Count += 1;
                 mediumAgeSum += getDates(now, vuln.importTime);
             } else if ("Critical" === vuln.severity) {
-                $scope.data.Critical.Count += 1;
+                $scope.data[customCritical].Count += 1;
                 criticalAgeSum += getDates(now, vuln.importTime);
             } else if ("Low" === vuln.severity) {
-                $scope.data.Low.Count += 1;
+                $scope.data[customLow].Count += 1;
                 lowAgeSum += getDates(now, vuln.importTime);
             } else if ("Info" === vuln.severity) {
-                $scope.data.Info.Count += 1;
+                $scope.data[customInfo].Count += 1;
                 infoAgeSum += getDates(now, vuln.importTime);
             }
         });
 
-        totalCount = $scope.data.High.Count + $scope.data.Medium.Count + $scope.data.Critical.Count + $scope.data.Low.Count + $scope.data.Info.Count;
+        totalCount =
+            $scope.data[customHigh].Count +
+            $scope.data[customMedium].Count +
+            $scope.data[customCritical].Count +
+            $scope.data[customLow].Count +
+            $scope.data[customInfo].Count;
 
         if (totalCount !== 0) {
-            $scope.data.Critical.Percentage = getPercent($scope.data.Critical.Count/totalCount);
-            $scope.data.High.Percentage = getPercent($scope.data.High.Count/totalCount);
-            $scope.data.Medium.Percentage = getPercent($scope.data.Medium.Count/totalCount);
-            $scope.data.Low.Percentage = getPercent($scope.data.Low.Count/totalCount);
-            $scope.data.Info.Percentage = getPercent($scope.data.Info.Count/totalCount);
+            $scope.data[customCritical].Percentage = getPercent($scope.data[customCritical].Count/totalCount);
+            $scope.data[customHigh].Percentage = getPercent($scope.data[customHigh].Count/totalCount);
+            $scope.data[customMedium].Percentage = getPercent($scope.data[customMedium].Count/totalCount);
+            $scope.data[customLow].Percentage = getPercent($scope.data[customLow].Count/totalCount);
+            $scope.data[customInfo].Percentage = getPercent($scope.data[customInfo].Count/totalCount);
         }
 
-        $scope.data.High.Avg_Age = ($scope.data.High.Count !== 0) ? Math.round(highAgeSum/$scope.data.High.Count) : 0;
-        $scope.data.Critical.Avg_Age = ($scope.data.Critical.Count !== 0) ? Math.round(criticalAgeSum/$scope.data.Critical.Count) : 0;
-        $scope.data.Medium.Avg_Age = ($scope.data.Medium.Count !== 0) ? Math.round(mediumAgeSum/$scope.data.Medium.Count) : 0;
-        $scope.data.Low.Avg_Age = ($scope.data.Low.Count !== 0) ? Math.round(lowAgeSum/$scope.data.Low.Count) : 0;
-        $scope.data.Info.Avg_Age = ($scope.data.Info.Count !== 0) ? Math.round(infoAgeSum/$scope.data.Info.Count) : 0;
+        $scope.data[customHigh].Avg_Age = ($scope.data[customHigh].Count !== 0) ? Math.round(highAgeSum/$scope.data[customHigh].Count) : 0;
+        $scope.data[customCritical].Avg_Age = ($scope.data[customCritical].Count !== 0) ? Math.round(criticalAgeSum/$scope.data[customCritical].Count) : 0;
+        $scope.data[customMedium].Avg_Age = ($scope.data[customMedium].Count !== 0) ? Math.round(mediumAgeSum/$scope.data[customMedium].Count) : 0;
+        $scope.data[customLow].Avg_Age = ($scope.data[customLow].Count !== 0) ? Math.round(lowAgeSum/$scope.data[customLow].Count) : 0;
+        $scope.data[customInfo].Avg_Age = ($scope.data[customInfo].Count !== 0) ? Math.round(infoAgeSum/$scope.data[customInfo].Count) : 0;
 
     };
 
     var filterPITBySeverity = function() {
-        var criticalCount = $scope.parameters.severities.critical ? $scope.data.Critical.Count : 0;
-        var highCount = $scope.parameters.severities.high ? $scope.data.High.Count : 0;
-        var mediumCount = $scope.parameters.severities.medium ? $scope.data.Medium.Count : 0;
-        var lowCount = $scope.parameters.severities.low ? $scope.data.Low.Count : 0;
-        var infoCount = $scope.parameters.severities.info ? $scope.data.Info.Count : 0;
+
+        var customCritical = customSeverityService.getCustomSeverity('Critical');
+        var customHigh = customSeverityService.getCustomSeverity('High');
+        var customMedium = customSeverityService.getCustomSeverity('Medium');
+        var customLow = customSeverityService.getCustomSeverity('Low');
+        var customInfo = customSeverityService.getCustomSeverity('Info');
+
+        var criticalCount = $scope.parameters.severities.critical ? $scope.data[customCritical].Count : 0;
+        var highCount = $scope.parameters.severities.high ? $scope.data[customHigh].Count : 0;
+        var mediumCount = $scope.parameters.severities.medium ? $scope.data[customMedium].Count : 0;
+        var lowCount = $scope.parameters.severities.low ? $scope.data[customLow].Count : 0;
+        var infoCount = $scope.parameters.severities.info ? $scope.data[customInfo].Count : 0;
 
         var totalCount = criticalCount + highCount + mediumCount + lowCount + infoCount;
 
         if (totalCount !== 0) {
-            $scope.data.Critical.Percentage = getPercent($scope.data.Critical.Count/totalCount);
-            $scope.data.High.Percentage = getPercent($scope.data.High.Count/totalCount);
-            $scope.data.Medium.Percentage = getPercent($scope.data.Medium.Count/totalCount);
-            $scope.data.Low.Percentage = getPercent($scope.data.Low.Count/totalCount);
-            $scope.data.Info.Percentage = getPercent($scope.data.Info.Count/totalCount);
+            $scope.data[customCritical].Percentage = getPercent($scope.data[customCritical].Count/totalCount);
+            $scope.data[customHigh].Percentage = getPercent($scope.data[customHigh].Count/totalCount);
+            $scope.data[customMedium].Percentage = getPercent($scope.data[customMedium].Count/totalCount);
+            $scope.data[customLow].Percentage = getPercent($scope.data[customLow].Count/totalCount);
+            $scope.data[customInfo].Percentage = getPercent($scope.data[customInfo].Count/totalCount);
         }
 
         $scope.pointInTimeData = {};
         if ($scope.parameters.severities.critical)
-            $scope.pointInTimeData.Critical = $scope.data.Critical;
+            $scope.pointInTimeData[customCritical] = $scope.data[customCritical];
         if ($scope.parameters.severities.high)
-            $scope.pointInTimeData.High = $scope.data.High;
+            $scope.pointInTimeData[customHigh] = $scope.data[customHigh];
         if ($scope.parameters.severities.medium)
-            $scope.pointInTimeData.Medium = $scope.data.Medium;
+            $scope.pointInTimeData[customMedium] = $scope.data[customMedium];
         if ($scope.parameters.severities.low)
-            $scope.pointInTimeData.Low = $scope.data.Low;
+            $scope.pointInTimeData[customLow] = $scope.data[customLow];
         if ($scope.parameters.severities.info)
-            $scope.pointInTimeData.Info = $scope.data.Info;
+            $scope.pointInTimeData[customInfo] = $scope.data[customInfo];
 
     };
 
@@ -949,15 +967,15 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
         $scope.topAppsData.forEach(function(app) {
             if (!$scope.parameters.severities.critical)
-                app["Critical"] = 0;
+                app[customSeverityService.getCustomSeverity("Critical")] = 0;
             if (!$scope.parameters.severities.high)
-                app["High"] = 0;
+                app[customSeverityService.getCustomSeverity("High")] = 0;
             if (!$scope.parameters.severities.medium)
-                app["Medium"] = 0;
+                app[customSeverityService.getCustomSeverity("Medium")] = 0;
             if (!$scope.parameters.severities.low)
-                app["Low"] = 0;
+                app[customSeverityService.getCustomSeverity("Low")] = 0;
             if (!$scope.parameters.severities.info)
-                app["Info"] = 0;
+                app[customSeverityService.getCustomSeverity("Info")] = 0;
         });
 
         $scope.topAppsData.sort(function(app1, app2) {
