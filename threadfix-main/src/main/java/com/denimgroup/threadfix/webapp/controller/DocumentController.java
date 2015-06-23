@@ -62,7 +62,7 @@ public class DocumentController {
     @JsonView(AllViews.TableRow.class)
     @RequestMapping(value = "/documents/upload", method = RequestMethod.POST, produces = "text/plain")
     public @ResponseBody String uploadSubmitText(@PathVariable("appId") int appId,
-            @PathVariable("orgId") int orgId, @RequestParam("file") MultipartFile file) throws IOException {
+            @PathVariable("orgId") int orgId, @RequestParam("file0") MultipartFile file) throws IOException {
         Object o = uploadSubmit(appId, orgId, file);
         ObjectWriter mapper = new CustomJacksonObjectMapper().writerWithView(AllViews.TableRow.class);
         String s = mapper.writeValueAsString(o);
@@ -72,7 +72,7 @@ public class DocumentController {
     @JsonView(AllViews.TableRow.class)
 	@RequestMapping(value = "/documents/upload", method = RequestMethod.POST, produces = "application/json")
 	public @ResponseBody Object uploadSubmit(@PathVariable("appId") int appId,
-			@PathVariable("orgId") int orgId, @RequestParam("file") MultipartFile file) throws IOException {
+			@PathVariable("orgId") int orgId, @RequestParam("file0") MultipartFile file) throws IOException {
 
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)){
 			return RestResponse.failure("You don't have permission to upload a document.");
@@ -106,7 +106,7 @@ public class DocumentController {
 			@PathVariable("orgId") int orgId,
 			@PathVariable("vulnId") int vulnId,
 			HttpServletRequest request,
-			@RequestParam("file") MultipartFile file) throws IOException {
+			@RequestParam("file0") MultipartFile file) throws IOException {
 
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)){
             return RestResponse.failure("You don't have permission to upload a document.");
