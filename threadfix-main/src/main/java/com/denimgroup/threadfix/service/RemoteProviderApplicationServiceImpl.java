@@ -295,8 +295,9 @@ public class RemoteProviderApplicationServiceImpl implements
 
 		if (application.getRemoteProviderApplications().contains(remoteProviderApplication)) {
 			application.getRemoteProviderApplications().remove(remoteProviderApplication);
-			remoteProviderApplication.setApplication(null);
 		}
+		remoteProviderApplication.setApplication(null);
+		remoteProviderApplication.setApplicationChannel(null);
 
 		store(remoteProviderApplication);
 		applicationDao.saveOrUpdate(application);
