@@ -25,6 +25,7 @@
 package com.denimgroup.threadfix.webapp.controller.rest;
 
 import com.denimgroup.threadfix.data.entities.Tag;
+import com.denimgroup.threadfix.data.enums.TagType;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.TagService;
 import com.denimgroup.threadfix.views.AllViews;
@@ -81,16 +82,17 @@ public class TagRestController extends TFRestController {
         }
 
         String name = request.getParameter("name");
-        String isCommentTag = request.getParameter("isCommentTag");
+        String tagType = request.getParameter("tagType");
+        TagType tagTypeEnum = TagType.getTagType(tagType);
+        if (tagTypeEnum == null)
+            tagTypeEnum = TagType.APPLICATION;
 
         if (name == null || name.trim().equals(""))
             return RestResponse.failure("This field cannot be blank");
 
         Tag newTag = new Tag();
         newTag.setName(name);
-//        if (isCommentTag != null)
-//            newTag.setTagForComment(Boolean.parseBoolean(isCommentTag));
-//        else newTag.setTagForComment(false);
+        newTag.setType(tagTypeEnum);
 
         Tag databaseTag;
         if (!newTag.getTagForComment())
