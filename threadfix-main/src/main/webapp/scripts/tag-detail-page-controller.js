@@ -4,6 +4,9 @@ myAppModule.controller('TagDetailPageController', function ($scope, $window, $ht
 
     $scope.tagId = $window.location.pathname.match(/([0-9]+)/)[0];
     $scope.currentUrl = "/configuration/tags/" + $scope.tagId;
+    $scope.numberToShow = 50;
+    $scope.vulnPage = 1;
+
     $scope.$on('rootScopeInitialized', function() {
         $scope.loading = true;
         $http.get(tfEncoder.encode($scope.currentUrl + '/objects')).
@@ -12,6 +15,15 @@ myAppModule.controller('TagDetailPageController', function ($scope, $window, $ht
                 if (data.success) {
                     $scope.appList = data.object.appList;
                     $scope.vulnListOfVulnTags = data.object.vulnList;
+                    $scope.allVulnListOfVulnTags = data.object.vulnList;
+
+                    $scope.allVulnListOfVulnTags.sort(function(vuln1, vuln2){
+                        return vuln1.severityId - vuln2.severityId;
+                    });
+
+                    $scope.numVulns = $scope.allVulnListOfVulnTags.length;
+                    $scope.numberOfPages = Math.ceil($scope.numVulns/$scope.numberToShow);
+                    $scope.init($scope.vulnPage);
                     $scope.commentList = data.object.commentList;
                     $scope.type = data.object.type;
                     getVulnList();
@@ -24,6 +36,18 @@ myAppModule.controller('TagDetailPageController', function ($scope, $window, $ht
                 $scope.errorMessage = "Failed to retrieve waf list. HTTP status was " + status;
             });
     });
+
+    $scope.init = function(vulnPage){
+        $scope.vulnPage = vulnPage;
+        $scope.vulnListOfVulnTags = $scope.allVulnListOfVulnTags.slice(($scope.vulnPage-1) * $scope.numberToShow, $scope.vulnPage * $scope.numberToShow);
+    }
+
+    $scope.goToPage = function(valid, vulnPageInput) {
+        if (valid) {
+            $scope.vulnPage = vulnPageInput;
+            $scope.init($scope.vulnPage);
+        }
+    };
 
     var getVulnList = function(){
         var vulnMap = {};
@@ -71,7 +95,7 @@ myAppModule.controller('TagDetailPageController', function ($scope, $window, $ht
         });
 
         $scope.allVulnList.sort(function(vuln1, vuln2){
-            return vuln1.vulnerabilityComments.length - vuln2.vulnerabilityComments.length;
+            return vuln2.genericSeverity.intValue - vuln1.genericSeverity.intValue;
         });
 
         $scope.$broadcast("complianceVulnList", $scope.allVulnList);

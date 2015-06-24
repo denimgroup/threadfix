@@ -34,12 +34,14 @@ import org.hibernate.classic.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
@@ -168,20 +170,27 @@ public class HibernateApplicationDao implements ApplicationDao {
     public List<Integer> getTopXVulnerableAppsFromList(int numApps, List<Integer> teamIdList,
                                                        List<Integer> applicationIdList) {
         List<Integer> tagIdList = list();
-        return getTopXVulnerableAppsFromList(numApps, teamIdList, applicationIdList, tagIdList);
+        List<Integer> vulnTagIdList = list();
+        return getTopXVulnerableAppsFromList(numApps, teamIdList, applicationIdList, tagIdList, vulnTagIdList);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public List<Integer> getTopXVulnerableAppsFromList(int numApps, List<Integer> teamIdList,
                                                        List<Integer> applicationIdList,
-                                                       List<Integer> tagIdList) {
+                                                       List<Integer> tagIdList,
+                                                       List<Integer> vulnTagIdList) {
         Session session = sessionFactory.getCurrentSession();
         Criteria criteria = session.createCriteria(Application.class);
         criteria.createAlias("vulnerabilities", "vulnerability");
         criteria.add(Restrictions.eq("active", true));
         criteria.add(Restrictions.eq("vulnerability.active", true));
         criteria.add(Restrictions.eq("vulnerability.isFalsePositive", false));
+
+        if (vulnTagIdList.size() > 0) {
+            criteria.createAlias("vulnerability.tags", "tags");
+            criteria.add(Restrictions.in("tags.id", vulnTagIdList));
+        }
 
         if (teamIdList.isEmpty() || applicationIdList.isEmpty()) {
             if (!applicationIdList.isEmpty()) {
@@ -204,7 +213,8 @@ public class HibernateApplicationDao implements ApplicationDao {
 
         criteria.setProjection(Projections.projectionList()
                         .add(Projections.groupProperty("id"))
-                        .add(Projections.alias(Projections.count("vulnerabilities"), "vulnCount"))
+                        .add(Projections.alias(Projections.countDistinct("vulnerability.id"), "vulnCount"))
+//                        .add(Projections.alias(Projections.count("vulnerabilities"), "vulnCount"))
         );
         criteria.addOrder(Order.desc("vulnCount"));
 
@@ -273,5 +283,66 @@ public class HibernateApplicationDao implements ApplicationDao {
                 .setProjection(Projections.rowCount())
                 .uniqueResult();
         return result == null ? 0 : result;
+    }
+
+    @Override
+    public List<Map<String, Object>> retrieveAppsInfoMap(List<Integer> applicationIdList, List<Integer> vulnTagIds) {
+//        return (List<Map<String, Object>>)
+//                sessionFactory.getCurrentSession().createQuery(
+//                "select new map( " +
+//                        "vulnerability.genericSeverity.name as severity, " +
+//                        "vulnerability.genericVulnerability.name as genericVulnName, " +
+//                        "vulnerability.openTime as importTime, " +
+//                        "vulnerability.closeTime as closeTime, " +
+//                        "vulnerability.active as active, " +
+//                        "vulnerability.hidden as hidden, " +
+//                        "vulnerability.isFalsePositive as isFalsePositive, " +
+//                        "vulnerability.application.name as appName, " +
+//                        "vulnerability.application.id as appId, " +
+//                        "vulnerability.application.organization.name as teamName, " +
+//                        "vulnerability.application.organization.id as teamId " +
+//                        ") " +
+//                        "from Vulnerability vulnerability " +
+//                        "where vulnerability.hidden = false " +
+//                        "and vulnerability.application.id in (:idList) " +
+//                        "and vulnerability.active = true " +
+//                        "order by vulnerability.genericSeverity.name, vulnerability.application.name")
+//                .setParameterList("idList", applicationIdList)
+//                .list();
+
+
+        Session session = sessionFactory.getCurrentSession();
+        Criteria criteria = session.createCriteria(Application.class);
+
+        criteria.createAlias("vulnerabilities", "vulnerability");
+        criteria.createAlias("organization", "team");
+        criteria.add(Restrictions.eq("active", true));
+        criteria.add(Restrictions.eq("vulnerability.active", true));
+        criteria.add(Restrictions.eq("vulnerability.isFalsePositive", false));
+        criteria.createAlias("vulnerability.genericSeverity", "severity");
+
+        if (applicationIdList.size() > 0) {
+            criteria.add(Restrictions.in("id", applicationIdList));
+        }
+
+        if (vulnTagIds.size() > 0) {
+            criteria.createAlias("vulnerability.tags", "tags");
+            criteria.add(Restrictions.in("tags.id", vulnTagIds));
+        }
+
+        criteria.setProjection(Projections.projectionList()
+                        .add(Projections.groupProperty("id"), "appId")
+                        .add(Projections.groupProperty("name"), "appName")
+                        .add(Projections.groupProperty("team.id"), "teamId")
+                        .add(Projections.groupProperty("team.name"), "teamName")
+                        .add(Projections.groupProperty("severity.intValue"), "severityIntValue")
+                        .add(Projections.groupProperty("severity.name"), "severityNameValue")
+                        .add(Projections.alias(Projections.countDistinct("vulnerability.id"), "vulnCount"))
+        );
+        criteria.addOrder(Order.desc("vulnCount"));
+        criteria.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+
+        List results = criteria.list();
+        return results;
     }
 }

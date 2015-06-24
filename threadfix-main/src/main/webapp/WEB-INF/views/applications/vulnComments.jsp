@@ -35,12 +35,11 @@
                 </div>
                 <div ng-hide="canUpdateVulnComment">
                     <c:if test="${ canManageTags }">
-                        <span ng-repeat="cmtTag in comment.tags">
-                            <a class="pointer" id="cmtTag{{ $index }}" ng-click="goToTag(cmtTag)">{{cmtTag.name}}<span ng-hide="$index===comment.tags.length-1">,</span></a>
-                        </span>
+                            <span style="font-weight: bold;" id="commentTagLink{{comment.id}}{{ $index }}" ng-repeat="cmtTag in comment.tags" class="pointer badge" ng-class="{'badge-comment-tag': true}" ng-click="goToTag(cmtTag)">{{cmtTag.name}}</span>
                     </c:if>
                     <c:if test="${ !canManageTags }">
-                        <span ng-repeat="cmtTag in comment.tags">{{cmtTag.name}}<span ng-hide="$index===comment.tags.length-1">,&nbsp;</span></span>
+                        nocanmanageTask
+                        <span style="font-weight: bold;" id="commentTag{{comment.id}}{{ $index }}" ng-repeat="cmtTag in comment.tags" class="badge" ng-class="{'badge-comment-tag': true}">{{cmtTag.name}}</span>
                     </c:if>
                 </div>
             </td>
