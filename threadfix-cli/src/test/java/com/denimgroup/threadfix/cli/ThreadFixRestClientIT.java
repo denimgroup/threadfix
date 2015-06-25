@@ -251,17 +251,6 @@ public class ThreadFixRestClientIT {
         assertEquals("WAF ID didn't match.", response.object.getWaf().getId().toString(), wafId);
     }
 
-    @Ignore
-    @Test
-    public void testTask() {
-        String scannerList = "OWASP Zed Attack Proxy";
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(new TestPropertiesManager());
-
-        RestResponse<Task> response = client.requestTask(scannerList, "");
-
-        assertTrue(response != null && response.object != null);
-    }
-
     // TODO write tests for the scan agent methods.
 
 }
