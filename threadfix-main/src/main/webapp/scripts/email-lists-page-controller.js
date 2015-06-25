@@ -98,4 +98,55 @@ module.controller('EmailListsPageController', function($scope, $http, $modal, $l
             $log.info('Modal dismissed at: ' + new Date());
         });
     };
+
+    $scope.showEmailAddresses = function(emailList){
+        if ("showEmailAddresses" in emailList){
+            emailList.showEmailAddresses = !emailList.showEmailAddresses;
+        }
+        else {
+            emailList.showEmailAddresses = true;
+        }
+    };
+
+    $scope.addNewEmail = function(emailList){
+        if (!emailList.newEmailAddress) return;
+        emailList.newEmailError = null;
+        emailList.newEmailLoading = true;
+        var addEmailUrl = tfEncoder.encode("/configuration/emailLists/" + emailList.id + "/addEmail");
+        $http.post(addEmailUrl, {"emailAddress": emailList.newEmailAddress}).
+            success(function(data, status, headers, config) {
+                if (data.success) {
+                    emailList.newEmailAddress = null;
+                    threadFixModalService.addElement(emailList.emailAddresses, data.object);
+                }
+                else {
+                    emailList.newEmailError = data.message;
+                }
+            }).
+            error(function(data, status, headers, config) {
+                $scope.error = "Failure. HTTP status was " + status;
+            });
+        emailList.newEmailLoading = false;
+    };
+
+    $scope.deleteEmailAddress = function(emailList, emailAddress){
+        if (confirm("Delete this email address?")) {
+            emailList.newEmailLoading = true;
+            var deleteUrl = tfEncoder.encode("/configuration/emailLists/" + emailList.id + "/deleteEmail");
+            $http.post(deleteUrl, {"emailAddress": emailAddress}).
+                success(function(data, status, headers, config) {
+                    if (data.success) {
+                        $scope.successMessage = "Successfully deleted email address " + emailAddress;
+                        threadFixModalService.deleteElement(emailList.emailAddresses, emailAddress);
+                    }
+                    else {
+                        $scope.errorMessage = "Failure. Message was : " + data.message;
+                    }
+                }).
+                error(function(data, status, headers, config) {
+                    $scope.error = "Failure. HTTP status was " + status;
+                });
+            emailList.newEmailLoading = false;
+        }
+    };
 });

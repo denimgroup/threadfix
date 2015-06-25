@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.EmailList;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.EmailListService;
+import com.denimgroup.threadfix.service.email.EmailFilterService;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
@@ -52,6 +54,8 @@ public class EmailListController {
 
     @Autowired
     private EmailListService emailListService;
+    @Autowired
+    private EmailFilterService emailFilterService;
 
     private final SanitizedLogger log = new SanitizedLogger(EmailListController.class);
 
@@ -136,6 +140,45 @@ public class EmailListController {
         } else {
             log.warn("EmailList Id is invalid or EmailList currently can not be deleted.");
             return RestResponse.failure("EmailList Id is invalid or EmailList currently can not be deleted.");
+        }
+    }
+
+    @RequestMapping(value = "/{emailListId}/addEmail", method = RequestMethod.POST)
+    public @ResponseBody RestResponse<String> addEmailAddress(
+            @PathVariable("emailListId") int emailListId,
+            @RequestParam("emailAddress") String emailAddress) {
+
+        EmailList emailList = emailListService.loadById(emailListId);
+        if (emailList == null) {
+            return RestResponse.failure("Invalid email list.");
+        }
+        List<String> emailAddresses = emailList.getEmailAddresses();
+        if (emailAddresses.contains(emailAddress)){
+            return RestResponse.failure("Email address already exists.");
+        }
+        if (!emailFilterService.validateEmailAddress(emailAddress)){
+            return RestResponse.failure("Email address doesn't comply with filter");
+        }
+        else {
+            return RestResponse.success(emailListService.addEmailAddress(emailList, emailAddress));
+        }
+    }
+
+    @RequestMapping(value = "/{emailListId}/deleteEmail", method = RequestMethod.POST)
+    public @ResponseBody RestResponse<String> deleteEmailAddress(
+            @PathVariable("emailListId") int emailListId,
+            @RequestParam("emailAddress") String emailAddress) {
+
+        EmailList emailList = emailListService.loadById(emailListId);
+        if (emailList == null) {
+            return RestResponse.failure("Invalid email report.");
+        }
+        List<String> emailAddresses = emailList.getEmailAddresses();
+        if (emailAddresses.contains(emailAddress)){
+            return RestResponse.success(emailListService.removeEmailAddress(emailList, emailAddress));
+        }
+        else {
+            return RestResponse.failure("Invalid email address.");
         }
     }
 }

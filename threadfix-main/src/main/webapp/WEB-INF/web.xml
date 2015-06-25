@@ -145,6 +145,8 @@
                 protected-regex ^/configuration/emailLists/new$,
                 protected-regex ^/configuration/emailLists/[0-9]+/edit$,
                 protected-regex ^/configuration/emailLists/[0-9]+/delete$,
+                protected-regex ^/configuration/emailLists/[0-9]+/addEmail$,
+                protected-regex ^/configuration/emailLists/[0-9]+/deleteEmail,
                 protected-regex ^/configuration/filters/[0-9]+/delete$,
 		    	protected-regex ^/configuration/filters/[0-9]+/edit$,
 		    	protected-regex ^/configuration/filters/new$,
