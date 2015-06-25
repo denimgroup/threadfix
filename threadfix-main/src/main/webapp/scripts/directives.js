@@ -73,7 +73,8 @@ threadfixModule.directive('focusOn', function($timeout, $parse, $log) {
             });
             element.bind('blur', function() {
                 $log.info('blur');
-                scope.$apply(model.assign(scope, false));
+                // this could throw an error before
+                model && model.assign && scope.$apply(model.assign(scope, false));
             })
         }
     };
