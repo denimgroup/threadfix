@@ -32,6 +32,11 @@
                     Error: Username or Password incorrect
                 </div>
             </c:if>
+            <c:if test="${SPRING_SECURITY_LAST_EXCEPTION.message =='Check logs'}">
+                <div id="loginError" style="position:absolute;left:50%;top:50%;margin-left:-250px;margin-top:-68px;width:500px;text-align:center;color:red;font-weight:bold">
+                    Error: Your database may have been created incorrectly.<br>Please check logs for more information.
+                </div>
+            </c:if>
             <div style="position:absolute;left:50%;top:50%;margin-left:-143px;margin-top:-32px;color:black;width:70px;text-align:right;">
                 Username
             </div>
