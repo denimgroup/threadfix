@@ -59,9 +59,14 @@
                             <tbody>
                                 <tr ng-repeat="emailAddress in scheduledReport.emailAddresses">
                                     <td>{{ emailAddress }}</td>
-                                    </td>
                                     <td class="centered">
                                       <a class="btn btn-danger" ng-click="deleteEmailAddress(scheduledReport,emailAddress)">Delete</a>
+                                    </td>
+                                </tr>
+                                <tr ng-repeat="emailList in scheduledReport.emailLists">
+                                    <td>{{ emailList.name }}</td>
+                                    <td class="centered">
+                                        <a class="btn btn-danger" ng-click="deleteEmailList(scheduledReport,emailList)">Delete</a>
                                     </td>
                                 </tr>
                                 <tr ng-show="scheduledReport.emailAddresses.length==0 && scheduledReport.showEmailAddresses">
@@ -77,6 +82,19 @@
                                     <td>
                                          <span ng-show="newEmailLoading" class="spinner dark"></span>
                                          <span class="errors" ng-show="scheduledReport.newEmailError"> {{ scheduledReport.newEmailError }}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <select ng-options="emailList.name for emailList in emailLists track by emailList.id"
+                                                id="emailListSelect" ng-model="scheduledReport.newEmailList"></select>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-primary" style="margin-top: -10px" ng-click="addNewEmailList(scheduledReport)" ng-disabled="!scheduledReport.newEmailList">Add Email List</a>
+                                    </td>
+                                    <td>
+                                        <span ng-show="newEmailListLoading" class="spinner dark"></span>
+                                        <span class="errors" ng-show="scheduledReport.newEmailListError"> {{ scheduledReport.newEmailListError }}</span>
                                     </td>
                                 </tr>
                             </tbody>

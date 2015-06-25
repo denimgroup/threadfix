@@ -69,4 +69,18 @@ public class EmailList extends AuditableEntity {
         this.emailAddresses = emailAddresses;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof EmailList)) return false;
+
+        EmailList emailList = (EmailList) o;
+        return !(name != null ? !name.equals(emailList.name) : emailList.name != null);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        return result;
+    }
 }

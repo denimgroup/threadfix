@@ -4,6 +4,7 @@ import static com.denimgroup.threadfix.CollectionUtils.map;
 
 import java.util.Map;
 
+import com.denimgroup.threadfix.service.EmailListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,8 @@ public class ScheduledEmailReportController {
 	private GenericSeverityService genericSeverityService;
 	@Autowired
 	private EmailConfiguration emailConfiguration;
+	@Autowired
+	private EmailListService emailListService;
 
     @RequestMapping(method = RequestMethod.GET)
     public String aboutPage() {
@@ -43,6 +46,7 @@ public class ScheduledEmailReportController {
 		map.put("genericSeverities", genericSeverityService.loadAll());
 		map.put("organizations", organizationService.loadAll());
 		map.put("isConfiguredEmail", emailConfiguration.isConfiguredEmail());
+		map.put("emailLists", emailListService.loadAllActive());
 		return RestResponse.success(map);
 	}
 }
