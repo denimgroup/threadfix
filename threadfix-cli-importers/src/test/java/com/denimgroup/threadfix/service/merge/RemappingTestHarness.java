@@ -27,6 +27,8 @@ import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.ChannelType;
+import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.util.SpringConfiguration;
 import com.denimgroup.threadfix.service.ChannelVulnerabilityService;
@@ -76,8 +78,14 @@ public class RemappingTestHarness {
 
         Application application = merger.mergeSeriesInternal(null, finalPaths);
 
+        ChannelType channelType = channelTypeDao.retrieveByName(ScannerType.MANUAL.getDbName());
+
+        ChannelVulnerability channelVulnerability = channelVulnerabilityDao.retrieveByName(channelType, unmappedType);
+
+        assert channelVulnerability != null : "Unable to find channel vuln for " + unmappedType;
+
         // this *should* find the same hibernate-managed object if we're in the same Spring container
-        channelVulnerabilityService.createMapping(ScannerType.SSVL.getDbName(), unmappedType, cweId);
+        channelVulnerabilityService.createMapping(ScannerType.SSVL.getDbName(), channelVulnerability.getId(), cweId);
 
         applicationDao.saveOrUpdate(application);
 
