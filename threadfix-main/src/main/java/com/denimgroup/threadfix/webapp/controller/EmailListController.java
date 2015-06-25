@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.EmailListService;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
+import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -88,4 +89,41 @@ public class EmailListController {
             return RestResponse.success(emailList);
         }
     }
+
+    @RequestMapping(value = "/{emailListId}/edit", method = RequestMethod.POST)
+    public @ResponseBody RestResponse<Map<String, Object>> editSubmit(@PathVariable("emailListId") int emailListId,
+                                                                      @Valid @ModelAttribute EmailList emailList,
+                                                                      BindingResult result) {
+        if (result.hasErrors()) {
+            return FormRestResponse.failure("error", result);
+        } else {
+            EmailList databaseEmailList = null;
+
+            if (emailList.getName().trim().equals("")) {
+                result.rejectValue("name", null, null, "This field cannot be blank");
+            } else {
+                databaseEmailList = emailListService.loadByName(emailList.getName().trim());
+                if (databaseEmailList != null && !databaseEmailList.getId().equals(emailListId)) {
+                    result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
+                }
+                databaseEmailList = emailListService.loadById(emailListId);
+            }
+
+            if (result.hasErrors()) {
+                return FormRestResponse.failure("error", result);
+            }
+
+            if (databaseEmailList != null) {
+                Map<String, Object> resultMap = map();
+                log.info("Editing EmailList " + databaseEmailList.getName() + " to " + emailList.getName());
+                databaseEmailList.setName(emailList.getName());
+                emailListService.store(databaseEmailList);
+                resultMap.put("emailLists", emailListService.loadAll());
+                return RestResponse.success(resultMap);
+            } else {
+                return RestResponse.failure("Error occurs.");
+            }
+        }
+    }
+    
 }

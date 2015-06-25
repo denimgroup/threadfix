@@ -60,5 +60,40 @@ module.controller('EmailListsPageController', function($scope, $http, $modal, $l
         });
     };
 
+    $scope.openEditModal = function(emailList) {
+        var modalInstance = $modal.open({
+            templateUrl: 'editEmailListModal.html',
+            controller: 'ModalControllerWithConfig',
+            resolve: {
+                url: function() {
+                    return tfEncoder.encode("/configuration/emailLists/" + emailList.id + "/edit");
+                },
+                object: function() {
+                    return angular.copy(emailList);
+                },
+                buttonText: function() {
+                    return "Save Edits";
+                },
+                config: function() {
+                    return {}
+                },
+                deleteUrl: function() {
+                    return tfEncoder.encode("/configuration/emailLists/" + emailList.id + "/delete");
+                }
+            }
+        });
+
+        modalInstance.result.then(function (emailListsMap) {
+            if (emailListsMap) {
+                $scope.emailLists = emailListsMap.emailLists;
+                $scope.emailLists.sort(nameCompare);
+                $scope.errorMessage = "";
+                $scope.successMessage = "Successfully edited email list " + emailList.name;
+            }
+
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    };
 
 });

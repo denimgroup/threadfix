@@ -143,6 +143,7 @@
 		    	protected-regex ^/configuration/defecttrackers/scheduledUpdates/addUpdate$,
                 protected-regex ^/configuration/emailLists/map$,
                 protected-regex ^/configuration/emailLists/new$,
+                protected-regex ^/configuration/emailLists/[0-9]+/edit$,
                 protected-regex ^/configuration/filters/[0-9]+/delete$,
 		    	protected-regex ^/configuration/filters/[0-9]+/edit$,
 		    	protected-regex ^/configuration/filters/new$,

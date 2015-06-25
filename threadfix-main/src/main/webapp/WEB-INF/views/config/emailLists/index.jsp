@@ -14,6 +14,7 @@
     <%@ include file="/WEB-INF/views/errorMessage.jspf" %>
     <%@ include file="/WEB-INF/views/angular-init.jspf"%>
     <%@ include file="/WEB-INF/views/config/emailLists/createEmailListForm.jsp" %>
+    <%@ include file="/WEB-INF/views/config/emailLists/editEmailListForm.jsp" %>
 
     <div ng-hide="initialized" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
 
@@ -33,6 +34,9 @@
             <tr ng-show="emailLists" ng-repeat="emailList in emailLists" class="bodyRow">
                 <td class="details pointer" id="emailListName{{ emailList.name }}">
                     {{ emailList.name }}
+                </td>
+                <td class="centered">
+                    <a id="editEmailListModalButton{{ emailList.name }}" ng-click="openEditModal(emailList)" class="btn">Edit / Delete</a>
                 </td>
             </tr>
         </tbody>
