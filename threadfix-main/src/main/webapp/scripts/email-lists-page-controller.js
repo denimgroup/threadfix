@@ -89,11 +89,24 @@ module.controller('EmailListsPageController', function($scope, $http, $modal, $l
                 $scope.emailLists.sort(nameCompare);
                 $scope.errorMessage = "";
                 $scope.successMessage = "Successfully edited email list " + emailList.name;
+            } else {
+                var index = $scope.emailLists.indexOf(emailList);
+                if (index > -1) {
+                    $scope.emailLists.splice(index, 1);
+                }
+                if ($scope.emailLists.length === 0) {
+                    $scope.emailLists = undefined;
+                }
+
+                $scope.successMessage = "The deletion was successful for email list " + emailList.name;
+                $scope.errorMessage = "";
             }
+
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
     };
+
 
 });

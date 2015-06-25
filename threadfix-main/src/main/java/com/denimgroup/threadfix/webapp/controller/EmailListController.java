@@ -125,5 +125,17 @@ public class EmailListController {
             }
         }
     }
-    
+
+    @RequestMapping(value = "/{emailListId}/delete", method = RequestMethod.POST)
+    public @ResponseBody RestResponse<EmailList> deleteSubmit(@PathVariable("emailListId") int emailListId) {
+        EmailList emailList = emailListService.loadById(emailListId);
+
+        if (emailList != null) {
+            emailListService.deleteById(emailListId);
+            return RestResponse.success(null);
+        } else {
+            log.warn("EmailList Id is invalid or EmailList currently can not be deleted.");
+            return RestResponse.failure("EmailList Id is invalid or EmailList currently can not be deleted.");
+        }
+    }
 }

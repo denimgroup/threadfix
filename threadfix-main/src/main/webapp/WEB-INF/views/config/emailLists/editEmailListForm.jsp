@@ -2,6 +2,13 @@
     <div class="modal-header">
         <h4 id="myModalLabel">
             Edit List {{ object.name }}
+            <span class="delete-span">
+                <a id="deleteEmailListButton"
+                   class="btn btn-danger header-button"
+                   ng-click="showDeleteDialog('Email List')">
+                    Delete
+                </a>
+            </span>
         </h4>
     </div>
     <div ng-form="form" class="modal-body">
