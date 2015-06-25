@@ -34,6 +34,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                     $scope.searchApplications = data.object.applications;
                     $scope.filterParameters = data.object.filterParameters;
                     $scope.tags = data.object.tags;
+                    $scope.vulnTags = data.object.vulnTags;
                     $scope.enterpriseTags = data.object.enterpriseTags;
 
                     $scope.teams.sort(nameCompare)

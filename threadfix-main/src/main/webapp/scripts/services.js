@@ -209,6 +209,21 @@ threadfixModule.factory('vulnSearchParameterService', function() {
             }
         }
 
+        if (parameters.vulnTags) {
+            parameters.vulnTags.forEach(function(filteredTag){
+                filteredTag.id = undefined;
+            });
+            if ($scope.vulnTags) {
+                $scope.vulnTags.forEach(function(tag){
+                    parameters.vulnTags.forEach(function(filteredTag){
+                        if (tag.name === filteredTag.name) {
+                            filteredTag.id = tag.id;
+                        }
+                    });
+                })
+            }
+        }
+
         parameters.channelTypes = parameters.scanners;
 
         if (!parameters.channelTypes)
@@ -324,6 +339,10 @@ threadfixModule.factory('vulnSearchParameterService', function() {
             $scope.parameters.tags.push(tag);
         });
 
+        filterParameters.vulnTags.forEach(function (tag) {
+            $scope.parameters.vulnTags.push(tag);
+        });
+
         $scope.parameters.genericVulnerabilities = filterParameters.genericVulnerabilities;
 
         //$scope.endDate = filterParameters.endDate;
@@ -379,6 +398,11 @@ threadfixModule.factory('vulnSearchParameterService', function() {
         }
         if (label.tagsList)
             criteria.parameters.tags.push.apply(criteria.parameters.tags, label.tagsList);
+
+        if (label.vulnTagsList) {
+            criteria.parameters.vulnTags = [];
+            criteria.parameters.vulnTags.push.apply(criteria.parameters.vulnTags, label.vulnTagsList);
+        }
 
         criteria.parameters.channelTypes = [];
         criteria.parameters.scanners = [];

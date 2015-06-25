@@ -18,6 +18,7 @@ myAppModule.controller('VulnSummaryModalController', function ($log, $scope, $wi
     scope.searchApplications = angular.copy(scope.parameters.applications);
     scope.teams = angular.copy(scope.parameters.teams);
     scope.tags = angular.copy(scope.parameters.tags);
+    scope.vulnTags = angular.copy(scope.parameters.vulnTags);
 
     vulnSearchParameterService.updateParameters(scope, scope.parameters);
 

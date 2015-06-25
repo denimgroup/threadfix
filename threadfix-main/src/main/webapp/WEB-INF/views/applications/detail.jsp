@@ -95,6 +95,7 @@
     <%@ include file="/WEB-INF/views/applications/modals/submitGRCControl.jsp" %>
     <%@ include file="/WEB-INF/views/defects/addToExistingDefectForm.jsp" %>
     <%@ include file="/WEB-INF/views/applications/forms/vulnCommentForm.jsp"%>
+    <%@ include file="/WEB-INF/views/applications/forms/vulnTaggingForm.jsp"%>
     <%@ include file="/WEB-INF/views/applications/forms/uploadDocForm.jsp"%>
     <%@ include file="/WEB-INF/views/applications/forms/manualFindingForm.jsp"%>
     <%@ include file="/WEB-INF/views/applications/forms/addScheduledScanForm.jsp"%>

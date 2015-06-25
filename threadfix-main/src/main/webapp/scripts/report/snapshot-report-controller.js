@@ -329,6 +329,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     $scope.resetFilters = function() {
         $scope.parameters = {
             tags: [],
+            vulnTags: [],
             teams: [],
             applications: [],
             scanners: [],
@@ -375,6 +376,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
                     $scope.allPortfolioApps = data.object.appList;
 
                     $scope.tags = data.object.tags;
+                    $scope.vulnTags = data.object.vulnTags;
 
                     $scope.appTagMatrix = [];
                     $scope.allPortfolioApps.forEach(function(app) {
@@ -459,6 +461,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         if (!$scope.title)
             $scope.title = {};
         $scope.title.tagsList = $scope.parameters.tags;
+        $scope.title.vulnTagsList = $scope.parameters.vulnTags;
         $scope.title.teamsList = $scope.parameters.teams;
         $scope.title.appsList = $scope.parameters.applications;
 
@@ -780,6 +783,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
         var filteredList;
 
+        // Filter by application tags
         if ($scope.parameters.tags.length === 0)
             filteredList = rawList;
         else {
@@ -793,6 +797,26 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
                 return false;
             });
         }
+
+        // Filter by vulnerability tags
+        if ($scope.parameters.vulnTags.length !== 0) {
+            filteredList = filteredList.filter(function(vuln){
+
+                var isSelected = false;
+                vuln.tags.some(function(vulnTag){
+                    $scope.parameters.vulnTags.some(function(selectedTag){
+                        if (selectedTag.name === vulnTag.name) {
+                            isSelected = true;
+                            return true;
+                        }
+                    })
+                    if (isSelected) return true;
+                });
+
+                return isSelected;
+            });
+        }
+
         return filteredList;
     };
 
@@ -804,10 +828,20 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
         vulnSearchParameterService.updateParameters($scope.$parent, parameters);
 
+        if (!$scope.title)
+            $scope.title = {};
+        $scope.title.tagsList = parameters.tags;
+        $scope.title.vulnTagsList = parameters.vulnTags;
+        $scope.title.teamsList = parameters.teams;
+        $scope.title.appsList = parameters.applications;
+
         $http.post(tfEncoder.encode("/reports/getTopApps"), parameters).
             success(function(data) {
-
-                $scope.topAppsData = data.object.appList;
+                if (data.object.appList) {
+                    $scope.topAppsData = data.object.appList;
+                } else {
+                    $scope.topAppsData = convertRawInfo(data.object.rawAppList);
+                }
                 if ($scope.topAppsData) {
                     $scope._topAppsData = angular.copy($scope.topAppsData);
                     filterMVABySeverity();
@@ -822,6 +856,35 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             });
 
     };
+
+    var convertRawInfo = function(rawAppList) {
+        var map = {};
+        rawAppList.forEach(function(rawApp){
+            if (map[rawApp.appId]) {
+                map[rawApp.appId][rawApp.severityNameValue] = rawApp.vulnCount;
+            } else {
+                map[rawApp.appId] = {
+                    Critical: 0,
+                    High: 0,
+                    Medium: 0,
+                    Low: 0,
+                    Info: 0,
+                    appId: rawApp.appId,
+                    appName: rawApp.appName,
+                    teamId: rawApp.teamId,
+                    teamName: rawApp.teamName,
+                    title: rawApp.teamName + "/" + rawApp.appName
+                };
+                map[rawApp.appId][rawApp.severityNameValue] = rawApp.vulnCount;
+            }
+        });
+
+        var result = [];
+        for (var key in map) {
+            result.push(map[key]);
+        }
+        return result;
+    }
 
     var processOWASPData = function() {
 
@@ -1101,6 +1164,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
     $scope.exportCSV = function() {
 
+        var vulnTagsName = ($scope.title.vulnTags) ? "_" + $scope.title.vulnTags : "";
         var tagsName = ($scope.title.tags) ? "_" + $scope.title.tags : "";
         var teamsName = ($scope.title.teams) ? "_" + $scope.title.teams : "";
         var appsName = ($scope.title.apps) ? "_" + $scope.title.apps : "";
@@ -1111,8 +1175,10 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
     var convertToCsv = function(title, data){
         var csvArray = ['Vulnerability Progress By Type \n'];
+        if (title.vulnTags)
+            csvArray.push(["Vulnerability Tags: " + title.vulnTags]);
         if (title.tags)
-            csvArray.push(["Tags: " + title.tags]);
+            csvArray.push(["Application Tags: " + title.tags]);
         if (title.teams)
             csvArray.push(["Teams: " + title.teams]);
         if (title.apps)

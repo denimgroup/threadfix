@@ -29,8 +29,9 @@
                                 <li ng-repeat="genericSeverity in genericSeverityList" ng-click="changeSeverity(genericSeverity)"><a class="pointer">{{genericSeverity.name}}</a></li>
                             </ul>
                         </li>
+                        <li><a class="pointer" id="addBatchTaggingBtn" ng-click="addBatchTagging(vulnTags)">Batch Tagging</a></li>
                         <c:if test="${ canSubmitComments }">
-                            <li><a class="pointer" id="addBatchCommentBtn" ng-click="addBatchComment(commentTags)">Add Batch Comment</a></li>
+                            <li><a class="pointer" id="addBatchCommentBtn" ng-click="addBatchComment(commentTags)">Batch Comment</a></li>
                         </c:if>
                     </c:if>
                 </ul>

@@ -16,10 +16,17 @@ module.controller('TagsPageController', function($scope, $http, $modal, $log, tf
                         $scope.tags = data.object.tags;
                         $scope.tags.sort(nameCompare);
                     }
+
+                    if (data.object.vulnTags.length > 0) {
+                        $scope.vulnTags = data.object.vulnTags;
+                        $scope.vulnTags.sort(nameCompare);
+                    }
+
                     if (data.object.commentTags.length > 0) {
                         $scope.commentTags = data.object.commentTags;
                         $scope.commentTags.sort(nameCompare);
                     }
+                    $scope.tagTypes = data.object.tagTypes;
                 } else {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
                 }
@@ -40,10 +47,10 @@ module.controller('TagsPageController', function($scope, $http, $modal, $log, tf
                     return tfEncoder.encode("/configuration/tags/new");
                 },
                 object: function () {
-                    return {};
+                    return {type: $scope.tagTypes[0]};
                 },
                 config: function() {
-                    return {};
+                    return {tagTypes: $scope.tagTypes};
                 },
                 buttonText: function() {
                     return "Create Tag";
@@ -53,20 +60,20 @@ module.controller('TagsPageController', function($scope, $http, $modal, $log, tf
 
         $scope.currentModal = modalInstance;
         modalInstance.result.then(function (tag) {
-            if (tag.tagForComment) {
-                if (!$scope.commentTags) {
-                    $scope.commentTags = [ tag ];
-                } else {
-                    $scope.commentTags.push(tag);
-                    $scope.commentTags.sort(nameCompare);
-                }
+
+            var collection;
+            if (tag.type == "APPLICATION")
+                collection = $scope.tags;
+            else if (tag.type == "VULNERABILITY")
+                collection = $scope.vulnTags;
+            else
+                collection = $scope.commentTags;
+
+            if (!collection) {
+                collection = [ tag ];
             } else {
-                if (!$scope.tags) {
-                    $scope.tags = [ tag ];
-                } else {
-                    $scope.tags.push(tag);
-                    $scope.tags.sort(nameCompare);
-                }
+                collection.push(tag);
+                collection.sort(nameCompare);
             }
 
             $scope.successMessage = "Successfully created tag " + tag.name;
@@ -103,35 +110,35 @@ module.controller('TagsPageController', function($scope, $http, $modal, $log, tf
         modalInstance.result.then(function (tagsMap) {
             if (tagsMap) {
                 $scope.tags = tagsMap.tags;
+                $scope.vulnTags = tagsMap.vulnTags;
                 $scope.commentTags = tagsMap.commentTags;
                 $scope.tags.sort(nameCompare);
+                $scope.vulnTags.sort(nameCompare);
                 $scope.commentTags.sort(nameCompare);
                 $scope.errorMessage = "";
                 $scope.successMessage = "Successfully edited tag " + tag.name;
             } else {
                 if (tag.deletable) {
-                    if (!tag.tagForComment) {
-                        var index = $scope.tags.indexOf(tag);
-                        if (index > -1) {
-                            $scope.tags.splice(index, 1);
-                        }
-                        if ($scope.tags.length === 0) {
-                            $scope.tags = undefined;
-                        }
-                    } else {
-                        var index = $scope.commentTags.indexOf(tag);
-                        if (index > -1) {
-                            $scope.commentTags.splice(index, 1);
-                        }
-                        if ($scope.commentTags.length === 0) {
-                            $scope.commentTags = undefined;
-                        }
+                    var collection;
+                    if (tag.type == "APPLICATION")
+                        collection = $scope.tags;
+                    else if (tag.type == "VULNERABILITY")
+                        collection = $scope.vulnTags;
+                    else
+                        collection = $scope.commentTags;
+
+                    var index = collection.indexOf(tag);
+                    if (index > -1) {
+                        collection.splice(index, 1);
+                    }
+                    if (collection.length === 0) {
+                        collection = undefined;
                     }
                     $scope.successMessage = "The deletion was successful for Tag " + tag.name;
                     $scope.errorMessage = "";
                 } else {
                     $scope.successMessage = "";
-                    $scope.errorMessage = "Failed to delete a Tag with applications or vulnerability comment mappings.";
+                    $scope.errorMessage = "Failed to delete a Tag with associated mappings.";
                 }
             }
 

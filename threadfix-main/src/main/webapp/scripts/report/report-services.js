@@ -480,12 +480,13 @@ threadfixModule.factory('reportUtilities', function() {
     var drawingDuration = 500;
 
     reportUtilities.drawTitle = function(svg, w, label, title, y) {
-        var teams, apps, tags, i = 0;
+        var teams, apps, tags, vulnTags, i = 0;
 
         if (label) {
             teams = label.teams;
             apps = label.apps;
             tags = label.tags;
+            vulnTags = label.vulnTags;
         }
 
         svg.append("g")
@@ -525,12 +526,24 @@ threadfixModule.factory('reportUtilities', function() {
                 .attr("y", y + 20 + i*15)
                 .attr("class", "title")
                 .attr("id", title+"_Tags")
-                .text("Tags: " + tags)
+                .text("Application Tags: " + tags);
+            i++;
         }
+
+        if (vulnTags) {
+            svg.append("g")
+                .append("text")
+                .attr("x", w/2)
+                .attr("y", y + 20 + i*15)
+                .attr("class", "title")
+                .attr("id", title+"_VulnTags")
+                .text("Vulnerability Tags: " + vulnTags)
+        }
+
     };
 
     reportUtilities.createTeamAppNames = function($scope) {
-        var teams, apps, tags, i;
+        var teams, apps, tags, vulnTags, i;
 
         if ($scope.parameters.teams && $scope.parameters.applications)
             if ($scope.parameters.teams.length === 0
@@ -566,11 +579,25 @@ threadfixModule.factory('reportUtilities', function() {
             }
         }
 
+        if ($scope.parameters.vulnTags) {
+            if ($scope.parameters.vulnTags.length === 0) {
+                vulnTags = "All";
+            } else {
+                if ($scope.parameters.vulnTags.length > 0) {
+                    vulnTags = $scope.parameters.vulnTags[0].name;
+                }
+                for (i=1; i<$scope.parameters.vulnTags.length; i++) {
+                    vulnTags += ", " + $scope.parameters.vulnTags[i].name;
+                }
+            }
+        }
+
         if (!$scope.title)
             $scope.title = {};
         $scope.title.teams = teams;
         $scope.title.apps = apps;
         $scope.title.tags = tags;
+        $scope.title.vulnTags = vulnTags;
     };
 
     reportUtilities.drawTable = function(d3, tableData, divId) {

@@ -21,27 +21,37 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.data.dao;
+package com.denimgroup.threadfix.data.enums;
 
-import com.denimgroup.threadfix.data.entities.Tag;
-import com.denimgroup.threadfix.data.enums.TagType;
+import com.fasterxml.jackson.annotation.JsonView;
 
-import java.util.List;
+public enum TagType {
+    APPLICATION("Application"),
+    VULNERABILITY("Vulnerability"),
+    COMMENT("Vulnerability Comment");
 
-/**
- * Basic DAO class for the Tag entity.
- *
- * @author stran
- */
-public interface TagDao extends GenericNamedObjectDao<Tag> {
-    Tag retrieveAppTagByName(String name);
-    Tag retrieveCommentTagByName(String name);
+    TagType(String displayName) {
+        this.displayName = displayName;
+    }
 
-    List<Tag> retrieveAllCommentTags();
-    List<Tag> retrieveTagsByName(String name);
-    List<Tag> retrieveAllApplicationTags();
-    List<Tag> retrieveAllVulnerabilityTags();
+    private String displayName;
 
+    @JsonView(Object.class)
+    public String getDisplayName() { return displayName; }
 
-    Tag retrieveTagWithType(String name, TagType type);
+    public static TagType getTagType(String input) {
+        TagType type = null;
+
+        if (input != null) {
+            for (TagType frameworkType : values()) {
+                if (frameworkType.toString().equals(input) ||
+                        frameworkType.displayName.equals(input)) {
+                    type = frameworkType;
+                    break;
+                }
+            }
+        }
+
+        return type;
+    }
 }
