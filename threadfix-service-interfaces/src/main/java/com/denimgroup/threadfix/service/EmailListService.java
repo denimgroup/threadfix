@@ -45,8 +45,8 @@ public interface EmailListService {
 
     void deleteById(int emailListId);
 
-    boolean removeEmailAddress(String emailAddress, int emailListId);
+    String removeEmailAddress(EmailList emailList, String emailAddress);
 
-    boolean addEmailAddress(String emailAddress, int emailListId);
+    String addEmailAddress(EmailList emailList, String emailAddress);
 
 }

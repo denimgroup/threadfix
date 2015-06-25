@@ -81,9 +81,7 @@ public class EmailListServiceImpl implements EmailListService {
     }
 
     @Override
-    public boolean removeEmailAddress(String emailAddress, int emailListId) {
-
-        EmailList emailList = loadById(emailListId);
+    public String removeEmailAddress(EmailList emailList, String emailAddress) {
 
         List<String> emailAddresses = emailList.getEmailAddresses();
 
@@ -91,13 +89,11 @@ public class EmailListServiceImpl implements EmailListService {
 
         store(emailList);
 
-        return true;
+        return emailAddress;
     }
 
     @Override
-    public boolean addEmailAddress(String emailAddress, int emailListId) {
-
-        EmailList emailList = loadById(emailListId);
+    public String addEmailAddress(EmailList emailList, String emailAddress) {
 
         List<String> emailAddresses = emailList.getEmailAddresses();
 
@@ -105,6 +101,6 @@ public class EmailListServiceImpl implements EmailListService {
 
         store(emailList);
 
-        return true;
+        return emailAddress;
     }
 }
