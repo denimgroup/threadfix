@@ -25,13 +25,11 @@
 package com.denimgroup.threadfix.data.entities;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import java.beans.Transient;
-import java.util.Arrays;
+import javax.validation.constraints.Size;
 import java.util.List;
-
-import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * @author zabdisubhan
@@ -41,9 +39,15 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 @Table(name = "EmailList")
 public class EmailList extends AuditableEntity {
 
+    private static final long serialVersionUID = 2874752871948132066L;
+    private static final int NAME_LENGTH = 60;
+
+    @NotEmpty(message = "{errors.required}")
+    @Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
     private String name;
     private List<String> emailAddresses;
 
+    @Column(length = NAME_LENGTH, nullable = false)
     @JsonView(Object.class)
     public String getName() {
         return name;
