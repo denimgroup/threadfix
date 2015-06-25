@@ -1,6 +1,6 @@
 var module = angular.module('threadfix')
 
-module.controller('EmailListsPageController', function($scope, $http, $modal, $log, tfEncoder){
+module.controller('EmailListsPageController', function($scope, $http, $modal, $log, tfEncoder, threadFixModalService){
 
     var nameCompare = function(a,b) {
         return a.name.localeCompare(b.name);
@@ -90,23 +90,12 @@ module.controller('EmailListsPageController', function($scope, $http, $modal, $l
                 $scope.errorMessage = "";
                 $scope.successMessage = "Successfully edited email list " + emailList.name;
             } else {
-                var index = $scope.emailLists.indexOf(emailList);
-                if (index > -1) {
-                    $scope.emailLists.splice(index, 1);
-                }
-                if ($scope.emailLists.length === 0) {
-                    $scope.emailLists = undefined;
-                }
-
+                threadFixModalService.deleteElement($scope.emailLists, emailList);
                 $scope.successMessage = "The deletion was successful for email list " + emailList.name;
                 $scope.errorMessage = "";
             }
-
-
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
     };
-
-
 });
