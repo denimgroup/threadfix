@@ -23,50 +23,47 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import java.util.List;
-
-import org.hibernate.Criteria;
+import com.denimgroup.threadfix.data.dao.AbstractNamedObjectDao;
+import com.denimgroup.threadfix.data.dao.GenericSeverityDao;
+import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.denimgroup.threadfix.data.dao.GenericSeverityDao;
-import com.denimgroup.threadfix.data.entities.GenericSeverity;
+import java.util.List;
 
 @Repository
-public class HibernateGenericSeverityDao implements GenericSeverityDao {
+public class HibernateGenericSeverityDao
+		extends AbstractNamedObjectDao<GenericSeverity>
+		implements GenericSeverityDao {
 
 	private SessionFactory sessionFactory;
 
 	@Autowired
 	public HibernateGenericSeverityDao(SessionFactory sessionFactory) {
+		super(sessionFactory);
 		this.sessionFactory = sessionFactory;
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	@Override
-	public List<GenericSeverity> retrieveAll() {
-		return getBaseCriteria().list();
+	protected Class<GenericSeverity> getClassReference() {
+		return GenericSeverity.class;
 	}
 
 	@Override
-	public GenericSeverity retrieveByName(String name) {
-		return (GenericSeverity) getBaseCriteria().add(Restrictions.eq("name", name)).uniqueResult();
-	}
-
-	@Override
-	public GenericSeverity retrieveById(int id) {
-		return (GenericSeverity) getBaseCriteria().add(Restrictions.eq("id", id)).uniqueResult();
-	}
-	
-	private Criteria getBaseCriteria() {
-		return sessionFactory.getCurrentSession().createCriteria(GenericSeverity.class);
-	}
-
-    @Override
     public GenericSeverity retrieveByIntValue(int iValue) {
-        return (GenericSeverity) getBaseCriteria().add(Restrictions.eq("intValue", iValue))
+		return (GenericSeverity) sessionFactory.getCurrentSession()
+				.createCriteria(GenericSeverity.class)
+				.add(Restrictions.eq("intValue", iValue))
                 .setMaxResults(1).uniqueResult();
     }
+
+	@Override
+	public List<GenericSeverity> retrieveAllWithCustomName(String customName) {
+		return sessionFactory.getCurrentSession()
+				.createCriteria(GenericSeverity.class)
+				.add(Restrictions.eq("customName", customName))
+				.list();
+	}
 }

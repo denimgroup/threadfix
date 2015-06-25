@@ -185,3 +185,43 @@ threadfixModule.directive('onOffCheckbox', function() {
 
     return directive;
 });
+
+threadfixModule.directive('genericSeverity', function(customSeverityService) {
+
+    var link = function(scope, element, attrs) {
+
+        var original = attrs.genericSeverity;
+
+        if (!original) {
+            console.log("generic-severity directive requires a value");
+        }
+
+        // thanks functional programming
+
+        var setText = function() {
+            if (!customSeverityService.getCustomSeverity('Critical')) {
+                console.log("Critical not found, make sure you're populating the custom severities list by emitting a genericSeverities event.");
+            }
+
+            var result = customSeverityService.getCustomSeverity(original);
+
+            if (result) {
+                element.text(result);
+            } else {
+                element.text(original);
+            }
+        };
+
+        if (customSeverityService.isInitialized()) {
+            setText();
+        } else {
+            customSeverityService.addCallback(setText);
+        }
+
+    };
+
+    return {
+        restrict: 'A',
+        link: link
+    };
+});

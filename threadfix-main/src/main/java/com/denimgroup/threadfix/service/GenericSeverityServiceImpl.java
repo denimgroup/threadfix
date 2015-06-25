@@ -23,36 +23,46 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.GenericNamedObjectDao;
+import com.denimgroup.threadfix.data.dao.GenericSeverityDao;
+import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.denimgroup.threadfix.data.dao.GenericSeverityDao;
-import com.denimgroup.threadfix.data.entities.GenericSeverity;
+import java.util.List;
 
 @Service
-public class GenericSeverityServiceImpl implements GenericSeverityService {
+public class GenericSeverityServiceImpl
+		extends AbstractNamedObjectService<GenericSeverity>
+		implements GenericSeverityService {
 
-	GenericSeverityDao genericSeverityDao = null;
-	
 	@Autowired
-	public GenericSeverityServiceImpl(GenericSeverityDao genericSeverityDao ) {
-		this.genericSeverityDao = genericSeverityDao;
-	}
-	
+	GenericSeverityDao genericSeverityDao;
+
 	@Override
 	public List<GenericSeverity> loadAll() {
-		return genericSeverityDao.retrieveAll();
+		return getDao().retrieveAll();
 	}
 
 	@Override
-	public GenericSeverity load(String name) {
-		return genericSeverityDao.retrieveByName(name);
+	public boolean canSetCustomNameTo(int genericSeverityId, String text) {
+		if ("".equals(text)) {
+			return true; // it's ok to clear the custom text
+		}
+
+		List<GenericSeverity> genericSeverities = genericSeverityDao.retrieveAllWithCustomName(text);
+
+		for (GenericSeverity genericSeverity : genericSeverities) {
+			if (text.equals(genericSeverity.getCustomName()) && genericSeverity.getId() != genericSeverityId) {
+				return false; // a different severity has this name
+			}
+		}
+
+		return true;
 	}
 
 	@Override
-	public GenericSeverity load(int id) {
-		return genericSeverityDao.retrieveById(id);
+	public GenericNamedObjectDao<GenericSeverity> getDao() {
+		return genericSeverityDao;
 	}
 }

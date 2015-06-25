@@ -207,7 +207,10 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                         .attr("class", "bar pointer")
                         .attr("height", 0)
                         .attr("x", function(d) { return x(d.y0); })
-                        .attr("width", function(d) { return x(d.y1) - x(d.y0); })
+                        .attr("width", function(d) {
+                            var number = x(d.y1) - x(d.y0);
+                            if (number > 0)
+                            return number; })
                         .style("fill", function(d) { return d.fillColor; })
                         .on('mouseover', tip.show)
                         .on('mouseout', tip.hide)

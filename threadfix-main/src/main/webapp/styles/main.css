@@ -1418,3 +1418,12 @@ input.no-bottom-margin {
 .side-list-width {
 	width: 166px !important;
 }
+
+.table.fixed-table  {
+	table-layout:fixed;
+	word-wrap:break-word;
+}
+
+.table.fixed-table input {
+	margin-bottom:0;
+}

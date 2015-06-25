@@ -1,8 +1,8 @@
 var d3ThreadfixModule = angular.module('threadfix');
 
 // Point in time
-d3ThreadfixModule.directive('d3Pointintime', ['$window', '$timeout', 'd3', 'd3donut', 'reportExporter', 'd3Service', 'reportConstants', 'reportUtilities',
-    function($window, $timeout, d3, d3donut, reportExporter, d3Service, reportConstants, reportUtilities) {
+d3ThreadfixModule.directive('d3Pointintime', ['$window', '$timeout', 'd3', 'd3donut', 'reportExporter', 'd3Service', 'reportConstants', 'reportUtilities', 'customSeverityService',
+    function($window, $timeout, d3, d3donut, reportExporter, d3Service, reportConstants, reportUtilities, customSeverityService) {
         return {
             restrict: 'EA',
             scope: {
@@ -65,16 +65,16 @@ d3ThreadfixModule.directive('d3Pointintime', ['$window', '$timeout', 'd3', 'd3do
                     d3donut.draw2D(id, getData(), pieDim.h, pieDim.w, 150, 200 , 100, true, scope.label);
 
                     var tableData = [];
-                    if (data.Critical)
-                        tableData.push(data.Critical);
-                    if (data.High)
-                        tableData.push(data.High);
-                    if (data.Medium)
-                        tableData.push(data.Medium);
-                    if (data.Low)
-                        tableData.push(data.Low);
-                    if (data.Info)
-                        tableData.push(data.Info);
+                    if (data[customSeverityService.getCustomSeverity('Critical')])
+                        tableData.push(data[customSeverityService.getCustomSeverity('Critical')]);
+                    if (data[customSeverityService.getCustomSeverity('High')])
+                        tableData.push(data[customSeverityService.getCustomSeverity('High')]);
+                    if (data[customSeverityService.getCustomSeverity('Medium')])
+                        tableData.push(data[customSeverityService.getCustomSeverity('Medium')]);
+                    if (data[customSeverityService.getCustomSeverity('Low')])
+                        tableData.push(data[customSeverityService.getCustomSeverity('Low')]);
+                    if (data[customSeverityService.getCustomSeverity('Info')])
+                        tableData.push(data[customSeverityService.getCustomSeverity('Info')]);
 
                     var legend = svg.selectAll(".legend")
                         .data(tableData)

@@ -403,7 +403,7 @@ threadfixModule.factory('d3Service', function() {
 
 });
 
-threadfixModule.factory('reportConstants', function() {
+threadfixModule.factory('reportConstants', function(customSeverityService) {
 
     var reportConstants = {};
 
@@ -412,49 +412,62 @@ threadfixModule.factory('reportConstants', function() {
     reportConstants.vulnTypeTextColorList = ["#688c9d", "#458A37", "#EFD20A", "#F27421", "#F7280C", "#C2A677",
         "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd" ];
     reportConstants.vulnTypeList = ["Info", "Low", "Medium", "High", "Critical"];
-    reportConstants.vulnTypeColorMap = {
-        Info: {
+
+    customSeverityService.addCallback(function() {
+        reportConstants.vulnTypeList = [
+            customSeverityService.getCustomSeverity("Info"),
+            customSeverityService.getCustomSeverity("Low"),
+            customSeverityService.getCustomSeverity("Medium"),
+            customSeverityService.getCustomSeverity("High"),
+            customSeverityService.getCustomSeverity("Critical")
+        ];
+
+        reportConstants.vulnTypeColorMap = {
+            Old: {
+                graphColor: reportConstants.vulnTypeColorList[5],
+                textColor: reportConstants.vulnTypeTextColorList[5]
+            },
+            Closed: {
+                graphColor: reportConstants.vulnTypeColorList[6],
+                textColor: reportConstants.vulnTypeTextColorList[6]
+            },
+            Resurfaced: {
+                graphColor: reportConstants.vulnTypeColorList[7],
+                textColor: reportConstants.vulnTypeTextColorList[7]
+            },
+            New: {
+                graphColor: reportConstants.vulnTypeColorList[8],
+                textColor: reportConstants.vulnTypeTextColorList[8]
+            },
+            Total: {
+                graphColor: reportConstants.vulnTypeColorList[9],
+                textColor: reportConstants.vulnTypeTextColorList[9]
+            }
+
+        };
+
+        reportConstants.vulnTypeColorMap[customSeverityService.getCustomSeverity('Info')] = {
             graphColor: reportConstants.vulnTypeColorList[0],
             textColor: reportConstants.vulnTypeTextColorList[0]
-        },
-        Low:  {
+        };
+        reportConstants.vulnTypeColorMap[customSeverityService.getCustomSeverity('Low')] = {
             graphColor: reportConstants.vulnTypeColorList[1],
             textColor: reportConstants.vulnTypeTextColorList[1]
-        },
-        Medium:  {
+        };
+        reportConstants.vulnTypeColorMap[customSeverityService.getCustomSeverity('Medium')] = {
             graphColor: reportConstants.vulnTypeColorList[2],
             textColor: reportConstants.vulnTypeTextColorList[2]
-        },
-        High:  {
+        };
+        reportConstants.vulnTypeColorMap[customSeverityService.getCustomSeverity('High')] = {
             graphColor: reportConstants.vulnTypeColorList[3],
             textColor: reportConstants.vulnTypeTextColorList[3]
-        },
-        Critical:  {
+        };
+        reportConstants.vulnTypeColorMap[customSeverityService.getCustomSeverity('Critical')] = {
             graphColor: reportConstants.vulnTypeColorList[4],
             textColor: reportConstants.vulnTypeTextColorList[4]
-        },
-        Old: {
-            graphColor: reportConstants.vulnTypeColorList[5],
-            textColor: reportConstants.vulnTypeTextColorList[5]
-        },
-        Closed: {
-            graphColor: reportConstants.vulnTypeColorList[6],
-            textColor: reportConstants.vulnTypeTextColorList[6]
-        },
-        Resurfaced: {
-            graphColor: reportConstants.vulnTypeColorList[7],
-            textColor: reportConstants.vulnTypeTextColorList[7]
-        },
-        New: {
-            graphColor: reportConstants.vulnTypeColorList[8],
-            textColor: reportConstants.vulnTypeTextColorList[8]
-        },
-        Total: {
-            graphColor: reportConstants.vulnTypeColorList[9],
-            textColor: reportConstants.vulnTypeTextColorList[9]
-        }
+        };
+    });
 
-    };
     reportConstants.reportTypes = {
         trending: {
             id: 9,
@@ -633,7 +646,7 @@ threadfixModule.factory('reportUtilities', function() {
 
 });
 
-threadfixModule.factory('trendingUtilities', function(reportUtilities) {
+threadfixModule.factory('trendingUtilities', function(reportUtilities, customSeverityService) {
 
     var trendingUtilities = {};
     var startIndex = -1, endIndex = -1;
@@ -805,19 +818,19 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
             data.Hidden = scan.numberHiddenVulnerabilities;
         }
         if ($scope.parameters.severities.info) {
-            data.Info = calculateInfo(scan, $scope);
+            data[customSeverityService.getCustomSeverity('Info')] = calculateInfo(scan, $scope);
         }
         if ($scope.parameters.severities.low) {
-            data.Low = calculateLow(scan, $scope);
+            data[customSeverityService.getCustomSeverity('Low')] = calculateLow(scan, $scope);
         }
         if ($scope.parameters.severities.medium) {
-            data.Medium = calculateMedium(scan, $scope);
+            data[customSeverityService.getCustomSeverity('Medium')] = calculateMedium(scan, $scope);
         }
         if ($scope.parameters.severities.high) {
-            data.High = calculateHigh(scan, $scope);
+            data[customSeverityService.getCustomSeverity('High')] = calculateHigh(scan, $scope);
         }
         if ($scope.parameters.severities.critical) {
-            data.Critical = calculateCritical(scan, $scope);
+            data[customSeverityService.getCustomSeverity('Critical')] = calculateCritical(scan, $scope);
         }
         return data;
     };

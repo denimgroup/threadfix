@@ -21,7 +21,7 @@
                     Ignore
                 </div>
                 <div id="genericSeverity{{ $index }}" ng-if="vulnFilter.targetGenericSeverity">
-                    {{ vulnFilter.targetGenericSeverity.name }}
+                    {{ vulnFilter.targetGenericSeverity.displayName }}
                 </div>
             </td>
             <td>
