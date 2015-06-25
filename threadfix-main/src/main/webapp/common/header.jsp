@@ -133,6 +133,11 @@
                                     <a id="configureDefaultsLink" href="<spring:url value="/configuration/settings" htmlEscape="true"/>">System Settings</a>
                                 </li>
                             </security:authorize>
+                            <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_EMAIL_REPORTS">
+                                <li class="normalLinks">
+                                    <a id="emailListsLink" href="<spring:url value="/configuration/emailLists" htmlEscape="true"/>">Manage Email Lists</a>
+                                </li>
+                            </security:authorize>
                             <security:authorize ifAnyGranted="ROLE_CAN_MODIFY_VULNERABILITIES">
                                 <li class="normalLinks">
                                     <a id="vulnFiltersLink" href="<spring:url value="/configuration/filters" htmlEscape="true"/>">Manage Filters</a>
