@@ -17,11 +17,11 @@ public class ScheduledEmailReportJob implements Job {
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
         String jobName = context.getJobDetail().getDescription();
-        log.info("ScheduledScanJob " + jobName + " executing at " + new Date() + ". Sending request to queue.");
+        log.info("ScheduledEmailReportJob " + jobName + " executing at " + new Date() + ". Sending request to queue.");
 
         JobDataMap dataMap = context.getJobDetail().getJobDataMap();
         int scheduledEmailReportId = dataMap.getInt("scheduledEmailReportId");
         QueueSender queueSender = (QueueSender)dataMap.get("queueSender");
         queueSender.startEmailReport(scheduledEmailReportId);
-		}
+    }
 }
