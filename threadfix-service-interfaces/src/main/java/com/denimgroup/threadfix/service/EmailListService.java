@@ -26,27 +26,12 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.EmailList;
 
-import java.util.List;
-
 /**
  * @author zabdisubhan
  */
-public interface EmailListService {
-
-    List<EmailList> loadAll();
-
-    List<EmailList> loadAllActive();
-
-    EmailList loadById(int emailListId);
-
-    EmailList loadByName(String emailListName);
-
-    void store(EmailList emailList);
-
-    void deleteById(int emailListId);
+public interface EmailListService extends GenericNamedObjectService<EmailList> {
 
     String removeEmailAddress(EmailList emailList, String emailAddress);
 
     String addEmailAddress(EmailList emailList, String emailAddress);
-
 }

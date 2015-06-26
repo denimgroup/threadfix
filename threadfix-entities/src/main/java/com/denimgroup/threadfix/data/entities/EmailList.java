@@ -80,7 +80,6 @@ public class EmailList extends AuditableEntity {
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        return result;
+        return name != null ? name.hashCode() : 0;
     }
 }

@@ -25,9 +25,10 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.dao.EmailListDao;
+import com.denimgroup.threadfix.data.dao.GenericNamedObjectDao;
+import com.denimgroup.threadfix.data.dao.GenericObjectDao;
 import com.denimgroup.threadfix.data.entities.EmailList;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,45 +41,12 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = false)
-public class EmailListServiceImpl implements EmailListService {
+public class EmailListServiceImpl extends AbstractNamedObjectService<EmailList> implements EmailListService {
 
     protected final SanitizedLogger log = new SanitizedLogger(EmailListServiceImpl.class);
 
     @Autowired
     private EmailListDao emailListDao;
-
-    @Override
-    public List<EmailList> loadAll() {
-        return emailListDao.retrieveAll();
-    }
-
-    @Override
-    public List<EmailList> loadAllActive() {
-        return emailListDao.retrieveAllActive();
-    }
-
-    @Override
-    public EmailList loadById(int emailListId) {
-        return emailListDao.retrieveById(emailListId);
-    }
-
-    @Override
-    public EmailList loadByName(String emailListName) {
-        return emailListDao.retrieveByName(emailListName);
-    }
-
-    @Override
-    public void store(EmailList emailList) {
-        emailListDao.saveOrUpdate(emailList);
-    }
-
-    @Override
-    public void deleteById(int emailListId) {
-        EmailList emailList = loadById(emailListId);
-        log.info("Deleting EmailList with ID: " + emailListId + " and Name: " + emailList.getName());
-        emailList.setActive(false);
-        emailListDao.saveOrUpdate(emailList);
-    }
 
     @Override
     public String removeEmailAddress(EmailList emailList, String emailAddress) {
@@ -87,7 +55,7 @@ public class EmailListServiceImpl implements EmailListService {
 
         emailAddresses.remove(emailAddress);
 
-        store(emailList);
+        saveOrUpdate(emailList);
 
         return emailAddress;
     }
@@ -99,8 +67,13 @@ public class EmailListServiceImpl implements EmailListService {
 
         emailAddresses.add(emailAddress);
 
-        store(emailList);
+        saveOrUpdate(emailList);
 
         return emailAddress;
+    }
+
+    @Override
+    public GenericNamedObjectDao<EmailList> getDao() {
+        return emailListDao;
     }
 }

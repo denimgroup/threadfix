@@ -24,7 +24,7 @@
 
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
+import com.denimgroup.threadfix.data.dao.AbstractNamedObjectDao;
 import com.denimgroup.threadfix.data.dao.EmailListDao;
 import com.denimgroup.threadfix.data.entities.EmailList;
 import org.hibernate.SessionFactory;
@@ -36,7 +36,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class HibernateEmailListDao
-        extends AbstractObjectDao<EmailList>
+        extends AbstractNamedObjectDao<EmailList>
         implements EmailListDao {
 
     @Autowired
@@ -47,10 +47,5 @@ public class HibernateEmailListDao
     @Override
     protected Class<EmailList> getClassReference() {
         return EmailList.class;
-    }
-
-    @Override
-    public EmailList retrieveByName(String emailListName) {
-        return null;
     }
 }

@@ -83,13 +83,15 @@ public class EmailListController {
             if (emailList.getName().trim().equals("")) {
                 result.rejectValue("name", null, null, "This field cannot be blank");
             }
-
+            if (emailListService.nameExists(emailList.getName())) {
+                result.rejectValue("name", null, null, "This name already exists");
+            }
             if (result.hasErrors()) {
                 return FormRestResponse.failure("error", result);
             }
 
             log.info("Saving new Email List " + emailList.getName());
-            emailListService.store(emailList);
+            emailListService.saveOrUpdate(emailList);
             return RestResponse.success(emailList);
         }
     }
@@ -121,7 +123,7 @@ public class EmailListController {
                 Map<String, Object> resultMap = map();
                 log.info("Editing EmailList " + databaseEmailList.getName() + " to " + emailList.getName());
                 databaseEmailList.setName(emailList.getName());
-                emailListService.store(databaseEmailList);
+                emailListService.saveOrUpdate(databaseEmailList);
                 resultMap.put("emailLists", emailListService.loadAll());
                 return RestResponse.success(resultMap);
             } else {
@@ -135,7 +137,7 @@ public class EmailListController {
         EmailList emailList = emailListService.loadById(emailListId);
 
         if (emailList != null) {
-            emailListService.deleteById(emailListId);
+            emailListService.markInactive(emailList);
             return RestResponse.success(null);
         } else {
             log.warn("EmailList Id is invalid or EmailList currently can not be deleted.");
