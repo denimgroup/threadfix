@@ -29,11 +29,12 @@
                     <th>Severity Threshold</th>
                     <th class="centered">Email addresses</th>
                     <th class="centered">Edit / Delete</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-hide="scheduledEmailReports.length || loading">
-                    <td colspan="4" style="text-align:center;">No email reports scheduled.</td>
+                    <td colspan="6" style="text-align:center;">No email reports scheduled.</td>
                 </tr>
                 <tr ng-repeat-start="scheduledReport in scheduledEmailReports">
                     <td>{{ scheduledReport.scheduledDate }} {{ scheduledReport.period }}</td>
@@ -45,9 +46,9 @@
                     <td class="centered">
                         <button class="btn" ng-click="openEditModal(scheduledReport)">Edit / Delete</button>
                     </td>
+                    <td></td>
                 </tr>
-                <tr ng-repeat-end ng-show="scheduledReport.showEmailAddresses"
-                    class="grey-background">
+                <tr ng-repeat-end ng-show="scheduledReport.showEmailAddresses" class="grey-background">
                     <td colspan="3">
                         <table>
                             <thead ng-show="scheduledReport.emailAddresses.length > 0">
@@ -61,12 +62,6 @@
                                     <td>{{ emailAddress }}</td>
                                     <td class="centered">
                                       <a class="btn btn-danger" ng-click="deleteEmailAddress(scheduledReport,emailAddress)">Delete</a>
-                                    </td>
-                                </tr>
-                                <tr ng-repeat="emailList in scheduledReport.emailLists">
-                                    <td>{{ emailList.name }}</td>
-                                    <td class="centered">
-                                        <a class="btn btn-danger" ng-click="deleteEmailList(scheduledReport,emailList)">Delete</a>
                                     </td>
                                 </tr>
                                 <tr ng-show="scheduledReport.emailAddresses.length==0 && scheduledReport.showEmailAddresses">
@@ -84,13 +79,34 @@
                                          <span class="errors" ng-show="scheduledReport.newEmailError"> {{ scheduledReport.newEmailError }}</span>
                                     </td>
                                 </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td colspan="3" style="padding:8px">
+                        <table>
+                            <thead ng-show="scheduledReport.emailAddresses.length > 0">
+                                <tr>
+                                    <th>Email Lists</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="emailList in scheduledReport.emailLists">
+                                    <td>{{ emailList.name }}</td>
+                                    <td class="centered">
+                                        <a class="btn btn-danger" ng-click="deleteEmailList(scheduledReport,emailList)">Delete</a>
+                                    </td>
+                                </tr>
+                                <tr ng-show="scheduledReport.emailLists.length==0 && scheduledReport.showEmailAddresses">
+                                    <td>No Email Lists</td>
+                                </tr>
                                 <tr>
                                     <td>
                                         <select ng-options="emailList.name for emailList in emailLists track by emailList.id"
                                                 id="emailListSelect" ng-model="scheduledReport.newEmailList"></select>
                                     </td>
                                     <td>
-                                        <a class="btn btn-primary" style="margin-top: -10px" ng-click="addNewEmailList(scheduledReport)" ng-disabled="!scheduledReport.newEmailList">Add Email List</a>
+                                        <a class="btn btn-primary" style="margin-top: -10px" ng-click="addNewEmailList(scheduledReport)" ng-disabled="!scheduledReport.newEmailList">Add List</a>
                                     </td>
                                     <td>
                                         <span ng-show="newEmailListLoading" class="spinner dark"></span>
@@ -103,6 +119,5 @@
                 </tr>
             </tbody>
         </table>
-
     </div>
 </body>
