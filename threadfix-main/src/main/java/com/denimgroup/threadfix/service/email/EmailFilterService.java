@@ -1,8 +1,10 @@
 package com.denimgroup.threadfix.service.email;
 
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
+import static com.denimgroup.threadfix.CollectionUtils.set;
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -26,13 +28,12 @@ public class EmailFilterService {
 		return false;
 	}
 
-	public List<String> getFilteredEmailAddresses(List<String> emailAddresses){
-		List<String> filteredEmailAddresses = list();
+	public Set<String> getFilteredEmailAddresses(List<String> emailAddresses){
+		Set<String> filteredEmailAddresses = set();
 		for (String emailAddress : emailAddresses){
 			if(validateEmailAddress(emailAddress)){
 				filteredEmailAddresses.add(emailAddress);
-			}
-			else {
+			} else {
 				log.warn("Blocked an email address not matching current filters: " + emailAddress);
 			}
 		}
