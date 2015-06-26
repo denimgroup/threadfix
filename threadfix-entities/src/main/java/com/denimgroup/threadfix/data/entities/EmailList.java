@@ -57,7 +57,7 @@ public class EmailList extends AuditableEntity {
         this.name = name;
     }
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @Column(name = "emailAddress", length = 128)
     @CollectionTable(name = "EmailAddress", joinColumns = @JoinColumn(name = "EmailListId"))
     @JsonView(Object.class)
