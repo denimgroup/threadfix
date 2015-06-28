@@ -78,8 +78,11 @@ public interface ThreadFixRestClient {
 
     public RestResponse<ScanQueueTask> queueScan(String applicationId, String scannerType);
     public RestResponse<ScanQueueTask> queueScan(String applicationId, String scannerType, String scanConfigId);
+    public RestResponse<Task> requestTask(String scanners, String agentConfig);
+    public RestResponse<String> taskStatusUpdate(String scanQueueTaskId, String message);
     public RestResponse<String> setTaskConfig(String appId, String scannerType, String filePath);
-
+    public RestResponse<ScanQueueTask> completeTask(String scanQueueTaskId, String filePath, String secureTaskKey);
+    public RestResponse<String> failTask(String scanQueueTaskId, String message, String secureTaskKey);
 
     // QA only
     public RestResponse<User> trap();

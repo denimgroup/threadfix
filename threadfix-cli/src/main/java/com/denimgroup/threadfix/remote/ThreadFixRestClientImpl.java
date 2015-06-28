@@ -237,6 +237,24 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 				new String[] { url },
                 Application.class);
 	}
+
+    public RestResponse<Task> requestTask(String scanners, String agentConfig) {
+        return httpRestUtils.httpPost("/tasks/requestTask",
+                new String[] {"scanners", "agentConfig" },
+                new String[] { scanners, agentConfig }, Task.class);
+    }
+
+    /**
+     * Determine if we want to pass the taskId as a parameter or if we want to REST it up
+     * @param scanQueueTaskId
+     * @param message
+     * @return
+     */
+    public RestResponse<String> taskStatusUpdate(String scanQueueTaskId, String message) {
+        return httpRestUtils.httpPost("/tasks/taskStatusUpdate",
+                new String[]{"scanQueueTaskId", "message"},
+                new String[]{ scanQueueTaskId, message}, String.class);
+    }
 	
 	public RestResponse<String> setTaskConfig(String appId, String scannerType, String filePath) {
 		String url = "/tasks/setTaskConfig";
