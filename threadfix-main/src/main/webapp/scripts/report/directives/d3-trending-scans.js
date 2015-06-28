@@ -1,8 +1,8 @@
 var d3ThreadfixModule = angular.module('threadfix');
 
 // Trending scans report
-d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilities', 'reportConstants',
-    function(d3, reportExporter, reportUtilities, reportConstants) {
+d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilities', 'reportConstants', 'customSeverityService',
+    function(d3, reportExporter, reportUtilities, reportConstants, customSeverityService) {
         return {
             restrict: 'EA',
             scope: {
@@ -84,6 +84,23 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     Critical: 9,
                     Total: 10
                 };
+
+                customSeverityService.addCallback(function() {
+                    fieldOrderMap = {
+                        New : 0,
+                        Resurfaced: 1,
+                        Closed: 2,
+                        Old: 3,
+                        Hidden: 4
+                    };
+
+                    fieldOrderMap[customSeverityService.getCustomSeverity('Info')] = 5;
+                    fieldOrderMap[customSeverityService.getCustomSeverity('Low')] = 6;
+                    fieldOrderMap[customSeverityService.getCustomSeverity('Medium')] = 7;
+                    fieldOrderMap[customSeverityService.getCustomSeverity('High')] = 8;
+                    fieldOrderMap[customSeverityService.getCustomSeverity('Critical')] = 9;
+                    fieldOrderMap['Total'] = 10;
+                });
 
                 // A line generator, for the dark stroke.
                 var line = d3.svg.line()

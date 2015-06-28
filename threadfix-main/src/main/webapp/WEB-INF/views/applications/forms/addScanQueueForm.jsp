@@ -12,7 +12,8 @@
                     <td>Scan</td>
                     <td>
                         <select style="width:300px;" name="scanQueueType" id="scan" ng-model="object.scanner">
-                            <option ng-repeat='scanner in config.scanners' value="{{ scanner }}"> {{ scanner }} </option>
+                            <option ng-selected = "scanner === object.scanner"
+                                    ng-repeat='scanner in config.scanners' value="{{ scanner }}"> {{ scanner }} </option>
                         </select>
                     </td>
                 </tr>

@@ -100,7 +100,7 @@ module.controller('VulnSearchTreeController', function($log, $scope, $rootScope,
                     element.vulns = data.object.vulns;
                     element.vulns.forEach(updateChannelNames);
                     element.vulns.forEach(function(vuln){
-                        vulnSearchParameterService.updateVulnCommentTags($scope.tags, vuln);
+                        vulnSearchParameterService.updateVulnCommentTags($scope.commentTags, vuln);
                     });
                     element.totalVulns = data.object.vulnCount;
                     element.max = Math.ceil(data.object.vulnCount/100);

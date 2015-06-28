@@ -69,7 +69,7 @@
 			</tr>
 			<tr>
 				<td class="bold">Severity</td>
-				<td class="inputValue" id="genericSeverityName"><c:out value="${ finding.channelSeverity.severityMap.genericSeverity.name }"/></td>
+				<td class="inputValue" id="genericSeverityName"><c:out value="${ finding.channelSeverity.severityMap.genericSeverity.displayName }"/></td>
 			</tr>
             <tr>
                 <td class="bold">Description</td>

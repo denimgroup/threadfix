@@ -417,8 +417,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Long countUsers(String searchString) {
 		return userDao.countUsers(searchString);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Long countUsers() {
+		return userDao.countUsers();
 	}
 
 	@Override

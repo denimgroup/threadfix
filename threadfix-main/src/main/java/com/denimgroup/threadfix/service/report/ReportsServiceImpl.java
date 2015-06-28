@@ -164,6 +164,7 @@ public class ReportsServiceImpl implements ReportsService {
         List<Integer> teamIdList = list();
         List<Integer> applicationIdList = list();
         List<Integer> tagIdList = list();
+        List<Integer> vulnTagIdList = list();
 
         vulnerabilitySearchService.applyPermissions(parameters);
 
@@ -176,8 +177,18 @@ public class ReportsServiceImpl implements ReportsService {
         for (Tag tag: parameters.getTags())
             tagIdList.add(tag.getId());
 
-        List<Integer> top20Apps = applicationDao.getTopXVulnerableAppsFromList(20, teamIdList, applicationIdList, tagIdList);
-        map.put("appList", getTopAppsListInfo(top20Apps));
+        for (Tag tag: parameters.getVulnTags()) {
+            vulnTagIdList.add(tag.getId());
+        }
+
+        List<Integer> top20Apps = applicationDao.getTopXVulnerableAppsFromList(20, teamIdList, applicationIdList, tagIdList, vulnTagIdList);
+
+        if (vulnTagIdList.size() == 0) { // Only query from application table
+            map.put("appList", getTopAppsListInfo(top20Apps));
+        } else { // Join with vulnerability table
+            map.put("rawAppList", applicationDao.retrieveAppsInfoMap(applicationIdList, vulnTagIdList));
+        }
+
         return map;
     }
 
