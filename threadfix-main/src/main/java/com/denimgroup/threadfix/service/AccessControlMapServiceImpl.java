@@ -97,7 +97,7 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 			
 			if (map.getAccessControlApplicationMaps() == null || 
 					map.getAccessControlApplicationMaps().size() == 0) {
-				return "You must select at least one application.";
+				return "You must set at least one role.";
 			}
 			List<AccessControlApplicationMap> maps = list();
 			for (AccessControlApplicationMap appMap : map.getAccessControlApplicationMaps()) {
