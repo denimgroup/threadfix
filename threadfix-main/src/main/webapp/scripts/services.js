@@ -54,7 +54,7 @@ threadfixModule.factory('customSeverityService', function() {
     };
 
     service.getCustomSeverity = function(input) {
-        return service.map[input];
+        return service.map[input] || input;
     };
 
     return service;
