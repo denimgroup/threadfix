@@ -119,7 +119,7 @@ public class Tag extends AuditableEntity {
 
     @Transient
     @JsonIgnore
-    public int getVulnCommentsCount(){
+    public int getVulnCommentsCount() {
         int numVulnComments = 0;
         for (VulnerabilityComment comment: vulnerabilityComments) {
             if (comment.getVulnerability() != null
@@ -131,7 +131,7 @@ public class Tag extends AuditableEntity {
 
     }
     @Transient
-    public boolean getDeletable(){
+    public boolean getDeletable() {
         if (enterpriseTag == null)
             enterpriseTag = false;
         return applications.size()==0
@@ -158,5 +158,15 @@ public class Tag extends AuditableEntity {
 
     public void setType(TagType type) {
         this.type = type;
+    }
+    String encodedName = null;
+    @JsonView(AllViews.VulnSearchApplications.class)
+    @Transient
+    public String getEncodedName() {
+        return encodedName;
+    }
+
+    public void setEncodedName(String name) {
+        encodedName = name;
     }
 }
