@@ -106,7 +106,7 @@
                                 <a id="updateChannelVulnLink" href="<spring:url value="/mappings/index" htmlEscape="true"/>">Scanner Mappings</a>
                             </li>
                         </security:authorize>
-                        <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
+                        <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_ENTERPRISE">
                             <li class="normalLinks">
                                 <a id="customizeSeveritiesLink" href="<spring:url value="/severities" htmlEscape="true"/>">Customize Severities</a>
                             </li>
