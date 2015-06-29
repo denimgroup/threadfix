@@ -57,4 +57,6 @@ public interface ScanQueueService {
 	ScanQueueTask queueScanTask(int appId, ScanQueueTask scanQueueTask);
 
 	ScanQueueTask queueScanWithConfig(int appId, String scannerType, String scanConfigId);
+
+	ScanQueueTask queueScanWithScheduledScanId(int scheduledScanId);
 }

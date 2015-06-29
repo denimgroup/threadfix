@@ -68,11 +68,22 @@
             <tr class="left-align">
                 <td style="padding:5px;">Scanner</td>
                 <td style="padding:5px;">
-                    <select style="width:243px;" name="scanner" ng-model="object.scanner"
+                    <select style="width:300px;" name="scanner" ng-model="object.scanner"
                                  id="scanner${application.id}">
                         <option ng-selected = "object.scanner === scanner" ng-repeat='scanner in config.scanners' value="{{ scanner }}"> {{ scanner }} </option>
                     </select>
                     <errors path="scanner" cssClass="errors" />
+                </td>
+            </tr>
+            <tr class="left-align">
+                <td>Target URL</td>
+                <td>
+                    <input style="width:300px;" id="urlInput" type='url' name='targetUrl' ng-model="object.targetUrl" ng-maxlength="255"/>
+                </td>
+                <td>
+                    <span id="urlInputLengthError" class="errors" ng-show="form.targetUrl.$dirty && form.targetUrl.$error.maxlength">Maximum length is 255.</span>
+                    <span id="urlInputInvalidUrlError" class="errors" ng-show="form.targetUrl.$dirty && form.targetUrl.$error.url">URL is invalid.</span>
+                    <span id="urlInputError" class="errors" ng-show="object.targetUrl_error"> {{ object.name_error }}</span>
                 </td>
             </tr>
             <tr>
