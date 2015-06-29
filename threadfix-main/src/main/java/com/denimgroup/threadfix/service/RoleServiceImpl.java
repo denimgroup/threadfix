@@ -125,7 +125,8 @@ public class RoleServiceImpl implements RoleService {
 		if (name.length() > Role.NAME_LENGTH) {
 			return FIELD_ERROR;
 		}
-		
+
+		databaseRole = loadRole(role.getId());
 		if (databaseRole != null) {
 			if (databaseRole.getCanManageUsers() && !role.getCanManageUsers() && 
 					!userDao.canRemovePermissionFromRole(role.getId(), "canManageUsers")) {
