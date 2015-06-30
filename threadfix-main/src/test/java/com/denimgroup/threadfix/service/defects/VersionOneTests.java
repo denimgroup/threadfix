@@ -24,7 +24,7 @@
 package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
-import com.denimgroup.threadfix.service.defects.mock.VersionOneRestUtilsMock;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl;
 import org.junit.Test;
 
 import java.util.List;
@@ -49,7 +49,7 @@ public class VersionOneTests {
         tracker.setUrl(VERSION_ONE_URL);
 
         // TODO mock the appropriate class
-        ((VersionOneDefectTracker) tracker).restUtils = new VersionOneRestUtilsMock();
+        ((VersionOneDefectTracker) tracker).utils = new RemoteProviderHttpUtilsImpl<>(VersionOneDefectTracker.class);
 
         return tracker;
     }
@@ -58,7 +58,7 @@ public class VersionOneTests {
     public void testFactory() {
         AbstractDefectTracker tracker = getTracker();
 
-        assertTrue("Tracker should have been HPQC but wasn't.", tracker instanceof VersionOneDefectTracker);
+        assertTrue("Tracker should have been VersionOne but wasn't.", tracker instanceof VersionOneDefectTracker);
     }
 
     @Test
@@ -67,7 +67,6 @@ public class VersionOneTests {
         List<String> productNames = tracker.getProductNames();
 
         System.out.println(productNames);
-
     }
 
 }
