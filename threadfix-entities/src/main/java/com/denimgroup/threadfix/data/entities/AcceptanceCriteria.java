@@ -29,7 +29,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,7 +51,7 @@ public class AcceptanceCriteria extends AuditableEntity {
     @Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
     private String name;
 
-    private Set<ACStatus> acStatusSet = new HashSet<ACStatus>(0);
+    private Set<AcceptanceCriteriaStatus> acceptanceCriteriaStatusSet = new HashSet<AcceptanceCriteriaStatus>(0);
 
     private FilterJsonBlob filterJsonBlob;
 
@@ -67,12 +66,12 @@ public class AcceptanceCriteria extends AuditableEntity {
     }
 
     @OneToMany(mappedBy = "acceptanceCriteria")
-    public Set<ACStatus> getAcStatusSet() {
-        return acStatusSet;
+    public Set<AcceptanceCriteriaStatus> getAcceptanceCriteriaStatusSet() {
+        return acceptanceCriteriaStatusSet;
     }
 
-    public void setAcStatusSet(Set<ACStatus> acStatusSet) {
-        this.acStatusSet = acStatusSet;
+    public void setAcceptanceCriteriaStatusSet(Set<AcceptanceCriteriaStatus> acceptanceCriteriaStatusSet) {
+        this.acceptanceCriteriaStatusSet = acceptanceCriteriaStatusSet;
     }
 
     @Transient
@@ -80,8 +79,8 @@ public class AcceptanceCriteria extends AuditableEntity {
     public List<Application> getApplications(){
         List<Application> applications = list();
 
-        for (ACStatus acStatus : acStatusSet) {
-            applications.add(acStatus.getApplication());
+        for (AcceptanceCriteriaStatus acceptanceCriteriaStatus : acceptanceCriteriaStatusSet) {
+            applications.add(acceptanceCriteriaStatus.getApplication());
         }
 
         return applications;

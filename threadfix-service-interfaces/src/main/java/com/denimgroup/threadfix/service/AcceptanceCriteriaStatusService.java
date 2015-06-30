@@ -24,14 +24,14 @@
 
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.ACStatus;
+import com.denimgroup.threadfix.data.entities.AcceptanceCriteriaStatus;
 
 /**
  * @author zabdisubhan
  */
-public interface ACStatusService extends GenericObjectService<ACStatus> {
+public interface AcceptanceCriteriaStatusService extends GenericObjectService<AcceptanceCriteriaStatus> {
 
 
-    void delete(ACStatus acStatus);
+    void delete(AcceptanceCriteriaStatus acceptanceCriteriaStatus);
 
 }

@@ -32,8 +32,8 @@ import javax.persistence.*;
  * @author zabdisubhan
  */
 @Entity
-@Table(name = "ACStatus")
-public class ACStatus extends AuditableEntity {
+@Table(name = "AcceptanceCriteriaStatus")
+public class AcceptanceCriteriaStatus extends AuditableEntity {
 
     private boolean passing = false;
     private Application application;

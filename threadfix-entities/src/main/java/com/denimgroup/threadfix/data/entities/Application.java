@@ -161,7 +161,7 @@ public class Application extends AuditableEntity {
 
     private List<Tag> tags = new ArrayList<Tag>();
 
-    private Set<ACStatus> acStatusSet = new HashSet<ACStatus>(0);
+    private Set<AcceptanceCriteriaStatus> acceptanceCriteriaStatusSet = new HashSet<AcceptanceCriteriaStatus>(0);
 
 	@Column(length = NAME_LENGTH, nullable = false)
     @JsonView(Object.class) // This means it will be included in all ObjectWriters with Views.
@@ -420,12 +420,12 @@ public class Application extends AuditableEntity {
 	}
 
     @OneToMany(mappedBy = "application")
-    public Set<ACStatus> getAcStatusSet() {
-        return acStatusSet;
+    public Set<AcceptanceCriteriaStatus> getAcceptanceCriteriaStatusSet() {
+        return acceptanceCriteriaStatusSet;
     }
 
-    public void setAcStatusSet(Set<ACStatus> acStatusSet) {
-        this.acStatusSet = acStatusSet;
+    public void setAcceptanceCriteriaStatusSet(Set<AcceptanceCriteriaStatus> acceptanceCriteriaStatusSet) {
+        this.acceptanceCriteriaStatusSet = acceptanceCriteriaStatusSet;
     }
 
 	public void setVulnerabilities(List<Vulnerability> vulnerabilities) {
@@ -914,8 +914,8 @@ public class Application extends AuditableEntity {
     public List<AcceptanceCriteria> getAcceptanceCriteria(){
         List<AcceptanceCriteria> acceptanceCriteriaList = list();
 
-        for (ACStatus acStatus : acStatusSet) {
-            acceptanceCriteriaList.add(acStatus.getAcceptanceCriteria());
+        for (AcceptanceCriteriaStatus acceptanceCriteriaStatus : acceptanceCriteriaStatusSet) {
+            acceptanceCriteriaList.add(acceptanceCriteriaStatus.getAcceptanceCriteria());
         }
 
         return acceptanceCriteriaList;
