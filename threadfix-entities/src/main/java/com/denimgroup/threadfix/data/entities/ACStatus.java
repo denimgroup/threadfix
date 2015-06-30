@@ -49,7 +49,7 @@ public class ACStatus extends AuditableEntity {
 
     @ManyToOne
     @JsonView(Object.class)
-    @JoinColumn(name = "Application_Id")
+    @JoinColumn(name = "Application_Id", nullable = false)
     public Application getApplication() {
         return application;
     }
@@ -60,7 +60,7 @@ public class ACStatus extends AuditableEntity {
 
     @ManyToOne
     @JsonView(Object.class)
-    @JoinColumn(name = "AcceptanceCriteria_Id")
+    @JoinColumn(name = "AcceptanceCriteria_Id", nullable = false)
     public AcceptanceCriteria getAcceptanceCriteria() {
         return acceptanceCriteria;
     }
