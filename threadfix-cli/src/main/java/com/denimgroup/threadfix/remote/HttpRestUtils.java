@@ -48,6 +48,8 @@ public class HttpRestUtils {
     @Nonnull
     final PropertiesManager propertiesManager;
 
+    private boolean unsafeFlag = false;
+
     private static final SanitizedLogger LOGGER = new SanitizedLogger(HttpRestUtils.class);
 
     public HttpRestUtils(@Nonnull PropertiesManager manager) {
@@ -61,8 +63,8 @@ public class HttpRestUtils {
                                             @Nonnull String[] paramVals,
                                             @Nonnull Class<T> targetClass) {
 
-        //	TODO - Revisit how we handle certificate errors here
-		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
+        if (isUnsafeFlag())
+            Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 
         String completeUrl = makePostUrl(path);
 
@@ -116,7 +118,8 @@ public class HttpRestUtils {
                                         @Nonnull String[] paramVals,
                                         @Nonnull Class<T> targetClass) {
 
-		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
+        if (isUnsafeFlag())
+            Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 
         String urlString = makePostUrl(path);
 
@@ -188,8 +191,8 @@ public class HttpRestUtils {
         String urlString = makeGetUrl(path, params);
 
 		LOGGER.debug("Requesting " + urlString);
-
-		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
+        if (isUnsafeFlag())
+            Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 		GetMethod get = new GetMethod(urlString);
 
 		get.setRequestHeader("Accept", "application/json");
@@ -260,5 +263,13 @@ public class HttpRestUtils {
         } else {
             post.addParameter("apiKey", propertiesManager.getKey());
         }
+    }
+
+    public boolean isUnsafeFlag() {
+        return unsafeFlag;
+    }
+
+    public void setUnsafeFlag(boolean unsafeFlag) {
+        this.unsafeFlag = unsafeFlag;
     }
 }
