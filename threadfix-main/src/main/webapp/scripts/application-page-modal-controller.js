@@ -54,6 +54,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                    $scope.$parent.genericSeverityList = $scope.config.genericSeverityList;
                    $scope.$parent.scanAgentSupportedList = $scope.config.scanAgentSupportedList;
                    $scope.$parent.documents = $scope.config.documents;
+                   $scope.$parent.application = $scope.config.application;
 
                    $rootScope.$broadcast('seeMoreExtension', "/" + $scope.config.application.team.id + "/" + $scope.config.application.id);
 

@@ -51,14 +51,12 @@ public class ScheduledScanJob implements Job {
         log.info("ScheduledScanJob " + jobName + " executing at " + new Date() + ". Sending request to queue.");
 
         JobDataMap dataMap = context.getJobDetail().getJobDataMap();
-        int appId = dataMap.getInt("appId");
-        String scanner = dataMap.getString("scanner");
-        String scanConfigId = null;
-        if (dataMap.containsKey("scanConfigId"))
-            scanConfigId = String.valueOf(dataMap.getInt("scanConfigId"));
+
+        int scheduledScanId = dataMap.getInt("scheduledScanId");
+
         QueueSender queueSender = (QueueSender)dataMap.get("queueSender");
 
-        queueSender.addScheduledScan(appId, scanner, scanConfigId);
+        queueSender.addScheduledScanById(scheduledScanId);
 
     }
 }

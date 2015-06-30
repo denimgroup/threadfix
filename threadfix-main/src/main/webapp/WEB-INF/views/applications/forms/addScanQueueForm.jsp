@@ -17,6 +17,17 @@
                         </select>
                     </td>
                 </tr>
+                <tr class="left-align">
+                    <td>Target URL</td>
+                    <td>
+                        <input style="width:300px;" id="urlInput" type='url' name='targetUrl' ng-model="object.targetUrl" ng-maxlength="255"/>
+                    </td>
+                    <td>
+                        <span id="urlInputLengthError" class="errors" ng-show="form.targetUrl.$dirty && form.targetUrl.$error.maxlength">Maximum length is 255.</span>
+                        <span id="urlInputInvalidUrlError" class="errors" ng-show="form.targetUrl.$dirty && form.targetUrl.$error.url">URL is invalid.</span>
+                        <span id="urlInputError" class="errors" ng-show="object.targetUrl_error"> {{ object.name_error }}</span>
+                    </td>
+                </tr>
                 <tr>
                     <td>Scan Config</td>
                     <td>
