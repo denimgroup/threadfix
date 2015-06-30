@@ -415,8 +415,9 @@ public class CommandLineParser {
 	}
 
 	private static <T> void printOutput(RestResponse<T> response) {
-
-		if (response.success) {
+		if (response == null) {
+			LOGGER.error("Request sent unsuccessfully.");
+		} else if (response.success) {
 			LOGGER.info("Operation successful, printing JSON output.");
 			System.out.println(response.getOriginalJson());
 		} else {
