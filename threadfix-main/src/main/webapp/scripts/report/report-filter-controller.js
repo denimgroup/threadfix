@@ -240,7 +240,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
             else
                 return (!parameters.filterType || parameters.filterType.isVulnSearchFilter);
         }
-    }
+    };
 
     var resetDateRange = function(){
         // Reset Date Range
