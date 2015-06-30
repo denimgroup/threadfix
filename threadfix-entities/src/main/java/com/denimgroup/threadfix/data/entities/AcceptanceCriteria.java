@@ -24,14 +24,17 @@
 package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.views.AllViews;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * Created by sgerick on 5/26/2015.
@@ -49,7 +52,7 @@ public class AcceptanceCriteria extends AuditableEntity {
     @Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
     private String name;
 
-    private List<Application> applications = new ArrayList<Application>();
+    private Set<ACStatus> acStatusSet = new HashSet<ACStatus>(0);
 
     private FilterJsonBlob filterJsonBlob;
 
@@ -63,17 +66,25 @@ public class AcceptanceCriteria extends AuditableEntity {
         this.name = name;
     }
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="AcceptanceCriteria_Application",
-            joinColumns={@JoinColumn(name="AcceptanceCriteria_Id")},
-            inverseJoinColumns={@JoinColumn(name="Application_Id")})
-    @JsonView(AllViews.TableRow.class)
-    public List<Application> getApplications() {
-        return applications;
+    @OneToMany(mappedBy = "acceptanceCriteria")
+    public Set<ACStatus> getAcStatusSet() {
+        return acStatusSet;
     }
 
-    public void setApplications(List<Application> applications) {
-        this.applications = applications;
+    public void setAcStatusSet(Set<ACStatus> acStatusSet) {
+        this.acStatusSet = acStatusSet;
+    }
+
+    @Transient
+    @JsonView(Object.class)
+    public List<Application> getApplications(){
+        List<Application> applications = list();
+
+        for (ACStatus acStatus : acStatusSet) {
+            applications.add(acStatus.getApplication());
+        }
+
+        return applications;
     }
 
     @OneToOne

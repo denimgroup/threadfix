@@ -161,7 +161,7 @@ public class Application extends AuditableEntity {
 
     private List<Tag> tags = new ArrayList<Tag>();
 
-    private Set<AcceptanceCriteria> acceptanceCriteriaSet = new HashSet<AcceptanceCriteria>(0);
+    private Set<ACStatus> acStatusSet = new HashSet<ACStatus>(0);
 
 	@Column(length = NAME_LENGTH, nullable = false)
     @JsonView(Object.class) // This means it will be included in all ObjectWriters with Views.
@@ -418,6 +418,15 @@ public class Application extends AuditableEntity {
 	public List<Vulnerability> getVulnerabilities() {
 		return vulnerabilities;
 	}
+
+    @OneToMany(mappedBy = "application")
+    public Set<ACStatus> getAcStatusSet() {
+        return acStatusSet;
+    }
+
+    public void setAcStatusSet(Set<ACStatus> acStatusSet) {
+        this.acStatusSet = acStatusSet;
+    }
 
 	public void setVulnerabilities(List<Vulnerability> vulnerabilities) {
 		this.vulnerabilities = vulnerabilities;
@@ -888,7 +897,6 @@ public class Application extends AuditableEntity {
         this.skipApplicationMerge = isSkipApplicationMerge;
     }
 
-//    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name="Application_Tag",
             joinColumns={@JoinColumn(name="Application_Id")},
@@ -902,14 +910,15 @@ public class Application extends AuditableEntity {
         this.tags = tags;
     }
 
-    @ManyToMany(mappedBy = "applications")
-    @JsonIgnore
-    public Set<AcceptanceCriteria> getAcceptanceCriteriaSet() {
-        return acceptanceCriteriaSet;
-    }
+    @Transient
+    public List<AcceptanceCriteria> getAcceptanceCriteria(){
+        List<AcceptanceCriteria> acceptanceCriteriaList = list();
 
-    public void setAcceptanceCriteriaSet(Set<AcceptanceCriteria> acceptanceCriteriaSet) {
-        this.acceptanceCriteriaSet = acceptanceCriteriaSet;
+        for (ACStatus acStatus : acStatusSet) {
+            acceptanceCriteriaList.add(acStatus.getAcceptanceCriteria());
+        }
+
+        return acceptanceCriteriaList;
     }
 
     @Override
