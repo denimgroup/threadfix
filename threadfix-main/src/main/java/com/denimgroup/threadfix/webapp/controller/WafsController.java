@@ -56,6 +56,7 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Controller
 @RequestMapping("/wafs")
+@PreAuthorize("hasRole('ROLE_CAN_MANAGE_WAFS')")
 @SessionAttributes({"newWaf","waf"})
 public class WafsController {
 
