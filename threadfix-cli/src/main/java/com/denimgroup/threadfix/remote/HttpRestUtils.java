@@ -38,6 +38,7 @@ import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.protocol.Protocol;
 
 import javax.annotation.Nonnull;
+import javax.net.ssl.SSLHandshakeException;
 import java.io.File;
 import java.io.IOException;
 
@@ -47,6 +48,8 @@ public class HttpRestUtils {
 
     @Nonnull
     final PropertiesManager propertiesManager;
+
+    private boolean unsafeFlag = false;
 
     private static final SanitizedLogger LOGGER = new SanitizedLogger(HttpRestUtils.class);
 
@@ -61,8 +64,8 @@ public class HttpRestUtils {
                                             @Nonnull String[] paramVals,
                                             @Nonnull Class<T> targetClass) {
 
-        //	TODO - Revisit how we handle certificate errors here
-		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
+        if (isUnsafeFlag())
+            Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 
         String completeUrl = makePostUrl(path);
 
@@ -70,28 +73,28 @@ public class HttpRestUtils {
 
 		filePost.setRequestHeader("Accept", "application/json");
 
-        RestResponse<T> response;
+        RestResponse<T> response = null;
         int status = -1;
 
 		try {
-			Part[] parts = new Part[paramNames.length + 2];
-			parts[paramNames.length] = new FilePart("file", file);
+            Part[] parts = new Part[paramNames.length + 2];
+            parts[paramNames.length] = new FilePart("file", file);
             parts[paramNames.length + 1] = new StringPart("apiKey", propertiesManager.getKey());
 
-			for (int i = 0; i < paramNames.length; i++) {
-				parts[i] = new StringPart(paramNames[i], paramVals[i]);
-			}
+            for (int i = 0; i < paramNames.length; i++) {
+                parts[i] = new StringPart(paramNames[i], paramVals[i]);
+            }
 
-			filePost.setRequestEntity(new MultipartRequestEntity(parts,
-					filePost.getParams()));
+            filePost.setRequestEntity(new MultipartRequestEntity(parts,
+                    filePost.getParams()));
 
-			filePost.setContentChunked(true);
-			HttpClient client = new HttpClient();
+            filePost.setContentChunked(true);
+            HttpClient client = new HttpClient();
             status = client.executeMethod(filePost);
 
-			if (status != 200) {
+            if (status != 200) {
                 LOGGER.warn("Request for '" + completeUrl + "' status was " + status + ", not 200 as expected.");
-			}
+            }
 
             if (status == 302) {
                 Header location = filePost.getResponseHeader("Location");
@@ -100,6 +103,10 @@ public class HttpRestUtils {
 
             response = ResponseParser.getRestResponse(filePost.getResponseBodyAsStream(), status, targetClass);
 
+        } catch (SSLHandshakeException sslHandshakeException) {
+            LOGGER.error("Unsigned certificate found. " +
+                    "We recommend you import server certificate to the Java cacerts keystore, or add option -Dunsafe-ssl from command line to accept all unsigned certificates. " +
+                    "Check out https://github.com/denimgroup/threadfix/wiki/Importing-Self-Signed-Certificates on how to import Self Signed Certificates.", sslHandshakeException);
         } catch (IOException e1) {
             LOGGER.error("There was an error and the POST request was not finished.", e1);
             response = ResponseParser.getErrorResponse(
@@ -116,7 +123,8 @@ public class HttpRestUtils {
                                         @Nonnull String[] paramVals,
                                         @Nonnull Class<T> targetClass) {
 
-		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
+        if (isUnsafeFlag())
+            Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 
         String urlString = makePostUrl(path);
 
@@ -125,7 +133,7 @@ public class HttpRestUtils {
 		post.setRequestHeader("Accept", "application/json");
 
         int responseCode = -1;
-        RestResponse<T> response;
+        RestResponse<T> response = null;
 
 		try {
 			for (int i = 0; i < paramNames.length; i++) {
@@ -149,7 +157,11 @@ public class HttpRestUtils {
 
             response = ResponseParser.getRestResponse(post.getResponseBodyAsStream(), responseCode, targetClass);
 
-		} catch (IOException e1) {
+		} catch (SSLHandshakeException sslHandshakeException) {
+            LOGGER.error("Unsigned certificate found. " +
+                    "We recommend you import server certificate to the Java cacerts keystore, or add option -Dunsafe-ssl from command line to accept all unsigned certificates. " +
+                    "Check out https://github.com/denimgroup/threadfix/wiki/Importing-Self-Signed-Certificates on how to import Self Signed Certificates.", sslHandshakeException);
+        } catch (IOException e1) {
             LOGGER.error("Encountered IOException while trying to post to " + path, e1);
             response = ResponseParser.getErrorResponse(
                     "There was an error and the POST request was not finished.",
@@ -188,8 +200,8 @@ public class HttpRestUtils {
         String urlString = makeGetUrl(path, params);
 
 		LOGGER.debug("Requesting " + urlString);
-
-		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
+        if (isUnsafeFlag())
+            Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 		GetMethod get = new GetMethod(urlString);
 
 		get.setRequestHeader("Accept", "application/json");
@@ -197,7 +209,7 @@ public class HttpRestUtils {
 		HttpClient client = new HttpClient();
 
         int status = -1;
-        RestResponse<T> response;
+        RestResponse<T> response = null;
 
 		try {
 			status = client.executeMethod(get);
@@ -213,7 +225,11 @@ public class HttpRestUtils {
 
             response = ResponseParser.getRestResponse(get.getResponseBodyAsStream(), status, targetClass);
 
-		} catch (IOException e) {
+		} catch (SSLHandshakeException sslHandshakeException) {
+            LOGGER.error("Unsigned certificate found. " +
+                    "We recommend you import server certificate to the Java cacerts keystore, or add option -Dunsafe-ssl from command line to accept all unsigned certificates. " +
+                    "Check out https://github.com/denimgroup/threadfix/wiki/Importing-Self-Signed-Certificates on how to import Self Signed Certificates.", sslHandshakeException);
+        } catch (IOException e) {
             LOGGER.error("Encountered IOException while trying to post to " + path, e);
             response = ResponseParser.getErrorResponse("There was an error and the GET request was not finished.", status);
 		}
@@ -260,5 +276,13 @@ public class HttpRestUtils {
         } else {
             post.addParameter("apiKey", propertiesManager.getKey());
         }
+    }
+
+    public boolean isUnsafeFlag() {
+        return unsafeFlag;
+    }
+
+    public void setUnsafeFlag(boolean unsafeFlag) {
+        this.unsafeFlag = unsafeFlag;
     }
 }
