@@ -18,6 +18,7 @@ import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,6 +36,7 @@ import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 @Controller
 @RequestMapping("/configuration/settings")
 @SessionAttributes("defaultConfiguration")
+@PreAuthorize("hasRole('ROLE_CAN_MANAGE_SYSTEM_SETTINGS')")
 public class SystemSettingsController {
 	
 	protected final SanitizedLogger log = new SanitizedLogger(SystemSettingsController.class);
