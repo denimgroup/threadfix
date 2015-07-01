@@ -135,9 +135,7 @@ public class ReportsController {
                 request);
         map.put("tags", tagService.loadAll());
         return RestResponse.success(map);
-
     }
-
 
     @RequestMapping(value="/getTopApps", method = RequestMethod.POST)
     public @ResponseBody RestResponse<Map<String, Object>> processTopApps(@ModelAttribute VulnerabilitySearchParameters reportParameters,

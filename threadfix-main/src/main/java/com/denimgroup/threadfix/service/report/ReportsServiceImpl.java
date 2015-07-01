@@ -42,6 +42,7 @@ import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.CollectionUtils.setFrom;
 import static com.denimgroup.threadfix.util.CSVExportProperties.*;
 
 /**
@@ -124,6 +125,9 @@ public class ReportsServiceImpl implements ReportsService {
     public Map<String, Object> generateSnapshotReport(ReportParameters parameters, HttpServletRequest request) {
         Map<String, Object> map = map();
         List<Integer> applicationIdList = getApplicationIdList(parameters);
+
+        Set<Integer> appIdSet = setFrom(applicationIdList);
+
         if (applicationIdList.isEmpty()) {
             log.info("No applications found.");
             return map;
@@ -132,6 +136,9 @@ public class ReportsServiceImpl implements ReportsService {
 
         List<Map<String, Object>> appList = list();
         for (Application application: applicationDao.retrieveAllActive()) {
+            if (!appIdSet.contains(application.getId())) {
+                continue;
+            }
             if (application.getScans() != null && application.getScans().size() > 0)
                 appList.add(CollectionUtils.<String, Object>map("appId", application.getId(), "appName", application.getName(),
                         "criticality", application.getApplicationCriticality().getName(),
