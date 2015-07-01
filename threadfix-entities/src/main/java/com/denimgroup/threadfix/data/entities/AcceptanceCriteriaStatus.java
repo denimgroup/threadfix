@@ -24,15 +24,23 @@
 
 package com.denimgroup.threadfix.data.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * @author zabdisubhan
  */
 @Entity
-@Table(name = "AcceptanceCriteriaStatus")
+@Table(name = "AcceptanceCriteriaStatus",
+        uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"Application_Id", "AcceptanceCriteria_Id"})})
 public class AcceptanceCriteriaStatus extends AuditableEntity {
 
     private boolean passing = false;
@@ -48,7 +56,7 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
     }
 
     @ManyToOne
-    @JsonView(Object.class)
+    @JsonIgnore
     @JoinColumn(name = "Application_Id", nullable = false)
     public Application getApplication() {
         return application;
@@ -58,8 +66,21 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
         this.application = application;
     }
 
-    @ManyToOne
+    @Transient
+    @JsonProperty("application")
     @JsonView(Object.class)
+    public Map<String, ? extends Serializable> getApplicationJson() {
+        if(application != null) {
+            return map(
+                    "id", application.getId(),
+                    "name", application.getName());
+        } else {
+            return null;
+        }
+    }
+
+    @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "AcceptanceCriteria_Id", nullable = false)
     public AcceptanceCriteria getAcceptanceCriteria() {
         return acceptanceCriteria;

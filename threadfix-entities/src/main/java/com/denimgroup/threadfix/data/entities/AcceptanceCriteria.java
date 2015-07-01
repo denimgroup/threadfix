@@ -66,6 +66,7 @@ public class AcceptanceCriteria extends AuditableEntity {
     }
 
     @OneToMany(mappedBy = "acceptanceCriteria")
+    @JsonView(Object.class)
     public Set<AcceptanceCriteriaStatus> getAcceptanceCriteriaStatusSet() {
         return acceptanceCriteriaStatusSet;
     }
