@@ -54,6 +54,15 @@ public class CommandLineParser {
 		try {
 			CommandLine cmd = parser.parse(options, args);
 
+			if (cmd.hasOption("D")) {
+				String[] strings = cmd.getOptionValues("D");
+				if (strings == null || strings.length < 1) {
+					throw new ParseException("Bad arguments for set.");
+				}
+				if (strings[0].equalsIgnoreCase("unsafe-ssl"))
+					client.setUnsafeFlag(true);
+			}
+
 			if (cmd.hasOption("help")) {
 				HelpFormatter formatter = new HelpFormatter();
 				formatter.printHelp("java -jar tfcli.jar", options );
@@ -406,8 +415,9 @@ public class CommandLineParser {
 	}
 
 	private static <T> void printOutput(RestResponse<T> response) {
-
-		if (response.success) {
+		if (response == null) {
+			LOGGER.error("Request sent unsuccessfully.");
+		} else if (response.success) {
 			LOGGER.info("Operation successful, printing JSON output.");
 			System.out.println(response.getOriginalJson());
 		} else {

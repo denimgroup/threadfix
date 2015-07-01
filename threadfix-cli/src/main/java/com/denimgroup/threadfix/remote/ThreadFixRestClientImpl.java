@@ -54,7 +54,7 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
         propertiesManager = manager;
         httpRestUtils = new HttpRestUtils(propertiesManager);
     }
-	
+
 	/**
 	 * Custom constructor for when you want to use the in-memory properties
 	 * 
@@ -397,5 +397,10 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
                 paramValues.add(String.valueOf(ids.get(i)));
             }
         }
+    }
+
+    @Override
+    public void setUnsafeFlag(boolean unsafeFlag) {
+        this.httpRestUtils.setUnsafeFlag(unsafeFlag);
     }
 }
