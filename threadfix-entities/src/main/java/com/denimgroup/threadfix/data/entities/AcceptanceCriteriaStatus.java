@@ -69,11 +69,12 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
     @Transient
     @JsonProperty("application")
     @JsonView(Object.class)
-    public Map<String, ? extends Serializable> getApplicationJson() {
+    public Map<String, Object> getApplicationJson() {
         if(application != null) {
             return map(
                     "id", application.getId(),
-                    "name", application.getName());
+                    "name", application.getName(),
+                    "team", map("name", application.getOrganization().getName()));
         } else {
             return null;
         }
