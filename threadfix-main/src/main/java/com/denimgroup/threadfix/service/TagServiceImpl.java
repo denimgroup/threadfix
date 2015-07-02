@@ -70,6 +70,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Tag loadTag(int tagId) {
         return tagDao.retrieveById(tagId);
     }
