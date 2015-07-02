@@ -130,6 +130,12 @@ threadfixModule.factory('threadFixModalService', function($http, $modal, tfEncod
         }
     };
 
+    threadFixModalService.deleteElements = function(elementList, elements) {
+        for (var i = 0; i < elements.length; i++) {
+            threadFixModalService.deleteElement(elementList, elements[i]);
+        }
+    };
+
     threadFixModalService.addElement = function(elementList, element) {
         if (!elementList) {
             elementList = [];

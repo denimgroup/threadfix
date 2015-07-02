@@ -164,7 +164,7 @@ public class Application extends AuditableEntity {
     private Boolean useDefaultCredentials = false;
     private Boolean useDefaultProject = false;
 
-//    private Set<AcceptanceCriteria> acceptanceCriteriaSet = new HashSet<AcceptanceCriteria>(0);
+    private Set<AcceptanceCriteriaStatus> acceptanceCriteriaStatusSet = new HashSet<AcceptanceCriteriaStatus>(0);
 
 	@Column(length = NAME_LENGTH, nullable = false)
     @JsonView(Object.class) // This means it will be included in all ObjectWriters with Views.
@@ -421,6 +421,15 @@ public class Application extends AuditableEntity {
 	public List<Vulnerability> getVulnerabilities() {
 		return vulnerabilities;
 	}
+
+    @OneToMany(mappedBy = "application")
+    public Set<AcceptanceCriteriaStatus> getAcceptanceCriteriaStatusSet() {
+        return acceptanceCriteriaStatusSet;
+    }
+
+    public void setAcceptanceCriteriaStatusSet(Set<AcceptanceCriteriaStatus> acceptanceCriteriaStatusSet) {
+        this.acceptanceCriteriaStatusSet = acceptanceCriteriaStatusSet;
+    }
 
 	public void setVulnerabilities(List<Vulnerability> vulnerabilities) {
 		this.vulnerabilities = vulnerabilities;
@@ -903,6 +912,16 @@ public class Application extends AuditableEntity {
         this.tags = tags;
     }
 
+    @Transient
+    public List<AcceptanceCriteria> getAcceptanceCriteria(){
+        List<AcceptanceCriteria> acceptanceCriteriaList = list();
+
+        for (AcceptanceCriteriaStatus acceptanceCriteriaStatus : acceptanceCriteriaStatusSet) {
+            acceptanceCriteriaList.add(acceptanceCriteriaStatus.getAcceptanceCriteria());
+        }
+
+        return acceptanceCriteriaList;
+    }
     @Column
     public Boolean isUseDefaultProject() {
         return useDefaultProject;
@@ -920,16 +939,6 @@ public class Application extends AuditableEntity {
     public void setUseDefaultCredentials(Boolean useDefaultCredentials) {
         this.useDefaultCredentials = useDefaultCredentials;
     }
-
-//    @ManyToMany(mappedBy = "applications")
-//    @JsonIgnore
-//    public Set<AcceptanceCriteria> getAcceptanceCriteriaSet() {
-//        return acceptanceCriteriaSet;
-//    }
-//
-//    public void setAcceptanceCriteriaSet(Set<AcceptanceCriteria> acceptanceCriteriaSet) {
-//        this.acceptanceCriteriaSet = acceptanceCriteriaSet;
-//    }
 
     @Override
 	public String toString() {

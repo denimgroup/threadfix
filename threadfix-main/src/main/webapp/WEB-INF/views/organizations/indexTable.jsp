@@ -73,7 +73,9 @@
                     <div ng-show="team.applications">
                         <div ng-if="team.report" tf-bind-html-unsafe="team.report" class="tableReportDiv" id="teamGraph{{ team.name }}"></div>
                         <div ng-hide="team.report || team.reportFailed || !loading" class="team-report-wrapper">
-                            <div style="float:right" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
+                            <div style="float:right" class="modal-loading">
+                                <div><span class="spinner dark"></span>Loading...</div>
+                            </div>
                         </div>
                         <div ng-show="team.reportFailed" class="team-report-wrapper">
                             Report Failed
