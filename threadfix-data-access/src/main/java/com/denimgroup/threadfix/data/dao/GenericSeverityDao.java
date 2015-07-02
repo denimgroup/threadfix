@@ -23,18 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
-import java.util.List;
-
 import com.denimgroup.threadfix.data.entities.GenericSeverity;
 
-public interface GenericSeverityDao {
+import java.util.List;
 
-	List<GenericSeverity> retrieveAll();
-	
-	GenericSeverity retrieveByName(String name);
-	
-	GenericSeverity retrieveById(int id);
+public interface GenericSeverityDao extends GenericNamedObjectDao<GenericSeverity> {
 
     GenericSeverity retrieveByIntValue(int iValue);
-	
+
+    List<GenericSeverity> retrieveAllWithCustomName(String customText);
 }

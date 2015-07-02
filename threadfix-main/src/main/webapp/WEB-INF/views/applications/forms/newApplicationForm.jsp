@@ -171,7 +171,7 @@
                     <td>Disable Vulnerability Merging</td>
                     <td class="inputValue">
                         <input id="skipApplicationMerge" type="checkbox" ng-model="object.skipApplicationMerge" name="skipApplicationMerge"/>
-                        <a class="btn" popover="ThreadFix detects matching scan results and combine them in order to simplify the result set. This can make the number of vulnerabilities in ThreadFix lower than the number of results in a scan. Checking this box disables this behavior.">?</a>
+                        <a class="btn" popover="ThreadFix detects matching scan results and combines them in order to simplify the result set. This can make the number of vulnerabilities in ThreadFix lower than the number of results in a scan. Checking this box disables this behavior.">?</a>
                     </td>
                 </tr>
             </table>

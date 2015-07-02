@@ -7,6 +7,7 @@
     <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
     <cbs:cachebustscript src="/scripts/update-defect-defaults-modal-controller.js"/>
     <cbs:cachebustscript src="/scripts/default-value-mapping.js"/>
+    <cbs:cachebustscript src="/scripts/create-edit-defect-tracker-modal-controller.js"/>
 </head>
 
 <body id="config">

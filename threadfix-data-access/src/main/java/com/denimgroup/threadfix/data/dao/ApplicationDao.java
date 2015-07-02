@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -83,7 +84,7 @@ public interface ApplicationDao extends GenericObjectDao<Application> {
 	 */
 	List<Integer> getTopXVulnerableAppsFromList(int numApps, List<Integer> teamIdList , List<Integer> applicationIdList);
 
-    List<Integer> getTopXVulnerableAppsFromList(int numApps, List<Integer> teamIdList , List<Integer> applicationIdList , List<Integer> tagIdList);
+    List<Integer> getTopXVulnerableAppsFromList(int numApps, List<Integer> teamIdList , List<Integer> applicationIdList , List<Integer> tagIdList, List<Integer> vulnTagIdList);
 
     long getUnmappedFindingCount(Integer appId);
 
@@ -92,4 +93,6 @@ public interface ApplicationDao extends GenericObjectDao<Application> {
     List<Object[]> getPointInTime(List<Integer> applicationIdList);
 
 	long getApplicationCount();
+
+	List<Map<String, Object>>  retrieveAppsInfoMap(List<Integer> applicationIdList, List<Integer> vulnTagIds);
 }

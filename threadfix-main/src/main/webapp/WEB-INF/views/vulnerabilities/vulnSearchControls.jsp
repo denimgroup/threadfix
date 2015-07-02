@@ -26,11 +26,12 @@
                         <li class="dropdown-submenu">
                             <a tabindex="-1" href="#" id="changeSeverityButton">Change Severity</a>
                             <ul class="dropdown-menu">
-                                <li ng-repeat="genericSeverity in genericSeverityList" ng-click="changeSeverity(genericSeverity)"><a class="pointer">{{genericSeverity.name}}</a></li>
+                                <li ng-repeat="genericSeverity in genericSeverityList" ng-click="changeSeverity(genericSeverity)"><a class="pointer">{{genericSeverity.displayName}}</a></li>
                             </ul>
                         </li>
+                        <li><a class="pointer" id="addBatchTaggingBtn" ng-click="addBatchTagging(vulnTags)">Batch Tagging</a></li>
                         <c:if test="${ canSubmitComments }">
-                            <li><a class="pointer" id="addBatchCommentBtn" ng-click="addBatchComment(commentTags)">Add Batch Comment</a></li>
+                            <li><a class="pointer" id="addBatchCommentBtn" ng-click="addBatchComment(commentTags)">Batch Comment</a></li>
                         </c:if>
                     </c:if>
                 </ul>

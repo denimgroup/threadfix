@@ -46,6 +46,8 @@
 package com.denimgroup.threadfix.webapp.filter;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.NonceService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.servlet.*;
@@ -56,9 +58,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -75,14 +74,7 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
  * </ul>
  */
 public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements Filter {
-	
-	//	TODO - Move the creation of SecureRandoms into some sort of shared facility
-	//	for the entire application (each class doesn't need to repeat this code)
-	private static final String RANDOM_ALGORITHM = "SHA1PRNG";
-	private static final String RANDOM_PROVIDER = "SUN";
-	
-    private SecureRandom randomSource = null;
-    
+
     private final SanitizedLogger log = new SanitizedLogger(CsrfPreventionFilter.class);
 
     private final Set<String> entryPoints = new HashSet<>();
@@ -97,6 +89,9 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
     
     public static final String CSRF_NONCE_REQUEST_PARAM =
         "nonce";
+
+    @Autowired
+    private NonceService nonceService;
 
     /**
      * Entry points are URLs that will not be tested for the presence of a valid
@@ -209,7 +204,7 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
             
             // if it matches one of the patterns for GET requests, don't check.
             String previousNonce = req.getParameter(CSRF_NONCE_REQUEST_PARAM);
-            
+
             if (!skipNonceCheck && !nonceCache.contains(previousNonce)) {
             	
             	String nonceStatus = previousNonce == null ? "Missing nonce" : "Incorrect nonce";
@@ -230,62 +225,17 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
             // This way links still work with AJAX around.
             if (!skipNonceGeneration) {
             	log.debug("Generating new nonce. Path: " + req.getServletPath());
-	            String newNonce = generateNonce();
+	            String newNonce = nonceService.generateNonce();
 	            nonceCache.add(newNonce);
 	            wResponse = new CsrfResponseWrapper(res, newNonce);
             } else {
             	wResponse = new CsrfResponseWrapper(res, previousNonce);
             }
+
+            req.getSession().removeAttribute("redirectFromLogin");
         }
         
         chain.doFilter(request, wResponse);
-    }
-
-    /**
-     * Generate a once time token (nonce) for authenticating subsequent
-     * requests. This will also add the token to the session. The nonce
-     * generation is a simplified version of ManagerBase.generateSessionId().
-     * 
-     */
-    protected String generateNonce() {
-        byte random[] = new byte[16];
-
-        // Render the result as a String of hexadecimal digits
-        StringBuilder buffer = new StringBuilder();
-
-        if (randomSource == null) {
-			try {
-				randomSource = SecureRandom.getInstance(RANDOM_ALGORITHM, RANDOM_PROVIDER);
-			} catch (NoSuchAlgorithmException e) {
-				log.error("Unable to find algorithm " + RANDOM_ALGORITHM, e);
-			} catch (NoSuchProviderException e) {
-				log.error("Unable to find provider " + RANDOM_PROVIDER, e);
-			}
-        }
-        
-        if (randomSource == null) {
-        	return null;
-        }
-        
-        randomSource.nextBytes(random);
-       
-        for (byte element : random) {
-            byte b1 = (byte) ((element & 0xf0) >> 4);
-            byte b2 = (byte) (element & 0x0f);
-            if (b1 < 10) {
-                buffer.append((char) ('0' + b1));
-            } else {
-                buffer.append((char) ('A' + (b1 - 10)));
-            }
-            
-            if (b2 < 10) {
-                buffer.append((char) ('0' + b2));
-            } else {
-                buffer.append((char) ('A' + (b2 - 10)));
-            }
-        }
-
-        return buffer.toString();
     }
 
     private static class CsrfResponseWrapper
@@ -350,7 +300,7 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
         }
     }
     
-    private static class LruCache<T> implements Serializable {
+    public static class LruCache<T> implements Serializable {
 
     	private static final long serialVersionUID = 2034805024625345966L;
     	

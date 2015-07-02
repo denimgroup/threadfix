@@ -36,6 +36,8 @@ public class AllViews {
 
     public static interface VulnSearch {}
 
+    public static interface RestVulnSearchWithCustomText extends RestVulnSearch {}
+
     public static interface UIVulnSearch extends VulnSearch {}
 
     public static interface RestVulnSearch extends UIVulnSearch, RestView2_1 {}
@@ -61,4 +63,7 @@ public class AllViews {
     // this is just for one property really
     public static interface VulnSearchApplications {}
 
+    public static interface RestViewScanList {}
+
+    public static interface RestCweView {}
 }

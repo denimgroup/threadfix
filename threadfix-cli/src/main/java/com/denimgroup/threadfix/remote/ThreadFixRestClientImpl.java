@@ -33,6 +33,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 
@@ -53,7 +54,7 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
         propertiesManager = manager;
         httpRestUtils = new HttpRestUtils(propertiesManager);
     }
-	
+
 	/**
 	 * Custom constructor for when you want to use the in-memory properties
 	 * 
@@ -237,24 +238,6 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
                 Application.class);
 	}
 	
-	public RestResponse<Task> requestTask(String scanners, String agentConfig) {
-		return httpRestUtils.httpPost("/tasks/requestTask",
-				new String[] {"scanners", "agentConfig" },
-				new String[] { scanners, agentConfig }, Task.class);
-	}
-	
-	/**
-	 * Determine if we want to pass the taskId as a parameter or if we want to REST it up
-	 * @param scanQueueTaskId
-	 * @param message
-	 * @return
-	 */
-	public RestResponse<String> taskStatusUpdate(String scanQueueTaskId, String message) {
-		return httpRestUtils.httpPost("/tasks/taskStatusUpdate",
-                new String[]{"scanQueueTaskId", "message"},
-                new String[]{ scanQueueTaskId, message}, String.class);
-	}
-	
 	public RestResponse<String> setTaskConfig(String appId, String scannerType, String filePath) {
 		String url = "/tasks/setTaskConfig";
 		String[] paramNames 	= {	"appId", "scannerType" };
@@ -262,19 +245,6 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 		return httpRestUtils.httpPostFile(url, new File(filePath), paramNames, paramValues, String.class);
 	}
 	
-	public RestResponse<ScanQueueTask> completeTask(String scanQueueTaskId, String filePath, String secureTaskKey) {
-		String url = "/tasks/completeTask";
-		String[] paramNames 	= {	"scanQueueTaskId", "secureTaskKey" };
-		String[] paramValues 	= {  scanQueueTaskId,   secureTaskKey };
-	    return httpRestUtils.httpPostFile(url, new File(filePath), paramNames, paramValues, ScanQueueTask.class);
-	}
-	
-	public RestResponse<String> failTask(String scanQueueTaskId, String message, String secureTaskKey) {
-		return httpRestUtils.httpPost("/tasks/failTask",
-				new String[] {"scanQueueTaskId", "message", "secureTaskKey" },
-				new String[] { scanQueueTaskId,	  message,   secureTaskKey }, String.class);
-	}
-
 	public RestResponse<Finding> addDynamicFinding(String applicationId, String vulnType, String severity,
 		String nativeId, String parameter, String longDescription,
 		String fullUrl, String path) {
@@ -300,6 +270,52 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 								nativeId, parameter, longDescription,
 								filePath, column, lineText, lineNumber }, Finding.class);
 	}
+
+    @Override
+    public RestResponse<Tag> createTag(String name, Boolean isCommentTag) {
+        return httpRestUtils.httpPost("/tags/new",
+                new String[] { "name", "isCommentTag" },
+                new String[] { name, String.valueOf(isCommentTag) }, Tag.class);
+    }
+
+    @Override
+    public RestResponse<Tag> searchTagById(String id) {
+        return httpRestUtils.httpGet("/tags/" + id, Tag.class);
+    }
+
+    @Override
+    public RestResponse<Tag[]> searchTagsByName(String name) {
+        return httpRestUtils.httpGet("/tags/lookup", "&name=" + name, Tag[].class);
+    }
+
+    @Override
+    public RestResponse<Map> getAllTags() {
+        return httpRestUtils.httpGet("/tags/index", Map.class);
+    }
+
+    @Override
+    public RestResponse<Application> addAppTag(String appId, String tagId) {
+        return httpRestUtils.httpPost("/applications/" + appId + "/tags/add/" + tagId, new String[]{}, new String[]{}, Application.class);
+    }
+
+    @Override
+    public RestResponse<Application> removeAppTag(String appId, String tagId) {
+        return httpRestUtils.httpPost("/applications/" + appId + "/tags/remove/" + tagId, new String[]{}, new String[]{}, Application.class);
+    }
+
+    @Override
+    public RestResponse<Tag> updateTag(String tagId, String name) {
+        return httpRestUtils.httpPost("/tags/" + tagId + "/update",
+                new String[] {"name" },
+                new String[] { name }, Tag.class);
+    }
+
+    @Override
+    public RestResponse<String> removeTag(String tagId) {
+        return httpRestUtils.httpPost("/tags/" + tagId + "/delete",
+                new String[] { },
+                new String[] { }, String.class);
+    }
 
     // TODO find a better way to serialize this into a VulnerabilitySearchParameters form.
     @Override
@@ -381,5 +397,10 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
                 paramValues.add(String.valueOf(ids.get(i)));
             }
         }
+    }
+
+    @Override
+    public void setUnsafeFlag(boolean unsafeFlag) {
+        this.httpRestUtils.setUnsafeFlag(unsafeFlag);
     }
 }

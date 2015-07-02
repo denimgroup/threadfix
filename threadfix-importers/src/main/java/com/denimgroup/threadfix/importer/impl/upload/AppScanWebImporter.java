@@ -252,8 +252,14 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 	    		
 	    		for (String host : hosts)
 	    			if (currentUrl.startsWith(host)) {
-	    				location.setHost(host);
-		    			location.setPath("/" + currentUrl.substring(host.length()));
+                        if(host.endsWith("/")){
+                            host = host.substring(0,host.length()-1);
+                            location.setHost(host);
+                            location.setPath(currentUrl.substring(host.length()));
+                        }else{
+                            location.setHost(host);
+                            location.setPath("/" + currentUrl.substring(host.length()));
+                        }
 	    			}
 	    		
 	    		if (location.getPath() == null)

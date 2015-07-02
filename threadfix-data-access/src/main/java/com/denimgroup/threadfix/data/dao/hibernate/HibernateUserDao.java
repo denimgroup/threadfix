@@ -207,6 +207,13 @@ public class HibernateUserDao
 	}
 
 	@Override
+	public Long countUsers() {
+		return (Long) getActiveUserCriteria()
+				.setProjection(Projections.rowCount())
+				.uniqueResult();
+	}
+
+	@Override
 	public boolean canRemovePermissionFromUserAndGroup(Integer userId, Integer groupId, String string) {
 		Long result = (Long) sessionFactory.getCurrentSession()
 				.createCriteria(User.class)

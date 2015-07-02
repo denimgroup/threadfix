@@ -1,6 +1,6 @@
-var myAppModule = angular.module('threadfix')
+var myAppModule = angular.module('threadfix');
 
-myAppModule.controller('ScanHistoryController', function($scope, $log, $http, $window, tfEncoder) {
+myAppModule.controller('ScanHistoryController', function($scope, $log, $rootScope, $http, $window, tfEncoder, customSeverityService) {
 
     $scope.initialized = false;
 
@@ -18,6 +18,7 @@ myAppModule.controller('ScanHistoryController', function($scope, $log, $http, $w
                     $scope.scans = data.object.scanList;
                     $scope.numScans = data.object.numScans;
 
+                    customSeverityService.setSeverities(data.object.genericSeverities);
                 } else {
                     $scope.output = "Failure. Message was : " + data.message;
                 }

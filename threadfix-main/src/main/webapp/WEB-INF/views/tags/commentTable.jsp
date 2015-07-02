@@ -53,7 +53,7 @@
                         'badge-medium': vuln.genericSeverity.intValue === 3,
                         'badge-low': vuln.genericSeverity.intValue === 2,
                         'badge-info': vuln.genericSeverity.intValue === 1
-                        }">{{ vuln.genericSeverity.name }}</td>
+                        }">{{ vuln.genericSeverity.displayName }}</td>
             <td style="word-wrap: break-word;" class="centered" id="appName{{ $index }}"><a ng-click="goToAppFromVuln(vuln)">{{ vuln.app.name }}</a></td>
             <td style="word-wrap: break-word;" class="centered" id="teamName{{ $index }}"><a ng-click="goToTeamFromVuln(vuln)">{{ vuln.team.name }}</a></td>
             <td>
@@ -92,9 +92,7 @@
                                     </div>
                                 </td>
                                 <td class="left-align" >
-                        <span ng-repeat="cmtTag in comment.tags">
-                            <a class="pointer" id="cmtTag{{ $index }}" ng-click="goToTag(cmtTag)">{{cmtTag.name}}<span ng-hide="$index===comment.tags.length-1">,</span></a>
-                        </span>
+                                    <span style="font-weight: bold;" id="commentTag{{comment.id}}{{ $index }}" ng-repeat="cmtTag in comment.tags" class="pointer badge" ng-class="{'badge-comment-tag': true}" ng-click="goToTag(cmtTag)">{{cmtTag.name}}</span>
                                 </td>
                             </tr>
                             </tbody>

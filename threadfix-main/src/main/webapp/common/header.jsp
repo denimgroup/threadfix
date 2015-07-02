@@ -76,8 +76,7 @@
 						    	<a id="apiKeysLink" href="<spring:url value="/configuration/keys" htmlEscape="true"/>">API Keys</a>
 						    </li>
 					    </security:authorize>
-                        <%--Didn't know how to add properly new permissions so use API keys permissions for the moment--%>
-                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_API_KEYS">
+                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_EMAIL_REPORTS">
                             <li class="normalLinks">
                                 <a id="scheduledEmailReportsLink" href="<spring:url value="/configuration/scheduledEmailReports" htmlEscape="true"/>">Scheduled Email Reports</a>
                             </li>
@@ -114,6 +113,11 @@
                                 <a id="updateChannelVulnLink" href="<spring:url value="/mappings/index" htmlEscape="true"/>">Scanner Mappings</a>
                             </li>
                         </security:authorize>
+                        <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_ENTERPRISE">
+                            <li class="normalLinks">
+                                <a id="customizeSeveritiesLink" href="<spring:url value="/severities" htmlEscape="true"/>">Customize Severities</a>
+                            </li>
+                        </security:authorize>
                         <security:authorize ifAllGranted="ROLE_CAN_MANAGE_TAGS">
                             <li class="normalLinks">
                                 <a id="tagsLink" href="<spring:url value="/configuration/tags" htmlEscape="true"/>">Tags</a>
@@ -124,11 +128,26 @@
 						    	<a id="wafsLink" href="<spring:url value="/wafs" htmlEscape="true"/>">WAFs</a>
 						    </li>
 					    </security:authorize>
+                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS">
+                            <li class="normalLinks">
+                                <a id="scamResultFiltersLink" href="<spring:url value="/configuration/scanResultFilters" htmlEscape="true"/>">Scan Result Filters</a>
+                            </li>
+                      	</security:authorize>
+                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT">
+                            <li class="normalLinks">
+                                <a id="customCweTextLink" href="<spring:url value="/configuration/customCweText" htmlEscape="true"/>">Custom CWE Text</a>
+                            </li>
+                        </security:authorize>
 						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_CAN_MANAGE_USERS,ROLE_CAN_MANAGE_ROLES,ROLE_CAN_VIEW_ERROR_LOGS">
 							<li class="divider" role="presentation"></li>
                             <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
                                 <li class="normalLinks">
                                     <a id="configureDefaultsLink" href="<spring:url value="/configuration/settings" htmlEscape="true"/>">System Settings</a>
+                                </li>
+                            </security:authorize>
+                            <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_EMAIL_REPORTS">
+                                <li class="normalLinks">
+                                    <a id="emailListsLink" href="<spring:url value="/configuration/emailLists" htmlEscape="true"/>">Manage Email Lists</a>
                                 </li>
                             </security:authorize>
                             <security:authorize ifAnyGranted="ROLE_CAN_MODIFY_VULNERABILITIES">

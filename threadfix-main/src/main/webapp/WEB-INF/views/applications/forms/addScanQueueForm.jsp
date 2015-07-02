@@ -12,12 +12,24 @@
                     <td>Scan</td>
                     <td>
                         <select style="width:300px;" name="scanQueueType" id="scan" ng-model="object.scanner">
-                            <option ng-repeat='scanner in config.scanners' value="{{ scanner }}"> {{ scanner }} </option>
+                            <option ng-selected = "scanner === object.scanner"
+                                    ng-repeat='scanner in config.scanners' value="{{ scanner }}"> {{ scanner }} </option>
                         </select>
                     </td>
                 </tr>
+                <tr class="left-align">
+                    <td>Target URL</td>
+                    <td>
+                        <input style="width:300px;" id="urlInput" type='url' name='targetUrl' ng-model="object.targetUrl" ng-maxlength="255"/>
+                    </td>
+                    <td>
+                        <span id="urlInputLengthError" class="errors" ng-show="form.targetUrl.$dirty && form.targetUrl.$error.maxlength">Maximum length is 255.</span>
+                        <span id="urlInputInvalidUrlError" class="errors" ng-show="form.targetUrl.$dirty && form.targetUrl.$error.url">URL is invalid.</span>
+                        <span id="urlInputError" class="errors" ng-show="object.targetUrl_error"> {{ object.name_error }}</span>
+                    </td>
+                </tr>
                 <tr>
-                    <td>Scan Profile</td>
+                    <td>Scan Config</td>
                     <td>
                         <input id="defectId"
                                style="z-index:4000;width:300px"

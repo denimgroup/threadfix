@@ -25,6 +25,7 @@
 package com.denimgroup.threadfix.service.scannermapping;
 
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
+import com.denimgroup.threadfix.data.entities.Tag;
 import com.denimgroup.threadfix.importer.interop.ScannerMappingsUpdaterService;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.DefaultConfigService;
@@ -35,6 +36,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 /**
@@ -89,6 +92,22 @@ public class ScannerMappingUpdater implements ApplicationContextAware {
 
             defaultConfiguration.setHasTagCommentUpdates(true);
             defaultConfigService.saveConfiguration(defaultConfiguration);
+        } else {
+            // If we need to update from Boolean TagForComment to TagType enum
+            List<Tag> tagList = tagService.loadAll();
+            if (tagList == null) {
+                LOG.info("There is no tags in system.");
+                return;
+            }
+            boolean needUpdate = false;
+            for (Tag tag: tagList) {
+                needUpdate = (tag.getType() == null) ? true : false;
+                break;
+            }
+            if (needUpdate) {
+                tagService.updateTagTypes();
+            }
+
         }
     }
 }

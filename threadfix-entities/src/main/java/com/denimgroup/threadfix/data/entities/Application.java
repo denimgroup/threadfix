@@ -161,6 +161,9 @@ public class Application extends AuditableEntity {
 
     private List<Tag> tags = new ArrayList<Tag>();
 
+    private Boolean useDefaultCredentials = false;
+    private Boolean useDefaultProject = false;
+
     private Set<AcceptanceCriteriaStatus> acceptanceCriteriaStatusSet = new HashSet<AcceptanceCriteriaStatus>(0);
 
 	@Column(length = NAME_LENGTH, nullable = false)
@@ -184,7 +187,7 @@ public class Application extends AuditableEntity {
 	}
 	
 	@Column(length = 255)
-    @JsonView({AllViews.RestViewApplication2_1.class, AllViews.FormInfo.class, AllViews.TableRow.class})
+    @JsonView({AllViews.RestViewApplication2_1.class, AllViews.FormInfo.class, AllViews.TableRow.class, AllViews.RestViewTag.class})
 	public String getUniqueId() {
 		return uniqueId;
 	}
@@ -464,13 +467,12 @@ public class Application extends AuditableEntity {
 	}	
 
     @OneToOne(mappedBy = "application")
-    @JsonView(Object.class)
-	public GRCApplication getGrcApplication() {
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class })
+    public GRCApplication getGrcApplication() {
 		return grcApplication;
 	}
 
-	public void setGrcApplication(
-			GRCApplication grcApplication) {
+	public void setGrcApplication(GRCApplication grcApplication) {
 		this.grcApplication = grcApplication;
 	}
 
@@ -848,8 +850,8 @@ public class Application extends AuditableEntity {
 
     // TODO exclude from default ObjectMapper
     @Transient
-    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.VulnSearchApplications.class, AllViews.RestViewTag.class })
-    private Map<String, Object> getTeam() {
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.VulnSearchApplications.class, AllViews.RestViewTag.class, AllViews.DefectTrackerInfos.class })
+    public Map<String, Object> getTeam() {
         Organization team = getOrganization();
 
         Map<String, Object> map = new HashMap<String, Object>();
@@ -901,7 +903,7 @@ public class Application extends AuditableEntity {
     @JoinTable(name="Application_Tag",
             joinColumns={@JoinColumn(name="Application_Id")},
             inverseJoinColumns={@JoinColumn(name="Tag_Id")})
-    @JsonIgnore
+	@JsonView({AllViews.RestViewApplication2_1.class, AllViews.RestViewTag.class})
     public List<Tag> getTags() {
         return tags;
     }
@@ -920,9 +922,36 @@ public class Application extends AuditableEntity {
 
         return acceptanceCriteriaList;
     }
+    @Column
+    public Boolean isUseDefaultProject() {
+        return useDefaultProject;
+    }
+
+    public void setUseDefaultProject(Boolean useDefaultProject) {
+        this.useDefaultProject = useDefaultProject;
+    }
+
+    @Column
+    public Boolean isUseDefaultCredentials() {
+        return useDefaultCredentials;
+    }
+
+    public void setUseDefaultCredentials(Boolean useDefaultCredentials) {
+        this.useDefaultCredentials = useDefaultCredentials;
+    }
 
     @Override
 	public String toString() {
 		return name;
+	}
+
+	@Transient
+	@JsonIgnore
+	public boolean containTag(Tag tag) {
+		for (Tag appTag: getTags()) {
+			if (appTag.getId().compareTo(tag.getId()) == 0)
+				return true;
+		}
+		return false;
 	}
 }

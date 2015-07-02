@@ -24,6 +24,11 @@
             <span id="file{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.calculatedFilePath }}</span>
             <br>
         </div>
+        <div ng-if="(vulnerability.path || vulnerability.parameter) && vulnerability.fullUrl">
+            <div class="vuln-tree-label">Full Url</div>
+            <span id="fullUrl{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.fullUrl }}</span>
+            <br>
+        </div>
     </div>
 
     <!-- Dependency -->
@@ -48,6 +53,9 @@
 
     <!-- Scanner Badges -->
     <span id="channel{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}{{ name }}" ng-repeat="name in vulnerability.channelNames" class="badge">{{ name }}</span>
+    <br>
+    <!-- Tag Badges -->
+    <span id="tag{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}{{ name }}" ng-repeat="tag in vulnerability.tags" class="badge pointer" ng-class="{'badge-vulnerability-tag': true}" ng-click="goToTag(tag)">{{ tag.name }}</span>
     <br>
     <a id="defectBadge{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}"
        ng-href="{{ vulnerability.defect.defectURL }}"

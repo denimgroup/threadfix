@@ -1295,6 +1295,18 @@ div.remote-provider-config-modal a {
 	background-color:#808080;
 }
 
+.badge-application-tag {
+	background-color:#0088cc;
+}
+
+.badge-vulnerability-tag {
+	background-color:#c43c35;
+}
+
+.badge-comment-tag {
+	background-color:#c67605;
+}
+
 .text-critical{
 	color:#F7280C
 }
@@ -1409,4 +1421,13 @@ input.no-bottom-margin {
 
 ul.dropdown-menu {
     text-align: left;
+}
+
+.table.fixed-table  {
+	table-layout:fixed;
+	word-wrap:break-word;
+}
+
+.table.fixed-table input {
+	margin-bottom:0;
 }

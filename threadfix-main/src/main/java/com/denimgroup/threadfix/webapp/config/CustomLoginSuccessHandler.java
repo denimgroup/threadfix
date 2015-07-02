@@ -26,9 +26,12 @@ package com.denimgroup.threadfix.webapp.config;
 
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.service.DefaultConfigService;
+import com.denimgroup.threadfix.service.NonceService;
+import com.denimgroup.threadfix.webapp.filter.CsrfPreventionFilter.LruCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.savedrequest.DefaultSavedRequest;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -44,8 +47,16 @@ public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     private final static Integer MAX_TIMEOUT = 30;
     private final static Integer MIN_TIMEOUT = 1;
 
+    public static final String CSRF_NONCE_SESSION_ATTR_NAME =
+            "org.apache.catalina.filters.CSRF_NONCE";
+
+    private int nonceCacheSize = 5;
+
     @Autowired
     DefaultConfigService defaultConfigService;
+
+    @Autowired
+    private NonceService nonceService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -61,6 +72,34 @@ public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             request.getSession().setMaxInactiveInterval(sessionTimeout*SECONDS_IN_MIN);
         }
 
-        super.onAuthenticationSuccess(request, response, authentication);
+        DefaultSavedRequest defaultSavedRequest = (DefaultSavedRequest) request.getSession().getAttribute("SPRING_SECURITY_SAVED_REQUEST");
+
+        if(defaultSavedRequest != null){
+
+            String requestUrl = defaultSavedRequest.getRequestURL();
+
+            String nonce = nonceService.generateNonce();
+
+            requestUrl = requestUrl + "?nonce=" + nonce;
+
+            @SuppressWarnings("unchecked")
+            LruCache<String> nonceCache =
+                    (LruCache<String>) request.getSession(true).getAttribute(
+                            CSRF_NONCE_SESSION_ATTR_NAME);
+
+            // generate a new cache if one is not found.
+            if (nonceCache == null) {
+                nonceCache = new LruCache<>(nonceCacheSize);
+                request.getSession().setAttribute(
+                        CSRF_NONCE_SESSION_ATTR_NAME, nonceCache);
+            }
+
+            nonceCache.add(nonce);
+
+            getRedirectStrategy().sendRedirect(request, response, requestUrl);
+        }else{
+
+            super.onAuthenticationSuccess(request, response, authentication);
+        }
     }
 }

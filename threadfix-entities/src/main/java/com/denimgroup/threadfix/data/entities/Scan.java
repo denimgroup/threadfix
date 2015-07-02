@@ -114,8 +114,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
     private String urlPathRoot;
     @Size(max = 32, message = "{errors.maxlength} 32.")
     private String fileName;
-    @Size(max = 255, message = "{errors.maxlength} 255.")
-    private String originalFileName;
+    private List<String> originalFileNames;
 
 	private boolean isDownloadable;
 
@@ -131,7 +130,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
     }
 
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.RestView2_1.class, AllViews.RestViewScanStatistic.class})
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.RestView2_1.class, AllViews.RestViewScanStatistic.class, AllViews.RestViewScanList.class})
 	@Index(name="importTime")
     public Calendar getImportTime() {
         return importTime;
@@ -200,13 +199,15 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
         this.fileName = fileName;
     }
 
-    @JsonView({AllViews.FormInfo.class, AllViews.RestView2_1.class, AllViews.RestViewScanStatistic.class})
-    public String getOriginalFileName() {
-        return originalFileName;
+	@CollectionTable(name="ScanFileNames", joinColumns=@JoinColumn(name="scanId"))
+	@ElementCollection
+	@JsonView({AllViews.FormInfo.class, AllViews.RestView2_1.class, AllViews.RestViewScanStatistic.class})
+    public List<String> getOriginalFileNames() {
+        return originalFileNames;
     }
 
-    public void setOriginalFileName(String originalFileName) {
-        this.originalFileName = originalFileName;
+    public void setOriginalFileNames(List<String> originalFileNames) {
+        this.originalFileNames = originalFileNames;
     }
 
     @OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)
@@ -268,11 +269,11 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	public void setNumberOldVulnerabilities(Integer numberOldVulnerabilities) {
 		this.numberOldVulnerabilities = numberOldVulnerabilities;
 	}
-	
+
 	/**
 	 * Keeping track of this information allows us to produce scans without extensive recalculation,
 	 * because we don't have to track down which application channel we should count a vulnerability for.
-	 * 
+	 *
 	 * This may lead to a small bug if a vuln is opened in one channel, then found in another and
 	 * subsequently closed there. This needs to be looked into.
 	 * @return
@@ -327,12 +328,12 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	public void setNumberRepeatResults(Integer numberRepeatResults) {
 		this.numberRepeatResults = numberRepeatResults;
 	}
-	
+
 	@Transient
 	public Integer getNumWithoutGenericMappings() {
 		return numWithoutGenericMappings;
 	}
-	
+
 	public void setNumWithoutGenericMappings(Integer numWithoutGenericMappings) {
 		this.numWithoutGenericMappings = numWithoutGenericMappings;
 	}
@@ -341,25 +342,25 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	public Integer getNumWithoutChannelVulns() {
 		return numWithoutChannelVulns;
 	}
-	
+
 	public void setNumWithoutChannelVulns(Integer numWithoutChannelVulns) {
 		this.numWithoutChannelVulns = numWithoutChannelVulns;
 	}
-	
+
 	@Transient
 	public Integer getTotalNumberSkippedResults() {
 		return totalNumberSkippedResults;
 	}
-	
+
 	public void setTotalNumberSkippedResults(Integer totalNumberSkippedResults) {
 		this.totalNumberSkippedResults = totalNumberSkippedResults;
 	}
-	
+
 	@Transient
 	public Integer getTotalNumberFindingsMergedInScan() {
 		return totalNumberFindingsMergedInScan;
 	}
-	
+
 	public void setTotalNumberFindingsMergedInScan(
 			Integer totalNumberFindingsMergedInScan) {
 		this.totalNumberFindingsMergedInScan = totalNumberFindingsMergedInScan;
@@ -379,7 +380,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 		integerList.add(getNumberClosedVulnerabilities());
 		return integerList;
 	}
-	
+
 	@JsonIgnore
 	public static ScanTimeComparator getTimeComparator() {
 		return new ScanTimeComparator();
@@ -391,16 +392,16 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
     }
 
     static public class ScanTimeComparator implements Comparator<Scan> {
-	
+
 		@Override
 		public int compare(Scan scan1, Scan scan2){
 			Calendar scan1Time = scan1.getImportTime();
 			Calendar scan2Time = scan2.getImportTime();
-			
+
 			if (scan1Time == null || scan2Time == null) {
 				return 0;
 			}
-			
+
 			return scan1Time.compareTo(scan2Time);
 		}
 	}
@@ -414,7 +415,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	public void setNumberInfoVulnerabilities(Long numberInfoVulnerabilities) {
 		this.numberInfoVulnerabilities = numberInfoVulnerabilities;
 	}
-	
+
 	@Column
     @JsonView({ AllViews.TableRow.class, AllViews.RestView2_1.class, AllViews.RestViewScanStatistic.class })
 	public Long getNumberLowVulnerabilities() {
@@ -424,7 +425,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	public void setNumberLowVulnerabilities(Long numberLowVulnerabilities) {
 		this.numberLowVulnerabilities = numberLowVulnerabilities;
 	}
-	
+
 	@Column
     @JsonView({ AllViews.TableRow.class, AllViews.RestView2_1.class, AllViews.RestViewScanStatistic.class })
 	public Long getNumberMediumVulnerabilities() {
@@ -434,7 +435,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	public void setNumberMediumVulnerabilities(Long numberMediumVulnerabilities) {
 		this.numberMediumVulnerabilities = numberMediumVulnerabilities;
 	}
-	
+
 	@Column
     @JsonView({ AllViews.TableRow.class, AllViews.RestView2_1.class, AllViews.RestViewScanStatistic.class })
 	public Long getNumberHighVulnerabilities() {
@@ -444,7 +445,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	public void setNumberHighVulnerabilities(Long numberHighVulnerabilities) {
 		this.numberHighVulnerabilities = numberHighVulnerabilities;
 	}
-	
+
 	@Column
     @JsonView({ AllViews.TableRow.class, AllViews.RestView2_1.class, AllViews.RestViewScanStatistic.class })
     public Long getNumberCriticalVulnerabilities() {
@@ -455,7 +456,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 			Long numberCriticalVulnerabilities) {
 		this.numberCriticalVulnerabilities = numberCriticalVulnerabilities;
 	}
-	
+
 	@Column
     @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.RestViewScanStatistic.class})
     public Integer getNumberHiddenVulnerabilities() {
@@ -494,7 +495,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
     // This should get serialized.
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({AllViews.TableRow.class})
     @Transient
     private String getType() {
         String type = getApplicationChannel().getChannelType().getName();
@@ -520,7 +521,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
         return map;
     }
 
-    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.RestView2_1.class, AllViews.RestViewScanStatistic.class })
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.RestView2_1.class, AllViews.RestViewScanStatistic.class, AllViews.RestViewScanList.class })
     @Transient
     private String getScannerName() {
         return getApplicationChannel().getChannelType().getName();
@@ -632,6 +633,22 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	public void setDownloadable(boolean isDownloadable) {
 		this.isDownloadable = isDownloadable;
 	}
+
+    @Transient
+    @JsonView(AllViews.RestViewScan2_1.class)
+    public List<Finding> getUnmappedFindings(){
+        List<Finding> unMappedFindings = list();
+
+        if(findings != null && !findings.isEmpty()){
+            for(Finding finding : findings){
+                if(finding.getVulnerability() == null){
+                    unMappedFindings.add(finding);
+                }
+            }
+        }
+
+        return unMappedFindings;
+    }
 
 	@Override
 	public String toString() {

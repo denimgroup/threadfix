@@ -146,6 +146,9 @@ public interface UserService {
 
 	Long countUsers(String searchString);
 
+	@Transactional(readOnly = true)
+	Long countUsers();
+
 	List<User> search(String searchString, int numResults, int page);
 
 	List<User> search(HttpServletRequest request);

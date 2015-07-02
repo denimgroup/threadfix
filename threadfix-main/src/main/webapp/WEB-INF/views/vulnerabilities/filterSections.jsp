@@ -84,14 +84,14 @@
 </div>
 
 <!-- Tags. -->
-<div class="accordion-group" ng-show="treeTeam || vulnSearch || complianceActive || trendingActive || snapshotActive">
+<div class="accordion-group" ng-show="treeTeam || vulnSearch || complianceActive || trendingActive || snapshotActive || treeApplication">
     <div class="accordion-heading" ng-click="showTagControls = !showTagControls">
         <span id="expandTagFilters" class="icon" ng-class="{ 'icon-minus': showTagControls, 'icon-plus': !showTagControls }"></span> Tags
     </div>
     <div ng-show="showTagControls" class="filter-group-body">
 
-        <div class="accordion-inner">
-            Applications
+        <div class="accordion-inner" ng-hide="treeApplication">
+            Application
             <a ng-hide="showTagInput" ng-click="showTagInput = !showTagInput">
                 <span id="showTagInput" class="icon" ng-class="{ 'icon-minus': showTagInput, 'icon-plus': !showTagInput }"></span>
             </a>
@@ -108,6 +108,26 @@
                 {{ filteredTag.name }}
             </div>
         </div>
+
+        <div class="accordion-inner" ng-hide="complianceActive || trendingActive">
+            Vulnerability
+            <a ng-hide="showVulnTagInput" ng-click="showVulnTagInput = !showVulnTagInput">
+                <span id="showVulnTagInput" class="icon" ng-class="{ 'icon-minus': showVulnTagInput, 'icon-plus': !showVulnTagInput }"></span>
+            </a>
+            <br>
+            <input id="vulnTagNameTypeahead"
+                   focus-on="showVulnTagInput"
+                   ng-show="showVulnTagInput"
+                   typeahead="tag.name for tag in vulnTags | filter:$viewValue | limitTo:8"
+                   type="text"
+                   ng-model="newFilteredVulnTag.name"
+                   typeahead-on-select="addNew(parameters.vulnTags, newFilteredVulnTag.name); newFilteredVulnTag = {}; showVulnTagInput = false"/>
+            <div ng-repeat="filteredTag in parameters.vulnTags">
+                <span class="pointer icon icon-minus-sign" ng-click="remove(parameters.vulnTags, $index)"></span>
+                {{ filteredTag.name }}
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -196,11 +216,11 @@
             Severity
             <br>
             <div>
-                <input id="showInfo" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.info"/>Info<br>
-                <input id="showLow" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.low"/>Low<br>
-                <input id="showMedium" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.medium"/>Medium<br>
-                <input id="showHigh" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.high"/>High<br>
-                <input id="showCritical" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.critical"/>Critical
+                <input type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.info" id="showInfo"/><span generic-severity="Info"></span><br>
+                <input type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.low" id="showLow"/><span generic-severity="Low"></span><br>
+                <input type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.medium" id="showMedium"/><span generic-severity="Medium"></span><br>
+                <input type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.high" id="showHigh"/><span generic-severity="High"></span><br>
+                <input type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.critical" id="showCritical"/><span generic-severity="Critical"></span>
             </div>
         </div>
 

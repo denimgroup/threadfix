@@ -28,10 +28,13 @@ import com.denimgroup.threadfix.data.dao.TagDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityCommentDao;
 import com.denimgroup.threadfix.data.entities.Tag;
 import com.denimgroup.threadfix.data.entities.VulnerabilityComment;
+import com.denimgroup.threadfix.data.enums.TagType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
@@ -59,6 +62,11 @@ public class TagServiceImpl implements TagService {
     @Override
     public Tag loadCommentTag(String name) {
         return tagDao.retrieveCommentTagByName(name);
+    }
+
+    @Override
+    public List<Tag> loadTagsByName(String name) {
+        return tagDao.retrieveTagsByName(name);
     }
 
     @Override
@@ -96,9 +104,11 @@ public class TagServiceImpl implements TagService {
                 newCommentTag.setName(appTag.getName());
                 newCommentTag.setEnterpriseTag(appTag.getEnterpriseTag());
                 newCommentTag.setDefaultJsonFilter(appTag.getDefaultJsonFilter());
-                newCommentTag.setTagForComment(true);
+                newCommentTag.setType(TagType.COMMENT);
                 tagDao.saveOrUpdate(newCommentTag);
             }
+            appTag.setType(TagType.APPLICATION);
+            tagDao.saveOrUpdate(appTag);
         }
 
     }
@@ -115,7 +125,7 @@ public class TagServiceImpl implements TagService {
         for (VulnerabilityComment comment: vulnerabilityComments) {
             List<Tag> newTags = CollectionUtils.list();
             for (Tag tag: comment.getTags()) {
-                if (tag.getTagForComment() == null || !tag.getTagForComment()) {
+                if (tag.getType() == TagType.APPLICATION) {
                     Tag sameTagInComment = loadCommentTag(tag.getName());
                     if (sameTagInComment != null)
                         newTags.add(sameTagInComment);
@@ -139,5 +149,75 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<Tag> loadAllCommentTags() {
         return tagDao.retrieveAllCommentTags();
+    }
+
+    @Override
+    public void updateTagTypes() {
+        log.info("About to update type for all tags.");
+        for (Tag tag: tagDao.retrieveAll()) {
+            if (!tag.getTagForComment()) { // this is an application tag
+                tag.setType(TagType.APPLICATION);
+            } else {
+                tag.setType(TagType.COMMENT);
+            }
+            tagDao.saveOrUpdate(tag);
+        }
+    }
+
+    @Override
+    public List<Tag> loadAllVulnTags() {
+        return tagDao.retrieveAllVulnerabilityTags();
+    }
+
+    @Override
+    public Tag loadTagWithType(String name, TagType type) {
+        return tagDao.retrieveTagWithType(name, type);
+    }
+
+    @Override
+    public void validate(Tag tag, BindingResult result) {
+        Tag databaseTag;
+        if (tag.getName().trim().equals("")) {
+            result.rejectValue("name", null, null, "This field cannot be blank");
+        }
+
+        if (tag.getType() == null) {
+            result.rejectValue("type", null, null, "This field cannot be blank");
+        } else { // Checking if type is valid
+            TagType type = TagType.getTagType(tag.getType().toString());
+            databaseTag = loadTagWithType(tag.getName().trim(), type);
+            if (databaseTag != null && (tag.getId() == null || !databaseTag.getId().equals(tag.getId()))) {
+                result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
+            }
+
+            // Check if updating tag is enterprise tag
+            if (tag.getId() != null) {
+                databaseTag = loadTag(tag.getId());
+                if (databaseTag == null || (databaseTag.getEnterpriseTag() != null && databaseTag.getEnterpriseTag())) {
+                    result.rejectValue("name", MessageConstants.ERROR_INVALID, new String[]{"Tag Id"}, null);
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean isValidTags(List<Tag> allTags, List<Tag> tags) {
+        for (Tag tag: tags) {
+            if (!containTag(allTags, tag)) {
+                log.warn("Tag ID " + tag.getId() + " is invalid.");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean containTag(List<Tag> allTags, Tag tag) {
+        for (Tag tagInCol: allTags) {
+            if (tagInCol.getId().compareTo(tag.getId()) == 0)
+                return true;
+        }
+        return false;
     }
 }

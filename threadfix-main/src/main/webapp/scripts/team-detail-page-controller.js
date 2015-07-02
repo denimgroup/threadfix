@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('TeamDetailPageController', function ($scope, $window, $http, $modal, $log, $rootScope, tfEncoder, $timeout) {
+myAppModule.controller('TeamDetailPageController', function ($scope, $window, $http, $modal, $log, $rootScope, tfEncoder, customSeverityService) {
 
     $scope.rightReportTitle = "Top 10 Vulnerable Applications";
     $scope.empty = false;
@@ -38,6 +38,7 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
         $http.get(tfEncoder.encodeRelative($scope.teamId + "/info")).
             success(function(data, status, headers, config) {
                 if (data.success) {
+                    customSeverityService.setSeverities(data.object.genericSeverities);
                     $scope.team = data.object.team;
                     $scope.team.applications = data.object.applications;
                     $scope.applications = data.object.applications;

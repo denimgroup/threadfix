@@ -18,8 +18,12 @@
 			<td class="inputValue">{{title.apps}}</td>
 		</tr>
 		<tr>
-			<td>Tag</td>
+			<td>Application Tag</td>
 			<td class="inputValue">{{title.tags}}</td>
+		</tr>
+		<tr>
+			<td>Vulnerability Tag</td>
+			<td class="inputValue">{{title.vulnTags}}</td>
 		</tr>
 		<tr>
 			<td>Number of Applications</td>

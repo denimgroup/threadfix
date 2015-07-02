@@ -6,6 +6,7 @@ import java.util.Map;
 import com.denimgroup.threadfix.data.entities.DefaultDefectField;
 import com.denimgroup.threadfix.data.entities.DefaultDefectProfile;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import org.springframework.validation.BindingResult;
 
 public interface DefaultDefectProfileService {
 
@@ -33,4 +34,12 @@ public interface DefaultDefectProfileService {
 
 	public void deleteProfileById(Integer defaultProfileId);
 
+	public DefaultDefectProfile loadAppDefectProfileByName(String name, Integer appId);
+
+	/**
+	 * This function checks if name of default defect profile is duplicate.
+	 * @param defaultDefectProfile
+	 * @param result
+	 */
+	void validateName(DefaultDefectProfile defaultDefectProfile, BindingResult result);
 }

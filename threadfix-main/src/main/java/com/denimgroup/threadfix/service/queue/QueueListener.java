@@ -59,8 +59,6 @@ public class QueueListener implements MessageListener {
     @Autowired
 	private VulnerabilityService vulnerabilityService;
     @Autowired
-	private ApplicationChannelService applicationChannelService = null;
-    @Autowired
 	private RemoteProviderApplicationService remoteProviderApplicationService = null;
     @Autowired
     private OrganizationService organizationService;
@@ -77,6 +75,8 @@ public class QueueListener implements MessageListener {
     private EmailReportService emailReportService;
     @Autowired
     private ScheduledEmailReportService scheduledEmailReportService;
+	@Autowired(required=false)
+	private ScheduledScanService scheduledScanService;
 
 	/*
 	 * (non-Javadoc)
@@ -107,11 +107,6 @@ public class QueueListener implements MessageListener {
 				String type = map.getString("type");
 				
 				switch (type) {
-					case QueueConstants.NORMAL_SCAN_TYPE :
-						processScanRequest(map.getInt("channelId"), map.getString("fileName"),
-								map.getInt("jobStatusId"), map.getString("userName"));
-						break;
-						
 					case QueueConstants.DEFECT_TRACKER_VULN_UPDATE_TYPE:
 						processDefectTrackerUpdateRequest(map.getInt("appId"),
 								map.getInt("jobStatusId"));
@@ -136,8 +131,7 @@ public class QueueListener implements MessageListener {
 								map.getInt("jobStatusId"));
 						break;
                     case QueueConstants.SCHEDULED_SCAN_TYPE:
-                        processScheduledScan(map.getInt("appId"),
-                                map.getString("scanner"), map.getString("scanConfigId"));
+                        processScheduledScan(map.getInt("scheduledScanId"));
                         break;
                     case QueueConstants.STATISTICS_UPDATE:
                         processStatisticsUpdate(map.getInt("appId"));
@@ -308,60 +302,6 @@ public class QueueListener implements MessageListener {
 	}
 
 	/**
-	 */
-	private void processScanRequest(Integer channelId, String fileName, Integer jobStatusId, String userName) {
-		// TODO Move the jobStatus updating to the importer to improve messages
-		// once the messages persist
-		
-		jobStatusService.updateJobStatus(jobStatusId, "Job received");
-		
-		ApplicationChannel appChannel = applicationChannelService.loadApplicationChannel(channelId);
-		
-		boolean fullLog = userName != null && appChannel != null && appChannel.getApplication() != null
-				&& appChannel.getApplication().getName() != null && appChannel.getChannelType() != null
-				&& appChannel.getChannelType().getName() != null;
-			
-		if (fullLog) {
-			log.info("User " + userName + " added a " + appChannel.getChannelType().getName() +
-					" scan to the Application " + appChannel.getApplication().getName() +
-					" (filename " + fileName + ").");
-		}
-		
-		jobStatusService.updateJobStatus(jobStatusId, "Processing Scan from file.");
-		
-		boolean finished = false;
-		
-		try {
-			finished = scanMergeService.processScan(channelId, fileName, jobStatusId, userName);
-		} catch (OutOfMemoryError e) {
-			closeJobStatus(jobStatusId, "Scan encountered an out of memory error and did not complete correctly.");
-			log.warn("Encountered out of memory error. Closing job status and rethrowing exception.",e);
-			throw e;
-		} finally {
-			if (finished) {
-				closeJobStatus(jobStatusId, "Scan completed.");
-
-                if (appChannel != null && appChannel.getApplication() != null) {
-                    queueSender.updateCachedStatistics(appChannel.getApplication().getId());
-                }
-
-				if (fullLog) {
-					log.info("The " + appChannel.getChannelType().getName() + " scan from User "
-						+ userName + " on Application " + appChannel.getApplication().getName()
-						+ " (filename " + fileName + ") completed successfully.");
-				}
-			} else {
-				closeJobStatus(jobStatusId, "Scan encountered an error.");
-				if (fullLog) {
-					log.info("The " + appChannel.getChannelType().getName() + " scan from User "
-						+ userName + " on Application " + appChannel.getApplication().getName()
-						+ " (filename " + fileName + ") did not complete successfully.");
-				}
-			}
-		}
-	}
-
-	/**
 	 * @param appId
 	 * @param jobStatusId
 	 */
@@ -404,24 +344,25 @@ public class QueueListener implements MessageListener {
 	}
 
     /**
-     * @param appId
-     * @param scanner
+     * @param scheduledScanId
      */
     @Transactional(readOnly=false)
-    private void processScheduledScan(int appId, String scanner, String scanConfigId) {
-        if (scanQueueService == null) {
+	private void processScheduledScan(int scheduledScanId) {
+        if (scanQueueService == null || scheduledScanService == null) {
             return;
         }
 
-        Application application = applicationService.loadApplication(appId);
-        if (application == null)
-            return;
+		ScheduledScan scheduledScan = scheduledScanService.loadById(scheduledScanId);
+		if (scheduledScan == null
+				|| scheduledScan.getApplication() == null
+				|| scheduledScan.getApplication().getId() == null)
+			return;
 
-        ScanQueueTask scanTask = scanQueueService.queueScanWithConfig(appId, scanner, scanConfigId);
+        ScanQueueTask scanTask = scanQueueService.queueScanWithScheduledScanId(scheduledScanId);
         if (scanTask == null || scanTask.getId() < 0) {
-            log.warn("Adding scan queue task " + scanner +" for application with Id " + appId + " was failed.");
+            log.warn("Adding scan queue task " + scheduledScan.getScanner() +" for application with Id " + scheduledScan.getApplication().getId() + " was failed.");
         } else {
-            log.info("Scan Queue Task ID " + scanTask.getId() + " was successfully added to the application with ID " + appId);
+            log.info("Scan Queue Task ID " + scanTask.getId() + " was successfully added to the application with ID " + scheduledScan.getApplication().getId());
         }
     }
 

@@ -38,6 +38,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.listFrom;
 import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
@@ -180,9 +181,9 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	    		String currentChannelVulnCode = stringValueMap.get(findingMap.get("vulnType"));
 	    		String currentPath = fileMap.get(siteMap.get(findingMap.get("siteId")).get("fileId"));
 	    		String currentSeverityCode = findingMap.get("severity");
-	    		String lineNumberString = fileMap.get(siteMap.get(findingMap.get("siteId")).get("line"));
-	    		
-	    		Integer lineNumber = parseInt(lineNumberString, "line");
+	    		String lineNumberString = siteMap.get(findingMap.get("siteId")).get("line");
+
+				Integer lineNumber = parseInt(lineNumberString, "line");
 	    		if (lineNumber == null) {
 	    			lineNumber = -1;
 	    		}
@@ -196,7 +197,7 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	    		
 	    		if (atts.getValue("trace") == null) {
 	    			DataFlowElement element = new DataFlowElement(currentPath, lineNumber, null);
-	    			finding.setDataFlowElements(Arrays.asList(element));
+	    			finding.setDataFlowElements(list(element));
 	    		} else {
 	    			finding.setDataFlowElements(getDataFlowElements(atts.getValue("trace")));
 	    		}
@@ -258,7 +259,7 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	    		Map<String, String> singleTaintMap = taintMap.get(string);
 	    		if (singleTaintMap != null) {
 	    			Map<String, String> mySiteMap = siteMap.get(singleTaintMap.get("siteId"));
-	    			
+
 	    			String lineText = stringValueMap.get(mySiteMap.get("cxt"));
 	    			
 	    			if (lineText != null) {

@@ -3,6 +3,7 @@ package com.denimgroup.threadfix.service;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.CollectionUtils.list;
@@ -18,6 +19,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.EmailList;
 import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.Organization;
@@ -47,11 +49,24 @@ public class EmailReportServiceImpl implements EmailReportService {
 	@Autowired
 	private EmailFilterService emailFilterService;
 
+    private Set<String> getFilteredEmailAddresses(ScheduledEmailReport scheduledEmailReport) {
+
+        List<String> emailAddresses = scheduledEmailReport.getEmailAddresses();
+        List<EmailList> emailLists = scheduledEmailReport.getEmailLists();
+
+        for (EmailList emailList : emailLists) {
+            emailAddresses.addAll(emailList.getEmailAddresses());
+        }
+
+        return emailFilterService.getFilteredEmailAddresses(emailAddresses);
+    }
+
 	@Override
 	public void sendEmailReport(ScheduledEmailReport scheduledEmailReport) {
-		List<Vulnerability> vulnerabilities = getNewVulnerabilities(scheduledEmailReport); //10 most severe vulns
-		List<String> filteredEmailAddresses = emailFilterService.getFilteredEmailAddresses(scheduledEmailReport.getEmailAddresses());
-		if (!emailConfiguration.isConfiguredEmail()){
+		Set<String> filteredEmailAddresses = getFilteredEmailAddresses(scheduledEmailReport);
+        List<Vulnerability> vulnerabilities = getNewVulnerabilities(scheduledEmailReport); //10 most severe vulns
+
+        if (!emailConfiguration.isConfiguredEmail()){
 			LOG.info("Email is not configured, not sending any email");
 			return;
 		}
@@ -63,6 +78,7 @@ public class EmailReportServiceImpl implements EmailReportService {
 			LOG.info("No valid email addresses, not sending any email");
 			return;
 		}
+
 		//everything is ok, send the email
 		String emailBody = getEmailReportBody(scheduledEmailReport);
 		MimeMessage message = javaMailSender.createMimeMessage();
@@ -93,8 +109,7 @@ public class EmailReportServiceImpl implements EmailReportService {
 		parameters.setGenericSeverities(getGenericSeveritiesAboveThreshold(scheduledEmailReport));
 		parameters.setTeams(scheduledEmailReport.getOrganizations());
 		parameters.setDescList(list("severity.intValue"));
-		List<Vulnerability> newVulns = vulnerabilitySearchService.performLookup(parameters);
-		return newVulns;
+		return vulnerabilitySearchService.performLookup(parameters);
 	}
 
 	private void configureDate(VulnerabilitySearchParameters parameters, ScheduledEmailReport scheduledEmailReport){
@@ -173,14 +188,14 @@ public class EmailReportServiceImpl implements EmailReportService {
 			parameters.setGenericSeverities(list(genericSeverity));
 			List<VulnerabilityTreeElement> tree = vulnerabilitySearchService.getTree(parameters);
 			if (!tree.isEmpty()){
-				List<Object> treesWithVuln = contructTreeWithVulns(tree, parameters); //loop on trees to retrieve the vulns while the parameters are configured
+				List<Object> treesWithVuln = constructTreeWithVulns(tree, parameters); //loop on trees to retrieve the vulns while the parameters are configured
 				severityTreeWithVulns.put(genericSeverity.getName(), treesWithVuln);
 			}
 		}
 		return severityTreeWithVulns;
 	}
 
-	private List<Object> contructTreeWithVulns(List<VulnerabilityTreeElement> trees, VulnerabilitySearchParameters parameters) {
+	private List<Object> constructTreeWithVulns(List<VulnerabilityTreeElement> trees, VulnerabilitySearchParameters parameters) {
 		List<Object> treesWithVulns = list();
 		for (VulnerabilityTreeElement tree : trees){
 			Map<String, Object> treeWithVulns = map();

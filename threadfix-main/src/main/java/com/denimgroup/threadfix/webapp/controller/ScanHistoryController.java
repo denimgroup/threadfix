@@ -27,6 +27,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.service.GenericSeverityService;
 import com.denimgroup.threadfix.service.ScanService;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
@@ -48,14 +49,10 @@ public class ScanHistoryController {
 
 	private final SanitizedLogger log = new SanitizedLogger(ScanHistoryController.class);
 
-	private ScanService scanService;
-
 	@Autowired
-	public ScanHistoryController(ScanService scanService) {
-		this.scanService = scanService;
-	}
-
-	public ScanHistoryController(){}
+	private ScanService scanService;
+	@Autowired
+	private GenericSeverityService genericSeverityService;
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
@@ -64,7 +61,7 @@ public class ScanHistoryController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView viewScans() {
-		log.info("Hit scan history page.");
+		log.debug("Hit scan history page.");
 
 		return new ModelAndView("scans/history");
 	}
@@ -91,6 +88,7 @@ public class ScanHistoryController {
         Map<String, Object> map = new HashMap<>();
 		map.put("scanList", scans);
 		map.put("numScans", scanCount);
+		map.put("genericSeverities", genericSeverityService.loadAll());
         return RestResponse.success(map);
 	}
 	

@@ -28,20 +28,21 @@ import com.denimgroup.threadfix.exception.RestException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ExceptionLogService;
+import com.mysql.jdbc.PacketTooBigException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.orm.hibernate3.HibernateJdbcException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
-
-import org.springframework.orm.hibernate3.HibernateJdbcException;
-import com.mysql.jdbc.PacketTooBigException;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.ws.client.WebServiceTransportException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
@@ -90,6 +91,16 @@ public class RestExceptionControllerAdvice {
         }  else {
             return failure(ex.getRootCause().getMessage());
         }
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ModelAndView handleError404(HttpServletRequest request, Exception e) {
+
+        if (request.getUserPrincipal() == null) {
+            return new ModelAndView("redirect:/login.jsp");
+        }
+
+        return new ModelAndView("404");
     }
 
     @ResponseStatus(HttpStatus.OK)

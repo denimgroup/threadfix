@@ -1,5 +1,3 @@
-
-
 <div id="severitySuccessMessage" ng-show="severitySuccessMessage" class="alert alert-success">
     <button class="close" ng-click="severitySuccessMessage = undefined" type="button">&times;</button>
     {{ severitySuccessMessage }}
@@ -31,7 +29,7 @@
         </thead>
         <tbody>
             <tr>
-                <td>Critical</td>
+                <td generic-severity="Critical"></td>
                 <td class="centered">
                     <input id="showCritical1" type="radio" ng-model="severityFilter.showCritical" ng-disabled="!severityFilter.enabled" name="showCritical" value="true"/>
                 </td>
@@ -40,7 +38,7 @@
                 </td>
             </tr>
             <tr>
-                <td>High</td>
+                <td generic-severity="High"></td>
                 <td class="centered">
                     <input id="showHigh1" type="radio" ng-model="severityFilter.showHigh" ng-disabled="!severityFilter.enabled" name="showHigh" value="true"/>
                 </td>
@@ -49,7 +47,7 @@
                 </td>
             </tr>
             <tr>
-                <td>Medium</td>
+                <td generic-severity="Medium"></td>
                 <td class="centered">
                     <input id="showMedium1" type="radio" ng-model="severityFilter.showMedium" ng-disabled="!severityFilter.enabled" name="showMedium" value="true"/>
                 </td>
@@ -58,7 +56,7 @@
                 </td>
             </tr>
             <tr>
-                <td>Low</td>
+                <td generic-severity="Low"></td>
                 <td class="centered">
                     <input id="showLow1" type="radio" ng-model="severityFilter.showLow" ng-disabled="!severityFilter.enabled" name="showLow" value="true"/>
                 </td>
@@ -67,7 +65,7 @@
                 </td>
             </tr>
             <tr>
-                <td>Info</td>
+                <td generic-severity="Info"></td>
                 <td class="centered">
                     <input id="showInfo1" type="radio" ng-model="severityFilter.showInfo" ng-disabled="!severityFilter.enabled" name="showInfo" value="true"/>
                 </td>

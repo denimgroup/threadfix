@@ -45,11 +45,11 @@ public class ScannerMappingUpdateController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public RestResponse<String> addMappings(@RequestParam String channelName,
-                                                          @RequestParam String channelVulnerabilityCode,
-                                                          @RequestParam String genericVulnerabilityId) {
+                                              @RequestParam int channelVulnerabilityId,
+                                              @RequestParam String genericVulnerabilityId) {
 
         ChannelVulnerabilityService.MappingCreateResult result =
-                channelVulnerabilityService.createMapping(channelName, channelVulnerabilityCode, genericVulnerabilityId);
+                channelVulnerabilityService.createMapping(channelName, channelVulnerabilityId, genericVulnerabilityId);
 
         if (result == ChannelVulnerabilityService.MappingCreateResult.SUCCESS) {
             return success("Successfully created new mapping.");
