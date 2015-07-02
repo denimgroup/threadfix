@@ -465,18 +465,20 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		
 		log.info("Updating status for defect " + defect.getNativeId());
 
-        String result = null;
+        String result;
         try {
             result = restUtils.getUrlAsString(getUrlWithRest() + "issue/" + defect.getNativeId(),
                 getUsername(), getPassword());
 
         } catch (RestIOException e) {
             if (e.getCause() instanceof FileNotFoundException) { // invalid issue key
-                log.error("Issue " + defect.getNativeId() + " not found. Invalid Jira " +
+                String message = "Issue " + defect.getNativeId() + " not found. Invalid Jira " +
                         "installations and invalid scanner-supplied defect IDs can " +
-                        "cause this error.");
-                return null;
+                        "cause this error.";
+                log.error(message);
+                throw new RestIOException(e, message);
             }
+            throw e;
         }
 
 		if (result != null) {
