@@ -1406,3 +1406,7 @@ input.no-bottom-margin {
 .side-list-width {
 	width: 166px !important;
 }
+
+ul.dropdown-menu {
+    text-align: left;
+}
