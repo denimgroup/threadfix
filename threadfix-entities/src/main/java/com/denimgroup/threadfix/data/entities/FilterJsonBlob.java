@@ -23,13 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "FilterJsonBlob")
@@ -38,6 +36,8 @@ public class FilterJsonBlob extends AuditableEntity {
 
     private String json, name;
     private Boolean defaultTrending;
+
+    private AcceptanceCriteria acceptanceCriteria;
 
     @JsonProperty
     @JsonView(Object.class)
@@ -70,6 +70,17 @@ public class FilterJsonBlob extends AuditableEntity {
 
     public void setDefaultTrending(Boolean defaultTrending) {
         this.defaultTrending = defaultTrending;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "acceptanceCriteriaId")
+    @JsonIgnore
+    public AcceptanceCriteria getAcceptanceCriteria() {
+        return acceptanceCriteria;
+    }
+
+    public void setAcceptanceCriteria(AcceptanceCriteria acceptanceCriteria) {
+        this.acceptanceCriteria = acceptanceCriteria;
     }
 
     @Transient
