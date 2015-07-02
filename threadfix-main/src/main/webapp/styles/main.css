@@ -1419,6 +1419,10 @@ input.no-bottom-margin {
 	width: 166px !important;
 }
 
+ul.dropdown-menu {
+    text-align: left;
+}
+
 .table.fixed-table  {
 	table-layout:fixed;
 	word-wrap:break-word;
