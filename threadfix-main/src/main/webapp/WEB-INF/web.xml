@@ -133,6 +133,8 @@
                 protected-regex ^/configuration/acceptcriterias/list$,
                 protected-regex ^/configuration/acceptcriterias/[0-9]+/edit$,
                 protected-regex ^/configuration/acceptcriterias/[0-9]+/delete$,
+                protected-regex ^/configuration/acceptcriterias/[0-9]+/add/[0-9]+$,
+                protected-regex ^/configuration/acceptcriterias/[0-9]+/remove/[0-9]+$,
         		protected-regex ^/configuration/remoteproviders/[0-9]+/table$,
 		    	protected-regex ^/configuration/remoteproviders/[0-9]+/configure$,
 		    	protected-regex ^/configuration/remoteproviders/[0-9]+/apps/[0-9]+/edit$,
