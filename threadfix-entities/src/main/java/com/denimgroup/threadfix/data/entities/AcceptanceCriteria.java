@@ -51,7 +51,7 @@ public class AcceptanceCriteria extends AuditableEntity {
     @Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
     private String name;
 
-    private List<AcceptanceCriteriaStatus> acceptanceCriteriaStatuses = list();
+    private List<AcceptanceCriteriaStatus> acceptanceCriteriaStatuses;
 
     private FilterJsonBlob filterJsonBlob;
 

@@ -147,6 +147,7 @@ public class Application extends AuditableEntity {
 	private List<RemoteProviderApplication> remoteProviderApplications;
 	private List<Document> documents;
 	private List<VulnerabilityFilter> filters;
+    private List<AcceptanceCriteriaStatus> acceptanceCriteriaStatuses;
 
 	// these are here so we don't generate them more than we need to
 	private List<Integer> reportList = null;
@@ -163,8 +164,6 @@ public class Application extends AuditableEntity {
 
     private Boolean useDefaultCredentials = false;
     private Boolean useDefaultProject = false;
-
-    private Set<AcceptanceCriteriaStatus> acceptanceCriteriaStatuses = new HashSet<AcceptanceCriteriaStatus>(0);
 
 	@Column(length = NAME_LENGTH, nullable = false)
     @JsonView(Object.class) // This means it will be included in all ObjectWriters with Views.
@@ -423,11 +422,12 @@ public class Application extends AuditableEntity {
 	}
 
     @OneToMany(mappedBy = "application")
-    public Set<AcceptanceCriteriaStatus> getAcceptanceCriteriaStatuses() {
+    @JsonView(Object.class)
+    public List<AcceptanceCriteriaStatus> getAcceptanceCriteriaStatuses() {
         return acceptanceCriteriaStatuses;
     }
 
-    public void setAcceptanceCriteriaStatuses(Set<AcceptanceCriteriaStatus> acceptanceCriteriaStatuses) {
+    public void setAcceptanceCriteriaStatuses(List<AcceptanceCriteriaStatus> acceptanceCriteriaStatuses) {
         this.acceptanceCriteriaStatuses = acceptanceCriteriaStatuses;
     }
 
@@ -922,6 +922,7 @@ public class Application extends AuditableEntity {
 
         return acceptanceCriteriaList;
     }
+
     @Column
     public Boolean isUseDefaultProject() {
         return useDefaultProject;
