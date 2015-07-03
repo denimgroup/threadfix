@@ -27,6 +27,7 @@ package com.denimgroup.threadfix.service;
 import com.denimgroup.threadfix.data.entities.AcceptanceCriteria;
 import com.denimgroup.threadfix.data.entities.AcceptanceCriteriaStatus;
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.FilterJsonBlob;
 
 /**
  * @author zabdisubhan
@@ -38,5 +39,11 @@ public interface AcceptanceCriteriaStatusService extends GenericObjectService<Ac
     void addStatus(AcceptanceCriteria acceptanceCriteria, Application application);
 
     void deleteStatus(AcceptanceCriteria acceptanceCriteria, Integer applicationId);
+
+    boolean setStatus(AcceptanceCriteriaStatus acceptanceCriteriaStatus, AcceptanceCriteria acceptanceCriteria);
+
+    boolean setStatuses(AcceptanceCriteria acceptanceCriteria);
+
+    boolean meetsAcceptanceCriteria(FilterJsonBlob filterJsonBlob, Application application);
 
 }
