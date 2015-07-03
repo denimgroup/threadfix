@@ -46,4 +46,6 @@ public interface AcceptanceCriteriaStatusService extends GenericObjectService<Ac
 
     boolean meetsAcceptanceCriteria(FilterJsonBlob filterJsonBlob, Application application);
 
+    boolean appPassesAllFilters(Application application);
+
 }

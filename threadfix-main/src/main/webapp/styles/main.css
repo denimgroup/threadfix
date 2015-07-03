@@ -1307,6 +1307,14 @@ div.remote-provider-config-modal a {
 	background-color:#c67605;
 }
 
+.badge-ac-status-passing {
+    background-color: darkgreen;
+}
+
+.badge-ac-status-failing {
+    background-color: #c43c35;
+}
+
 .text-critical{
 	color:#F7280C
 }

@@ -422,7 +422,7 @@ public class Application extends AuditableEntity {
 	}
 
     @OneToMany(mappedBy = "application")
-    @JsonView(Object.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class })
     public List<AcceptanceCriteriaStatus> getAcceptanceCriteriaStatuses() {
         return acceptanceCriteriaStatuses;
     }
