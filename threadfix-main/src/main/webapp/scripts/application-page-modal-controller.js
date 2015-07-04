@@ -18,10 +18,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                if (data.success) {
                    $scope.config = data.object;
 
-                   $scope.config.application.
-
-
-                   if (!$scope.config.wafList) {
+                   if (!$scope.config.wafList){
                        $scope.config.wafList = [];
                    }
                    if (!$scope.config.defectTrackerList) {
