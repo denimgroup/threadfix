@@ -415,18 +415,18 @@ public class CommandLineParser {
 	}
 
 	private static <T> void printOutput(RestResponse<T> response) {
-		if (response == null) {
-			LOGGER.error("Request sent unsuccessfully.");
-		} else if (response.success) {
-			LOGGER.info("Operation successful, printing JSON output.");
-			System.out.println(response.getOriginalJson());
-		} else {
-			LOGGER.error("Operation unsuccessful, printing error message.");
-			if (response.message == null || response.message.trim().equals("")) {
-				LOGGER.error("Invalid message received from server. Please check your URL and try again.");
-				LOGGER.error("The URL should end with /rest. To set your URL, use the -s url <url> option.");
+		if (response != null) {
+			if (response.success) {
+				LOGGER.info("Operation successful, printing JSON output.");
+				System.out.println(response.getOriginalJson());
 			} else {
-				LOGGER.error(response.message);
+				LOGGER.error("Operation unsuccessful, printing error message.");
+				if (response.message == null || response.message.trim().equals("")) {
+					LOGGER.error("Invalid message received from server. Please check your URL and try again.");
+					LOGGER.error("The URL should end with /rest. To set your URL, use the -s url <url> option.");
+				} else {
+					LOGGER.error(response.message);
+				}
 			}
 		}
 	}

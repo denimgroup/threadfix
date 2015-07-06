@@ -111,7 +111,9 @@ public class HttpRestUtils {
             response = ResponseParser.getRestResponse(filePost.getResponseBodyAsStream(), status, targetClass);
 
         } catch (SSLHandshakeException sslHandshakeException) {
+
             importCert(sslHandshakeException);
+
         } catch (IOException e1) {
             LOGGER.error("There was an error and the POST request was not finished.", e1);
             response = ResponseParser.getErrorResponse(
@@ -163,7 +165,9 @@ public class HttpRestUtils {
             response = ResponseParser.getRestResponse(post.getResponseBodyAsStream(), responseCode, targetClass);
 
 		} catch (SSLHandshakeException sslHandshakeException) {
+
             importCert(sslHandshakeException);
+
         } catch (IOException e1) {
             LOGGER.error("Encountered IOException while trying to post to " + path, e1);
             response = ResponseParser.getErrorResponse(
@@ -228,7 +232,9 @@ public class HttpRestUtils {
             response = ResponseParser.getRestResponse(get.getResponseBodyAsStream(), status, targetClass);
 
 		} catch (SSLHandshakeException sslHandshakeException) {
+
             importCert(sslHandshakeException);
+
         } catch (IOException e) {
             LOGGER.error("Encountered IOException while trying to post to " + path, e);
             response = ResponseParser.getErrorResponse("There was an error and the GET request was not finished.", status);
@@ -295,12 +301,14 @@ public class HttpRestUtils {
     private void importCert(SSLHandshakeException sslHandshakeException){
         if (count < 2) {
             LOGGER.warn("Unsigned certificate found. Trying to import it to Java KeyStore.");
-            count++;
             try {
                 URI uri = getURI();
                 String domain = uri.getHost();
                 domain = domain.startsWith("www.") ? domain.substring(4) : domain;
-                InstallCert.install(domain, uri.getPort());
+                if (InstallCert.install(domain, uri.getPort())) {
+                    count++;
+                    LOGGER.info("Successfully imported certificate. Please run your command again.");
+                }
             } catch (Exception e) {
                 LOGGER.error("Error when tried to import certificate. ", e);
             }

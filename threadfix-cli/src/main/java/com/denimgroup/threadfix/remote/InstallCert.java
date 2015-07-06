@@ -51,16 +51,37 @@ public class InstallCert {
 
     private static final SanitizedLogger LOGGER = new SanitizedLogger(InstallCert.class);
 
-    public static void install(String host, int port) throws Exception {
-        char[] passphrase = "changeit".toCharArray();
+    public static boolean install(String host, int port) throws Exception {
 
+        String password = "changeit"; // default keystore password
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         File file = new File(JAVA_KEY_STORE_FILE);
 
-        LOGGER.info("Loading KeyStore " + file + "...");
+        char[] passphrase = null;
         InputStream in = new FileInputStream(file);
         KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
-        ks.load(in, passphrase);
-        in.close();
+        int attempedNo = 0;
+        while (attempedNo < 3) {
+            attempedNo++;
+            System.out.print("Enter keystore password, leave empty to keep '" + password + "': ");
+            String input = reader.readLine();
+            if (!input.trim().isEmpty()) {
+                password = input;
+            }
+            passphrase = password.toCharArray();
+            try {
+                LOGGER.info("Loading KeyStore " + file + "...");
+                ks.load(in, passphrase);
+                in.close();
+                break;
+            } catch (Exception e) {
+               LOGGER.error("Loaded KeyStore file error. Message: " + e.getMessage());
+                if (attempedNo >= 3){
+                    LOGGER.error("You have tried entering password " + attempedNo + " times. Exiting...");
+                    return false;
+                }
+            }
+        }
 
         SSLContext context = SSLContext.getInstance("TLS");
         TrustManagerFactory tmf =
@@ -80,17 +101,14 @@ public class InstallCert {
             socket.close();
             LOGGER.info("No errors, certificate is already trusted");
         } catch (SSLException e) {
-            LOGGER.error("SSLException encountered as expected.", e);
+            LOGGER.error("SSLException encountered as expected. Error message: " + e.getMessage());
         }
 
         X509Certificate[] chain = tm.chain;
         if (chain == null) {
             LOGGER.warn("Could not obtain server certificate chain");
-            return;
+            return false;
         }
-
-        BufferedReader reader =
-                new BufferedReader(new InputStreamReader(System.in));
 
         System.out.println("Server sent " + chain.length + " certificate(s):");
         MessageDigest sha1 = MessageDigest.getInstance("SHA1");
@@ -114,7 +132,7 @@ public class InstallCert {
             k = (line.length() == 0) ? 0 : Integer.parseInt(line) - 1;
         } catch (NumberFormatException e) {
             LOGGER.warn("KeyStore not changed");
-            return;
+            return false;
         }
 
         X509Certificate cert = chain[k];
@@ -127,6 +145,7 @@ public class InstallCert {
 
         LOGGER.info("Added certificate to keystore '" + JAVA_KEY_STORE_FILE + "' using alias '"
                         + alias + "'");
+        return true;
     }
 
     private static final char[] HEXDIGITS = "0123456789abcdef".toCharArray();
