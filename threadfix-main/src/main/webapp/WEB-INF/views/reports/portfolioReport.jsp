@@ -22,10 +22,6 @@
 			<td class="inputValue">{{title.tags}}</td>
 		</tr>
 		<tr>
-			<td>Vulnerability Tag</td>
-			<td class="inputValue">{{title.vulnTags}}</td>
-		</tr>
-		<tr>
 			<td>Number of Applications</td>
 			<td class="inputValue">{{filterPortfolioApps.length}}</td>
 		</tr>
