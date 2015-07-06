@@ -119,12 +119,7 @@ public class UploadScanServiceImpl implements UploadScanService{
                 }
             }
 
-            // Run Acceptance Criteria check
-            Application application = applicationService.loadApplication(appId);
-
-            if (application == null) {
-                log.warn("Application Id is invalid in processMultiFileUpload().");
-            } else acceptanceCriteriaStatusService.setAppStatus(application);
+            acceptanceCriteriaStatusService.setAppStatus(appId);
         }
     }
 }
