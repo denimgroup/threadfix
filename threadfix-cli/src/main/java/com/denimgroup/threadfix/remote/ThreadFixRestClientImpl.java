@@ -375,10 +375,10 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 	}
 
     @Override
-    public RestResponse<Tag> createTag(String name, Boolean isCommentTag) {
+    public RestResponse<Tag> createTag(String name, String tagType) {
         return httpRestUtils.httpPost("/tags/new",
-                new String[] { "name", "isCommentTag" },
-                new String[] { name, String.valueOf(isCommentTag) }, Tag.class);
+                new String[] { "name", "tagType" },
+                new String[] { name, tagType }, Tag.class);
     }
 
     @Override

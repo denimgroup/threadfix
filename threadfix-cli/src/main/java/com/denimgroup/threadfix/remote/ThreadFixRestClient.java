@@ -114,7 +114,7 @@ public interface ThreadFixRestClient {
                                    String nativeId, String parameter, String longDescription,
                                    String filePath, String column, String lineText, String lineNumber);
 
-    public RestResponse<Tag> createTag(String name, Boolean isCommentTag);
+    public RestResponse<Tag> createTag(String name, String tagType);
     public RestResponse<Tag> searchTagById(String id);
     public RestResponse<Tag[]> searchTagsByName(String name);
     public RestResponse<Map> getAllTags();
