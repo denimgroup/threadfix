@@ -60,10 +60,15 @@ public class JsonFilterBlobController {
                 int filtersNo = filterJsonBlobService.updateDefaultTrendingFilter();
                 LOG.info("Number of FilterJsonBlob objects updated to non-default trending report: " + String.valueOf(filtersNo));
             }
-            filterJsonBlobService.saveOrUpdate(filterJsonBlob);
 
             if (dbBlob != null && dbBlob.getAcceptanceCriteria() != null) {
-                acceptanceCriteriaStatusService.setStatuses(dbBlob.getAcceptanceCriteria());
+                filterJsonBlob.setAcceptanceCriteria(dbBlob.getAcceptanceCriteria());
+            }
+
+            filterJsonBlobService.saveOrUpdate(filterJsonBlob);
+
+            if (filterJsonBlob.getAcceptanceCriteria() != null) {
+                acceptanceCriteriaStatusService.setStatuses(filterJsonBlob.getAcceptanceCriteria());
             }
 
             return RestResponse.success(filterJsonBlobService.loadAllActive());
