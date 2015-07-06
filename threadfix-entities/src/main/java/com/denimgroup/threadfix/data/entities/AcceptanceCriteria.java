@@ -80,8 +80,12 @@ public class AcceptanceCriteria extends AuditableEntity {
     public List<Application> getApplications(){
         List<Application> applications = list();
 
-        for (AcceptanceCriteriaStatus acceptanceCriteriaStatus : acceptanceCriteriaStatuses) {
-            applications.add(acceptanceCriteriaStatus.getApplication());
+        if(acceptanceCriteriaStatuses != null && acceptanceCriteriaStatuses.size() > 0) {
+
+            for (AcceptanceCriteriaStatus acceptanceCriteriaStatus : acceptanceCriteriaStatuses) {
+                if (acceptanceCriteriaStatus != null)
+                    applications.add(acceptanceCriteriaStatus.getApplication());
+            }
         }
 
         return applications;
