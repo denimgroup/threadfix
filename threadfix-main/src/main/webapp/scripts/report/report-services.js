@@ -403,7 +403,7 @@ threadfixModule.factory('d3Service', function() {
 
 });
 
-threadfixModule.factory('reportConstants', function() {
+threadfixModule.factory('reportConstants', function(customSeverityService) {
 
     var reportConstants = {};
 
@@ -412,49 +412,62 @@ threadfixModule.factory('reportConstants', function() {
     reportConstants.vulnTypeTextColorList = ["#688c9d", "#458A37", "#EFD20A", "#F27421", "#F7280C", "#C2A677",
         "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd" ];
     reportConstants.vulnTypeList = ["Info", "Low", "Medium", "High", "Critical"];
-    reportConstants.vulnTypeColorMap = {
-        Info: {
+
+    customSeverityService.addCallback(function() {
+        reportConstants.vulnTypeList = [
+            customSeverityService.getCustomSeverity("Info"),
+            customSeverityService.getCustomSeverity("Low"),
+            customSeverityService.getCustomSeverity("Medium"),
+            customSeverityService.getCustomSeverity("High"),
+            customSeverityService.getCustomSeverity("Critical")
+        ];
+
+        reportConstants.vulnTypeColorMap = {
+            Old: {
+                graphColor: reportConstants.vulnTypeColorList[5],
+                textColor: reportConstants.vulnTypeTextColorList[5]
+            },
+            Closed: {
+                graphColor: reportConstants.vulnTypeColorList[6],
+                textColor: reportConstants.vulnTypeTextColorList[6]
+            },
+            Resurfaced: {
+                graphColor: reportConstants.vulnTypeColorList[7],
+                textColor: reportConstants.vulnTypeTextColorList[7]
+            },
+            New: {
+                graphColor: reportConstants.vulnTypeColorList[8],
+                textColor: reportConstants.vulnTypeTextColorList[8]
+            },
+            Total: {
+                graphColor: reportConstants.vulnTypeColorList[9],
+                textColor: reportConstants.vulnTypeTextColorList[9]
+            }
+
+        };
+
+        reportConstants.vulnTypeColorMap[customSeverityService.getCustomSeverity('Info')] = {
             graphColor: reportConstants.vulnTypeColorList[0],
             textColor: reportConstants.vulnTypeTextColorList[0]
-        },
-        Low:  {
+        };
+        reportConstants.vulnTypeColorMap[customSeverityService.getCustomSeverity('Low')] = {
             graphColor: reportConstants.vulnTypeColorList[1],
             textColor: reportConstants.vulnTypeTextColorList[1]
-        },
-        Medium:  {
+        };
+        reportConstants.vulnTypeColorMap[customSeverityService.getCustomSeverity('Medium')] = {
             graphColor: reportConstants.vulnTypeColorList[2],
             textColor: reportConstants.vulnTypeTextColorList[2]
-        },
-        High:  {
+        };
+        reportConstants.vulnTypeColorMap[customSeverityService.getCustomSeverity('High')] = {
             graphColor: reportConstants.vulnTypeColorList[3],
             textColor: reportConstants.vulnTypeTextColorList[3]
-        },
-        Critical:  {
+        };
+        reportConstants.vulnTypeColorMap[customSeverityService.getCustomSeverity('Critical')] = {
             graphColor: reportConstants.vulnTypeColorList[4],
             textColor: reportConstants.vulnTypeTextColorList[4]
-        },
-        Old: {
-            graphColor: reportConstants.vulnTypeColorList[5],
-            textColor: reportConstants.vulnTypeTextColorList[5]
-        },
-        Closed: {
-            graphColor: reportConstants.vulnTypeColorList[6],
-            textColor: reportConstants.vulnTypeTextColorList[6]
-        },
-        Resurfaced: {
-            graphColor: reportConstants.vulnTypeColorList[7],
-            textColor: reportConstants.vulnTypeTextColorList[7]
-        },
-        New: {
-            graphColor: reportConstants.vulnTypeColorList[8],
-            textColor: reportConstants.vulnTypeTextColorList[8]
-        },
-        Total: {
-            graphColor: reportConstants.vulnTypeColorList[9],
-            textColor: reportConstants.vulnTypeTextColorList[9]
-        }
+        };
+    });
 
-    };
     reportConstants.reportTypes = {
         trending: {
             id: 9,
@@ -633,7 +646,7 @@ threadfixModule.factory('reportUtilities', function() {
 
 });
 
-threadfixModule.factory('trendingUtilities', function(reportUtilities) {
+threadfixModule.factory('trendingUtilities', function(reportUtilities, customSeverityService) {
 
     var trendingUtilities = {};
     var startIndex = -1, endIndex = -1;
@@ -651,7 +664,50 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
         $scope.loading = true;
         $scope.noData = false;
         var trendingScansData = [];
+        $scope.trendingStartDate = undefined;
+        $scope.trendingEndDate = undefined;
+
         reportUtilities.createTeamAppNames($scope);
+
+        if ($scope.parameters.daysOldModifier) {
+            $scope.trendingEndDate = new Date();
+            if ($scope.parameters.daysOldModifier === "LastYear") {
+                $scope.trendingStartDate = new Date($scope.trendingEndDate.getFullYear(), $scope.trendingEndDate.getMonth() - 11, 1);
+            } else if ($scope.parameters.daysOldModifier === "LastQuarter") {
+                $scope.trendingStartDate = new Date($scope.trendingEndDate.getFullYear(), $scope.trendingEndDate.getMonth() - 2, 1);
+            }
+        } else {
+            if ($scope.parameters.endDate) {
+                $scope.trendingEndDate = $scope.parameters.endDate;
+            }
+            if ($scope.parameters.startDate) {
+                $scope.trendingStartDate = $scope.parameters.startDate;
+            }
+        }
+
+        // Validate time input: if endDate is before startDate
+        if ($scope.parameters.endDate && $scope.parameters.startDate
+            && ($scope.parameters.startDate > $scope.parameters.endDate)) {
+            $scope.loading = false;
+            return trendingScansData;
+        } else if ($scope.parameters.endDate && $scope.filterScans.length > 0
+            && $scope.parameters.endDate < $scope.filterScans[0].importTime) { // If endDate is before importDate of first scan in list
+            $scope.loading = false;
+            return trendingScansData;
+        } else if ($scope.trendingStartDate && $scope.filterScans.length > 0
+            && $scope.trendingStartDate > $scope.filterScans[$scope.filterScans.length - 1].importTime) { // If startDate is after the last scan in list
+
+            $scope.trendingEndDate = ($scope.trendingEndDate) ? $scope.trendingEndDate : new Date();
+
+            if ($scope.trendingStartDate > $scope.trendingEndDate) // Last check if date input is invalid
+                return trendingScansData;
+
+            var _scan = trendingUtilities.filterDisplayData($scope.filterScans[$scope.filterScans.length - 1], $scope);
+            trendingScansData.push(createEndHash(null, $scope, [_scan], $scope.trendingStartDate));
+            trendingScansData.push(createEndHash(null, $scope, [_scan]));
+            $scope.loading = false;
+            return trendingScansData;
+        }
 
         trendingUtilities.filterByTime($scope);
         if ($scope.filterScans.length === 0) {
@@ -706,6 +762,9 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
                     trendingScansData.unshift(createStartHash(hashBefore, $scope, trendingScansData));
                     trendingScansData.push(createEndHash(hashAfter, $scope, trendingScansData));
                 }
+            } else if (hashBefore && hashAfter) { //If no scans were found in this period of time, but there were scans before and after
+                trendingScansData.push(createStartHash(hashBefore, $scope, [hashAfter]));
+                trendingScansData.push(createEndHash(hashAfter, $scope, [hashBefore]));
             }
         }
         return trendingScansData;
@@ -748,7 +807,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
         return startHash;
     };
 
-    var createEndHash = function(hashAfter, $scope, trendingScansData) {
+    var createEndHash = function(hashAfter, $scope, trendingScansData, endDate) {
         var endHash = {
             notRealScan : true
         };
@@ -760,7 +819,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
         var keys;
 
         if (!hashAfter) {
-            endHash.importTime=  $scope.trendingEndDate;
+            endHash.importTime=  endDate ? endDate : $scope.trendingEndDate;
             keys = Object.keys(lastHashInList);
             keys.forEach(function(key){
                 if (key != "importTime")
@@ -768,7 +827,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
             });
         } else {
             var rate1 = (hashAfter.importTime)-(lastHashInList.importTime);
-            var rate2 = $scope.trendingEndDate-(hashAfter.importTime);
+            var rate2 = $scope.trendingEndDate-(lastHashInList.importTime);
 
             endHash.importTime = $scope.trendingEndDate;
 
@@ -805,19 +864,19 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
             data.Hidden = scan.numberHiddenVulnerabilities;
         }
         if ($scope.parameters.severities.info) {
-            data.Info = calculateInfo(scan, $scope);
+            data[customSeverityService.getCustomSeverity('Info')] = calculateInfo(scan, $scope);
         }
         if ($scope.parameters.severities.low) {
-            data.Low = calculateLow(scan, $scope);
+            data[customSeverityService.getCustomSeverity('Low')] = calculateLow(scan, $scope);
         }
         if ($scope.parameters.severities.medium) {
-            data.Medium = calculateMedium(scan, $scope);
+            data[customSeverityService.getCustomSeverity('Medium')] = calculateMedium(scan, $scope);
         }
         if ($scope.parameters.severities.high) {
-            data.High = calculateHigh(scan, $scope);
+            data[customSeverityService.getCustomSeverity('High')] = calculateHigh(scan, $scope);
         }
         if ($scope.parameters.severities.critical) {
-            data.Critical = calculateCritical(scan, $scope);
+            data[customSeverityService.getCustomSeverity('Critical')] = calculateCritical(scan, $scope);
         }
         return data;
     };
@@ -909,24 +968,8 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
     trendingUtilities.filterByTime = function($scope) {
         if (!$scope.filterScans || $scope.filterScans.length === 0)
             return;
-        $scope.trendingStartDate = undefined;
-        $scope.trendingEndDate = undefined;
+
         startIndex = -1; endIndex = -1;
-        if ($scope.parameters.daysOldModifier) {
-            $scope.trendingEndDate = new Date();
-            if ($scope.parameters.daysOldModifier === "LastYear") {
-                $scope.trendingStartDate = new Date($scope.trendingEndDate.getFullYear(), $scope.trendingEndDate.getMonth() - 11, 1);
-            } else if ($scope.parameters.daysOldModifier === "LastQuarter") {
-                $scope.trendingStartDate = new Date($scope.trendingEndDate.getFullYear(), $scope.trendingEndDate.getMonth() - 2, 1);
-            }
-        } else {
-            if ($scope.parameters.endDate) {
-                $scope.trendingEndDate = $scope.parameters.endDate;
-            }
-            if ($scope.parameters.startDate) {
-                $scope.trendingStartDate = $scope.parameters.startDate;
-            }
-        }
 
         if (!$scope.trendingStartDate) {
             startIndex = 0;

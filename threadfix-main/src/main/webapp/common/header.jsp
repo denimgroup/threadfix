@@ -91,6 +91,13 @@
                                 <a id="grcToolsLink" href="<spring:url value="/configuration/grctools" htmlEscape="true"/>">GRC Tools</a>
                             </li>
                         </security:authorize>
+
+                        <security:authorize ifAllGranted="ROLE_ENTERPRISE">
+                            <li class="normalLinks">
+                                <a id="acceptCriteriaLink" href="<spring:url value="/configuration/acceptcriterias" htmlEscape="true"/>">Acceptance Criteria</a>
+                            </li>
+                        </security:authorize>
+
                         <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_REMOTE_PROVIDERS">
                             <li class="normalLinks">
                                 <a id="remoteProvidersLink" href="<spring:url value="/configuration/remoteproviders" htmlEscape="true"/>">Remote Providers</a>
@@ -104,6 +111,11 @@
                         <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
                             <li class="normalLinks">
                                 <a id="updateChannelVulnLink" href="<spring:url value="/mappings/index" htmlEscape="true"/>">Scanner Mappings</a>
+                            </li>
+                        </security:authorize>
+                        <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_ENTERPRISE">
+                            <li class="normalLinks">
+                                <a id="customizeSeveritiesLink" href="<spring:url value="/severities" htmlEscape="true"/>">Customize Severities</a>
                             </li>
                         </security:authorize>
                         <security:authorize ifAllGranted="ROLE_CAN_MANAGE_TAGS">
@@ -131,6 +143,11 @@
                             <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
                                 <li class="normalLinks">
                                     <a id="configureDefaultsLink" href="<spring:url value="/configuration/settings" htmlEscape="true"/>">System Settings</a>
+                                </li>
+                            </security:authorize>
+                            <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_EMAIL_REPORTS">
+                                <li class="normalLinks">
+                                    <a id="emailListsLink" href="<spring:url value="/configuration/emailLists" htmlEscape="true"/>">Manage Email Lists</a>
                                 </li>
                             </security:authorize>
                             <security:authorize ifAnyGranted="ROLE_CAN_MODIFY_VULNERABILITIES">

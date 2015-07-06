@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.denimgroup.threadfix.data.entities.EmailList;
+import com.denimgroup.threadfix.service.EmailListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -41,6 +43,8 @@ public class EditScheduledEmailReportController {
 	private OrganizationService organizationService;
 	@Autowired
 	private EmailFilterService emailFilterService;
+	@Autowired
+	private EmailListService emailListService;
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
@@ -160,6 +164,61 @@ public class EditScheduledEmailReportController {
 		}
 		else {
 			return RestResponse.failure("Invalid Email address.");
+		}
+	}
+
+	@RequestMapping(value = "/addEmailList", method = RequestMethod.POST)
+	public @ResponseBody RestResponse<EmailList> addEmailList(
+			@PathVariable("scheduledEmailReportId") int scheduledEmailReportId,
+			@RequestParam("emailListId") Integer emailListId) {
+
+		ScheduledEmailReport scheduledEmailReport = scheduledEmailReportService.loadById(scheduledEmailReportId);
+		if (scheduledEmailReport == null) {
+			return RestResponse.failure("Invalid email report.");
+		}
+
+        EmailList emailList = emailListService.loadById(emailListId);
+		List<EmailList> emailLists = scheduledEmailReport.getEmailLists();
+
+        if (emailLists.contains(emailList)){
+			return RestResponse.failure("Email list already added.");
+		} else {
+			emailLists.add(emailList);
+			scheduledEmailReport.setEmailLists(emailLists);
+			if (scheduledEmailReportService.save(scheduledEmailReport) < 0) {
+				return RestResponse.failure("Updating Scheduled Email Report failed.");
+			}
+			else {
+				return RestResponse.success(emailList);
+			}
+		}
+	}
+
+	@RequestMapping(value = "/deleteEmailList", method = RequestMethod.POST)
+	public @ResponseBody RestResponse<EmailList> deleteEmailList(
+			@PathVariable("scheduledEmailReportId") int scheduledEmailReportId,
+            @RequestParam("emailListId") Integer emailListId) {
+
+        ScheduledEmailReport scheduledEmailReport = scheduledEmailReportService.loadById(scheduledEmailReportId);
+        if (scheduledEmailReport == null) {
+            return RestResponse.failure("Invalid email report.");
+        }
+
+        EmailList emailList = emailListService.loadById(emailListId);
+        List<EmailList> emailLists = scheduledEmailReport.getEmailLists();
+
+        if (emailLists.contains(emailList)){
+            emailLists.remove(emailList);
+			scheduledEmailReport.setEmailLists(emailLists);
+			if (scheduledEmailReportService.save(scheduledEmailReport) < 0) {
+				return RestResponse.failure("Updating Scheduled Email Report failed.");
+			}
+			else {
+				return RestResponse.success(emailList);
+			}
+		}
+		else {
+			return RestResponse.failure("Invalid Email List.");
 		}
 	}
 }

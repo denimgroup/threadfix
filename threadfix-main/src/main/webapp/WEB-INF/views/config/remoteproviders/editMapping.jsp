@@ -2,7 +2,7 @@
 
     <div class="modal-header">
         <h4 id="myModalLabel">
-            Edit Mapping for {{ object.customName || object.nativeId }}
+            Edit Mapping for {{ object.customName || object.nativeName || object.nativeId }}
             <span ng-show="config.showDelete" class="delete-span">
                 <a class="btn btn-danger header-button deleteLink"
                         id="deleteLink${ remoteProviderApplication.id }"
@@ -14,7 +14,7 @@
     </div>
 
 	<div ng-form="form" class="modal-body">
-		<table style="border-spacing:10" class="modal-form-table">
+		<table style="border-spacing:10px" class="modal-form-table">
 			<tbody>
 				<tr>
 					<td>Team</td>

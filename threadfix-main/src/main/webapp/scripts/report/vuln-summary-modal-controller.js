@@ -25,7 +25,7 @@ myAppModule.controller('VulnSummaryModalController', function ($log, $scope, $wi
     $http.post(tfEncoder.encode("/reports/tree"), scope.parameters).
         success(function(data, status, headers, config) {
             $scope.loading = false;
-            $scope.categories = data.object;
+            $scope.categories = data.object.tree;
             if ($scope.categories) {
                 $scope.categories.forEach(function(category){
                     category.severityStr = severities[category.intValue-1];

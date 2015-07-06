@@ -97,4 +97,6 @@ public interface ThreadFixRestClient {
     public RestResponse<Tag> updateTag(String tagId, String name);
 
     public RestResponse<String> removeTag(String tagId);
+
+    void setUnsafeFlag(boolean unsafeFlag);
 }

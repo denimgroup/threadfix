@@ -20,11 +20,11 @@
         <th style="width:8px"></th>
         <th style="width:98px;">Name</th>
         <th class="centered fixed-team-header">Total</th>
-        <th class="centered fixed-team-header">Critical</th>
-        <th class="centered fixed-team-header">High</th>
-        <th class="centered fixed-team-header">Medium</th>
-        <th class="centered fixed-team-header">Low</th>
-        <th class="centered fixed-team-header">Info</th>
+        <th class="centered fixed-team-header" generic-severity="Critical"></th>
+        <th class="centered fixed-team-header" generic-severity="High"></th>
+        <th class="centered fixed-team-header" generic-severity="Medium"></th>
+        <th class="centered fixed-team-header" generic-severity="Low"></th>
+        <th class="centered fixed-team-header" generic-severity="Info"></th>
         <th></th>
         <th style="width:130px;"></th>
         <th style="width:70px;"></th>
@@ -73,7 +73,9 @@
                     <div ng-show="team.applications">
                         <div ng-if="team.report" tf-bind-html-unsafe="team.report" class="tableReportDiv" id="teamGraph{{ team.name }}"></div>
                         <div ng-hide="team.report || team.reportFailed || !loading" class="team-report-wrapper">
-                            <div style="float:right" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
+                            <div style="float:right" class="modal-loading">
+                                <div><span class="spinner dark"></span>Loading...</div>
+                            </div>
                         </div>
                         <div ng-show="team.reportFailed" class="team-report-wrapper">
                             Report Failed
@@ -89,11 +91,11 @@
                                 <tr>
                                     <th style="width:70px;"></th>
                                     <th class="centered fixed-team-header">Total</th>
-                                    <th class="centered fixed-team-header">Critical</th>
-                                    <th class="centered fixed-team-header">High</th>
-                                    <th class="centered fixed-team-header">Medium</th>
-                                    <th class="centered fixed-team-header">Low</th>
-                                    <th class="centered fixed-team-header">Info</th>
+                                    <th class="centered fixed-team-header" generic-severity="Critical"></th>
+                                    <th class="centered fixed-team-header" generic-severity="High"></th>
+                                    <th class="centered fixed-team-header" generic-severity="Medium"></th>
+                                    <th class="centered fixed-team-header" generic-severity="Low"></th>
+                                    <th class="centered fixed-team-header" generic-severity="Info"></th>
                                     <th style="width:110px;"></th>
                                 </tr>
                             </thead>

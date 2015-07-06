@@ -8,7 +8,7 @@ module.controller('ScheduledEmailReportsController', function($scope, $http, $mo
         if (a.id < b.id) return -1;
         if (a.id > b.id) return 1;
         return 0;
-    }
+    };
 
     $scope.$on('rootScopeInitialized', function() {
         $http.get(tfEncoder.encode('/configuration/scheduledEmailReports/info')).
@@ -19,6 +19,7 @@ module.controller('ScheduledEmailReportsController', function($scope, $http, $mo
                     $scope.genericSeverities = data.object.genericSeverities;
                     $scope.organizations = data.object.organizations;
                     $scope.isConfiguredEmail = data.object.isConfiguredEmail;
+                    $scope.emailLists = data.object.emailLists;
 
                     if ($scope.scheduledEmailReports.length === 0) {
                         $scope.scheduledEmailReports = undefined;
@@ -76,7 +77,7 @@ module.controller('ScheduledEmailReportsController', function($scope, $http, $mo
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     $scope.openEditModal = function(scheduledReport) {
         //preparing input model for the multi-select directive, a bit odd but we have to initialize the multi-select from the input-model
@@ -132,16 +133,16 @@ module.controller('ScheduledEmailReportsController', function($scope, $http, $mo
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     $scope.showEmailAddresses = function(scheduledReport){
-        if  ("showEmailAddresses" in scheduledReport){
+        if ("showEmailAddresses" in scheduledReport){
             scheduledReport.showEmailAddresses = !scheduledReport.showEmailAddresses;
-            }
+        }
         else {
             scheduledReport.showEmailAddresses = true;
         }
-    }
+    };
 
     $scope.addNewEmail = function(scheduledReport){
         if (!scheduledReport.newEmailAddress) return;
@@ -162,7 +163,7 @@ module.controller('ScheduledEmailReportsController', function($scope, $http, $mo
             $scope.error = "Failure. HTTP status was " + status;
         });
         scheduledReport.newEmailLoading = false;
-    }
+    };
 
     $scope.deleteEmailAddress = function(scheduledReport, emailAddress){
         if (confirm("Delete this email address?")) {
@@ -180,8 +181,54 @@ module.controller('ScheduledEmailReportsController', function($scope, $http, $mo
             }).
             error(function(data, status, headers, config) {
                 $scope.error = "Failure. HTTP status was " + status;
-            })
+            });
             scheduledReport.newEmailLoading = false;
         }
-    }
+    };
+
+    $scope.selectedEmailList = function(scheduledReport, emailList) {
+        scheduledReport.newEmailListId = emailList.id;
+    };
+
+    $scope.addNewEmailList = function(scheduledReport){
+        if (!scheduledReport.newEmailList) return;
+        scheduledReport.newEmailListError = null;
+        scheduledReport.newEmailListLoading = true;
+        var addEmailListUrl = tfEncoder.encode("/configuration/scheduledEmailReports/" + scheduledReport.id + "/addEmailList");
+        $http.post(addEmailListUrl, {"emailListId": scheduledReport.newEmailList.id}).
+            success(function(data, status, headers, config) {
+                if (data.success) {
+                    scheduledReport.newEmailList = null;
+                    threadFixModalService.addElement(scheduledReport.emailLists, data.object);
+                }
+                else {
+                    scheduledReport.newEmailListError = data.message;
+                }
+            }).
+            error(function(data, status, headers, config) {
+                $scope.error = "Failure. HTTP status was " + status;
+            });
+        scheduledReport.newEmailLoading = false;
+    };
+
+    $scope.deleteEmailList = function(scheduledReport, emailList){
+        if (confirm("Delete this email list?")) {
+            scheduledReport.newEmailLoading = true;
+            var deleteUrl = tfEncoder.encode("/configuration/scheduledEmailReports/" + scheduledReport.id + "/deleteEmailList");
+            $http.post(deleteUrl, {"emailListId": emailList.id}).
+                success(function(data, status, headers, config) {
+                    if (data.success) {
+                        $scope.successMessage = "Successfully deleted email list " + emailList.name;
+                        threadFixModalService.deleteElement(scheduledReport.emailLists, emailList);
+                    }
+                    else {
+                        $scope.errorMessage = "Failure. Message was : " + data.message;
+                    }
+                }).
+                error(function(data, status, headers, config) {
+                    $scope.error = "Failure. HTTP status was " + status;
+                });
+            scheduledReport.newEmailLoading = false;
+        }
+    };
 });

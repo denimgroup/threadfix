@@ -43,10 +43,10 @@ public enum TagType {
         TagType type = null;
 
         if (input != null) {
-            for (TagType frameworkType : values()) {
-                if (frameworkType.toString().equalsIgnoreCase(input) ||
-                        frameworkType.displayName.equalsIgnoreCase(input)) {
-                    type = frameworkType;
+            for (TagType tagType : values()) {
+                if (tagType.toString().equals(input) ||
+                        tagType.displayName.equals(input)) {
+                    type = tagType;
                     break;
                 }
             }

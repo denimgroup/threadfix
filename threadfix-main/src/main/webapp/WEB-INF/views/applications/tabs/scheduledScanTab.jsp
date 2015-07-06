@@ -13,6 +13,7 @@
                 <th>ID</th>
                 <th>Scanner</th>
                 <th>Profile</th>
+                <th>Target URL</th>
                 <th>Time</th>
                 <th>Frequency</th>
                 <c:if test="${ canManageApplications }">
@@ -28,6 +29,7 @@
                     <td id="scheduledScanId{{ $index }}"> {{ scheduledScan.id }} </td>
                     <td id="scheduledScanScanner{{ $index }}"> {{ scheduledScan.scanner }} </td>
                     <td id="scheduledScanScanner{{ $index }}"><span  ng-show="scheduledScan.scanConfig"> {{ scheduledScan.scanConfig.name + '.' + scheduledScan.scanConfig.type }} </span></td>
+                    <td id="scheduledScanTargetUrl{{ $index }}"> {{ scheduledScan.targetUrl }} </td>
                     <td id="scheduledScanDay{{ $index }}"> {{ scheduledScan.day }} &nbsp; {{ scheduledScan.hour }}:{{ scheduledScan.extraMinute }}{{ scheduledScan.minute }}
                         &nbsp; {{ scheduledScan.period }} </td>
                     <td id="scheduledScanFrequency{{ $index }}"> {{ scheduledScan.frequency }} </td>

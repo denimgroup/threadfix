@@ -164,6 +164,8 @@ public class Application extends AuditableEntity {
     private Boolean useDefaultCredentials = false;
     private Boolean useDefaultProject = false;
 
+    private Set<AcceptanceCriteriaStatus> acceptanceCriteriaStatusSet = new HashSet<AcceptanceCriteriaStatus>(0);
+
 	@Column(length = NAME_LENGTH, nullable = false)
     @JsonView(Object.class) // This means it will be included in all ObjectWriters with Views.
 	public String getName() {
@@ -419,6 +421,15 @@ public class Application extends AuditableEntity {
 	public List<Vulnerability> getVulnerabilities() {
 		return vulnerabilities;
 	}
+
+    @OneToMany(mappedBy = "application")
+    public Set<AcceptanceCriteriaStatus> getAcceptanceCriteriaStatusSet() {
+        return acceptanceCriteriaStatusSet;
+    }
+
+    public void setAcceptanceCriteriaStatusSet(Set<AcceptanceCriteriaStatus> acceptanceCriteriaStatusSet) {
+        this.acceptanceCriteriaStatusSet = acceptanceCriteriaStatusSet;
+    }
 
 	public void setVulnerabilities(List<Vulnerability> vulnerabilities) {
 		this.vulnerabilities = vulnerabilities;
@@ -901,6 +912,16 @@ public class Application extends AuditableEntity {
         this.tags = tags;
     }
 
+    @Transient
+    public List<AcceptanceCriteria> getAcceptanceCriteria(){
+        List<AcceptanceCriteria> acceptanceCriteriaList = list();
+
+        for (AcceptanceCriteriaStatus acceptanceCriteriaStatus : acceptanceCriteriaStatusSet) {
+            acceptanceCriteriaList.add(acceptanceCriteriaStatus.getAcceptanceCriteria());
+        }
+
+        return acceptanceCriteriaList;
+    }
     @Column
     public Boolean isUseDefaultProject() {
         return useDefaultProject;

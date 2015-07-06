@@ -34,6 +34,13 @@ public class OptionsHolder {
     public static Options getOptions() {
         Options options = new Options();
 
+        Option property  = OptionBuilder.withArgName( "unsafe-ssl" )
+                .hasArgs(1)
+                .withValueSeparator()
+                .withDescription( "unsafe-ssl to force ThreadFix to accept unsigned certificates." )
+                .create( "D" );
+        options.addOption(property);
+
         Option teams = OptionBuilder.withLongOpt("teams")
                 .withDescription("Fetches a list of ThreadFix teams and applications.")
                 .create("t");

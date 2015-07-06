@@ -25,10 +25,10 @@
 					<th>Scanner</th>
 					<th>Total Vulns</th>
 					<th>Hidden</th>
-					<th>Critical</th>
-					<th>High</th>
-					<th>Medium</th>
-					<th>Low</th>
+					<th generic-severity="Critical"></th>
+					<th generic-severity="High"></th>
+					<th generic-severity="Medium"></th>
+					<th generic-severity="Low"></th>
 					<th></th>
 				</tr>
 			</thead>

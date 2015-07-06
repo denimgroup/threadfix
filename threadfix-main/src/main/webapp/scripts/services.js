@@ -17,6 +17,49 @@ threadfixModule.factory('tfEncoder', function($rootScope, $location) {
     return tfEncoder;
 });
 
+/**
+ * This service is a little funky. Basically, every generic-severity directive on the page
+ * adds a callback to the callbacks array. Then when the controller sets the severities in
+ * customSeverityService, the service calls each of the callbacks, which then set the proper
+ * text for each element that has the directive. It's better than declaring a bunch of watchers
+ * and using $rootScope, which was my first solution.
+ *
+ * So, for developers: when you need the custom names for severities, be sure to use the
+ * generic-severity directive on the element that needs the text (create a div if necessary.)
+ * Call setSeverities on this service and Angular will handle the rest.
+ */
+threadfixModule.factory('customSeverityService', function() {
+    var service = {};
+
+    service.callbacks = [];
+
+    service.map = {};
+
+    service.setSeverities = function(genericSeverities) {
+        genericSeverities.forEach(function(severity) {
+            service.map[severity.name] = severity.displayName;
+        });
+
+        service.callbacks.forEach(function(callback) {
+            callback();
+        });
+    };
+
+    service.addCallback = function(callbackFunction) {
+        service.callbacks.push(callbackFunction);
+    };
+
+    service.isInitialized = function() {
+        return !!service.map['Critical']; // !! should make this a boolean
+    };
+
+    service.getCustomSeverity = function(input) {
+        return service.map[input] || input;
+    };
+
+    return service;
+});
+
 threadfixModule.factory('threadfixAPIService', function($location, $http, tfEncoder, $rootScope) {
 
     var threadfixAPIService = {};
@@ -84,6 +127,12 @@ threadfixModule.factory('threadFixModalService', function($http, $modal, tfEncod
 
         if (elementList.length === 0) {
             elementList = undefined;
+        }
+    };
+
+    threadFixModalService.deleteElements = function(elementList, elements) {
+        for (var i = 0; i < elements.length; i++) {
+            threadFixModalService.deleteElement(elementList, elements[i]);
         }
     };
 
@@ -485,7 +534,13 @@ threadfixModule.factory('vulnTreeTransformer', function() {
         }
     };
 
-    transformer.transform = function(serverResponse, owasp, disaStig) {
+    transformer.transform = function(map, owasp, disaStig) {
+
+        var customNameHash = {};
+        map.severities.forEach(function(severity) {
+            customNameHash[severity.name] = severity.displayName;
+        });
+        var serverResponse = map.tree;
 
         var initialCategories = [];
         var newTree = [];
@@ -582,7 +637,13 @@ threadfixModule.factory('vulnTreeTransformer', function() {
             newTree = initialCategories;
 
         } else {
-            initialCategories = [getCategory('Critical', 5), getCategory('High', 4), getCategory('Medium', 3), getCategory('Low', 2), getCategory('Info', 1)];
+            initialCategories = [
+                getCategory(customNameHash['Critical'], 5),
+                getCategory(customNameHash['High'], 4),
+                getCategory(customNameHash['Medium'], 3),
+                getCategory(customNameHash['Low'], 2),
+                getCategory(customNameHash['Info'], 1)
+            ];
 
             serverResponse.forEach(function(element) {
                 var newTreeCategory = initialCategories[5 - element.intValue]; // use the int value backwards to get the index

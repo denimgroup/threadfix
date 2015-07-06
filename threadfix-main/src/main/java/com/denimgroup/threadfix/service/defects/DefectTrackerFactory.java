@@ -159,7 +159,7 @@ public final class DefectTrackerFactory {
         if(application.isUseDefaultCredentials() != null && application.isUseDefaultCredentials()){
             tracker.setUsername(application.getDefectTracker().getDefaultUsername());
             tracker.setPassword(application.getDefectTracker().getDefaultPassword());
-        }else {
+        } else {
             tracker.setUsername(application.getUserName());
             tracker.setPassword(application.getPassword());
         }

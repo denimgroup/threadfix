@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('ReportPageController', function ($scope, $window, $http, tfEncoder, threadfixAPIService) {
+myAppModule.controller('ReportPageController', function ($scope, $window, $http, tfEncoder, threadfixAPIService, customSeverityService) {
 
     var nameCompare = function(a,b) {
         return a.name.localeCompare(b.name);
@@ -36,6 +36,8 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                     $scope.tags = data.object.tags;
                     $scope.vulnTags = data.object.vulnTags;
                     $scope.enterpriseTags = data.object.enterpriseTags;
+
+                    customSeverityService.setSeverities(data.object.genericSeverities);
 
                     $scope.teams.sort(nameCompare)
 

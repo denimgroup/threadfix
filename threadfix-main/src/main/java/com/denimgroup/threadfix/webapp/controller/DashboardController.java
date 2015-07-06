@@ -69,7 +69,7 @@ public class DashboardController {
     @Autowired
     private FilterJsonBlobService filterJsonBlobService;
     @Autowired
-    private ReportService reportService;
+    private GenericSeverityService genericSeverityService;
     @Autowired
     private CacheBustService cacheBustService;
 
@@ -108,6 +108,7 @@ public class DashboardController {
         ReportParameters parameters = getParameters(request, ReportFormat.TRENDING);
         Map<String, Object> map = reportsService.generateTrendingReport(parameters, request);
         map.put("savedFilters", filterJsonBlobService.loadAll());
+        map.put("genericSeverities", genericSeverityService.loadAll());
 
         return RestResponse.success(map);
     }
@@ -121,7 +122,6 @@ public class DashboardController {
         ReportCheckResultBean resultBean = reportsService.generateDashboardReport(parameters, request);
 
         return RestResponse.success(resultBean.getReportList());
-
 	}
 
     private ReportParameters getParameters(HttpServletRequest request, ReportFormat reportFormat) {

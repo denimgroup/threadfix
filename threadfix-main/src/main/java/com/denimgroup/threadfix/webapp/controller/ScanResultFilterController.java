@@ -95,7 +95,7 @@ public class ScanResultFilterController {
             return failure("Filter already exists for this scanner type and severity.");
         }
 
-        scanResultFilter.setGenericSeverity(genericSeverityService.load(scanResultFilter.getGenericSeverity().getId()));
+        scanResultFilter.setGenericSeverity(genericSeverityService.loadById(scanResultFilter.getGenericSeverity().getId()));
         scanResultFilter.setChannelType(channelTypeService.loadChannel(scanResultFilter.getChannelType().getId()));
         scanResultFilterService.storeAndApplyFilter(scanResultFilter);
 
@@ -129,7 +129,7 @@ public class ScanResultFilterController {
         ScanResultFilter databaseScanResultFilter = scanResultFilterService.loadById(scanResultFilterId);
         GenericSeverity previousGenericSeverity = databaseScanResultFilter.getGenericSeverity();
         ChannelType previousChannelType = databaseScanResultFilter.getChannelType();
-        databaseScanResultFilter.setGenericSeverity(genericSeverityService.load(scanResultFilter.getGenericSeverity().getId()));
+        databaseScanResultFilter.setGenericSeverity(genericSeverityService.loadById(scanResultFilter.getGenericSeverity().getId()));
         databaseScanResultFilter.setChannelType(channelTypeService.loadChannel(scanResultFilter.getChannelType().getId()));
 
         scanResultFilterService.storeAndApplyFilter(databaseScanResultFilter, previousGenericSeverity, previousChannelType);

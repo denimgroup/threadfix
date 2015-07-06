@@ -216,11 +216,11 @@
             Severity
             <br>
             <div>
-                <input id="showInfo" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.info"/>Info<br>
-                <input id="showLow" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.low"/>Low<br>
-                <input id="showMedium" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.medium"/>Medium<br>
-                <input id="showHigh" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.high"/>High<br>
-                <input id="showCritical" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.critical"/>Critical
+                <input type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.info" id="showInfo"/><span generic-severity="Info"></span><br>
+                <input type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.low" id="showLow"/><span generic-severity="Low"></span><br>
+                <input type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.medium" id="showMedium"/><span generic-severity="Medium"></span><br>
+                <input type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.high" id="showHigh"/><span generic-severity="High"></span><br>
+                <input type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.critical" id="showCritical"/><span generic-severity="Critical"></span>
             </div>
         </div>
 
