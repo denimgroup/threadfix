@@ -68,7 +68,7 @@ public class TagRestController extends TFRestController {
     /**
      * Create a new tag.
      *
-     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#createTag(String name, Boolean isCommentTag)
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#createTag(String name, String tagType)
      *
      */
     @RequestMapping(headers="Accept=application/json", value="/new", method=RequestMethod.POST)
@@ -84,6 +84,7 @@ public class TagRestController extends TFRestController {
         String name = request.getParameter("name");
         String tagType = request.getParameter("tagType");
         TagType tagTypeEnum = TagType.getTagType(tagType);
+        // Default tag is Application
         if (tagTypeEnum == null)
             tagTypeEnum = TagType.APPLICATION;
 
