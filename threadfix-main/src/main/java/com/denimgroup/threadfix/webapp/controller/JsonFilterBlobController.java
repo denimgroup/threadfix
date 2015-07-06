@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.FilterJsonBlob;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.service.AcceptanceCriteriaStatusService;
 import com.denimgroup.threadfix.service.FilterJsonBlobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,6 +42,8 @@ public class JsonFilterBlobController {
 
     @Autowired
     private FilterJsonBlobService filterJsonBlobService;
+    @Autowired
+    private AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
     public @ResponseBody RestResponse<List<FilterJsonBlob>> save(@ModelAttribute FilterJsonBlob filterJsonBlob) {
@@ -58,6 +61,11 @@ public class JsonFilterBlobController {
                 LOG.info("Number of FilterJsonBlob objects updated to non-default trending report: " + String.valueOf(filtersNo));
             }
             filterJsonBlobService.saveOrUpdate(filterJsonBlob);
+
+            if (dbBlob != null && dbBlob.getAcceptanceCriteria() != null) {
+                acceptanceCriteriaStatusService.setStatuses(dbBlob.getAcceptanceCriteria());
+            }
+
             return RestResponse.success(filterJsonBlobService.loadAllActive());
         }
     }
