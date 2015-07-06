@@ -72,8 +72,8 @@ public class FilterJsonBlob extends AuditableEntity {
         this.defaultTrending = defaultTrending;
     }
 
-    @OneToOne
-    @JoinColumn(name = "acceptanceCriteriaId")
+    @OneToOne(mappedBy = "filterJsonBlob")
+//    @JoinColumn(name = "acceptanceCriteriaId")
     @JsonIgnore
     public AcceptanceCriteria getAcceptanceCriteria() {
         return acceptanceCriteria;
