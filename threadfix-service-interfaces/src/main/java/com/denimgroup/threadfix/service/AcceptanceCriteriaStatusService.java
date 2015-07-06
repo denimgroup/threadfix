@@ -48,4 +48,6 @@ public interface AcceptanceCriteriaStatusService extends GenericObjectService<Ac
 
     boolean appPassesAllFilters(Application application);
 
+    boolean setAppStatus(Application application);
+
 }
