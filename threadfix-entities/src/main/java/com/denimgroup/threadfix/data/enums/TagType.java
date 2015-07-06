@@ -44,8 +44,8 @@ public enum TagType {
 
         if (input != null) {
             for (TagType tagType : values()) {
-                if (tagType.toString().equals(input) ||
-                        tagType.displayName.equals(input)) {
+                if (tagType.toString().equalsIgnoreCase(input) ||
+                        tagType.displayName.equalsIgnoreCase(input)) {
                     type = tagType;
                     break;
                 }
