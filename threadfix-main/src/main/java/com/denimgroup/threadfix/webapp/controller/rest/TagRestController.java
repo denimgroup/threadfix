@@ -174,6 +174,7 @@ public class TagRestController extends TFRestController {
         log.info("Received REST request to query all tags.");
         Map<String, Object> map = map();
         map.put("Application Tag", tagService.loadAllApplicationTags());
+        map.put("Vulnerability Tag", tagService.loadAllVulnTags());
         map.put("Vulnerability Comment Tag", tagService.loadAllCommentTags());
 
         return RestResponse.success(map);
