@@ -428,6 +428,8 @@ public class CommandLineParser {
 					LOGGER.error(response.message);
 				}
 			}
+		} else {
+			LOGGER.warn("Request sent unsuccessfully.");
 		}
 	}
 

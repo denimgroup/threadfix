@@ -55,7 +55,7 @@ public class HttpRestUtils {
 
     public static final String JAVA_KEY_STORE_FILE = getKeyStoreFile();
 
-    private static int count;
+    private static int count = 0;
 
     private static final SanitizedLogger LOGGER = new SanitizedLogger(HttpRestUtils.class);
 
