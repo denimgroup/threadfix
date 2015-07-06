@@ -64,7 +64,7 @@
         </c:if>
     </h2>
 
-    <div ng-hide="config.noFilters">
+    <div ng-show="config.application.acceptanceCriteriaStatuses">
         Acceptance Criteria:
         <span id="appFilterStatus" ng-show="config.passAllFilters" class="badge" ng-class="{'badge-ac-status-passing': true}">PASS</span>
         <span id="appFilterStatus" ng-hide="config.passAllFilters" class="badge" ng-class="{'badge-ac-status-failing': true}">FAIL</span>

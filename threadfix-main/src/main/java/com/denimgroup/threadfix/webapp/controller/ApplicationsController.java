@@ -206,7 +206,6 @@ public class ApplicationsController {
 
         // basic information
         map.put("application", application);
-        map.put("noFilters", application.getAcceptanceCriteriaStatuses().size()==0);
         map.put("passAllFilters", acceptanceCriteriaStatusService.appPassesAllFilters(application));
 
         // scans tab
