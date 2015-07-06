@@ -93,7 +93,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                 $scope.$parent.tabs.forEach(function(tab){
                     tab.active = false;
                 });
-            };
+            }
 
             // Remove the element team of All in vuln search page
             if ($scope.$parent.teams) {
@@ -106,13 +106,13 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                 if (index > -1) {
                     $scope.$parent.teams.splice(index, 1);
                 }
-            };
+            }
 
             $scope.filterParameters = $scope.$parent.filterParameters;
             $scope.resetFilters();
             vulnSearchParameterService.convertFromSpringToAngular($scope, $scope.filterParameters);
             $scope.refresh();
-        };
+        }
 
     });
 
