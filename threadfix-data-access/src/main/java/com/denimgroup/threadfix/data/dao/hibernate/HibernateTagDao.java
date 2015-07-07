@@ -136,12 +136,14 @@ public class HibernateTagDao
 
     @Override
     public Tag retrieveTagWithType(String name, TagType type) {
-        return (Tag) getSession()
-                .createCriteria(getClassReference())
-                .add(Restrictions.eq("active", true))
-                .add(Restrictions.eq("name", name))
-                .add(Restrictions.eq("type", type))
-                .addOrder(getOrder())
-                .uniqueResult();
+        if (type == TagType.APPLICATION) {
+            return retrieveAppTagByName(name);
+        } else
+            return (Tag) getSession()
+                    .createCriteria(getClassReference())
+                    .add(Restrictions.eq("active", true))
+                    .add(Restrictions.eq("name", name))
+                    .add(Restrictions.eq("type", type))
+                    .uniqueResult();
     }
 }
