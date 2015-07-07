@@ -68,13 +68,7 @@ public class ApplicationRestController extends TFRestController {
     @Autowired
     private DocumentService documentService;
     @Autowired
-    private ScanService scanService;
-    @Autowired
     private ScanParametersService scanParametersService;
-    @Autowired
-    private ScanTypeCalculationService scanTypeCalculationService;
-    @Autowired
-    private ScanMergeService scanMergeService;
     @Autowired
     private WafService wafService;
     @Autowired
@@ -204,6 +198,7 @@ public class ApplicationRestController extends TFRestController {
      * Return details about a specific application.
      * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#searchForApplicationByName(String, String)
      */
+    @JsonView(AllViews.RestViewApplication2_1.class)
     @RequestMapping(headers="Accept=application/json", value="/{teamId}/lookup", method=RequestMethod.GET)
     public Object applicationLookup(HttpServletRequest request,
                                     @PathVariable("teamId") String teamName) throws IOException {
