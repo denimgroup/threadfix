@@ -38,14 +38,14 @@ public interface AcceptanceCriteriaStatusService extends GenericObjectService<Ac
 
     void addStatus(AcceptanceCriteria acceptanceCriteria, Application application);
 
-    void deleteStatus(AcceptanceCriteria acceptanceCriteria, Integer applicationId);
+    void removeStatus(AcceptanceCriteria acceptanceCriteria, Integer applicationId);
 
-    boolean setStatus(AcceptanceCriteriaStatus acceptanceCriteriaStatus, AcceptanceCriteria acceptanceCriteria);
+    void runStatusCheck(AcceptanceCriteria acceptanceCriteria);
 
-    boolean setStatuses(AcceptanceCriteria acceptanceCriteria);
+    void runStatusCheck(int applicationId);
 
-    boolean appPassesAllFilters(Application application);
+    boolean passFilters(Application application);
 
-    boolean setAppStatus(int applicationId);
+    boolean passFilters(AcceptanceCriteria acceptanceCriteria);
 
 }

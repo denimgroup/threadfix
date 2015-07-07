@@ -206,7 +206,7 @@ public class ApplicationsController {
 
         // basic information
         map.put("application", application);
-        map.put("passAllFilters", acceptanceCriteriaStatusService.appPassesAllFilters(application));
+        map.put("passFilters", acceptanceCriteriaStatusService.passFilters(application));
 
         // scans tab
         map.put("scans", checkDownloadable(application.getScans()));

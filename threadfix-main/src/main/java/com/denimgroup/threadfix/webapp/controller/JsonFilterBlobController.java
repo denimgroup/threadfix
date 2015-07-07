@@ -68,7 +68,7 @@ public class JsonFilterBlobController {
             filterJsonBlobService.saveOrUpdate(filterJsonBlob);
 
             if (filterJsonBlob.getAcceptanceCriteria() != null) {
-                acceptanceCriteriaStatusService.setStatuses(filterJsonBlob.getAcceptanceCriteria());
+                acceptanceCriteriaStatusService.runStatusCheck(filterJsonBlob.getAcceptanceCriteria());
             }
 
             return RestResponse.success(filterJsonBlobService.loadAllActive());

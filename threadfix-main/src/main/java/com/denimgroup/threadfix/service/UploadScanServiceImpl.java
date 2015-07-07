@@ -119,7 +119,7 @@ public class UploadScanServiceImpl implements UploadScanService{
                 }
             }
 
-            acceptanceCriteriaStatusService.setAppStatus(appId);
+            acceptanceCriteriaStatusService.runStatusCheck(appId);
         }
     }
 }

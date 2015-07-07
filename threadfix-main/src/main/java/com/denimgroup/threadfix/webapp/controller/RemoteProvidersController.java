@@ -160,7 +160,7 @@ public class RemoteProvidersController {
 		}
 
         for (RemoteProviderApplication remoteProviderApplication : remoteProviderType.getRemoteProviderApplications()) {
-            acceptanceCriteriaStatusService.setAppStatus(remoteProviderApplication.getApplication().getId());
+            acceptanceCriteriaStatusService.runStatusCheck(remoteProviderApplication.getApplication().getId());
         }
 
 		return RestResponse.success("Importing scans.");
@@ -190,7 +190,7 @@ public class RemoteProvidersController {
 		ResponseCode response = remoteProviderTypeService.importScansForApplication(remoteProviderApplication);
 		
 		if (response.equals(ResponseCode.SUCCESS)) {
-            acceptanceCriteriaStatusService.setAppStatus(appId);
+            acceptanceCriteriaStatusService.runStatusCheck(appId);
             return RestResponse.success("Do the redirect");
 		} else {
 			String errorMsg;
