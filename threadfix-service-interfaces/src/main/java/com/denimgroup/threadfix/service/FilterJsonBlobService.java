@@ -24,7 +24,9 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.FilterJsonBlob;
+import java.util.List;
 
 public interface FilterJsonBlobService extends GenericNamedObjectService<FilterJsonBlob> {
     int updateDefaultTrendingFilter();
+    List<FilterJsonBlob> loadAllAssociated();
 }
