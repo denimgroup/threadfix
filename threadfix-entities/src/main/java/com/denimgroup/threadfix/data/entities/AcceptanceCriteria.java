@@ -65,7 +65,7 @@ public class AcceptanceCriteria extends AuditableEntity {
         this.name = name;
     }
 
-    @OneToMany(mappedBy = "acceptanceCriteria")
+    @OneToMany(mappedBy = "acceptanceCriteria", cascade = CascadeType.REMOVE)
     @JsonView(Object.class)
     public List<AcceptanceCriteriaStatus> getAcceptanceCriteriaStatuses() {
         return acceptanceCriteriaStatuses;
