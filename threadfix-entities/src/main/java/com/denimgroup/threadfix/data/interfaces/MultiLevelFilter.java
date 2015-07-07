@@ -21,23 +21,19 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.data.interfaces;
 
-import com.denimgroup.threadfix.data.entities.SeverityFilter;
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Organization;
 
-import java.util.List;
+/**
+ * Created by mcollins on 5/18/15.
+ */
+public interface MultiLevelFilter {
 
-public interface SeverityFilterService {
+    boolean getGlobal();
+    Application getApplication();
+    Organization getOrganization();
 
-	void save(SeverityFilter severityFilter, int orgId, int appId);
-	
-	void clean(SeverityFilter severityFilter, int teamId, int appId);
 
-	SeverityFilter loadFilter(int orgId, int appId);
-
-	List<SeverityFilter> loadAllFilters();
-
-	SeverityFilter getParentFilter(int teamId, int appId);
-
-	SeverityFilter loadEffectiveFilter(int orgId, int appId);
 }

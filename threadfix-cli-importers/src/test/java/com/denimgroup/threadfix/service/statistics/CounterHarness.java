@@ -21,23 +21,15 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.service.statistics;
 
-import com.denimgroup.threadfix.data.entities.SeverityFilter;
+/**
+ * Created by mcollins on 6/11/15.
+ */
+public class CounterHarness {
 
-import java.util.List;
 
-public interface SeverityFilterService {
 
-	void save(SeverityFilter severityFilter, int orgId, int appId);
-	
-	void clean(SeverityFilter severityFilter, int teamId, int appId);
 
-	SeverityFilter loadFilter(int orgId, int appId);
 
-	List<SeverityFilter> loadAllFilters();
-
-	SeverityFilter getParentFilter(int teamId, int appId);
-
-	SeverityFilter loadEffectiveFilter(int orgId, int appId);
 }

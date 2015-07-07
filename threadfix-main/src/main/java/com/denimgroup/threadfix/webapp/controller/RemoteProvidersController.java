@@ -299,7 +299,8 @@ public class RemoteProvidersController {
         return authenticationFieldMap;
     }
 
-    @PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
+	@JsonView(AllViews.TableRow.class)
+	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
 	@RequestMapping(value="/{typeId}/clearConfiguration", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<RemoteProviderType> clearConfiguration(@PathVariable("typeId") int typeId,
 			HttpServletRequest request) {
