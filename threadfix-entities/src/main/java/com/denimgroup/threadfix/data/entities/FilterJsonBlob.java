@@ -88,4 +88,20 @@ public class FilterJsonBlob extends AuditableEntity {
     public String toString() {
         return json;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof FilterJsonBlob)) return false;
+
+        FilterJsonBlob that = (FilterJsonBlob) o;
+
+        return name.equals(that.name);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 }
