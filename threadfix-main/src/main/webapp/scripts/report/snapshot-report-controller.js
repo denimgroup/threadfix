@@ -1020,8 +1020,6 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             });
             $scope.scanStatistics.push({});
         })
-
-
     };
 
     var filterMVABySeverity = function() {

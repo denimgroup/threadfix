@@ -159,14 +159,14 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
             success(function(data, status, headers, config) {
                 if (data.success) {
                     var exportList = [];
-                    data.object.forEach(function(elementObj){
+                    data.object.elementList.forEach(function(elementObj){
                         var element = elementObj.element;
                         var info = elementObj.info;
                         element.vulns = info.vulns;
                         element.vulnCount = info.vulnCount;
                         exportList.push(element);
                     });
-                    $scope.exportVulnTree = vulnTreeTransformer.transform(exportList, parameters.owasp, isDISASTIG ? $scope.DISA_STIG : undefined);
+                    $scope.exportVulnTree = vulnTreeTransformer.transform({tree: exportList, severities: data.object.severities}, parameters.owasp, isDISASTIG ? $scope.DISA_STIG : undefined);
                     //$scope.$apply();
 
                     reportExporter.exportPDFTableFromId($scope, exportInfo, null, function() {

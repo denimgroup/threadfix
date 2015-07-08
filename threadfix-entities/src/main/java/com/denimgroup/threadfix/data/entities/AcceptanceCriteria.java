@@ -51,7 +51,7 @@ public class AcceptanceCriteria extends AuditableEntity {
     @Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
     private String name;
 
-    private Set<AcceptanceCriteriaStatus> acceptanceCriteriaStatusSet = new HashSet<AcceptanceCriteriaStatus>(0);
+    private List<AcceptanceCriteriaStatus> acceptanceCriteriaStatuses;
 
     private FilterJsonBlob filterJsonBlob;
 
@@ -65,14 +65,14 @@ public class AcceptanceCriteria extends AuditableEntity {
         this.name = name;
     }
 
-    @OneToMany(mappedBy = "acceptanceCriteria")
+    @OneToMany(mappedBy = "acceptanceCriteria", cascade = CascadeType.REMOVE)
     @JsonView(Object.class)
-    public Set<AcceptanceCriteriaStatus> getAcceptanceCriteriaStatusSet() {
-        return acceptanceCriteriaStatusSet;
+    public List<AcceptanceCriteriaStatus> getAcceptanceCriteriaStatuses() {
+        return acceptanceCriteriaStatuses;
     }
 
-    public void setAcceptanceCriteriaStatusSet(Set<AcceptanceCriteriaStatus> acceptanceCriteriaStatusSet) {
-        this.acceptanceCriteriaStatusSet = acceptanceCriteriaStatusSet;
+    public void setAcceptanceCriteriaStatuses(List<AcceptanceCriteriaStatus> acceptanceCriteriaStatuses) {
+        this.acceptanceCriteriaStatuses = acceptanceCriteriaStatuses;
     }
 
     @Transient
@@ -80,8 +80,12 @@ public class AcceptanceCriteria extends AuditableEntity {
     public List<Application> getApplications(){
         List<Application> applications = list();
 
-        for (AcceptanceCriteriaStatus acceptanceCriteriaStatus : acceptanceCriteriaStatusSet) {
-            applications.add(acceptanceCriteriaStatus.getApplication());
+        if(acceptanceCriteriaStatuses != null && acceptanceCriteriaStatuses.size() > 0) {
+
+            for (AcceptanceCriteriaStatus acceptanceCriteriaStatus : acceptanceCriteriaStatuses) {
+                if (acceptanceCriteriaStatus != null)
+                    applications.add(acceptanceCriteriaStatus.getApplication());
+            }
         }
 
         return applications;

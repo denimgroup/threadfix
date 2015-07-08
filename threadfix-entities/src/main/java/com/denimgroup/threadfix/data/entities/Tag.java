@@ -141,7 +141,7 @@ public class Tag extends AuditableEntity {
     }
 
     @Column(nullable = true)
-    @JsonView(Object.class)
+    @JsonIgnore
     public Boolean getTagForComment() {
         return (tagForComment != null && tagForComment) || getType() == TagType.COMMENT;
     }

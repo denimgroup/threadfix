@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Tag;
 import com.denimgroup.threadfix.data.entities.Waf;
+import com.denimgroup.threadfix.data.enums.TagType;
 import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
@@ -61,20 +62,15 @@ public class ApplicationRestController extends TFRestController {
             ADD_CHANNEL_FAILED = "Adding an Application Channel failed.",
             SET_WAF_FAILED = "Call to setWaf failed.",
             SCAN_TYPE_LOOKUP_FAILED = "Unable to determine Scan type",
-            TAG_LOOKUP_FAILED = "Tag lookup failed. Check your ID.";
+            TAG_LOOKUP_FAILED = "Tag lookup failed. Check your ID.",
+    TAG_INVALID = "Invalid Tag ID. It is not an Application Tag.";
 
     @Autowired
     private ApplicationService applicationService;
     @Autowired
     private DocumentService documentService;
     @Autowired
-    private ScanService scanService;
-    @Autowired
     private ScanParametersService scanParametersService;
-    @Autowired
-    private ScanTypeCalculationService scanTypeCalculationService;
-    @Autowired
-    private ScanMergeService scanMergeService;
     @Autowired
     private WafService wafService;
     @Autowired
@@ -204,6 +200,7 @@ public class ApplicationRestController extends TFRestController {
      * Return details about a specific application.
      * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#searchForApplicationByName(String, String)
      */
+    @JsonView(AllViews.RestViewApplication2_1.class)
     @RequestMapping(headers="Accept=application/json", value="/{teamId}/lookup", method=RequestMethod.GET)
     public Object applicationLookup(HttpServletRequest request,
                                     @PathVariable("teamId") String teamName) throws IOException {
@@ -430,6 +427,11 @@ public class ApplicationRestController extends TFRestController {
         if(tag == null){
             log.warn("Invalid Tag ID.");
             return failure(TAG_LOOKUP_FAILED);
+        }
+
+        if (TagType.APPLICATION != tag.getType()) {
+            log.warn(TAG_INVALID);
+            return failure(TAG_INVALID);
         }
 
         if(application.containTag(tag)){
