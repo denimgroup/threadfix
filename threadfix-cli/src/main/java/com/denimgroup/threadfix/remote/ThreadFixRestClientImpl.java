@@ -66,6 +66,7 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
         propertiesManager.setMemoryKey(apiKey);
         propertiesManager.setMemoryUrl(url);
         httpRestUtils = new HttpRestUtils(propertiesManager);
+        httpRestUtils.setUnsafeFlag(true);
 	}
 	
 	public RestResponse<Application> createApplication(String teamId, String name, String url) {
