@@ -219,6 +219,10 @@ body#config #tab-config a:hover {
 	padding-top: 43px;
 }
 
+#main-content .top.popover {
+	padding-top: 0px;
+}
+
 em {
 	font-style: italic;
 }
