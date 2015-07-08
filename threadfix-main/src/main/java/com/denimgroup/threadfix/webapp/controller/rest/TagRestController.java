@@ -91,18 +91,14 @@ public class TagRestController extends TFRestController {
         if (name == null || name.trim().equals(""))
             return RestResponse.failure("This field cannot be blank");
 
-        Tag newTag = new Tag();
-        newTag.setName(name);
-        newTag.setType(tagTypeEnum);
-
-        Tag databaseTag;
-        if (!newTag.getTagForComment())
-            databaseTag = tagService.loadApplicationTag(newTag.getName().trim());
-        else
-            databaseTag = tagService.loadCommentTag(newTag.getName().trim());
+        Tag databaseTag = tagService.loadTagWithType(name, tagTypeEnum);
         if (databaseTag != null) {
             return RestResponse.failure("The name is already taken.");
         }
+
+        Tag newTag = new Tag();
+        newTag.setName(name);
+        newTag.setType(tagTypeEnum);
 
         log.info("Saving new Tag " + newTag.getName());
         tagService.storeTag(newTag);
@@ -174,6 +170,7 @@ public class TagRestController extends TFRestController {
         log.info("Received REST request to query all tags.");
         Map<String, Object> map = map();
         map.put("Application Tag", tagService.loadAllApplicationTags());
+        map.put("Vulnerability Tag", tagService.loadAllVulnTags());
         map.put("Vulnerability Comment Tag", tagService.loadAllCommentTags());
 
         return RestResponse.success(map);

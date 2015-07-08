@@ -109,7 +109,7 @@
             </div>
         </div>
 
-        <div class="accordion-inner" ng-hide="complianceActive || trendingActive">
+        <div class="accordion-inner" ng-hide="complianceActive || trendingActive || (reportId && reportId == Portfolio_Report_Id)">
             Vulnerability
             <a ng-hide="showVulnTagInput" ng-click="showVulnTagInput = !showVulnTagInput">
                 <span id="showVulnTagInput" class="icon" ng-class="{ 'icon-minus': showVulnTagInput, 'icon-plus': !showVulnTagInput }"></span>
