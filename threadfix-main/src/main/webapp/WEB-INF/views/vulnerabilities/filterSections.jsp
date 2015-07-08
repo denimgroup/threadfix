@@ -99,17 +99,17 @@
             <input id="tagNameTypeahead"
                    focus-on="showTagInput"
                    ng-show="showTagInput"
-                   typeahead="tag.name for tag in tags | filter:$viewValue | limitTo:8"
+                   typeahead="tag as tag.encodedName for tag in tags | filter:$viewValue | limitTo:8"
                    type="text"
-                   ng-model="newFilteredTag.name"
-                   typeahead-on-select="addNew(parameters.tags, newFilteredTag.name); newFilteredTag = {}; showTagInput = false"/>
+                   ng-model="newFilteredTag"
+                   typeahead-on-select="addNew(parameters.tags, newFilteredTag.name); newFilteredTag = ''; showTagInput = false"/>
             <div ng-repeat="filteredTag in parameters.tags">
                 <span class="pointer icon icon-minus-sign" ng-click="remove(parameters.tags, $index)"></span>
                 {{ filteredTag.name }}
             </div>
         </div>
 
-        <div class="accordion-inner" ng-hide="complianceActive || trendingActive">
+        <div class="accordion-inner" ng-hide="complianceActive || trendingActive || (reportId && reportId == Portfolio_Report_Id)">
             Vulnerability
             <a ng-hide="showVulnTagInput" ng-click="showVulnTagInput = !showVulnTagInput">
                 <span id="showVulnTagInput" class="icon" ng-class="{ 'icon-minus': showVulnTagInput, 'icon-plus': !showVulnTagInput }"></span>

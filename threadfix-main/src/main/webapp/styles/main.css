@@ -219,6 +219,10 @@ body#config #tab-config a:hover {
 	padding-top: 43px;
 }
 
+#main-content .top.popover {
+	padding-top: 0px;
+}
+
 em {
 	font-style: italic;
 }
@@ -1305,6 +1309,14 @@ div.remote-provider-config-modal a {
 
 .badge-comment-tag {
 	background-color:#c67605;
+}
+
+.badge-ac-status-passing {
+    background-color: darkgreen;
+}
+
+.badge-ac-status-failing {
+    background-color: #c43c35;
 }
 
 .text-critical{

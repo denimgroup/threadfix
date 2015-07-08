@@ -29,7 +29,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
@@ -47,6 +46,7 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
     private Application application;
     private AcceptanceCriteria acceptanceCriteria;
 
+    @JsonView(Object.class)
     public boolean isPassing() {
         return passing;
     }
@@ -74,7 +74,9 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
             return map(
                     "id", application.getId(),
                     "name", application.getName(),
-                    "team", map("name", application.getOrganization().getName()));
+                    "team", map(
+                            "id", application.getOrganization().getId(),
+                            "name", application.getOrganization().getName()));
         } else {
             return null;
         }

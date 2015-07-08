@@ -24,18 +24,12 @@
 
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
-import com.denimgroup.threadfix.data.entities.RemoteProviderAuthenticationField;
-import com.denimgroup.threadfix.data.entities.RemoteProviderType;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.enums.QualysPlatform;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.RemoteProviderApplicationService;
-import com.denimgroup.threadfix.service.RemoteProviderTypeService;
+import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
-import com.denimgroup.threadfix.service.ScheduledRemoteProviderImportService;
 import com.denimgroup.threadfix.service.queue.QueueSender;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
@@ -74,6 +68,8 @@ public class RemoteProvidersController {
     private ScheduledRemoteProviderImportService scheduledRemoteProviderImportService;
 	@Autowired
 	private QueueSender queueSender;
+    @Autowired
+    private AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
 
     @InitBinder
     public void setAllowedFields(WebDataBinder dataBinder) {
@@ -162,7 +158,11 @@ public class RemoteProvidersController {
 		} else {
 			log.error("No apps were configured with applications.");
 		}
-		
+
+        for (RemoteProviderApplication remoteProviderApplication : remoteProviderType.getRemoteProviderApplications()) {
+            acceptanceCriteriaStatusService.runStatusCheck(remoteProviderApplication.getApplication().getId());
+        }
+
 		return RestResponse.success("Importing scans.");
 	}
 	
@@ -190,6 +190,7 @@ public class RemoteProvidersController {
 		ResponseCode response = remoteProviderTypeService.importScansForApplication(remoteProviderApplication);
 		
 		if (response.equals(ResponseCode.SUCCESS)) {
+            acceptanceCriteriaStatusService.runStatusCheck(appId);
             return RestResponse.success("Do the redirect");
 		} else {
 			String errorMsg;
