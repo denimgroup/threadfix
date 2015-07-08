@@ -136,6 +136,9 @@ public class QueueListener implements MessageListener {
                     case QueueConstants.STATISTICS_UPDATE:
                         processStatisticsUpdate(map.getInt("appId"));
                         break;
+					case QueueConstants.STATISTICS_TEAM_UPDATE:
+						processStatisticsTeamUpdate(map.getInt("teamId"));
+						break;
                     case QueueConstants.VULNS_FILTER:
                         updateVulnsFilter();
                         break;
@@ -178,6 +181,25 @@ public class QueueListener implements MessageListener {
             );
         }
     }
+
+	private void processStatisticsTeamUpdate(int teamId) {
+		if (teamId == -1) {
+			log.info("Processing statistics update for all teams.");
+			for (Organization organization : organizationService.loadAllActive()) {
+				for (Application app : organization.getActiveApplications()) {
+					vulnerabilityService.updateVulnerabilityReport(app);
+				}
+			}
+		} else {
+			log.info("Processing statistics update for team with ID " + teamId);
+			Organization organization = organizationService.loadById(teamId);
+			if (organization != null) {
+				for (Application app : organization.getActiveApplications()) {
+					vulnerabilityService.updateVulnerabilityReport(app);
+				}
+			}
+		}
+	}
 
     private void processRemoteProviderBulkImport(Integer remoteProviderTypeId, Integer jobStatusId) {
 		log.info("Remote Provider Bulk Import job received");
