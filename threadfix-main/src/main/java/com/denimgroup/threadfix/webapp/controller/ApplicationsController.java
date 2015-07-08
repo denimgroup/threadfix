@@ -106,6 +106,8 @@ public class ApplicationsController {
     private CacheBustService cacheBustService;
     @Autowired
     private GenericSeverityService genericSeverityService;
+    @Autowired
+    private AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -204,6 +206,7 @@ public class ApplicationsController {
 
         // basic information
         map.put("application", application);
+        map.put("passFilters", acceptanceCriteriaStatusService.passFilters(application));
 
         // scans tab
         map.put("scans", checkDownloadable(application.getScans()));
