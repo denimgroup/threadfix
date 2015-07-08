@@ -13,20 +13,12 @@ import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.denimgroup.threadfix.data.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.EmailList;
-import com.denimgroup.threadfix.data.entities.GenericSeverity;
-import com.denimgroup.threadfix.data.entities.GenericVulnerability;
-import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.data.entities.ScheduledEmailReport;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.data.entities.VulnerabilitySearchParameters;
-import com.denimgroup.threadfix.data.entities.VulnerabilityTreeElement;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.email.EmailConfiguration;
 import com.denimgroup.threadfix.service.email.EmailFilterService;
@@ -223,4 +215,35 @@ public class EmailReportServiceImpl implements EmailReportService {
 		}
 		return genericSeveritiesAboveThreshold;
 	}
+
+    @Override
+    public void sendAcceptanceCriteriaReport(AcceptanceCriteria acceptanceCriteria) {
+        Map<String, Object> model = map();
+        String emailBody = templateBuilderService.prepareMessageFromTemplate(model, "acceptanceCriteriaReport.vm");
+
+        MimeMessage message = javaMailSender.createMimeMessage();
+        try {
+            message.setSubject("AC Status Update");
+            message.setContent(emailBody, "text/html; charset=utf-8");
+
+            Set<String> filteredEmailAddresses =
+                    emailFilterService.getFilteredEmailAddresses(list("zabdisubhan@denimgroup.com"));
+
+            LOG.info("Filtered email addresses: " + filteredEmailAddresses.toString());
+
+            for (String emailAddress : filteredEmailAddresses){
+                message.addRecipient(MimeMessage.RecipientType.TO, new InternetAddress(emailAddress));
+            }
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        try {
+            javaMailSender.send(message);
+            LOG.info("Email report sent normally sent normally");
+        }
+        catch (MailException ex) {
+            LOG.error("Email not send because of misconfiguration", ex);
+        }
+
+    }
 }
