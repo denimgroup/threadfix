@@ -172,6 +172,7 @@ public class ScanController {
 		return null;
 	}
 
+    @JsonView(AllViews.TableRow.class)
 	@RequestMapping(value = "/{scanId}/table", method = RequestMethod.POST)
 	public @ResponseBody Object scanTable(
 			@ModelAttribute TableSortBean bean,
@@ -257,6 +258,7 @@ public class ScanController {
 		return RestResponse.success(responseMap);
 	}
 
+    @JsonView(AllViews.TableRow.class)
 	@RequestMapping(value = "/{scanId}/objects")
 	public @ResponseBody Object getBaseObjects(@PathVariable("scanId") Integer scanId) throws IOException {
 		Map<String, Object> map = new HashMap<>();
