@@ -7,12 +7,15 @@ import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import com.denimgroup.threadfix.data.entities.ScanResultFilter;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Repository
 public class HibernateScanResultFilterDao extends AbstractObjectDao<ScanResultFilter> implements ScanResultFilterDao {
@@ -56,5 +59,42 @@ public class HibernateScanResultFilterDao extends AbstractObjectDao<ScanResultFi
         }
 
         return scanResultFilters.get(0);
+    }
+
+    // idk if this is better than just raw Java but it was fun to write
+    @Override
+    public List<Integer> retrieveAllChannelSeverities() {
+
+        List<ScanResultFilter> filters = retrieveAll();
+
+        if (filters.isEmpty()) {
+            return list();
+        }
+
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ScanResultFilter.class)
+                .createAlias("genericSeverity", "genericSeverityAlias")
+                .createAlias("genericSeverityAlias.severityMapping", "mappingAlias")
+                .createAlias("mappingAlias.channelSeverity", "channelSeverityAlias")
+                .createAlias("channelSeverityAlias.channelType", "channelTypeAlias")
+                .setProjection(Projections.property("channelSeverityAlias.id"));
+
+        LogicalExpression wherePart = null;
+        for (ScanResultFilter filter : filters) {
+
+            if (wherePart == null) {
+                wherePart = getLogicalExpression(filter);
+            } else {
+                wherePart = Restrictions.or(wherePart, getLogicalExpression(filter));
+            }
+        }
+
+        return criteria.add(wherePart).list();
+    }
+
+    private LogicalExpression getLogicalExpression(ScanResultFilter filter) {
+        return Restrictions.and(
+                Restrictions.eq("genericSeverityAlias.intValue", filter.getGenericSeverity().getIntValue()),
+                Restrictions.eq("channelTypeAlias.id", filter.getChannelType().getId())
+        );
     }
 }

@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
+import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.StatisticsCounterDao;
 import com.denimgroup.threadfix.data.entities.StatisticsCounter;
@@ -34,6 +35,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
 import static org.hibernate.criterion.Projections.rowCount;
 import static org.hibernate.criterion.Restrictions.eq;
 
@@ -74,7 +76,10 @@ public class HibernateStatisticsCounterDao
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Map<String, Object>> getFindingSeverityMap(List<Integer> filteredSeverities, List<Integer> filteredVulnerabilities) {
+    public List<Map<String, Object>> getFindingSeverityMap(
+            List<Integer> filteredSeverities,
+            List<Integer> filteredVulnerabilities,
+            List<Integer> filteredChannelSeverities) {
 
         String hql = "select new map (" +
                     "count(*) as total, " +
@@ -82,32 +87,53 @@ public class HibernateStatisticsCounterDao
                     "counter.currentGenericSeverityId as genericSeverityId) " +
                 "from StatisticsCounter counter ";
 
-        if (!filteredSeverities.isEmpty() || !filteredVulnerabilities.isEmpty()) {
+        List<String> whereStatements = getWhereStatements(filteredSeverities, filteredVulnerabilities, filteredChannelSeverities);
+
+        if (!whereStatements.isEmpty()) {
             hql += "where ";
-        }
-        if (!filteredSeverities.isEmpty()) {
-            hql += "counter.currentGenericSeverityId not in (:filteredSeverities) ";
-            if (!filteredVulnerabilities.isEmpty()) {
-                hql += "and ";
-            }
-        }
-        if (!filteredVulnerabilities.isEmpty()) {
-            hql += "counter.genericVulnerabilityId not in (:filteredVulnerabilities) ";
+
+            hql += CollectionUtils.join(" and ", whereStatements);
         }
 
         hql += "group by counter.scanId, counter.currentGenericSeverityId";
 
         Query query = getSession().createQuery(hql);
 
+        addParameterLists(filteredSeverities, filteredVulnerabilities, filteredChannelSeverities, query);
+
+        Object idsMap = query.list();
+        return (List<Map<String, Object>>) idsMap;
+    }
+
+    private void addParameterLists(List<Integer> filteredSeverities,
+                                   List<Integer> filteredVulnerabilities,
+                                   List<Integer> filteredChannelSeverities,
+                                   Query query) {
         if (!filteredSeverities.isEmpty()) {
             query.setParameterList("filteredSeverities", filteredSeverities);
         }
         if (!filteredVulnerabilities.isEmpty()) {
             query.setParameterList("filteredVulnerabilities", filteredVulnerabilities);
         }
+        if (!filteredChannelSeverities.isEmpty()) {
+            query.setParameterList("filteredChannelSeverities", filteredChannelSeverities);
+        }
+    }
 
-        Object idsMap = query.list();
-        return (List<Map<String, Object>>) idsMap;
+    private List<String> getWhereStatements(List<Integer> filteredSeverities, List<Integer> filteredVulnerabilities, List<Integer> filteredChannelSeverities) {
+        List<String> whereStatements = list();
+
+        if (!filteredSeverities.isEmpty()) {
+            whereStatements.add("counter.currentGenericSeverityId not in (:filteredSeverities)");
+        }
+        if (!filteredVulnerabilities.isEmpty()) {
+            whereStatements.add("counter.genericVulnerabilityId not in (:filteredVulnerabilities)");
+        }
+        if (!filteredChannelSeverities.isEmpty()) {
+            whereStatements.add("counter.channelSeverityId not in (:filteredChannelSeverities)");
+        }
+
+        return whereStatements;
     }
 
     @Override

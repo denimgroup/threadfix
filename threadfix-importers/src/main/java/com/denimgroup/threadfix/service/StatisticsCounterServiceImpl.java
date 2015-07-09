@@ -54,6 +54,8 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
     VulnerabilityFilterDao vulnerabilityFilterDao;
     @Autowired
     GenericSeverityDao genericSeverityDao;
+    @Autowired
+    ScanResultFilterDao scanResultFilterDao;
 
     @Override
     public void updateStatistics(List<Scan> scans) {
@@ -315,12 +317,16 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
     private Map<Integer, Long[]> getIntegerMap(int orgID, int appID) {
         List<Integer> filteredSeverities = getFilteredSeverities(orgID, appID),
-                filteredVulnerabilities = getFilteredVulnerabilities(orgID, appID);
+                filteredVulnerabilities = getFilteredVulnerabilities(orgID, appID),
+                filteredChannelSeverities = scanResultFilterDao.retrieveAllChannelSeverities();
 
         Map<Integer, Integer> genericSeverityIdToSeverityMap = generateGenericSeverityMap();
 
         List<Map<String, Object>> totalMap =
-                statisticsCounterDao.getFindingSeverityMap(filteredSeverities, filteredVulnerabilities);
+                statisticsCounterDao.getFindingSeverityMap(
+                        filteredSeverities,
+                        filteredVulnerabilities,
+                        filteredChannelSeverities);
 
         Map<Integer, Long[]> scanStatsMap = map();
 
