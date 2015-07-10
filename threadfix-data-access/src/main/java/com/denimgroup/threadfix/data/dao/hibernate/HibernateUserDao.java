@@ -253,4 +253,12 @@ public class HibernateUserDao
 				.setFirstResult((page - 1) * number)
 				.list();
 	}
+
+	@Override
+	public List<User> loadUsersForRole(Integer id) {
+		return getSession().createCriteria(User.class)
+				.createAlias("globalRole", "roleAlias")
+				.add(Restrictions.eq("roleAlias.id", id))
+				.list();
+	}
 }

@@ -301,10 +301,12 @@ public class UserServiceImpl implements UserService {
 			maps.addAll(userMaps);
 		}
 
-		for (Group group : user.getGroups()) {
-			List<AccessControlTeamMap> tempMaps = accessControlMapDao.retrieveAllMapsForGroup(group.getId());
-			if (tempMaps != null) {
-				maps.addAll(tempMaps);
+		if (user.getGroups() != null) {
+			for (Group group : user.getGroups()) {
+				List<AccessControlTeamMap> tempMaps = accessControlMapDao.retrieveAllMapsForGroup(group.getId());
+				if (tempMaps != null) {
+					maps.addAll(tempMaps);
+				}
 			}
 		}
 
@@ -459,5 +461,11 @@ public class UserServiceImpl implements UserService {
 		}
 
 		return search(searchString, number, page);
+	}
+
+	@Override
+	public List<User> getUsersForRoleId(Integer id) {
+
+		return userDao.loadUsersForRole(id);
 	}
 }
