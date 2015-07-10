@@ -142,4 +142,14 @@ public class DatabaseUtils {
         assertTrue("Response was unsuccessful. Message: " + restResponse.message, restResponse.success);
 
     }
+
+    public static void deleteAllTeams() {
+
+        RestResponse<Organization[]> response = CLIENT.getAllTeams();
+        assertTrue("Request for all teams was unsuccessful. Message: " + response.message, response.success);
+
+        for(Organization team: response.object) {
+            RestResponse<Organization> teamResponse = CLIENT.deleteTeam(String.valueOf(team.getId()));
+        }
+    }
 }
