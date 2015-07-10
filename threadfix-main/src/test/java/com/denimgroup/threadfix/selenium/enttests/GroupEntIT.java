@@ -176,33 +176,32 @@ public class GroupEntIT extends BaseDataTest {
                 groupIndexPage.getDuplicateNameError().contains("Failure: A group with that name already exists."));
     }
 
-    //TODO: Uncomment and complete test once DGTF-1494 is resolved
-//    @Test
-//    public void testEditDuplicateGroupValidation(){
-//        String groupName = getName();
-//        String secondGroupName = getName();
-//
-//        GroupIndexPage groupIndexPage = loginPage.defaultLogin()
-//                .clickManageGroupsLink()
-//                .clickCreateGroup()
-//                .setGroupName(groupName)
-//                .clickSaveGroup();
-//
-//        assertTrue("First Group not added.", groupIndexPage.isGroupPresent(groupName));
-//
-//        groupIndexPage.clickCreateGroup()
-//                .editGroupName(secondGroupName)
-//                .clickSaveGroup();
-//
-//        assertTrue("Second Group not added.", groupIndexPage.isGroupPresent(groupName));
-//
-//        groupIndexPage.clickEditLink(secondGroupName)
-//                .editGroupName(groupName)
-//                .clickSaveGroup();
-//
-//        assertTrue("Duplicate field error did not show correctly.",
-//                groupIndexPage.getEditDuplicateNameError().contains("That name is already taken."));
-//    }
+    @Test
+    public void testEditDuplicateGroupValidation() {
+        String groupName = getName();
+        String secondGroupName = getName();
+
+        GroupIndexPage groupIndexPage = loginPage.defaultLogin()
+                .clickManageGroupsLink()
+                .clickCreateGroup()
+                .setGroupName(groupName)
+                .clickSaveGroup();
+
+        assertTrue("First Group not added.", groupIndexPage.isGroupPresent(groupName));
+
+        groupIndexPage.clickCreateGroup()
+                .setGroupName(secondGroupName)
+                .clickSaveGroup();
+
+        assertTrue("Second Group not added.", groupIndexPage.isGroupPresent(groupName));
+
+        groupIndexPage.clickEditLink(secondGroupName)
+                .editGroupName(groupName)
+                .clickSaveGroup();
+
+        assertTrue("Duplicate field error did not show correctly.",
+                groupIndexPage.getErrorAlertMessage().contains("That name is already taken."));
+    }
 
     @Test
     public void testAddUserToGroup() {

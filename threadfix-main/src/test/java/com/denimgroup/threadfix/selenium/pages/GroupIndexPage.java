@@ -220,7 +220,9 @@ public class GroupIndexPage extends BasePage {
         return driver.findElementById("name.errors.required").getText();
     }
 
-    public String getDuplicateNameError(){
+    public String getDuplicateNameError() {
         return driver.findElementById("errorSpan").getText();
     }
+
+    public String getErrorAlertMessage() { return driver.findElementByCssSelector("div.alert-danger:not(.ng-hide)").getText(); }
 }
