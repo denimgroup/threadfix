@@ -94,4 +94,6 @@ public interface UserDao extends GenericNamedObjectDao<User> {
 	boolean canRemovePermissionFromUserAndGroup(Integer userId, Integer groupId, String camelCase);
 
 	List<User> getSearchResults(String searchString, int number, int page);
+
+	List<User> loadUsersForRole(Integer id);
 }

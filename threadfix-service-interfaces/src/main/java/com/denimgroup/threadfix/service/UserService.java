@@ -152,4 +152,6 @@ public interface UserService {
 	List<User> search(String searchString, int numResults, int page);
 
 	List<User> search(HttpServletRequest request);
+
+	List<User> getUsersForRoleId(Integer id);
 }
