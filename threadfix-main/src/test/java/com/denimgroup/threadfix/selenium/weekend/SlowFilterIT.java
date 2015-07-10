@@ -100,6 +100,10 @@ public class SlowFilterIT extends BaseIT{
             System.err.println(e.getMessage());
             clearGlobalFilter();
             throw e;
+        } catch (AssertionError a){
+            loginPage.logout();
+            clearGlobalFilter();
+            throw a;
         }
     }
 
@@ -179,6 +183,10 @@ public class SlowFilterIT extends BaseIT{
             System.err.println(e.getMessage());
             clearGlobalFilter();
             throw e;
+        } catch (AssertionError a) {
+            loginPage.logout();
+            clearGlobalFilter();
+            throw a;
         }
     }
 
