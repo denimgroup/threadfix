@@ -32,6 +32,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  * Created by mac on 5/13/14.
  */
@@ -41,7 +43,7 @@ public class FilterJsonBlobServiceImpl extends AbstractNamedObjectService<Filter
     @Autowired
     private FilterJsonBlobDao filterJsonBlobDao;
 
-    @Autowired
+    @Autowired(required = false)
     private AcceptanceCriteriaService acceptanceCriteriaService;
 
     @Override
@@ -57,6 +59,10 @@ public class FilterJsonBlobServiceImpl extends AbstractNamedObjectService<Filter
     @Override
     @SuppressWarnings("unchecked")
     public List<FilterJsonBlob> loadAllAssociated() {
+
+        if (acceptanceCriteriaService == null) {
+            return list();
+        }
         return (List<FilterJsonBlob>)
                 CollectionUtils.collect(acceptanceCriteriaService.loadAll(),
                         new BeanToPropertyValueTransformer("filterJsonBlob"));
