@@ -4,8 +4,8 @@
 
     <!-- This is the Action button -->
     <c:if test="${ canModifyVulnerabilities || canSubmitDefects || canManageGrcTools }">
-        <div ng-if="treeApplication">
-            <div ng-show="treeApplication && vulnTree" id="btnDiv" class="btn-group" ng-controller="BulkOperationsController">
+        <div ng-if="treeApplication || treeTeam">
+            <div ng-show="(treeApplication || treeTeam) && vulnTree" id="btnDiv" class="btn-group" ng-controller="BulkOperationsController">
                 {{ $parent | json }}
                 <button ng-hide="submitting" id="actionItems" class="btn dropdown-toggle" data-toggle="dropdown" type="button">
                     Action <span class="caret"></span>

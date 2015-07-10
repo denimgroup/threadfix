@@ -101,6 +101,7 @@
                 regex ^/configuration/scanqueue/[0-9]+/detail$,
                 regex ^/organizations/[0-9]+$,
                 regex ^/organizations/[0-9]+/filters$,
+				regex ^/organizations/[0-9]+/info$,
                 regex ^/organizations/[0-9]+/filters/tab$,
                 regex ^/organizations/[0-9]+/surveys/new$,
                 regex ^/organizations/[0-9]+/surveys/[0-9]+$,

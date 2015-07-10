@@ -102,7 +102,9 @@ public class TeamDetailPageController {
                     Permission.CAN_MODIFY_VULNERABILITIES,
                     Permission.CAN_MANAGE_VULN_FILTERS,
                     Permission.CAN_GENERATE_REPORTS,
-                    Permission.CAN_MANAGE_USERS);
+                    Permission.CAN_MANAGE_USERS,
+                    Permission.CAN_SUBMIT_COMMENTS,
+                    Permission.CAN_MANAGE_TAGS);
             mav.addObject("apps", apps);
             mav.addObject(organization);
 
