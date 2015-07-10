@@ -29,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
@@ -45,6 +46,33 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
     private boolean passing = false;
     private Application application;
     private AcceptanceCriteria acceptanceCriteria;
+
+    private List<EmailList> emailLists;
+    private List<String> emailAddresses;
+    private boolean sendEmail = false;
+
+    @ElementCollection
+    @Column(name = "emailAddress", length = 128)
+    @CollectionTable(name = "AcceptanceCriteriaStatusEmailAddress", joinColumns = @JoinColumn(name = "AcceptanceCriteriaStatusId"))
+    @JsonView(Object.class)
+    public List<String> getEmailAddresses() {
+        return emailAddresses;
+    }
+
+    public void setEmailAddresses(List<String> emailAddresses) {
+        this.emailAddresses = emailAddresses;
+    }
+
+    @ManyToMany
+    @JoinColumn(name = "emailListId")
+    @JsonView(Object.class)
+    public List<EmailList> getEmailLists() {
+        return emailLists;
+    }
+
+    public void setEmailLists(List<EmailList> emailLists) {
+        this.emailLists = emailLists;
+    }
 
     @JsonView(Object.class)
     public boolean isPassing() {
@@ -64,6 +92,14 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
 
     public void setApplication(Application application) {
         this.application = application;
+    }
+
+    public boolean isSendEmail() {
+        return sendEmail;
+    }
+
+    public void setSendEmail(boolean sendEmail) {
+        this.sendEmail = sendEmail;
     }
 
     @Transient
