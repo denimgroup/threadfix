@@ -23,21 +23,16 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.SeverityFilter;
+import com.denimgroup.threadfix.data.entities.Scan;
 
 import java.util.List;
 
-public interface SeverityFilterService {
+/**
+ * Created by mcollins on 5/13/15.
+ */
+public interface StatisticsCounterService {
 
-	void save(SeverityFilter severityFilter, int orgId, int appId);
-	
-	void clean(SeverityFilter severityFilter, int teamId, int appId);
+    void updateStatistics(List<Scan> scan);
 
-	SeverityFilter loadFilter(int orgId, int appId);
-
-	List<SeverityFilter> loadAllFilters();
-
-	SeverityFilter getParentFilter(int teamId, int appId);
-
-	SeverityFilter loadEffectiveFilter(int orgId, int appId);
+    void checkStatisticsCounters();
 }

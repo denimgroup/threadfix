@@ -21,23 +21,25 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.data.dao;
 
-import com.denimgroup.threadfix.data.entities.SeverityFilter;
+import com.denimgroup.threadfix.data.entities.StatisticsCounter;
 
 import java.util.List;
+import java.util.Map;
 
-public interface SeverityFilterService {
+/**
+ * Created by mcollins on 5/13/15.
+ */
+public interface StatisticsCounterDao extends GenericObjectDao<StatisticsCounter> {
 
-	void save(SeverityFilter severityFilter, int orgId, int appId);
-	
-	void clean(SeverityFilter severityFilter, int teamId, int appId);
+    Long getCountForSeverity(int scanId, int severity);
 
-	SeverityFilter loadFilter(int orgId, int appId);
+    @SuppressWarnings("unchecked")
+    List<Map<String, Object>> getFindingSeverityMap(List<Integer> filteredSeverities,
+                                                    List<Integer> filteredVulnerabilities,
+                                                    List<Integer> filteredChannelSeverities);
 
-	List<SeverityFilter> loadAllFilters();
+    List<Map<String,Object>> getRawFindingTotalMap();
 
-	SeverityFilter getParentFilter(int teamId, int appId);
-
-	SeverityFilter loadEffectiveFilter(int orgId, int appId);
 }

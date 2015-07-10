@@ -25,6 +25,8 @@ package com.denimgroup.threadfix.data.dao;
 
 import com.denimgroup.threadfix.data.entities.SeverityFilter;
 
+import java.util.List;
+
 public interface SeverityFilterDao {
 
 	public void saveOrUpdate(SeverityFilter severityFilter);
@@ -34,5 +36,7 @@ public interface SeverityFilterDao {
 	public SeverityFilter retrieveTeam(int orgId);
 
 	public SeverityFilter retrieveApplication(int appId);
+
+	List<SeverityFilter> retrieveAll();
 
 }

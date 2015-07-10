@@ -29,6 +29,8 @@ import org.springframework.stereotype.Service;
 import com.denimgroup.threadfix.data.dao.SeverityFilterDao;
 import com.denimgroup.threadfix.data.entities.SeverityFilter;
 
+import java.util.List;
+
 @Service
 public class SeverityFilterServiceImpl implements SeverityFilterService {
 
@@ -62,6 +64,11 @@ public class SeverityFilterServiceImpl implements SeverityFilterService {
 		} else {
 			return severityFilterDao.retrieveApplication(appId);
 		}
+	}
+
+	@Override
+	public List<SeverityFilter> loadAllFilters() {
+		return severityFilterDao.retrieveAll();
 	}
 
 	@Override
