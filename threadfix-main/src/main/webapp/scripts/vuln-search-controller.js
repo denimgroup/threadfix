@@ -66,6 +66,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                             return (!parameters.filterType || parameters.filterType.isVulnSearchFilter);
                         });
                         $scope.filterParameters = data.object.filterParameters;
+                        $scope.genericSeverityList = data.object.genericSeverities;
                     }
                     if ($scope.filterParameters) {
 
