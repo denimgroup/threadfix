@@ -5,12 +5,15 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
     var $parent = $scope.$parent;
 
     var getApplication = function() {
-        return $parent.treeApplication;
+        return ($parent.treeApplication) ? $parent.treeApplication : {id: -1};
     };
 
+    var getTeam = function(){
+        return ($parent.treeApplication) ? $parent.treeApplication.team : $parent.treeTeam;
+    }
+
     var getAppUrlBase = function () {
-        var app = getApplication();
-        return "/organizations/" + app.team.id + "/applications/" + app.id;
+        return "/organizations/" + getTeam().id + "/applications/" + getApplication().id;
     };
 
     var getFilteredVulns = function() {

@@ -5,7 +5,7 @@
         <br>
     </span>
 
-    <span ng-show="treeApplication" class="vuln-tree-checkbox">
+    <span ng-show="treeApplication || treeTeam" class="vuln-tree-checkbox">
         <input id="checkbox{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" type="checkbox" ng-model="vulnerability.checked" ng-change="applyVulnerabilityChecked(element, vulnerability)"/>
     </span>
 

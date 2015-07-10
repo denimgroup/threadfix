@@ -338,7 +338,22 @@ public class QueueSenderImpl implements QueueSender {
         sendMap(scheduledScanMap);
     }
 
-    private void send(String message) {
+	@Override
+	public void updateTeamCachedStatistics(int orgId) {
+		MapMessage scheduledScanMap = new ActiveMQMapMessage();
+
+		try {
+			scheduledScanMap.setInt("teamId", orgId);
+			scheduledScanMap.setString("type", QueueConstants.STATISTICS_TEAM_UPDATE);
+		} catch (JMSException e) {
+			log.error(jmsErrorString);
+			addExceptionLog(e);
+		}
+
+		sendMap(scheduledScanMap);
+	}
+
+	private void send(String message) {
 		jmsTemplate.convertAndSend("requestQueue", message);
 	}
 
