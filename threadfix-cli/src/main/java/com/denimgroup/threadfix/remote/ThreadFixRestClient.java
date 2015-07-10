@@ -107,6 +107,9 @@ public interface ThreadFixRestClient {
     // QA only
     public RestResponse<Tag> attachAppToTag(String tagId, String appId);
 
+    //QA only
+    public RestResponse<Organization> deleteTeam(String teamId);
+
     public RestResponse<Finding> addDynamicFinding(String applicationId, String vulnType, String severity,
                                     String nativeId, String parameter, String longDescription,
                                     String fullUrl, String path);

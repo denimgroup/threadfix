@@ -37,6 +37,18 @@ public class DatabaseUtils {
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
     }
 
+    public static void deleteTeam(String teamName) {
+        RestResponse<Organization> response = CLIENT.searchForTeamByName(teamName);
+
+        assertTrue("Search Response was unsuccessful. Message: " + response.message, response.success);
+
+        System.out.println(String.valueOf(response.object.getId()));
+
+        RestResponse<Organization> restResponse = CLIENT.deleteTeam(String.valueOf(response.object.getId()));
+
+        assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
+    }
+
     public static void createUser(String username, String globalRoleName) {
         RestResponse<User> response = CLIENT.createUser(username, globalRoleName);
 

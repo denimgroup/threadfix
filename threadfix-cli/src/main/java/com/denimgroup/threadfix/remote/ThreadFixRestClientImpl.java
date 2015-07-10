@@ -349,6 +349,13 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
                 new String[] {}, Tag.class);
     }
 
+    //QA only
+    public RestResponse<Organization> deleteTeam(String teamId) {
+        return httpRestUtils.httpPost("/teams/delete/"+teamId,
+                new String[] {},
+                new String[] {}, Organization.class);
+    }
+
 	public RestResponse<Finding> addDynamicFinding(String applicationId, String vulnType, String severity,
 		String nativeId, String parameter, String longDescription,
 		String fullUrl, String path) {

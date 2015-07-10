@@ -104,6 +104,10 @@ public abstract class BaseIT {
         return teamName;
     }
 
+    protected void deleteTeam(String teamName) {
+        DatabaseUtils.deleteTeam(teamName);
+    }
+
     /**
      * This method will create an application in the ThreadFix DBS
      * @param teamName non-null, and valid team name must be provided

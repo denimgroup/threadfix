@@ -60,12 +60,15 @@ public class TeamRestController extends TFRestController {
     public static final String LOOKUP_FAILED   = "Team Lookup failed.";
     public static final String INVALID_PARAMS  = "Invalid parameters entered";
     public static final String PUT_SUCCESS     = "Fields updated successfully";
+    public static final String DELETION_FAILED = "Team deletion failed.";
+    public static final String DELETION_SUCCESS= "Team deleted successfully";
 
     private final static String DETAIL = "teamIDLookup",
             LOOKUP                     = "teamNameLookup",
             NEW                        = "newTeam",
             INDEX                      = "teamList",
-            UPDATE                     = "putTeam";
+            UPDATE                     = "putTeam",
+            DELETE                     = "deleteTeam";
 
     // TODO finalize which methods need to be restricted
     static {
@@ -290,4 +293,27 @@ public class TeamRestController extends TFRestController {
         }
     }
 
+    @RequestMapping(headers = "Accept=application/json", value = "/delete/{teamId}", method = RequestMethod.POST)
+    @JsonView(AllViews.RestViewTeam2_1.class)
+    public Object deleteTeam(HttpServletRequest request, @PathVariable("teamId") int teamId) {
+        log.info("Received REST request to delete Team with id " + teamId + ".");
+
+        String result = checkKey(request, DELETE);
+        if (!result.equals(API_KEY_SUCCESS)) {
+            return RestResponse.failure(result);
+        }
+
+        Organization organization = organizationService.loadById(teamId);
+
+        if (organization == null || !organization.isActive()) {
+            log.warn("Invalid Team ID.");
+            return RestResponse.failure(CREATION_FAILED);
+
+        } else {
+            String teamName = organization.getName();
+            organizationService.markInactive(organization);
+            log.info("REST Request to delete Team resource with id " + teamId + " is completed successfully");
+            return RestResponse.success(DELETION_SUCCESS);
+        }
+    }
 }

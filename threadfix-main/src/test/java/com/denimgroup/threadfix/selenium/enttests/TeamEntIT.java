@@ -104,4 +104,20 @@ public class TeamEntIT extends BaseDataTest {
         assertTrue("App vulnerabilities are shown which user should not have permissions to see.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName,"Total","44"));
     }
+
+    @Test
+    public void testDeleteTeamRestMethod(){
+        String teamName = createTeam();
+
+        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink();
+
+        assertTrue("Team is not present", teamIndexPage.isTeamPresent(teamName));
+
+        deleteTeam(teamName);
+
+        teamIndexPage.refreshPage();
+
+        assertFalse("Team is still present", teamIndexPage.isTeamPresent(teamName));
+    }
 }
