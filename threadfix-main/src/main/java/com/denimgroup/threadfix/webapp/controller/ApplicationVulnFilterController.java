@@ -25,6 +25,8 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.VulnerabilityFilter;
 import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.views.AllViews;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -63,6 +65,7 @@ public class ApplicationVulnFilterController extends AbstractVulnFilterControlle
 	}
 
 	@RequestMapping(value = "/map", method = RequestMethod.GET)
+	@JsonView(AllViews.TableRow.class)
 	public @ResponseBody RestResponse<Map<String, Object>> map(@PathVariable int appId, @PathVariable int orgId) {
 		return mapBackend(orgId, appId);
 	}

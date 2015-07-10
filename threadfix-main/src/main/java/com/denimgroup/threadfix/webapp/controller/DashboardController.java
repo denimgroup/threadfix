@@ -32,6 +32,8 @@ import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -103,14 +105,14 @@ public class DashboardController {
 
     @JsonView(AllViews.RestViewScanStatistic.class)
     @RequestMapping(value="/leftReport", method=RequestMethod.GET)
-    public @ResponseBody Object leftReport(HttpServletRequest request) {
+    public @ResponseBody Object leftReport(HttpServletRequest request) throws JsonProcessingException {
 
         ReportParameters parameters = getParameters(request, ReportFormat.TRENDING);
         Map<String, Object> map = reportsService.generateTrendingReport(parameters, request);
         map.put("savedFilters", filterJsonBlobService.loadAll());
         map.put("genericSeverities", genericSeverityService.loadAll());
 
-        return RestResponse.success(map);
+        return new ObjectMapper().writerWithView(AllViews.RestViewScanStatistic.class).writeValueAsString(RestResponse.success(map));
     }
 
 	@RequestMapping(value="/rightReport", method=RequestMethod.GET)
