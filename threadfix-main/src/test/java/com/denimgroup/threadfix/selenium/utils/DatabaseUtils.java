@@ -42,8 +42,6 @@ public class DatabaseUtils {
 
         assertTrue("Search Response was unsuccessful. Message: " + response.message, response.success);
 
-        System.out.println(String.valueOf(response.object.getId()));
-
         RestResponse<Organization> restResponse = CLIENT.deleteTeam(String.valueOf(response.object.getId()));
 
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
