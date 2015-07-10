@@ -10,7 +10,7 @@
     </span>
 
     <!-- Path + Parameter -->
-    <div ng-if="!vulnerability.dependency">
+    <div ng-if="!vulnerability.dependency" style="word-wrap:break-word;">
         <div ng-if="vulnerability.path || vulnerability.parameter">
             <div class="vuln-tree-label">Path</div>
             <span id="path{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.path }}</span>
