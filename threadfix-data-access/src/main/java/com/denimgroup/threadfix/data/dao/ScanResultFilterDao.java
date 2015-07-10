@@ -12,4 +12,6 @@ public interface ScanResultFilterDao extends GenericObjectDao<ScanResultFilter>{
     List<GenericSeverity> loadFilteredSeveritiesForChannelType(ChannelType channelType);
 
     ScanResultFilter loadByChannelTypeAndSeverity(ChannelType channelType, GenericSeverity genericSeverity);
+
+    List<Integer> retrieveAllChannelSeverities();
 }

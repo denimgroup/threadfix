@@ -37,7 +37,7 @@ public class UploadScanServiceImpl implements UploadScanService{
     private ScanMergeService scanMergeService;
     @Autowired
     private DefaultConfigService defaultConfigService;
-    @Autowired
+    @Autowired(required = false)
     private AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
     @Autowired
     private ApplicationService applicationService;
@@ -119,7 +119,9 @@ public class UploadScanServiceImpl implements UploadScanService{
                 }
             }
 
-            acceptanceCriteriaStatusService.runStatusCheck(appId);
+            if (acceptanceCriteriaStatusService != null) {
+                acceptanceCriteriaStatusService.runStatusCheck(appId);
+            }
         }
     }
 }

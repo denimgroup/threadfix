@@ -106,7 +106,7 @@ public class ApplicationsController {
     private CacheBustService cacheBustService;
     @Autowired
     private GenericSeverityService genericSeverityService;
-    @Autowired
+    @Autowired(required = false)
     private AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
 
 	@InitBinder
@@ -206,7 +206,10 @@ public class ApplicationsController {
 
         // basic information
         map.put("application", application);
-        map.put("passFilters", acceptanceCriteriaStatusService.passFilters(application));
+
+        if (acceptanceCriteriaStatusService != null) {
+            map.put("passFilters", acceptanceCriteriaStatusService.passFilters(application));
+        }
 
         // scans tab
         map.put("scans", checkDownloadable(application.getScans()));

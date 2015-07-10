@@ -42,7 +42,7 @@ public class JsonFilterBlobController {
 
     @Autowired
     private FilterJsonBlobService filterJsonBlobService;
-    @Autowired
+    @Autowired(required = false)
     private AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
@@ -67,7 +67,7 @@ public class JsonFilterBlobController {
 
             filterJsonBlobService.saveOrUpdate(filterJsonBlob);
 
-            if (filterJsonBlob.getAcceptanceCriteria() != null) {
+            if (acceptanceCriteriaStatusService != null && filterJsonBlob.getAcceptanceCriteria() != null) {
                 acceptanceCriteriaStatusService.runStatusCheck(filterJsonBlob.getAcceptanceCriteria());
             }
 
