@@ -128,4 +128,10 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
     public void setAcceptanceCriteria(AcceptanceCriteria acceptanceCriteria) {
         this.acceptanceCriteria = acceptanceCriteria;
     }
+
+    @Transient
+    @JsonView(Object.class)
+    public String getName() {
+        return application.getName();
+    }
 }
