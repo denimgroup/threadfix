@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.cli;
 
+import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.data.enums.TagType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.ThreadFixRestClient;
 import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
@@ -123,6 +125,12 @@ public class CommandLineParser {
 					}
 				}
 
+			} else if (cmd.hasOption("printScannerNames")) {
+				System.out.println("Scanner names supported by ScanAgent:");
+				for (ScannerType type : ScannerType.getScanAgentSupportedList()) {
+					System.out.println("\t" + type.getShortName() + " (" + type.getFullName() + ")");
+				}
+
 			} else if (cmd.hasOption("sp")) {
 				String[] parameterArgs = cmd.getOptionValues("sp");
 				if (! (parameterArgs.length == 2 || parameterArgs.length == 3)) {
@@ -174,8 +182,12 @@ public class CommandLineParser {
                 if (isInteger(queueArgs[0])) {
                     LOGGER.info("Queueing a scan.");
 					String scanConfigId = queueArgs.length >= 3 ? queueArgs[2] : null;
-                    System.out.println(client.queueScan(queueArgs[0], queueArgs[1], scanConfigId));
-                } else
+					ScannerType scannerType = ScannerType.getScannerType(queueArgs[1]);
+					if (scannerType != null)
+						System.out.println(client.queueScan(queueArgs[0], scannerType.getFullName(), scanConfigId));
+					else
+						LOGGER.warn("Scanner Name was not recognized, not doing anything. Available scanner names can be found with --printScannerNames");
+				} else
                     LOGGER.warn("ApplicationId is not number, not doing anything.");
 
 			} else if (cmd.hasOption("au")) {
@@ -319,10 +331,15 @@ public class CommandLineParser {
 				throw new ParseException("Wrong number of arguments.'");
 			}
 			LOGGER.info("Creating a tag with the name " + tagArgs[0]);
-			Boolean isCommentTag = false;
-			if (tagArgs.length > 1)
-				isCommentTag = parseBoolean(tagArgs[1]);
-			printOutput(client.createTag(tagArgs[0], isCommentTag));
+			TagType tagType = null;
+			if (tagArgs.length > 1) {
+				tagType = TagType.getTagType(tagArgs[1]);
+				if (tagType == null) {
+					LOGGER.warn("Type was not recognized. Available types are APPLICATION, VULNERABILITY, and COMMENT.");
+					return;
+				}
+			}
+			printOutput(client.createTag(tagArgs[0], tagType == null ? null : tagType.toString()));
 
 		} else if (cmd.hasOption("stg")) {
 			String[] searchTagArgs = cmd.getOptionValues("stg");
@@ -415,19 +432,21 @@ public class CommandLineParser {
 	}
 
 	private static <T> void printOutput(RestResponse<T> response) {
-		if (response == null) {
-			LOGGER.error("Request sent unsuccessfully.");
-		} else if (response.success) {
-			LOGGER.info("Operation successful, printing JSON output.");
-			System.out.println(response.getOriginalJson());
-		} else {
-			LOGGER.error("Operation unsuccessful, printing error message.");
-			if (response.message == null || response.message.trim().equals("")) {
-				LOGGER.error("Invalid message received from server. Please check your URL and try again.");
-				LOGGER.error("The URL should end with /rest. To set your URL, use the -s url <url> option.");
+		if (response != null) {
+			if (response.success) {
+				LOGGER.info("Operation successful, printing JSON output.");
+				System.out.println(response.getOriginalJson());
 			} else {
-				LOGGER.error(response.message);
+				LOGGER.error("Operation unsuccessful, printing error message.");
+				if (response.message == null || response.message.trim().equals("")) {
+					LOGGER.error("Invalid message received from server. Please check your URL and try again.");
+					LOGGER.error("The URL should end with /rest. To set your URL, use the -s url <url> option.");
+				} else {
+					LOGGER.error(response.message);
+				}
 			}
+		} else {
+			LOGGER.warn("Request sent unsuccessfully.");
 		}
 	}
 

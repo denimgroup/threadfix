@@ -18,7 +18,8 @@
                 </td>
             </tr>
         </table>
+        <div style="height:200px"></div>
     </div>
-    <div style="height:200px"></div>
+
     <%@ include file="/WEB-INF/views/modal/footer.jspf" %>
 </script>

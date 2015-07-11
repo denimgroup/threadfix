@@ -54,6 +54,8 @@ public class DateUtils {
         if (dateString != null && !dateString.trim().equals("")) {
             try {
                 return getCalendarFromString(utcFormat, dateString);
+
+
             } catch (IllegalArgumentException e) {
                 log.error("An invalid date string was passed to the SimpleDateFormat constructor: " + dateString);
             }

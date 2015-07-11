@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.RoleService;
+import com.denimgroup.threadfix.service.SessionService;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.views.AllViews;
@@ -53,20 +54,19 @@ import java.util.List;
 @PreAuthorize("hasRole('ROLE_CAN_MANAGE_USERS')")
 public class EditUserController {
 
+	@Autowired
 	private UserService userService = null;
+	@Autowired
 	private RoleService roleService = null;
+	@Autowired(required = false)
+	private SessionService sessionService;
 	private boolean ldapPluginInstalled = false;
 
 	private final SanitizedLogger log = new SanitizedLogger(EditUserController.class);
 
-	@Autowired
-	public EditUserController(RoleService roleService, UserService userService) {
-		this.userService = userService;
-		this.roleService = roleService;
+	public EditUserController() {
 		ldapPluginInstalled = EnterpriseTest.isEnterprise();
 	}
-
-	public EditUserController(){}
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
@@ -132,6 +132,10 @@ public class EditUserController {
 				user.setGlobalRole(null);
 			}
 			userService.storeUser(user);
+
+			if (sessionService != null) {
+				sessionService.reloadSession(user);
+			}
 
 			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
             String userName = user.getName();

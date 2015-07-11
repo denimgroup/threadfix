@@ -21,29 +21,15 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.queue;
+package com.denimgroup.threadfix.service.statistics;
 
 /**
- * @author bbeverly
- * 
+ * Created by mcollins on 6/11/15.
  */
-public interface QueueConstants {
+public class CounterHarness {
 
-	static final String DEFECT_TRACKER_SYNC_REQUEST = "DEFECT_TRACKER_SYNC_REQUEST";
-	static final String IMPORT_SCANS_REQUEST = "IMPORT_SCANS_REQUEST";
 
-	static final String IMPORT_REMOTE_PROVIDER_SCANS_REQUEST = "IMPORT_REMOTE_PROVIDER_SCANS_REQUEST";
-	static final String NORMAL_SCAN_TYPE = "Scan";
-	static final String DEFECT_TRACKER_VULN_UPDATE_TYPE = "Defect Tracker Vuln Update";
-	static final String GRC_CONTROLS_UPDATE_TYPE = "GRC Controls Update";
-	static final String SEND_EMAIL_REPORT = "Send Email Report";
-	static final String SUBMIT_DEFECT_TYPE = "Submit Defect";
-    static final String SCHEDULED_SCAN_TYPE = "Scheduled Scan";
 
-    static final String STATISTICS_UPDATE = "Statistics Update";
 
-	static final String STATISTICS_TEAM_UPDATE = "Statistics Team Update";
-
-    static final String VULNS_FILTER = "Vulnerabilities Filter";
 
 }

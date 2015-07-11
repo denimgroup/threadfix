@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderAuthenticationField;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.exception.RestException;
 import com.denimgroup.threadfix.importer.interop.RemoteProviderFactory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.owasp.esapi.ESAPI;
@@ -361,7 +362,12 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
             if (applications != null && !applications.isEmpty()) {
                 return ResponseCode.SUCCESS;
             } else {
-                return ResponseCode.NO_APPS;
+
+				String error = "We were unable to retrieve a list of applications using these credentials." +
+						" Please ensure that the credentials are valid and that there are applications " +
+						"available in the account.";
+				// throwing the exception here prevents any changes from being saved
+				throw new RestException(error);
             }
 
         } else {

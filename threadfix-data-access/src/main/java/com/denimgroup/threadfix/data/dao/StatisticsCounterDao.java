@@ -21,29 +21,25 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.queue;
+package com.denimgroup.threadfix.data.dao;
+
+import com.denimgroup.threadfix.data.entities.StatisticsCounter;
+
+import java.util.List;
+import java.util.Map;
 
 /**
- * @author bbeverly
- * 
+ * Created by mcollins on 5/13/15.
  */
-public interface QueueConstants {
+public interface StatisticsCounterDao extends GenericObjectDao<StatisticsCounter> {
 
-	static final String DEFECT_TRACKER_SYNC_REQUEST = "DEFECT_TRACKER_SYNC_REQUEST";
-	static final String IMPORT_SCANS_REQUEST = "IMPORT_SCANS_REQUEST";
+    Long getCountForSeverity(int scanId, int severity);
 
-	static final String IMPORT_REMOTE_PROVIDER_SCANS_REQUEST = "IMPORT_REMOTE_PROVIDER_SCANS_REQUEST";
-	static final String NORMAL_SCAN_TYPE = "Scan";
-	static final String DEFECT_TRACKER_VULN_UPDATE_TYPE = "Defect Tracker Vuln Update";
-	static final String GRC_CONTROLS_UPDATE_TYPE = "GRC Controls Update";
-	static final String SEND_EMAIL_REPORT = "Send Email Report";
-	static final String SUBMIT_DEFECT_TYPE = "Submit Defect";
-    static final String SCHEDULED_SCAN_TYPE = "Scheduled Scan";
+    @SuppressWarnings("unchecked")
+    List<Map<String, Object>> getFindingSeverityMap(List<Integer> filteredSeverities,
+                                                    List<Integer> filteredVulnerabilities,
+                                                    List<Integer> filteredChannelSeverities);
 
-    static final String STATISTICS_UPDATE = "Statistics Update";
-
-	static final String STATISTICS_TEAM_UPDATE = "Statistics Team Update";
-
-    static final String VULNS_FILTER = "Vulnerabilities Filter";
+    List<Map<String,Object>> getRawFindingTotalMap();
 
 }

@@ -104,4 +104,5 @@ public interface QueueSender {
 
     void updateVulnFilter();
 
+	void updateTeamCachedStatistics(int orgId);
 }

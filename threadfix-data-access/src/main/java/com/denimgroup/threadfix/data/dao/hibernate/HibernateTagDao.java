@@ -27,7 +27,6 @@ import com.denimgroup.threadfix.data.dao.AbstractNamedObjectDao;
 import com.denimgroup.threadfix.data.dao.TagDao;
 import com.denimgroup.threadfix.data.entities.Tag;
 import com.denimgroup.threadfix.data.enums.TagType;
-import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -62,16 +61,6 @@ public class HibernateTagDao
     protected Class<Tag> getClassReference() {
         return Tag.class;
     }
-
-    @Override
-    public Tag retrieveByName(String name) {
-        return (Tag) getSession()
-                .createCriteria(getClassReference())
-                .add(Restrictions.eq("active", true))
-                .add(Restrictions.eq("name", name))
-                .uniqueResult();
-    }
-
 
     @Override
     public Tag retrieveAppTagByName(String name) {
@@ -136,12 +125,14 @@ public class HibernateTagDao
 
     @Override
     public Tag retrieveTagWithType(String name, TagType type) {
-        return (Tag) getSession()
-                .createCriteria(getClassReference())
-                .add(Restrictions.eq("active", true))
-                .add(Restrictions.eq("name", name))
-                .add(Restrictions.eq("type", type))
-                .addOrder(getOrder())
-                .uniqueResult();
+        if (type == TagType.APPLICATION) {
+            return retrieveAppTagByName(name);
+        } else
+            return (Tag) getSession()
+                    .createCriteria(getClassReference())
+                    .add(Restrictions.eq("active", true))
+                    .add(Restrictions.eq("name", name))
+                    .add(Restrictions.eq("type", type))
+                    .uniqueResult();
     }
 }

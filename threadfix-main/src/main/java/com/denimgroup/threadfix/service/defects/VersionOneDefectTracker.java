@@ -26,11 +26,11 @@ package com.denimgroup.threadfix.service.defects;
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.exception.DefectTrackerCommunicationException;
+import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.exception.RestUrlException;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
-import com.denimgroup.threadfix.service.defects.utils.RestUtils;
-import com.denimgroup.threadfix.service.defects.utils.RestUtilsImpl;
 import com.denimgroup.threadfix.service.defects.utils.versionone.Assets;
 import com.denimgroup.threadfix.service.defects.utils.versionone.AttributeDefinition;
 import com.denimgroup.threadfix.service.defects.utils.versionone.AttributeDefinitionParser;
@@ -40,6 +40,7 @@ import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
@@ -53,15 +54,13 @@ import static com.denimgroup.threadfix.util.DefectTrackersPropertiesHolder.showF
  */
 public class VersionOneDefectTracker extends AbstractDefectTracker {
 
-    private static final String CONTENT_TYPE = "application/xml";
-
     private List<String> parentProjects = list();
     List<AttributeDefinition> attributeDefinitions = list();
     List<DynamicFormField> dynamicFormFields = list();
 
     private static final SanitizedLogger LOG = new SanitizedLogger(VersionOneDefectTracker.class);
 
-    RestUtils restUtils = RestUtilsImpl.getInstance(VersionOneDefectTracker.class);
+    RemoteProviderHttpUtils utils = RemoteProviderHttpUtilsImpl.getImpl(VersionOneDefectTracker.class);
 
     @Override
     public String createDefect(List<Vulnerability> vulnerabilities, DefectMetadata metadata) {
@@ -110,7 +109,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
 
         LOG.debug(defectXml);
 
-        String result = restUtils.postUrlAsString(getUrlWithRest() + "Defect", defectXml, getUsername(), getPassword(), CONTENT_TYPE);
+        String result = makePostRequest(getUrlWithRest() + "Defect", defectXml);
 
         if (result == null) {
             throw new DefectTrackerCommunicationException("ThreadFix was unable to submit a defect to the tracker.");
@@ -236,11 +235,10 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
     private void getV1Data() {
         retrieveParentProjects();
 
-        String attributesXML = restUtils.getUrlAsString(getMetaEndpoint(), getUsername(), getPassword());
+        String attributesXML = makeRequest(getMetaEndpoint());
         LOG.debug(attributesXML);
         attributeDefinitions = AttributeDefinitionParser.parseRequiredAttributes(attributesXML);
         dynamicFormFields = convertToGenericField(attributeDefinitions);
-
     }
 
     private List<DynamicFormField> convertToGenericField(List<AttributeDefinition> attributeDefinitions) {
@@ -306,8 +304,9 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
     private String getWhereQuery(String assetName) {
         StringBuilder builder = new StringBuilder();
         builder.append("where=");
+        String urlPipe = urlEncode("|");
         for (String project : parentProjects) {
-            builder.append(assetName).append("='").append(urlEncode(project)).append("'|");
+            builder.append(assetName).append("='").append(urlEncode(project)).append("'").append(urlPipe);
         }
         builder.append(assetName).append("='").append(urlEncode(getProjectName())).append("'");
         return builder.toString();
@@ -341,8 +340,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         log.info("Checking VersionOne credentials.");
         lastError = null;
 
-        String response = restUtils.getUrlAsString(getUrlWithRest() + "Member?where=Username='" +
-                getUrlEncodedUsername() + "'", getUsername(), getPassword());
+        String response = makeRestRequest("Member?where=Username='" + getUrlEncodedUsername() + "'");
 
         boolean valid = false;
 
@@ -376,7 +374,13 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
             return false;
         }
 
-        boolean valid = restUtils.requestHas401Error(getUrlWithRest() + "Member");
+        boolean valid = false;
+        try {
+            HttpResponse response = utils.getUrl(getUrlWithRest() + "Member");
+            valid = response.getStatus() == HttpURLConnection.HTTP_UNAUTHORIZED;
+        } catch (Exception e) {
+            throw new RestIOException(e, "Unable to complete request to VersionOne servers.");
+        }
 
         if (valid) {
             setLastError(BAD_URL);
@@ -430,9 +434,8 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
     private List<String> getProjectList() {
         List<String> projectList = list();
 
-        String result = restUtils.getUrlAsString(getUrlWithRest() +
-                        "Member?where=Username='" + getUrlEncodedUsername() + "'&sel=Scopes",
-                getUsername(), getPassword());
+        String result = makeRestRequest("Member?where=Username='" + getUrlEncodedUsername() + "'&sel=Scopes");
+
         if (result != null) {
             Assets assets = MarshallingUtils.marshal(Assets.class, result);
             if (assets != null && assets.getAssets() != null) {
@@ -450,10 +453,33 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         return projectList;
     }
 
+    private String makeRequest(String urlString) {
+        RequestConfigurer configurer = getBasicConfigurer();
+
+        return utils.getUrlWithConfigurer(urlString, configurer).getBodyAsString();
+    }
+
+    private String makePostRequest(String urlString, String body) {
+        RequestConfigurer configurer = getBasicConfigurer()
+                .withRequestBody(body, "text/xml");
+
+        return utils.postUrlWithConfigurer(urlString, configurer).getBodyAsString();
+    }
+
+    private DefaultRequestConfigurer getBasicConfigurer() {
+        return new DefaultRequestConfigurer()
+                .withUsernamePassword(getUsername(), getPassword())
+                .withHeaders(new String[] { "Accept" }, new String[] { "text/xml" });
+    }
+
+    private String makeRestRequest(String urlString) {
+        return makeRequest(getUrlWithRest() + urlString);
+    }
+
     private List<Assets.Asset> getAssets(String url) {
         List<Assets.Asset> assetList = list();
 
-        String result = restUtils.getUrlAsString(url, getUsername(), getPassword());
+        String result = makeRequest(url);
         if (result != null) {
             Assets assets = MarshallingUtils.marshal(Assets.class, result);
             if (assets != null && assets.getAssets() != null) {
@@ -635,8 +661,8 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
             setProjectId(getProjectIdByName());
         }
 
-        String result = restUtils.getUrlAsString(getUrlWithRest().replace("Data/", "") +
-                "New/Defect?ctx=" + urlEncode(getProjectId()), getUsername(), getPassword());
+        String result = makeRequest(getUrlWithRest().replace("Data/", "") +
+                "New/Defect?ctx=" + urlEncode(getProjectId()));
 
         if (result == null) {
             throw new DefectTrackerCommunicationException("Received null response while attempting to get " +
@@ -659,8 +685,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         String id = asset.getId();
         if (id != null)
             id = id.replace(":","/");
-        String numberXmlDefect = restUtils.getUrlAsString(getUrlWithRest() +
-                id + "?sel=Number", getUsername(), getPassword());
+        String numberXmlDefect = makeRestRequest(id + "?sel=Number");
 
         if (numberXmlDefect == null) {
             throw new DefectTrackerCommunicationException("Received null response from server.");
