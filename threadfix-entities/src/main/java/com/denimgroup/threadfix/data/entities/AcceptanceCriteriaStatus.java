@@ -29,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -127,6 +128,20 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
 
     public void setAcceptanceCriteria(AcceptanceCriteria acceptanceCriteria) {
         this.acceptanceCriteria = acceptanceCriteria;
+    }
+
+
+    @Transient
+    @JsonProperty("acceptanceCriteria")
+    @JsonView(Object.class)
+    public Map<String, ? extends Serializable> getAcceptanceCriteriaJson() {
+        if(acceptanceCriteria != null) {
+            return map(
+                    "id", acceptanceCriteria.getId(),
+                    "name", acceptanceCriteria.getName());
+        } else {
+            return null;
+        }
     }
 
     @Transient
