@@ -79,7 +79,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
         String userName = createRegularUser();
 
         String noTeamRoleError = "You must pick a Role.";
-        String noApplicationRoleSelectedError = "You must select at least one application.";
+        String noApplicationRoleSelectedError = "You must set at least one role.";
 
         UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
