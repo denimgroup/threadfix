@@ -51,7 +51,7 @@ public class CWEUpdateIT extends BaseIT {
         try {
             globalFilterPage.deleteFilter()
                     .closeSuccessNotification()
-                    .clickOrganizationHeaderLink();
+                    .clickDashboardLink();
         } catch (NoSuchElementException e) {
             System.out.println("There was not a global vulnerability filter set.");
         }
