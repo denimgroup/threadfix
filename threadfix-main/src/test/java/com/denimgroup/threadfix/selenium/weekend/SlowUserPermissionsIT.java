@@ -61,7 +61,6 @@ public class SlowUserPermissionsIT extends BaseIT{
                 rolesIndexPage.getEditRoleError().contains("You cannot remove the Manage Users privilege from this role."));
     }
 
-    //TODO after fixing Bug #75 it should be work
     @Test
     public void checkDefectTrackerPermission() {
         String teamName = getRandomString(8);
@@ -95,10 +94,11 @@ public class SlowUserPermissionsIT extends BaseIT{
                 .clickCreateUserButton()
                 .setName(userName)
                 .setPassword("TestPassword")
-                .setConfirmPassword("TestPassword")
-                .toggleGlobalAccess()
+                .setConfirmPasswordModal("TestPassword")
+                .clickAddNewUserBtn()
+                .clickUserLink(userName)
                 .chooseRoleForGlobalAccess(roleName)
-                .clickAddNewUserBtn();
+                .clickSaveChanges();
 
         LoginPage loginPage = userIndexPage.clickLogOut();
 
@@ -107,20 +107,11 @@ public class SlowUserPermissionsIT extends BaseIT{
                 .expandTeamRowByName(teamName)
                 .clickApplicationName(appName)
                 .clickEditDeleteBtn()
-                .clickAddDefectTrackerButton();
+                .clickAddDefectTrackerButton()
+                .clickCreateNewDefectTracker();
 
-        if (applicationDetailPage.isCreateDefectTrackerDisplay()) {
-            applicationDetailPage.clickCreateNewDefectTracker()
-                    .setNameInput(defectTrackerName)
-                    .setUrlInput(BUGZILLA_URL)
-                    .clickUpdateApplicationButton();
-
-        } else {
-            applicationDetailPage.setNameInput(defectTrackerType)
-                    .clickUpdateApplicationButton();
-        }
-
-        assertTrue("Able to Create new Defect Tracker", applicationDetailPage.applicationErrorMessage());
+        assertTrue("Was able to begin creating a new Defect Tracker without permission.",
+                applicationDetailPage.isCreateDefectTrackerDisplay());
 
 
         applicationDetailPage.clickCloseModalButton()
