@@ -182,7 +182,29 @@ threadfixModule.directive('onOffCheckbox', function() {
         };
     };
 
+    return directive;
+});
 
+threadfixModule.directive('successMessage', function($compile) {
+    var directive = {};
+
+    directive.restrict = 'E';
+
+    directive.compile = function(element, attributes) {
+        // do one-time configuration of element.
+
+        var id = attributes.id;
+
+        var html = '<div ng-show="successMessage" class="alert alert-success" id="' + id + '">' +
+            '<button class="close" ng-click="successMessage = undefined" type="button">&times;</button>' +
+            '{{ successMessage }}' +
+        '</div>';
+
+        return function(scope, element) {
+            var e = $compile(html)(scope);
+            element.replaceWith(e);
+        };
+    };
 
     return directive;
 });
