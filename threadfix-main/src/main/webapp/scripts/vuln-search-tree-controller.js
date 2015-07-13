@@ -99,6 +99,7 @@ module.controller('VulnSearchTreeController', function($log, $scope, $rootScope,
                 if (data.success) {
                     element.vulns = data.object.vulns;
                     element.vulns.forEach(updateChannelNames);
+                    element.vulns.forEach(setGoToLink);
                     element.vulns.forEach(function(vuln){
                         vulnSearchParameterService.updateVulnCommentTags($scope.tags, vuln);
                     });
@@ -162,6 +163,10 @@ module.controller('VulnSearchTreeController', function($log, $scope, $rootScope,
                 $scope.loadingTree = false;
             });
     });
+
+    var setGoToLink = function(vulnerability) {
+        vulnerability.viewMoreLink = tfEncoder.encode($scope.getUrlBase(vulnerability));
+    };
 
     $scope.goTo = function(vuln) {
         $window.location.href = tfEncoder.encode($scope.getUrlBase(vuln));

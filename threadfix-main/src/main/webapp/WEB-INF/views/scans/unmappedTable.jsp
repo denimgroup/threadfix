@@ -52,7 +52,7 @@
                 </a>
             </td>
             <td class="pointer">
-                <a id="unmappedVulnType{{ index }}" ng-click="goTo(finding)">
+                <a id="unmappedVulnType{{ index }}" ng-href="{{ getFindingUrl(finding) }}">
                     View Finding
                 </a>
             </td>

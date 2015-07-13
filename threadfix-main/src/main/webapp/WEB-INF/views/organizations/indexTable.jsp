@@ -58,7 +58,7 @@
                     </a>
                 </c:if>
             <td>
-                <a style="text-decoration:none" id="organizationLink{{ team.name }}" ng-click="goTo(team)">View Team</a>
+                <a style="text-decoration:none" id="organizationLink{{ team.name }}" ng-href="{{ getTeamUrl(team) }}">View Team</a>
             </td>
         </tr>
 
@@ -101,7 +101,7 @@
                                     ng-file-drop="onFileSelect(team, app, $files)">
                                 <td class="pointer" style="padding:5px;word-wrap: break-word;">
                                     <div style="word-wrap: break-word;width:120px;text-align:left;">
-                                        <a id="applicationLink{{ team.name }}-{{ app.name }}" ng-click="goToPage(team, app)">{{ app.name }}</a>
+                                        <a id="applicationLink{{ team.name }}-{{ app.name }}" ng-href="{{ getAppUrl(team, app) }}">{{ app.name }}</a>
                                     </div>
                                 </td>
                                 <td class="centered" id="numTotalVulns{{ team.name }}-{{ app.name }}">{{ app.totalVulnCount }}</td>

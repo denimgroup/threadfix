@@ -51,8 +51,8 @@ myAppModule.controller('ScanMappedFindingTableController', function ($scope, $wi
         }
     };
 
-    $scope.goTo = function(finding) {
-        $window.location.href = tfEncoder.encode($scope.$parent.currentUrl + "/findings/" + finding.id);
+    $scope.getFindingUrl = function(finding) {
+        return tfEncoder.encode($scope.$parent.currentUrl + "/findings/" + finding.id);
     };
 
 });

@@ -29,8 +29,8 @@ myAppModule.controller('ScanHistoryController', function($scope, $log, $http, $w
             });
     });
 
-    $scope.goTo = function(scan) {
-        $window.location.href = tfEncoder.encode("/organizations/" + scan.team.id + "/applications/" + scan.app.id + "/scans/" + scan.id);
+    $scope.getScanUrl = function(scan) {
+        return tfEncoder.encode("/organizations/" + scan.team.id + "/applications/" + scan.app.id + "/scans/" + scan.id);
     };
 
 });

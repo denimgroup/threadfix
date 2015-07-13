@@ -276,12 +276,12 @@ myAppModule.controller('ApplicationsIndexController',
         }
     };
 
-    $scope.goTo = function(team) {
-        $window.location.href = tfEncoder.encode("/organizations/" + team.id);
+    $scope.getTeamUrl = function(team) {
+        return tfEncoder.encode("/organizations/" + team.id);
     };
 
-    $scope.goToPage = function(team, app) {
-        $window.location.href = tfEncoder.encode("/organizations/" + team.id + "/applications/" + app.id);
+    $scope.getAppUrl = function(team, app) {
+        return tfEncoder.encode("/organizations/" + team.id + "/applications/" + app.id);
     };
 
     var updateTeam = function(oldTeam, newTeam) {

@@ -6,7 +6,7 @@
 
 <ul class="breadcrumb">
     <li><a id="applicationsIndexLink" href="<spring:url value="/teams"/>">Applications Index</a> <span class="divider">/</span></li>
-    <li ng-show="application"><a id="teamLink" class="pointer" ng-click="goToTeam(application)">Team: {{ application.team.name }}</a> <span class="divider">/</span></li>
+    <li ng-show="application"><a id="teamLink" class="pointer" ng-href="{{ teamUrl }}">Team: {{ application.team.name }}</a> <span class="divider">/</span></li>
     <li ng-show="application" class="active">Application: {{ application.name }}</li>
     <li ng-hide="application"><a href="${ fn:escapeXml(orgUrl) }">Team: <c:out value="${ application.organization.name }"/></a> <span class="divider">/</span></li>
     <li ng-hide="application" class="active">Application: <c:out value="${ application.name }"/></li>

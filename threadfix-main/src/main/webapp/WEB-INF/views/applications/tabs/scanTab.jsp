@@ -44,7 +44,7 @@
                     </td>
                 </c:if>
                 <td>
-                    <a class="pointer" ng-click="viewScan(scan)">View Scan</a>
+                    <a class="pointer" ng-href="{{ getUrl(scan) }}">View Scan</a>
                 </td>
             </tr>
         </tbody>

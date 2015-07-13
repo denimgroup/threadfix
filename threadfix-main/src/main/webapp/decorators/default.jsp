@@ -25,7 +25,6 @@
         <cbs:cachebustscript src="/scripts/threadfix-module.js"/>
         <cbs:cachebustscript src="/scripts/services.js"/>
         <cbs:cachebustscript src="/scripts/generic-modal-controller.js"/>
-        <cbs:cachebustscript src="/scripts/header-controller.js"/>
         <cbs:cachebustscript src="/scripts/wrapper-controller.js"/>
         <cbs:cachebustscript src="/scripts/init-controller.js"/>
         <cbs:cachebustscript src="/scripts/directives.js"/>

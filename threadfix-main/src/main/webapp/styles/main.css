@@ -1308,3 +1308,10 @@ input.wide {
 .pdf-data {
     display: none;
 }
+
+a.fill-div {
+	display: block;
+	height: 100%;
+	width: 100%;
+	line-height: 30px;
+}

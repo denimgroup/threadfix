@@ -136,13 +136,13 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
         }
     };
 
-    $scope.goTo = function(finding) {
+    $scope.getFindingUrl = function(finding) {
 
         var url = $scope.$parent.currentUrl.indexOf('scans') == -1 ?
         $scope.$parent.currentUrl + "/scans/1/findings/" + finding.id :
         $scope.$parent.currentUrl + "/findings/" + finding.id;
 
-        $window.location.href = tfEncoder.encode(url);
+        return tfEncoder.encode(url);
     };
 
 });

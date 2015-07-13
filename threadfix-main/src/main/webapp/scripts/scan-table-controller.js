@@ -49,8 +49,8 @@ myAppModule.controller('ScanTableController', function ($scope, $window, $http, 
         }
     };
 
-    $scope.viewScan = function(scan) {
-        window.location.href = tfEncoder.encode(currentUrl + '/scans/' + scan.id);
+    $scope.getUrl = function(scan) {
+        return tfEncoder.encode(currentUrl + '/scans/' + scan.id);
     };
 
     $scope.$on('scans', function(event, scans) {

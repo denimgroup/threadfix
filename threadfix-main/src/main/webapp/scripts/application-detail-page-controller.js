@@ -25,16 +25,12 @@ myAppModule.controller('ApplicationDetailPageController', function ($scope, $win
     $scope.teamId = $window.location.pathname.match(/([0-9]+)/)[0];
     $scope.currentUrl = "/organizations/" + $scope.teamId + "/applications/" + $scope.appId;
 
-
     $scope.$on('rootScopeInitialized', function() {
         $scope.reportQuery = "&appId=" + $scope.appId + "&orgId=" + $scope.teamId;
+        $scope.teamUrl = tfEncoder.encode("/organizations/" + $scope.teamId);
     });
 
     $scope.rightReportTitle = "Top 10 Vulnerabilities";
-
-    $scope.goToTeam = function(application) {
-        window.location.href = tfEncoder.encode("/organizations/" + application.team.id);
-    };
 
     $scope.$on('numVulns', function(event, numVulns) {
         $scope.numVulns = numVulns;
