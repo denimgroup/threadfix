@@ -30,6 +30,10 @@
             #end
         #end
     #end
+
+    #foreach ($customText in $customTexts)
+        $customText
+    #end
 #end
 
 ##This part will add most of the interesting details of the findings of a vulnerability

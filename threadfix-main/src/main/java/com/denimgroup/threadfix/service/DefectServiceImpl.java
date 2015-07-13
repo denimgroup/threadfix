@@ -26,7 +26,10 @@ package com.denimgroup.threadfix.service;
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.DefectDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
-import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Defect;
+import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.exception.IllegalStateRestException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
@@ -37,13 +40,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 @Service
 @Transactional(readOnly = false)
@@ -187,7 +188,12 @@ public class DefectServiceImpl implements DefectService {
         DefectMetadata metadata = new DefectMetadata(editedSummary, editedPreamble,
                 component, version, severity, priority, status, fieldsMap);
 
-        Map<String,Object> templateModel = map("vulnerabilities", vulnsWithoutDefects, "metadata", metadata, "defectTrackerName", defectTrackerName);
+        Map<String,Object> templateModel = map(
+				"vulnerabilities", vulnsWithoutDefects,
+				"metadata", metadata,
+				"defectTrackerName", defectTrackerName,
+				"customTexts", getCustomText(vulnsWithoutDefects)
+				);
         String description = templateBuilderService.prepareMessageFromTemplate(templateModel, "defectDescription.vm");
         metadata.setFullDescription(description);
 
@@ -238,7 +244,20 @@ public class DefectServiceImpl implements DefectService {
 		return map;
 	}
 
-    private String createMessageWithScannerInfo(Vulnerability vuln, String scannerInfo) {
+	private Set<String> getCustomText(List<Vulnerability> vulnsWithoutDefects) {
+		Set<String> results = set();
+
+		for (Vulnerability vulnerability : vulnsWithoutDefects) {
+
+			if (vulnerability.getGenericVulnerability().getCustomText() != null) {
+				results.add(vulnerability.getGenericVulnerability().getCustomText());
+			}
+		}
+
+		return results;
+	}
+
+	private String createMessageWithScannerInfo(Vulnerability vuln, String scannerInfo) {
 
         String message = scannerInfo;
 
