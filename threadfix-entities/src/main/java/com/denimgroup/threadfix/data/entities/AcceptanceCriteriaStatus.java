@@ -44,13 +44,13 @@ import static com.denimgroup.threadfix.CollectionUtils.map;
         @UniqueConstraint(columnNames = {"Application_Id", "AcceptanceCriteria_Id"})})
 public class AcceptanceCriteriaStatus extends AuditableEntity {
 
-    private boolean passing = false;
+    private Boolean passing = false;
     private Application application;
     private AcceptanceCriteria acceptanceCriteria;
 
     private List<EmailList> emailLists;
     private List<String> emailAddresses;
-    private boolean sendEmail = false;
+    private Boolean sendEmail = false;
 
     @ElementCollection
     @Column(name = "emailAddress", length = 128)
@@ -78,7 +78,7 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
     @Column
     @JsonView(Object.class)
     public Boolean isPassing() {
-        return passing;
+        return passing != null && passing;
     }
 
     public void setPassing(boolean passing) {
@@ -99,7 +99,7 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
     @Column
     @JsonView(Object.class)
     public Boolean isSendEmail() {
-        return sendEmail;
+        return sendEmail != null && sendEmail;
     }
 
     public void setSendEmail(boolean sendEmail) {
