@@ -214,6 +214,8 @@ public class SystemSettingsEntIT extends BaseDataTest {
 
     @Test
     public void testSessionTimeout() {
+        createTeam();
+
         systemSettingsPage.expandSessionTimeoutSettings()
                 .setTimeout("1")
                 .clickSaveChanges();
