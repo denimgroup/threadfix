@@ -460,7 +460,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .loadFilter(filterName, "snapshotFilterDiv");
 
         assertTrue("Medium Bar shouldn't be present", driver.findElement(By.id(teamName + appName + "MediumBar"))
-                .getAttribute("width").equals("0"));
+                .getAttribute("width") == null);
     }
 
     //===========================================================================================================

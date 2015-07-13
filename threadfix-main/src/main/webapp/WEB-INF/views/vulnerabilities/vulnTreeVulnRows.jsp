@@ -56,7 +56,7 @@
     <br>
     <!-- Tag Badges -->
     <span id="tag{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}{{ name }}" ng-repeat="tag in vulnerability.tags" class="badge pointer" ng-class="{'badge-vulnerability-tag': true}" ng-click="goToTag(tag)">{{ tag.name }}</span>
-    <br>
+    <br ng-show="vulnerability.tags">
     <a id="defectBadge{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}"
        ng-href="{{ vulnerability.defect.defectURL }}"
        target="_blank"
