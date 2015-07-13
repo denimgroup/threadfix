@@ -100,7 +100,9 @@ public class AcceptanceCriteria extends AuditableEntity {
         this.acceptanceCriteriaStatuses = acceptanceCriteriaStatuses;
     }
 
-    public boolean isSendEmail() {
+    @Column
+    @JsonView(Object.class)
+    public Boolean isSendEmail() {
         return sendEmail;
     }
 

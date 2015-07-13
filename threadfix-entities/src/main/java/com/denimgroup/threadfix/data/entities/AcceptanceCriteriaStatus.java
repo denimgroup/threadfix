@@ -75,8 +75,9 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
         this.emailLists = emailLists;
     }
 
+    @Column
     @JsonView(Object.class)
-    public boolean isPassing() {
+    public Boolean isPassing() {
         return passing;
     }
 
@@ -95,7 +96,9 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
         this.application = application;
     }
 
-    public boolean isSendEmail() {
+    @Column
+    @JsonView(Object.class)
+    public Boolean isSendEmail() {
         return sendEmail;
     }
 
