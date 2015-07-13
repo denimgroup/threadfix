@@ -24,7 +24,10 @@
 
 package com.denimgroup.threadfix.importer.util;
 
+import com.denimgroup.threadfix.data.entities.VulnerabilitySearchParameters;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -152,5 +155,9 @@ public class JsonUtils {
         };
     }
 
+    @Nonnull
+    public static <T> T toObject (final String jsonString, Class<T> tClass) {
+        return new Gson().fromJson(jsonString, tClass);
+    }
 
 }
