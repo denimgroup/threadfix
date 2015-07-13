@@ -40,6 +40,7 @@ public class TeamIT extends BaseDataTest {
 
     @Before
     public void initialNavigation() {
+        createTeam();
         teamIndexPage = loginPage.defaultLogin().clickOrganizationHeaderLink();
     }
 
