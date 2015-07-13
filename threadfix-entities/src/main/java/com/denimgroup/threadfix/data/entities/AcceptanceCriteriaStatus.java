@@ -29,6 +29,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
@@ -42,13 +44,41 @@ import static com.denimgroup.threadfix.CollectionUtils.map;
         @UniqueConstraint(columnNames = {"Application_Id", "AcceptanceCriteria_Id"})})
 public class AcceptanceCriteriaStatus extends AuditableEntity {
 
-    private boolean passing = false;
+    private Boolean passing = false;
     private Application application;
     private AcceptanceCriteria acceptanceCriteria;
 
+    private List<EmailList> emailLists;
+    private List<String> emailAddresses;
+    private Boolean sendEmail = false;
+
+    @ElementCollection
+    @Column(name = "emailAddress", length = 128)
+    @CollectionTable(name = "AcceptanceCriteriaStatusEmailAddress", joinColumns = @JoinColumn(name = "AcceptanceCriteriaStatusId"))
     @JsonView(Object.class)
-    public boolean isPassing() {
-        return passing;
+    public List<String> getEmailAddresses() {
+        return emailAddresses;
+    }
+
+    public void setEmailAddresses(List<String> emailAddresses) {
+        this.emailAddresses = emailAddresses;
+    }
+
+    @ManyToMany
+    @JoinColumn(name = "emailListId")
+    @JsonView(Object.class)
+    public List<EmailList> getEmailLists() {
+        return emailLists;
+    }
+
+    public void setEmailLists(List<EmailList> emailLists) {
+        this.emailLists = emailLists;
+    }
+
+    @Column
+    @JsonView(Object.class)
+    public Boolean isPassing() {
+        return passing != null && passing;
     }
 
     public void setPassing(boolean passing) {
@@ -64,6 +94,16 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
 
     public void setApplication(Application application) {
         this.application = application;
+    }
+
+    @Column
+    @JsonView(Object.class)
+    public Boolean isSendEmail() {
+        return sendEmail != null && sendEmail;
+    }
+
+    public void setSendEmail(boolean sendEmail) {
+        this.sendEmail = sendEmail;
     }
 
     @Transient
@@ -91,5 +131,25 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
 
     public void setAcceptanceCriteria(AcceptanceCriteria acceptanceCriteria) {
         this.acceptanceCriteria = acceptanceCriteria;
+    }
+
+
+    @Transient
+    @JsonProperty("acceptanceCriteria")
+    @JsonView(Object.class)
+    public Map<String, ? extends Serializable> getAcceptanceCriteriaJson() {
+        if(acceptanceCriteria != null) {
+            return map(
+                    "id", acceptanceCriteria.getId(),
+                    "name", acceptanceCriteria.getName());
+        } else {
+            return null;
+        }
+    }
+
+    @Transient
+    @JsonView(Object.class)
+    public String getName() {
+        return application.getName();
     }
 }
