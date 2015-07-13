@@ -92,6 +92,10 @@ public interface ThreadFixRestClient {
     // QA only
     public RestResponse<User> createUser(String username);
     // QA only
+    public RestResponse<User> deleteUser(String userId);
+    // QA only
+    public RestResponse<User[]> listUsers();
+    // QA only
     public RestResponse<User> addUserTeamAppPermission(String userName, String roleName, String teamName, String appName);
 
 

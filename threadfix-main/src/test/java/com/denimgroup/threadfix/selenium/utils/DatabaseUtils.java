@@ -152,4 +152,16 @@ public class DatabaseUtils {
             RestResponse<Organization> teamResponse = CLIENT.deleteTeam(String.valueOf(team.getId()));
         }
     }
+
+    public static void deleteExtraUsers() {
+
+        RestResponse<User[]> response = CLIENT.listUsers();
+        assertTrue("Request for all users was unsuccessful. Message: " + response.message, response.success);
+
+        for(int index = 0; index < response.object.length; index++){
+            if(response.object[index].getId() != 1) {
+                RestResponse<User> userResponse = CLIENT.deleteUser(String.valueOf(response.object[index].getId()));
+            }
+        }
+    }
 }
