@@ -81,7 +81,7 @@
     <div class="modal-footer">
         <span class="errors" style="float:left">{{ error }}</span>
 
-        <a class="btn" ng-click="cancel()">Close</a>
+        <a class="btn" id="closeModalButton" ng-click="cancel()">Close</a>
         <button id="loadingButton"
                 disabled="disabled"
                 class="btn btn-primary"
