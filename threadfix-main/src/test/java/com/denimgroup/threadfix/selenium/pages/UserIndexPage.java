@@ -230,18 +230,18 @@ public class UserIndexPage extends BasePage {
     public UserIndexPage clickUserLink(String userName) {
         refreshPage();
         try {
-            driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']").click();
+            driver.findElementById("user" + userName).click();
         } catch (NoSuchElementException e) {
             try {
                 sleep(5000);
                 driver.findElementByXPath("//a[text()='2']").click();
                 sleep(2000);
-                driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']").click();
+                driver.findElementById("user" + userName).click();
             } catch (NoSuchElementException ex) {
                 sleep(5000);
                 driver.findElementByXPath("//a[text()='3']").click();
                 sleep(2000);
-                driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']").click();
+                driver.findElementById("user" + userName).click();
             }
         }
         sleep(5000);
@@ -385,17 +385,17 @@ public class UserIndexPage extends BasePage {
 
     public boolean isUserNamePresent(String userName) {
         try {
-            driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']");
+            driver.findElementById("user" + userName);
         } catch (NoSuchElementException e) {
             try {
                 driver.findElementByXPath("//a[text()='2']").click();
                 sleep(2000);
-                driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']");
+                driver.findElementById("user" + userName);
             } catch (NoSuchElementException ex) {
                 try {
                     driver.findElementByXPath("//a[text()='3']").click();
                     sleep(2000);
-                    driver.findElementByXPath("//li[@id=\'lastYearReport\']/a[text()=\'" + userName + "\']");
+                    driver.findElementById("user" + userName);
                 } catch (NoSuchElementException exc) {
                     return false;
                 }

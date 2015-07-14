@@ -74,7 +74,7 @@ public class GroupIndexPage extends BasePage {
 
     public GroupIndexPage clickEditLink(String groupName) {
         refreshPage();
-        driver.findElementByXPath("//li[@id=\'groupList\']/a[text()=\'" + groupName + "\']").click();
+        driver.findElementById("group" + groupName).click();
         waitForElement(driver.findElementById("submit"));
         return new GroupIndexPage(driver);
     }
@@ -152,7 +152,7 @@ public class GroupIndexPage extends BasePage {
 
     public boolean isGroupPresent(String groupName) {
         try{
-            driver.findElementByXPath("//li[@id=\'groupList\']/a[text()=\'" + groupName + "\']");
+            driver.findElementById("group" + groupName);
         } catch(NoSuchElementException e){
             return false;
         }
