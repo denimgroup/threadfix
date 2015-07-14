@@ -215,7 +215,6 @@ public class HibernateApplicationDao implements ApplicationDao {
         criteria.setProjection(Projections.projectionList()
                         .add(Projections.groupProperty("id"))
                         .add(Projections.alias(Projections.countDistinct("vulnerability.id"), "vulnCount"))
-//                        .add(Projections.alias(Projections.count("vulnerabilities"), "vulnCount"))
         );
         criteria.addOrder(Order.desc("vulnCount"));
 
@@ -226,8 +225,8 @@ public class HibernateApplicationDao implements ApplicationDao {
             list.add((Integer) resultArray[0]);
         }
 
-        if (list == null || list.isEmpty())
-            list = Arrays.asList(new Integer[]{-1});
+        if (list.isEmpty())
+            list = Arrays.asList(-1);
         return list;
     }
 
