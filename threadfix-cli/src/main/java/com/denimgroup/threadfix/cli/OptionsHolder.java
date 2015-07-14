@@ -34,6 +34,13 @@ public class OptionsHolder {
     public static Options getOptions() {
         Options options = new Options();
 
+        Option property  = OptionBuilder.withArgName( "unsafe-ssl" )
+                .hasArgs(1)
+                .withValueSeparator()
+                .withDescription( "unsafe-ssl to force ThreadFix to accept unsigned certificates." )
+                .create( "D" );
+        options.addOption(property);
+
         Option teams = OptionBuilder.withLongOpt("teams")
                 .withDescription("Fetches a list of ThreadFix teams and applications.")
                 .create("t");
@@ -90,6 +97,8 @@ public class OptionsHolder {
         options.addOption(setParameters);
 
         options.addOption(new Option("printScanOptions", "Prints available scan options"));
+
+        options.addOption(new Option("printScannerNames", "Prints scanner names supported by ScanAgent"));
 
         Option createTeam = OptionBuilder.withArgName("name")
                 .hasArg()
@@ -153,6 +162,61 @@ public class OptionsHolder {
                 .withDescription("Gets WAF Rules for an application and returns its JSON.")
                 .create("ra");
         options.addOption(getRulesForApp);
+
+        Option createTag = OptionBuilder.withArgName("name> <[tagType]")
+                .withValueSeparator(' ')
+                .hasArgs(2)
+                .withLongOpt("create-tag")
+                .withDescription("Creates a ThreadFix Tag and returns its JSON. tagType is optional, default is Application Tag.")
+                .create("ctg");
+        options.addOption(createTag);
+
+        Option searchTag = OptionBuilder.withArgName("property> <value")
+                .withValueSeparator(' ')
+                .hasArgs(2)
+                .withLongOpt("search-tag")
+                .withDescription("Searches for ThreadFix Tags by either name or id, and returns their JSON.")
+                .create("stg");
+        options.addOption(searchTag);
+
+
+        Option updateTag = OptionBuilder.withArgName("tagId> <name")
+                .hasArgs(2)
+                .withLongOpt("update-tag")
+                .withDescription("Update ThreadFix Tag, and returns their JSON.")
+                .create("utg");
+        options.addOption(updateTag);
+
+
+        Option removeTag = OptionBuilder.withArgName("tagId")
+                .hasArgs(1)
+                .withLongOpt("remove-tag")
+                .withDescription("Remove ThreadFix Tag, and returns message.")
+                .create("rtg");
+        options.addOption(removeTag);
+
+
+
+        Option tags = OptionBuilder.withLongOpt("tags")
+                .withDescription("Fetches a list of ThreadFix tags.")
+                .create("tg");
+        options.addOption(tags);
+
+        Option addAppTag = OptionBuilder.withArgName("applicationId> <tagId")
+                .withValueSeparator(' ')
+                .hasArgs(2)
+                .withLongOpt("addAppTag")
+                .withDescription("Add Tag for the given applicationId")
+                .create("aat");
+        options.addOption(addAppTag);
+
+        Option removeAppTag = OptionBuilder.withArgName("applicationId> <tagId")
+                .withValueSeparator(' ')
+                .hasArgs(2)
+                .withLongOpt("removeAppTag")
+                .withDescription("Remove Tag for the given applicationId")
+                .create("rat");
+        options.addOption(removeAppTag);
 
         return options;
     }

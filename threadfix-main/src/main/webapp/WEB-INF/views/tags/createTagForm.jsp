@@ -15,9 +15,10 @@
 					</td>
 				</tr>
 				<tr>
-					<td>Vulnerability Comment Tag</td>
+					<td>Type</td>
 					<td class="inputValue">
-						<input id="vulnCommentTag" type="checkbox" ng-model="object.tagForComment" name="tagForComment"/>
+						<select ng-model="object.type" name="type" ng-options="tagType for tagType in config.tagTypes" id="tagType"></select>
+						<span id="otherTypeError" class="errors" ng-show="object.type_error"> {{ object.type_error }}</span>
 					</td>
 				</tr>
 			</tbody>

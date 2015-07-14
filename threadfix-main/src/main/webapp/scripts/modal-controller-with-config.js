@@ -68,7 +68,7 @@ myAppModule.controller('ModalControllerWithConfig', function ($log, $scope, $roo
     $scope.focusInput = true;
 
     $scope.switchTo = function(name) {
-        $rootScope.$broadcast('modalSwitch', name);
+        $rootScope.$broadcast('modalSwitch', name, $scope.object);
     };
 
     $scope.cancel = function () {

@@ -106,7 +106,8 @@ public class EditApplicationController {
                 "password", "waf.id", "projectName", "projectRoot", "applicationCriticality.id",
                 "uniqueId", "organization.id", "frameworkType", "repositoryUrl", "repositoryBranch",
                 "repositoryRevision", "repositoryUserName", "repositoryPassword", "repositoryFolder",
-                "repositoryType", "skipApplicationMerge", "mainDefaultDefectProfile.id");
+                "repositoryType", "skipApplicationMerge", "mainDefaultDefectProfile.id",
+				"useDefaultCredentials", "useDefaultProject");
 	}
 
 	@JsonView(AllViews.FormInfo.class)
@@ -130,7 +131,8 @@ public class EditApplicationController {
 		// TODO split into 3 controllers and use setAllowedFields
 		application.setWaf(databaseApplication.getWaf());
 		application.setDefectTracker(databaseApplication.getDefectTracker());
-        application.setUserName(databaseApplication.getUserName());
+
+		application.setUserName(databaseApplication.getUserName());
         application.setPassword(databaseApplication.getPassword());
 		application.setEndpointPermissions(databaseApplication.getEndpointPermissions());
 		

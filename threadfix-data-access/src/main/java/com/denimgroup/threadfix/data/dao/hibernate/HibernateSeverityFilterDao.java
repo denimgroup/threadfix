@@ -33,6 +33,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.denimgroup.threadfix.data.dao.SeverityFilterDao;
 import com.denimgroup.threadfix.data.entities.SeverityFilter;
 
+import java.util.List;
+
 @Repository
 public class HibernateSeverityFilterDao implements SeverityFilterDao {
 
@@ -76,7 +78,12 @@ public class HibernateSeverityFilterDao implements SeverityFilterDao {
 				.setMaxResults(1)
 				.uniqueResult();
 	}
-	
+
+	@Override
+	public List<SeverityFilter> retrieveAll() {
+		return getBaseCriteria().list();
+	}
+
 	private Criteria getBaseCriteria() {
 		return sessionFactory.getCurrentSession().createCriteria(SeverityFilter.class);
 	}

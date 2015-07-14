@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
@@ -189,4 +190,6 @@ public interface ApplicationService {
     long getUnmappedFindingCount(Integer appId);
 
 	long getApplicationCount();
+
+    Object updateApplicationFromREST(Integer applicationId, MultiValueMap<String, String> params, BindingResult result);
 }

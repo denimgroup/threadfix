@@ -24,14 +24,17 @@
 package com.denimgroup.threadfix.service.merge;
 
 import com.denimgroup.threadfix.data.dao.ScanDao;
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.ScanResultFilterService;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.translator.PathGuesser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Service
 public class ScanMergerImpl implements ScanMerger {
@@ -48,6 +51,8 @@ public class ScanMergerImpl implements ScanMerger {
     private ScanCleanerUtils  scanCleanerUtils;
     @Autowired
     private PermissionsHandler permissionsHandler;
+    @Autowired(required=false) // will be null in offline contexts
+    private ScanResultFilterService scanResultFilterService;
 
     @Override
     public void merge(Scan scan, ApplicationChannel applicationChannel) {
@@ -74,6 +79,8 @@ public class ScanMergerImpl implements ScanMerger {
             LOG.error("An incorrectly configured application made it to processRemoteScan()");
             return;
         }
+
+        filterScanResults(scan, applicationChannel);
 
         // TODO probably make all of these autowired
         Application application = applicationChannel.getApplication();
@@ -104,4 +111,27 @@ public class ScanMergerImpl implements ScanMerger {
             permissionsHandler.setPermissions(scan, application.getId());
         }
 	}
+
+    private void filterScanResults(Scan scan, ApplicationChannel applicationChannel) {
+
+        if (scan != null && applicationChannel != null && applicationChannel.getChannelType() != null) {
+
+            List<GenericSeverity> filteredSeverities = list();
+            if (scanResultFilterService != null) {
+                filteredSeverities = scanResultFilterService.loadFilteredSeveritiesForChannelType(applicationChannel.getChannelType());
+            }
+
+            if (filteredSeverities != null && !filteredSeverities.isEmpty()) {
+                List<Finding> toFilter = list();
+
+                for (Finding finding : scan.getFindings()) {
+                    if (filteredSeverities.contains(finding.getChannelSeverity().getSeverityMap().getGenericSeverity())) {
+                        toFilter.add(finding);
+                    }
+                }
+
+                scan.getFindings().removeAll(toFilter);
+            }
+        }
+    }
 }

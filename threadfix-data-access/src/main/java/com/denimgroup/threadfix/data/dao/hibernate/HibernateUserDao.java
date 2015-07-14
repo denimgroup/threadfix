@@ -207,6 +207,13 @@ public class HibernateUserDao
 	}
 
 	@Override
+	public Long countUsers() {
+		return (Long) getActiveUserCriteria()
+				.setProjection(Projections.rowCount())
+				.uniqueResult();
+	}
+
+	@Override
 	public boolean canRemovePermissionFromUserAndGroup(Integer userId, Integer groupId, String string) {
 		Long result = (Long) sessionFactory.getCurrentSession()
 				.createCriteria(User.class)
@@ -244,6 +251,14 @@ public class HibernateUserDao
 						Restrictions.like("displayName", "%" + searchString + "%")
 				)).setMaxResults(number)
 				.setFirstResult((page - 1) * number)
+				.list();
+	}
+
+	@Override
+	public List<User> loadUsersForRole(Integer id) {
+		return getSession().createCriteria(User.class)
+				.createAlias("globalRole", "roleAlias")
+				.add(Restrictions.eq("roleAlias.id", id))
 				.list();
 	}
 }

@@ -76,9 +76,9 @@ public class TeamDetailPageController {
     @Autowired
     private DefaultConfigService defaultConfigService;
     @Autowired
-    private ReportService reportService;
-    @Autowired
     private CacheBustService cacheBustService;
+    @Autowired
+    private GenericSeverityService genericSeverityService;
 
     @RequestMapping(method=RequestMethod.GET)
     public ModelAndView detail(@PathVariable("orgId") int orgId,
@@ -102,7 +102,9 @@ public class TeamDetailPageController {
                     Permission.CAN_MODIFY_VULNERABILITIES,
                     Permission.CAN_MANAGE_VULN_FILTERS,
                     Permission.CAN_GENERATE_REPORTS,
-                    Permission.CAN_MANAGE_USERS);
+                    Permission.CAN_MANAGE_USERS,
+                    Permission.CAN_SUBMIT_COMMENTS,
+                    Permission.CAN_MANAGE_TAGS);
             mav.addObject("apps", apps);
             mav.addObject(organization);
 
@@ -146,6 +148,7 @@ public class TeamDetailPageController {
             Map<String, Object> map = new HashMap<>();
             map.put("team", organization);
             map.put("applications", apps);
+            map.put("genericSeverities", genericSeverityService.loadAll());
             if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,null)) {
                 map.put("users", userService.getPermissibleUsers(orgId, null));
             }

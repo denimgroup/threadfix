@@ -5,12 +5,12 @@
         <br>
     </span>
 
-    <span ng-show="treeApplication" class="vuln-tree-checkbox">
+    <span ng-show="treeApplication || treeTeam" class="vuln-tree-checkbox">
         <input id="checkbox{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" type="checkbox" ng-model="vulnerability.checked" ng-change="applyVulnerabilityChecked(element, vulnerability)"/>
     </span>
 
     <!-- Path + Parameter -->
-    <div ng-if="!vulnerability.dependency">
+    <div ng-if="!vulnerability.dependency" style="word-wrap:break-word;">
         <div ng-if="vulnerability.path || vulnerability.parameter">
             <div class="vuln-tree-label">Path</div>
             <span id="path{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.path }}</span>
@@ -22,6 +22,11 @@
         <div ng-if="vulnerability.calculatedFilePath">
             <div class="vuln-tree-label">File</div>
             <span id="file{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.calculatedFilePath }}</span>
+            <br>
+        </div>
+        <div ng-if="(vulnerability.path || vulnerability.parameter) && vulnerability.fullUrl">
+            <div class="vuln-tree-label">Full Url</div>
+            <span id="fullUrl{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.fullUrl }}</span>
             <br>
         </div>
     </div>
@@ -49,6 +54,9 @@
     <!-- Scanner Badges -->
     <span id="channel{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}{{ name }}" ng-repeat="name in vulnerability.channelNames" class="badge">{{ name }}</span>
     <br>
+    <!-- Tag Badges -->
+    <span id="tag{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}{{ name }}" ng-repeat="tag in vulnerability.tags" class="badge pointer" ng-class="{'badge-vulnerability-tag': true}" ng-click="goToTag(tag)">{{ tag.name }}</span>
+    <br ng-show="vulnerability.tags">
     <a id="defectBadge{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}"
        ng-href="{{ vulnerability.defect.defectURL }}"
        target="_blank"

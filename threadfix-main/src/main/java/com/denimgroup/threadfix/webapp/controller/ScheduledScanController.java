@@ -25,6 +25,7 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ScheduledScan;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -75,16 +76,24 @@ public class ScheduledScanController {
             return RestResponse.failure("You are not allowed to modify scheduled scans for this application.");
         }
 
+        Application application = applicationService.loadApplication(appId);
+
+        if (application == null || !application.isActive()) {
+            return RestResponse.failure("Application was not found for ID " + appId);
+        }
+
         scheduledScanService.validateDate(scheduledScan, result);
 
         if (result.hasErrors()) {
             return FormRestResponse.failure("Encountered errors.", result);
         }
 
-        Application application = applicationService.loadApplication(appId);
-
-        if (application == null || !application.isActive()) {
-            return RestResponse.failure("Application was not found for ID " + appId);
+        if ((application.getUrl() == null || application.getUrl().isEmpty())
+                &&(scheduledScan.getTargetUrl() == null || scheduledScan.getTargetUrl().isEmpty())
+                && ChannelType.DYNAMIC_TYPES.contains(scheduledScan.getScanner())) {
+            String msg = "Target URL is required. You need to either set URL for Application or ScheduledScan.";
+            log.warn(msg);
+            return RestResponse.failure(msg);
         }
 
         int scheduledScanId = scheduledScanService.save(appId, scheduledScan);

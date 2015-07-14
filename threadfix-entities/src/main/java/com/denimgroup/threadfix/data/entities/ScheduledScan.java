@@ -26,8 +26,10 @@ package com.denimgroup.threadfix.data.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name="ScheduledScan")
@@ -38,6 +40,7 @@ public class ScheduledScan extends ScheduledJob {
 	private Application application;
     private String scanner;
     private Document scanConfig;
+    private String targetUrl;
 
 	@ManyToOne
 	@JoinColumn(name = "applicationId")
@@ -68,5 +71,16 @@ public class ScheduledScan extends ScheduledJob {
 
     public void setScanConfig(Document scanConfig) {
         this.scanConfig = scanConfig;
+    }
+
+    @URL(message = "{errors.url}")
+    @Size(min = 0, max = 255, message = "{errors.maxlength} " + 255 + ".")
+    @JsonView(Object.class)
+    public String getTargetUrl() {
+        return (targetUrl == null || targetUrl.isEmpty()) && getApplication() != null ? getApplication().getUrl() : targetUrl;
+    }
+
+    public void setTargetUrl(String targetUrl) {
+        this.targetUrl = targetUrl;
     }
 }

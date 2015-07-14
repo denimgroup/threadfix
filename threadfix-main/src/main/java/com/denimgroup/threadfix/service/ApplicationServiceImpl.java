@@ -39,6 +39,7 @@ import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 
 import javax.annotation.Nullable;
@@ -49,6 +50,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 
 @Service
 @Transactional(readOnly = false)
@@ -75,6 +77,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Autowired private ScanMergeService scanMergeService;
     @Autowired private GenericVulnerabilityDao genericVulnerabilityDao;
     @Autowired private ScheduledScanDao scheduledScanDao;
+    @Autowired private ApplicationCriticalityService applicationCriticalityService;
 
     @Nullable
     @Autowired(required = false)
@@ -709,12 +712,28 @@ public class ApplicationServiceImpl implements ApplicationService {
 	
 	@Override
 	public Application decryptCredentials(Application application) {
+		if (application == null) {
+			return null;
+		}
+
 		try {
-			if (application != null && application.getEncryptedPassword() != null &&
+			if (application.getEncryptedPassword() != null &&
 					application.getEncryptedUserName() != null) {
 				application.setPassword(ESAPI.encryptor().decrypt(application.getEncryptedPassword()));
 				application.setUserName(ESAPI.encryptor().decrypt(application.getEncryptedUserName()));
 			}
+
+			DefectTracker defectTracker = application.getDefectTracker();
+			if (defectTracker != null &&
+					defectTracker.getEncryptedDefaultUsername() != null &&
+					!defectTracker.getEncryptedDefaultUsername().isEmpty()
+					&& defectTracker.getEncryptedDefaultPassword() != null &&
+					!defectTracker.getEncryptedDefaultPassword().isEmpty()){
+
+				defectTracker.setDefaultUsername(ESAPI.encryptor().decrypt(defectTracker.getEncryptedDefaultUsername()));
+				defectTracker.setDefaultPassword(ESAPI.encryptor().decrypt(defectTracker.getEncryptedDefaultPassword()));
+			}
+
 		} catch (EncryptionException e) {
 			log.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
 		}
@@ -775,5 +794,56 @@ public class ApplicationServiceImpl implements ApplicationService {
 		application.setVulnerabilityReport(applicationDao.loadVulnerabilityReport(application));
         application.getOrganization().updateVulnerabilityReport();
 
+    }
+
+    @Override
+    public Object updateApplicationFromREST(Integer applicationId, MultiValueMap<String, String> params, BindingResult result) {
+        Application dbApplication = loadApplication(applicationId);
+
+        if(dbApplication == null){
+            log.info("No application found for id: " + applicationId);
+            throw new RuntimeException("No application found for id: " + applicationId);
+        }
+
+        if(params.containsKey("name")){
+            dbApplication.setName((String) params.getFirst("name"));
+        }
+        if(params.containsKey("url")){
+            dbApplication.setUrl((String) params.getFirst("url"));
+        }
+        if(params.containsKey("uniqueId")){
+            dbApplication.setUniqueId((String) params.getFirst("uniqueId"));
+        }
+        if(params.containsKey("applicationCriticality")){
+            dbApplication.setApplicationCriticality(applicationCriticalityService.loadApplicationCriticality(Integer.parseInt(params.getFirst("applicationCriticality"))));
+        }
+        if(params.containsKey("frameworkType")){
+            dbApplication.setFrameworkType((String) params.getFirst("frameworkType"));
+        }
+        if(params.containsKey("repositoryUrl")){
+            dbApplication.setRepositoryUrl((String) params.getFirst("repositoryUrl"));
+        }
+        if(params.containsKey("repositoryBranch")){
+            dbApplication.setRepositoryBranch((String) params.getFirst("repositoryBranch"));
+        }
+        if(params.containsKey("repositoryUserName")){
+            dbApplication.setRepositoryUserName((String) params.getFirst("repositoryUserName"));
+        }
+        if(params.containsKey("repositoryPassword")){
+            dbApplication.setRepositoryPassword((String) params.getFirst("repositoryPassword"));
+        }
+        if(params.containsKey("repositoryFolder")){
+            dbApplication.setRepositoryFolder((String) params.getFirst("repositoryFolder"));
+        }
+
+        validateAfterEdit(dbApplication, result);
+
+        if(result.hasErrors()){
+            throw new RuntimeException("Has validation errors");
+        }
+
+        storeApplication(dbApplication);
+
+        return success("Fields updated successfully.");
     }
 }

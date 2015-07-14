@@ -43,8 +43,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.data.entities.GenericSeverity.REVERSE_MAP;
 import static com.denimgroup.threadfix.webapp.controller.rest.AddFindingRestController.*;
 
@@ -52,29 +54,23 @@ import static com.denimgroup.threadfix.webapp.controller.rest.AddFindingRestCont
 @Transactional(readOnly = false) // used to be true
 public class FindingServiceImpl implements FindingService {
 
+	@Autowired
 	private FindingDao findingDao = null;
+	@Autowired
 	private ChannelVulnerabilityDao channelVulnerabilityDao = null;
+	@Autowired
 	private GenericVulnerabilityDao genericVulnerabilityDao = null;
+	@Autowired
 	private UserDao userDao = null;
+	@Autowired
 	private ChannelTypeDao channelTypeDao = null;
+	@Autowired
 	private ChannelSeverityDao channelSeverityDao = null;
+	@Autowired
+	private GenericSeverityDao genericSeverityDao = null;
 
 	private final SanitizedLogger log = new SanitizedLogger(FindingServiceImpl.class);
-	
-	@Autowired
-	public FindingServiceImpl(FindingDao findingDao,
-			ChannelSeverityDao channelSeverityDao,
-			ChannelVulnerabilityDao channelVulnerabilityDao,
-			GenericVulnerabilityDao genericVulnerabilityDao,
-			ChannelTypeDao channelTypeDao, UserDao userDao) {
-		this.findingDao = findingDao;
-		this.channelTypeDao = channelTypeDao;
-		this.channelSeverityDao = channelSeverityDao;
-		this.userDao = userDao;
-		this.genericVulnerabilityDao = genericVulnerabilityDao;
-		this.channelVulnerabilityDao = channelVulnerabilityDao;
-	}
-	
+
 	@Override
 	public void validateManualFinding(Finding finding, BindingResult result, boolean isStatic) {
 
@@ -432,9 +428,43 @@ public class FindingServiceImpl implements FindingService {
 	}
 	
 	@Override
-	public List<ChannelSeverity> getManualSeverities() {
+	public List<Map<String, Object>> getManualSeverities() {
 		ChannelType channelType = channelTypeDao.retrieveByName(ScannerType.MANUAL.getFullName());
-		return channelSeverityDao.retrieveByChannel(channelType);
+		List<ChannelSeverity> channelSeverities = channelSeverityDao.retrieveByChannel(channelType);
+
+		List<Map<String, Object>> returnList = list();
+		Map<String, String> customNameMap = getCustomNameMap();
+
+		for (ChannelSeverity severity : channelSeverities) {
+
+			if (!GenericSeverity.NUMERIC_MAP.containsKey(severity.getName())) {
+				continue;
+			}
+
+			// kinda gross, avoids some typing errors though
+			Map<String, Object> map = map();
+			map.putAll(map(
+					"id", severity.getId(),
+					"name", severity.getName(),
+					"displayName", customNameMap.get(severity.getName())
+			));
+			returnList.add(map);
+		}
+
+		return returnList;
+	}
+
+	private Map<String, String> getCustomNameMap() {
+
+		List<GenericSeverity> genericSeverities = genericSeverityDao.retrieveAll();
+
+		Map<String, String> returnMap = map();
+
+		for (GenericSeverity genericSeverity : genericSeverities) {
+			returnMap.put(genericSeverity.getName(), genericSeverity.getDisplayName());
+		}
+
+		return returnMap;
 	}
 
 	@Override
@@ -446,4 +476,9 @@ public class FindingServiceImpl implements FindingService {
 	public long getTotalUnmappedFindings() {
 		return findingDao.getTotalUnmappedFindings();
 	}
+
+    @Override
+    public List<Finding> loadByGenericSeverityAndChannelType(GenericSeverity genericSeverity, ChannelType channelType) {
+        return findingDao.retrieveByGenericSeverityAndChannelType(genericSeverity, channelType);
+    }
 }

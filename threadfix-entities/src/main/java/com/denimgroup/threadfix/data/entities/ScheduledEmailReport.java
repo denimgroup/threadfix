@@ -21,6 +21,7 @@ public class ScheduledEmailReport extends ScheduledJob {
 	private static final long serialVersionUID = 2972698237771512123L;
 
 	private GenericSeverity severityLevel;
+    private List<EmailList> emailLists;
 	private List<String> emailAddresses;
 	private List<Organization> organizations;
 
@@ -36,7 +37,18 @@ public class ScheduledEmailReport extends ScheduledJob {
 		this.emailAddresses = emailAddresses;
 	}
 
-	@ManyToOne
+    @ManyToMany
+    @JoinColumn(name = "emailListId")
+    @JsonView(Object.class)
+    public List<EmailList> getEmailLists() {
+        return emailLists;
+    }
+
+    public void setEmailLists(List<EmailList> emailLists) {
+        this.emailLists = emailLists;
+    }
+
+    @ManyToOne
 	@JoinColumn(name = "severityLevelId")
 	@JsonView(Object.class)
 	public GenericSeverity getSeverityLevel() {

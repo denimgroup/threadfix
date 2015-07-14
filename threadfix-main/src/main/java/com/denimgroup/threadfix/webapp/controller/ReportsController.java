@@ -146,6 +146,7 @@ public class ReportsController {
         Map<String, Object> map = reportsService.generateSnapshotReport(reportParameters,
                 request);
         map.put("tags", tagService.loadAllApplicationTags());
+		map.put("vulnTags", tagService.loadAllVulnTags());
         return RestResponse.success(map);
     }
 

@@ -18,7 +18,7 @@
 			<td class="inputValue">{{title.apps}}</td>
 		</tr>
 		<tr>
-			<td>Tag</td>
+			<td>Application Tag</td>
 			<td class="inputValue">{{title.tags}}</td>
 		</tr>
 		<tr>

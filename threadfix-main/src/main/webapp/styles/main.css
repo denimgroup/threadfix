@@ -219,6 +219,10 @@ body#config #tab-config a:hover {
 	padding-top: 43px;
 }
 
+#main-content .top.popover {
+	padding-top: 0px;
+}
+
 em {
 	font-style: italic;
 }
@@ -1295,6 +1299,26 @@ div.remote-provider-config-modal a {
 	background-color:#808080;
 }
 
+.badge-application-tag {
+	background-color:#0088cc;
+}
+
+.badge-vulnerability-tag {
+	background-color:#c43c35;
+}
+
+.badge-comment-tag {
+	background-color:#c67605;
+}
+
+.badge-ac-status-passing {
+    background-color: darkgreen;
+}
+
+.badge-ac-status-failing {
+    background-color: #c43c35;
+}
+
 .text-critical{
 	color:#F7280C
 }
@@ -1405,4 +1429,17 @@ input.no-bottom-margin {
 
 .side-list-width {
 	width: 166px !important;
+}
+
+ul.dropdown-menu {
+    text-align: left;
+}
+
+.table.fixed-table  {
+	table-layout:fixed;
+	word-wrap:break-word;
+}
+
+.table.fixed-table input {
+	margin-bottom:0;
 }

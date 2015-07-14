@@ -1,4 +1,4 @@
-3/27/2015 11:45:00
+7/7/2015 11:45:00
 type.info,,
 Fortify 360
 type.vulnerabilities,,
@@ -99,5 +99,21 @@ Privacy Violation: Screen Caching,Privacy Violation: Screen Caching,359
 XSLT Injection,XSLT Injection,631
 Insecure Transport: HTTP GET,Insecure Transport: HTTP GET,311
 Android Bad Practices: Mixed Component Functionality,Android Bad Practices: Mixed Component Functionality,265
+Fortify 360 Build Misconfiguration: External Ant Dependency Repository,Fortify 360 Build Misconfiguration: External Ant Dependency Repository,933
+Fortify 360 Cookie Security: Overly Broad Path,Fortify 360 Cookie Security: Overly Broad Path,384
+Fortify 360 Insider Threat: Email Spying,Fortify 360 Insider Threat: Email Spying,16
+Fortify 360 Insider Threat: External Ant Command,Fortify 360 Insider Threat: External Ant Command,16
+Fortify 360 Insider Threat: Password Bypass,Fortify 360 Insider Threat: Password Bypass,269
+Fortify 360 Insider Threat: Static Config File SQL Query,Fortify 360 Insider Threat: Static Config File SQL Query,16
+Fortify 360 Insider Threat: Static SQL Query,Fortify 360 Insider Threat: Static SQL Query,16
+Fortify 360 Insider Threat: Suspicious String,Fortify 360 Insider Threat: Suspicious String,16
+Fortify 360 Insider Threat: Time Bomb,Fortify 360 Insider Threat: Time Bomb,511
+Fortify 360 Insider Threat: Transaction Disruption,Fortify 360 Insider Threat: Transaction Disruption,665
+Fortify 360 OGNL Expression Injection: Struts 2,Fortify 360 OGNL Expression Injection: Struts 2,95
+Fortify 360 Struts Misconfiguration: Invalid Path,Fortify 360 Struts Misconfiguration: Invalid Path,16
+Fortify 360 Struts Misconfiguration: Missing Forward Name,Fortify 360 Struts Misconfiguration: Missing Forward Name,16
+Fortify 360 Struts: Unused Action Form,Fortify 360 Struts: Unused Action Form,16
+Fortify 360 System Information Leak: Internal,Fortify 360 System Information Leak: Internal,200
+Fortify 360 System Information Leak: Struts 2,Fortify 360 System Information Leak: Struts 2,200
 type.severities,,
 Code Quality,Code Quality,1,1

@@ -23,13 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.data.interfaces.MultiLevelFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "SeverityFilter")
-public class SeverityFilter extends BaseEntity {
+public class SeverityFilter extends BaseEntity implements MultiLevelFilter {
 
 	private static final long serialVersionUID = -203648283130654134L;
 
@@ -109,6 +111,7 @@ public class SeverityFilter extends BaseEntity {
 	}
 	
 	@Column(nullable = false)
+	@JsonView(Object.class)
 	public boolean getEnabled() {
 		return enabled;
 	}
@@ -118,6 +121,7 @@ public class SeverityFilter extends BaseEntity {
 	}
 
 	@Column(nullable = false)
+	@JsonView(Object.class)
 	public boolean getGlobal() {
 		return global;
 	}
@@ -127,6 +131,7 @@ public class SeverityFilter extends BaseEntity {
 	}
 
 	@Column(nullable = false)
+	@JsonView(Object.class)
 	public boolean getShowInfo() {
 		return showInfo;
 	}
@@ -136,6 +141,7 @@ public class SeverityFilter extends BaseEntity {
 	}
 
 	@Column(nullable = false)
+	@JsonView(Object.class)
 	public boolean getShowLow() {
 		return showLow;
 	}
@@ -144,6 +150,7 @@ public class SeverityFilter extends BaseEntity {
 		this.showLow = showLow;
 	}
 
+	@JsonView(Object.class)
 	@Column(nullable = false)
 	public boolean getShowMedium() {
 		return showMedium;
@@ -154,6 +161,7 @@ public class SeverityFilter extends BaseEntity {
 	}
 
 	@Column(nullable = false)
+	@JsonView(Object.class)
 	public boolean getShowHigh() {
 		return showHigh;
 	}
@@ -163,6 +171,7 @@ public class SeverityFilter extends BaseEntity {
 	}
 
 	@Column(nullable = false)
+	@JsonView(Object.class)
 	public boolean getShowCritical() {
 		return showCritical;
 	}

@@ -46,6 +46,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
 
 @RestController
@@ -159,6 +160,7 @@ public class AddApplicationController {
             org = application.getOrganization();
         }
 
+        fixTags(application, application.getTags());
         applicationService.validateAfterCreate(application, result);
 
         if (application.getRepositoryUrl() != null && !application.getRepositoryUrl().isEmpty() &&
@@ -193,5 +195,23 @@ public class AddApplicationController {
 
             return "Success";
         }
+    }
+
+    // TODO make hibernate do this the proper way
+    private void fixTags(Application application, List<Tag> tags) {
+        List<Tag> newTags = list();
+
+        for (Tag tag : tags) {
+            if (tag == null || tag.getId() == null) {
+                continue;
+            }
+
+            Tag databaseTag = tagService.loadTag(tag.getId());
+            if (databaseTag != null) {
+                newTags.add(databaseTag);
+            }
+        }
+
+        application.setTags(newTags);
     }
 }

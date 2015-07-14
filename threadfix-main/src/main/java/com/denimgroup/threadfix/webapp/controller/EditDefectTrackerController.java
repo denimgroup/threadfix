@@ -65,7 +65,7 @@ public class EditDefectTrackerController {
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields("name", "url", "defectTrackerType.id");
+		dataBinder.setAllowedFields("name", "url", "defectTrackerType.id", "defaultUsername", "defaultPassword", "defaultProductName");
 	}
 
 	@ModelAttribute
@@ -99,7 +99,12 @@ public class EditDefectTrackerController {
 								AbstractDefectTracker.INVALID_CERTIFICATE)){
                     result.rejectValue("url", null, null, MessageConstants.ERROR_SELF_CERTIFICATE);
 				}
-			}
+			} else if((defectTracker.getDefaultUsername() != null || defectTracker.getDefaultPassword() != null)
+                    && !defectTrackerService.checkCredentials(defectTracker, result)){
+                if (!result.hasFieldErrors("defaultUsername")) {
+                    result.rejectValue("defaultUsername", null, null, defectTracker.getDefectTrackerType().getName() + " Credentials are invalid.");
+                }
+            }
 		}
 		
 		if (result.hasErrors()) {
@@ -122,6 +127,9 @@ public class EditDefectTrackerController {
             oldTracker.setName(defectTracker.getName());
             oldTracker.setUrl(defectTracker.getUrl());
             oldTracker.setDefectTrackerType(defectTracker.getDefectTrackerType());
+            oldTracker.setDefaultUsername(defectTracker.getDefaultUsername());
+            oldTracker.setDefaultPassword(defectTracker.getDefaultPassword());
+            oldTracker.setDefaultProductName(defectTracker.getDefaultProductName());
 
 			defectTrackerService.storeDefectTracker(oldTracker);
 			

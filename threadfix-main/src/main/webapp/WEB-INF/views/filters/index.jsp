@@ -26,18 +26,18 @@
             <li class="active">Vulnerability Filters</li>
         </ul>
 
-        <h2 ng-show="type === 'Application'">Application {{ application.name }} Filters</h2>
-        <h2 ng-show="type === 'Organization'">Team {{ organization.name }} Filters</h2>
-        <h2 ng-show="type === 'Global'">Global Filters</h2>
+        <h2 ng-show="tab.application">Application {{ application.name }} Filters</h2>
+        <h2 ng-show="tab.organization">Team {{ organization.name }} Filters</h2>
+        <h2 ng-show="tab.global">Global Filters</h2>
 
         <div id="helpText">
             ThreadFix Vulnerability Filters are used to sort data.<br/>
         </div>
 
         <tabset ng-hide="originalType === 'Global'">
-            <tab ng-click="setTab('Application')" ng-show="originalType === 'Application'" heading="Application Filters" active="type==='Application'"></tab>
-            <tab ng-click="setTab('Organization')" heading="Team Filters" active="type==='Organization'"></tab>
-            <tab ng-click="setTab('Global')" heading="Global Filters" active="type==='Global'"></tab>
+            <tab ng-click="setTab('Application')" ng-show="originalType === 'Application'" heading="Application Filters" active="tab.application"></tab>
+            <tab ng-click="setTab('Organization')" heading="Team Filters" active="tab.organization"></tab>
+            <tab ng-click="setTab('Global')" heading="Global Filters" active="tab.global"></tab>
         </tabset>
 
         <div id="tabsDiv">

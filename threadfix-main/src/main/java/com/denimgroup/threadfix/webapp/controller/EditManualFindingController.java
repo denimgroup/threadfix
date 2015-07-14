@@ -28,7 +28,10 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.*;
+import com.denimgroup.threadfix.service.FindingService;
+import com.denimgroup.threadfix.service.ManualFindingService;
+import com.denimgroup.threadfix.service.ScanService;
+import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.queue.QueueSender;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
@@ -46,6 +49,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/vulnerabilities/{vulnerabilityId}/manual/{findingId}/edit")
@@ -293,9 +297,8 @@ public class EditManualFindingController {
         dbFinding.setLongDescription(finding.getLongDescription());
     }
 
-
 	@ModelAttribute("channelSeverityList")
-	public List<ChannelSeverity> populateChannelSeverity() {
+	public List<Map<String, Object>> populateChannelSeverity() {
 		return findingService.getManualSeverities();
 	}
 	

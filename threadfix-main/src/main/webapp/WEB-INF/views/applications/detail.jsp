@@ -4,6 +4,7 @@
 	<title><c:out value="${ application.name }"/></title>
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/dyn-form.css"/>
 	<cbs:cachebustscript src="/scripts/add-defect-tracker-modal-controller.js"/>
+    <cbs:cachebustscript src="/scripts/create-edit-defect-tracker-modal-controller.js"/>
 	<cbs:cachebustscript src="/scripts/application-detail-page-controller.js"/>
 	<cbs:cachebustscript src="/scripts/application-page-modal-controller.js"/>
 	<cbs:cachebustscript src="/scripts/defect-submission-modal-controller.js"/>
@@ -22,6 +23,8 @@
 	<cbs:cachebustscript src="/scripts/scan-unmapped-finding-table-controller.js"/>
 	<cbs:cachebustscript src="/scripts/add-to-existing-defect-controller.js"/>
     <cbs:cachebustscript src="/scripts/report/vuln-summary-modal-controller.js"/>
+    <cbs:cachebustscript src="/scripts/update-defect-defaults-modal-controller.js"/>
+    <cbs:cachebustscript src="/scripts/default-value-mapping.js"/>
     <c:forEach items="${ reportJsPaths }" var="reportJs">
         <script type="text/javascript" src="${ reportJs }"></script>
     </c:forEach>
@@ -92,6 +95,7 @@
     <%@ include file="/WEB-INF/views/applications/modals/submitGRCControl.jsp" %>
     <%@ include file="/WEB-INF/views/defects/addToExistingDefectForm.jsp" %>
     <%@ include file="/WEB-INF/views/applications/forms/vulnCommentForm.jsp"%>
+    <%@ include file="/WEB-INF/views/applications/forms/vulnTaggingForm.jsp"%>
     <%@ include file="/WEB-INF/views/applications/forms/uploadDocForm.jsp"%>
     <%@ include file="/WEB-INF/views/applications/forms/manualFindingForm.jsp"%>
     <%@ include file="/WEB-INF/views/applications/forms/addScheduledScanForm.jsp"%>
@@ -99,4 +103,6 @@
     <%@ include file="/WEB-INF/views/applications/forms/viewApplicationForm.jsp" %>
     <%@ include file="../scans/createMappingModal.jsp" %>
     <%@ include file="/WEB-INF/views/reports/vulnSummaryModal.jsp" %>
+    <%@ include file="../config/defecttrackers/modals/updateDefectDefaultModal.jsp" %>
+    <%@ include file="../config/defecttrackers/modals/createDefaultProfileModal.jsp" %>
 </body>

@@ -24,11 +24,7 @@
 
 package com.denimgroup.threadfix.service;
 
-import java.io.File;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.*;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -42,8 +38,13 @@ import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityCommentDao;
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
 
-import static com.denimgroup.threadfix.CollectionUtils.*;
+import java.io.File;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
+
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.listFrom;
 
 @Service
 @Transactional(readOnly = false)
@@ -482,7 +483,10 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			List<Vulnerability> vulnsToUpdate = list();
 			
 			if (scan.getScanCloseVulnerabilityMaps() != null) {
-				for (ScanCloseVulnerabilityMap map : scan.getScanCloseVulnerabilityMaps()) {
+
+				List<ScanCloseVulnerabilityMap> scanCloseVulnerabilityMapsCopy = listFrom(scan.getScanCloseVulnerabilityMaps());
+
+				for (ScanCloseVulnerabilityMap map : scanCloseVulnerabilityMapsCopy) {
 					if (map != null && map.getVulnerability() != null &&
 							map.getVulnerability().getOriginalFinding() != null 
 							&& map.getVulnerability().getOriginalFinding().getScan() != null 
@@ -817,7 +821,6 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 	 * Sets open and close times for the vuln based on the current set of
 	 * close and reopen maps.
 	 * @param vuln
-	 * @param scanToDelete
 	 */
 	private void updateVulnStatus(Vulnerability vuln) {
 		if (vuln == null || vuln.getFindings() == null ||
