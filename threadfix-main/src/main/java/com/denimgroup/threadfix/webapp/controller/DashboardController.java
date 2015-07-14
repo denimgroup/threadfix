@@ -104,22 +104,28 @@ public class DashboardController {
     @JsonView(AllViews.RestViewScanStatistic.class)
     @RequestMapping(value="/leftReport", method=RequestMethod.GET)
     public @ResponseBody Object leftReport(HttpServletRequest request) {
-
+        long start = System.currentTimeMillis();
+        log.info("Processing left report");
         ReportParameters parameters = getParameters(request, ReportFormat.TRENDING);
         Map<String, Object> map = reportsService.generateTrendingReport(parameters, request);
         map.put("savedFilters", filterJsonBlobService.loadAll());
         map.put("genericSeverities", genericSeverityService.loadAll());
+
+        log.info("Left report took " + (System.currentTimeMillis() - start) + " ms");
 
         return RestResponse.success(map);
     }
 
 	@RequestMapping(value="/rightReport", method=RequestMethod.GET)
 	public @ResponseBody RestResponse<List<Map<String, Object>>> rightReport(HttpServletRequest request) {
-
+        long start = System.currentTimeMillis();
+        log.info("Processing right report");
         ReportFormat reportFormat = (request.getParameter("appId") != null) ? ReportFormat.TOP_TEN_VULNS : ReportFormat.TOP_TEN_APPS;
 
         ReportParameters parameters = getParameters(request, reportFormat);
         ReportCheckResultBean resultBean = reportsService.generateDashboardReport(parameters, request);
+
+        log.info("Right report took " + (System.currentTimeMillis() - start) + " ms");
 
         return RestResponse.success(resultBean.getReportList());
 	}

@@ -70,7 +70,7 @@
     </div>
 
     <tabset style="margin-top:10px;">
-        <tab heading="{{ applications.length }} Applications" active="showAppsTab" >
+        <tab heading="{{ countApps }} Applications" active="showAppsTab" >
             <%@ include file="applicationsTable.jsp" %>
         </tab>
         <tab heading="{{ vulnerabilityCount }} Vulnerabilities" active="showVulnTab" ng-click="clickVulnTab()" >

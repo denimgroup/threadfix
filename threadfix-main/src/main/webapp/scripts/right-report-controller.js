@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix');
 
-myAppModule.controller('RightReportController', function ($scope, $window, threadfixAPIService, filterService, trendingUtilities) {
+myAppModule.controller('RightReportController', function ($scope, $window, threadfixAPIService, $log) {
 
     // Using this controller is easy; just set up a parent controller with empty and reportQuery fields.
     $scope.empty = $scope.$parent.empty;
@@ -16,9 +16,10 @@ myAppModule.controller('RightReportController', function ($scope, $window, threa
     });
 
     var loadRightReport = function() {
+        var start = new Date();
         threadfixAPIService.loadReport("/dashboard/rightReport", $scope.reportQuery).
             success(function(data, status, headers, config) {
-
+                $log.info("right request server took " + ((new Date()).getTime() - start.getTime()) + " ms");
                 $scope.topAppsData = data.object;
 
                 if (!$scope.topAppsData) {

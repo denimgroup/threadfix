@@ -114,10 +114,19 @@ public class HibernateScanDao
     @Override
 	@SuppressWarnings("unchecked")
 	public List<Scan> retrieveByApplicationIdList(List<Integer> applicationIdList) {
+
+		List<Integer> scanIds =  sessionFactory.getCurrentSession()
+				.createCriteria(Application.class)
+				.add(Restrictions.in("id", applicationIdList))
+				.createAlias("scans", "scans")
+				.add(Restrictions.eq("scans.lockedMetadata", false))
+				.setProjection(Projections.groupProperty("scans.id"))
+				.list();
+
 		return sessionFactory.getCurrentSession()
-			.createQuery("from Scan scan where scan.application.id in (:idList) and lockedMetadata = false")
-			.setParameterList("idList", applicationIdList)
-			.list();
+				.createCriteria(Scan.class)
+				.add(Restrictions.in("id", scanIds))
+				.list();
 	}
 
     @Override

@@ -137,7 +137,10 @@ public class TeamDetailPageController {
         final RestResponse<? extends Object> restResponse;
 
         Organization organization = organizationService.loadById(orgId);
+        long start = System.currentTimeMillis();
         List<Application> apps = PermissionUtils.filterApps(organization);
+
+        log.info("Filtering apps from team took " + (System.currentTimeMillis() - start) + " ms");
 
         if (organization == null){
             restResponse = RestResponse.failure("Unable to find the requested team.");
@@ -147,6 +150,10 @@ public class TeamDetailPageController {
         } else {
             Map<String, Object> map = new HashMap<>();
             map.put("team", organization);
+
+            map.put("countApps", organizationService.countApps(orgId, null));
+            map.put("vulnerabilityCount", organizationService.countVulns(orgId));
+
             map.put("applications", apps);
             map.put("genericSeverities", genericSeverityService.loadAll());
             if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,null)) {
@@ -154,6 +161,8 @@ public class TeamDetailPageController {
             }
             restResponse = RestResponse.success(map);
         }
+
+        log.info("Get team info took " + (System.currentTimeMillis() - start) + " ms");
 
         return restResponse;
     }

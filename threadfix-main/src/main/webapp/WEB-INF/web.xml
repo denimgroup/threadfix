@@ -257,6 +257,7 @@
         		protected-regex ^/organizations/[0-9]+/getReport$,
         		protected-regex ^/organizations/[0-9]+/modalEdit$,
 		    	protected-regex ^/organizations/[0-9]+/modalAddApp$,
+				protected-regex ^/organizations/[0-9]+/search$,
 		    	protected-regex ^/organizations/jsonList$,
         		protected-regex ^/reports/ajax$,
                 protected-regex ^/reports/ajax/page$,

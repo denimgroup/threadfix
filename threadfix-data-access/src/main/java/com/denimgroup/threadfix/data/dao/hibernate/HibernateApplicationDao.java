@@ -39,12 +39,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 /**
  * Hibernate Application DAO implementation. Most basic methods are implemented
@@ -83,7 +85,7 @@ public class HibernateApplicationDao implements ApplicationDao {
     @Override
     @Transactional(readOnly = false) // used to be true
     public Application retrieveById(int id) {
-        return (Application) getActiveAppCriteria().add(Restrictions.eq("id",id)).uniqueResult();
+        return (Application) getActiveAppCriteria().add(Restrictions.eq("id", id)).uniqueResult();
     }
 
     @Override
@@ -287,29 +289,6 @@ public class HibernateApplicationDao implements ApplicationDao {
 
     @Override
     public List<Map<String, Object>> retrieveAppsInfoMap(List<Integer> applicationIdList, List<Integer> vulnTagIds) {
-//        return (List<Map<String, Object>>)
-//                sessionFactory.getCurrentSession().createQuery(
-//                "select new map( " +
-//                        "vulnerability.genericSeverity.name as severity, " +
-//                        "vulnerability.genericVulnerability.name as genericVulnName, " +
-//                        "vulnerability.openTime as importTime, " +
-//                        "vulnerability.closeTime as closeTime, " +
-//                        "vulnerability.active as active, " +
-//                        "vulnerability.hidden as hidden, " +
-//                        "vulnerability.isFalsePositive as isFalsePositive, " +
-//                        "vulnerability.application.name as appName, " +
-//                        "vulnerability.application.id as appId, " +
-//                        "vulnerability.application.organization.name as teamName, " +
-//                        "vulnerability.application.organization.id as teamId " +
-//                        ") " +
-//                        "from Vulnerability vulnerability " +
-//                        "where vulnerability.hidden = false " +
-//                        "and vulnerability.application.id in (:idList) " +
-//                        "and vulnerability.active = true " +
-//                        "order by vulnerability.genericSeverity.name, vulnerability.application.name")
-//                .setParameterList("idList", applicationIdList)
-//                .list();
-
 
         Session session = sessionFactory.getCurrentSession();
         Criteria criteria = session.createCriteria(Application.class);
@@ -344,5 +323,89 @@ public class HibernateApplicationDao implements ApplicationDao {
 
         List results = criteria.list();
         return results;
+    }
+
+    @Override
+    public Long countApps(Integer teamId, String searchString) {
+
+        return (Long) getSearchAppCriteria(teamId, searchString)
+                .setProjection(Projections.rowCount())
+                .uniqueResult();
+    }
+
+    @Override
+    public List<Application> getSearchResults(Integer teamId, String searchString, int number, int page, Set<Integer> appIds, Set<Integer> teamIds) {
+
+        Criteria criteria = getSearchAppCriteria(teamId, searchString);
+        addFiltering(criteria, teamIds, appIds);
+        return (List<Application>) criteria.setMaxResults(number)
+                .setFirstResult((page - 1) * number)
+                .list();
+    }
+
+    @Override
+    public Long countApps(Integer orgId, String searchString, Set<Integer> appIds, Set<Integer> teamIds) {
+        Criteria criteria = getSearchAppCriteria(orgId, searchString);
+        addFiltering(criteria, teamIds, appIds);
+
+        return (Long) criteria.setProjection(Projections.rowCount())
+                .uniqueResult();
+    }
+
+    @Override
+    public Long countVulns(Integer orgId, Set<Integer> appIds, Set<Integer> teamIds) {
+        Criteria criteria = getSearchAppCriteria(orgId, null);
+        addFiltering(criteria, teamIds, appIds);
+
+        return (Long) criteria.setProjection(Projections.sum("totalVulnCount"))
+                .uniqueResult();
+    }
+
+    private Criteria getSearchAppCriteria(Integer orgId, String searchString) {
+        Criteria criteria = getActiveAppCriteria();
+
+        criteria.createAlias("organization", "team");
+        criteria.addOrder(Order.asc("name"));
+        criteria.add(Restrictions.eq("team.id", orgId));
+        if (searchString != null && !searchString.isEmpty()){
+            criteria.add(Restrictions.like("name", "%" + searchString + "%"));
+        }
+
+        return criteria;
+    }
+
+    private void addFiltering(Criteria criteria, Set<Integer> teamIds, Set<Integer> appIds) {
+
+        boolean useAppIds = appIds != null,
+                useTeamIds = teamIds != null;
+
+        if (teamIds != null && teamIds.isEmpty()) {
+            teamIds = set(0);
+        }
+
+        if (appIds != null && appIds.isEmpty()) {
+            appIds = set(0);
+        }
+
+        if (!useAppIds && !useTeamIds) {
+            return ;
+        }
+
+        if (useAppIds && useTeamIds) {
+            criteria
+                    .add(Restrictions.eq("team.active", true))
+                    .add(Restrictions.or(
+                            Restrictions.in("id", appIds),
+                            Restrictions.in("team.id", teamIds)
+                    ));
+        } else if (useAppIds) {
+            criteria
+                    .add(Restrictions.in("id", appIds));
+        } else {
+            criteria
+                    .add(Restrictions.in("team.id", teamIds))
+                    .add(Restrictions.eq("team.active", true));
+        }
+
     }
 }
