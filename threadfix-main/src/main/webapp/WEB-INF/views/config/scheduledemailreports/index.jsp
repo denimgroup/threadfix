@@ -39,7 +39,7 @@
                 <tr ng-repeat-start="scheduledReport in scheduledEmailReports">
                     <td>{{ scheduledReport.scheduledDate }} {{ scheduledReport.period }}</td>
                     <td style="max-width:500px; word-wrap: break-word;"><span ng-repeat="organization in scheduledReport.organizations">{{ organization.name }} </span></td>
-                    <td>{{ scheduledReport.severityLevel.name }}</td>
+                    <td>{{ scheduledReport.severityLevel.displayName }}</td>
                     <td class="centered">
                         <button class="btn" ng-click="showEmailAddresses(scheduledReport)">Show/Hide</button>
                     </td>

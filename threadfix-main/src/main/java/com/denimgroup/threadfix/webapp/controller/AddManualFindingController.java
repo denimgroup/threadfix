@@ -23,7 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
@@ -41,6 +43,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans/new")
@@ -59,7 +62,7 @@ public class AddManualFindingController {
     private FindingService              findingService;
 
     @ModelAttribute
-    public List<ChannelSeverity> populateChannelSeverity() {
+    public List<Map<String, Object>> populateChannelSeverity() {
         return findingService.getManualSeverities();
     }
 

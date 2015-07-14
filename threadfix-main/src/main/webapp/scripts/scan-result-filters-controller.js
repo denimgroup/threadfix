@@ -10,13 +10,13 @@ module.controller('ScanResultFiltersController', function($scope, $http, $modal,
             return scannerCompare;
         }
 
-        if(a.genericSeverity.intValue == b.genericSeverity.intValue){
+        if (a.genericSeverity.intValue == b.genericSeverity.intValue) {
             return 0;
         }
-        if(a.genericSeverity.intValue > b.genericSeverity.intValue){
+        if (a.genericSeverity.intValue > b.genericSeverity.intValue) {
             return -1;
         }
-        if(a.genericSeverity.intValue < b.genericSeverity.intValue){
+        if (a.genericSeverity.intValue < b.genericSeverity.intValue) {
             return 1;
         }
     };
