@@ -25,21 +25,21 @@
 package com.denimgroup.threadfix.webapp.controller.rest;
 
 import com.denimgroup.threadfix.CollectionUtils;
+import com.denimgroup.threadfix.data.entities.AccessControlTeamMap;
 import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.UserService;
+import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+
+import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 
 @RestController
 @RequestMapping("/rest")
@@ -49,6 +49,12 @@ public class QARestController extends TFRestController {
     private OrganizationService organizationService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private RoleService roleService;
+    @Autowired
+    private ApplicationService applicationService;
+    @Autowired
+    private AccessControlMapService accessControlMapService;
 
     private static final String TEAM_DELETION_FAILED = "Team deletion failed.";
     private static final String TEAM_DELETION_SUCCESS= "Team deleted successfully";
@@ -57,6 +63,11 @@ public class QARestController extends TFRestController {
     private static final String USER_DELETION_FAILED = "User deletion failed.";
     private static final String USER_DELETION_SUCCESS= "User deleted successfully";
     private static final String DELETE_USER = "deleteUser";
+
+
+    /********************************
+     * TEAM METHODS
+     ********************************/
 
     @RequestMapping(headers = "Accept=application/json", value = "/teams/delete/{teamId}", method = RequestMethod.POST)
     @JsonView(AllViews.RestViewTeam2_1.class)
@@ -80,6 +91,67 @@ public class QARestController extends TFRestController {
             log.info("REST Request to delete Team " + teamName + " is completed successfully");
             return RestResponse.success(TEAM_DELETION_SUCCESS);
         }
+    }
+
+    /********************************
+     * USER METHODS
+     ********************************/
+
+    @RequestMapping(value = "/user/create", method = RequestMethod.POST)
+    public @ResponseBody
+    RestResponse<User> createUser(@RequestParam String username,
+                                  @RequestParam(required = false) String globalRoleName) {
+
+        User user = new User();
+        user.setName(username);
+
+        user.setHasGlobalGroupAccess(globalRoleName != null);
+        if (globalRoleName != null) {
+            user.setGlobalRole(roleService.loadRole(globalRoleName));
+        }
+
+        user.setSalt("c892c2c6-2bd9-4b6a-a826-d9a71f5db441");
+        user.setPassword("3ac7de35360886d9aa7c821e4908f7c260c63eea9c229bff38ac40b28279b7a5");
+
+        userService.storeUser(user);
+
+        return success(user);
+    }
+
+    @RequestMapping(value= "/user/permission", method =  RequestMethod.POST)
+    public @ResponseBody RestResponse<User> addUserTeamAppPermission(@RequestParam String username,
+                                                                     @RequestParam String rolename,
+                                                                     @RequestParam String teamname,
+                                                                     @RequestParam String appname) {
+
+        User user = userService.loadUser(username);
+
+        AccessControlTeamMap newAccessControlTeamMap = new AccessControlTeamMap();
+
+        newAccessControlTeamMap.setUser(user);
+        newAccessControlTeamMap.setOrganization(organizationService.loadByName(teamname));
+        newAccessControlTeamMap.setRole(roleService.loadRole(rolename));
+        newAccessControlTeamMap.setAllApps(true);
+
+        accessControlMapService.store(newAccessControlTeamMap);
+
+        List<AccessControlTeamMap> userControlTeamMap = accessControlMapService.loadAllMapsForUser(user.getId());
+        int controlTeamMapID = userControlTeamMap.get(0).getId();
+
+        List<AccessControlTeamMap> accessControlTeamMapList = user.getAccessControlTeamMaps();
+        accessControlTeamMapList.add(accessControlMapService.loadAccessControlTeamMap(controlTeamMapID));
+
+        user.setAccessControlTeamMaps(accessControlTeamMapList);
+
+        userService.storeUser(user);
+
+        return success(user);
+    }
+
+    @RequestMapping(value="/user/trap", method = RequestMethod.POST)
+    public @ResponseBody void trap() {
+        String a = null;
+        a.length();
     }
 
     @RequestMapping(headers = "Accept=application/json", value = "/user/delete/{userId}", method = RequestMethod.POST)
@@ -115,5 +187,188 @@ public class QARestController extends TFRestController {
         List<User> users = userService.loadAllUsers();
 
         return RestResponse.success(users);
+    }
+
+    /********************************
+     * ROLE METHODS
+     ********************************/
+
+    @RequestMapping(value= "/role/create", method = RequestMethod.POST)
+    public @ResponseBody RestResponse<Role> createRole(@RequestParam String roleName,
+                                                       @RequestParam Boolean allPermissions) {
+
+        Role role = new Role();
+        role.setDisplayName(roleName);
+
+        if (allPermissions) {
+            role.setCanGenerateReports(allPermissions);
+            role.setCanGenerateWafRules(allPermissions);
+            role.setCanManageApiKeys(allPermissions);
+            role.setCanManageApplications(allPermissions);
+            role.setCanManageGrcTools(allPermissions);
+            role.setCanManageDefectTrackers(allPermissions);
+            role.setCanManageRemoteProviders(allPermissions);
+            role.setCanManageScanAgents(allPermissions);
+            role.setCanManageSystemSettings(allPermissions);
+            role.setCanManageRoles(allPermissions);
+            role.setCanManageTags(allPermissions);
+            role.setCanManageTeams(allPermissions);
+            role.setCanManageUsers(allPermissions);
+            role.setCanManageUsers(allPermissions);
+            role.setCanManageWafs(allPermissions);
+            role.setCanManageVulnFilters(allPermissions);
+            role.setCanModifyVulnerabilities(allPermissions);
+            role.setCanSubmitDefects(allPermissions);
+            role.setCanUploadScans(allPermissions);
+            role.setCanViewErrorLogs(allPermissions);
+        }
+
+        roleService.storeRole(role);
+
+        return success(role);
+    }
+
+    @RequestMapping(value= "/role/create/specific", method = RequestMethod.POST)
+    public @ResponseBody RestResponse<Role> permissionSpecificRole(@RequestParam String roleName,
+                                                                   @RequestParam String permission) {
+
+        Role role = new Role();
+        role.setDisplayName(roleName);
+
+        switch(permission) {
+            case "canManageUsers":
+                role.setCanManageUsers(true);
+                break;
+            case "canManageRoles":
+                role.setCanManageRoles(true);
+                break;
+            case "canManageTeams":
+                role.setCanManageTeams(true);
+                break;
+            case "canManageGRCTools":
+                role.setCanManageGrcTools(true);
+                break;
+            case "canManageDefectTrackers":
+                role.setCanManageDefectTrackers(true);
+                break;
+            case "canManageVulnFilters":
+                role.setCanManageVulnFilters(true);
+                break;
+            case "canModifyVulnerabilities":
+                role.setCanModifyVulnerabilities(true);
+                break;
+            case "canUploadScans":
+                role.setCanUploadScans(true);
+                break;
+            case "canViewErrorLogs":
+                role.setCanViewErrorLogs(true);
+                break;
+            case "canSubmitDefects":
+                role.setCanSubmitDefects(true);
+                break;
+            case "canManageWafs":
+                role.setCanManageWafs(true);
+                break;
+            case "canGenerateWafRules":
+                role.setCanGenerateWafRules(true);
+                break;
+            case "canManageApiKeys":
+                role.setCanManageApiKeys(true);
+                break;
+            case "canManageRemoteProviders":
+                role.setCanManageRemoteProviders(true);
+                break;
+            case "canGenerateReports":
+                role.setCanGenerateReports(true);
+                break;
+            case "canManageApplications":
+                role.setCanManageApplications(true);
+                break;
+            case "canManageScanAgents":
+                role.setCanManageScanAgents(true);
+                break;
+            case "canManageSystemSettings":
+                role.setCanManageSystemSettings(true);
+                break;
+            case "canManageTags":
+                role.setCanManageTags(true);
+                break;
+            default:
+                throw new RuntimeException(permission + " is not a valid permission");
+        }
+
+        roleService.storeRole(role);
+
+        return success(role);
+    }
+
+    @RequestMapping(value= "/role/edit", method = RequestMethod.POST)
+    public @ResponseBody RestResponse<Role> removePermission(@RequestParam String roleName,
+                                                             @RequestParam String permission) {
+
+        Role role = roleService.loadRole(roleName);
+
+        switch(permission) {
+            case "canManageUsers":
+                role.setCanManageUsers(false);
+                break;
+            case "canManageRoles":
+                role.setCanManageRoles(false);
+                break;
+            case "canManageTeams":
+                role.setCanManageTeams(false);
+                break;
+            case "canManageDefectTrackers":
+                role.setCanManageDefectTrackers(false);
+                break;
+            case "canManageVulnFilters":
+                role.setCanManageVulnFilters(false);
+                break;
+            case "canModifyVulnerabilities":
+                role.setCanModifyVulnerabilities(false);
+                break;
+            case "canUploadScans":
+                role.setCanUploadScans(false);
+                break;
+            case "canViewErrorLogs":
+                role.setCanViewErrorLogs(false);
+                break;
+            case "canSubmitDefects":
+                role.setCanSubmitDefects(false);
+                break;
+            case "canManageWafs":
+                role.setCanManageWafs(false);
+                break;
+            case "canGenerateWafRules":
+                role.setCanGenerateWafRules(false);
+                break;
+            case "canManageApiKeys":
+                role.setCanManageApiKeys(false);
+                break;
+            case "canManageRemoteProviders":
+                role.setCanManageRemoteProviders(false);
+                break;
+            case "canGenerateReports":
+                role.setCanGenerateReports(false);
+                break;
+            case "canManageApplications":
+                role.setCanManageApplications(false);
+                break;
+            case "canManageScanAgents":
+                role.setCanManageScanAgents(false);
+                break;
+            case "canManageSystemSettings":
+                role.setCanManageSystemSettings(false);
+                break;
+            case "canManageTags":
+                role.setCanManageTags(false);
+                break;
+            default:
+                throw new RuntimeException(permission + " is not a valid permission");
+        }
+
+        roleService.storeRole(role);
+
+        return success(role);
     }
 }
