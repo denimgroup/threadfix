@@ -26,7 +26,7 @@
 
 <ul class="nav nav-pills">
   <li ng-repeat="user in users"
-      id="lastYearReport"
+      id="user{{ $index }}"
       class="span2"
       ng-class="{ active: currentUser.id === user.id }">
     <a href="#" class="no-underline" ng-click="setCurrentUser(user)">{{ user.name }}</a>
