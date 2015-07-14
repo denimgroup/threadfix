@@ -25,10 +25,7 @@
 package com.denimgroup.threadfix.webapp.controller.rest;
 
 import com.denimgroup.threadfix.CollectionUtils;
-import com.denimgroup.threadfix.data.entities.AccessControlTeamMap;
-import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.data.entities.Role;
-import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.views.AllViews;
@@ -55,6 +52,8 @@ public class QARestController extends TFRestController {
     private ApplicationService applicationService;
     @Autowired
     private AccessControlMapService accessControlMapService;
+    @Autowired
+    private GroupService groupService;
 
     private static final String TEAM_DELETION_FAILED = "Team deletion failed.";
     private static final String TEAM_DELETION_SUCCESS= "Team deleted successfully";
@@ -371,4 +370,19 @@ public class QARestController extends TFRestController {
 
         return success(role);
     }
+
+    /********************************
+     * GROUP METHODS
+     ********************************/
+
+    @RequestMapping(headers = "Accept=application/json", value = "/groups/create", method = RequestMethod.POST)
+    public @ResponseBody RestResponse<Group> createGroup(@RequestParam String groupName) {
+        Group group = new Group();
+        group.setName(groupName);
+
+        groupService.saveOrUpdate(group);
+
+        return success(group);
+    }
+
 }
