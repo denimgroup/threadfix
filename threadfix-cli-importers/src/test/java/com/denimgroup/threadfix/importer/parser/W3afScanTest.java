@@ -24,11 +24,17 @@
 
 package com.denimgroup.threadfix.importer.parser;
 
+import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.importer.ScanLocationManager;
 import com.denimgroup.threadfix.importer.TransactionalTest;
+import com.denimgroup.threadfix.importer.utils.ParserUtils;
 import com.denimgroup.threadfix.importer.utils.ScanComparisonUtils;
 import org.junit.Test;
+
 import static com.denimgroup.threadfix.importer.TestConstants.*;
+import static org.junit.Assert.assertTrue;
+
 /**
  * Created by denimgroup on 2/10/14.
  */
@@ -50,9 +56,52 @@ public class W3afScanTest extends TransactionalTest {
 
     };
 
+    public final static String[][] w3afResultsV21 = new String[] [] {
+            {SQLI,"High","/bank/login.aspx","passw"},
+            {SQLI,"High","/bank/login.aspx","uid"},
+            {SQLI,"High","/subscribe.aspx","txtEmail"},
+            {XSS,"Medium","/bank/login.aspx","uid"},
+            {XSS,"Medium","/comment.aspx","name"},
+            {XSS,"Medium","/search.aspx","txtSearch"},
+            {XSS,"Medium","/subscribe.aspx","txtEmail"}
+    };
+
     @Test
     public void w3afScanTest() {
         ScanComparisonUtils.compare(w3afResults, ScanLocationManager.getRoot() +
                 "Dynamic/w3af/w3af-demo-site.xml");
     }
+
+    @Test
+    public void w3afScanTestV21() {
+        ScanComparisonUtils.compare(w3afResultsV21, ScanLocationManager.getRoot() +
+                "Dynamic/w3af/w3af-ver_172.xml");
+    }
+
+    @Test
+    public void w3afScanTestNewFields() {
+        Scan scan = ParserUtils.getScan("Dynamic/w3af/w3af-ver_172.xml");
+        String description, detail, recommendation;
+        boolean descFound = false, detailFound = false, recommendationFound = false;
+
+        for (Finding finding : scan) {
+            description = finding.getLongDescription();
+            detail = finding.getScannerDetail();
+            recommendation = finding.getScannerRecommendation();
+
+            if (description != null && !description.isEmpty())
+                descFound = true;
+            if (detail != null && !detail.isEmpty())
+                detailFound = true;
+            if (recommendation != null && !recommendation.isEmpty())
+                recommendationFound = true;
+        }
+
+        assertTrue("No finding found with LongDescription.", descFound);
+        assertTrue("No finding found with ScannerDetail.", detailFound);
+        assertTrue("No finding found with ScannerRecommendation.", recommendationFound);
+    }
+
+
 }
+
