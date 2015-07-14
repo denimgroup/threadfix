@@ -44,7 +44,7 @@ public class TagIndexPage extends BasePage{
     public TagIndexPage createNewCommentTag(String name) {
         driver.findElementById("createTagModalButton").click();
         driver.findElementById("tagCreateNameInput").sendKeys(name);
-        driver.findElementById("vulnCommentTag").click();
+        driver.findElementById("tagType").sendKeys("comment");
         clickModalSubmit();
         return new TagIndexPage(driver);
     }
