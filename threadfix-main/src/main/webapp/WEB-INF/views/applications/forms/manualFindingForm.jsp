@@ -82,7 +82,7 @@
                 <tr>
                     <td>Severity</td>
                     <td class="inputValue">
-                        <select style="width:350px;" id="severityInput" name="channelSeverity" ng-model="object.channelSeverity" ng-options="severity.name for severity in config.manualSeverities"/>
+                        <select style="width:350px;" id="severityInput" name="channelSeverity" ng-model="object.channelSeverity" ng-options="severity.displayName for severity in config.manualSeverities"/>
                     </td>
                     <td/>
                 </tr>
