@@ -191,7 +191,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
 
     @Test
     public void testViewMoreNavigation() {
-        initializeTeamAndApp();
+        initializeTeamAndAppWithAppScanEnterpriseScan();
 
         ApplicationDetailPage applicationDetailPage1 = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
