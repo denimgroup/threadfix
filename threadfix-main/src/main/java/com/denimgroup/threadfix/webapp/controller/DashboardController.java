@@ -45,6 +45,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
+import static com.denimgroup.threadfix.CollectionUtils.map;
+
 /**
  * @author bbeverly
  * @author mcollins
@@ -116,14 +118,17 @@ public class DashboardController {
     }
 
 	@RequestMapping(value="/rightReport", method=RequestMethod.GET)
-	public @ResponseBody RestResponse<List<Map<String, Object>>> rightReport(HttpServletRequest request) {
+	public @ResponseBody RestResponse rightReport(HttpServletRequest request) {
 
         ReportFormat reportFormat = (request.getParameter("appId") != null) ? ReportFormat.TOP_TEN_VULNS : ReportFormat.TOP_TEN_APPS;
 
         ReportParameters parameters = getParameters(request, reportFormat);
         ReportCheckResultBean resultBean = reportsService.generateDashboardReport(parameters, request);
 
-        return RestResponse.success(resultBean.getReportList());
+        return RestResponse.success(map(
+                "map", resultBean.getReportList(),
+                "genericSeverities", genericSeverityService.loadAll())
+        );
 	}
 
     private ReportParameters getParameters(HttpServletRequest request, ReportFormat reportFormat) {
