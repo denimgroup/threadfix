@@ -81,7 +81,7 @@ public class RolesIndexPage extends BasePage {
 	}
 
 	public RolesIndexPage clickEditLink(String roleName) {
-        driver.findElementByXPath("//li[@id=\'roleList\']/a[text()=\'" + roleName + "\']").click();
+        driver.findElementById("role" + roleName).click();
 		waitForElement(driver.findElementById("submit"));
         return new RolesIndexPage(driver);
 	}
@@ -150,7 +150,7 @@ public class RolesIndexPage extends BasePage {
 	
 	public boolean isNamePresent(String roleName){
         try {
-            driver.findElementByXPath("//li[@id=\'roleList\']/a[text()=\'"+ roleName + "\']");
+            driver.findElementById("role" + roleName);
         } catch (NoSuchElementException e) {
             return false;
         }

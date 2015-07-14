@@ -97,10 +97,10 @@ public class DatabaseUtils {
 
     public static int getTagId(String tagName, boolean isAppTag) {
         RestResponse<Tag[]> response = CLIENT.searchTagsByName(tagName);
-        for(Tag tag: response.object){
-            if(isAppTag && !tag.getTagForComment()){
+        for (Tag tag : response.object) {
+            if (isAppTag && !tag.getTagForComment()) {
                 return tag.getId();
-            } else if (!isAppTag && tag.getTagForComment()){
+            } else if (!isAppTag && tag.getTagForComment()) {
                 return tag.getId();
             }
         }

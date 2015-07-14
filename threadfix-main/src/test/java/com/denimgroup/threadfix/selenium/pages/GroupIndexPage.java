@@ -34,130 +34,132 @@ public class GroupIndexPage extends BasePage {
         super(webdriver);
     }
 
-    public GroupIndexPage clickCreateGroup(){
+    /*------------------------------------ Utility Methods ------------------------------------*/
+
+    public GroupIndexPage clickCreateGroup() {
         driver.findElementById("newGroupModalLink").click();
         waitForElement(driver.findElementById("submit"));
         return new GroupIndexPage(driver);
     }
 
-    public GroupIndexPage clickDeleteButton(String groupName){
+    public GroupIndexPage clickDeleteButton(String groupName) {
         clickEditLink(groupName);
         driver.findElementByCssSelector("a#deleteRoleLink:not(.ng-hide)").click();
         handleAlert();
         return new GroupIndexPage(driver);
     }
 
-    public GroupIndexPage setGroupName(String groupName){
+    public GroupIndexPage setGroupName(String groupName) {
         driver.findElementById("groupNameInput").clear();
         driver.findElementById("groupNameInput").sendKeys(groupName);
         return this;
     }
 
-    public GroupIndexPage editGroupName(String groupName){
+    public GroupIndexPage editGroupName(String groupName) {
         driver.findElementById("name").clear();
         driver.findElementById("name").sendKeys(groupName);
         return this;
     }
 
-    public GroupIndexPage setGroupGlobalRole(String globalRole){
+    public GroupIndexPage setGroupGlobalRole(String globalRole) {
         //Enter key is sent to update other fields on page
         driver.findElementById("roleSelect").sendKeys(globalRole + Keys.ENTER);
         return this;
     }
 
-    public GroupIndexPage clickSaveGroup(){
+    public GroupIndexPage clickSaveGroup() {
         driver.findElementByCssSelector("button#submit:not(.disabled)").click();
         return new GroupIndexPage(driver);
     }
 
-    public GroupIndexPage clickEditLink(String groupName){
+    public GroupIndexPage clickEditLink(String groupName) {
         refreshPage();
-        driver.findElementByXPath("//li[@id=\'groupList\']/a[text()=\'" + groupName + "\']").click();
+        driver.findElementById("group" + groupName).click();
         waitForElement(driver.findElementById("submit"));
         return new GroupIndexPage(driver);
     }
 
-    public GroupIndexPage setUserField(String userName){
+    public GroupIndexPage setUserField(String userName) {
         driver.findElementById("userTypeahead").sendKeys(userName);
         driver.findElementByXPath("//div[@id=\'users\']//a[strong[text()=\'" + userName + "\'] and not(text())]").click();
         return this;
     }
 
-    public GroupIndexPage clickAddUser(){
+    public GroupIndexPage clickAddUser() {
         driver.findElementByXPath("//a[text()=\'Add User\']").click();
         return this;
     }
 
-    public GroupIndexPage clickRemoveUser(String userName){
+    public GroupIndexPage clickRemoveUser(String userName) {
         driver.findElementByXPath("//td[text()=\'" + userName + "\']/following-sibling::td/a").click();
         handleAlert();
         return this;
     }
 
-    public GroupIndexPage clickAddTeamRole(){
+    public GroupIndexPage clickAddTeamRole() {
         driver.findElementByCssSelector("div#config[ng-show=\'currentGroup\'] a#addPermissionButton").click();
         waitForElement(driver.findElementById("submit"));
         return new GroupIndexPage(driver);
     }
 
-    public GroupIndexPage setTeamName(String teamName){
+    public GroupIndexPage setTeamName(String teamName) {
         //Sends keys for team name and Enter key to update other fields on page
         driver.findElementById("orgSelect").sendKeys(teamName + Keys.ENTER);
         return this;
     }
 
-    public GroupIndexPage setTeamRole(String role){
+    public GroupIndexPage setTeamRole(String role) {
         driver.findElementById("roleSelectTeam").sendKeys(role);
         return this;
     }
 
-    public GroupIndexPage clickEditTeamRole(String teamName, String roleName){
+    public GroupIndexPage clickEditTeamRole(String teamName, String roleName) {
         driver.findElementById("editAppMap" + teamName + "all" + roleName).click();
         waitForElement(driver.findElementById("submit"));
         return new GroupIndexPage(driver);
     }
 
-    public GroupIndexPage clickDeleteTeamRole(String teamName, String roleName){
+    public GroupIndexPage clickDeleteTeamRole(String teamName, String roleName) {
         driver.findElementById("deleteAppMap" + teamName + "all" + roleName).click();
         handleAlert();
         return this;
     }
 
-    public GroupIndexPage clickAddApplicationRole(){
+    public GroupIndexPage clickAddApplicationRole() {
         driver.findElementByCssSelector("div#config[ng-show=\'currentGroup\'] a#addApplicationRoleButton").click();
         waitForElement(driver.findElementById("submit"));
         return new GroupIndexPage(driver);
     }
 
-    public GroupIndexPage setApplicationRole(String appName, String role){
+    public GroupIndexPage setApplicationRole(String appName, String role) {
         driver.findElementById("roleSelectApp" + appName).sendKeys(role);
         return this;
     }
 
-    public GroupIndexPage clickEditApplicationRole(String teamName, String appName, String roleName){
+    public GroupIndexPage clickEditApplicationRole(String teamName, String appName, String roleName) {
         driver.findElementById("editAppMap" + teamName + appName + roleName).click();
         waitForElement(driver.findElementById("submit"));
         return new GroupIndexPage(driver);
     }
 
-    public GroupIndexPage clickDeleteApplicationRole(String teamName, String appName, String roleName){
+    public GroupIndexPage clickDeleteApplicationRole(String teamName, String appName, String roleName) {
         driver.findElementById("deleteAppMap" + teamName + appName + roleName).click();
         handleAlert();
         return this;
     }
 
+    /*------------------------------------ Boolean Methods ------------------------------------*/
 
-
-    public boolean isGroupPresent(String groupName){
+    public boolean isGroupPresent(String groupName) {
         try{
-            driver.findElementByXPath("//li[@id=\'groupList\']/a[text()=\'" + groupName + "\']");
+            driver.findElementById("group" + groupName);
         } catch(NoSuchElementException e){
             return false;
         }
         return true;
     }
 
-    public boolean isUserPresent(String userName){
+    public boolean isUserPresent(String userName) {
         try{
             driver.findElementByXPath("//div[@id=\'users\']//td[text()=\'" + userName + "\']");
         } catch(NoSuchElementException e){
@@ -166,7 +168,7 @@ public class GroupIndexPage extends BasePage {
         return true;
     }
 
-    public boolean isValidationPresent(){
+    public boolean isValidationPresent() {
         try {
             driver.findElementByCssSelector("div.alert-success:not(.ng-hide)");
         } catch (NoSuchElementException e){
@@ -184,7 +186,7 @@ public class GroupIndexPage extends BasePage {
         return true;
     }
 
-    public boolean isApplicationRolePresent(String teamName, String appName, String roleName){
+    public boolean isApplicationRolePresent(String teamName, String appName, String roleName) {
         try{
             driver.findElementById("teamName" + teamName + appName + roleName);
         } catch(NoSuchElementException e){
@@ -193,7 +195,7 @@ public class GroupIndexPage extends BasePage {
         return true;
     }
 
-    public boolean isSaveChangesClickable(){
+    public boolean isSaveChangesClickable() {
         try{
             driver.findElementByCssSelector("button#submit:not(.disabled)");
         } catch(NoSuchElementException e){
@@ -202,13 +204,13 @@ public class GroupIndexPage extends BasePage {
         return true;
     }
 
+    /*------------------------------------ Getter Methods ------------------------------------*/
 
-
-    public String getValidationMessage(){
+    public String getValidationMessage() {
         return driver.findElementByCssSelector("div.alert-success:not(.ng-hide)").getText();
     }
 
-    public String getGroupGlobalRole(){
+    public String getGroupGlobalRole() {
         return driver.findElementByCssSelector("select#roleSelect option[selected]").getText();
     }
 
