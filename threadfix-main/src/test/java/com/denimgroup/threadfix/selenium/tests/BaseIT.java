@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
+import com.denimgroup.threadfix.data.enums.TagType;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.apache.commons.lang.RandomStringUtils;
@@ -174,8 +175,12 @@ public abstract class BaseIT {
         return roleName;
     }
 
-    protected String createTag(String tagName) {
-        return String.valueOf(DatabaseUtils.createTag(tagName));
+    protected String createTag(String tagName){
+        return String.valueOf(DatabaseUtils.createTag(tagName, TagType.APPLICATION.getDisplayName()));
+    }
+
+    protected String createTag(String tagName, String tagType) {
+        return String.valueOf(DatabaseUtils.createTag(tagName, tagType));
     }
 
 

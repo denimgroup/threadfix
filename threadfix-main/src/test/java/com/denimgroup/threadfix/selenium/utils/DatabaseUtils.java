@@ -87,8 +87,8 @@ public class DatabaseUtils {
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
     }
 
-    public static int createTag(String tagName) {
-        RestResponse<Tag> response = CLIENT.createTag(tagName);
+    public static int createTag(String tagName, String tagType) {
+        RestResponse<Tag> response = CLIENT.createTag(tagName, tagType);
 
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
 

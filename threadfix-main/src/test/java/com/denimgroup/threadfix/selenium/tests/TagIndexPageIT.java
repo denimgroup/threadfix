@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
+import com.denimgroup.threadfix.data.enums.TagType;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Before;
@@ -99,11 +100,10 @@ public class TagIndexPageIT extends BaseDataTest{
         assertTrue("Comment Tag was not created properly", tagIndexPage.isCommentTagNameLinkPresent(tagName));
     }
 
-    @Ignore("pending REST update") @Test
+    @Test
     public void testDeleteCommentTag() {
-        //TODO: Update to use REST when ability to create comment tags is added
         String tagName = getName();
-        createTag(tagName);
+        createTag(tagName, TagType.COMMENT.getDisplayName());
 
         TagIndexPage tagIndexPage = loginPage.defaultLogin()
                 .clickTagsLink()
@@ -112,11 +112,10 @@ public class TagIndexPageIT extends BaseDataTest{
         assertTrue("Comment Tag was not deleted properly", !tagIndexPage.isCommentTagNameLinkPresent(tagName));
     }
 
-    @Ignore("pending REST update") @Test
+    @Test
     public void testEditCommentTag() {
-        //TODO: Update to use REST when ability to create comment tags is added
         String tagName = getName();
-        createTag(tagName);
+        createTag(tagName, TagType.COMMENT.getDisplayName());
         String newName = getName();
 
         TagIndexPage tagIndexPage = loginPage.defaultLogin()
@@ -127,11 +126,10 @@ public class TagIndexPageIT extends BaseDataTest{
         assertTrue("New comment tag name was no added properly ", tagIndexPage.isCommentTagNameLinkPresent(newName));
     }
 
-    @Ignore("pending REST update") @Test
+    @Test
     public void testCommentTagNameNavigation() {
-        //TODO: Update to use REST when ability to create comment tags is added
         String tagName = getName();
-        createTag(tagName);
+        createTag(tagName, TagType.COMMENT.getDisplayName());
 
         loginPage.defaultLogin()
                 .clickTagsLink()

@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
+import com.denimgroup.threadfix.data.enums.TagType;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import com.denimgroup.threadfix.views.AllViews;
@@ -76,12 +77,11 @@ public class TagDetailPageIT extends BaseDataTest {
         assertTrue("The number of apps attached is incorrect", tagDetailPage.getNumberofAttachedApps().equals("2"));
     }
 
-    @Ignore("pending REST update") @Test
+    @Ignore("pending ID update") @Test
     public void testAttachTagToComment() {
         initializeTeamAndAppWithIbmScan();
-        //TODO: Update to use REST when ability to create comment tags is added
         String tagName = getName();
-        createTag(tagName);
+        createTag(tagName, TagType.COMMENT.getDisplayName());
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -97,16 +97,15 @@ public class TagDetailPageIT extends BaseDataTest {
 
         TagDetailPage tagDetailPage = applicationDetailPage.clickTagsLink()
                 .clickTagName(tagName);
-
+        //TODO: update when IDs are updated for Comment Tags
         assertTrue("Tag was not attached to comment properly", tagDetailPage.isLinkPresent(appName));
     }
 
-    @Ignore("pending REST update") @Test
+    @Test
     public void testCorrectNumberOfComments() {
         initializeTeamAndAppWithIbmScan();
-        //TODO: Update to use REST when ability to create comment tags is added
         String tagName = getName();
-        createTag(tagName);
+        createTag(tagName, TagType.COMMENT.getDisplayName());
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -161,12 +160,11 @@ public class TagDetailPageIT extends BaseDataTest {
         assertTrue("Team page navigation failed.", teamDetailPage.isTeamNameDisplayedCorrectly(teamName));
     }
 
-    @Ignore("pending REST update") @Test
+    @Ignore("pending ID update") @Test
     public void testCommentTagLinkNavigation() {
         initializeTeamAndAppWithIbmScan();
-        //TODO: Update to use REST when ability to create comment tags is added
         String tagName = getName();
-        createTag(tagName);
+        createTag(tagName, TagType.COMMENT.getDisplayName());
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -179,21 +177,19 @@ public class TagDetailPageIT extends BaseDataTest {
                 .attachTag(tagName)
                 .setComment(teamName + appName)
                 .clickModalSubmit();
-        //TODO: update rest of test after 1552 is resolved
+        //TODO: update rest of test after new ID is assigned to comment tags
         TagDetailPage tagDetailPage = applicationDetailPage.clickTagName(tagName);
 
         assertTrue("Comment tag link navigation failed", tagDetailPage.isLinkPresent(appName));
     }
 
-    @Ignore("pending REST update") @Test
+    @Ignore("pending ID update") @Test
     public void testUpdateCommentTag() {
         initializeTeamAndAppWithIbmScan();
-        //TODO: Update to use REST when ability to create comment tags is added
         String tagName = getName();
-        createTag(tagName);
-        //TODO: Update to use REST when ability to create comment tags is added
+        createTag(tagName, TagType.COMMENT.getDisplayName());
         String tagName2 = getName();
-        createTag(tagName2);
+        createTag(tagName2, TagType.COMMENT.getDisplayName());
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -220,7 +216,7 @@ public class TagDetailPageIT extends BaseDataTest {
 
         applicationDetailPage1.expandVulnerabilityByType("Critical79")
                 .expandCommentSection("Critical790");
-
+        //TODO: Update when IDs are updated for Comment Tags
         assertTrue("Comment tag was not updated properly", applicationDetailPage1.isLinkPresent(tagName2)
                 || applicationDetailPage1.isLinkPresent(tagName2 + ","));
     }
