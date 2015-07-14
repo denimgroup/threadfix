@@ -484,12 +484,7 @@ public class UserIndexPage extends BasePage {
     }
 
     public boolean isAddTeamRoleButtonDisabled() {
-        try {
-            driver.findElementByXPath("//a[text()='Add Team Role' and @class='disabled']");
-        } catch (NoSuchElementException e) {
-            return false;
-        }
-        return true;
+        return driver.findElementById("addPermissionButton").getAttribute("ng-disabled") != null;
     }
 
     /*----------------------------------- Helper Methods -----_------------------------------*/

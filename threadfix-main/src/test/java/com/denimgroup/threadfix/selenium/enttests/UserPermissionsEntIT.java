@@ -640,8 +640,6 @@ public class UserPermissionsEntIT extends BaseDataTest{
                     .clickUserLink("user");
 
             assertTrue("Add Permission Button is Clickable", userIndexPage.isAddTeamRoleButtonDisabled());
-            assertTrue("There is no Error Message Available",
-                    userIndexPage.isErrorPresent("Cannot add permissions with no teams."));
         }
     }
 
