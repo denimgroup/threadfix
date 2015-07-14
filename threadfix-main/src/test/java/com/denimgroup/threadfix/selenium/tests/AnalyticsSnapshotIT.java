@@ -111,6 +111,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
     @Test
     public void testExpandCollapseFilters() {
+        initializeTeamAndAppWithWebInspectScan();
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
                 .waitForReportTab("snapshot")
@@ -430,7 +431,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         assertTrue("Info Bar is not present", !driver.findElements(By.id(teamName + appName + "InfoBar")).isEmpty());
         assertTrue("Low Bar is not present", !driver.findElements(By.id(teamName + appName + "LowBar")).isEmpty());
         assertTrue("Medium Bar shouldn't be present", driver.findElement(By.id(teamName + appName + "MediumBar"))
-                .getAttribute("width").equals("0"));
+                .getAttribute("width") == null);
         assertTrue("High Bar is not present", !driver.findElements(By.id(teamName + appName + "HighBar")).isEmpty());
         assertTrue("Critical Bar is not present", !driver.findElements(By.id(teamName + appName + "CriticalBar")).isEmpty());
     }
