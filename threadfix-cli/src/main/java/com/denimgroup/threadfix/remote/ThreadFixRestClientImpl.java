@@ -348,22 +348,6 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
     }
 
     //QA only
-    @Override
-    public RestResponse<Tag> createTag(String tagname) {
-        return httpRestUtils.httpPost("/tags/new",
-                new String[] {"name"},
-                new String[] {tagname}, Tag.class);
-    }
-
-    //QA only
-    @Override
-    public RestResponse<Tag> attachAppToTag(String tagId, String appId) {
-        return httpRestUtils.httpPost("/applications/"+appId+"/tags/add/"+tagId,
-                new String[] {},
-                new String[] {}, Tag.class);
-    }
-
-    //QA only
     public RestResponse<Organization> deleteTeam(String teamId) {
         return httpRestUtils.httpPost("/teams/delete/"+teamId,
                 new String[] {},

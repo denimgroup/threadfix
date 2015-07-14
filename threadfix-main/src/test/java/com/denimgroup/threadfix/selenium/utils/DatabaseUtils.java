@@ -111,7 +111,7 @@ public class DatabaseUtils {
         RestResponse<Application> response = CLIENT.searchForApplicationByName(appName, teamName);
         assertTrue("Request for Application was unsuccessful. Message:" + response.message, response.success);
 
-        RestResponse<Tag> restResponse = CLIENT.attachAppToTag(tagId, String.valueOf(response.object.getId()));
+        RestResponse<Application> restResponse = CLIENT.addAppTag(String.valueOf(response.object.getId()), tagId);
 
         assertTrue("Response was unsuccessful. Message: " + restResponse.message, restResponse.success);
     }
