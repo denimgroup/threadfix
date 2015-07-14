@@ -40,6 +40,7 @@ public class AnalyticsTrendingIT extends BaseDataTest {
 
     @Test
     public void testExpandCollapseFilters() {
+        initializeTeamAndAppWithAppScanEnterpriseScan();
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
                 .clickTrendingTab(false);
