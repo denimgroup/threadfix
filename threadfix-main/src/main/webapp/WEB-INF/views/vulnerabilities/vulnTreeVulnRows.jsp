@@ -10,7 +10,7 @@
     </span>
 
     <!-- Path + Parameter -->
-    <div ng-if="!vulnerability.dependency">
+    <div ng-if="!vulnerability.dependency" style="word-wrap:break-word;">
         <div ng-if="vulnerability.path || vulnerability.parameter">
             <div class="vuln-tree-label">Path</div>
             <span id="path{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.path }}</span>
@@ -56,7 +56,7 @@
     <br>
     <!-- Tag Badges -->
     <span id="tag{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}{{ name }}" ng-repeat="tag in vulnerability.tags" class="badge pointer" ng-class="{'badge-vulnerability-tag': true}" ng-click="goToTag(tag)">{{ tag.name }}</span>
-    <br>
+    <br ng-show="vulnerability.tags">
     <a id="defectBadge{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}"
        ng-href="{{ vulnerability.defect.defectURL }}"
        target="_blank"

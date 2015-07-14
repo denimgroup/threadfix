@@ -50,10 +50,35 @@ public class AcceptanceCriteria extends AuditableEntity {
     @NotEmpty(message = "{errors.required}")
     @Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
     private String name;
-
     private List<AcceptanceCriteriaStatus> acceptanceCriteriaStatuses;
-
     private FilterJsonBlob filterJsonBlob;
+
+    private List<EmailList> emailLists;
+    private List<String> emailAddresses;
+    private Boolean sendEmail = false;
+
+    @ElementCollection
+    @Column(name = "emailAddress", length = 128)
+    @CollectionTable(name = "AcceptanceCriteriaEmailAddress", joinColumns = @JoinColumn(name = "AcceptanceCriteriaId"))
+    @JsonView(Object.class)
+    public List<String> getEmailAddresses() {
+        return emailAddresses;
+    }
+
+    public void setEmailAddresses(List<String> emailAddresses) {
+        this.emailAddresses = emailAddresses;
+    }
+
+    @ManyToMany
+    @JoinColumn(name = "emailListId")
+    @JsonView(Object.class)
+    public List<EmailList> getEmailLists() {
+        return emailLists;
+    }
+
+    public void setEmailLists(List<EmailList> emailLists) {
+        this.emailLists = emailLists;
+    }
 
     @Column(length = NAME_LENGTH, nullable = false)
     @JsonView(Object.class) // This means it will be included in all ObjectWriters with Views.
@@ -73,6 +98,16 @@ public class AcceptanceCriteria extends AuditableEntity {
 
     public void setAcceptanceCriteriaStatuses(List<AcceptanceCriteriaStatus> acceptanceCriteriaStatuses) {
         this.acceptanceCriteriaStatuses = acceptanceCriteriaStatuses;
+    }
+
+    @Column
+    @JsonView(Object.class)
+    public Boolean isSendEmail() {
+        return sendEmail != null && sendEmail;
+    }
+
+    public void setSendEmail(boolean sendEmail) {
+        this.sendEmail = sendEmail;
     }
 
     @Transient
@@ -102,4 +137,19 @@ public class AcceptanceCriteria extends AuditableEntity {
         this.filterJsonBlob = filterJsonBlob;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AcceptanceCriteria)) return false;
+
+        AcceptanceCriteria that = (AcceptanceCriteria) o;
+
+        return name.equals(that.name);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 }

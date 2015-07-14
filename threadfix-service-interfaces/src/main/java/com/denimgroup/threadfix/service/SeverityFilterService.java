@@ -25,6 +25,8 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.SeverityFilter;
 
+import java.util.List;
+
 public interface SeverityFilterService {
 
 	void save(SeverityFilter severityFilter, int orgId, int appId);
@@ -32,6 +34,8 @@ public interface SeverityFilterService {
 	void clean(SeverityFilter severityFilter, int teamId, int appId);
 
 	SeverityFilter loadFilter(int orgId, int appId);
+
+	List<SeverityFilter> loadAllFilters();
 
 	SeverityFilter getParentFilter(int teamId, int appId);
 

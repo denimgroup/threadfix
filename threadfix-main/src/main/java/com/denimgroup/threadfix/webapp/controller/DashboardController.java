@@ -32,6 +32,8 @@ import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,6 +44,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * @author bbeverly
@@ -103,9 +107,10 @@ public class DashboardController {
 
     @JsonView(AllViews.RestViewScanStatistic.class)
     @RequestMapping(value="/leftReport", method=RequestMethod.GET)
-    public @ResponseBody Object leftReport(HttpServletRequest request) {
+    public @ResponseBody Object leftReport(HttpServletRequest request) throws JsonProcessingException {
         long start = System.currentTimeMillis();
         log.info("Processing left report");
+
         ReportParameters parameters = getParameters(request, ReportFormat.TRENDING);
         Map<String, Object> map = reportsService.generateTrendingReport(parameters, request);
         map.put("savedFilters", filterJsonBlobService.loadAll());
@@ -116,8 +121,10 @@ public class DashboardController {
         return RestResponse.success(map);
     }
 
+
 	@RequestMapping(value="/rightReport", method=RequestMethod.GET)
-	public @ResponseBody RestResponse<List<Map<String, Object>>> rightReport(HttpServletRequest request) {
+	public @ResponseBody RestResponse rightReport(HttpServletRequest request) {
+
         long start = System.currentTimeMillis();
         log.info("Processing right report");
         ReportFormat reportFormat = (request.getParameter("appId") != null) ? ReportFormat.TOP_TEN_VULNS : ReportFormat.TOP_TEN_APPS;
@@ -127,7 +134,10 @@ public class DashboardController {
 
         log.info("Right report took " + (System.currentTimeMillis() - start) + " ms");
 
-        return RestResponse.success(resultBean.getReportList());
+        return RestResponse.success(map(
+                "map", resultBean.getReportList(),
+                "genericSeverities", genericSeverityService.loadAll())
+        );
 	}
 
     private ReportParameters getParameters(HttpServletRequest request, ReportFormat reportFormat) {

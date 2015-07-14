@@ -25,9 +25,11 @@
 package com.denimgroup.threadfix.data.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is used in place of saving repeat Findings for subsequent scans,
@@ -47,6 +49,7 @@ public class ScanRepeatFindingMap extends BaseEntity implements FindingLike {
 
 	private Finding finding;
 	private Scan scan;
+	private List<StatisticsCounter> statisticsCounters;
 	
 	/**
 	 * This constructor is here because Spring demanded it and should not be used.
@@ -108,5 +111,16 @@ public class ScanRepeatFindingMap extends BaseEntity implements FindingLike {
 
 	public void setScan(Scan scan) {
 		this.scan = scan;
+	}
+
+	@OneToMany(mappedBy = "scanRepeatFindingMap")
+	@Cascade({ org.hibernate.annotations.CascadeType.ALL })
+	@JsonIgnore
+	public List<StatisticsCounter> getStatisticsCounters() {
+		return statisticsCounters;
+	}
+
+	public void setStatisticsCounters(List<StatisticsCounter> statisticsCounters) {
+		this.statisticsCounters = statisticsCounters;
 	}
 }

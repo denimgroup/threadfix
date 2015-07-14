@@ -26,7 +26,7 @@
                 <tr>
                     <td>Severity</td>
                     <td>
-                        <select ng-options="severity.name for severity in config.severities"
+                        <select ng-options="severity.displayName for severity in config.severities"
                                 ng-model="object.genericSeverity"
                                 id="severitySelect"
                                 name="severityId">

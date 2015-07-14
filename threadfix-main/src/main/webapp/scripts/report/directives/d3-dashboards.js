@@ -247,8 +247,8 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
     }]);
 
 // Donut
-d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut', 'd3Service', 'reportConstants',
-    function($window, $timeout, d3, d3donut, d3Service, reportConstants) {
+d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut', 'd3Service', 'reportConstants','customSeverityService',
+    function($window, $timeout, d3, d3donut, d3Service, reportConstants, customSeverityService) {
         return {
             restrict: 'EA',
             scope: {
@@ -269,6 +269,10 @@ d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut', 
 
                     if (!data)
                         return;
+
+                    ["Info", "Low", "Medium", "High", "Critical"].forEach(function(severity) {
+                        data[0][customSeverityService.getCustomSeverity(severity)] = data[0][severity];
+                    });
 
                     color.domain(reportConstants.vulnTypeList);
 
