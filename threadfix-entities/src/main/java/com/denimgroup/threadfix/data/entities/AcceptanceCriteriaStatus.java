@@ -47,10 +47,10 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
     private Boolean passing = false;
     private Application application;
     private AcceptanceCriteria acceptanceCriteria;
-
     private List<EmailList> emailLists;
     private List<String> emailAddresses;
     private Boolean sendEmail = false;
+    private transient boolean statusChanged = false;
 
     @ElementCollection
     @Column(name = "emailAddress", length = 128)
@@ -83,6 +83,15 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
 
     public void setPassing(boolean passing) {
         this.passing = passing;
+    }
+
+    @Transient
+    public boolean hasStatusChanged() {
+        return statusChanged;
+    }
+
+    public void setStatusChanged(boolean statusChanged) {
+        this.statusChanged = statusChanged;
     }
 
     @ManyToOne

@@ -1,31 +1,27 @@
 <html style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif">
     <body>
         <p>Report of new Acceptance Criteria status changes</p>
-
-        #foreach( $acceptanceCriteria in $acceptanceCriterias )
-            <div>
-                <h3>
-                    Changes for $acceptanceCriteria
-                </h3>
-
-                #set( $changedStatuses = $changedStatusesMap[$acceptanceCriteria] )
-
-                <ul>
-                    #foreach( $changedStatus in $changedStatuses )
-                        #if ( $changedStatus.passing )
-                            #set( $color = 'green')
-                            #set( $status = 'passing')
-                        #else
-                            #set( $color = 'red')
-                            #set( $status = 'failing')
-                        #end
-
-                        <li>
-                            <span style="color:$color">$changedStatus.name now $status</span>
-                        </li>
+        <ul>
+            #foreach( $status in $statuses )
+                #if ( $status.hasStatusChanged() )
+                    #if ( $status.passing )
+                        #set( $color = 'green')
+                        #set( $currentStatus = 'PASS')
+                    #else
+                        #set( $color = 'red')
+                        #set( $currentStatus = 'FAIL')
                     #end
-                </ul>
-            </div>
-        #end
+
+                    <li>
+                        <span style="display:inline-block;padding:2px 4px;font-size:11.844px;font-weight:bold;line-height:14px;color:#fff;text-shadow:0 -1px 0 rgba(0,0,0,0.25);white-space:nowrap;vertical-align:baseline;background-color:$color">
+                            $currentStatus
+                        </span>
+                        <span style="font-size: 14px">
+                            &nbsp;$status.name: $status.acceptanceCriteria.name ($status.acceptanceCriteria.getFilterJsonBlob().getName())
+                        </span>
+                    </li>
+                #end
+            #end
+        </ul>
     </body>
 <html>

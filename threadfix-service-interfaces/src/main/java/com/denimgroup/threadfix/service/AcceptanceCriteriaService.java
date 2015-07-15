@@ -70,15 +70,4 @@ public interface AcceptanceCriteriaService {
      */
     void storeAcceptanceCriteria(AcceptanceCriteria acceptanceCriteria);
 
-    /**
-     * @param acceptanceCriteria
-     */
-
-    List<String> notificationACEmailAddresses(AcceptanceCriteria acceptanceCriteria);
-
-    /**
-     * @param changedStatusesMap
-     */
-
-    List<String> notificationACSEmailAddresses(Map<String, List<AcceptanceCriteriaStatus>> changedStatusesMap);
 }

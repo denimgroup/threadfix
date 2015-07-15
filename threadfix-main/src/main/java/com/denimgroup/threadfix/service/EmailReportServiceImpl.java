@@ -1,9 +1,6 @@
 package com.denimgroup.threadfix.service;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.CollectionUtils.list;
@@ -14,6 +11,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.data.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
@@ -43,7 +41,7 @@ public class EmailReportServiceImpl implements EmailReportService {
 	private EmailFilterService emailFilterService;
     @Nullable
     @Autowired(required = false)
-    AcceptanceCriteriaService acceptanceCriteriaService;
+    AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
 
     private Set<String> getFilteredEmailAddresses(ScheduledEmailReport scheduledEmailReport) {
 
@@ -170,8 +168,8 @@ public class EmailReportServiceImpl implements EmailReportService {
 			Map<String, Object> severityTreeWithVulns = getSeverityTreeWithVulns(parameters, severitiesAboveThreshold);
 			if (!severityTreeWithVulns.isEmpty()){
 				Map<String, Object> applicationTree = map("name", (Object) application.getName(),
-															"severityTree", severityTreeWithVulns,
-															"url", application.getUrl());
+                        "severityTree", severityTreeWithVulns,
+                        "url", application.getUrl());
 				applicationsModel.add(applicationTree);
 			}
 		}
@@ -221,41 +219,59 @@ public class EmailReportServiceImpl implements EmailReportService {
 	}
 
     @Override
-    public void sendAcceptanceCriteriaReport(Map<String, List<AcceptanceCriteriaStatus>> changedStatusesMap) {
+    public void sendAcceptanceCriteriaReport(List<AcceptanceCriteriaStatus> acceptanceCriteriaStatuses) {
 
-        if (acceptanceCriteriaService != null) {
+        if (acceptanceCriteriaStatusService != null) {
+            Map<String, List<AcceptanceCriteriaStatus>> emailMap = map();
 
-            Map<String, Object> model = map();
-            model.put("acceptanceCriterias", changedStatusesMap.keySet());
-            model.put("changedStatusesMap", changedStatusesMap);
-
-            String emailBody = templateBuilderService.prepareMessageFromTemplate(model, "acceptanceCriteriaReport.vm");
-
-            MimeMessage message = javaMailSender.createMimeMessage();
-            try {
-                message.setSubject("Acceptance Criteria Status Update");
-                message.setContent(emailBody, "text/html; charset=utf-8");
-
-                Set<String> filteredEmailAddresses =
-                        emailFilterService.getFilteredEmailAddresses(
-                                acceptanceCriteriaService.notificationACSEmailAddresses(changedStatusesMap));
+            for (AcceptanceCriteriaStatus acs : acceptanceCriteriaStatuses) {
+                Set<String> filteredEmailAddresses = emailFilterService.getFilteredEmailAddresses(
+                        acceptanceCriteriaStatusService.getNotificationEmailAddresses(acs));
 
                 LOG.info("Filtered email addresses: " + filteredEmailAddresses.toString());
 
-                if(filteredEmailAddresses.size() == 0)
-                    return;
-
-                for (String emailAddress : filteredEmailAddresses) {
-                    message.addRecipient(MimeMessage.RecipientType.TO, new InternetAddress(emailAddress));
+                for (String email : filteredEmailAddresses) {
+                    if (!emailMap.containsKey(email)) {
+                        emailMap.put(email, CollectionUtils.<AcceptanceCriteriaStatus>list());
+                    }
+                    emailMap.get(email).add(acs);
                 }
-            } catch (MessagingException e) {
-                e.printStackTrace();
             }
-            try {
-                javaMailSender.send(message);
-                LOG.info("Email report sent normally sent normally");
-            } catch (MailException ex) {
-                LOG.error("Email not send because of misconfiguration", ex);
+
+            if(emailMap.size() == 0)
+                return;
+
+            for (Object o : emailMap.entrySet()) {
+                Map.Entry pair = (Map.Entry) o;
+                String emailAddress = (String) pair.getKey();
+                List<AcceptanceCriteriaStatus> statuses = (List<AcceptanceCriteriaStatus>) pair.getValue();
+
+                Map<String, Object> model = map();
+                model.put("statuses", statuses);
+
+                String emailBody = templateBuilderService.prepareMessageFromTemplate(model, "acceptanceCriteriaReport.vm");
+                MimeMessage message = javaMailSender.createMimeMessage();
+
+                try {
+                    message.setSubject("Acceptance Criteria Status Update");
+                    message.setContent(emailBody, "text/html; charset=utf-8");
+                    message.addRecipient(MimeMessage.RecipientType.TO, new InternetAddress(emailAddress));
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    javaMailSender.send(message);
+                    LOG.info("Email report sent normally sent normally");
+                } catch (MailException ex) {
+                    LOG.error("Email not send because of misconfiguration", ex);
+                }
+
+                try {
+                    Thread.sleep(2000);
+                } catch(InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
             }
         }
     }
