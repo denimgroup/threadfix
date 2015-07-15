@@ -9,6 +9,7 @@ import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.listOf;
 
+import javax.annotation.Nullable;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -40,6 +41,9 @@ public class EmailReportServiceImpl implements EmailReportService {
 	private EmailConfiguration emailConfiguration;
 	@Autowired
 	private EmailFilterService emailFilterService;
+    @Nullable
+    @Autowired(required = false)
+    AcceptanceCriteriaService acceptanceCriteriaService;
 
     private Set<String> getFilteredEmailAddresses(ScheduledEmailReport scheduledEmailReport) {
 
@@ -218,32 +222,35 @@ public class EmailReportServiceImpl implements EmailReportService {
 
     @Override
     public void sendAcceptanceCriteriaReport(AcceptanceCriteria acceptanceCriteria) {
-        Map<String, Object> model = map();
-        String emailBody = templateBuilderService.prepareMessageFromTemplate(model, "acceptanceCriteriaReport.vm");
 
-        MimeMessage message = javaMailSender.createMimeMessage();
-        try {
-            message.setSubject("AC Status Update");
-            message.setContent(emailBody, "text/html; charset=utf-8");
+        if (acceptanceCriteriaService != null) {
 
-            Set<String> filteredEmailAddresses =
-                    emailFilterService.getFilteredEmailAddresses(list("zabdisubhan@denimgroup.com"));
+            Map<String, Object> model = map();
+            String emailBody = templateBuilderService.prepareMessageFromTemplate(model, "acceptanceCriteriaReport.vm");
 
-            LOG.info("Filtered email addresses: " + filteredEmailAddresses.toString());
+            MimeMessage message = javaMailSender.createMimeMessage();
+            try {
+                message.setSubject("AC Status Update");
+                message.setContent(emailBody, "text/html; charset=utf-8");
 
-            for (String emailAddress : filteredEmailAddresses){
-                message.addRecipient(MimeMessage.RecipientType.TO, new InternetAddress(emailAddress));
+                Set<String> filteredEmailAddresses =
+                        emailFilterService.getFilteredEmailAddresses(
+                                acceptanceCriteriaService.notificationEmailAddresses(acceptanceCriteria));
+
+                LOG.info("Filtered email addresses: " + filteredEmailAddresses.toString());
+
+                for (String emailAddress : filteredEmailAddresses) {
+                    message.addRecipient(MimeMessage.RecipientType.TO, new InternetAddress(emailAddress));
+                }
+            } catch (MessagingException e) {
+                e.printStackTrace();
             }
-        } catch (MessagingException e) {
-            e.printStackTrace();
+            try {
+                javaMailSender.send(message);
+                LOG.info("Email report sent normally sent normally");
+            } catch (MailException ex) {
+                LOG.error("Email not send because of misconfiguration", ex);
+            }
         }
-        try {
-            javaMailSender.send(message);
-            LOG.info("Email report sent normally sent normally");
-        }
-        catch (MailException ex) {
-            LOG.error("Email not send because of misconfiguration", ex);
-        }
-
     }
 }

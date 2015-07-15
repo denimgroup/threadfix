@@ -67,4 +67,10 @@ public interface AcceptanceCriteriaService {
      * @param acceptanceCriteria
      */
     void storeAcceptanceCriteria(AcceptanceCriteria acceptanceCriteria);
+
+    /**
+     * @param acceptanceCriteria
+     */
+
+    List<String> notificationEmailAddresses(AcceptanceCriteria acceptanceCriteria);
 }
