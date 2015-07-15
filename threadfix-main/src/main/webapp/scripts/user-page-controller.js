@@ -113,7 +113,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
             $scope.userId = newUser.id;
             reloadList();
 
-            $scope.successMessage = "Successfully created user " + newUser.name;
+            $scope.usersSuccessMessage = "Successfully created user " + newUser.name;
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
@@ -163,7 +163,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     };
 
     $scope.clearMessage = function() {
-        $scope.successMessage = undefined;
+        $scope.usersSuccessMessage = undefined;
     };
 
     $scope.updatePage = function(page, searchString) {
@@ -281,7 +281,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
             success(function(data) {
 
                 if (data.success) {
-                    $scope.successMessage = "Edit succeeded.";
+                    $scope.usersSuccessMessage = "Edit succeeded.";
 
                     $scope.users = data.object;
 
@@ -355,7 +355,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
 
                 addMapsToUser($scope.currentUser);
 
-                $scope.successMessage = "Successfully added permissions.";
+                $scope.usersSuccessMessage = "Successfully added permissions.";
 
             }, function () {
                 $log.info('Modal dismissed at: ' + new Date());
@@ -450,9 +450,9 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
             addMapsToUser($scope.currentUser);
 
             if (editedPermissionsObject) {
-                $scope.successMessage = "Successfully edited permissions.";
+                $scope.usersSuccessMessage = "Successfully edited permissions.";
             } else {
-                $scope.successMessage = "Permissions object was successfully deleted.";
+                $scope.usersSuccessMessage = "Permissions object was successfully deleted.";
             }
 
         }, function () {
@@ -472,7 +472,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                         // this will cause the user to be logged out if the session is invalid
                         reloadList();
                         $rootScope.$broadcast('refreshGroups');
-                        $scope.successMessage = "User was successfully deleted.";
+                        $scope.usersSuccessMessage = "User was successfully deleted.";
                     } else {
                         $scope.errorMessage = "Failure: " + data.message;
                     }
@@ -492,7 +492,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 success(function(data, status, headers, config) {
                     if (data.success) {
                         addMapsToUser($scope.currentUser);
-                        $scope.successMessage = "Permission was successfully deleted.";
+                        $scope.usersSuccessMessage = "Permission was successfully deleted.";
                     } else {
                         $scope.errorMessage = "Failure. Message was : " + data.message;
                     }
@@ -536,7 +536,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 if (data.success) {
                     reloadList();
                     $rootScope.$broadcast('refreshGroups');
-                    $scope.successMessage = "Added user to group " + group.name + ".";
+                    $scope.usersSuccessMessage = "Added user to group " + group.name + ".";
                 } else {
                     $scope.errorMessage = "Failure. " + data.message;
                 }
@@ -556,7 +556,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                     if (data.success) {
                         reloadList();
                         $rootScope.$broadcast('refreshGroups');
-                        $scope.successMessage = "Removed user from group " + group.name;
+                        $scope.usersSuccessMessage = "Removed user from group " + group.name;
                     } else {
                         $scope.errorMessage = "Failure. " + data.message;
                     }
