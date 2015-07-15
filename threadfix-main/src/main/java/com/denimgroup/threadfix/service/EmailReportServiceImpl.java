@@ -266,12 +266,6 @@ public class EmailReportServiceImpl implements EmailReportService {
                 } catch (MailException ex) {
                     LOG.error("Email not send because of misconfiguration", ex);
                 }
-
-                try {
-                    Thread.sleep(2000);
-                } catch(InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
             }
         }
     }
