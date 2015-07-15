@@ -69,7 +69,7 @@ public class AcceptanceCriteria extends AuditableEntity {
         this.emailAddresses = emailAddresses;
     }
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "emailListId")
     @JsonView(Object.class)
     public List<EmailList> getEmailLists() {
