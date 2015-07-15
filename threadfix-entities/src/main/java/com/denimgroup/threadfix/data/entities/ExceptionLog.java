@@ -39,6 +39,8 @@ public final class ExceptionLog extends BaseEntity {
 
 	private String exceptionStackTrace;
 	private Calendar time;
+
+	private String commit;
 	
 	private String exceptionToString;
 	private String message;
@@ -135,6 +137,15 @@ public final class ExceptionLog extends BaseEntity {
 
 	public void setTime(Calendar time) {
 		this.time = time;
+	}
+
+	@Column(nullable = true)
+	public String getCommit() {
+		return commit;
+	}
+
+	public void setCommit(String commit) {
+		this.commit = commit;
 	}
 
 	@Column(nullable = true)
