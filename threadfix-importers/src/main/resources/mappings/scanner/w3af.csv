@@ -1,4 +1,4 @@
-3/27/2015 11:45:00
+7/13/2015 10:30:00
 type.info,,
 w3af
 type.vulnerabilities,,
@@ -172,3 +172,5 @@ Code execution via remote file inclusion,Code execution via remote file inclusio
 (Blind) SQL injection,(Blind) SQL injection,89
 Arbitrary file read,Arbitrary file read,434
 Manually added vulnerability,Manually added vulnerability,16
+type.severities,,,
+Information,Information,1,1

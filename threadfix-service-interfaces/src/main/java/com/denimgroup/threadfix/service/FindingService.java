@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.ChannelSeverity;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.GenericSeverity;
@@ -33,6 +32,7 @@ import org.springframework.validation.BindingResult;
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author bbeverly
@@ -154,7 +154,7 @@ public interface FindingService {
 	 * 
 	 * @return
 	 */
-	List<ChannelSeverity> getManualSeverities();
+	List<Map<String, Object>> getManualSeverities();
 
 	/**
 	 * 

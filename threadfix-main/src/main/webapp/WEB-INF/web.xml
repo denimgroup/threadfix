@@ -170,6 +170,8 @@
                 protected-regex ^/configuration/acceptcriterias/list$,
                 protected-regex ^/configuration/acceptcriterias/[0-9]+/edit$,
                 protected-regex ^/configuration/acceptcriterias/[0-9]+/delete$,
+                protected-regex ^/configuration/acceptcriterias/[0-9]+/toggle,
+                protected-regex ^/configuration/acceptcriterias/acs/[0-9]+/toggle,
                 protected-regex ^/configuration/acceptcriterias/[0-9]+/addEmail,
                 protected-regex ^/configuration/acceptcriterias/acs/[0-9]+/addEmail,
                 protected-regex ^/configuration/acceptcriterias/[0-9]+/deleteEmail,

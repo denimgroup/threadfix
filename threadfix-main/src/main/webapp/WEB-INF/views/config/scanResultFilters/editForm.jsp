@@ -33,14 +33,14 @@
                             id="severitySelect"
                             name="severityId">
                         <option ng-selected="object.genericSeverity.id === severity.id" ng-repeat="severity in config.severities" value="{{severity.id}}">
-                            {{severity.name}}
+                            {{ severity.displayName }}
                         </option>
                     </select>
                 </td>
                 <td>
-                        <span id="severityServerError" class="errors" ng-show="object.genericSeverity_error">
-                            {{ object.genericSeverity_error }}
-                        </span>
+                    <span id="severityServerError" class="errors" ng-show="object.genericSeverity_error">
+                        {{ object.genericSeverity_error }}
+                    </span>
                 </td>
             </tr>
             </tbody>

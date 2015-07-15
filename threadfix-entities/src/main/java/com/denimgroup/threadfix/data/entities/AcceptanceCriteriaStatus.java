@@ -29,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -43,13 +44,13 @@ import static com.denimgroup.threadfix.CollectionUtils.map;
         @UniqueConstraint(columnNames = {"Application_Id", "AcceptanceCriteria_Id"})})
 public class AcceptanceCriteriaStatus extends AuditableEntity {
 
-    private boolean passing = false;
+    private Boolean passing = false;
     private Application application;
     private AcceptanceCriteria acceptanceCriteria;
 
     private List<EmailList> emailLists;
     private List<String> emailAddresses;
-    private boolean sendEmail = false;
+    private Boolean sendEmail = false;
 
     @ElementCollection
     @Column(name = "emailAddress", length = 128)
@@ -74,9 +75,10 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
         this.emailLists = emailLists;
     }
 
+    @Column
     @JsonView(Object.class)
-    public boolean isPassing() {
-        return passing;
+    public Boolean isPassing() {
+        return passing != null && passing;
     }
 
     public void setPassing(boolean passing) {
@@ -94,8 +96,10 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
         this.application = application;
     }
 
-    public boolean isSendEmail() {
-        return sendEmail;
+    @Column
+    @JsonView(Object.class)
+    public Boolean isSendEmail() {
+        return sendEmail != null && sendEmail;
     }
 
     public void setSendEmail(boolean sendEmail) {
@@ -127,6 +131,20 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
 
     public void setAcceptanceCriteria(AcceptanceCriteria acceptanceCriteria) {
         this.acceptanceCriteria = acceptanceCriteria;
+    }
+
+
+    @Transient
+    @JsonProperty("acceptanceCriteria")
+    @JsonView(Object.class)
+    public Map<String, ? extends Serializable> getAcceptanceCriteriaJson() {
+        if(acceptanceCriteria != null) {
+            return map(
+                    "id", acceptanceCriteria.getId(),
+                    "name", acceptanceCriteria.getName());
+        } else {
+            return null;
+        }
     }
 
     @Transient

@@ -29,7 +29,7 @@
             <tr ng-repeat="category in categories">
                 <td id="cweId{{ category.genericVulnerability.id }}">{{ category.genericVulnerability.displayId }}</td>
                 <td id="cweName{{ category.genericVulnerability.id }}" style="word-wrap: break-word;">{{ category.genericVulnerability.name }}</td>
-                <td id="severity{{ category.genericVulnerability.id }}" >{{ category.severityStr }}</td>
+                <td id="severity{{ category.genericVulnerability.id }}" generic-severity="{{ category.severityStr }}"></td>
                 <td id="quantity{{ category.genericVulnerability.id }}" >{{ category.numResults }}</td>
             </tr>
             <tr ng-hide="categories || loading">

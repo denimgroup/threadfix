@@ -55,7 +55,7 @@ public class AcceptanceCriteria extends AuditableEntity {
 
     private List<EmailList> emailLists;
     private List<String> emailAddresses;
-    private boolean sendEmail = false;
+    private Boolean sendEmail = false;
 
     @ElementCollection
     @Column(name = "emailAddress", length = 128)
@@ -100,8 +100,10 @@ public class AcceptanceCriteria extends AuditableEntity {
         this.acceptanceCriteriaStatuses = acceptanceCriteriaStatuses;
     }
 
-    public boolean isSendEmail() {
-        return sendEmail;
+    @Column
+    @JsonView(Object.class)
+    public Boolean isSendEmail() {
+        return sendEmail != null && sendEmail;
     }
 
     public void setSendEmail(boolean sendEmail) {
