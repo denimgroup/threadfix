@@ -1,6 +1,6 @@
-<html style="font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">
+<html style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif">
     <body>
-        <p>Report of new Acceptance Criteria status changes.</p>
+        <p>Report of new Acceptance Criteria status changes</p>
 
         #foreach( $acceptanceCriteria in $acceptanceCriterias )
             <div>
