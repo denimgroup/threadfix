@@ -1,6 +1,22 @@
 
 <html>
 <body>
-<p>Words</p>
+<p>Report of new Acceptance Criteria status changes.</p>
+
+#foreach( $changedStatus in $changedStatuses )
+    #if ( $changedStatus.passing )
+        #set( $color = 'green')
+        #set( $status = 'passing')
+    #else
+        #set( $color = 'red')
+        #set( $status = 'failing')
+    #end
+
+    <div>
+        $changedStatus.name: <span style="color:$color; font-weight:bold">Acceptance Criteria now $status</span>
+    </div>
+#end
+
+
 </body>
 <html>

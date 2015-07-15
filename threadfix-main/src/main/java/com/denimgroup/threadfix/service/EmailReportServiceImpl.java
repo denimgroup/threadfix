@@ -221,16 +221,20 @@ public class EmailReportServiceImpl implements EmailReportService {
 	}
 
     @Override
-    public void sendAcceptanceCriteriaReport(AcceptanceCriteria acceptanceCriteria) {
+    public void sendAcceptanceCriteriaReport(AcceptanceCriteria acceptanceCriteria,
+                                             List<AcceptanceCriteriaStatus> changedStatuses) {
 
         if (acceptanceCriteriaService != null) {
 
             Map<String, Object> model = map();
+            model.put("acceptanceCriteria", acceptanceCriteria);
+            model.put("changedStatuses", changedStatuses);
+
             String emailBody = templateBuilderService.prepareMessageFromTemplate(model, "acceptanceCriteriaReport.vm");
 
             MimeMessage message = javaMailSender.createMimeMessage();
             try {
-                message.setSubject("AC Status Update");
+                message.setSubject("Acceptance Criteria Status Update for " + acceptanceCriteria.getName());
                 message.setContent(emailBody, "text/html; charset=utf-8");
 
                 Set<String> filteredEmailAddresses =
