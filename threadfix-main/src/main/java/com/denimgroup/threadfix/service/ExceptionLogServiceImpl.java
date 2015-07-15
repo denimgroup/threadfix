@@ -31,6 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.denimgroup.threadfix.util.TFManifestProperties.MANIFEST_GIT_COMMIT;
+
 @Service
 @Transactional(readOnly = false)
 public class ExceptionLogServiceImpl implements ExceptionLogService {
@@ -40,6 +42,7 @@ public class ExceptionLogServiceImpl implements ExceptionLogService {
 	
 	@Override
 	public void storeExceptionLog(ExceptionLog exceptionLog) {
+		exceptionLog.setCommit(MANIFEST_GIT_COMMIT);
 		exceptionLogDao.saveOrUpdate(exceptionLog);
 	}
 

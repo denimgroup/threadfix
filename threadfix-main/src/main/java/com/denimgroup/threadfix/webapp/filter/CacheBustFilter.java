@@ -34,14 +34,10 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.InputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
+
+import static com.denimgroup.threadfix.util.TFManifestProperties.*;
 
 /**
  * Created by zabdisubhan on 9/8/14.
@@ -70,38 +66,8 @@ public class CacheBustFilter extends GenericFilterBean {
 
     @Override
     public void initFilterBean() throws ServletException {
-        try {
-            InputStream is =
-                getServletContext().getResourceAsStream("/META-INF/MANIFEST.MF");
-            if (is == null) {
-                log.warn("/META-INF/MANIFEST.MF not found.");
-            } else {
-                Manifest mf = new Manifest();
-                mf.read(is);
-                Attributes attrs = mf.getMainAttributes();
-                String version = attrs.getValue("Implementation-Version");
-                String date = attrs.getValue("Implementation-Build-Date");
-                gitCommit = attrs.getValue("Implementation-Build");
-
-                if(date != null) {
-                    SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                    try {
-                        buildDate = dt.parse(date);
-                    } catch (ParseException e) {
-                        log.debug("Exception thrown parsing build date from MANIFEST.mf file.");
-                    }
-                }
-
-                // build fake git commit # for dev env
-                gitCommit = (gitCommit != null) ? gitCommit : Integer.toString(new Random().nextInt(10000000));
-
-                if (version != null){
-                    buildNumber = version + "-" + gitCommit;
-                    log.info("Application version set to: " + buildNumber);
-                }
-            }
-        } catch (IOException e) {
-            log.error("I/O Exception reading manifest: " + e.getMessage());
-        }
+        gitCommit = MANIFEST_GIT_COMMIT;
+        buildDate = MANIFEST_BUILD_DATE;
+        buildNumber = MANIFEST_BUILD_NUMBER;
     }
 }
