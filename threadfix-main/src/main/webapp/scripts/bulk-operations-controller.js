@@ -207,8 +207,11 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
                 if (data.success) {
                     $parent.successMessage = object.vulnerabilityIds.length + " vulnerabilities successfully " + messageExtension + ".";
                     $parent.refresh();
-                    if (refreshReport)
+                    if (refreshReport) {
                         $rootScope.$broadcast('severityChanged');
+                    } else {
+                        $rootScope.$broadcast('scanUploaded');
+                    }
                 } else {
                     $parent.errorMessage = "Failure. Message was : " + data.message;
                 }
