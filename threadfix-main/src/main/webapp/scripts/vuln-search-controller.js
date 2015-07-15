@@ -146,15 +146,17 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
     });
 
     $scope.refreshHeading = function() {
-        $http.get(tfEncoder.encode("/reports/update/heading/"+ $scope.$parent.appId)).
-            success(function(data, status, headers, config, response) {
-                $rootScope.$broadcast('scans', data.object.scans);
-                $rootScope.$broadcast('numVulns',  data.object.numVulns);
-            }).
-            error(function(data, status, headers, config) {
-                $scope.errorMessage = "Failed to retrieve heading information. HTTP status was " + status;
-                $scope.loadingTree = false;
-            });
+        if ($scope.$parent.appId) {
+            $http.get(tfEncoder.encode("/reports/update/heading/"+ $scope.$parent.appId)).
+                success(function(data, status, headers, config, response) {
+                    $rootScope.$broadcast('scans', data.object.scans);
+                    $rootScope.$broadcast('numVulns',  data.object.numVulns);
+                }).
+                error(function(data, status, headers, config) {
+                    $scope.errorMessage = "Failed to retrieve heading information. HTTP status was " + status;
+                    $scope.loadingTree = false;
+                });
+        }
     };
 
     $scope.$on('updateDisplayData', function(event, parameters) {
