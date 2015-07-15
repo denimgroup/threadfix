@@ -27,6 +27,7 @@
             <thead>
                 <tr>
                     <th class="first">Key</th>
+                    <th class="short">&nbsp;</th>
                     <th class="medium">Note</th>
                     <th class="centered">Edit / Delete</th>
                     <th class="short last">Restricted</th>
@@ -34,15 +35,16 @@
             </thead>
             <tbody>
                 <tr ng-hide="keys.length || loading">
-                    <td colspan="4" style="text-align:center;">No API Keys found.</td>
+                    <td colspan="5" style="text-align:center;">No API Keys found.</td>
                 </tr>
                 <tr ng-repeat="key in keys">
-                    <td id="key{{ key.note }}" style="max-width:550px;">{{ key.apiKey }}</td>
-                    <td id="note{{ key.note }}" style="max-width:300px;word-wrap: break-word;">{{ key.note }}</td>
-                    <td class="centered">
+                    <td id="key{{ key.note }}" style="vertical-align:text-top;">{{ key.apiKey }}</td>
+                    <td>&nbsp;</td>
+                    <td id="note{{ key.note }}" style="word-wrap:break-word;vertical-align:text-top;">{{ key.note }}</td>
+                    <td class="centered" style="vertical-align: text-top;">
                         <button class="btn" id="editKeyModal{{ key.note }}" ng-click="openEditModal(key)">Edit / Delete</button>
                     </td>
-                    <td id="restricted{{ key.note }}">{{ key.isRestrictedKey }}</td>
+                    <td id="restricted{{ key.note }}" style="vertical-align: text-top;">{{ key.isRestrictedKey }}</td>
                 </tr>
             </tbody>
         </table>
