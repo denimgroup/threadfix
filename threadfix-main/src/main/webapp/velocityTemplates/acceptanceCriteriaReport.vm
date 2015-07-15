@@ -1,22 +1,31 @@
+<html style="font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">
+    <body>
+        <p>Report of new Acceptance Criteria status changes.</p>
 
-<html>
-<body>
-<p>Report of new Acceptance Criteria status changes.</p>
+        #foreach( $acceptanceCriteria in $acceptanceCriterias )
+            <div>
+                <h3>
+                    Changes for $acceptanceCriteria
+                </h3>
 
-#foreach( $changedStatus in $changedStatuses )
-    #if ( $changedStatus.passing )
-        #set( $color = 'green')
-        #set( $status = 'passing')
-    #else
-        #set( $color = 'red')
-        #set( $status = 'failing')
-    #end
+                #set( $changedStatuses = $changedStatusesMap[$acceptanceCriteria] )
 
-    <div>
-        $changedStatus.name: <span style="color:$color; font-weight:bold">Acceptance Criteria now $status</span>
-    </div>
-#end
+                <ul>
+                    #foreach( $changedStatus in $changedStatuses )
+                        #if ( $changedStatus.passing )
+                            #set( $color = 'green')
+                            #set( $status = 'passing')
+                        #else
+                            #set( $color = 'red')
+                            #set( $status = 'failing')
+                        #end
 
-
-</body>
+                        <li>
+                            <span style="color:$color">$changedStatus.name now $status</span>
+                        </li>
+                    #end
+                </ul>
+            </div>
+        #end
+    </body>
 <html>

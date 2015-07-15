@@ -20,6 +20,5 @@ public interface EmailReportService {
 
 	public Map<String, Object> getNewVulnerabilitiesHierarchicalModel(ScheduledEmailReport scheduledEmailReport);
 
-    public void sendAcceptanceCriteriaReport(AcceptanceCriteria acceptanceCriteria,
-                                             List<AcceptanceCriteriaStatus> changedStatuses);
+    public void sendAcceptanceCriteriaReport(Map<String, List<AcceptanceCriteriaStatus>> changedStatusesMap);
 }
