@@ -65,14 +65,20 @@ public interface UserService {
 	 */
 	User loadLdapUser(String name);
 
-	/**
+    /**
+     * @param name
+     * @return
+     */
+    User loadLocalUser(String name);
+
+    /**
 	 * @param user
 	 */
 	void storeUser(User user);
 
 	/**
-	 * @param userId
-	 */
+	 * @param user
+     */
 	void delete(User user);
 
 	/**
@@ -91,7 +97,7 @@ public interface UserService {
 	
 	/**
 	 * 
-	 * @param user
+	 * @param userId
 	 * @return
 	 */
 	Set<Permission> getGlobalPermissions(Integer userId);
