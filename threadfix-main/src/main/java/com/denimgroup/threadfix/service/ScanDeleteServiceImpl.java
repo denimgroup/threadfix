@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Calendar;
 import java.util.Collections;
@@ -61,7 +62,10 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 	private EndpointPermissionService endpointPermissionService;
     @Autowired
     private DefaultConfigService defaultConfigService;
-	
+    @Nullable
+    @Autowired(required = false)
+    private AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
+
 	/**
 	 * Deleting a scan requires a lot of code to check and make sure that all mappings
 	 * are where they should be. A lot of this is facilitated by ScanReopenVulnerabilityMap
@@ -184,6 +188,11 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
             } else {
                 log.info("Deleted file at location: " + filePath);
             }
+        }
+
+        // Run status check on delete
+        if (acceptanceCriteriaStatusService != null) {
+            acceptanceCriteriaStatusService.runStatusCheck(app.getId());
         }
 
 		log.info("The scan deletion has finished.");
