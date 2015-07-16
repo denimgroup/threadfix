@@ -241,10 +241,9 @@ public class EmailReportServiceImpl implements EmailReportService {
             if(emailMap.size() == 0)
                 return;
 
-            for (Object o : emailMap.entrySet()) {
-                Map.Entry pair = (Map.Entry) o;
-                String emailAddress = (String) pair.getKey();
-                List<AcceptanceCriteriaStatus> statuses = (List<AcceptanceCriteriaStatus>) pair.getValue();
+            for (Map.Entry<String, List<AcceptanceCriteriaStatus>> entry : emailMap.entrySet()) {
+                String emailAddress = entry.getKey();
+                List<AcceptanceCriteriaStatus> statuses = entry.getValue();
 
                 Map<String, Object> model = map();
                 model.put("statuses", statuses);
