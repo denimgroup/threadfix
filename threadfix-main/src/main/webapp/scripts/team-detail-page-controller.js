@@ -36,6 +36,10 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
 
     $scope.$on('rootScopeInitialized', function() {
         $scope.reportQuery = "&orgId=" + $scope.teamId;
+        refreshIt();
+    });
+
+    var refreshIt = function() {
         $http.get(tfEncoder.encodeRelative($scope.teamId + "/info")).
             success(function(data, status, headers, config) {
                 if (data.success) {
@@ -61,10 +65,11 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
                 $scope.errorMessage = "Encountered error. HTTP status was " + status;
                 $log.error("Encountered error. HTTP status was " + status);
             });
-
         $scope.searchApps($scope.lastSearchString);
 
-    });
+    };
+
+    $scope.$on("scanUploaded", refreshIt);
 
     $scope.openEditModal = function() {
 

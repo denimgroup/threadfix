@@ -254,7 +254,8 @@ public class UserServiceImpl implements UserService {
 		for (AccessControlTeamMap teamMap : maps) {
 			if (teamMap != null && teamMap.getAccessControlApplicationMaps() != null) {
 				for (AccessControlApplicationMap appMap : teamMap.getAccessControlApplicationMaps()) {
-					if (appMap != null && appMap.getApplication() != null &&
+					if (appMap != null && appMap.isActive() &&
+							appMap.getApplication() != null &&
 							appMap.getApplication().getId() != null &&
 							appMap.getRole() != null &&
 							appMap.getRole().getPermissions() != null) {
