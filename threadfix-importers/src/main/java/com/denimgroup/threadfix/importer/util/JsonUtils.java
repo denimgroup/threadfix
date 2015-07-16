@@ -24,7 +24,6 @@
 
 package com.denimgroup.threadfix.importer.util;
 
-import com.denimgroup.threadfix.data.entities.VulnerabilitySearchParameters;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.google.gson.Gson;
 import org.json.JSONArray;
