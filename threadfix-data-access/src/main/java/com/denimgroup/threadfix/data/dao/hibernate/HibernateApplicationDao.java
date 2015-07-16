@@ -337,6 +337,7 @@ public class HibernateApplicationDao implements ApplicationDao {
     public List<Application> getSearchResults(Integer teamId, String searchString, int number, int page, Set<Integer> appIds, Set<Integer> teamIds) {
 
         Criteria criteria = getSearchAppCriteria(teamId, searchString);
+        criteria.addOrder(Order.asc("name"));
         addFiltering(criteria, teamIds, appIds);
         return (List<Application>) criteria.setMaxResults(number)
                 .setFirstResult((page - 1) * number)
@@ -365,7 +366,6 @@ public class HibernateApplicationDao implements ApplicationDao {
         Criteria criteria = getActiveAppCriteria();
 
         criteria.createAlias("organization", "team");
-        criteria.addOrder(Order.asc("name"));
         criteria.add(Restrictions.eq("team.id", orgId));
         if (searchString != null && !searchString.isEmpty()){
             criteria.add(Restrictions.like("name", "%" + searchString + "%"));
