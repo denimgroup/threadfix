@@ -24,8 +24,10 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.AcceptanceCriteria;
+import com.denimgroup.threadfix.data.entities.AcceptanceCriteriaStatus;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sgerick on 5/27/2015.
@@ -67,4 +69,5 @@ public interface AcceptanceCriteriaService {
      * @param acceptanceCriteria
      */
     void storeAcceptanceCriteria(AcceptanceCriteria acceptanceCriteria);
+
 }

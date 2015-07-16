@@ -29,6 +29,8 @@ import com.denimgroup.threadfix.data.entities.AcceptanceCriteriaStatus;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.FilterJsonBlob;
 
+import java.util.List;
+
 /**
  * @author zabdisubhan
  */
@@ -47,5 +49,7 @@ public interface AcceptanceCriteriaStatusService extends GenericObjectService<Ac
     boolean passFilters(Application application);
 
     boolean passFilters(AcceptanceCriteria acceptanceCriteria);
+
+    List<String> getNotificationEmailAddresses(AcceptanceCriteriaStatus acceptanceCriteriaStatus);
 
 }
