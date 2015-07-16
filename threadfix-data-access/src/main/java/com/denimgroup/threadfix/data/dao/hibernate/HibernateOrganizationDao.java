@@ -25,8 +25,12 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 
 import com.denimgroup.threadfix.data.dao.AbstractNamedObjectDao;
 import com.denimgroup.threadfix.data.dao.OrganizationDao;
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -53,7 +57,8 @@ public class HibernateOrganizationDao extends AbstractNamedObjectDao<Organizatio
         return Organization.class;
     }
 
-    @Override
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<Organization> retrieveAllActiveFilter(Set<Integer> authenticatedTeamIds) {
 		return sessionFactory.getCurrentSession()
