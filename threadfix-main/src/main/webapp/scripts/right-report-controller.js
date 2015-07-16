@@ -47,8 +47,6 @@ myAppModule.controller('RightReportController', function ($scope, $window, threa
                     }
                 });
 
-                $scope.topAppsData = data.object.map;
-
                 $scope.loadingRight = false;
 
             }).
