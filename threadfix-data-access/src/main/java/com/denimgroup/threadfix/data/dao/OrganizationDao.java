@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 
 import java.util.List;

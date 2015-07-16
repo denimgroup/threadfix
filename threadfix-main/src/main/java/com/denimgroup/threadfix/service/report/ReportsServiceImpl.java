@@ -103,6 +103,8 @@ public class ReportsServiceImpl implements ReportsService {
     @Override
     public Map<String, Object> generateTrendingReport(ReportParameters parameters, HttpServletRequest request) {
 
+        long start = System.currentTimeMillis();
+
         Map<String, Object> map = map();
 
         List<Integer> applicationIdList = getApplicationIdList(parameters);
@@ -111,12 +113,16 @@ public class ReportsServiceImpl implements ReportsService {
             return map;
         }
 
+        log.info("getAppList took " + (System.currentTimeMillis() - start) + " ms");
+
         List<Scan> scanList = scanDao.retrieveByApplicationIdList(applicationIdList);
         if (scanList == null || scanList.isEmpty()) {
             log.info("Unable to fill Report - no scans were found.");
             return map;
         }
         map.put("scanList", scanList);
+
+        log.info("generateTrendingReport took " + (System.currentTimeMillis() - start) + " ms");
 
         return map;
     }

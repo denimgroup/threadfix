@@ -23,9 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -50,4 +52,9 @@ public interface OrganizationService extends GenericNamedObjectService<Organizat
 
     List<Organization> loadTeams(Permission permission, boolean checkApps);
 
+	List<Application> search(Integer orgId, HttpServletRequest request);
+
+	Long countApps(Integer orgId, String searchString);
+
+	Long countVulns(Integer orgId);
 }
