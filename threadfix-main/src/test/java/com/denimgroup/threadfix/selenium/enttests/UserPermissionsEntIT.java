@@ -434,15 +434,11 @@ public class UserPermissionsEntIT extends BaseDataTest{
                 .clickSetWaf();
 
         if (applicationDetailPage.isWafPresent()) {
-            applicationDetailPage.clickCreateNewWaf()
-                    .setWafName(wafName)
-                    .clickCreateWafButton();
+            applicationDetailPage.clickCreateNewWaf();
+            assertTrue("Creating WAF was still allowed.", applicationDetailPage.isWafCreationDenied());
         } else {
-            applicationDetailPage.setWafName(wafName)
-                    .clickCreateWafButton();
+            assertTrue("Creating WAF was still allowed.", applicationDetailPage.isWAFAddButtonPresent());
         }
-
-        assertTrue("Creating WAF was still allowed.", applicationDetailPage.isWafCreationDenied());
 
         WafIndexPage wafIndexPage = applicationDetailPage.clickCloseModalButton()
                 .clickEditDeleteBtn()

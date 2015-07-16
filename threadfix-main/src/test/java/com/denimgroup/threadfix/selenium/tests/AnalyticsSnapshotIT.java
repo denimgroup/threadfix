@@ -606,19 +606,17 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .expandTeamApplicationFilter("snapshotFilterDiv")
                 .addTeamFilter(teamName, "snapshotFilterDiv");
 
-        assertTrue("Total Vulnerabilities is incorrect.", analyticsPage.getScanComparisonSummaryItem(4).equals("39"));
+        assertTrue("Total Vulnerabilities is incorrect.", analyticsPage.getScanComparisonSummaryItem(5).equals("39"));
 
-        String rowNumber = analyticsPage.getScanComparisonScannerRow(scannerName);
-
-        assertTrue("Number Found is incorrect.", analyticsPage.getScanComparisonFoundCount(rowNumber).equals("39"));
-        assertTrue("Percent Found is incorrect.", analyticsPage.getScanComparisonFoundPercent(rowNumber).equals("100%"));
+        assertTrue("Number Found is incorrect.", analyticsPage.getScanComparisonFoundCount("0").equals("39"));
+        assertTrue("Percent Found is incorrect.", analyticsPage.getScanComparisonFoundPercent("0").equals("100%"));
         assertTrue("Number of False Positives is incorrect.",
-                analyticsPage.getScanComparisonFalsePostiveCount(rowNumber).equals("1"));
+                analyticsPage.getScanComparisonFalsePostiveCount("0").equals("1"));
         assertTrue("Percent of False Positives is incorrect.",
-                analyticsPage.getScanComparisonFalsePositivePercent(rowNumber).equals("2.6%"));
+                analyticsPage.getScanComparisonFalsePositivePercent("0").equals("2.6%"));
         assertTrue("Found HAM Endpoint number is incorrect.",
-                analyticsPage.getScanComparisonHAMEndpointCount(rowNumber).equals("26"));
+                analyticsPage.getScanComparisonHAMEndpointCount("0").equals("26"));
         assertTrue("Found HAM Endpoint percent is incorrect.",
-                analyticsPage.getScanComparisonHAMEndpointPercent(rowNumber).equals("66.7%"));
+                analyticsPage.getScanComparisonHAMEndpointPercent("0").equals("66.7%"));
     }
 }
