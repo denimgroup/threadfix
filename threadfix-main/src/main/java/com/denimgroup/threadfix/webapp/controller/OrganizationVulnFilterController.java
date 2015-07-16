@@ -57,6 +57,7 @@ public class OrganizationVulnFilterController extends AbstractVulnFilterControll
 	}
 	
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
+	@JsonView(AllViews.TableRow.class)
 	public @ResponseBody RestResponse<VulnerabilityFilter> submitNew(@PathVariable int orgId,
 			VulnerabilityFilter vulnerabilityFilter,
 			BindingResult bindingResult,
@@ -71,6 +72,7 @@ public class OrganizationVulnFilterController extends AbstractVulnFilterControll
     }
 	
 	@RequestMapping(value = "/{filterId}/edit", method = RequestMethod.POST)
+	@JsonView(AllViews.TableRow.class)
 	public @ResponseBody RestResponse<VulnerabilityFilter> submitEdit(
 			@PathVariable int orgId,
 			@PathVariable int filterId,
@@ -81,6 +83,7 @@ public class OrganizationVulnFilterController extends AbstractVulnFilterControll
 	}
 	
 	@RequestMapping(value = "/{filterId}/delete", method = RequestMethod.POST)
+	@JsonView(AllViews.TableRow.class)
 	public String submitDelete(
 			@PathVariable int orgId,
 			@PathVariable int filterId,
