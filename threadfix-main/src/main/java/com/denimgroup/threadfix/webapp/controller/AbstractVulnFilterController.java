@@ -53,6 +53,12 @@ public abstract class AbstractVulnFilterController {
 	protected ApplicationService applicationService;
     @Autowired
 	protected OrganizationService organizationService;
+	@Autowired
+	protected ChannelVulnerabilityService channelVulnerabilityService;
+	@Autowired
+	protected ChannelTypeService channelTypeService;
+	@Autowired
+	protected ChannelVulnerabilityFilterService channelVulnerabilityFilterService;
 
 	private final SanitizedLogger log = new SanitizedLogger(AbstractVulnFilterController.class);
 	private static final String
@@ -147,6 +153,11 @@ public abstract class AbstractVulnFilterController {
             map.put("teamVulnerabilityFilters", vulnerabilityFilterService.getPrimaryVulnerabilityList(orgId, -1));
         }
 
+			List<ChannelType> channelTypes = channelTypeService.loadAll();
+			map.put("channelVulnerabilitiesMap", channelVulnerabilityService.getChannelVulnsEachChannelType(channelTypes));
+			map.put("channelTypes", channelTypes);
+			map.put("globalChannelVulnFilterList", channelVulnerabilityFilterService.retrieveAll());
+
         if (type.equals("Application")) {
             map.put("applicationSeverityFilter", getSeverityFilter(orgId, appId));
             map.put("applicationVulnerabilityFilters", vulnerabilityFilterService.getPrimaryVulnerabilityList(orgId, appId));
@@ -240,6 +251,32 @@ public abstract class AbstractVulnFilterController {
 		log.info("Vulnerability Filter was successfully deleted");
 		model.addAttribute("successMessage", "Vulnerability Filter was successfully deleted");
 		return returnSuccess(model, orgId, appId);
+	}
+
+	public RestResponse<ChannelVulnerabilityFilter> submitNewChannelFilterBackend(
+			ChannelVulnerabilityFilter vulnerabilityFilter,
+			BindingResult bindingResult,
+			SessionStatus status) {
+
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, -1, -1)) {
+			return RestResponse.failure(AUTHORIZATION_FAILED);
+		}
+
+
+		if (!bindingResult.hasErrors()) {
+			channelVulnerabilityFilterService.validate(vulnerabilityFilter, bindingResult);
+		}
+
+		if (bindingResult.hasErrors()) {
+			log.warn(FAILURE_MESSAGE);
+			return FormRestResponse.failure(FAILURE_MESSAGE, bindingResult);
+		} else {
+			channelVulnerabilityFilterService.save(vulnerabilityFilter);
+			vulnerabilityFilterService.updateStatistics(-1, -1);
+			status.setComplete();
+			log.info(SUCCESS_MESSAGE);
+			return RestResponse.success(vulnerabilityFilter);
+		}
 	}
 	
 	public String returnSuccess(Model model, int orgId, int appId) {

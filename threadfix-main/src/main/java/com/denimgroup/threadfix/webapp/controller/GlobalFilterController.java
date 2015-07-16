@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.data.entities.ChannelVulnerabilityFilter;
 import com.denimgroup.threadfix.data.entities.VulnerabilityFilter;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import org.springframework.stereotype.Controller;
@@ -78,5 +79,12 @@ public class GlobalFilterController extends AbstractVulnFilterController {
 	@RequestMapping(value="/{filterId}/delete", method = RequestMethod.POST)
 	public String submitDelete(Model model, @PathVariable int filterId) {
 		return submitDeleteBackend(model, -1, -1, filterId);
+	}
+
+	@RequestMapping(value="/newChannelFilter", method = RequestMethod.POST)
+	public @ResponseBody RestResponse<ChannelVulnerabilityFilter> submitNewChannelFilter(ChannelVulnerabilityFilter channelVulnerabilityFilter,
+																	 BindingResult bindingResult, SessionStatus status) {
+		return submitNewChannelFilterBackend(channelVulnerabilityFilter,
+				bindingResult, status);
 	}
 }
