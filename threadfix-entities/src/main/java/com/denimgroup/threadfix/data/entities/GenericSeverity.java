@@ -122,7 +122,7 @@ public class GenericSeverity extends BaseEntity {
 	}
 
 	@Column(nullable = true)
-	@JsonView(AllViews.TableRow.class)
+	@JsonView({AllViews.TableRow.class, AllViews.ApplicationIndexView.class})
 	public void setCustomName(String customName) {
 		this.customName = customName;
 	}
