@@ -3,6 +3,7 @@ package com.denimgroup.threadfix.service;
 import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
@@ -36,6 +37,10 @@ public class UploadScanServiceImpl implements UploadScanService{
     private ScanMergeService scanMergeService;
     @Autowired
     private DefaultConfigService defaultConfigService;
+    @Autowired(required = false)
+    private AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
+    @Autowired
+    private ApplicationService applicationService;
 
     @Override
     public Object processMultiFileUpload(Collection<MultipartFile> files, Integer orgId, Integer appId, String channelIdString) {
@@ -112,6 +117,10 @@ public class UploadScanServiceImpl implements UploadScanService{
                         }
                     }
                 }
+            }
+
+            if (acceptanceCriteriaStatusService != null) {
+                acceptanceCriteriaStatusService.runStatusCheck(appId);
             }
         }
     }

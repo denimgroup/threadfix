@@ -40,7 +40,7 @@ public interface ScanQueueService {
 	
 	boolean taskStatusUpdate(int taskId, String message);
 	
-	Task requestTask(String scanners, String agentConfig, String secureTaskKey) throws ScanQueueTaskConfigException;
+	Task requestTask(String scanners, String agentConfig, String secureTaskKey, String scanAgentKey) throws ScanQueueTaskConfigException;
 	
 	void completeTask(int scanQueueTaskId);
 	
@@ -57,4 +57,6 @@ public interface ScanQueueService {
 	ScanQueueTask queueScanTask(int appId, ScanQueueTask scanQueueTask);
 
 	ScanQueueTask queueScanWithConfig(int appId, String scannerType, String scanConfigId);
+
+	ScanQueueTask queueScanWithScheduledScanId(int scheduledScanId);
 }

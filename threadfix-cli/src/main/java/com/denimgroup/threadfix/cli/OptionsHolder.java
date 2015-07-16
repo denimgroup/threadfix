@@ -34,6 +34,13 @@ public class OptionsHolder {
     public static Options getOptions() {
         Options options = new Options();
 
+        Option property  = OptionBuilder.withArgName( "unsafe-ssl" )
+                .hasArgs(1)
+                .withValueSeparator()
+                .withDescription( "unsafe-ssl to force ThreadFix to accept unsigned certificates." )
+                .create( "D" );
+        options.addOption(property);
+
         Option teams = OptionBuilder.withLongOpt("teams")
                 .withDescription("Fetches a list of ThreadFix teams and applications.")
                 .create("t");
@@ -90,6 +97,8 @@ public class OptionsHolder {
         options.addOption(setParameters);
 
         options.addOption(new Option("printScanOptions", "Prints available scan options"));
+
+        options.addOption(new Option("printScannerNames", "Prints scanner names supported by ScanAgent"));
 
         Option createTeam = OptionBuilder.withArgName("name")
                 .hasArg()
@@ -154,11 +163,11 @@ public class OptionsHolder {
                 .create("ra");
         options.addOption(getRulesForApp);
 
-        Option createTag = OptionBuilder.withArgName("name> <[isCommentTag]")
+        Option createTag = OptionBuilder.withArgName("name> <[tagType]")
                 .withValueSeparator(' ')
                 .hasArgs(2)
                 .withLongOpt("create-tag")
-                .withDescription("Creates a ThreadFix Tag and returns its JSON. Set true/false for optional isCommentTag parameter.")
+                .withDescription("Creates a ThreadFix Tag and returns its JSON. tagType is optional, default is Application Tag.")
                 .create("ctg");
         options.addOption(createTag);
 

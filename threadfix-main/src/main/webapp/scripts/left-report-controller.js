@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix');
 
-myAppModule.controller('LeftReportController', function ($scope, $window, threadfixAPIService, filterService, trendingUtilities) {
+myAppModule.controller('LeftReportController', function ($scope, $window, threadfixAPIService, filterService, trendingUtilities, customSeverityService, $log) {
 
     // Using this controller is easy; just set up a parent controller with empty and reportQuery fields.
     $scope.empty = $scope.$parent.empty;
@@ -16,11 +16,13 @@ myAppModule.controller('LeftReportController', function ($scope, $window, thread
     });
 
     var loadLeftReport = function() {
+        var start = new Date();
         threadfixAPIService.loadReport("/dashboard/leftReport", $scope.reportQuery).
             success(function(data, status, headers, config) {
-
+                $log.info("left request server took " + ((new Date()).getTime() - start.getTime()) + " ms");
                 $scope.allScans = data.object.scanList;
                 $scope.savedFilters = data.object.savedFilters;
+                customSeverityService.setSeverities(data.object.genericSeverities);
 
                 if ($scope.allScans) {
                     $scope.savedDefaultTrendingFilter = filterService.findDefaultFilter($scope);
@@ -31,10 +33,16 @@ myAppModule.controller('LeftReportController', function ($scope, $window, thread
                     });
 
                     $scope.filterScans = $scope.allScans;
+
                     $scope.trendingScansData = trendingUtilities.refreshScans($scope);
+                    $log.info("trendingUtilities.refreshScans took " + ((new Date()).getTime() - start.getTime()) + " ms");
 
                     var hasResultsFilter = function(scan) {
-                        return scan.Critical + scan.High + scan.Medium + scan.Low + scan.Info > 0;
+                        return scan[customSeverityService.getCustomSeverity('Critical')] +
+                            scan[customSeverityService.getCustomSeverity('High')] +
+                            scan[customSeverityService.getCustomSeverity('Medium')] +
+                            scan[customSeverityService.getCustomSeverity('Low')] +
+                            scan[customSeverityService.getCustomSeverity('Info')] > 0;
                     };
 
                     if ($scope.trendingScansData &&

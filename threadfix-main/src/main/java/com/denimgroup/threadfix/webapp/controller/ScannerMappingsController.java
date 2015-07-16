@@ -34,6 +34,7 @@ import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -49,6 +50,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/mappings")
+@PreAuthorize("hasRole('ROLE_READ_ACCESS')")
 public class ScannerMappingsController {
 
     @Autowired
@@ -75,7 +77,6 @@ public class ScannerMappingsController {
 	@JsonView(AllViews.TableRow.class)
 	@ResponseBody
 	public Object getCweList() {
-
 		return RestResponse.success(genericVulnerabilityService.loadAll());
 	}
 

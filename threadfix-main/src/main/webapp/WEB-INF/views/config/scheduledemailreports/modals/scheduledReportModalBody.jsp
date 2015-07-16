@@ -17,7 +17,7 @@
         <tr>
             <td>Severity threshold</td>
             <td>
-                <select ng-options="genericSeverity.id as genericSeverity.name for genericSeverity in config.genericSeverities" ng-model="object.severityLevel.id" required/></select>
+                <select ng-options="genericSeverity.id as genericSeverity.displayName for genericSeverity in config.genericSeverities" ng-model="object.severityLevel.id" required/></select>
                 <span class="errors" ng-show="object.severityLevel_error"> {{ object.severityLevel_error }}</span>
             </td>
         </tr>

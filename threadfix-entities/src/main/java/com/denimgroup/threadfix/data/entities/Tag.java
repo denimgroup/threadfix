@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.data.enums.TagType;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -50,9 +51,11 @@ public class Tag extends AuditableEntity {
     private Boolean enterpriseTag = false;
     private Boolean tagForComment = false;
     private String defaultJsonFilter;
+    private TagType type;
 
     private Set<Application> applications = new HashSet<Application>(0);
     private Set<VulnerabilityComment> vulnerabilityComments = new HashSet<VulnerabilityComment>(0);
+    private Set<Vulnerability> vulnerabilities = new HashSet<Vulnerability>(0);
 
     @Column(length = NAME_LENGTH, nullable = false)
     @JsonView(Object.class)
@@ -84,6 +87,16 @@ public class Tag extends AuditableEntity {
         this.vulnerabilityComments = vulnerabilityComments;
     }
 
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags")
+    @JsonIgnore
+    public Set<Vulnerability> getVulnerabilities() {
+        return vulnerabilities;
+    }
+
+    public void setVulnerabilities(Set<Vulnerability> vulnerabilities) {
+        this.vulnerabilities = vulnerabilities;
+    }
+
     @Column(nullable = true)
     @JsonView(AllViews.TableRow.class)
     public Boolean getEnterpriseTag() {
@@ -106,7 +119,7 @@ public class Tag extends AuditableEntity {
 
     @Transient
     @JsonIgnore
-    public int getVulnCommentsCount(){
+    public int getVulnCommentsCount() {
         int numVulnComments = 0;
         for (VulnerabilityComment comment: vulnerabilityComments) {
             if (comment.getVulnerability() != null
@@ -118,19 +131,42 @@ public class Tag extends AuditableEntity {
 
     }
     @Transient
-    public boolean getDeletable(){
+    public boolean getDeletable() {
         if (enterpriseTag == null)
             enterpriseTag = false;
-        return applications.size()==0 && getVulnCommentsCount()==0 && !enterpriseTag;
+        return applications.size()==0
+                && getVulnCommentsCount()==0
+                && vulnerabilities.size() == 0
+                && !enterpriseTag;
     }
 
     @Column(nullable = true)
-    @JsonView(Object.class)
+    @JsonIgnore
     public Boolean getTagForComment() {
-        return tagForComment;
+        return (tagForComment != null && tagForComment) || getType() == TagType.COMMENT;
     }
 
     public void setTagForComment(Boolean tagForComment) {
         this.tagForComment = tagForComment;
+    }
+
+    @Column(nullable = true)
+    @JsonView(Object.class)
+    public TagType getType() {
+        return type;
+    }
+
+    public void setType(TagType type) {
+        this.type = type;
+    }
+    String encodedName = null;
+    @JsonView(AllViews.VulnSearchApplications.class)
+    @Transient
+    public String getEncodedName() {
+        return encodedName;
+    }
+
+    public void setEncodedName(String name) {
+        encodedName = name;
     }
 }

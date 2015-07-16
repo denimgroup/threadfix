@@ -159,14 +159,14 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
             success(function(data, status, headers, config) {
                 if (data.success) {
                     var exportList = [];
-                    data.object.forEach(function(elementObj){
+                    data.object.elementList.forEach(function(elementObj){
                         var element = elementObj.element;
                         var info = elementObj.info;
                         element.vulns = info.vulns;
                         element.vulnCount = info.vulnCount;
                         exportList.push(element);
                     });
-                    $scope.exportVulnTree = vulnTreeTransformer.transform(exportList, parameters.owasp, isDISASTIG ? $scope.DISA_STIG : undefined);
+                    $scope.exportVulnTree = vulnTreeTransformer.transform({tree: exportList, severities: data.object.severities}, parameters.owasp, isDISASTIG ? $scope.DISA_STIG : undefined);
                     //$scope.$apply();
 
                     reportExporter.exportPDFTableFromId($scope, exportInfo, null, function() {
@@ -403,7 +403,7 @@ threadfixModule.factory('d3Service', function() {
 
 });
 
-threadfixModule.factory('reportConstants', function() {
+threadfixModule.factory('reportConstants', function(customSeverityService) {
 
     var reportConstants = {};
 
@@ -412,49 +412,62 @@ threadfixModule.factory('reportConstants', function() {
     reportConstants.vulnTypeTextColorList = ["#688c9d", "#458A37", "#EFD20A", "#F27421", "#F7280C", "#C2A677",
         "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd" ];
     reportConstants.vulnTypeList = ["Info", "Low", "Medium", "High", "Critical"];
-    reportConstants.vulnTypeColorMap = {
-        Info: {
+
+    customSeverityService.addCallback(function() {
+        reportConstants.vulnTypeList = [
+            customSeverityService.getCustomSeverity("Info"),
+            customSeverityService.getCustomSeverity("Low"),
+            customSeverityService.getCustomSeverity("Medium"),
+            customSeverityService.getCustomSeverity("High"),
+            customSeverityService.getCustomSeverity("Critical")
+        ];
+
+        reportConstants.vulnTypeColorMap = {
+            Old: {
+                graphColor: reportConstants.vulnTypeColorList[5],
+                textColor: reportConstants.vulnTypeTextColorList[5]
+            },
+            Closed: {
+                graphColor: reportConstants.vulnTypeColorList[6],
+                textColor: reportConstants.vulnTypeTextColorList[6]
+            },
+            Resurfaced: {
+                graphColor: reportConstants.vulnTypeColorList[7],
+                textColor: reportConstants.vulnTypeTextColorList[7]
+            },
+            New: {
+                graphColor: reportConstants.vulnTypeColorList[8],
+                textColor: reportConstants.vulnTypeTextColorList[8]
+            },
+            Total: {
+                graphColor: reportConstants.vulnTypeColorList[9],
+                textColor: reportConstants.vulnTypeTextColorList[9]
+            }
+
+        };
+
+        reportConstants.vulnTypeColorMap[customSeverityService.getCustomSeverity('Info')] = {
             graphColor: reportConstants.vulnTypeColorList[0],
             textColor: reportConstants.vulnTypeTextColorList[0]
-        },
-        Low:  {
+        };
+        reportConstants.vulnTypeColorMap[customSeverityService.getCustomSeverity('Low')] = {
             graphColor: reportConstants.vulnTypeColorList[1],
             textColor: reportConstants.vulnTypeTextColorList[1]
-        },
-        Medium:  {
+        };
+        reportConstants.vulnTypeColorMap[customSeverityService.getCustomSeverity('Medium')] = {
             graphColor: reportConstants.vulnTypeColorList[2],
             textColor: reportConstants.vulnTypeTextColorList[2]
-        },
-        High:  {
+        };
+        reportConstants.vulnTypeColorMap[customSeverityService.getCustomSeverity('High')] = {
             graphColor: reportConstants.vulnTypeColorList[3],
             textColor: reportConstants.vulnTypeTextColorList[3]
-        },
-        Critical:  {
+        };
+        reportConstants.vulnTypeColorMap[customSeverityService.getCustomSeverity('Critical')] = {
             graphColor: reportConstants.vulnTypeColorList[4],
             textColor: reportConstants.vulnTypeTextColorList[4]
-        },
-        Old: {
-            graphColor: reportConstants.vulnTypeColorList[5],
-            textColor: reportConstants.vulnTypeTextColorList[5]
-        },
-        Closed: {
-            graphColor: reportConstants.vulnTypeColorList[6],
-            textColor: reportConstants.vulnTypeTextColorList[6]
-        },
-        Resurfaced: {
-            graphColor: reportConstants.vulnTypeColorList[7],
-            textColor: reportConstants.vulnTypeTextColorList[7]
-        },
-        New: {
-            graphColor: reportConstants.vulnTypeColorList[8],
-            textColor: reportConstants.vulnTypeTextColorList[8]
-        },
-        Total: {
-            graphColor: reportConstants.vulnTypeColorList[9],
-            textColor: reportConstants.vulnTypeTextColorList[9]
-        }
+        };
+    });
 
-    };
     reportConstants.reportTypes = {
         trending: {
             id: 9,
@@ -480,12 +493,13 @@ threadfixModule.factory('reportUtilities', function() {
     var drawingDuration = 500;
 
     reportUtilities.drawTitle = function(svg, w, label, title, y) {
-        var teams, apps, tags, i = 0;
+        var teams, apps, tags, vulnTags, i = 0;
 
         if (label) {
             teams = label.teams;
             apps = label.apps;
             tags = label.tags;
+            vulnTags = label.vulnTags;
         }
 
         svg.append("g")
@@ -525,12 +539,24 @@ threadfixModule.factory('reportUtilities', function() {
                 .attr("y", y + 20 + i*15)
                 .attr("class", "title")
                 .attr("id", title+"_Tags")
-                .text("Tags: " + tags)
+                .text("Application Tags: " + tags);
+            i++;
         }
+
+        if (vulnTags) {
+            svg.append("g")
+                .append("text")
+                .attr("x", w/2)
+                .attr("y", y + 20 + i*15)
+                .attr("class", "title")
+                .attr("id", title+"_VulnTags")
+                .text("Vulnerability Tags: " + vulnTags)
+        }
+
     };
 
     reportUtilities.createTeamAppNames = function($scope) {
-        var teams, apps, tags, i;
+        var teams, apps, tags, vulnTags, i;
 
         if ($scope.parameters.teams && $scope.parameters.applications)
             if ($scope.parameters.teams.length === 0
@@ -566,11 +592,25 @@ threadfixModule.factory('reportUtilities', function() {
             }
         }
 
+        if ($scope.parameters.vulnTags) {
+            if ($scope.parameters.vulnTags.length === 0) {
+                vulnTags = "All";
+            } else {
+                if ($scope.parameters.vulnTags.length > 0) {
+                    vulnTags = $scope.parameters.vulnTags[0].name;
+                }
+                for (i=1; i<$scope.parameters.vulnTags.length; i++) {
+                    vulnTags += ", " + $scope.parameters.vulnTags[i].name;
+                }
+            }
+        }
+
         if (!$scope.title)
             $scope.title = {};
         $scope.title.teams = teams;
         $scope.title.apps = apps;
         $scope.title.tags = tags;
+        $scope.title.vulnTags = vulnTags;
     };
 
     reportUtilities.drawTable = function(d3, tableData, divId) {
@@ -606,11 +646,12 @@ threadfixModule.factory('reportUtilities', function() {
 
 });
 
-threadfixModule.factory('trendingUtilities', function(reportUtilities) {
+threadfixModule.factory('trendingUtilities', function(reportUtilities, customSeverityService, $log) {
 
     var trendingUtilities = {};
     var startIndex = -1, endIndex = -1;
     var firstHashInList, lastHashInList;
+    var currentInfoNo = 0, currentLowNo = 0, currentMedNo = 0, currentHighNo = 0, currentCriticalNo = 0, currentTotalNo = 0;
 
     trendingUtilities.getFirstHashInList = function(){
         return firstHashInList;
@@ -621,18 +662,75 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
     };
 
     trendingUtilities.refreshScans = function($scope){
+
+        var start = new Date();
+
         $scope.loading = true;
         $scope.noData = false;
         var trendingScansData = [];
+        $scope.trendingStartDate = undefined;
+        $scope.trendingEndDate = undefined;
+
         reportUtilities.createTeamAppNames($scope);
 
+        if ($scope.parameters.daysOldModifier) {
+            $scope.trendingEndDate = new Date();
+            if ($scope.parameters.daysOldModifier === "LastYear") {
+                $scope.trendingStartDate = new Date($scope.trendingEndDate.getFullYear(), $scope.trendingEndDate.getMonth() - 11, 1);
+            } else if ($scope.parameters.daysOldModifier === "LastQuarter") {
+                $scope.trendingStartDate = new Date($scope.trendingEndDate.getFullYear(), $scope.trendingEndDate.getMonth() - 2, 1);
+            }
+        } else {
+            if ($scope.parameters.endDate) {
+                $scope.trendingEndDate = $scope.parameters.endDate;
+            }
+            if ($scope.parameters.startDate) {
+                $scope.trendingStartDate = $scope.parameters.startDate;
+            }
+        }
+
+        // Validate time input: if endDate is before startDate
+        if ($scope.parameters.endDate && $scope.parameters.startDate
+            && ($scope.parameters.startDate > $scope.parameters.endDate)) {
+            $scope.loading = false;
+            return trendingScansData;
+        } else if ($scope.parameters.endDate && $scope.filterScans.length > 0
+            && $scope.parameters.endDate < $scope.filterScans[0].importTime) { // If endDate is before importDate of first scan in list
+            $scope.loading = false;
+            return trendingScansData;
+        } else if ($scope.trendingStartDate && $scope.filterScans.length > 0
+            && $scope.trendingStartDate > $scope.filterScans[$scope.filterScans.length - 1].importTime) { // If startDate is after the last scan in list
+
+            $scope.trendingEndDate = ($scope.trendingEndDate) ? $scope.trendingEndDate : new Date();
+
+            if ($scope.trendingStartDate > $scope.trendingEndDate) // Last check if date input is invalid
+                return trendingScansData;
+
+            $log.info("refreshScans.initialize took " + ((new Date()).getTime() - start.getTime()) + " ms");
+
+            var _scan = trendingUtilities.filterDisplayData($scope.filterScans[$scope.filterScans.length - 1], $scope);
+
+            $log.info("refreshScans.filterDisplayData took " + ((new Date()).getTime() - start.getTime()) + " ms");
+
+            trendingScansData.push(createEndHash(null, $scope, [_scan], $scope.trendingStartDate));
+            trendingScansData.push(createEndHash(null, $scope, [_scan]));
+            $scope.loading = false;
+            return trendingScansData;
+        }
+
         trendingUtilities.filterByTime($scope);
+
+        $log.info("refreshScans.filterByTime took " + ((new Date()).getTime() - start.getTime()) + " ms");
+
         if ($scope.filterScans.length === 0) {
             $scope.noData = true;
             $scope.loading = false;
             return trendingScansData;
         }
         trendingScansData = trendingUtilities.updateDisplayData($scope);
+
+        $log.info("refreshScans.updateDisplayData took " + ((new Date()).getTime() - start.getTime()) + " ms");
+
         if (trendingScansData.length === 0) {
             $scope.noData = true;
             $scope.loading = false;
@@ -679,6 +777,9 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
                     trendingScansData.unshift(createStartHash(hashBefore, $scope, trendingScansData));
                     trendingScansData.push(createEndHash(hashAfter, $scope, trendingScansData));
                 }
+            } else if (hashBefore && hashAfter) { //If no scans were found in this period of time, but there were scans before and after
+                trendingScansData.push(createStartHash(hashBefore, $scope, [hashAfter]));
+                trendingScansData.push(createEndHash(hashAfter, $scope, [hashBefore]));
             }
         }
         return trendingScansData;
@@ -721,7 +822,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
         return startHash;
     };
 
-    var createEndHash = function(hashAfter, $scope, trendingScansData) {
+    var createEndHash = function(hashAfter, $scope, trendingScansData, endDate) {
         var endHash = {
             notRealScan : true
         };
@@ -733,7 +834,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
         var keys;
 
         if (!hashAfter) {
-            endHash.importTime=  $scope.trendingEndDate;
+            endHash.importTime=  endDate ? endDate : $scope.trendingEndDate;
             keys = Object.keys(lastHashInList);
             keys.forEach(function(key){
                 if (key != "importTime")
@@ -741,7 +842,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
             });
         } else {
             var rate1 = (hashAfter.importTime)-(lastHashInList.importTime);
-            var rate2 = $scope.trendingEndDate-(hashAfter.importTime);
+            var rate2 = $scope.trendingEndDate-(lastHashInList.importTime);
 
             endHash.importTime = $scope.trendingEndDate;
 
@@ -778,19 +879,19 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
             data.Hidden = scan.numberHiddenVulnerabilities;
         }
         if ($scope.parameters.severities.info) {
-            data.Info = calculateInfo(scan, $scope);
+            data[customSeverityService.getCustomSeverity('Info')] = calculateInfo(scan, $scope);
         }
         if ($scope.parameters.severities.low) {
-            data.Low = calculateLow(scan, $scope);
+            data[customSeverityService.getCustomSeverity('Low')] = calculateLow(scan, $scope);
         }
         if ($scope.parameters.severities.medium) {
-            data.Medium = calculateMedium(scan, $scope);
+            data[customSeverityService.getCustomSeverity('Medium')] = calculateMedium(scan, $scope);
         }
         if ($scope.parameters.severities.high) {
-            data.High = calculateHigh(scan, $scope);
+            data[customSeverityService.getCustomSeverity('High')] = calculateHigh(scan, $scope);
         }
         if ($scope.parameters.severities.critical) {
-            data.Critical = calculateCritical(scan, $scope);
+            data[customSeverityService.getCustomSeverity('Critical')] = calculateCritical(scan, $scope);
         }
         return data;
     };
@@ -799,43 +900,44 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
         var adjustedTotal = scan.numberTotalVulnerabilities -
             scan.numberOldVulnerabilities +
             scan.numberOldVulnerabilitiesInitiallyFromThisChannel;
-        return trendingTotal($scope.totalVulnsByChannelMap, scan, adjustedTotal);
+        currentTotalNo = trendingTotal($scope.totalVulnsByChannelMap, scan, adjustedTotal, currentTotalNo);
+        return currentTotalNo;
     };
 
     var calculateInfo = function(scan, $scope) {
-        return trendingTotal($scope.infoVulnsByChannelMap, scan, scan.numberInfoVulnerabilities);
+        currentInfoNo = trendingTotal($scope.infoVulnsByChannelMap, scan, scan.numberInfoVulnerabilities, currentInfoNo);
+        return currentInfoNo;
     };
 
     var calculateLow = function(scan, $scope) {
-        return trendingTotal($scope.lowVulnsByChannelMap, scan, scan.numberLowVulnerabilities);
+        currentLowNo = trendingTotal($scope.lowVulnsByChannelMap, scan, scan.numberLowVulnerabilities, currentLowNo);
+        return currentLowNo;
     };
 
     var calculateMedium = function(scan, $scope) {
-        return trendingTotal($scope.mediumVulnsByChannelMap, scan, scan.numberMediumVulnerabilities);
+        currentMedNo = trendingTotal($scope.mediumVulnsByChannelMap, scan, scan.numberMediumVulnerabilities, currentMedNo);
+        return currentMedNo;
     };
 
     var calculateHigh = function(scan, $scope) {
-        return trendingTotal($scope.highVulnsByChannelMap, scan, scan.numberHighVulnerabilities);
+        currentHighNo = trendingTotal($scope.highVulnsByChannelMap, scan, scan.numberHighVulnerabilities, currentHighNo);
+        return currentHighNo;
     };
 
     var calculateCritical = function(scan, $scope) {
-        return trendingTotal($scope.criticalVulnsByChannelMap, scan, scan.numberCriticalVulnerabilities);
+        currentCriticalNo = trendingTotal($scope.criticalVulnsByChannelMap, scan, scan.numberCriticalVulnerabilities, currentCriticalNo);
+        return currentCriticalNo;
     };
 
-    var trendingTotal = function(map, scan, newNum) {
+    var trendingTotal = function(map, scan, newNum, currentTotalNo) {
+
+        var numTotal = currentTotalNo + newNum;
+
         if (scan.applicationChannelId) {
+            numTotal = numTotal - (map[scan.applicationChannelId] ? map[scan.applicationChannelId] : 0);
             map[scan.applicationChannelId] = newNum;
         }
 
-        var numTotal = newNum;
-        // This code counts in the old vulns from other channels.
-        for (var key in map) {
-            if (map.hasOwnProperty(key)) {
-                if (!scan.applicationChannelId || scan.applicationChannelId != key) {
-                    numTotal += map[key];
-                }
-            }
-        }
         return numTotal;
     };
 
@@ -882,24 +984,8 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
     trendingUtilities.filterByTime = function($scope) {
         if (!$scope.filterScans || $scope.filterScans.length === 0)
             return;
-        $scope.trendingStartDate = undefined;
-        $scope.trendingEndDate = undefined;
+
         startIndex = -1; endIndex = -1;
-        if ($scope.parameters.daysOldModifier) {
-            $scope.trendingEndDate = new Date();
-            if ($scope.parameters.daysOldModifier === "LastYear") {
-                $scope.trendingStartDate = new Date($scope.trendingEndDate.getFullYear(), $scope.trendingEndDate.getMonth() - 11, 1);
-            } else if ($scope.parameters.daysOldModifier === "LastQuarter") {
-                $scope.trendingStartDate = new Date($scope.trendingEndDate.getFullYear(), $scope.trendingEndDate.getMonth() - 2, 1);
-            }
-        } else {
-            if ($scope.parameters.endDate) {
-                $scope.trendingEndDate = $scope.parameters.endDate;
-            }
-            if ($scope.parameters.startDate) {
-                $scope.trendingStartDate = $scope.parameters.startDate;
-            }
-        }
 
         if (!$scope.trendingStartDate) {
             startIndex = 0;

@@ -15,7 +15,16 @@
 	</div>
 		
 	<div ng-controller="ScanHistoryController" ng-init="loading = true">
-        <!-- TODO re-add pagination -->
+
+		<div ng-form="mappedForm" class="pagination" ng-show="numScans > 100">
+			<pagination class="no-margin" total-items="numScans / 10" max-size="5" page="page"></pagination>
+
+			<input name="pageInput"  ng-enter="goToPage(mappedForm.$valid)" style="width:50px" type="number" ng-model="pageInput" max="{{numberOfPages * 1}}" min="1"/>
+			<button class="btn" ng-class="{ disabled : mappedForm.$invalid }" ng-click="goToPage(mappedForm.$valid)"> Go to Page </button>
+			<span class="errors" ng-show="mappedForm.pageInput.$dirty && mappedForm.pageInput.$error.min || mappedForm.pageInput.$error.max">Input number from 1 to {{numberOfPages}}</span>
+			<span class="errors" ng-show="mappedForm.pageInput.$dirty && mappedForm.pageInput.$error.number">Not a valid number</span>
+		</div>
+
 		<table class="table">
 			<thead>
 				<tr>
@@ -25,10 +34,10 @@
 					<th>Scanner</th>
 					<th>Total Vulns</th>
 					<th>Hidden</th>
-					<th>Critical</th>
-					<th>High</th>
-					<th>Medium</th>
-					<th>Low</th>
+					<th generic-severity="Critical"></th>
+					<th generic-severity="High"></th>
+					<th generic-severity="Medium"></th>
+					<th generic-severity="Low"></th>
 					<th></th>
 				</tr>
 			</thead>
@@ -39,7 +48,7 @@
                 <tr ng-hide="loading || scans" class="bodyRow">
                     <td colspan="10" style="text-align: center;">No Scans found.</td>
                 </tr>
-                <tr ng-show="scans" ng-repeat="scan in scans">
+                <tr ng-show="!loading && scans" ng-repeat="scan in scans">
                     <td>{{ scan.importTime | date:'medium' }}</td>
                     <td>{{ scan.app.name }}</td>
                     <td>{{ scan.team.name }}</td>

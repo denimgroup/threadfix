@@ -5,12 +5,15 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
     var $parent = $scope.$parent;
 
     var getApplication = function() {
-        return $parent.treeApplication;
+        return ($parent.treeApplication) ? $parent.treeApplication : {id: -1};
     };
 
+    var getTeam = function(){
+        return ($parent.treeApplication) ? $parent.treeApplication.team : $parent.treeTeam;
+    }
+
     var getAppUrlBase = function () {
-        var app = getApplication();
-        return "/organizations/" + app.team.id + "/applications/" + app.id;
+        return "/organizations/" + getTeam().id + "/applications/" + getApplication().id;
     };
 
     var getFilteredVulns = function() {
@@ -204,8 +207,11 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
                 if (data.success) {
                     $parent.successMessage = object.vulnerabilityIds.length + " vulnerabilities successfully " + messageExtension + ".";
                     $parent.refresh();
-                    if (refreshReport)
+                    if (refreshReport) {
                         $rootScope.$broadcast('severityChanged');
+                    } else {
+                        $rootScope.$broadcast('scanUploaded');
+                    }
                 } else {
                     $parent.errorMessage = "Failure. Message was : " + data.message;
                 }
@@ -271,6 +277,44 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
                 vuln.vulnerabilityComments.push(comment);
             });
             $log.info("Successfully added comment.");
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    };
+
+
+    $scope.addBatchTagging = function(tags) {
+
+        var filteredVulns = getFilteredVulns();
+        var modalInstance = $modal.open({
+            templateUrl: 'vulnTaggingForm.html',
+            controller: 'ModalControllerWithConfig',
+            resolve: {
+                url: function() {
+                    return tfEncoder.encode(getAppUrlBase() + "/addBatchVulnTagging");
+                },
+                object: function () {
+                    return {vulnerabilityIds : filteredVulns.map(function(vuln) {
+                        return vuln.id;
+                    })};
+                },
+                config: function() {
+                    return {tags: tags};
+                },
+                buttonText: function() {
+                    return "Batch Tagging";
+                }
+            }
+        });
+
+        $scope.currentModal = modalInstance;
+
+        modalInstance.result.then(function (selectedTags) {
+            filteredVulns.forEach(function(vuln){
+                vuln.tags = selectedTags;
+            });
+            $log.info("Successfully tagged to vulnerabilities.");
+            $scope.successMessage = "Successfully tagged to vulnerabilities.";
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });

@@ -26,8 +26,13 @@ package com.denimgroup.threadfix.service;
 import com.denimgroup.threadfix.data.dao.FilterJsonBlobDao;
 import com.denimgroup.threadfix.data.dao.GenericNamedObjectDao;
 import com.denimgroup.threadfix.data.entities.FilterJsonBlob;
+import org.apache.commons.beanutils.BeanToPropertyValueTransformer;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * Created by mac on 5/13/14.
@@ -38,6 +43,9 @@ public class FilterJsonBlobServiceImpl extends AbstractNamedObjectService<Filter
     @Autowired
     private FilterJsonBlobDao filterJsonBlobDao;
 
+    @Autowired(required = false)
+    private AcceptanceCriteriaService acceptanceCriteriaService;
+
     @Override
     public GenericNamedObjectDao<FilterJsonBlob> getDao() {
         return filterJsonBlobDao;
@@ -46,5 +54,17 @@ public class FilterJsonBlobServiceImpl extends AbstractNamedObjectService<Filter
     @Override
     public int updateDefaultTrendingFilter() {
         return filterJsonBlobDao.updateDefaultTrendingFilter();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<FilterJsonBlob> loadAllAssociated() {
+
+        if (acceptanceCriteriaService == null) {
+            return list();
+        }
+        return (List<FilterJsonBlob>)
+                CollectionUtils.collect(acceptanceCriteriaService.loadAll(),
+                        new BeanToPropertyValueTransformer("filterJsonBlob"));
     }
 }

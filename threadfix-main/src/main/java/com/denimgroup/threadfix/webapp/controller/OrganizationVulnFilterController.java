@@ -25,6 +25,8 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.VulnerabilityFilter;
 import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.views.AllViews;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -55,6 +57,7 @@ public class OrganizationVulnFilterController extends AbstractVulnFilterControll
 	}
 	
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
+	@JsonView(AllViews.TableRow.class)
 	public @ResponseBody RestResponse<VulnerabilityFilter> submitNew(@PathVariable int orgId,
 			VulnerabilityFilter vulnerabilityFilter,
 			BindingResult bindingResult,
@@ -63,11 +66,13 @@ public class OrganizationVulnFilterController extends AbstractVulnFilterControll
 	}
 
     @RequestMapping(value = "/map", method = RequestMethod.GET)
-    public @ResponseBody RestResponse<Map<String, Object>> map(@PathVariable int orgId) {
+	@JsonView(AllViews.TableRow.class)
+	public @ResponseBody RestResponse<Map<String, Object>> map(@PathVariable int orgId) {
         return mapBackend(orgId, -1);
     }
 	
 	@RequestMapping(value = "/{filterId}/edit", method = RequestMethod.POST)
+	@JsonView(AllViews.TableRow.class)
 	public @ResponseBody RestResponse<VulnerabilityFilter> submitEdit(
 			@PathVariable int orgId,
 			@PathVariable int filterId,
@@ -78,6 +83,7 @@ public class OrganizationVulnFilterController extends AbstractVulnFilterControll
 	}
 	
 	@RequestMapping(value = "/{filterId}/delete", method = RequestMethod.POST)
+	@JsonView(AllViews.TableRow.class)
 	public String submitDelete(
 			@PathVariable int orgId,
 			@PathVariable int filterId,

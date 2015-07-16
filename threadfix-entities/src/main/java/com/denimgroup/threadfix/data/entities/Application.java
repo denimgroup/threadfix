@@ -147,6 +147,7 @@ public class Application extends AuditableEntity {
 	private List<RemoteProviderApplication> remoteProviderApplications;
 	private List<Document> documents;
 	private List<VulnerabilityFilter> filters;
+    private List<AcceptanceCriteriaStatus> acceptanceCriteriaStatuses;
 
 	// these are here so we don't generate them more than we need to
 	private List<Integer> reportList = null;
@@ -419,6 +420,16 @@ public class Application extends AuditableEntity {
 	public List<Vulnerability> getVulnerabilities() {
 		return vulnerabilities;
 	}
+
+    @OneToMany(mappedBy = "application")
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class })
+    public List<AcceptanceCriteriaStatus> getAcceptanceCriteriaStatuses() {
+        return acceptanceCriteriaStatuses;
+    }
+
+    public void setAcceptanceCriteriaStatuses(List<AcceptanceCriteriaStatus> acceptanceCriteriaStatuses) {
+        this.acceptanceCriteriaStatuses = acceptanceCriteriaStatuses;
+    }
 
 	public void setVulnerabilities(List<Vulnerability> vulnerabilities) {
 		this.vulnerabilities = vulnerabilities;
@@ -899,6 +910,17 @@ public class Application extends AuditableEntity {
 
     public void setTags(List<Tag> tags) {
         this.tags = tags;
+    }
+
+    @Transient
+    public List<AcceptanceCriteria> getAcceptanceCriteria(){
+        List<AcceptanceCriteria> acceptanceCriteriaList = list();
+
+        for (AcceptanceCriteriaStatus acceptanceCriteriaStatus : acceptanceCriteriaStatuses) {
+            acceptanceCriteriaList.add(acceptanceCriteriaStatus.getAcceptanceCriteria());
+        }
+
+        return acceptanceCriteriaList;
     }
 
     @Column

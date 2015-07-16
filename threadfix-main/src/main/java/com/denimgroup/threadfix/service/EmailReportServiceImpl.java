@@ -1,30 +1,23 @@
 package com.denimgroup.threadfix.service;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.listOf;
 
+import javax.annotation.Nullable;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.denimgroup.threadfix.CollectionUtils;
+import com.denimgroup.threadfix.data.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.GenericSeverity;
-import com.denimgroup.threadfix.data.entities.GenericVulnerability;
-import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.data.entities.ScheduledEmailReport;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.data.entities.VulnerabilitySearchParameters;
-import com.denimgroup.threadfix.data.entities.VulnerabilityTreeElement;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.email.EmailConfiguration;
 import com.denimgroup.threadfix.service.email.EmailFilterService;
@@ -46,12 +39,28 @@ public class EmailReportServiceImpl implements EmailReportService {
 	private EmailConfiguration emailConfiguration;
 	@Autowired
 	private EmailFilterService emailFilterService;
+    @Nullable
+    @Autowired(required = false)
+    AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
+
+    private Set<String> getFilteredEmailAddresses(ScheduledEmailReport scheduledEmailReport) {
+
+        List<String> emailAddresses = scheduledEmailReport.getEmailAddresses();
+        List<EmailList> emailLists = scheduledEmailReport.getEmailLists();
+
+        for (EmailList emailList : emailLists) {
+            emailAddresses.addAll(emailList.getEmailAddresses());
+        }
+
+        return emailFilterService.getFilteredEmailAddresses(emailAddresses);
+    }
 
 	@Override
 	public void sendEmailReport(ScheduledEmailReport scheduledEmailReport) {
-		List<Vulnerability> vulnerabilities = getNewVulnerabilities(scheduledEmailReport); //10 most severe vulns
-		List<String> filteredEmailAddresses = emailFilterService.getFilteredEmailAddresses(scheduledEmailReport.getEmailAddresses());
-		if (!emailConfiguration.isConfiguredEmail()){
+		Set<String> filteredEmailAddresses = getFilteredEmailAddresses(scheduledEmailReport);
+        List<Vulnerability> vulnerabilities = getNewVulnerabilities(scheduledEmailReport); //10 most severe vulns
+
+        if (!emailConfiguration.isConfiguredEmail()){
 			LOG.info("Email is not configured, not sending any email");
 			return;
 		}
@@ -63,6 +72,7 @@ public class EmailReportServiceImpl implements EmailReportService {
 			LOG.info("No valid email addresses, not sending any email");
 			return;
 		}
+
 		//everything is ok, send the email
 		String emailBody = getEmailReportBody(scheduledEmailReport);
 		MimeMessage message = javaMailSender.createMimeMessage();
@@ -93,8 +103,7 @@ public class EmailReportServiceImpl implements EmailReportService {
 		parameters.setGenericSeverities(getGenericSeveritiesAboveThreshold(scheduledEmailReport));
 		parameters.setTeams(scheduledEmailReport.getOrganizations());
 		parameters.setDescList(list("severity.intValue"));
-		List<Vulnerability> newVulns = vulnerabilitySearchService.performLookup(parameters);
-		return newVulns;
+		return vulnerabilitySearchService.performLookup(parameters);
 	}
 
 	private void configureDate(VulnerabilitySearchParameters parameters, ScheduledEmailReport scheduledEmailReport){
@@ -159,8 +168,8 @@ public class EmailReportServiceImpl implements EmailReportService {
 			Map<String, Object> severityTreeWithVulns = getSeverityTreeWithVulns(parameters, severitiesAboveThreshold);
 			if (!severityTreeWithVulns.isEmpty()){
 				Map<String, Object> applicationTree = map("name", (Object) application.getName(),
-															"severityTree", severityTreeWithVulns,
-															"url", application.getUrl());
+                        "severityTree", severityTreeWithVulns,
+                        "url", application.getUrl());
 				applicationsModel.add(applicationTree);
 			}
 		}
@@ -173,14 +182,14 @@ public class EmailReportServiceImpl implements EmailReportService {
 			parameters.setGenericSeverities(list(genericSeverity));
 			List<VulnerabilityTreeElement> tree = vulnerabilitySearchService.getTree(parameters);
 			if (!tree.isEmpty()){
-				List<Object> treesWithVuln = contructTreeWithVulns(tree, parameters); //loop on trees to retrieve the vulns while the parameters are configured
+				List<Object> treesWithVuln = constructTreeWithVulns(tree, parameters); //loop on trees to retrieve the vulns while the parameters are configured
 				severityTreeWithVulns.put(genericSeverity.getName(), treesWithVuln);
 			}
 		}
 		return severityTreeWithVulns;
 	}
 
-	private List<Object> contructTreeWithVulns(List<VulnerabilityTreeElement> trees, VulnerabilitySearchParameters parameters) {
+	private List<Object> constructTreeWithVulns(List<VulnerabilityTreeElement> trees, VulnerabilitySearchParameters parameters) {
 		List<Object> treesWithVulns = list();
 		for (VulnerabilityTreeElement tree : trees){
 			Map<String, Object> treeWithVulns = map();
@@ -208,4 +217,55 @@ public class EmailReportServiceImpl implements EmailReportService {
 		}
 		return genericSeveritiesAboveThreshold;
 	}
+
+    @Override
+    public void sendAcceptanceCriteriaReport(List<AcceptanceCriteriaStatus> acceptanceCriteriaStatuses) {
+
+        if (acceptanceCriteriaStatusService != null) {
+            Map<String, List<AcceptanceCriteriaStatus>> emailMap = map();
+
+            for (AcceptanceCriteriaStatus acs : acceptanceCriteriaStatuses) {
+                Set<String> filteredEmailAddresses = emailFilterService.getFilteredEmailAddresses(
+                        acceptanceCriteriaStatusService.getNotificationEmailAddresses(acs));
+
+                LOG.info("Filtered email addresses: " + filteredEmailAddresses.toString());
+
+                for (String email : filteredEmailAddresses) {
+                    if (!emailMap.containsKey(email)) {
+                        emailMap.put(email, CollectionUtils.<AcceptanceCriteriaStatus>list());
+                    }
+                    emailMap.get(email).add(acs);
+                }
+            }
+
+            if(emailMap.size() == 0)
+                return;
+
+            for (Map.Entry<String, List<AcceptanceCriteriaStatus>> entry : emailMap.entrySet()) {
+                String emailAddress = entry.getKey();
+                List<AcceptanceCriteriaStatus> statuses = entry.getValue();
+
+                Map<String, Object> model = map();
+                model.put("statuses", statuses);
+
+                String emailBody = templateBuilderService.prepareMessageFromTemplate(model, "acceptanceCriteriaReport.vm");
+                MimeMessage message = javaMailSender.createMimeMessage();
+
+                try {
+                    message.setSubject("Acceptance Criteria Status Update");
+                    message.setContent(emailBody, "text/html; charset=utf-8");
+                    message.addRecipient(MimeMessage.RecipientType.TO, new InternetAddress(emailAddress));
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    javaMailSender.send(message);
+                    LOG.info("Email report sent normally sent normally");
+                } catch (MailException ex) {
+                    LOG.error("Email not send because of misconfiguration", ex);
+                }
+            }
+        }
+    }
 }

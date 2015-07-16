@@ -13,7 +13,7 @@
 	<table class="dataTable">
 		<tr>
 			<td>Severity / Generic Severity:</td>
-			<td class="inputValue"><c:out value="${ finding.channelSeverity.name }"/> / <c:out value="${ finding.channelSeverity.severityMap.genericSeverity.name }"/></td>
+			<td class="inputValue"><c:out value="${ finding.channelSeverity.name }"/> / <c:out value="${ finding.channelSeverity.severityMap.genericSeverity.displayName }"/></td>
 		</tr>
 		<tr>
 			<td>Vulnerability Type:</td>

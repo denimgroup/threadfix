@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -68,11 +69,12 @@ public class GenericSeverity extends BaseEntity {
 	@NotEmpty(message = "{errors.required}")
 	@Size(max = 50, message = "{errors.maxlength}")
 	private String name;
-	
+
 	private Integer intValue;
 
 	private List<SeverityMap> severityMapping;
 	private List<Vulnerability> vulnerabilities;
+	private String customName;
 
 	@Column(length = 50, nullable = false)
     @JsonView(Object.class)
@@ -117,5 +119,21 @@ public class GenericSeverity extends BaseEntity {
 	@Override
 	public String toString() {
 		return getName();
+	}
+
+	@Column(nullable = true)
+	@JsonView({AllViews.TableRow.class, AllViews.ApplicationIndexView.class})
+	public void setCustomName(String customName) {
+		this.customName = customName;
+	}
+
+	public String getCustomName() {
+		return customName;
+	}
+
+	@JsonView(Object.class)
+	@Transient
+	public String getDisplayName() {
+		return customName == null || customName.trim().length() == 0 ? name : customName;
 	}
 }

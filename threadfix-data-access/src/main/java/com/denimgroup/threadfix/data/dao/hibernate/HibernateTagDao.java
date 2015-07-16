@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 import com.denimgroup.threadfix.data.dao.AbstractNamedObjectDao;
 import com.denimgroup.threadfix.data.dao.TagDao;
 import com.denimgroup.threadfix.data.entities.Tag;
-import org.hibernate.Criteria;
+import com.denimgroup.threadfix.data.enums.TagType;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -63,22 +63,12 @@ public class HibernateTagDao
     }
 
     @Override
-    public Tag retrieveByName(String name) {
-        return (Tag) getSession()
-                .createCriteria(getClassReference())
-                .add(Restrictions.eq("active", true))
-                .add(Restrictions.eq("name", name))
-                .uniqueResult();
-    }
-
-
-    @Override
     public Tag retrieveAppTagByName(String name) {
         return (Tag) getSession()
                 .createCriteria(getClassReference())
                 .add(Restrictions.eq("active", true))
                 .add(Restrictions.eq("name", name))
-                .add(Restrictions.or(Restrictions.isNull("tagForComment"), Restrictions.eq("tagForComment", false)))
+                .add(Restrictions.or(Restrictions.isNull("type"), Restrictions.eq("type", TagType.APPLICATION)))
                 .uniqueResult();
     }
 
@@ -88,7 +78,7 @@ public class HibernateTagDao
                 .createCriteria(getClassReference())
                 .add(Restrictions.eq("active", true))
                 .add(Restrictions.eq("name", name))
-                .add(Restrictions.eq("tagForComment", true))
+                .add(Restrictions.eq("type", TagType.COMMENT))
                 .uniqueResult();
     }
 
@@ -97,7 +87,7 @@ public class HibernateTagDao
         return getSession()
                 .createCriteria(getClassReference())
                 .add(Restrictions.eq("active", true))
-                .add(Restrictions.eq("tagForComment", true))
+                .add(Restrictions.eq("type", TagType.COMMENT))
                 .addOrder(getOrder())
                 .list();
 
@@ -118,8 +108,31 @@ public class HibernateTagDao
         return getSession()
                 .createCriteria(getClassReference())
                 .add(Restrictions.eq("active", true))
-                .add(Restrictions.or(Restrictions.isNull("tagForComment"), Restrictions.eq("tagForComment", false)))
+                .add(Restrictions.or(Restrictions.isNull("type"), Restrictions.eq("type", TagType.APPLICATION)))
                 .addOrder(getOrder())
                 .list();
+    }
+
+    @Override
+    public List<Tag> retrieveAllVulnerabilityTags() {
+        return getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.eq("type", TagType.VULNERABILITY))
+                .addOrder(getOrder())
+                .list();
+    }
+
+    @Override
+    public Tag retrieveTagWithType(String name, TagType type) {
+        if (type == TagType.APPLICATION) {
+            return retrieveAppTagByName(name);
+        } else
+            return (Tag) getSession()
+                    .createCriteria(getClassReference())
+                    .add(Restrictions.eq("active", true))
+                    .add(Restrictions.eq("name", name))
+                    .add(Restrictions.eq("type", type))
+                    .uniqueResult();
     }
 }

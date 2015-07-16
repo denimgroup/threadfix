@@ -172,7 +172,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                     if (!data || data.length < 1) return;
 
                     if (scope.label && (scope.label.teams || scope.label.apps || scope.label.tags))
-                        reportUtilities.drawTitle(svg1, scope.width, scope.label, "Most Vulnerable Applications", 40 - margin.top);
+                        reportUtilities.drawTitle(svg1, scope.width, scope.label, "Most Vulnerable Applications", 20 - margin.top);
 
                     barGraphData(d3, data, color, false, scope.label, reportConstants, textColor);
 
@@ -207,7 +207,10 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                         .attr("class", "bar pointer")
                         .attr("height", 0)
                         .attr("x", function(d) { return x(d.y0); })
-                        .attr("width", function(d) { return x(d.y1) - x(d.y0); })
+                        .attr("width", function(d) {
+                            var number = x(d.y1) - x(d.y0);
+                            if (number > 0)
+                            return number; })
                         .style("fill", function(d) { return d.fillColor; })
                         .on('mouseover', tip.show)
                         .on('mouseout', tip.hide)
@@ -244,8 +247,8 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
     }]);
 
 // Donut
-d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut', 'd3Service', 'reportConstants',
-    function($window, $timeout, d3, d3donut, d3Service, reportConstants) {
+d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut', 'd3Service', 'reportConstants','customSeverityService',
+    function($window, $timeout, d3, d3donut, d3Service, reportConstants, customSeverityService) {
         return {
             restrict: 'EA',
             scope: {
@@ -266,6 +269,10 @@ d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut', 
 
                     if (!data)
                         return;
+
+                    ["Info", "Low", "Medium", "High", "Critical"].forEach(function(severity) {
+                        data[0][customSeverityService.getCustomSeverity(severity)] = data[0][severity];
+                    });
 
                     color.domain(reportConstants.vulnTypeList);
 

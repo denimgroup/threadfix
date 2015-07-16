@@ -6,6 +6,7 @@
     <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
     <cbs:cachebustscript src="/scripts/vuln-search-controller.js"/>
     <cbs:cachebustscript src="/scripts/vuln-search-tree-controller.js"/>
+    <cbs:cachebustscript src="/scripts/bulk-operations-controller.js"/>
     <cbs:cachebustscript src="/scripts/report/report-filter-controller.js"/>
     <cbs:cachebustscript src="/scripts/report/vuln-summary-modal-controller.js"/>
     <c:forEach items="${ reportJsPaths }" var="reportJs">
@@ -23,6 +24,7 @@
     <%@ include file="/WEB-INF/views/config/users/permissibleUsers.jsp" %>
     <%@ include file="/WEB-INF/views/reports/vulnSummaryModal.jsp" %>
     <%@ include file="/WEB-INF/views/applications/forms/vulnCommentForm.jsp"%>
+    <%@ include file="/WEB-INF/views/applications/forms/vulnTaggingForm.jsp"%>
 
     <ul class="breadcrumb">
         <li><a href="<spring:url value="/teams"/>">Applications Index</a> <span class="divider">/</span></li>
@@ -68,7 +70,7 @@
     </div>
 
     <tabset style="margin-top:10px;">
-        <tab heading="{{ applications.length }} Applications" active="showAppsTab" >
+        <tab heading="{{ countApps }} Applications" active="showAppsTab" >
             <%@ include file="applicationsTable.jsp" %>
         </tab>
         <tab heading="{{ vulnerabilityCount }} Vulnerabilities" active="showVulnTab" ng-click="clickVulnTab()" >

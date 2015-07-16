@@ -34,15 +34,19 @@ import org.hibernate.classic.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 /**
  * Hibernate Application DAO implementation. Most basic methods are implemented
@@ -81,7 +85,7 @@ public class HibernateApplicationDao implements ApplicationDao {
     @Override
     @Transactional(readOnly = false) // used to be true
     public Application retrieveById(int id) {
-        return (Application) getActiveAppCriteria().add(Restrictions.eq("id",id)).uniqueResult();
+        return (Application) getActiveAppCriteria().add(Restrictions.eq("id", id)).uniqueResult();
     }
 
     @Override
@@ -168,20 +172,28 @@ public class HibernateApplicationDao implements ApplicationDao {
     public List<Integer> getTopXVulnerableAppsFromList(int numApps, List<Integer> teamIdList,
                                                        List<Integer> applicationIdList) {
         List<Integer> tagIdList = list();
-        return getTopXVulnerableAppsFromList(numApps, teamIdList, applicationIdList, tagIdList);
+        List<Integer> vulnTagIdList = list();
+        return getTopXVulnerableAppsFromList(numApps, teamIdList, applicationIdList, tagIdList, vulnTagIdList);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public List<Integer> getTopXVulnerableAppsFromList(int numApps, List<Integer> teamIdList,
                                                        List<Integer> applicationIdList,
-                                                       List<Integer> tagIdList) {
+                                                       List<Integer> tagIdList,
+                                                       List<Integer> vulnTagIdList) {
         Session session = sessionFactory.getCurrentSession();
         Criteria criteria = session.createCriteria(Application.class);
         criteria.createAlias("vulnerabilities", "vulnerability");
         criteria.add(Restrictions.eq("active", true));
         criteria.add(Restrictions.eq("vulnerability.active", true));
+        criteria.add(Restrictions.eq("vulnerability.hidden", false));
         criteria.add(Restrictions.eq("vulnerability.isFalsePositive", false));
+
+        if (vulnTagIdList.size() > 0) {
+            criteria.createAlias("vulnerability.tags", "tags");
+            criteria.add(Restrictions.in("tags.id", vulnTagIdList));
+        }
 
         if (teamIdList.isEmpty() || applicationIdList.isEmpty()) {
             if (!applicationIdList.isEmpty()) {
@@ -204,7 +216,7 @@ public class HibernateApplicationDao implements ApplicationDao {
 
         criteria.setProjection(Projections.projectionList()
                         .add(Projections.groupProperty("id"))
-                        .add(Projections.alias(Projections.count("vulnerabilities"), "vulnCount"))
+                        .add(Projections.alias(Projections.countDistinct("vulnerability.id"), "vulnCount"))
         );
         criteria.addOrder(Order.desc("vulnCount"));
 
@@ -215,8 +227,8 @@ public class HibernateApplicationDao implements ApplicationDao {
             list.add((Integer) resultArray[0]);
         }
 
-        if (list == null || list.isEmpty())
-            list = Arrays.asList(new Integer[]{-1});
+        if (list.isEmpty())
+            list = Arrays.asList(-1);
         return list;
     }
 
@@ -273,5 +285,127 @@ public class HibernateApplicationDao implements ApplicationDao {
                 .setProjection(Projections.rowCount())
                 .uniqueResult();
         return result == null ? 0 : result;
+    }
+
+    @Override
+    public List<Map<String, Object>> retrieveAppsInfoMap(List<Integer> applicationIdList, List<Integer> vulnTagIds) {
+
+        Session session = sessionFactory.getCurrentSession();
+        Criteria criteria = session.createCriteria(Application.class);
+
+        criteria.createAlias("vulnerabilities", "vulnerability");
+        criteria.createAlias("organization", "team");
+        criteria.add(Restrictions.eq("active", true));
+        criteria.add(Restrictions.eq("vulnerability.active", true));
+        criteria.add(Restrictions.eq("vulnerability.isFalsePositive", false));
+        criteria.createAlias("vulnerability.genericSeverity", "severity");
+
+        if (applicationIdList.size() > 0) {
+            criteria.add(Restrictions.in("id", applicationIdList));
+        }
+
+        if (vulnTagIds.size() > 0) {
+            criteria.createAlias("vulnerability.tags", "tags");
+            criteria.add(Restrictions.in("tags.id", vulnTagIds));
+        }
+
+        criteria.setProjection(Projections.projectionList()
+                        .add(Projections.groupProperty("id"), "appId")
+                        .add(Projections.groupProperty("name"), "appName")
+                        .add(Projections.groupProperty("team.id"), "teamId")
+                        .add(Projections.groupProperty("team.name"), "teamName")
+                        .add(Projections.groupProperty("severity.intValue"), "severityIntValue")
+                        .add(Projections.groupProperty("severity.name"), "severityNameValue")
+                        .add(Projections.alias(Projections.countDistinct("vulnerability.id"), "vulnCount"))
+        );
+        criteria.addOrder(Order.desc("vulnCount"));
+        criteria.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+
+        List results = criteria.list();
+        return results;
+    }
+
+    @Override
+    public Long countApps(Integer teamId, String searchString) {
+
+        return (Long) getSearchAppCriteria(teamId, searchString)
+                .setProjection(Projections.rowCount())
+                .uniqueResult();
+    }
+
+    @Override
+    public List<Application> getSearchResults(Integer teamId, String searchString, int number, int page, Set<Integer> appIds, Set<Integer> teamIds) {
+
+        Criteria criteria = getSearchAppCriteria(teamId, searchString);
+        criteria.addOrder(Order.asc("name"));
+        addFiltering(criteria, teamIds, appIds);
+        return (List<Application>) criteria.setMaxResults(number)
+                .setFirstResult((page - 1) * number)
+                .list();
+    }
+
+    @Override
+    public Long countApps(Integer orgId, String searchString, Set<Integer> appIds, Set<Integer> teamIds) {
+        Criteria criteria = getSearchAppCriteria(orgId, searchString);
+        addFiltering(criteria, teamIds, appIds);
+
+        return (Long) criteria.setProjection(Projections.rowCount())
+                .uniqueResult();
+    }
+
+    @Override
+    public Long countVulns(Integer orgId, Set<Integer> appIds, Set<Integer> teamIds) {
+        Criteria criteria = getSearchAppCriteria(orgId, null);
+        addFiltering(criteria, teamIds, appIds);
+
+        return (Long) criteria.setProjection(Projections.sum("totalVulnCount"))
+                .uniqueResult();
+    }
+
+    private Criteria getSearchAppCriteria(Integer orgId, String searchString) {
+        Criteria criteria = getActiveAppCriteria();
+
+        criteria.createAlias("organization", "team");
+        criteria.add(Restrictions.eq("team.id", orgId));
+        if (searchString != null && !searchString.isEmpty()){
+            criteria.add(Restrictions.like("name", "%" + searchString + "%"));
+        }
+
+        return criteria;
+    }
+
+    private void addFiltering(Criteria criteria, Set<Integer> teamIds, Set<Integer> appIds) {
+
+        boolean useAppIds = appIds != null,
+                useTeamIds = teamIds != null;
+
+        if (teamIds != null && teamIds.isEmpty()) {
+            teamIds = set(0);
+        }
+
+        if (appIds != null && appIds.isEmpty()) {
+            appIds = set(0);
+        }
+
+        if (!useAppIds && !useTeamIds) {
+            return ;
+        }
+
+        if (useAppIds && useTeamIds) {
+            criteria
+                    .add(Restrictions.eq("team.active", true))
+                    .add(Restrictions.or(
+                            Restrictions.in("id", appIds),
+                            Restrictions.in("team.id", teamIds)
+                    ));
+        } else if (useAppIds) {
+            criteria
+                    .add(Restrictions.in("id", appIds));
+        } else {
+            criteria
+                    .add(Restrictions.in("team.id", teamIds))
+                    .add(Restrictions.eq("team.active", true));
+        }
+
     }
 }

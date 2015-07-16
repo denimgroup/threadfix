@@ -42,6 +42,8 @@ public interface QueueConstants {
 
     static final String STATISTICS_UPDATE = "Statistics Update";
 
+	static final String STATISTICS_TEAM_UPDATE = "Statistics Team Update";
+
     static final String VULNS_FILTER = "Vulnerabilities Filter";
 
 }

@@ -42,6 +42,7 @@ import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.CollectionUtils.setFrom;
 import static com.denimgroup.threadfix.util.CSVExportProperties.*;
 
 /**
@@ -102,6 +103,8 @@ public class ReportsServiceImpl implements ReportsService {
     @Override
     public Map<String, Object> generateTrendingReport(ReportParameters parameters, HttpServletRequest request) {
 
+        long start = System.currentTimeMillis();
+
         Map<String, Object> map = map();
 
         List<Integer> applicationIdList = getApplicationIdList(parameters);
@@ -110,12 +113,16 @@ public class ReportsServiceImpl implements ReportsService {
             return map;
         }
 
+        log.info("getAppList took " + (System.currentTimeMillis() - start) + " ms");
+
         List<Scan> scanList = scanDao.retrieveByApplicationIdList(applicationIdList);
         if (scanList == null || scanList.isEmpty()) {
             log.info("Unable to fill Report - no scans were found.");
             return map;
         }
         map.put("scanList", scanList);
+
+        log.info("generateTrendingReport took " + (System.currentTimeMillis() - start) + " ms");
 
         return map;
     }
@@ -124,6 +131,9 @@ public class ReportsServiceImpl implements ReportsService {
     public Map<String, Object> generateSnapshotReport(ReportParameters parameters, HttpServletRequest request) {
         Map<String, Object> map = map();
         List<Integer> applicationIdList = getApplicationIdList(parameters);
+
+        Set<Integer> appIdSet = setFrom(applicationIdList);
+
         if (applicationIdList.isEmpty()) {
             log.info("No applications found.");
             return map;
@@ -133,6 +143,9 @@ public class ReportsServiceImpl implements ReportsService {
         // Portfolio report
         List<Map<String, Object>> appList = list();
         for (Application application: applicationDao.retrieveAllActive()) {
+            if (!appIdSet.contains(application.getId())) {
+                continue;
+            }
             if (application.getScans() != null && application.getScans().size() > 0)
                 appList.add(CollectionUtils.<String, Object>map(
                         "appId", application.getId(),
@@ -164,6 +177,7 @@ public class ReportsServiceImpl implements ReportsService {
         List<Integer> teamIdList = list();
         List<Integer> applicationIdList = list();
         List<Integer> tagIdList = list();
+        List<Integer> vulnTagIdList = list();
 
         vulnerabilitySearchService.applyPermissions(parameters);
 
@@ -176,8 +190,18 @@ public class ReportsServiceImpl implements ReportsService {
         for (Tag tag: parameters.getTags())
             tagIdList.add(tag.getId());
 
-        List<Integer> top20Apps = applicationDao.getTopXVulnerableAppsFromList(20, teamIdList, applicationIdList, tagIdList);
-        map.put("appList", getTopAppsListInfo(top20Apps));
+        for (Tag tag: parameters.getVulnTags()) {
+            vulnTagIdList.add(tag.getId());
+        }
+
+        List<Integer> top20Apps = applicationDao.getTopXVulnerableAppsFromList(20, teamIdList, applicationIdList, tagIdList, vulnTagIdList);
+
+        if (vulnTagIdList.size() == 0) { // Only query from application table
+            map.put("appList", getTopAppsListInfo(top20Apps));
+        } else { // Join with vulnerability table
+            map.put("rawAppList", applicationDao.retrieveAppsInfoMap(applicationIdList, vulnTagIdList));
+        }
+
         return map;
     }
 

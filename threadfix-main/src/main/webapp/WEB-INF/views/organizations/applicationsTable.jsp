@@ -15,6 +15,33 @@
     </div>
 </c:if>
 
+<div
+    id="teamPaginationDiv{{ team.id }}">
+        <div class="pagination" ng-init="page = 1">
+            <input id="appSelectTypeahead{{team.id}}"
+                   type="text"
+                   class="form-control"
+                   ng-model="goToApp"
+                   placeholder="Application Search (press Enter)"
+                   ng-enter="searchApps(goToApp)"/>
+
+            <pagination ng-show="currentCount > numberToShow"
+                    id="pagination{{team.id}}"
+                        class="no-margin"
+                        total-items="currentCount / numberToShow * 10"
+                        max-size="5"
+                        page="page"
+                        first-text="&laquo;"
+                        last-text="&raquo;"
+                        boundary-links="true"
+                        direction-links="false"
+                        ng-model="page"
+                        ng-click="updatePage(page, goToApp)"></pagination>
+        </div>
+
+
+</div>
+
 <table class="table table-striped">
     <thead>
     <tr>
@@ -22,19 +49,19 @@
         <th class="long">URL</th>
         <th class="short">Criticality</th>
         <th class="short">Open Vulns</th>
-        <th class="short">Critical</th>
-        <th class="short">High</th>
-        <th class="short">Medium</th>
-        <th class="short">Low</th>
-        <th class="short">Info</th>
+        <th class="short" generic-severity="Critical"></th>
+        <th class="short" generic-severity="High"></th>
+        <th class="short" generic-severity="Medium"></th>
+        <th class="short" generic-severity="Low"></th>
+        <th class="short" generic-severity="Info"></th>
     </tr>
     </thead>
     <tbody id="applicationsTableBody">
-    <tr ng-hide="applications" class="bodyRow">
+    <tr ng-hide="loadingCurrentApps || currentApplications" class="bodyRow">
         <td colspan="9" style="text-align:center;">No applications found.</td>
     </tr>
-    <tr ng-show="applications"
-        ng-repeat="app in applications" class="bodyRow">
+    <tr ng-show="!loadingCurrentApps && currentApplications"
+        ng-repeat="app in currentApplications" class="bodyRow">
         <td class="pointer ellipsis" ng-click="goToPage(app)" style="max-width:200px;" id="appName{{ $index }}">
             <a id="appLink{{ $index }}"> {{ app.name }} </a>
         </td>

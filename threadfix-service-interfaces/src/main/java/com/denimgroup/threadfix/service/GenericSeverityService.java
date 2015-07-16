@@ -23,15 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.util.List;
-
 import com.denimgroup.threadfix.data.entities.GenericSeverity;
 
-public interface GenericSeverityService {
+public interface GenericSeverityService extends GenericNamedObjectService<GenericSeverity> {
 
-	List<GenericSeverity> loadAll();
-	
-	GenericSeverity load(String name);
-	
-	GenericSeverity load(int id);
+    boolean canSetCustomNameTo(int genericSeverityId, String text);
+
 }

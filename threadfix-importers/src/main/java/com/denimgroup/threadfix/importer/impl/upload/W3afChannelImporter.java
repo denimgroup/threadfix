@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.importer.impl.upload;
 
 import com.denimgroup.threadfix.annotations.ScanImporter;
+import com.denimgroup.threadfix.annotations.StartingTagSet;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -52,7 +53,8 @@ import static com.denimgroup.threadfix.CollectionUtils.map;
  * 
  * @author mcollins
  */
-@ScanImporter(scannerName = ScannerDatabaseNames.W3AF_DB_NAME, startingXMLTags = { "w3afrun" })
+@ScanImporter(scannerName = ScannerDatabaseNames.W3AF_DB_NAME,
+            startingXMLTagSets = {@StartingTagSet("w3afrun"), @StartingTagSet("w3af-run") })
 public class W3afChannelImporter extends AbstractChannelImporter {
 
     public static final String POTENTIALLY_INTERESTING_FILE = "Potentially interesting file";
@@ -72,8 +74,9 @@ public class W3afChannelImporter extends AbstractChannelImporter {
     public Scan parseInput() {
         try {
             removeTagFromInputStream("httpresponse");
+            removeTagFromInputStream("http-response");
         } catch (IOException e) {
-            log.error("Encountered IOException while trying to remove the httpresponse tag.", e);
+            log.error("Encountered IOException while trying to remove the httpresponse tag in parseInput.", e);
         }
 
         return parseSAXInput(new W3afSAXParser());
@@ -137,10 +140,26 @@ public class W3afChannelImporter extends AbstractChannelImporter {
         private Map<FindingKey, String> findingMap = map();
         private Boolean inVuln = false;
         private String path, param, vuln, severity;
+        private String description = null,
+                        detailDescription = null,
+                        fixGuidance = null;
+        private boolean getText = false;
 
 
-        public void add(Finding finding) {
+
+        private void addFinding() {
+            findingMap.put(FindingKey.PATH, path);
+            findingMap.put(FindingKey.PARAMETER, param);
+            findingMap.put(FindingKey.VULN_CODE, vuln);
+            findingMap.put(FindingKey.SEVERITY_CODE, severity);
+            findingMap.put(FindingKey.RAWFINDING, currentRawFinding.toString());
+            findingMap.put(FindingKey.RECOMMENDATION, fixGuidance);
+            findingMap.put(FindingKey.DETAIL, detailDescription);
+
+            Finding finding = constructFinding(findingMap);
+
             if (finding != null) {
+                finding.setLongDescription(description);
                 finding.setNativeId(getNativeId(finding));
                 finding.setIsStatic(false);
                 saxFindingList.add(finding);
@@ -154,6 +173,8 @@ public class W3afChannelImporter extends AbstractChannelImporter {
         public void startElement(String uri, String name, String qName, Attributes atts) {
             if ("w3afrun".equals(qName))
                 date = DateUtils.getCalendarFromString(dateFormatString, atts.getValue("startstr"));
+            if ("w3af-run".equals(qName))
+                date = DateUtils.getCalendarFromString(dateFormatString, atts.getValue("start-long"));
 
             if ("vulnerability".equals(qName) && atts.getValue("url") != null &&
                     !atts.getValue("url").isEmpty()) {
@@ -179,20 +200,28 @@ public class W3afChannelImporter extends AbstractChannelImporter {
                 vuln = atts.getValue("name");
                 severity = "Info";
             }
+            if ("description".equals(qName)) {
+                description = null;
+                getText = true;
+            }
+            else if ("long-description".equals(qName)) {
+                detailDescription = null;
+                getText = true;
+            }
+            else if ("fix-guidance".equals(qName)) {
+                fixGuidance = null;
+                getText = true;
+            }
+            else
+                getText = false;
         }
 
         public void endElement(String uri, String name, String qName) {
-            if (inVuln) {
+            if (inVuln
+                    && "vulnerability".equals(qName)|"information".equals(qName)) {
                 currentRawFinding.append("</").append(qName).append(">");
 
-                findingMap.put(FindingKey.PATH, path);
-                findingMap.put(FindingKey.PARAMETER, param);
-                findingMap.put(FindingKey.VULN_CODE, vuln);
-                findingMap.put(FindingKey.SEVERITY_CODE, severity);
-                findingMap.put(FindingKey.RAWFINDING, currentRawFinding.toString());
-
-                Finding finding = constructFinding(findingMap);
-                add(finding);
+                addFinding();
 
                 inVuln = false;
                 param = null;
@@ -201,6 +230,22 @@ public class W3afChannelImporter extends AbstractChannelImporter {
                 severity = null;
                 currentRawFinding.setLength(0);
 
+                description = null;
+                detailDescription = null;
+                fixGuidance = null;
+            }
+
+            if ("description".equals(qName)) {
+                description = getBuilderText();
+                getText = false;
+            }
+            if ("long-description".equals(qName)) {
+                detailDescription = getBuilderText();
+                getText = false;
+            }
+            if ("fix-guidance".equals(qName)) {
+                fixGuidance = getBuilderText();
+                getText = false;
             }
         }
 
@@ -208,6 +253,8 @@ public class W3afChannelImporter extends AbstractChannelImporter {
         {
             if (inVuln)
                 currentRawFinding.append(ch,start,length);
+            if (getText)
+                addTextToBuilder(ch, start, length);
         }
     }
 
@@ -217,8 +264,9 @@ public class W3afChannelImporter extends AbstractChannelImporter {
 
         try {
             removeTagFromInputStream("httpresponse");
+            removeTagFromInputStream("http-response");
         } catch (IOException e) {
-            log.error("Encountered IOException while trying to remove teh httpresponse tag", e);
+            log.error("Encountered IOException while trying to remove the httpresponse tag in checkFile.", e);
         }
 
         return testSAXInput(new W3afSAXValidator());
@@ -253,6 +301,13 @@ public class W3afChannelImporter extends AbstractChannelImporter {
                 testDate = DateUtils.getCalendarFromString(dateFormatString, atts.getValue("startstr"));
                 hasDate = testDate != null;
             }
+
+            if (!correctFormat && "w3af-run".equals(qName)) {
+                correctFormat = true;
+                testDate = DateUtils.getCalendarFromString(dateFormatString, atts.getValue("start-long"));
+                hasDate = testDate != null;
+            }
+
         }
     }
 }

@@ -24,10 +24,8 @@
 
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
-import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
@@ -73,9 +71,8 @@ public interface RemoteProviderApplicationService {
 
 	/**
 	 *
-	 * @param result
-	 * @param remoteProviderApplication
-	 * @param application
+	 * @param remoteProviderApplicationId
+	 * @param applicationId
 	 */
 	String processApp(int remoteProviderApplicationId, int applicationId);
 

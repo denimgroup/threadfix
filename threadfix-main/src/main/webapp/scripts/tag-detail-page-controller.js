@@ -4,6 +4,9 @@ myAppModule.controller('TagDetailPageController', function ($scope, $window, $ht
 
     $scope.tagId = $window.location.pathname.match(/([0-9]+)/)[0];
     $scope.currentUrl = "/configuration/tags/" + $scope.tagId;
+    $scope.numberToShow = 50;
+    $scope.vulnPage = 1;
+
     $scope.$on('rootScopeInitialized', function() {
         $scope.loading = true;
         $http.get(tfEncoder.encode($scope.currentUrl + '/objects')).
@@ -11,8 +14,18 @@ myAppModule.controller('TagDetailPageController', function ($scope, $window, $ht
                 $scope.loading = false;
                 if (data.success) {
                     $scope.appList = data.object.appList;
+                    $scope.vulnListOfVulnTags = data.object.vulnList;
+                    $scope.allVulnListOfVulnTags = data.object.vulnList;
+
+                    $scope.allVulnListOfVulnTags.sort(function(vuln1, vuln2){
+                        return vuln1.severityId - vuln2.severityId;
+                    });
+
+                    $scope.numVulns = $scope.allVulnListOfVulnTags.length;
+                    $scope.numberOfPages = Math.ceil($scope.numVulns/$scope.numberToShow);
+                    $scope.init($scope.vulnPage);
                     $scope.commentList = data.object.commentList;
-                    $scope.isCommentTag = data.object.isCommentTag;
+                    $scope.type = data.object.type;
                     getVulnList();
                 } else {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
@@ -23,6 +36,18 @@ myAppModule.controller('TagDetailPageController', function ($scope, $window, $ht
                 $scope.errorMessage = "Failed to retrieve waf list. HTTP status was " + status;
             });
     });
+
+    $scope.init = function(vulnPage){
+        $scope.vulnPage = vulnPage;
+        $scope.vulnListOfVulnTags = $scope.allVulnListOfVulnTags.slice(($scope.vulnPage-1) * $scope.numberToShow, $scope.vulnPage * $scope.numberToShow);
+    }
+
+    $scope.goToPage = function(valid, vulnPageInput) {
+        if (valid) {
+            $scope.vulnPage = vulnPageInput;
+            $scope.init($scope.vulnPage);
+        }
+    };
 
     var getVulnList = function(){
         var vulnMap = {};
@@ -70,7 +95,7 @@ myAppModule.controller('TagDetailPageController', function ($scope, $window, $ht
         });
 
         $scope.allVulnList.sort(function(vuln1, vuln2){
-            return vuln1.vulnerabilityComments.length - vuln2.vulnerabilityComments.length;
+            return vuln2.genericSeverity.intValue - vuln1.genericSeverity.intValue;
         });
 
         $scope.$broadcast("complianceVulnList", $scope.allVulnList);
@@ -82,6 +107,41 @@ myAppModule.controller('TagDetailPageController', function ($scope, $window, $ht
 
     $scope.goToTeam = function(app) {
         $window.location.href = tfEncoder.encode("/organizations/" + app.team.id);
+    };
+
+    $scope.goToAppFromVuln = function (vuln) {
+        $window.location.href = tfEncoder.encode("/organizations/" + vuln.team.id + "/applications/" + vuln.app.id);
+    }
+
+    $scope.goToTeamFromVuln = function (vuln) {
+        $window.location.href = tfEncoder.encode("/organizations/" + vuln.team.id);
+    }
+
+    $scope.goToTag = function (tag) {
+        window.location.href = tfEncoder.encode("/configuration/tags/" + tag.id + "/view");
+    }
+
+    $scope.goToVuln = function (vuln) {
+        $window.location.href = tfEncoder.encode("/organizations/" + vuln.team.id + "/applications/" + vuln.app.id + "/vulnerabilities/" + vuln.id);
+    };
+
+    $scope.expand = function (vulnList) {
+        vulnList.forEach(function (vuln) {
+            vuln.expanded = true;
+        });
+    };
+
+    $scope.contract = function (vulnList) {
+        vulnList.forEach(function (vuln) {
+            vuln.expanded = false;
+        });
+    };
+
+    $scope.toggle = function (vuln) {
+        if (typeof vuln.expanded === "undefined") {
+            vuln.expanded = false;
+        }
+        vuln.expanded = !vuln.expanded;
     };
 
 });

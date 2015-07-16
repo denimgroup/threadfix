@@ -148,11 +148,9 @@ public class ScheduledScanScheduler {
         JobDetail job = JobBuilder
                 .newJob(ScheduledScanJob.class)
                 .withIdentity(jobName, groupName).build();
-        job.getJobDataMap().put("appId", scheduledScan.getApplication().getId());
-        job.getJobDataMap().put("scanner", scheduledScan.getScanner());
-        if (scheduledScan.getScanConfig() != null) {
-            job.getJobDataMap().put("scanConfigId", scheduledScan.getScanConfig().getId());
-        }
+
+        job.getJobDataMap().put("scheduledScanId", scheduledScan.getId());
+
         job.getJobDataMap().put("queueSender", queueSender);
         try {
             String cronExpression = getCronExpression(scheduledScan);

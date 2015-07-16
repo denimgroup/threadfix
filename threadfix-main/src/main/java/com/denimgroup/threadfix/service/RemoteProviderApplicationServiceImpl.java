@@ -30,7 +30,6 @@ import com.denimgroup.threadfix.data.dao.RemoteProviderApplicationDao;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.interop.RemoteProviderFactory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.queue.QueueSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -258,7 +257,7 @@ public class RemoteProviderApplicationServiceImpl implements
 			store(remoteProviderApplication);
 			applicationDao.saveOrUpdate(application);
 		}
-		
+
 		return "";
 	}
 	

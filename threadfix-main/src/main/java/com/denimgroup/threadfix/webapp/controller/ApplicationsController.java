@@ -106,6 +106,8 @@ public class ApplicationsController {
     private CacheBustService cacheBustService;
     @Autowired
     private GenericSeverityService genericSeverityService;
+    @Autowired(required = false)
+    private AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -199,11 +201,15 @@ public class ApplicationsController {
         map.put("wafList", wafService.loadAll());
         map.put("wafTypeList", wafService.loadAllWafTypes());
 
-        // Generic Severities
-        map.put("genericSeverityList", genericSeverityService.loadAll());
+//        // Generic Severities
+//        map.put("genericSeverityList", genericSeverityService.loadAll());
 
         // basic information
         map.put("application", application);
+
+        if (acceptanceCriteriaStatusService != null) {
+            map.put("passFilters", acceptanceCriteriaStatusService.passFilters(application));
+        }
 
         // scans tab
         map.put("scans", checkDownloadable(application.getScans()));

@@ -4,8 +4,8 @@
 
     <!-- This is the Action button -->
     <c:if test="${ canModifyVulnerabilities || canSubmitDefects || canManageGrcTools }">
-        <div ng-if="treeApplication">
-            <div ng-show="treeApplication && vulnTree" id="btnDiv" class="btn-group" ng-controller="BulkOperationsController">
+        <div ng-if="treeApplication || treeTeam">
+            <div ng-show="(treeApplication || treeTeam) && vulnTree" id="btnDiv" class="btn-group" ng-controller="BulkOperationsController">
                 {{ $parent | json }}
                 <button ng-hide="submitting" id="actionItems" class="btn dropdown-toggle" data-toggle="dropdown" type="button">
                     Action <span class="caret"></span>
@@ -26,11 +26,12 @@
                         <li class="dropdown-submenu">
                             <a tabindex="-1" href="#" id="changeSeverityButton">Change Severity</a>
                             <ul class="dropdown-menu">
-                                <li ng-repeat="genericSeverity in genericSeverityList" ng-click="changeSeverity(genericSeverity)"><a class="pointer">{{genericSeverity.name}}</a></li>
+                                <li ng-repeat="genericSeverity in genericSeverityList" ng-click="changeSeverity(genericSeverity)"><a class="pointer">{{genericSeverity.displayName}}</a></li>
                             </ul>
                         </li>
+                        <li><a class="pointer" id="addBatchTaggingBtn" ng-click="addBatchTagging(vulnTags)">Batch Tagging</a></li>
                         <c:if test="${ canSubmitComments }">
-                            <li><a class="pointer" id="addBatchCommentBtn" ng-click="addBatchComment(commentTags)">Add Batch Comment</a></li>
+                            <li><a class="pointer" id="addBatchCommentBtn" ng-click="addBatchComment(commentTags)">Batch Comment</a></li>
                         </c:if>
                     </c:if>
                 </ul>

@@ -76,9 +76,9 @@ public class TeamDetailPageController {
     @Autowired
     private DefaultConfigService defaultConfigService;
     @Autowired
-    private ReportService reportService;
-    @Autowired
     private CacheBustService cacheBustService;
+    @Autowired
+    private GenericSeverityService genericSeverityService;
 
     @RequestMapping(method=RequestMethod.GET)
     public ModelAndView detail(@PathVariable("orgId") int orgId,
@@ -102,7 +102,9 @@ public class TeamDetailPageController {
                     Permission.CAN_MODIFY_VULNERABILITIES,
                     Permission.CAN_MANAGE_VULN_FILTERS,
                     Permission.CAN_GENERATE_REPORTS,
-                    Permission.CAN_MANAGE_USERS);
+                    Permission.CAN_MANAGE_USERS,
+                    Permission.CAN_SUBMIT_COMMENTS,
+                    Permission.CAN_MANAGE_TAGS);
             mav.addObject("apps", apps);
             mav.addObject(organization);
 
@@ -135,7 +137,10 @@ public class TeamDetailPageController {
         final RestResponse<? extends Object> restResponse;
 
         Organization organization = organizationService.loadById(orgId);
+        long start = System.currentTimeMillis();
         List<Application> apps = PermissionUtils.filterApps(organization);
+
+        log.info("Filtering apps from team took " + (System.currentTimeMillis() - start) + " ms");
 
         if (organization == null){
             restResponse = RestResponse.failure("Unable to find the requested team.");
@@ -145,12 +150,19 @@ public class TeamDetailPageController {
         } else {
             Map<String, Object> map = new HashMap<>();
             map.put("team", organization);
+
+            map.put("countApps", organizationService.countApps(orgId, null));
+            map.put("vulnerabilityCount", organizationService.countVulns(orgId));
+
             map.put("applications", apps);
+            map.put("genericSeverities", genericSeverityService.loadAll());
             if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,null)) {
                 map.put("users", userService.getPermissibleUsers(orgId, null));
             }
             restResponse = RestResponse.success(map);
         }
+
+        log.info("Get team info took " + (System.currentTimeMillis() - start) + " ms");
 
         return restResponse;
     }

@@ -11,6 +11,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             teams: [],
             applications: [],
             tags: [],
+            vulnTags: [],
             scanners: [],
             genericVulnerabilities: [],
             severities: {},
@@ -52,8 +53,10 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                         $scope.teams = data.object.teams;
                         $scope.tags = data.object.tags;
                         $scope.commentTags = data.object.commentTags;
+                        $scope.vulnTags = data.object.vulnTags;
                         $scope.tags.sort(nameCompare);
                         $scope.commentTags.sort(nameCompare);
+                        $scope.vulnTags.sort(nameCompare);
                         $scope.scanners = data.object.scanners;
                         $scope.genericVulnerabilities = data.object.vulnTypes;
                         $scope.searchApplications = data.object.applications;
@@ -63,6 +66,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                             return (!parameters.filterType || parameters.filterType.isVulnSearchFilter);
                         });
                         $scope.filterParameters = data.object.filterParameters;
+                        $scope.genericSeverityList = data.object.genericSeverities;
                     }
                     if ($scope.filterParameters) {
 
@@ -90,7 +94,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                 $scope.$parent.tabs.forEach(function(tab){
                     tab.active = false;
                 });
-            };
+            }
 
             // Remove the element team of All in vuln search page
             if ($scope.$parent.teams) {
@@ -103,13 +107,13 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                 if (index > -1) {
                     $scope.$parent.teams.splice(index, 1);
                 }
-            };
+            }
 
             $scope.filterParameters = $scope.$parent.filterParameters;
             $scope.resetFilters();
             vulnSearchParameterService.convertFromSpringToAngular($scope, $scope.filterParameters);
             $scope.refresh();
-        };
+        }
 
     });
 
@@ -142,15 +146,17 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
     });
 
     $scope.refreshHeading = function() {
-        $http.get(tfEncoder.encode("/reports/update/heading/"+ $scope.$parent.appId)).
-            success(function(data, status, headers, config, response) {
-                $rootScope.$broadcast('scans', data.object.scans);
-                $rootScope.$broadcast('numVulns',  data.object.numVulns);
-            }).
-            error(function(data, status, headers, config) {
-                $scope.errorMessage = "Failed to retrieve heading information. HTTP status was " + status;
-                $scope.loadingTree = false;
-            });
+        if ($scope.$parent.appId) {
+            $http.get(tfEncoder.encode("/reports/update/heading/"+ $scope.$parent.appId)).
+                success(function(data, status, headers, config, response) {
+                    $rootScope.$broadcast('scans', data.object.scans);
+                    $rootScope.$broadcast('numVulns',  data.object.numVulns);
+                }).
+                error(function(data, status, headers, config) {
+                    $scope.errorMessage = "Failed to retrieve heading information. HTTP status was " + status;
+                    $scope.loadingTree = false;
+                });
+        }
     };
 
     $scope.$on('updateDisplayData', function(event, parameters) {

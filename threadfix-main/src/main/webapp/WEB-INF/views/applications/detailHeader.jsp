@@ -63,13 +63,18 @@
             </div>
         </c:if>
     </h2>
+
+    <div ng-show="config.application.acceptanceCriteriaStatuses">
+        Acceptance Criteria:
+        <span id="appFilterStatus" ng-show="config.passFilters" class="badge" ng-class="{'badge-ac-status-passing': true}">PASS</span>
+        <span id="appFilterStatus" ng-hide="config.passFilters" class="badge" ng-class="{'badge-ac-status-failing': true}">FAIL</span>
+    </div>
     <c:if test="${ canManageTags }">
-        <span style="font-weight: bold;" ng-repeat="appTag in config.applicationTags">
-            <a class="pointer" id="appTag{{ $index }}" ng-click="goToTag(appTag)">{{appTag.name}}<span ng-hide="$index===config.applicationTags.length-1">,</span></a>
+        <span style="font-weight: bold;" ng-repeat="appTag in config.applicationTags" class="pointer badge" id="appTag{{ $index }}" ng-click="goToTag(appTag)" class="badge" ng-class="{'badge-application-tag': true}">{{appTag.name}}&nbsp;
         </span>
     </c:if>
     <c:if test="${ !canManageTags }">
-        <span style="font-weight: bold;" id="appLabelTag{{ $index }}" ng-repeat="appTag in config.applicationTags">{{appTag.name}}<span ng-hide="$index===config.applicationTags.length-1">,&nbsp;</span></span>
+        <span style="font-weight: bold;" id="appLabelTag{{ $index }}" ng-repeat="appTag in config.applicationTags" class="badge" ng-class="{'badge-application-tag': true}">{{appTag.name}}</span>
     </c:if>
 </div>
 

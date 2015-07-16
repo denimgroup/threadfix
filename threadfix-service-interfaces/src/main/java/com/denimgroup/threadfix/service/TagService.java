@@ -24,6 +24,8 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.enums.TagType;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
@@ -44,4 +46,15 @@ public interface TagService {
     List<Tag> loadAllApplicationTags();
     List<Tag> loadAllCommentTags();
 
+    void updateTagTypes();
+
+    List<Tag> loadAllVulnTags();
+
+    Tag loadTagWithType(String name, TagType type);
+
+    void validate(Tag tag, BindingResult result);
+
+    boolean isValidTags(List<Tag> allTags, List<Tag> tags);
+
+    boolean containTag(List<Tag> allTags, Tag tag);
 }

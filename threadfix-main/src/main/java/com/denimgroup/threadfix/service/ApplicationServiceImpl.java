@@ -92,6 +92,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Autowired
     private RepositoryServiceFactory repositoryServiceFactory;
 
+    @Nullable
+    @Autowired(required = false)
+    private AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
+
     @Override
 	public List<Application> loadAllActive() {
 		return applicationDao.retrieveAllActive();
@@ -187,6 +191,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 		application.setScheduledScans(null);
 
 		application.getOrganization().updateVulnerabilityReport();
+
+        if (acceptanceCriteriaStatusService != null && application.getAcceptanceCriteriaStatuses() != null) {
+            for (AcceptanceCriteriaStatus acceptanceCriteriaStatus: application.getAcceptanceCriteriaStatuses()) {
+                acceptanceCriteriaStatusService.delete(acceptanceCriteriaStatus);
+                acceptanceCriteriaStatus.setApplication(null);
+            }
+        }
 
 		applicationDao.saveOrUpdate(application);
 	}

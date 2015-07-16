@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.data.dao;
 
 import com.denimgroup.threadfix.data.entities.Tag;
+import com.denimgroup.threadfix.data.enums.TagType;
 
 import java.util.List;
 
@@ -39,6 +40,8 @@ public interface TagDao extends GenericNamedObjectDao<Tag> {
     List<Tag> retrieveAllCommentTags();
     List<Tag> retrieveTagsByName(String name);
     List<Tag> retrieveAllApplicationTags();
+    List<Tag> retrieveAllVulnerabilityTags();
 
 
+    Tag retrieveTagWithType(String name, TagType type);
 }

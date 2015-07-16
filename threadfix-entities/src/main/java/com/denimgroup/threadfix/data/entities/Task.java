@@ -31,6 +31,7 @@ public class Task {
 	private TaskConfig taskConfig;
     private int taskId;
 	private String secureTaskKey;
+	private String secureScanAgentInstanceKey;
 	
 	public Task() {
 		
@@ -72,6 +73,14 @@ public class Task {
 
 	public void setSecureTaskKey(String secureTaskKey) {
 		this.secureTaskKey = secureTaskKey;
+	}
+
+	public String getSecureScanAgentInstanceKey() {
+		return secureScanAgentInstanceKey;
+	}
+
+	public void setSecureScanAgentInstanceKey(String secureScanAgentInstanceKey) {
+		this.secureScanAgentInstanceKey = secureScanAgentInstanceKey;
 	}
 
 	public String toString() {

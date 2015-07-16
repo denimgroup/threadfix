@@ -1,5 +1,3 @@
-
-
 <div id="severitySuccessMessage" ng-show="severitySuccessMessage" class="alert alert-success">
     <button class="close" ng-click="severitySuccessMessage = undefined" type="button">&times;</button>
     {{ severitySuccessMessage }}
@@ -25,54 +23,53 @@
         <thead>
             <tr>
                 <th style="width:80px;">Severity</th>
-                <th style="width:30px">Show</th>
-                <th style="width:30px">Hide</th>
+                <th style="width:30px"></th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>Critical</td>
-                <td class="centered">
-                    <input id="showCritical1" type="radio" ng-model="severityFilter.showCritical" ng-disabled="!severityFilter.enabled" name="showCritical" value="true"/>
-                </td>
-                <td class="centered">
-                    <input id="showCritical2" type="radio" ng-model="severityFilter.showCritical" ng-disabled="!severityFilter.enabled" name="showCritical" value="false"/>
-                </td>
-            </tr>
-            <tr>
-                <td>High</td>
-                <td class="centered">
-                    <input id="showHigh1" type="radio" ng-model="severityFilter.showHigh" ng-disabled="!severityFilter.enabled" name="showHigh" value="true"/>
-                </td>
-                <td class="centered">
-                    <input id="showHigh2" type="radio" ng-model="severityFilter.showHigh" ng-disabled="!severityFilter.enabled" name="showHigh" value="false"/>
+                <td generic-severity="Critical"></td>
+                <td>
+                    <div class="btn-group">
+                        <label id="showCritical1" class="btn" ng-model="severityFilter.showCritical" ng-class="{ disabled : !severityFilter.enabled }" ng-click="setSeverity('showCritical', true)" btn-radio="true">Show</label>
+                        <label id="showCritical2" class="btn" ng-model="severityFilter.showCritical" ng-class="{ disabled : !severityFilter.enabled }" ng-click="setSeverity('showCritical', false)" btn-radio="false">Hide</label>
+                    </div>
                 </td>
             </tr>
             <tr>
-                <td>Medium</td>
-                <td class="centered">
-                    <input id="showMedium1" type="radio" ng-model="severityFilter.showMedium" ng-disabled="!severityFilter.enabled" name="showMedium" value="true"/>
-                </td>
-                <td class="centered">
-                    <input id="showMedium2" type="radio" ng-model="severityFilter.showMedium" ng-disabled="!severityFilter.enabled" name="showMedium" value="false"/>
-                </td>
-            </tr>
-            <tr>
-                <td>Low</td>
-                <td class="centered">
-                    <input id="showLow1" type="radio" ng-model="severityFilter.showLow" ng-disabled="!severityFilter.enabled" name="showLow" value="true"/>
-                </td>
-                <td class="centered">
-                    <input id="showLow2" type="radio" ng-model="severityFilter.showLow" ng-disabled="!severityFilter.enabled" name="showLow" value="false"/>
+                <td generic-severity="High"></td>
+                <td>
+                    <div class="btn-group">
+                        <label id="showHigh1" class="btn" ng-model="severityFilter.showHigh" ng-class="{ disabled : !severityFilter.enabled }" ng-click="setSeverity('showHigh', true)" btn-radio="true">Show</label>
+                        <label id="showHigh2" class="btn" ng-model="severityFilter.showHigh" ng-class="{ disabled : !severityFilter.enabled }" ng-click="setSeverity('showHigh', false)" btn-radio="false">Hide</label>
+                    </div>
                 </td>
             </tr>
             <tr>
-                <td>Info</td>
-                <td class="centered">
-                    <input id="showInfo1" type="radio" ng-model="severityFilter.showInfo" ng-disabled="!severityFilter.enabled" name="showInfo" value="true"/>
+                <td generic-severity="Medium"></td>
+                <td>
+                    <div class="btn-group">
+                        <label id="showMedium1" class="btn" ng-model="severityFilter.showMedium" ng-class="{ disabled : !severityFilter.enabled }" ng-click="setSeverity('showMedium', true)" btn-radio="true">Show</label>
+                        <label id="showMedium2" class="btn" ng-model="severityFilter.showMedium" ng-class="{ disabled : !severityFilter.enabled }" ng-click="setSeverity('showMedium', false)" btn-radio="false">Hide</label>
+                    </div>
                 </td>
-                <td class="centered">
-                    <input id="showInfo2" type="radio" ng-model="severityFilter.showInfo"  ng-disabled="!severityFilter.enabled" name="showInfo" value="false"/>
+            </tr>
+            <tr>
+                <td generic-severity="Low"></td>
+                <td>
+                    <div class="btn-group">
+                        <label id="showLow1" class="btn" ng-model="severityFilter.showLow" ng-class="{ disabled : !severityFilter.enabled }" ng-click="setSeverity('showLow', true)" btn-radio="true">Show</label>
+                        <label id="showLow2" class="btn" ng-model="severityFilter.showLow" ng-class="{ disabled : !severityFilter.enabled }" ng-click="setSeverity('showLow', false)" btn-radio="false">Hide</label>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td generic-severity="Info"></td>
+                <td>
+                    <div class="btn-group">
+                        <label id="showInfo1" class="btn" ng-model="severityFilter.showInfo" ng-class="{ disabled : !severityFilter.enabled }" ng-click="setSeverity('showInfo', true)" btn-radio="true">Show</label>
+                        <label id="showInfo2" class="btn" ng-model="severityFilter.showInfo" ng-class="{ disabled : !severityFilter.enabled }" ng-click="setSeverity('showInfo', false)" btn-radio="false">Hide</label>
+                    </div>
                 </td>
             </tr>
         </tbody>

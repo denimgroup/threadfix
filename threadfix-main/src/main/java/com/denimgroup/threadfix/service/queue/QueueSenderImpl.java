@@ -275,27 +275,25 @@ public class QueueSenderImpl implements QueueSender {
 		sendMap(remoteProviderImportMap);
 	}
 
-    @Override
-    public void addScheduledScan(int appId, String scanner, String scanConfigId) {
-        if (appId < 0)
-            return;
+	@Override
+	public void addScheduledScanById(int scheduledScanId) {
+		if (scheduledScanId < 0)
+			return;
 
-        MapMessage scheduledScanMap = new ActiveMQMapMessage();
+		MapMessage scheduledScanMap = new ActiveMQMapMessage();
 
-        try {
-            scheduledScanMap.setInt("appId", appId);
-            scheduledScanMap.setString("type", QueueConstants.SCHEDULED_SCAN_TYPE);
-            scheduledScanMap.setString("scanner", scanner);
-			scheduledScanMap.setString("scanConfigId", scanConfigId);
-        } catch (JMSException e) {
-            log.error(jmsErrorString);
-            addExceptionLog(e);
-        }
+		try {
+			scheduledScanMap.setInt("scheduledScanId", scheduledScanId);
+			scheduledScanMap.setString("type", QueueConstants.SCHEDULED_SCAN_TYPE);
+		} catch (JMSException e) {
+			log.error(jmsErrorString);
+			addExceptionLog(e);
+		}
 
-        sendMap(scheduledScanMap);
-    }
+		sendMap(scheduledScanMap);
+	}
 
-    @Override
+	@Override
     public void updateCachedStatistics(int appId) {
         MapMessage scheduledScanMap = new ActiveMQMapMessage();
 
@@ -340,7 +338,22 @@ public class QueueSenderImpl implements QueueSender {
         sendMap(scheduledScanMap);
     }
 
-    private void send(String message) {
+	@Override
+	public void updateTeamCachedStatistics(int orgId) {
+		MapMessage scheduledScanMap = new ActiveMQMapMessage();
+
+		try {
+			scheduledScanMap.setInt("teamId", orgId);
+			scheduledScanMap.setString("type", QueueConstants.STATISTICS_TEAM_UPDATE);
+		} catch (JMSException e) {
+			log.error(jmsErrorString);
+			addExceptionLog(e);
+		}
+
+		sendMap(scheduledScanMap);
+	}
+
+	private void send(String message) {
 		jmsTemplate.convertAndSend("requestQueue", message);
 	}
 

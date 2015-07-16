@@ -59,8 +59,6 @@ public class QueueListener implements MessageListener {
     @Autowired
 	private VulnerabilityService vulnerabilityService;
     @Autowired
-	private ApplicationChannelService applicationChannelService = null;
-    @Autowired
 	private RemoteProviderApplicationService remoteProviderApplicationService = null;
     @Autowired
     private OrganizationService organizationService;
@@ -77,6 +75,8 @@ public class QueueListener implements MessageListener {
     private EmailReportService emailReportService;
     @Autowired
     private ScheduledEmailReportService scheduledEmailReportService;
+	@Autowired(required=false)
+	private ScheduledScanService scheduledScanService;
 
 	/*
 	 * (non-Javadoc)
@@ -131,12 +131,14 @@ public class QueueListener implements MessageListener {
 								map.getInt("jobStatusId"));
 						break;
                     case QueueConstants.SCHEDULED_SCAN_TYPE:
-                        processScheduledScan(map.getInt("appId"),
-                                map.getString("scanner"), map.getString("scanConfigId"));
+                        processScheduledScan(map.getInt("scheduledScanId"));
                         break;
                     case QueueConstants.STATISTICS_UPDATE:
                         processStatisticsUpdate(map.getInt("appId"));
                         break;
+					case QueueConstants.STATISTICS_TEAM_UPDATE:
+						processStatisticsTeamUpdate(map.getInt("teamId"));
+						break;
                     case QueueConstants.VULNS_FILTER:
                         updateVulnsFilter();
                         break;
@@ -179,6 +181,25 @@ public class QueueListener implements MessageListener {
             );
         }
     }
+
+	private void processStatisticsTeamUpdate(int teamId) {
+		if (teamId == -1) {
+			log.info("Processing statistics update for all teams.");
+			for (Organization organization : organizationService.loadAllActive()) {
+				for (Application app : organization.getActiveApplications()) {
+					vulnerabilityService.updateVulnerabilityReport(app);
+				}
+			}
+		} else {
+			log.info("Processing statistics update for team with ID " + teamId);
+			Organization organization = organizationService.loadById(teamId);
+			if (organization != null) {
+				for (Application app : organization.getActiveApplications()) {
+					vulnerabilityService.updateVulnerabilityReport(app);
+				}
+			}
+		}
+	}
 
     private void processRemoteProviderBulkImport(Integer remoteProviderTypeId, Integer jobStatusId) {
 		log.info("Remote Provider Bulk Import job received");
@@ -345,24 +366,25 @@ public class QueueListener implements MessageListener {
 	}
 
     /**
-     * @param appId
-     * @param scanner
+     * @param scheduledScanId
      */
     @Transactional(readOnly=false)
-    private void processScheduledScan(int appId, String scanner, String scanConfigId) {
-        if (scanQueueService == null) {
+	private void processScheduledScan(int scheduledScanId) {
+        if (scanQueueService == null || scheduledScanService == null) {
             return;
         }
 
-        Application application = applicationService.loadApplication(appId);
-        if (application == null)
-            return;
+		ScheduledScan scheduledScan = scheduledScanService.loadById(scheduledScanId);
+		if (scheduledScan == null
+				|| scheduledScan.getApplication() == null
+				|| scheduledScan.getApplication().getId() == null)
+			return;
 
-        ScanQueueTask scanTask = scanQueueService.queueScanWithConfig(appId, scanner, scanConfigId);
+        ScanQueueTask scanTask = scanQueueService.queueScanWithScheduledScanId(scheduledScanId);
         if (scanTask == null || scanTask.getId() < 0) {
-            log.warn("Adding scan queue task " + scanner +" for application with Id " + appId + " was failed.");
+            log.warn("Adding scan queue task " + scheduledScan.getScanner() +" for application with Id " + scheduledScan.getApplication().getId() + " was failed.");
         } else {
-            log.info("Scan Queue Task ID " + scanTask.getId() + " was successfully added to the application with ID " + appId);
+            log.info("Scan Queue Task ID " + scanTask.getId() + " was successfully added to the application with ID " + scheduledScan.getApplication().getId());
         }
     }
 

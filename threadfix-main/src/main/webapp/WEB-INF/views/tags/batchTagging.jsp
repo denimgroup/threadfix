@@ -27,8 +27,6 @@
             </td>
             <td>
                 <input id="applicationNameTypeahead"
-                       <%--focus-on="showApplicationInput"--%>
-                       <%--ng-show="showApplicationInput"--%>
                        typeahead="application as (application.team.name + ' / ' + application.name) for application in applications | filter:$viewValue | limitTo:10"
                        type="text"
                        ng-model="newApplication"
@@ -40,8 +38,6 @@
             <td>Tag</td>
             <td>
                 <input id="tagNameTypeahead"
-                       <%--focus-on="showTeamInput"--%>
-                       <%--ng-show="showTeamInput"--%>
                        typeahead="tag as tag.name for tag in tags | filter:$viewValue | limitTo:10"
                        type="text"
                        ng-model="newTag"
@@ -57,7 +53,6 @@
     <div class="accordion-inner">
         <h5>Selected Applications</h5>
         <div ng-show="selectedApplications.length === 0">No Applications Selected</div>
-        <%--<div>No Applications Selected</div>--%>
         <div ng-repeat="app in selectedApplications">
             <span id="removeApp{{ app.name }}" class="pointer icon icon-minus-sign" ng-click="remove(selectedApplications, $index)"></span>
             {{ app.team.name + ' / ' + app.name }}
@@ -86,13 +81,6 @@
             <span class="spinner"></span>
             Submitting
         </button>
-        <%--<a id="submittingBtn"--%>
-           <%--ng-show="submitting"--%>
-           <%--class="btn"--%>
-           <%----%>
-                <%-->--%>
-            <%--Submit--%>
-        <%--</a>--%>
     </div>
 </div>
 

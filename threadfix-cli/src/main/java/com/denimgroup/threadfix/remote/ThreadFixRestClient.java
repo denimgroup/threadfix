@@ -78,11 +78,7 @@ public interface ThreadFixRestClient {
 
     public RestResponse<ScanQueueTask> queueScan(String applicationId, String scannerType);
     public RestResponse<ScanQueueTask> queueScan(String applicationId, String scannerType, String scanConfigId);
-    public RestResponse<Task> requestTask(String scanners, String agentConfig);
-    public RestResponse<String> taskStatusUpdate(String scanQueueTaskId, String message);
     public RestResponse<String> setTaskConfig(String appId, String scannerType, String filePath);
-    public RestResponse<ScanQueueTask> completeTask(String scanQueueTaskId, String filePath, String secureTaskKey);
-    public RestResponse<String> failTask(String scanQueueTaskId, String message, String secureTaskKey);
 
     public RestResponse<Finding> addDynamicFinding(String applicationId, String vulnType, String severity,
                                     String nativeId, String parameter, String longDescription,
@@ -91,7 +87,7 @@ public interface ThreadFixRestClient {
                                    String nativeId, String parameter, String longDescription,
                                    String filePath, String column, String lineText, String lineNumber);
 
-    public RestResponse<Tag> createTag(String name, Boolean isCommentTag);
+    public RestResponse<Tag> createTag(String name, String tagType);
     public RestResponse<Tag> searchTagById(String id);
     public RestResponse<Tag[]> searchTagsByName(String name);
     public RestResponse<Map> getAllTags();
@@ -101,4 +97,6 @@ public interface ThreadFixRestClient {
     public RestResponse<Tag> updateTag(String tagId, String name);
 
     public RestResponse<String> removeTag(String tagId);
+
+    void setUnsafeFlag(boolean unsafeFlag);
 }
