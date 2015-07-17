@@ -175,7 +175,7 @@ public abstract class BaseIT {
         return roleName;
     }
 
-    protected String createTag(String tagName) {
+    protected String createTag(String tagName){
         return String.valueOf(DatabaseUtils.createTag(tagName, TagType.APPLICATION.getDisplayName()));
     }
 
@@ -183,8 +183,5 @@ public abstract class BaseIT {
         return String.valueOf(DatabaseUtils.createTag(tagName, tagType));
     }
 
-    protected void createGroup(String groupName) {
-        DatabaseUtils.createGroup(groupName);
-    }
 
 }

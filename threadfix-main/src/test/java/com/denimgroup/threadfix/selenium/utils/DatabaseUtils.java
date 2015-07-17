@@ -164,9 +164,4 @@ public class DatabaseUtils {
             }
         }
     }
-
-    public static void createGroup(String groupName) {
-        RestResponse<Group> response = CLIENT.createGroup(groupName);
-        assertTrue("Request for create group was unsuccessful.  Message: " + response.message, response.success);
-    }
 }

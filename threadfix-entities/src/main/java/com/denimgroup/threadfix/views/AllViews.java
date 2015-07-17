@@ -66,4 +66,6 @@ public class AllViews {
     public static interface RestViewScanList {}
 
     public static interface RestCweView {}
+
+    public static interface ApplicationIndexView {}
 }

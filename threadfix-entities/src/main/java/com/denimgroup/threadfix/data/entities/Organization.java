@@ -153,7 +153,7 @@ public class Organization extends AuditableEntity {
 	}
 
     @Column
-    @JsonView({ AllViews.RestViewTeam2_1.class, AllViews.TableRow.class })
+    @JsonView({ AllViews.RestViewTeam2_1.class, AllViews.TableRow.class, AllViews.ApplicationIndexView.class })
     public Integer getTotalVulnCount() {
         return totalVulnCount;
     }
@@ -163,13 +163,13 @@ public class Organization extends AuditableEntity {
     }
 
     @Column
-    @JsonView({ AllViews.RestViewTeam2_1.class, AllViews.TableRow.class })
+    @JsonView({ AllViews.RestViewTeam2_1.class, AllViews.TableRow.class, AllViews.ApplicationIndexView.class })
     public Integer getInfoVulnCount() {
         return infoVulnCount;
     }
 
     @Column
-    @JsonView({ AllViews.RestViewTeam2_1.class, AllViews.TableRow.class })
+    @JsonView({ AllViews.RestViewTeam2_1.class, AllViews.TableRow.class, AllViews.ApplicationIndexView.class })
     public void setInfoVulnCount(Integer infoVulnCount) {
         this.infoVulnCount = infoVulnCount;
     }
@@ -179,7 +179,7 @@ public class Organization extends AuditableEntity {
     }
 
     @Column
-    @JsonView({ AllViews.RestViewTeam2_1.class, AllViews.TableRow.class })
+    @JsonView({ AllViews.RestViewTeam2_1.class, AllViews.TableRow.class, AllViews.ApplicationIndexView.class })
     public void setLowVulnCount(Integer lowVulnCount) {
         this.lowVulnCount = lowVulnCount;
     }
@@ -189,7 +189,7 @@ public class Organization extends AuditableEntity {
     }
 
     @Column
-    @JsonView({ AllViews.RestViewTeam2_1.class, AllViews.TableRow.class })
+    @JsonView({ AllViews.RestViewTeam2_1.class, AllViews.TableRow.class, AllViews.ApplicationIndexView.class })
     public void setMediumVulnCount(Integer mediumVulnCount) {
         this.mediumVulnCount = mediumVulnCount;
     }
@@ -199,19 +199,26 @@ public class Organization extends AuditableEntity {
     }
 
     @Column
-    @JsonView({ AllViews.RestViewTeam2_1.class, AllViews.TableRow.class })
+    @JsonView({ AllViews.RestViewTeam2_1.class, AllViews.TableRow.class, AllViews.ApplicationIndexView.class })
     public void setHighVulnCount(Integer highVulnCount) {
         this.highVulnCount = highVulnCount;
     }
 
     @Column
-    @JsonView({ AllViews.RestViewTeam2_1.class, AllViews.TableRow.class })
+    @JsonView({ AllViews.RestViewTeam2_1.class, AllViews.TableRow.class, AllViews.ApplicationIndexView.class })
     public Integer getCriticalVulnCount() {
         return criticalVulnCount;
     }
 
     public void setCriticalVulnCount(Integer criticalVulnCount) {
         this.criticalVulnCount = criticalVulnCount;
+    }
+
+    @Transient
+    @JsonView({ AllViews.ApplicationIndexView.class })
+    public Integer getNumApps(){
+        List<Application> activeApps = getActiveApplications();
+        return (activeApps == null) ? 0 : activeApps.size();
     }
 
 }
