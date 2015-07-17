@@ -57,7 +57,7 @@ public interface UserService {
 	 * @param name
 	 * @return
 	 */
-	User loadUser(String name);
+	List<User> loadUser(String name);
 	
 	/**
 	 * @param name

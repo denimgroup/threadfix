@@ -96,13 +96,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = false)
-    public User loadUser(String name) {
-        User user = userDao.retrieveByName(name);
-        if (user != null && user.getIsLdapUser()) {
-            return null;
-        } else {
-            return user;
-        }
+    public List<User> loadUser(String name) {
+        List<User> users = list();
+        User localUser = userDao.retrieveLocalUser(name);
+        User ldapUser = userDao.retrieveLdapUser(name);
+        if (localUser != null)
+            users.add(localUser);
+        if (ldapUser != null)
+            users.add(ldapUser);
+        return users;
     }
 
     @Override
