@@ -111,7 +111,7 @@ public class EditUserController {
 			return FormRestResponse.failure("Errors", result);
 		} else {
 
-            for (User databaseUser : userService.loadUser(user.getName())) {
+            for (User databaseUser : userService.loadUsers(user.getName())) {
                 if (!databaseUser.getId().equals(user.getId())) {
                     result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
                     return FormRestResponse.failure("Errors", result);

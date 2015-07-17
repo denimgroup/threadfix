@@ -99,7 +99,7 @@ public class AddUserController {
 		if (result.hasErrors()) {
             return FormRestResponse.failure("Errors", result);
 		} else {
-            if (!userService.loadUser(user.getName().trim()).isEmpty()) {
+            if (!userService.loadUsers(user.getName().trim()).isEmpty()) {
 				result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
                 return FormRestResponse.failure("Errors", result);
 			}

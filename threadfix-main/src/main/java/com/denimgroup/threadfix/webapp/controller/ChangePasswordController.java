@@ -122,7 +122,7 @@ public class ChangePasswordController {
 			
 			String currentUserName = SecurityContextHolder.getContext().getAuthentication().getName();
 
-            for (User databaseUser : userService.loadUser(user.getName())) {
+            for (User databaseUser : userService.loadUsers(user.getName())) {
                 if (!databaseUser.getId().equals(user.getId())) {
                     ControllerUtils.addItem(request, CURRENT_PASSWORD_FIELD_STR, "The user has changed since starting this procedure.");
                     return "redirect:/configuration/users/password";

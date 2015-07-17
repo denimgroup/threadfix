@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = false)
-    public List<User> loadUser(String name) {
+    public List<User> loadUsers(String name) {
         List<User> users = list();
         User localUser = userDao.retrieveLocalUser(name);
         User ldapUser = userDao.retrieveLdapUser(name);
