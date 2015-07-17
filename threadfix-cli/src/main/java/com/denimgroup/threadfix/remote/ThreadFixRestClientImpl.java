@@ -354,13 +354,6 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
                 new String[] {}, Organization.class);
     }
 
-    //QA only
-    public RestResponse<Group> createGroup(String groupName) {
-        return httpRestUtils.httpPost("/groups/create",
-                new String[] {"groupName"},
-                new String[] {groupName}, Group.class);
-    }
-
 	public RestResponse<Finding> addDynamicFinding(String applicationId, String vulnType, String severity,
 		String nativeId, String parameter, String longDescription,
 		String fullUrl, String path) {
