@@ -62,10 +62,8 @@ public class GroupEntIT extends BaseDataTest {
     @Test
     public void testDeleteGroup() {
         String groupName = getName();
-        createGroup(groupName);
 
-        GroupIndexPage groupIndexPage = loginPage.defaultLogin()
-                .clickManageGroupsLink();
+        GroupIndexPage groupIndexPage = initialize(groupName);
 
         assertTrue("Group not added.", groupIndexPage.isGroupPresent(groupName));
 
@@ -81,10 +79,8 @@ public class GroupEntIT extends BaseDataTest {
     public void testEditGroupName() {
         String originalGroupName = getName();
         String editedGroupName = getName();
-        createGroup(originalGroupName);
 
-        GroupIndexPage groupIndexPage = loginPage.defaultLogin()
-                .clickManageGroupsLink();
+        GroupIndexPage groupIndexPage = initialize(originalGroupName);
 
         assertTrue("Group not added.", groupIndexPage.isGroupPresent(originalGroupName));
 
@@ -101,10 +97,8 @@ public class GroupEntIT extends BaseDataTest {
     @Test
     public void testEditGroupGlobalRole() {
         String groupName = getName();
-        createGroup(groupName);
 
-        GroupIndexPage groupIndexPage = loginPage.defaultLogin()
-                .clickManageGroupsLink();
+        GroupIndexPage groupIndexPage = initialize(groupName);
 
         assertTrue("Group not added.", groupIndexPage.isGroupPresent(groupName));
 
@@ -137,10 +131,8 @@ public class GroupEntIT extends BaseDataTest {
     public void testEditGroupValidation(){
         String groupName = getName();
         String whitespace = "      ";
-        createGroup(groupName);
 
-        GroupIndexPage groupIndexPage = loginPage.defaultLogin()
-                .clickManageGroupsLink();
+        GroupIndexPage groupIndexPage = initialize(groupName);
 
         assertTrue("Group not added.", groupIndexPage.isGroupPresent(groupName));
 
@@ -155,10 +147,8 @@ public class GroupEntIT extends BaseDataTest {
     @Test
     public void testCreateDuplicateGroupValidation(){
         String groupName = getName();
-        createGroup(groupName);
 
-        GroupIndexPage groupIndexPage = loginPage.defaultLogin()
-                .clickManageGroupsLink();
+        GroupIndexPage groupIndexPage = initialize(groupName);
 
         assertTrue("First group not added.", groupIndexPage.isGroupPresent(groupName));
 
@@ -174,10 +164,8 @@ public class GroupEntIT extends BaseDataTest {
     public void testEditDuplicateGroupValidation() {
         String groupName = getName();
         String secondGroupName = getName();
-        createGroup(groupName);
 
-        GroupIndexPage groupIndexPage = loginPage.defaultLogin()
-                .clickManageGroupsLink();
+        GroupIndexPage groupIndexPage = initialize(groupName);
 
         assertTrue("First Group not added.", groupIndexPage.isGroupPresent(groupName));
 
@@ -198,10 +186,8 @@ public class GroupEntIT extends BaseDataTest {
     @Test
     public void testAddUserToGroup() {
         String groupName = getName();
-        createGroup(groupName);
 
-        GroupIndexPage groupIndexPage = loginPage.defaultLogin()
-                .clickManageGroupsLink();
+        GroupIndexPage groupIndexPage = initialize(groupName);
 
         assertTrue("Group not added.", groupIndexPage.isGroupPresent(groupName));
 
@@ -218,10 +204,8 @@ public class GroupEntIT extends BaseDataTest {
     @Test
     public void testRemoveUserFromGroup() {
         String groupName = getName();
-        createGroup(groupName);
 
-        GroupIndexPage groupIndexPage = loginPage.defaultLogin()
-                .clickManageGroupsLink();
+        GroupIndexPage groupIndexPage = initialize(groupName);
 
         assertTrue("Group not added.", groupIndexPage.isGroupPresent(groupName));
 
@@ -243,10 +227,8 @@ public class GroupEntIT extends BaseDataTest {
     public void testAddTeamRoleToGroup() {
         String teamName = createTeam();
         String groupName = getName();
-        createGroup(groupName);
 
-        GroupIndexPage groupIndexPage = loginPage.defaultLogin()
-                .clickManageGroupsLink();
+        GroupIndexPage groupIndexPage = initialize(groupName);
 
         assertTrue("Group not added.", groupIndexPage.isGroupPresent(groupName));
 
@@ -267,10 +249,8 @@ public class GroupEntIT extends BaseDataTest {
         String teamName = createTeam();
         String secondTeamName = createTeam();
         String groupName = getName();
-        createGroup(groupName);
 
-        GroupIndexPage groupIndexPage = loginPage.defaultLogin()
-                .clickManageGroupsLink();
+        GroupIndexPage groupIndexPage = initialize(groupName);
 
         assertTrue("Group not added.", groupIndexPage.isGroupPresent(groupName));
 
@@ -297,10 +277,8 @@ public class GroupEntIT extends BaseDataTest {
     public void testDeleteTeamRoleFromGroup() {
         String teamName = createTeam();
         String groupName = getName();
-        createGroup(groupName);
 
-        GroupIndexPage groupIndexPage = loginPage.defaultLogin()
-                .clickManageGroupsLink();
+        GroupIndexPage groupIndexPage = initialize(groupName);
 
         assertTrue("Group not added.", groupIndexPage.isGroupPresent(groupName));
 
@@ -325,10 +303,8 @@ public class GroupEntIT extends BaseDataTest {
         String teamName = createTeam();
         String appName = createApplication(teamName);
         String groupName = getName();
-        createGroup(groupName);
 
-        GroupIndexPage groupIndexPage = loginPage.defaultLogin()
-                .clickManageGroupsLink();
+        GroupIndexPage groupIndexPage = initialize(groupName);
 
         assertTrue("Group not added.", groupIndexPage.isGroupPresent(groupName));
 
@@ -351,10 +327,8 @@ public class GroupEntIT extends BaseDataTest {
         String secondTeamName = createTeam();
         String secondAppName = createApplication(secondTeamName);
         String groupName = getName();
-        createGroup(groupName);
 
-        GroupIndexPage groupIndexPage = loginPage.defaultLogin()
-                .clickManageGroupsLink();
+        GroupIndexPage groupIndexPage = initialize(groupName);
 
         assertTrue("Group not added.", groupIndexPage.isGroupPresent(groupName));
 
@@ -383,10 +357,8 @@ public class GroupEntIT extends BaseDataTest {
         String teamName = createTeam();
         String appName = createApplication(teamName);
         String groupName = getName();
-        createGroup(groupName);
 
-        GroupIndexPage groupIndexPage = loginPage.defaultLogin()
-                .clickManageGroupsLink();
+        GroupIndexPage groupIndexPage = initialize(groupName);
 
         assertTrue("Group not added.", groupIndexPage.isGroupPresent(groupName));
 
