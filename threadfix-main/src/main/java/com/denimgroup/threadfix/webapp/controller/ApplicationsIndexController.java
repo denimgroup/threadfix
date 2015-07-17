@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
@@ -97,7 +98,7 @@ public class ApplicationsIndexController {
 	}
 
 	@RequestMapping(value="/organizations/jsonList", method = RequestMethod.GET)
-	@JsonView(AllViews.TableRow.class)
+	@JsonView(AllViews.ApplicationIndexView.class)
 	public @ResponseBody Object jsonList() {
         List<Organization> organizations = organizationService.loadAllActiveFilter();
 
@@ -132,5 +133,16 @@ public class ApplicationsIndexController {
 			ReportCheckResultBean resultBean = reportsService.generateDashboardReport(parameters, request);
 			return RestResponse.success(resultBean.getReportList());
 		}
+	}
+
+	@RequestMapping(value = "/organizations/{orgId}/search", method = RequestMethod.POST)
+	@JsonView(AllViews.TableRow.class)
+	@ResponseBody
+	public Object search(@PathVariable("orgId") int orgId, HttpServletRequest request) {
+		List<Application> apps = organizationService.search(orgId, request);
+
+		return RestResponse.success(CollectionUtils.map(
+				"applications", apps,
+				"countApps", organizationService.countApps(orgId, request.getParameter("searchString"))));
 	}
 }

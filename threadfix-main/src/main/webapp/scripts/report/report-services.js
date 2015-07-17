@@ -646,11 +646,12 @@ threadfixModule.factory('reportUtilities', function() {
 
 });
 
-threadfixModule.factory('trendingUtilities', function(reportUtilities, customSeverityService) {
+threadfixModule.factory('trendingUtilities', function(reportUtilities, customSeverityService, $log) {
 
     var trendingUtilities = {};
     var startIndex = -1, endIndex = -1;
     var firstHashInList, lastHashInList;
+    var currentInfoNo = 0, currentLowNo = 0, currentMedNo = 0, currentHighNo = 0, currentCriticalNo = 0, currentTotalNo = 0;
 
     trendingUtilities.getFirstHashInList = function(){
         return firstHashInList;
@@ -661,6 +662,9 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities, customSev
     };
 
     trendingUtilities.refreshScans = function($scope){
+
+        var start = new Date();
+
         $scope.loading = true;
         $scope.noData = false;
         var trendingScansData = [];
@@ -702,7 +706,12 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities, customSev
             if ($scope.trendingStartDate > $scope.trendingEndDate) // Last check if date input is invalid
                 return trendingScansData;
 
+            $log.info("refreshScans.initialize took " + ((new Date()).getTime() - start.getTime()) + " ms");
+
             var _scan = trendingUtilities.filterDisplayData($scope.filterScans[$scope.filterScans.length - 1], $scope);
+
+            $log.info("refreshScans.filterDisplayData took " + ((new Date()).getTime() - start.getTime()) + " ms");
+
             trendingScansData.push(createEndHash(null, $scope, [_scan], $scope.trendingStartDate));
             trendingScansData.push(createEndHash(null, $scope, [_scan]));
             $scope.loading = false;
@@ -710,12 +719,18 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities, customSev
         }
 
         trendingUtilities.filterByTime($scope);
+
+        $log.info("refreshScans.filterByTime took " + ((new Date()).getTime() - start.getTime()) + " ms");
+
         if ($scope.filterScans.length === 0) {
             $scope.noData = true;
             $scope.loading = false;
             return trendingScansData;
         }
         trendingScansData = trendingUtilities.updateDisplayData($scope);
+
+        $log.info("refreshScans.updateDisplayData took " + ((new Date()).getTime() - start.getTime()) + " ms");
+
         if (trendingScansData.length === 0) {
             $scope.noData = true;
             $scope.loading = false;
@@ -885,43 +900,44 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities, customSev
         var adjustedTotal = scan.numberTotalVulnerabilities -
             scan.numberOldVulnerabilities +
             scan.numberOldVulnerabilitiesInitiallyFromThisChannel;
-        return trendingTotal($scope.totalVulnsByChannelMap, scan, adjustedTotal);
+        currentTotalNo = trendingTotal($scope.totalVulnsByChannelMap, scan, adjustedTotal, currentTotalNo);
+        return currentTotalNo;
     };
 
     var calculateInfo = function(scan, $scope) {
-        return trendingTotal($scope.infoVulnsByChannelMap, scan, scan.numberInfoVulnerabilities);
+        currentInfoNo = trendingTotal($scope.infoVulnsByChannelMap, scan, scan.numberInfoVulnerabilities, currentInfoNo);
+        return currentInfoNo;
     };
 
     var calculateLow = function(scan, $scope) {
-        return trendingTotal($scope.lowVulnsByChannelMap, scan, scan.numberLowVulnerabilities);
+        currentLowNo = trendingTotal($scope.lowVulnsByChannelMap, scan, scan.numberLowVulnerabilities, currentLowNo);
+        return currentLowNo;
     };
 
     var calculateMedium = function(scan, $scope) {
-        return trendingTotal($scope.mediumVulnsByChannelMap, scan, scan.numberMediumVulnerabilities);
+        currentMedNo = trendingTotal($scope.mediumVulnsByChannelMap, scan, scan.numberMediumVulnerabilities, currentMedNo);
+        return currentMedNo;
     };
 
     var calculateHigh = function(scan, $scope) {
-        return trendingTotal($scope.highVulnsByChannelMap, scan, scan.numberHighVulnerabilities);
+        currentHighNo = trendingTotal($scope.highVulnsByChannelMap, scan, scan.numberHighVulnerabilities, currentHighNo);
+        return currentHighNo;
     };
 
     var calculateCritical = function(scan, $scope) {
-        return trendingTotal($scope.criticalVulnsByChannelMap, scan, scan.numberCriticalVulnerabilities);
+        currentCriticalNo = trendingTotal($scope.criticalVulnsByChannelMap, scan, scan.numberCriticalVulnerabilities, currentCriticalNo);
+        return currentCriticalNo;
     };
 
-    var trendingTotal = function(map, scan, newNum) {
+    var trendingTotal = function(map, scan, newNum, currentTotalNo) {
+
+        var numTotal = currentTotalNo + newNum;
+
         if (scan.applicationChannelId) {
+            numTotal = numTotal - (map[scan.applicationChannelId] ? map[scan.applicationChannelId] : 0);
             map[scan.applicationChannelId] = newNum;
         }
 
-        var numTotal = newNum;
-        // This code counts in the old vulns from other channels.
-        for (var key in map) {
-            if (map.hasOwnProperty(key)) {
-                if (!scan.applicationChannelId || scan.applicationChannelId != key) {
-                    numTotal += map[key];
-                }
-            }
-        }
         return numTotal;
     };
 

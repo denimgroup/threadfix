@@ -927,7 +927,7 @@ public class ApplicationIT extends BaseDataTest {
                 .clickModalSubmit();
 
         assertFalse("The modal did not submit correctly using Subversion as source repo.",
-                teamIndexPage.isElementPresentByXpath("//button[text()=Add Application]"));
+                teamIndexPage.isAddApplicationButtonPresent());
     }
 
     //===========================================================================================================

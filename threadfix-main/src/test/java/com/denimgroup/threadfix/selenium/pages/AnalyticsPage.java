@@ -378,11 +378,6 @@ public class AnalyticsPage extends BasePage {
                 ") td.inputValue").getText();
     }
 
-    public String getScanComparisonScannerRow(String scanner) {
-        return driver.findElementByXPath("//td[starts-with(@id, \'scanName\') and text() = \'" + scanner + "\']")
-                .getAttribute("id").substring(8);
-    }
-
     public String getScanComparisonFoundCount(String rowNumber) {
         return driver.findElementById("foundCount" + rowNumber).getText();
     }

@@ -1273,8 +1273,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public boolean isWafCreationDenied() {
         sleep(2000);
-        handleAlert();
-        return driver.findElementByXPath("//h4[@id='myModalLabel']").getText().equals("Add WAF");
+        return driver.findElementById("myModalLabel").getText().equals("Add WAF");
     }
 
 

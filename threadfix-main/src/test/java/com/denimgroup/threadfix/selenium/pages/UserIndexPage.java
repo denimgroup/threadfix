@@ -249,12 +249,12 @@ public class UserIndexPage extends BasePage {
     }
 
     public UserIndexPage clickSaveMap() {
-        driver.findElementByXPath("//button[text()='Save Map']").click();
+        driver.findElementByCssSelector("#submit:not(.disabled)").click();
         return new UserIndexPage(driver);
     }
 
     public UserIndexPage clickSaveEdits() {
-        driver.findElementByXPath("//button[text()='Save Edits']").click();
+        driver.findElementByCssSelector("#submit:not(.disabled)").click();
         return new UserIndexPage(driver);
     }
 

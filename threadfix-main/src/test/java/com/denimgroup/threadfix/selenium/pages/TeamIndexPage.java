@@ -317,6 +317,10 @@ public class TeamIndexPage extends BasePage {
         return driver.findElementsByCssSelector("#submit.disabled").isEmpty();
     }
 
+    public boolean isAddApplicationButtonPresent() {
+        return driver.findElementsById("submit").isEmpty();
+    }
+
     public String getUrlRepositoryError() {
         return driver.findElementById("sourceUrlValidError").getText().trim();
     }

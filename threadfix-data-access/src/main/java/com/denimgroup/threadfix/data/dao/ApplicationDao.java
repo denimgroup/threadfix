@@ -95,4 +95,12 @@ public interface ApplicationDao extends GenericObjectDao<Application> {
 	long getApplicationCount();
 
 	List<Map<String, Object>>  retrieveAppsInfoMap(List<Integer> applicationIdList, List<Integer> vulnTagIds);
+
+	Long countApps(Integer teamId, String searchString);
+
+	List<Application> getSearchResults(Integer teamId, String searchString, int number, int page, Set<Integer> appIds, Set<Integer> teamIds);
+
+	Long countApps(Integer orgId, String searchString, Set<Integer> appIds, Set<Integer> teamIds);
+
+	Long countVulns(Integer orgId, Set<Integer> appIds, Set<Integer> teamIds);
 }

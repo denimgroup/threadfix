@@ -268,6 +268,7 @@
         		protected-regex ^/organizations/[0-9]+/getReport$,
         		protected-regex ^/organizations/[0-9]+/modalEdit$,
 		    	protected-regex ^/organizations/[0-9]+/modalAddApp$,
+				protected-regex ^/organizations/[0-9]+/search$,
 		    	protected-regex ^/organizations/jsonList$,
         		protected-regex ^/reports/ajax$,
                 protected-regex ^/reports/ajax/page$,
@@ -383,6 +384,9 @@
 	</filter-mapping>
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>com.denimgroup.threadfix.util.TFManifestProperties</listener-class>
 	</listener>
 	<servlet>
 		<servlet-name>dispatcher</servlet-name>
