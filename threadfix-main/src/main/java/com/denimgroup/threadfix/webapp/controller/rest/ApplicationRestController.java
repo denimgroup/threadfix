@@ -429,7 +429,7 @@ public class ApplicationRestController extends TFRestController {
             return failure(TAG_LOOKUP_FAILED);
         }
 
-        if (TagType.APPLICATION != tag.getType()) {
+        if (tag.getType() != null && TagType.APPLICATION != tag.getType()) {
             log.warn(TAG_INVALID);
             return failure(TAG_INVALID);
         }
