@@ -1,18 +1,15 @@
 package com.denimgroup.threadfix.data.entities;
 
+import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 @Entity
 @Table(name="ScheduledEmailReport")
@@ -38,8 +35,9 @@ public class ScheduledEmailReport extends ScheduledJob {
 	}
 
     @ManyToMany
-    @JoinColumn(name = "emailListId")
-    @JsonView(Object.class)
+    @JoinTable(name="ScheduledEmailReport_EmailList",
+            joinColumns={@JoinColumn(name="scheduledEmailReportId")},
+            inverseJoinColumns={@JoinColumn(name="emailListId")})
     public List<EmailList> getEmailLists() {
         return emailLists;
     }

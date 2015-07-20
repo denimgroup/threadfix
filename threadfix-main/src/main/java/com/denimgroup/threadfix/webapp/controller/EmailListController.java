@@ -137,7 +137,7 @@ public class EmailListController {
         EmailList emailList = emailListService.loadById(emailListId);
 
         if (emailList != null) {
-            emailListService.markInactive(emailList);
+            emailListService.delete(emailList);
             return RestResponse.success(null);
         } else {
             log.warn("EmailList Id is invalid or EmailList currently can not be deleted.");

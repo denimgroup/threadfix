@@ -34,4 +34,6 @@ public interface EmailListService extends GenericNamedObjectService<EmailList> {
     String removeEmailAddress(EmailList emailList, String emailAddress);
 
     String addEmailAddress(EmailList emailList, String emailAddress);
+
+    void delete(EmailList emailList);
 }
