@@ -188,12 +188,7 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		finding.setScan(scan);
         scanCleanerUtils.clean(scan);
 
-		EventAction eventAction = EventAction.VULNERABILITY_OTHER;
-		Vulnerability vuln = finding.getVulnerability();
-		if (vuln.isNew()) {
-			eventAction = EventAction.APPLICATION_CREATE;
-		}
-		vulnerabilityService.storeVulnerability(vuln, eventAction);
+		vulnerabilityService.storeVulnerability(finding.getVulnerability());
 
 		scanDao.saveOrUpdate(scan);
 		log.debug("Manual Finding submission was successful.");

@@ -42,6 +42,9 @@ public class ApplicationMergerImpl implements ApplicationMerger {
 	private ApplicationDao applicationDao;
 	private ScanDao scanDao;
 	private JobStatusService jobStatusService;
+
+    @Autowired
+    VulnerabilityParser vulnerabilityParser;
 	
 	@Autowired
 	public ApplicationMergerImpl(ApplicationDao applicationDao,
@@ -87,7 +90,7 @@ public class ApplicationMergerImpl implements ApplicationMerger {
 
         if (application.getSkipApplicationMerge()) {
             for (Finding finding : scan.getFindings()) {
-                Vulnerability newVuln = VulnerabilityParser.parse(finding);
+                Vulnerability newVuln = vulnerabilityParser.parse(finding);
                 scanStatisticsUpdater.addFindingToNewVulnUpdate(finding, newVuln);
             }
         } else {
@@ -101,7 +104,7 @@ public class ApplicationMergerImpl implements ApplicationMerger {
                     match = matcher.doesMatch(finding, vuln);
                     if (match) {
                         scanStatisticsUpdater.addFindingToOldVulnUpdate(finding, vuln);
-                        VulnerabilityParser.addToVuln(vuln, finding);
+                        vulnerabilityParser.addToVuln(vuln, finding);
                         break;
                     }
                 }
@@ -114,7 +117,7 @@ public class ApplicationMergerImpl implements ApplicationMerger {
                         match = matcher.doesMatch(finding, newVuln);
                         if (match) {
                             scanStatisticsUpdater.addFindingToInScanVulnUpdate(finding);
-                            VulnerabilityParser.addToVuln(newVuln, finding);
+                            vulnerabilityParser.addToVuln(newVuln, finding);
                             break;
                         }
                     }
@@ -123,7 +126,7 @@ public class ApplicationMergerImpl implements ApplicationMerger {
                 // if it wasn't found there either, we need to save it.
                 // it gets counted as new if a vuln is successfully parsed.
                 if (!match) {
-                    Vulnerability newVuln = VulnerabilityParser.parse(finding);
+                    Vulnerability newVuln = vulnerabilityParser.parse(finding);
                     scanStatisticsUpdater.addFindingToNewVulnUpdate(finding, newVuln);
                     if (newVuln != null) {
                         newGuesser.add(newVuln);

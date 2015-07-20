@@ -57,9 +57,8 @@ public class DefectEventTrackingAspect extends EventTrackingAspect {
             }
         } catch (Exception e) {
             log.error("Error while logging Event: " + EventAction.DEFECT_SUBMIT, e);
-        } finally {
-            return proceed;
         }
+        return proceed;
     }
 
     @Around("execution(* com.denimgroup.threadfix.service.DefectService.updateVulnsFromDefectTracker(..)) && args(applicationId, userId)")
@@ -80,40 +79,38 @@ public class DefectEventTrackingAspect extends EventTrackingAspect {
         } catch (Exception e) {
             errorLoggingEvent = true;
             log.error("Error while logging Event: " + EventAction.DEFECT_STATUS_UPDATED, e);
-        } finally {
-            Object proceed = joinPoint.proceed();
-            try {
-                if (!errorLoggingEvent && (application != null)) {
-                    for (Vulnerability vuln : application.getVulnerabilities()) {
-                        Defect defect = vuln.getDefect();
-                        if (defect != null) {
-                            User user = null;
-                            try {
-                                user = userService.loadUser(userId);
-                            } catch (Exception e) {}
+        }
+        Object proceed = joinPoint.proceed();
+        try {
+            if (!errorLoggingEvent && (application != null)) {
+                for (Vulnerability vuln : application.getVulnerabilities()) {
+                    Defect defect = vuln.getDefect();
+                    if (defect != null) {
+                        User user = null;
+                        try {
+                            user = userService.loadUser(userId);
+                        } catch (Exception e) {}
 
-                            String newStatus = defect.getStatus();
-                            String oldStatus = vulnerabilityDefectStatuses.get(vuln.getId());
-                            if (!newStatus.equals(oldStatus)) {
-                                Event event = generateUpdateDefectStatusEvent(defect, user);
-                                publishEventTrackingEvent(event);
-                            }
+                        String newStatus = defect.getStatus();
+                        String oldStatus = vulnerabilityDefectStatuses.get(vuln.getId());
+                        if (!newStatus.equals(oldStatus)) {
+                            Event event = generateUpdateDefectStatusEvent(defect, user);
+                            publishEventTrackingEvent(event);
+                        }
 
-                            Boolean isClosed = defect.isClosed();
-                            Boolean wasClosed = vulnerabilityDefectClosed.get(vuln.getId());
-                            if (isClosed && !wasClosed) {
-                                Event event = generateCloseDefectEvent(defect, user);
-                                publishEventTrackingEvent(event);
-                            }
+                        Boolean isClosed = defect.isClosed();
+                        Boolean wasClosed = vulnerabilityDefectClosed.get(vuln.getId());
+                        if (isClosed && !wasClosed) {
+                            Event event = generateCloseDefectEvent(defect, user);
+                            publishEventTrackingEvent(event);
                         }
                     }
                 }
-            } catch (Exception e) {
-                log.error("Error while logging Event: " + EventAction.DEFECT_STATUS_UPDATED, e);
-            } finally {
-                return proceed;
             }
+        } catch (Exception e) {
+            log.error("Error while logging Event: " + EventAction.DEFECT_STATUS_UPDATED, e);
         }
+        return proceed;
     }
 
     @Around("execution(* com.denimgroup.threadfix.service.ScanMergeService.saveRemoteScanAndRun(Integer, String, String)) && args(channelId, fileName, originalFileName)")
@@ -151,9 +148,8 @@ public class DefectEventTrackingAspect extends EventTrackingAspect {
             }
         } catch (Exception e) {
             log.error("Error while logging Event: " + EventAction.DEFECT_APPEARED_AFTER_CLOSED, e);
-        } finally {
-            return proceed;
         }
+        return proceed;
     }
 
     protected Event generateSubmitDefectEvent(Defect defect) {

@@ -29,7 +29,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 @Table(name = "Event")
@@ -53,11 +56,12 @@ public class Event extends AuditableEntity {
     private Scan scan;
     private Defect defect;
     private VulnerabilityComment comment;
+    private String detail;
     private String status;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
-    @JsonView({ AllViews.FormInfo.class})
+    @JsonView({ AllViews.HistoryView.class})
     public Date getDate() {
         return date;
     }
@@ -67,7 +71,7 @@ public class Event extends AuditableEntity {
     }
 
     @Column(length = ENUM_LENGTH)
-    @JsonView({ AllViews.FormInfo.class})
+    @JsonView({ AllViews.HistoryView.class})
     public String getEventAction() {
         return eventAction;
     }
@@ -80,6 +84,17 @@ public class Event extends AuditableEntity {
     @JsonIgnore
      public EventAction getEventActionEnum() {
         return EventAction.getEventAction(eventAction);
+    }
+
+    @Transient
+    @JsonView({ AllViews.HistoryView.class})
+    public String getEventActionDisplayName() {
+        EventAction eventAction = getEventActionEnum();
+        if (eventAction != null) {
+            return eventAction.getDisplayName();
+        } else {
+            return null;
+        }
     }
 
     @Column
@@ -102,15 +117,40 @@ public class Event extends AuditableEntity {
         this.application = application;
     }
 
+    @Transient
+    @JsonView({ AllViews.HistoryView.class})
+    public Integer getApplicationId() {
+        Application application = getApplication();
+        if (application != null) {
+            return application.getId();
+        }
+        return null;
+    }
+
     @ManyToOne
     @JoinColumn(name = "userId")
-    @JsonView({ AllViews.FormInfo.class})
+    @JsonIgnore
     public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Transient
+    @JsonView({ AllViews.HistoryView.class})
+    public String getUserName() {
+        User user = getUser();
+        String userName = null;
+        if (user != null) {
+            userName = user.getName();
+        }
+        if (userName != null) {
+            return userName;
+        } else {
+            return "Threadfix";
+        }
     }
 
     @ManyToOne
@@ -124,6 +164,16 @@ public class Event extends AuditableEntity {
         this.vulnerability = vulnerability;
     }
 
+    @Transient
+    @JsonView({ AllViews.HistoryView.class})
+    public Integer getVulnerabilityId() {
+        Vulnerability vulnerability = getVulnerability();
+        if (vulnerability != null) {
+            return vulnerability.getId();
+        }
+        return null;
+    }
+
     @ManyToOne
     @JoinColumn(name = "scanId")
     @JsonIgnore
@@ -133,6 +183,16 @@ public class Event extends AuditableEntity {
 
     public void setScan(Scan scan) {
         this.scan = scan;
+    }
+
+    @Transient
+    @JsonView({ AllViews.HistoryView.class})
+    public Integer getScanId() {
+        Scan scan = getScan();
+        if (scan != null) {
+            return scan.getId();
+        }
+        return null;
     }
 
     @ManyToOne
@@ -146,6 +206,16 @@ public class Event extends AuditableEntity {
         this.defect = defect;
     }
 
+    @Transient
+    @JsonView({ AllViews.HistoryView.class})
+    public Integer getDefectId() {
+        Defect defect = getDefect();
+        if (defect != null) {
+            return defect.getId();
+        }
+        return null;
+    }
+
     @ManyToOne
     @JoinColumn(name = "commentId")
     @JsonIgnore
@@ -157,13 +227,300 @@ public class Event extends AuditableEntity {
         this.comment = comment;
     }
 
+    @Transient
+    @JsonView({ AllViews.HistoryView.class})
+    public Integer getVulnerabilityCommentId() {
+        VulnerabilityComment comment = getVulnerabilityComment();
+        if (comment != null) {
+            return comment.getId();
+        }
+        return null;
+    }
+
     @Column(length = STATUS_LENGTH)
-    @JsonView({ AllViews.FormInfo.class})
+    @JsonView({ AllViews.HistoryView.class})
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
+
+    @Column(length = STATUS_LENGTH)
+    @JsonView({ AllViews.HistoryView.class})
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @Transient
+    @JsonView({ AllViews.HistoryView.class})
+    public String getDescription() {
+        String description = null;
+        switch (getEventActionEnum()) {
+            default:
+                description = getUserName() + " performed an action: " + getEventActionDisplayName();
+        }
+        return description;
+    }
+
+    @Transient
+    @JsonView({ AllViews.OrganizationHistoryView.class})
+    public Map<String, Object> getTeamDescriptionWithUrls() {
+        return getFormattedDescriptionWithUrls(HistoryView.ORGANIZATION_HISTORY);
+    }
+
+    @Transient
+    @JsonView({ AllViews.ApplicationHistoryView.class})
+    public Map<String, Object> getApplicationDescriptionWithUrls() {
+        return getFormattedDescriptionWithUrls(HistoryView.APPLICATION_HISTORY);
+    }
+
+    @Transient
+    @JsonView({ AllViews.VulnerabilityHistoryView.class})
+    public Map<String, Object> getVulnerabilityDescriptionWithUrls() {
+        return getFormattedDescriptionWithUrls(HistoryView.VULNERABILITY_HISTORY);
+    }
+
+    @Transient
+    @JsonView({ AllViews.UserHistoryView.class})
+    public Map<String, Object> getUserDescriptionWithUrls() {
+        return getFormattedDescriptionWithUrls(HistoryView.USER_HISTORY);
+    }
+
+    @Transient
+    @JsonIgnore
+    private Map<String, Object> getFormattedDescriptionWithUrls(HistoryView historyView) {
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM d, yyyy h:mm:ss a");
+
+        Map<String, Object> descriptionWithUrls = new HashMap<String, Object>();
+        descriptionWithUrls.put("urlCount", 0);
+
+        StringBuilder description = new StringBuilder();
+        switch (getEventActionEnum()) {
+            case APPLICATION_CREATE:
+                description.append(" created Application");
+                if ((historyView == HistoryView.ORGANIZATION_HISTORY) || (historyView == HistoryView.USER_HISTORY)) {
+                    description.append(" ").append(buildApplicationLink(getApplication(), getApplication().getName(), descriptionWithUrls));
+                }
+                description.append(".");
+                break;
+            case APPLICATION_EDIT:
+                description.append(getUserName()).append(" edited Application");
+                if ((historyView == HistoryView.ORGANIZATION_HISTORY) || (historyView == HistoryView.USER_HISTORY)) {
+                    description.append(" ").append(buildApplicationLink(getApplication(), getApplication().getName(), descriptionWithUrls));
+                }
+                description.append(".");
+                break;
+            case APPLICATION_SET_TAGS:
+                description.append(getUserName()).append(" set tags on Application");
+                if ((historyView == HistoryView.ORGANIZATION_HISTORY) || (historyView == HistoryView.USER_HISTORY)) {
+                    description.append(" ").append(buildApplicationLink(getApplication(), getApplication().getName(), descriptionWithUrls));
+                }
+                description.append(".");
+                break;
+            case APPLICATION_SCAN_UPLOADED:
+                description.append(getUserName()).append(" uploaded a ")
+                        .append(buildScanLink(getScan(), "Scan", descriptionWithUrls))
+                        .append(" to Application");
+                if ((historyView == HistoryView.ORGANIZATION_HISTORY) || (historyView == HistoryView.USER_HISTORY)) {
+                    description.append(" ").append(buildApplicationLink(getApplication(), getApplication().getName(), descriptionWithUrls));
+                }
+                description.append(".");
+                break;
+            case APPLICATION_SCAN_DELETED:
+                description.append(getUserName()).append(" deleted a ")
+                        .append(buildScanLink(getScan(), "Scan", descriptionWithUrls))
+                        .append(" to Application");
+                if ((historyView == HistoryView.ORGANIZATION_HISTORY) || (historyView == HistoryView.USER_HISTORY)) {
+                    description.append(" ").append(buildApplicationLink(getApplication(), getApplication().getName(), descriptionWithUrls));
+                }
+                description.append(".");
+                break;
+            case VULNERABILITY_CREATE:
+            case VULNERABILITY_OPEN_SCAN_DELETED:
+            case VULNERABILITY_OPEN_SCAN_UPLOAD:
+                description.append(getUserName()).append(" created Vulnerability");
+                if ((historyView != HistoryView.VULNERABILITY_HISTORY) && (getVulnerability() != null)) {
+                    description.append(" ").append(buildVulnerabilityLink(getVulnerability(), getVulnerability().getVulnerabilityName(), descriptionWithUrls));
+                }
+                description.append(".");
+                break;
+            case VULNERABILITY_CLOSE:
+            case VULNERABILITY_CLOSE_FINDINGS_MERGE:
+            case VULNERABILITY_CLOSE_SCAN_DELETED:
+            case VULNERABILITY_CLOSE_SCAN_UPLOAD:
+                description.append(getUserName()).append(" closed Vulnerability");
+                if ((historyView != HistoryView.VULNERABILITY_HISTORY) && (getVulnerability() != null)) {
+                    description.append(" ").append(buildVulnerabilityLink(getVulnerability(), getVulnerability().getVulnerabilityName(), descriptionWithUrls));
+                }
+                description.append(".");
+                break;
+            case VULNERABILITY_REOPEN:
+            case VULNERABILITY_REOPEN_SCAN_UPLOAD:
+                description.append(getUserName()).append(" reopened Vulnerability");
+                if ((historyView != HistoryView.VULNERABILITY_HISTORY) && (getVulnerability() != null)) {
+                    description.append(" ").append(buildVulnerabilityLink(getVulnerability(), getVulnerability().getVulnerabilityName(), descriptionWithUrls));
+                }
+                description.append(".");
+                break;
+            case VULNERABILITY_MARK_FALSE_POSITIVE:
+                description.append(getUserName()).append(" marked Vulnerability as false positive");
+                if ((historyView != HistoryView.VULNERABILITY_HISTORY) && (getVulnerability() != null)) {
+                    description.append(" ").append(buildVulnerabilityLink(getVulnerability(), getVulnerability().getVulnerabilityName(), descriptionWithUrls));
+                }
+                description.append(".");
+                break;
+            case VULNERABILITY_UNMARK_FALSE_POSITIVE:
+                description.append(getUserName()).append(" unmarked Vulnerability as false positive");
+                if ((historyView != HistoryView.VULNERABILITY_HISTORY) && (getVulnerability() != null)) {
+                    description.append(" ").append(buildVulnerabilityLink(getVulnerability(), getVulnerability().getVulnerabilityName(), descriptionWithUrls));
+                }
+                description.append(".");
+                break;
+            case VULNERABILITY_COMMENT:
+                description.append(getUserName()).append(" commented on Vulnerability");
+                if ((historyView != HistoryView.VULNERABILITY_HISTORY) && (getVulnerability() != null)) {
+                    description.append(" ").append(buildVulnerabilityLink(getVulnerability(), getVulnerability().getVulnerabilityName(), descriptionWithUrls));
+                }
+                description.append(".");
+                break;
+            case VULNERABILITY_OTHER:
+                description.append(getUserName()).append(" performed an action on Vulnerability");
+                if ((historyView != HistoryView.VULNERABILITY_HISTORY) && (getVulnerability() != null)) {
+                    description.append(" ").append(buildVulnerabilityLink(getVulnerability(), getVulnerability().getVulnerabilityName(), descriptionWithUrls));
+                }
+                description.append(".");
+                break;
+            case DEFECT_SUBMIT:
+                description.append(getUserName()).append(" submitted Defect ");
+                if (getDefect() != null) {
+                    description.append(buildDefectLink(getVulnerability(), getDefect().getNativeId(), descriptionWithUrls));
+                }
+                description.append(" for Vulnerability");
+                if ((historyView != HistoryView.VULNERABILITY_HISTORY) && (getVulnerability() != null)) {
+                    description.append(" ").append(buildVulnerabilityLink(getVulnerability(), getVulnerability().getVulnerabilityName(), descriptionWithUrls));
+                }
+                description.append(".");
+                break;
+            case DEFECT_STATUS_UPDATED:
+                description.append(getUserName()).append(" updated the status of Defect ");
+                if (getDefect() != null) {
+                    description.append(buildDefectLink(getVulnerability(), getDefect().getNativeId(), descriptionWithUrls));
+                }
+                description.append(" for Vulnerability");
+                if ((historyView != HistoryView.VULNERABILITY_HISTORY) && (getVulnerability() != null)) {
+                    description.append(" ").append(buildVulnerabilityLink(getVulnerability(), getVulnerability().getVulnerabilityName(), descriptionWithUrls));
+                }
+                description.append(".");
+                break;
+            case DEFECT_CLOSED:
+                description.append(getUserName()).append(" closed Defect ");
+                if (getDefect() != null) {
+                    description.append(buildDefectLink(getVulnerability(), getDefect().getNativeId(), descriptionWithUrls));
+                }
+                description.append(" for Vulnerability");
+                if ((historyView != HistoryView.VULNERABILITY_HISTORY) && (getVulnerability() != null)) {
+                    description.append(" ").append(buildVulnerabilityLink(getVulnerability(), getVulnerability().getVulnerabilityName(), descriptionWithUrls));
+                }
+                description.append(".");
+                break;
+            case DEFECT_APPEARED_AFTER_CLOSED:
+                // TODO: this needs to be reworded!!!
+                description.append(getUserName()).append(" uploaded a Scan with Vulnerability");
+                if ((historyView != HistoryView.VULNERABILITY_HISTORY) && (getVulnerability() != null)) {
+                    description.append(" ").append(buildVulnerabilityLink(getVulnerability(), getVulnerability().getVulnerabilityName(), descriptionWithUrls));
+                }
+                description.append(" with previously closed Defect ");
+                if (getDefect() != null) {
+                    description.append(buildDefectLink(getVulnerability(), getDefect().getNativeId(), descriptionWithUrls));
+                }
+                description.append(".");
+                break;
+            default:
+                description.append(getUserName()).append(" performed an action: ").append(getEventActionDisplayName());
+        }
+
+        String detail = getDetail();
+        if (detail != null) {
+            description.append(" <span class='detail'>").append(detail).append("</span>");
+        }
+
+        descriptionWithUrls.put("string", description.toString());
+
+        return descriptionWithUrls;
+    }
+
+    private String buildApplicationLink(Application application, String linkText, Map<String, Object> urlMap) {
+        if (application == null) {
+            return linkText;
+        }
+        String urlString = "/organizations/" +
+                application.getOrganization().getId() +
+                "/applications/" +
+                application.getId();
+        return buildLink(urlString, linkText, urlMap);
+    }
+
+    private String buildScanLink(Scan scan, String linkText, Map<String, Object> urlMap) {
+        if (scan == null) {
+            return linkText;
+        }
+        String urlString = "/organizations/" +
+                scan.getApplication().getOrganization().getId() +
+                "/applications/" +
+                scan.getApplication().getId() +
+                "/scans/" +
+                scan.getId();
+        return buildLink(urlString, linkText, urlMap);
+    }
+
+    private String buildVulnerabilityLink(Vulnerability vulnerability, String linkText, Map<String, Object> urlMap) {
+//        if (vulnerability == null) {
+            return linkText;
+//        }
+//        String urlString = "/organizations/" +
+//                vulnerability.getApplication().getOrganization().getId() +
+//                "/applications/" +
+//                vulnerability.getApplication().getId() +
+//                "/vulnerabilities/" +
+//                vulnerability.getId();
+//        return buildLink(urlString, linkText, urlMap);
+    }
+
+    private String buildDefectLink(Vulnerability vulnerability, String linkText, Map<String, Object> urlMap) {
+        if (defect == null || vulnerability == null) {
+            return linkText;
+        }
+        String urlString = "/organizations/" +
+                vulnerability.getApplication().getOrganization().getId() +
+                "/applications/" +
+                vulnerability.getApplication().getId() +
+                "/vulnerabilities/" +
+                vulnerability.getId() +
+                "/defect";
+        return buildLink(urlString, linkText, urlMap);
+    }
+
+    private String buildLink(String urlString, String linkText, Map<String, Object> urlMap) {
+        String urlIdentifier = addUrl(urlMap, urlString);
+        String link = "<a href='" + urlIdentifier + "'>" + linkText + "</a>";
+        return link;
+    }
+
+    private String addUrl(Map<String, Object> urlMap, String urlString) {
+        int urlCount = (Integer)urlMap.get("urlCount");
+        String urlIdentifier = "{URL_" + urlCount + "}";
+        urlMap.put(urlIdentifier, urlString);
+        urlMap.put("urlCount", ++urlCount);
+        return urlIdentifier;
+    }
+
+    private enum HistoryView {
+        ORGANIZATION_HISTORY, APPLICATION_HISTORY, VULNERABILITY_HISTORY, USER_HISTORY;
     }
 }

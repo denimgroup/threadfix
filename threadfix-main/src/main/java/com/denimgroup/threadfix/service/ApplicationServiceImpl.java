@@ -376,7 +376,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 					}
 					vulnerability.setWafRuleGeneratedTime(null);
 					vulnerability.setWafRules(new ArrayList<WafRule>());
-					vulnerabilityService.storeVulnerability(vulnerability, EventAction.VULNERABILITY_OTHER);
+					vulnerabilityService.storeVulnerability(vulnerability);
 				}
 			}
 		}
@@ -496,7 +496,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 			if (vulns != null) {
 				for (Vulnerability vuln : vulns) {
 					vuln.setDefect(null);
-					vulnerabilityService.storeVulnerability(vuln, EventAction.VULNERABILITY_OTHER);
+					vulnerabilityService.storeVulnerability(vuln);
 				}
 			}
 		}
@@ -842,7 +842,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             throw new RuntimeException("Has validation errors");
         }
 
-        storeApplication(dbApplication);
+        storeApplication(dbApplication, EventAction.APPLICATION_EDIT);
 
         return success("Fields updated successfully.");
     }

@@ -177,7 +177,7 @@ public class DocumentServiceImpl implements DocumentService {
 			appDocs.add(doc);
 			
 			documentDao.saveOrUpdate(doc);
-			vulnerabilityService.storeVulnerability(vulnerability, EventAction.VULNERABILITY_OTHER);
+			vulnerabilityService.storeVulnerability(vulnerability);
 
 		} catch (SQLException | IOException e) {
 			log.warn("Unable to save document - exception occurs.");
@@ -209,7 +209,7 @@ public class DocumentServiceImpl implements DocumentService {
 			vulnerability.getDocuments().remove(document);
 			document.setVulnerability(null);
 			documentDao.delete(document);
-			vulnerabilityService.storeVulnerability(vulnerability, EventAction.VULNERABILITY_OTHER);
+			vulnerabilityService.storeVulnerability(vulnerability);
 			return "redirect:/organizations/" + vulnerability.getApplication().getOrganization().getId() + "/applications/" + vulnerability.getApplication().getId() + "/vulnerabilities/" + vulnerability.getId();
 		}
 		

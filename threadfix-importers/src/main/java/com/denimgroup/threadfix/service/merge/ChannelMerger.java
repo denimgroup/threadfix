@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.VulnerabilityService;
+import com.denimgroup.threadfix.service.VulnerabilityStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
@@ -39,6 +40,9 @@ public class ChannelMerger {
 
     @Autowired
     private VulnerabilityService vulnerabilityService;
+    @Autowired
+    private VulnerabilityStatusService vulnerabilityStatusService;
+
     private Scan scan;
     private ApplicationChannel applicationChannel;
 
@@ -55,10 +59,11 @@ public class ChannelMerger {
      * as the incoming scan.
      *
      * @param vulnerabilityService TODO this is a shim to get around autowiring problems so we can unit test this.
+     * @param vulnerabilityStatusService TODO this is a shim to get around autowiring problems so we can unit test this.
      * @param scan recent scan to merge
      * @param applicationChannel context information about the scan
      */
-    public static void channelMerge(VulnerabilityService vulnerabilityService, Scan scan, ApplicationChannel applicationChannel) {
+    public static void channelMerge(VulnerabilityService vulnerabilityService, VulnerabilityStatusService vulnerabilityStatusService, Scan scan, ApplicationChannel applicationChannel) {
         if (scan == null || applicationChannel == null) {
             LOG.warn("Insufficient data to complete Application Channel-wide merging process.");
             return;
@@ -69,6 +74,7 @@ public class ChannelMerger {
         merger.scan = scan;
         merger.applicationChannel = applicationChannel;
         merger.vulnerabilityService = vulnerabilityService;
+        merger.vulnerabilityStatusService = vulnerabilityStatusService;
 
         merger.performMerge();
     }
@@ -143,13 +149,13 @@ public class ChannelMerger {
                 }
 
                 if (scan.getImportTime() != null) {
-                    oldNativeIdVulnHash.get(nativeId).closeVulnerability(scan,
-                            scan.getImportTime());
+                    vulnerabilityStatusService.closeVulnerability(oldNativeIdVulnHash.get(nativeId), scan,
+                            scan.getImportTime(), false, false);
                 } else {
-                    oldNativeIdVulnHash.get(nativeId).closeVulnerability(scan,
-                            Calendar.getInstance());
+                    vulnerabilityStatusService.closeVulnerability(oldNativeIdVulnHash.get(nativeId), scan,
+                            Calendar.getInstance(), false, false);
                 }
-                vulnerabilityService.storeVulnerability(oldNativeIdVulnHash.get(nativeId), EventAction.VULNERABILITY_CLOSE);
+                vulnerabilityService.storeVulnerability(oldNativeIdVulnHash.get(nativeId));
                 closed += 1;
             }
         }
@@ -205,9 +211,9 @@ public class ChannelMerger {
 
         if (!vulnerability.isActive()) {
             resurfaced += 1;
-            vulnerability.reopenVulnerability(scan,
+            vulnerabilityStatusService.reopenVulnerability(vulnerability, scan,
                     scan.getImportTime());
-            vulnerabilityService.storeVulnerability(vulnerability, EventAction.VULNERABILITY_REOPEN);
+            vulnerabilityService.storeVulnerability(vulnerability);
         }
     }
 
@@ -230,9 +236,8 @@ public class ChannelMerger {
                     + "in the scan results. Marking the finding and Vulnerability.");
             oldFinding.setMarkedFalsePositive(true);
             if (oldFinding.getVulnerability() != null) {
-                oldFinding.getVulnerability().setIsFalsePositive(true);
-                vulnerabilityService.storeVulnerability(oldFinding
-                        .getVulnerability(), EventAction.VULNERABILITY_MARK_FALSE_POSITIVE);
+                vulnerabilityStatusService.markVulnerabilityFalsePositive(oldFinding.getVulnerability());
+                vulnerabilityService.storeVulnerability(oldFinding.getVulnerability());
             }
         }
         // If the finding has had its false positive status removed, update
@@ -244,9 +249,8 @@ public class ChannelMerger {
                     + "in the scan results. Unmarking the finding and Vulnerability.");
             oldFinding.setMarkedFalsePositive(false);
             if (oldFinding.getVulnerability() != null) {
-                oldFinding.getVulnerability().setIsFalsePositive(false);
-                vulnerabilityService.storeVulnerability(oldFinding
-                        .getVulnerability(), EventAction.VULNERABILITY_UNMARK_FALSE_POSITIVE);
+                vulnerabilityStatusService.unmarkVulnerabilityFalsePositive(oldFinding.getVulnerability());
+                vulnerabilityService.storeVulnerability(oldFinding.getVulnerability());
             }
         }
 

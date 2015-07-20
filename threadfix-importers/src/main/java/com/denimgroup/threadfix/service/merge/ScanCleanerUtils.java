@@ -128,7 +128,7 @@ public class ScanCleanerUtils {
                         finding.getScan().getApplication());
 
 				if (finding.getVulnerability().getId() == null) {
-					vulnerabilityService.storeVulnerability(finding.getVulnerability(), EventAction.VULNERABILITY_CREATE);
+					vulnerabilityService.storeVulnerability(finding.getVulnerability());
 				}
                 finding.getScan().getApplication().addVulnerability(finding.getVulnerability());
 

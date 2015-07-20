@@ -441,7 +441,7 @@ public class ApplicationRestController extends TFRestController {
         }
 
         application.getTags().add(tag);
-        applicationService.storeApplication(application);
+        applicationService.storeApplication(application, EventAction.APPLICATION_SET_TAGS);
 
         return success(application);
     }
@@ -479,7 +479,7 @@ public class ApplicationRestController extends TFRestController {
 
         if(application.containTag(tag)){
             application.getTags().remove(tag);
-            applicationService.storeApplication(application);
+            applicationService.storeApplication(application, EventAction.APPLICATION_SET_TAGS);
 
             return success("Tag successfully removed from application");
         }else{

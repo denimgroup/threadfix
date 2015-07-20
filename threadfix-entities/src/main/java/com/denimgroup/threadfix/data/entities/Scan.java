@@ -74,7 +74,9 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 
     private List<Finding> findings;
 
-    private Integer numWithoutChannelVulns    = null;
+    private List<Event> events;
+
+	private Integer numWithoutChannelVulns    = null;
     private Integer numWithoutGenericMappings = null;
 
     private Integer totalNumberSkippedResults       = null;
@@ -171,6 +173,17 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
     public void setFindings(List<Finding> findings) {
         this.findings = findings;
     }
+
+	@OneToMany(mappedBy = "scan")
+	@OrderBy("date ASC")
+	@JsonIgnore
+	public List<Event> getEvents() {
+		return events;
+	}
+
+	public void setEvents(List<Event> events) {
+		this.events = events;
+	}
 
     @Column(length = 256)
     public String getFilePathRoot() {

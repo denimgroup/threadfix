@@ -32,6 +32,7 @@ import com.denimgroup.threadfix.service.EventBuilder;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.DeclareError;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -52,9 +53,8 @@ public class ApplicationEventTrackingAspect extends EventTrackingAspect {
             }
         } catch (Exception e) {
             log.error("Error while logging Event: " + eventAction, e);
-        } finally {
-            return proceed;
         }
+        return proceed;
     }
 
     protected Event generateStoreApplicationEvent(Application application, EventAction eventAction) {
@@ -67,26 +67,28 @@ public class ApplicationEventTrackingAspect extends EventTrackingAspect {
         return event;
     }
 
-    @Around("execution(* com.denimgroup.threadfix.service.ScanMergeService.saveRemoteScanAndRun(Integer, String, String)) && args(channelId, fileName, originalFileName)")
-    public Object processSaveRemoteScanAndRunEvent(ProceedingJoinPoint joinPoint, Integer channelId, String fileName, String originalFileName) throws Throwable {
-        return emitUploadApplicationScanEvent(joinPoint, channelId, fileName);
+    @Around("execution(* com.denimgroup.threadfix.service.ScanMergeService.saveRemoteScanAndRun(..)) && args(channelId, fileNames, originalFileNames)")
+    public Object processSaveRemoteScanAndRunEvent(ProceedingJoinPoint joinPoint, Integer channelId, List<String> fileNames, List<String> originalFileNames) throws Throwable {
+        Object proceed = joinPoint.proceed();
+        for (String fileName : fileNames) {
+            emitUploadApplicationScanEvent((Scan)proceed, channelId, fileName);
+        }
+        return proceed;
     }
 
     @Around("execution(* com.denimgroup.threadfix.service.ScanMergeService.processScan(Integer, String, Integer, String)) && args(channelId, fileName, statusId, userName)")
     public Object processProcessScanEvent(ProceedingJoinPoint joinPoint, Integer channelId, String fileName, Integer statusId, String userName) throws Throwable {
-        return emitUploadApplicationScanEvent(joinPoint, channelId, fileName);
+        Object proceed = joinPoint.proceed();
+        emitUploadApplicationScanEvent((Scan)proceed, channelId, fileName);
+        return proceed;
     }
 
-    public Object emitUploadApplicationScanEvent(ProceedingJoinPoint joinPoint, Integer channelId, String fileName) throws Throwable {
-        Object proceed = joinPoint.proceed();
+    public void emitUploadApplicationScanEvent(Scan scan, Integer channelId, String fileName) throws Throwable {
         try {
-            Scan scan = (Scan) proceed;
             Event event = generateUploadScanEvent(scan);
             publishEventTrackingEvent(event);
         } catch (Exception e) {
             log.error("Error while logging Event: " + EventAction.APPLICATION_SCAN_UPLOADED, e);
-        } finally {
-            return proceed;
         }
     }
 
@@ -96,7 +98,7 @@ public class ApplicationEventTrackingAspect extends EventTrackingAspect {
                 .setEventAction(EventAction.APPLICATION_SCAN_UPLOADED)
                 .setApplication(scan.getApplication())
                 .setScan(scan)
-                .setStatus(eventService.buildUploadScanString(scan))
+                .setDetail(eventService.buildUploadScanString(scan))
                 .generateEvent();
         eventService.saveOrUpdate(event);
         return event;
@@ -109,8 +111,15 @@ public class ApplicationEventTrackingAspect extends EventTrackingAspect {
 
         for (Event event: eventService.loadAllByScan(scan)) {
             event.setScan(null);
+            scan.getEvents().remove(event);
             eventService.saveOrUpdate(event);
         }
+        scanService.storeScan(scan);
+
+//        for (Event event: eventService.loadAllByScan(scan)) {
+//            event.setScan(null);
+//            eventService.saveOrUpdate(event);
+//        }
 
         joinPoint.proceed();
         try {
@@ -126,7 +135,7 @@ public class ApplicationEventTrackingAspect extends EventTrackingAspect {
                 .setUser(userService.getCurrentUser())
                 .setEventAction(EventAction.APPLICATION_SCAN_DELETED)
                 .setApplication(application)
-                .setStatus(scanDescription)
+                .setDetail(scanDescription)
                 .generateEvent();
         eventService.saveOrUpdate(event);
         return event;

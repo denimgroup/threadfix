@@ -63,6 +63,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	private ScanMerger scanMerger;
     @Autowired
 	private VulnerabilityFilterService vulnerabilityFilterService;
+	@Autowired
+	private VulnerabilityStatusService vulnerabilityStatusService;
     @Autowired
     private ChannelImporterFactory channelImporterFactory;
     @Autowired
@@ -146,9 +148,11 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 							// set the matched vulnerability inactive, not a
 							// good method, but deleting it will cause cascading
 							// problems
-							vulnerabilities.get(j).setActive(false);
 							if (shouldSaveVulnerabilites) {
-								vulnerabilityService.storeVulnerability(vulnerabilities.get(j), EventAction.VULNERABILITY_CLOSE);
+								vulnerabilityStatusService.closeVulnerability(vulnerabilities.get(j), null, null, false, false);
+								vulnerabilityService.storeVulnerability(vulnerabilities.get(j));
+							} else {
+								vulnerabilities.get(j).setActive(false);
 							}
 						}
 					}

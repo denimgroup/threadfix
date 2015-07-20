@@ -81,6 +81,11 @@ public class EventBuilder {
         return this;
     }
 
+    public EventBuilder setDetail(String detail) {
+        event.setDetail(detail);
+        return this;
+    }
+
     public EventBuilder setStatus(String status) {
         event.setStatus(status);
         return this;

@@ -70,6 +70,8 @@ public class User extends AuditableEntity {
     private List<AccessControlTeamMap> accessControlTeamMaps;
     private List<Group> groups;
 
+    private List<Event> events;
+
     @Column(length = NAME_LENGTH, nullable = false)
     @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
     public String getName() {
@@ -263,6 +265,29 @@ public class User extends AuditableEntity {
 
     public void setGroups(List<Group> groups) {
         this.groups = groups;
+    }
+
+    @OneToMany(mappedBy = "user")
+    @OrderBy("date ASC")
+    @JsonIgnore
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
+
+    @Transient
+    @JsonView({AllViews.UserHistoryView.class})
+    public List<Event> getUserEvents() {
+        List<Event> userEvents = list();
+        for (Event event : getEvents()) {
+            if (event.getEventActionEnum().isUserEventAction()) {
+                userEvents.add(event);
+            }
+        }
+        return userEvents;
     }
 
     @Transient

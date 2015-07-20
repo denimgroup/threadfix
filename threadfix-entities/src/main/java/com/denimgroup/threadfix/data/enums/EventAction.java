@@ -32,8 +32,16 @@ public enum EventAction {
     APPLICATION_SCAN_UPLOADED("Upload Application Scan"),
     APPLICATION_SCAN_DELETED("Delete Application Scan"),
     VULNERABILITY_CREATE("Create Vulnerability"),
+    VULNERABILITY_OPEN_SCAN_DELETED("Open Vulnerability From Scan Deletion"),
+    VULNERABILITY_OPEN_SCAN_UPLOAD("Create Vulnerability From Scan Upload"),
     VULNERABILITY_CLOSE("Close Vulnerability"),
+    VULNERABILITY_CLOSE_FINDINGS_MERGE("Close Vulnerability From Findings Merge"),
+    VULNERABILITY_CLOSE_SCAN_DELETED("Close Vulnerability From Scan Deletion"),
+    VULNERABILITY_CLOSE_SCAN_UPLOAD("Close Vulnerability From Scan Upload"),
+    VULNERABILITY_CLOSE_MANUAL("Close Vulnerability Manually"),
     VULNERABILITY_REOPEN("Reopen Vulnerability"),
+    VULNERABILITY_REOPEN_SCAN_UPLOAD("Reopen Vulnerability From Scan Upload"),
+    VULNERABILITY_REOPEN_MANUAL("Reopen Vulnerability Manually"),
     VULNERABILITY_MARK_FALSE_POSITIVE("Mark Vulnerability False Positive"),
     VULNERABILITY_UNMARK_FALSE_POSITIVE("Unmark Vulnerability False Positive"),
     VULNERABILITY_COMMENT("Create Vulnerability Comment"),
@@ -43,12 +51,30 @@ public enum EventAction {
     DEFECT_CLOSED("Close Defect"),
     DEFECT_APPEARED_AFTER_CLOSED("Appeared In Scan After Defect Closed");
 
+    private static EventAction[] organizationEventActions = { APPLICATION_CREATE, APPLICATION_EDIT,
+            APPLICATION_SET_TAGS, APPLICATION_SCAN_UPLOADED, APPLICATION_SCAN_DELETED };
+
     private static EventAction[] applicationEventActions = { APPLICATION_CREATE, APPLICATION_EDIT,
             APPLICATION_SET_TAGS, APPLICATION_SCAN_UPLOADED, APPLICATION_SCAN_DELETED };
 
-    private static EventAction[] vulnerabilityEventActions = { VULNERABILITY_CREATE, VULNERABILITY_CLOSE,
-            VULNERABILITY_REOPEN, VULNERABILITY_MARK_FALSE_POSITIVE, VULNERABILITY_UNMARK_FALSE_POSITIVE,
-            VULNERABILITY_COMMENT, VULNERABILITY_OTHER };
+    private static EventAction[] vulnerabilityEventActions = { VULNERABILITY_OPEN_SCAN_DELETED,
+            VULNERABILITY_OPEN_SCAN_UPLOAD,
+            VULNERABILITY_CLOSE_FINDINGS_MERGE,
+            VULNERABILITY_CLOSE_SCAN_DELETED,
+            VULNERABILITY_CLOSE_SCAN_UPLOAD,
+            VULNERABILITY_REOPEN_SCAN_UPLOAD, VULNERABILITY_MARK_FALSE_POSITIVE, VULNERABILITY_UNMARK_FALSE_POSITIVE,
+            VULNERABILITY_COMMENT, VULNERABILITY_OTHER, DEFECT_SUBMIT, DEFECT_STATUS_UPDATED, DEFECT_CLOSED,
+            DEFECT_APPEARED_AFTER_CLOSED };
+
+    private static EventAction[] userEventActions = { APPLICATION_CREATE, APPLICATION_EDIT,
+            APPLICATION_SET_TAGS, APPLICATION_SCAN_UPLOADED, APPLICATION_SCAN_DELETED, VULNERABILITY_OPEN_SCAN_DELETED,
+            VULNERABILITY_OPEN_SCAN_UPLOAD,
+            VULNERABILITY_CLOSE_FINDINGS_MERGE,
+            VULNERABILITY_CLOSE_SCAN_DELETED,
+            VULNERABILITY_CLOSE_SCAN_UPLOAD,
+            VULNERABILITY_REOPEN_SCAN_UPLOAD, VULNERABILITY_MARK_FALSE_POSITIVE,
+            VULNERABILITY_UNMARK_FALSE_POSITIVE, VULNERABILITY_COMMENT, VULNERABILITY_OTHER, DEFECT_SUBMIT,
+            DEFECT_STATUS_UPDATED, DEFECT_CLOSED, DEFECT_APPEARED_AFTER_CLOSED };
 
     EventAction(String displayName) {
         this.displayName = displayName;
@@ -58,6 +84,15 @@ public enum EventAction {
 
     @JsonView(Object.class)
     public String getDisplayName() { return displayName; }
+
+    public boolean isOrganizationEventAction() {
+        for (EventAction eventAction: organizationEventActions) {
+            if (eventAction.equals(this)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public boolean isApplicationEventAction() {
         for (EventAction eventAction: applicationEventActions) {
@@ -70,6 +105,15 @@ public enum EventAction {
 
     public boolean isVulnerabilityEventAction() {
         for (EventAction eventAction: vulnerabilityEventActions) {
+            if (eventAction.equals(this)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isUserEventAction() {
+        for (EventAction eventAction: userEventActions) {
             if (eventAction.equals(this)) {
                 return true;
             }

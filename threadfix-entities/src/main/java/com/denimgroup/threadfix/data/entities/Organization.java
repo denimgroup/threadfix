@@ -33,7 +33,12 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static java.util.Collections.*;
 
 @Entity
 @Table(name = "Organization")
@@ -54,7 +59,8 @@ public class Organization extends AuditableEntity {
 	
 	private List<Application> activeApps;
 	private List<AccessControlTeamMap> accessControlTeamMaps;
-	
+    private List<Event> events;
+
 	public static final int NAME_LENGTH = 60;
 
 	@NotEmpty(message = "{errors.required}")
@@ -125,7 +131,41 @@ public class Organization extends AuditableEntity {
 		this.accessControlTeamMaps = accessControlTeamMaps;
 	}
 
-	// TODO this might belong somewhere else
+    @Transient
+    @JsonView({Object.class})
+    public List<Event> getOrganizationEvents() {
+        List<Event> organizationEvents = list();
+        for (Application application: getApplications()) {
+            for (Event event: application.getEvents()) {
+                if (event.getEventActionEnum().isOrganizationEventAction()) {
+                    organizationEvents.add(event);
+                }
+            }
+        }
+        sort(organizationEvents, new Comparator<Event>() {
+            @Override
+            public int compare(Event o1, Event o2) {
+                if ((o1 == null) && (o2 == null)) {
+                    return 0;
+                } else if (o1 == null) {
+                    return -1;
+                } else if (o2 == null) {
+                    return 1;
+                } else if ((o1.getDate() == null) && (o2.getDate() == null)) {
+                    return o1.getId().compareTo(o2.getId());
+                } else if (o1.getDate() == null) {
+                    return -1;
+                } else if (o2.getDate() == null) {
+                    return 1;
+                } else {
+                    return o1.getDate().compareTo(o2.getDate());
+                }
+            }
+        });
+        return organizationEvents;
+    }
+
+    // TODO this might belong somewhere else
 	/*
 	 * Index Severity 0 Info 1 Low 2 Medium 3 High 4 Critical 5 # Total vulns
 	 */

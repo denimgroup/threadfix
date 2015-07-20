@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.VulnerabilityService;
+import com.denimgroup.threadfix.service.VulnerabilityStatusService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,8 @@ public class FindingsController {
 	private FindingService findingService;
 	@Autowired
     private VulnerabilityService vulnerabilityService;
+	@Autowired
+	private VulnerabilityStatusService vulnerabilityStatusService;
 
 	@RequestMapping(value = "/organizations/{orgId}/applications/{appId}/scans/{scanId}/findings/{findingId}", method = RequestMethod.GET)
 	public ModelAndView finding(@PathVariable("findingId") int findingId,
@@ -140,8 +143,8 @@ public class FindingsController {
 			
 			if (finding.getVulnerability() != null && 
 					finding.getVulnerability().getFindings().size() == 1) {
-				finding.getVulnerability().closeVulnerability(null, Calendar.getInstance());
-				vulnerabilityService.storeVulnerability(finding.getVulnerability(), EventAction.VULNERABILITY_OTHER);
+				vulnerabilityStatusService.closeVulnerability(finding.getVulnerability(),  null, Calendar.getInstance(), false, true);
+				vulnerabilityService.storeVulnerability(finding.getVulnerability());
 			}
 			
 			finding.setVulnerability(vulnerability);

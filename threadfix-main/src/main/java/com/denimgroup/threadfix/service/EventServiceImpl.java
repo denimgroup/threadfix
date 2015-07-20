@@ -71,9 +71,9 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
     public String buildUploadScanString(Scan scan) {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM d, yyyy h:mm:ss a");
 
-        String uploadScanString = getUserName() + " uploaded a " + scan.getApplicationChannel().getChannelType().getName() +
+        String uploadScanString = scan.getApplicationChannel().getChannelType().getName() +
                 " Scan dated " + dateFormatter.format(scan.getImportTime().getTime()) + " with " + scan.getNumberTotalVulnerabilities() +
-                " Vulnerabilities. The scan was uploaded from " + scan.getOriginalFileName() + ".";
+                " Vulnerabilities. The scan was uploaded from ";// + scan.getOriginalFileName() + ".";
 
         return uploadScanString;
     }
@@ -90,9 +90,9 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
             }
         }
 
-        String deleteScanString = getUserName() + " deleted a " + scan.getApplicationChannel().getChannelType().getName() +
+        String deleteScanString = scan.getApplicationChannel().getChannelType().getName() +
                 " Scan dated " + dateFormatter.format(scan.getImportTime().getTime()) + " with " + scan.getNumberTotalVulnerabilities() +
-                " Vulnerabilities. The scan was uploaded from " + scan.getOriginalFileName();
+                " Vulnerabilities. The scan was uploaded from ";// + scan.getOriginalFileName();
         if (scanUploadEvent != null) {
             deleteScanString += " on " + dateFormatter.format(scanUploadEvent.getDate());
         }

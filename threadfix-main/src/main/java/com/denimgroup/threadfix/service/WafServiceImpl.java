@@ -201,7 +201,7 @@ public class WafServiceImpl implements WafService {
 
 				Vulnerability vuln = wafRule.getVulnerability();
 				vuln.setWafRuleGeneratedTime(now);
-				vulnerabilityService.storeVulnerability(vuln, EventAction.VULNERABILITY_OTHER);
+				vulnerabilityService.storeVulnerability(vuln);
 			}
 		}
 	}
