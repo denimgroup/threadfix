@@ -37,12 +37,12 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/configuration/filters")
-@SessionAttributes({"vulnerabilityFilter", "severityFilter"})
+@SessionAttributes({"vulnerabilityFilter", "severityFilter", "channelVulnerabilityFilter"})
 public class GlobalFilterController extends AbstractVulnFilterController {
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields("sourceGenericVulnerability.name", "targetGenericSeverity.id");
+		dataBinder.setAllowedFields("sourceGenericVulnerability.name", "targetGenericSeverity.id", "sourceChannelType.id", "sourceChannelType.name", "sourceChannelVulnerability.id", "sourceChannelVulnerability.name");
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -86,5 +86,18 @@ public class GlobalFilterController extends AbstractVulnFilterController {
 																	 BindingResult bindingResult, SessionStatus status) {
 		return submitNewChannelFilterBackend(channelVulnerabilityFilter,
 				bindingResult, status);
+	}
+
+	@RequestMapping(value="/{filterId}/editChannelFilter", method = RequestMethod.POST)
+	public @ResponseBody RestResponse<ChannelVulnerabilityFilter> submitEditChannelFilter(ChannelVulnerabilityFilter channelVulnerabilityFilter,
+																	  BindingResult bindingResult, SessionStatus status, Model model,
+																	  @PathVariable int filterId) {
+		return submitEditChannelFilterBackend(channelVulnerabilityFilter,
+				bindingResult, status, filterId);
+	}
+
+	@RequestMapping(value="/{filterId}/deleteChannelFilter", method = RequestMethod.POST)
+	public @ResponseBody String submitDeleteChannelFilter(@PathVariable int filterId) {
+		return submitDeleteChannelFilterBackend(filterId);
 	}
 }

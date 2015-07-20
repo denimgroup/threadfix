@@ -264,7 +264,7 @@ public abstract class AbstractVulnFilterController {
 
 
 		if (!bindingResult.hasErrors()) {
-			channelVulnerabilityFilterService.validate(vulnerabilityFilter, bindingResult);
+			channelVulnerabilityFilterService.validate(vulnerabilityFilter, bindingResult, -1);
 		}
 
 		if (bindingResult.hasErrors()) {
@@ -272,11 +272,49 @@ public abstract class AbstractVulnFilterController {
 			return FormRestResponse.failure(FAILURE_MESSAGE, bindingResult);
 		} else {
 			channelVulnerabilityFilterService.save(vulnerabilityFilter);
-			vulnerabilityFilterService.updateStatistics(-1, -1);
+			channelVulnerabilityFilterService.updateStatistics();
 			status.setComplete();
 			log.info(SUCCESS_MESSAGE);
 			return RestResponse.success(vulnerabilityFilter);
 		}
+	}
+
+	public RestResponse<ChannelVulnerabilityFilter> submitEditChannelFilterBackend(
+			ChannelVulnerabilityFilter vulnerabilityFilter,
+			BindingResult bindingResult,
+			SessionStatus status,
+			int filterId) {
+
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, -1, -1)) {
+			return RestResponse.failure(AUTHORIZATION_FAILED);
+		}
+
+		if (!bindingResult.hasErrors()) {
+			vulnerabilityFilter = channelVulnerabilityFilterService.validate(vulnerabilityFilter, bindingResult, filterId);
+		}
+
+		if (bindingResult.hasErrors()) {
+			log.warn(FAILURE_MESSAGE);
+			return FormRestResponse.failure("Found some errors", bindingResult);
+		} else {
+			vulnerabilityFilter.setId(filterId);
+			channelVulnerabilityFilterService.save(vulnerabilityFilter);
+			channelVulnerabilityFilterService.updateStatistics();
+			status.setComplete();
+			log.info(SUCCESS_MESSAGE);
+			return RestResponse.success(vulnerabilityFilter);
+		}
+	}
+
+	public String submitDeleteChannelFilterBackend(int filterId) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, -1, -1)) {
+			return "403";
+		}
+		channelVulnerabilityFilterService.delete(filterId);
+
+		String msg = "Channel Vulnerability Filter was successfully deleted";
+		log.info(msg);
+		return msg;
 	}
 	
 	public String returnSuccess(Model model, int orgId, int appId) {

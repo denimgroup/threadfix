@@ -2,10 +2,10 @@
 <table class="table table-striped">
 	<thead>
 		<tr>
-			<th style="width:500px">Channel Vulnerability Type</th>
-            <th style="width:70px">Channel Type</th>
-            <th style="width:50px">Severity</th>
-			<th style="width:50px">Type</th>
+			<th style="width:400px">Channel Vulnerability Type</th>
+            <th style="width:120px">Channel Type</th>
+            <th style="width:75px">Severity</th>
+			<th style="width:75px">Type</th>
 			<th style="width:130px"></th>
 		</tr>
 	</thead>
