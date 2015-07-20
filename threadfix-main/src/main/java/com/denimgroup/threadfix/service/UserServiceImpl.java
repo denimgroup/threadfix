@@ -96,13 +96,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = false)
-    public User loadUser(String name) {
-        User user = userDao.retrieveByName(name);
-        if (user != null && user.getIsLdapUser()) {
-            return null;
-        } else {
-            return user;
-        }
+    public List<User> loadUsers(String name) {
+        List<User> users = list();
+        User localUser = userDao.retrieveLocalUser(name);
+        User ldapUser = userDao.retrieveLdapUser(name);
+        if (localUser != null)
+            users.add(localUser);
+        if (ldapUser != null)
+            users.add(ldapUser);
+        return users;
     }
 
     @Override
@@ -317,43 +319,53 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional(readOnly = false) // used to be true
 	public boolean hasRemovedAdminPermissions(User user) {
-		
-		if (user == null || user.getId() == null) {
-			return true; // should never get here
-		}
-		
-		Set<Permission> dbPerms = getGlobalPermissions(user.getId());
-		
-		if (user.getGlobalRole() == null || user.getGlobalRole().getId() == null) {
-		 return dbPerms.contains(Permission.CAN_MANAGE_USERS) || 
-				dbPerms.contains(Permission.CAN_MANAGE_ROLES);
-		}
-		
-		Role newRole = roleDao.retrieveById(user.getGlobalRole().getId());
-		
-		if (newRole == null) {
-			return false;
-		}
-		
-		Set<Permission> newPerms = newRole.getPermissions();
-		
+
+        if (user == null || user.getId() == null) {
+            return true; // should never get here
+        }
+
+        Set<Permission> dbPerms = getGlobalPermissions(user.getId());
+
+        if (user.getGlobalRole() == null || user.getGlobalRole().getId() == null) {
+            return dbPerms.contains(Permission.CAN_MANAGE_USERS) ||
+                    dbPerms.contains(Permission.CAN_MANAGE_ROLES);
+        }
+
+        Role newRole = roleDao.retrieveById(user.getGlobalRole().getId());
+
+        if (newRole == null) {
+            return false;
+        }
+
+        Set<Permission> newPerms = newRole.getPermissions();
+
 		if (newPerms == null) {
 			return false;
-		}
-		
-		return user.getGlobalRole() != null && 
+            }
+
+		return user.getGlobalRole() != null &&
 				(!newPerms.contains(Permission.CAN_MANAGE_USERS) && dbPerms.contains(Permission.CAN_MANAGE_USERS)) ||
 				(!newPerms.contains(Permission.CAN_MANAGE_ROLES) && dbPerms.contains(Permission.CAN_MANAGE_ROLES));
-	}
+    }
 
 	@Override
 	@Transactional(readOnly = false) // used to be true
 	public User loadLdapUser(String name) {
 		return userDao.retrieveLdapUser(name);
 	}
-	
-	
-	// This is a terrible idea, we should switch to a strategy that 
+
+    /**
+     * @param name of user.
+     * @return User by name.
+     */
+    @Override
+    @Transactional(readOnly = false)
+    public User loadLocalUser(String name) {
+        return userDao.retrieveLocalUser(name);
+    }
+
+
+    // This is a terrible idea, we should switch to a strategy that
 	// actually lets us use normal model validation
 	@Override
 	public User applyChanges(User user, Integer userId) {

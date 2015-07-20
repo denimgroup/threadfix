@@ -40,7 +40,13 @@ public interface UserDao extends GenericNamedObjectDao<User> {
 	 */
 	User retrieveLdapUser(String name);
 
-	/**
+    /**
+     * @param name
+     * @return
+     */
+    User retrieveLocalUser(String name);
+
+    /**
 	 * Checks to see whether it's ok to delete the role with the given id based on whether
 	 * a user will still have the given permission.
 	 * @param id

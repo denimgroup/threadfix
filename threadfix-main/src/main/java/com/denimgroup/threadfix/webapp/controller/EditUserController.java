@@ -111,11 +111,12 @@ public class EditUserController {
 			return FormRestResponse.failure("Errors", result);
 		} else {
 
-			User databaseUser = userService.loadUser(user.getName());
-			if (databaseUser != null && !databaseUser.getId().equals(user.getId())) {
-				result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
-                return FormRestResponse.failure("Errors", result);
-			}
+            for (User databaseUser : userService.loadUsers(user.getName())) {
+                if (!databaseUser.getId().equals(user.getId())) {
+                    result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
+                    return FormRestResponse.failure("Errors", result);
+                }
+            }
 
 			if (user.getGlobalRole() != null && user.getGlobalRole().getId() != null) {
 				Role role = roleService.loadRole(user.getGlobalRole().getId());

@@ -121,7 +121,7 @@ public class CustomUserDetailServiceImpl implements UserDetailsService, CustomUs
 
     @Override
     public final UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.loadUser(username);
+        User user = userService.loadLocalUser(username);
         if (user == null) {
             if (userService.countUsers() == 0) {
                 log.debug("There appears to be no users in your DBS. Your database might not have been created correctly.");

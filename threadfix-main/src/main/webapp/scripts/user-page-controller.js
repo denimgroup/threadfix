@@ -37,7 +37,6 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                     if (data.object.users.length > 0) {
                         $scope.roles = data.object.roles;
                         $scope.users = data.object.users;
-                        $scope.users.sort(nameCompare);
 
                         $scope.teams = data.object.teams;
                         $scope.teams.sort(nameCompare);
@@ -233,7 +232,6 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                     lastNumber = $scope.numberToShow;
                     lastPage = $scope.page;
                     $scope.users = users;
-                    $scope.users.sort(nameCompare);
                     selectUserWithId($scope.userId);
                 } else {
                     $scope.errorMessage = "Failed to receive search results. Message was : " + data.message;
