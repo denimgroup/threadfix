@@ -20,7 +20,6 @@ myAppModule.controller('RightReportController', function ($scope, $window, threa
         threadfixAPIService.loadReport("/dashboard/rightReport", $scope.reportQuery).
             success(function(data, status, headers, config) {
                 $log.info("Right report request to server took " + ((new Date()).getTime() - start.getTime()) + " ms");
-                $scope.topAppsData = [];
 
                 if (!data.object || !data.object.map) {
                     $scope.empty = true;
@@ -28,25 +27,28 @@ myAppModule.controller('RightReportController', function ($scope, $window, threa
 
                 customSeverityService.setSeverities(data.object.genericSeverities);
 
-                data.object.map.forEach(function(application) {
+                if (data.object.map) {
+                    $scope.topAppsData = [];
+                    data.object.map.forEach(function (application) {
 
-                    if (application.cweId) { // top 10 vulns
-                        $scope.topAppsData.push(application);
-                    } else { // top 10 apps
-                        var innerData = {};
-                        innerData[customSeverityService.getCustomSeverity("Info")] = application["Info"];
-                        innerData[customSeverityService.getCustomSeverity("Low")] = application["Low"];
-                        innerData[customSeverityService.getCustomSeverity("Medium")] = application["Medium"];
-                        innerData[customSeverityService.getCustomSeverity("High")] = application["High"];
-                        innerData[customSeverityService.getCustomSeverity("Critical")] = application["Critical"];
-                        innerData.appId = application.appId;
-                        innerData.appName = application.appName;
-                        innerData.teamId = application.teamId;
-                        innerData.teamName = application.teamName;
-                        innerData.title = application.title;
-                        $scope.topAppsData.push(innerData);
-                    }
-                });
+                        if (application.cweId) { // top 10 vulns
+                            $scope.topAppsData.push(application);
+                        } else { // top 10 apps
+                            var innerData = {};
+                            innerData[customSeverityService.getCustomSeverity("Info")] = application["Info"];
+                            innerData[customSeverityService.getCustomSeverity("Low")] = application["Low"];
+                            innerData[customSeverityService.getCustomSeverity("Medium")] = application["Medium"];
+                            innerData[customSeverityService.getCustomSeverity("High")] = application["High"];
+                            innerData[customSeverityService.getCustomSeverity("Critical")] = application["Critical"];
+                            innerData.appId = application.appId;
+                            innerData.appName = application.appName;
+                            innerData.teamId = application.teamId;
+                            innerData.teamName = application.teamName;
+                            innerData.title = application.title;
+                            $scope.topAppsData.push(innerData);
+                        }
+                    });
+                }
 
                 $scope.loadingRight = false;
 

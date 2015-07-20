@@ -104,8 +104,6 @@ public class ApplicationsController {
     private DefaultConfigService defaultConfigService;
     @Autowired
     private CacheBustService cacheBustService;
-    @Autowired
-    private GenericSeverityService genericSeverityService;
     @Autowired(required = false)
     private AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
 
