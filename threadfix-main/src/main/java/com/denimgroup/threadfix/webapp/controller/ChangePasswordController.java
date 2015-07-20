@@ -121,14 +121,15 @@ public class ChangePasswordController {
 			}
 			
 			String currentUserName = SecurityContextHolder.getContext().getAuthentication().getName();
-			
-			User databaseUser = userService.loadUser(user.getName());
-			if (databaseUser != null && !databaseUser.getId().equals(user.getId())) {
-				// TODO check this out
-                ControllerUtils.addItem(request, CURRENT_PASSWORD_FIELD_STR, "The user has changed since starting this procedure.");
-                return "redirect:/configuration/users/password";
-			}
-			
+
+            for (User databaseUser : userService.loadUsers(user.getName())) {
+                if (!databaseUser.getId().equals(user.getId())) {
+                    ControllerUtils.addItem(request, CURRENT_PASSWORD_FIELD_STR, "The user has changed since starting this procedure.");
+                    return "redirect:/configuration/users/password";
+                }
+            }
+
+            User databaseUser = userService.loadUser(user.getId());
 			if (userService.isCorrectPassword(databaseUser, user.getCurrentPassword())) {
 				user.setHasChangedInitialPassword(true);
 				user.setLastPasswordChangedDate(new Date());
