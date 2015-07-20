@@ -33,6 +33,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -615,6 +616,8 @@ public class DefectTrackerIT extends BaseDataTest {
                 .setPeriodOfDay("PM")
                 .setDay("Sunday")
                 .clickAddScheduledUpdated();
+
+        defectTrackerSchedulePage.waitForElement(driver.findElement(By.cssSelector("span.errors")));
 
         assertTrue("Same Schedule was Created",
                 defectTrackerSchedulePage.isErrorPresent("Another defect tracker update is scheduled at that time/frequency"));
