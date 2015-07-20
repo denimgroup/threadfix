@@ -88,6 +88,9 @@
                 class="btn btn-primary"
                 ng-hide="loading"
                 ng-click="submitUpdate(form.$valid)">Save Changes</button>
+        <security:authorize ifNotGranted="ROLE_ENTERPRISE">
+            <a id="deleteUserLink" ng-show="currentUser" class="btn btn-danger" ng-click="deleteUser()">Delete User</a>
+        </security:authorize>
     </div>
 
     <security:authorize ifAllGranted="ROLE_ENTERPRISE">
