@@ -193,7 +193,9 @@ public class RemoteProvidersController {
 		ResponseCode response = remoteProviderTypeService.importScansForApplication(remoteProviderApplication);
 		
 		if (response.equals(ResponseCode.SUCCESS)) {
-            acceptanceCriteriaStatusService.runStatusCheck(appId);
+			if (acceptanceCriteriaStatusService != null) {
+				acceptanceCriteriaStatusService.runStatusCheck(appId);
+			}
             return RestResponse.success("Do the redirect");
 		} else {
 			String errorMsg;
