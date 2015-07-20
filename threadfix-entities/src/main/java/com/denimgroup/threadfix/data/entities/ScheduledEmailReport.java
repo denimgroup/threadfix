@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.persistence.*;
 
+import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -38,6 +39,7 @@ public class ScheduledEmailReport extends ScheduledJob {
     @JoinTable(name="ScheduledEmailReport_EmailList",
             joinColumns={@JoinColumn(name="scheduledEmailReportId")},
             inverseJoinColumns={@JoinColumn(name="emailListId")})
+    @JsonView(AllViews.ScheduledEmailReportView.class)
     public List<EmailList> getEmailLists() {
         return emailLists;
     }
@@ -61,7 +63,7 @@ public class ScheduledEmailReport extends ScheduledJob {
     @JoinTable(name="ScheduledEmailReport_Organization",
             joinColumns={@JoinColumn(name="scheduledEmailReportId")},
             inverseJoinColumns={@JoinColumn(name="organizationId")})
-    @JsonView(Object.class)
+    @JsonView(AllViews.ScheduledEmailReportView.class)
 	public List<Organization> getOrganizations() {
 		return organizations;
 	}
