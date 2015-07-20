@@ -65,7 +65,19 @@ public class HibernateUserDao
 				.uniqueResult();
 	}
 
-	@Override
+    /**
+     * @param name
+     * @return
+     */
+    @Override
+    public User retrieveLocalUser(String name) {
+        return (User) getActiveUserCriteria()
+                .add(Restrictions.eq("name", name))
+                .add(Restrictions.eq("isLdapUser", false))
+                .uniqueResult();
+    }
+
+    @Override
 	protected Class<User> getClassReference() {
 		return User.class;
 	}
