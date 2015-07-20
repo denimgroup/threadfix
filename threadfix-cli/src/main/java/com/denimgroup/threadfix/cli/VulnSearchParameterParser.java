@@ -86,15 +86,17 @@ public class VulnSearchParameterParser {
     private static String[] collapseParameters(String[] parameters) {
         List<String> newList = new ArrayList<String>();
         String lastValue = null;
-        for (String parameter : parameters) {
-            if (parameter.contains("=")) {
-                if (lastValue != null) {
-                    newList.add(lastValue);
+        if (parameters != null) {
+            for (String parameter : parameters) {
+                if (parameter.contains("=")) {
+                    if (lastValue != null) {
+                        newList.add(lastValue);
+                    }
+                    lastValue = parameter;
+                } else if (lastValue != null) {
+                    lastValue = lastValue.concat(" ");
+                    lastValue = lastValue.concat(parameter);
                 }
-                lastValue = parameter;
-            } else if (lastValue != null) {
-                lastValue = lastValue.concat(" ");
-                lastValue = lastValue.concat(parameter);
             }
         }
         if (lastValue != null) {
