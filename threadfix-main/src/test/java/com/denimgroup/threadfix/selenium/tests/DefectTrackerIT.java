@@ -587,6 +587,8 @@ public class DefectTrackerIT extends BaseDataTest {
                 .setPeriodOfDay(periodOfDay)
                 .clickAddScheduledUpdated();
 
+        defectTrackerSchedulePage.waitForErrorMessage();
+
         assertTrue("Same Schedule was Created",
                 defectTrackerSchedulePage.isErrorPresent("Another defect tracker update is scheduled at that time/frequency"));
     }
@@ -617,7 +619,7 @@ public class DefectTrackerIT extends BaseDataTest {
                 .setDay("Sunday")
                 .clickAddScheduledUpdated();
 
-        defectTrackerSchedulePage.waitForElement(driver.findElement(By.cssSelector("span.errors")));
+        defectTrackerSchedulePage.waitForErrorMessage();
 
         assertTrue("Same Schedule was Created",
                 defectTrackerSchedulePage.isErrorPresent("Another defect tracker update is scheduled at that time/frequency"));
