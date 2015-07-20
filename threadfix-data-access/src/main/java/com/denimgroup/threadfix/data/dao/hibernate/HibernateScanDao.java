@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.CollectionUtils.set;
 import static org.hibernate.criterion.Projections.rowCount;
@@ -124,10 +125,15 @@ public class HibernateScanDao
 				.setProjection(Projections.groupProperty("scans.id"))
 				.list();
 
-		return sessionFactory.getCurrentSession()
-				.createCriteria(Scan.class)
-				.add(Restrictions.in("id", scanIds))
-				.list();
+		if (scanIds != null && !scanIds.isEmpty()) {
+			return sessionFactory.getCurrentSession()
+					.createCriteria(Scan.class)
+					.add(Restrictions.in("id", scanIds))
+					.list();
+		} else {
+			return list();
+		}
+
 	}
 
     @Override
