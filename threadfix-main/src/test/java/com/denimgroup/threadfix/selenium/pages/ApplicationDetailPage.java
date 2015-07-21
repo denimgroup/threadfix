@@ -1107,7 +1107,11 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public boolean isEditDeletePresent() {
-        return driver.findElementById("editApplicationModalButton").isDisplayed();
+        try {
+            return driver.findElementById("editApplicationModalButton").isDisplayed();
+        } catch(NoSuchElementException e) {
+            return false;
+        }
     }
 
     public boolean isEditDeleteClickable() {
