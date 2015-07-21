@@ -104,7 +104,7 @@ public class AnalyticsEntIT extends BaseDataTest {
         loginPage.defaultLogin()
                 .clickTagsLink();
 
-        assertTrue("PCI Tag not on page", driver.findElement(By.linkText("PCI")).isDisplayed());
+        assertTrue("PCI Tag not on page", driver.findElement(By.id("tagNamePCI")).isDisplayed());
     }
 
     @Test
@@ -112,7 +112,7 @@ public class AnalyticsEntIT extends BaseDataTest {
         loginPage.defaultLogin()
                 .clickTagsLink();
 
-        assertTrue("HIPAA Tag not on page", driver.findElement(By.linkText("HIPAA")).isDisplayed());
+        assertTrue("HIPAA Tag not on page", driver.findElement(By.id("tagNameHIPAA")).isDisplayed());
     }
 
     @Test

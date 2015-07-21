@@ -98,7 +98,7 @@ public class ApplicationIT extends BaseDataTest {
 
         assertTrue("Application was not present on team's detail page.", teamDetailPage.isAppPresent(appName));
 
-        ApplicationDetailPage applicationDetailPage = teamDetailPage.clickAppLink(appName);
+        ApplicationDetailPage applicationDetailPage = teamDetailPage.clickAppLink("0");
 
         assertTrue("Application name was not present on application's detail page.",
                 applicationDetailPage.getNameText().equals(appName));
@@ -228,7 +228,7 @@ public class ApplicationIT extends BaseDataTest {
                 applicationDetailPage.getNameRequiredError().equals(emptyError));
 
         // Test URL format
-        applicationDetailPage = applicationDetailPage.clickCloseAppInvalid()
+        applicationDetailPage = applicationDetailPage.clickCloseModalButton()
                 .clickEditDeleteBtn()
                 .setNameInput("dummyName")
                 .setUrlInput(urlText)
@@ -715,7 +715,7 @@ public class ApplicationIT extends BaseDataTest {
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
                 .clickScansTab()
-                .cancelDeleteScanTaskButton();
+                .cancelDeleteScanButton();
 
         applicationDetailPage.clickDeleteScanButton();
 

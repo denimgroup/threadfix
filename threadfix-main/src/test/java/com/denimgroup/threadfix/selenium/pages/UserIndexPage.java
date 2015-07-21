@@ -338,7 +338,7 @@ public class UserIndexPage extends BasePage {
 
     public UserIndexPage setTeam(String team) {
         try {
-            new Select(driver.findElementById("orgSelect")).selectByVisibleText(team);
+            driver.findElementById("orgSelect").sendKeys(team);
         } catch (NoSuchElementException e) {
             driver.findElementByLinkText("Close").click();
             this.refreshPage();
@@ -350,17 +350,17 @@ public class UserIndexPage extends BasePage {
     }
 
     public UserIndexPage setTeamNoCatch(String teamName) {
-        new Select(driver.findElementById("orgSelect")).selectByVisibleText(teamName);
+        driver.findElementById("orgSelect").sendKeys(teamName);
         return this;
     }
 
     public UserIndexPage setTeamRole(String role) {
-        new Select(driver.findElementById("roleSelectTeam")).selectByVisibleText(role);
+        driver.findElementById("roleSelectTeam").sendKeys(role);
         return this;
     }
 
     public UserIndexPage setApplicationRole(String app, String role) {
-        new Select(driver.findElementById("roleSelectApp" + app)).selectByVisibleText(role);
+        driver.findElementById("roleSelectApp" + app).sendKeys(role);
         return this;
     }
 

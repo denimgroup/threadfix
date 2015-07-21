@@ -204,12 +204,12 @@ public class SystemSettingsEntIT extends BaseDataTest {
 
         assertTrue("Save validation alert was not present.", systemSettingsPage.isSaveSuccessful());
 
-        systemSettingsPage.logout().login(LDAP_USERNAME, LDAP_USERPASSWORD)
+        ApplicationDetailPage applicationDetailPage = systemSettingsPage.logout().login(LDAP_USERNAME, LDAP_USERPASSWORD)
                 .clickTeamsTab().expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
                 .clickActionButton();
 
-        assertTrue("There are non-read-access-only options available", driver.findElements(By.linkText("Edit / Delete")).isEmpty());
+        assertFalse("There are non-read-access-only options available", applicationDetailPage.isEditDeletePresent());
     }
 
     @Test

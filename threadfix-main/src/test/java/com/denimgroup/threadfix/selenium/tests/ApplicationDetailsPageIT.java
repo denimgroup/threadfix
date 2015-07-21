@@ -222,7 +222,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
                 .uploadScanButton(teamName, appName)
                 .uploadNewScan(ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"), teamName, appName);
 
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickApplicationName(appName)
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickApplicationName(teamName, appName)
                 .clickScansTab();
         String[] scanValues = applicationDetailPage.getFirstScanInfo();
 
@@ -241,7 +241,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
-                .clickApplicationName(appName);
+                .clickApplicationName(teamName, appName);
 
         applicationDetailPage.clickFilesTab()
                 .clickAddFileButton()
@@ -258,7 +258,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin().clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
-                .clickApplicationName(appName);
+                .clickApplicationName(teamName, appName);
 
         applicationDetailPage.clickEditDeleteBtn()
             .clickAddDefectTrackerButton();

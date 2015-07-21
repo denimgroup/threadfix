@@ -145,7 +145,7 @@ public class AnalyticsPage extends BasePage {
         teamNameSpace.clear();
         teamNameSpace.sendKeys(teamName);
         sleep(1000);
-        driver.findElementByLinkText(teamName).click();
+        teamNameSpace.sendKeys(Keys.ENTER);
         waitForResultsToLoad();
         return new AnalyticsPage(driver);
     }
@@ -162,12 +162,12 @@ public class AnalyticsPage extends BasePage {
     }
 
     public ApplicationDetailPage clickAppName(String appName) {
-        driver.findElementByLinkText(appName).click();
+        driver.findElementById(appName).findElement(By.tagName("a")).click();
         return new ApplicationDetailPage(driver);
     }
 
     public TeamDetailPage clickTeamName(String teamName) {
-        driver.findElementByLinkText(teamName).click();
+        driver.findElementById(teamName).findElement(By.tagName("a")).click();
         return new TeamDetailPage(driver);
     }
 
