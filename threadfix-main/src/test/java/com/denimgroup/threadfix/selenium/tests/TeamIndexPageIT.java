@@ -106,7 +106,7 @@ public class TeamIndexPageIT extends BaseDataTest {
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
 
-        assertTrue("Upload Scan Button is not Available", teamIndexPage.isUploadScanButtonDisplay());
+        assertTrue("Upload Scan Button is not Available", teamIndexPage.isUploadScanButtonDisplay(teamName, appName));
     }
 
     //===========================================================================================================

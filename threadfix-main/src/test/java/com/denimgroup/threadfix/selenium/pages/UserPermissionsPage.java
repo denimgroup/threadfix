@@ -46,7 +46,7 @@ public class UserPermissionsPage extends BasePage {
 
     public UserPermissionsPage setTeam(String team) {
         try {
-            new Select(driver.findElementById("orgSelect")).selectByVisibleText(team);
+            driver.findElementById("orgSelect").sendKeys(team);
         } catch (NoSuchElementException e) {
             driver.findElementByLinkText("Close").click();
             this.refreshPage();
@@ -58,7 +58,7 @@ public class UserPermissionsPage extends BasePage {
     }
 
     public UserPermissionsPage setTeamNoCatch(String teamName) {
-        new Select(driver.findElementById("orgSelect")).selectByVisibleText(teamName);
+        driver.findElementById("orgSelect").sendKeys(teamName);
         return this;
     }
 
@@ -69,12 +69,12 @@ public class UserPermissionsPage extends BasePage {
     }
 
     public UserPermissionsPage setTeamRole(String role) {
-        new Select(driver.findElementById("roleSelectTeam")).selectByVisibleText(role);
+        driver.findElementById("roleSelectTeam").sendKeys(role);
         return this;
     }
 
     public UserPermissionsPage setApplicationRole(String appName, String role) {
-        new Select(driver.findElementById("roleSelectApp" + appName)).selectByVisibleText(role);
+        driver.findElementById("roleSelectApp" + appName).sendKeys(role);
         return this;
     }
 

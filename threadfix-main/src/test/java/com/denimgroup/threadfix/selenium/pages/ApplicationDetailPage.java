@@ -343,7 +343,7 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage cancelDeleteScanTaskButton() {
+    public ApplicationDetailPage cancelDeleteScanButton() {
         driver.findElementByLinkText("Delete Scan").click();
         dismissAlert();
         return new ApplicationDetailPage(driver);
@@ -406,11 +406,6 @@ public class ApplicationDetailPage extends BasePage {
         driver.findElementById("descriptionInput").clear();
         driver.findElementById("descriptionInput").sendKeys(Status);
         sleep(500);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage clickCloseAppInvalid() {
-        driver.findElementByLinkText("Close").click();
         return new ApplicationDetailPage(driver);
     }
 

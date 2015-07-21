@@ -105,7 +105,7 @@ public class SlowUserPermissionsIT extends BaseIT{
         ApplicationDetailPage applicationDetailPage = loginPage.login(userName, "TestPassword")
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
-                .clickApplicationName(appName)
+                .clickApplicationName(teamName, appName)
                 .clickEditDeleteBtn()
                 .clickAddDefectTrackerButton()
                 .clickCreateNewDefectTracker();

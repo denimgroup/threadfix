@@ -135,9 +135,9 @@ public class TeamIndexPage extends BasePage {
         return new TeamIndexPage(driver);
     }
 
-    public ApplicationDetailPage clickApplicationName(String appName) {
+    public ApplicationDetailPage clickApplicationName(String teamName, String appName) {
         sleep(1000);
-        driver.findElementByLinkText(appName).click();
+        driver.findElementById("applicationLink"+teamName+"-"+appName).click();
         return new ApplicationDetailPage(driver);
     }
 
@@ -147,7 +147,7 @@ public class TeamIndexPage extends BasePage {
     }
 
     public TeamIndexPage clickCloseAddAppModal() {
-        driver.findElementByLinkText("Close").click();
+        driver.findElementById("closeModalButton").click();
         return new TeamIndexPage(driver);
     }
 
@@ -368,8 +368,8 @@ public class TeamIndexPage extends BasePage {
         return driver.findElementsById("uploadScanModalLink" + teamName + "-" + appName).size() != 0;
     }
 
-    public boolean isUploadScanButtonDisplay() {
-        return driver.findElementByLinkText("Upload Scan").isDisplayed();
+    public boolean isUploadScanButtonDisplay(String teamName, String appName) {
+        return driver.findElementById("uploadScanModalLink" + teamName + "-" + appName).isDisplayed();
     }
 
     public boolean isScanUploadedAlready(String teamName, String appName) {

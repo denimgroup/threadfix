@@ -321,7 +321,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
         assertFalse("Upload Button is Available", teamIndexPage.isUploadButtonPresent(teamName, appName));
 
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickApplicationName(appName)
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickApplicationName(teamName, appName)
                 .clickActionButton();
 
         assertFalse("Upload Link is Available", applicationDetailPage.isElementPresent("uploadScanModalLink"));
@@ -347,7 +347,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
         ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
-                .clickApplicationName(appName)
+                .clickApplicationName(teamName, appName)
                 .addDefectTracker(newDefectTrackerName, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLA_PROJECTNAME)
                 .clickVulnerabilitiesActionButton();
 
@@ -367,7 +367,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
          applicationFilterPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
-                .clickApplicationName(appName)
+                .clickApplicationName(teamName, appName)
                 .clickActionButton();
 
         assertFalse("Close Vulnerability button is available",
@@ -383,7 +383,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
         ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
-                .clickApplicationName(appName)
+                .clickApplicationName(teamName, appName)
                 .clickVulnerabilitiesActionButton();
 
         assertFalse("Close Vulnerabilities Link is available",
@@ -513,7 +513,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
         ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
-                .clickApplicationName(appName);
+                .clickApplicationName(teamName, appName);
 
         assertFalse("Scan Agent Tab is Available", applicationDetailPage.isLinkPresent("0 Scan Agent Tasks"));
         assertFalse("Scheduled Scans Tab Available", applicationDetailPage.isLinkPresent("0 Scheduled Scans"));
@@ -543,7 +543,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
         ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
-                .clickApplicationName(appName)
+                .clickApplicationName(teamName, appName)
                 .clickActionButton();
 
         assertFalse("Edit/Delete Button wasn't gone",
