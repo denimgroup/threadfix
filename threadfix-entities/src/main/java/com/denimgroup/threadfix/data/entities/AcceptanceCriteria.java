@@ -60,7 +60,7 @@ public class AcceptanceCriteria extends AuditableEntity {
     @ElementCollection
     @Column(name = "emailAddress", length = 128)
     @CollectionTable(name = "AcceptanceCriteriaEmailAddress", joinColumns = @JoinColumn(name = "AcceptanceCriteriaId"))
-    @JsonView(Object.class)
+    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
     public List<String> getEmailAddresses() {
         return emailAddresses;
     }
@@ -71,7 +71,7 @@ public class AcceptanceCriteria extends AuditableEntity {
 
     @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "emailListId")
-    @JsonView(Object.class)
+    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
     public List<EmailList> getEmailLists() {
         return emailLists;
     }
@@ -81,7 +81,7 @@ public class AcceptanceCriteria extends AuditableEntity {
     }
 
     @Column(length = NAME_LENGTH, nullable = false)
-    @JsonView(Object.class) // This means it will be included in all ObjectWriters with Views.
+    @JsonView(AllViews.AcceptanceCriteriaPageView.class) // This means it will be included in all ObjectWriters with Views.
     public String getName() {
         return name;
     }
@@ -91,7 +91,7 @@ public class AcceptanceCriteria extends AuditableEntity {
     }
 
     @OneToMany(mappedBy = "acceptanceCriteria", cascade = CascadeType.REMOVE)
-    @JsonView(Object.class)
+    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
     public List<AcceptanceCriteriaStatus> getAcceptanceCriteriaStatuses() {
         return acceptanceCriteriaStatuses;
     }
@@ -101,7 +101,7 @@ public class AcceptanceCriteria extends AuditableEntity {
     }
 
     @Column
-    @JsonView(Object.class)
+    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
     public Boolean isSendEmail() {
         return sendEmail != null && sendEmail;
     }
@@ -111,7 +111,7 @@ public class AcceptanceCriteria extends AuditableEntity {
     }
 
     @Transient
-    @JsonView(Object.class)
+    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
     public List<Application> getApplications(){
         List<Application> applications = list();
 
@@ -128,7 +128,7 @@ public class AcceptanceCriteria extends AuditableEntity {
 
     @OneToOne
     @JoinColumn(name = "filterJsonBlobId")
-    @JsonView(AllViews.TableRow.class)
+    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
     public FilterJsonBlob getFilterJsonBlob() {
         return filterJsonBlob;
     }

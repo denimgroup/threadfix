@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -55,7 +56,7 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
     @ElementCollection
     @Column(name = "emailAddress", length = 128)
     @CollectionTable(name = "AcceptanceCriteriaStatusEmailAddress", joinColumns = @JoinColumn(name = "AcceptanceCriteriaStatusId"))
-    @JsonView(Object.class)
+    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
     public List<String> getEmailAddresses() {
         return emailAddresses;
     }
@@ -66,7 +67,7 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
 
     @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "emailListId")
-    @JsonView(Object.class)
+    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
     public List<EmailList> getEmailLists() {
         return emailLists;
     }
@@ -76,7 +77,7 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
     }
 
     @Column
-    @JsonView(Object.class)
+    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
     public Boolean isPassing() {
         return passing != null && passing;
     }
@@ -106,7 +107,7 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
     }
 
     @Column
-    @JsonView(Object.class)
+    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
     public Boolean isSendEmail() {
         return sendEmail != null && sendEmail;
     }
@@ -117,7 +118,7 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
 
     @Transient
     @JsonProperty("application")
-    @JsonView(Object.class)
+    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
     public Map<String, Object> getApplicationJson() {
         if(application != null) {
             return map(
@@ -145,7 +146,7 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
 
     @Transient
     @JsonProperty("acceptanceCriteria")
-    @JsonView(Object.class)
+    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
     public Map<String, ? extends Serializable> getAcceptanceCriteriaJson() {
         if(acceptanceCriteria != null) {
             return map(
@@ -157,7 +158,7 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
     }
 
     @Transient
-    @JsonView(Object.class)
+    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
     public String getName() {
         return application.getName();
     }
