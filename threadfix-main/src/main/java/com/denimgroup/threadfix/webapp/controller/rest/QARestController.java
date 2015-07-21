@@ -124,7 +124,7 @@ public class QARestController extends TFRestController {
                                                                      @RequestParam String teamname,
                                                                      @RequestParam String appname) {
 
-        User user = userService.loadUser(username);
+        User user = userService.loadUsers(username).get(0);
 
         AccessControlTeamMap newAccessControlTeamMap = new AccessControlTeamMap();
 

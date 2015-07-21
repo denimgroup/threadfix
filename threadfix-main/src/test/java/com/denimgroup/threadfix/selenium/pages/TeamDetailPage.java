@@ -123,7 +123,7 @@ public class TeamDetailPage extends BasePage {
     }
 
     public TeamDetailPage clickVulnerabilitiesTab() {
-        driver.findElementByLinkText("0 Vulnerabilities").click();
+        driver.findElementByPartialLinkText("Vulnerabilities").click();
         waitForElement(driver.findElementByClassName("filter-controls"));
         return new TeamDetailPage(driver);
     }

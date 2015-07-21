@@ -57,6 +57,11 @@ public class DefectTrackerSchedulePage extends BasePage{
         return this;
     }
 
+    public DefectTrackerSchedulePage waitForErrorMessage() {
+        waitForElement(driver.findElement(By.cssSelector("span.errors")));
+        return new DefectTrackerSchedulePage(driver);
+    }
+
       /*------------------------------ Boolean Methods ------------------------------*/
 
     public boolean isNewSchedulePresent(String expectedTime) {
