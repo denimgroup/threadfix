@@ -58,7 +58,9 @@ public class DefectTrackerSchedulePage extends BasePage{
     }
 
     public DefectTrackerSchedulePage waitForErrorMessage() {
-        waitForElement(driver.findElement(By.cssSelector("span.errors")));
+        if (!driver.findElementByCssSelector("span.errors").isDisplayed()) {
+            sleep(5000);
+        }
         return new DefectTrackerSchedulePage(driver);
     }
 
