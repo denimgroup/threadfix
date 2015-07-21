@@ -417,6 +417,7 @@ public class UserIndexPage extends BasePage {
         if (userName != null) {
             clickUserLink(userName);
         }
+        waitForElementPresence("roleSelect", 5000);
 		return new Select(driver.findElementById("roleSelect")).getFirstSelectedOption().getText().contains(role);
 	}
 
