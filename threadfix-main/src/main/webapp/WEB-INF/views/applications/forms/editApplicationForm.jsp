@@ -102,7 +102,14 @@
                     </multi-select>
                 </td>
             </tr>
-
+            <tr id="appACDiv" ng-show="config.isEnterprise">
+                <td>Acceptance Criteria</td>
+                <td>
+                    <button class="btn" ng-click="switchTo('manageAcceptanceCriteria')" id="manageAcceptanceCriteriaButton">
+                        Manage Acceptance Criteria
+                    </button>
+                </td>
+            </tr>
             <tr>
                 <td colspan="2">
                     <a class="pointer" ng-click="sourceCodeDisplay = !sourceCodeDisplay">Source Code Information</a>

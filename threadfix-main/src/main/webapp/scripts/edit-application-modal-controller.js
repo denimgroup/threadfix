@@ -1,4 +1,4 @@
-var myAppModule = angular.module('threadfix');
+    var myAppModule = angular.module('threadfix');
 
 
 // this is a shim for optional dependencies
