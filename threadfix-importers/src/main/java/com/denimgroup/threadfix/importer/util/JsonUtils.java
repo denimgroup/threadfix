@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.importer.util;
 
+import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.google.gson.Gson;
 import org.json.JSONArray;
@@ -33,6 +34,7 @@ import org.json.JSONObject;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by mac on 4/4/14.
@@ -156,6 +158,15 @@ public class JsonUtils {
     @Nonnull
     public static <T> T toObject (final String jsonString, Class<T> tClass) {
         return new Gson().fromJson(jsonString, tClass);
+    }
+
+    @Nonnull
+    public static <T> List<T> toObjectList (final String jsonString, Class<T> tClass) throws JSONException {
+        List<T> result = CollectionUtils.list();
+        for (JSONObject jsonObject: toJSONObjectIterable(jsonString)) {
+            result.add(new Gson().fromJson(String.valueOf(jsonObject), tClass));
+        }
+        return result;
     }
 
 }

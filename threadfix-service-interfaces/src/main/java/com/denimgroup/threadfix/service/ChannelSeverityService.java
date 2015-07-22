@@ -43,4 +43,8 @@ public interface ChannelSeverityService {
 	 */
 	ChannelSeverity loadById(int id);
 
+	List<Object> loadAllByChannel();
+
+	String updateChannelSeverityMappings(List<ChannelSeverity> channelSeverities);
+
 }
