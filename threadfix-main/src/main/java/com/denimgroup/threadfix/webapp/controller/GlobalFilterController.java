@@ -28,6 +28,8 @@ import com.denimgroup.threadfix.data.entities.VulnerabilityFilter;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
+import com.denimgroup.threadfix.views.AllViews;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -46,7 +48,7 @@ public class GlobalFilterController extends AbstractVulnFilterController {
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields("sourceGenericVulnerability.name", "targetGenericSeverity.id", "sourceChannelType.id", "sourceChannelType.name", "sourceChannelVulnerability.id", "sourceChannelVulnerability.name");
+		dataBinder.setAllowedFields("sourceGenericVulnerability.name", "targetGenericSeverity.id", "targetGenericSeverity.name", "targetGenericSeverity.displayName", "sourceChannelType.id", "sourceChannelType.name", "sourceChannelVulnerability.id", "sourceChannelVulnerability.name");
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -86,6 +88,7 @@ public class GlobalFilterController extends AbstractVulnFilterController {
 	}
 
 	@RequestMapping(value="/newChannelFilter", method = RequestMethod.POST)
+	@JsonView(AllViews.TableRow.class)
 	public @ResponseBody RestResponse<ChannelVulnerabilityFilter> submitNewChannelFilter(ChannelVulnerabilityFilter channelVulnerabilityFilter,
 																	 BindingResult bindingResult, SessionStatus status) {
 		if (!EnterpriseTest.isEnterprise()) {
@@ -98,6 +101,7 @@ public class GlobalFilterController extends AbstractVulnFilterController {
 	}
 
 	@RequestMapping(value="/{filterId}/editChannelFilter", method = RequestMethod.POST)
+	@JsonView(AllViews.TableRow.class)
 	public @ResponseBody RestResponse<ChannelVulnerabilityFilter> submitEditChannelFilter(ChannelVulnerabilityFilter channelVulnerabilityFilter,
 																	  BindingResult bindingResult, SessionStatus status, Model model,
 																	  @PathVariable int filterId) {
@@ -111,6 +115,7 @@ public class GlobalFilterController extends AbstractVulnFilterController {
 	}
 
 	@RequestMapping(value="/{filterId}/deleteChannelFilter", method = RequestMethod.POST)
+	@JsonView(AllViews.TableRow.class)
 	public @ResponseBody RestResponse<String> submitDeleteChannelFilter(@PathVariable int filterId) {
 		if (!EnterpriseTest.isEnterprise()) {
 			String msg = "You do not have permission to delete channel vulnerability filter. You need to update to enterprise license.";

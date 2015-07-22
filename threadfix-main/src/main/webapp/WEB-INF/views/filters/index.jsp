@@ -65,7 +65,7 @@
                         {{ channelVulnSuccessMessage }}
                     </div>
 
-                    <a id="createNewChannelVulnModalButton" ng-click="showNewChannelVulnFilterModal()" class="btn">Create New Channel Vulnerability Filter</a>
+                    <a id="createNewChannelVulnModalButton" ng-click="showNewChannelVulnFilterModal()" class="btn">Create New Scanner Vulnerability Filter</a>
 
                     <div id="tableChannelVulnDiv">
                         <%@ include file="/WEB-INF/views/filters/channelVulnTable.jsp" %>
