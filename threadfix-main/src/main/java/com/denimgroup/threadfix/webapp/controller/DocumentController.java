@@ -106,7 +106,7 @@ public class DocumentController {
 			@PathVariable("orgId") int orgId,
 			@PathVariable("vulnId") int vulnId,
 			HttpServletRequest request,
-			@RequestParam("file") MultipartFile file) throws IOException {
+			@RequestParam("file0") MultipartFile file) throws IOException {
 
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)){
             return RestResponse.failure("You don't have permission to upload a document.");
