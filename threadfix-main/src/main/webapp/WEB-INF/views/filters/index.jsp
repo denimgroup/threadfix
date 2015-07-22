@@ -14,6 +14,7 @@
 
     <div ng-show="initialized">
         <%@ include file="/WEB-INF/views/filters/form.jsp"%>
+        <%@ include file="/WEB-INF/views/filters/channelFilterForm.jsp"%>
 
         <ul ng-show="originalType !== 'Global'" class="breadcrumb">
             <li><a href="<spring:url value="/"/>">Applications Index</a> <span class="divider">/</span></li>
@@ -54,6 +55,24 @@
                 <%@ include file="/WEB-INF/views/filters/table.jsp" %>
             </div>
 
+            <c:if test="${ isEnterprise}">
+                <!-- Channel Vulnerability Filter section -->
+                <div ng-show="originalType === 'Global' || type === 'Global'">
+                    <h3>{{ channelVulnFiltersTitle }}</h3>
+
+                    <div id="channelVulnFiltersSuccessMessage" ng-show="channelVulnSuccessMessage" class="alert alert-success">
+                        <button class="close" ng-click="channelVulnSuccessMessage = undefined" type="button">&times;</button>
+                        {{ channelVulnSuccessMessage }}
+                    </div>
+
+                    <a id="createNewChannelVulnModalButton" ng-click="showNewChannelVulnFilterModal()" class="btn">Create New Channel Vulnerability Filter</a>
+
+                    <div id="tableChannelVulnDiv">
+                        <%@ include file="/WEB-INF/views/filters/channelVulnTable.jsp" %>
+                    </div>
+                </div>
+                <!-- End Channel Vulnerability Filter section -->
+            </c:if>
             <h3>{{ severityFiltersTitle }}</h3>
 
             <%@ include file="/WEB-INF/views/filters/severityFilterForm.jsp" %>

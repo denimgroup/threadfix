@@ -23,8 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.data.entities.ChannelVulnerabilityFilter;
 import com.denimgroup.threadfix.data.entities.VulnerabilityFilter;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -36,12 +39,14 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/configuration/filters")
-@SessionAttributes({"vulnerabilityFilter", "severityFilter"})
+@SessionAttributes({"vulnerabilityFilter", "severityFilter", "channelVulnerabilityFilter"})
 public class GlobalFilterController extends AbstractVulnFilterController {
+
+	private final SanitizedLogger log = new SanitizedLogger(GlobalFilterController.class);
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields("sourceGenericVulnerability.name", "targetGenericSeverity.id");
+		dataBinder.setAllowedFields("sourceGenericVulnerability.name", "targetGenericSeverity.id", "sourceChannelType.id", "sourceChannelType.name", "sourceChannelVulnerability.id", "sourceChannelVulnerability.name");
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -78,5 +83,40 @@ public class GlobalFilterController extends AbstractVulnFilterController {
 	@RequestMapping(value="/{filterId}/delete", method = RequestMethod.POST)
 	public String submitDelete(Model model, @PathVariable int filterId) {
 		return submitDeleteBackend(model, -1, -1, filterId);
+	}
+
+	@RequestMapping(value="/newChannelFilter", method = RequestMethod.POST)
+	public @ResponseBody RestResponse<ChannelVulnerabilityFilter> submitNewChannelFilter(ChannelVulnerabilityFilter channelVulnerabilityFilter,
+																	 BindingResult bindingResult, SessionStatus status) {
+		if (!EnterpriseTest.isEnterprise()) {
+			String msg = "You do not have permission to add new channel vulnerability filter. You need to update to enterprise license.";
+			log.warn(msg);
+			return RestResponse.failure(msg);
+		}
+		return submitNewChannelFilterBackend(channelVulnerabilityFilter,
+				bindingResult, status);
+	}
+
+	@RequestMapping(value="/{filterId}/editChannelFilter", method = RequestMethod.POST)
+	public @ResponseBody RestResponse<ChannelVulnerabilityFilter> submitEditChannelFilter(ChannelVulnerabilityFilter channelVulnerabilityFilter,
+																	  BindingResult bindingResult, SessionStatus status, Model model,
+																	  @PathVariable int filterId) {
+		if (!EnterpriseTest.isEnterprise()) {
+			String msg = "You do not have permission to edit channel vulnerability filter. You need to update to enterprise license.";
+			log.warn(msg);
+			return RestResponse.failure(msg);
+		}
+		return submitEditChannelFilterBackend(channelVulnerabilityFilter,
+				bindingResult, status, filterId);
+	}
+
+	@RequestMapping(value="/{filterId}/deleteChannelFilter", method = RequestMethod.POST)
+	public @ResponseBody RestResponse<String> submitDeleteChannelFilter(@PathVariable int filterId) {
+		if (!EnterpriseTest.isEnterprise()) {
+			String msg = "You do not have permission to delete channel vulnerability filter. You need to update to enterprise license.";
+			log.warn(msg);
+			return RestResponse.failure(msg);
+		}
+		return RestResponse.success(submitDeleteChannelFilterBackend(filterId));
 	}
 }
