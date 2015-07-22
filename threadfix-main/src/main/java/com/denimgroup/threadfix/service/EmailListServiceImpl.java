@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.dao.EmailListDao;
 import com.denimgroup.threadfix.data.dao.GenericNamedObjectDao;
 import com.denimgroup.threadfix.data.dao.GenericObjectDao;
 import com.denimgroup.threadfix.data.entities.EmailList;
+import com.denimgroup.threadfix.data.entities.ScheduledEmailReport;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,11 @@ public class EmailListServiceImpl extends AbstractNamedObjectService<EmailList> 
 
     @Autowired
     private EmailListDao emailListDao;
+
+    @Override
+    public GenericNamedObjectDao<EmailList> getDao() {
+        return emailListDao;
+    }
 
     @Override
     public String removeEmailAddress(EmailList emailList, String emailAddress) {
@@ -73,7 +79,16 @@ public class EmailListServiceImpl extends AbstractNamedObjectService<EmailList> 
     }
 
     @Override
-    public GenericNamedObjectDao<EmailList> getDao() {
-        return emailListDao;
+    public void delete(EmailList emailList) {
+
+        List<ScheduledEmailReport> scheduledEmailReports = emailList.getScheduledEmailReports();
+
+        for (ScheduledEmailReport ser : scheduledEmailReports) {
+            ser.getEmailLists().remove(emailList);
+        }
+
+        markInactive(emailList);
+
+        saveOrUpdate(emailList);
     }
 }

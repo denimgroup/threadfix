@@ -68,4 +68,6 @@ public class AllViews {
     public static interface RestCweView {}
 
     public static interface ApplicationIndexView {}
+
+    public static interface ScheduledEmailReportView {}
 }
