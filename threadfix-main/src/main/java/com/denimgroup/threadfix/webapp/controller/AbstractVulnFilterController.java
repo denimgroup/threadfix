@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
+import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,7 +122,8 @@ public abstract class AbstractVulnFilterController {
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, orgId, appId)) {
 			return "403";
 		}
-		
+
+		model.addAttribute("isEnterprise", EnterpriseTest.isEnterprise());
 		model.addAttribute("vulnerabilityFilter", vulnerabilityFilterService.getNewFilter(orgId, appId));
 		model.addAttribute("severityFilter",      getSeverityFilter(orgId, appId));
 		model.addAttribute("vulnerabilityFilterList", vulnerabilityFilterService.getPrimaryVulnerabilityList(orgId, appId));
@@ -141,27 +143,29 @@ public abstract class AbstractVulnFilterController {
         map.put("application", applicationService.loadApplication(appId));
         map.put("organization", organizationService.loadById(orgId));
 		map.put("vulnerabilityFilter", vulnerabilityFilterService.getNewFilter(orgId, appId));
-        map.put("globalSeverityFilter", getSeverityFilter(-1, -1));
-        map.put("globalVulnerabilityFilterList", vulnerabilityFilterService.getPrimaryVulnerabilityList(-1, -1));
-        map.put("type", type);
-        map.put("originalType", type);
-        map.put("genericSeverities", getGenericSeverities());
-        map.put("genericVulnerabilities", getGenericVulnerabilities());
+		map.put("globalSeverityFilter", getSeverityFilter(-1, -1));
+		map.put("globalVulnerabilityFilterList", vulnerabilityFilterService.getPrimaryVulnerabilityList(-1, -1));
+		map.put("type", type);
+		map.put("originalType", type);
+		map.put("genericSeverities", getGenericSeverities());
+		map.put("genericVulnerabilities", getGenericVulnerabilities());
 
-        if (!type.equals("Global")) {
-            map.put("teamSeverityFilter", getSeverityFilter(orgId, -1));
-            map.put("teamVulnerabilityFilters", vulnerabilityFilterService.getPrimaryVulnerabilityList(orgId, -1));
-        }
+		if (!type.equals("Global")) {
+			map.put("teamSeverityFilter", getSeverityFilter(orgId, -1));
+			map.put("teamVulnerabilityFilters", vulnerabilityFilterService.getPrimaryVulnerabilityList(orgId, -1));
+		}
 
+		if (EnterpriseTest.isEnterprise()) {
 			List<ChannelType> channelTypes = channelTypeService.loadAll();
 			map.put("channelVulnerabilitiesMap", channelVulnerabilityService.getChannelVulnsEachChannelType(channelTypes));
 			map.put("channelTypes", channelTypes);
 			map.put("globalChannelVulnFilterList", channelVulnerabilityFilterService.retrieveAll());
+		}
 
-        if (type.equals("Application")) {
-            map.put("applicationSeverityFilter", getSeverityFilter(orgId, appId));
-            map.put("applicationVulnerabilityFilters", vulnerabilityFilterService.getPrimaryVulnerabilityList(orgId, appId));
-        }
+		if (type.equals("Application")) {
+			map.put("applicationSeverityFilter", getSeverityFilter(orgId, appId));
+			map.put("applicationVulnerabilityFilters", vulnerabilityFilterService.getPrimaryVulnerabilityList(orgId, appId));
+		}
 
 		return RestResponse.success(map);
 	}
