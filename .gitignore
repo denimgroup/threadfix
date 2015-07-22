@@ -20,3 +20,5 @@ threadfix-scanagent
 Build
 netrc
 scanagent.properties
+sonar-project.properties
+

@@ -83,7 +83,7 @@ public class DependencyCheckChannelImporter extends AbstractChannelImporter {
 					    
 	    public void add(Finding finding) {
 			if (finding != null) {
-    			finding.setNativeId(finding.getDependency().getCve());
+    			finding.setNativeId(finding.getDependency().getCve() + finding.getDependency().getComponentName());
 	    		saxFindingList.add(finding);
     		}
 	    }
