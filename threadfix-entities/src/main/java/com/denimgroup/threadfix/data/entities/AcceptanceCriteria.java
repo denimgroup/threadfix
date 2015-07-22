@@ -29,9 +29,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
@@ -106,7 +104,7 @@ public class AcceptanceCriteria extends AuditableEntity {
         return sendEmail != null && sendEmail;
     }
 
-    public void setSendEmail(boolean sendEmail) {
+    public void setSendEmail(Boolean sendEmail) {
         this.sendEmail = sendEmail;
     }
 
