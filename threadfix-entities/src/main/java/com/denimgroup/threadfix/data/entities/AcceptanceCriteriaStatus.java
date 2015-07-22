@@ -112,7 +112,7 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
         return sendEmail != null && sendEmail;
     }
 
-    public void setSendEmail(boolean sendEmail) {
+    public void setSendEmail(Boolean sendEmail) {
         this.sendEmail = sendEmail;
     }
 
