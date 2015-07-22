@@ -58,7 +58,7 @@ public abstract class AbstractVulnFilterController {
 	protected ChannelVulnerabilityService channelVulnerabilityService;
 	@Autowired
 	protected ChannelTypeService channelTypeService;
-	@Autowired
+	@Autowired(required = false)
 	protected ChannelVulnerabilityFilterService channelVulnerabilityFilterService;
 
 	private final SanitizedLogger log = new SanitizedLogger(AbstractVulnFilterController.class);

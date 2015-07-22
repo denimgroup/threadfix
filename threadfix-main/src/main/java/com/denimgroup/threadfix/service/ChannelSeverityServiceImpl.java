@@ -30,7 +30,9 @@ import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.data.dao.GenericSeverityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.GenericSeverity;
+import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.queue.QueueSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +51,8 @@ public class ChannelSeverityServiceImpl implements ChannelSeverityService {
 	private ChannelTypeDao channelTypeDao;
 	@Autowired
 	private GenericSeverityDao genericSeverityDao;
+	@Autowired
+	private QueueSender queueSender;
 
 	@Autowired
 	public ChannelSeverityServiceImpl(ChannelTypeDao channelTypeDao,
@@ -85,16 +89,37 @@ public class ChannelSeverityServiceImpl implements ChannelSeverityService {
 	@Override
 	public String updateChannelSeverityMappings(List<ChannelSeverity> channelSeverities) {
 
+		String ids = "";
 		for (ChannelSeverity channelSeverity: channelSeverities) {
 			GenericSeverity genericSeverity = genericSeverityDao.retrieveById(channelSeverity.getSeverityMap().getGenericSeverity().getId());
 			if (genericSeverity != null) {
 				ChannelSeverity dbChannelSeverity = channelSeverityDao.retrieveById(channelSeverity.getId());
 				dbChannelSeverity.getSeverityMap().setGenericSeverity(genericSeverity);
 				channelSeverityDao.saveOrUpdate(dbChannelSeverity);
+				ids = ids + dbChannelSeverity.getId() + ",";
 			}
 		}
 
+		if (!ids.isEmpty())
+			queueSender.updateChannelSeverityMappings(ids);
+
 		return null;
+	}
+
+	@Override
+	public void updateExistingVulns(String channelSeverityIds) {
+		assert channelSeverityIds != null;
+		List<Integer> idsList = CollectionUtils.list();
+		String[] ids = channelSeverityIds.split(",");
+		for (String idStr: ids) {
+			Integer channelSeverityId = IntegerUtils.getIntegerOrNull(idStr);
+			if (channelSeverityId != null)
+				idsList.add(channelSeverityId);
+		}
+
+		if (idsList.size() > 0)
+			channelSeverityDao.updateExistingVulns(idsList);
+
 	}
 
 }

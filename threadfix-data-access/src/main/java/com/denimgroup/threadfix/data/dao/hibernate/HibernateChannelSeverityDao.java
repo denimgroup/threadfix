@@ -73,7 +73,36 @@ public class HibernateChannelSeverityDao implements ChannelSeverityDao {
 
 	@Override
 	public void saveOrUpdate(ChannelSeverity channelSeverity) {
-        sessionFactory.getCurrentSession().saveOrUpdate(channelSeverity.getSeverityMap());
+		sessionFactory.getCurrentSession().saveOrUpdate(channelSeverity.getSeverityMap());
 		sessionFactory.getCurrentSession().saveOrUpdate(channelSeverity);
+	}
+
+	@Override
+	public void updateExistingVulns(List<Integer> channelSeverityIds) {
+
+		for (Integer channelSeverityId: channelSeverityIds) {
+			ChannelSeverity channelSeverity = retrieveById(channelSeverityId);
+			if (channelSeverity == null)
+				continue;
+
+			List list = sessionFactory.getCurrentSession().createQuery(
+					"select finding.vulnerability.id from Finding finding where finding.channelSeverity.id = :channelSeverityId and finding.firstFindingForVuln = true")
+					.setParameter("channelSeverityId", channelSeverityId)
+					.list();
+
+			if (!list.isEmpty()) {
+				sessionFactory.getCurrentSession().createQuery(
+						"update Vulnerability vulnerability set genericSeverity = :genericSeverity where id in (:vulnIds)")
+						.setParameterList("vulnIds", list)
+						.setParameter("genericSeverity", channelSeverity.getSeverityMap().getGenericSeverity())
+						.executeUpdate();
+
+				sessionFactory.getCurrentSession().createQuery(
+						"update StatisticsCounter counter set currentGenericSeverityId = :genericSeverityId where vulnerabilityId in (:vulnIds)")
+						.setParameterList("vulnIds", list)
+						.setParameter("genericSeverityId", channelSeverity.getSeverityMap().getGenericSeverity().getId())
+						.executeUpdate();
+			}
+		}
 	}
 }

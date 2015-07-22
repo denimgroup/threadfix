@@ -109,16 +109,18 @@
                             </li>
                         </security:authorize>
 
-                        <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
+                        <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_ENTERPRISE">
                             <li class="dropdown-submenu">
                                 <a tabindex="-1" href="#" id="manageMappingsLink">Mappings</a>
                                 <ul class="dropdown-menu">
                                     <li class="normalLinks">
-                                        <a id="updateChannelVulnLink" href="<spring:url value="/mappings/index" htmlEscape="true"/>">Channel Vulnerability</a>
+                                        <a id="updateChannelVulnLink" href="<spring:url value="/mappings/index" htmlEscape="true"/>">Scanner Vulnerability</a>
                                     </li>
-                                    <li class="normalLinks">
-                                        <a id="updateChannelSeverityLink" href="<spring:url value="/mappings/channelSeverity/index" htmlEscape="true"/>">Channel Severity</a>
-                                    </li>
+                                    <security:authorize ifAllGranted="ROLE_ENTERPRISE">
+                                        <li class="normalLinks">
+                                            <a id="updateChannelSeverityLink" href="<spring:url value="/mappings/channelSeverity/index" htmlEscape="true"/>">Scanner Severity</a>
+                                        </li>
+                                    </security:authorize>
                                 </ul>
                             </li>
                         </security:authorize>
@@ -130,9 +132,9 @@
                         </security:authorize>
                         <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_WAFS">
                             <li class="normalLinks">
-						    	<a id="wafsLink" href="<spring:url value="/wafs" htmlEscape="true"/>">WAFs</a>
-						    </li>
-					    </security:authorize>
+                                <a id="wafsLink" href="<spring:url value="/wafs" htmlEscape="true"/>">WAFs</a>
+                            </li>
+                        </security:authorize>
                         <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_ENTERPRISE,ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT">
                             <li class="dropdown-submenu">
                                 <a tabindex="-1" href="#" id="manageCustomLink">Custom Texts</a>

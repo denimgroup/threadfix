@@ -47,4 +47,6 @@ public interface ChannelSeverityService {
 
 	String updateChannelSeverityMappings(List<ChannelSeverity> channelSeverities);
 
+	void updateExistingVulns(String channelSeverityIds);
+
 }
