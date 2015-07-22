@@ -16,7 +16,7 @@
 
         <table class="modal-form-table">
             <tr>
-                <td>Source Channel Type</td>
+                <td>Source Scanner Type</td>
                 <td>
                     <input id="sourceChannelType.name"
                            required style="z-index:4000;width:500px"
@@ -24,35 +24,35 @@
                            name = "sourceChannelTypeName"
                            ng-model="object.sourceChannelType"
                            typeahead="channelType as channelType.name for channelType in config.channelTypes | filter:$viewValue | limitTo:10"
+                           typeahead-on-select="object.sourceChannelVulnerability = undefined;"
                            class="form-control"/>
                     <span id="sourceChannelTypeRequiredError" class="errors" ng-show="form.sourceChannelTypeName.$dirty && form.sourceChannelTypeName.$error.required">Channel Type is required.</span>
                     <span id="sourceChannelTypeNameError" class="errors" ng-show="object.sourceChannelType_name_error"> {{ object.sourceChannelType_name_error }}</span>
                 </td>
             </tr>
             <tr>
-                <td>Source Channel Vulnerability</td>
+                <td>Source Scanner Vulnerability</td>
                 <td>
                     <input id="sourceChannelVulnerability.name"
                            required style="z-index:4000;width:500px"
-                           <%--disabled = "!object.sourceChannelType.name"--%>
                            type="text"
                            name = "sourceChannelVulnerabilityName"
                            ng-model="object.sourceChannelVulnerability"
                            typeahead="vulnerability as vulnerability.name for vulnerability in config.channelVulnerabilitiesMap[object.sourceChannelType.name] | filter:$viewValue | limitTo:10"
                            class="form-control"/>
-                    <span id="sourceChannelVulnerabilityRequiredError" class="errors" ng-show="form.sourceChannelVulnerabilityName.$dirty && form.sourceChannelVulnerabilityName.$error.required">Channel Vulnerability is required.</span>
+                    <span id="sourceChannelVulnerabilityRequiredError" class="errors" ng-show="form.sourceChannelVulnerabilityName.$dirty && form.sourceChannelVulnerabilityName.$error.required">Scanner Vulnerability is required.</span>
                     <span id="sourceChannelVulnerabilityNameError" class="errors" ng-show="object.sourceChannelVulnerability_name_error"> {{ object.sourceChannelVulnerability_name_error }}</span>
                 </td>
             </tr>
             <tr>
                 <td>
-                    Target Severity Type
+                    Target Generic Severity Type
                 </td>
                 <td>
                     <select id="targetGenericSeverity.id" required style="width:320px" name="targetGenericSeverityId" ng-model="object.targetGenericSeverity.id">
                         <option ng-selected="severity.id === object.targetGenericSeverity.id" ng-repeat = "severity in config.genericSeverities" value="{{ severity.id }}"> {{ severity.displayName }} </option>
                     </select>
-                    <span id="genericSeverityRequiredError" class="errors" ng-show="form.targetGenericSeverityId.$dirty && form.targetGenericSeverityId.$error.required">Severity is required.</span>
+                    <span id="genericSeverityRequiredError" class="errors" ng-show="form.targetGenericSeverityId.$dirty && form.targetGenericSeverityId.$error.required">Generic Severity is required.</span>
                     <span id="genericSeverityIdError" class="errors" ng-show="object.targetGenericSeverity_id_error"> {{ object.targetGenericSeverity_id_error }}</span>
                 </td>
             </tr>
