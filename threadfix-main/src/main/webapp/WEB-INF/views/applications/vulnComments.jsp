@@ -22,7 +22,8 @@
             </td>
             <td class="left-align" >
                 <div ng-show="canUpdateVulnComment">
-                    <multi-select id="commentTags"
+                    <multi-select id-prefix="comment{{ $index }}Tags"
+                                  id="commentTags"
                             input-model="comment.tagsList"
                             output-model="comment.tags"
                             button-label="name"

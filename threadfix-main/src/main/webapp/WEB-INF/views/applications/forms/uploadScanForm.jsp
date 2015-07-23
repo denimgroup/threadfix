@@ -15,7 +15,7 @@
 
         <div ng-show="ready()">
             <div>
-                <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+                <alert id="alert" ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
             </div>
             <div ng-hide="isIE">
                 Drag and drop scan files here.
