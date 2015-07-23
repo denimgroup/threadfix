@@ -104,7 +104,21 @@
                     </multi-select>
                 </td>
             </tr>
-
+            <security:authorize ifAllGranted="ROLE_ENTERPRISE">
+                <tr id="appACDiv" ng-show="config.isEnterprise">
+                    <td>Acceptance Criteria</td>
+                    <td>
+                        <button ng-show="config.acceptanceCriterias" class="btn"
+                                ng-click="switchTo('manageAcceptanceCriteria')" id="manageAcceptanceCriteriaButton">
+                            Manage Acceptance Criteria
+                        </button>
+                        <a ng-hide="config.acceptanceCriterias" class="btn btn-primary"
+                                ng-click="goToAcceptanceCriteriaPage()" id="goToAcceptanceCriteriaButton">
+                            Create Acceptance Criteria
+                        </a>
+                    </td>
+                </tr>
+            </security:authorize>
             <tr>
                 <td colspan="2">
                     <a class="pointer" ng-click="sourceCodeDisplay = !sourceCodeDisplay">Source Code Information</a>
