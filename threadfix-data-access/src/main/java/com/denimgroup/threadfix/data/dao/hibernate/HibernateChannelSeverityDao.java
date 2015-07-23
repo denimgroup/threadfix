@@ -48,7 +48,7 @@ public class HibernateChannelSeverityDao implements ChannelSeverityDao {
 		return sessionFactory
 				.getCurrentSession()
 				.createQuery(
-						"from ChannelSeverity cs where cs.channelType = :channelTypeId")
+						"from ChannelSeverity cs where cs.channelType = :channelTypeId order by cs.numericValue desc")
 				.setInteger("channelTypeId", channelType.getId()).list();
 	}
 
