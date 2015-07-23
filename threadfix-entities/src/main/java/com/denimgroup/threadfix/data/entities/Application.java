@@ -850,7 +850,8 @@ public class Application extends AuditableEntity {
 
     // TODO exclude from default ObjectMapper
     @Transient
-    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.VulnSearchApplications.class, AllViews.RestViewTag.class, AllViews.DefectTrackerInfos.class })
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.VulnSearchApplications.class,
+            AllViews.RestViewTag.class, AllViews.DefectTrackerInfos.class, AllViews.AcceptanceCriteriaPageView.class })
     public Map<String, Object> getTeam() {
         Organization team = getOrganization();
 
@@ -913,7 +914,8 @@ public class Application extends AuditableEntity {
     }
 
     @Transient
-    public List<AcceptanceCriteria> getAcceptanceCriteria(){
+    @JsonView(AllViews.FormInfo.class)
+    public List<AcceptanceCriteria> getAcceptanceCriterias(){
         List<AcceptanceCriteria> acceptanceCriteriaList = list();
 
         for (AcceptanceCriteriaStatus acceptanceCriteriaStatus : acceptanceCriteriaStatuses) {

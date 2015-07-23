@@ -23,15 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
+import com.denimgroup.threadfix.data.entities.ChannelSeverity;
+import com.denimgroup.threadfix.data.entities.ChannelType;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.entities.ChannelSeverity;
-import com.denimgroup.threadfix.data.entities.ChannelType;
+import java.util.List;
 
 @Repository
 public class HibernateChannelSeverityDao implements ChannelSeverityDao {
@@ -49,7 +48,7 @@ public class HibernateChannelSeverityDao implements ChannelSeverityDao {
 		return sessionFactory
 				.getCurrentSession()
 				.createQuery(
-						"from ChannelSeverity cs where cs.channelType = :channelTypeId")
+						"from ChannelSeverity cs where cs.channelType = :channelTypeId order by cs.numericValue desc")
 				.setInteger("channelTypeId", channelType.getId()).list();
 	}
 
@@ -73,7 +72,38 @@ public class HibernateChannelSeverityDao implements ChannelSeverityDao {
 
 	@Override
 	public void saveOrUpdate(ChannelSeverity channelSeverity) {
-        sessionFactory.getCurrentSession().saveOrUpdate(channelSeverity.getSeverityMap());
+		sessionFactory.getCurrentSession().saveOrUpdate(channelSeverity.getSeverityMap());
 		sessionFactory.getCurrentSession().saveOrUpdate(channelSeverity);
+		sessionFactory.getCurrentSession().flush();
+		sessionFactory.getCurrentSession().refresh(channelSeverity);
+	}
+
+	@Override
+	public void updateExistingVulns(List<Integer> channelSeverityIds) {
+
+		for (Integer channelSeverityId: channelSeverityIds) {
+			ChannelSeverity channelSeverity = retrieveById(channelSeverityId);
+			if (channelSeverity == null)
+				continue;
+
+			List list = sessionFactory.getCurrentSession().createQuery(
+					"select finding.vulnerability.id from Finding finding where finding.channelSeverity.id = :channelSeverityId and finding.firstFindingForVuln = true")
+					.setParameter("channelSeverityId", channelSeverityId)
+					.list();
+
+			if (!list.isEmpty()) {
+				sessionFactory.getCurrentSession().createQuery(
+						"update Vulnerability vulnerability set genericSeverity = :genericSeverity where id in (:vulnIds)")
+						.setParameterList("vulnIds", list)
+						.setParameter("genericSeverity", channelSeverity.getSeverityMap().getGenericSeverity())
+						.executeUpdate();
+
+				sessionFactory.getCurrentSession().createQuery(
+						"update StatisticsCounter counter set currentGenericSeverityId = :genericSeverityId where vulnerabilityId in (:vulnIds)")
+						.setParameterList("vulnIds", list)
+						.setParameter("genericSeverityId", channelSeverity.getSeverityMap().getGenericSeverity().getId())
+						.executeUpdate();
+			}
+		}
 	}
 }

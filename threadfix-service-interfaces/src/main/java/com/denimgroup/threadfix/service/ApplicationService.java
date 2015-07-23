@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.data.entities.AcceptanceCriteria;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
@@ -191,4 +192,7 @@ public interface ApplicationService {
 	long getApplicationCount();
 
     Object updateApplicationFromREST(Integer applicationId, MultiValueMap<String, String> params, BindingResult result);
+
+    List<AcceptanceCriteria> loadUnassociatedAcceptanceCriteria(Application application);
+
 }
