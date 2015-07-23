@@ -110,9 +110,9 @@
                         </security:authorize>
 
                         <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_ENTERPRISE">
-                            <li class="dropdown-submenu">
+                            <li class="dropdown-submenu pull-left normalLinks">
                                 <a tabindex="-1" href="#" id="manageMappingsLink">Mappings</a>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown-menu" style="text-align:right;left: -170px">
                                     <li class="normalLinks">
                                         <a id="updateChannelVulnLink" href="<spring:url value="/mappings/index" htmlEscape="true"/>">Scanner Vulnerability</a>
                                     </li>
@@ -136,9 +136,9 @@
                             </li>
                         </security:authorize>
                         <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_ENTERPRISE,ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT">
-                            <li class="dropdown-submenu">
-                                <a tabindex="-1" href="#" id="manageCustomLink">Custom Texts</a>
-                                <ul class="dropdown-menu">
+                            <li class="dropdown-submenu pull-left normalLinks">
+                                <a tabindex="-1" href="#" id="manageCustomLink">Custom Text</a>
+                                <ul class="dropdown-menu" style="text-align:right;left: -170px">
                                     <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_ENTERPRISE">
                                         <li class="normalLinks">
                                             <a id="customizeSeveritiesLink" href="<spring:url value="/severities" htmlEscape="true"/>">Severity</a>
@@ -165,9 +165,9 @@
                                 </li>
                             </security:authorize>
                             <security:authorize ifAnyGranted="ROLE_CAN_MODIFY_VULNERABILITIES,ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS">
-                                <li class="dropdown-submenu">
-                                    <a tabindex="-1" href="#" id="manageFiltersLink">Manage Filters</a>
-                                    <ul class="dropdown-menu">
+                                <li class="dropdown-submenu normalLinks pull-left">
+                                    <a href="#" id="manageFiltersLink">Manage Filters</a>
+                                    <ul class="dropdown-menu" style="text-align:right;left: -170px">
                                         <security:authorize ifAnyGranted="ROLE_CAN_MODIFY_VULNERABILITIES">
                                             <li class="normalLinks">
                                                 <a id="vulnFiltersLink" href="<spring:url value="/configuration/filters" htmlEscape="true"/>">Vulnerability</a>

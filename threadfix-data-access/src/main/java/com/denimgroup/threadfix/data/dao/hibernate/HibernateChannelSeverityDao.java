@@ -23,15 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
+import com.denimgroup.threadfix.data.entities.ChannelSeverity;
+import com.denimgroup.threadfix.data.entities.ChannelType;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.entities.ChannelSeverity;
-import com.denimgroup.threadfix.data.entities.ChannelType;
+import java.util.List;
 
 @Repository
 public class HibernateChannelSeverityDao implements ChannelSeverityDao {
@@ -75,6 +74,8 @@ public class HibernateChannelSeverityDao implements ChannelSeverityDao {
 	public void saveOrUpdate(ChannelSeverity channelSeverity) {
 		sessionFactory.getCurrentSession().saveOrUpdate(channelSeverity.getSeverityMap());
 		sessionFactory.getCurrentSession().saveOrUpdate(channelSeverity);
+		sessionFactory.getCurrentSession().flush();
+		sessionFactory.getCurrentSession().refresh(channelSeverity);
 	}
 
 	@Override
