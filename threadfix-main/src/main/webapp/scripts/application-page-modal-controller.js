@@ -197,6 +197,9 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             }
             $scope.currentModal.dismiss('modalChanged');
             $scope.showCreateDefectProfileModal();
+        } else if (name === 'manageAcceptanceCriteria') {
+            $scope.currentModal.dismiss('modalChanged');
+            $scope.showAcceptanceCriteriaModal();
         }
     });
 
@@ -417,7 +420,6 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
         });
     };
 
-
     $scope.showCreateDefectProfileModal = function() {
         var modalInstance = $modal.open({
             templateUrl: 'createDefaultProfileModal.html',
@@ -606,4 +608,27 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             }
         });
     };
-})
+
+    $scope.showAcceptanceCriteriaModal = function() {
+
+        var modalInstance = $modal.open({
+            templateUrl: 'manageAcceptanceCriteriaModal.html',
+            controller: 'ManageAcceptanceCriteriaModalController',
+            resolve: {
+                object: function() {
+                    return angular.copy($scope.config.application);
+                },
+                acceptanceCriterias: function() {
+                    return angular.copy($scope.config.acceptanceCriterias)
+                }
+            }
+        });
+
+        modalInstance.result.then(function (result) {
+            $scope.config.application.acceptanceCriterias = result.assignedAcceptanceCriterias;
+            $scope.config.acceptanceCriterias = result.availableAcceptanceCriterias;
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    };
+});

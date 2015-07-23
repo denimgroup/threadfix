@@ -106,6 +106,9 @@ public class ApplicationsController {
     private CacheBustService cacheBustService;
     @Autowired(required = false)
     private AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
+    @Autowired(required = false)
+    private AcceptanceCriteriaService acceptanceCriteriaService;
+
 
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -228,11 +231,13 @@ public class ApplicationsController {
 
         // tagging
         map.put("tags", tagService.loadAllApplicationTags());
-
         map.put("applicationTags", application.getTags());
+        map.put("isEnterprise", EnterpriseTest.isEnterprise());
 
-        if (EnterpriseTest.isEnterprise())
+        if (EnterpriseTest.isEnterprise()) {
+            map.put("acceptanceCriterias", applicationService.loadUnassociatedAcceptanceCriteria(application));
             map.put("scanAgentSupportedList", ScannerType.getScanAgentSupportedListInString());
+        }
 
         // permissions
         for (Permission permission : new Permission[]{Permission.CAN_MANAGE_DEFECT_TRACKERS, Permission.CAN_MANAGE_WAFS}) {

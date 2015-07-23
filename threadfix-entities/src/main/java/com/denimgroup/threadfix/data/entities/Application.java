@@ -914,7 +914,8 @@ public class Application extends AuditableEntity {
     }
 
     @Transient
-    public List<AcceptanceCriteria> getAcceptanceCriteria(){
+    @JsonView(AllViews.FormInfo.class)
+    public List<AcceptanceCriteria> getAcceptanceCriterias(){
         List<AcceptanceCriteria> acceptanceCriteriaList = list();
 
         for (AcceptanceCriteriaStatus acceptanceCriteriaStatus : acceptanceCriteriaStatuses) {

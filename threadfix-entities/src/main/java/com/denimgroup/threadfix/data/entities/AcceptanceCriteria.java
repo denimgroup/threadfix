@@ -79,7 +79,7 @@ public class AcceptanceCriteria extends AuditableEntity {
     }
 
     @Column(length = NAME_LENGTH, nullable = false)
-    @JsonView(AllViews.AcceptanceCriteriaPageView.class) // This means it will be included in all ObjectWriters with Views.
+    @JsonView({AllViews.AcceptanceCriteriaPageView.class, AllViews.FormInfo.class})
     public String getName() {
         return name;
     }
@@ -126,7 +126,7 @@ public class AcceptanceCriteria extends AuditableEntity {
 
     @OneToOne
     @JoinColumn(name = "filterJsonBlobId")
-    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
+    @JsonView(AllViews.TableRow.class)
     public FilterJsonBlob getFilterJsonBlob() {
         return filterJsonBlob;
     }
