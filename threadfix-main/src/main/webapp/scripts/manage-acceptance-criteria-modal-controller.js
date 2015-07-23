@@ -74,11 +74,10 @@ myAppModule.controller('ManageAcceptanceCriteriaModalController', function ($sco
 
     $scope.focusInput = true;
 
-    $scope.switchTo = function(name) {
-        $rootScope.$broadcast('modalSwitch', name);
-    };
-
     $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
+        $modalInstance.close({
+            assignedAcceptanceCriterias: $scope.object.acceptanceCriterias,
+            availableAcceptanceCriterias: $scope.acceptanceCriterias
+        });
     };
 });

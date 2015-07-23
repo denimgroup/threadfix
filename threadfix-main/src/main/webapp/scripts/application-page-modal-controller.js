@@ -611,24 +611,24 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
     $scope.showAcceptanceCriteriaModal = function() {
 
-        $modal.open({
+        var modalInstance = $modal.open({
             templateUrl: 'manageAcceptanceCriteriaModal.html',
             controller: 'ManageAcceptanceCriteriaModalController',
             resolve: {
                 object: function() {
-
-                    var appCopy = angular.copy($scope.config.application);
-
-                    //appCopy.acceptanceCriterias = appCopy.acceptanceCriteriaStatuses.map(function(acs) {
-                    //    return acs.acceptanceCriteria;
-                    //});
-
-                    return appCopy;
+                    return angular.copy($scope.config.application);
                 },
                 acceptanceCriterias: function() {
                     return angular.copy($scope.config.acceptanceCriterias)
                 }
             }
+        });
+
+        modalInstance.result.then(function (result) {
+            $scope.config.application.acceptanceCriterias = result.assignedAcceptanceCriterias;
+            $scope.config.acceptanceCriterias = result.availableAcceptanceCriterias;
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
         });
     };
 });

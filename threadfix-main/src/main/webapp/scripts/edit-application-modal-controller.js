@@ -6,7 +6,7 @@ myAppModule.value('deleteUrl', null);
 
 // TODO wrap this back into genericModalController and make config optional
 
-myAppModule.controller('EditApplicationModalController', function ($log, $scope, $rootScope, $modalInstance, $http, threadFixModalService, object, config, url, buttonText, deleteUrl, timeoutService, tfEncoder, tagsUrl) {
+myAppModule.controller('EditApplicationModalController', function ($log, $scope, $rootScope, $modalInstance, $http, $window, threadFixModalService, object, config, url, buttonText, deleteUrl, timeoutService, tfEncoder, tagsUrl) {
 
     $scope.object = object;
 
@@ -99,5 +99,9 @@ myAppModule.controller('EditApplicationModalController', function ($log, $scope,
                 });
         }
     };
+
+    $scope.goToAcceptanceCriteriaPage = function() {
+        $window.location.href = tfEncoder.encode("/configuration/acceptcriterias");
+    }
 
 });
