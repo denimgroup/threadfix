@@ -52,7 +52,7 @@ public class QARestController extends TFRestController {
     private ApplicationService applicationService;
     @Autowired
     private AccessControlMapService accessControlMapService;
-    @Autowired
+    @Autowired(required=false)
     private GroupService groupService;
 
     private static final String TEAM_DELETION_FAILED = "Team deletion failed.";
