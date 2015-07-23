@@ -92,7 +92,9 @@
             <tr>
                 <td class="right-align">Tag</td>
                 <td class="left-align" >
-                    <multi-select id="tagSelect"
+                    <multi-select
+                            id-prefix="tags"
+                            id="tagSelect"
                             input-model="config.tags"
                             output-model="object.tags"
                             button-label="name"
@@ -111,8 +113,8 @@
             <tr ng-show="sourceCodeDisplay">
                 <td class="right-align">Source Code Repository Type</td>
                 <td class="left-align">
-                    <input type="radio" name="repositoryType" ng-model="object.repositoryType" value="GIT"> Git
-                    <input type="radio" name="repositoryType" ng-model="object.repositoryType" value="SVN"> SVN
+                    <input id="gitRadioButton" type="radio" name="repositoryType" ng-model="object.repositoryType" value="GIT"> Git
+                    <input id="svnRadioButton" type="radio" name="repositoryType" ng-model="object.repositoryType" value="SVN"> SVN
                 </td>
                 <td>
                     <span id="repositoryTypeServerError" class="errors" ng-show="object.repositoryType_error"> {{ object.repositoryType_error }}</span>
