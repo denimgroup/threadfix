@@ -13,6 +13,8 @@ module.controller('EmailListsPageController', function($scope, $http, $modal, $l
                     if (data.object.emailLists.length > 0) {
                         $scope.emailLists = data.object.emailLists;
                         $scope.emailLists.sort(nameCompare);
+                    } else {
+                        $scope.emailLists = [];
                     }
                 } else {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
@@ -40,20 +42,15 @@ module.controller('EmailListsPageController', function($scope, $http, $modal, $l
                     return {};
                 },
                 buttonText: function() {
-                    return "Create Email List";
+                    return "Create";
                 }
             }
         });
 
         $scope.currentModal = modalInstance;
         modalInstance.result.then(function (emailList) {
-            if (!$scope.emailLists) {
-                $scope.emailLists = [ emailList ];
-            } else {
-                $scope.emailLists.push(emailList);
-                $scope.emailLists.sort(nameCompare);
-            }
-
+            $scope.emailLists.push(emailList);
+            $scope.emailLists.sort(nameCompare);
             $scope.successMessage = "Successfully created email list " + emailList.name;
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
@@ -72,7 +69,7 @@ module.controller('EmailListsPageController', function($scope, $http, $modal, $l
                     return angular.copy(emailList);
                 },
                 buttonText: function() {
-                    return "Save Edits";
+                    return "Save";
                 },
                 config: function() {
                     return {}
@@ -117,7 +114,12 @@ module.controller('EmailListsPageController', function($scope, $http, $modal, $l
             success(function(data, status, headers, config) {
                 if (data.success) {
                     emailList.newEmailAddress = null;
-                    threadFixModalService.addElement(emailList.emailAddresses, data.object);
+
+                    if (!emailList.emailAddresses) {
+                        emailList.emailAddresses = [ data.object ];
+                    } else {
+                        threadFixModalService.addElement(emailList.emailAddresses, data.object);
+                    }
                 }
                 else {
                     emailList.newEmailError = data.message;
