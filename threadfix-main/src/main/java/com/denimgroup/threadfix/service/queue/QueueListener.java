@@ -47,8 +47,6 @@ public class QueueListener implements MessageListener {
 	protected final SanitizedLogger log = new SanitizedLogger(QueueListener.class);
 
     @Autowired
-	private ScanMergeService scanMergeService;
-    @Autowired
 	private DefectService defectService;
     @Autowired(required=false)
 	private GRCToolService grcToolService;
@@ -77,6 +75,8 @@ public class QueueListener implements MessageListener {
     private ScheduledEmailReportService scheduledEmailReportService;
 	@Autowired(required=false)
 	private ScheduledScanService scheduledScanService;
+	@Autowired
+	private ChannelSeverityService channelSeverityService;
 
 	/*
 	 * (non-Javadoc)
@@ -142,6 +142,10 @@ public class QueueListener implements MessageListener {
                     case QueueConstants.VULNS_FILTER:
                         updateVulnsFilter();
                         break;
+					case QueueConstants.CHANNEL_SEVERITY_MAPPINGS:
+						updateChannelSeverityMappings(map.getString("channelSeverityIds"));
+						break;
+					
                     case QueueConstants.SEND_EMAIL_REPORT:
                         processSendEmailReport(map.getInt("scheduledEmailReportId"));
 				}
@@ -153,7 +157,14 @@ public class QueueListener implements MessageListener {
 		}
 	}
 
-    private void processSendEmailReport(int scheduledEmailReportId) {
+	private void updateChannelSeverityMappings(String channelSeverityIds) {
+
+		channelSeverityService.updateExistingVulns(channelSeverityIds);
+
+		updateVulnsFilter();
+	}
+
+	private void processSendEmailReport(int scheduledEmailReportId) {
         log.info("Schedule Email Report was called! With scheduledEmailReportId=" + scheduledEmailReportId);
         ScheduledEmailReport scheduledEmailReport = scheduledEmailReportService.loadById(scheduledEmailReportId);
         emailReportService.sendEmailReport(scheduledEmailReport);
