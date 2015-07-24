@@ -162,7 +162,10 @@ public class RemoteProvidersController {
 		if (acceptanceCriteriaStatusService != null) {
 			for (RemoteProviderApplication remoteProviderApplication :
 					remoteProviderType.getRemoteProviderApplications()) {
-				acceptanceCriteriaStatusService.runStatusCheck(remoteProviderApplication.getApplication().getId());
+				if (remoteProviderApplication.getApplication() != null &&
+						remoteProviderApplication.getApplication().getId() != null) {
+					acceptanceCriteriaStatusService.runStatusCheck(remoteProviderApplication.getApplication().getId());
+				}
 			}
 		}
 
