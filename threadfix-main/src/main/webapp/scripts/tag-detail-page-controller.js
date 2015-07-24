@@ -57,7 +57,8 @@ myAppModule.controller('TagDetailPageController', function ($scope, $window, $ht
                     vulnMap[comment.commentInfo.vulnerabilityId] = {
                         id : comment.commentInfo.vulnerabilityId,
                         genericVulnerability: {
-                            name: comment.commentInfo.vulnerabilityName
+                            name: comment.commentInfo.vulnerabilityName,
+                            displayId: comment.commentInfo.vulnerabilityDisplayId
                         },
                         app : {
                             id: comment.commentInfo.applicationId,
