@@ -104,7 +104,7 @@ public class HibernateScanDao
 	@SuppressWarnings("unchecked")
 	public List<Scan> retrieveByApplicationIdList(List<Integer> applicationIdList) {
 		return sessionFactory.getCurrentSession()
-			.createQuery("from Scan scan where scan.application.id in (:idList) and lockedMetadata = false")
+			.createQuery("from Scan scan where scan.application.id in (:idList) and lockedMetadata = false or lockedMetadata IS NULL")
 			.setParameterList("idList", applicationIdList)
 			.list();
 	}
