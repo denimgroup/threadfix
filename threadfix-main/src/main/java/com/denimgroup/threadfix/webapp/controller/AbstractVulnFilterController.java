@@ -156,7 +156,7 @@ public abstract class AbstractVulnFilterController {
 		}
 
 		if (EnterpriseTest.isEnterprise()) {
-			List<ChannelType> channelTypes = channelTypeService.loadAll();
+			List<ChannelType> channelTypes = channelTypeService.loadAllHasVulnMapping();
 			map.put("channelVulnerabilitiesMap", channelVulnerabilityService.getChannelVulnsEachChannelType(channelTypes));
 			map.put("channelTypes", channelTypes);
 			map.put("globalChannelVulnFilterList", channelVulnerabilityFilterService.retrieveAll());
