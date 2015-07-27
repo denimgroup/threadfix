@@ -57,7 +57,7 @@ public class ChannelType extends BaseEntity {
 			ScannerType.BURPSUITE.getFullName(), 
 			ScannerType.NESSUS.getFullName(),
 			ScannerType.NETSPARKER.getFullName(), 
-			ScannerType.NTO_SPIDER.getFullName(), 
+			ScannerType.APP_SPIDER.getFullName(),
 			ScannerType.SKIPFISH.getFullName(), 
 			ScannerType.W3AF.getFullName(),
 			ScannerType.WEBINSPECT.getFullName(), 

@@ -88,7 +88,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
             ScannerType.BURPSUITE.getFullName(),
             ScannerType.NESSUS.getFullName(),
             ScannerType.NETSPARKER.getFullName(),
-            ScannerType.NTO_SPIDER.getFullName(),
+            ScannerType.APP_SPIDER.getFullName(),
             ScannerType.SKIPFISH.getFullName(),
             ScannerType.W3AF.getFullName(),
             ScannerType.WEBINSPECT.getFullName(),
