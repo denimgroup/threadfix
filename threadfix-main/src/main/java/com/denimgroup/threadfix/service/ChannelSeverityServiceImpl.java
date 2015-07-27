@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.data.dao.GenericSeverityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.GenericSeverity;
+import com.denimgroup.threadfix.data.entities.SeverityMap;
 import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.queue.QueueSender;
@@ -94,7 +95,15 @@ public class ChannelSeverityServiceImpl implements ChannelSeverityService {
 			GenericSeverity genericSeverity = genericSeverityDao.retrieveById(channelSeverity.getSeverityMap().getGenericSeverity().getId());
 			if (genericSeverity != null) {
 				ChannelSeverity dbChannelSeverity = channelSeverityDao.retrieveById(channelSeverity.getId());
-				dbChannelSeverity.getSeverityMap().setGenericSeverity(genericSeverity);
+
+				if (dbChannelSeverity.getSeverityMap() != null)
+					dbChannelSeverity.getSeverityMap().setGenericSeverity(genericSeverity);
+				else {
+					SeverityMap map = new SeverityMap();
+					map.setChannelSeverity(dbChannelSeverity);
+					map.setGenericSeverity(genericSeverity);
+					dbChannelSeverity.setSeverityMap(map);
+				}
 				channelSeverityDao.saveOrUpdate(dbChannelSeverity);
 				ids = ids + dbChannelSeverity.getId() + ",";
 			}
