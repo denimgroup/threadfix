@@ -26,5 +26,50 @@ package com.denimgroup.threadfix.util;
 /**
  * Created by mcollins on 7/27/15.
  */
-public class Result {
+public class Result<T> {
+
+    T result = null;
+    String errorMessage = null;
+    boolean success = false;
+
+    public T getResult() {
+        if (result == null) {
+            throw new IllegalStateException("Check valid status before calling getResult()");
+        }
+        return result;
+    }
+
+    public String getErrorMessage() {
+        if (errorMessage == null) {
+            throw new IllegalStateException("Check valid status before calling getErrorMessage()");
+        }
+        return errorMessage;
+    }
+
+    public boolean success() {
+        return success;
+    }
+
+    private Result() {}
+
+    public static <T> Result<T> failure(String message) {
+        if (message == null) {
+            throw new IllegalArgumentException("Can't pass null message.");
+        }
+
+        Result<T> result = new Result<T>();
+        result.errorMessage = message;
+        return result;
+    }
+
+    public static <T> Result<T> success(T resultObject) {
+        if (resultObject == null) {
+            throw new IllegalArgumentException("Can't pass null message.");
+        }
+
+        Result<T> result = new Result<T>();
+        result.success = true;
+        result.result = resultObject;
+        return result;
+    }
 }

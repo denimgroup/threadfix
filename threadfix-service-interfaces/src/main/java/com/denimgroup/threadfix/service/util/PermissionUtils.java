@@ -26,8 +26,10 @@ package com.denimgroup.threadfix.service.util;
 
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.service.PermissionService;
+import com.denimgroup.threadfix.service.ThreadFixUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -35,6 +37,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -72,6 +75,14 @@ public class PermissionUtils extends SpringBeanAutowiringSupport {
 				.getAuthorities().contains(new SimpleGrantedAuthority(permission.getText()));
 	}
 
+	public static boolean hasGlobalPermission(Collection<? extends GrantedAuthority> authorities, Permission permission) {
+		if (permission == null || permission.getText() == null || authorities == null) {
+			return false;
+		}
+
+		return authorities.contains(new SimpleGrantedAuthority(permission.getText()));
+	}
+
 	public static boolean hasGlobalReadAccess() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		
@@ -90,6 +101,11 @@ public class PermissionUtils extends SpringBeanAutowiringSupport {
     public static boolean isAuthorized(Permission permission, Integer orgId, Integer appId) {
         return getInstance().isCommunity() ||
                 getInstance().permissionService.isAuthorized(permission, orgId, appId);
+    }
+
+    public static boolean isAuthorized(ThreadFixUserDetails details, Permission permission, Integer orgId, Integer appId) {
+        return getInstance().isCommunity() ||
+                getInstance().permissionService.isAuthorized(details, permission, orgId, appId);
     }
 
     public static void addPermissions(ModelAndView modelAndView, Integer orgId,
@@ -150,11 +166,27 @@ public class PermissionUtils extends SpringBeanAutowiringSupport {
         }
     }
 
+    public static Set<Integer> getAuthenticatedAppIds(ThreadFixUserDetails details) {
+        if (getInstance().isCommunity()) {
+            return null;
+        } else {
+            return getInstance().permissionService.getAuthenticatedAppIds(details);
+        }
+    }
+
     public static Set<Integer> getAuthenticatedTeamIds() {
         if (getInstance().isCommunity()) {
             return null;
         } else {
             return getInstance().permissionService.getAuthenticatedTeamIds();
+        }
+    }
+
+    public static Set<Integer> getAuthenticatedTeamIds(ThreadFixUserDetails details) {
+        if (getInstance().isCommunity()) {
+            return null;
+        } else {
+            return getInstance().permissionService.getAuthenticatedTeamIds(details);
         }
     }
 

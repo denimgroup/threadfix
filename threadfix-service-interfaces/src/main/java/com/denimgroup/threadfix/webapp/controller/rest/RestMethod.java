@@ -35,65 +35,62 @@ public enum RestMethod {
     CREATE_FINDING(CAN_MODIFY_VULNERABILITIES, false),
 
     // Application-level stuff needs to be checked using PermissionUtils
-    APPLICATION_DETAIL(false),
-    APPLICATION_SET_PARAMS(true),
-    APPLICATION_LOOKUP(false),
-    APPLICATION_NEW(true),
-    APPLICATION_SET_WAF(true),
-    APPLICATION_UPLOAD(true),
-    APPLICATION_ATTACH_FILE(true),
-    APPLICATION_SET_URL(true),
-    APPLICATION_UPDATE(true),
-    APPLICATION_ADD_TAG(true),
-    APPLICATION_REMOVE_TAG(true),
-    APPLICATION_SCAN_LIST(false),
+    APPLICATION_DETAIL(READ_ACCESS, false),
+    APPLICATION_SET_PARAMS(CAN_MANAGE_APPLICATIONS, true),
+    APPLICATION_LOOKUP(READ_ACCESS, false),
+    APPLICATION_NEW(CAN_MANAGE_APPLICATIONS, true),
+    APPLICATION_SET_WAF(CAN_MANAGE_APPLICATIONS, true),
+    APPLICATION_UPLOAD(CAN_UPLOAD_SCANS, false),
+    APPLICATION_ATTACH_FILE(CAN_MANAGE_APPLICATIONS, true),
+    APPLICATION_SET_URL(CAN_MANAGE_APPLICATIONS, true),
+    APPLICATION_UPDATE(CAN_MANAGE_APPLICATIONS, true),
+    APPLICATION_ADD_TAG(CAN_MANAGE_APPLICATIONS, true),
+    APPLICATION_REMOVE_TAG(CAN_MANAGE_APPLICATIONS, true),
+    APPLICATION_SCAN_LIST(READ_ACCESS, false),
 
     // CWE
     CWE_SET_CUSTOM_TEXT(CAN_MANAGE_CUSTOM_CWE_TEXT, true),
 
     // PLUGINS
-    PLUGIN_MARKERS(false),
-    PLUGIN_ENDPOINTS(false),
-    PLUGIN_APPLICATIONS(false),
+    PLUGIN_MARKERS(READ_ACCESS, false),
+    PLUGIN_ENDPOINTS(READ_ACCESS, false),
+    PLUGIN_APPLICATIONS(READ_ACCESS, false),
 
     // Scans--check in its controller
-    SCAN_DETAILS(false),
+    SCAN_DETAILS(READ_ACCESS, false),
 
     // Tags
     TAG_CREATE(CAN_MANAGE_TAGS, true),
+    TAG_APPLICATION_LIST(CAN_MANAGE_TAGS, true),
     TAG_EDIT(CAN_MANAGE_TAGS, true),
     TAG_LOOKUP(CAN_MANAGE_TAGS, true),
     TAG_DELETE(CAN_MANAGE_TAGS, true),
     TAG_LIST(CAN_MANAGE_TAGS, true),
 
     // Teams (hybrid)
-    TEAM_LOOKUP(false),
-    TEAM_NEW_APPLICATION(true),
+    TEAM_LOOKUP(READ_ACCESS, false),
+    TEAM_NEW_APPLICATION(CAN_MANAGE_APPLICATIONS, true),
     TEAM_NEW(CAN_MANAGE_TEAMS, true),
-    TEAM_LIST(false),
-    TEAM_UPDATE(true),
+    TEAM_LIST(READ_ACCESS, false),
+    TEAM_UPDATE(CAN_MANAGE_TEAMS, true),
 
     // Vuln Search (needs to apply search stuff)
-    VULNERABILITY_SEARCH(false),
+    VULNERABILITY_SEARCH(CAN_GENERATE_REPORTS, false),
 
     // WAFs
-    WAF_LIST(Permission.CAN_MANAGE_WAFS, true),
-    WAF_DETAIL(Permission.CAN_MANAGE_WAFS, true),
-    WAF_LOOKUP(Permission.CAN_MANAGE_WAFS, true),
-    WAF_RULES(Permission.CAN_MANAGE_WAFS, true),
-    WAF_NEW(Permission.CAN_MANAGE_WAFS, true),
-    WAF_LOG(Permission.CAN_MANAGE_WAFS, true)
+    WAF_LIST(CAN_MANAGE_WAFS, true),
+    WAF_DETAIL(CAN_MANAGE_WAFS, true),
+    WAF_LOOKUP(CAN_MANAGE_WAFS, true),
+    WAF_RULES(CAN_MANAGE_WAFS, true),
+    WAF_NEW(CAN_MANAGE_WAFS, true),
+    WAF_LOG(CAN_MANAGE_WAFS, true)
     ;
 
-    Permission permission;
-    boolean restricted;
+    public final Permission permission;
+    public final boolean restricted;
 
     RestMethod(Permission permission, boolean restricted) {
         this.permission = permission;
-        this.restricted = restricted;
-    }
-
-    RestMethod(boolean restricted) {
         this.restricted = restricted;
     }
 }
