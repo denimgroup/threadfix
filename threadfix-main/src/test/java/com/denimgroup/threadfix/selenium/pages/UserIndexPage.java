@@ -259,7 +259,7 @@ public class UserIndexPage extends BasePage {
     }
 
     public UserIndexPage clickCloseButton() {
-        driver.findElementByXPath("//a[text()='Close']").click();
+        driver.findElementById("closeButton").click();
         return new UserIndexPage(driver);
     }
 	

@@ -373,7 +373,7 @@ public class TeamIndexPage extends BasePage {
     }
 
     public boolean isScanUploadedAlready(String teamName, String appName) {
-        return driver.findElementByXPath("//span[text()='Scan file has already been uploaded.']").isDisplayed();
+        return driver.findElementById("alert").getText().contains("Scan file has already been uploaded.");
     }
 
     public boolean isTeamTotalNumberCorrect(String teamName, String expectednumber) {

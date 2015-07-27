@@ -86,12 +86,12 @@ public class GroupIndexPage extends BasePage {
     }
 
     public GroupIndexPage clickAddUser() {
-        driver.findElementByXPath("//a[text()=\'Add User\']").click();
+        driver.findElementById("addUser").click();
         return this;
     }
 
     public GroupIndexPage clickRemoveUser(String userName) {
-        driver.findElementByXPath("//td[text()=\'" + userName + "\']/following-sibling::td/a").click();
+        driver.findElementById("userRemoveButton" + userName).click();
         handleAlert();
         return this;
     }
@@ -161,7 +161,7 @@ public class GroupIndexPage extends BasePage {
 
     public boolean isUserPresent(String userName) {
         try{
-            driver.findElementByXPath("//div[@id=\'users\']//td[text()=\'" + userName + "\']");
+            driver.findElementByCssSelector("td#user" + userName + ":not(.ng-hide)");
         } catch(NoSuchElementException e){
             return false;
         }

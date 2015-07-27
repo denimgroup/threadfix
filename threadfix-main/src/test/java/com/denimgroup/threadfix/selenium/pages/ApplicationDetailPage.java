@@ -855,10 +855,10 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage attachTag(String tagName) {
-        driver.findElementByXPath("//*[@id=\"tagSelect\"]/button").click();
+        driver.findElementById("tagsButton").click();
         driver.findElementByXPath("//*[@id=\'tagSelect\']//input[contains(@class,'inputFilter')]").sendKeys(tagName);
         driver.findElementById(tagName).click();
-        driver.findElementByXPath("//*[@id=\"tagSelect\"]/button").click();
+        driver.findElementById("tagsButton").click();
         return this;
     }
 
@@ -1361,7 +1361,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public boolean isScanUploadedAlready(String teamName, String appName) {
-        return driver.findElementByXPath("//span[text()='Scan file has already been uploaded.']").isDisplayed();
+        return driver.findElementById("alert").getText().contains("Scan file has already been uploaded.");
     }
 
     public boolean isUniqueIdAvailabe(String uniqueName) {
@@ -1460,6 +1460,6 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public void selectGitRepositoryType() {
-        driver.findElementByXPath("//input[@value='GIT']").click();
+        driver.findElementById("gitRadioButton").click();
     }
 }
