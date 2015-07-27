@@ -30,7 +30,8 @@
                     <th class="short">&nbsp;</th>
                     <th class="medium">Note</th>
                     <th class="centered">Edit / Delete</th>
-                    <th class="short last">Restricted</th>
+                    <th class="short">Restricted</th>
+                    <th class="short">User</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,6 +46,7 @@
                         <button class="btn" id="editKeyModal{{ key.note }}" ng-click="openEditModal(key)">Edit / Delete</button>
                     </td>
                     <td id="restricted{{ key.note }}" style="vertical-align: text-top;">{{ key.isRestrictedKey }}</td>
+                    <td id="user{{ key.note }}" style="vertical-align: text-top;">{{ key.username }}</td>
                 </tr>
             </tbody>
         </table>

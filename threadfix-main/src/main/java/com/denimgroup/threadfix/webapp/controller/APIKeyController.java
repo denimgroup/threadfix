@@ -45,14 +45,10 @@ import java.util.List;
 @PreAuthorize("hasRole('ROLE_CAN_MANAGE_API_KEYS')")
 public class APIKeyController {
 
-	private APIKeyService apiKeyService = null;
+	@Autowired
+	private APIKeyService apiKeyService;
 	
 	private final SanitizedLogger log = new SanitizedLogger(APIKeyController.class);
-
-	@Autowired
-	public APIKeyController(APIKeyService apiKeyService) {
-		this.apiKeyService = apiKeyService;
-	}
 
 	public APIKeyController(){}
 	
@@ -67,7 +63,7 @@ public class APIKeyController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public String index(HttpServletRequest request, Model model) {
+	public String index(Model model) {
 		model.addAttribute("apiKeyList", apiKeyService.loadAll());
 		model.addAttribute("apiKey", new APIKey());
 

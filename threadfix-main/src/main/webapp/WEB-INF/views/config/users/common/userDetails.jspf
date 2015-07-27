@@ -94,6 +94,38 @@
     </div>
 
     <security:authorize ifAllGranted="ROLE_ENTERPRISE">
+
+        <div id="apiKeys">
+
+            <h4>
+                API Keys
+                <a class="btn" ng-click="createNewKey(user)">
+                    Add New Key
+                </a>
+            </h4>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>API Key</th>
+                    <th>Note</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody ng-if="!currentUser.apiKeys.length">
+                <tr>
+                    <td colspan="3" class="center">No Entries</td>
+                </tr>
+                </tbody>
+                <tbody ng-if="currentUser.apiKeys">
+                <tr ng-repeat="key in currentUser.apiKeys">
+                    <td>{{ key.apiKey }}</td>
+                    <td>{{ key.note }}</td>
+                    <td><a class="btn" ng-click="openEditModal(user, key)">Edit / Delete</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
         <div id="groups">
 
             <h4>Groups</h4>
