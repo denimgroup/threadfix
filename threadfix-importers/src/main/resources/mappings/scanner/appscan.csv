@@ -49,3 +49,6 @@ Weak SSL Cipher Suites are Supported,WeakCipherSuites,327
 Missing Cross-Frame Scripting Defence,XFS,693
 Cross-Site Scripting through Remote File Inclusion,XSSThroughRFI,73
 Zikula Application Framework index.php Cross-Site Scripting,ZikulaApplicationFrameworkindexphpXSS,79
+Unencrypted Login Request,Unencrypted Login Request,930
+Missing Cross-Frame Scripting Defence,XFS,933
+Query Parameter in SSL Request,Query Parameter in SSL Request,933
