@@ -106,6 +106,10 @@ myAppModule.controller('ModalControllerWithConfig', function ($log, $scope, $roo
                 $scope.tags = [];
                 $log.warn("Failed to retrieve waf list. HTTP status was " + status);
             });
+    };
+
+    $scope.startsWith = function(vulnerability, viewValue) {
+        return vulnerability.substr(0, viewValue.length).toLowerCase() == viewValue.toLowerCase();
     }
 
 });
