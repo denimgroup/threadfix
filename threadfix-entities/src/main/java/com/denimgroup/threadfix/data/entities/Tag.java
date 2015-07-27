@@ -153,7 +153,7 @@ public class Tag extends AuditableEntity {
     @Column(nullable = true)
     @JsonView(Object.class)
     public TagType getType() {
-        return type;
+        return type != null ? type : TagType.APPLICATION;
     }
 
     public void setType(TagType type) {
