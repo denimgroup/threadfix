@@ -613,7 +613,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
         long timeStamp = new Date().getTime();
 
-        diskZipFile = new File("temp-zip-file" + timeStamp);
+        diskZipFile = DiskUtils.getScratchFile("temp-zip-file" + timeStamp);
 
         if (diskZipFile.exists()) {
             if (!diskZipFile.delete()) {
