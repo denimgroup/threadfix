@@ -62,5 +62,7 @@ public interface ChannelTypeService {
 	 * @return
 	 */
 	public List<ChannelType> getChannelTypeOptions(Application application);
+
+	List<ChannelType> loadAllHasVulnMapping();
 	
 }

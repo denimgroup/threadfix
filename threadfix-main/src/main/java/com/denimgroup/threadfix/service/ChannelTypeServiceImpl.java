@@ -107,4 +107,9 @@ public class ChannelTypeServiceImpl implements ChannelTypeService {
 		return editedList;
 	}
 
+	@Override
+	public List<ChannelType> loadAllHasVulnMapping() {
+		return channelTypeDao.loadAllHasVulnMapping();
+	}
+
 }
