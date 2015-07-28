@@ -46,13 +46,11 @@ public class ScanIndexPage extends BasePage {
         return cnt;
     }
 
-    public ScanDetailPage clickViewScanLink(String teamName, String appName, String scanner) {
+    public ScanDetailPage clickViewScanLink() {
         if (getNumScanRows() == 0) {
             return null;
         }
-        //TODO: Update once this page has ids added
-        driver.findElementByXPath("//tr[td/text() = \'" + appName + "\' and td/text() = \'" + teamName +
-            "\' and td/text() = '" + scanner + "\']//a").click();
+        driver.findElementById("importTime0").click();
         return new ScanDetailPage(driver);
     }
 }

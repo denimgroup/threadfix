@@ -592,7 +592,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         uploadScanToApp(teamName, appName, "Petclinic XML");
 
         VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage.clickScansHeaderLink()
-                .clickViewScanLink(teamName, appName, scannerName)
+                .clickViewScanLink()
                 .clickViewFinding()
                 .clickViewVulnerability()
                 .clickToggleMoreInfoButton()
