@@ -23,7 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.data.entities.APIKey;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.APIKeyService;
@@ -40,22 +42,19 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
+import static com.denimgroup.threadfix.service.util.PermissionUtils.hasGlobalPermission;
+
 @Controller
 @RequestMapping("/configuration/keys")
 @PreAuthorize("hasRole('ROLE_CAN_MANAGE_API_KEYS')")
 public class APIKeyController {
 
-	private APIKeyService apiKeyService = null;
+	@Autowired
+	private APIKeyService apiKeyService;
 	
 	private final SanitizedLogger log = new SanitizedLogger(APIKeyController.class);
 
-	@Autowired
-	public APIKeyController(APIKeyService apiKeyService) {
-		this.apiKeyService = apiKeyService;
-	}
-
-	public APIKeyController(){}
-	
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
 		dataBinder.setValidator(new BeanValidator());
@@ -67,7 +66,7 @@ public class APIKeyController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public String index(HttpServletRequest request, Model model) {
+	public String index(Model model) {
 		model.addAttribute("apiKeyList", apiKeyService.loadAll());
 		model.addAttribute("apiKey", new APIKey());
 
@@ -93,19 +92,43 @@ public class APIKeyController {
 
     // TODO authenticate
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public @ResponseBody RestResponse<List<APIKey>> list() {
-        return RestResponse.success(apiKeyService.loadAll());
+	@ResponseBody
+	public RestResponse<List<APIKey>> list() {
+		List<APIKey> list = apiKeyService.loadAll();
+
+		// if they don't also have CAN_MANAGE_USERS then we don't want to allow the edit
+		if (!hasGlobalPermission(Permission.CAN_MANAGE_USERS)) {
+
+			// filter....
+			List<APIKey> finalList = CollectionUtils.list();
+
+			for (APIKey apiKey : list) {
+				if (apiKey.getUser() == null) {
+					finalList.add(apiKey);
+				}
+			}
+
+			list = finalList;
+		}
+
+		return RestResponse.success(list);
 	}
 	
 	@RequestMapping(value = "/{keyId}/delete", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<String> delete(@PathVariable("keyId") int keyId) {
+	@ResponseBody
+	public RestResponse<String> delete(@PathVariable("keyId") int keyId) {
 
         // TODO validate authentication
 
-		APIKey newAPIKey = apiKeyService.loadAPIKey(keyId);
-		
-		if (newAPIKey != null) {
-			apiKeyService.deactivateApiKey(newAPIKey);
+		APIKey keyToDelete = apiKeyService.loadAPIKey(keyId);
+
+		// this should only trigger when the user fakes a request
+		if (keyToDelete != null) {
+			if (keyToDelete.getUser() != null && !hasGlobalPermission(Permission.CAN_MANAGE_USERS)) {
+				return failure("You do not have permission to edit user API keys.");
+			}
+
+			apiKeyService.deactivateApiKey(keyToDelete);
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("API Key", keyId));
 			throw new ResourceNotFoundException();
@@ -119,7 +142,12 @@ public class APIKeyController {
 			@PathVariable("keyId") int keyId, @RequestParam(required = false) String note) {
 		APIKey apiKey = apiKeyService.loadAPIKey(keyId);
 
-        String isRestrictedKeyStr= request.getParameter("isRestrictedKey");
+		// this should only trigger when the user fakes a request
+		if (apiKey.getUser() != null && !hasGlobalPermission(Permission.CAN_MANAGE_USERS)) {
+			return failure("You do not have permission to edit user API keys.");
+		}
+
+		String isRestrictedKeyStr = request.getParameter("isRestrictedKey");
 		
 		boolean restricted = (isRestrictedKeyStr != null && isRestrictedKeyStr.equalsIgnoreCase("true"));
 		

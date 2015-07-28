@@ -41,6 +41,13 @@ public interface PermissionService {
 	 * @return
 	 */
 	boolean isAuthorized(Permission permission, Integer orgId, Integer appId);
+
+	/**
+	 *
+	 * @param orgId
+	 * @return
+	 */
+	boolean isAuthorized(ThreadFixUserDetails userDetails, Permission permission, Integer orgId, Integer appId);
 	
 	/**
 	 * 
@@ -62,13 +69,15 @@ public interface PermissionService {
 	 * @return
 	 */
 	boolean canSeeRules(Waf waf);
-	
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	Set<Integer> getAuthenticatedAppIds();
-	
+
+	Set<Integer> getAuthenticatedAppIds(ThreadFixUserDetails details);
+
 	/**
 	 * This method returns null if the user has access to all teams.
 	 * TODO revisit this section
@@ -76,17 +85,18 @@ public interface PermissionService {
 	 */
 	Set<Integer> getAuthenticatedTeamIds();
 
+	Set<Integer> getAuthenticatedTeamIds(ThreadFixUserDetails details);
+
 	/**
-	 * 
+	 *
 	 * @param organization
 	 * @return
 	 */
 	List<Application> filterApps(Organization organization);
-	
+
 	/**
-	 * 
+	 *
 	 * @param providers
 	 */
 	void filterApps(List<RemoteProviderType> providers);
-
 }

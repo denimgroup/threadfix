@@ -27,6 +27,7 @@ package com.denimgroup.threadfix.webapp.controller.rest;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.ManualFindingService;
+import com.denimgroup.threadfix.util.Result;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
+import static com.denimgroup.threadfix.remote.response.RestResponse.resultError;
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 
 @RestController
@@ -60,8 +62,6 @@ public class AddFindingRestController extends TFRestController {
     @Autowired
 	private FindingService findingService;
 	
-	private final static String NEW = "newFinding";
-
 	/**
 	 * Create a new manual finding.
 	 * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#addDynamicFinding()
@@ -72,9 +72,9 @@ public class AddFindingRestController extends TFRestController {
 			@PathVariable("appId") int appId) {
 		log.info("Received REST request for a new Finding.");
 
-		String result = checkKey(request, NEW);
-		if (!result.equals(API_KEY_SUCCESS)) {
-			return failure(result);
+		Result<String> keyCheck = checkKey(request, RestMethod.CREATE_FINDING, -1, appId);
+		if (!keyCheck.success()) {
+			return resultError(keyCheck);
 		}
 		// By not using @RequestParam notations, we can catch the error in the code
 		// and provide better error messages.

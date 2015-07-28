@@ -33,12 +33,17 @@
                         <span id="lengthLimitError" class="errors" ng-show="form.note.$dirty && form.note.$error.maxlength">Over 255 characters limit!</span>
                     </td>
 				</tr>
-				<tr>
+				<tr ng-if="!object.username">
 					<td>Restricted?</td>
 					<td class="inputValue">
 						<input type="checkbox" id="modalRestricted" ng-model="object.isRestrictedKey" name="isRestrictedKey"/>
 					</td>
 				</tr>
+                <tr ng-if="object.username">
+                    <td colspan="2">
+                        This user's roles will be used to authorize actions for this API Key.
+                    </td>
+                </tr>
 			</tbody>
 		</table>
 	</div>

@@ -23,9 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "APIKey")
@@ -35,10 +36,14 @@ public class APIKey extends AuditableEntity {
 
 	private String key;
 	private String note;
+
+	// this is an optional field.
+	private User user;
 	
 	private boolean isRestrictedKey;
 
 	@Column(length = 50, nullable = false)
+	@JsonView(Object.class)
 	public String getApiKey() {
 		return key;
 	}
@@ -48,6 +53,7 @@ public class APIKey extends AuditableEntity {
 	}
 
 	@Column(length = 255)
+	@JsonView(Object.class)
 	public String getNote() {
 		return note;
 	}
@@ -57,11 +63,29 @@ public class APIKey extends AuditableEntity {
 	}
 	
 	@Column(nullable = false)
+	@JsonView(Object.class)
 	public boolean getIsRestrictedKey() {
 		return isRestrictedKey;
 	}
 	
 	public void setIsRestrictedKey(boolean restricted) {
 		this.isRestrictedKey = restricted;
+	}
+
+	@ManyToOne
+	@JoinColumn(name = "userId", nullable = true)
+	@JsonIgnore
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	@Transient
+	@JsonView(Object.class)
+	public String getUsername() {
+		return user == null ? null : user.getBestName();
 	}
 }

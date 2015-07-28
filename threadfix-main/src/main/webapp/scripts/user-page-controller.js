@@ -4,7 +4,7 @@ var myAppModule = angular.module('threadfix');
 myAppModule.value('deleteUrl', null);
 
 
-myAppModule.controller('UserPageController', function ($scope, $modal, $http, $log, $rootScope, tfEncoder) {
+myAppModule.controller('UserPageController', function ($scope, $modal, $http, $log, $rootScope, tfEncoder, threadFixModalService) {
 
     ////////////////////////////////////////////////////////////////////////////////
     //             Basic Page Functionality + $on(rootScopeInitialized)
@@ -567,5 +567,71 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 });
         }
     };
+
+    $scope.createNewKey = function(user) {
+        var modalInstance = $modal.open({
+            templateUrl: 'newKeyModal.html',
+            controller: 'GenericModalController',
+            resolve: {
+                url: function() {
+                    return tfEncoder.encode("/users/" + user.id + "/keys/new");
+                },
+                object: function() {
+                    return { username: user.name };
+                },
+                buttonText: function() {
+                    return "Create Key";
+                }
+            }
+        });
+
+        modalInstance.result.then(function (key) {
+
+            $scope.currentUser.apiKeys.push(key);
+
+            $scope.userSuccessMessage = "Successfully created key.";
+
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    };
+
+    $scope.openEditModal = function(user, key) {
+        var modalInstance = $modal.open({
+            templateUrl: 'editKeyModal.html',
+            controller: 'GenericModalController',
+            resolve: {
+                url: function() {
+                    return tfEncoder.encode("/users/" + user.id + "/keys/" + key.id + "/edit");
+                },
+                object: function() {
+                    var keyCopy = angular.copy(key);
+                    return keyCopy;
+                },
+                buttonText: function() {
+                    return "Save Edits";
+                },
+                deleteUrl: function() {
+                    return tfEncoder.encode("/users/" + user.id + "/keys/" + key.id + "/delete");
+                }
+            }
+        });
+
+        modalInstance.result.then(function (editedKey) {
+
+            if (editedKey) {
+                threadFixModalService.deleteElement($scope.currentUser.apiKeys, key);
+                threadFixModalService.addElement($scope.currentUser.apiKeys, editedKey);
+
+                $scope.successMessage = "Successfully edited key " + editedKey.apiKey;
+            } else {
+                threadFixModalService.deleteElement($scope.currentUser.apiKeys, key);
+                $scope.successMessage = "API key was successfully deleted.";
+            }
+
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    }
 
 });
