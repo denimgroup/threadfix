@@ -40,7 +40,7 @@
                     <a id="editEmailListModalButton{{ emailList.name }}" ng-click="openEditModal(emailList)" class="btn">Edit / Delete</a>
                 </td>
                 <td class="centered">
-                    <button class="btn" ng-click="showEmailAddresses(emailList)">Show/Hide</button>
+                    <button class="btn" id="showEmailAddresses{{ emailList.name}}" ng-click="showEmailAddresses(emailList)">Show/Hide</button>
                 </td>
             </tr>
             <tr ng-repeat-end ng-show="emailList.showEmailAddresses" class="grey-background">
