@@ -34,6 +34,7 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.RepositoryService;
 import com.denimgroup.threadfix.service.repository.RepositoryServiceFactory;
+import com.denimgroup.threadfix.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,6 +44,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.remote.response.RestResponse.resultError;
 
 @RestController
 @RequestMapping("/rest/code")
@@ -53,6 +55,7 @@ public class PluginRestController extends TFRestController {
 
     @Autowired
     private RepositoryServiceFactory repositoryServiceFactory;
+
     /**
      *
      * @see com.denimgroup.threadfix.remote.PluginClient#getVulnerabilityMarkers(String)
@@ -63,9 +66,9 @@ public class PluginRestController extends TFRestController {
             @PathVariable("appId") int appId) {
         log.info("Received REST request for marker information for application with id = " + appId);
 
-        String result = checkKey(request, "markers");
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return RestResponse.failure(result);
+        Result<String> keyCheck = checkKey(request, RestMethod.PLUGIN_MARKERS, -1, -1);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
         }
 
         Application application = applicationService.loadApplication(appId);
@@ -88,14 +91,13 @@ public class PluginRestController extends TFRestController {
      * @see com.denimgroup.threadfix.remote.PluginClient#getThreadFixApplications()
      */
     @RequestMapping(value = "/applications", method = RequestMethod.GET)
-    public
     @ResponseBody
-    RestResponse<Application.Info[]> getApplicationList(HttpServletRequest request) {
+    public RestResponse<Application.Info[]> getApplicationList(HttpServletRequest request) {
         log.info("Received REST request for application CSV list");
 
-        String result = checkKey(request, "markers");
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return RestResponse.failure(result);
+        Result<String> keyCheck = checkKey(request, RestMethod.PLUGIN_APPLICATIONS, -1, -1);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
         }
 
         List<Application> applications = applicationService.loadAllActive();
@@ -118,9 +120,9 @@ public class PluginRestController extends TFRestController {
                                                HttpServletRequest request) {
         log.info("Received REST request for application CSV list");
 
-        String result = checkKey(request, "markers");
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return RestResponse.failure(result);
+        Result<String> keyCheck = checkKey(request, RestMethod.PLUGIN_ENDPOINTS, -1, -1);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
         }
 
         Application application = applicationService.loadApplication(appId);

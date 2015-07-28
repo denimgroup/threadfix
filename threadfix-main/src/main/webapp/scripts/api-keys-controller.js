@@ -65,7 +65,7 @@ module.controller('ApiKeysController', function($scope, $http, $modal, $log, tfE
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     $scope.openEditModal = function(key) {
         var modalInstance = $modal.open({

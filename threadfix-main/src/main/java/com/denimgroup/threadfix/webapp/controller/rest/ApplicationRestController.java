@@ -29,10 +29,10 @@ import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Tag;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.enums.TagType;
-import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.beans.ScanParametersBean;
+import com.denimgroup.threadfix.util.Result;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -49,21 +49,19 @@ import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
+import static com.denimgroup.threadfix.remote.response.RestResponse.resultError;
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
+import static com.denimgroup.threadfix.webapp.controller.rest.RestMethod.*;
 
 @RestController
 @RequestMapping("/rest/applications")
 public class ApplicationRestController extends TFRestController {
 
     public static final String
-            CREATION_FAILED = "New Application creation failed.",
             APPLICATION_LOOKUP_FAILED = "Application lookup failed. Check your ID.",
             WAF_LOOKUP_FAILED = "WAF lookup failed. Check your ID.",
-            ADD_CHANNEL_FAILED = "Adding an Application Channel failed.",
-            SET_WAF_FAILED = "Call to setWaf failed.",
-            SCAN_TYPE_LOOKUP_FAILED = "Unable to determine Scan type",
             TAG_LOOKUP_FAILED = "Tag lookup failed. Check your ID.",
-    TAG_INVALID = "Invalid Tag ID. It is not an Application Tag.";
+            TAG_INVALID = "Invalid Tag ID. It is not an Application Tag.";
 
     @Autowired
     private ApplicationService applicationService;
@@ -80,25 +78,6 @@ public class ApplicationRestController extends TFRestController {
     @Autowired
     private UploadScanService uploadScanService;
 
-    private final static String DETAIL = "applicationDetail",
-            SET_PARAMS = "setParameters",
-            LOOKUP = "applicationLookup",
-            NEW = "newApplication",
-            SET_WAF = "setWaf",
-            UPLOAD = "uploadScan",
-            ATTACH_FILE = "attachFile",
-            SET_URL = "setUrl",
-            UPDATE = "updateApplication",
-            ADD_TAG = "addTag",
-            REMOVE_TAG = "removeTag",
-            SCAN_LIST = "scanList";
-
-    // TODO finalize which methods need to be restricted
-    static {
-        restrictedMethods.add(NEW);
-        restrictedMethods.add(SET_WAF);
-    }
-
     /**
      * Return details about a specific application.
      *
@@ -111,9 +90,9 @@ public class ApplicationRestController extends TFRestController {
                                                   @PathVariable("appId") int appId) throws IOException {
         log.info("Received REST request for Applications with id = " + appId + ".");
 
-        String result = checkKey(request, DETAIL);
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return failure(result);
+        Result<String> keyCheck = checkKey(request, RestMethod.APPLICATION_DETAIL, -1, appId);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
         }
 
         Application application = applicationService.loadApplication(appId);
@@ -141,9 +120,9 @@ public class ApplicationRestController extends TFRestController {
                                          @RequestParam("filename") String filename) {
         log.info("Received REST request to attach a file to application with id = " + appId + ".");
 
-        String result = checkKey(request, ATTACH_FILE);
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return failure(result);
+        Result<String> keyCheck = checkKey(request, APPLICATION_ATTACH_FILE, -1, appId);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
         }
 
         if (filename != null) {
@@ -165,9 +144,9 @@ public class ApplicationRestController extends TFRestController {
                                               @PathVariable("appId") int appId) throws IOException {
         log.info("Received REST request to set parameters for application with id = " + appId + ".");
 
-        String result = checkKey(request, SET_PARAMS);
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return failure(result);
+        Result<String> keyCheck = checkKey(request, APPLICATION_SET_PARAMS, -1, appId);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
         }
 
         Application application = applicationService.loadApplication(appId);
@@ -207,13 +186,15 @@ public class ApplicationRestController extends TFRestController {
         String appName = request.getParameter("name");
         String appUniqueId = request.getParameter("uniqueId");
 
-        String result = checkKey(request, LOOKUP);
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return failure(result);
+        // we check again after the application lookup to see if the user actually has permissions
+        Result<String> keyCheck = checkKeyGlobal(request, APPLICATION_LOOKUP);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
         }
         if ((appName == null) && (appUniqueId == null)) {
             return failure(APPLICATION_LOOKUP_FAILED);
         }
+
         log.info("Received REST request for Applications in team = " + teamName + ".");
         Organization org = organizationService.loadByName(teamName);
         if (org == null) {
@@ -229,6 +210,7 @@ public class ApplicationRestController extends TFRestController {
             if (org == null)
                 return failure(APPLICATION_LOOKUP_FAILED);
         }
+
         Application application = null;
         int teamId = org.getId();
         if (appName != null)
@@ -251,6 +233,11 @@ public class ApplicationRestController extends TFRestController {
             }
         }
 
+        keyCheck = checkKey(request, APPLICATION_LOOKUP, teamId, application.getId());
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
+        }
+
         return RestResponse.success(application);
     }
 
@@ -268,9 +255,9 @@ public class ApplicationRestController extends TFRestController {
                              MultipartRequest multiPartRequest) throws IOException {
         log.info("Received REST request to upload a scan to application " + appId + ".");
 
-        String result = checkKey(request, UPLOAD);
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return failure(result);
+        Result<String> keyCheck = checkKey(request, APPLICATION_UPLOAD, -1, appId);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
         }
 
         MultiValueMap<String, MultipartFile> fileMap = multiPartRequest.getMultiFileMap();
@@ -311,9 +298,9 @@ public class ApplicationRestController extends TFRestController {
             }
         }
 
-        String result = checkKey(request, SET_WAF);
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return failure(result);
+        Result<String> keyCheck = checkKey(request, APPLICATION_SET_WAF, -1, appId);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
         }
 
         if (wafId == null) {
@@ -359,11 +346,10 @@ public class ApplicationRestController extends TFRestController {
 
         String url = request.getParameter("url");
 
-        String result = checkKey(request, SET_URL);
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return failure(result);
+        Result<String> keyCheck = checkKey(request, APPLICATION_SET_URL, -1, appId);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
         }
-
         
         Application application = applicationService.loadApplication(appId);
 
@@ -385,10 +371,9 @@ public class ApplicationRestController extends TFRestController {
 
         log.info("Received REST request for updating Application with id = " + appId + ".");
 
-        String result = checkKey(request, UPDATE);
-
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return failure(result);
+        Result<String> keyCheck = checkKey(request, APPLICATION_UPDATE, -1, appId);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
         }
 
         if(params == null || params.isEmpty()){
@@ -409,10 +394,9 @@ public class ApplicationRestController extends TFRestController {
                          HttpServletRequest request){
 
             log.info("Received REST request adding Tag " + tagId + " for Application " + appId + ".");
-        String result = checkKey(request, ADD_TAG);
-
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return failure(result);
+        Result<String> keyCheck = checkKey(request, APPLICATION_ADD_TAG, -1, appId);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
         }
 
         Application application = applicationService.loadApplication(appId);
@@ -450,16 +434,18 @@ public class ApplicationRestController extends TFRestController {
      * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#removeAppTag(String appId, String tagId)
      *
      */
-    @RequestMapping(value = "/{appId}/tags/remove/{tagId}", method = RequestMethod.POST, headers="Accept=application/json")
+    @RequestMapping(value = "/{appId}/tags/remove/{tagId}",
+            method = RequestMethod.POST,
+            headers="Accept=application/json")
     @JsonView(AllViews.RestViewApplication2_1.class)
     public Object removeTag(HttpServletRequest request,
-                         @PathVariable("appId") int appId, @PathVariable("tagId") int tagId) throws IOException {
+                         @PathVariable("appId") int appId,
+                         @PathVariable("tagId") int tagId) throws IOException {
 
         log.info("Received REST request removing Tag " + tagId + " from Application " + appId + ".");
-        String result = checkKey(request, REMOVE_TAG);
-
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return failure(result);
+        Result<String> keyCheck = checkKey(request, APPLICATION_REMOVE_TAG, -1, appId);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
         }
 
         Application application = applicationService.loadApplication(appId);
@@ -491,9 +477,9 @@ public class ApplicationRestController extends TFRestController {
     public Object scanList(HttpServletRequest request,
                            @PathVariable("appId") int appId) throws IOException {
 
-        String result = checkKey(request, SCAN_LIST);
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return failure(result);
+        Result<String> keyCheck = checkKey(request, APPLICATION_SCAN_LIST, -1, appId);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
         }
 
         Application application = applicationService.loadApplication(appId);
@@ -501,11 +487,11 @@ public class ApplicationRestController extends TFRestController {
         if (application == null) {
             log.warn("Invalid Application ID.");
             return failure(APPLICATION_LOOKUP_FAILED);
-        }else if(application.getScans() == null || application.getScans().isEmpty()){
+        } else if (application.getScans() == null || application.getScans().isEmpty()) {
             String message = "No scans associated with application: " + appId;
             log.warn(message);
             return failure(message);
-        }else{
+        } else {
             return success(application.getScans());
         }
     }

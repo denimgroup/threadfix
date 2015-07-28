@@ -23,26 +23,20 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.util.Result;
+import com.denimgroup.threadfix.webapp.controller.rest.RestMethod;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 /**
- * Created by mac on 5/7/14.
+ * Created by mcollins on 7/27/15.
  */
-public interface VulnerabilitySearchService {
+public interface CheckAPIKeyService {
+    public final static String API_KEY_SUCCESS = "Authentication was successful.";
+    public final static String API_KEY_NOT_FOUND_ERROR = "Authentication failed, check your API Key.";
+    public final static String RESTRICTED_URL_ERROR = "The requested URL is restricted for your API Key.";
 
-    List<Vulnerability> performLookup(VulnerabilitySearchParameters parameters);
+    Result<String> checkKey(HttpServletRequest request, RestMethod method, int teamId, int appId);
 
-    List<Vulnerability> performLookupREST(VulnerabilitySearchParameters parameters, ThreadFixUserDetails details);
-
-    long performLookupCount(VulnerabilitySearchParameters parameters);
-
-    List<VulnerabilityTreeElement> getTree(VulnerabilitySearchParameters parameters);
-
-    Long getCount(VulnerabilitySearchParameters parameters);
-
-    void doNameLookups(VulnerabilitySearchParameters parameters);
-
-    void applyPermissions(VulnerabilitySearchParameters parameters);
+    ThreadFixUserDetails getUserDetailsFromApiKeyInRequest(HttpServletRequest request);
 }
