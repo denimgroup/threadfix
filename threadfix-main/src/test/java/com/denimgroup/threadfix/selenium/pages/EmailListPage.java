@@ -62,11 +62,65 @@ public class EmailListPage extends BasePage {
         return new EmailListPage(driver);
     }
 
+    public EmailListPage clickShowHideButton(String listName) {
+        driver.findElementById("showEmailAddresses" + listName).click();
+        return this;
+    }
+
+    public EmailListPage addEmailAddress(String listName, String addressName) {
+        driver.findElementById("emailList" + listName + "EmailInput").clear();
+        driver.findElementById("emailList" + listName + "EmailInput").sendKeys(addressName);
+        driver.findElementById("emailList" + listName + "AddEmailButton").click();
+        return this;
+    }
+
+    public EmailListPage deleteEmailAddress(String listName, int numberAdded) {
+        driver.findElementById("emailList" + listName + "Delete" + numberAdded).click();
+        handleAlert();
+        return this;
+    }
+
     /*------------------------------------ Boolean Methods ------------------------------------*/
 
-    public boolean isEmailListPresent(String listName){
+    public boolean isEmailListPresent(String listName) {
         try {
             driver.findElementById("emailListName" + listName);
+        } catch(NoSuchElementException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isEmailAddressPresent(String listName, int numberAdded) {
+        try {
+            driver.findElementById("emailList" + listName + "EmailAddress" + numberAdded);
+        } catch(NoSuchElementException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isEmailListEmptyErrorPresent() {
+        try {
+            driver.findElementByCssSelector("span#nameRequiredError:not(.ng-hide)");
+        } catch(NoSuchElementException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isEmailListLengthErrorPresent() {
+        try {
+            driver.findElementByCssSelector("span#characterLimitError:not(.ng-hide)");
+        } catch(NoSuchElementException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isEmailListDuplicateErrorPresent() {
+        try {
+            driver.findElementByCssSelector("span#otherNameError:not(.ng-hide)");
         } catch(NoSuchElementException e) {
             return false;
         }

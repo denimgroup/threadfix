@@ -40,6 +40,10 @@ public class EmailListIT extends BaseDataTest {
                 .clickSaveEmailList();
     }
 
+    public String getEmailAddress() {
+        return getRandomString(8) + "@denimgroup.com";
+    }
+
     @Test
     public void testCreateEmailList() {
         String name = getName();
@@ -81,5 +85,85 @@ public class EmailListIT extends BaseDataTest {
         assertFalse("Email List was not deleted", emailListPage.isEmailListPresent(name));
         assertTrue("Success message is incorrect",
                 emailListPage.getSuccessMessage().contains("The deletion was successful for email list " + name));
+    }
+
+    @Test
+    public void testAddEmailToEmailList() {
+        String listName = getName();
+        String addressName = getEmailAddress();
+
+        EmailListPage emailListPage = initialize(listName);
+        assertTrue("Email List is not present", emailListPage.isEmailListPresent(listName));
+
+        emailListPage.clickShowHideButton(listName)
+                .addEmailAddress(listName, addressName);
+
+        assertTrue("Email Address was not added to list", emailListPage.isEmailAddressPresent(listName, 0));
+    }
+
+    @Test
+    public void testDeleteEmailFromEmailList() {
+        String listName = getName();
+        String addressName = getEmailAddress();
+
+        EmailListPage emailListPage = initialize(listName);
+        assertTrue("Email List is not present", emailListPage.isEmailListPresent(listName));
+
+        emailListPage.clickShowHideButton(listName)
+                .addEmailAddress(listName, addressName);
+
+        assertTrue("Email Address was not added to list", emailListPage.isEmailAddressPresent(listName, 0));
+
+        emailListPage.deleteEmailAddress(listName, 0);
+
+        assertFalse("Email Address was not deleted from list", emailListPage.isEmailAddressPresent(listName, 0));
+    }
+
+    @Test
+    public void testEmailListValidation() {
+        String name = getName();
+        String emptyName = "          ";
+        String longName = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+
+        EmailListPage emailListPage = initialize(name);
+        assertTrue("Email List is not present", emailListPage.isEmailListPresent(name));
+
+        emailListPage.clickCreateEmailList()
+                .setEmailListName(emptyName)
+                .clickSaveEmailList();
+
+        assertTrue("Name is required error is not present", emailListPage.isEmailListEmptyErrorPresent());
+
+        emailListPage.setEmailListName(longName)
+                .clickSaveEmailList();
+
+        assertTrue("Character limit error is not present", emailListPage.isEmailListLengthErrorPresent());
+
+        emailListPage.setEmailListName(name)
+                .clickSaveEmailList();
+
+        assertTrue("Duplicate name error is not present", emailListPage.isEmailListDuplicateErrorPresent());
+    }
+
+    @Test
+    public void testEmailListAddressValidation() {
+        String listName = getName();
+        String addressName = getEmailAddress();
+
+        EmailListPage emailListPage = initialize(listName);
+        assertTrue("Email List is not present", emailListPage.isEmailListPresent(listName));
+
+        emailListPage.clickShowHideButton(listName)
+                .addEmailAddress(listName, addressName);
+
+        assertTrue("Email Address was not added to list", emailListPage.isEmailAddressPresent(listName, 0));
+
+        emailListPage.addEmailAddress(listName, addressName);
+
+        assertFalse("Duplicate Email Address was allowed", emailListPage.isEmailAddressPresent(listName, 1));
+
+        emailListPage.addEmailAddress(listName, listName);
+
+        assertFalse("Invalid Email Address was allowed", emailListPage.isEmailAddressPresent(listName, 1));
     }
 }
