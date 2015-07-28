@@ -25,8 +25,12 @@ package com.denimgroup.threadfix.data.dao;
 
 import com.denimgroup.threadfix.data.entities.ChannelType;
 
+import java.util.List;
+
 /**
  * @author bbeverly
  * 
  */
-public interface ChannelTypeDao extends GenericNamedObjectDao<ChannelType> {}
+public interface ChannelTypeDao extends GenericNamedObjectDao<ChannelType> {
+    List<ChannelType> loadAllHasVulnMapping();
+}
