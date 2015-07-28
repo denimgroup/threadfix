@@ -2,20 +2,17 @@
     <h3 ng-hide="hideTitle">
         <span style="float:left">
             Results
-        </span>
+        </span><br style="clear:both;" />
         <span class="spinner-div">
             <span id="vulnTreeLoadingSpinner" ng-show="loadingTree || !vulnTree" class="spinner dark"></span>
         </span>
     </h3>
-
     <div id="noResultsFound" ng-if="vulnTree && vulnTree.length == 0">
         No results found.
     </div>
-
     <a id="toggleVulnTree" class="btn" ng-click="toggleVulnTree()" ng-show="vulnTree && vulnTree.length > 0" style="margin: -9px 0 8px 0;">
         {{ vulnTree.expanded ? 'Collapse' : 'Expand' }} All
     </a>
-
     <table ng-show="vulnTree">
         <tbody ng-repeat="category in vulnTree" >
             <tr>
