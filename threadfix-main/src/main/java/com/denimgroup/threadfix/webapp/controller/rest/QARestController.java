@@ -73,11 +73,6 @@ public class QARestController extends TFRestController {
     public Object deleteTeam(HttpServletRequest request, @PathVariable("teamId") int teamId) {
         log.info("Received REST request to delete Team with id " + teamId + ".");
 
-        String result = checkKey(request, DELETE_TEAM);
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return RestResponse.failure(result);
-        }
-
         Organization organization = organizationService.loadById(teamId);
 
         if (organization == null || !organization.isActive()) {
@@ -156,11 +151,6 @@ public class QARestController extends TFRestController {
     @RequestMapping(headers = "Accept=application/json", value = "/user/delete/{userId}", method = RequestMethod.POST)
     public Object deleteUser(HttpServletRequest request, @PathVariable("userId") int userId) {
         log.info("Received REST request to delete User with id " + userId + ".");
-
-        String result = checkKey(request, DELETE_USER);
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return RestResponse.failure(result);
-        }
 
         User user = userService.loadUser(userId);
 

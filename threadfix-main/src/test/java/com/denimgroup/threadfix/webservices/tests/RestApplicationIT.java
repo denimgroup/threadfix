@@ -48,7 +48,15 @@ import static org.junit.Assert.assertTrue;
 @Category(WebServiceTests.class)
 public class RestApplicationIT extends BaseRestIT {
 
-	String[] channels = { ScannerType.APPSCAN_DYNAMIC.getFullName(), 
+
+    private final String
+        CREATION_FAILED = "New Application creation failed.",
+        ADD_CHANNEL_FAILED = "Adding an Application Channel failed.",
+        SET_WAF_FAILED = "Call to setWaf failed.",
+        SCAN_TYPE_LOOKUP_FAILED = "Unable to determine Scan type",
+        TAG_INVALID = "Invalid Tag ID. It is not an Application Tag.";
+
+	String[] scanners = { ScannerType.APPSCAN_DYNAMIC.getFullName(),
 			ScannerType.ARACHNI.getFullName(),
 			ScannerType.BURPSUITE.getFullName(), 
 			ScannerType.CAT_NET.getFullName(), 
@@ -90,54 +98,54 @@ public class RestApplicationIT extends BaseRestIT {
 		response = httpPost(creationUrl, new String[] { "apiKey",
 				"name", "url" }, new String[] { GOOD_API_KEY,
 				getRandomString(2000), "http://normal.url.com" });
-		assertTrue(response.equals(ApplicationRestController.CREATION_FAILED));
+		assertTrue(response.equals(CREATION_FAILED));
 
 		response = httpPost(creationUrl,
 				new String[] { "apiKey", "name", "url" }, new String[] {
 						GOOD_API_KEY, "", "http://normal.url.com" });
-		assertTrue(response.equals(ApplicationRestController.CREATION_FAILED));
+		assertTrue(response.equals(CREATION_FAILED));
 
 		response = httpPost(creationUrl,
 				new String[] { "apiKey", "name", "url" }, new String[] {
 						GOOD_API_KEY, "   	\t\t\t", "http://normal.url.com" });
-		assertTrue(response.equals(ApplicationRestController.CREATION_FAILED));
+		assertTrue(response.equals(CREATION_FAILED));
 
 		response = httpPost(creationUrl, new String[] { "apiKey", "url" },
 				new String[] { GOOD_API_KEY, "http://normal.url.com" });
-		assertTrue(response.equals(ApplicationRestController.CREATION_FAILED));
+		assertTrue(response.equals(CREATION_FAILED));
 
 		// test url param
 		response = httpPost(creationUrl,
 				new String[] { "apiKey", "name", "url" }, new String[] {
 						GOOD_API_KEY, getRandomString(20),
 						"http://" + getRandomString(2000) });
-		assertTrue(response.equals(ApplicationRestController.CREATION_FAILED));
+		assertTrue(response.equals(CREATION_FAILED));
 
 		response = httpPost(creationUrl,
 				new String[] { "apiKey", "name", "url" }, new String[] {
 						GOOD_API_KEY, getRandomString(20), "" });
-		assertTrue(response.equals(ApplicationRestController.CREATION_FAILED));
+		assertTrue(response.equals(CREATION_FAILED));
 
 		response = httpPost(creationUrl,
 				new String[] { "apiKey", "name", "url" }, new String[] {
 						GOOD_API_KEY, getRandomString(20), "   \t\t\t\t" });
-		assertTrue(response.equals(ApplicationRestController.CREATION_FAILED));
+		assertTrue(response.equals(CREATION_FAILED));
 
 		response = httpPost(creationUrl, new String[] { "apiKey", "name" },
 				new String[] { GOOD_API_KEY, getRandomString(20) });
-		assertTrue(response.equals(ApplicationRestController.CREATION_FAILED));
+		assertTrue(response.equals(CREATION_FAILED));
 
 		// URL format
 		response = httpPost(creationUrl,
 				new String[] { "apiKey", "name", "url" },
 				new String[] { GOOD_API_KEY, getRandomString(20),
 						getRandomString(20) });
-		assertTrue(response.equals(ApplicationRestController.CREATION_FAILED));
+		assertTrue(response.equals(CREATION_FAILED));
 
 		// Test both missing
 		response = httpPost(creationUrl, new String[] { "apiKey" },
 				new String[] { GOOD_API_KEY });
-		assertTrue(response.equals(ApplicationRestController.CREATION_FAILED));
+		assertTrue(response.equals(CREATION_FAILED));
 
 		// Test valid input
 		String applicationName = getRandomString(20);
@@ -225,25 +233,25 @@ public class RestApplicationIT extends BaseRestIT {
 		response = httpPost(url, new String[] { "apiKey", "channelName" },
 				new String[] { GOOD_API_KEY, "THIS IS NOT A CHANNEL" });
 		assertTrue(response
-				.equals(ApplicationRestController.ADD_CHANNEL_FAILED));
+				.equals(ADD_CHANNEL_FAILED));
 
 		// empty string
 		response = httpPost(url, new String[] { "apiKey", "channelName" },
 				new String[] { GOOD_API_KEY, "" });
 		assertTrue(response
-				.equals(ApplicationRestController.ADD_CHANNEL_FAILED));
+				.equals(ADD_CHANNEL_FAILED));
 
 		// whitespace
 		response = httpPost(url, new String[] { "apiKey", "channelName" },
 				new String[] { GOOD_API_KEY, "   \t\t\t" });
 		assertTrue(response
-				.equals(ApplicationRestController.ADD_CHANNEL_FAILED));
+				.equals(ADD_CHANNEL_FAILED));
 
 		// missing param
 		response = httpPost(url, new String[] { "apiKey" },
 				new String[] { GOOD_API_KEY });
 		assertTrue(response
-				.equals(ApplicationRestController.ADD_CHANNEL_FAILED));
+				.equals(ADD_CHANNEL_FAILED));
 
 		// bad app ID
 		String badUrl = BASE_URL + "/teams/" + teamId
@@ -251,11 +259,11 @@ public class RestApplicationIT extends BaseRestIT {
 		response = httpPost(badUrl, new String[] { "apiKey", "channelName" },
 				new String[] { GOOD_API_KEY, "Arachni" });
 		assertTrue(response
-				.equals(ApplicationRestController.ADD_CHANNEL_FAILED));
+				.equals(ADD_CHANNEL_FAILED));
 
 		// add each valid channel type
 
-		for (String channelName : channels) {
+		for (String channelName : scanners) {
 			response = httpPost(url, new String[] { "apiKey", "channelName" },
 					new String[] { GOOD_API_KEY, channelName });
 			assertTrue(response != null);
@@ -299,34 +307,34 @@ public class RestApplicationIT extends BaseRestIT {
 		// string
 		response = httpPost(addWafUrl, paramArray, new String[] { GOOD_API_KEY,
 				"string key" });
-		assertTrue(response.equals(ApplicationRestController.SET_WAF_FAILED));
+		assertTrue(response.equals(SET_WAF_FAILED));
 
 		// empty
 		response = httpPost(addWafUrl, paramArray, new String[] { GOOD_API_KEY,
 				"" });
-		assertTrue(response.equals(ApplicationRestController.SET_WAF_FAILED));
+		assertTrue(response.equals(SET_WAF_FAILED));
 
 		// negative number
 		response = httpPost(addWafUrl, paramArray, new String[] { GOOD_API_KEY,
 				"-1" });
-		assertTrue(response.equals(ApplicationRestController.SET_WAF_FAILED));
+		assertTrue(response.equals(SET_WAF_FAILED));
 
 		// invalid WAF ID
 		response = httpPost(addWafUrl, paramArray, new String[] { GOOD_API_KEY,
 				"100000" });
-		assertTrue(response.equals(ApplicationRestController.SET_WAF_FAILED));
+		assertTrue(response.equals(SET_WAF_FAILED));
 
 		// Missing
 		response = httpPost(addWafUrl, new String[] { "apiKey" },
 				new String[] { GOOD_API_KEY });
-		assertTrue(response.equals(ApplicationRestController.SET_WAF_FAILED));
+		assertTrue(response.equals(SET_WAF_FAILED));
 
 		// invalid App ID
 		String badWafUrl = BASE_URL + "/teams/" + teamId
 				+ "/applications/1235632/setWaf";
 		response = httpPost(badWafUrl, paramArray, new String[] { GOOD_API_KEY,
 				String.valueOf(wafId) });
-		assertTrue(response.equals(ApplicationRestController.SET_WAF_FAILED));
+		assertTrue(response.equals(SET_WAF_FAILED));
 
 		// test valid
 		response = httpPost(addWafUrl, paramArray, new String[] { GOOD_API_KEY,
