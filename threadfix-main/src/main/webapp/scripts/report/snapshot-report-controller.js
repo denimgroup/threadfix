@@ -941,7 +941,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
         $scope.$broadcast("refreshVulnSearchTree", parameters);
         $scope.loading = false;
-
+        $scope.hideTitle = false;
     };
 
     var processDisaStigData = function() {
@@ -954,7 +954,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
         $scope.$broadcast("refreshVulnSearchTree", parameters);
         $scope.loading = false;
-
+        $scope.hideTitle = false;
     };
 
     var processPortfolioData = function() {
