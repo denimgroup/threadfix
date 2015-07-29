@@ -868,7 +868,9 @@ public class ApplicationServiceImpl implements ApplicationService {
             return list();
 
         List<AcceptanceCriteria> acceptanceCriterias = acceptanceCriteriaService.loadAll();
-        acceptanceCriterias.removeAll(application.getAcceptanceCriterias());
+
+        if(acceptanceCriterias != null && acceptanceCriterias.size() > 0)
+            acceptanceCriterias.removeAll(application.getAcceptanceCriterias());
 
         return acceptanceCriterias;
     }
