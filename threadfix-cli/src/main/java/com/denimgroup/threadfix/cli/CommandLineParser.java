@@ -128,7 +128,7 @@ public class CommandLineParser {
 			} else if (cmd.hasOption("printScannerNames")) {
 				System.out.println("Scanner names supported by ScanAgent:");
 				for (ScannerType type : ScannerType.getScanAgentSupportedList()) {
-					System.out.println("\t" + type.getShortName() + " (" + type.getFullName() + ")");
+					System.out.println("\t" + type.getShortName() + " (" + type.getDisplayName() + ")");
 				}
 
 			} else if (cmd.hasOption("sp")) {
@@ -184,7 +184,7 @@ public class CommandLineParser {
 					String scanConfigId = queueArgs.length >= 3 ? queueArgs[2] : null;
 					ScannerType scannerType = ScannerType.getScannerType(queueArgs[1]);
 					if (scannerType != null)
-						System.out.println(client.queueScan(queueArgs[0], scannerType.getFullName(), scanConfigId));
+						System.out.println(client.queueScan(queueArgs[0], scannerType.getDisplayName(), scanConfigId));
 					else
 						LOGGER.warn("Scanner Name was not recognized, not doing anything. Available scanner names can be found with --printScannerNames");
 				} else
