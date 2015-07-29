@@ -124,6 +124,9 @@ public class TeamIndexPageIT extends BaseDataTest {
 
     @Test
     public void testIsUploadScanButtonAvailableAfterUploading() {
+        String team = getName();
+        String app = getName();
+
         DatabaseUtils.uploadScan(teamName, appName,ScanContents.SCAN_FILE_MAP.get("Burp Suite"));
 
         TeamIndexPage teamIndexPage = loginPage.defaultLogin()
@@ -131,6 +134,18 @@ public class TeamIndexPageIT extends BaseDataTest {
                 .expandTeamRowByName(teamName);
 
         assertTrue("Upload Scan Button is not Available", teamIndexPage.isUploadScanButtonDisplay(teamName, appName));
+
+        teamIndexPage.clickAddTeamButton()
+                .setTeamName(team)
+                .addNewTeam(team)
+                .clickAddNewApplication(team)
+                .setApplicationName(app)
+                .saveApplication()
+                .uploadScanButton(team, app)
+                .uploadNewScan(ScanContents.SCAN_FILE_MAP.get("Burp Suite"), team, app);
+
+        assertTrue("Upload Scan Button is not Available after manual upload",
+                teamIndexPage.isUploadScanButtonDisplay(team, app));
     }
 
     //===========================================================================================================
