@@ -161,13 +161,13 @@ public class AnalyticsPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
-    public ApplicationDetailPage clickAppName(String appName) {
-        driver.findElementById(appName).findElement(By.tagName("a")).click();
+    public ApplicationDetailPage clickAppName() {
+        driver.findElementById("appName0").findElement(By.tagName("a")).click();
         return new ApplicationDetailPage(driver);
     }
 
-    public TeamDetailPage clickTeamName(String teamName) {
-        driver.findElementById(teamName).findElement(By.tagName("a")).click();
+    public TeamDetailPage clickTeamName() {
+        driver.findElementById("teamName0").findElement(By.tagName("a")).click();
         return new TeamDetailPage(driver);
     }
 

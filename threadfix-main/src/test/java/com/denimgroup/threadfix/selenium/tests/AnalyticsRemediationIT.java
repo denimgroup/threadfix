@@ -89,7 +89,7 @@ public class AnalyticsRemediationIT extends BaseDataTest {
     public void testAppNameNavigation() {
         initialize();
 
-        analyticsPage.clickAppName(appName);
+        analyticsPage.clickAppName();
 
         //Runtime Fix
         analyticsPage.refreshPage();
@@ -101,7 +101,7 @@ public class AnalyticsRemediationIT extends BaseDataTest {
     public void testTeamNameNavigation() {
         initialize();
 
-        analyticsPage.clickTeamName(teamName);
+        analyticsPage.clickTeamName();
 
         assertTrue("Link did not navigate correctly", driver.findElement(By.id("name")).getText().contains(teamName));
     }
