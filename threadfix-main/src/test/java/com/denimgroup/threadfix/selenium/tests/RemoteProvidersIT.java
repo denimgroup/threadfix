@@ -132,7 +132,7 @@ public class RemoteProvidersIT extends BaseDataTest {
 	public void testInvalidWhiteHat(){
         remoteProvidersIndexPage.clearPreviousWhiteHat()
                 .clickConfigureWhiteHat()
-                .setWhiteHatAPI("ThisShould'tWork!")
+                .setWhiteHatAPI("ThisShouldNotWork")
                 .clickSubmitWait();
 
         remoteProvidersIndexPage.sleep(1000);
