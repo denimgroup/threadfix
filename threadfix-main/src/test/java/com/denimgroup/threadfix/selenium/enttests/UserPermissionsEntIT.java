@@ -58,8 +58,6 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
         String role = "Administrator";
 
-        DatabaseUtils.createUser(userName, role);
-
         UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
                 .clickUserLink(userName)
