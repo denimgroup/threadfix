@@ -72,10 +72,8 @@ public class TeamEntIT extends BaseDataTest {
                 driver.findElements(By.id("teamName" + hiddenTeam)).isEmpty());
     }
 
-    //Todo: Update this test for new UI, and rename based on issue.
-    @Ignore
     @Test
-    public void testIssue866() {
+    public void testTeamIndexCountWithLimitedPermission() {
         String roleName = createSpecificPermissionRole("canGenerateReports");
         String user = createRegularUser();
 
@@ -83,20 +81,16 @@ public class TeamEntIT extends BaseDataTest {
         String hiddenApp = createApplication(teamName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
         DatabaseUtils.uploadScan(teamName, hiddenApp, ScanContents.SCAN_FILE_MAP.get("WebInspect"));
-        DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
 
         UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink();
 
-        //Runtime Fix
-        sleep(5000);
-
-        //userIndexPage.clickUserLink(user)
-        //        .editSpecificPermissions(teamName, "all", roleName)
-        //        .toggleAllApps()
-        //        .setApplicationRole(appName, roleName)
-        //        .clickModalSubmit()
-        //        .logout();
+        userIndexPage.clickUserLink(user)
+                .clickAddApplicationRole()
+                .setTeam(teamName)
+                .setApplicationRole(appName,roleName)
+                .clickSaveMap()
+                .logout();
 
         TeamIndexPage teamIndexPage = loginPage.login(user, "TestPassword")
                 .clickOrganizationHeaderLink();
