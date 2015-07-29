@@ -381,10 +381,12 @@ public abstract class BasePage {
 	}
 
     public boolean isManageFiltersMenuLinkPresent(){
+        hover("manageFiltersLink");
         return driver.findElementById("vulnFiltersLink").isDisplayed();
     }
 
     public boolean isManageFiltersMenuLinkClickable(){
+        hover("manageFiltersLink");
         return isClickable("vulnFiltersLink");
     }
 
