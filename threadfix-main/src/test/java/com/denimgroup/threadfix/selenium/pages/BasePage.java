@@ -180,6 +180,7 @@ public abstract class BasePage {
 
     public FilterPage clickManageFiltersLink() {
         clickConfigTab();
+        hover("manageFiltersLink");
         driver.findElementById("vulnFiltersLink").click();
         sleep(3000);
         return new FilterPage(driver);
