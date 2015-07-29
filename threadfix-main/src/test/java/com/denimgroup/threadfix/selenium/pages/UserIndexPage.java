@@ -199,6 +199,9 @@ public class UserIndexPage extends BasePage {
         this.setTeam(secondTeam);
         secondTeamValue = Integer.parseInt(new Select(driver.findElementById("orgSelect")).getFirstSelectedOption().getAttribute("value"));
 
+        System.out.println("first: " + firstTeamValue);
+        System.out.println("second: " + secondTeamValue);
+
         return secondTeamValue > firstTeamValue;
     }
 	
@@ -338,7 +341,7 @@ public class UserIndexPage extends BasePage {
 
     public UserIndexPage setTeam(String team) {
         try {
-            driver.findElementById("orgSelect").sendKeys(team);
+            new Select(driver.findElementById("orgSelect")).selectByVisibleText(team);
         } catch (NoSuchElementException e) {
             driver.findElementByLinkText("Close").click();
             this.refreshPage();
@@ -350,17 +353,17 @@ public class UserIndexPage extends BasePage {
     }
 
     public UserIndexPage setTeamNoCatch(String teamName) {
-        driver.findElementById("orgSelect").sendKeys(teamName);
+        new Select(driver.findElementById("orgSelect")).selectByVisibleText(teamName);
         return this;
     }
 
     public UserIndexPage setTeamRole(String role) {
-        driver.findElementById("roleSelectTeam").sendKeys(role);
+        new Select(driver.findElementById("roleSelectTeam")).selectByVisibleText(role);
         return this;
     }
 
     public UserIndexPage setApplicationRole(String app, String role) {
-        driver.findElementById("roleSelectApp" + app).sendKeys(role);
+        new Select(driver.findElementById("roleSelectApp" + app)).selectByVisibleText(role);
         return this;
     }
 

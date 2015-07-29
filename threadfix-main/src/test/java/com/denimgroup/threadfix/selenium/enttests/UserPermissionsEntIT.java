@@ -274,7 +274,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
                 .clickAddTeamRole()
                 .expandTeamName();
 
-        assertTrue("The applications are sorted", userIndexPage.compareOrderOfSelector(firstTeamName, secondTeamName));
+        assertTrue("The applications are not sorted", userIndexPage.compareOrderOfSelector(firstTeamName, secondTeamName));
     }
 
     @Ignore
