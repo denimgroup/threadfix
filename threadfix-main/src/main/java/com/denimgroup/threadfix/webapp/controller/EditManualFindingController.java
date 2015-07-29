@@ -70,7 +70,7 @@ public class EditManualFindingController {
     private ScanService scanService;
 
 	public boolean isManual(Finding finding) {
-        return finding != null && ScannerType.MANUAL.getFullName().equals(finding.getChannelNameOrNull());
+        return finding != null && ScannerType.MANUAL.getDisplayName().equals(finding.getChannelNameOrNull());
 	}
 	
 	public boolean isAuthorizedForFinding(Finding finding) {

@@ -88,12 +88,11 @@ public class ScheduledScanController {
             return FormRestResponse.failure("Encountered errors.", result);
         }
 
-        if ((application.getUrl() == null || application.getUrl().isEmpty())
-                &&(scheduledScan.getTargetUrl() == null || scheduledScan.getTargetUrl().isEmpty())
-                && ChannelType.DYNAMIC_TYPES.contains(scheduledScan.getScanner())) {
-            String msg = "Target URL is required. You need to either set URL for Application or ScheduledScan.";
-            log.warn(msg);
-            return RestResponse.failure(msg);
+        scheduledScan.setApplication(application);
+
+        String errMsg = scheduledScanService.validate(scheduledScan);
+        if (errMsg != null) {
+            return RestResponse.failure(errMsg);
         }
 
         int scheduledScanId = scheduledScanService.save(appId, scheduledScan);

@@ -24,7 +24,6 @@
 
 package com.denimgroup.threadfix.data.entities;
 
-import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -35,17 +34,15 @@ import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.denimgroup.threadfix.CollectionUtils.list;
-
 @Entity
 @Table(name = "RemoteProviderType")
 public class RemoteProviderType extends BaseEntity  {
 
     private static final long serialVersionUID = -4542241524388720916L;
 
-    public static final String SENTINEL        = ScannerType.SENTINEL.getFullName();
-    public static final String VERACODE        = ScannerType.VERACODE.getFullName();
-    public static final String QUALYSGUARD_WAS = ScannerType.QUALYSGUARD_WAS.getFullName();
+    public static final String SENTINEL        = ScannerType.SENTINEL.getDisplayName();
+    public static final String VERACODE        = ScannerType.VERACODE.getDisplayName();
+    public static final String QUALYSGUARD_WAS = ScannerType.QUALYSGUARD_WAS.getDisplayName();
 
     public static final int NAME_LENGTH    = 60;
     public static final int API_KEY_LENGTH = 1024;

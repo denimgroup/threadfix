@@ -102,7 +102,7 @@ public class FindingServiceImpl implements FindingService {
                     if (genericVulnerability != null) {
                         cweName = genericVulnerability.getName();
                         if (cweName != null) {
-                            manualType = channelTypeDao.retrieveByName(ScannerType.MANUAL.getFullName());
+                            manualType = channelTypeDao.retrieveByName(ScannerType.MANUAL.getDisplayName());
                             if (manualType != null) {
                                 newChannelVuln = channelVulnerabilityDao.retrieveByName(manualType, cweName);
                             }
@@ -266,7 +266,7 @@ public class FindingServiceImpl implements FindingService {
 		if (vulnType != null) {
 			channelVulnerability = channelVulnerabilityDao
 				.retrieveByCode(
-						channelTypeDao.retrieveByName(ScannerType.MANUAL.getFullName()),
+						channelTypeDao.retrieveByName(ScannerType.MANUAL.getDisplayName()),
 						vulnType);
 		}
 		
@@ -290,7 +290,7 @@ public class FindingServiceImpl implements FindingService {
 	private ChannelSeverity getChannelSeverity(String severity) {
 		return channelSeverityDao
             .retrieveByCode(
-					channelTypeDao.retrieveByName(ScannerType.MANUAL.getFullName()),
+					channelTypeDao.retrieveByName(ScannerType.MANUAL.getDisplayName()),
 					REVERSE_MAP.get(severity));
 	}
 
@@ -429,7 +429,7 @@ public class FindingServiceImpl implements FindingService {
 	
 	@Override
 	public List<Map<String, Object>> getManualSeverities() {
-		ChannelType channelType = channelTypeDao.retrieveByName(ScannerType.MANUAL.getFullName());
+		ChannelType channelType = channelTypeDao.retrieveByName(ScannerType.MANUAL.getDisplayName());
 		List<ChannelSeverity> channelSeverities = channelSeverityDao.retrieveByChannel(channelType);
 
 		List<Map<String, Object>> returnList = list();

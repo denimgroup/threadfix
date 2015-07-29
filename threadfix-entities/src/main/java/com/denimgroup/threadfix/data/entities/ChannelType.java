@@ -45,38 +45,38 @@ public class ChannelType extends BaseEntity {
 	// This set is used to hold the channel types that should include their native IDs in the vuln description.
 	// Any useful native IDs should be included here, but not ones that we generate ourselves.
 	public final static Set<String> NATIVE_ID_SCANNERS = set(
-			ScannerType.CAT_NET.getFullName(),
-			ScannerType.FORTIFY.getFullName(), 
-			ScannerType.SENTINEL.getFullName(),
-			ScannerType.VERACODE.getFullName());
+			ScannerType.CAT_NET.getDisplayName(),
+			ScannerType.FORTIFY.getDisplayName(),
+			ScannerType.SENTINEL.getDisplayName(),
+			ScannerType.VERACODE.getDisplayName());
 	
 	public static final Set<String> DYNAMIC_TYPES = set(
-			ScannerType.ACUNETIX_WVS.getFullName(),
-			ScannerType.APPSCAN_ENTERPRISE.getFullName(), 
-			ScannerType.ARACHNI.getFullName(), 
-			ScannerType.BURPSUITE.getFullName(), 
-			ScannerType.NESSUS.getFullName(),
-			ScannerType.NETSPARKER.getFullName(), 
-			ScannerType.APP_SPIDER.getFullName(),
-			ScannerType.SKIPFISH.getFullName(), 
-			ScannerType.W3AF.getFullName(),
-			ScannerType.WEBINSPECT.getFullName(), 
-			ScannerType.ZAPROXY.getFullName(), 
-			ScannerType.QUALYSGUARD_WAS.getFullName(), 
-			ScannerType.APPSCAN_DYNAMIC.getFullName());
+			ScannerType.ACUNETIX_WVS.getDisplayName(),
+			ScannerType.APPSCAN_ENTERPRISE.getDisplayName(),
+			ScannerType.ARACHNI.getDisplayName(),
+			ScannerType.BURPSUITE.getDisplayName(),
+			ScannerType.NESSUS.getDisplayName(),
+			ScannerType.NETSPARKER.getDisplayName(),
+			ScannerType.APP_SPIDER.getDisplayName(),
+			ScannerType.SKIPFISH.getDisplayName(),
+			ScannerType.W3AF.getDisplayName(),
+			ScannerType.WEBINSPECT.getDisplayName(),
+			ScannerType.ZAPROXY.getDisplayName(),
+			ScannerType.QUALYSGUARD_WAS.getDisplayName(),
+			ScannerType.APPSCAN_DYNAMIC.getDisplayName());
 	
 	public static final Set<String> STATIC_TYPES = set(
-			ScannerType.APPSCAN_SOURCE.getFullName(),
-			ScannerType.FINDBUGS.getFullName(), 
-			ScannerType.FORTIFY.getFullName(), 
-			ScannerType.VERACODE.getFullName(), 
-			ScannerType.CAT_NET.getFullName(),
-			ScannerType.BRAKEMAN.getFullName(),
-            ScannerType.PMD.getFullName(),
-            ScannerType.CLANG.getFullName(),
-			ScannerType.CPPCHECK.getFullName());
+			ScannerType.APPSCAN_SOURCE.getDisplayName(),
+			ScannerType.FINDBUGS.getDisplayName(),
+			ScannerType.FORTIFY.getDisplayName(),
+			ScannerType.VERACODE.getDisplayName(),
+			ScannerType.CAT_NET.getDisplayName(),
+			ScannerType.BRAKEMAN.getDisplayName(),
+            ScannerType.PMD.getDisplayName(),
+            ScannerType.CLANG.getDisplayName(),
+			ScannerType.CPPCHECK.getDisplayName());
 
-	public static final List<String> MIXED_TYPES = Arrays.asList(ScannerType.SENTINEL.getFullName());
+	public static final List<String> MIXED_TYPES = Arrays.asList(ScannerType.SENTINEL.getDisplayName());
 	public static final String DYNAMIC="Dynamic", STATIC="Static", MIXED="Mixed";
 
 	private List<ApplicationChannel> applicationChannels;

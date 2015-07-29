@@ -80,10 +80,10 @@ public class ChannelTypeServiceImpl implements ChannelTypeService {
 			return null;
 		
 		Set<String> doNotIncludeList = new HashSet<>();
-		doNotIncludeList.add(ScannerType.SENTINEL.getFullName());
-		doNotIncludeList.add(ScannerType.VERACODE.getFullName());
-		doNotIncludeList.add(ScannerType.QUALYSGUARD_WAS.getFullName());
-		doNotIncludeList.add(ScannerType.MANUAL.getFullName());
+		doNotIncludeList.add(ScannerType.SENTINEL.getDisplayName());
+		doNotIncludeList.add(ScannerType.VERACODE.getDisplayName());
+		doNotIncludeList.add(ScannerType.QUALYSGUARD_WAS.getDisplayName());
+		doNotIncludeList.add(ScannerType.MANUAL.getDisplayName());
 		
 		if (application != null && application.getChannelList() != null && 
 				application.getChannelList().size() != 0) {

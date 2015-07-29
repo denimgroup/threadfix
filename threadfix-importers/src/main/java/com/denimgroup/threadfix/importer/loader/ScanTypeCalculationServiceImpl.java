@@ -137,7 +137,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 			returnString = figureOutJson(fileName);
         } else if (originalName.endsWith(".html")) {
             //probably clang
-            returnString = ScannerType.CLANG.getFullName();
+            returnString = ScannerType.CLANG.getDisplayName();
         } else {
             returnString = figureOutXml(fileName);
         }
@@ -225,10 +225,10 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 			if (zipFile.getEntry("audit.fvdl") != null) {
 				result = ScannerType.FORTIFY.getDbName();
 			} else if (ZipFileUtils.getZipEntry("issue_index.js", zipFile) != null){
-				result = ScannerType.SKIPFISH.getFullName();
+				result = ScannerType.SKIPFISH.getDisplayName();
 			} else if (zipFile.getEntry("index.html") != null
                     && zipFile.getEntry("scanview.css") != null) {
-                result = ScannerType.CLANG.getFullName();
+                result = ScannerType.CLANG.getDisplayName();
             }
 		} catch (FileNotFoundException e) {
 			log.warn("Unable to find zip file.", e);

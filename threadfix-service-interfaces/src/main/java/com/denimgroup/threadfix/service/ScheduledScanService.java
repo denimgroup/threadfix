@@ -28,5 +28,6 @@ import com.denimgroup.threadfix.data.entities.ScheduledScan;
 public interface ScheduledScanService extends ScheduledJobService<ScheduledScan> {
 
     public int save(int appId, ScheduledScan scheduledJob);
+    String validate(ScheduledScan scheduledScan);
 
 }
