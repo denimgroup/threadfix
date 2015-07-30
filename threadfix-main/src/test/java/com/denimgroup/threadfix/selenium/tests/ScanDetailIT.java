@@ -61,11 +61,11 @@ public class ScanDetailIT extends BaseDataTest {
         ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan()
                 .toggleStatistics();
 
-        assertTrue("Statistics were not show.", scanDetailPage.areStatisticsDisplayed());
+        assertTrue("Statistics are not displayed.", scanDetailPage.areStatisticsDisplayed());
 
         scanDetailPage.toggleStatistics();
 
-        assertFalse("Statistics were show", scanDetailPage.areStatisticsDisplayed());
+        assertFalse("Statistics are displayed", scanDetailPage.areStatisticsDisplayed());
     }
 
     @Test

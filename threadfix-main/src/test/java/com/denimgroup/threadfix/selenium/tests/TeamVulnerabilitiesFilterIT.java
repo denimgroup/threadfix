@@ -83,9 +83,6 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
         teamDetailPage.clickClearFilters();
 
-        //TODO remove refresh when issue #663 is fixed in 2.2milestone2
-        teamDetailPage.refreshPage();
-
         teamDetailPage.clickVulnerabilitiesTab("44");
 
         assertTrue("Critical vulnerabilities should be shown.",
@@ -219,9 +216,6 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
         teamDetailPage.clickClearFilters();
 
-        //TODO remove refresh when issue #663 is fixed in 2.2milestone2
-        teamDetailPage.refreshPage();
-
         teamDetailPage.clickVulnerabilitiesTab("69");
 
         assertTrue("Only 16 critical vulnerabilities should be shown.",
@@ -233,7 +227,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         assertTrue("Only 14 info vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Info", "14"));
 
-        teamDetailPage.expandTeamApplication().addApplicationFilter(appName2);
+        teamDetailPage.addApplicationFilter(appName2);
 
         assertTrue("Only 6 critical vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Critical", "6"));
@@ -457,5 +451,5 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
     //===========================================================================================================
     // Date Range
     //===========================================================================================================
-    //TODO this functionality works but there is a bug (358) in FF that stops us from writing a test for now.
+    //TODO Add test once DGTF-1833 is resolved
 }
