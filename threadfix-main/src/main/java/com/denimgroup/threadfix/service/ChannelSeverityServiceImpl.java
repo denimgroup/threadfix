@@ -23,51 +23,42 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.denimgroup.threadfix.CollectionUtils;
+import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
+import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.GenericSeverityDao;
+import com.denimgroup.threadfix.data.entities.ChannelSeverity;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import com.denimgroup.threadfix.data.entities.SeverityMap;
 import com.denimgroup.threadfix.importer.util.IntegerUtils;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.queue.QueueSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.entities.ChannelSeverity;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(readOnly = false) // used to be true
 public class ChannelSeverityServiceImpl implements ChannelSeverityService {
 
-	private final SanitizedLogger log = new SanitizedLogger(ChannelSeverityServiceImpl.class);
-
+	@Autowired
 	private ChannelSeverityDao channelSeverityDao;
+	@Autowired
 	private ChannelTypeDao channelTypeDao;
 	@Autowired
 	private GenericSeverityDao genericSeverityDao;
 	@Autowired
 	private QueueSender queueSender;
 
-	@Autowired
-	public ChannelSeverityServiceImpl(ChannelTypeDao channelTypeDao,
-			ChannelSeverityDao channelSeverityDao) {
-		this.channelSeverityDao = channelSeverityDao;
-		this.channelTypeDao = channelTypeDao;
-	}
-
 	@Override
 	public List<ChannelSeverity> loadByChannel(String channelTypeName) {
 		return channelSeverityDao.retrieveByChannel(
 				channelTypeDao.retrieveByName(channelTypeName));
 	}
-	
+
 	@Override
 	public ChannelSeverity loadById(int id) {
 		return channelSeverityDao.retrieveById(id);
@@ -77,7 +68,7 @@ public class ChannelSeverityServiceImpl implements ChannelSeverityService {
 	public List<Object> loadAllByChannel() {
 
 		List<Object> list = CollectionUtils.list();
-		for (ChannelType channelType: channelTypeDao.retrieveAll()) {
+		for (ChannelType channelType : channelTypeDao.retrieveAll()) {
 			Map<String, Object> map = CollectionUtils.map();
 			map.put("channelType", channelType);
 			map.put("channelSeverities", channelSeverityDao.retrieveByChannel(channelType));
@@ -91,7 +82,7 @@ public class ChannelSeverityServiceImpl implements ChannelSeverityService {
 	public String updateChannelSeverityMappings(List<ChannelSeverity> channelSeverities) {
 
 		String ids = "";
-		for (ChannelSeverity channelSeverity: channelSeverities) {
+		for (ChannelSeverity channelSeverity : channelSeverities) {
 			GenericSeverity genericSeverity = genericSeverityDao.retrieveById(channelSeverity.getSeverityMap().getGenericSeverity().getId());
 			if (genericSeverity != null) {
 				ChannelSeverity dbChannelSeverity = channelSeverityDao.retrieveById(channelSeverity.getId());
@@ -109,8 +100,9 @@ public class ChannelSeverityServiceImpl implements ChannelSeverityService {
 			}
 		}
 
-		if (!ids.isEmpty())
+		if (!ids.isEmpty()) {
 			queueSender.updateChannelSeverityMappings(ids);
+		}
 
 		return null;
 	}
@@ -120,15 +112,15 @@ public class ChannelSeverityServiceImpl implements ChannelSeverityService {
 		assert channelSeverityIds != null;
 		List<Integer> idsList = CollectionUtils.list();
 		String[] ids = channelSeverityIds.split(",");
-		for (String idStr: ids) {
+		for (String idStr : ids) {
 			Integer channelSeverityId = IntegerUtils.getIntegerOrNull(idStr);
-			if (channelSeverityId != null)
+			if (channelSeverityId != null) {
 				idsList.add(channelSeverityId);
+			}
 		}
 
-		if (idsList.size() > 0)
+		if (idsList.size() > 0) {
 			channelSeverityDao.updateExistingVulns(idsList);
-
+		}
 	}
-
 }
