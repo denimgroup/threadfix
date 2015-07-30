@@ -74,6 +74,102 @@ public class RemoteProvidersIT extends BaseDataTest {
 		assertTrue("Remote Provider Page not found", remoteProvidersIndexPage.isTabPresent());
 	}
 
+    //===========================================================================================================
+    // Contrast
+    //===========================================================================================================
+
+    @Test
+    public void testConfigureContrast() {
+
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("Contrast");
+
+        remoteProvidersIndexPage.clickConfigureContrast()
+                .setContrastUser(CONTRAST_USER)
+                .setContrastAPI(CONTRAST_API_KEY)
+                .setContrastService(CONTRAST_SERVICE_KEY)
+                .saveContrast();
+
+        assertTrue("Contrast Sentinel was not configured properly",
+                remoteProvidersIndexPage.successAlert().contains("Successfully edited remote provider Contrast"));
+        assertTrue("Contrast Sentinel configured message is not correct.",
+                remoteProvidersIndexPage.checkConfigurationMessage(0, "Yes"));
+
+        //Runtime Fix
+        remoteProvidersIndexPage.refreshPage();
+
+        remoteProvidersIndexPage.clearContrast();
+
+        assertTrue("Contrast configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("Contrast configuration was cleared successfully."));
+        assertTrue("Contrast configured message is not correct.",
+                remoteProvidersIndexPage.checkConfigurationMessage(0, "No"));
+    }
+
+    @Test
+    public void testUpdateContrastApplications() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("Contrast");
+
+        remoteProvidersIndexPage.clickConfigureContrast()
+                .setContrastUser(CONTRAST_USER)
+                .setContrastAPI(CONTRAST_API_KEY)
+                .setContrastService(CONTRAST_SERVICE_KEY)
+                .saveContrast();
+
+        remoteProvidersIndexPage.clickEditMappingContrastButton(0)
+                .selectTeamMapping(teamName)
+                .selectAppMapping(appName)
+                .clickUpdateMappings();
+
+        remoteProvidersIndexPage.clickContrastImportScan(0)
+                .checkForAlert();
+
+        assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
+        driver.switchTo().alert().dismiss();
+
+        //Runtime Fix
+        remoteProvidersIndexPage.refreshPage();
+
+        remoteProvidersIndexPage.clearContrast();
+
+        assertTrue("Contrast configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("Contrast configuration was cleared successfully."));
+        assertTrue("Contrast configured message is not correct.",
+                remoteProvidersIndexPage.checkConfigurationMessage(0, "No"));
+    }
+
+    @Test
+    public void testEditContrastApplicationName() {
+        String newName = getName();
+
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("Contrast");
+
+        remoteProvidersIndexPage.clickConfigureContrast()
+                .setContrastUser(CONTRAST_USER)
+                .setContrastAPI(CONTRAST_API_KEY)
+                .setContrastService(CONTRAST_SERVICE_KEY)
+                .saveContrast();
+
+        remoteProvidersIndexPage.clickEditName("4","0").setNewName(newName);
+
+        assertTrue("Application name did not update properly",
+                driver.findElement(By.cssSelector("td[id^=provider4appid]")).getText().equals(newName));
+
+        //Runtime Fix
+        remoteProvidersIndexPage.refreshPage();
+
+        remoteProvidersIndexPage.clearContrast();
+    }
+
+    //===========================================================================================================
+    // IBM Rational AppScan Enterprise
+    //===========================================================================================================
+
+    
+
+    //===========================================================================================================
+    // QualysGuard WAS
+    //===========================================================================================================
+
     @Test
     public void testConfigureQualys() {
         remoteProvidersIndexPage.clickConfigureQualys()
@@ -107,42 +203,90 @@ public class RemoteProvidersIT extends BaseDataTest {
                 remoteProvidersIndexPage.getErrorMessage().contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
     }
 
-	@Test
-	public void testConfigureWhiteHat() {
-        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("WhiteHat");
+    @Test
+    public void testEditQualysMapping() {
+        remoteProvidersIndexPage.clickConfigureQualys()
+                .setQualysUsername(QUALYS_USER)
+                .setQualysPassword(QUALYS_PASS)
+                .saveQualys();
 
-        remoteProvidersIndexPage.clickConfigureWhiteHat()
-                .setWhiteHatAPI(SENTINEL_API_KEY)
-                .saveWhiteHat();
+        remoteProvidersIndexPage.mapQualysToTeamAndApp(0, teamName, appName);
 
-		assertTrue("WhiteHat Sentinel was not configured properly",
-                remoteProvidersIndexPage.successAlert().contains("Successfully edited remote provider WhiteHat Sentinel"));
-        assertTrue("WhiteHat Sentinel configured message is not correct.",
-                remoteProvidersIndexPage.checkConfigurationMessage(6, "Yes"));
-		
-		remoteProvidersIndexPage = remoteProvidersIndexPage.clearWhiteHat();
+        assertTrue("Team was not mapped properly.", remoteProvidersIndexPage.isMappingCorrect(3, 0, teamName, appName));
 
-		assertTrue("WhiteHat Sentinel configuration was not cleared properly",
-                remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
-        assertTrue("WhiteHat Sentinel configured message is not correct.",
-                remoteProvidersIndexPage.checkConfigurationMessage(6, "No"));
-	}
+        remoteProvidersIndexPage.clearQualys();
 
-	@Test
-	public void testInvalidWhiteHat(){
-        remoteProvidersIndexPage.clearPreviousWhiteHat()
-                .clickConfigureWhiteHat()
-                .setWhiteHatAPI("ThisShouldNotWork")
-                .clickSubmitWait();
+        assertTrue("Qualys configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS configuration was cleared successfully."));
+    }
 
-        remoteProvidersIndexPage.sleep(1000);
+    @Test
+    public void testImportQualysGuardScan() {
+        remoteProvidersIndexPage.clickConfigureQualys()
+                .setQualysUsername(QUALYS_USER)
+                .setQualysPassword(QUALYS_PASS)
+                .setQualysPlatform(QUALYS_PLATFORM)
+                .clickModalSubmitInvalid();
 
-		assertTrue("Incorrect credentials accepted",
-                remoteProvidersIndexPage.getErrorMessage().contains("Failure. Unable to retrieve applications. WhiteHat response status:"));
-	}
+        assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS"));
 
-	@Test
-	public void testConfigureVeracode() {
+        remoteProvidersIndexPage.clickEditMappingQualysButton(3)
+                .selectTeamMapping(teamName)
+                .selectAppMapping(appName)
+                .clickUpdateMappings();
+
+        remoteProvidersIndexPage.clickQualysGuardImportScan(3)
+                .checkForAlert();
+
+        assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
+        driver.switchTo().alert().dismiss();
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.clearQualys();
+
+        assertTrue("Qualys Guard configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS configuration was cleared successfully."));
+    }
+
+    @Test
+    public void testQualysEditNameModalHeader() {
+        remoteProvidersIndexPage.clickConfigureQualys()
+                .setQualysUsername(QUALYS_USER)
+                .setQualysPassword(QUALYS_PASS)
+                .setQualysPlatform(QUALYS_PLATFORM)
+                .clickModalSubmitInvalid();
+
+        assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(),
+                remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS"));
+
+        remoteProvidersIndexPage.clickEditName("3", "0");
+
+        assertTrue("Modal does not contain app name",
+                driver.findElement(By.id("myModalLabel")).getText().contains("PHP Demo site"));
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.closeModal().clearQualys();
+
+        assertTrue("Qualys configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS configuration was cleared successfully."));
+    }
+
+    //===========================================================================================================
+    // Sonatype
+    //===========================================================================================================
+
+
+
+    //===========================================================================================================
+    // Trustwave Hailstorm
+    //===========================================================================================================
+
+
+
+    //===========================================================================================================
+    // Veracode
+    //===========================================================================================================
+
+    @Test
+    public void testConfigureVeracode() {
         remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("Veracode");
 
         remoteProvidersIndexPage.clickConfigureVeracode()
@@ -161,10 +305,10 @@ public class RemoteProvidersIT extends BaseDataTest {
                 remoteProvidersIndexPage.successAlert().contains("Veracode configuration was cleared successfully."));
         assertTrue("Veracode configured message is not correct.",
                 remoteProvidersIndexPage.checkConfigurationMessage(5, "No"));
-	}
-	
-	@Test
-	public void testInvalidVeracode(){
+    }
+
+    @Test
+    public void testInvalidVeracode(){
         remoteProvidersIndexPage.clickConfigureVeracode()
                 .setVeraUsername("No Such User")
                 .setVeraPassword("Password Bad")
@@ -173,24 +317,7 @@ public class RemoteProvidersIT extends BaseDataTest {
         remoteProvidersIndexPage.sleep(15000);
         String error = remoteProvidersIndexPage.getErrorMessage();
         System.out.println(error);
-		assertTrue("Incorrect credentials accepted", error.contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
-	}
-
-    @Test
-    public void testEditQualysMapping() {
-        remoteProvidersIndexPage.clickConfigureQualys()
-                .setQualysUsername(QUALYS_USER)
-                .setQualysPassword(QUALYS_PASS)
-                .saveQualys();
-
-        remoteProvidersIndexPage.mapQualysToTeamAndApp(0, teamName, appName);
-
-        assertTrue("Team was not mapped properly.", remoteProvidersIndexPage.isMappingCorrect(3, 0, teamName, appName));
-
-        remoteProvidersIndexPage.clearQualys();
-
-        assertTrue("Qualys configuration was not cleared properly",
-                remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS configuration was cleared successfully."));
+        assertTrue("Incorrect credentials accepted", error.contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
     }
 
     @Test
@@ -210,6 +337,89 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         assertTrue("Veracode configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("Veracode configuration was cleared successfully."));
+    }
+
+    @Test
+    public void testImportVeracodeScan() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("Veracode");
+
+        remoteProvidersIndexPage.clickConfigureVeracode()
+                .setVeraUsername(VERACODE_USER)
+                .setVeraPassword(VERACODE_PASSWORD)
+                .saveVera()
+                .mapVeracodeToTeamAndApp(0, teamName, appName);
+
+        assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("Veracode"));
+
+        remoteProvidersIndexPage.clickVeracodeImportScan(0)
+                .checkForAlert();
+
+        assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
+        driver.switchTo().alert().dismiss();
+
+        remoteProvidersIndexPage.clearVeraCode();
+
+        assertTrue("Veracode configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("Veracode configuration was cleared successfully."));
+    }
+
+    @Test
+    public void testVeracodeEditNameModalHeader() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("Veracode");
+
+        remoteProvidersIndexPage.clickConfigureVeracode()
+                .setVeraUsername(VERACODE_USER)
+                .setVeraPassword(VERACODE_PASSWORD)
+                .saveVera()
+                .mapVeracodeToTeamAndApp(0, teamName, appName);
+
+        remoteProvidersIndexPage.clickEditName("2", "0");
+
+        assertTrue("Modal does not contain app name",
+                driver.findElement(By.id("myModalLabel")).getText().contains("Apache"));
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.closeModal().clearVeraCode();
+
+        assertTrue("Veracode configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("Veracode configuration was cleared successfully."));
+    }
+
+    //===========================================================================================================
+    // WhiteHat Sentinel
+    //===========================================================================================================
+
+    @Test
+    public void testConfigureWhiteHat() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("WhiteHat");
+
+        remoteProvidersIndexPage.clickConfigureWhiteHat()
+                .setWhiteHatAPI(SENTINEL_API_KEY)
+                .saveWhiteHat();
+
+        assertTrue("WhiteHat Sentinel was not configured properly",
+                remoteProvidersIndexPage.successAlert().contains("Successfully edited remote provider WhiteHat Sentinel"));
+        assertTrue("WhiteHat Sentinel configured message is not correct.",
+                remoteProvidersIndexPage.checkConfigurationMessage(6, "Yes"));
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.clearWhiteHat();
+
+        assertTrue("WhiteHat Sentinel configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
+        assertTrue("WhiteHat Sentinel configured message is not correct.",
+                remoteProvidersIndexPage.checkConfigurationMessage(6, "No"));
+    }
+
+    @Test
+    public void testInvalidWhiteHat(){
+        remoteProvidersIndexPage.clearPreviousWhiteHat()
+                .clickConfigureWhiteHat()
+                .setWhiteHatAPI("ThisShouldNotWork")
+                .clickSubmitWait();
+
+        remoteProvidersIndexPage.sleep(1000);
+
+        assertTrue("Incorrect credentials accepted",
+                remoteProvidersIndexPage.getErrorMessage().contains("Failure. Unable to retrieve applications. WhiteHat response status:"));
     }
 
     @Test
@@ -252,55 +462,34 @@ public class RemoteProvidersIT extends BaseDataTest {
     }
 
     @Test
-    public void testImportVeracodeScan() {
-        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("Veracode");
+    public void testCheckWhiteHatEditNameModalHeader() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("WhiteHat");
 
-        remoteProvidersIndexPage.clickConfigureVeracode()
-                .setVeraUsername(VERACODE_USER)
-                .setVeraPassword(VERACODE_PASSWORD)
-                .saveVera()
-                .mapVeracodeToTeamAndApp(0, teamName, appName);
+        remoteProvidersIndexPage.clickConfigureWhiteHat()
+                .setWhiteHatAPI(SENTINEL_API_KEY)
+                .saveWhiteHat();
 
-        assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("Veracode"));
+        remoteProvidersIndexPage.clickEditName("1", "0");
 
-        remoteProvidersIndexPage.clickVeracodeImportScan(0)
-                .checkForAlert();
+        //Runtime Fix
+        sleep(5000);
 
-        assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
-        driver.switchTo().alert().dismiss();
+        assertTrue("Modal does not contain app name",
+                driver.findElement(By.id("myModalLabel")).getText().contains("DAST App"));
 
-        remoteProvidersIndexPage.clearVeraCode();
+        remoteProvidersIndexPage.closeModal().clearWhiteHat();
 
-        assertTrue("Veracode configuration was not cleared properly",
-                remoteProvidersIndexPage.successAlert().contains("Veracode configuration was cleared successfully."));
+        assertTrue("WhiteHat Sentinel configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
     }
 
-    @Test
-    public void testImportQualysGuardScan() {
-        remoteProvidersIndexPage.clickConfigureQualys()
-                .setQualysUsername(QUALYS_USER)
-                .setQualysPassword(QUALYS_PASS)
-                .setQualysPlatform(QUALYS_PLATFORM)
-                .clickModalSubmitInvalid();
+    //===========================================================================================================
+    // WhiteHat Sentinel Source
+    //===========================================================================================================
 
-        assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS"));
-
-        remoteProvidersIndexPage.clickEditMappingQualysButton(3)
-                .selectTeamMapping(teamName)
-                .selectAppMapping(appName)
-                .clickUpdateMappings();
-
-        remoteProvidersIndexPage.clickQualysGuardImportScan(3)
-                .checkForAlert();
-
-        assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
-        driver.switchTo().alert().dismiss();
-
-        remoteProvidersIndexPage = remoteProvidersIndexPage.clearQualys();
-
-        assertTrue("Qualys Guard configuration was not cleared properly",
-                remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS configuration was cleared successfully."));
-    }
+    //===========================================================================================================
+    // Other
+    //===========================================================================================================
 
     @Test
     public void testVulnerabilityCountAfterImport() {
@@ -662,152 +851,5 @@ public class RemoteProvidersIT extends BaseDataTest {
         assertFalse("success message is present",
                 remoteProvidersIndexPage.isSuccessMessagePresent("Weekly Scheduled Remote Provider Import successfully deleted."));
 
-    }
-
-    @Test
-    public void testQualysEditNameModalHeader() {
-        remoteProvidersIndexPage.clickConfigureQualys()
-                .setQualysUsername(QUALYS_USER)
-                .setQualysPassword(QUALYS_PASS)
-                .setQualysPlatform(QUALYS_PLATFORM)
-                .clickModalSubmitInvalid();
-
-        assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(),
-                remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS"));
-
-        remoteProvidersIndexPage.clickEditName("3","0");
-
-        assertTrue("Modal does not contain app name",
-                driver.findElement(By.id("myModalLabel")).getText().contains("PHP Demo site"));
-
-        remoteProvidersIndexPage = remoteProvidersIndexPage.closeModal().clearQualys();
-
-        assertTrue("Qualys configuration was not cleared properly",
-                remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS configuration was cleared successfully."));
-    }
-
-    @Test
-    public void testVeracodeEditNameModalHeader() {
-        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("Veracode");
-
-        remoteProvidersIndexPage.clickConfigureVeracode()
-                .setVeraUsername(VERACODE_USER)
-                .setVeraPassword(VERACODE_PASSWORD)
-                .saveVera()
-                .mapVeracodeToTeamAndApp(0, teamName, appName);
-
-        remoteProvidersIndexPage.clickEditName("2","0");
-
-        assertTrue("Modal does not contain app name",
-                driver.findElement(By.id("myModalLabel")).getText().contains("Apache"));
-
-        remoteProvidersIndexPage = remoteProvidersIndexPage.closeModal().clearVeraCode();
-
-        assertTrue("Veracode configuration was not cleared properly",
-                remoteProvidersIndexPage.successAlert().contains("Veracode configuration was cleared successfully."));
-    }
-
-    @Test
-    public void testCheckWhiteHatEditNameModalHeader() {
-        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("WhiteHat");
-
-        remoteProvidersIndexPage.clickConfigureWhiteHat()
-                .setWhiteHatAPI(SENTINEL_API_KEY)
-                .saveWhiteHat();
-
-        remoteProvidersIndexPage.clickEditName("1","0");
-
-        //Runtime Fix
-        sleep(5000);
-
-        assertTrue("Modal does not contain app name",
-                driver.findElement(By.id("myModalLabel")).getText().contains("DAST App"));
-
-        remoteProvidersIndexPage.closeModal().clearWhiteHat();
-
-        assertTrue("WhiteHat Sentinel configuration was not cleared properly",
-                remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
-    }
-    
-    @Test
-    public void testConfigureContrast() {
-
-        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("Contrast");
-
-        remoteProvidersIndexPage.clickConfigureContrast()
-                .setContrastUser(CONTRAST_USER)
-                .setContrastAPI(CONTRAST_API_KEY)
-                .setContrastService(CONTRAST_SERVICE_KEY)
-                .saveContrast();
-
-        assertTrue("Contrast Sentinel was not configured properly",
-                remoteProvidersIndexPage.successAlert().contains("Successfully edited remote provider Contrast"));
-        assertTrue("Contrast Sentinel configured message is not correct.",
-                remoteProvidersIndexPage.checkConfigurationMessage(0, "Yes"));
-
-        //Runtime Fix
-        remoteProvidersIndexPage.refreshPage();
-
-        remoteProvidersIndexPage.clearContrast();
-
-        assertTrue("Contrast configuration was not cleared properly",
-                remoteProvidersIndexPage.successAlert().contains("Contrast configuration was cleared successfully."));
-        assertTrue("Contrast configured message is not correct.",
-                remoteProvidersIndexPage.checkConfigurationMessage(0, "No"));
-    }
-
-    @Test
-    public void testUpdateContrastApplications() {
-        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("Contrast");
-
-        remoteProvidersIndexPage.clickConfigureContrast()
-                .setContrastUser(CONTRAST_USER)
-                .setContrastAPI(CONTRAST_API_KEY)
-                .setContrastService(CONTRAST_SERVICE_KEY)
-                .saveContrast();
-
-        remoteProvidersIndexPage.clickEditMappingContrastButton(0)
-                .selectTeamMapping(teamName)
-                .selectAppMapping(appName)
-                .clickUpdateMappings();
-
-        remoteProvidersIndexPage.clickContrastImportScan(0)
-                .checkForAlert();
-
-        assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
-        driver.switchTo().alert().dismiss();
-
-        //Runtime Fix
-        remoteProvidersIndexPage.refreshPage();
-
-        remoteProvidersIndexPage.clearContrast();
-
-        assertTrue("Contrast configuration was not cleared properly",
-                remoteProvidersIndexPage.successAlert().contains("Contrast configuration was cleared successfully."));
-        assertTrue("Contrast configured message is not correct.",
-                remoteProvidersIndexPage.checkConfigurationMessage(0, "No"));
-    }
-
-    @Test
-    public void testEditContrastApplicationName() {
-        String newName = getName();
-
-        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("Contrast");
-
-        remoteProvidersIndexPage.clickConfigureContrast()
-                .setContrastUser(CONTRAST_USER)
-                .setContrastAPI(CONTRAST_API_KEY)
-                .setContrastService(CONTRAST_SERVICE_KEY)
-                .saveContrast();
-
-        remoteProvidersIndexPage.clickEditName("4","0").setNewName(newName);
-
-        assertTrue("Application name did not update properly",
-                driver.findElement(By.cssSelector("td[id^=provider4appid]")).getText().equals(newName));
-
-        //Runtime Fix
-        remoteProvidersIndexPage.refreshPage();
-
-        remoteProvidersIndexPage.clearContrast();
     }
 }
