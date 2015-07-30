@@ -143,9 +143,9 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
         applicationDetailPage.clickActionButton();
         sleep(1000);
         assertTrue("Edit Delete button is not present", applicationDetailPage.isEditDeletePresent());
-        assertTrue("Edit De;ete button is not clickable", applicationDetailPage.isEditDeleteClickable());
+        assertTrue("Edit Delete button is not clickable", applicationDetailPage.isEditDeleteClickable());
         assertTrue("Edit Vuln button is not present", applicationDetailPage.isEditVulnFiltersPresent());
-        assertTrue("Edit Vuln buton is not clickable", applicationDetailPage.isEditVulnFiltersClickable());
+        assertTrue("Edit Vuln button is not clickable", applicationDetailPage.isEditVulnFiltersClickable());
         assertTrue("Scan Upload button is not present", applicationDetailPage.isUploadScanPresent());
         assertTrue("Scan Upload button is not clickable", applicationDetailPage.isUploadScanClickable());
         assertTrue("Add Manual finding button is not present", applicationDetailPage.isAddManualFindingsPresent());

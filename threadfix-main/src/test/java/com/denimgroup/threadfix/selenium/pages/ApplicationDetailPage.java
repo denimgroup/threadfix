@@ -784,7 +784,7 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage expandDateRange() {
         waitForResultsToLoad();
         driver.findElementById("showDateRange").click();
-        waitForElement(driver.findElementById("lessThan"));
+        waitForElement(driver.findElementById("startDateInput"));
         return new ApplicationDetailPage(driver);
     }
 

@@ -90,9 +90,6 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
 
         applicationDetailPage = applicationDetailPage.toggleClear();
 
-        //TODO Remove refresh after issue #663 is fixed in 2.2milestone2
-        applicationDetailPage.refreshPage();
-
         assertTrue("Critical vulnerabilities should be shown.",
                 applicationDetailPage.isSeverityLevelShown("Critical"));
         assertTrue("Medium vulnerabilities should be shown.",
@@ -239,17 +236,12 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "5"));
     }
 
-    //TODO get rid of the extra clicks for the info shown when fix
     @Test
     public void testPathFilter() {
         String path = "/demo/EvalInjection2.php";
 
-        // Get rid of these when fix is issued.
         applicationDetailPage = applicationDetailPage.expandFieldControls()
                 .addPathFilter(path);
-
-        applicationDetailPage = applicationDetailPage.toggleSeverityFilter("Info")
-                .toggleSeverityFilter("Info");
 
         assertTrue("Only 1 critical vulnerability should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "1"));
@@ -257,17 +249,12 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
                 applicationDetailPage.isVulnerabilityCountCorrect("Info", "1"));
     }
 
-    //TODO get rid of the extra clicks for the info shown when fix
     @Test
     public void testParameterFilter() {
         String parameter = "username";
 
         applicationDetailPage = applicationDetailPage.expandFieldControls()
                 .addParameterFilter(parameter);
-
-        // Get rid of these when fix is issued.
-        applicationDetailPage = applicationDetailPage.toggleSeverityFilter("Info")
-                .toggleSeverityFilter("Info");
 
         assertTrue("Only 4 critical vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
@@ -354,7 +341,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
     // Date Range
     //===========================================================================================================
 
-    //TODO when issue 358 has been closed this test can be added back
+    //TODO when issue 1833 has been closed this test can be re-examined
     @Ignore
     @Test
     public void testDateFilter() {
