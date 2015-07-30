@@ -92,7 +92,7 @@
                 /configuration/download,/configuration/acceptcriterias,/severities,
         		/configuration/settings,/configuration/filters,/configuration/scanqueue,/mappings/index,/configuration/tags,/teams,
         		/j_spring_security_check,/j_spring_security_logout,/images/*,/styles/*,/scripts/*,/rest/*,/configuration/download/*,
-                /configuration/scheduledEmailReports,/configuration/emailLists,
+                /configuration/scheduledEmailReports,/configuration/emailLists,/urlMismatch,
                 /configuration/scanResultFilters,/configuration/customCweText,
         		regex ^/rest/[a-zA-Z0-9/]*$,
                 regex ^/v/[^/]+/scripts/.*$,
