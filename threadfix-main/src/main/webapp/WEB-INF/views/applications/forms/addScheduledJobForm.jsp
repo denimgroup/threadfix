@@ -59,7 +59,7 @@
                     <option value="Saturday">Saturday</option>
                 </select>
                 <errors path="dateError" cssClass="errors"/>
-                <span class="errors" ng-show="object.dateError_error"> {{ object.dateError_error }}</span>
+                <span class="errors" id="dateError" ng-show="object.dateError_error"> {{ object.dateError_error }}</span>
             </td>
         </tr>
     </table>
