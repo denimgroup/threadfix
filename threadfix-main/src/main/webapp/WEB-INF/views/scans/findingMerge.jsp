@@ -21,7 +21,11 @@
 		</tr>
 		<tr>
 			<td>Generic Vulnerability Type:</td>
-			<td class="inputValue"><c:out value="${ finding.channelVulnerability.genericVulnerability.name }"/></td>
+			<td class="inputValue">
+                <span tooltip="CWE-${finding.channelVulnerability.genericVulnerability.displayId}">
+                    <c:out value="${ finding.channelVulnerability.genericVulnerability.name }"/>
+                </span>
+            </td>
 		</tr>
 		<tr>
 			<td>Vulnerability ID:</td>
@@ -66,7 +70,7 @@
 			<c:forEach var="vulnerability" items="${ similarVulns }">
 				<tr class="bodyRow">
 					<td style="text-align:center">
-						<input type="radio" name="vulnerabilityId" value="${ vulnerability.id }"></input>
+						<input type="radio" name="vulnerabilityId" value="${ vulnerability.id }" />
 					</td>
 					<td>
 						<c:if test="${ vulnerability.active and not vulnerability.hidden }">
@@ -79,7 +83,11 @@
 					<td style="text-align:center">
 						<c:out value="${ vulnerability.id }"/>
 					</td>
-					<td><c:out value="${ vulnerability.genericVulnerability.name }"/></td>
+					<td>
+                        <span tooltip="CWE-${vulnerability.genericVulnerability.displayId}">
+                            <c:out value="${ vulnerability.genericVulnerability.name }"/>
+                        </span>
+                    </td>
 				<c:forEach var="finding" items="${ vulnerability.findings }">
 					<td><c:out value="${ finding.surfaceLocation.path }"/></td>
 					<td><c:out value="${ finding.surfaceLocation.parameter }"/></td>
@@ -116,12 +124,16 @@
 			<c:forEach var="vulnerability" items="${ sameGenericVulns }">
 				<tr class="bodyRow">
 					<td style="text-align:center">
-						<input type="radio" name="vulnerabilityId" value="${ vulnerability.id }"></input>
+						<input type="radio" name="vulnerabilityId" value="${ vulnerability.id }" />
 					</td>
 					<td style="text-align:center">
 						<c:out value="${ vulnerability.id }"/>
 					</td>
-					<td><c:out value="${ vulnerability.genericVulnerability.name }"/></td>
+					<td>
+                        <span tooltip="CWE-${vulnerability.genericVulnerability.displayId}">
+                            <c:out value="${ vulnerability.genericVulnerability.name }"/>
+                        </span>
+                    </td>
 					<c:forEach var="finding" items="${ vulnerability.findings }">
 						<td><c:out value="${ finding.surfaceLocation.path }"/></td>
 						<td><c:out value="${ finding.surfaceLocation.parameter }"/></td>

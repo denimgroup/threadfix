@@ -44,7 +44,7 @@
                 <span ng-class="{ expanded: vuln.expanded }" class="caret-right"></span>
             </td>
             <td ng-click="toggle(vuln)" id="vulnName{{ $index }}" style="word-wrap: break-word;text-align:left;">
-                {{ vuln.genericVulnerability.name }}
+                <span tooltip="CWE-{{vuln.genericVulnerability.displayId}}">{{ vuln.genericVulnerability.name }}</span>
             </td>
             <td ng-click="toggle(vuln)" class="centered" id="severity{{ $index }}"
                 ng-class="{
