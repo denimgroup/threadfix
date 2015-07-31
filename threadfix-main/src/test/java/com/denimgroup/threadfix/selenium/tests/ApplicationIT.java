@@ -1004,6 +1004,8 @@ public class ApplicationIT extends BaseDataTest {
 
         applicationDetailPage.refreshPage();
 
+        applicationDetailPage.waitForResultsToLoad();
+
         applicationDetailPage.expandVulnerabilityByType(appVuln)
                 .expandCommentSection(appVuln + "0")
                 .addComment(appVuln + "0")
