@@ -48,4 +48,6 @@ public interface QueueConstants {
 
 	static final String CHANNEL_SEVERITY_MAPPINGS = "Channel Severity Mappings";
 
+	static final String DELETE_CHANNEL_VULN_FILTER = "Delete channel vulnerability filter";
+
 }

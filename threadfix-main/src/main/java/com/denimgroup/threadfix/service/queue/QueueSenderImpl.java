@@ -371,6 +371,22 @@ public class QueueSenderImpl implements QueueSender {
 		sendMap(channelSeverityMappingsMap);
 	}
 
+	@Override
+	public void deleteVulnFilter(int channelTypeId, String channelVulnName) {
+		MapMessage channelVulnFilterMap = new ActiveMQMapMessage();
+
+		try {
+			channelVulnFilterMap.setInt("channelTypeId", channelTypeId);
+			channelVulnFilterMap.setString("channelVulnName", channelVulnName);
+			channelVulnFilterMap.setString("type", QueueConstants.DELETE_CHANNEL_VULN_FILTER);
+		} catch (JMSException e) {
+			log.error(jmsErrorString);
+			addExceptionLog(e);
+		}
+
+		sendMap(channelVulnFilterMap);
+	}
+
 	private void send(String message) {
 		jmsTemplate.convertAndSend("requestQueue", message);
 	}
