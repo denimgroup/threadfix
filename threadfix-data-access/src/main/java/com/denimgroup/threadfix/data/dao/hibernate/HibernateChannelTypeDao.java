@@ -26,10 +26,15 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 import com.denimgroup.threadfix.data.dao.AbstractNamedObjectDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class HibernateChannelTypeDao extends AbstractNamedObjectDao<ChannelType> implements ChannelTypeDao {
@@ -47,5 +52,23 @@ public class HibernateChannelTypeDao extends AbstractNamedObjectDao<ChannelType>
     @Override
     public Class<ChannelType> getClassReference() {
         return ChannelType.class;
+    }
+
+    @Override
+    public List<ChannelType> loadAllHasVulnMapping() {
+        Criteria criteria = getSession()
+                .createCriteria(getClassReference())
+                .createAlias("channelVulnerabilities", "channelVulns")
+                .setProjection(Projections.projectionList()
+                        .add(Projections.groupProperty("name"), "name")
+                        .add(Projections.groupProperty("id"), "id"));
+
+        Order order = getOrder();
+        if (order != null) {
+            criteria.addOrder(order);
+        }
+        criteria.setResultTransformer(Transformers.aliasToBean(ChannelType.class));
+
+        return criteria.list();
     }
 }

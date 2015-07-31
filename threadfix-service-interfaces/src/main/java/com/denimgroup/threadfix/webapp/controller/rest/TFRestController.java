@@ -27,12 +27,15 @@ package com.denimgroup.threadfix.webapp.controller.rest;
 import com.denimgroup.threadfix.data.entities.APIKey;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.APIKeyService;
+import com.denimgroup.threadfix.service.CheckAPIKeyService;
+import com.denimgroup.threadfix.service.ThreadFixUserDetails;
+import com.denimgroup.threadfix.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Set;
 
-import static com.denimgroup.threadfix.CollectionUtils.set;
+import static com.denimgroup.threadfix.util.Result.failure;
+import static com.denimgroup.threadfix.util.Result.success;
 
 /**
  * This class provides the checkKey method and log implementation to each REST Controller.
@@ -48,17 +51,10 @@ public abstract class TFRestController {
 	public final static String API_KEY_NOT_FOUND_ERROR = "Authentication failed, check your API Key.";
 	public final static String RESTRICTED_URL_ERROR = "The requested URL is restricted for your API Key.";
 
+	@Autowired(required = false)
+	protected CheckAPIKeyService checkAPIKeyService;
 	@Autowired
 	protected APIKeyService apiKeyService;
-
-	/**
-	 * Implementing classes should add the names of restricted methods to this set
-	 * and use the checkRestriction method with the name of the requested method as
-	 * a parameter.
-	 * <br/><br/>
-	 * TODO move to a configuration file. All in code right now.
-	 */
-	protected static Set<String> restrictedMethods = set();
 
 	/**
 	 * This method checks that the key is valid and has permission to use 
@@ -67,39 +63,68 @@ public abstract class TFRestController {
 	 * @param request
 	 * @return
 	 */
-	protected String checkKey(HttpServletRequest request, String methodName) {		
+	protected Result<String> checkKeyGlobal(HttpServletRequest request, RestMethod method) {
+
+		Result<APIKey> lookup = getAPIKey(request);
+
+		if (!lookup.success()) {
+			return failure(lookup.getErrorMessage());
+		}
+
+		APIKey key = lookup.getResult();
+		boolean validRequest = key != null;
+
+		if (validRequest) {
+			log.debug("API key with ID: " + key.getId() + " authenticated successfully on path: "
+					+ request.getPathInfo() + " for methodName: " + method);
+			
+			if (key.getIsRestrictedKey() && method.restricted) {
+					log.info("The API key attempted to request a protected URL.");
+					return failure(RESTRICTED_URL_ERROR);
+			} else {
+				return success(API_KEY_SUCCESS);
+			}
+			
+		} else {
+			log.warn("API key " + request.getParameter("apiKey")
+					+ " did not authenticate successfully on "
+					+ request.getPathInfo() + ".");
+			return failure(API_KEY_NOT_FOUND_ERROR);
+		}
+	}
+
+	private Result<APIKey> getAPIKey(HttpServletRequest request) {
 		String apiKey = request.getParameter("apiKey");
 
 		if (apiKey == null) {
 			log.warn("Request to " + request.getPathInfo()
 					+ " did not contain an API Key(null).");
-			return API_KEY_NOT_FOUND_ERROR;
-		} else if(apiKey.length() == 0) {
-            log.warn("Request to " + request.getPathInfo()
-                    + " did not contain an API Key(blank).");
-            return API_KEY_NOT_FOUND_ERROR;
-        }
+			return failure(API_KEY_NOT_FOUND_ERROR);
+		} else if (apiKey.length() == 0) {
+			log.warn("Request to " + request.getPathInfo()
+					+ " did not contain an API Key(blank).");
+			return failure(API_KEY_NOT_FOUND_ERROR);
+		}
 
 		APIKey key = apiKeyService.loadAPIKey(apiKey);
-		boolean validRequest = key != null;
-
-		if (validRequest) {
-			log.debug("API key with ID: " + key.getId() + " authenticated successfully on path: "
-					+ request.getPathInfo() + " for methodName: " + methodName);
-			
-			if (key.getIsRestrictedKey() &&
-				restrictedMethods.contains(methodName)) {
-					log.info("The API key attempted to request a protected URL.");
-					return RESTRICTED_URL_ERROR;
-			} else {
-				return API_KEY_SUCCESS;
-			}
-			
+		if (key == null) {
+			return failure("API Key not found in database.");
 		} else {
-			log.warn("API key " + apiKey
-					+ " did not authenticate successfully on "
-					+ request.getPathInfo() + ".");
-			return API_KEY_NOT_FOUND_ERROR;
+			return success(key);
 		}
+	}
+
+	protected Result<String> checkKey(HttpServletRequest request, RestMethod method, int teamId, int appId) {
+
+		if (checkAPIKeyService == null) {
+			return checkKeyGlobal(request, method);
+		} else {
+			return checkAPIKeyService.checkKey(request, method, teamId, appId);
+		}
+
+	}
+
+	protected ThreadFixUserDetails getUserDetailsFromApiKeyInRequest(HttpServletRequest request) {
+		return checkAPIKeyService == null ? null : checkAPIKeyService.getUserDetailsFromApiKeyInRequest(request);
 	}
 }

@@ -452,10 +452,12 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			log.debug("Updating new / old vuln stats for the Scan with ID " + 
 					earliestFinding.getScan().getId());
 			
-			earliestFinding.getScan().setNumberNewVulnerabilities(
-					earliestFinding.getScan().getNumberNewVulnerabilities() + 1);
-			earliestFinding.getScan().setNumberOldVulnerabilities(
-					earliestFinding.getScan().getNumberOldVulnerabilities() - 1);
+            if (earliestFinding.getScan().getNumberOldVulnerabilities() > 0) {
+                earliestFinding.getScan().setNumberNewVulnerabilities(
+                        earliestFinding.getScan().getNumberNewVulnerabilities() + 1);
+                earliestFinding.getScan().setNumberOldVulnerabilities(
+                        earliestFinding.getScan().getNumberOldVulnerabilities() - 1);
+            }
 			scanDao.saveOrUpdate(earliestFinding.getScan());
 			
 			vuln.setOpenTime(earliestFinding.getScan().getImportTime());

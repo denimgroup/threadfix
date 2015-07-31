@@ -23,46 +23,20 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.util.List;
+import com.denimgroup.threadfix.util.Result;
+import com.denimgroup.threadfix.webapp.controller.rest.RestMethod;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ChannelType;
+import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author bbeverly
- * 
+ * Created by mcollins on 7/27/15.
  */
-public interface ChannelTypeService {
+public interface CheckAPIKeyService {
+    public final static String API_KEY_SUCCESS = "Authentication was successful.";
+    public final static String API_KEY_NOT_FOUND_ERROR = "Authentication failed, check your API Key.";
+    public final static String RESTRICTED_URL_ERROR = "The requested URL is restricted for your API Key.";
 
-	/**
-	 * @return
-	 */
-	List<ChannelType> loadAll();
+    Result<String> checkKey(HttpServletRequest request, RestMethod method, int teamId, int appId);
 
-	/**
-	 * @param channelId
-	 * @return
-	 */
-	ChannelType loadChannel(int channelId);
-
-	/**
-	 * @param name
-	 * @return
-	 */
-	ChannelType loadChannel(String name);
-
-	/**
-	 * @param channelType
-	 */
-	void storeChannel(ChannelType channelType);
-	
-	/**
-	 * 
-	 * @param application
-	 * @return
-	 */
-	public List<ChannelType> getChannelTypeOptions(Application application);
-
-	List<ChannelType> loadAllHasVulnMapping();
-	
+    ThreadFixUserDetails getUserDetailsFromApiKeyInRequest(HttpServletRequest request);
 }

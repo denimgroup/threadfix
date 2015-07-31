@@ -61,6 +61,7 @@ myAppModule.controller('ManageAcceptanceCriteriaModalController', function ($sco
                     if (data.success) {
                         threadFixModalService.deleteElement($scope.object.acceptanceCriterias, acceptanceCriteria);
                         threadFixModalService.addElement($scope.acceptanceCriterias, acceptanceCriteria);
+                        $scope.acceptanceCriterias.sort(nameCompare);
                     }
                     else {
                         $scope.errorMessage = "Failure. Message was : " + data.message;
