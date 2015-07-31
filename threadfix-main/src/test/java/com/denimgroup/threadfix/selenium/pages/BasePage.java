@@ -510,8 +510,12 @@ public abstract class BasePage {
     }
 
 	public void waitForInvisibleElement(String id){
-		WebDriverWait wait = new WebDriverWait(driver,10);
-		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(id)));
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(id)));
+        } catch(TimeoutException t) {
+            System.out.println("Element is not invisible.  Attempting to finish test.");
+        }
 	}
 
     public void takeScreenShot() {
