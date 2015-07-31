@@ -347,7 +347,8 @@
 				protected-regex ^/organizations/[0-9]+/applications/[0-9]+/edit/setTagsEndpoint$,
 				protected-regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/vulnComments/[0-9]+/update$,
 				protected-regex ^/reports/filter/delete/[0-9]+$,
-				protected-regex ^/reports/search/export/csv$
+				protected-regex ^/reports/search/export/csv$,
+				protected-regex ^/reports/search/export/ssvl$
         	</param-value>
 		</init-param>
 	</filter>
