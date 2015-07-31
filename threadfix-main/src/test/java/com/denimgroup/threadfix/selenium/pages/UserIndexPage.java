@@ -154,6 +154,7 @@ public class UserIndexPage extends BasePage {
     }
 
     public UserIndexPage chooseRoleForGlobalAccess(String role) {
+        waitForElement(driver.findElementById("roleSelect"));
         driver.findElementById("roleSelect").sendKeys(role);
         return this;
     }
@@ -494,7 +495,7 @@ public class UserIndexPage extends BasePage {
     /*----------------------------------- Helper Methods -----_------------------------------*/
 
     public UserIndexPage waitForDeleteUserButton() {
-        waitForElement(driver.findElementByLinkText("Delete User"));
+        waitForClickableElement(driver.findElementByLinkText("Delete User"));
         return new UserIndexPage(driver);
     }
 
