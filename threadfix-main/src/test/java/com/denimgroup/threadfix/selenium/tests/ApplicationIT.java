@@ -405,7 +405,8 @@ public class ApplicationIT extends BaseDataTest {
                 .setCWE(cwe)
                 .setParameter(parameter)
                 .setDescription(description)
-                .clickDynamicSubmit();
+                .clickDynamicSubmit()
+                .waitForResultsToLoad();
 
         assertTrue("Manual finding was not added to vulnerabilities listing on application detail page.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "1"));
@@ -489,7 +490,8 @@ public class ApplicationIT extends BaseDataTest {
                 .setSourceFile(sourceFile)
                 .setParameter(parameter)
                 .setDescription(description)
-                .clickDynamicSubmit();
+                .clickDynamicSubmit()
+                .waitForResultsToLoad();
 
         applicationDetailPage.refreshPage();
 
@@ -960,6 +962,8 @@ public class ApplicationIT extends BaseDataTest {
                 .clickDynamicSubmit();
 
         applicationDetailPage.refreshPage();
+
+        applicationDetailPage.waitForResultsToLoad();
 
         applicationDetailPage.expandVulnerabilityByType(appVuln);
         sleep(2000);
