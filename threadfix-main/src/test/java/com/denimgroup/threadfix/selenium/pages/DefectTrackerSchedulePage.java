@@ -82,9 +82,7 @@ public class DefectTrackerSchedulePage extends BasePage{
     }
 
     public DefectTrackerSchedulePage waitForErrorMessage() {
-        if (!driver.findElementByCssSelector("span.errors").isDisplayed()) {
-            sleep(5000);
-        }
+        waitForElement(driver.findElement(By.cssSelector("errors span.errors:not(.ng-hide)")));
         return new DefectTrackerSchedulePage(driver);
     }
 
