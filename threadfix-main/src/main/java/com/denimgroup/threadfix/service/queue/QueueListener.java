@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.queue;
 
+import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityFilterDao;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.*;
@@ -77,6 +78,8 @@ public class QueueListener implements MessageListener {
 	private ScheduledScanService scheduledScanService;
 	@Autowired
 	private ChannelSeverityService channelSeverityService;
+	@Autowired(required = false)
+	private ChannelVulnerabilityFilterDao channelVulnerabilityFilterDao;
 
 	/*
 	 * (non-Javadoc)
@@ -145,7 +148,9 @@ public class QueueListener implements MessageListener {
 					case QueueConstants.CHANNEL_SEVERITY_MAPPINGS:
 						updateChannelSeverityMappings(map.getString("channelSeverityIds"));
 						break;
-					
+					case QueueConstants.DELETE_CHANNEL_VULN_FILTER:
+						deleteVulnsFilter(map.getInt("channelTypeId"), map.getString("channelVulnName"));
+						break;
                     case QueueConstants.SEND_EMAIL_REPORT:
                         processSendEmailReport(map.getInt("scheduledEmailReportId"));
 				}
@@ -175,6 +180,15 @@ public class QueueListener implements MessageListener {
         vulnerabilityFilterService.updateAllVulnerabilities();
         log.info("Updating all filter vulnerabilities finished.");
     }
+
+	private void deleteVulnsFilter(int channelTypeId, String channelVulnName) {
+		log.info("About to change back severity all vulnerabilities of channel vulnerability name " + channelVulnName);
+		if (channelVulnerabilityFilterDao != null) {
+			channelVulnerabilityFilterDao.changeVulnsAfterDelete(channelTypeId, channelVulnName);
+		}
+		vulnerabilityFilterService.updateAllVulnerabilities();
+		log.info("Finished changing severity back.");
+	}
 
     private void processStatisticsUpdate(int appId) {
         if (appId == -1) {

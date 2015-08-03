@@ -542,6 +542,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
         allCWEvulns.forEach(function(vuln){
             var key = vuln.genericVulnName;
+            var cweNum = vuln.genericVulnDisplayId;
             if (!statsMap[key]) {
                 statsMap[key] = {
                     numOpen : 0,
@@ -550,7 +551,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
                     totalTimeToClose : 0
                 }
             }
-
+            statsMap[key]["displayId"] = cweNum;
             if (vuln.active) {
                 statsMap[key]["numOpen"] = statsMap[key]["numOpen"] + 1;
                 statsMap[key]["totalAgeOpen"] = statsMap[key]["totalAgeOpen"] + getDates(now, vuln.importTime);
@@ -567,7 +568,8 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             var mapEntry = statsMap[key];
             var genericVulnEntry = {
                 total : mapEntry["numOpen"] + mapEntry["numClosed"],
-                description : key
+                description : key,
+                displayId: mapEntry["displayId"]
             };
 
             genericVulnEntry.percentClosed = (genericVulnEntry.total === 0) ? 100 : getPercentNumber(mapEntry["numClosed"]/genericVulnEntry.total);

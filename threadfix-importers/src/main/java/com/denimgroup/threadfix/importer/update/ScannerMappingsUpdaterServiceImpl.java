@@ -61,7 +61,7 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
 
         if (importers != null) {
             for (ScannerType importer : importers) {
-                scanners.add(importer.getFullName());
+                scanners.add(importer.getDisplayName());
             }
         }
 
