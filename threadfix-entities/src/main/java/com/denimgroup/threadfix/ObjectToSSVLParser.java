@@ -24,10 +24,7 @@
 package com.denimgroup.threadfix;
 
 
-import com.denimgroup.threadfix.data.entities.DataFlowElement;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.SurfaceLocation;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.entities.ssvl.generated.ObjectFactory;
 import com.denimgroup.threadfix.data.entities.ssvl.generated.Severities;
 import com.denimgroup.threadfix.data.entities.ssvl.generated.Vulnerabilities;
@@ -39,6 +36,7 @@ import java.io.StringWriter;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -46,6 +44,19 @@ import java.util.List;
  * Created by stran on 7/31/15.
  */
 public class ObjectToSSVLParser {
+
+    public static final String SSVL_SPEC_VERSION_0_3 = "0.3";
+
+    public static SimpleDateFormat
+            OUR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss aaa XXX");
+
+    public static String getTimestamp(Calendar calendar) {
+        return OUR_DATE_FORMAT.format(calendar.getTime());
+    }
+
+    public static String getCurrentTimestamp() {
+        return OUR_DATE_FORMAT.format(new Date());
+    }
 
     private ObjectToSSVLParser(){}
 
@@ -61,6 +72,9 @@ public class ObjectToSSVLParser {
             for (Vulnerability tfVuln: tfVulnerabilities) {
                 ssvlVulnerabilities.getVulnerability().add(convertTFVulnToSSVLVuln(tfVuln));
             }
+
+        ssvlVulnerabilities.setExportTimestamp(getCurrentTimestamp());
+        ssvlVulnerabilities.setSpecVersion(SSVL_SPEC_VERSION_0_3);
 
         StringWriter stringWriter = new StringWriter();
         try {
@@ -87,11 +101,12 @@ public class ObjectToSSVLParser {
 
     public static Vulnerabilities.Vulnerability convertTFVulnToSSVLVuln(Vulnerability tfVuln) {
         Vulnerabilities.Vulnerability ssvlVuln = factory.createVulnerabilitiesVulnerability();
-        ssvlVuln.setShortDescription(tfVuln.getGenericVulnName());
+        ssvlVuln.setDescription(tfVuln.getGenericVulnName());
         if (tfVuln.getDefect() != null)
             ssvlVuln.setIssueID(tfVuln.getDefect().getNativeId());
         ssvlVuln.setCWE(tfVuln.getGenericVulnerability().getDisplayId());
         ssvlVuln.setSeverity(Severities.fromValue(tfVuln.getSeverityName()));
+        ssvlVuln.setApplication(tfVuln.getAppName());
         if (tfVuln.getFindings() != null) {
             for (Finding tfFinding: tfVuln.getFindings()) {
                 ssvlVuln.getFinding().add(convertTFFindingToSSVLFinding(tfFinding));
@@ -113,19 +128,40 @@ public class ObjectToSSVLParser {
 
         Vulnerabilities.Vulnerability.Finding ssvlFinding = factory.createVulnerabilitiesVulnerabilityFinding();
 
-        ssvlFinding.setFindingDescription(tfFinding.getLongDescription());
+        ssvlFinding.setFindingDescription(tfFinding.getChannelVulnerability().getName());
+        ssvlFinding.setLongDescription(tfFinding.getLongDescription());
         ssvlFinding.setNativeID(tfFinding.getNativeId());
-        ssvlFinding.setSource(tfFinding.getChannelNameOrNull());
-        ssvlFinding.setSourceFileName(tfFinding.getSourceFileLocation());
-//        ssvlFinding.setIdentifiedTimestamp(getTimestamp(tfFinding.getScannedDate()));
-        ssvlFinding.setSurfaceLocation(convertTFSurfaceLocationToSSVL(tfFinding.getSurfaceLocation()));
+        ssvlFinding.setAttackString(tfFinding.getAttackString());
+        ssvlFinding.setScanner(tfFinding.getChannelNameOrNull());
+        ssvlFinding.setSeverity(tfFinding.getChannelSeverity().getName());
+        ssvlFinding.setIdentifiedTimestamp(getTimestamp(tfFinding.getScan().getImportTime()));
+        if (!tfFinding.getIsStatic())
+            ssvlFinding.setSurfaceLocation(convertTFSurfaceLocationToSSVL(tfFinding.getSurfaceLocation()));
 
         if (tfFinding.getDataFlowElements() != null)
             for (DataFlowElement tfDataFlow: tfFinding.getDataFlowElements()) {
                 ssvlFinding.getDataFlowElement().add(convertTFDataFlowElementToSSVL(tfDataFlow));
             }
 
+        ssvlFinding.setDependency(convertTFDependencyToSSVL(tfFinding.getDependency()));
+
         return ssvlFinding;
+    }
+
+    private static Vulnerabilities.Vulnerability.Finding.Dependency convertTFDependencyToSSVL(Dependency tfDependency) {
+
+        if (tfDependency == null)
+            return null;
+
+        Vulnerabilities.Vulnerability.Finding.Dependency ssvlDependency = factory.createVulnerabilitiesVulnerabilityFindingDependency();
+        ssvlDependency.setCVE(tfDependency.getCve());
+        ssvlDependency.setComponentName(tfDependency.getComponentName());
+        ssvlDependency.setComponentFilePath(tfDependency.getComponentFilePath());
+        ssvlDependency.setRefLink(tfDependency.getRefLink());
+        ssvlDependency.setSource(tfDependency.getSource());
+        ssvlDependency.setDescription(tfDependency.getDescription());
+
+        return ssvlDependency;
     }
 
     private static Vulnerabilities.Vulnerability.Finding.DataFlowElement convertTFDataFlowElementToSSVL(DataFlowElement tfDataFlowElement) {
@@ -166,18 +202,10 @@ public class ObjectToSSVLParser {
             return null;
 
         Vulnerabilities.Vulnerability.Finding.SurfaceLocation ssvlSurfaceLocation = factory.createVulnerabilitiesVulnerabilityFindingSurfaceLocation();
-        ssvlSurfaceLocation.setValue(tfSurfaceLocation.toString());
-        ssvlSurfaceLocation.setSource(tfSurfaceLocation.getParameter());
+        ssvlSurfaceLocation.setParameter(tfSurfaceLocation.getParameter());
         ssvlSurfaceLocation.setUrl(tfSurfaceLocation.getUrl().toString());
 
         return ssvlSurfaceLocation;
-    }
-
-    public static SimpleDateFormat
-            OUR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss aaa XXX");
-
-    public static String getTimestamp(Calendar calendar) {
-        return OUR_DATE_FORMAT.format(calendar.getTime());
     }
 
 }

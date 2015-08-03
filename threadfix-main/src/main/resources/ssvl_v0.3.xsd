@@ -10,19 +10,21 @@
                 <xs:element name="Vulnerability" maxOccurs="unbounded" minOccurs="0">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element type="xs:string" name="ShortDescription" maxOccurs="1" minOccurs="0"/>
-                            <xs:element type="xs:string" name="LongDescription" maxOccurs="1" minOccurs="0"/>
+                            <xs:element type="xs:string" name="Description" maxOccurs="1" minOccurs="0"/>
                             <xs:element name="Finding" maxOccurs="unbounded" minOccurs="0">
                                 <xs:complexType>
                                     <xs:sequence>
                                         <xs:element type="xs:string" name="FindingDescription" maxOccurs="1" minOccurs="0"/>
+                                        <xs:element type="xs:string" name="LongDescription" maxOccurs="1" minOccurs="0"/>
+                                        <xs:element type="xs:string" name="AttackString" maxOccurs="1" minOccurs="0"/>
+                                        <xs:element type="xs:string" name="ScannerDetail" maxOccurs="1" minOccurs="0"/>
+                                        <xs:element type="xs:string" name="ScannerRecommendation" maxOccurs="1" minOccurs="0"/>
                                         <xs:element name="SurfaceLocation" minOccurs="0">
                                             <xs:complexType>
                                                 <xs:simpleContent>
                                                     <xs:extension base="xs:string">
                                                         <xs:attribute type="xs:string" name="url" use="optional"/>
-                                                        <xs:attribute type="xs:string" name="source" use="optional"/>
-                                                        <!--<xs:attribute type="xs:string" name="value" use="optional"/>-->
+                                                        <xs:attribute type="xs:string" name="parameter" use="optional"/>
                                                     </xs:extension>
                                                 </xs:simpleContent>
                                             </xs:complexType>
@@ -38,10 +40,22 @@
                                                 <xs:attribute type="PositiveNumber" name="Sequence" use="optional"/>
                                             </xs:complexType>
                                         </xs:element>
+                                        <xs:element name="Dependency" minOccurs="0">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element type="xs:string" name="ComponentName"/>
+                                                    <xs:element type="xs:string" name="ComponentFilePath"/>
+                                                    <xs:element type="xs:string" name="Description"/>
+                                                </xs:sequence>
+                                                <xs:attribute type="xs:string" name="CVE" use="optional"/>
+                                                <xs:attribute type="xs:string" name="RefLink" use="optional"/>
+                                                <xs:attribute type="xs:string" name="Source" use="optional"/>
+                                            </xs:complexType>
+                                        </xs:element>
                                     </xs:sequence>
                                     <xs:attribute type="xs:string" name="NativeID" use="optional"/>
-                                    <xs:attribute type="xs:string" name="Source" use="optional"/>
-                                    <xs:attribute type="xs:string" name="SourceFileName" use="optional"/>
+                                    <xs:attribute type="xs:string" name="Scanner" use="optional"/>
+                                    <xs:attribute type="xs:string" name="Severity" use="optional"/>
                                     <xs:attribute type="xs:string" name="IdentifiedTimestamp" use="optional"/>
                                 </xs:complexType>
                             </xs:element>
@@ -49,11 +63,11 @@
                         <xs:attribute type="xs:string" name="IssueID" use="optional"/>
                         <xs:attribute type="CWE" name="CWE" use="optional"/>
                         <xs:attribute type="Severities" name="Severity" use="optional"/>
+                        <xs:attribute type="xs:string" name="Application" use="optional"/>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
             <xs:attribute type="xs:string" name="SpecVersion"/>
-            <xs:attribute type="xs:string" name="ApplicationTag"/>
             <xs:attribute type="xs:string" name="ExportTimestamp"/>
         </xs:complexType>
     </xs:element>
