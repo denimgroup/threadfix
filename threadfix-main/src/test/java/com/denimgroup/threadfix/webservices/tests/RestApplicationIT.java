@@ -56,18 +56,18 @@ public class RestApplicationIT extends BaseRestIT {
         SCAN_TYPE_LOOKUP_FAILED = "Unable to determine Scan type",
         TAG_INVALID = "Invalid Tag ID. It is not an Application Tag.";
 
-	String[] scanners = { ScannerType.APPSCAN_DYNAMIC.getFullName(),
-			ScannerType.ARACHNI.getFullName(),
-			ScannerType.BURPSUITE.getFullName(), 
-			ScannerType.CAT_NET.getFullName(), 
-			ScannerType.FINDBUGS.getFullName(),
-			ScannerType.NESSUS.getFullName(), 
-			ScannerType.NETSPARKER.getFullName(), 
-			ScannerType.SKIPFISH.getFullName(),
-			ScannerType.VERACODE.getFullName(), 
-			ScannerType.W3AF.getFullName(), 
-			ScannerType.WEBINSPECT.getFullName(),
-			ScannerType.ZAPROXY.getFullName() };
+	String[] scanners = { ScannerType.APPSCAN_DYNAMIC.getDisplayName(),
+			ScannerType.ARACHNI.getDisplayName(),
+			ScannerType.BURPSUITE.getDisplayName(), 
+			ScannerType.CAT_NET.getDisplayName(), 
+			ScannerType.FINDBUGS.getDisplayName(),
+			ScannerType.NESSUS.getDisplayName(), 
+			ScannerType.NETSPARKER.getDisplayName(), 
+			ScannerType.SKIPFISH.getDisplayName(),
+			ScannerType.VERACODE.getDisplayName(), 
+			ScannerType.W3AF.getDisplayName(), 
+			ScannerType.WEBINSPECT.getDisplayName(),
+			ScannerType.ZAPROXY.getDisplayName() };
 
 	@Test
 	public void creationTests() {

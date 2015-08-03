@@ -102,9 +102,9 @@ class SimpleVuln {
 			String channelName = finding.getJSONObject("channelVulnerability")
 				.getJSONObject("channelType")
 				.getString("name");
-			if (channelName.equals(ScannerType.APPSCAN_DYNAMIC.getFullName()))
+			if (channelName.equals(ScannerType.APPSCAN_DYNAMIC.getDisplayName()))
 				appscanIdsToMatch.add(finding.getString("nativeId"));
-			else if (channelName.equals(ScannerType.FORTIFY.getFullName()))
+			else if (channelName.equals(ScannerType.FORTIFY.getDisplayName()))
 				fortifyNativeIds.add(finding.getString("nativeId")); 
 		}
 	}
