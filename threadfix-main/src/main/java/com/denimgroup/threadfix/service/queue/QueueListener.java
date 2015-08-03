@@ -78,7 +78,7 @@ public class QueueListener implements MessageListener {
 	private ScheduledScanService scheduledScanService;
 	@Autowired
 	private ChannelSeverityService channelSeverityService;
-	@Autowired
+	@Autowired(required = false)
 	private ChannelVulnerabilityFilterDao channelVulnerabilityFilterDao;
 
 	/*
@@ -183,7 +183,9 @@ public class QueueListener implements MessageListener {
 
 	private void deleteVulnsFilter(int channelTypeId, String channelVulnName) {
 		log.info("About to change back severity all vulnerabilities of channel vulnerability name " + channelVulnName);
-		channelVulnerabilityFilterDao.changeVulnsAfterDelete(channelTypeId, channelVulnName);
+		if (channelVulnerabilityFilterDao != null) {
+			channelVulnerabilityFilterDao.changeVulnsAfterDelete(channelTypeId, channelVulnName);
+		}
 		vulnerabilityFilterService.updateAllVulnerabilities();
 		log.info("Finished changing severity back.");
 	}
