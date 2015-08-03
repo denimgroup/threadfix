@@ -29,7 +29,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
-import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.importer.impl.upload.fortify.FortifyFilter.HIDE;
+import static com.denimgroup.threadfix.importer.utils.AssertionUtils.compare;
 
 /**
  * Created by mcollins on 3/5/15.
@@ -272,5 +273,44 @@ public class FortifyFilterTests {
         assert finalSeverity == null : "Didn't get null, got " + finalSeverity;
     }
 
+    @Test
+    public void testSimpleAudiencePositive() {
+        FortifyFilter filter = new FortifyFilter(HIDE, "audience:fod");
+
+        String result = filter.getFinalSeverity(map(VulnKey.AUDIENCE, "fod,broad"), 0, 0);
+
+        compare("result", "Hide", result);
+    }
+
+    @Test
+    public void testSimpleAudienceNegative() {
+        FortifyFilter filter = new FortifyFilter(HIDE, "audience:!fod");
+
+        String result = filter.getFinalSeverity(map(VulnKey.AUDIENCE, "fod,broad"), 0, 0);
+
+        assert !HIDE.equals(result) : "Got " + HIDE + " but wanted to not match.";
+    }
+
+    @Test
+    public void testComplexFilter() {
+        FortifyFilter fortifyFilter = getAudienceAndAnalyzerFilter();
+
+        String finalSeverity = fortifyFilter.getFinalSeverity(map(
+                VulnKey.AUDIENCE, "fod,broad"
+        ), 0, 0);
+
+        assert !HIDE.equals(finalSeverity) : "Got " + HIDE + " but wanted to not match.";
+    }
+
+    private FortifyFilter getAudienceAndAnalyzerFilter() {
+        String longFilter =
+                "audience:!fod " +
+                "AND analyzer:!pentest " +
+                "AND category:!cross-site request forgery " +
+                        "category:!cookie security\\: cookie not sent over ssl " +
+                        "category:!cookie security\\: session cookie not sent over ssl";
+
+        return new FortifyFilter(HIDE, longFilter);
+    }
 
 }

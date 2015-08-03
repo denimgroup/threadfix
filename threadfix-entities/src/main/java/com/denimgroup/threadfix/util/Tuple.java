@@ -21,30 +21,36 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.importer.impl.upload.fortify;
-
-import java.util.regex.Pattern;
+package com.denimgroup.threadfix.util;
 
 /**
- * Created by mcollins on 3/6/15.
+ * Created by mcollins on 8/3/15.
  */
+public class Tuple<A, B> {
+    private final A first;
+    private final B second;
 
-enum VulnKey {
-    KINGDOM(standard("kingdom")),
-    ANALYZER(standard("analyzer")),
-    AUDIENCE(standard("audience")),
-    CATEGORY("category:\"?([^\":]+)\"?$"),
-    FULL_CATEGORY("category:\"?([^\"]+:[^\"]+)\"?$"),
-    TAINT(standard("taint")),
-    ANALYSIS(standard("Analysis"));
-
-    public static String standard(String input) {
-        return input + ":\"?([^\"]*)\"?";
+    private Tuple(A first, B second) {
+        this.first = first;
+        this.second = second;
     }
 
-    Pattern pattern;
+    public static <A, B> Tuple<A, B> tuple(A a, B b) {
+        assert a != null;
+        assert b != null;
+        return new Tuple(a, b);
+    }
 
-    VulnKey(String patternString) {
-        this.pattern = Pattern.compile(patternString);
+    public A getFirst() {
+        return first;
+    }
+
+    public B getSecond() {
+        return second;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + first + ", " + second + ")";
     }
 }

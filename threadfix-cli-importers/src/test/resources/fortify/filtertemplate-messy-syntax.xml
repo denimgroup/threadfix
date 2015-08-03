@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<FilterTemplate publishVersion="1" objectVersion="1" id="Fortify-FOD-Template" disableEdit="false" version="1.1">
+    <Name>Priority Project Template</Name>
+    <Description>Project Template for High Risk Projects</Description>
+    <FolderDefinition color="ca3f37" id="b968f72f-cc12-03b5-976e-ad4c13920c21">
+        <name>Critical</name>
+        <description>This folder provides a comprehensive list of issues in the application with a high impact and high likelihood.</description>
+    </FolderDefinition>
+    <FolderDefinition color="ff8c00" id="5b50bb77-071d-08ed-fdba-1213fa90ac5a">
+        <name>High</name>
+        <description>This folder provides a comprehensive list of issues in the application with a high impact and low likelihood.</description>
+    </FolderDefinition>
+    <FolderDefinition color="ffc800" id="d5f55910-5f0d-a775-e91f-191d1f5608a4">
+        <name>Medium</name>
+        <description>This folder provides a comprehensive list of issues in the application with a low impact and high likelihood.</description>
+    </FolderDefinition>
+    <FolderDefinition color="dbb604" id="bb824e8d-b401-40be-13bd-5d156696a685">
+        <name>Low</name>
+        <description>This folder provides a comprehensive list of issues in the application with a low impact and low likelihood.</description>
+    </FolderDefinition>
+    <DefaultFolder folderID="bb824e8d-b401-40be-13bd-5d156696a685"/>
+    <TagDefinition hidden="false" extensible="false" type="user" id="87f2364f-dcd4-49e6-861d-f8d3f351686b">
+        <name>Analysis</name>
+        <Description>The analysis tag must be set for an issue to be counted as 'Audited.' This is encouraged to be the final action performed by an auditor.</Description>
+        <value hidden="false" id="0">Not an Issue</value>
+        <value hidden="false" id="1">Reliability Issue</value>
+        <value hidden="false" id="2">Bad Practice</value>
+        <value hidden="false" id="3">Suspicious</value>
+        <value hidden="false" id="4">Exploitable</value>
+    </TagDefinition>
+    <TagDefinition hidden="true" extensible="true" type="user" id="87f2364f-dcd4-49e6-231d-f8d3f351645b">
+        <name>FODStatus</name>
+        <Description>The analysis tag must be set for an issue to be counted as 'Audited.' This is encouraged to be the final action performed by an auditor.</Description>
+        <value hidden="false" id="0">Not an Issue</value>
+        <value hidden="false" id="1">Do Not Fix</value>
+        <value hidden="false" id="2">Should Fix</value>
+    </TagDefinition>
+    <PrimaryTag>
+        <primaryTagGUID>87f2364f-dcd4-49e6-861d-f8d3f351686b</primaryTagGUID>
+        <neutralWeight>0</neutralWeight>
+        <openRange>(2,5]</openRange>
+        <naiRange>[0,2]</naiRange>
+    </PrimaryTag>
+    <FilterSet disableEdit="false" enabled="true" id="a243b195-0a59-3f8b-1403-d55b7a7d78e6" type="user">
+        <Title>Fortify On Demand</Title>
+        <Description>This setting provides the source code analyzer with the most comprehensive set of rules.  It should be used to discover a broad set of security issues to be audited.  Fortify SCA assigns issues a severity level based on the potential impact the issue could have on the security of an application. The engine also assigns a confidence level to further prioritize issues of the same severity. This set of filters uses these two attributes in order to sort the issues into three folders: Hot, Warning, and Info.
+        </Description>
+        <EnabledFolders>b968f72f-cc12-03b5-976e-ad4c13920c21</EnabledFolders>
+        <EnabledFolders>5b50bb77-071d-08ed-fdba-1213fa90ac5a</EnabledFolders>
+        <EnabledFolders>d5f55910-5f0d-a775-e91f-191d1f5608a4</EnabledFolders>
+        <EnabledFolders>bb824e8d-b401-40be-13bd-5d156696a685</EnabledFolders>
+        <Filter>
+            <actionParam>b968f72f-cc12-03b5-976e-ad4c13920c21</actionParam>
+            <query>[fortify priority order]:critical</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>5b50bb77-071d-08ed-fdba-1213fa90ac5a</actionParam>
+            <query>[fortify priority order]:high</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>d5f55910-5f0d-a775-e91f-191d1f5608a4</actionParam>
+            <query>[fortify priority order]:medium</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>bb824e8d-b401-40be-13bd-5d156696a685</actionParam>
+            <query>[fortify priority order]:low</query>
+            <action>setFolder</action>
+        </Filter>
+        <Filter>
+            <actionParam>true</actionParam>
+            <query>audience:!fod AND analyzer:!pentest AND category:!cross-site request forgery category:!cookie security\: cookie not sent over ssl category:!cookie security\: session cookie not sent over ssl</query>
+            <action>hide</action>
+        </Filter>
+    </FilterSet>
+</FilterTemplate>

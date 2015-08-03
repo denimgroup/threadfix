@@ -238,10 +238,12 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		Map<String, DataFlowElementMap> nodeSnippetMap = map();
 		
 		Map<String, Map<String, Float>> ruleMap = map();
+		Map<String, String> audienceMap = map();
 		String currentRuleID = null;
 
 		String currentKingdom = null;
 		String currentCategory = null;
+		String currentAnalyzer = null;
 		String currentChannelType = null;
 		String currentChannelSubtype = null;
 		String currentSeverity = null;
@@ -262,12 +264,13 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		boolean getTaint = false;
 		boolean getFact = false;
 		boolean getChannelType = false;
+		boolean getAnalyzer = false;
 		boolean getChannelSubtype = false;
 		boolean getSeverity = false;
 		boolean getStaticPathInformationUrl = false;
 		boolean getNativeId = false;
 		boolean getAction = false;
-		boolean getImpact = false, getProbability = false, getAccuracy = false;
+		boolean getImpact = false, getProbability = false, getAccuracy = false, getAudience = false;
 		boolean getConfidence = false;
 		boolean getClassID = false;
 		boolean getKingdom = false;
@@ -291,13 +294,15 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 			findingMap.put("Kingdom", currentKingdom);
 			findingMap.put("Category", currentCategory);
 			findingMap.put("Taint", currentTaint);
-	    	staticPathInformationMap.put(currentNativeId, currentStaticPathInformation);
+			findingMap.put("AnalyzerName", currentAnalyzer);
+			staticPathInformationMap.put(currentNativeId, currentStaticPathInformation);
 	    	nativeIdDataFlowElementsMap.put(currentNativeId, dataFlowElementMaps);
 	    	
 	    	rawFindingList.add(findingMap);
 	    	
 			currentKingdom = null;
 	    	currentChannelType = null;
+			currentAnalyzer = null;
 			currentTaint = null;
 	    	currentChannelSubtype = null;
 			currentSeverity = null;
@@ -345,8 +350,12 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 						VulnKey.FULL_CATEGORY, findingMap.get("channelType"),
 						VulnKey.CATEGORY, findingMap.get("Category"),
 						VulnKey.KINGDOM, findingMap.get("Kingdom"),
-						VulnKey.TAINT, findingMap.get("Taint")
+						VulnKey.TAINT, findingMap.get("Taint"),
+						VulnKey.ANALYZER, findingMap.get("AnalyzerName")
 				);
+				if (audienceMap.containsKey(findingMap.get("classID"))) {
+					vulnMap.put(VulnKey.AUDIENCE, audienceMap.get(findingMap.get("classID")));
+				}
 	   			String filterSeverity = filterSet.getResult(vulnMap, numberMap);
 
 				if (FortifyFilter.HIDE.equals(filterSeverity)) {
@@ -429,7 +438,9 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		    		skipToNextVuln = false;
 		    		getKingdom = true;
 		    	} else if ("Type".equals(qName)) {
-		    		getChannelType = true;
+					getChannelType = true;
+				} else if ("AnalyzerName".equals(qName)) {
+		    		getAnalyzer = true;
 		    	} else if ("Subtype".equals(qName)) {
 		    		getChannelSubtype = true;
 		    	} else if ("InstanceSeverity".equals(qName)) {
@@ -498,6 +509,8 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    				 getProbability = true;
 	    			 } else if (groupName.equals("Accuracy")) {
 	    				 getAccuracy = true;
+	    			 } else if (groupName.equals("audience")) {
+	    				 getAudience = true;
 	    			 }
 	    		}
 	    	}
@@ -508,6 +521,9 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    	if (getKingdom) {
 				currentKingdom = getBuilderText();
 				getKingdom = false;
+			} else if (getAnalyzer) {
+				currentAnalyzer = getBuilderText();
+				getAnalyzer = false;
 			} else if (getChannelType) {
 	    		currentChannelType = getBuilderText();
 				currentCategory = currentChannelType;
@@ -558,6 +574,9 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    	} else if (getAccuracy) {
 	    		ruleMap.get(currentRuleID).put("Accuracy", getFloatOrNull(getBuilderText()));
 	    		getAccuracy = false;
+	    	} else if (getAudience) {
+				audienceMap.put(currentRuleID, getBuilderText());
+				getAudience = false;
 	    	} else if (getConfidence) {
 	    		currentConfidence = getBuilderText();
 	    		getConfidence = false;
@@ -591,7 +610,7 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 	    	if (getChannelType || getSeverity || getNativeId || getClassID || getFact 
 	    			|| getSnippetText || getChannelSubtype || getAction || getImpact ||
 	    			getProbability || getAccuracy || getConfidence || getStaticPathInformationUrl
-					|| getKingdom || getTaint) {
+					|| getKingdom || getTaint || getAnalyzer || getAudience) {
 	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }

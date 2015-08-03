@@ -24,14 +24,17 @@
 package com.denimgroup.threadfix.importer.impl.upload.fortify;
 
 import com.denimgroup.threadfix.framework.util.RegexUtils;
+import com.denimgroup.threadfix.util.Tuple;
+import com.denimgroup.threadfix.util.TupleSet;
 
 import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
-import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.EnumUtils.in;
 import static com.denimgroup.threadfix.importer.impl.upload.fortify.FilterResult.*;
+import static com.denimgroup.threadfix.util.TupleSet.tupleSet;
 
 /**
  * Created by mcollins on 3/5/15.
@@ -53,8 +56,8 @@ public class FortifyFilter {
         parseFields(query);
     }
 
-    Map<VulnKey, String> myFields = map();
-    Map<VulnKey, String> myNegativeFields = map();
+    TupleSet<VulnKey, String> myFields = tupleSet();
+    TupleSet<VulnKey, String> myNegativeFields = tupleSet();
 
     // list of filters that were in an OR
     List<FortifyFilter> oredFilters = list();
@@ -84,18 +87,17 @@ public class FortifyFilter {
 
         for (VulnKey key : VulnKey.values()) {
             String result = RegexUtils.getRegexResult(query, key.pattern);
+
             if (result != null) {
-                String replaced = result.replaceAll("\\\\:", ":");
-                if (replaced.charAt(0) == '!') {
-                    myNegativeFields.put(key, replaced.substring(1));
-                } else {
-                    // one field cannot have two different values
-                    // Fortify allows the user to build filters like this
-                    if (myFields.containsKey(key) && !replaced.equals(myFields.get(key))) {
-                        invalid = true;
-                        break;
+
+                // This is a shim to handle weird syntax in ANDed categories
+                if (in(key, VulnKey.CATEGORY, VulnKey.FULL_CATEGORY) && result.contains("category:")) {
+                    String[] parts = result.split("category:");
+                    for (String part : parts) {
+                        parseFields("category:" + part);
                     }
-                    myFields.put(key, replaced);
+                } else {
+                    processRegexResult(key, result);
                 }
             }
         }
@@ -104,6 +106,15 @@ public class FortifyFilter {
         if (!confidence.isValid()) confidence.initialize(query);
         if (!severity.isValid()) severity.initialize(query);
         if (!likelihood.isValid()) likelihood.initialize(query);
+    }
+
+    private void processRegexResult(VulnKey key, String result) {
+        String replaced = result.replaceAll("\\\\:", ":");
+        if (replaced.charAt(0) == '!') {
+            myNegativeFields.add(key, replaced.substring(1));
+        } else {
+            myFields.add(key, replaced);
+        }
     }
 
     public String getFinalSeverity(Map<VulnKey, String> vulnInfo, float likelihood, float impact) {
@@ -117,8 +128,10 @@ public class FortifyFilter {
 
     public String getFinalSeverity(Map<VulnKey, String> vulnInfo, Map<String, Float> numberMap) {
 
+        String result;
+
         if (oredFilters.isEmpty()) {
-            return passes(vulnInfo, numberMap) ? target : null;
+            result = passes(vulnInfo, numberMap) ? target : null;
         } else {
             boolean success = false;
             for (FortifyFilter filter : oredFilters) {
@@ -127,8 +140,10 @@ public class FortifyFilter {
                     break;
                 }
             }
-            return success ? target: null;
+            result = success ? target : null;
         }
+
+        return result;
     }
 
     public boolean passes(Map<VulnKey, String> vulnInfo, Map<String, Float> numberMap) {
@@ -143,7 +158,7 @@ public class FortifyFilter {
         FilterResult negativeResult = getStringResult(vulnInfo, myNegativeFields);
         if (negativeResult == MISS) {
             negativeResult = MATCH;
-        } else if (negativeResult == MATCH) {
+        } else if (in(negativeResult, SOME, MATCH)) {
             negativeResult = MISS;
         }
 
@@ -169,21 +184,22 @@ public class FortifyFilter {
     }
 
 
-    private FilterResult getStringResult(Map<VulnKey, String> vulnInfo, Map<VulnKey, String> myFields) {
+    private FilterResult getStringResult(Map<VulnKey, String> vulnInfo, TupleSet<VulnKey, String> myFields) {
         FilterResult result = NO_MATCH;
 
-        for (VulnKey key : myFields.keySet()) {
+        for (Tuple<VulnKey, String> fieldTuple : myFields) {
+            VulnKey key = fieldTuple.getFirst();
+            String myValue = fieldTuple.getSecond();
 
             String theirValue = vulnInfo.get(key);
-            String myValue = myFields.get(key);
 
             if (myValue != null) { // we need to filter on this value
-                if (VulnKey.TAINT == key && theirValue != null) {
+                if (in(key, VulnKey.TAINT, VulnKey.AUDIENCE) && theirValue != null) {
 
                     if (theirValue.toLowerCase().contains(myValue.toLowerCase())) {
                         result = MATCH;
                     } else {
-                        result = MISS;
+                        result = result == MATCH ? SOME : MISS;
                         break;
                     }
                 } else if (myValue.equalsIgnoreCase(theirValue)) {
@@ -192,7 +208,7 @@ public class FortifyFilter {
                     result = MATCH;
                 } else {
                     // if we miss any one filter, fail the test
-                    result = MISS;
+                    result = result == MATCH ? SOME : MISS;
                     break;
                 }
             }

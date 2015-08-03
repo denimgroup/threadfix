@@ -21,30 +21,23 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.importer.impl.upload.fortify;
-
-import java.util.regex.Pattern;
+package com.denimgroup.threadfix;
 
 /**
- * Created by mcollins on 3/6/15.
+ * Created by mcollins on 8/3/15.
  */
+public class EnumUtils {
 
-enum VulnKey {
-    KINGDOM(standard("kingdom")),
-    ANALYZER(standard("analyzer")),
-    AUDIENCE(standard("audience")),
-    CATEGORY("category:\"?([^\":]+)\"?$"),
-    FULL_CATEGORY("category:\"?([^\"]+:[^\"]+)\"?$"),
-    TAINT(standard("taint")),
-    ANALYSIS(standard("Analysis"));
+    private EnumUtils(){}
 
-    public static String standard(String input) {
-        return input + ":\"?([^\"]*)\"?";
+    public static <K extends Enum<K>> boolean in(K actual, K... possibilities) {
+        for (K possibility : possibilities) {
+            if (actual == possibility) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    Pattern pattern;
-
-    VulnKey(String patternString) {
-        this.pattern = Pattern.compile(patternString);
-    }
 }

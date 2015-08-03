@@ -27,5 +27,5 @@ package com.denimgroup.threadfix.importer.impl.upload.fortify;
  * Created by mcollins on 3/11/15.
  */
 public enum FilterResult {
-    NO_MATCH, MATCH, MISS
+    NO_MATCH, MATCH, MISS, SOME
 }

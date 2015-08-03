@@ -21,30 +21,32 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.importer.impl.upload.fortify;
-
-import java.util.regex.Pattern;
+package com.denimgroup.threadfix.importer.utils;
 
 /**
- * Created by mcollins on 3/6/15.
+ * Created by mcollins on 8/3/15.
  */
+public class AssertionUtils {
 
-enum VulnKey {
-    KINGDOM(standard("kingdom")),
-    ANALYZER(standard("analyzer")),
-    AUDIENCE(standard("audience")),
-    CATEGORY("category:\"?([^\":]+)\"?$"),
-    FULL_CATEGORY("category:\"?([^\"]+:[^\"]+)\"?$"),
-    TAINT(standard("taint")),
-    ANALYSIS(standard("Analysis"));
+    private AssertionUtils(){}
 
-    public static String standard(String input) {
-        return input + ":\"?([^\"]*)\"?";
+    public static void compare(Number a, Number b) {
+        if (!a.equals(b)) {
+            assert false : "Expected " + a + " but got " + b;
+        }
     }
 
-    Pattern pattern;
+    public static void compare(String name, Number a, Number b) {
+        if (!a.equals(b)) {
+            assert false : "Expected " + a + " " + name + " but got " + b;
+        }
+    }
 
-    VulnKey(String patternString) {
-        this.pattern = Pattern.compile(patternString);
+    public static void compare(String name, String a, String b) {
+        if (a == null) {
+            assert b == null : "Expected null but got " + b + " for " + name;
+        } else {
+            assert a.equals(b) : "Expected " + name + " " + a + " but got " + b;
+        }
     }
 }

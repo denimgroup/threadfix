@@ -27,8 +27,12 @@ import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
+
+import static com.denimgroup.threadfix.importer.utils.AssertionUtils.compare;
 
 /**
  * Created by mcollins on 3/5/15.
@@ -86,18 +90,40 @@ public class FilterTemplateXmlTests {
         }
     }
 
-
     public static FilterTemplateXmlParser getParsedResult() {
         String name = "fortify/filtertemplate.xml";
         return getParsedResult(name);
     }
 
     public static FilterTemplateXmlParser getParsedResult(String fileName) {
-        InputStream auditXmlStream = AuditXmlParsingTests.class.getClassLoader().getResourceAsStream(fileName);
+        URL resource = FilterTemplateXmlTests.class.getClassLoader().getResource(fileName);
+
+        assert resource != null : "Got null resource from ClassLoader.getResource for " + fileName;
+
+        assert new File(resource.getFile()).exists() : "File at " + resource.getPath() + " didn't exist.";
+
+        InputStream auditXmlStream =
+                FilterTemplateXmlTests.class.getClassLoader().getResourceAsStream(fileName);
 
         FilterTemplateXmlParser parser = new FilterTemplateXmlParser();
         ScanUtils.readSAXInput(parser, AbstractChannelImporter.FILE_CHECK_COMPLETED, auditXmlStream);
         return parser;
     }
+
+    @Test
+    public void testMessySyntax() {
+        String fileName = "fortify/filtertemplate-messy-syntax.xml";
+
+        FilterTemplateXmlParser parsedResult = getParsedResult(fileName);
+
+        List<FortifyFilter> filters = parsedResult.filterSet.filters;
+
+        compare("filters", 5, filters.size());
+
+        FortifyFilter trickyFilter = filters.get(4);
+
+        compare("negative filter sections", 5, trickyFilter.myNegativeFields.size());
+    }
+
 
 }
