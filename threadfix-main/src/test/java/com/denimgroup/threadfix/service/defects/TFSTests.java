@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.service.defects.mock.TFSClientMock;
 import com.denimgroup.threadfix.service.defects.util.DefectUtils;
+import com.denimgroup.threadfix.service.defects.utils.tfs.TFSClient;
 import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -138,7 +139,9 @@ public class TFSTests {
     public void testSubmissionParameters() {
         AbstractDefectTracker tfsTracker = getConfiguredTracker();
 
-        ProjectMetadata metadata = tfsTracker.getProjectMetadata();
+        TFSClientMock client = new TFSClientMock();
+
+        ProjectMetadata metadata = new ProjectMetadata(null, null, null, client.getStatuses(), client.getPriorities());
 
         int statusSize = metadata.getStatuses().size();
         assertEquals("Status should have 1 match, but had " + statusSize, statusSize, 1);
