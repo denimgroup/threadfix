@@ -27,7 +27,6 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
-import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +38,8 @@ import org.springframework.web.bind.support.SessionStatus;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.service.enterprise.EnterpriseTest.isEnterprise;
 
 public abstract class AbstractVulnFilterController {
 
@@ -123,11 +124,15 @@ public abstract class AbstractVulnFilterController {
 			return "403";
 		}
 
-		model.addAttribute("isEnterprise", EnterpriseTest.isEnterprise());
+		model.addAttribute("isEnterprise", isEnterprise());
 		model.addAttribute("vulnerabilityFilter", vulnerabilityFilterService.getNewFilter(orgId, appId));
 		model.addAttribute("severityFilter",      getSeverityFilter(orgId, appId));
 		model.addAttribute("vulnerabilityFilterList", vulnerabilityFilterService.getPrimaryVulnerabilityList(orgId, appId));
 		model.addAttribute("type", getType(orgId, appId));
+
+		if (orgId == -1 && appId == -1) {
+			return "customize/threadfixVulnTypes/community";
+		}
 		return "filters/index";
 	}
 
@@ -155,7 +160,7 @@ public abstract class AbstractVulnFilterController {
 			map.put("teamVulnerabilityFilters", vulnerabilityFilterService.getPrimaryVulnerabilityList(orgId, -1));
 		}
 
-		if (EnterpriseTest.isEnterprise()) {
+		if (isEnterprise()) {
 			List<ChannelType> channelTypes = channelTypeService.loadAllHasVulnMapping();
 			map.put("channelVulnerabilitiesMap", channelVulnerabilityService.getChannelVulnsEachChannelType(channelTypes));
 			map.put("channelTypes", channelTypes);
