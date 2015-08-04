@@ -144,7 +144,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
     public void testSavedFiltersUpdateResults() {
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
-        String scanner = "IBM Rational AppScan";
+        String scanner = "IBM Security AppScan Standard";
         String parameter = "username";
         String newFilter = getName();
 
