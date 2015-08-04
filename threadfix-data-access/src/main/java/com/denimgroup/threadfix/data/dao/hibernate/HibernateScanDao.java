@@ -54,7 +54,7 @@ public class HibernateScanDao
         extends AbstractObjectDao<Scan>
         implements ScanDao {
 	
-	private String selectStart = "(select count(*) from Vulnerability vulnerability where vulnerability.hidden = false and vulnerability.genericSeverity.intValue = ";
+	private String selectStart = "(select count(*) from Vulnerability vulnerability where vulnerability.hidden = false and vulnerability.isFalsePositive = false and vulnerability.genericSeverity.intValue = ";
 	private String idStart = "scan.id as id, ";
 	private String vulnIds = " and vulnerability in (select finding.vulnerability.id from Finding finding where finding.scan = scan))";
 	private String mapVulnIds = " and vulnerability in (select map.finding.vulnerability.id from ScanRepeatFindingMap map where map.scan = scan))";
