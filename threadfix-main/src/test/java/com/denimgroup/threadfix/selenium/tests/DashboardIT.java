@@ -182,6 +182,6 @@ public class DashboardIT extends BaseDataTest {
                 dashboardPage.getMostRecentUploadDate().equals("12/01/14"));
         assertTrue("Most recent upload application is incorrect", dashboardPage.getMostRecentUploadApp().equals(appName));
         assertTrue("Most recent upload results are incorrect.",
-                dashboardPage.getMostRecentUploadName().contains("44 Vulnerabilities from IBM Rational AppScan (Dynamic)"));
+                dashboardPage.getMostRecentUploadName().contains("44 Vulnerabilities from IBM Security AppScan Standard (Dynamic)"));
     }
 }
