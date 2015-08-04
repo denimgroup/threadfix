@@ -68,7 +68,8 @@
             <%@ include file="/WEB-INF/views/applications/tabs/unmappedFindingsTab.jsp" %>
             <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SCAN_AGENTS">
                 <c:if test="${isEnterprise}">
-                    <tab id="scanAgentTasksTab" ng-controller="ScanAgentTasksTabController" heading="{{ heading }}">
+                    <tab id="scanAgentTasksTab" ng-controller="ScanAgentTasksTabController" heading="{{ heading }}"
+                         ng-click="setTab('Scan Agent Tasks')" active="tab.scanAgentTasks">
                         <!-- TODO refactor this nesting -->
                         <c:if test="${ canManageApplications }">
                             <div style="margin-top:10px;margin-bottom:7px;">
@@ -78,10 +79,14 @@
 
                         <%@ include file="/WEB-INF/views/applications/tabs/scanQueueTab.jsp" %>
                     </tab>
-                    <tab id="scheduledScanTab" ng-controller="ScheduledScanTabController" heading="{{ heading }}">
+                    <tab id="scheduledScanTab" ng-controller="ScheduledScanTabController" heading="{{ heading }}"
+                         ng-click="setTab('Scheduled Scans')" active="tab.scheduledScans">
                         <%@ include file="/WEB-INF/views/applications/tabs/scheduledScanTab.jsp" %>
                     </tab>
                 </c:if>
+            </security:authorize>
+            <security:authorize ifAnyGranted="ROLE_ENTERPRISE">
+                <%@ include file="/WEB-INF/views/applications/tabs/acceptanceCriteriaTab.jsp" %>
             </security:authorize>
         </tabset>
     </div>
