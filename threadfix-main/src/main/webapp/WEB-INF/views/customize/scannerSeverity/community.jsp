@@ -14,5 +14,5 @@
     <%@ include file="newForm.jsp" %>
     <%@ include file="editForm.jsp" %>
 
-    <%@ include file="ignoreResults.jspf" %>
+    <%@ include file="suppressResults.jspf" %>
 </body>

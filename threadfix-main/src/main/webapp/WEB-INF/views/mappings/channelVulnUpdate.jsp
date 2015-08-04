@@ -1,14 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<head>
-	<title>Scanner Plugin</title>
-    <cbs:cachebustscript src="/scripts/scan-unmapped-finding-table-controller.js"/>
-	<cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
-	<cbs:cachebustscript src="/scripts/mappings-page-controller.js"/>
-</head>
-
-<body id="wafs" ng-controller="MappingsPageController">
-	<h2>Scanner Mappings</h2>
+<div id="scannerMappings" ng-controller="MappingsPageController">
+	<h2>Scanner To CWE Mappings</h2>
 
 	<%@ include file="/WEB-INF/views/angular-init.jspf"%>
 
@@ -44,4 +37,4 @@
 		</div>
 	</div>
 
-</body>
+</div>

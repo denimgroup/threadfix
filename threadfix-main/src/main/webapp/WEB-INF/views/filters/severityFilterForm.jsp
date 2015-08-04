@@ -7,8 +7,6 @@
     <span id="severityErrorMessage">{{ severityErrorMessage }}</span>
 </div>
 
-<h2>Toggle Severities</h2>
-
 <div ng-form="form">
     <table class="table noBorders">
         <tbody>
@@ -80,7 +78,7 @@
 <a ng-hide="submittingSeverityFilter" id="submitSeverityFilterForm"
         class="modalSubmit btn btn-primary"
         ng-click="submitSeverityFilterForm()">
-    Save Severity Filter Changes
+    Save Changes
 </a>
 <a ng-show="submittingSeverityFilter"
         class="modalSubmit btn btn-primary"

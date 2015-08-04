@@ -111,13 +111,13 @@
                                 <ul class="dropdown-menu" style="text-align:right;left: -238px">
                                     <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_ENTERPRISE">
                                         <li class="normalLinks">
-                                            <a id="customizeThreadFixVulnerabilityTypesLink" href="<spring:url value="/filters" htmlEscape="true"/>">ThreadFix Vulnerability Types</a>
+                                            <a id="customizeThreadFixVulnerabilityTypesLink" href="<spring:url value="/configuration/filters" htmlEscape="true"/>">ThreadFix Vulnerability Types</a>
                                         </li>
                                     </security:authorize>
 
                                     <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT">
                                         <li class="normalLinks">
-                                            <a id="customizeScannerVulnerabilityTypesLink" href="<spring:url value="/configuration/customCweText" htmlEscape="true"/>">Scanner Vulnerability Types</a>
+                                            <a id="customizeScannerVulnerabilityTypesLink" href="<spring:url value="/mappings/index" htmlEscape="true"/>">Scanner Vulnerability Types</a>
                                         </li>
                                     </security:authorize>
 

@@ -79,6 +79,10 @@ public class ChannelMerger {
             scan.setFindings(listOf(Finding.class));
         }
 
+        for (Finding finding : scan.getFindings()) {
+            finding.setScan(scan);
+        }
+
         LOG.info("Starting Application Channel-wide merging process with "
                 + scan.getFindings().size() + " findings.");
 

@@ -1,7 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-    <title>Custom Severity Names</title>
+    <title>Customize ThreadFix Severities</title>
     <cbs:cachebustscript src="/scripts/custom-severity-text-controller.js"/>
 </head>
 
@@ -11,5 +11,7 @@
     <%@ include file="/WEB-INF/views/successMessage.jspf" %>
     <%@ include file="/WEB-INF/views/errorMessage.jspf"%>
 
-    <%@ include file="/WEB-INF/views/filters/severityFilterForm.jsp"%>
+    <h2>Show and Hide</h2>
+
+    <%@ include file="/WEB-INF/views/filters/severityFilterForm.jsp" %>
 </body>
