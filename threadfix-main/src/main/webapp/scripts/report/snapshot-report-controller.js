@@ -583,18 +583,26 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
     var filterPBVBySeverity = function(allVulns) {
         $scope.filterVulns = allVulns.filter(function(vuln){
-            if ("Critical" === vuln.severity) {
-                return $scope.parameters.severities.critical;
-            } else if ("High" === vuln.severity) {
-                return $scope.parameters.severities.high;
-            } else if ("Medium" === vuln.severity) {
-                return $scope.parameters.severities.medium;
-            } else if ("Low" === vuln.severity) {
-                return $scope.parameters.severities.low;
-            } else if ("Info" === vuln.severity) {
-                return $scope.parameters.severities.info;
+            if ( $scope.parameters.severities.critical
+              || $scope.parameters.severities.high
+              || $scope.parameters.severities.medium
+              || $scope.parameters.severities.low
+              || $scope.parameters.severities.info) {
+                if ("Critical" === vuln.severity) {
+                    return $scope.parameters.severities.critical;
+                } else if ("High" === vuln.severity) {
+                    return $scope.parameters.severities.high;
+                } else if ("Medium" === vuln.severity) {
+                    return $scope.parameters.severities.medium;
+                } else if ("Low" === vuln.severity) {
+                    return $scope.parameters.severities.low;
+                } else if ("Info" === vuln.severity) {
+                    return $scope.parameters.severities.info;
+                }
+                return false;
+            } else {
+                return true;
             }
-            return false;
         });
     }
 
@@ -727,12 +735,23 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         var customLow = customSeverityService.getCustomSeverity('Low');
         var customInfo = customSeverityService.getCustomSeverity('Info');
 
-        var criticalCount = $scope.parameters.severities.critical ? $scope.data[customCritical].Count : 0;
-        var highCount = $scope.parameters.severities.high ? $scope.data[customHigh].Count : 0;
-        var mediumCount = $scope.parameters.severities.medium ? $scope.data[customMedium].Count : 0;
-        var lowCount = $scope.parameters.severities.low ? $scope.data[customLow].Count : 0;
-        var infoCount = $scope.parameters.severities.info ? $scope.data[customInfo].Count : 0;
-
+        if ( $scope.parameters.severities.critical
+          || $scope.parameters.severities.high
+          || $scope.parameters.severities.medium
+          || $scope.parameters.severities.low
+          || $scope.parameters.severities.info) {
+            var criticalCount = $scope.parameters.severities.critical ? $scope.data[customCritical].Count : 0;
+            var highCount = $scope.parameters.severities.high ? $scope.data[customHigh].Count : 0;
+            var mediumCount = $scope.parameters.severities.medium ? $scope.data[customMedium].Count : 0;
+            var lowCount = $scope.parameters.severities.low ? $scope.data[customLow].Count : 0;
+            var infoCount = $scope.parameters.severities.info ? $scope.data[customInfo].Count : 0;
+        } else {
+            var criticalCount = $scope.data[customCritical].Count;
+            var highCount = $scope.data[customHigh].Count;
+            var mediumCount = $scope.data[customMedium].Count;
+            var lowCount = $scope.data[customLow].Count;
+            var infoCount = $scope.data[customInfo].Count;
+        }
         var totalCount = criticalCount + highCount + mediumCount + lowCount + infoCount;
 
         if (totalCount !== 0) {
@@ -744,16 +763,28 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         }
 
         $scope.pointInTimeData = {};
-        if ($scope.parameters.severities.critical)
+        if ( $scope.parameters.severities.critical
+            || $scope.parameters.severities.high
+            || $scope.parameters.severities.medium
+            || $scope.parameters.severities.low
+            || $scope.parameters.severities.info) {
+            if ($scope.parameters.severities.critical)
+                $scope.pointInTimeData[customCritical] = $scope.data[customCritical];
+            if ($scope.parameters.severities.high)
+                $scope.pointInTimeData[customHigh] = $scope.data[customHigh];
+            if ($scope.parameters.severities.medium)
+                $scope.pointInTimeData[customMedium] = $scope.data[customMedium];
+            if ($scope.parameters.severities.low)
+                $scope.pointInTimeData[customLow] = $scope.data[customLow];
+            if ($scope.parameters.severities.info)
+                $scope.pointInTimeData[customInfo] = $scope.data[customInfo];
+        } else {
             $scope.pointInTimeData[customCritical] = $scope.data[customCritical];
-        if ($scope.parameters.severities.high)
             $scope.pointInTimeData[customHigh] = $scope.data[customHigh];
-        if ($scope.parameters.severities.medium)
             $scope.pointInTimeData[customMedium] = $scope.data[customMedium];
-        if ($scope.parameters.severities.low)
             $scope.pointInTimeData[customLow] = $scope.data[customLow];
-        if ($scope.parameters.severities.info)
             $scope.pointInTimeData[customInfo] = $scope.data[customInfo];
+        }
 
     };
 
@@ -1054,16 +1085,22 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         $scope.topAppsData = angular.copy($scope._topAppsData);
 
         $scope.topAppsData.forEach(function(app) {
-            if (!$scope.parameters.severities.critical)
-                app[customSeverityService.getCustomSeverity("Critical")] = 0;
-            if (!$scope.parameters.severities.high)
-                app[customSeverityService.getCustomSeverity("High")] = 0;
-            if (!$scope.parameters.severities.medium)
-                app[customSeverityService.getCustomSeverity("Medium")] = 0;
-            if (!$scope.parameters.severities.low)
-                app[customSeverityService.getCustomSeverity("Low")] = 0;
-            if (!$scope.parameters.severities.info)
-                app[customSeverityService.getCustomSeverity("Info")] = 0;
+            if ($scope.parameters.severities.critical
+              || $scope.parameters.severities.high
+              || $scope.parameters.severities.medium
+              || $scope.parameters.severities.low
+              || $scope.parameters.severities.info) {
+                if (!$scope.parameters.severities.critical)
+                    app[customSeverityService.getCustomSeverity("Critical")] = 0;
+                if (!$scope.parameters.severities.high)
+                    app[customSeverityService.getCustomSeverity("High")] = 0;
+                if (!$scope.parameters.severities.medium)
+                    app[customSeverityService.getCustomSeverity("Medium")] = 0;
+                if (!$scope.parameters.severities.low)
+                    app[customSeverityService.getCustomSeverity("Low")] = 0;
+                if (!$scope.parameters.severities.info)
+                    app[customSeverityService.getCustomSeverity("Info")] = 0;
+            }
         });
 
         $scope.topAppsData.sort(function(app1, app2) {
