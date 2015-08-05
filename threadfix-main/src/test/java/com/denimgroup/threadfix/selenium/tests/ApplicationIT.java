@@ -408,6 +408,8 @@ public class ApplicationIT extends BaseDataTest {
                 .clickDynamicSubmit()
                 .waitForResultsToLoad();
 
+        assertFalse("Manual Finding was not added.", applicationDetailPage.areAllVulnerabilitiesHidden());
+
         assertTrue("Manual finding was not added to vulnerabilities listing on application detail page.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "1"));
 
@@ -492,6 +494,8 @@ public class ApplicationIT extends BaseDataTest {
                 .setDescription(description)
                 .clickDynamicSubmit()
                 .waitForResultsToLoad();
+
+        assertFalse("Manual Finding was not added.", applicationDetailPage.areAllVulnerabilitiesHidden());
 
         applicationDetailPage.refreshPage();
 
@@ -961,6 +965,8 @@ public class ApplicationIT extends BaseDataTest {
                 .setDescription(description)
                 .clickDynamicSubmit();
 
+        assertFalse("Manual Finding was not added.", applicationDetailPage.areAllVulnerabilitiesHidden());
+
         applicationDetailPage.refreshPage();
 
         applicationDetailPage.waitForResultsToLoad();
@@ -1001,6 +1007,8 @@ public class ApplicationIT extends BaseDataTest {
                 .setParameter(parameter)
                 .setDescription(description)
                 .clickDynamicSubmit();
+
+        assertFalse("Manual Finding was not added.", applicationDetailPage.areAllVulnerabilitiesHidden());
 
         applicationDetailPage.refreshPage();
 

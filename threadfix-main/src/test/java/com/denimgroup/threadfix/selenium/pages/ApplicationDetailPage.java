@@ -1289,7 +1289,11 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public boolean areAllVulnerabilitiesHidden() {
-        return driver.findElementById("noResultsFound").getText().trim().equals("No results found.");
+        try {
+            return driver.findElementById("noResultsFound").getText().trim().equals("No results found.");
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 
     public boolean isSavedFilterSuccessMessageDisplayed() {
