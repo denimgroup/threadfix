@@ -815,3 +815,21 @@ threadfixModule.factory('timeoutService', function(tfEncoder, $timeout) {
 
     return timeoutService;
 });
+
+threadfixModule.factory('urlIdShortener', function() {
+
+    var urlIdShortener = {};
+    var ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    var BASE = ALPHABET.length;
+
+    urlIdShortener.encode = function(num) {
+        encodingList = [];
+        while (num > 0) {
+            encodingList.push(ALPHABET.charAt(num % BASE));
+            num = num/BASE >> 0;
+        }
+        return encodingList.reverse().join("")
+    };
+
+    return urlIdShortener;
+});
