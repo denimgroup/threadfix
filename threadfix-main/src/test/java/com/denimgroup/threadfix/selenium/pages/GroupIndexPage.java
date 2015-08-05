@@ -69,6 +69,7 @@ public class GroupIndexPage extends BasePage {
 
     public GroupIndexPage clickSaveGroup() {
         driver.findElementByCssSelector("button#submit:not(.disabled)").click();
+        waitForClickableElement(driver.findElementById("newGroupModalLink"));
         return new GroupIndexPage(driver);
     }
 
