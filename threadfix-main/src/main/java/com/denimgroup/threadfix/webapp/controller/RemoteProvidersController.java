@@ -162,7 +162,10 @@ public class RemoteProvidersController {
 		if (acceptanceCriteriaStatusService != null) {
 			for (RemoteProviderApplication remoteProviderApplication :
 					remoteProviderType.getRemoteProviderApplications()) {
-				acceptanceCriteriaStatusService.runStatusCheck(remoteProviderApplication.getApplication().getId());
+				if (remoteProviderApplication.getApplication() != null &&
+						remoteProviderApplication.getApplication().getId() != null) {
+					acceptanceCriteriaStatusService.runStatusCheck(remoteProviderApplication.getApplication().getId());
+				}
 			}
 		}
 
@@ -193,7 +196,9 @@ public class RemoteProvidersController {
 		ResponseCode response = remoteProviderTypeService.importScansForApplication(remoteProviderApplication);
 		
 		if (response.equals(ResponseCode.SUCCESS)) {
-            acceptanceCriteriaStatusService.runStatusCheck(appId);
+			if (acceptanceCriteriaStatusService != null) {
+				acceptanceCriteriaStatusService.runStatusCheck(appId);
+			}
             return RestResponse.success("Do the redirect");
 		} else {
 			String errorMsg;
@@ -261,14 +266,20 @@ public class RemoteProvidersController {
 	@RequestMapping(value="/{typeId}/configure", method = RequestMethod.POST)
 	public @ResponseBody Object configureFinish(@PathVariable("typeId") int typeId,
 			HttpServletRequest request) {
-		
+
+        Map<String, String> authenticationFieldMap = getAuthenticationFieldMap(request);
+
+        String apiKey = authenticationFieldMap.get("API Key");
+        if (apiKey != null && !apiKey.matches("[\\p{Alnum}-]+") )
+            return RestResponse.failure("API Key has invalid characters, only alphanum/hyphen.");
+
 		ResponseCode test = remoteProviderTypeService.checkConfiguration(
-				request.getParameter("username"),
-				request.getParameter("password"),
-				request.getParameter("apiKey"),
+                request.getParameter("username"),
+                request.getParameter("password"),
+                request.getParameter("apiKey"),
                 request.getParameter("matchSourceNumbers"),
                 request.getParameter("platform"),
-                getAuthenticationFieldMap(request),
+                authenticationFieldMap,
                 typeId);
 
 		if (test.equals(ResponseCode.BAD_ID)) {

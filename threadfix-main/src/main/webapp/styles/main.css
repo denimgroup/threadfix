@@ -1488,3 +1488,8 @@ ul.dropdown-menu {
 .table.fixed-table input {
 	margin-bottom:0;
 }
+
+.multiSelect {
+	z-index:100000;
+}
+

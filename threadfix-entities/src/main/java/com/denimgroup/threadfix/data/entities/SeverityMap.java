@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -50,7 +51,7 @@ public class SeverityMap extends BaseEntity {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "genericSeverityId")
-	@JsonView(Object.class)
+	@JsonView({AllViews.TableRow.class, AllViews.VulnerabilityDetail.class})
 	public GenericSeverity getGenericSeverity() {
 		return genericSeverity;
 	}

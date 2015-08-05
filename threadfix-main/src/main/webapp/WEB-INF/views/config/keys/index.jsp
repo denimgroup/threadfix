@@ -30,12 +30,25 @@
                     <th class="short">&nbsp;</th>
                     <th class="medium">Note</th>
                     <th class="centered">Edit / Delete</th>
-                    <th class="short last">Restricted</th>
+                    <th class="short">Restricted</th>
+                    <security:authorize ifAllGranted="ROLE_ENTERPRISE,ROLE_CAN_MANAGE_USERS">
+                        <th class="short">User</th>
+                    </security:authorize>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-hide="keys.length || loading">
-                    <td colspan="5" style="text-align:center;">No API Keys found.</td>
+                    <security:authorize ifAllGranted="ROLE_ENTERPRISE,ROLE_CAN_MANAGE_USERS">
+                        <td colspan="6" style="text-align:center;">No API Keys found.</td>
+                    </security:authorize>
+                    <security:authorize ifNotGranted="ROLE_CAN_MANAGE_USERS">
+                        <security:authorize ifAllGranted="ROLE_ENTERPRISE">
+                            <td colspan="5" style="text-align:center;">No API Keys found.</td>
+                        </security:authorize>
+                    </security:authorize>
+                    <security:authorize ifNotGranted="ROLE_ENTERPRISE">
+                        <td colspan="5" style="text-align:center;">No API Keys found.</td>
+                    </security:authorize>
                 </tr>
                 <tr ng-repeat="key in keys">
                     <td id="key{{ key.note }}" style="vertical-align:text-top;">{{ key.apiKey }}</td>
@@ -45,6 +58,9 @@
                         <button class="btn" id="editKeyModal{{ key.note }}" ng-click="openEditModal(key)">Edit / Delete</button>
                     </td>
                     <td id="restricted{{ key.note }}" style="vertical-align: text-top;">{{ key.isRestrictedKey }}</td>
+                    <security:authorize ifAllGranted="ROLE_ENTERPRISE,ROLE_CAN_MANAGE_USERS">
+                        <td id="user{{ key.note }}" style="vertical-align: text-top;">{{ key.username }}</td>
+                    </security:authorize>
                 </tr>
             </tbody>
         </table>

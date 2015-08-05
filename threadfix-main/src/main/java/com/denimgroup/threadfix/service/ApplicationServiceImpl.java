@@ -77,9 +77,14 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Autowired private ScheduledScanDao scheduledScanDao;
     @Autowired private ApplicationCriticalityService applicationCriticalityService;
 
+
     @Nullable
     @Autowired(required = false)
     private ScanQueueTaskDao scanQueueTaskDao;
+
+    @Nullable
+    @Autowired(required = false)
+    private AcceptanceCriteriaService acceptanceCriteriaService;
 
     @Nullable
 	@Autowired(required = false)
@@ -854,5 +859,19 @@ public class ApplicationServiceImpl implements ApplicationService {
         storeApplication(dbApplication);
 
         return success("Fields updated successfully.");
+    }
+
+    @Override
+    public List<AcceptanceCriteria> loadUnassociatedAcceptanceCriteria(Application application) {
+
+        if (acceptanceCriteriaService == null)
+            return list();
+
+        List<AcceptanceCriteria> acceptanceCriterias = acceptanceCriteriaService.loadAll();
+
+        if(acceptanceCriterias != null && acceptanceCriterias.size() > 0)
+            acceptanceCriterias.removeAll(application.getAcceptanceCriterias());
+
+        return acceptanceCriterias;
     }
 }

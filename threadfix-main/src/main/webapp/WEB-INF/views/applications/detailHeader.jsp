@@ -64,6 +64,9 @@
         </c:if>
     </h2>
 
+    <%@ include file="/WEB-INF/views/successMessage.jspf" %>
+    <%@ include file="/WEB-INF/views/errorMessage.jspf"%>
+
     <div ng-show="config.application.acceptanceCriteriaStatuses">
         Acceptance Criteria:
         <span id="appFilterStatus" ng-show="config.passFilters" class="badge" ng-class="{'badge-ac-status-passing': true}">PASS</span>
@@ -84,6 +87,3 @@
         <%@ include file="/WEB-INF/views/applications/forms/editApplicationForm.jsp" %>
     </div>
 </div>
-<%@ include file="/WEB-INF/views/successMessage.jspf" %>
-
-<%@ include file="/WEB-INF/views/errorMessage.jspf"%>

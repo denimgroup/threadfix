@@ -49,6 +49,7 @@ public class DefaultConfiguration extends BaseEntity {
     private Boolean hasAddedScheduledDefectTrackerUpdates = null;
     private Boolean hasAddedScheduledGRCToolUpdates = null;
     private Boolean hasTagCommentUpdates;
+    private String channelTypeUpdatedDate;
     private Integer defaultRoleId = null;
 
     private Boolean hasCachedData = null;
@@ -242,6 +243,15 @@ public class DefaultConfiguration extends BaseEntity {
 
     public void setHasTagCommentUpdates(Boolean hasTagCommentUpdates) {
         this.hasTagCommentUpdates = hasTagCommentUpdates;
+    }
+
+    @Column
+    public String getChannelTypeUpdatedDate() {
+        return channelTypeUpdatedDate;
+    }
+
+    public void setChannelTypeUpdatedDate(String channelTypeUpdatedDate) {
+        this.channelTypeUpdatedDate = channelTypeUpdatedDate;
     }
 
     @Column

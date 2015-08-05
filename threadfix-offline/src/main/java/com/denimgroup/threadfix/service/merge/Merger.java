@@ -77,9 +77,9 @@ public class Merger extends SpringBeanAutowiringSupport {
         List<Scan> scans = list();
 
         ApplicationChannel channel = new ApplicationChannel();
-        ChannelType channelType = channelTypeDao.retrieveByName(scannerName.getFullName());
+        ChannelType channelType = channelTypeDao.retrieveByName(scannerName.getDisplayName());
 
-        assert channelType != null : "Unable to find ChannelType for name " + scannerName.getFullName();
+        assert channelType != null : "Unable to find ChannelType for name " + scannerName.getDisplayName();
 
         channel.setChannelType(channelType);
         channel.setApplication(application);

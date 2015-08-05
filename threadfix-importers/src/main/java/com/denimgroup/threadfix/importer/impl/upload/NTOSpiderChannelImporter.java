@@ -78,7 +78,7 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 			VULN_SUMMARY = "VulnSummary";
 
 	public NTOSpiderChannelImporter() {
-		super(ScannerType.NTO_SPIDER);
+		super(ScannerType.APP_SPIDER);
 	}
 
 	@Override

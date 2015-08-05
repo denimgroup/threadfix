@@ -46,6 +46,7 @@ public class EmailList extends AuditableEntity {
     @Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
     private String name;
     private List<String> emailAddresses;
+    private List<ScheduledEmailReport> scheduledEmailReports;
 
     @Column(length = NAME_LENGTH, nullable = false)
     @JsonView(Object.class)
@@ -67,6 +68,15 @@ public class EmailList extends AuditableEntity {
 
     public void setEmailAddresses(List<String> emailAddresses) {
         this.emailAddresses = emailAddresses;
+    }
+
+    @ManyToMany(mappedBy = "emailLists")
+    public List<ScheduledEmailReport> getScheduledEmailReports() {
+        return scheduledEmailReports;
+    }
+
+    public void setScheduledEmailReports(List<ScheduledEmailReport> scheduledEmailReports) {
+        this.scheduledEmailReports = scheduledEmailReports;
     }
 
     @Override

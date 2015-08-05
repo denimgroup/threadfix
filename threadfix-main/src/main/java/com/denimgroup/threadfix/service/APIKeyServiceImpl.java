@@ -74,7 +74,8 @@ public class APIKeyServiceImpl implements APIKeyService {
 	@Transactional(readOnly = false)
 	public void deactivateApiKey(APIKey apiKey) {
 		log.info("Deleting API Key with id " + apiKey.getId());
-		
+
+		apiKey.setUser(null);
 		apiKey.setActive(false);
 		apiKeyDao.saveOrUpdate(apiKey);
 	}

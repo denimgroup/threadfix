@@ -24,13 +24,10 @@
 
 package com.denimgroup.threadfix.service.scannermapping;
 
-import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
-import com.denimgroup.threadfix.data.entities.Tag;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.interop.ScannerMappingsUpdaterService;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.DefaultConfigService;
-import com.denimgroup.threadfix.service.GenericVulnerabilityService;
-import com.denimgroup.threadfix.service.TagService;
+import com.denimgroup.threadfix.service.*;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -60,6 +57,10 @@ public class ScannerMappingUpdater implements ApplicationContextAware {
     private DefaultConfigService defaultConfigService;
     @Autowired
     private TagService tagService;
+    @Autowired
+    private ChannelTypeService channelTypeService;
+    @Autowired
+    private RemoteProviderTypeService remoteProviderTypeService;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -80,6 +81,39 @@ public class ScannerMappingUpdater implements ApplicationContextAware {
         }
 
         updateTags();
+        updateChannelTypeNames();
+    }
+
+    private void updateChannelTypeNames() {
+        LOG.info("Checking if we need to update channel type names.");
+        DefaultConfiguration defaultConfiguration = defaultConfigService.loadCurrentConfiguration();
+        if (defaultConfiguration.getChannelTypeUpdatedDate() != null &&
+                defaultConfiguration.getChannelTypeUpdatedDate().equals(ScannerType.getEnumUpdatedDate())) {
+            LOG.info("No, we do not need to update channel type names.");
+        } else {
+            LOG.info("About to update channel type names.");
+            for (ScannerType scannerType: ScannerType.values()) {
+                if (!scannerType.getDisplayName().equals(scannerType.getOldName())) {
+                    ChannelType channelType = channelTypeService.loadChannel(scannerType.getOldName());
+                    if (channelType != null) {
+                        LOG.info("Updating channel " + scannerType.getOldName() + " to " + scannerType.getDisplayName());
+                        channelType.setName(scannerType.getDisplayName());
+                        channelTypeService.storeChannel(channelType);
+                    }
+
+                    RemoteProviderType remoteProviderType = remoteProviderTypeService.load(scannerType.getOldName());
+                    if (remoteProviderType != null) {
+                        LOG.info("Updating remote provider type " + scannerType.getOldName() + " to " + scannerType.getDisplayName());
+                        remoteProviderType.setName(scannerType.getDisplayName());
+                        remoteProviderTypeService.store(remoteProviderType);
+                    }
+                }
+            }
+            defaultConfiguration.setChannelTypeUpdatedDate(ScannerType.getEnumUpdatedDate());
+            defaultConfigService.saveConfiguration(defaultConfiguration);
+            LOG.info("Finished updating channel type names.");
+        }
+
     }
 
     private void updateTags() {

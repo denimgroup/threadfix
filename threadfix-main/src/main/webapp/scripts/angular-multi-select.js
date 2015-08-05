@@ -31,7 +31,7 @@
  * --------------------------------------------------------------------------------
  */
 
-var threadfixModule = angular.module('threadfix')
+var threadfixModule = angular.module('threadfix');
 
 threadfixModule.directive( 'multiSelect' , [ '$sce', '$timeout', function ( $sce, $timeout ) {
     return {
@@ -72,15 +72,15 @@ threadfixModule.directive( 'multiSelect' , [ '$sce', '$timeout', function ( $sce
 
         template:
             '<span class="multiSelect inlineBlock">' +
-                '<button type="button" class="button multiSelectButton" ng-click="toggleCheckboxes( $event ); refreshSelectedItems(); refreshButton();" ng-bind-html="varButtonLabel">' +
+                '<button id="{{ idPrefix }}Button" type="button" class="button multiSelectButton" ng-click="toggleCheckboxes( $event ); refreshSelectedItems(); refreshButton();" ng-bind-html="varButtonLabel">' +
                 '</button>' +
                 '<div class="checkboxLayer">' +
                     '<form>' +
                         '<div class="helperContainer" ng-if="displayHelper( \'filter\' ) || displayHelper( \'all\' ) || displayHelper( \'none\' ) || displayHelper( \'reset\' )">' +
                             '<div class="line" ng-if="displayHelper( \'all\' ) || displayHelper( \'none\' ) || displayHelper( \'reset\' )">' +
-                                '<button type="button" ng-click="select( \'all\',   $event );"    class="helperButton" ng-if="!isDisabled && displayHelper( \'all\' )">   &#10003;&nbsp; Select All</button> ' +
-                                '<button type="button" ng-click="select( \'none\',  $event );"   class="helperButton" ng-if="!isDisabled && displayHelper( \'none\' )">  &times;&nbsp; Select None</button>' +
-                                '<button type="button" ng-click="select( \'reset\', $event );"  class="helperButton" ng-if="!isDisabled && displayHelper( \'reset\' )" style="float:right">&#8630;&nbsp; Reset</button>' +
+                                '<button type="button" ng-click="select( \'all\',   $event );" class="btn helperButton" id="{{ idPrefix }}AllButton" ng-if="!isDisabled && displayHelper( \'all\' )">   &#10003;&nbsp; Select All</button> ' +
+                                '<button type="button" ng-click="select( \'none\',  $event );" class="btn helperButton" id="{{ idPrefix }}NoneButton" ng-if="!isDisabled && displayHelper( \'none\' )">  &times;&nbsp; Select None</button>' +
+                                '<button type="button" ng-click="select( \'reset\', $event );" class="btn helperButton" id="{{ idPrefix }}ResetButton" ng-if="!isDisabled && displayHelper( \'reset\' )" style="float:right">&#8630;&nbsp; Reset</button>' +
                             '</div>' +
                             '<div class="line" style="position:relative" ng-if="displayHelper( \'filter\' )">' +
                                 '<input placeholder="Search..." type="text" ng-click="select( \'filter\', $event )" ng-model="inputLabel.labelFilter" ng-change="updateFilter();$scope.getFormElements();" class="inputFilter" />' +
@@ -95,7 +95,7 @@ threadfixModule.directive( 'multiSelect' , [ '$sce', '$timeout', function ( $sce
                                 '<div class="acol" ng-if="item[ spacingProperty ] > 0" ng-repeat="i in numberToArray( item[ spacingProperty ] ) track by $index">&nbsp;</div>' +
                                 '<div class="acol">' +
                                     '<label>' +
-                                        '<input class="checkbox focusable" type="checkbox" ng-disabled="itemIsDisabled( item )" ng-checked="item[ tickProperty ]" ng-click="syncItems( item, $event, $index )" />' +
+                                        '<input id="{{ idPrefix }}Tag{{ writeLabel(item, \'itemLabel\') }}" class="checkbox focusable" type="checkbox" ng-disabled="itemIsDisabled( item )" ng-checked="item[ tickProperty ]" ng-click="syncItems( item, $event, $index )" />' +
                                         '<span ng-class="{disabled:itemIsDisabled( item )}" ng-bind-html="writeLabel( item, \'itemLabel\' )"></span>' +
                                     '</label>' +
                                 '</div>' +
@@ -123,6 +123,7 @@ threadfixModule.directive( 'multiSelect' , [ '$sce', '$timeout', function ( $sce
             $scope.formElements     = [];
             $scope.tabIndex         = 0;
             $scope.clickedItem      = null;
+            $scope.idPrefix         = attrs["idPrefix"];
             prevTabIndex            = 0;
             helperItems             = [];
             helperItemsLength       = 0;
@@ -521,9 +522,15 @@ threadfixModule.directive( 'multiSelect' , [ '$sce', '$timeout', function ( $sce
                 var temp = $scope[ type ].split( ' ' );
                 angular.forEach( temp, function( value2, key2 ) {
                     if ( typeof value2 !== 'undefined' ) {
+                        var first = true;
                         angular.forEach( item, function( value1, key1 ) {
                             if ( key1 == value2 ) {
-                                label += '&nbsp;' + value1;
+                                if (!first) {
+                                    label += '&nbsp;'
+                                } else {
+                                    first = false;
+                                }
+                                label += value1;
                             }
                         });
                     }

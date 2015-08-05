@@ -30,7 +30,6 @@ import com.denimgroup.threadfix.data.enums.QualysPlatform;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.DefaultRequestConfigurer;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
-import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
@@ -56,7 +55,7 @@ import static com.denimgroup.threadfix.importer.impl.remoteprovider.utils.Remote
 public class QualysRemoteProvider extends AbstractRemoteProvider {
 	
 	public String getType() {
-		return ScannerType.QUALYSGUARD_WAS.getFullName();
+		return ScannerType.QUALYSGUARD_WAS.getDisplayName();
 	}
 	
 	private String username = null;

@@ -47,7 +47,7 @@ public class FolderMappings {
         addToMap(ScannerType.CENZIC_HAILSTORM, "Dynamic/CenzicHailstorm");
         addToMap(ScannerType.NESSUS, "Dynamic/Nessus");
         addToMap(ScannerType.NETSPARKER, "Dynamic/NetSparker");
-        addToMap(ScannerType.NTO_SPIDER, "Dynamic/NTOSpider");
+        addToMap(ScannerType.APP_SPIDER, "Dynamic/NTOSpider");
         addToMap(ScannerType.SKIPFISH, "Dynamic/Skipfish");
         addToMap(ScannerType.W3AF, "Dynamic/w3af");
         addToMap(ScannerType.WEBINSPECT, "Dynamic/WebInspect");

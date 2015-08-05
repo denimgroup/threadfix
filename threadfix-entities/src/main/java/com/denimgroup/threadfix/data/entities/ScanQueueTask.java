@@ -160,7 +160,8 @@ public class ScanQueueTask extends AuditableEntity {
 	@Column(nullable=false)
     @JsonView(Object.class)
 	public String getScanner() {
-		return this.scanner;
+		ScannerType scannerType = ScannerType.getScannerType(scanner);
+		return scannerType != null ? scannerType.getDisplayName() : scanner;
 	}
 	
 	public void setScanner(String scanner) {

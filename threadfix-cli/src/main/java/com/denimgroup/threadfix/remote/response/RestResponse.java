@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.remote.response;
 
+import com.denimgroup.threadfix.util.Result;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -54,6 +55,10 @@ public class RestResponse<T> {
         restResponse.success = true;
         restResponse.object  = object;
         return restResponse;
+    }
+
+    public static <T> RestResponse<T> resultError(Result result) {
+        return failure(result.getErrorMessage());
     }
 
     @JsonIgnore

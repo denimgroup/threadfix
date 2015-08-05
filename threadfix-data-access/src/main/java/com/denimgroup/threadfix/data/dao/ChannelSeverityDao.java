@@ -67,4 +67,6 @@ public interface ChannelSeverityDao {
 	 *            The severity to save or update.
 	 */
 	void saveOrUpdate(ChannelSeverity channelSeverity);
+
+	void updateExistingVulns(List<Integer> channelSeverityIds);
 }

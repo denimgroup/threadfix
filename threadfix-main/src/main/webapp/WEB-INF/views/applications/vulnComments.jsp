@@ -22,7 +22,8 @@
             </td>
             <td class="left-align" >
                 <div ng-show="canUpdateVulnComment">
-                    <multi-select id="commentTags"
+                    <multi-select id-prefix="comment{{ $index }}Tags"
+                                  id="commentTags"
                             input-model="comment.tagsList"
                             output-model="comment.tags"
                             button-label="name"
@@ -38,7 +39,6 @@
                             <span style="font-weight: bold;" id="commentTagLink{{comment.id}}{{ $index }}" ng-repeat="cmtTag in comment.tags" class="pointer badge" ng-class="{'badge-comment-tag': true}" ng-click="goToTag(cmtTag)">{{cmtTag.name}}</span>
                     </c:if>
                     <c:if test="${ !canManageTags }">
-                        nocanmanageTask
                         <span style="font-weight: bold;" id="commentTag{{comment.id}}{{ $index }}" ng-repeat="cmtTag in comment.tags" class="badge" ng-class="{'badge-comment-tag': true}">{{cmtTag.name}}</span>
                     </c:if>
                 </div>
