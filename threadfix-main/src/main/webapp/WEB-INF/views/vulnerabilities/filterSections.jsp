@@ -3,7 +3,7 @@
 <div class="accordion-group">
     <div class="accordion-heading" style="text-align:center">
         <a id="toggleAllButton" class="btn" ng-click="toggleAllFilters()">
-            {{ (showSaveAndLoadControls || showTeamAndApplicationControls || showDetailsControls || showDateControls || showDateRange || showTypeAndMergedControls || showSaveFilter) ? 'Collapse' : 'Expand' }} All
+            {{ (showSaveAndLoadControls || showTeamAndApplicationControls || showDetailsControls || showDateControls || showDateRange || showTypeAndMergedControls || showSaveFilter || showPermissions) ? 'Collapse' : 'Expand' }} All
         </a>
         <a id="clearFiltersButton" class="btn" ng-click="reset()">Clear</a>
     </div>
