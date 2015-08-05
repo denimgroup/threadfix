@@ -154,7 +154,7 @@ public class UserIndexPage extends BasePage {
     }
 
     public UserIndexPage chooseRoleForGlobalAccess(String role) {
-        waitForElement(driver.findElementById("roleSelect"));
+        waitForClickableElement(driver.findElementById("roleSelect"));
         driver.findElementById("roleSelect").sendKeys(role);
         return this;
     }
