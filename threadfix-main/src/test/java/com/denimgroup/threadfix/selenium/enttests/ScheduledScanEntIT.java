@@ -123,7 +123,7 @@ public class ScheduledScanEntIT extends BaseDataTest {
                 .setScheduledScanFrequency("Weekly")
                 .setScheduledScanTime("6", "30", "AM")
                 .setScheduledScanDay("Friday")
-                .setScheduledScanScanner("Burp Suite",applicationDetailPage.getApplicationId())
+                .setScheduledScanScanner("Burp Suite Pro",applicationDetailPage.getApplicationId())
                 .clickModalSubmit();
 
         applicationDetailPage.clickDeleteScheduledScan();

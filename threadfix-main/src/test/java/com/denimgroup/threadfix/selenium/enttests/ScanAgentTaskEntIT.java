@@ -45,9 +45,9 @@ public class ScanAgentTaskEntIT extends BaseDataTest {
 	private static final Map<String, String> scanAgentMap = new HashMap<>();
     static{
         scanAgentMap.put("ZAP", "OWASP Zed Attack Proxy");
-        scanAgentMap.put("Burp", "Burp Suite");
+        scanAgentMap.put("Burp", "Burp Suite Pro");
         scanAgentMap.put("Acunetix", "Acunetix WVS");
-        scanAgentMap.put("AppScan", "IBM Rational AppScan");
+        scanAgentMap.put("AppScan", "IBM Security AppScan Standard");
     }
 
     @Before
