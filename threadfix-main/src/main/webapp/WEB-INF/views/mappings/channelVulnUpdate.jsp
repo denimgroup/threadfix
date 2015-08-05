@@ -1,7 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <div id="scannerMappings" ng-controller="MappingsPageController">
-	<h2>Scanner To CWE Mappings</h2>
+	<h3>Scanner Type to CWE Mappings</h3>
 
 	<%@ include file="/WEB-INF/views/angular-init.jspf"%>
 

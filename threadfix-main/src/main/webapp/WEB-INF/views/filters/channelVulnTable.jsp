@@ -11,7 +11,7 @@
 	</thead>
 	<tbody>
         <tr ng-hide="currentChannelVulnFilters" class="bodyRow">
-            <td colspan="5" class="centered">No filters found.</td>
+            <td colspan="5" class="centered">No mappings found.</td>
         </tr>
         <tr ng-show="currentChannelVulnFilters" ng-repeat="vulnFilter in currentChannelVulnFilters" class="bodyRow">
             <td id="genericVulnerability{{ $index }}">

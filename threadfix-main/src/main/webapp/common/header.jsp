@@ -74,7 +74,7 @@
                         <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_DEFECT_TRACKERS,ROLE_CAN_MANAGE_GRC_TOOLS,ROLE_CAN_MANAGE_REMOTE_PROVIDERS, ROLE_CAN_MANAGE_SCAN_AGENTS, ROLE_CAN_MANAGE_WAFS">
                             <li class="dropdown-submenu pull-left normalLinks">
                                 <a tabindex="-1" href="#" id="manageIntegrations">Integrations</a>
-                                <ul class="dropdown-menu" style="text-align:right;left: -171px">
+                                <ul class="dropdown-menu" style="text-align:right;" tabindex="-1">
                                     <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_DEFECT_TRACKERS">
                                         <li class="normalLinks">
                                             <a id="defectTrackersLink" href="<spring:url value="/configuration/defecttrackers" htmlEscape="true"/>">Defect Trackers</a>
@@ -108,7 +108,7 @@
                         <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_ENTERPRISE,ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT, ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS, ROLE_CAN_MANAGE_TAGS, ROLE_CAN_MODIFY_VULNERABILITIES">
                             <li class="dropdown-submenu pull-left normalLinks">
                                 <a tabindex="-1" href="#" id="manageCustomLink">Customize</a>
-                                <ul class="dropdown-menu" style="text-align:right;left: -238px">
+                                <ul class="dropdown-menu" style="text-align:right;" tabindex="-1">
                                     <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_ENTERPRISE">
                                         <li class="normalLinks">
                                             <a id="customizeThreadFixVulnerabilityTypesLink" href="<spring:url value="/configuration/filters" htmlEscape="true"/>">ThreadFix Vulnerability Types</a>
@@ -150,7 +150,7 @@
 
                                 <li class="dropdown-submenu pull-left normalLinks">
                                 <a tabindex="-1" href="#" id="adminLink">Administration</a>
-                                <ul class="dropdown-menu" style="text-align:right;left: -185px">
+                                <ul class="dropdown-menu" style="text-align:right;" tabindex="-1">
                                     <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
                                         <li class="normalLinks">
                                             <a id="configureDefaultsLink" href="<spring:url value="/configuration/settings" htmlEscape="true"/>">System Settings</a>

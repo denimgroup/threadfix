@@ -99,9 +99,9 @@ public class ScannerMappingsController {
         model.addAttribute("canUpdate", scannerMappingsExportService.canUpdate());
 
 		if (EnterpriseTest.isEnterprise()) {
-			return "customize/threadfixVulnTypes/enterprise";
+			return "customize/scannerVulnTypes/enterprise";
 		} else {
-			return "customize/threadfixVulnTypes/community";
+			return "customize/scannerVulnTypes/community";
 		}
 
 	}

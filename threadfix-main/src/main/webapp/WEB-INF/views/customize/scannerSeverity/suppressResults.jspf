@@ -7,12 +7,6 @@
   <%@ include file="newForm.jsp" %>
   <%@ include file="editForm.jsp" %>
 
-  <h2>Suppress Scanner Results</h2>
-
-  <div id="helpText">
-    Scan Result Filters are used to filter out a severity level from a scan type.<br/>
-  </div>
-
   <button class="btn" ng-click="openNewModal()" id="createNewScanResultFilterModalButton">Create New Rule</button>
 
   <div ng-show="loading" style="float:right" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>

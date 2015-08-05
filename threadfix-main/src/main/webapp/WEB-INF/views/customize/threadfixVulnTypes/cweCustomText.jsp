@@ -1,14 +1,7 @@
 <div ng-controller="CustomCweTextController">
-    <h2>Custom Text</h2>
-    <%@ include file="/WEB-INF/views/angular-init.jspf"%>
-
     <%@ include file="/WEB-INF/views/successMessage.jspf" %>
     <%@ include file="/WEB-INF/views/errorMessage.jsp" %>
     <%@ include file="cweCustomTextForm.jsp" %>
-
-    <div id="helpText">
-        Custom CWE Test can be used to add additional text to a defect tracker defect.
-    </div>
 
     <button class="btn" ng-click="openNewModal()" id="createNewCustomCweTextModalButton">Set Custom Text</button>
 
