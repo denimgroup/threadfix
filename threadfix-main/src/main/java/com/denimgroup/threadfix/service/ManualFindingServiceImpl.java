@@ -119,7 +119,7 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 			return false;
 		}
 		
-		ChannelType manualChannelType = channelTypeDao.retrieveByName(ScannerType.MANUAL.getFullName());
+		ChannelType manualChannelType = channelTypeDao.retrieveByName(ScannerType.MANUAL.getDisplayName());
 
 		Scan scan = getManualScan(applicationId);
 		if (scan == null || scan.getApplicationChannel() == null
@@ -208,7 +208,7 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 
 		ApplicationChannel applicationChannel = null;
 		ChannelType manualChannel = channelTypeDao
-				.retrieveByName(ScannerType.MANUAL.getFullName());
+				.retrieveByName(ScannerType.MANUAL.getDisplayName());
 		if (manualChannel != null)
 			applicationChannel = applicationChannelDao
 					.retrieveByAppIdAndChannelId(applicationId,
@@ -270,7 +270,7 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		ApplicationChannel applicationChannel = new ApplicationChannel();
 		applicationChannel.setApplication(application);
 		ChannelType manualChannel = channelTypeDao
-				.retrieveByName(ScannerType.MANUAL.getFullName());
+				.retrieveByName(ScannerType.MANUAL.getDisplayName());
 		applicationChannel.setChannelType(manualChannel);
 
 		if (application.getChannelList() == null)

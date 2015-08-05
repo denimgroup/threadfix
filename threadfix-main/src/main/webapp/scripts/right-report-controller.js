@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix');
 
-myAppModule.controller('RightReportController', function ($scope, $window, threadfixAPIService, customSeverityService) {
+myAppModule.controller('RightReportController', function ($scope, $window, threadfixAPIService, customSeverityService, $log) {
 
     // Using this controller is easy; just set up a parent controller with empty and reportQuery fields.
     $scope.empty = $scope.$parent.empty;
@@ -16,10 +16,10 @@ myAppModule.controller('RightReportController', function ($scope, $window, threa
     });
 
     var loadRightReport = function() {
+        var start = new Date();
         threadfixAPIService.loadReport("/dashboard/rightReport", $scope.reportQuery).
             success(function(data, status, headers, config) {
-
-                $scope.topAppsData = [];
+                $log.info("Right report request to server took " + ((new Date()).getTime() - start.getTime()) + " ms");
 
                 if (!data.object || !data.object.map) {
                     $scope.empty = true;
@@ -27,27 +27,28 @@ myAppModule.controller('RightReportController', function ($scope, $window, threa
 
                 customSeverityService.setSeverities(data.object.genericSeverities);
 
-                data.object.map.forEach(function(application) {
+                if (data.object.map) {
+                    $scope.topAppsData = [];
+                    data.object.map.forEach(function (application) {
 
-                    if (application.cweId) { // top 10 vulns
-                        $scope.topAppsData.push(application);
-                    } else { // top 10 apps
-                        var innerData = {};
-                        innerData[customSeverityService.getCustomSeverity("Info")] = application["Info"];
-                        innerData[customSeverityService.getCustomSeverity("Low")] = application["Low"];
-                        innerData[customSeverityService.getCustomSeverity("Medium")] = application["Medium"];
-                        innerData[customSeverityService.getCustomSeverity("High")] = application["High"];
-                        innerData[customSeverityService.getCustomSeverity("Critical")] = application["Critical"];
-                        innerData.appId = application.appId;
-                        innerData.appName = application.appName;
-                        innerData.teamId = application.teamId;
-                        innerData.teamName = application.teamName;
-                        innerData.title = application.title;
-                        $scope.topAppsData.push(innerData);
-                    }
-                });
-
-                $scope.topAppsData = data.object.map;
+                        if (application.cweId) { // top 10 vulns
+                            $scope.topAppsData.push(application);
+                        } else { // top 10 apps
+                            var innerData = {};
+                            innerData[customSeverityService.getCustomSeverity("Info")] = application["Info"];
+                            innerData[customSeverityService.getCustomSeverity("Low")] = application["Low"];
+                            innerData[customSeverityService.getCustomSeverity("Medium")] = application["Medium"];
+                            innerData[customSeverityService.getCustomSeverity("High")] = application["High"];
+                            innerData[customSeverityService.getCustomSeverity("Critical")] = application["Critical"];
+                            innerData.appId = application.appId;
+                            innerData.appName = application.appName;
+                            innerData.teamId = application.teamId;
+                            innerData.teamName = application.teamName;
+                            innerData.title = application.title;
+                            $scope.topAppsData.push(innerData);
+                        }
+                    });
+                }
 
                 $scope.loadingRight = false;
 

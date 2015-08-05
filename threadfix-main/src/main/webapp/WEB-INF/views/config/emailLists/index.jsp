@@ -40,7 +40,7 @@
                     <a id="editEmailListModalButton{{ emailList.name }}" ng-click="openEditModal(emailList)" class="btn">Edit / Delete</a>
                 </td>
                 <td class="centered">
-                    <button class="btn" ng-click="showEmailAddresses(emailList)">Show/Hide</button>
+                    <button class="btn" id="showEmailAddresses{{ emailList.name }}" ng-click="showEmailAddresses(emailList)">Show/Hide</button>
                 </td>
             </tr>
             <tr ng-repeat-end ng-show="emailList.showEmailAddresses" class="grey-background">
@@ -54,9 +54,9 @@
                         </thead>
                         <tbody>
                             <tr ng-repeat="emailAddress in emailList.emailAddresses">
-                                <td>{{ emailAddress }}</td>
+                                <td id="emailList{{ emailList.name }}EmailAddress{{ $index }}">{{ emailAddress }}</td>
                                 <td class="centered">
-                                    <a class="btn btn-danger" ng-click="deleteEmailAddress(emailList,emailAddress)">Delete</a>
+                                    <a class="btn btn-danger" id="emailList{{ emailList.name }}Delete{{ $index }}" ng-click="deleteEmailAddress(emailList,emailAddress)">Delete</a>
                                 </td>
                             </tr>
                             <tr ng-show="emailList.emailAddresses.length==0 && emailList.showEmailAddresses">
@@ -64,14 +64,14 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="email" style="margin: auto" ng-model="emailList.newEmailAddress"/>
+                                    <input type="email" style="margin: auto" id="emailList{{ emailList.name }}EmailInput" ng-model="emailList.newEmailAddress"/>
                                 </td>
                                 <td>
-                                    <a class="btn btn-primary" ng-click="addNewEmail(emailList)" ng-disabled="!emailList.newEmailAddress">Add Email</a>
+                                    <a class="btn btn-primary" id="emailList{{ emailList.name }}AddEmailButton" ng-click="addNewEmail(emailList)" ng-disabled="!emailList.newEmailAddress">Add Email</a>
                                 </td>
                                 <td>
                                     <span ng-show="newEmailLoading" class="spinner dark"></span>
-                                    <span class="errors" ng-show="emailList.newEmailError"> {{ emailList.newEmailError }}</span>
+                                    <span class="errors" id="emailList{{ emailList.name }}Error" ng-show="emailList.newEmailError"> {{ emailList.newEmailError }}</span>
                                 </td>
                             </tr>
                         </tbody>

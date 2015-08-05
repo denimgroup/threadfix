@@ -15,9 +15,9 @@
 
   <h2>Manage Users</h2>
 
-  <div ng-show="successMessage" class="alert alert-success">
-    <button class="close" ng-click="clearMessage()" type="button">&times;</button>
-    {{ successMessage }}
+  <div ng-show="usersSuccessMessage" id="usersSuccessMessage" class="alert alert-success">
+    <button class="close" ng-click="usersSuccessMessage = undefined" type="button">&times;</button>
+    {{ usersSuccessMessage }}
   </div>
   <%@ include file="/WEB-INF/views/errorMessage.jsp" %>
 

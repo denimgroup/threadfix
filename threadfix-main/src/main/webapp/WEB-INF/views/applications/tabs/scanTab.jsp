@@ -48,10 +48,10 @@
                     <a class="pointer" ng-click="viewScan(scan)">View Scan</a>
                 </td>
                 <td ng-show="scan.downloadable">
-                    <a ng-hide="scan.downloading" class="btn btn-primary" ng-click="downloadScan(scan)">Download Scan</a>
-                    <a ng-show="scan.downloading" class="btn btn-primary" ng-disabled>
+                    <a ng-hide="scan.downloading" id="downloadScanButton" class="btn btn-primary" ng-click="downloadScan(scan)">Download Scan</a>
+                    <a ng-show="scan.downloading" id="downloadingScanButton" class="btn btn-primary" ng-disabled>
                         <span class="spinner"></span>
-                        Dowloading
+                        Downloading
                     </a>
                 </td>
             </tr>

@@ -92,7 +92,9 @@
             <tr>
                 <td class="right-align">Tag</td>
                 <td class="left-align" >
-                    <multi-select id="tagSelect"
+                    <multi-select
+                            id-prefix="tags"
+                            id="tagSelect"
                             input-model="config.tags"
                             output-model="object.tags"
                             button-label="name"
@@ -102,7 +104,21 @@
                     </multi-select>
                 </td>
             </tr>
-
+            <security:authorize ifAllGranted="ROLE_ENTERPRISE">
+                <tr id="appACDiv" ng-show="config.isEnterprise">
+                    <td>Acceptance Criteria</td>
+                    <td>
+                        <button ng-show="config.acceptanceCriterias" class="btn"
+                                ng-click="switchTo('manageAcceptanceCriteria')" id="manageAcceptanceCriteriaButton">
+                            Manage Acceptance Criteria
+                        </button>
+                        <a ng-hide="config.acceptanceCriterias" class="btn btn-primary"
+                                ng-click="goToAcceptanceCriteriaPage()" id="goToAcceptanceCriteriaButton">
+                            Create Acceptance Criteria
+                        </a>
+                    </td>
+                </tr>
+            </security:authorize>
             <tr>
                 <td colspan="2">
                     <a class="pointer" ng-click="sourceCodeDisplay = !sourceCodeDisplay">Source Code Information</a>
@@ -111,8 +127,8 @@
             <tr ng-show="sourceCodeDisplay">
                 <td class="right-align">Source Code Repository Type</td>
                 <td class="left-align">
-                    <input type="radio" name="repositoryType" ng-model="object.repositoryType" value="GIT"> Git
-                    <input type="radio" name="repositoryType" ng-model="object.repositoryType" value="SVN"> SVN
+                    <input id="gitRadioButton" type="radio" name="repositoryType" ng-model="object.repositoryType" value="GIT"> Git
+                    <input id="svnRadioButton" type="radio" name="repositoryType" ng-model="object.repositoryType" value="SVN"> SVN
                 </td>
                 <td>
                     <span id="repositoryTypeServerError" class="errors" ng-show="object.repositoryType_error"> {{ object.repositoryType_error }}</span>

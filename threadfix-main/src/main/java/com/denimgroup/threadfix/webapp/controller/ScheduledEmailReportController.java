@@ -5,6 +5,7 @@ import static com.denimgroup.threadfix.CollectionUtils.map;
 import java.util.Map;
 
 import com.denimgroup.threadfix.service.EmailListService;
+import com.denimgroup.threadfix.views.AllViews;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +40,7 @@ public class ScheduledEmailReportController {
     }
 
 	@RequestMapping(value="/info", method = RequestMethod.GET)
-	@JsonView(Object.class)
+	@JsonView(AllViews.ScheduledEmailReportView.class)
 	public @ResponseBody RestResponse<Map<String, Object>> retrieveExistingSchedules(){
 		Map<String, Object> map = map();
 		map.put("scheduledEmailReports", scheduledEmailReportService.loadAll());

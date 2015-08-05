@@ -52,8 +52,7 @@
 
     <c:if test="${ ldap_plugin }">
         <div class="form-group">
-            <label style="margin-left: -149px;"
-                   for="isLdapUserCheckbox">LDAP user</label>
+            <label for="isLdapUserCheckbox">LDAP user</label>
             <input type="checkbox" class="ldapCheckbox"
                    id="isLdapUserCheckbox"
                    name="isLdapUser"
@@ -89,9 +88,45 @@
                 class="btn btn-primary"
                 ng-hide="loading"
                 ng-click="submitUpdate(form.$valid)">Save Changes</button>
+        <security:authorize ifNotGranted="ROLE_ENTERPRISE">
+            <a id="deleteUserLink" ng-show="currentUser" class="btn btn-danger" ng-click="deleteUser()">Delete User</a>
+        </security:authorize>
     </div>
 
     <security:authorize ifAllGranted="ROLE_ENTERPRISE">
+        <security:authorize ifAllGranted="ROLE_MANAGE_API_KEYS">
+            <div id="apiKeys">
+
+                <h4>
+                    API Keys
+                    <a class="btn" ng-click="createNewKey(user)">
+                        Add New Key
+                    </a>
+                </h4>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>API Key</th>
+                        <th>Note</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody ng-if="!currentUser.apiKeys.length">
+                    <tr>
+                        <td colspan="3" class="center">No Entries</td>
+                    </tr>
+                    </tbody>
+                    <tbody ng-if="currentUser.apiKeys">
+                    <tr ng-repeat="key in currentUser.apiKeys">
+                        <td>{{ key.apiKey }}</td>
+                        <td>{{ key.note }}</td>
+                        <td><a class="btn" ng-click="openEditModal(user, key)">Edit / Delete</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </security:authorize>
+
         <div id="groups">
 
             <h4>Groups</h4>

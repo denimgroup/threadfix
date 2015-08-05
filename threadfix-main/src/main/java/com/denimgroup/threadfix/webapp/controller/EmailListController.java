@@ -29,8 +29,10 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.EmailListService;
 import com.denimgroup.threadfix.service.email.EmailFilterService;
+import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -66,8 +68,8 @@ public class EmailListController {
     }
 
     @RequestMapping(value = "/map", method = RequestMethod.GET)
-    public @ResponseBody
-    RestResponse<Map<String, Object>> emailListMap() {
+    @JsonView(AllViews.ScheduledEmailReportView.class)
+    public @ResponseBody RestResponse<Map<String, Object>> emailListMap() {
         Map<String, Object> responseMap = map();
         responseMap.put("emailLists", emailListService.loadAllActive());
         return RestResponse.success(responseMap);
@@ -137,7 +139,7 @@ public class EmailListController {
         EmailList emailList = emailListService.loadById(emailListId);
 
         if (emailList != null) {
-            emailListService.markInactive(emailList);
+            emailListService.delete(emailList);
             return RestResponse.success(null);
         } else {
             log.warn("EmailList Id is invalid or EmailList currently can not be deleted.");

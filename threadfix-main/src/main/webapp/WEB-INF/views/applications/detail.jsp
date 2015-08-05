@@ -4,6 +4,7 @@
 	<title><c:out value="${ application.name }"/></title>
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/dyn-form.css"/>
 	<cbs:cachebustscript src="/scripts/add-defect-tracker-modal-controller.js"/>
+	<cbs:cachebustscript src="/scripts/manage-acceptance-criteria-modal-controller.js"/>
     <cbs:cachebustscript src="/scripts/create-edit-defect-tracker-modal-controller.js"/>
 	<cbs:cachebustscript src="/scripts/application-detail-page-controller.js"/>
 	<cbs:cachebustscript src="/scripts/application-page-modal-controller.js"/>
@@ -92,6 +93,7 @@
     </div>
 
     <%@ include file="forms/uploadScanForm.jsp"%>
+    <%@ include file="/WEB-INF/views/applications/modals/manageAcceptanceCriteriaModal.jsp" %>
     <%@ include file="/WEB-INF/views/applications/forms/addWafForm.jsp" %>
     <%@ include file="/WEB-INF/views/wafs/forms/createWafForm.jsp" %>
     <%@ include file="/WEB-INF/views/applications/forms/addDTForm.jsp" %>

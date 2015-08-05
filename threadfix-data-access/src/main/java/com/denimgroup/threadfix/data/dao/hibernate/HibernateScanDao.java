@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.CollectionUtils.set;
 import static org.hibernate.criterion.Projections.rowCount;
@@ -115,10 +116,24 @@ public class HibernateScanDao
     @Override
 	@SuppressWarnings("unchecked")
 	public List<Scan> retrieveByApplicationIdList(List<Integer> applicationIdList) {
-		return sessionFactory.getCurrentSession()
-			.createQuery("from Scan scan where scan.application.id in (:idList) and lockedMetadata = false")
-			.setParameterList("idList", applicationIdList)
-			.list();
+
+		List<Integer> scanIds =  sessionFactory.getCurrentSession()
+				.createCriteria(Application.class)
+				.add(Restrictions.in("id", applicationIdList))
+				.createAlias("scans", "scans")
+				.add(Restrictions.eq("scans.lockedMetadata", false))
+				.setProjection(Projections.groupProperty("scans.id"))
+				.list();
+
+		if (scanIds != null && !scanIds.isEmpty()) {
+			return sessionFactory.getCurrentSession()
+					.createCriteria(Scan.class)
+					.add(Restrictions.in("id", scanIds))
+					.list();
+		} else {
+			return list();
+		}
+
 	}
 
     @Override

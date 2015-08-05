@@ -84,30 +84,30 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 
     // These are for determining what type of scanner was used
     private static final List<String> DYNAMIC_TYPES = list(
-            ScannerType.ACUNETIX_WVS.getFullName(),
-            ScannerType.APPSCAN_ENTERPRISE.getFullName(),
-            ScannerType.ARACHNI.getFullName(),
-            ScannerType.BURPSUITE.getFullName(),
-            ScannerType.NESSUS.getFullName(),
-            ScannerType.NETSPARKER.getFullName(),
-            ScannerType.NTO_SPIDER.getFullName(),
-            ScannerType.SKIPFISH.getFullName(),
-            ScannerType.W3AF.getFullName(),
-            ScannerType.WEBINSPECT.getFullName(),
-            ScannerType.ZAPROXY.getFullName(),
-            ScannerType.QUALYSGUARD_WAS.getFullName(),
-            ScannerType.APPSCAN_DYNAMIC.getFullName(),
-            ScannerType.CENZIC_HAILSTORM.getFullName());
+            ScannerType.ACUNETIX_WVS.getDisplayName(),
+            ScannerType.APPSCAN_ENTERPRISE.getDisplayName(),
+            ScannerType.ARACHNI.getDisplayName(),
+            ScannerType.BURPSUITE.getDisplayName(),
+            ScannerType.NESSUS.getDisplayName(),
+            ScannerType.NETSPARKER.getDisplayName(),
+            ScannerType.APP_SPIDER.getDisplayName(),
+            ScannerType.SKIPFISH.getDisplayName(),
+            ScannerType.W3AF.getDisplayName(),
+            ScannerType.WEBINSPECT.getDisplayName(),
+            ScannerType.ZAPROXY.getDisplayName(),
+            ScannerType.QUALYSGUARD_WAS.getDisplayName(),
+            ScannerType.APPSCAN_DYNAMIC.getDisplayName(),
+            ScannerType.CENZIC_HAILSTORM.getDisplayName());
 
     private static final List<String> STATIC_TYPES = list(
-            ScannerType.APPSCAN_SOURCE.getFullName(),
-            ScannerType.FINDBUGS.getFullName(),
-            ScannerType.FORTIFY.getFullName(),
-            ScannerType.VERACODE.getFullName(),
-            ScannerType.CAT_NET.getFullName(),
-            ScannerType.BRAKEMAN.getFullName(),
-            ScannerType.CHECKMARX.getFullName());
-    private static final List<String> MIXED_TYPES  = Arrays.asList(ScannerType.SENTINEL.getFullName());
+            ScannerType.APPSCAN_SOURCE.getDisplayName(),
+            ScannerType.FINDBUGS.getDisplayName(),
+            ScannerType.FORTIFY.getDisplayName(),
+            ScannerType.VERACODE.getDisplayName(),
+            ScannerType.CAT_NET.getDisplayName(),
+            ScannerType.BRAKEMAN.getDisplayName(),
+            ScannerType.CHECKMARX.getDisplayName());
+    private static final List<String> MIXED_TYPES  = Arrays.asList(ScannerType.SENTINEL.getDisplayName());
     private static final String       DYNAMIC      = "Dynamic", STATIC = "Static", MIXED = "Mixed";
 
     @Size(max = 255, message = "{errors.maxlength} 255.")

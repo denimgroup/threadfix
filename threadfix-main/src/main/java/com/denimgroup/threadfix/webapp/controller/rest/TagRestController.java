@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.Tag;
 import com.denimgroup.threadfix.data.enums.TagType;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.TagService;
+import com.denimgroup.threadfix.util.Result;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.views.AllViews.RestViewTag;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -39,8 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
-import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
-import static com.denimgroup.threadfix.remote.response.RestResponse.success;
+import static com.denimgroup.threadfix.remote.response.RestResponse.*;
 
 @RestController
 @RequestMapping("/rest/tags")
@@ -49,21 +49,8 @@ public class TagRestController extends TFRestController {
     @Autowired
     private TagService tagService;
 
-    private final static String DETAIL = "tagIDLookup",
-            LOOKUP                     = "tagNameLookup",
-            NEW                        = "newTag",
-            INDEX                      = "tagList";
-    private static final String LIST = "list";
-    private static final String UPDATE = "updateTag";
-    private static final String DELETE = "deleteTag";
-    private static final String LIST_APPLICATIONS = "listApplications";
-
     private static final String
             TAG_LOOKUP_FAILED = "Tag lookup failed. Check your parameters.";
-
-    static {
-        restrictedMethods.add(NEW);
-    }
 
     /**
      * Create a new tag.
@@ -76,9 +63,9 @@ public class TagRestController extends TFRestController {
     public Object createTag(HttpServletRequest request) {
         log.info("Received REST request for a new tag.");
 
-        String result = checkKey(request, NEW);
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return RestResponse.failure(result);
+        Result<String> keyCheck = checkKey(request, RestMethod.TAG_CREATE, -1, -1);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
         }
 
         String name = request.getParameter("name");
@@ -117,9 +104,9 @@ public class TagRestController extends TFRestController {
                             @PathVariable("tagId") int tagId) {
         log.info("Received REST request for tag with id = " + tagId + ".");
 
-        String result = checkKey(request, DETAIL);
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return failure(result);
+        Result<String> keyCheck = checkKey(request, RestMethod.TAG_LOOKUP, -1, -1);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
         }
 
         Tag tag = tagService.loadTag(tagId);
@@ -140,9 +127,9 @@ public class TagRestController extends TFRestController {
     public Object tagLookup(HttpServletRequest request) {
         String tagName = request.getParameter("name");
 
-        String result = checkKey(request, LOOKUP);
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return failure(result);
+        Result<String> keyCheck = checkKey(request, RestMethod.TAG_LOOKUP, -1, -1);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
         }
         if ((tagName == null)) {
             return failure(TAG_LOOKUP_FAILED);
@@ -163,9 +150,9 @@ public class TagRestController extends TFRestController {
     @RequestMapping(headers="Accept=application/json", value="/index", method=RequestMethod.GET)
     public Object index(HttpServletRequest request) {
 
-        String result = checkKey(request, INDEX);
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return failure(result);
+        Result<String> keyCheck = checkKey(request, RestMethod.TAG_LIST, -1, -1);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
         }
         log.info("Received REST request to query all tags.");
         Map<String, Object> map = map();
@@ -182,9 +169,9 @@ public class TagRestController extends TFRestController {
 
         log.info("Received REST request for Tag list.");
 
-        String result = checkKey(request, LIST);
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return failure(result);
+        Result<String> keyCheck = checkKey(request, RestMethod.TAG_LIST, -1, -1);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
         }
 
         List<Tag> tags = tagService.loadAll();
@@ -198,9 +185,9 @@ public class TagRestController extends TFRestController {
 
         log.info("Received REST request for updating an existing Tag.");
 
-        String result = checkKey(request, UPDATE);
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return failure(result);
+        Result<String> keyCheck = checkKey(request, RestMethod.TAG_EDIT, -1, -1);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
         }
 
         if(tagName == null || tagName.trim().isEmpty()){
@@ -231,9 +218,9 @@ public class TagRestController extends TFRestController {
 
         log.info("Received REST request for deleting an existing Tag.");
 
-        String result = checkKey(request, DELETE);
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return failure(result);
+        Result<String> keyCheck = checkKey(request, RestMethod.TAG_DELETE, -1, -1);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
         }
 
         Tag tag = tagService.loadTag(tagId);
@@ -252,9 +239,9 @@ public class TagRestController extends TFRestController {
 
         log.info("Received REST request for listing Applications with a Tag.");
 
-        String result = checkKey(request, LIST_APPLICATIONS);
-        if (!result.equals(API_KEY_SUCCESS)) {
-            return failure(result);
+        Result<String> keyCheck = checkKey(request, RestMethod.TAG_APPLICATION_LIST, -1, -1);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
         }
 
         Tag tag = tagService.loadTag(tagId);

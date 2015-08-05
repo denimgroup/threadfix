@@ -1444,6 +1444,10 @@ ul.dropdown-menu {
 	margin-bottom:0;
 }
 
+.multiSelect {
+	z-index:100000;
+}
+
 table.eventHistory {
 	table-layout:fixed;
 }

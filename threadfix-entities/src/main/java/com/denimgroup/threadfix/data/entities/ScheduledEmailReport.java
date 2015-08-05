@@ -1,18 +1,16 @@
 package com.denimgroup.threadfix.data.entities;
 
+import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.denimgroup.threadfix.views.AllViews;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 @Entity
 @Table(name="ScheduledEmailReport")
@@ -38,8 +36,10 @@ public class ScheduledEmailReport extends ScheduledJob {
 	}
 
     @ManyToMany
-    @JoinColumn(name = "emailListId")
-    @JsonView(Object.class)
+    @JoinTable(name="ScheduledEmailReport_EmailList",
+            joinColumns={@JoinColumn(name="scheduledEmailReportId")},
+            inverseJoinColumns={@JoinColumn(name="emailListId")})
+    @JsonView(AllViews.ScheduledEmailReportView.class)
     public List<EmailList> getEmailLists() {
         return emailLists;
     }
@@ -63,7 +63,7 @@ public class ScheduledEmailReport extends ScheduledJob {
     @JoinTable(name="ScheduledEmailReport_Organization",
             joinColumns={@JoinColumn(name="scheduledEmailReportId")},
             inverseJoinColumns={@JoinColumn(name="organizationId")})
-    @JsonView(Object.class)
+    @JsonView(AllViews.ScheduledEmailReportView.class)
 	public List<Organization> getOrganizations() {
 		return organizations;
 	}

@@ -65,7 +65,7 @@ public class ScanTypeCalculatorTests {
                 if (innerEntry.getKey() != outerEntry) {
                     for (String file : innerEntry.getValue()) {
                         String type = service.getScannerType(file, file);
-                        assertFalse(outerEntry + " falsely identified file " + file, outerEntry.getFullName().equals(type));
+                        assertFalse(outerEntry + " falsely identified file " + file, outerEntry.getDisplayName().equals(type));
                     }
                 }
             }

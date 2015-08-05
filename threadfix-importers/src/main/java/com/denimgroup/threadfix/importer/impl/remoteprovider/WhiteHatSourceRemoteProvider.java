@@ -390,7 +390,7 @@ public class WhiteHatSourceRemoteProvider extends AbstractRemoteProvider {
 				openedDate  = getCalendarAtMidnight(atts.getValue("opened"));
 				closedDate  = getCalendarAtMidnight(atts.getValue("closed"));
 
-				if (!scanDateList.contains(openedDate)) {
+				if (openedDate != null && !scanDateList.contains(openedDate)) {
 					scanDateList.add(openedDate);
 				}
 				if (closedDate != null && !scanDateList.contains(openedDate))

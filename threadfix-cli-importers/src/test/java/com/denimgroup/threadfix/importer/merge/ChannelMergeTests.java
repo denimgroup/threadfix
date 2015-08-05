@@ -38,6 +38,10 @@ import java.util.List;
  */
 public class ChannelMergeTests {
 
+    /**
+     * Now that we've fixed the native IDs for dependency check this needs to be rewritten with a
+     * different scanner.
+     */
     @Test
     public void testBasicChannelMerge() {
         List<Scan> scans = Merger.getScanListFromPaths(ScannerType.DEPENDENCY_CHECK, DependencyCheckTests.FILE_PATH);
@@ -46,7 +50,7 @@ public class ChannelMergeTests {
 
         int size = scans.get(0).getFindings().size();
 
-        assert size == 109 : "Got " + size + " instead of 109 findings.";
+        assert size == 124 : "Got " + size + " instead of 109 findings.";
     }
 
     /**
@@ -54,7 +58,7 @@ public class ChannelMergeTests {
      * Should have 124 findings with no merges
      */
     @Test
-    @Ignore // TODO finalize how to unit test the turn merging off feature properly
+    @Ignore
     public void testChannelMergeMergingOff() {
         Application application = new Application();
         application.setSkipApplicationMerge(true);

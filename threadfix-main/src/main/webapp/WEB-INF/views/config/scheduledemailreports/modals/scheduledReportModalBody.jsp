@@ -4,6 +4,7 @@
             <td>Teams concerned</td>
             <td>
                 <multi-select
+                        id-prefix="tags"
                         input-model="config.organizations"
                         output-model="object.organizations"
                         button-label="name"

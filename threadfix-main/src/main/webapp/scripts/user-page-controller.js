@@ -4,7 +4,7 @@ var myAppModule = angular.module('threadfix');
 myAppModule.value('deleteUrl', null);
 
 
-myAppModule.controller('UserPageController', function ($scope, $modal, $http, $log, $rootScope, tfEncoder) {
+myAppModule.controller('UserPageController', function ($scope, $modal, $http, $log, $rootScope, tfEncoder, threadFixModalService) {
 
     ////////////////////////////////////////////////////////////////////////////////
     //             Basic Page Functionality + $on(rootScopeInitialized)
@@ -37,7 +37,6 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                     if (data.object.users.length > 0) {
                         $scope.roles = data.object.roles;
                         $scope.users = data.object.users;
-                        $scope.users.sort(nameCompare);
 
                         $scope.teams = data.object.teams;
                         $scope.teams.sort(nameCompare);
@@ -113,7 +112,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
             $scope.userId = newUser.id;
             reloadList();
 
-            $scope.successMessage = "Successfully created user " + newUser.name;
+            $scope.usersSuccessMessage = "Successfully created user " + newUser.name;
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
@@ -163,7 +162,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     };
 
     $scope.clearMessage = function() {
-        $scope.successMessage = undefined;
+        $scope.usersSuccessMessage = undefined;
     };
 
     $scope.updatePage = function(page, searchString) {
@@ -237,7 +236,6 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                     lastNumber = $scope.numberToShow;
                     lastPage = $scope.page;
                     $scope.users = users;
-                    $scope.users.sort(nameCompare);
                     selectUserWithId($scope.userId);
                 } else {
                     $scope.errorMessage = "Failed to receive search results. Message was : " + data.message;
@@ -288,7 +286,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
             success(function(data) {
 
                 if (data.success) {
-                    $scope.successMessage = "Edit succeeded.";
+                    $scope.usersSuccessMessage = "Edit succeeded.";
 
                     $scope.users = data.object;
 
@@ -362,7 +360,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
 
                 addMapsToUser($scope.currentUser);
 
-                $scope.successMessage = "Successfully added permissions.";
+                $scope.usersSuccessMessage = "Successfully added permissions.";
 
             }, function () {
                 $log.info('Modal dismissed at: ' + new Date());
@@ -457,9 +455,9 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
             addMapsToUser($scope.currentUser);
 
             if (editedPermissionsObject) {
-                $scope.successMessage = "Successfully edited permissions.";
+                $scope.usersSuccessMessage = "Successfully edited permissions.";
             } else {
-                $scope.successMessage = "Permissions object was successfully deleted.";
+                $scope.usersSuccessMessage = "Permissions object was successfully deleted.";
             }
 
         }, function () {
@@ -479,7 +477,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                         // this will cause the user to be logged out if the session is invalid
                         reloadList();
                         $rootScope.$broadcast('refreshGroups');
-                        $scope.successMessage = "User was successfully deleted.";
+                        $scope.usersSuccessMessage = "User was successfully deleted.";
                     } else {
                         $scope.errorMessage = "Failure: " + data.message;
                     }
@@ -499,7 +497,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 success(function(data, status, headers, config) {
                     if (data.success) {
                         addMapsToUser($scope.currentUser);
-                        $scope.successMessage = "Permission was successfully deleted.";
+                        $scope.usersSuccessMessage = "Permission was successfully deleted.";
                     } else {
                         $scope.errorMessage = "Failure. Message was : " + data.message;
                     }
@@ -543,7 +541,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 if (data.success) {
                     reloadList();
                     $rootScope.$broadcast('refreshGroups');
-                    $scope.successMessage = "Added user to group " + group.name + ".";
+                    $scope.usersSuccessMessage = "Added user to group " + group.name + ".";
                 } else {
                     $scope.errorMessage = "Failure. " + data.message;
                 }
@@ -563,7 +561,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                     if (data.success) {
                         reloadList();
                         $rootScope.$broadcast('refreshGroups');
-                        $scope.successMessage = "Removed user from group " + group.name;
+                        $scope.usersSuccessMessage = "Removed user from group " + group.name;
                     } else {
                         $scope.errorMessage = "Failure. " + data.message;
                     }
@@ -576,5 +574,71 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 });
         }
     };
+
+    $scope.createNewKey = function(user) {
+        var modalInstance = $modal.open({
+            templateUrl: 'newKeyModal.html',
+            controller: 'GenericModalController',
+            resolve: {
+                url: function() {
+                    return tfEncoder.encode("/users/" + user.id + "/keys/new");
+                },
+                object: function() {
+                    return { username: user.name };
+                },
+                buttonText: function() {
+                    return "Create Key";
+                }
+            }
+        });
+
+        modalInstance.result.then(function (key) {
+
+            $scope.currentUser.apiKeys.push(key);
+
+            $scope.userSuccessMessage = "Successfully created key.";
+
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    };
+
+    $scope.openEditModal = function(user, key) {
+        var modalInstance = $modal.open({
+            templateUrl: 'editKeyModal.html',
+            controller: 'GenericModalController',
+            resolve: {
+                url: function() {
+                    return tfEncoder.encode("/users/" + user.id + "/keys/" + key.id + "/edit");
+                },
+                object: function() {
+                    var keyCopy = angular.copy(key);
+                    return keyCopy;
+                },
+                buttonText: function() {
+                    return "Save Edits";
+                },
+                deleteUrl: function() {
+                    return tfEncoder.encode("/users/" + user.id + "/keys/" + key.id + "/delete");
+                }
+            }
+        });
+
+        modalInstance.result.then(function (editedKey) {
+
+            if (editedKey) {
+                threadFixModalService.deleteElement($scope.currentUser.apiKeys, key);
+                threadFixModalService.addElement($scope.currentUser.apiKeys, editedKey);
+
+                $scope.successMessage = "Successfully edited key " + editedKey.apiKey;
+            } else {
+                threadFixModalService.deleteElement($scope.currentUser.apiKeys, key);
+                $scope.successMessage = "API key was successfully deleted.";
+            }
+
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    }
 
 });

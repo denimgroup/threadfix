@@ -207,7 +207,7 @@ threadfixModule.factory('vulnSearchParameterService', function() {
 
         if ($scope.treeTeam) {
             $scope.parameters.teams = [ { id: $scope.treeTeam.id } ];
-        } else if (parameters.teams) {
+        } else if (parameters.teams && parameters.teams.length > 0) {
             parameters.teams.forEach(function(filteredTeam) {
                 filteredTeam.id = undefined;
             });
@@ -222,7 +222,7 @@ threadfixModule.factory('vulnSearchParameterService', function() {
 
         if ($scope.treeApplication) {
             $scope.parameters.applications = [ { id: $scope.treeApplication.id } ];
-        } else if (parameters.applications) {
+        } else if (parameters.applications && parameters.applications.length > 0) {
             // This may be a problem down the road, but it's easier than fighting angular / bootstrap typeahead
             //STran 8/14/2014: oh yes, I'm having problem with this right now
             parameters.applications.forEach(function(filteredApp) {
@@ -725,7 +725,9 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
                         $scope.savedDefaultTrendingFilter = defaultFilter;
                         $scope.$parent.savedDefaultTrendingFilter = defaultFilter;
 
-                        $scope.currentFilterNameInput = '';
+                        if(!$scope.acFilterPage)
+                            $scope.currentFilterNameInput = '';
+
                         if (editing) {
                             $scope.saveFilterSuccessMessage = 'Successfully edited filter ' + submissionObject.name;
                         } else {
@@ -759,6 +761,10 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
                         $scope.deleteFilterSuccessMessage = "Successfully deleted filter " + $scope.selectedFilter.name;
                         $scope.selectedFilter = undefined;
                         $scope.savedFilters = data.object;
+
+                        if($scope.acFilterPage)
+                            $scope.currentFilterNameInput = '';
+
                         if ($scope.savedFilters){
 
                             if (filterSavedFilters) {

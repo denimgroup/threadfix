@@ -4,6 +4,7 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
 
     $scope.rightReportTitle = "Top 10 Vulnerable Applications";
     $scope.empty = false;
+    $scope.numberToShow = 100;
 
     $scope.onFileSelect = function($files) {
         $scope.$broadcast('fileDragged', $files);
@@ -36,6 +37,10 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
 
     $scope.$on('rootScopeInitialized', function() {
         $scope.reportQuery = "&orgId=" + $scope.teamId;
+        refreshIt();
+    });
+
+    var refreshIt = function() {
         $http.get(tfEncoder.encodeRelative($scope.teamId + "/info")).
             success(function(data, status, headers, config) {
                 if (data.success) {
@@ -44,7 +49,11 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
                     $scope.team.applications = data.object.applications;
                     $scope.applications = data.object.applications;
                     $scope.users = data.object.users;
-                    countVulnerabilities();
+
+                    $scope.countApps = data.object.countApps;
+                    $scope.currentCount = data.object.countApps;
+                    $scope.vulnerabilityCount = data.object.vulnerabilityCount;
+
                     $scope.$broadcast('team', $scope.team);
                     $scope.$broadcast('seeMoreExtension', "/" + $scope.team.id);
                 } else {
@@ -57,7 +66,11 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
                 $scope.errorMessage = "Encountered error. HTTP status was " + status;
                 $log.error("Encountered error. HTTP status was " + status);
             });
-    });
+        $scope.searchApps($scope.lastSearchString);
+
+    };
+
+    $scope.$on("scanUploaded", refreshIt);
 
     $scope.openEditModal = function() {
 
@@ -129,10 +142,13 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
 
             if (!$scope.applications || $scope.applications.length === 0) {
                 $scope.applications = [];
+                $scope.currentApplications = [];
             }
             $scope.applications.push(object.application);
+            $scope.currentApplications.push(object.application);
 
             $scope.applications.sort(nameCompare);
+            $scope.currentApplications.sort(nameCompare);
 
             $scope.successMessage = "Successfully added application " + newApplication.name;
 
@@ -167,5 +183,44 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
             }
         });
     };
+
+    $scope.searchApps = function(searchText) {
+
+        $scope.loadingCurrentApps = true;
+        if ($scope.lastSearchString && $scope.lastSearchString === searchText &&
+            $scope.lastNumber === $scope.numberToShow &&
+            $scope.lastPage === $scope.page) {
+            return;
+        }
+
+        var searchObject = {
+            "searchString" : searchText,
+            "page" : $scope.page,
+            "number" : $scope.numberToShow
+        };
+
+        $http.post(tfEncoder.encode("/organizations/" + $scope.teamId + "/search"), searchObject).
+            then(function(response) {
+                var data = response.data;
+                $scope.loadingCurrentApps = false;
+                if (data.success) {
+                    $scope.currentApplications = data.object.applications;
+                    $scope.currentCount = data.object.countApps;
+                        $scope.lastSearchString = searchText;
+                    $scope.lastNumber = $scope.numberToShow;
+                    $scope.lastPage = $scope.page;
+                } else {
+                    $scope.errorMessage = "Failed to receive search results. Message was : " + data.message;
+                }
+            });
+
+    };
+
+
+    $scope.updatePage = function(page, searchString) {
+        $scope.page = page;
+        $scope.searchApps(searchString);
+    };
+
 
 });

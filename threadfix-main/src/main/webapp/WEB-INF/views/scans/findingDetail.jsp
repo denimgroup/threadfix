@@ -63,10 +63,12 @@
 				<td class="bold">Scanner Severity</td>
 				<td class="inputValue" id="scannerSeverity"><c:out value="${ finding.channelSeverity.name }"/></td>
 			</tr>
-			<tr>
-				<td class="bold">CWE Vulnerability</td>
-				<td class="inputValue" id="genericVulnerabilityName"><c:out value="${ finding.channelVulnerability.genericVulnerability.name }"/></td>
-			</tr>
+            <tr>
+                <td class="bold">CWE Vulnerability</td>
+                <td class="inputValue" id="genericVulnerabilityName">
+                    <span tooltip="CWE-${ finding.channelVulnerability.genericVulnerability.displayId }">
+                    <c:out value="${ finding.channelVulnerability.genericVulnerability.name }"/></span></td>
+            </tr>
 			<tr>
 				<td class="bold">Severity</td>
 				<td class="inputValue" id="genericSeverityName"><c:out value="${ finding.channelSeverity.severityMap.genericSeverity.displayName }"/></td>

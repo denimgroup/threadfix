@@ -542,6 +542,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
         allCWEvulns.forEach(function(vuln){
             var key = vuln.genericVulnName;
+            var cweNum = vuln.genericVulnDisplayId;
             if (!statsMap[key]) {
                 statsMap[key] = {
                     numOpen : 0,
@@ -550,7 +551,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
                     totalTimeToClose : 0
                 }
             }
-
+            statsMap[key]["displayId"] = cweNum;
             if (vuln.active) {
                 statsMap[key]["numOpen"] = statsMap[key]["numOpen"] + 1;
                 statsMap[key]["totalAgeOpen"] = statsMap[key]["totalAgeOpen"] + getDates(now, vuln.importTime);
@@ -567,7 +568,8 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             var mapEntry = statsMap[key];
             var genericVulnEntry = {
                 total : mapEntry["numOpen"] + mapEntry["numClosed"],
-                description : key
+                description : key,
+                displayId: mapEntry["displayId"]
             };
 
             genericVulnEntry.percentClosed = (genericVulnEntry.total === 0) ? 100 : getPercentNumber(mapEntry["numClosed"]/genericVulnEntry.total);
@@ -838,6 +840,33 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         return filteredList;
     };
 
+    var processWithCustomSeverities = function(appList) {
+        var returnList = [];
+
+        appList.forEach(function(application) {
+
+            if (application.cweId) { // top 10 vulns
+                $scope.topAppsData.push(application);
+            } else { // top 10 apps
+                var innerData = {};
+                innerData[customSeverityService.getCustomSeverity("Info")] = application["Info"];
+                innerData[customSeverityService.getCustomSeverity("Low")] = application["Low"];
+                innerData[customSeverityService.getCustomSeverity("Medium")] = application["Medium"];
+                innerData[customSeverityService.getCustomSeverity("High")] = application["High"];
+                innerData[customSeverityService.getCustomSeverity("Critical")] = application["Critical"];
+                innerData.appId = application.appId;
+                innerData.appName = application.appName;
+                innerData.teamId = application.teamId;
+                innerData.teamName = application.teamName;
+                innerData.title = application.title;
+                returnList.push(innerData);
+            }
+        });
+
+
+        return returnList;
+    };
+
     var processMVAData = function() {
 
         $scope.loading = true;
@@ -856,7 +885,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         $http.post(tfEncoder.encode("/reports/getTopApps"), parameters).
             success(function(data) {
                 if (data.object.appList) {
-                    $scope.topAppsData = data.object.appList;
+                    $scope.topAppsData = processWithCustomSeverities(data.object.appList);
                 } else {
                     $scope.topAppsData = convertRawInfo(data.object.rawAppList);
                 }
@@ -914,7 +943,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
         $scope.$broadcast("refreshVulnSearchTree", parameters);
         $scope.loading = false;
-
+        $scope.hideTitle = false;
     };
 
     var processDisaStigData = function() {
@@ -927,7 +956,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
         $scope.$broadcast("refreshVulnSearchTree", parameters);
         $scope.loading = false;
-
+        $scope.hideTitle = false;
     };
 
     var processPortfolioData = function() {

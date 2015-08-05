@@ -49,6 +49,8 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 @RestController
 @RequestMapping("/organizations/{orgId}/applications/{appId}/edit")
 @SessionAttributes({"application", "scanParametersBean"})
@@ -131,6 +133,7 @@ public class EditApplicationController {
 		// TODO split into 3 controllers and use setAllowedFields
 		application.setWaf(databaseApplication.getWaf());
 		application.setDefectTracker(databaseApplication.getDefectTracker());
+		application.setAcceptanceCriteriaStatuses(databaseApplication.getAcceptanceCriteriaStatuses());
 
 		application.setUserName(databaseApplication.getUserName());
         application.setPassword(databaseApplication.getPassword());
@@ -295,7 +298,7 @@ public class EditApplicationController {
             if (dbApplication == null) {
                 return FormRestResponse.failure("Invalid data.");
             }
-            dbApplication.setTags(newTags);
+			dbApplication.setTags(cleanTags(newTags));
             applicationService.storeApplication(dbApplication, EventAction.APPLICATION_SET_TAGS);
 
             return RestResponse.success(newTags);
@@ -305,4 +308,15 @@ public class EditApplicationController {
             return FormRestResponse.failure("Invalid data.");
         }
     }
+
+	private List<Tag> cleanTags(List<Tag> newTags) {
+
+		List<Tag> returnTags = list();
+
+		for (Tag newTag : newTags) {
+			returnTags.add(tagService.loadTag(newTag.getId()));
+		}
+
+		return returnTags;
+	}
 }

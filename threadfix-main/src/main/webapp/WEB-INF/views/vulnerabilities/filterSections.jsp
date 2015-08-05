@@ -391,7 +391,7 @@
 </div>
 
 <!-- Save Filter -->
-<div class="accordion-group" ng-hide="remediationEnterpriseActive">
+<div class="accordion-group">
     <div class="accordion-heading" ng-click="showSaveFilter = !showSaveFilter">
         <span id="showSaveFilter" class="icon" ng-class="{ 'icon-minus': showSaveFilter, 'icon-plus': !showSaveFilter }"></span> Save Current Filter
     </div>

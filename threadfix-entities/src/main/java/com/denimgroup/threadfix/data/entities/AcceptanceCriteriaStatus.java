@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -47,15 +48,15 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
     private Boolean passing = false;
     private Application application;
     private AcceptanceCriteria acceptanceCriteria;
-
     private List<EmailList> emailLists;
     private List<String> emailAddresses;
     private Boolean sendEmail = false;
+    private transient boolean statusChanged = false;
 
     @ElementCollection
     @Column(name = "emailAddress", length = 128)
     @CollectionTable(name = "AcceptanceCriteriaStatusEmailAddress", joinColumns = @JoinColumn(name = "AcceptanceCriteriaStatusId"))
-    @JsonView(Object.class)
+    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
     public List<String> getEmailAddresses() {
         return emailAddresses;
     }
@@ -64,9 +65,9 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
         this.emailAddresses = emailAddresses;
     }
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "emailListId")
-    @JsonView(Object.class)
+    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
     public List<EmailList> getEmailLists() {
         return emailLists;
     }
@@ -76,13 +77,22 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
     }
 
     @Column
-    @JsonView(Object.class)
+    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
     public Boolean isPassing() {
         return passing != null && passing;
     }
 
     public void setPassing(boolean passing) {
         this.passing = passing;
+    }
+
+    @Transient
+    public boolean hasStatusChanged() {
+        return statusChanged;
+    }
+
+    public void setStatusChanged(boolean statusChanged) {
+        this.statusChanged = statusChanged;
     }
 
     @ManyToOne
@@ -97,18 +107,18 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
     }
 
     @Column
-    @JsonView(Object.class)
+    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
     public Boolean isSendEmail() {
         return sendEmail != null && sendEmail;
     }
 
-    public void setSendEmail(boolean sendEmail) {
+    public void setSendEmail(Boolean sendEmail) {
         this.sendEmail = sendEmail;
     }
 
     @Transient
     @JsonProperty("application")
-    @JsonView(Object.class)
+    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
     public Map<String, Object> getApplicationJson() {
         if(application != null) {
             return map(
@@ -136,7 +146,7 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
 
     @Transient
     @JsonProperty("acceptanceCriteria")
-    @JsonView(Object.class)
+    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
     public Map<String, ? extends Serializable> getAcceptanceCriteriaJson() {
         if(acceptanceCriteria != null) {
             return map(
@@ -148,7 +158,7 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
     }
 
     @Transient
-    @JsonView(Object.class)
+    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
     public String getName() {
         return application.getName();
     }

@@ -67,6 +67,12 @@ public class AllViews {
 
     public static interface RestCweView {}
 
+    public static interface ApplicationIndexView {}
+
+    public static interface ScheduledEmailReportView {}
+
+    public static interface AcceptanceCriteriaPageView {}
+
     public static interface HistoryView {}
 
     public static interface OrganizationHistoryView extends HistoryView {}

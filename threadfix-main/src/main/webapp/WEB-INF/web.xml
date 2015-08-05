@@ -93,7 +93,7 @@
         		/configuration/settings,/configuration/filters,/configuration/scanqueue,/mappings/index,/configuration/tags,/teams,
         		/j_spring_security_check,/j_spring_security_logout,/images/*,/styles/*,/scripts/*,/rest/*,/configuration/download/*,
                 /configuration/scheduledEmailReports,/configuration/emailLists,
-                /configuration/scanResultFilters,/configuration/customCweText,
+                /configuration/scanResultFilters,/configuration/customCweText,/mappings/channelSeverity/index,
         		regex ^/rest/[a-zA-Z0-9/]*$,
                 regex ^/v/[^/]+/scripts/.*$,
                 regex ^/configuration/tags/[0-9]/view+$,
@@ -154,6 +154,9 @@
                 protected-regex ^/configuration/filters/[0-9]+/delete$,
 		    	protected-regex ^/configuration/filters/[0-9]+/edit$,
 		    	protected-regex ^/configuration/filters/new$,
+				protected-regex ^/configuration/filters/[0-9]+/deleteChannelFilter$,
+				protected-regex ^/configuration/filters/[0-9]+/editChannelFilter$,
+				protected-regex ^/configuration/filters/newChannelFilter$,
 		    	protected-regex ^/configuration/grctools/info$,
 		    	protected-regex ^/configuration/grctools/new$,
 		    	protected-regex ^/configuration/grctools/[0-9]+/getApps$,
@@ -217,6 +220,8 @@
 				protected-regex ^/groups/[0-9]+/removeUser/[0-9]+",
 		    	protected-regex ^/mappings/index/cwe$,
 		    	protected-regex ^/mappings/index/unmappedTable$,
+				protected-regex ^/mappings/channelSeverity/map$,
+				protected-regex ^/mappings/channelSeverity/update$,
 		    	protected-regex ^/organizations/modalAdd$,
 		    	protected-regex ^/organizations/scanqueue/list$,
 		    	protected-regex ^/organizations/severityFilter/set$,
@@ -269,6 +274,7 @@
         		protected-regex ^/organizations/[0-9]+/getReport$,
         		protected-regex ^/organizations/[0-9]+/modalEdit$,
 		    	protected-regex ^/organizations/[0-9]+/modalAddApp$,
+				protected-regex ^/organizations/[0-9]+/search$,
 		    	protected-regex ^/organizations/jsonList$,
         		protected-regex ^/reports/ajax$,
                 protected-regex ^/reports/ajax/page$,
@@ -384,6 +390,9 @@
 	</filter-mapping>
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>com.denimgroup.threadfix.util.TFManifestProperties</listener-class>
 	</listener>
 	<servlet>
 		<servlet-name>dispatcher</servlet-name>

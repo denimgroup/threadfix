@@ -72,6 +72,8 @@ public class User extends AuditableEntity {
 
     private List<Event> events;
 
+    private List<APIKey> apiKeys;
+
     @Column(length = NAME_LENGTH, nullable = false)
     @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
     public String getName() {
@@ -236,8 +238,18 @@ public class User extends AuditableEntity {
 	public void setAccessControlTeamMaps(List<AccessControlTeamMap> accessControlTeamMaps) {
 		this.accessControlTeamMaps = accessControlTeamMaps;
 	}
-	
-	@Column(nullable = true)
+
+    @OneToMany(mappedBy = "user")
+    @JsonView(AllViews.TableRow.class)
+    public List<APIKey> getApiKeys() {
+        return apiKeys;
+    }
+
+    public void setApiKeys(List<APIKey> apiKeys) {
+        this.apiKeys = apiKeys;
+    }
+
+    @Column(nullable = true)
     @JsonView(AllViews.TableRow.class)
 	public Boolean getIsLdapUser() {
 		return isLdapUser != null && isLdapUser;

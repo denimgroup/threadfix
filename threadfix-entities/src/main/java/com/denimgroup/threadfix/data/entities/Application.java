@@ -657,10 +657,10 @@ public class Application extends AuditableEntity {
 			return new ArrayList<ApplicationChannel>();
 		
 		Set<String> doNotIncludeSet = new HashSet<String>();
-		doNotIncludeSet.add(ScannerType.MANUAL.getFullName());
-		doNotIncludeSet.add(ScannerType.SENTINEL.getFullName());
-		doNotIncludeSet.add(ScannerType.VERACODE.getFullName());
-		doNotIncludeSet.add(ScannerType.QUALYSGUARD_WAS.getFullName());
+		doNotIncludeSet.add(ScannerType.MANUAL.getDisplayName());
+		doNotIncludeSet.add(ScannerType.SENTINEL.getDisplayName());
+		doNotIncludeSet.add(ScannerType.VERACODE.getDisplayName());
+		doNotIncludeSet.add(ScannerType.QUALYSGUARD_WAS.getDisplayName());
 		
 		List<ApplicationChannel> returnList = new ArrayList<ApplicationChannel>();
 	
@@ -874,7 +874,8 @@ public class Application extends AuditableEntity {
 
     // TODO exclude from default ObjectMapper
     @Transient
-    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.VulnSearchApplications.class, AllViews.RestViewTag.class, AllViews.DefectTrackerInfos.class })
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.VulnSearchApplications.class,
+            AllViews.RestViewTag.class, AllViews.DefectTrackerInfos.class, AllViews.AcceptanceCriteriaPageView.class })
     public Map<String, Object> getTeam() {
         Organization team = getOrganization();
 
@@ -937,7 +938,8 @@ public class Application extends AuditableEntity {
     }
 
     @Transient
-    public List<AcceptanceCriteria> getAcceptanceCriteria(){
+    @JsonView(AllViews.FormInfo.class)
+    public List<AcceptanceCriteria> getAcceptanceCriterias(){
         List<AcceptanceCriteria> acceptanceCriteriaList = list();
 
         for (AcceptanceCriteriaStatus acceptanceCriteriaStatus : acceptanceCriteriaStatuses) {
