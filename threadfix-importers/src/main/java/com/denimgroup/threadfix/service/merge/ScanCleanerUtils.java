@@ -89,8 +89,6 @@ public class ScanCleanerUtils {
                 continue;
             }
 
-            finding.setScan(scan);
-
             surfaceLocation = finding.getSurfaceLocation();
 
             if (surfaceLocation != null) {
