@@ -26,19 +26,21 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 
 import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.EventDao;
-import com.denimgroup.threadfix.data.entities.Defect;
-import com.denimgroup.threadfix.data.entities.Event;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.enums.EventAction;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Repository
 public class HibernateEventDao extends AbstractObjectDao<Event> implements EventDao {
@@ -101,5 +103,85 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
         }
 
         return criteria.list();
+    }
+
+    @Override
+    public List<Event> retrieveUngroupedByUser(User user) {
+        List<String> userEventActions = list();
+        for (EventAction eventAction : EventAction.userEventActions) {
+            userEventActions.add(eventAction.name());
+        }
+
+        Criteria criteria = getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.eq("user", user))
+                .add(Restrictions.in("eventAction", userEventActions));
+
+        Order order = getOrder();
+        if (order != null) {
+            criteria.addOrder(order);
+        }
+
+        List<Event> events = criteria.list();
+
+        return events;
+    }
+
+    @Override
+    public List<Event> retrieveGroupedByUser(User user) {
+        List<String> userGroupedEventAction = list();
+        for (EventAction eventAction : EventAction.userGroupedEventAction) {
+            userGroupedEventAction.add(eventAction.name());
+        }
+
+        Criteria criteria = getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.eq("user", user))
+                .add(Restrictions.in("eventAction", userGroupedEventAction));
+
+        Order order = getOrder();
+        if (order != null) {
+            criteria.addOrder(order);
+        }
+
+        criteria.createAlias("scan", "scan", Criteria.LEFT_JOIN);
+
+        criteria.setProjection(Projections.projectionList()
+                        .add(Projections.count("id").as("groupCount"))
+                        .add(Projections.groupProperty("eventAction").as("eventAction"))
+                        .add(Projections.groupProperty("scan").as("scan"))
+                        .add(Projections.groupProperty("deletedScanId").as("deletedScanId"))
+                        .add(Projections.property("date"), "date")
+                        .add(Projections.property("apiAction"), "apiAction")
+                        .add(Projections.property("application"), "application")
+                        .add(Projections.property("user"), "user")
+                        .add(Projections.property("vulnerability"), "vulnerability")
+                        .add(Projections.property("defect"), "defect")
+                        .add(Projections.property("vulnerabilityComment"), "vulnerabilityComment")
+                        .add(Projections.property("detail"), "detail")
+                        .add(Projections.property("status"), "status")
+        );
+
+        criteria.setResultTransformer(Transformers.aliasToBean(Event.class));
+
+        List<Event> events = criteria.list();
+
+        criteria = getSession().createCriteria(getClassReference());
+        criteria.setProjection(Projections.projectionList()
+                        .add(Projections.max("id").as("maxId"))
+        );
+        Integer maxId = (Integer)criteria.uniqueResult();
+
+        for (Event event : events) {
+            event.setId(maxId + (event.hashCode() % 1073741824));
+            EventAction eventAction = event.getEventActionEnum();
+            EventAction groupedEventAction = eventAction.getGroupedEventAction();
+            String groupedEventActionString = groupedEventAction.toString();
+            event.setEventAction(groupedEventActionString);
+        }
+
+        return events;
     }
 }

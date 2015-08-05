@@ -71,6 +71,11 @@ public class EventBuilder {
         return this;
     }
 
+    public EventBuilder setDeletedScanId(Integer deletedScanId) {
+        event.setDeletedScanId(deletedScanId);
+        return this;
+    }
+
     public EventBuilder setDefect(Defect defect) {
         event.setDefect(defect);
         return this;

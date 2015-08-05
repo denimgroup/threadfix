@@ -14,6 +14,7 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
     };
 
     $scope.teamId  = $window.location.pathname.match(/([0-9]+)$/)[0];
+    $scope.currentUrl = "/organizations/" + $scope.teamId;
 
     $scope.showAppLimitMessage = function(number) {
         if (number != -1)
@@ -134,6 +135,8 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
             $scope.applications.sort(nameCompare);
 
             $scope.successMessage = "Successfully added application " + newApplication.name;
+
+            $scope.$broadcast('applicationAdded');
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());

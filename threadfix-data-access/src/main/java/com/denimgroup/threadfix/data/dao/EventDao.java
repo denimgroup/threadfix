@@ -24,10 +24,7 @@
 
 package com.denimgroup.threadfix.data.dao;
 
-import com.denimgroup.threadfix.data.entities.Defect;
-import com.denimgroup.threadfix.data.entities.Event;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.data.entities.*;
 
 import java.util.List;
 
@@ -38,4 +35,8 @@ public interface EventDao extends GenericObjectDao<Event> {
     List<Event> retrieveAllByVulnerability(Vulnerability vulnerability);
 
     List<Event> retrieveAllByDefect(Defect defect);
+
+    List<Event> retrieveUngroupedByUser(User user);
+
+    List<Event> retrieveGroupedByUser(User user);
 }

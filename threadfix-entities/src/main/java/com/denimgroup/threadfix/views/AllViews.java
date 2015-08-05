@@ -66,4 +66,14 @@ public class AllViews {
     public static interface RestViewScanList {}
 
     public static interface RestCweView {}
+
+    public static interface HistoryView {}
+
+    public static interface OrganizationHistoryView extends HistoryView {}
+
+    public static interface ApplicationHistoryView extends HistoryView {}
+
+    public static interface VulnerabilityHistoryView extends HistoryView {}
+
+    public static interface UserHistoryView extends HistoryView {}
 }

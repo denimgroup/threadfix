@@ -125,5 +125,7 @@
             </table>
         </div>
 
+        <jsp:include page="/app/configuration/users/${ user.id }/history"/>
+
     </security:authorize>
 </div>

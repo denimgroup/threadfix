@@ -49,32 +49,35 @@ public enum EventAction {
     DEFECT_SUBMIT("Submit Defect"),
     DEFECT_STATUS_UPDATED("Update Defect Status"),
     DEFECT_CLOSED("Close Defect"),
-    DEFECT_APPEARED_AFTER_CLOSED("Appeared In Scan After Defect Closed");
+    DEFECT_APPEARED_AFTER_CLOSED("Appeared In Scan After Defect Closed"),
+    GROUPED_VULNERABILITY_OPEN_SCAN_DELETED("Open Vulnerabilities From Scan Deletion"),
+    GROUPED_VULNERABILITY_OPEN_SCAN_UPLOAD("Create Vulnerabilities From Scan Upload"),
+    GROUPED_VULNERABILITY_CLOSE_SCAN_DELETED("Close Vulnerabilities From Scan Deletion"),
+    GROUPED_VULNERABILITY_CLOSE_SCAN_UPLOAD("Close Vulnerabilities From Scan Upload"),
+    GROUPED_VULNERABILITY_REOPEN_SCAN_UPLOAD("Reopen Vulnerabilities From Scan Upload");
 
-    private static EventAction[] organizationEventActions = { APPLICATION_CREATE, APPLICATION_EDIT,
+    public static EventAction[] organizationEventActions = { APPLICATION_CREATE, APPLICATION_EDIT,
             APPLICATION_SET_TAGS, APPLICATION_SCAN_UPLOADED, APPLICATION_SCAN_DELETED };
 
-    private static EventAction[] applicationEventActions = { APPLICATION_CREATE, APPLICATION_EDIT,
+    public static EventAction[] applicationEventActions = { APPLICATION_CREATE, APPLICATION_EDIT,
             APPLICATION_SET_TAGS, APPLICATION_SCAN_UPLOADED, APPLICATION_SCAN_DELETED };
 
-    private static EventAction[] vulnerabilityEventActions = { VULNERABILITY_OPEN_SCAN_DELETED,
-            VULNERABILITY_OPEN_SCAN_UPLOAD,
-            VULNERABILITY_CLOSE_FINDINGS_MERGE,
-            VULNERABILITY_CLOSE_SCAN_DELETED,
-            VULNERABILITY_CLOSE_SCAN_UPLOAD,
-            VULNERABILITY_REOPEN_SCAN_UPLOAD, VULNERABILITY_MARK_FALSE_POSITIVE, VULNERABILITY_UNMARK_FALSE_POSITIVE,
+    public static EventAction[] vulnerabilityEventActions = { VULNERABILITY_OPEN_SCAN_DELETED,
+            VULNERABILITY_OPEN_SCAN_UPLOAD, VULNERABILITY_CLOSE_FINDINGS_MERGE, VULNERABILITY_CLOSE_SCAN_DELETED,
+            VULNERABILITY_CLOSE_SCAN_UPLOAD, VULNERABILITY_REOPEN_SCAN_UPLOAD, VULNERABILITY_MARK_FALSE_POSITIVE,
+            VULNERABILITY_UNMARK_FALSE_POSITIVE, VULNERABILITY_COMMENT, VULNERABILITY_OTHER, DEFECT_SUBMIT,
+            DEFECT_STATUS_UPDATED, DEFECT_CLOSED,
+            DEFECT_APPEARED_AFTER_CLOSED };
+
+    public static EventAction[] userEventActions = { APPLICATION_CREATE, APPLICATION_EDIT,
+            APPLICATION_SET_TAGS, APPLICATION_SCAN_UPLOADED, APPLICATION_SCAN_DELETED,
+            VULNERABILITY_CLOSE_FINDINGS_MERGE, VULNERABILITY_MARK_FALSE_POSITIVE, VULNERABILITY_UNMARK_FALSE_POSITIVE,
             VULNERABILITY_COMMENT, VULNERABILITY_OTHER, DEFECT_SUBMIT, DEFECT_STATUS_UPDATED, DEFECT_CLOSED,
             DEFECT_APPEARED_AFTER_CLOSED };
 
-    private static EventAction[] userEventActions = { APPLICATION_CREATE, APPLICATION_EDIT,
-            APPLICATION_SET_TAGS, APPLICATION_SCAN_UPLOADED, APPLICATION_SCAN_DELETED, VULNERABILITY_OPEN_SCAN_DELETED,
-            VULNERABILITY_OPEN_SCAN_UPLOAD,
-            VULNERABILITY_CLOSE_FINDINGS_MERGE,
-            VULNERABILITY_CLOSE_SCAN_DELETED,
-            VULNERABILITY_CLOSE_SCAN_UPLOAD,
-            VULNERABILITY_REOPEN_SCAN_UPLOAD, VULNERABILITY_MARK_FALSE_POSITIVE,
-            VULNERABILITY_UNMARK_FALSE_POSITIVE, VULNERABILITY_COMMENT, VULNERABILITY_OTHER, DEFECT_SUBMIT,
-            DEFECT_STATUS_UPDATED, DEFECT_CLOSED, DEFECT_APPEARED_AFTER_CLOSED };
+    public static EventAction[] userGroupedEventAction = { VULNERABILITY_OPEN_SCAN_DELETED,
+            VULNERABILITY_OPEN_SCAN_UPLOAD, VULNERABILITY_CLOSE_SCAN_DELETED,
+            VULNERABILITY_CLOSE_SCAN_UPLOAD, VULNERABILITY_REOPEN_SCAN_UPLOAD };
 
     EventAction(String displayName) {
         this.displayName = displayName;
@@ -121,6 +124,15 @@ public enum EventAction {
         return false;
     }
 
+    public boolean isUserGroupedEventAction() {
+        for (EventAction eventAction: userGroupedEventAction) {
+            if (eventAction.equals(this)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static EventAction getEventAction(String input) {
         EventAction action = null; // no default event action
 
@@ -134,5 +146,13 @@ public enum EventAction {
         }
 
         return action;
+    }
+
+    public EventAction getGroupedEventAction() {
+        try {
+            return valueOf("GROUPED_" + this.toString());
+        } catch (Exception e) {
+            return this;
+        }
     }
 }

@@ -54,10 +54,13 @@ public class Event extends AuditableEntity {
     private User user;
     private Vulnerability vulnerability;
     private Scan scan;
+    private Integer deletedScanId;
     private Defect defect;
     private VulnerabilityComment comment;
     private String detail;
     private String status;
+
+    private Long groupCount;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
@@ -144,7 +147,7 @@ public class Event extends AuditableEntity {
         User user = getUser();
         String userName = null;
         if (user != null) {
-            userName = user.getName();
+            userName = user.getDisplayName();
         }
         if (userName != null) {
             return userName;
@@ -193,6 +196,16 @@ public class Event extends AuditableEntity {
             return scan.getId();
         }
         return null;
+    }
+
+    @JoinColumn(name = "deletedScanId")
+    @JsonIgnore
+    public Integer getDeletedScanId() {
+        return deletedScanId;
+    }
+
+    public void setDeletedScanId(Integer deletedScanId) {
+        this.deletedScanId = deletedScanId;
     }
 
     @ManyToOne
@@ -259,6 +272,20 @@ public class Event extends AuditableEntity {
 
     @Transient
     @JsonView({ AllViews.HistoryView.class})
+    public Long getGroupCount() {
+        return groupCount;
+    }
+
+    public void setGroupCount(Object groupCount) {
+        try {
+            this.groupCount = (Long) groupCount;
+        } catch (Exception e) {
+            this.groupCount = -11l;
+        }
+    }
+
+    @Transient
+    @JsonView({ AllViews.HistoryView.class})
     public String getDescription() {
         String description = null;
         switch (getEventActionEnum()) {
@@ -297,152 +324,214 @@ public class Event extends AuditableEntity {
     private Map<String, Object> getFormattedDescriptionWithUrls(HistoryView historyView) {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM d, yyyy h:mm:ss a");
 
-        Map<String, Object> descriptionWithUrls = new HashMap<String, Object>();
-        descriptionWithUrls.put("urlCount", 0);
+        Map<String, Object> descriptionUrlMap = new HashMap<String, Object>();
+        descriptionUrlMap.put("urlCount", 0);
 
         StringBuilder description = new StringBuilder();
         switch (getEventActionEnum()) {
             case APPLICATION_CREATE:
-                description.append(" created Application");
-                if ((historyView == HistoryView.ORGANIZATION_HISTORY) || (historyView == HistoryView.USER_HISTORY)) {
-                    description.append(" ").append(buildApplicationLink(getApplication(), getApplication().getName(), descriptionWithUrls));
-                }
+                description.append(getUserName()).append(" created Application");
+                appendApplicationLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
             case APPLICATION_EDIT:
                 description.append(getUserName()).append(" edited Application");
-                if ((historyView == HistoryView.ORGANIZATION_HISTORY) || (historyView == HistoryView.USER_HISTORY)) {
-                    description.append(" ").append(buildApplicationLink(getApplication(), getApplication().getName(), descriptionWithUrls));
-                }
+                appendApplicationLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
             case APPLICATION_SET_TAGS:
                 description.append(getUserName()).append(" set tags on Application");
-                if ((historyView == HistoryView.ORGANIZATION_HISTORY) || (historyView == HistoryView.USER_HISTORY)) {
-                    description.append(" ").append(buildApplicationLink(getApplication(), getApplication().getName(), descriptionWithUrls));
-                }
+                appendApplicationLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
             case APPLICATION_SCAN_UPLOADED:
                 description.append(getUserName()).append(" uploaded a ")
-                        .append(buildScanLink(getScan(), "Scan", descriptionWithUrls))
+                        .append(buildScanLink(getScan(), "Scan", descriptionUrlMap))
                         .append(" to Application");
-                if ((historyView == HistoryView.ORGANIZATION_HISTORY) || (historyView == HistoryView.USER_HISTORY)) {
-                    description.append(" ").append(buildApplicationLink(getApplication(), getApplication().getName(), descriptionWithUrls));
-                }
+                appendApplicationLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
             case APPLICATION_SCAN_DELETED:
                 description.append(getUserName()).append(" deleted a ")
-                        .append(buildScanLink(getScan(), "Scan", descriptionWithUrls))
-                        .append(" to Application");
-                if ((historyView == HistoryView.ORGANIZATION_HISTORY) || (historyView == HistoryView.USER_HISTORY)) {
-                    description.append(" ").append(buildApplicationLink(getApplication(), getApplication().getName(), descriptionWithUrls));
-                }
+                        .append(buildScanLink(getScan(), "Scan", descriptionUrlMap))
+                        .append(" for Application");
+                appendApplicationLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
             case VULNERABILITY_CREATE:
-            case VULNERABILITY_OPEN_SCAN_DELETED:
+                description.append(getUserName()).append(" created Vulnerability");
+                appendVulnerabilityLink(description, descriptionUrlMap, historyView);
+                description.append(".");
+                break;
             case VULNERABILITY_OPEN_SCAN_UPLOAD:
                 description.append(getUserName()).append(" created Vulnerability");
-                if ((historyView != HistoryView.VULNERABILITY_HISTORY) && (getVulnerability() != null)) {
-                    description.append(" ").append(buildVulnerabilityLink(getVulnerability(), getVulnerability().getVulnerabilityName(), descriptionWithUrls));
-                }
+                appendVulnerabilityLink(description, descriptionUrlMap, historyView);
+                description.append(" uploading a ")
+                        .append(buildScanLink(getScan(), "Scan", descriptionUrlMap))
+                        .append(" to Application");
+                appendApplicationLink(description, descriptionUrlMap, historyView);
+                description.append(".");
+                break;
+            case VULNERABILITY_OPEN_SCAN_DELETED:
+                description.append(getUserName()).append(" opened Vulnerability");
+                appendVulnerabilityLink(description, descriptionUrlMap, historyView);
+                description.append(" deleting a ")
+                        .append(buildScanLink(getScan(), "Scan", descriptionUrlMap))
+                        .append(" for Application");
+                appendApplicationLink(description, descriptionUrlMap, historyView);
+                description.append(".");
+                break;
+            case GROUPED_VULNERABILITY_OPEN_SCAN_UPLOAD:
+                description.append(getUserName()).append(" created ").append(getGroupCount()).append(" Vulnerabilities");
+                description.append(" uploading a ")
+                        .append(buildScanLink(getScan(), "Scan", descriptionUrlMap))
+                        .append(" to Application");
+                appendApplicationLink(description, descriptionUrlMap, historyView);
+                description.append(".");
+                break;
+            case GROUPED_VULNERABILITY_OPEN_SCAN_DELETED:
+                description.append(getUserName()).append(" opened ").append(getGroupCount()).append(" Vulnerabilities");
+                description.append(" deleting a ")
+                        .append(buildScanLink(getScan(), "Scan", descriptionUrlMap))
+                        .append(" for Application");
+                appendApplicationLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
             case VULNERABILITY_CLOSE:
+                description.append(getUserName()).append(" closed Vulnerability");
+                appendVulnerabilityLink(description, descriptionUrlMap, historyView);
+                description.append(".");
+                break;
             case VULNERABILITY_CLOSE_FINDINGS_MERGE:
-            case VULNERABILITY_CLOSE_SCAN_DELETED:
+                description.append(getUserName()).append(" closed Vulnerability");
+                appendVulnerabilityLink(description, descriptionUrlMap, historyView);
+                description.append(" merging findings");
+                description.append(".");
+                break;
             case VULNERABILITY_CLOSE_SCAN_UPLOAD:
                 description.append(getUserName()).append(" closed Vulnerability");
-                if ((historyView != HistoryView.VULNERABILITY_HISTORY) && (getVulnerability() != null)) {
-                    description.append(" ").append(buildVulnerabilityLink(getVulnerability(), getVulnerability().getVulnerabilityName(), descriptionWithUrls));
-                }
+                appendVulnerabilityLink(description, descriptionUrlMap, historyView);
+                description.append(" uploading a ")
+                        .append(buildScanLink(getScan(), "Scan", descriptionUrlMap))
+                        .append(" to Application");
+                appendApplicationLink(description, descriptionUrlMap, historyView);
+                description.append(".");
+                break;
+            case VULNERABILITY_CLOSE_SCAN_DELETED:
+                description.append(getUserName()).append(" closed Vulnerability");
+                appendVulnerabilityLink(description, descriptionUrlMap, historyView);
+                description.append(" deleting a ")
+                        .append(buildScanLink(getScan(), "Scan", descriptionUrlMap))
+                        .append(" for Application");
+                appendApplicationLink(description, descriptionUrlMap, historyView);
+                description.append(".");
+                break;
+            case VULNERABILITY_CLOSE_MANUAL:
+                description.append(getUserName()).append(" closed Vulnerability");
+                appendVulnerabilityLink(description, descriptionUrlMap, historyView);
+                description.append(".");
+                break;
+            case GROUPED_VULNERABILITY_CLOSE_SCAN_UPLOAD:
+                description.append(getUserName()).append(" closed ").append(getGroupCount()).append(" Vulnerabilities");
+                description.append(" uploading a ")
+                        .append(buildScanLink(getScan(), "Scan", descriptionUrlMap))
+                        .append(" to Application");
+                appendApplicationLink(description, descriptionUrlMap, historyView);
+                description.append(".");
+                break;
+            case GROUPED_VULNERABILITY_CLOSE_SCAN_DELETED:
+                description.append(getUserName()).append(" closed ").append(getGroupCount()).append(" Vulnerabilities");
+                description.append(" deleting a ")
+                        .append(buildScanLink(getScan(), "Scan", descriptionUrlMap))
+                        .append(" for Application");
+                appendApplicationLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
             case VULNERABILITY_REOPEN:
+                description.append(getUserName()).append(" reopened Vulnerability");
+                appendVulnerabilityLink(description, descriptionUrlMap, historyView);
+                description.append(".");
+                break;
             case VULNERABILITY_REOPEN_SCAN_UPLOAD:
                 description.append(getUserName()).append(" reopened Vulnerability");
-                if ((historyView != HistoryView.VULNERABILITY_HISTORY) && (getVulnerability() != null)) {
-                    description.append(" ").append(buildVulnerabilityLink(getVulnerability(), getVulnerability().getVulnerabilityName(), descriptionWithUrls));
-                }
+                appendVulnerabilityLink(description, descriptionUrlMap, historyView);
+                description.append(" uploading a ")
+                        .append(buildScanLink(getScan(), "Scan", descriptionUrlMap))
+                        .append(" to Application");
+                appendApplicationLink(description, descriptionUrlMap, historyView);
+                description.append(".");
+                break;
+            case VULNERABILITY_REOPEN_MANUAL:
+                description.append(getUserName()).append(" reopened Vulnerability");
+                appendVulnerabilityLink(description, descriptionUrlMap, historyView);
+                description.append(".");
+                break;
+            case GROUPED_VULNERABILITY_REOPEN_SCAN_UPLOAD:
+                description.append(getUserName()).append(" reopened ").append(getGroupCount()).append(" Vulnerabilities");
+                description.append(" uploading a ")
+                        .append(buildScanLink(getScan(), "Scan", descriptionUrlMap))
+                        .append(" to Application");
+                appendApplicationLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
             case VULNERABILITY_MARK_FALSE_POSITIVE:
-                description.append(getUserName()).append(" marked Vulnerability as false positive");
-                if ((historyView != HistoryView.VULNERABILITY_HISTORY) && (getVulnerability() != null)) {
-                    description.append(" ").append(buildVulnerabilityLink(getVulnerability(), getVulnerability().getVulnerabilityName(), descriptionWithUrls));
-                }
+                description.append(getUserName()).append(" marked Vulnerability");
+                appendVulnerabilityLink(description, descriptionUrlMap, historyView);
+                description.append(" as false positive");
                 description.append(".");
                 break;
             case VULNERABILITY_UNMARK_FALSE_POSITIVE:
-                description.append(getUserName()).append(" unmarked Vulnerability as false positive");
-                if ((historyView != HistoryView.VULNERABILITY_HISTORY) && (getVulnerability() != null)) {
-                    description.append(" ").append(buildVulnerabilityLink(getVulnerability(), getVulnerability().getVulnerabilityName(), descriptionWithUrls));
-                }
+                description.append(getUserName()).append(" unmarked Vulnerability");
+                appendVulnerabilityLink(description, descriptionUrlMap, historyView);
+                description.append(" as false positive");
                 description.append(".");
                 break;
             case VULNERABILITY_COMMENT:
                 description.append(getUserName()).append(" commented on Vulnerability");
-                if ((historyView != HistoryView.VULNERABILITY_HISTORY) && (getVulnerability() != null)) {
-                    description.append(" ").append(buildVulnerabilityLink(getVulnerability(), getVulnerability().getVulnerabilityName(), descriptionWithUrls));
-                }
+                appendVulnerabilityLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
             case VULNERABILITY_OTHER:
                 description.append(getUserName()).append(" performed an action on Vulnerability");
-                if ((historyView != HistoryView.VULNERABILITY_HISTORY) && (getVulnerability() != null)) {
-                    description.append(" ").append(buildVulnerabilityLink(getVulnerability(), getVulnerability().getVulnerabilityName(), descriptionWithUrls));
-                }
+                appendVulnerabilityLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
             case DEFECT_SUBMIT:
                 description.append(getUserName()).append(" submitted Defect ");
-                if (getDefect() != null) {
-                    description.append(buildDefectLink(getVulnerability(), getDefect().getNativeId(), descriptionWithUrls));
-                }
+                appendDefectLing(description, descriptionUrlMap, historyView);
                 description.append(" for Vulnerability");
-                if ((historyView != HistoryView.VULNERABILITY_HISTORY) && (getVulnerability() != null)) {
-                    description.append(" ").append(buildVulnerabilityLink(getVulnerability(), getVulnerability().getVulnerabilityName(), descriptionWithUrls));
-                }
+                appendVulnerabilityLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
             case DEFECT_STATUS_UPDATED:
                 description.append(getUserName()).append(" updated the status of Defect ");
-                if (getDefect() != null) {
-                    description.append(buildDefectLink(getVulnerability(), getDefect().getNativeId(), descriptionWithUrls));
-                }
+                appendDefectLing(description, descriptionUrlMap, historyView);
                 description.append(" for Vulnerability");
-                if ((historyView != HistoryView.VULNERABILITY_HISTORY) && (getVulnerability() != null)) {
-                    description.append(" ").append(buildVulnerabilityLink(getVulnerability(), getVulnerability().getVulnerabilityName(), descriptionWithUrls));
-                }
+                appendVulnerabilityLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
             case DEFECT_CLOSED:
                 description.append(getUserName()).append(" closed Defect ");
-                if (getDefect() != null) {
-                    description.append(buildDefectLink(getVulnerability(), getDefect().getNativeId(), descriptionWithUrls));
-                }
+                appendDefectLing(description, descriptionUrlMap, historyView);
                 description.append(" for Vulnerability");
-                if ((historyView != HistoryView.VULNERABILITY_HISTORY) && (getVulnerability() != null)) {
-                    description.append(" ").append(buildVulnerabilityLink(getVulnerability(), getVulnerability().getVulnerabilityName(), descriptionWithUrls));
-                }
+                appendVulnerabilityLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
             case DEFECT_APPEARED_AFTER_CLOSED:
                 // TODO: this needs to be reworded!!!
                 description.append(getUserName()).append(" uploaded a Scan with Vulnerability");
-                if ((historyView != HistoryView.VULNERABILITY_HISTORY) && (getVulnerability() != null)) {
-                    description.append(" ").append(buildVulnerabilityLink(getVulnerability(), getVulnerability().getVulnerabilityName(), descriptionWithUrls));
-                }
+                appendVulnerabilityLink(description, descriptionUrlMap, historyView);
                 description.append(" with previously closed Defect ");
-                if (getDefect() != null) {
-                    description.append(buildDefectLink(getVulnerability(), getDefect().getNativeId(), descriptionWithUrls));
-                }
+                appendDefectLing(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
             default:
-                description.append(getUserName()).append(" performed an action: ").append(getEventActionDisplayName());
+                description.append(getUserName()).append(" performed an action").append(getEventActionDisplayName());
+                if (getGroupCount() != null) {
+                    description.append(" on ").append(getGroupCount()).append(" items");
+                }
+                description.append(": ");
+                description.append(".");
         }
 
         String detail = getDetail();
@@ -450,9 +539,15 @@ public class Event extends AuditableEntity {
             description.append(" <span class='detail'>").append(detail).append("</span>");
         }
 
-        descriptionWithUrls.put("string", description.toString());
+        descriptionUrlMap.put("string", description.toString());
 
-        return descriptionWithUrls;
+        return descriptionUrlMap;
+    }
+
+    private void appendApplicationLink(StringBuilder description, Map<String, Object> descriptionUrlMap, HistoryView historyView) {
+        if ((getApplication() != null) && (historyView != HistoryView.APPLICATION_HISTORY) && (historyView != HistoryView.VULNERABILITY_HISTORY)) {
+            description.append(" ").append(buildApplicationLink(getApplication(), getApplication().getName(), descriptionUrlMap));
+        }
     }
 
     private String buildApplicationLink(Application application, String linkText, Map<String, Object> urlMap) {
@@ -479,6 +574,12 @@ public class Event extends AuditableEntity {
         return buildLink(urlString, linkText, urlMap);
     }
 
+    private void appendVulnerabilityLink(StringBuilder description, Map<String, Object> descriptionUrlMap, HistoryView historyView) {
+        if ((getVulnerability() != null) && (historyView != HistoryView.VULNERABILITY_HISTORY)) {
+            description.append(" ").append(buildVulnerabilityLink(getVulnerability(), getVulnerability().getVulnerabilityName(), descriptionUrlMap));
+        }
+    }
+
     private String buildVulnerabilityLink(Vulnerability vulnerability, String linkText, Map<String, Object> urlMap) {
 //        if (vulnerability == null) {
             return linkText;
@@ -490,6 +591,12 @@ public class Event extends AuditableEntity {
 //                "/vulnerabilities/" +
 //                vulnerability.getId();
 //        return buildLink(urlString, linkText, urlMap);
+    }
+
+    private void appendDefectLing(StringBuilder description, Map<String, Object> descriptionUrlMap, HistoryView historyView) {
+        if (getDefect() != null) {
+            description.append(buildDefectLink(getVulnerability(), getDefect().getNativeId(), descriptionUrlMap));
+        }
     }
 
     private String buildDefectLink(Vulnerability vulnerability, String linkText, Map<String, Object> urlMap) {

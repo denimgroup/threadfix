@@ -108,8 +108,10 @@ public class ApplicationEventTrackingAspect extends EventTrackingAspect {
     public void updateEventForScanDeletionAndEmitDeleteApplicationScanEvent(ProceedingJoinPoint joinPoint, Scan scan) throws Throwable {
         Application application = scan.getApplication();
         String eventDescription = eventService.buildDeleteScanString(scan);
+        Integer scanId = scan.getId();
 
         for (Event event: eventService.loadAllByScan(scan)) {
+            event.setDeletedScanId(scanId);
             event.setScan(null);
             scan.getEvents().remove(event);
             eventService.saveOrUpdate(event);
@@ -123,19 +125,20 @@ public class ApplicationEventTrackingAspect extends EventTrackingAspect {
 
         joinPoint.proceed();
         try {
-            Event event = generateDeleteScanEvent(application, eventDescription);
+            Event event = generateDeleteScanEvent(application, eventDescription, scanId);
             publishEventTrackingEvent(event);
         } catch (Exception e) {
             log.error("Error while logging Event: " + EventAction.APPLICATION_SCAN_DELETED, e);
         }
     }
 
-    protected Event generateDeleteScanEvent(Application application, String scanDescription) {
+    protected Event generateDeleteScanEvent(Application application, String scanDescription, Integer scanId) {
         Event event = new EventBuilder()
                 .setUser(userService.getCurrentUser())
                 .setEventAction(EventAction.APPLICATION_SCAN_DELETED)
                 .setApplication(application)
                 .setDetail(scanDescription)
+                .setDeletedScanId(scanId)
                 .generateEvent();
         eventService.saveOrUpdate(event);
         return event;

@@ -417,6 +417,7 @@ public class Application extends AuditableEntity {
 	}
 
 	@Transient
+	@JsonView({AllViews.ApplicationHistoryView.class})
 	public List<Event> getApplicationEvents() {
 		List<Event> applicationEvents = list();
 		for (Event event : getEvents()) {
