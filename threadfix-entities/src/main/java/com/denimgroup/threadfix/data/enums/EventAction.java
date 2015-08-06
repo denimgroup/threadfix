@@ -26,21 +26,26 @@ package com.denimgroup.threadfix.data.enums;
 import com.fasterxml.jackson.annotation.JsonView;
 
 public enum EventAction {
+    GROUPED_VULNERABILITY_OPEN_SCAN_DELETED("Open Vulnerabilities From Scan Deletion"),
+    GROUPED_VULNERABILITY_OPEN_SCAN_UPLOAD("Create Vulnerabilities From Scan Upload"),
+    GROUPED_VULNERABILITY_CLOSE_SCAN_DELETED("Close Vulnerabilities From Scan Deletion"),
+    GROUPED_VULNERABILITY_CLOSE_SCAN_UPLOAD("Close Vulnerabilities From Scan Upload"),
+    GROUPED_VULNERABILITY_REOPEN_SCAN_UPLOAD("Reopen Vulnerabilities From Scan Upload"),
     APPLICATION_CREATE("Create Application"),
     APPLICATION_EDIT("Edit Application"),
     APPLICATION_SET_TAGS("Set Application Tags"),
     APPLICATION_SCAN_UPLOADED("Upload Application Scan"),
     APPLICATION_SCAN_DELETED("Delete Application Scan"),
     VULNERABILITY_CREATE("Create Vulnerability"),
-    VULNERABILITY_OPEN_SCAN_DELETED("Open Vulnerability From Scan Deletion"),
-    VULNERABILITY_OPEN_SCAN_UPLOAD("Create Vulnerability From Scan Upload"),
+    VULNERABILITY_OPEN_SCAN_DELETED("Open Vulnerability From Scan Deletion", GROUPED_VULNERABILITY_OPEN_SCAN_DELETED),
+    VULNERABILITY_OPEN_SCAN_UPLOAD("Create Vulnerability From Scan Upload", GROUPED_VULNERABILITY_OPEN_SCAN_UPLOAD),
     VULNERABILITY_CLOSE("Close Vulnerability"),
     VULNERABILITY_CLOSE_FINDINGS_MERGE("Close Vulnerability From Findings Merge"),
-    VULNERABILITY_CLOSE_SCAN_DELETED("Close Vulnerability From Scan Deletion"),
-    VULNERABILITY_CLOSE_SCAN_UPLOAD("Close Vulnerability From Scan Upload"),
+    VULNERABILITY_CLOSE_SCAN_DELETED("Close Vulnerability From Scan Deletion", GROUPED_VULNERABILITY_CLOSE_SCAN_DELETED),
+    VULNERABILITY_CLOSE_SCAN_UPLOAD("Close Vulnerability From Scan Upload", GROUPED_VULNERABILITY_CLOSE_SCAN_UPLOAD),
     VULNERABILITY_CLOSE_MANUAL("Close Vulnerability Manually"),
     VULNERABILITY_REOPEN("Reopen Vulnerability"),
-    VULNERABILITY_REOPEN_SCAN_UPLOAD("Reopen Vulnerability From Scan Upload"),
+    VULNERABILITY_REOPEN_SCAN_UPLOAD("Reopen Vulnerability From Scan Upload", GROUPED_VULNERABILITY_REOPEN_SCAN_UPLOAD),
     VULNERABILITY_REOPEN_MANUAL("Reopen Vulnerability Manually"),
     VULNERABILITY_MARK_FALSE_POSITIVE("Mark Vulnerability False Positive"),
     VULNERABILITY_UNMARK_FALSE_POSITIVE("Unmark Vulnerability False Positive"),
@@ -49,12 +54,7 @@ public enum EventAction {
     DEFECT_SUBMIT("Submit Defect"),
     DEFECT_STATUS_UPDATED("Update Defect Status"),
     DEFECT_CLOSED("Close Defect"),
-    DEFECT_APPEARED_AFTER_CLOSED("Appeared In Scan After Defect Closed"),
-    GROUPED_VULNERABILITY_OPEN_SCAN_DELETED("Open Vulnerabilities From Scan Deletion"),
-    GROUPED_VULNERABILITY_OPEN_SCAN_UPLOAD("Create Vulnerabilities From Scan Upload"),
-    GROUPED_VULNERABILITY_CLOSE_SCAN_DELETED("Close Vulnerabilities From Scan Deletion"),
-    GROUPED_VULNERABILITY_CLOSE_SCAN_UPLOAD("Close Vulnerabilities From Scan Upload"),
-    GROUPED_VULNERABILITY_REOPEN_SCAN_UPLOAD("Reopen Vulnerabilities From Scan Upload");
+    DEFECT_APPEARED_AFTER_CLOSED("Appeared In Scan After Defect Closed");
 
     public static EventAction[] organizationEventActions = { APPLICATION_CREATE, APPLICATION_EDIT,
             APPLICATION_SET_TAGS, APPLICATION_SCAN_UPLOADED, APPLICATION_SCAN_DELETED };
@@ -83,7 +83,14 @@ public enum EventAction {
         this.displayName = displayName;
     }
 
+    EventAction(String displayName, EventAction groupedEventAction) {
+        this.displayName = displayName;
+        this.groupedEventAction = groupedEventAction;
+    }
+
     private String displayName;
+
+    EventAction groupedEventAction;
 
     @JsonView(Object.class)
     public String getDisplayName() { return displayName; }
@@ -149,9 +156,9 @@ public enum EventAction {
     }
 
     public EventAction getGroupedEventAction() {
-        try {
-            return valueOf("GROUPED_" + this.toString());
-        } catch (Exception e) {
+        if (groupedEventAction != null) {
+            return groupedEventAction;
+        } else {
             return this;
         }
     }

@@ -29,7 +29,6 @@ package com.denimgroup.threadfix.service.merge;
 
 import com.denimgroup.threadfix.data.dao.*;
 import com.denimgroup.threadfix.data.entities.*;
-import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.VulnerabilityStatusService;
@@ -136,7 +135,6 @@ public class RemappingServiceImpl implements RemappingService {
         }
 
         for (Vulnerability vulnerability : vulnerabilitiesToUpdate) {
-            boolean wasActive = vulnerability.isActive();
             fixStateAndMappings(channel, vulnerability);
             vulnerabilityService.storeVulnerability(vulnerability);
         }

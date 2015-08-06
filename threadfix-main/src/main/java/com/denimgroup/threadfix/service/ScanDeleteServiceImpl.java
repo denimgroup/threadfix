@@ -24,9 +24,7 @@
 
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.dao.*;
 import com.denimgroup.threadfix.data.entities.*;
-import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -804,19 +802,15 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 		}
 		
 		if (newCloseTime != null && newOpenTime != null) {
-			boolean closingVuln = false;
-			boolean openingVuln = false;
 			if (vuln.isFoundByScanner()) {
 				vuln.setCloseTime(newCloseTime);
 				
 				if (!vuln.isActive() || newCloseTime.before(newOpenTime)) {
 					vulnerabilityStatusService.openVulnerability(vuln, scanToDelete, newOpenTime, true);
-					openingVuln = true;
 				}
 				
 				if (vuln.isActive() || newCloseTime.after(newOpenTime)) {
 					vulnerabilityStatusService.closeVulnerability(vuln, scanToDelete, newCloseTime, true, false);
-					closingVuln = true;
 				}
 			}
 			vuln.setOpenTime(newOpenTime);
@@ -865,18 +859,14 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			}
 		}
 
-		boolean closingVuln = false;
-		boolean openingVuln = false;
 		if (!vuln.isActive() && (newCloseTime == null || newOpenTime == null ||
 				newCloseTime.before(newOpenTime))) {
 			vulnerabilityStatusService.openVulnerability(vuln, scanToDelete, newOpenTime, true);
-			openingVuln = true;
 		}
 		
 		if (vuln.isActive() && newCloseTime != null &&
 				newCloseTime.after(newOpenTime)) {
 			vulnerabilityStatusService.closeVulnerability(vuln, scanToDelete, newCloseTime, true, false);
-			closingVuln = true;
 		}
 		vulnerabilityService.storeVulnerability(vuln);
 	}

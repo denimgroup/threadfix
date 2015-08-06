@@ -32,7 +32,6 @@ import com.denimgroup.threadfix.service.EventBuilder;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.DeclareError;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -117,11 +116,6 @@ public class ApplicationEventTrackingAspect extends EventTrackingAspect {
             eventService.saveOrUpdate(event);
         }
         scanService.storeScan(scan);
-
-//        for (Event event: eventService.loadAllByScan(scan)) {
-//            event.setScan(null);
-//            eventService.saveOrUpdate(event);
-//        }
 
         joinPoint.proceed();
         try {

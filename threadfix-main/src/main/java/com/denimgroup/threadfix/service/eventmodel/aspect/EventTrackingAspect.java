@@ -23,20 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.eventmodel.aspect;
 
-import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Event;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.EventBuilder;
 import com.denimgroup.threadfix.service.EventService;
 import com.denimgroup.threadfix.service.ScanService;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.service.eventmodel.event.EventTrackingEvent;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;

@@ -77,7 +77,7 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
 
         String uploadScanString = scan.getApplicationChannel().getChannelType().getName() +
                 " Scan dated " + dateFormatter.format(scan.getImportTime().getTime()) + " with " + scan.getNumberTotalVulnerabilities() +
-                " Vulnerabilities. The scan was uploaded from ";// + scan.getOriginalFileName() + ".";
+                " Vulnerabilities. The scan was uploaded from " + buildFileNamesString(scan.getOriginalFileNames()) + ".";
 
         return uploadScanString;
     }
@@ -96,7 +96,7 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
 
         String deleteScanString = scan.getApplicationChannel().getChannelType().getName() +
                 " Scan dated " + dateFormatter.format(scan.getImportTime().getTime()) + " with " + scan.getNumberTotalVulnerabilities() +
-                " Vulnerabilities. The scan was uploaded from ";// + scan.getOriginalFileName();
+                " Vulnerabilities. The scan was uploaded from " + buildFileNamesString(scan.getOriginalFileNames());
         if (scanUploadEvent != null) {
             deleteScanString += " on " + dateFormatter.format(scanUploadEvent.getDate());
         }
@@ -106,13 +106,21 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
 
     }
 
-    private String getUserName() {
-        String userName = "ThreadFix";
-        User user = userService.getCurrentUser();
-        if (user != null) {
-            userName = user.getName();
+    private String buildFileNamesString(List<String> fileNameList) {
+        StringBuilder fileNames = new StringBuilder();
+        int i = 0;
+        int numberOfFileNames = fileNameList.size();
+        for (String fileName : fileNameList) {
+            fileNames.append(fileName);
+            i++;
+            if (i < numberOfFileNames) {
+                fileNames.append(", ");
+                if (i == numberOfFileNames - 1) {
+                    fileNames.append("and ");
+                }
+            }
         }
-        return userName;
+        return fileNames.toString();
     }
 
     @Override

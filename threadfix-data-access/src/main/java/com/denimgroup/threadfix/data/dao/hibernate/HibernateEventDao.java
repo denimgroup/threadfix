@@ -37,15 +37,12 @@ import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Repository
 public class HibernateEventDao extends AbstractObjectDao<Event> implements EventDao {
-
-    private SessionFactory sessionFactory;
 
     @Autowired
     public HibernateEventDao(SessionFactory sessionFactory) {

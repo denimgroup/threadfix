@@ -298,7 +298,7 @@ public class EditApplicationController {
             if (dbApplication == null) {
                 return FormRestResponse.failure("Invalid data.");
             }
-			dbApplication.setTags(cleanTags(newTags));
+            dbApplication.setTags(cleanTags(newTags));
             applicationService.storeApplication(dbApplication, EventAction.APPLICATION_SET_TAGS);
 
             return RestResponse.success(newTags);

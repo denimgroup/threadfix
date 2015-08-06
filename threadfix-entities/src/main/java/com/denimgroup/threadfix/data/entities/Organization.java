@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -32,10 +33,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static java.util.Collections.*;
@@ -145,27 +143,43 @@ public class Organization extends AuditableEntity {
         sort(organizationEvents, new Comparator<Event>() {
             @Override
             public int compare(Event o1, Event o2) {
-                if ((o1 == null) && (o2 == null)) {
-                    return 0;
-                } else if (o1 == null) {
-                    return -1;
-                } else if (o2 == null) {
+                if (o2 == null) {
                     return 1;
-                } else if ((o1.getDate() == null) && (o2.getDate() == null)) {
-                    return o1.getId().compareTo(o2.getId());
-                } else if (o1.getDate() == null) {
-                    return -1;
-                } else if (o2.getDate() == null) {
-                    return 1;
-                } else {
-                    return o1.getDate().compareTo(o2.getDate());
                 }
+
+                int compared = 0;
+
+                Date date1 = o1.getDate();
+                Date date2 = o2.getDate();
+                if ((date1 == null) && (date2 != null)) {
+                    return -1;
+                } else if ((date1 != null) && (date2 == null)) {
+                    return 1;
+                }
+                compared = date1.compareTo(date2);
+                if (compared != 0) {
+                    return compared;
+                }
+
+                EventAction eventAction1 = o1.getEventActionEnum();
+                EventAction eventAction2 = o2.getEventActionEnum();
+                if ((eventAction1 == null) && (eventAction2 != null)) {
+                    return -1;
+                } else if ((eventAction1 != null) && (eventAction2 == null)) {
+                    return 1;
+                }
+                compared = eventAction1.compareTo(eventAction2);
+                if (compared != 0) {
+                    return compared;
+                }
+
+                return o1.getId().compareTo(o2.getId());
             }
         });
         return organizationEvents;
     }
 
-    // TODO this might belong somewhere else
+	// TODO this might belong somewhere else
 	/*
 	 * Index Severity 0 Info 1 Low 2 Medium 3 High 4 Critical 5 # Total vulns
 	 */

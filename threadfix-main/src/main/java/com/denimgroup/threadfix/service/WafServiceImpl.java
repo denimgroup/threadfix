@@ -25,7 +25,6 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.dao.*;
 import com.denimgroup.threadfix.data.entities.*;
-import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.waf.RealTimeProtectionGenerator;
 import com.denimgroup.threadfix.service.waf.RealTimeProtectionGeneratorFactory;

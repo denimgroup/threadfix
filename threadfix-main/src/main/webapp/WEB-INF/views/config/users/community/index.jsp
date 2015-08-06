@@ -4,9 +4,6 @@
   <title>Manage Users</title>
   <cbs:cachebustscript src="/scripts/user-modal-controller.js"/>
   <cbs:cachebustscript src="/scripts/user-page-controller.js"/>
-  <security:authorize ifAllGranted="ROLE_ENTERPRISE">
-    <cbs:cachebustscript src="/scripts/history-table-controller.js"/>
-  </security:authorize>
 </head>
 
 <body id="config" ng-controller="UserPageController">

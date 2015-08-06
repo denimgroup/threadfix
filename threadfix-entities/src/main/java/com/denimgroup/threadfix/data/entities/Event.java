@@ -29,7 +29,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -287,12 +286,15 @@ public class Event extends AuditableEntity {
     @Transient
     @JsonView({ AllViews.HistoryView.class})
     public String getDescription() {
-        String description = null;
-        switch (getEventActionEnum()) {
-            default:
-                description = getUserName() + " performed an action: " + getEventActionDisplayName();
+        StringBuilder description = new StringBuilder();
+
+        description.append(getUserName()).append(" performed an action");
+        if (getGroupCount() != null) {
+            description.append(" on ").append(getGroupCount()).append(" items");
         }
-        return description;
+        description.append(": ").append(getEventActionDisplayName());
+
+        return description.toString();
     }
 
     @Transient
@@ -322,8 +324,6 @@ public class Event extends AuditableEntity {
     @Transient
     @JsonIgnore
     private Map<String, Object> getFormattedDescriptionWithUrls(HistoryView historyView) {
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM d, yyyy h:mm:ss a");
-
         Map<String, Object> descriptionUrlMap = new HashMap<String, Object>();
         descriptionUrlMap.put("urlCount", 0);
 
@@ -498,21 +498,21 @@ public class Event extends AuditableEntity {
                 break;
             case DEFECT_SUBMIT:
                 description.append(getUserName()).append(" submitted Defect ");
-                appendDefectLing(description, descriptionUrlMap, historyView);
+                appendDefectLink(description, descriptionUrlMap, historyView);
                 description.append(" for Vulnerability");
                 appendVulnerabilityLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
             case DEFECT_STATUS_UPDATED:
                 description.append(getUserName()).append(" updated the status of Defect ");
-                appendDefectLing(description, descriptionUrlMap, historyView);
+                appendDefectLink(description, descriptionUrlMap, historyView);
                 description.append(" for Vulnerability");
                 appendVulnerabilityLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
             case DEFECT_CLOSED:
                 description.append(getUserName()).append(" closed Defect ");
-                appendDefectLing(description, descriptionUrlMap, historyView);
+                appendDefectLink(description, descriptionUrlMap, historyView);
                 description.append(" for Vulnerability");
                 appendVulnerabilityLink(description, descriptionUrlMap, historyView);
                 description.append(".");
@@ -522,15 +522,15 @@ public class Event extends AuditableEntity {
                 description.append(getUserName()).append(" uploaded a Scan with Vulnerability");
                 appendVulnerabilityLink(description, descriptionUrlMap, historyView);
                 description.append(" with previously closed Defect ");
-                appendDefectLing(description, descriptionUrlMap, historyView);
+                appendDefectLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
             default:
-                description.append(getUserName()).append(" performed an action").append(getEventActionDisplayName());
+                description.append(getUserName()).append(" performed an action");
                 if (getGroupCount() != null) {
                     description.append(" on ").append(getGroupCount()).append(" items");
                 }
-                description.append(": ");
+                description.append(": ").append(getEventActionDisplayName());
                 description.append(".");
         }
 
@@ -581,19 +581,28 @@ public class Event extends AuditableEntity {
     }
 
     private String buildVulnerabilityLink(Vulnerability vulnerability, String linkText, Map<String, Object> urlMap) {
-//        if (vulnerability == null) {
+        if (vulnerability == null) {
             return linkText;
-//        }
-//        String urlString = "/organizations/" +
-//                vulnerability.getApplication().getOrganization().getId() +
-//                "/applications/" +
-//                vulnerability.getApplication().getId() +
-//                "/vulnerabilities/" +
-//                vulnerability.getId();
-//        return buildLink(urlString, linkText, urlMap);
+        }
+        Application application = getApplication();
+        if (application == null) {
+            application = vulnerability.getApplication();
+        }
+        if (application == null) {
+            return linkText;
+        }
+        Organization organization = application.getOrganization();
+        if (organization == null) {
+            return linkText;
+        }
+
+        String urlString = "/organizations/" + organization.getId() +
+                "/applications/" + application.getId() +
+                "/vulnerabilities/" + vulnerability.getId();
+        return buildLink(urlString, linkText, urlMap);
     }
 
-    private void appendDefectLing(StringBuilder description, Map<String, Object> descriptionUrlMap, HistoryView historyView) {
+    private void appendDefectLink(StringBuilder description, Map<String, Object> descriptionUrlMap, HistoryView historyView) {
         if (getDefect() != null) {
             description.append(buildDefectLink(getVulnerability(), getDefect().getNativeId(), descriptionUrlMap));
         }
