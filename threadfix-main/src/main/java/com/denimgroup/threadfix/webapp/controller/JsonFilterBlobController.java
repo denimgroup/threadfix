@@ -23,15 +23,19 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.data.entities.FilterDate;
 import com.denimgroup.threadfix.data.entities.FilterJsonBlob;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.AcceptanceCriteriaStatusService;
+import com.denimgroup.threadfix.service.FilterDateService;
 import com.denimgroup.threadfix.service.FilterJsonBlobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -42,8 +46,16 @@ public class JsonFilterBlobController {
 
     @Autowired
     private FilterJsonBlobService filterJsonBlobService;
+    @Autowired
+    private FilterDateService filterDateService;
     @Autowired(required = false)
     private AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
+
+    // Turn Date.getTime() javascript numbers into java.util.Date objects.
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(Date.class, new NumericDatePropertyEditorSupport());
+    }
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
     public @ResponseBody RestResponse<List<FilterJsonBlob>> save(@ModelAttribute FilterJsonBlob filterJsonBlob) {
@@ -80,6 +92,32 @@ public class JsonFilterBlobController {
         FilterJsonBlob blob = filterJsonBlobService.loadById(filterId);
         filterJsonBlobService.markInactive(blob);
         return RestResponse.success(filterJsonBlobService.loadAllActive());
+    }
+
+    @RequestMapping(value = "saveDateRange", method = RequestMethod.POST)
+    public @ResponseBody Object saveDateRange(@ModelAttribute FilterDate filterDate) {
+
+        FilterDate dbFilterDate = filterDateService.loadByName(filterDate.getName());
+
+        // If there is active saved filter date range with same name, and this is not updating then return error
+        if (dbFilterDate != null)
+            if ( (filterDate.getId() == null)
+                    || (filterDate.getId() != dbFilterDate.getId())) {
+                return RestResponse.failure("That name already exists.");
+            }
+
+        LOG.info("Saving filter date range " + filterDate.getName());
+        filterDateService.saveOrUpdate(filterDate);
+        return RestResponse.success(filterDate);
+
+    }
+
+    @RequestMapping(value = "dateRange/{filterId}/delete", method = RequestMethod.POST)
+    public @ResponseBody Object deleteDateRange(@PathVariable int filterId) {
+        FilterDate dbFilterDate = filterDateService.loadById(filterId);
+        LOG.info("Deleting filter date range " + dbFilterDate.getName());
+        filterDateService.markInactive(dbFilterDate);
+        return RestResponse.success("Successfully deleted date range");
     }
 
 }

@@ -745,6 +745,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities, customSev
         var hashBefore, hashAfter;
         firstHashInList = null;
         lastHashInList = null;
+        currentInfoNo = 0, currentLowNo = 0, currentMedNo = 0, currentHighNo = 0, currentCriticalNo = 0, currentTotalNo = 0;
 
         reportUtilities.createTeamAppNames($scope);
         var trendingScansData = [];

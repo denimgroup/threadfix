@@ -71,6 +71,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                             var parameters = JSON.parse(filter.json);
                             return (!parameters.filterType || parameters.filterType.isVulnSearchFilter);
                         });
+                        $scope.savedDateRanges = data.object.savedDateRanges;
                         $scope.filterParameters = data.object.filterParameters;
                         $scope.genericSeverityList = data.object.genericSeverities;
                     }
