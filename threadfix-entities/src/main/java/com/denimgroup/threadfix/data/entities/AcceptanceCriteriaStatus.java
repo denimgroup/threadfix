@@ -77,7 +77,7 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
     }
 
     @Column
-    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
+    @JsonView({AllViews.FormInfo.class, AllViews.AcceptanceCriteriaPageView.class})
     public Boolean isPassing() {
         return passing != null && passing;
     }
@@ -146,19 +146,20 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
 
     @Transient
     @JsonProperty("acceptanceCriteria")
-    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.AcceptanceCriteriaPageView.class})
     public Map<String, ? extends Serializable> getAcceptanceCriteriaJson() {
         if(acceptanceCriteria != null) {
             return map(
                     "id", acceptanceCriteria.getId(),
-                    "name", acceptanceCriteria.getName());
+                    "name", acceptanceCriteria.getName(),
+                    "filterName", acceptanceCriteria.getFilterJsonBlob().getName());
         } else {
             return null;
         }
     }
 
     @Transient
-    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.AcceptanceCriteriaPageView.class})
     public String getName() {
         return application.getName();
     }

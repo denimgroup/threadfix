@@ -76,6 +76,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                     }
                     if ($scope.filterParameters) {
 
+                        $scope.$parent.tab = { vulnerabilities: true};
                         $scope.$parent.showVulnTab = true;
                         $scope.$parent.showAppsTab = false;
                         $scope.resetFilters();
