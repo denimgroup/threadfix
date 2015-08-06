@@ -416,18 +416,6 @@ public class Application extends AuditableEntity {
 		this.events = events;
 	}
 
-	@Transient
-	@JsonView({AllViews.ApplicationHistoryView.class})
-	public List<Event> getApplicationEvents() {
-		List<Event> applicationEvents = list();
-		for (Event event : getEvents()) {
-			if (event.getEventActionEnum().isApplicationEventAction()) {
-				applicationEvents.add(event);
-			}
-		}
-		return applicationEvents;
-	}
-
 	@OneToMany(mappedBy = "application", cascade = CascadeType.ALL)
 	@JsonIgnore
 	public List<AccessControlApplicationMap> getAccessControlApplicationMaps() {

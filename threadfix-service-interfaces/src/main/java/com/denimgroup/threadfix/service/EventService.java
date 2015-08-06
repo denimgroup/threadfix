@@ -40,5 +40,11 @@ public interface EventService extends GenericObjectService<Event> {
 
     String buildDeleteScanString(Scan scan);
 
+    List<Event> getApplicationEvents(Application application);
+
+    List<Event> getOrganizationEvents(Organization organization);
+
+    List<Event> getVulnerabilityEvents(Vulnerability vulnerability);
+
     List<Event> getUserEvents(User user);
 }

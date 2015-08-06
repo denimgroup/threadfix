@@ -35,10 +35,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static java.util.Collections.sort;
 
 @Service
 @Transactional
@@ -50,6 +50,8 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
     private EventDao eventDao;
     @Autowired
     private UserService userService;
+
+    private EventComparator eventComparator = new EventComparator();
 
     @Override
     GenericObjectDao<Event> getDao() {
@@ -124,38 +126,56 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
     }
 
     @Override
-    public List<Event> getUserEvents(User user) {
-        List<Event> rawUngroupedUserEvents = eventDao.retrieveUngroupedByUser(user);
-        List<Event> rawGroupedUserEvents = eventDao.retrieveGroupedByUser(user);
+    public List<Event> getApplicationEvents(Application application) {
+        List<Event> applicationEvents = list();
+        for (Event event : application.getEvents()) {
+            if (event.getEventActionEnum().isApplicationEventAction()) {
+                applicationEvents.add(event);
+            }
+        }
+        sort(applicationEvents, eventComparator);
+        return applicationEvents;
+    }
 
-
-        List<Event> userEvents = list();
-
-        userEvents.addAll(rawGroupedUserEvents);
-        userEvents.addAll(rawUngroupedUserEvents);
-        Collections.sort(userEvents, new Comparator<Event>() {
-            @Override
-            public int compare(Event e1, Event e2) {
-                int compared = e1.getDate().compareTo(e2.getDate());
-                if (compared != 0) {
-                    return compared;
-                }
-                compared = e1.getEventAction().compareTo(e2.getEventAction());
-                if (compared != 0) {
-                    return compared;
-                }
-                int h1 = e1.hashCode();
-                int h2 = e2.hashCode();
-                if (h1 < h2) {
-                    return -1;
-                } else if (h1 == h2) {
-                    return 0;
-                } else {
-                    return 1;
+    @Override
+    public List<Event> getOrganizationEvents(Organization organization) {
+        List<Event> organizationEvents = list();
+        for (Application application: organization.getApplications()) {
+            for (Event event: application.getEvents()) {
+                if (event.getEventActionEnum().isOrganizationEventAction()) {
+                    organizationEvents.add(event);
                 }
             }
-        });
+        }
+        sort(organizationEvents, eventComparator);
+        return organizationEvents;
+    }
 
+    @Override
+    public List<Event> getVulnerabilityEvents(Vulnerability vulnerability) {
+        List<Event> vulnerabilityEvents = list();
+        for (Event event : vulnerability.getEvents()) {
+            if (event.getEventActionEnum().isVulnerabilityEventAction()) {
+                vulnerabilityEvents.add(event);
+            }
+        }
+        if (vulnerability.getDefect() != null) {
+            for (Event event : vulnerability.getDefect().getEvents()) {
+                if (event.getEventActionEnum().isVulnerabilityEventAction()) {
+                    vulnerabilityEvents.add(event);
+                }
+            }
+        }
+        sort(vulnerabilityEvents, eventComparator);
+        return vulnerabilityEvents;
+    }
+
+    @Override
+    public List<Event> getUserEvents(User user) {
+        List<Event> userEvents = list();
+        userEvents.addAll(eventDao.retrieveUngroupedByUser(user));
+        userEvents.addAll(eventDao.retrieveGroupedByUser(user));
+        Collections.sort(userEvents, eventComparator);
         return userEvents;
     }
 

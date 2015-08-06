@@ -129,56 +129,6 @@ public class Organization extends AuditableEntity {
 		this.accessControlTeamMaps = accessControlTeamMaps;
 	}
 
-    @Transient
-    @JsonView({Object.class})
-    public List<Event> getOrganizationEvents() {
-        List<Event> organizationEvents = list();
-        for (Application application: getApplications()) {
-            for (Event event: application.getEvents()) {
-                if (event.getEventActionEnum().isOrganizationEventAction()) {
-                    organizationEvents.add(event);
-                }
-            }
-        }
-        sort(organizationEvents, new Comparator<Event>() {
-            @Override
-            public int compare(Event o1, Event o2) {
-                if (o2 == null) {
-                    return 1;
-                }
-
-                int compared = 0;
-
-                Date date1 = o1.getDate();
-                Date date2 = o2.getDate();
-                if ((date1 == null) && (date2 != null)) {
-                    return -1;
-                } else if ((date1 != null) && (date2 == null)) {
-                    return 1;
-                }
-                compared = date1.compareTo(date2);
-                if (compared != 0) {
-                    return compared;
-                }
-
-                EventAction eventAction1 = o1.getEventActionEnum();
-                EventAction eventAction2 = o2.getEventActionEnum();
-                if ((eventAction1 == null) && (eventAction2 != null)) {
-                    return -1;
-                } else if ((eventAction1 != null) && (eventAction2 == null)) {
-                    return 1;
-                }
-                compared = eventAction1.compareTo(eventAction2);
-                if (compared != 0) {
-                    return compared;
-                }
-
-                return o1.getId().compareTo(o2.getId());
-            }
-        });
-        return organizationEvents;
-    }
-
 	// TODO this might belong somewhere else
 	/*
 	 * Index Severity 0 Info 1 Low 2 Medium 3 High 4 Critical 5 # Total vulns
