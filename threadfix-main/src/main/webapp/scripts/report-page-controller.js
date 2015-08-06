@@ -32,6 +32,10 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                     $scope.genericVulnerabilities = data.object.vulnTypes;
                     $scope.savedFilters = data.object.savedFilters;
                     $scope.savedDateRanges = data.object.savedDateRanges;
+                    if (!$scope.savedDateRanges)
+                        $scope.savedDateRanges = [];
+                    $scope.savedDateRanges.unshift({name: ""});
+                    $scope.selectedDateRange = $scope.savedDateRanges[0];
                     $scope.searchApplications = data.object.applications;
                     $scope.filterParameters = data.object.filterParameters;
                     $scope.tags = data.object.tags;

@@ -72,6 +72,10 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                             return (!parameters.filterType || parameters.filterType.isVulnSearchFilter);
                         });
                         $scope.savedDateRanges = data.object.savedDateRanges;
+                        if (!$scope.savedDateRanges)
+                            $scope.savedDateRanges = [];
+                        $scope.savedDateRanges.unshift({name: ""});
+                        $scope.selectedDateRange = $scope.savedDateRanges[0];
                         $scope.filterParameters = data.object.filterParameters;
                         $scope.genericSeverityList = data.object.genericSeverities;
                     }

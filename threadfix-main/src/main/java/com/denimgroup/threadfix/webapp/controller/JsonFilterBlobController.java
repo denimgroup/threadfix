@@ -30,6 +30,8 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.AcceptanceCriteriaStatusService;
 import com.denimgroup.threadfix.service.FilterDateService;
 import com.denimgroup.threadfix.service.FilterJsonBlobService;
+import com.denimgroup.threadfix.views.AllViews;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -94,6 +96,7 @@ public class JsonFilterBlobController {
         return RestResponse.success(filterJsonBlobService.loadAllActive());
     }
 
+    @JsonView(AllViews.VulnSearchApplications.class)
     @RequestMapping(value = "saveDateRange", method = RequestMethod.POST)
     public @ResponseBody Object saveDateRange(@ModelAttribute FilterDate filterDate) {
 

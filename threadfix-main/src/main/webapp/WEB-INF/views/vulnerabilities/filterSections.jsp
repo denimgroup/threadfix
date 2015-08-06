@@ -362,13 +362,10 @@
                 </div>
                 <p class="input-group">
                     <select ng-show="savedDateRanges" id="filterSelect" style="width: 135px;" ng-model="selectedDateRange" ng-change="selectDateRange(selectedDateRange)"
-                            <%--ng-options="dateRange as dateRange.name for dateRange in savedDateRanges"--%>
-                            >
-                        <option value="undefined">Select</option>
-                        <option ng-repeat="dateRange in savedDateRanges" value="{{ dateRange }}" >{{dateRange.name}}</option>
+                            ng-options="dateRange.name for dateRange in savedDateRanges">
                     </select>
                     <span class="input-group-btn">
-                        <button tooltip="Save Date Range" type="button" ng-show="showDateRange" class="btn btn-default" ng-click="saveDate()">{{currentDateRange ? Edit : Save}}</button>
+                        <button tooltip="{{currentDateRange && 'Edit' || 'Save'}} Date Range" type="button" ng-show="showDateRange" class="btn btn-default" ng-click="saveDate()"><i class="icon-edit"></i></button>
                     </span>
                 </p>
             </div>
