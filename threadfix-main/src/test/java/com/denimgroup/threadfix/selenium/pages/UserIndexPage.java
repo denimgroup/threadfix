@@ -417,11 +417,10 @@ public class UserIndexPage extends BasePage {
 	}
 	
 	public boolean isRoleSelected(String userName,String role){
-		waitForElement(driver.findElementById("roleSelect"));
         if (userName != null) {
             clickUserLink(userName);
         }
-        waitForElementPresence("roleSelect", 5000);
+        waitForElement(driver.findElementById("roleSelect"));
 		return new Select(driver.findElementById("roleSelect")).getFirstSelectedOption().getText().contains(role);
 	}
 
