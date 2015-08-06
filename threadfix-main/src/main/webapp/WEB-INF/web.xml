@@ -349,7 +349,8 @@
 				protected-regex ^/reports/filter/delete/[0-9]+$,
 				protected-regex ^/reports/filter/dateRange/[0-9]+/delete$,
 				protected-regex ^/reports/filter/saveDateRange$,
-				protected-regex ^/reports/search/export/csv$
+				protected-regex ^/reports/search/export/csv$,
+				protected-regex ^/reports/search/export/ssvl$
         	</param-value>
 		</init-param>
 	</filter>
