@@ -150,15 +150,9 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
                         .add(Projections.groupProperty("eventAction").as("eventAction"))
                         .add(Projections.groupProperty("scan").as("scan"))
                         .add(Projections.groupProperty("deletedScanId").as("deletedScanId"))
-                        .add(Projections.property("date"), "date")
-                        .add(Projections.property("apiAction"), "apiAction")
-                        .add(Projections.property("application"), "application")
-                        .add(Projections.property("user"), "user")
-                        .add(Projections.property("vulnerability"), "vulnerability")
-                        .add(Projections.property("defect"), "defect")
-                        .add(Projections.property("vulnerabilityComment"), "vulnerabilityComment")
-                        .add(Projections.property("detail"), "detail")
-                        .add(Projections.property("status"), "status")
+                        .add(Projections.min("date"), "date")
+                        .add(Projections.groupProperty("application"), "application")
+                        .add(Projections.groupProperty("user"), "user")
         );
 
         criteria.setResultTransformer(Transformers.aliasToBean(Event.class));
