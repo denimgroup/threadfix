@@ -454,6 +454,11 @@
             <a id="exportCSVButton" ng-click="exportCSV(reportId, DISA_STIG)" class="btn">Export CSV</a>
         </div>
     </div>
+    <div class="accordion-group" ng-show="treeTeam || vulnSearch || treeApplication || reportId === 11 || reportId === 13">
+        <div class="accordion-heading" style="text-align:center">
+            <a id="exportSSVLButton" ng-click="exportSSVL(reportId, DISA_STIG)" class="btn">Export SSVL</a>
+        </div>
+    </div>
 
     <div class="accordion-group"  ng-hide="treeTeam || vulnSearch || treeApplication">
         <div class="accordion-heading" style="text-align:center">
