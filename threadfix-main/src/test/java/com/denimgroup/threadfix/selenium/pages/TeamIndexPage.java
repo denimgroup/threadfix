@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -382,6 +383,15 @@ public class TeamIndexPage extends BasePage {
 
     public boolean isApplicationTotalNumberCorrect(String teamName, String appName, String expectecNumber) {
         return driver.findElementById("numTotalVulns" + teamName + "-" + appName).getText().trim().equals(expectecNumber);
+    }
+
+    public boolean isSourceFolderInvalidErrorPresent() {
+        try {
+            driver.findElementById("sourceFolderOtherError");
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+        return true;
     }
 
     /*------------------------------------ Void Methods ----------------------------------------*/

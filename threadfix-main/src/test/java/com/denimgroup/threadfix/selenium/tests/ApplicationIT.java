@@ -862,6 +862,8 @@ public class ApplicationIT extends BaseDataTest {
                 .setSourceCodeFolder(repositoryPath)
                 .clickModalSubmit();
 
+        assertFalse("Source Code Folder was invalid.", teamIndexPage.isSourceFolderInvalidErrorPresent());
+
         ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName)
                 .clickEditDeleteBtn()
                 .expandSourceCodeFields();
