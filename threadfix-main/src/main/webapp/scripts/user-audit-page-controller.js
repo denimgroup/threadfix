@@ -105,6 +105,26 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
             });
     };
 
+    $scope.getAllUsers = function(callback) {
+
+        var users = [];
+
+        $http.get(tfEncoder.encode('/configuration/users/all')).
+            success(function(data) {
+
+                if (data.success) {
+                    callback(data.object);
+                } else {
+                    $scope.errorMessage = "Failure. Message was : " + data.message;
+                }
+            }).
+            error(function(data, status, headers, config) {
+                $scope.errorMessage = "Failed to retrieve user list. HTTP status was " + status;
+            });
+
+        return users;
+    };
+
     $scope.openGroups = function(user) {
 
         $modal.open({
@@ -121,43 +141,42 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
         });
     };
 
-    $scope.exportPDF = function(users) {
+    $scope.exportPDF = function() {
+        $scope.getAllUsers(function(users) {
+            var data = [], fontSize = 12, height = 0, doc;
 
-        var data = []
-            ,fontSize = 12
-            ,height = 0
-            ,doc
-            ;
+            doc = new jsPDF('p', 'pt', 'a4', true);
+            doc.setFont("courier", "normal");
+            doc.setFontSize(fontSize);
 
-        doc = new jsPDF('p', 'pt', 'a4', true);
-        doc.setFont("courier", "normal");
-        doc.setFontSize(fontSize);
+            for (var i = 0; i < users.length; i++) {
 
-        for (var i = 0; i < users.length; i++) {
+                var user = users[i];
+                var groupListStr = user.groups.map(function(group) {
+                    return group.name;
+                }).join(", ");
 
-            var user = users[i];
-            var groupListStr = user.groups.map(function(group) {
-                return group.name;
-            }).join(", ");
+                data.push({
+                    "Name" : user.displayName ? user.displayName : "-",
+                    "Username" : user.name,
+                    "Last Log In" : $filter('date')(user.lastLoginDate, 'medium'),
+                    "Role" : user.globalRole ? user.globalRole.displayName : "-",
+                    "Groups" : groupListStr
+                });
+            }
 
-            data.push({
-                "Name" : user.displayName ? user.displayName : "--",
-                "Username" : user.name,
-                "Last Log In" : $filter('date')(user.lastLoginDate, 'medium'),
-                "Role" : user.globalRole ? user.globalRole.displayName : "--",
-                "Groups" : groupListStr
+            height = doc.drawTable(data, {
+                xstart: 10,
+                ystart: 10,
+                tablestart: 70,
+                marginleft: 50
             });
-        }
 
-        height = doc.drawTable(data, {
-            xstart: 10,
-            ystart: 10,
-            tablestart: 70,
-            marginleft: 50
+            var fileName = "user-audit-report-" + $filter('date')(new Date(), 'yyyyMMddHHmmss') + ".pdf";
+            doc.save(fileName);
         });
 
-        var fileName = "user-audit-report-" + $filter('date')(new Date(), 'yyyyMMddHHmmss') + ".pdf";
-        doc.save(fileName);
+
     };
 
 });
