@@ -111,6 +111,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         modalInstance.result.then(function (newUser) {
             $scope.userId = newUser.id;
             reloadList();
+            $rootScope.$broadcast('refreshUsers');
 
             $scope.usersSuccessMessage = "Successfully created user " + newUser.name;
 

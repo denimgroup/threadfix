@@ -1,0 +1,124 @@
+var myAppModule = angular.module('threadfix');
+
+myAppModule.controller('UserAuditPageController', function ($scope, $modal, $http, $log, $rootScope, tfEncoder, threadFixModalService) {
+
+    ////////////////////////////////////////////////////////////////////////////////
+    //             Basic Page Functionality + $on(rootScopeInitialized)
+    ////////////////////////////////////////////////////////////////////////////////
+
+    var lastSearchString = undefined;
+    var lastNumber = 0;
+    var lastPage = 0;
+
+    $scope.activateTab = function(tab) {
+        $scope.active = {}; //reset
+        $scope.active[tab] = true;
+        $rootScope.title = tab[0].toUpperCase() + tab.substr(1);
+    };
+
+    $scope.numberToShow = 20;
+
+    $scope.updatePage = function(page, searchString) {
+        $scope.page = page;
+        $scope.searchUsers(searchString);
+    };
+
+    $scope.searchUsers = function(searchText) {
+
+        if (lastSearchString && lastSearchString === searchText &&
+            lastNumber === $scope.numberToShow &&
+            lastPage === $scope.page) {
+            return;
+        }
+
+        var users = [];
+
+        var searchObject = {
+            "searchString" : searchText,
+            "page" : $scope.page,
+            "number" : $scope.numberToShow
+        };
+
+        $http.post(tfEncoder.encode("/configuration/users/search"), searchObject).
+            then(function(response) {
+
+                var data = response.data;
+
+                if (data.success) {
+                    $scope.countUsers = data.object.countUsers;
+                    lastSearchString = searchText;
+                    lastNumber = $scope.numberToShow;
+                    lastPage = $scope.page;
+                    $scope.users = data.object.users;;
+                } else {
+                    $scope.errorMessage = "Failed to receive search results. Message was : " + data.message;
+                }
+
+                return users;
+            });
+
+    };
+
+    $scope.$on('rootScopeInitialized', function() {
+        reloadList();
+    });
+
+    $scope.$on('refreshUsers', function() {
+        reloadList();
+    });
+
+    $scope.$on('refreshGroups', function() {
+        reloadList();
+    });
+
+    $scope.$on('reloadRoles', function() {
+        reloadList();
+    });
+
+    var reloadList = function(callBack) {
+        $scope.initialized = false;
+
+        $http.get(tfEncoder.encode('/configuration/users/map/page/' + $scope.page + '/' + $scope.numberToShow)).
+            success(function(data) {
+
+                if (data.success) {
+                    $scope.countUsers = data.object.countUsers;
+                    if (data.object.users.length > 0) {
+                        $scope.users = data.object.users;
+                    } else {
+
+                        // If the last page is no longer exist then refresh to page 1
+                        if ($scope.page !== 1) {
+                            $scope.page = 1;
+                            reloadList();
+                        }
+                    }
+                } else {
+                    $scope.errorMessage = "Failure. Message was : " + data.message;
+                }
+
+                $scope.initialized = true;
+            }).
+            error(function(data, status, headers, config) {
+                $scope.initialized = true;
+                $scope.errorMessage = "Failed to retrieve user list. HTTP status was " + status;
+            });
+    };
+
+    $scope.openGroups = function(user) {
+
+        $modal.open({
+            templateUrl: 'attrListModal.html',
+            controller: 'ModalController',
+            resolve: {
+                data: function() {
+                    return {
+                        heading: 'User Groups',
+                        list: user.groups
+                    }
+                }
+            }
+        });
+    };
+
+});

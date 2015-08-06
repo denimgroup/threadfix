@@ -135,7 +135,7 @@ public class User extends AuditableEntity {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
-    @JsonIgnore
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
     public Date getLastLoginDate() {
         return lastLoginDate;
     }
