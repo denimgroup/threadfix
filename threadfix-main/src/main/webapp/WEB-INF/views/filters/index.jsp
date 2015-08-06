@@ -48,6 +48,9 @@
                 <%@ include file="/WEB-INF/views/filters/table.jsp" %>
             </div>
 
+            <h3>{{ severityFiltersTitle }}</h3>
+
+            <%@ include file="/WEB-INF/views/filters/severityFilterForm.jsp" %>
         </div>
     </div>
 </body>

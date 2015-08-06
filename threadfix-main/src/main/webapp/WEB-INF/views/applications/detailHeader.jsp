@@ -35,7 +35,7 @@
                         </spring:url>
                         <li>
                             <a class="pointer" id="editVulnerabilityFiltersButton" href="<c:out value="${ vulnFiltersUrl }"/>" data-toggle="modal">
-                                Edit Vulnerability Filters
+                                Customize ThreadFix Vulnerability Types and Severities
                             </a>
                         </li>
                     </c:if>

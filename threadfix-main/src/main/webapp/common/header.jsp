@@ -74,7 +74,7 @@
                         <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_DEFECT_TRACKERS,ROLE_CAN_MANAGE_GRC_TOOLS,ROLE_CAN_MANAGE_REMOTE_PROVIDERS, ROLE_CAN_MANAGE_SCAN_AGENTS, ROLE_CAN_MANAGE_WAFS">
                             <li class="dropdown-submenu pull-left normalLinks">
                                 <a tabindex="-1" href="#" id="manageIntegrations">Integrations</a>
-                                <ul class="dropdown-menu" style="text-align:right;" tabindex="-1">
+                                <ul class="dropdown-menu" style="text-align:right; left: -177px;" tabindex="-1">
                                     <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_DEFECT_TRACKERS">
                                         <li class="normalLinks">
                                             <a id="defectTrackersLink" href="<spring:url value="/configuration/defecttrackers" htmlEscape="true"/>">Defect Trackers</a>
@@ -108,7 +108,7 @@
                         <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_ENTERPRISE,ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT, ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS, ROLE_CAN_MANAGE_TAGS, ROLE_CAN_MODIFY_VULNERABILITIES">
                             <li class="dropdown-submenu pull-left normalLinks">
                                 <a tabindex="-1" href="#" id="manageCustomLink">Customize</a>
-                                <ul class="dropdown-menu" style="text-align:right;" tabindex="-1">
+                                <ul class="dropdown-menu" style="text-align:right; width: 230px; left: -242px;" tabindex="-1">
                                     <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_ENTERPRISE">
                                         <li class="normalLinks">
                                             <a id="customizeThreadFixVulnerabilityTypesLink" href="<spring:url value="/configuration/filters" htmlEscape="true"/>">ThreadFix Vulnerability Types</a>
@@ -150,7 +150,7 @@
 
                                 <li class="dropdown-submenu pull-left normalLinks">
                                 <a tabindex="-1" href="#" id="adminLink">Administration</a>
-                                <ul class="dropdown-menu" style="text-align:right;" tabindex="-1">
+                                <ul class="dropdown-menu" style="text-align:right; left: -177px;" tabindex="-1">
                                     <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
                                         <li class="normalLinks">
                                             <a id="configureDefaultsLink" href="<spring:url value="/configuration/settings" htmlEscape="true"/>">System Settings</a>
@@ -175,15 +175,15 @@
                                         </li>
                                     </security:authorize>
 
-                                    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS">
+                                    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_EMAIL_REPORTS">
                                         <li class="normalLinks">
-                                            <a id="scanResultFiltersLink" href="<spring:url value="/configuration/scanResultFilters" htmlEscape="true"/>">Email</a>
+                                            <a id="emailReportConfiguration" href="<spring:url value="/configuration/scheduledEmailReports" htmlEscape="true"/>">Email Reports</a>
                                         </li>
                                     </security:authorize>
 
-                                    <security:authorize ifAllGranted="ROLE_ENTERPRISE">
+                                    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_EMAIL_REPORTS">
                                         <li class="normalLinks">
-                                            <a id="notificationsLink" href="<spring:url value="/configuration/notifications" htmlEscape="true"/>">Notifications</a>
+                                            <a id="scanResultFiltersLink" href="<spring:url value="/configuration/emailLists" htmlEscape="true"/>">Email Lists</a>
                                         </li>
                                     </security:authorize>
                                     </ul>

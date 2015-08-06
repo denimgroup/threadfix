@@ -1448,3 +1448,9 @@ ul.dropdown-menu {
 	z-index:100000;
 }
 
+/* Submenu placement itself */
+.dropdown-submenu > .dropdown-menu { left: auto; right: 100%; }
+/* Arrow position */
+.dropdown-submenu { position: relative; }
+.dropdown-submenu > a:after { position: absolute; left: 7px; top: 3px; float: none; border-right-color: #cccccc; border-width: 5px 5px 5px 0; }
+.dropdown-submenu:hover > a:after { border-right-color: #ffffff; }
