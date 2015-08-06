@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix');
 
-myAppModule.controller('UserAuditPageController', function ($scope, $modal, $http, $log, $rootScope, tfEncoder, threadFixModalService) {
+myAppModule.controller('UserAuditPageController', function ($scope, $modal, $http, $log, $rootScope, tfEncoder, $filter) {
 
     ////////////////////////////////////////////////////////////////////////////////
     //             Basic Page Functionality + $on(rootScopeInitialized)
@@ -119,6 +119,45 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
                 }
             }
         });
+    };
+
+    $scope.exportPDF = function(users) {
+
+        var data = []
+            ,fontSize = 12
+            ,height = 0
+            ,doc
+            ;
+
+        doc = new jsPDF('p', 'pt', 'a4', true);
+        doc.setFont("courier", "normal");
+        doc.setFontSize(fontSize);
+
+        for (var i = 0; i < users.length; i++) {
+
+            var user = users[i];
+            var groupListStr = user.groups.map(function(group) {
+                return group.name;
+            }).join(", ");
+
+            data.push({
+                "Name" : user.displayName ? user.displayName : "--",
+                "Username" : user.name,
+                "Last Log In" : $filter('date')(user.lastLoginDate, 'medium'),
+                "Role" : user.globalRole ? user.globalRole.displayName : "--",
+                "Groups" : groupListStr
+            });
+        }
+
+        height = doc.drawTable(data, {
+            xstart: 10,
+            ystart: 10,
+            tablestart: 70,
+            marginleft: 50
+        });
+
+        var fileName = "user-audit-report-" + $filter('date')(new Date(), 'yyyyMMddHHmmss') + ".pdf";
+        doc.save(fileName);
     };
 
 });
