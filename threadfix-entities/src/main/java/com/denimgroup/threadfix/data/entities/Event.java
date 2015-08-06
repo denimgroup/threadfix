@@ -144,15 +144,14 @@ public class Event extends AuditableEntity {
     @JsonView({ AllViews.HistoryView.class})
     public String getUserName() {
         User user = getUser();
-        String userName = null;
-        if (user != null) {
-            userName = user.getDisplayName();
+        if (user == null) {
+            return "ThreadFix";
         }
-        if (userName != null) {
-            return userName;
-        } else {
-            return "Threadfix";
+        String userName = user.getDisplayName();
+        if ((userName == null) || (userName.trim() == "")) {
+            userName = user.getName();
         }
+        return userName;
     }
 
     @ManyToOne
