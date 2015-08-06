@@ -16,7 +16,7 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
         $rootScope.title = tab[0].toUpperCase() + tab.substr(1);
     };
 
-    $scope.numberToShow = 20;
+    $scope.numberToShow = 10;
 
     $scope.updatePage = function(page, searchString) {
         $scope.page = page;
@@ -49,7 +49,7 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
                     lastSearchString = searchText;
                     lastNumber = $scope.numberToShow;
                     lastPage = $scope.page;
-                    $scope.users = data.object.users;;
+                    $scope.users = data.object.users;
                 } else {
                     $scope.errorMessage = "Failed to receive search results. Message was : " + data.message;
                 }
@@ -75,7 +75,7 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
         reloadList();
     });
 
-    var reloadList = function(callBack) {
+    var reloadList = function() {
         $scope.initialized = false;
 
         $http.get(tfEncoder.encode('/configuration/users/map/page/' + $scope.page + '/' + $scope.numberToShow)).
