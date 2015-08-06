@@ -82,7 +82,7 @@ public class DefectTrackerSchedulePage extends BasePage{
     }
 
     public DefectTrackerSchedulePage waitForErrorMessage() {
-        waitForElement(driver.findElement(By.cssSelector("errors span.errors:not(.ng-hide)")));
+        waitForElement(driver.findElement(By.cssSelector("#dateError:not(.ng-hide)")));
         return new DefectTrackerSchedulePage(driver);
     }
 
@@ -93,7 +93,7 @@ public class DefectTrackerSchedulePage extends BasePage{
     }
 
     public boolean isErrorPresent(String errorMessage) {
-        return driver.findElementByClassName("errors").getText().trim().contains(errorMessage);
+        return driver.findElementById("dateError").getText().trim().contains(errorMessage);
     }
 
     public boolean isDeleteButtonPresent(String elementId) {
