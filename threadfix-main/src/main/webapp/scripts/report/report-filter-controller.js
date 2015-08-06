@@ -58,26 +58,26 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
             || $scope.showDateRange
             || $scope.showTypeAndMergedControls
             || $scope.showTagControls
-            || $scope.showOWasp) {
-            $scope.showTeamAndApplicationControls = false;
-            $scope.showDetailsControls = false;
-            $scope.showDateControls = false;
-            $scope.showDateRange = false;
-            $scope.showSaveFilter = false;
-            $scope.showTypeAndMergedControls = false;
-            $scope.showTagControls = false;
-            $scope.showOWasp = false;
+            || $scope.showOWasp
+            || $scope.showPermissions) {
+            toggleAll(false);
         } else {
-            $scope.showTeamAndApplicationControls = true;
-            $scope.showDetailsControls = true;
-            $scope.showDateControls = true;
-            $scope.showDateRange = true;
-            $scope.showSaveFilter = true;
-            $scope.showTypeAndMergedControls = true;
-            $scope.showTagControls = true;
-            $scope.showOWasp = true;
+            toggleAll(true);
         }
     };
+
+    var toggleAll = function(bool){
+        $scope.showTeamAndApplicationControls = bool;
+        $scope.showDetailsControls = bool;
+        $scope.showDateControls = bool;
+        $scope.showDateRange = bool;
+        $scope.showSaveFilter = bool;
+        $scope.showTypeAndMergedControls = bool;
+        $scope.showTagControls = bool;
+        $scope.showOWasp = bool;
+        $scope.showPermissions = bool;
+    };
+
 
     $scope.maxDate = new Date();
 
