@@ -878,20 +878,32 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities, customSev
         if ($scope.parameters.showHidden) {
             data.Hidden = scan.numberHiddenVulnerabilities;
         }
-        if ($scope.parameters.severities.info) {
-            data[customSeverityService.getCustomSeverity('Info')] = calculateInfo(scan, $scope);
-        }
-        if ($scope.parameters.severities.low) {
-            data[customSeverityService.getCustomSeverity('Low')] = calculateLow(scan, $scope);
-        }
-        if ($scope.parameters.severities.medium) {
-            data[customSeverityService.getCustomSeverity('Medium')] = calculateMedium(scan, $scope);
-        }
-        if ($scope.parameters.severities.high) {
-            data[customSeverityService.getCustomSeverity('High')] = calculateHigh(scan, $scope);
-        }
-        if ($scope.parameters.severities.critical) {
-            data[customSeverityService.getCustomSeverity('Critical')] = calculateCritical(scan, $scope);
+        if (   !$scope.parameters.severities.info
+            && !$scope.parameters.severities.low
+            && !$scope.parameters.severities.medium
+            && !$scope.parameters.severities.high
+            && !$scope.parameters.severities.critical) {
+                data[customSeverityService.getCustomSeverity('Info')] = calculateInfo(scan, $scope);
+                data[customSeverityService.getCustomSeverity('Low')] = calculateLow(scan, $scope);
+                data[customSeverityService.getCustomSeverity('Medium')] = calculateMedium(scan, $scope);
+                data[customSeverityService.getCustomSeverity('High')] = calculateHigh(scan, $scope);
+                data[customSeverityService.getCustomSeverity('Critical')] = calculateCritical(scan, $scope);
+        } else {
+            if ($scope.parameters.severities.info) {
+                data[customSeverityService.getCustomSeverity('Info')] = calculateInfo(scan, $scope);
+            }
+            if ($scope.parameters.severities.low) {
+                data[customSeverityService.getCustomSeverity('Low')] = calculateLow(scan, $scope);
+            }
+            if ($scope.parameters.severities.medium) {
+                data[customSeverityService.getCustomSeverity('Medium')] = calculateMedium(scan, $scope);
+            }
+            if ($scope.parameters.severities.high) {
+                data[customSeverityService.getCustomSeverity('High')] = calculateHigh(scan, $scope);
+            }
+            if ($scope.parameters.severities.critical) {
+                data[customSeverityService.getCustomSeverity('Critical')] = calculateCritical(scan, $scope);
+            }
         }
         return data;
     };
