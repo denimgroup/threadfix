@@ -449,9 +449,14 @@ public class UserIT extends BaseDataTest {
 
         userIndexPage.createUser(userName,displayName,password)
                 .clickUserLink(userName)
-                .waitForDeleteUserButton()
-                .chooseRoleForGlobalAccess("Administrator")
-                .clickSaveChanges();
+                .waitForDeleteUserButton();
+
+        if (userIndexPage.isGlobalRolePresent()) {
+            userIndexPage.chooseRoleForGlobalAccess("Administrator")
+                    .clickSaveChanges();
+        } else {
+            System.out.println("Role select not found.  Assuming build is Community version.");
+        }
 
         ApplicationDetailPage applicationDetailPage = userIndexPage.logout()
                 .login(userName, password)

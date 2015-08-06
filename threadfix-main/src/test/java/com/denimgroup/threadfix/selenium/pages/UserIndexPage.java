@@ -415,6 +415,15 @@ public class UserIndexPage extends BasePage {
 	public boolean isGlobalAccessErrorPresent(){
 		return driver.findElementById("hasGlobalGroupAccessErrors").getText().contains("This would leave users unable to access the user management portion of ThreadFix.");
 	}
+
+    public boolean isGlobalRolePresent(){
+        try {
+            driver.findElementById("roleSelect");
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+        return true;
+    }
 	
 	public boolean isRoleSelected(String userName,String role){
         if (userName != null) {
