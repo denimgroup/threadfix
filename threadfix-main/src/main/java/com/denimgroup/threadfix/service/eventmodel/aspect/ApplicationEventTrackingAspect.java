@@ -77,19 +77,19 @@ public class ApplicationEventTrackingAspect extends EventTrackingAspect {
     public Object processSaveRemoteScanAndRunEvent(ProceedingJoinPoint joinPoint, Integer channelId, List<String> fileNames, List<String> originalFileNames) throws Throwable {
         Object proceed = joinPoint.proceed();
         for (String fileName : fileNames) {
-            emitUploadApplicationScanEvent((Scan)proceed, channelId, fileName);
+            emitUploadApplicationScanEvent((Scan)proceed);
         }
         return proceed;
     }
 
-    @Around("execution(* com.denimgroup.threadfix.service.ScanMergeService.processScan(Integer, String, Integer, String)) && args(channelId, fileName, statusId, userName)")
-    public Object processProcessScanEvent(ProceedingJoinPoint joinPoint, Integer channelId, String fileName, Integer statusId, String userName) throws Throwable {
+    @Around("execution(* com.denimgroup.threadfix.service.ScanMergeService.processScan(..)) && args(channelId, fileNames, originalFileNames, statusId, userName)")
+    public Object processProcessScanEvent(ProceedingJoinPoint joinPoint, Integer channelId, List<String> fileNames, List<String> originalFileNames, Integer statusId, String userName) throws Throwable {
         Object proceed = joinPoint.proceed();
-        emitUploadApplicationScanEvent((Scan)proceed, channelId, fileName);
+        emitUploadApplicationScanEvent((Scan)proceed);
         return proceed;
     }
 
-    public void emitUploadApplicationScanEvent(Scan scan, Integer channelId, String fileName) throws Throwable {
+    public void emitUploadApplicationScanEvent(Scan scan) throws Throwable {
         try {
             Event event = generateUploadScanEvent(scan);
             publishEventTrackingEvent(event);
