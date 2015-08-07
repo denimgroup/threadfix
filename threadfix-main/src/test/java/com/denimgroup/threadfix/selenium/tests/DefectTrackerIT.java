@@ -178,7 +178,6 @@ public class DefectTrackerIT extends BaseDataTest {
                 .setURL(BUGZILLA_URL)
                 .clickSaveDefectTracker();
 
-        System.out.print(driver.findElement(By.id("nameServerError")).getText());
         assertTrue("Defect tracker was not present in table.", defectTrackerIndexPage.isNamePresent(defectTrackerName));
     }
 
