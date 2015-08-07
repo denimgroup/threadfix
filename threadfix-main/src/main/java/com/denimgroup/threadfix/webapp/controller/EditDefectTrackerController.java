@@ -29,9 +29,11 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.DefectService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
+import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +76,9 @@ public class EditDefectTrackerController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public @ResponseBody RestResponse<DefectTracker> processSubmitAjax(
+	@ResponseBody
+	@JsonView(AllViews.DefectTrackerInfos.class)
+	public RestResponse<DefectTracker> processSubmitAjax(
             @PathVariable("defectTrackerId") int defectTrackerId,
 			@Valid @ModelAttribute DefectTracker defectTracker,
             BindingResult result) {
