@@ -45,7 +45,7 @@ public class GroupIndexPage extends BasePage {
 
     public GroupIndexPage clickDeleteButton(String groupName) {
         clickEditLink(groupName);
-        driver.findElementByCssSelector("a#deleteRoleLink:not(.ng-hide)").click();
+        driver.findElementByCssSelector("a#deleteGroupLink:not(.ng-hide)").click();
         handleAlert();
         return new GroupIndexPage(driver);
     }

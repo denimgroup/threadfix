@@ -45,7 +45,7 @@ public class UserIndexPage extends BasePage {
 	}
 
     public UserIndexPage clickDelete(String user){
-        driver.findElementById("deleteRoleLink").click();
+        driver.findElementById("deleteUserLink").click();
         handleAlert();
         return new UserIndexPage(driver);
     }
