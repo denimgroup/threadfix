@@ -72,7 +72,7 @@
 				  	 </div>
 					<ul id="configurationHeader" class="dropdown-menu pull-right config-header" style="text-align:right;">
                         <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_DEFECT_TRACKERS,ROLE_CAN_MANAGE_GRC_TOOLS,ROLE_CAN_MANAGE_REMOTE_PROVIDERS, ROLE_CAN_MANAGE_SCAN_AGENTS, ROLE_CAN_MANAGE_WAFS">
-                            <li class="dropdown-submenu pull-left normalLinks">
+                            <li class="dropdown-submenu left pull-left normalLinks">
                                 <a tabindex="-1" href="#" id="manageIntegrations">Integrations</a>
                                 <ul class="dropdown-menu" style="text-align:right; left: -177px;" tabindex="-1">
                                     <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_DEFECT_TRACKERS">
@@ -106,7 +106,7 @@
                             </li>
                         </security:authorize>
                         <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_ENTERPRISE,ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT, ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS, ROLE_CAN_MANAGE_TAGS, ROLE_CAN_MODIFY_VULNERABILITIES">
-                            <li class="dropdown-submenu pull-left normalLinks">
+                            <li class="dropdown-submenu left pull-left normalLinks">
                                 <a tabindex="-1" href="#" id="manageCustomLink">Customize</a>
                                 <ul class="dropdown-menu" style="text-align:right; width: 230px; left: -242px;" tabindex="-1">
                                     <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_ENTERPRISE">
@@ -148,7 +148,7 @@
 						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_CAN_MANAGE_USERS,ROLE_CAN_MANAGE_ROLES,ROLE_CAN_VIEW_ERROR_LOGS">
 							<li class="divider" role="presentation"></li>
 
-                                <li class="dropdown-submenu pull-left normalLinks">
+                                <li class="dropdown-submenu left pull-left normalLinks">
                                 <a tabindex="-1" href="#" id="adminLink">Administration</a>
                                 <ul class="dropdown-menu" style="text-align:right; left: -177px;" tabindex="-1">
                                     <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS">

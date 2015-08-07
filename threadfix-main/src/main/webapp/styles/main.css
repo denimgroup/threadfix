@@ -1468,8 +1468,8 @@ table.eventHistory td.eventDate {
 }
 
 /* Submenu placement itself */
-.dropdown-submenu > .dropdown-menu { left: auto; right: 100%; }
+.dropdown-submenu.left > .dropdown-menu { left: auto; right: 100%; }
 /* Arrow position */
-.dropdown-submenu { position: relative; }
-.dropdown-submenu > a:after { position: absolute; left: 7px; top: 3px; float: none; border-right-color: #cccccc; border-width: 5px 5px 5px 0; }
-.dropdown-submenu:hover > a:after { border-right-color: #ffffff; }
+.dropdown-submenu.left { position: relative; }
+.dropdown-submenu.left > a:after { position: absolute; left: 7px; top: 3px; float: none; border-right-color: #cccccc; border-width: 5px 5px 5px 0; }
+.dropdown-submenu.left:hover > a:after { border-right-color: #ffffff; }
