@@ -67,7 +67,7 @@ public class ScannerMappingsController {
 	private ChannelTypeService channelTypeService;
 	@Autowired
 	private ChannelVulnerabilityService channelVulnerabilityService;
-	@Autowired
+	@Autowired(required = false)
 	private ChannelVulnerabilityFilterService channelVulnerabilityFilterService;
 	@Autowired
 	private GenericSeverityService genericSeverityService;
@@ -78,6 +78,9 @@ public class ScannerMappingsController {
 		Map<String, Object> map = CollectionUtils.map();
 
 		if (EnterpriseTest.isEnterprise()) {
+			if (channelVulnerabilityFilterService == null) {
+				throw new IllegalStateException();
+			}
 			map.put("genericSeverities", genericSeverityService.loadAll());
 
 			List<ChannelType> channelTypes = channelTypeService.loadAllHasVulnMapping();
