@@ -1448,3 +1448,21 @@ ul.dropdown-menu {
 	z-index:100000;
 }
 
+table.eventHistory {
+	table-layout:fixed;
+}
+table.eventHistory tr:first-child td {
+	border-top: 0;
+}
+table.eventHistory td.eventDescription {
+	word-wrap: break-word;
+}
+table.eventHistory td.eventDescription span.detail {
+	display: block;
+	padding-left: 5px;
+}
+table.eventHistory td.eventDate {
+	width:25%;
+	text-align:right;
+	vertical-align: top;
+}

@@ -24,12 +24,17 @@
 
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.dao.*;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.denimgroup.threadfix.data.dao.DefectDao;
+import com.denimgroup.threadfix.data.dao.FindingDao;
+import com.denimgroup.threadfix.data.dao.ScanDao;
+import com.denimgroup.threadfix.data.dao.VulnerabilityCommentDao;
+import com.denimgroup.threadfix.data.dao.WafRuleDao;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -49,7 +54,9 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
     @Autowired
 	private ScanDao scanDao;
     @Autowired
-	private VulnerabilityDao vulnerabilityDao;
+	private VulnerabilityService vulnerabilityService;
+	@Autowired
+	private VulnerabilityStatusService vulnerabilityStatusService;
     @Autowired
 	private VulnerabilityCommentDao vulnerabilityCommentDao;
     @Autowired
@@ -240,7 +247,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 							nextScan.getImportTime());
 					closeMapsToRemove.add(closeMap);
 					nextScan.getScanCloseVulnerabilityMaps().add(closeMap);
-					vulnerabilityDao.saveOrUpdate(closeMap.getVulnerability());
+					vulnerabilityService.storeVulnerability(closeMap.getVulnerability());
 					scanDao.saveOrUpdate(nextScan);
 				}
 			}
@@ -277,7 +284,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					// TODO maybe down the road change this to resurface time or something
 					reopenMap.getVulnerability().setOpenTime(
 							nextScan.getImportTime());
-					vulnerabilityDao.saveOrUpdate(reopenMap.getVulnerability());
+					vulnerabilityService.storeVulnerability(reopenMap.getVulnerability());
 				}
 			}
 		}
@@ -341,9 +348,9 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					// what it was before
 					vuln.getScanCloseVulnerabilityMaps().remove(map);
 					if (map.getVulnerability().isFoundByScanner()) {
-						vuln.openVulnerability(map.getVulnerability().getOpenTime());
+						vulnerabilityStatusService.openVulnerability(vuln, scan, map.getVulnerability().getOpenTime(), true);
 					}
-					vulnerabilityDao.saveOrUpdate(vuln);
+					vulnerabilityService.storeVulnerability(vuln);
 				}
 			}
 		}
@@ -353,10 +360,10 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 				if (map != null && map.getVulnerability() != null) {
 
 					if (map.getVulnerability().isFoundByScanner()) {
-						map.getVulnerability().closeVulnerability(null, null);
+						vulnerabilityStatusService.closeVulnerability(map.getVulnerability(), scan, null, true, false);
 					}
 					map.getVulnerability().getScanReopenVulnerabilityMaps().remove(map);
-					vulnerabilityDao.saveOrUpdate(map.getVulnerability());
+					vulnerabilityService.storeVulnerability(map.getVulnerability());
 				}
 			}
 		}
@@ -441,7 +448,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					earliestFinding.getSurfaceLocation());
 			earliestFinding.setFirstFindingForVuln(true);
 			findingDao.saveOrUpdate(earliestFinding);
-			vulnerabilityDao.saveOrUpdate(earliestFinding.getVulnerability());
+			vulnerabilityService.storeVulnerability(earliestFinding.getVulnerability());
 		
 			if (finding != null && !earliestFinding.getId().equals(finding.getId())) {
 				// set it to be the first finding
@@ -544,7 +551,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			
 			for (Vulnerability vuln : vulnsToUpdate) {
 				vuln.getScanCloseVulnerabilityMaps().removeAll(closeMapsToDelete);
-				updateVulnStatus(vuln);
+				updateVulnStatus(vuln, scan);
 			}
 			
 			
@@ -553,7 +560,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					scan.getScanCloseVulnerabilityMaps().remove(map);
 					map.getVulnerability().getScanCloseVulnerabilityMaps().remove(map);
 					scanDao.deleteMap(map);
-					vulnerabilityDao.saveOrUpdate(map.getVulnerability());
+					vulnerabilityService.storeVulnerability(map.getVulnerability());
 				}
 				scanDao.saveOrUpdate(scan);
 			}
@@ -563,7 +570,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					scan.getScanReopenVulnerabilityMaps().remove(map);
 					map.getVulnerability().getScanReopenVulnerabilityMaps().remove(map);
 					scanDao.deleteMap(map);
-					vulnerabilityDao.saveOrUpdate(map.getVulnerability());
+					vulnerabilityService.storeVulnerability(map.getVulnerability());
 				}
 				scanDao.saveOrUpdate(scan);
 			}
@@ -657,7 +664,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					updateFirstFindingForVuln(null,vuln);
 				}
 				// be sure to save in case there's any updated state
-				vulnerabilityDao.saveOrUpdate(vuln);
+				vulnerabilityService.storeVulnerability(vuln);
 			}
 		}
 		
@@ -694,7 +701,9 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 				}
 				if (!keepIt) {
 					log.debug("Deleting orphaned defect with ID " + vuln.getDefect().getId() + ".");
-					defectDao.delete(vuln.getDefect());
+					Defect defect = vuln.getDefect();
+					vuln.setDefect(null);
+					defectDao.delete(defect);
 				}
 			}
 			
@@ -715,7 +724,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 				endpointPermissionService.saveOrUpdate(permission);
 			}
 			
-			vulnerabilityDao.delete(vuln);
+			vulnerabilityService.deleteVulnerability(vuln);
 		}
 	}
 
@@ -797,15 +806,15 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 				vuln.setCloseTime(newCloseTime);
 				
 				if (!vuln.isActive() || newCloseTime.before(newOpenTime)) {
-					vuln.openVulnerability(newOpenTime);
+					vulnerabilityStatusService.openVulnerability(vuln, scanToDelete, newOpenTime, true);
 				}
 				
 				if (vuln.isActive() || newCloseTime.after(newOpenTime)) {
-					vuln.closeVulnerability(null, newCloseTime);
+					vulnerabilityStatusService.closeVulnerability(vuln, scanToDelete, newCloseTime, true, false);
 				}
 			}
 			vuln.setOpenTime(newOpenTime);
-			vulnerabilityDao.saveOrUpdate(vuln);
+			vulnerabilityService.storeVulnerability(vuln);
 		}
 	}
 	
@@ -814,7 +823,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 	 * close and reopen maps.
 	 * @param vuln
 	 */
-	private void updateVulnStatus(Vulnerability vuln) {
+	private void updateVulnStatus(Vulnerability vuln, Scan scanToDelete) {
 		if (vuln == null || vuln.getFindings() == null ||
 				!vuln.isFoundByScanner() ||
 				vuln.getFindings().size() == 0) {
@@ -852,14 +861,14 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 
 		if (!vuln.isActive() && (newCloseTime == null || newOpenTime == null ||
 				newCloseTime.before(newOpenTime))) {
-			vuln.openVulnerability(newOpenTime);
+			vulnerabilityStatusService.openVulnerability(vuln, scanToDelete, newOpenTime, true);
 		}
 		
 		if (vuln.isActive() && newCloseTime != null &&
 				newCloseTime.after(newOpenTime)) {
-			vuln.closeVulnerability(null, newCloseTime);
+			vulnerabilityStatusService.closeVulnerability(vuln, scanToDelete, newCloseTime, true, false);
 		}
-		vulnerabilityDao.saveOrUpdate(vuln);
+		vulnerabilityService.storeVulnerability(vuln);
 	}
 	
 }

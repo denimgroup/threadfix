@@ -52,6 +52,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.denimgroup.threadfix.data.enums.EventAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -201,7 +202,7 @@ public class EditApplicationController {
             return "ajaxFailureHarness";
         } else {
             application.setOrganization(organizationService.loadOrganization(application.getOrganization().getId()));
-            applicationService.storeApplication(application);
+            applicationService.storeApplication(application, EventAction.APPLICATION_EDIT);
 //			applicationService.updateProjectRoot(application);
 
             String user = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -259,7 +260,7 @@ public class EditApplicationController {
                     }
                 }
 
-                applicationService.storeApplication(databaseApplication);
+                applicationService.storeApplication(databaseApplication, EventAction.APPLICATION_EDIT);
 
                 String user = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -318,7 +319,7 @@ public class EditApplicationController {
 
             permissionService.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS);
 
-            applicationService.storeApplication(application);
+            applicationService.storeApplication(application, EventAction.APPLICATION_EDIT);
 
             String user = SecurityContextHolder.getContext().getAuthentication().getName();
 

@@ -12,6 +12,9 @@
     <c:forEach items="${ reportJsPaths }" var="reportJs">
         <script type="text/javascript" src="${ reportJs }"></script>
     </c:forEach>
+    <c:if test="${isEnterprise}">
+        <cbs:cachebustscript src="/scripts/history-table-controller.js"/>
+    </c:if>
 </head>
 
 <body ng-controller="TeamDetailPageController"
@@ -76,6 +79,9 @@
         <tab heading="{{ vulnerabilityCount }} Vulnerabilities" active="showVulnTab" ng-click="clickVulnTab()" >
             <%@ include file="../vulnerabilities/vulnSearchControls.jsp" %>
         </tab>
+        <c:if test="${isEnterprise}">
+            <jsp:include page="/app/organizations/${ organization.id }/history"/>
+        </c:if>
 
     </tabset>
 

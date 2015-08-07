@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.dao.*;
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -69,6 +70,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Autowired private WafRuleDao wafRuleDao;
 	@Autowired private WafDao wafDao;
 	@Autowired private VulnerabilityDao vulnerabilityDao;
+	@Autowired private VulnerabilityService vulnerabilityService;
 	@Autowired private AccessControlMapService accessControlMapService;
 	@Autowired private ApplicationCriticalityDao applicationCriticalityDao;
 	@Autowired private DefectDao defectDao;
@@ -137,7 +139,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
 	@Transactional(readOnly = false)
-	public void storeApplication(Application application) {
+	public void storeApplication(Application application, EventAction eventAction) {
 		if (application != null) {
             // Set default for Application Type is Detect
             if (application.getFrameworkType().equals(FrameworkType.NONE.toString()))
@@ -390,7 +392,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 					}
 					vulnerability.setWafRuleGeneratedTime(null);
 					vulnerability.setWafRules(new ArrayList<WafRule>());
-					vulnerabilityDao.saveOrUpdate(vulnerability);
+					vulnerabilityService.storeVulnerability(vulnerability);
 				}
 			}
 		}
@@ -510,7 +512,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 			if (vulns != null) {
 				for (Vulnerability vuln : vulns) {
 					vuln.setDefect(null);
-					vulnerabilityDao.saveOrUpdate(vuln);
+					vulnerabilityService.storeVulnerability(vuln);
 				}
 			}
 		}
@@ -533,9 +535,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 			Application app = loadApplication(application.getId());
 			
 			scanMergeService.updateSurfaceLocation(app);
-			scanMergeService.updateVulnerabilities(app);
-							
-			storeApplication(app);
+			scanMergeService.updateVulnerabilities(app, true);
+
+			storeApplication(app, EventAction.APPLICATION_EDIT);
 		}
 	}
 	
@@ -856,7 +858,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             throw new RuntimeException("Has validation errors");
         }
 
-        storeApplication(dbApplication);
+        storeApplication(dbApplication, EventAction.APPLICATION_EDIT);
 
         return success("Fields updated successfully.");
     }

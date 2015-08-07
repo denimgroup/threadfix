@@ -206,6 +206,7 @@
         		protected-regex ^/configuration/users/[0-9]+/access/team/[0-9]+/delete$,
         		protected-regex ^/configuration/users/[0-9]+/access/app/[0-9]+/delete$,
         		protected-regex ^/configuration/users/[0-9]+/access/new$,
+				protected-regex ^/configuration/users/[0-9]+/history/objects$,
 				protected-regex ^/groups/[0-9]+/access/[0-9]+/edit$,
         		protected-regex ^/groups/[0-9]+/permissions/map$,
         		protected-regex ^/groups/[0-9]+/access/team/[0-9]+/delete$,

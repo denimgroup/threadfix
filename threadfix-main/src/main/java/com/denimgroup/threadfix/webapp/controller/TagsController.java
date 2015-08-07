@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.data.enums.TagType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
@@ -227,7 +228,7 @@ public class TagsController {
                 } else
                     log.info("Tag " + tag.getName() + " was already added to application " + dbApp.getName() + ".");
             }
-            applicationService.storeApplication(dbApp);
+            applicationService.storeApplication(dbApp, EventAction.APPLICATION_SET_TAGS);
         }
 
         return RestResponse.success("Batch tagging ran successfully.");

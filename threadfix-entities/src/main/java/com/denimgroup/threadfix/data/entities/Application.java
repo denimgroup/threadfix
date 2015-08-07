@@ -143,6 +143,7 @@ public class Application extends AuditableEntity {
 
 	private List<ApplicationChannel> channelList;
 	private List<Scan> scans;
+	private List<Event> events;
 	private List<Vulnerability> vulnerabilities;
 	private List<RemoteProviderApplication> remoteProviderApplications;
 	private List<Document> documents;
@@ -403,7 +404,18 @@ public class Application extends AuditableEntity {
 	public void setScans(List<Scan> scans) {
 		this.scans = scans;
 	}
-	
+
+	@OneToMany(mappedBy = "application")
+	@OrderBy("date ASC")
+	@JsonIgnore
+	public List<Event> getEvents() {
+		return events;
+	}
+
+	public void setEvents(List<Event> events) {
+		this.events = events;
+	}
+
 	@OneToMany(mappedBy = "application", cascade = CascadeType.ALL)
 	@JsonIgnore
 	public List<AccessControlApplicationMap> getAccessControlApplicationMaps() {

@@ -112,7 +112,8 @@ public class QueueListener implements MessageListener {
 				switch (type) {
 					case QueueConstants.DEFECT_TRACKER_VULN_UPDATE_TYPE:
 						processDefectTrackerUpdateRequest(map.getInt("appId"),
-								map.getInt("jobStatusId"));
+								map.getInt("jobStatusId"),
+								(Integer) map.getObject("userId"));
 						break;
 
 					case QueueConstants.GRC_CONTROLS_UPDATE_TYPE:
@@ -259,7 +260,7 @@ public class QueueListener implements MessageListener {
 		
 		for (Application application : apps) {
 			if (application != null && application.getDefectTracker() != null) {
-				defectService.updateVulnsFromDefectTracker(application.getId());
+				defectService.updateVulnsFromDefectTracker(application.getId(), null);
 			}
 		}
 		
@@ -351,16 +352,17 @@ public class QueueListener implements MessageListener {
 	/**
 	 * @param appId
 	 * @param jobStatusId
+	 * @param userId
 	 */
 	@Transactional(readOnly=false)
-	private void processDefectTrackerUpdateRequest(Integer appId, Integer jobStatusId) {
+	private void processDefectTrackerUpdateRequest(Integer appId, Integer jobStatusId, Integer userId) {
 		if (appId == null) {
 			closeJobStatus(jobStatusId, "Defect Tracker update failed because it received a null application ID");
 			return;
 		}
 
 		jobStatusService.updateJobStatus(jobStatusId, "Processing Defect Tracker Vulnerability update request.");
-		boolean result = defectService.updateVulnsFromDefectTracker(appId);
+		boolean result = defectService.updateVulnsFromDefectTracker(appId, userId);
 		
 		if (result) {
 			closeJobStatus(jobStatusId, "Vulnerabilities successfully updated.");
