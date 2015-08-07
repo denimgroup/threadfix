@@ -179,4 +179,13 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
         return userEvents;
     }
 
+    @Override
+    public List<Event> getGlobalEvents() {
+        List<Event> userEvents = list();
+        userEvents.addAll(eventDao.retrieveGlobalUngrouped());
+        userEvents.addAll(eventDao.retrieveGlobalGrouped());
+        Collections.sort(userEvents, eventComparator);
+        return userEvents;
+    }
+
 }

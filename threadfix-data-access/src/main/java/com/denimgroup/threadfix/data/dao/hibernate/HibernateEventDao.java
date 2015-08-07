@@ -109,11 +109,47 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
             userEventActions.add(eventAction.name());
         }
 
+        return retrieveUngrouped(userEventActions, user);
+    }
+
+    @Override
+    public List<Event> retrieveGroupedByUser(User user) {
+        List<String> userGroupedEventAction = list();
+        for (EventAction eventAction : EventAction.userGroupedEventAction) {
+            userGroupedEventAction.add(eventAction.name());
+        }
+
+        return retrieveGrouped(userGroupedEventAction, user);
+    }
+
+    @Override
+    public List<Event> retrieveGlobalUngrouped() {
+        List<String> globalEventActions = list();
+        for (EventAction eventAction : EventAction.globalEventActions) {
+            globalEventActions.add(eventAction.name());
+        }
+
+        return retrieveUngrouped(globalEventActions, null);
+    }
+
+    @Override
+    public List<Event> retrieveGlobalGrouped() {
+        List<String> globalGroupedEventAction = list();
+        for (EventAction eventAction : EventAction.globalGroupedEventAction) {
+            globalGroupedEventAction.add(eventAction.name());
+        }
+
+        return retrieveGrouped(globalGroupedEventAction, null);
+    }
+
+    private List<Event> retrieveUngrouped(List<String> eventActions, User user) {
         Criteria criteria = getSession()
                 .createCriteria(getClassReference())
                 .add(Restrictions.eq("active", true))
-                .add(Restrictions.eq("user", user))
-                .add(Restrictions.in("eventAction", userEventActions));
+                .add(Restrictions.in("eventAction", eventActions));
+        if (user != null) {
+            criteria.add(Restrictions.eq("user", user));
+        }
 
         Order order = getOrder();
         if (order != null) {
@@ -125,18 +161,14 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
         return events;
     }
 
-    @Override
-    public List<Event> retrieveGroupedByUser(User user) {
-        List<String> userGroupedEventAction = list();
-        for (EventAction eventAction : EventAction.userGroupedEventAction) {
-            userGroupedEventAction.add(eventAction.name());
-        }
-
+    private List<Event> retrieveGrouped(List<String> eventActions, User user) {
         Criteria criteria = getSession()
                 .createCriteria(getClassReference())
                 .add(Restrictions.eq("active", true))
-                .add(Restrictions.eq("user", user))
-                .add(Restrictions.in("eventAction", userGroupedEventAction));
+                .add(Restrictions.in("eventAction", eventActions));
+        if (user != null) {
+            criteria.add(Restrictions.eq("user", user));
+        }
 
         Order order = getOrder();
         if (order != null) {
@@ -166,7 +198,6 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
         Integer maxId = (Integer)criteria.uniqueResult();
 
         for (Event event : events) {
-            event.setId(maxId + (event.hashCode() % 1073741824));
             EventAction eventAction = event.getEventActionEnum();
             EventAction groupedEventAction = eventAction.getGroupedEventAction();
             String groupedEventActionString = groupedEventAction.toString();

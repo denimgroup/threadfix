@@ -39,4 +39,8 @@ public interface EventDao extends GenericObjectDao<Event> {
     List<Event> retrieveUngroupedByUser(User user);
 
     List<Event> retrieveGroupedByUser(User user);
+
+    List<Event> retrieveGlobalUngrouped();
+
+    List<Event> retrieveGlobalGrouped();
 }

@@ -94,6 +94,7 @@
         		/j_spring_security_check,/j_spring_security_logout,/images/*,/styles/*,/scripts/*,/rest/*,/configuration/download/*,
                 /configuration/scheduledEmailReports,/configuration/emailLists,
                 /configuration/scanResultFilters,/configuration/customCweText,/mappings/channelSeverity/index,
+				/history,
         		regex ^/rest/[a-zA-Z0-9/]*$,
                 regex ^/v/[^/]+/scripts/.*$,
                 regex ^/configuration/tags/[0-9]/view+$,

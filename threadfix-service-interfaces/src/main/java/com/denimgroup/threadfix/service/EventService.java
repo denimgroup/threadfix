@@ -47,4 +47,6 @@ public interface EventService extends GenericObjectService<Event> {
     List<Event> getVulnerabilityEvents(Vulnerability vulnerability);
 
     List<Event> getUserEvents(User user);
+
+    List<Event> getGlobalEvents();
 }
