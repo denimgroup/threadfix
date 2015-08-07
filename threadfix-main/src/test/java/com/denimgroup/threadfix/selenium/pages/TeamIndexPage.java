@@ -227,10 +227,11 @@ public class TeamIndexPage extends BasePage {
 
     public TeamIndexPage uploadScanButton(String teamName, String appName) {
         driver.findElementById("uploadScanModalLink" + teamName + "-" + appName).click();
-        return this;
+        return new TeamIndexPage(driver);
     }
 
     public TeamIndexPage uploadNewScan(String file, String teamName, String appName) {
+        waitForElement(driver.findElementById("scanFileInput"));
         driver.findElementById("scanFileInput").sendKeys(file);
         waitForElement(driver.findElementById("applicationLink" + teamName + "-" + appName));
         return new TeamIndexPage(driver);
