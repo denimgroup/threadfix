@@ -860,6 +860,14 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities, customSev
     trendingUtilities.filterDisplayData = function(scan, $scope) {
         var data = {};
         data.importTime = scan.importTime;
+
+        currentTotalNo = 0;
+        currentInfoNo = 0;
+        currentLowNo = 0;
+        currentMedNo = 0;
+        currentHighNo = 0;
+        currentCriticalNo = 0;
+
         if ($scope.parameters.showNew) {
             data.New = scan.numberNewVulnerabilities;
         }
