@@ -1,4 +1,4 @@
-var module = angular.module('threadfix')
+var module = angular.module('threadfix');
 
 module.controller('TagsPageController', function($scope, $http, $modal, $log, tfEncoder){
 
@@ -8,35 +8,32 @@ module.controller('TagsPageController', function($scope, $http, $modal, $log, tf
 
     $scope.tagChecked = {allChecked: false};
 
-    $scope.$on('rootScopeInitialized', function() {
+    $scope.refresh = function() {
         $http.get(tfEncoder.encode('/configuration/tags/map')).
-            success(function(data) {
+            success(function (data) {
                 if (data.success) {
-                    if (data.object.tags.length > 0) {
-                        $scope.tags = data.object.tags;
-                        $scope.tags.sort(nameCompare);
-                    }
+                    $scope.tags = data.object.tags;
+                    $scope.tags.sort(nameCompare);
 
-                    if (data.object.vulnTags.length > 0) {
-                        $scope.vulnTags = data.object.vulnTags;
-                        $scope.vulnTags.sort(nameCompare);
-                    }
+                    $scope.vulnTags = data.object.vulnTags;
+                    $scope.vulnTags.sort(nameCompare);
 
-                    if (data.object.commentTags.length > 0) {
-                        $scope.commentTags = data.object.commentTags;
-                        $scope.commentTags.sort(nameCompare);
-                    }
+                    $scope.commentTags = data.object.commentTags;
+                    $scope.commentTags.sort(nameCompare);
+
                     $scope.tagTypes = data.object.tagTypes;
                 } else {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
                 }
                 $scope.initialized = true;
             }).
-            error(function(data, status, headers, config) {
+            error(function (data, status, headers, config) {
                 $scope.initialized = true;
                 $scope.errorMessage = "Failed to retrieve waf list. HTTP status was " + status;
             });
-    });
+    };
+
+    $scope.$on('rootScopeInitialized', $scope.refresh);
 
     $scope.openNewModal = function() {
         var modalInstance = $modal.open({
@@ -61,26 +58,13 @@ module.controller('TagsPageController', function($scope, $http, $modal, $log, tf
         $scope.currentModal = modalInstance;
         modalInstance.result.then(function (tag) {
 
-            var collection;
-            if (tag.type == "APPLICATION")
-                collection = $scope.tags;
-            else if (tag.type == "VULNERABILITY")
-                collection = $scope.vulnTags;
-            else
-                collection = $scope.commentTags;
-
-            if (!collection) {
-                collection = [ tag ];
-            } else {
-                collection.push(tag);
-                collection.sort(nameCompare);
-            }
+            $scope.refresh();
 
             $scope.successMessage = "Successfully created tag " + tag.name;
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     $scope.openEditModal = function(tag) {
         if (tag.enterpriseTag)
@@ -108,48 +92,17 @@ module.controller('TagsPageController', function($scope, $http, $modal, $log, tf
         });
 
         modalInstance.result.then(function (tagsMap) {
-            if (tagsMap) {
-                $scope.tags = tagsMap.tags;
-                $scope.vulnTags = tagsMap.vulnTags;
-                $scope.commentTags = tagsMap.commentTags;
-                $scope.tags.sort(nameCompare);
-                $scope.vulnTags.sort(nameCompare);
-                $scope.commentTags.sort(nameCompare);
-                $scope.errorMessage = "";
-                $scope.successMessage = "Successfully edited tag " + tag.name;
-            } else {
-                if (tag.deletable) {
-                    var collection;
-                    if (tag.type == "APPLICATION")
-                        collection = $scope.tags;
-                    else if (tag.type == "VULNERABILITY")
-                        collection = $scope.vulnTags;
-                    else
-                        collection = $scope.commentTags;
-
-                    var index = collection.indexOf(tag);
-                    if (index > -1) {
-                        collection.splice(index, 1);
-                    }
-                    if (collection.length === 0) {
-                        collection = undefined;
-                    }
-                    $scope.successMessage = "The deletion was successful for Tag " + tag.name;
-                    $scope.errorMessage = "";
-                } else {
-                    $scope.successMessage = "";
-                    $scope.errorMessage = "Failed to delete a Tag with associated mappings.";
-                }
-            }
+            $scope.successMessage = "Successfully edited tag " + tag.name;
+            $scope.refresh();
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     $scope.goToTag = function(tag) {
         window.location.href = tfEncoder.encode("/configuration/tags/" + tag.id +"/view");
-    }
+    };
 
     $scope.goToBatchTagging = function() {
         var tagIds = null;
@@ -157,9 +110,9 @@ module.controller('TagsPageController', function($scope, $http, $modal, $log, tf
             if (tag.checked) {
                 tagIds = tagIds ? (tagIds + "-" + tag.id) : tag.id;
             }
-        })
+        });
         window.location.href = tfEncoder.encode('/configuration/tags/batchTagging/' + tagIds);
-    }
+    };
 
     $scope.applyAllTagsChecked = function(allChecked) {
         $scope.allChecked = allChecked;
@@ -168,7 +121,7 @@ module.controller('TagsPageController', function($scope, $http, $modal, $log, tf
                 tag.checked = allChecked;
             });
         }
-    }
+    };
 
     $scope.applyTagChecked = function(tag) {
         if (!tag.checked) {
