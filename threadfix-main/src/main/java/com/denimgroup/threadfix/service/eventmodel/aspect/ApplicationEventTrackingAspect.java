@@ -25,13 +25,16 @@ package com.denimgroup.threadfix.service.eventmodel.aspect;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Event;
+import com.denimgroup.threadfix.data.entities.ExceptionLog;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.EventBuilder;
+import com.denimgroup.threadfix.service.ExceptionLogService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -42,6 +45,9 @@ public class ApplicationEventTrackingAspect extends EventTrackingAspect {
 
     protected SanitizedLogger log = new SanitizedLogger(ApplicationEventTrackingAspect.class);
 
+    @Autowired
+    private ExceptionLogService exceptionLogService;
+
     @Around("execution(* com.denimgroup.threadfix.service.ApplicationService.storeApplication(..)) && args(application, eventAction)")
     public Object emitStoreApplicationEvent(ProceedingJoinPoint joinPoint, Application application, EventAction eventAction) throws Throwable {
         Object proceed = joinPoint.proceed();
@@ -51,7 +57,8 @@ public class ApplicationEventTrackingAspect extends EventTrackingAspect {
                 publishEventTrackingEvent(event);
             }
         } catch (Exception e) {
-            log.error("Error while logging Event: " + eventAction, e);
+            log.error("Error while logging Event: " + eventAction + ", logging to database (visible under View Error Messages)");
+            exceptionLogService.storeExceptionLog(new ExceptionLog(e));
         }
         return proceed;
     }
@@ -70,24 +77,25 @@ public class ApplicationEventTrackingAspect extends EventTrackingAspect {
     public Object processSaveRemoteScanAndRunEvent(ProceedingJoinPoint joinPoint, Integer channelId, List<String> fileNames, List<String> originalFileNames) throws Throwable {
         Object proceed = joinPoint.proceed();
         for (String fileName : fileNames) {
-            emitUploadApplicationScanEvent((Scan)proceed, channelId, fileName);
+            emitUploadApplicationScanEvent((Scan)proceed);
         }
         return proceed;
     }
 
-    @Around("execution(* com.denimgroup.threadfix.service.ScanMergeService.processScan(Integer, String, Integer, String)) && args(channelId, fileName, statusId, userName)")
-    public Object processProcessScanEvent(ProceedingJoinPoint joinPoint, Integer channelId, String fileName, Integer statusId, String userName) throws Throwable {
+    @Around("execution(* com.denimgroup.threadfix.service.ScanMergeService.processScan(..)) && args(channelId, fileNames, originalFileNames, statusId, userName)")
+    public Object processProcessScanEvent(ProceedingJoinPoint joinPoint, Integer channelId, List<String> fileNames, List<String> originalFileNames, Integer statusId, String userName) throws Throwable {
         Object proceed = joinPoint.proceed();
-        emitUploadApplicationScanEvent((Scan)proceed, channelId, fileName);
+        emitUploadApplicationScanEvent((Scan)proceed);
         return proceed;
     }
 
-    public void emitUploadApplicationScanEvent(Scan scan, Integer channelId, String fileName) throws Throwable {
+    public void emitUploadApplicationScanEvent(Scan scan) throws Throwable {
         try {
             Event event = generateUploadScanEvent(scan);
             publishEventTrackingEvent(event);
         } catch (Exception e) {
-            log.error("Error while logging Event: " + EventAction.APPLICATION_SCAN_UPLOADED, e);
+            log.error("Error while logging Event: " + EventAction.APPLICATION_SCAN_UPLOADED + ", logging to database (visible under View Error Messages)");
+            exceptionLogService.storeExceptionLog(new ExceptionLog(e));
         }
     }
 
@@ -122,7 +130,8 @@ public class ApplicationEventTrackingAspect extends EventTrackingAspect {
             Event event = generateDeleteScanEvent(application, eventDescription, scanId);
             publishEventTrackingEvent(event);
         } catch (Exception e) {
-            log.error("Error while logging Event: " + EventAction.APPLICATION_SCAN_DELETED, e);
+            log.error("Error while logging Event: " + EventAction.APPLICATION_SCAN_DELETED + ", logging to database (visible under View Error Messages)");
+            exceptionLogService.storeExceptionLog(new ExceptionLog(e));
         }
     }
 

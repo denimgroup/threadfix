@@ -50,7 +50,7 @@
                                 <spring:param name="orgId" value="${ organization.id }"/>
                             </spring:url>
                             <a id="editfiltersButton1" href="<c:out value='${ filterUrl }'/>" data-toggle="modal">
-                                Edit Filters
+                                Customize ThreadFix Vulnerability Types and Severities
                             </a>
                         </li>
                     </c:if>

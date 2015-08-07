@@ -27,7 +27,6 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
-import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +38,11 @@ import org.springframework.web.bind.support.SessionStatus;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.data.entities.Permission.CAN_MANAGE_CUSTOM_CWE_TEXT;
+import static com.denimgroup.threadfix.data.entities.Permission.CAN_MANAGE_VULN_FILTERS;
+import static com.denimgroup.threadfix.service.enterprise.EnterpriseTest.isEnterprise;
+import static com.denimgroup.threadfix.service.util.PermissionUtils.isAuthorized;
 
 public abstract class AbstractVulnFilterController {
 
@@ -119,20 +123,33 @@ public abstract class AbstractVulnFilterController {
 	}
 
 	public String indexBackend(Model model, int orgId, int appId) {
-		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, orgId, appId)) {
+		boolean isGlobal = orgId == -1 && appId == -1,
+				canManageVulnFilters = isAuthorized(CAN_MANAGE_VULN_FILTERS, orgId, appId),
+				canManageCweText     = isAuthorized(CAN_MANAGE_CUSTOM_CWE_TEXT, orgId, appId);
+
+		if (isGlobal && !canManageCweText && !canManageVulnFilters) {
+			return "403";
+		} else if (!isGlobal && !canManageVulnFilters) {
 			return "403";
 		}
 
-		model.addAttribute("isEnterprise", EnterpriseTest.isEnterprise());
+		model.addAttribute("isEnterprise", isEnterprise());
 		model.addAttribute("vulnerabilityFilter", vulnerabilityFilterService.getNewFilter(orgId, appId));
 		model.addAttribute("severityFilter",      getSeverityFilter(orgId, appId));
 		model.addAttribute("vulnerabilityFilterList", vulnerabilityFilterService.getPrimaryVulnerabilityList(orgId, appId));
 		model.addAttribute("type", getType(orgId, appId));
+
+		if (orgId == -1 && appId == -1) {
+			PermissionUtils.addPermissions(model, -1, -1,
+					CAN_MANAGE_VULN_FILTERS,
+					CAN_MANAGE_CUSTOM_CWE_TEXT);
+			return "customize/threadfixVulnTypes/community";
+		}
 		return "filters/index";
 	}
 
 	public RestResponse<Map<String, Object>> mapBackend(int orgId, int appId) {
-		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, orgId, appId)) {
+		if (!isAuthorized(CAN_MANAGE_VULN_FILTERS, orgId, appId)) {
 			return RestResponse.failure("You don't have permission to edit these filters.");
 		}
 
@@ -155,7 +172,7 @@ public abstract class AbstractVulnFilterController {
 			map.put("teamVulnerabilityFilters", vulnerabilityFilterService.getPrimaryVulnerabilityList(orgId, -1));
 		}
 
-		if (EnterpriseTest.isEnterprise()) {
+		if (isEnterprise()) {
 			List<ChannelType> channelTypes = channelTypeService.loadAllHasVulnMapping();
 			map.put("channelVulnerabilitiesMap", channelVulnerabilityService.getChannelVulnsEachChannelType(channelTypes));
 			map.put("channelTypes", channelTypes);
@@ -172,7 +189,7 @@ public abstract class AbstractVulnFilterController {
 	
 	public String tabBackend(Model model, int orgId, int appId) {
 		
-		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, orgId, appId)) {
+		if (!isAuthorized(CAN_MANAGE_VULN_FILTERS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -191,7 +208,7 @@ public abstract class AbstractVulnFilterController {
 			int orgId,
 			int appId) {
 
-		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, orgId, appId)) {
+		if (!isAuthorized(CAN_MANAGE_VULN_FILTERS, orgId, appId)) {
 			return RestResponse.failure(AUTHORIZATION_FAILED);
 		}
 
@@ -221,7 +238,7 @@ public abstract class AbstractVulnFilterController {
 			int appId,
 			int filterId) {
 		
-		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, orgId, appId)) {
+		if (!isAuthorized(CAN_MANAGE_VULN_FILTERS, orgId, appId)) {
 			return RestResponse.failure(AUTHORIZATION_FAILED);
 		}
 		
@@ -246,7 +263,7 @@ public abstract class AbstractVulnFilterController {
 	
 	public String submitDeleteBackend(Model model, int orgId, int appId, int filterId) {
 
-		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, orgId, appId)) {
+		if (!isAuthorized(CAN_MANAGE_VULN_FILTERS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -262,7 +279,7 @@ public abstract class AbstractVulnFilterController {
 			BindingResult bindingResult,
 			SessionStatus status) {
 
-		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, -1, -1)) {
+		if (!isAuthorized(CAN_MANAGE_VULN_FILTERS, -1, -1)) {
 			return RestResponse.failure(AUTHORIZATION_FAILED);
 		}
 
@@ -289,7 +306,7 @@ public abstract class AbstractVulnFilterController {
 			SessionStatus status,
 			int filterId) {
 
-		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, -1, -1)) {
+		if (!isAuthorized(CAN_MANAGE_VULN_FILTERS, -1, -1)) {
 			return RestResponse.failure(AUTHORIZATION_FAILED);
 		}
 
@@ -311,7 +328,7 @@ public abstract class AbstractVulnFilterController {
 	}
 
 	public String submitDeleteChannelFilterBackend(int filterId) {
-		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, -1, -1)) {
+		if (!isAuthorized(CAN_MANAGE_VULN_FILTERS, -1, -1)) {
 			return "403";
 		}
 		channelVulnerabilityFilterService.delete(filterId);

@@ -6,7 +6,7 @@ module.controller('ScanResultFiltersController', function($scope, $http, $modal,
 
     var compare = function(a, b){
         var scannerCompare = a.scannerTypeName.localeCompare(b.scannerTypeName);
-        if(scannerCompare !=0){
+        if (scannerCompare !=0) {
             return scannerCompare;
         }
 
@@ -22,7 +22,7 @@ module.controller('ScanResultFiltersController', function($scope, $http, $modal,
     };
 
     $scope.$on('rootScopeInitialized', function() {
-        $http.get(tfEncoder.encode('/configuration/scanResultFilters/info')).
+        $http.get(tfEncoder.encode('/customize/scannerSeverities/info')).
             success(function(data, status, headers, config) {
 
                 if (data.success) {
@@ -53,7 +53,7 @@ module.controller('ScanResultFiltersController', function($scope, $http, $modal,
             controller: 'ModalControllerWithConfig',
             resolve: {
                 url: function() {
-                    return tfEncoder.encode("/configuration/scanResultFilters/new");
+                    return tfEncoder.encode("/customize/scannerSeverities/new");
                 },
                 object: function() {
                     return {};
@@ -93,7 +93,7 @@ module.controller('ScanResultFiltersController', function($scope, $http, $modal,
             controller: 'ModalControllerWithConfig',
             resolve: {
                 url: function() {
-                    return tfEncoder.encode("/configuration/scanResultFilters/" + filter.id + "/edit");
+                    return tfEncoder.encode("/customize/scannerSeverities/" + filter.id + "/edit");
                 },
                 object: function() {
                     var filterCopy = angular.copy(filter);
@@ -109,7 +109,7 @@ module.controller('ScanResultFiltersController', function($scope, $http, $modal,
                     };
                 },
                 deleteUrl: function() {
-                    return tfEncoder.encode("/configuration/scanResultFilters/" + filter.id + "/delete");
+                    return tfEncoder.encode("/customize/scannerSeverities/" + filter.id + "/delete");
                 }
             }
         });
