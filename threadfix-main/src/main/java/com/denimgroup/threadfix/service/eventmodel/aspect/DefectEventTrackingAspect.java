@@ -42,6 +42,8 @@ public class DefectEventTrackingAspect extends EventTrackingAspect {
     protected SanitizedLogger log = new SanitizedLogger(DefectEventTrackingAspect.class);
 
     @Autowired
+    private ExceptionLogService exceptionLogService;
+    @Autowired
     private ApplicationService applicationService;
 
     @Around("execution(* com.denimgroup.threadfix.service.DefectService.createDefect(..))")
@@ -55,7 +57,8 @@ public class DefectEventTrackingAspect extends EventTrackingAspect {
                 publishEventTrackingEvent(event);
             }
         } catch (Exception e) {
-            log.error("Error while logging Event: " + EventAction.DEFECT_SUBMIT, e);
+            log.error("Error while logging Event: " + EventAction.DEFECT_SUBMIT + ", logging to database (visible under View Error Messages)");
+            exceptionLogService.storeExceptionLog(new ExceptionLog(e));
         }
         return proceed;
     }
@@ -77,7 +80,8 @@ public class DefectEventTrackingAspect extends EventTrackingAspect {
             }
         } catch (Exception e) {
             errorLoggingEvent = true;
-            log.error("Error while logging Event: " + EventAction.DEFECT_STATUS_UPDATED, e);
+            log.error("Error while logging Event: " + EventAction.DEFECT_STATUS_UPDATED + ", logging to database (visible under View Error Messages)");
+            exceptionLogService.storeExceptionLog(new ExceptionLog(e));
         }
         Object proceed = joinPoint.proceed();
         try {
@@ -107,7 +111,8 @@ public class DefectEventTrackingAspect extends EventTrackingAspect {
                 }
             }
         } catch (Exception e) {
-            log.error("Error while logging Event: " + EventAction.DEFECT_STATUS_UPDATED, e);
+            log.error("Error while logging Event: " + EventAction.DEFECT_STATUS_UPDATED + ", logging to database (visible under View Error Messages)");
+            exceptionLogService.storeExceptionLog(new ExceptionLog(e));
         }
         return proceed;
     }
@@ -146,7 +151,8 @@ public class DefectEventTrackingAspect extends EventTrackingAspect {
                 }
             }
         } catch (Exception e) {
-            log.error("Error while logging Event: " + EventAction.DEFECT_APPEARED_AFTER_CLOSED, e);
+            log.error("Error while logging Event: " + EventAction.DEFECT_APPEARED_AFTER_CLOSED + ", logging to database (visible under View Error Messages)");
+            exceptionLogService.storeExceptionLog(new ExceptionLog(e));
         }
         return proceed;
     }
