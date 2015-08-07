@@ -564,10 +564,10 @@ public class ApplicationDetailPage extends BasePage {
         return new TagDetailPage(driver);
     }
 
-    public FilterPage clickEditVulnerabilityFilters() {
+    public TeamAppCustomizeVulnerabilityTypesPage clickEditVulnerabilityFilters() {
         waitForElement(driver.findElementById("editVulnerabilityFiltersButton"));
         driver.findElementById("editVulnerabilityFiltersButton").click();
-        return new FilterPage(driver);
+        return new TeamAppCustomizeVulnerabilityTypesPage(driver);
     }
 
     public ApplicationDetailPage clickManualFindingButton() {

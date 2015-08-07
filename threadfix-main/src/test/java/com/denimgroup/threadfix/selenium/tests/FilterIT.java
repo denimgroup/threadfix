@@ -24,10 +24,7 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
-import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.FilterPage;
-import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
-import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
+import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -54,7 +51,7 @@ public class FilterIT extends BaseIT {
         TeamIndexPage teamIndexPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink();
 
-        FilterPage applicationFilterPage = teamIndexPage.expandTeamRowByName(teamName)
+        TeamAppCustomizeVulnerabilityTypesPage appCustomizeVulnerabilityTypesPage = teamIndexPage.expandTeamRowByName(teamName)
                 .clickViewAppLink(appName1, teamName)
                 .clickActionButton()
                 .clickEditVulnerabilityFilters()
@@ -66,7 +63,7 @@ public class FilterIT extends BaseIT {
                 .hideInfo()
                 .saveFilterChanges();
 
-        teamIndexPage = applicationFilterPage.clickOrganizationHeaderLink()
+        teamIndexPage = appCustomizeVulnerabilityTypesPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
 
         assertTrue("Vulnerabilities were not filtered properly on team index page.",
@@ -96,7 +93,7 @@ public class FilterIT extends BaseIT {
         TeamIndexPage teamIndexPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink();
 
-        FilterPage teamFilterPage = teamIndexPage.clickViewTeamLink(teamName)
+        TeamAppCustomizeVulnerabilityTypesPage teamCustomizeVulnerabilityTypesPage = teamIndexPage.clickViewTeamLink(teamName)
                 .clickActionButton()
                 .clickEditTeamFilters()
                 .clickCreateNewFilter()
@@ -107,7 +104,7 @@ public class FilterIT extends BaseIT {
                 .hideInfo()
                 .saveFilterChanges();
 
-        teamIndexPage = teamFilterPage.clickOrganizationHeaderLink();
+        teamIndexPage = teamCustomizeVulnerabilityTypesPage.clickOrganizationHeaderLink();
 
         assertTrue("The filter was not implemented correctly.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Medium", "0"));
@@ -139,26 +136,26 @@ public class FilterIT extends BaseIT {
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName);
 
-        FilterPage teamFilterPage = teamDetailPage.clickActionButton()
+        TeamAppCustomizeVulnerabilityTypesPage teamCustomizeVulnerabilityTypesPage = teamDetailPage.clickActionButton()
                 .clickEditTeamFilters()
                 .enableSeverityFilters()
                 .hideMedium()
                 .saveFilterChanges();
 
-        TeamIndexPage teamIndexPage = teamFilterPage.clickOrganizationHeaderLink();
+        TeamIndexPage teamIndexPage = teamCustomizeVulnerabilityTypesPage.clickOrganizationHeaderLink();
 
         // Set appName1 to hide 'Critical'
         ApplicationDetailPage applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-        FilterPage applicationFilterPage = applicationDetailPage.clickActionButton()
+        TeamAppCustomizeVulnerabilityTypesPage appCustomizeVulnerabilityTypesPage = applicationDetailPage.clickActionButton()
                 .clickEditVulnerabilityFilters()
                 .enableSeverityFilters()
                 .hideCritical()
                 .saveFilterChanges();
 
         // Check TeamIndexPage to for the results
-        teamIndexPage = applicationFilterPage.clickOrganizationHeaderLink();
+        teamIndexPage = appCustomizeVulnerabilityTypesPage.clickOrganizationHeaderLink();
 
         assertTrue("Critical vulnerability count was not correct.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Critical", "0"));
@@ -171,7 +168,7 @@ public class FilterIT extends BaseIT {
         assertTrue("Info vulnerability count was not correct.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Info", "9"));
 
-        applicationFilterPage = teamIndexPage.expandTeamRowByName(teamName)
+        appCustomizeVulnerabilityTypesPage = teamIndexPage.expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
                 .clickActionButton()
                 .clickEditVulnerabilityFilters()
@@ -179,7 +176,7 @@ public class FilterIT extends BaseIT {
                 .hideInfo()
                 .saveFilterChanges();
 
-        teamIndexPage = applicationFilterPage.clickOrganizationHeaderLink();
+        teamIndexPage = appCustomizeVulnerabilityTypesPage.clickOrganizationHeaderLink();
 
         assertTrue("Critical vulnerability count was not correct.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Critical", "6"));

@@ -72,10 +72,10 @@ public class TeamDetailPage extends BasePage {
         return new TeamDetailPage(driver);
     }
 
-    public FilterPage clickEditTeamFilters() {
+    public TeamAppCustomizeVulnerabilityTypesPage clickEditTeamFilters() {
         driver.findElementById("editfiltersButton1").click();
         waitForElement(driver.findElementById("createNewKeyModalButton"));
-        return new FilterPage(driver);
+        return new TeamAppCustomizeVulnerabilityTypesPage(driver);
     }
 
     public TeamDetailPage clickUserPermLink() {

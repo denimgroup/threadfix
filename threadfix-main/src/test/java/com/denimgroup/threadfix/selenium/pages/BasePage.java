@@ -113,6 +113,7 @@ public abstract class BasePage {
 
     public WafIndexPage clickWafsHeaderLink() {
         clickConfigTab();
+        hover("manageIntegrations");
         driver.findElementById("wafsLink").click();
         sleep(1000);
         return new WafIndexPage(driver);
@@ -139,12 +140,14 @@ public abstract class BasePage {
 
     public ApiKeysIndexPage clickApiKeysLink(){
         clickConfigTab();
+        hover("adminLink");
         driver.findElementById("apiKeysLink").click();
         return new ApiKeysIndexPage(driver);
     }
 
     public DefectTrackerIndexPage clickDefectTrackersLink(){
         clickConfigTab();
+        hover("manageIntegrations");
         driver.findElementById("defectTrackersLink").click();
         sleep(4000);
         return new DefectTrackerIndexPage(driver);
@@ -152,6 +155,7 @@ public abstract class BasePage {
 
     public RemoteProvidersIndexPage clickRemoteProvidersLink(){
         clickConfigTab();
+        hover("manageIntegrations");
         driver.findElementById("remoteProvidersLink").click();
         sleep(6000);
         return new RemoteProvidersIndexPage(driver);
@@ -159,6 +163,7 @@ public abstract class BasePage {
 
     public ScanAgentTasksPage clickScanAgentTasksLink() {
         clickConfigTab();
+        hover("manageIntegrations");
         driver.findElementById("scanQueueLink").click();
         sleep(3000);
         return new ScanAgentTasksPage(driver);
@@ -173,21 +178,31 @@ public abstract class BasePage {
 
     public UserIndexPage clickManageUsersLink(){
         clickConfigTab();
+        hover("adminLink");
         driver.findElementById("manageUsersLink").click();
         sleep(6000);
         return new UserIndexPage(driver);
     }
 
-    public FilterPage clickManageFiltersLink() {
+    public CustomizeVulnerabilityTypesPage clickCustomizeThreadFixVulnerabilityTypesLink() {
         clickConfigTab();
-        hover("manageFiltersLink");
-        driver.findElementById("vulnFiltersLink").click();
+        hover("manageCustomLink");
+        driver.findElementById("customizeThreadFixVulnerabilityTypesLink").click();
         sleep(3000);
-        return new FilterPage(driver);
+        return new CustomizeVulnerabilityTypesPage(driver);
+    }
+
+    public CustomizeSeveritiesPage clickCustomizeThreadFixSeveritiesLink() {
+        clickConfigTab();
+        hover("manageCustomLink");
+        driver.findElementById("customizeThreadFixSeveritiesLink").click();
+        sleep(3000);
+        return new CustomizeSeveritiesPage(driver);
     }
 
     public RolesIndexPage clickManageRolesLink(){
         clickConfigTab();
+        hover("adminLink");
         driver.findElementById("manageRolesLink").click();
         sleep(3000);
         return new RolesIndexPage(driver);
@@ -195,6 +210,7 @@ public abstract class BasePage {
 
     public GroupIndexPage clickManageGroupsLink(){
         clickConfigTab();
+        hover("adminLink");
         driver.findElementById("manageGroupsLink").click();
         sleep(3000);
         return new GroupIndexPage(driver);
@@ -208,6 +224,7 @@ public abstract class BasePage {
 
     public SystemSettingsPage clickSystemSettingsLink(){
         clickConfigTab();
+        hover("adminLink");
         driver.findElementById("configureDefaultsLink").click();
         return new SystemSettingsPage(driver);
 
@@ -221,12 +238,14 @@ public abstract class BasePage {
 
     public TagIndexPage clickTagsLink() {
         clickConfigTab();
+        hover("manageCustomLink");
         driver.findElementById("tagsLink").click();
         return new TagIndexPage(driver);
     }
 
     public EmailListPage clickManageEmailListsLink() {
         clickConfigTab();
+        hover("adminLink");
         driver.findElementById("emailListsLink").click();
         return new EmailListPage(driver);
     }
@@ -296,9 +315,15 @@ public abstract class BasePage {
 
 	public boolean isScansMenuLinkClickable(){ return isClickable("scansHeader");}
 
-    public boolean isTagsPageLinkPresent() {return driver.findElementById("tagsLink").isDisplayed();}
+    public boolean isTagsPageLinkPresent() {
+        hover("manageCustomLink");
+        return driver.findElementById("tagsLink").isDisplayed();
+    }
 
-    public boolean isTagsPageLinkClickable() {return isClickable("tagsLink");}
+    public boolean isTagsPageLinkClickable() {
+        hover("manageCustomLink");
+        return isClickable("tagsLink");
+    }
 
 	public boolean isReportsMenuLinkPresent(){
 		return driver.findElementById("reportsHeader").isDisplayed();
@@ -332,62 +357,74 @@ public abstract class BasePage {
         return isClickable("logo");
 	}
 
-	public boolean isApiKeysLinkPresent(){
+	public boolean isApiKeysLinkPresent() {
+        hover("adminLink");
 		return driver.findElementById("apiKeysLink").isDisplayed();
 	}
 
-	public boolean isApiKeysMenuLinkClickable(){
+	public boolean isApiKeysMenuLinkClickable() {
+        hover("adminLink");
         return isClickable("apiKeysLink");
 	}
 
-	public boolean isWafsLinkPresent(){
+	public boolean isWafsLinkPresent() {
+        hover("manageCustomLink");
 		return driver.findElementById("wafsLink").isDisplayed();
 	}
 
-	public boolean isWafsMenuLinkClickable(){
+	public boolean isWafsMenuLinkClickable() {
+        hover("manageCustomLink");
         return isClickable("wafsLink");
 	}
 
-	public boolean isDefectTrackerLinkPresent(){
+	public boolean isDefectTrackerLinkPresent() {
+        hover("manageIntegrations");
 		return driver.findElementById("defectTrackersLink").isDisplayed();
 	}
 
-	public boolean isDefectTrackerMenuLinkClickable(){
+	public boolean isDefectTrackerMenuLinkClickable() {
+        hover("manageIntegrations");
         return isClickable("defectTrackersLink");
 	}
 
-	public boolean isRemoteProvidersLinkPresent(){
+	public boolean isRemoteProvidersLinkPresent() {
+        hover("manageIntegrations");
 		return driver.findElementById("remoteProvidersLink").isDisplayed();
 	}
 
-	public boolean isRemoteProvidersMenuLinkClickable(){
+	public boolean isRemoteProvidersMenuLinkClickable() {
+        hover("manageIntegrations");
         return isClickable("remoteProvidersLink");
 	}
 
-	public boolean isManageUsersLinkPresent(){
+	public boolean isManageUsersLinkPresent() {
+        hover("adminLink");
 		return driver.findElementById("manageUsersLink").isDisplayed();
 	}
 
-	public boolean isManageUsersMenuLinkClickable(){
+	public boolean isManageUsersMenuLinkClickable() {
+        hover("adminLink");
         return isClickable("manageUsersLink");
 	}
 
-	public boolean isManageRolesLinkPresent(){
+	public boolean isManageRolesLinkPresent() {
+        hover("adminLink");
 		return driver.findElementById("manageRolesLink").isDisplayed();
 	}
 
-	public boolean isManageRolesMenuLinkClickable(){
+	public boolean isManageRolesMenuLinkClickable() {
+        hover("adminLink");
         return isClickable("manageRolesLink");
 	}
 
-    public boolean isManageFiltersMenuLinkPresent(){
-        hover("manageFiltersLink");
-        return driver.findElementById("vulnFiltersLink").isDisplayed();
+    public boolean isCustomizeThreadFixVulnerabilityTypesLinkPresent(){
+        hover("manageCustomLink");
+        return driver.findElementById("customizeThreadFixVulnerabilityTypesLink").isDisplayed();
     }
 
-    public boolean isManageFiltersMenuLinkClickable(){
-        hover("manageFiltersLink");
-        return isClickable("vulnFiltersLink");
+    public boolean isCustomizeThreadFixVulnerabilityTypesLinkClickable(){
+        hover("manageCustomLink");
+        return isClickable("customizeThreadFixVulnerabilityTypesLink");
     }
 
 	public boolean isLogsLinkPresent(){
@@ -402,11 +439,13 @@ public abstract class BasePage {
         return driver.findElementsByCssSelector("#submit.disabled").isEmpty();
     }
 
-	public boolean isConfigureDefaultsLinkPresent(){
+	public boolean isConfigureDefaultsLinkPresent() {
+        hover("adminLink");
 		return driver.findElementById("configureDefaultsLink").isDisplayed();
 	}
 
-	public boolean isConfigureDefaultsMenuLinkClickable(){
+	public boolean isConfigureDefaultsMenuLinkClickable() {
+        hover("adminLink");
         return isClickable("configureDefaultsLink");
 	}
 

@@ -27,8 +27,6 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import com.microsoft.tfs.core.clients.registration.Database;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
@@ -108,8 +106,8 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
         assertTrue("Waf link is not clickable", dashboardPage.isWafsMenuLinkClickable());
         assertTrue("Manage Users is not present", dashboardPage.isManageUsersLinkPresent());
         assertTrue("Manage Users is not clickable", dashboardPage.isManageUsersMenuLinkClickable());
-        assertTrue("Manage Filters is not present", dashboardPage.isManageFiltersMenuLinkPresent());
-        assertTrue("Manage Filters is not clickable", dashboardPage.isManageFiltersMenuLinkClickable());
+        assertTrue("Customize ThreadFix Vulnerability Types Link is not present", dashboardPage.isCustomizeThreadFixVulnerabilityTypesLinkPresent());
+        assertTrue("Customize ThreadFix Vulnerability Types Link is not clickable", dashboardPage.isCustomizeThreadFixVulnerabilityTypesLinkClickable());
         assertTrue("View Error Log is not present", dashboardPage.isLogsLinkPresent());
         assertTrue("View Error Log is not clickable", dashboardPage.isLogsMenuLinkClickable());
     }
@@ -180,9 +178,9 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
         sleep(3000);
         applicationDetailPage.clickActionButton();
         sleep(2000);
-        FilterPage filterPage = applicationDetailPage.clickEditVulnerabilityFilters();
+        TeamAppCustomizeVulnerabilityTypesPage appCustomizeVulnerabilityTypesPage = applicationDetailPage.clickEditVulnerabilityFilters();
         sleep(1000);
-        assertTrue("Did not navigate to FilterPage.", filterPage.isElementVisible("createNewKeyModalButton"));
+        assertTrue("Did not navigate to FilterPage.", appCustomizeVulnerabilityTypesPage.isElementVisible("createNewKeyModalButton"));
     }
 
     @Test

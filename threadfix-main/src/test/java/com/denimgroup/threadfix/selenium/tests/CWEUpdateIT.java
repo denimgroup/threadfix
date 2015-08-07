@@ -24,8 +24,7 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
-import com.denimgroup.threadfix.selenium.pages.FilterPage;
-import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
+import com.denimgroup.threadfix.selenium.pages.CustomizeVulnerabilityTypesPage;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.NoSuchElementException;
@@ -40,16 +39,16 @@ public class CWEUpdateIT extends BaseIT {
         String vulnerabilityType = "Improper Authorization in Handler for Custom URL Scheme";
         String severity = "High";
 
-        FilterPage globalFilterPage = loginPage.defaultLogin()
-                .clickManageFiltersLink()
+        CustomizeVulnerabilityTypesPage customizeVulnerabilityTypesPage = loginPage.defaultLogin()
+                .clickCustomizeThreadFixVulnerabilityTypesLink()
                 .clickCreateNewFilter()
                 .addVulnerabilityFilter(vulnerabilityType, severity);
 
-        assertTrue("Could not find the vulnerability.", globalFilterPage.isVulnerabilityTypeFound());
-        assertTrue("Success message not present.", globalFilterPage.isSuccessMessagePresent());
+        assertTrue("Could not find the vulnerability.", customizeVulnerabilityTypesPage.isVulnerabilityTypeFound());
+        assertTrue("Success message not present.", customizeVulnerabilityTypesPage.isSuccessMessagePresent());
 
         try {
-            globalFilterPage.deleteFilter()
+            customizeVulnerabilityTypesPage.deleteFilter()
                     .closeSuccessNotification()
                     .clickDashboardLink();
         } catch (NoSuchElementException e) {

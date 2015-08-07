@@ -31,7 +31,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -358,18 +357,18 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
         createRestrictedUser("canManageVulnFilters");
 
-        FilterPage applicationFilterPage = loginPage.login(userName, testPassword)
-                .clickManageFiltersLink();
+        CustomizeVulnerabilityTypesPage customizeVulnerabilityTypesPage = loginPage.login(userName, testPassword)
+                .clickCustomizeThreadFixVulnerabilityTypesLink();
 
-        assertTrue("Access Denied Page is not showing", applicationFilterPage.isAccessDenied());
+        assertTrue("Access Denied Page is not showing", customizeVulnerabilityTypesPage.isAccessDenied());
 
-         applicationFilterPage.clickOrganizationHeaderLink()
+        customizeVulnerabilityTypesPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickApplicationName(teamName, appName)
                 .clickActionButton();
 
         assertFalse("Close Vulnerability button is available",
-                applicationFilterPage.isElementPresent("editVulnerabilityFiltersButton"));
+                customizeVulnerabilityTypesPage.isElementPresent("editVulnerabilityFiltersButton"));
     }
 
     @Test

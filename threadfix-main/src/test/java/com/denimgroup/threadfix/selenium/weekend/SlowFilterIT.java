@@ -24,14 +24,10 @@
 package com.denimgroup.threadfix.selenium.weekend;
 
 import com.denimgroup.threadfix.WeekendTests;
-import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.FilterPage;
-import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
-import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
+import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.tests.BaseIT;
 import com.denimgroup.threadfix.selenium.tests.ScanContents;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.NoSuchElementException;
@@ -61,17 +57,20 @@ public class SlowFilterIT extends BaseIT{
             DatabaseUtils.createApplication(teamName2, appName2);
             DatabaseUtils.uploadScan(teamName2, appName2, file);
 
-            FilterPage globalFilterPage = loginPage.defaultLogin()
-                    .clickManageFiltersLink()
+            CustomizeVulnerabilityTypesPage customizeVulnerabilityTypesPage = loginPage.defaultLogin()
+                    .clickCustomizeThreadFixVulnerabilityTypesLink()
                     .clickCreateNewFilter()
                     .addVulnerabilityFilter(vulnerabilityType, severity)
-                    .closeSuccessNotification()
+                    .closeSuccessNotification();
+
+            CustomizeSeveritiesPage customizeSeveritiesPage = customizeVulnerabilityTypesPage.clickCustomizeThreadFixSeveritiesLink()
+                    .clickShowHideTab()
                     .enableSeverityFilters()
                     .hideMedium()
                     .saveFilterChanges()
                     .waitForChanges();
 
-            TeamIndexPage teamIndexPage = globalFilterPage.clickOrganizationHeaderLink();
+            TeamIndexPage teamIndexPage = customizeSeveritiesPage.clickOrganizationHeaderLink();
             sleep(3000);
 
             assertTrue("The global filter for " + teamName1 + " was not implemented correctly - medium should be 0.",
@@ -122,11 +121,14 @@ public class SlowFilterIT extends BaseIT{
             DatabaseUtils.uploadScan(teamName, appName, file);
 
             // Set global severity filter for vulnerabilityType1 and hide 'Medium', 'Low', 'Info' vulnerabilities
-            FilterPage globalFilterPage = loginPage.defaultLogin()
-                    .clickManageFiltersLink()
+            CustomizeVulnerabilityTypesPage customizeVulnerabilityTypesPage = loginPage.defaultLogin()
+                    .clickCustomizeThreadFixVulnerabilityTypesLink()
                     .clickCreateNewFilter()
                     .addVulnerabilityFilter(vulnerabilityType, severity)
-                    .closeSuccessNotification()
+                    .closeSuccessNotification();
+
+            CustomizeSeveritiesPage customizeSeveritiesPage = customizeVulnerabilityTypesPage.clickCustomizeThreadFixSeveritiesLink()
+                    .clickShowHideTab()
                     .enableSeverityFilters()
                     .hideMedium()
                     .hideLow()
@@ -134,31 +136,31 @@ public class SlowFilterIT extends BaseIT{
                     .saveFilterChanges()
                     .waitForChanges();
 
-            TeamIndexPage teamIndexPage = globalFilterPage.clickOrganizationHeaderLink();
+            TeamIndexPage teamIndexPage = customizeSeveritiesPage.clickOrganizationHeaderLink();
 
             // Set teamName to show 'Medium' vulnerabilities
             TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
 
-            FilterPage teamFilterPage = teamDetailPage.clickActionButton()
+            TeamAppCustomizeVulnerabilityTypesPage teamCustomizeVulnerabilityTypesPage = teamDetailPage.clickActionButton()
                     .clickEditTeamFilters()
                     .enableSeverityFilters()
                     .showMedium()
                     .saveFilterChanges();
 
-            teamIndexPage = teamFilterPage.clickOrganizationHeaderLink();
+            teamIndexPage = teamCustomizeVulnerabilityTypesPage.clickOrganizationHeaderLink();
 
             // Set appName1 to hide 'Critical'
             ApplicationDetailPage applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
                     .clickViewAppLink(appName, teamName);
 
-            FilterPage applicationFilterPage = applicationDetailPage.clickActionButton()
+            TeamAppCustomizeVulnerabilityTypesPage appCustomizeVulnerabilityTypesPage = applicationDetailPage.clickActionButton()
                     .clickEditVulnerabilityFilters()
                     .enableSeverityFilters()
                     .hideCritical()
                     .saveFilterChanges();
 
             // Check TeamIndexPage to for the final results
-            teamIndexPage = applicationFilterPage.clickOrganizationHeaderLink();
+            teamIndexPage = appCustomizeVulnerabilityTypesPage.clickOrganizationHeaderLink();
 
             assertTrue("Application filter of hiding 'Critical' was not implemented correctly.",
                     teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Critical", "0"));
@@ -195,15 +197,16 @@ public class SlowFilterIT extends BaseIT{
                 .clickOrganizationHeaderLink();
 
         try {
-            FilterPage globalFilterPage = teamIndexPage.clickManageFiltersLink()
+            CustomizeVulnerabilityTypesPage customizeVulnerabilityTypesPage = teamIndexPage.clickCustomizeThreadFixVulnerabilityTypesLink()
                     .deleteFilter()
                     .closeSuccessNotification();
-            teamIndexPage = globalFilterPage.clickOrganizationHeaderLink();
+            teamIndexPage = customizeVulnerabilityTypesPage.clickOrganizationHeaderLink();
         } catch (NoSuchElementException e) {
             System.out.println("There was not a global vulnerability filter set.");
         }
 
-        FilterPage globalFilterPage = teamIndexPage.clickManageFiltersLink()
+        CustomizeSeveritiesPage customizeSeveritiesPage = teamIndexPage.clickCustomizeThreadFixSeveritiesLink()
+                .clickShowHideTab()
                 .enableSeverityFilters()
                 .showCritical()
                 .showHigh()
@@ -214,6 +217,6 @@ public class SlowFilterIT extends BaseIT{
                 .saveFilterChanges()
                 .waitForChanges();
 
-        loginPage = globalFilterPage.logout();
+        loginPage = customizeSeveritiesPage.logout();
     }
 }

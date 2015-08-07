@@ -94,8 +94,8 @@ public class TeamIndexPageIT extends BaseDataTest {
         assertTrue("Waf link is not clickable", dashboardPage.isWafsMenuLinkClickable());
         assertTrue("Manage Users is not present", dashboardPage.isManageUsersLinkPresent());
         assertTrue("Manage Users is not clickable", dashboardPage.isManageUsersMenuLinkClickable());
-        assertTrue("Manage Filters is not present", dashboardPage.isManageFiltersMenuLinkPresent());
-        assertTrue("Manage Filters is not clickable", dashboardPage.isManageFiltersMenuLinkClickable());
+        assertTrue("Customize ThreadFix Vulnerability Types is not present", dashboardPage.isCustomizeThreadFixVulnerabilityTypesLinkPresent());
+        assertTrue("Customize ThreadFix Vulnerability Types is not clickable", dashboardPage.isCustomizeThreadFixVulnerabilityTypesLinkClickable());
         assertTrue("View Error Log is not present", dashboardPage.isLogsLinkPresent());
         assertTrue("View Error Log is not clickable", dashboardPage.isLogsMenuLinkClickable());
     }
