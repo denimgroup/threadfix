@@ -27,6 +27,7 @@ package com.denimgroup.threadfix.selenium.pages;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.Select;
 
 public class GroupIndexPage extends BasePage {
 
@@ -110,7 +111,7 @@ public class GroupIndexPage extends BasePage {
     }
 
     public GroupIndexPage setTeamRole(String role) {
-        driver.findElementById("roleSelectTeam").sendKeys(role);
+        new Select(driver.findElementById("roleSelectTeam")).selectByVisibleText(role);
         return this;
     }
 
@@ -133,7 +134,7 @@ public class GroupIndexPage extends BasePage {
     }
 
     public GroupIndexPage setApplicationRole(String appName, String role) {
-        driver.findElementById("roleSelectApp" + appName).sendKeys(role);
+        new Select(driver.findElementById("roleSelectApp" + appName)).selectByVisibleText(role);
         return this;
     }
 
