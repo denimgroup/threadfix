@@ -1,5 +1,5 @@
 
-<tab id="documentsTab" ng-controller="DocumentFormController" heading="{{ heading }}">
+<tab id="documentsTab" ng-controller="DocumentFormController" heading="{{ heading }}" ng-click="setTab('Files')" active="tab.files">
 
     <c:if test="${ canManageApplications }">
         <div style="margin-top:10px;margin-bottom:7px;">

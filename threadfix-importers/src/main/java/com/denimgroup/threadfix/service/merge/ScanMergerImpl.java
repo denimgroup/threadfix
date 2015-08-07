@@ -24,10 +24,11 @@
 package com.denimgroup.threadfix.service.merge;
 
 import com.denimgroup.threadfix.data.dao.ScanDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScanResultFilterService;
+import com.denimgroup.threadfix.service.VulnerabilityService;
+import com.denimgroup.threadfix.service.VulnerabilityStatusService;
 import com.denimgroup.threadfix.service.translator.PathGuesser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,9 @@ public class ScanMergerImpl implements ScanMerger {
     @Autowired
     private ScanDao           scanDao;
     @Autowired
-    private VulnerabilityDao  vulnerabilityDao;
+    private VulnerabilityService vulnerabilityService;
+    @Autowired
+    private VulnerabilityStatusService vulnerabilityStatusService;
     @Autowired
     private ScanCleanerUtils  scanCleanerUtils;
     @Autowired
@@ -86,7 +89,7 @@ public class ScanMergerImpl implements ScanMerger {
         Application application = applicationChannel.getApplication();
 
         PathGuesser.generateGuesses(application, scan);
-        ChannelMerger.channelMerge(vulnerabilityDao, scan, applicationChannel);
+        ChannelMerger.channelMerge(vulnerabilityService, vulnerabilityStatusService, scan, applicationChannel);
         applicationMerger.applicationMerge(scan, application, null);
 
         scan.setApplicationChannel(applicationChannel);
@@ -106,6 +109,7 @@ public class ScanMergerImpl implements ScanMerger {
 
         scanCleanerUtils.clean(scan);
         if (shouldSaveScan) {
+            vulnerabilityService.storeScanVulnerabilities(scan);
             scanDao.saveOrUpdate(scan);
             permissionsHandler.setPermissions(scan, application.getId());
         }

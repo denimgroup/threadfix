@@ -27,6 +27,7 @@ package com.denimgroup.threadfix.webapp.controller.rest;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
@@ -154,7 +155,7 @@ public class TeamRestController extends TFRestController {
                         ApplicationCriticality.LOW));
 
 		if (applicationService.checkApplication(application)) {
-			applicationService.storeApplication(application);
+			applicationService.storeApplication(application, EventAction.APPLICATION_CREATE);
 			log.info("Application creation was successful. Returning application.");
             return RestResponse.success(application);
 		} else {

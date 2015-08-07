@@ -12,6 +12,9 @@
 	<cbs:cachebustscript src="/scripts/grc-control-submission-modal-controller.js"/>
 	<cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
     <cbs:cachebustscript src="/scripts/edit-application-modal-controller.js"/>
+    <c:if test="${isEnterprise}">
+        <cbs:cachebustscript src="/scripts/history-table-controller.js"/>
+    </c:if>
 	<cbs:cachebustscript src="/scripts/scan-table-controller.js"/>
 	<cbs:cachebustscript src="/scripts/upload-scan-controller.js"/>
 	<cbs:cachebustscript src="/scripts/scheduled-scan-tab-controller.js"/>
@@ -65,10 +68,14 @@
             <%@ include file="/WEB-INF/views/applications/tabs/vulnTabTree.jsp" %>
             <%@ include file="/WEB-INF/views/applications/tabs/scanTab.jsp" %>
             <%@ include file="/WEB-INF/views/applications/tabs/docsTab.jsp" %>
+            <c:if test="${isEnterprise}">
+                <jsp:include page="/app/organizations/${ application.organization.id }/applications/${ application.id }/history"/>
+            </c:if>
             <%@ include file="/WEB-INF/views/applications/tabs/unmappedFindingsTab.jsp" %>
             <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SCAN_AGENTS">
                 <c:if test="${isEnterprise}">
-                    <tab id="scanAgentTasksTab" ng-controller="ScanAgentTasksTabController" heading="{{ heading }}">
+                    <tab id="scanAgentTasksTab" ng-controller="ScanAgentTasksTabController" heading="{{ heading }}"
+                         ng-click="setTab('Scan Agent Tasks')" active="tab.scanAgentTasks">
                         <!-- TODO refactor this nesting -->
                         <c:if test="${ canManageApplications }">
                             <div style="margin-top:10px;margin-bottom:7px;">
@@ -78,10 +85,14 @@
 
                         <%@ include file="/WEB-INF/views/applications/tabs/scanQueueTab.jsp" %>
                     </tab>
-                    <tab id="scheduledScanTab" ng-controller="ScheduledScanTabController" heading="{{ heading }}">
+                    <tab id="scheduledScanTab" ng-controller="ScheduledScanTabController" heading="{{ heading }}"
+                         ng-click="setTab('Scheduled Scans')" active="tab.scheduledScans">
                         <%@ include file="/WEB-INF/views/applications/tabs/scheduledScanTab.jsp" %>
                     </tab>
                 </c:if>
+            </security:authorize>
+            <security:authorize ifAnyGranted="ROLE_ENTERPRISE">
+                <%@ include file="/WEB-INF/views/applications/tabs/acceptanceCriteriaTab.jsp" %>
             </security:authorize>
         </tabset>
     </div>

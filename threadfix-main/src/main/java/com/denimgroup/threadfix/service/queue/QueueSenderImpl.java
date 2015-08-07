@@ -26,11 +26,13 @@ package com.denimgroup.threadfix.service.queue;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ExceptionLog;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
+import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ChannelSeverityService;
 import com.denimgroup.threadfix.service.ExceptionLogService;
 import com.denimgroup.threadfix.service.JobStatusService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService;
+import com.denimgroup.threadfix.service.UserService;
 import org.apache.activemq.command.ActiveMQMapMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
@@ -62,6 +64,8 @@ public class QueueSenderImpl implements QueueSender {
 	private JobStatusService jobStatusService = null;
     @Autowired
     private RemoteProviderTypeService remoteProviderTypeService;
+	@Autowired
+	private UserService userService;
 	@Autowired
 	private ChannelSeverityService channelSeverityService;
 
@@ -168,8 +172,15 @@ public class QueueSenderImpl implements QueueSender {
 
 		MapMessage defectTrackerVulnMap = new ActiveMQMapMessage();
 
+		Integer userId = null;
+		User user = userService.getCurrentUser();
+		if (user != null) {
+			userId = user.getId();
+		}
+
 		try {
 			defectTrackerVulnMap.setInt("appId", appId);
+			defectTrackerVulnMap.setObject("userId", userId);
 			defectTrackerVulnMap.setString("type", QueueConstants.DEFECT_TRACKER_VULN_UPDATE_TYPE);
 			defectTrackerVulnMap.setString("urlPath",
 					"/organizations/" + orgId + "/applications/" + appId);

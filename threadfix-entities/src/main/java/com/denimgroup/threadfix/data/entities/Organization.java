@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -32,8 +33,10 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static java.util.Collections.*;
 
 @Entity
 @Table(name = "Organization")
@@ -54,7 +57,8 @@ public class Organization extends AuditableEntity {
 	
 	private List<Application> activeApps;
 	private List<AccessControlTeamMap> accessControlTeamMaps;
-	
+    private List<Event> events;
+
 	public static final int NAME_LENGTH = 60;
 
 	@NotEmpty(message = "{errors.required}")
