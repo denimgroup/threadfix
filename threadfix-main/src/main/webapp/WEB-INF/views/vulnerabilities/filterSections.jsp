@@ -3,7 +3,7 @@
 <div class="accordion-group">
     <div class="accordion-heading" style="text-align:center">
         <a id="toggleAllButton" class="btn" ng-click="toggleAllFilters()">
-            {{ (showSaveAndLoadControls || showTeamAndApplicationControls || showDetailsControls || showDateControls || showDateRange || showTypeAndMergedControls || showSaveFilter) ? 'Collapse' : 'Expand' }} All
+            {{ (showSaveAndLoadControls || showTeamAndApplicationControls || showDetailsControls || showDateControls || showDateRange || showTypeAndMergedControls || showSaveFilter || showPermissions) ? 'Collapse' : 'Expand' }} All
         </a>
         <a id="clearFiltersButton" class="btn" ng-click="reset()">Clear</a>
     </div>
@@ -452,6 +452,11 @@
     <div class="accordion-group" ng-show="treeTeam || vulnSearch || treeApplication || reportId === 3 || reportId === 11 || reportId === 13">
         <div class="accordion-heading" style="text-align:center">
             <a id="exportCSVButton" ng-click="exportCSV(reportId, DISA_STIG)" class="btn">Export CSV</a>
+        </div>
+    </div>
+    <div class="accordion-group" ng-show="treeTeam || vulnSearch || treeApplication || reportId === 11 || reportId === 13">
+        <div class="accordion-heading" style="text-align:center">
+            <a id="exportSSVLButton" ng-click="exportSSVL(reportId, DISA_STIG)" class="btn">Export SSVL</a>
         </div>
     </div>
 

@@ -87,7 +87,7 @@ public interface DefectService {
 	 * 
 	 * @param application
 	 */
-	boolean updateVulnsFromDefectTracker(Integer applicationId);
+	boolean updateVulnsFromDefectTracker(Integer applicationId, Integer userId);
 	
 	/**
 	 * 

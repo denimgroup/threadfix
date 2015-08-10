@@ -58,26 +58,26 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
             || $scope.showDateRange
             || $scope.showTypeAndMergedControls
             || $scope.showTagControls
-            || $scope.showOWasp) {
-            $scope.showTeamAndApplicationControls = false;
-            $scope.showDetailsControls = false;
-            $scope.showDateControls = false;
-            $scope.showDateRange = false;
-            $scope.showSaveFilter = false;
-            $scope.showTypeAndMergedControls = false;
-            $scope.showTagControls = false;
-            $scope.showOWasp = false;
+            || $scope.showOWasp
+            || $scope.showPermissions) {
+            toggleAll(false);
         } else {
-            $scope.showTeamAndApplicationControls = true;
-            $scope.showDetailsControls = true;
-            $scope.showDateControls = true;
-            $scope.showDateRange = true;
-            $scope.showSaveFilter = true;
-            $scope.showTypeAndMergedControls = true;
-            $scope.showTagControls = true;
-            $scope.showOWasp = true;
+            toggleAll(true);
         }
     };
+
+    var toggleAll = function(bool){
+        $scope.showTeamAndApplicationControls = bool;
+        $scope.showDetailsControls = bool;
+        $scope.showDateControls = bool;
+        $scope.showDateRange = bool;
+        $scope.showSaveFilter = bool;
+        $scope.showTypeAndMergedControls = bool;
+        $scope.showTagControls = bool;
+        $scope.showOWasp = bool;
+        $scope.showPermissions = bool;
+    };
+
 
     $scope.maxDate = new Date();
 
@@ -269,56 +269,64 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
     };
 
     $scope.exportCSV = function(reportId, DISA_STIG) {
-        var reportName = "search_export.csv";
-
         if (reportId === 3) {
             // Progress By Vulnerability report
             $scope.$parent.exportCSV();
         } else {
-            $log.info('Downloading vulnerabilities list');
+            exportTextFile(reportId, DISA_STIG, "/reports/search/export/csv", "csv");
+        }
+    };
 
-            var parameters = angular.copy($scope.parameters);
+    $scope.exportSSVL = function(reportId, DISA_STIG) {
+        exportTextFile(reportId, DISA_STIG, "/reports/search/export/ssvl", "ssvl");
+    };
 
-            vulnSearchParameterService.updateParameters($scope, parameters);
+    var exportTextFile = function(reportId, DISA_STIG, url, extension) {
+        var reportName = "search_export." + extension;
 
-            // OWASP TOP 10 report
-            if (reportId === 11 && parameters.selectedOwasp) {
-                parameters.genericVulnerabilities = [];
-                parameters.selectedOwasp.top10.forEach(function(owaspVuln){
-                    owaspVuln.members.forEach(function(cweId){
-                        parameters.genericVulnerabilities.push({id: cweId})
+        $log.info('Downloading vulnerabilities list in ' + extension + ' format');
 
+        var parameters = angular.copy($scope.parameters);
+
+        vulnSearchParameterService.updateParameters($scope, parameters);
+
+        // OWASP TOP 10 report
+        if (reportId === 11 && parameters.selectedOwasp) {
+            parameters.genericVulnerabilities = [];
+            parameters.selectedOwasp.top10.forEach(function(owaspVuln){
+                owaspVuln.members.forEach(function(cweId){
+                    parameters.genericVulnerabilities.push({id: cweId})
+
+                });
+            });
+            reportName = "owasp_top_10_report." + extension;
+        }
+
+        // DISA STIG report
+        if (reportId === 13) {
+            parameters.genericVulnerabilities = [];
+            DISA_STIG.forEach(function(cat){
+                cat.members.forEach(function(stig){
+                    stig.cweIds.forEach(function(cweId){
+                        parameters.genericVulnerabilities.push({id: cweId});
                     });
                 });
-                reportName = "owasp_top_10_report.csv"
-            }
+            });
+            reportName = "disa_stig_report." + extension;
+        }
 
-            // DISA STIG report
-            if (reportId === 13) {
-                parameters.genericVulnerabilities = [];
-                DISA_STIG.forEach(function(cat){
-                    cat.members.forEach(function(stig){
-                        stig.cweIds.forEach(function(cweId){
-                            parameters.genericVulnerabilities.push({id: cweId});
-                        });
-                    });
+        if (reportExporter.checkOldIE()) {
+            window.location.href = tfEncoder.encode(url);
+        } else {
+            $http.post(tfEncoder.encode(url), parameters).
+                success(function(data)
+                {
+                    reportExporter.exportCSV(data, "application/octet-stream", reportName);
+                }).
+                error(function(data, status) {
+                    $scope.errorMessage = "Failed to retrieve vulnerability report. HTTP status was " + status;
+                    $scope.loadingTree = false;
                 });
-                reportName = "disa_stig_report.csv"
-            }
-
-            if (reportExporter.checkOldIE()) {
-                window.location.href = tfEncoder.encode("/reports/search/export/csv");
-            } else {
-                $http.post(tfEncoder.encode("/reports/search/export/csv"), parameters).
-                    success(function(data, status, headers, config, response)
-                    {
-                        reportExporter.exportCSV(data, "application/octet-stream", reportName);
-                    }).
-                    error(function(data, status, headers, config) {
-                        $scope.errorMessage = "Failed to retrieve vulnerability report. HTTP status was " + status;
-                        $scope.loadingTree = false;
-                    });
-            }
         }
     };
 

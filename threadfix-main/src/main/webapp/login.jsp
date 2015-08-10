@@ -7,6 +7,7 @@
 	<meta http-equiv="X-FRAME-OPTIONS" content="DENY"/>
 	<title>ThreadFix</title>
     <cbs:cachebustscript src="/scripts/angular.min.js"/>
+    <cbs:cachebustscript src="/scripts/angular-sanitize.min.js"/>
     <cbs:cachebustscript src="/scripts/login-controller.js"/>
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/login.css"/>
 </head>

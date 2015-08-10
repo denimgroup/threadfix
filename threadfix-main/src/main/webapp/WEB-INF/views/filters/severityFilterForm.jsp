@@ -7,11 +7,11 @@
     <span id="severityErrorMessage">{{ severityErrorMessage }}</span>
 </div>
 
-<div ng-form="form" class="modal-body">
+<div ng-form="form">
     <table class="table noBorders">
         <tbody>
             <tr>
-                <td style="width:130px">Enable Severity Filters</td>
+                <td style="width:130px">Enable</td>
                 <td>
                     <input type="checkbox" ng-model="severityFilter.enabled" id="enabledBox" name="disabled">
                 </td>
@@ -78,7 +78,7 @@
 <a ng-hide="submittingSeverityFilter" id="submitSeverityFilterForm"
         class="modalSubmit btn btn-primary"
         ng-click="submitSeverityFilterForm()">
-    Save Severity Filter Changes
+    Save Changes
 </a>
 <a ng-show="submittingSeverityFilter"
         class="modalSubmit btn btn-primary"

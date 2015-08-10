@@ -3,7 +3,7 @@
 
 
 // the httpProvider stuff configures things to work like x-www-form-urlencoded
-angular.module('threadfix', ['ui.bootstrap', 'angularFileUpload', 'threadfixFilters', 'd3', 'dynform'], function($httpProvider)
+angular.module('threadfix', ['ui.bootstrap', 'angularFileUpload', 'threadfixFilters', 'd3', 'dynform', 'ngSanitize'], function($httpProvider)
 {
     // Use x-www-form-urlencoded Content-Type
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';

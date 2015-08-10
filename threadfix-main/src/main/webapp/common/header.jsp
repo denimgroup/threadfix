@@ -71,82 +71,75 @@
 						</div>
 				  	 </div>
 					<ul id="configurationHeader" class="dropdown-menu pull-right config-header" style="text-align:right;">
-						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_API_KEYS">
-						    <li class="normalLinks">
-						    	<a id="apiKeysLink" href="<spring:url value="/configuration/keys" htmlEscape="true"/>">API Keys</a>
-						    </li>
-					    </security:authorize>
-                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_EMAIL_REPORTS">
-                            <li class="normalLinks">
-                                <a id="scheduledEmailReportsLink" href="<spring:url value="/configuration/scheduledEmailReports" htmlEscape="true"/>">Scheduled Email Reports</a>
-                            </li>
-                        </security:authorize>
-                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_DEFECT_TRACKERS">
-                            <li class="normalLinks">
-                                <a id="defectTrackersLink" href="<spring:url value="/configuration/defecttrackers" htmlEscape="true"/>">Defect Trackers</a>
-                            </li>
-                        </security:authorize>
-                        <security:authorize ifAllGranted="ROLE_CAN_MANAGE_GRC_TOOLS,ROLE_ENTERPRISE">
-                            <li class="normalLinks">
-                                <a id="grcToolsLink" href="<spring:url value="/configuration/grctools" htmlEscape="true"/>">GRC Tools</a>
-                            </li>
-                        </security:authorize>
-
-                        <security:authorize ifAllGranted="ROLE_ENTERPRISE">
-                            <li class="normalLinks">
-                                <a id="acceptCriteriaLink" href="<spring:url value="/configuration/acceptcriterias" htmlEscape="true"/>">Acceptance Criteria</a>
-                            </li>
-                        </security:authorize>
-
-                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_REMOTE_PROVIDERS">
-                            <li class="normalLinks">
-                                <a id="remoteProvidersLink" href="<spring:url value="/configuration/remoteproviders" htmlEscape="true"/>">Remote Providers</a>
-                            </li>
-                        </security:authorize>
-                        <security:authorize ifAllGranted="ROLE_ENTERPRISE, ROLE_CAN_MANAGE_SCAN_AGENTS">
-                            <li class="normalLinks">
-                                <a id="scanQueueLink" href="<spring:url value="/configuration/scanqueue" htmlEscape="true"/>">Scan Agent Tasks</a>
-                            </li>
-                        </security:authorize>
-
-                        <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_ENTERPRISE">
-                            <li class="dropdown-submenu pull-left normalLinks">
-                                <a tabindex="-1" href="#" id="manageMappingsLink">Mappings</a>
-                                <ul class="dropdown-menu" style="text-align:right;left: -170px">
-                                    <li class="normalLinks">
-                                        <a id="updateChannelVulnLink" href="<spring:url value="/mappings/index" htmlEscape="true"/>">Scanner Vulnerability</a>
-                                    </li>
-                                    <security:authorize ifAllGranted="ROLE_ENTERPRISE">
+                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_DEFECT_TRACKERS,ROLE_CAN_MANAGE_GRC_TOOLS,ROLE_CAN_MANAGE_REMOTE_PROVIDERS, ROLE_CAN_MANAGE_SCAN_AGENTS, ROLE_CAN_MANAGE_WAFS">
+                            <li class="dropdown-submenu left pull-left normalLinks">
+                                <a tabindex="-1" href="#" id="manageIntegrations">Integrations</a>
+                                <ul class="dropdown-menu" style="text-align:right; left: -177px;" tabindex="-1">
+                                    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_DEFECT_TRACKERS">
                                         <li class="normalLinks">
-                                            <a id="updateChannelSeverityLink" href="<spring:url value="/mappings/channelSeverity/index" htmlEscape="true"/>">Scanner Severity</a>
+                                            <a id="defectTrackersLink" href="<spring:url value="/configuration/defecttrackers" htmlEscape="true"/>">Defect Trackers</a>
                                         </li>
                                     </security:authorize>
-                                </ul>
-                            </li>
-                        </security:authorize>
+                                    <security:authorize ifAllGranted="ROLE_CAN_MANAGE_GRC_TOOLS,ROLE_ENTERPRISE">
+                                        <li class="normalLinks">
+                                            <a id="grcToolsLink" href="<spring:url value="/configuration/grctools" htmlEscape="true"/>">GRC Tools</a>
+                                        </li>
+                                    </security:authorize>
 
-                        <security:authorize ifAllGranted="ROLE_CAN_MANAGE_TAGS">
-                            <li class="normalLinks">
-                                <a id="tagsLink" href="<spring:url value="/configuration/tags" htmlEscape="true"/>">Tags</a>
+                                    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_REMOTE_PROVIDERS">
+                                        <li class="normalLinks">
+                                            <a id="remoteProvidersLink" href="<spring:url value="/configuration/remoteproviders" htmlEscape="true"/>">Remote Providers</a>
+                                        </li>
+                                    </security:authorize>
+                                    <security:authorize ifAllGranted="ROLE_ENTERPRISE, ROLE_CAN_MANAGE_SCAN_AGENTS">
+                                        <li class="normalLinks">
+                                            <a id="scanQueueLink" href="<spring:url value="/configuration/scanqueue" htmlEscape="true"/>">Scan Agent Tasks</a>
+                                        </li>
+                                    </security:authorize>
+
+                                    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_WAFS">
+                                        <li class="normalLinks">
+                                            <a id="wafsLink" href="<spring:url value="/wafs" htmlEscape="true"/>">WAFs</a>
+                                        </li>
+                                    </security:authorize>
+                                 </ul>
                             </li>
                         </security:authorize>
-                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_WAFS">
-                            <li class="normalLinks">
-                                <a id="wafsLink" href="<spring:url value="/wafs" htmlEscape="true"/>">WAFs</a>
-                            </li>
-                        </security:authorize>
-                        <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_ENTERPRISE,ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT">
-                            <li class="dropdown-submenu pull-left normalLinks">
-                                <a tabindex="-1" href="#" id="manageCustomLink">Custom Text</a>
-                                <ul class="dropdown-menu" style="text-align:right;left: -170px">
+                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_ENTERPRISE,ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT, ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS, ROLE_CAN_MANAGE_TAGS, ROLE_CAN_MODIFY_VULNERABILITIES">
+                            <li class="dropdown-submenu left pull-left normalLinks">
+                                <a tabindex="-1" href="#" id="manageCustomLink">Customize</a>
+                                <ul class="dropdown-menu" style="text-align:right; width: 230px; left: -242px;" tabindex="-1">
                                     <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_ENTERPRISE">
                                         <li class="normalLinks">
-                                            <a id="customizeSeveritiesLink" href="<spring:url value="/severities" htmlEscape="true"/>">Severity</a>
+                                            <a id="customizeThreadFixVulnerabilityTypesLink" href="<spring:url value="/configuration/filters" htmlEscape="true"/>">ThreadFix Vulnerability Types</a>
                                         </li>
                                     </security:authorize>
+
                                     <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT">
                                         <li class="normalLinks">
-                                            <a id="customCweTextLink" href="<spring:url value="/configuration/customCweText" htmlEscape="true"/>">CWE</a>
+                                            <a id="customizeScannerVulnerabilityTypesLink" href="<spring:url value="/mappings/index" htmlEscape="true"/>">Scanner Vulnerability Types</a>
+                                        </li>
+                                    </security:authorize>
+
+                                    <security:authorize ifAnyGranted="ROLE_CAN_MODIFY_VULNERABILITIES">
+                                        <li class="normalLinks">
+                                            <a id="customizeThreadFixSeveritiesLink" href="<spring:url value="/severities" htmlEscape="true"/>">ThreadFix Severities</a>
+                                        </li>
+                                    </security:authorize>
+
+                                        <li class="normalLinks">
+                                            <a id="customizeScannerSeveritiesLink" href="<spring:url value="/customize/scannerSeverities" htmlEscape="true"/>">Scanner Severities</a>
+                                        </li>
+
+                                    <security:authorize ifAllGranted="ROLE_CAN_MANAGE_TAGS">
+                                        <li class="normalLinks">
+                                            <a id="tagsLink" href="<spring:url value="/configuration/tags" htmlEscape="true"/>">Tags</a>
+                                        </li>
+                                    </security:authorize>
+
+                                    <security:authorize ifAllGranted="ROLE_ENTERPRISE">
+                                        <li class="normalLinks">
+                                            <a id="acceptCriteriaLink" href="<spring:url value="/configuration/acceptcriterias" htmlEscape="true"/>">Acceptance Policies</a>
                                         </li>
                                     </security:authorize>
                                 </ul>
@@ -154,61 +147,62 @@
                         </security:authorize>
 						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_CAN_MANAGE_USERS,ROLE_CAN_MANAGE_ROLES,ROLE_CAN_VIEW_ERROR_LOGS">
 							<li class="divider" role="presentation"></li>
-                            <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
-                                <li class="normalLinks">
-                                    <a id="configureDefaultsLink" href="<spring:url value="/configuration/settings" htmlEscape="true"/>">System Settings</a>
-                                </li>
-                            </security:authorize>
-                            <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_EMAIL_REPORTS">
-                                <li class="normalLinks">
-                                    <a id="emailListsLink" href="<spring:url value="/configuration/emailLists" htmlEscape="true"/>">Manage Email Lists</a>
-                                </li>
-                            </security:authorize>
-                            <security:authorize ifAnyGranted="ROLE_CAN_MODIFY_VULNERABILITIES,ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS">
-                                <li class="dropdown-submenu normalLinks pull-left">
-                                    <a href="#" id="manageFiltersLink">Manage Filters</a>
-                                    <ul class="dropdown-menu" style="text-align:right;left: -170px">
-                                        <security:authorize ifAnyGranted="ROLE_CAN_MODIFY_VULNERABILITIES">
+
+                                <li class="dropdown-submenu left pull-left normalLinks">
+                                <a tabindex="-1" href="#" id="adminLink">Administration</a>
+                                <ul class="dropdown-menu" style="text-align:right; left: -177px;" tabindex="-1">
+                                    <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
+                                        <li class="normalLinks">
+                                            <a id="configureDefaultsLink" href="<spring:url value="/configuration/settings" htmlEscape="true"/>">System Settings</a>
+                                        </li>
+                                    </security:authorize>
+                                    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_USERS">
+                                        <li class="normalLinks">
+                                            <a id="manageUsersLink" href="<spring:url value="/configuration/users" htmlEscape="true"/>">Users</a>
+                                        </li>
+                                        <security:authorize ifAnyGranted="ROLE_ENTERPRISE">
                                             <li class="normalLinks">
-                                                <a id="vulnFiltersLink" href="<spring:url value="/configuration/filters" htmlEscape="true"/>">Vulnerability</a>
+                                                <a id="manageGroupsLink" href="<spring:url value="/configuration/groups" htmlEscape="true"/>">Groups</a>
                                             </li>
                                         </security:authorize>
-                                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS">
+                                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_ROLES">
                                             <li class="normalLinks">
-                                                <a id="scamResultFiltersLink" href="<spring:url value="/configuration/scanResultFilters" htmlEscape="true"/>">Scan Result</a>
+                                                <a id="manageRolesLink" href="<spring:url value="/configuration/roles" htmlEscape="true"/>">Roles</a>
                                             </li>
                                         </security:authorize>
+                                    </security:authorize>
+                                    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_API_KEYS">
+                                        <li class="normalLinks">
+                                            <a id="apiKeysLink" href="<spring:url value="/configuration/keys" htmlEscape="true"/>">API Keys</a>
+                                        </li>
+                                    </security:authorize>
+
+                                    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_EMAIL_REPORTS">
+                                        <li class="normalLinks">
+                                            <a id="emailReportConfiguration" href="<spring:url value="/configuration/scheduledEmailReports" htmlEscape="true"/>">Email Reports</a>
+                                        </li>
+                                    </security:authorize>
+
+                                    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_EMAIL_REPORTS">
+                                        <li class="normalLinks">
+                                            <a id="scanResultFiltersLink" href="<spring:url value="/configuration/emailLists" htmlEscape="true"/>">Email Lists</a>
+                                        </li>
+                                    </security:authorize>
                                     </ul>
                                 </li>
+						    </security:authorize>
+                            <li class="normalLinks">
+                                <a id="viewDownloadPageLink" href="<spring:url value="/configuration/download" htmlEscape="true"/>">Download Tools</a>
+                            </li>
+                            <security:authorize ifAnyGranted="ROLE_CAN_VIEW_ERROR_LOGS">
+                                <li class="normalLinks">
+                                    <a id="viewLogsLink" href="<spring:url value="/configuration/logs" htmlEscape="true"/>">Error Messages</a>
+                                </li>
                             </security:authorize>
-                            <security:authorize ifAnyGranted="ROLE_ENTERPRISE">
-                                <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_ROLES">
-                                    <li class="normalLinks">
-                                        <a id="manageRolesLink" href="<spring:url value="/configuration/roles" htmlEscape="true"/>">Manage Roles</a>
-                                    </li>
-                                </security:authorize>
-                            </security:authorize>
-						    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_USERS">
-                                <li class="normalLinks">
-                                    <a id="manageUsersLink" href="<spring:url value="/configuration/users" htmlEscape="true"/>">Manage Users</a>
-                                </li>
-                                <li class="normalLinks">
-                                    <a id="manageGroupsLink" href="<spring:url value="/configuration/groups" htmlEscape="true"/>">Manage Groups</a>
-                                </li>
-							</security:authorize>
-							<security:authorize ifAnyGranted="ROLE_CAN_VIEW_ERROR_LOGS">
-                                <li class="normalLinks">
-                                    <a id="viewLogsLink" href="<spring:url value="/configuration/logs" htmlEscape="true"/>">View Error Messages</a>
-                                </li>
-							</security:authorize>
-						</security:authorize>
-                        <li class="normalLinks">
-                            <a id="viewDownloadPageLink" href="<spring:url value="/configuration/download" htmlEscape="true"/>">Download Tools</a>
-                        </li>
-                        <li class="normalLinks">
-                            <a id="viewAboutPageLink" href="<spring:url value="/about" htmlEscape="true"/>">About</a>
-                        </li>
-					</ul>
+                            <li class="normalLinks">
+                                <a id="viewAboutPageLink" href="<spring:url value="/about" htmlEscape="true"/>">About</a>
+                            </li>
+                        </ul>
 				   </div>
 				</td>
 			</tr>

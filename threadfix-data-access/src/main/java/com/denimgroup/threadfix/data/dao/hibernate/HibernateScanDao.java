@@ -279,7 +279,18 @@ public class HibernateScanDao
 		if (scan == null) {
 			return;
 		}
-		
+
+		// We must remove ScanCloseVulnerabilityMap and ScanReopenVulnerabilityMap associations to prevent Hibernate
+		// exceptions for "deleted object would be re-saved by cascade". This problem was introduced with Event objects
+		// associated with both Vulnerabilities and Scans.
+		for (ScanCloseVulnerabilityMap scanCloseVulnerabilityMap : scan.getScanCloseVulnerabilityMaps()) {
+			scanCloseVulnerabilityMap.getVulnerability().getScanCloseVulnerabilityMaps().remove(scanCloseVulnerabilityMap);
+		}
+
+		for (ScanReopenVulnerabilityMap scanReopenVulnerabilityMap : scan.getScanReopenVulnerabilityMaps()) {
+			scanReopenVulnerabilityMap.getVulnerability().getScanCloseVulnerabilityMaps().remove(scanReopenVulnerabilityMap);
+		}
+
 		List<Long> surfaceLocationIds = sessionFactory.getCurrentSession()
 				  	  .createQuery("select surfaceLocation.id from Finding where scan = :scan)")
 					  .setInteger("scan", scan.getId())
@@ -334,8 +345,7 @@ public class HibernateScanDao
 			}
 		}
 
-		sessionFactory.getCurrentSession().save(new DeletedScan(scan));
-		sessionFactory.getCurrentSession().delete(scan);
+		delete(scan);
 	}
 	
 	@SuppressWarnings("unchecked")

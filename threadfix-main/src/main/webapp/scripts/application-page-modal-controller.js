@@ -63,6 +63,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                    $rootScope.$broadcast('application', $scope.config.application);
                    $rootScope.$broadcast('scans', $scope.config.scans);
                    $rootScope.$broadcast('documents', $scope.config.documents);
+                   $rootScope.$broadcast('acceptanceCriteriaStatuses', $scope.config.application.acceptanceCriteriaStatuses);
 
                    $rootScope.$broadcast('loadVulnerabilitySearchTable');
 
@@ -631,4 +632,23 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             $log.info('Modal dismissed at: ' + new Date());
         });
     };
+
+    $scope.setTab = function(tab) {
+        if (tab === 'Vulnerabilities') {
+            $scope.$parent.tab = { vulnerabilities: true };
+        } else if (tab === 'Scans') {
+            $scope.$parent.tab = { scans: true };
+        } else if (tab === 'Files') {
+            $scope.$parent.tab = { files: true };
+        } else if (tab === 'Unmapped Findings') {
+            $scope.$parent.tab = { unmappedFindings: true };
+        } else if (tab === 'Scan Agent Tasks') {
+            $scope.$parent.tab = { scanAgentTasks: true };
+        } else if (tab === 'Scheduled Scans') {
+            $scope.$parent.tab = { scheduledScans: true };
+        } else if (tab === 'Acceptance Criteria') {
+            $scope.$parent.tab = { acceptanceCriteria: true };
+        }
+    };
+
 });

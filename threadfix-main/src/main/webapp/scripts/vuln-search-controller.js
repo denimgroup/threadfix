@@ -14,7 +14,13 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             vulnTags: [],
             scanners: [],
             genericVulnerabilities: [],
-            severities: {},
+            severities: {
+                info: true,
+                low: true,
+                medium: true,
+                high: true,
+                critical: true
+            },
             numberVulnerabilities: 10,
             showOpen: true,
             showClosed: false,
@@ -70,6 +76,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                     }
                     if ($scope.filterParameters) {
 
+                        $scope.$parent.tab = { vulnerabilities: true};
                         $scope.$parent.showVulnTab = true;
                         $scope.$parent.showAppsTab = false;
                         $scope.resetFilters();

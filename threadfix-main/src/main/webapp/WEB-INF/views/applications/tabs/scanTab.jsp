@@ -1,5 +1,4 @@
-<tab id="scanTab" ng-controller="ScanTableController"
-     heading="{{ heading }}">
+<tab id="scanTab" ng-controller="ScanTableController" heading="{{ heading }}" ng-click="setTab('Scans')" active="tab.scans">
 
     <div ng-hide="scans || isIE" class="empty-tab-drop-area">
         <div>Drop a scan here to upload.</div>

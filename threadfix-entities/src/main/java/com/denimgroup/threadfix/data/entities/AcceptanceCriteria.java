@@ -126,7 +126,7 @@ public class AcceptanceCriteria extends AuditableEntity {
 
     @OneToOne
     @JoinColumn(name = "filterJsonBlobId")
-    @JsonView({AllViews.TableRow.class, AllViews.AcceptanceCriteriaPageView.class})
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.AcceptanceCriteriaPageView.class})
     public FilterJsonBlob getFilterJsonBlob() {
         return filterJsonBlob;
     }

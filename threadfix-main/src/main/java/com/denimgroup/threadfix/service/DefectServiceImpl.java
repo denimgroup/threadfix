@@ -25,11 +25,7 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.DefectDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.Defect;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.exception.IllegalStateRestException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
@@ -53,13 +49,15 @@ public class DefectServiceImpl implements DefectService {
     @Autowired
 	private DefectDao defectDao;
 	@Autowired
-	private VulnerabilityDao vulnerabilityDao;
+	private VulnerabilityService vulnerabilityService;
 	@Autowired
 	private ApplicationService applicationService;
     @Autowired
     private DefectSubmissionServiceImpl defectSubmissionService;
 	@Autowired
 	private ApplicationDao applicationDao;
+	@Autowired
+	private UserService userService;
 	@Autowired
 	private TemplateBuilderService templateBuilderService;
 	@Autowired
@@ -226,7 +224,7 @@ public class DefectServiceImpl implements DefectService {
 			for (Vulnerability vulnerability : vulnsWithoutDefects) {
 				vulnerability.setDefect(defect);
 				vulnerability.setDefectSubmittedTime(Calendar.getInstance());
-				vulnerabilityDao.saveOrUpdate(vulnerability);
+				vulnerabilityService.storeVulnerability(vulnerability);
 			}
 
 			if (defectTrackerName != null) {
@@ -331,9 +329,9 @@ public class DefectServiceImpl implements DefectService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public boolean updateVulnsFromDefectTracker(Integer appId) {
+	public boolean updateVulnsFromDefectTracker(Integer applicationId, Integer userId) {
 		
-		Application application = applicationService.loadApplication(appId);
+		Application application = applicationService.loadApplication(applicationId);
 		
 		int numUpdated = 0;
 		
@@ -377,7 +375,7 @@ public class DefectServiceImpl implements DefectService {
 							!defectOpenStatus) {
 						if (vuln.getDefectClosedTime() == null) {
 							vuln.setDefectClosedTime(Calendar.getInstance());
-							vulnerabilityDao.saveOrUpdate(vuln);
+							vulnerabilityService.storeVulnerability(vuln);
 							numUpdated += 1;
 						}
 					}
@@ -446,7 +444,7 @@ public class DefectServiceImpl implements DefectService {
 		for (Vulnerability vulnerability : vulnerabilities) {
 			vulnerability.setDefect(defect);
 			vulnerability.setDefectSubmittedTime(Calendar.getInstance());
-			vulnerabilityDao.saveOrUpdate(vulnerability);
+			vulnerabilityService.storeVulnerability(vulnerability);
 		}
 
 		log.info("Successfully added vulns to Defect ID " + id + ".");
@@ -473,7 +471,14 @@ public class DefectServiceImpl implements DefectService {
 
 		if (needsUpdate) {
 			log.debug("Created new defects, getting status updates from the server.");
-			updateVulnsFromDefectTracker(appId);
+			Integer userId = null;
+			try {
+				User user = userService.getCurrentUser();
+				if (user != null) {
+					userId = user.getId();
+				}
+			} catch (Exception e) {}
+			updateVulnsFromDefectTracker(appId, userId);
 		} else {
 			log.debug("Didn't find any scanner-supplied defect IDs, exiting.");
 		}
@@ -505,7 +510,7 @@ public class DefectServiceImpl implements DefectService {
 
 						hadAnyStatuses = true;
 						defectDao.saveOrUpdate(defect);
-						vulnerabilityDao.saveOrUpdate(vulnerability);
+						vulnerabilityService.storeVulnerability(vulnerability);
 					}
 				}
 			}

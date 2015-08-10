@@ -10,7 +10,7 @@
 	</thead>
 	<tbody>
         <tr ng-hide="currentVulnFilters" class="bodyRow">
-            <td colspan="4" class="centered">No filters found.</td>
+            <td colspan="4" class="centered">No mappings found.</td>
         </tr>
         <tr ng-show="currentVulnFilters" ng-repeat="vulnFilter in currentVulnFilters" class="bodyRow">
             <td id="genericVulnerability{{ $index }}">

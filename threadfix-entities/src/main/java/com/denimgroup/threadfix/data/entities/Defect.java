@@ -56,6 +56,7 @@ public class Defect extends AuditableEntity {
 
     private Application         application;
     private List<Vulnerability> vulnerabilities;
+    private List<Event> events;
 
     @Size(max = STATUS_LENGTH, message = "{errors.maxlength} " + STATUS_LENGTH + ".")
     private String status;
@@ -130,6 +131,17 @@ public class Defect extends AuditableEntity {
 		this.vulnerabilities = vulnerabilities;
 	}
 
+    @OneToMany(mappedBy = "defect")
+    @OrderBy("date ASC")
+    @JsonIgnore
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
+
     @Transient
     @JsonView({AllViews.TableRow.class, AllViews.VulnSearch.class, AllViews.VulnerabilityDetail.class})
     private boolean isOpened() {
@@ -137,4 +149,15 @@ public class Defect extends AuditableEntity {
         else return true;
     }
 
+    @Transient
+    @JsonIgnore
+    public boolean isClosed() {
+        return CLOSED_CODES.contains(status);
+    }
+
+    @Transient
+    @JsonIgnore
+    public boolean isOpen() {
+        return OPEN_CODES.contains(status);
+    }
 }

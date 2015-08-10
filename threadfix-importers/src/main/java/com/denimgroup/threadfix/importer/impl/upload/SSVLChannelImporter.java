@@ -145,7 +145,8 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 	    }
 	    
 	    private void parseSurfaceLocation(Attributes atts) {
-	    	findingMap.put(FindingKey.PARAMETER, atts.getValue("value"));
+			String parameter = (atts.getValue("value") != null) ? atts.getValue("value") : atts.getValue("parameter");
+	    	findingMap.put(FindingKey.PARAMETER, parameter);
 			String urlString = atts.getValue("url");
 
 			UrlValidator validator = new UrlValidator();
@@ -265,35 +266,39 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 	public ScanCheckResultBean checkFile() {
 		
 		boolean valid = false;
-		
-		try {
-			URL schemaFile = ResourceUtils.getResourceAsUrl("ssvl.xsd");
+		String[] schemaList = new String[]{"ssvl.xsd", "ssvl_v0.3.xsd"};
 
-            if (schemaFile == null) {
-                throw new IllegalStateException("ssvl.xsd file not available from ClassLoader. Fix that.");
-            }
+		for (String schemaFilePath: schemaList) {
 
-            if (inputFileName == null) {
-                throw new IllegalStateException("inputFileName was null, unable to load scan file.");
-            }
+			try {
+				URL schemaFile = ResourceUtils.getResourceAsUrl(schemaFilePath);
 
-			Source xmlFile = new StreamSource(new File(inputFileName));
-			SchemaFactory schemaFactory = SchemaFactory
-			    .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			Schema schema = schemaFactory.newSchema(schemaFile);
-			Validator validator = schema.newValidator();
-		    validator.validate(xmlFile);
-		    
-		    valid = true;
-		    
-		    log.info(xmlFile.getSystemId() + " is valid");
-		    
-		} catch (MalformedURLException e) {
-			log.error("Code contained an incorrect path to the XSD file.", e);
-		} catch (SAXException e) {
-			log.warn("SAX Exception encountered, ", e);
-		} catch (IOException e) {
-			log.warn("IOException encountered, ", e);
+				if (schemaFile == null) {
+					throw new IllegalStateException("ssvl.xsd file not available from ClassLoader. Fix that.");
+				}
+
+				if (inputFileName == null) {
+					throw new IllegalStateException("inputFileName was null, unable to load scan file.");
+				}
+
+				Source xmlFile = new StreamSource(new File(inputFileName));
+				SchemaFactory schemaFactory = SchemaFactory
+						.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+				Schema schema = schemaFactory.newSchema(schemaFile);
+				Validator validator = schema.newValidator();
+				validator.validate(xmlFile);
+
+				valid = true;
+				log.info(xmlFile.getSystemId() + " is valid");
+				break;
+
+			} catch (MalformedURLException e) {
+				log.error("Code contained an incorrect path to the XSD file.", e);
+			} catch (SAXException e) {
+				log.warn("SAX Exception encountered, ", e);
+			} catch (IOException e) {
+				log.warn("IOException encountered, ", e);
+			}
 		}
 		
 		if (valid) {

@@ -93,7 +93,7 @@
         		/configuration/settings,/configuration/filters,/configuration/scanqueue,/mappings/index,/configuration/tags,/teams,
         		/j_spring_security_check,/j_spring_security_logout,/images/*,/styles/*,/scripts/*,/rest/*,/configuration/download/*,
                 /configuration/scheduledEmailReports,/configuration/emailLists,/urlMismatch,
-                /configuration/scanResultFilters,/configuration/customCweText,/mappings/channelSeverity/index,
+                /configuration/scanResultFilters,/configuration/customCweText,/customize/scannerSeverities,
         		regex ^/rest/[a-zA-Z0-9/]*$,
                 regex ^/v/[^/]+/scripts/.*$,
                 regex ^/configuration/tags/[0-9]/view+$,
@@ -207,6 +207,7 @@
         		protected-regex ^/configuration/users/[0-9]+/access/team/[0-9]+/delete$,
         		protected-regex ^/configuration/users/[0-9]+/access/app/[0-9]+/delete$,
         		protected-regex ^/configuration/users/[0-9]+/access/new$,
+				protected-regex ^/configuration/users/[0-9]+/history/objects$,
 				protected-regex ^/groups/[0-9]+/access/[0-9]+/edit$,
         		protected-regex ^/groups/[0-9]+/permissions/map$,
         		protected-regex ^/groups/[0-9]+/access/team/[0-9]+/delete$,
@@ -348,7 +349,8 @@
 				protected-regex ^/organizations/[0-9]+/applications/[0-9]+/edit/setTagsEndpoint$,
 				protected-regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/vulnComments/[0-9]+/update$,
 				protected-regex ^/reports/filter/delete/[0-9]+$,
-				protected-regex ^/reports/search/export/csv$
+				protected-regex ^/reports/search/export/csv$,
+				protected-regex ^/reports/search/export/ssvl$
         	</param-value>
 		</init-param>
 	</filter>

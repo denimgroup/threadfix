@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.ScanMergeService;
@@ -120,9 +121,9 @@ public class PathController {
 		
 		// TODO validate this attachment - not a high priority as it doesn't affect anything really
 		app.setProjectRoot(application.getProjectRoot());
-		applicationService.storeApplication(app);
+		applicationService.storeApplication(app, EventAction.APPLICATION_EDIT);
 		scanMergeService.updateSurfaceLocation(app);
-		scanMergeService.updateVulnerabilities(app);
+		scanMergeService.updateVulnerabilities(app, false);
 		status.setComplete();
 		return "redirect:/organizations/" + String.valueOf(orgId) + "/applications/"
 				+ String.valueOf(appId);

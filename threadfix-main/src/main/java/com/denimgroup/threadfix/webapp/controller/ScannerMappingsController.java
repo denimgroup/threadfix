@@ -23,13 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.CollectionUtils;
+import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.importer.interop.ScannerMappingsUpdaterService;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.FindingService;
-import com.denimgroup.threadfix.service.GenericVulnerabilityService;
-import com.denimgroup.threadfix.service.ScannerMappingsExportService;
+import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
+import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -44,6 +45,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -61,6 +63,35 @@ public class ScannerMappingsController {
 	private GenericVulnerabilityService genericVulnerabilityService;
 	@Autowired
 	private FindingService findingService;
+	@Autowired
+	private ChannelTypeService channelTypeService;
+	@Autowired
+	private ChannelVulnerabilityService channelVulnerabilityService;
+	@Autowired(required = false)
+	private ChannelVulnerabilityFilterService channelVulnerabilityFilterService;
+	@Autowired
+	private GenericSeverityService genericSeverityService;
+
+	@RequestMapping(value = "/filters/map", method = RequestMethod.GET)
+	@ResponseBody
+	public RestResponse<Map<String, Object>> mapBackend() {
+		Map<String, Object> map = CollectionUtils.map();
+
+		if (EnterpriseTest.isEnterprise()) {
+			if (channelVulnerabilityFilterService == null) {
+				throw new IllegalStateException();
+			}
+			map.put("genericSeverities", genericSeverityService.loadAll());
+
+			List<ChannelType> channelTypes = channelTypeService.loadAllHasVulnMapping();
+			map.put("channelVulnerabilitiesMap", channelVulnerabilityService.getChannelVulnsEachChannelType(channelTypes));
+			map.put("channelTypes", channelTypes);
+			map.put("type", "Global");
+			map.put("globalChannelVulnFilterList", channelVulnerabilityFilterService.retrieveAll());
+		}
+
+		return RestResponse.success(map);
+	}
 
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(Model model) {
@@ -70,7 +101,12 @@ public class ScannerMappingsController {
 		model.addAttribute("exportText", scannerMappingsExportService.getUserAddedMappingsInCSV());
         model.addAttribute("canUpdate", scannerMappingsExportService.canUpdate());
 
-		return "mappings/channelVulnUpdate";
+		if (EnterpriseTest.isEnterprise()) {
+			return "customize/scannerVulnTypes/enterprise";
+		} else {
+			return "customize/scannerVulnTypes/community";
+		}
+
 	}
 
 	@RequestMapping(value = "/index/cwe", method = RequestMethod.GET)

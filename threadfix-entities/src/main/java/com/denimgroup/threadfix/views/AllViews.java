@@ -72,4 +72,14 @@ public class AllViews {
     public static interface ScheduledEmailReportView {}
 
     public static interface AcceptanceCriteriaPageView {}
+
+    public static interface HistoryView {}
+
+    public static interface OrganizationHistoryView extends HistoryView {}
+
+    public static interface ApplicationHistoryView extends HistoryView {}
+
+    public static interface VulnerabilityHistoryView extends HistoryView {}
+
+    public static interface UserHistoryView extends HistoryView {}
 }

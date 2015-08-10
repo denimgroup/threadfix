@@ -2,14 +2,12 @@
 
 <head>
     <title>Scan Result Filters</title>
-    <cbs:cachebustscript src="/scripts/scan-result-filters-controller.js"/>
-    <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
 </head>
 
 <body>
     <%@ include file="/WEB-INF/views/angular-init.jspf"%>
     <div ng-controller="ScanResultFiltersController">
-        <h2>Scan Result Filters</h2>
+        <h2>Ignore Incoming Results</h2>
 
         <%@ include file="/WEB-INF/views/successMessage.jspf" %>
         <%@ include file="/WEB-INF/views/errorMessage.jsp" %>
