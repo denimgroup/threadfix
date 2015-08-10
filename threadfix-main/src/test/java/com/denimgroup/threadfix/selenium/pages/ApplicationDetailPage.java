@@ -503,6 +503,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage expandVulnerabilityByType(String type) {
+        waitForElement(driver.findElementById("expandVuln" + type));
         driver.findElementById("expandVuln" + type).click();
         return new ApplicationDetailPage(driver);
     }
@@ -1282,6 +1283,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public boolean isVulnerabilityCountCorrect(String level, String expected) {
+        waitForElement(driver.findElementById("totalBadge" + level));
         return expected.equals(driver.findElementById("totalBadge" + level).getText().trim());
     }
 
