@@ -263,20 +263,20 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     public void testProgressByVulnerabilityInTimeFieldFilters() {
         initializeTeamAndAppWithWebInspectScan();
 
-        loginPage.defaultLogin()
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
                 .waitForReportTab("snapshot")
                 .clickSnapshotTab(false)
                 .sleepOnArrival(10000)
                 .selectDropDownReport("Progress By Vulnerability")
                 .expandFieldControls("snapshotFilterDiv")
-                .selectFieldControls("Info", "snapshotFilterDiv")
                 .selectFieldControls("Low", "snapshotFilterDiv")
                 .selectFieldControls("Medium", "snapshotFilterDiv")
                 .selectFieldControls("High", "snapshotFilterDiv")
                 .selectFieldControls("Critical", "snapshotFilterDiv");
 
-        assertTrue("Field controls did not work.", driver.findElements(By.id("averageTimeToCloseVuln5")).isEmpty());
+        assertTrue("Info Vulnerability is present.", analyticsPage.getProgressByVulnerabilityType("0").contains("Information Exposure"));
+        assertTrue("Other Vulnerabilities are not filtered out.", analyticsPage.isProgressByVulnerabilityCountCorrect(1));
     }
 
     @Test

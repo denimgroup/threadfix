@@ -402,6 +402,10 @@ public class AnalyticsPage extends BasePage {
         return driver.findElementById("foundHAMEndpointPercent" + rowNumber).getText();
     }
 
+    public String getProgressByVulnerabilityType(String rowNumber) {
+        return driver.findElementById("descriptionVuln" + rowNumber).getText();
+    }
+
     /* _____________________ Helper Methods _____________________ */
 
     public void waitForResultsToLoad() {
@@ -478,5 +482,9 @@ public class AnalyticsPage extends BasePage {
                 !filterDiv.findElement(By.id("show" + levels.get(1))).isSelected() &&
                 !filterDiv.findElement(By.id("show" + levels.get(2))).isSelected() &&
                 !filterDiv.findElement(By.id("show" + levels.get(3))).isSelected());
+    }
+
+    public boolean isProgressByVulnerabilityCountCorrect(int number) {
+        return driver.findElements(By.cssSelector("#progressVulnsTable>tbody>tr")).size() == number;
     }
 }
