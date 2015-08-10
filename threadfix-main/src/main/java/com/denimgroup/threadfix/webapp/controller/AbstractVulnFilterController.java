@@ -217,7 +217,12 @@ public abstract class AbstractVulnFilterController {
 		if (!bindingResult.hasErrors()) {
 			vulnerabilityFilterService.validate(vulnerabilityFilter, bindingResult);
 		}
-		
+
+		VulnerabilityFilter existingFilter = vulnerabilityFilterService.find(vulnerabilityFilter.getSourceGenericVulnerability(), orgId, appId);
+		if (existingFilter != null) {
+			return RestResponse.failure("There is already a mapping defined for this vulnerability type.");
+		}
+
 		if (bindingResult.hasErrors()) {
 			log.warn(FAILURE_MESSAGE);
             return FormRestResponse.failure(FAILURE_MESSAGE, bindingResult);
@@ -243,9 +248,14 @@ public abstract class AbstractVulnFilterController {
 		}
 		
 		vulnerabilityFilter.setApplication(applicationService.loadApplication(appId));
-		
+
 		if (!bindingResult.hasErrors()) {
 			vulnerabilityFilter = vulnerabilityFilterService.validate(vulnerabilityFilter, bindingResult, filterId);
+		}
+
+		VulnerabilityFilter existingFilter = vulnerabilityFilterService.find(vulnerabilityFilter.getSourceGenericVulnerability(), orgId, appId);
+		if (existingFilter != null && !existingFilter.getId().equals(vulnerabilityFilter.getId())) {
+			return RestResponse.failure("There is already a mapping defined for this vulnerability type.");
 		}
 
         if (bindingResult.hasErrors()) {
