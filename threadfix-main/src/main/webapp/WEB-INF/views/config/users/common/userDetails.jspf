@@ -94,7 +94,7 @@
     </div>
 
     <security:authorize ifAllGranted="ROLE_ENTERPRISE">
-        <security:authorize ifAllGranted="ROLE_MANAGE_API_KEYS">
+        <security:authorize ifAllGranted="ROLE_CAN_MANAGE_API_KEYS">
             <div id="apiKeys">
 
                 <h4>
