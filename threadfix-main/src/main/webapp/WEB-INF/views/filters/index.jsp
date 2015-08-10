@@ -30,11 +30,20 @@
         <h2 ng-show="tab.organization">Customize Vulnerability Types for Team {{ organization.name }}</h2>
         <h2 ng-show="tab.global">Customize Global Vulnerability Types</h2>
 
-        <tabset ng-hide="originalType === 'Global'">
-            <tab ng-click="setTab('Application')" ng-if="originalType === 'Application'" heading="Application" active="tab.application">{{ tab | json }}</tab>
-            <tab ng-click="setTab('Organization')" heading="Team" active="tab.organization"></tab>
-            <tab ng-click="setTab('Global')" heading="Global" active="tab.global"></tab>
-        </tabset>
+        <div ng-if="originalType !== 'Organization'">
+            <tabset ng-hide="originalType === 'Global'">
+                <tab ng-click="setTab('Application')" ng-show="originalType === 'Application'" heading="Application"></tab>
+                <tab ng-click="setTab('Organization')" heading="Team"></tab>
+                <tab ng-click="setTab('Global')" heading="Global"></tab>
+            </tabset>
+        </div>
+
+        <div ng-if="originalType === 'Organization'">
+            <tabset ng-hide="originalType === 'Global'">
+                <tab ng-click="setTab('Organization')" heading="Team"></tab>
+                <tab ng-click="setTab('Global')" heading="Global"></tab>
+            </tabset>
+        </div>
 
         <div id="tabsDiv">
             <div id="vulnFiltersSuccessMessage" ng-show="successMessage" class="alert alert-success">
