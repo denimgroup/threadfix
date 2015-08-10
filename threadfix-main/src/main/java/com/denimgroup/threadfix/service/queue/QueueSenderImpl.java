@@ -383,12 +383,11 @@ public class QueueSenderImpl implements QueueSender {
 	}
 
 	@Override
-	public void deleteVulnFilter(int channelTypeId, String channelVulnName) {
+	public void deleteVulnFilter(int channelFilterId) {
 		MapMessage channelVulnFilterMap = new ActiveMQMapMessage();
 
 		try {
-			channelVulnFilterMap.setInt("channelTypeId", channelTypeId);
-			channelVulnFilterMap.setString("channelVulnName", channelVulnName);
+			channelVulnFilterMap.setInt("channelFilterId", channelFilterId);
 			channelVulnFilterMap.setString("type", QueueConstants.DELETE_CHANNEL_VULN_FILTER);
 		} catch (JMSException e) {
 			log.error(jmsErrorString);
