@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
@@ -91,6 +92,7 @@ public class QARestController extends TFRestController {
      * USER METHODS
      ********************************/
 
+    @JsonView(AllViews.TableRow.class)
     @RequestMapping(value = "/user/create", method = RequestMethod.POST)
     public @ResponseBody
     RestResponse<User> createUser(@RequestParam String username,
@@ -106,12 +108,14 @@ public class QARestController extends TFRestController {
 
         user.setSalt("c892c2c6-2bd9-4b6a-a826-d9a71f5db441");
         user.setPassword("3ac7de35360886d9aa7c821e4908f7c260c63eea9c229bff38ac40b28279b7a5");
+        user.setEvents(new ArrayList<Event>());
 
         userService.storeUser(user);
 
         return success(user);
     }
 
+    @JsonView(AllViews.TableRow.class)
     @RequestMapping(value= "/user/permission", method =  RequestMethod.POST)
     public @ResponseBody RestResponse<User> addUserTeamAppPermission(@RequestParam String username,
                                                                      @RequestParam String rolename,
@@ -142,12 +146,14 @@ public class QARestController extends TFRestController {
         return success(user);
     }
 
+    @JsonView(AllViews.TableRow.class)
     @RequestMapping(value="/user/trap", method = RequestMethod.POST)
     public @ResponseBody void trap() {
         String a = null;
         a.length();
     }
 
+    @JsonView(AllViews.TableRow.class)
     @RequestMapping(headers = "Accept=application/json", value = "/user/delete/{userId}", method = RequestMethod.POST)
     public Object deleteUser(HttpServletRequest request, @PathVariable("userId") int userId) {
         log.info("Received REST request to delete User with id " + userId + ".");
@@ -169,6 +175,7 @@ public class QARestController extends TFRestController {
         }
     }
 
+    @JsonView(AllViews.TableRow.class)
     @RequestMapping(headers = "Accept=application/json", value = "/user/list", method = RequestMethod.POST)
     public Object listUsers(HttpServletRequest request) {
         log.info("Recieved REST request to list Users");
@@ -182,6 +189,7 @@ public class QARestController extends TFRestController {
      * ROLE METHODS
      ********************************/
 
+    @JsonView(AllViews.TableRow.class)
     @RequestMapping(value= "/role/create", method = RequestMethod.POST)
     public @ResponseBody RestResponse<Role> createRole(@RequestParam String roleName,
                                                        @RequestParam Boolean allPermissions) {
@@ -217,6 +225,7 @@ public class QARestController extends TFRestController {
         return success(role);
     }
 
+    @JsonView(AllViews.TableRow.class)
     @RequestMapping(value= "/role/create/specific", method = RequestMethod.POST)
     public @ResponseBody RestResponse<Role> permissionSpecificRole(@RequestParam String roleName,
                                                                    @RequestParam String permission) {
@@ -290,6 +299,7 @@ public class QARestController extends TFRestController {
         return success(role);
     }
 
+    @JsonView(AllViews.TableRow.class)
     @RequestMapping(value= "/role/edit", method = RequestMethod.POST)
     public @ResponseBody RestResponse<Role> removePermission(@RequestParam String roleName,
                                                              @RequestParam String permission) {
@@ -363,6 +373,7 @@ public class QARestController extends TFRestController {
      * GROUP METHODS
      ********************************/
 
+    @JsonView(AllViews.TableRow.class)
     @RequestMapping(headers = "Accept=application/json", value = "/groups/create", method = RequestMethod.POST)
     public @ResponseBody RestResponse<Group> createGroup(@RequestParam String groupName) {
         Group group = new Group();
