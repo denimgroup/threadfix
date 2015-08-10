@@ -31,7 +31,7 @@
         <h2 ng-show="tab.global">Customize Global Vulnerability Types</h2>
 
         <tabset ng-hide="originalType === 'Global'">
-            <tab ng-click="setTab('Application')" ng-show="originalType === 'Application'" heading="Application" active="tab.application"></tab>
+            <tab ng-click="setTab('Application')" ng-if="originalType === 'Application'" heading="Application" active="tab.application">{{ tab | json }}</tab>
             <tab ng-click="setTab('Organization')" heading="Team" active="tab.organization"></tab>
             <tab ng-click="setTab('Global')" heading="Global" active="tab.global"></tab>
         </tabset>
