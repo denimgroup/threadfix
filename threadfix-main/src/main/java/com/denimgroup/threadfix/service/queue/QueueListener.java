@@ -149,7 +149,7 @@ public class QueueListener implements MessageListener {
 						updateChannelSeverityMappings(map.getString("channelSeverityIds"));
 						break;
 					case QueueConstants.DELETE_CHANNEL_VULN_FILTER:
-						deleteVulnsFilter(map.getInt("channelTypeId"), map.getString("channelVulnName"));
+						deleteVulnsFilter(map.getInt("channelFilterId"));
 						break;
                     case QueueConstants.SEND_EMAIL_REPORT:
                         processSendEmailReport(map.getInt("scheduledEmailReportId"));
@@ -181,13 +181,29 @@ public class QueueListener implements MessageListener {
         log.info("Updating all filter vulnerabilities finished.");
     }
 
-	private void deleteVulnsFilter(int channelTypeId, String channelVulnName) {
-		log.info("About to change back severity all vulnerabilities of channel vulnerability name " + channelVulnName);
+	private void deleteVulnsFilter(int channelFilterId) {
+
 		if (channelVulnerabilityFilterDao != null) {
-			channelVulnerabilityFilterDao.changeVulnsAfterDelete(channelTypeId, channelVulnName);
+
+			ChannelVulnerabilityFilter channelVulnerabilityFilter = channelVulnerabilityFilterDao.retrieveById(channelFilterId);
+			if (channelVulnerabilityFilter != null) {
+
+				int channelTypeId = channelVulnerabilityFilter.getId();
+				String channelVulnName = channelVulnerabilityFilter.getSourceChannelVulnerability().getName();
+				boolean isHiddenFilter = channelVulnerabilityFilter.getTargetGenericSeverity() == null;
+				channelVulnerabilityFilterDao.delete(channelVulnerabilityFilter);
+
+				if (!isHiddenFilter) {
+					log.info("About to change back severity all vulnerabilities of channel vulnerability name " + channelVulnName);
+					channelVulnerabilityFilterDao.changeVulnsAfterDelete(channelTypeId, channelVulnName);
+					log.info("Finished changing severity back.");
+				}
+
+				updateVulnsFilter();
+			}
 		}
-		vulnerabilityFilterService.updateAllVulnerabilities();
-		log.info("Finished changing severity back.");
+
+
 	}
 
     private void processStatisticsUpdate(int appId) {

@@ -108,5 +108,5 @@ public interface QueueSender {
 
 	void updateChannelSeverityMappings(String channelSeverityIds);
 
-	void deleteVulnFilter(int channelTypeId, String channelVulnName);
+	void deleteVulnFilter(int channelFilterId);
 }
