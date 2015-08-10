@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 
 public class TagIndexPage extends BasePage{
@@ -95,7 +96,21 @@ public class TagIndexPage extends BasePage{
 
     /*------------------------------ Boolean Methods ------------------------------*/
 
-    public boolean isAppTagNameLinkPresent(String name) { return !driver.findElements(By.id("tagName" + name)).isEmpty(); }
+    public boolean isAppTagNameLinkPresent(String name) {
+        try {
+            waitForElement(driver.findElementById("tagName" + name));
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+        return true;
+    }
 
-    public boolean isCommentTagNameLinkPresent(String name) { return !driver.findElements(By.id("commentTagName" + name)).isEmpty(); }
+    public boolean isCommentTagNameLinkPresent(String name) {
+        try {
+            waitForElement(driver.findElementById("commentTagName" + name));
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+        return true;
+    }
 }

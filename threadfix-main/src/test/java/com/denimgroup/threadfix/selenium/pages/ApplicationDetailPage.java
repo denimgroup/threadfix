@@ -525,6 +525,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public AnalyticsPage clickViewMoreTopVulnerabilities(){
         driver.findElementById("rightViewMore").click();
+        sleep(2500);
         waitForElement(driver.findElementById("snapshotFilterDiv"));
         return new AnalyticsPage(driver);
     }

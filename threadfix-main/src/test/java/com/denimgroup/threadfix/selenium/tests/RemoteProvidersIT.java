@@ -27,7 +27,6 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
@@ -570,7 +569,8 @@ public class RemoteProvidersIT extends BaseDataTest {
         TeamDetailPage teamDetailPage = remoteProvidersIndexPage.clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName);
 
-        TeamIndexPage teamIndexPage = teamDetailPage.clickDeleteButton();
+        TeamIndexPage teamIndexPage = teamDetailPage.clickDeleteButton()
+                .clickCloseNewTeamModal();
 
         assertTrue("Team Name wasn't deleted",
                 teamDetailPage.successAlert().contains("Team" +  " " + teamName + " has been deleted successfully"));
@@ -638,7 +638,8 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         TeamDetailPage teamDetailPage = remoteProvidersIndexPage.clickTeamLink(teamName);
 
-        TeamIndexPage teamIndexPage = teamDetailPage.clickDeleteButton();
+        TeamIndexPage teamIndexPage = teamDetailPage.clickDeleteButton()
+                .clickCloseNewTeamModal();
 
         teamIndexPage.clickRemoteProvidersLink();
 

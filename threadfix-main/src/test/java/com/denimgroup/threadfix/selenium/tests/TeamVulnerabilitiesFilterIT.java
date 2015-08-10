@@ -71,8 +71,8 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
         teamDetailPage.expandFieldControls()
                 .setParameterFilter(parameter)
-                .toggleSeverityFilter("Critical")
-                .toggleSeverityFilter("Medium");
+                .toggleSeverityFilter("Low")
+                .toggleSeverityFilter("Info");
 
         sleep(1000);
 
@@ -166,8 +166,8 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
                 .addScannerFilter(scanner)
                 .expandFieldControls()
                 .setParameterFilter(parameter)
-                .toggleSeverityFilter("Medium")
-                .toggleSeverityFilter("Critical")
+                .toggleSeverityFilter("Low")
+                .toggleSeverityFilter("Info")
                 .expandSavedFilters()
                 .addSavedFilter(newFilter);
 
@@ -367,8 +367,8 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
                 .clickVulnerabilitiesTab("44");
 
         teamDetailPage.expandFieldControls()
-                .toggleSeverityFilter("Critical")
-                .toggleSeverityFilter("Low");
+                .toggleSeverityFilter("Medium")
+                .toggleSeverityFilter("Info");
 
         assertTrue("Critical vulnerabilities should be shown.",
                 teamDetailPage.isSeverityLevelShown("Critical"));

@@ -358,8 +358,12 @@ public abstract class BasePage {
 	}
 
 	public boolean isApiKeysLinkPresent() {
-        hover("adminLink");
-		return driver.findElementById("apiKeysLink").isDisplayed();
+        try {
+            hover("adminLink");
+            return driver.findElementById("apiKeysLink").isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
 	}
 
 	public boolean isApiKeysMenuLinkClickable() {
@@ -368,12 +372,12 @@ public abstract class BasePage {
 	}
 
 	public boolean isWafsLinkPresent() {
-        hover("manageCustomLink");
+        hover("manageIntegrations");
 		return driver.findElementById("wafsLink").isDisplayed();
 	}
 
 	public boolean isWafsMenuLinkClickable() {
-        hover("manageCustomLink");
+        hover("manageIntegrations");
         return isClickable("wafsLink");
 	}
 

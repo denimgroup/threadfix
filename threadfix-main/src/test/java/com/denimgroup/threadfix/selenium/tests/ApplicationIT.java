@@ -30,9 +30,6 @@ import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.openqa.selenium.By;
-
-import javax.validation.constraints.AssertTrue;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

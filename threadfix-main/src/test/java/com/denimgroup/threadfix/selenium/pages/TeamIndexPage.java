@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -152,6 +153,13 @@ public class TeamIndexPage extends BasePage {
         return new TeamIndexPage(driver);
     }
 
+    public TeamIndexPage clickCloseNewTeamModal() {
+        if (isElementPresent("myModalLabel")) {
+            driver.findElementById("closeModalButton").click();
+        }
+        return new TeamIndexPage(driver);
+    }
+
     public TeamIndexPage addNewApplication(String teamName, String appName, String url, String criticality) {
         clickAddNewApplication(teamName);
         setApplicationName(appName);
@@ -233,7 +241,12 @@ public class TeamIndexPage extends BasePage {
     public TeamIndexPage uploadNewScan(String file, String teamName, String appName) {
         waitForElement(driver.findElementById("scanFileInput"));
         driver.findElementById("scanFileInput").sendKeys(file);
-        waitForElement(driver.findElementById("applicationLink" + teamName + "-" + appName));
+        try {
+            waitForElement(driver.findElementById("applicationLink" + teamName + "-" + appName));
+        } catch (StaleElementReferenceException e) {
+            refreshPage();
+            expandTeamRowByName(teamName);
+        }
         return new TeamIndexPage(driver);
     }
 

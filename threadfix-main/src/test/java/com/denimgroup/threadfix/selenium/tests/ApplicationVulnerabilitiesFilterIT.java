@@ -78,8 +78,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
 
         applicationDetailPage = applicationDetailPage.expandFieldControls()
                 .addParameterFilter(parameter)
-                .toggleSeverityFilter("Critical")
-                .toggleSeverityFilter("Medium");
+                .toggleSeverityFilter("Low")
+                .toggleSeverityFilter("Info");
 
         sleep(1000);
 
@@ -87,6 +87,10 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
         assertTrue("Only 4 medium vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Medium", "4"));
+        assertFalse("Low vulnerabilities should not be shown.",
+                applicationDetailPage.isSeverityLevelShown("Low"));
+        assertFalse("Info vulnerabilities should not be shown.",
+                applicationDetailPage.isSeverityLevelShown("Info"));
 
         applicationDetailPage = applicationDetailPage.toggleClear();
 
@@ -154,8 +158,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
                 .addScannerFilter(scanner)
                 .expandFieldControls()
                 .addParameterFilter(parameter)
-                .toggleSeverityFilter("Medium")
-                .toggleSeverityFilter("Critical")
+                .toggleSeverityFilter("Low")
+                .toggleSeverityFilter("Info")
                 .expandSavedFilters()
                 .addSavedFilter(newFilter);
 
@@ -267,8 +271,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
     @Test
     public void testSeverityFilter() {
         applicationDetailPage = applicationDetailPage.expandFieldControls()
-                .toggleSeverityFilter("Critical")
-                .toggleSeverityFilter("Low");
+                .toggleSeverityFilter("Medium")
+                .toggleSeverityFilter("Info");
 
         assertTrue("Critical vulnerabilities should be shown.",
                 applicationDetailPage.isSeverityLevelShown("Critical"));

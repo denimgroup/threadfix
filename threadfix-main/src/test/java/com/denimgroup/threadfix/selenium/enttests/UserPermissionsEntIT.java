@@ -556,7 +556,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
         dashboardPage.clickConfigTab();
 
-        assertFalse("API keys Link is Present", dashboardPage.isElementPresent("apiKeysLink"));
+        assertFalse("API keys Link is Present", dashboardPage.isApiKeysLinkPresent());
     }
 
     @Test
