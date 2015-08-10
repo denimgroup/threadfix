@@ -338,7 +338,9 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickDeleteScanButton() {
-        driver.findElementByLinkText("Delete Scan").click();
+        if (!tryClick(By.linkText("Delete Scan"))) {
+            throw new StaleElementReferenceException("Delete button could not be clicked.");
+        }
         handleAlert();
         return new ApplicationDetailPage(driver);
     }
@@ -584,7 +586,9 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ScanDetailPage clickViewScan() {
-        driver.findElementByLinkText("View Scan").click();
+        if (!tryClick(By.linkText("View Scan"))) {
+            throw new StaleElementReferenceException("View Scan button could not be clicked.");
+        }
         waitForElement(driver.findElementById("statisticButton"));
         return new ScanDetailPage(driver);
     }
