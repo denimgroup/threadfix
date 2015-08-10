@@ -139,7 +139,7 @@
 
                                     <security:authorize ifAllGranted="ROLE_ENTERPRISE">
                                         <li class="normalLinks">
-                                            <a id="acceptCriteriaLink" href="<spring:url value="/configuration/acceptcriterias" htmlEscape="true"/>">Acceptance Policies</a>
+                                            <a id="acceptCriteriaLink" href="<spring:url value="/configuration/acceptcriterias" htmlEscape="true"/>">Acceptance Criteria</a>
                                         </li>
                                     </security:authorize>
                                 </ul>
