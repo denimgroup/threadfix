@@ -10,6 +10,10 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
     var lastNumber = 0;
     var lastPage = 0;
 
+    var nameCompare = function(a,b) {
+        return a.name.localeCompare(b.name);
+    };
+
     $scope.activateTab = function(tab) {
         $scope.active = {}; //reset
         $scope.active[tab] = true;
@@ -50,6 +54,7 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
                     lastNumber = $scope.numberToShow;
                     lastPage = $scope.page;
                     $scope.users = data.object.users;
+                    //$scope.users.sort(nameCompare);
                 } else {
                     $scope.errorMessage = "Failed to receive search results. Message was : " + data.message;
                 }
@@ -85,6 +90,7 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
                     $scope.countUsers = data.object.countUsers;
                     if (data.object.users.length > 0) {
                         $scope.users = data.object.users;
+                        //$scope.users.sort(nameCompare);
                     } else {
 
                         // If the last page is no longer exist then refresh to page 1
@@ -128,13 +134,41 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
     $scope.openGroups = function(user) {
 
         $modal.open({
-            templateUrl: 'attrListModal.html',
+            templateUrl: 'groupsListModal.html',
             controller: 'ModalController',
             resolve: {
                 data: function() {
                     return {
                         heading: 'User Groups',
                         list: user.groups
+                    }
+                }
+            }
+        });
+    };
+
+    $scope.openRoles = function(user) {
+
+        var hasAppRoles = false;
+
+        for (var i = 0; i < user.accessControlTeamMaps.length; i++){
+            var teamMap = user.accessControlTeamMaps[i];
+
+            if (teamMap.appRoles.length > 0) {
+                hasAppRoles = true;
+                break;
+            }
+        }
+
+        $modal.open({
+            templateUrl: 'rolesListModal.html',
+            controller: 'ModalController',
+            resolve: {
+                data: function() {
+                    return {
+                        heading: 'User Roles',
+                        teamMaps: user.accessControlTeamMaps,
+                        hasAppRoles: hasAppRoles
                     }
                 }
             }
@@ -175,8 +209,6 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
             var fileName = "user-audit-report-" + $filter('date')(new Date(), 'yyyyMMddHHmmss') + ".pdf";
             doc.save(fileName);
         });
-
-
     };
 
 });

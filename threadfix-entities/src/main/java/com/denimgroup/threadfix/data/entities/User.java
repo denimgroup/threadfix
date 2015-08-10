@@ -330,6 +330,37 @@ public class User extends AuditableEntity {
 
         return users;
     }
+    @Transient
+    @JsonProperty("accessControlTeamMaps")
+    @JsonView(AllViews.TableRow.class)
+    public List<?> getAccessControlTeamMapsJSON() {
+        List<Map<?, ?>> teamMaps = list();
+
+        if (this.accessControlTeamMaps != null) {
+            for (AccessControlTeamMap accessControlTeamMap : this.accessControlTeamMaps) {
+
+                List<Map<?, ?>> appMaps = list();
+
+                for (AccessControlApplicationMap appMap : accessControlTeamMap.getAccessControlApplicationMaps()) {
+                    appMaps.add(map(
+                                    "roleName", appMap.getRole() != null ? appMap.getRole().getDisplayName() : "-",
+                                    "appName", appMap.getApplication().getName()
+                            )
+                    );
+
+                }
+
+                teamMaps.add(map(
+                        "roleName", accessControlTeamMap.getRole() != null ? accessControlTeamMap.getRole().getDisplayName() : "-",
+                        "teamName", accessControlTeamMap.getOrganization().getName(),
+                        "appRoles", appMaps
+                    )
+                );
+            }
+        }
+
+        return teamMaps;
+    }
 
 
 }
