@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Tag;
 import com.denimgroup.threadfix.data.entities.Waf;
+import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.data.enums.TagType;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
@@ -328,7 +329,7 @@ public class ApplicationRestController extends TFRestController {
 
             application.setWaf(waf);
             applicationService.updateWafRules(application, oldWafId);
-            applicationService.storeApplication(application);
+            applicationService.storeApplication(application, EventAction.APPLICATION_EDIT);
             return RestResponse.success(application);
         }
     }
@@ -358,7 +359,7 @@ public class ApplicationRestController extends TFRestController {
             return failure(APPLICATION_LOOKUP_FAILED);
         } else {
             application.setUrl(url);
-            applicationService.storeApplication(application);
+            applicationService.storeApplication(application, EventAction.APPLICATION_EDIT);
             return RestResponse.success(application);
         }
     }
@@ -424,7 +425,7 @@ public class ApplicationRestController extends TFRestController {
         }
 
         application.getTags().add(tag);
-        applicationService.storeApplication(application);
+        applicationService.storeApplication(application, EventAction.APPLICATION_SET_TAGS);
 
         return success(application);
     }
@@ -464,7 +465,7 @@ public class ApplicationRestController extends TFRestController {
 
         if(application.containTag(tag)){
             application.getTags().remove(tag);
-            applicationService.storeApplication(application);
+            applicationService.storeApplication(application, EventAction.APPLICATION_SET_TAGS);
 
             return success("Tag successfully removed from application");
         }else{

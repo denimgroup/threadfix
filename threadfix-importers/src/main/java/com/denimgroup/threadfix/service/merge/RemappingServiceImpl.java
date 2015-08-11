@@ -30,6 +30,8 @@ package com.denimgroup.threadfix.service.merge;
 import com.denimgroup.threadfix.data.dao.*;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.VulnerabilityService;
+import com.denimgroup.threadfix.service.VulnerabilityStatusService;
 import com.denimgroup.threadfix.service.queue.QueueSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -50,7 +52,11 @@ public class RemappingServiceImpl implements RemappingService {
     @Autowired
     ApplicationChannelDao applicationChannelDao;
     @Autowired
-    VulnerabilityDao vulnerabilityDao;
+    VulnerabilityService vulnerabilityService;
+    @Autowired
+    private VulnerabilityStatusService vulnerabilityStatusService;
+    @Autowired
+    VulnerabilityParser vulnerabilityParser;
     @Autowired
     ScanCloseReopenMappingDao scanCloseReopenMappingDao;
     @Autowired(required = false) // not all environments have a queue
@@ -115,7 +121,7 @@ public class RemappingServiceImpl implements RemappingService {
             attemptToAddFromCache(newCache, finding);
 
             if (finding.getVulnerability() == null) {
-                Vulnerability parse = VulnerabilityParser.parse(finding);
+                Vulnerability parse = vulnerabilityParser.parse(finding);
 
                 newVulnerabilities.add(parse);
                 newCache.add(parse);
@@ -130,7 +136,7 @@ public class RemappingServiceImpl implements RemappingService {
 
         for (Vulnerability vulnerability : vulnerabilitiesToUpdate) {
             fixStateAndMappings(channel, vulnerability);
-            vulnerabilityDao.saveOrUpdate(vulnerability);
+            vulnerabilityService.storeVulnerability(vulnerability);
         }
 
         return !vulnerabilitiesToUpdate.isEmpty();
@@ -216,9 +222,9 @@ public class RemappingServiceImpl implements RemappingService {
 
         if (shouldBeOpen != null && shouldBeOpen != isOpen) {
             if (shouldBeOpen) {
-                newVulnerability.openVulnerability(lastActionDate);
+                vulnerabilityStatusService.openVulnerability(newVulnerability, scanTimeMap.get(lastActionDate), lastActionDate, false);
             } else {
-                newVulnerability.closeVulnerability(scanTimeMap.get(lastActionDate), lastActionDate);
+                vulnerabilityStatusService.closeVulnerability(newVulnerability, scanTimeMap.get(lastActionDate), lastActionDate, false, false);
             }
         }
     }
@@ -320,7 +326,7 @@ public class RemappingServiceImpl implements RemappingService {
             for (Vulnerability vulnerability : possibilities) {
 
                 if (findingMatcher.doesMatch(finding, vulnerability)) {
-                    VulnerabilityParser.addToVuln(vulnerability, finding);
+                    vulnerabilityParser.addToVuln(vulnerability, finding);
                 }
             }
         }

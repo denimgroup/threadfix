@@ -52,7 +52,7 @@ public class WafServiceImpl implements WafService {
     @Autowired
     private       WafRuleDirectiveDao                wafRuleDirectiveDao = null;
     @Autowired
-    private       VulnerabilityDao                   vulnerabilityDao    = null;
+    private       VulnerabilityService               vulnerabilityService= null;
     private final RealTimeProtectionGeneratorFactory factory             = new RealTimeProtectionGeneratorFactory();
 
     @Override
@@ -200,7 +200,7 @@ public class WafServiceImpl implements WafService {
 
 				Vulnerability vuln = wafRule.getVulnerability();
 				vuln.setWafRuleGeneratedTime(now);
-				vulnerabilityDao.saveOrUpdate(vuln);
+				vulnerabilityService.storeVulnerability(vuln);
 			}
 		}
 	}

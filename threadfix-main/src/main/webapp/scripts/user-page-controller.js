@@ -173,8 +173,11 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     $scope.setCurrentUser = function(user) {
         if (user.wasSelected) {
             $scope.currentUser = user.formUser;
+            $scope.currentUrl = "/configuration/users/" + $scope.currentUser.id;
+            $rootScope.$broadcast('userSelected');
         } else {
             $scope.currentUser = angular.copy(user);
+            $scope.currentUrl = "/configuration/users/" + $scope.currentUser.id;
             addMapsToUser($scope.currentUser, function() {
                 user.formUser = $scope.currentUser;
                 if (!$scope.currentUser.hasGlobalGroupAccess) {
@@ -190,6 +193,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 $scope.currentUser.unencryptedPassword = "";
                 $scope.currentUser.passwordConfirm = "";
                 user.baseUser = angular.copy($scope.currentUser);
+                $rootScope.$broadcast('userSelected');
             });
             user.wasSelected = true;
         }
@@ -245,6 +249,8 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     function selectUserWithId(targetId) {
         if (!targetId) {
             $scope.currentUser = undefined;
+            $scope.currentUrl = undefined;
+            $rootScope.$broadcast('userNotAvailable');
             return;
         }
 
@@ -258,6 +264,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
 
         if (targetIndex === -1) {
             $scope.currentUser = undefined;
+            $rootScope.$broadcast('userNotAvailable');
             return;
         }
 
@@ -587,7 +594,11 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
 
         modalInstance.result.then(function (key) {
 
-            $scope.currentUser.apiKeys.push(key);
+            if (!$scope.currentUser.apiKeys || !$scope.currentUser.apiKeys.length) {
+                $scope.currentUser.apiKeys = [ key ];
+            } else {
+                $scope.currentUser.apiKeys.push(key);
+            }
 
             $scope.userSuccessMessage = "Successfully created key.";
 

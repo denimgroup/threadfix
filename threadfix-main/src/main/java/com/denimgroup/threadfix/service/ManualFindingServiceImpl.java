@@ -186,6 +186,9 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		scan.setNumberTotalVulnerabilities(scan.getNumberTotalVulnerabilities() + 1);
 		finding.setScan(scan);
         scanCleanerUtils.clean(scan);
+
+		vulnerabilityService.storeVulnerability(finding.getVulnerability());
+
 		scanDao.saveOrUpdate(scan);
 		log.debug("Manual Finding submission was successful.");
 		log.debug(userName + " has added a new finding to the Application " + 

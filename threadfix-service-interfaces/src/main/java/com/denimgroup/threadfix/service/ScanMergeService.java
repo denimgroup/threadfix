@@ -49,7 +49,7 @@ public interface ScanMergeService {
 	 * 
 	 * @param application
 	 */
-	void updateVulnerabilities(Application application);
+	void updateVulnerabilities(Application application, boolean shouldSaveVulnerabilites);
 
     /**
      * This method does the actual scan processing work. It is usually called from QueueListener or

@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
@@ -185,7 +186,7 @@ public class AddApplicationController {
             return "ajaxFailureHarness";
         } else {
 
-            applicationService.storeApplication(application);
+            applicationService.storeApplication(application, EventAction.APPLICATION_CREATE);
 
             String user = SecurityContextHolder.getContext().getAuthentication().getName();
             log.debug("User " + user + " has created an Application with the name " + application.getName() +

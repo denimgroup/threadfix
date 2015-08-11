@@ -112,7 +112,8 @@ public class QueueListener implements MessageListener {
 				switch (type) {
 					case QueueConstants.DEFECT_TRACKER_VULN_UPDATE_TYPE:
 						processDefectTrackerUpdateRequest(map.getInt("appId"),
-								map.getInt("jobStatusId"));
+								map.getInt("jobStatusId"),
+								(Integer) map.getObject("userId"));
 						break;
 
 					case QueueConstants.GRC_CONTROLS_UPDATE_TYPE:
@@ -149,7 +150,7 @@ public class QueueListener implements MessageListener {
 						updateChannelSeverityMappings(map.getString("channelSeverityIds"));
 						break;
 					case QueueConstants.DELETE_CHANNEL_VULN_FILTER:
-						deleteVulnsFilter(map.getInt("channelTypeId"), map.getString("channelVulnName"));
+						deleteVulnsFilter(map.getInt("channelFilterId"));
 						break;
                     case QueueConstants.SEND_EMAIL_REPORT:
                         processSendEmailReport(map.getInt("scheduledEmailReportId"));
@@ -181,13 +182,29 @@ public class QueueListener implements MessageListener {
         log.info("Updating all filter vulnerabilities finished.");
     }
 
-	private void deleteVulnsFilter(int channelTypeId, String channelVulnName) {
-		log.info("About to change back severity all vulnerabilities of channel vulnerability name " + channelVulnName);
+	private void deleteVulnsFilter(int channelFilterId) {
+
 		if (channelVulnerabilityFilterDao != null) {
-			channelVulnerabilityFilterDao.changeVulnsAfterDelete(channelTypeId, channelVulnName);
+
+			ChannelVulnerabilityFilter channelVulnerabilityFilter = channelVulnerabilityFilterDao.retrieveById(channelFilterId);
+			if (channelVulnerabilityFilter != null) {
+
+				int channelTypeId = channelVulnerabilityFilter.getId();
+				String channelVulnName = channelVulnerabilityFilter.getSourceChannelVulnerability().getName();
+				boolean isHiddenFilter = channelVulnerabilityFilter.getTargetGenericSeverity() == null;
+				channelVulnerabilityFilterDao.delete(channelVulnerabilityFilter);
+
+				if (!isHiddenFilter) {
+					log.info("About to change back severity all vulnerabilities of channel vulnerability name " + channelVulnName);
+					channelVulnerabilityFilterDao.changeVulnsAfterDelete(channelTypeId, channelVulnName);
+					log.info("Finished changing severity back.");
+				}
+
+				updateVulnsFilter();
+			}
 		}
-		vulnerabilityFilterService.updateAllVulnerabilities();
-		log.info("Finished changing severity back.");
+
+
 	}
 
     private void processStatisticsUpdate(int appId) {
@@ -259,7 +276,7 @@ public class QueueListener implements MessageListener {
 		
 		for (Application application : apps) {
 			if (application != null && application.getDefectTracker() != null) {
-				defectService.updateVulnsFromDefectTracker(application.getId());
+				defectService.updateVulnsFromDefectTracker(application.getId(), null);
 			}
 		}
 		
@@ -351,16 +368,17 @@ public class QueueListener implements MessageListener {
 	/**
 	 * @param appId
 	 * @param jobStatusId
+	 * @param userId
 	 */
 	@Transactional(readOnly=false)
-	private void processDefectTrackerUpdateRequest(Integer appId, Integer jobStatusId) {
+	private void processDefectTrackerUpdateRequest(Integer appId, Integer jobStatusId, Integer userId) {
 		if (appId == null) {
 			closeJobStatus(jobStatusId, "Defect Tracker update failed because it received a null application ID");
 			return;
 		}
 
 		jobStatusService.updateJobStatus(jobStatusId, "Processing Defect Tracker Vulnerability update request.");
-		boolean result = defectService.updateVulnsFromDefectTracker(appId);
+		boolean result = defectService.updateVulnsFromDefectTracker(appId, userId);
 		
 		if (result) {
 			closeJobStatus(jobStatusId, "Vulnerabilities successfully updated.");

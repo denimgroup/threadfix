@@ -66,8 +66,7 @@ public class HibernateDefectDao
 		
 		if (defects != null && defects.size() > 0) {
 			for (Defect defect : defects) {
-				sessionFactory.getCurrentSession().save(new DeletedDefect(defect));
-				sessionFactory.getCurrentSession().delete(defect);
+				delete(defect);
 			}
 		}
 	}
@@ -90,8 +89,7 @@ public class HibernateDefectDao
 			
 		if (defects != null && defects.size() > 0) {
 			for (Defect defect : defects) {
-				sessionFactory.getCurrentSession().save(new DeletedDefect(defect));
-				sessionFactory.getCurrentSession().delete(defect);
+				delete(defect);
 			}
 		}
 	}
