@@ -9,6 +9,7 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ChannelTypeService;
 import com.denimgroup.threadfix.service.GenericSeverityService;
 import com.denimgroup.threadfix.service.ScanResultFilterService;
+import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
@@ -30,11 +31,11 @@ import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 
 @Controller
-@RequestMapping("/configuration/scanResultFilters")
+@RequestMapping("/customize/scannerSeverities")
 @PreAuthorize("hasRole('ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS')")
 public class ScanResultFilterController {
 
-    private static final String INDEX_VIEW = "config/scanResultFilters/index";
+    private static final String INDEX_VIEW = "customize/scannerSeverities";
 
     private final SanitizedLogger log = new SanitizedLogger(ScanResultFilterController.class);
 
@@ -62,7 +63,11 @@ public class ScanResultFilterController {
         model.addAttribute("scanResultFilterList", scanResultFilterService.loadAll());
         model.addAttribute("scanResultFilter", new ScanResultFilter());
 
-        return INDEX_VIEW;
+        if (EnterpriseTest.isEnterprise()) {
+            return "customize/scannerSeverity/enterprise";
+        } else {
+            return "customize/scannerSeverity/community";
+        }
     }
 
     @RequestMapping(value = "/info", method = RequestMethod.GET)

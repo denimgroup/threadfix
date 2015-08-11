@@ -125,7 +125,8 @@ public class DefectTrackersController {
 
     // TODO move this elsewhere?
     @RequestMapping(value = "/jsontest", method = RequestMethod.POST)
-    public @ResponseBody RestResponse<?> readJson(@Valid @ModelAttribute DefectTracker defectTracker, BindingResult result) {
+    @ResponseBody
+    public RestResponse<?> readJson(@Valid @ModelAttribute DefectTracker defectTracker, BindingResult result) {
 
         if(defectTracker.getUrl() == null){
             return failure("Missing defect tracker url.");
