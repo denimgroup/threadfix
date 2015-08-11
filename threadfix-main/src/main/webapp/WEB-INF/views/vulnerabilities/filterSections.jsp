@@ -361,7 +361,7 @@
                     {{ successDateRangeMessage }}
                 </div>
                 <p class="input-group">
-                    <select ng-show="savedDateRanges" id="filterSelect" style="width: 135px;" ng-model="selectedDateRange" ng-change="selectDateRange(selectedDateRange)"
+                    <select ng-show="savedDateRanges" id="filterSelect" style="width: 135px;margin-bottom:0" ng-model="selectedDateRange" ng-change="selectDateRange(selectedDateRange)"
                             ng-options="dateRange.name for dateRange in savedDateRanges">
                     </select>
                     <span class="input-group-btn">
@@ -375,7 +375,7 @@
             <h4>Start Date</h4>
             <div class="col-md-6">
                 <p class="input-group">
-                <input id="startDateInput" type="text" class="form-control" style="width:135px;margin-bottom:0" datepicker-popup="dd-MMM-yyyy" ng-model="parameters.startDate"
+                    <input id="startDateInput" type="text" class="form-control" style="width:135px;margin-bottom:0" datepicker-popup="dd-MMM-yyyy" ng-model="parameters.startDate"
                            is-open="startDateOpened" min-date="minDate" max-date="maxDate" date-disabled="disabled(date, mode)" close-text="Close"
                            ng-change="refresh()"
                             />
