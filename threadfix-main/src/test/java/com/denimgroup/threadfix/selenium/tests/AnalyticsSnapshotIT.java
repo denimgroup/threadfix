@@ -275,7 +275,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .selectFieldControls("High", "snapshotFilterDiv")
                 .selectFieldControls("Critical", "snapshotFilterDiv");
 
-        assertTrue("Info Vulnerability is present.", analyticsPage.getProgressByVulnerabilityType("0").contains("Information Exposure"));
+        assertTrue("Info Vulnerability is not present.", analyticsPage.getProgressByVulnerabilityType("0").contains("Information Exposure"));
         assertTrue("Other Vulnerabilities are not filtered out.", analyticsPage.isProgressByVulnerabilityCountCorrect(1));
     }
 
