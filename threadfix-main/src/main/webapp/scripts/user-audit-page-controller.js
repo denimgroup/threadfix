@@ -10,6 +10,8 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
         return a.name.localeCompare(b.name);
     };
 
+    var browerErrMsg = "Sorry, your browser does not support this feature. Please upgrade IE version or change to Chrome which is recommended.";
+
     $scope.activateTab = function(tab) {
         $scope.active = {}; //reset
         $scope.active[tab] = true;
@@ -143,13 +145,26 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
         return appMaps;
     };
 
+    var checkOldIE = function() {
+        // IE <10, unsupported
+        return (typeof navigator !== "undefined" &&
+        /MSIE [1-9]\./.test(navigator.userAgent));
+    };
+
     $scope.exportPDF = function() {
+
+        if (checkOldIE()) {
+            alert(browerErrMsg);
+            return;
+        }
+
         $scope.getAllUsers(function(users) {
-            var data = [], fontSize = 12, height = 0, doc;
+            var data = [], fontSize = 10, height = 0, doc;
 
             doc = new jsPDF('p', 'pt', 'a4', true);
-            doc.setFont("courier", "normal");
+            doc.setFont("normal", "normal");
             doc.setFontSize(fontSize);
+            doc.cellInitialize();
 
             for (var i = 0; i < users.length; i++) {
 
