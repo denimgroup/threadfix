@@ -104,6 +104,7 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
         $scope.currentModal = modalInstance;
 
         modalInstance.result.then(function (object) {
+            $rootScope.$broadcast('scanUploaded');
             $scope.successMessage = "Successfully created mapping. You should see new Vulnerabilities in the Vulnerabilities tree. Please export these mappings to Denim Group from the Scanner Mappings page.";
             $scope.refresh(true, false);
         }, function () {
