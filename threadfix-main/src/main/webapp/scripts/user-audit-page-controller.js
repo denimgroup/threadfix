@@ -6,10 +6,6 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
     //             Basic Page Functionality + $on(rootScopeInitialized)
     ////////////////////////////////////////////////////////////////////////////////
 
-    var lastSearchString = undefined;
-    var lastNumber = 0;
-    var lastPage = 0;
-
     var nameCompare = function(a,b) {
         return a.name.localeCompare(b.name);
     };
@@ -22,46 +18,9 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
 
     $scope.numberToShow = 10;
 
-    $scope.updatePage = function(page, searchString) {
+    $scope.updatePage = function(page) {
         $scope.page = page;
-        $scope.searchUsers(searchString);
-    };
-
-    $scope.searchUsers = function(searchText) {
-
-        if (lastSearchString && lastSearchString === searchText &&
-            lastNumber === $scope.numberToShow &&
-            lastPage === $scope.page) {
-            return;
-        }
-
-        var users = [];
-
-        var searchObject = {
-            "searchString" : searchText,
-            "page" : $scope.page,
-            "number" : $scope.numberToShow
-        };
-
-        $http.post(tfEncoder.encode("/configuration/users/search"), searchObject).
-            then(function(response) {
-
-                var data = response.data;
-
-                if (data.success) {
-                    $scope.countUsers = data.object.countUsers;
-                    lastSearchString = searchText;
-                    lastNumber = $scope.numberToShow;
-                    lastPage = $scope.page;
-                    $scope.users = data.object.users;
-                    //$scope.users.sort(nameCompare);
-                } else {
-                    $scope.errorMessage = "Failed to receive search results. Message was : " + data.message;
-                }
-
-                return users;
-            });
-
+        reloadList();
     };
 
     $scope.$on('rootScopeInitialized', function() {
@@ -90,7 +49,7 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
                     $scope.countUsers = data.object.countUsers;
                     if (data.object.users.length > 0) {
                         $scope.users = data.object.users;
-                        //$scope.users.sort(nameCompare);
+                        $scope.users.sort(nameCompare);
                     } else {
 
                         // If the last page is no longer exist then refresh to page 1
@@ -149,16 +108,8 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
 
     $scope.openRoles = function(user) {
 
-        var hasAppRoles = false;
-
-        for (var i = 0; i < user.accessControlTeamMaps.length; i++){
-            var teamMap = user.accessControlTeamMaps[i];
-
-            if (teamMap.appRoles.length > 0) {
-                hasAppRoles = true;
-                break;
-            }
-        }
+        var teamMaps = user.accessControlTeamMaps;
+        var appMaps = getAppRoles(teamMaps);
 
         $modal.open({
             templateUrl: 'rolesListModal.html',
@@ -167,12 +118,29 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
                 data: function() {
                     return {
                         heading: 'User Roles',
-                        teamMaps: user.accessControlTeamMaps,
-                        hasAppRoles: hasAppRoles
+                        teamMaps: teamMaps,
+                        appMaps: appMaps,
+                        userGlobalRole: user.globalRole != null ? user.globalRole.displayName : '--'
                     }
                 }
             }
         });
+    };
+
+    var getAppRoles = function(teamMaps) {
+
+        var appMaps = [];
+
+        for (var i = 0; i < teamMaps.length; i++) {
+            var appRoles = teamMaps[i].appRoles;
+
+            for (var j = 0; j < appRoles.length; j++) {
+                var appRole = appRoles[j];
+                appMaps.push(appRole);
+            }
+        }
+
+        return appMaps;
     };
 
     $scope.exportPDF = function() {
@@ -186,16 +154,37 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
             for (var i = 0; i < users.length; i++) {
 
                 var user = users[i];
-                var groupListStr = user.groups.map(function(group) {
+                var groups = user.groups.map(function(group) {
                     return group.name;
                 }).join(", ");
+
+                var roles = "Global Role: " + (user.globalRole != null ? user.globalRole.displayName : "--");
+
+                var teamRoles = user.accessControlTeamMaps.map(function(teamMap) {
+                    if ( teamMap.roleName !== '-') {
+                        return teamMap.roleName + " (" + teamMap.teamName + ")";
+                    }
+                });
+
+                if ( teamRoles.length > 0 ) {
+                    roles += "\nTeam Roles: " + teamRoles.join(", ");
+                }
+
+                var appRoles = getAppRoles(user.accessControlTeamMaps).map(function(appMap) {
+                    if ( appMap.roleName !== '-') {
+                        return appMap.roleName + " (" + appMap.teamName + ":" + appMap.appName + ")";
+                    }
+                });
+
+                if ( appRoles.length > 0 )
+                    roles += "\nApp Roles: " + appRoles.join(", ");
 
                 data.push({
                     "Name" : user.displayName ? user.displayName : "-",
                     "Username" : user.name,
                     "Last Log In" : $filter('date')(user.lastLoginDate, 'medium'),
-                    "Role" : user.globalRole ? user.globalRole.displayName : "-",
-                    "Groups" : groupListStr
+                    "Roles" : roles,
+                    "Groups" : groups
                 });
             }
 

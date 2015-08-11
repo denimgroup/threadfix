@@ -343,11 +343,11 @@ public class User extends AuditableEntity {
 
                 for (AccessControlApplicationMap appMap : accessControlTeamMap.getAccessControlApplicationMaps()) {
                     appMaps.add(map(
+                                    "teamName", accessControlTeamMap.getOrganization().getName(),
                                     "roleName", appMap.getRole() != null ? appMap.getRole().getDisplayName() : "-",
                                     "appName", appMap.getApplication().getName()
                             )
                     );
-
                 }
 
                 teamMaps.add(map(
