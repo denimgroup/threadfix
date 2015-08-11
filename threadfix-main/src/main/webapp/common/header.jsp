@@ -159,9 +159,6 @@
                                     <a id="configureDefaultsLink" href="<spring:url value="/configuration/settings" htmlEscape="true"/>">System Settings</a>
                                 </li>
                             </security:authorize>
-                            <li class="normalLinks">
-                                <a id="historyLink" href="<spring:url value="/history" htmlEscape="true"/>">History</a>
-                            </li>
                             <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_EMAIL_REPORTS">
                                 <li class="normalLinks">
                                     <a id="emailListsLink" href="<spring:url value="/configuration/emailLists" htmlEscape="true"/>">Manage Email Lists</a>
@@ -205,6 +202,9 @@
                                 </li>
 							</security:authorize>
 						</security:authorize>
+                        <li class="normalLinks">
+                            <a id="historyLink" href="<spring:url value="/history" htmlEscape="true"/>">History</a>
+                        </li>
                         <li class="normalLinks">
                             <a id="viewDownloadPageLink" href="<spring:url value="/configuration/download" htmlEscape="true"/>">Download Tools</a>
                         </li>

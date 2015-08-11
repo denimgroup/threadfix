@@ -38,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
@@ -109,7 +110,7 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
             userEventActions.add(eventAction.name());
         }
 
-        return retrieveUngrouped(userEventActions, user);
+        return retrieveUngrouped(userEventActions, user, null, null);
     }
 
     @Override
@@ -119,63 +120,39 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
             userGroupedEventAction.add(eventAction.name());
         }
 
-        return retrieveGrouped(userGroupedEventAction, user);
+        return retrieveGrouped(userGroupedEventAction, user, null, null);
     }
 
     @Override
-    public List<Event> retrieveGlobalUngrouped() {
+    public List<Event> retrieveGlobalUngrouped(Set<Integer> appIds, Set<Integer> teamIds) {
         List<String> globalEventActions = list();
         for (EventAction eventAction : EventAction.globalEventActions) {
             globalEventActions.add(eventAction.name());
         }
 
-        return retrieveUngrouped(globalEventActions, null);
+        return retrieveUngrouped(globalEventActions, null, appIds, teamIds);
     }
 
     @Override
-    public List<Event> retrieveGlobalGrouped() {
+    public List<Event> retrieveGlobalGrouped(Set<Integer> appIds, Set<Integer> teamIds) {
         List<String> globalGroupedEventAction = list();
         for (EventAction eventAction : EventAction.globalGroupedEventAction) {
             globalGroupedEventAction.add(eventAction.name());
         }
 
-        return retrieveGrouped(globalGroupedEventAction, null);
+        return retrieveGrouped(globalGroupedEventAction, null, appIds, teamIds);
     }
 
-    private List<Event> retrieveUngrouped(List<String> eventActions, User user) {
-        Criteria criteria = getSession()
-                .createCriteria(getClassReference())
-                .add(Restrictions.eq("active", true))
-                .add(Restrictions.in("eventAction", eventActions));
-        if (user != null) {
-            criteria.add(Restrictions.eq("user", user));
-        }
-
-        Order order = getOrder();
-        if (order != null) {
-            criteria.addOrder(order);
-        }
+    private List<Event> retrieveUngrouped(List<String> eventActions, User user, Set<Integer> appIds, Set<Integer> teamIds) {
+        Criteria criteria = getEventCriteria(eventActions, user, appIds, teamIds);
 
         List<Event> events = criteria.list();
 
         return events;
     }
 
-    private List<Event> retrieveGrouped(List<String> eventActions, User user) {
-        Criteria criteria = getSession()
-                .createCriteria(getClassReference())
-                .add(Restrictions.eq("active", true))
-                .add(Restrictions.in("eventAction", eventActions));
-        if (user != null) {
-            criteria.add(Restrictions.eq("user", user));
-        }
-
-        Order order = getOrder();
-        if (order != null) {
-            criteria.addOrder(order);
-        }
-
-        criteria.createAlias("scan", "scan", Criteria.LEFT_JOIN);
+    private List<Event> retrieveGrouped(List<String> eventActions, User user, Set<Integer> appIds, Set<Integer> teamIds) {
+        Criteria criteria = getEventCriteria(eventActions, user, appIds, teamIds);
 
         criteria.setProjection(Projections.projectionList()
                         .add(Projections.count("id").as("groupCount"))
@@ -191,12 +168,6 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
 
         List<Event> events = criteria.list();
 
-        criteria = getSession().createCriteria(getClassReference());
-        criteria.setProjection(Projections.projectionList()
-                        .add(Projections.max("id").as("maxId"))
-        );
-        Integer maxId = (Integer)criteria.uniqueResult();
-
         for (Event event : events) {
             EventAction eventAction = event.getEventActionEnum();
             EventAction groupedEventAction = eventAction.getGroupedEventAction();
@@ -205,5 +176,38 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
         }
 
         return events;
+    }
+
+    private Criteria getEventCriteria(List<String> eventActions, User user, Set<Integer> appIds, Set<Integer> teamIds) {
+        Criteria criteria = getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.in("eventAction", eventActions));
+
+        criteria.createAlias("scan", "scan", Criteria.LEFT_JOIN);
+        criteria.createAlias("application", "application", Criteria.LEFT_JOIN);
+        criteria.createAlias("application.organization", "application.organization", Criteria.LEFT_JOIN);
+
+        if (user != null) {
+            criteria.add(Restrictions.eq("user", user));
+        }
+
+        if ((appIds != null) && (!appIds.isEmpty()) && (teamIds != null) && (!teamIds.isEmpty())) {
+            criteria.add(Restrictions.or(
+                    Restrictions.in("application.id", appIds),
+                    Restrictions.in("application.organization.id", teamIds)
+            ));
+        } else if ((appIds != null) && (!appIds.isEmpty())) {
+            criteria.add(Restrictions.in("application.id", appIds));
+        } else if ((teamIds != null) && (!teamIds.isEmpty())) {
+            criteria.add(Restrictions.in("application.organization.id", teamIds));
+        }
+
+        Order order = getOrder();
+        if (order != null) {
+            criteria.addOrder(order);
+        }
+
+        return criteria;
     }
 }

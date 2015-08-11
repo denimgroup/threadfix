@@ -27,6 +27,7 @@ package com.denimgroup.threadfix.service;
 import com.denimgroup.threadfix.data.entities.*;
 
 import java.util.List;
+import java.util.Set;
 
 public interface EventService extends GenericObjectService<Event> {
 
@@ -48,5 +49,5 @@ public interface EventService extends GenericObjectService<Event> {
 
     List<Event> getUserEvents(User user);
 
-    List<Event> getGlobalEvents();
+    List<Event> getGlobalEvents(Set<Integer> appIds, Set<Integer> teamIds);
 }
