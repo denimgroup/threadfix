@@ -14,7 +14,7 @@
         </tr>
         <tr ng-show="currentVulnFilters" ng-repeat="vulnFilter in currentVulnFilters" class="bodyRow">
             <td id="genericVulnerability{{ $index }}">
-                {{ vulnFilter.sourceGenericVulnerability.name }}
+                <span tooltip="CWE-{{ vulnFilter.sourceGenericVulnerability.displayId }}">{{ vulnFilter.sourceGenericVulnerability.name }}</span>
             </td>
             <td style="word-wrap: break-word;">
                 <div id="genericSeverity{{ $index }}" ng-if="!vulnFilter.targetGenericSeverity">
