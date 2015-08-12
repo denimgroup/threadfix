@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.Select;
 
 public class TagIndexPage extends BasePage{
 
@@ -46,9 +47,9 @@ public class TagIndexPage extends BasePage{
         driver.findElementById("createTagModalButton").click();
         driver.findElementById("tagCreateNameInput").sendKeys(name);
         driver.findElementById("tagType").sendKeys("comment");
+        new Select(driver.findElementById("tagType")).selectByVisibleText("COMMENT");
         clickModalSubmit();
         waitForElementPresenceByCss("div.alert.alert-success:not(.ng-hide)", 5);
-        takeScreenShot();
         return new TagIndexPage(driver);
     }
 
