@@ -159,12 +159,12 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
         }
 
         $scope.getAllUsers(function(users) {
-            var data = [], fontSize = 10, height = 0, doc;
 
-            doc = new jsPDF('p', 'pt', 'a4', true);
-            doc.setFont("normal", "normal");
-            doc.setFontSize(fontSize);
-            doc.cellInitialize();
+            var data = [];
+            var doc = new jsPDF('l', 'pt');
+            var now = new Date();
+
+            doc.text("Users Audit Report (" + $filter('date')(now, 'short') + ")" , 10, doc.autoTableEndPosY() + 30);
 
             for (var i = 0; i < users.length; i++) {
 
@@ -175,43 +175,63 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
 
                 var roles = "Global Role: " + (user.globalRole != null ? user.globalRole.displayName : "--");
 
-                var teamRoles = user.accessControlTeamMaps.map(function(teamMap) {
+                var teamRoles = [];
+
+                for (var j = 0; j < user.accessControlTeamMaps.length; j++) {
+                    var teamMap = user.accessControlTeamMaps[j];
                     if ( teamMap.roleName !== '-') {
-                        return teamMap.roleName + " (" + teamMap.teamName + ")";
+                        teamRoles.push(teamMap.roleName + " (" + teamMap.teamName + ")");
                     }
-                });
+                }
 
                 if ( teamRoles.length > 0 ) {
                     roles += "\nTeam Roles: " + teamRoles.join(", ");
                 }
 
-                var appRoles = getAppRoles(user.accessControlTeamMaps).map(function(appMap) {
-                    if ( appMap.roleName !== '-') {
-                        return appMap.roleName + " (" + appMap.teamName + ":" + appMap.appName + ")";
-                    }
-                });
+                var appMaps = getAppRoles(user.accessControlTeamMaps);
+                var appRoles = [];
 
-                if ( appRoles.length > 0 )
+                for (var k = 0; k < appMaps.length; k++) {
+                    var appMap = appMaps[k];
+                    if ( appMap.roleName !== '-') {
+                        appRoles.push(appMap.roleName + " (" + appMap.teamName + ":" + appMap.appName + ")");
+                    }
+                }
+
+                if ( appRoles.length > 0 ) {
                     roles += "\nApp Roles: " + appRoles.join(", ");
+                }
 
                 data.push({
-                    "Name" : user.displayName ? user.displayName : "-",
-                    "Username" : user.name,
-                    "Last Log In" : $filter('date')(user.lastLoginDate, 'medium'),
-                    "Roles" : roles,
-                    "Groups" : groups
+                    "name" : user.displayName ? user.displayName : "-",
+                    "username" : user.name,
+                    "lastLogIn" : $filter('date')(user.lastLoginDate, 'medium'),
+                    "groups" : groups,
+                    "roles" : roles
                 });
             }
 
-            height = doc.drawTable(data, {
-                xstart: 10,
-                ystart: 10,
-                tablestart: 70,
-                marginleft: 50
+            var columns = [
+                {title: "Name", key: "name"},
+                {title: "Username", key: "username"},
+                {title: "Last Log In", key: "lastLogIn"},
+                {title: "Groups", key: "groups"},
+                {title: "Roles", key: "roles"}
+            ];
+
+            doc.autoTable(columns, data, {
+                margins: {
+                    horizontal: 10,
+                    top: 40,
+                    bottom: 40
+                },
+                avoidPageSplit: true,
+                startY: 50,
+                overflow: 'linebreak',
+                overflowColumns: ['roles']
             });
 
-            var fileName = "user-audit-report-" + $filter('date')(new Date(), 'yyyyMMddHHmmss') + ".pdf";
-            doc.save(fileName);
+            doc.save("user-audit-report-" + $filter('date')(now, 'yyyyMMddHHmmss') + ".pdf");
         });
     };
 
