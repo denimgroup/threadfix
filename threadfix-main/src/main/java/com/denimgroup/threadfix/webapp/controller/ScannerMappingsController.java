@@ -100,6 +100,7 @@ public class ScannerMappingsController {
         model.addAttribute("supportedScanners", scannerMappingsUpdaterService.getSupportedScanners());
 		model.addAttribute("exportText", scannerMappingsExportService.getUserAddedMappingsInCSV());
         model.addAttribute("canUpdate", scannerMappingsExportService.canUpdate());
+        model.addAttribute("exportUnmappedText", findingService.getUnmappedFindingsAsCSV() );
 
 		if (EnterpriseTest.isEnterprise()) {
 			return "customize/scannerVulnTypes/enterprise";
