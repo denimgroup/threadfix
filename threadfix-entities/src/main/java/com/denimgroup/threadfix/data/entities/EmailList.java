@@ -41,10 +41,12 @@ public class EmailList extends AuditableEntity {
 
     private static final long serialVersionUID = 2874752871948132066L;
     private static final int NAME_LENGTH = 60;
+    private static final int EMAIL_LENGTH = 128;
 
     @NotEmpty(message = "{errors.required}")
     @Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
     private String name;
+    @Size(max = EMAIL_LENGTH, message = "{errors.maxlength} " + EMAIL_LENGTH + ".")
     private List<String> emailAddresses;
     private List<ScheduledEmailReport> scheduledEmailReports;
 
@@ -59,7 +61,7 @@ public class EmailList extends AuditableEntity {
     }
 
     @ElementCollection
-    @Column(name = "emailAddress", length = 128)
+    @Column(name = "emailAddress", length = EMAIL_LENGTH)
     @CollectionTable(name = "EmailAddress", joinColumns = @JoinColumn(name = "EmailListId"))
     @JsonView(Object.class)
     public List<String> getEmailAddresses() {
