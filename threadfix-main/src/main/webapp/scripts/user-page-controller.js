@@ -111,6 +111,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         modalInstance.result.then(function (newUser) {
             $scope.userId = newUser.id;
             reloadList();
+            $rootScope.$broadcast('refreshUsers');
 
             $scope.usersSuccessMessage = "Successfully created user " + newUser.name;
 
@@ -594,7 +595,11 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
 
         modalInstance.result.then(function (key) {
 
-            $scope.currentUser.apiKeys.push(key);
+            if (!$scope.currentUser.apiKeys || !$scope.currentUser.apiKeys.length) {
+                $scope.currentUser.apiKeys = [ key ];
+            } else {
+                $scope.currentUser.apiKeys.push(key);
+            }
 
             $scope.userSuccessMessage = "Successfully created key.";
 

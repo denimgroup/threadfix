@@ -745,6 +745,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities, customSev
         var hashBefore, hashAfter;
         firstHashInList = null;
         lastHashInList = null;
+        currentInfoNo = 0, currentLowNo = 0, currentMedNo = 0, currentHighNo = 0, currentCriticalNo = 0, currentTotalNo = 0;
 
         reportUtilities.createTeamAppNames($scope);
         var trendingScansData = [];
@@ -754,6 +755,14 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities, customSev
         $scope.mediumVulnsByChannelMap = {};
         $scope.highVulnsByChannelMap = {};
         $scope.criticalVulnsByChannelMap = {};
+
+        // TODO figure out a better way than global variables
+        currentTotalNo = 0;
+        currentInfoNo = 0;
+        currentLowNo = 0;
+        currentMedNo = 0;
+        currentHighNo = 0;
+        currentCriticalNo = 0;
 
         if (startIndex!==-1 && endIndex!==-1) {
             $scope.filterScans.forEach(function(scan, index){
@@ -860,13 +869,6 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities, customSev
     trendingUtilities.filterDisplayData = function(scan, $scope) {
         var data = {};
         data.importTime = scan.importTime;
-
-        currentTotalNo = 0;
-        currentInfoNo = 0;
-        currentLowNo = 0;
-        currentMedNo = 0;
-        currentHighNo = 0;
-        currentCriticalNo = 0;
 
         if ($scope.parameters.showNew) {
             data.New = scan.numberNewVulnerabilities;

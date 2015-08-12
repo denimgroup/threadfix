@@ -126,6 +126,14 @@ public class UsersController {
 		}
 	}
 
+    @RequestMapping(value = "/configuration/users/all", method = RequestMethod.GET)
+    @JsonView(AllViews.TableRow.class)
+    @ResponseBody
+    public RestResponse<List<User>> getUsers() {
+        List<User> users = userService.loadAllUsers();
+        return success(users);
+    }
+
 	@RequestMapping(value = "/configuration/users/map/page/{page}/{numberToShow}", method = RequestMethod.GET)
 	@JsonView(AllViews.TableRow.class)
 	@ResponseBody

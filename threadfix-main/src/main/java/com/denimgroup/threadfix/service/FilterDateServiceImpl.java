@@ -21,27 +21,34 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+package com.denimgroup.threadfix.service;
 
-package com.denimgroup.threadfix.data.dao;
-
-import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.dao.FilterDateDao;
+import com.denimgroup.threadfix.data.dao.FilterJsonBlobDao;
+import com.denimgroup.threadfix.data.dao.GenericNamedObjectDao;
+import com.denimgroup.threadfix.data.entities.FilterDate;
+import com.denimgroup.threadfix.data.entities.FilterJsonBlob;
+import org.apache.commons.beanutils.BeanToPropertyValueTransformer;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
-public interface EventDao extends GenericObjectDao<Event> {
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
-    List<Event> retrieveAllByScan(Scan scan);
+/**
+ * Created by mac on 5/13/14.
+ */
+@Service
+public class FilterDateServiceImpl extends AbstractNamedObjectService<FilterDate> implements FilterDateService {
 
-    List<Event> retrieveAllByVulnerability(Vulnerability vulnerability);
+    @Autowired
+    private FilterDateDao filterDateDao;
 
-    List<Event> retrieveAllByDefect(Defect defect);
+    @Override
+    public GenericNamedObjectDao<FilterDate> getDao() {
+        return filterDateDao;
+    }
 
-    List<Event> retrieveUngroupedByUser(User user);
-
-    List<Event> retrieveGroupedByUser(User user);
-
-    List<Event> retrieveGlobalUngrouped(Set<Integer> appIds, Set<Integer> teamIds);
-
-    List<Event> retrieveGlobalGrouped(Set<Integer> appIds, Set<Integer> teamIds);
 }

@@ -139,7 +139,7 @@
 
                                     <security:authorize ifAllGranted="ROLE_ENTERPRISE">
                                         <li class="normalLinks">
-                                            <a id="acceptCriteriaLink" href="<spring:url value="/configuration/acceptcriterias" htmlEscape="true"/>">Acceptance Policies</a>
+                                            <a id="acceptCriteriaLink" href="<spring:url value="/configuration/acceptcriterias" htmlEscape="true"/>">Acceptance Criteria</a>
                                         </li>
                                     </security:authorize>
                                 </ul>
@@ -191,6 +191,11 @@
                                     </ul>
                                 </li>
 						    </security:authorize>
+                            <security:authorize ifAnyGranted="ROLE_ENTERPRISE">
+                                <li class="normalLinks">
+                                    <a id="historyLink" href="<spring:url value="/history" htmlEscape="true"/>">History</a>
+                                </li>
+                            </security:authorize>
                             <li class="normalLinks">
                                 <a id="viewDownloadPageLink" href="<spring:url value="/configuration/download" htmlEscape="true"/>">Download Tools</a>
                             </li>

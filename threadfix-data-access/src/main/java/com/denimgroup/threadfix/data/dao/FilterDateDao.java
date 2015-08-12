@@ -21,27 +21,10 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-
 package com.denimgroup.threadfix.data.dao;
 
-import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.entities.FilterDate;
 
-import java.util.List;
-import java.util.Set;
+public interface FilterDateDao extends GenericNamedObjectDao<FilterDate> {
 
-public interface EventDao extends GenericObjectDao<Event> {
-
-    List<Event> retrieveAllByScan(Scan scan);
-
-    List<Event> retrieveAllByVulnerability(Vulnerability vulnerability);
-
-    List<Event> retrieveAllByDefect(Defect defect);
-
-    List<Event> retrieveUngroupedByUser(User user);
-
-    List<Event> retrieveGroupedByUser(User user);
-
-    List<Event> retrieveGlobalUngrouped(Set<Integer> appIds, Set<Integer> teamIds);
-
-    List<Event> retrieveGlobalGrouped(Set<Integer> appIds, Set<Integer> teamIds);
 }

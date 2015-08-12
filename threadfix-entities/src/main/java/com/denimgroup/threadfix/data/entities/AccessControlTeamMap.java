@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
@@ -64,7 +65,7 @@ public class AccessControlTeamMap extends AuditableEntity {
 	}
 
 	@OneToMany(mappedBy = "accessControlTeamMap", cascade = CascadeType.ALL)
-    @JsonView(Object.class)
+    @JsonView(AllViews.TableRow.class)
 	public List<AccessControlApplicationMap> getAccessControlApplicationMaps() {
 		return accessControlApplicationMaps;
 	}
