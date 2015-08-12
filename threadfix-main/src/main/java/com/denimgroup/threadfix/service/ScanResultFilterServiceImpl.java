@@ -81,11 +81,9 @@ public class ScanResultFilterServiceImpl implements ScanResultFilterService{
 
     @Override
     public void delete(ScanResultFilter scanResultFilter) {
-
         unFilterFindings(scanResultFilter.getGenericSeverity(), scanResultFilter.getChannelType());
-        vulnerabilityFilterService.updateAllVulnerabilities();
-
         scanResultFilterDao.delete(scanResultFilter);
+        vulnerabilityFilterService.updateAllVulnerabilities();
     }
 
     @Override
