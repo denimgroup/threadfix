@@ -99,11 +99,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 
     public RemoteProvidersIndexPage saveContrast(){
         driver.findElementById("submit").click();
-        waitForSuccessMessage();
-        int i = 1;
-        while(driver.findElements(By.id("clearConfig4")).isEmpty() && i++ < 5) {
-            sleep(20000);
-        }
+        waitForInvisibleElement("myModalLabel");
         waitForElement(driver.findElementById("clearConfig4"));
         return new RemoteProvidersIndexPage(driver);
     }
