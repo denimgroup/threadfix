@@ -123,7 +123,7 @@ public class TagIndexPageIT extends BaseDataTest{
                 .editCommentTagName(tagName, newName);
 
         assertTrue("Old comment tag name was not deleted properly", !tagIndexPage.isCommentTagNameLinkPresent(tagName));
-        assertTrue("New comment tag name was no added properly ", tagIndexPage.isCommentTagNameLinkPresent(newName));
+        assertTrue("New comment tag name was not added properly ", tagIndexPage.isCommentTagNameLinkPresent(newName));
     }
 
     @Test
