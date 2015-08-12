@@ -1,4 +1,4 @@
-3/27/2015 11:45:00
+8/10/2015 11:45:00
 type.info,,
 OWASP Zed Attack Proxy
 type.vulnerabilities,,
@@ -19,3 +19,6 @@ Weak Authentication Method,Weak Authentication Method,287
 IE8's XSS protection filter not disabled,IE8's XSS protection filter not disabled,16
 Application Error disclosure,Application Error disclosure,200
 SQL Injection - Hypersonic SQL,SQL Injection - Hypersonic SQL,89
+type.severities,,,
+4,4,4,4
+5,5,5,5
