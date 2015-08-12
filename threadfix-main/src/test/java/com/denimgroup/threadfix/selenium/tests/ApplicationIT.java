@@ -931,6 +931,8 @@ public class ApplicationIT extends BaseDataTest {
                 .selectSubversionRepositoryType()
                 .clickModalSubmit();
 
+        teamIndexPage.waitForClosedModal();
+
         assertFalse("The modal did not submit correctly using Subversion as source repo.",
                 teamIndexPage.isAddApplicationButtonPresent());
     }

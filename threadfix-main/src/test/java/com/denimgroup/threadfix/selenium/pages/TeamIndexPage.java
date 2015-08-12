@@ -266,6 +266,11 @@ public class TeamIndexPage extends BasePage {
         return new TeamIndexPage(driver);
     }
 
+    public TeamIndexPage waitForClosedModal() {
+        waitForInvisibleElement("myModalLabel");
+        return new TeamIndexPage(driver);
+    }
+
     /*------------------------------------ Get Methods ----------------------------------------*/
 
     public String getLengthError() {
@@ -333,7 +338,11 @@ public class TeamIndexPage extends BasePage {
     }
 
     public boolean isAddApplicationButtonPresent() {
-        return driver.findElementsById("submit").isEmpty();
+        try {
+            return driver.findElementById("submit") != null;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 
     public String getUrlRepositoryError() {
