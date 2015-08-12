@@ -550,7 +550,7 @@ public class Event extends AuditableEntity {
     }
 
     private String buildApplicationLink(Application application, String linkText, Map<String, Object> urlMap) {
-        if (application == null) {
+        if ((application == null) || (!application.isActive())) {
             return linkText;
         }
         String urlString = "/organizations/" +
@@ -562,6 +562,17 @@ public class Event extends AuditableEntity {
 
     private String buildScanLink(Scan scan, String linkText, Map<String, Object> urlMap) {
         if (scan == null) {
+            return linkText;
+        }
+        Application application = getApplication();
+        if (application == null) {
+            application = scan.getApplication();
+        }
+        if ((application == null) || (!application.isActive())) {
+            return linkText;
+        }
+        Organization organization = application.getOrganization();
+        if ((organization == null) || (!organization.isActive())) {
             return linkText;
         }
         String urlString = "/organizations/" +
@@ -580,18 +591,18 @@ public class Event extends AuditableEntity {
     }
 
     private String buildVulnerabilityLink(Vulnerability vulnerability, String linkText, Map<String, Object> urlMap) {
-        if (vulnerability == null) {
+        if ((vulnerability == null) || (!vulnerability.isActive())) {
             return linkText;
         }
         Application application = getApplication();
         if (application == null) {
             application = vulnerability.getApplication();
         }
-        if (application == null) {
+        if ((application == null) || (!application.isActive())) {
             return linkText;
         }
         Organization organization = application.getOrganization();
-        if (organization == null) {
+        if ((organization == null) || (!organization.isActive())) {
             return linkText;
         }
 
@@ -608,7 +619,18 @@ public class Event extends AuditableEntity {
     }
 
     private String buildDefectLink(Vulnerability vulnerability, String linkText, Map<String, Object> urlMap) {
-        if (defect == null || vulnerability == null) {
+        if ((defect == null) || (!defect.isActive()) || (vulnerability == null) || (!vulnerability.isActive())) {
+            return linkText;
+        }
+        Application application = getApplication();
+        if (application == null) {
+            application = vulnerability.getApplication();
+        }
+        if ((application == null) || (!application.isActive())) {
+            return linkText;
+        }
+        Organization organization = application.getOrganization();
+        if ((organization == null) || (!organization.isActive())) {
             return linkText;
         }
         String urlString = "/organizations/" +
