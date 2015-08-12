@@ -47,6 +47,7 @@ public class TagIndexPage extends BasePage{
         driver.findElementById("tagCreateNameInput").sendKeys(name);
         driver.findElementById("tagType").sendKeys("comment");
         clickModalSubmit();
+        waitForElementPresenceByCss("div.alert.alert-success", 5);
         return new TagIndexPage(driver);
     }
 
