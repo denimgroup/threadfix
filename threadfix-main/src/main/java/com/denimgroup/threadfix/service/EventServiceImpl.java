@@ -36,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static java.util.Collections.sort;
@@ -175,6 +176,15 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
         List<Event> userEvents = list();
         userEvents.addAll(eventDao.retrieveUngroupedByUser(user));
         userEvents.addAll(eventDao.retrieveGroupedByUser(user));
+        Collections.sort(userEvents, eventComparator);
+        return userEvents;
+    }
+
+    @Override
+    public List<Event> getGlobalEvents(Set<Integer> appIds, Set<Integer> teamIds) {
+        List<Event> userEvents = list();
+        userEvents.addAll(eventDao.retrieveGlobalUngrouped(appIds, teamIds));
+        userEvents.addAll(eventDao.retrieveGlobalGrouped(appIds, teamIds));
         Collections.sort(userEvents, eventComparator);
         return userEvents;
     }

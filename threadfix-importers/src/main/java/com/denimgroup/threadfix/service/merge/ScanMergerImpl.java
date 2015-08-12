@@ -87,13 +87,12 @@ public class ScanMergerImpl implements ScanMerger {
 
         // TODO probably make all of these autowired
         Application application = applicationChannel.getApplication();
+        scan.setApplicationChannel(applicationChannel);
+        scan.setApplication(applicationChannel.getApplication());
 
         PathGuesser.generateGuesses(application, scan);
         ChannelMerger.channelMerge(vulnerabilityService, vulnerabilityStatusService, scan, applicationChannel);
         applicationMerger.applicationMerge(scan, application, null);
-
-        scan.setApplicationChannel(applicationChannel);
-        scan.setApplication(applicationChannel.getApplication());
 
         if (scan.getNumberTotalVulnerabilities() != null
                 && scan.getNumberNewVulnerabilities() != null) {
