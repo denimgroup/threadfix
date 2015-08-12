@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ChannelVulnerabilityService;
+import com.denimgroup.threadfix.service.VulnerabilityFilterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +43,9 @@ public class ScannerMappingUpdateController {
     @Autowired
     public ChannelVulnerabilityService channelVulnerabilityService;
 
+    @Autowired
+    public VulnerabilityFilterService vulnerabilityFilterService;
+
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public RestResponse<String> addMappings(@RequestParam String channelName,
@@ -52,6 +56,7 @@ public class ScannerMappingUpdateController {
                 channelVulnerabilityService.createMapping(channelName, channelVulnerabilityId, genericVulnerabilityId);
 
         if (result == ChannelVulnerabilityService.MappingCreateResult.SUCCESS) {
+            vulnerabilityFilterService.updateAllVulnerabilities();
             return success("Successfully created new mapping.");
         } else {
             return failure(result.toString());
