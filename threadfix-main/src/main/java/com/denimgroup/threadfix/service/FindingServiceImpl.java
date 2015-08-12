@@ -478,6 +478,11 @@ public class FindingServiceImpl implements FindingService {
 	}
 
     @Override
+    public String getUnmappedFindingsAsCSV() {
+        return findingDao.getUnmappedFindingsAsCSV();
+    }
+
+    @Override
     public List<Finding> loadByGenericSeverityAndChannelType(GenericSeverity genericSeverity, ChannelType channelType) {
         return findingDao.retrieveByGenericSeverityAndChannelType(genericSeverity, channelType);
     }

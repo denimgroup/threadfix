@@ -38,7 +38,11 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * Hibernate Finding DAO implementation. Most basic methods are implemented in
@@ -298,4 +302,32 @@ public class HibernateFindingDao
 
         return criteria.list();
     }
+
+    @Override
+    public String getUnmappedFindingsAsCSV() {
+        List<Finding> unmappedFindings = list();
+        StringBuilder sb = new StringBuilder();
+
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Finding.class)
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.isNull("vulnerability"));
+
+        unmappedFindings = criteria.list();
+
+        if (!unmappedFindings.isEmpty())
+            sb.append("Scanner, Vulnerability Type, Severity\n");
+
+        for (Finding unmappedFinding : unmappedFindings) {
+            sb.append(unmappedFinding.getScan().getApplicationChannel().getChannelType().getName()).append(",");
+            sb.append(unmappedFinding.getChannelVulnerability().getName()).append(",");
+            sb.append(unmappedFinding.getChannelSeverity().getName()).append("\n");
+        }
+
+        try {
+            return URLEncoder.encode(sb.toString(), "UTF-8").replaceAll("\\+", "%20");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("UTF-8 was not supported.", e);
+        }
+    }
+
 }

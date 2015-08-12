@@ -92,4 +92,6 @@ public interface FindingDao extends GenericObjectDao<Finding> {
 	long getTotalUnmappedFindings();
 
     List<Finding> retrieveByGenericSeverityAndChannelType(GenericSeverity genericSeverity, ChannelType channelType);
+
+    String getUnmappedFindingsAsCSV();
 }
