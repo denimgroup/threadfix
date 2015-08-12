@@ -52,7 +52,7 @@ public interface ScanQueueService {
 
 	void deleteTask(ScanQueueTask task);
 
-	String validate(ScanQueueTask scanQueueTask);
+	String validate(ScanQueueTask scanQueueTask, BindingResult result);
 
 	ScanQueueTask queueScanTask(int appId, ScanQueueTask scanQueueTask);
 

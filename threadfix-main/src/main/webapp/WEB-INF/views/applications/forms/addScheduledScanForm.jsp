@@ -83,7 +83,7 @@
                 <td>
                     <span id="urlInputLengthError" class="errors" ng-show="form.targetUrl.$dirty && form.targetUrl.$error.maxlength">Maximum length is 255.</span>
                     <span id="urlInputInvalidUrlError" class="errors" ng-show="form.targetUrl.$dirty && form.targetUrl.$error.url">URL is invalid.</span>
-                    <span id="urlInputError" class="errors" ng-show="object.targetUrl_error"> {{ object.name_error }}</span>
+                    <span id="urlInputError" class="errors" ng-show="object.targetUrl_error"> {{ object.targetUrl_error }}</span>
                 </td>
             </tr>
             <tr>
@@ -99,6 +99,9 @@
                            placeholder="Type file name"
                            class="form-control"/>
                     <a id="uploadDocScheduledScanModalLink${ application.id }" class="btn" ng-click="switchTo('addDocInScheduledScanModal')">Upload File</a>
+                </td>
+                <td>
+                    <span id="fileError" class="errors" ng-show="object.scanConfig_error"> {{ object.scanConfig_error }}</span>
                 </td>
             </tr>
         </table>
