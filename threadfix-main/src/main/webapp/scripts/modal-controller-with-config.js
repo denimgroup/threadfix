@@ -25,6 +25,7 @@ myAppModule.controller('ModalControllerWithConfig', function ($log, $scope, $roo
             $scope.loading = true;
 
             threadFixModalService.post(url, $scope.object).
+                //$http.post(url, $scope.object).
                 success(function(data, status, headers, config) {
                     timeoutService.cancel();
                     $scope.loading = false;
