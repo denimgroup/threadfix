@@ -21,7 +21,7 @@
 					<td>
                         <select id="orgSelect1" ng-options="team.name for team in config.teams" name="teamName"
                                 ng-model="object.organization"
-                                ng-change="object.application.id = object.organization.applications[0].id" required>
+                                ng-change="object.application = object.organization.applications[0]" required>
 
                         </select>
                     </td>
@@ -32,8 +32,8 @@
 				<tr>
 					<td style="padding-right:10px">Application</td>
 					<td>
-                        <select id="appSelect1" ng-model="object.application.id" required name="appName">
-                            <option ng-repeat="app in object.organization.applications" value="{{ app.id }}">{{ app.name }}</option>
+                        <select id="appSelect1" ng-model="object.application" required name="appName"
+                                ng-options="app.name for app in object.organization.applications">
                         </select>
                     </td>
                     <td>

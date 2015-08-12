@@ -205,6 +205,13 @@ myAppModule.controller('ApplicationsIndexController',
                 newApplication.infoVulnCount = 0;
 
                 newApplication.showUploadScanButton = object.uploadScan;
+                
+                if (newApplication.showUploadScanButton) {
+                    if (!$scope.canUploadIds || $scope.canUploadIds.length === 0) {
+                        $scope.canUploadIds = [];
+                    }
+                    $scope.canUploadIds.push(newApplication.id);
+                }
 
                 team.applications.push(newApplication);
 
@@ -333,11 +340,7 @@ myAppModule.controller('ApplicationsIndexController',
 
         var updateTeam = function(oldTeam, newTeam) {
             newTeam.applications.forEach(function(application) {
-                oldTeam.applications.forEach(function(oldApplication) {
-                    if (application.id === oldApplication.id) {
-                        application.showUploadScanButton = oldApplication.showUploadScanButton;
-                    }
-                });
+                application.showUploadScanButton = $scope.canUploadIds.indexOf(application.id) !== -1;
             });
 
             newTeam.showEditButton = oldTeam.showEditButton;

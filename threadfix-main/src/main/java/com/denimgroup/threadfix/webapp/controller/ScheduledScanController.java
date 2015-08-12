@@ -85,7 +85,10 @@ public class ScheduledScanController {
         scheduledScanService.validateDate(scheduledScan, result);
 
         if (result.hasErrors()) {
-            return FormRestResponse.failure("Encountered errors.", result);
+            if (result.hasFieldErrors("scanConfig")) {
+                return RestResponse.failure("Scan Config file is invalid.");
+            } else
+                return FormRestResponse.failure("Encountered errors.", result);
         }
 
         scheduledScan.setApplication(application);

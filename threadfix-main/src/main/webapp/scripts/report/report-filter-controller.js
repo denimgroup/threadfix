@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('ReportFilterController', function($http, $scope, $rootScope, filterService, vulnSearchParameterService, tfEncoder, reportExporter, $log) {
+module.controller('ReportFilterController', function($http, $scope, $rootScope, filterService, vulnSearchParameterService, tfEncoder, reportExporter, $log, $modal, threadFixModalService) {
 
     $scope.parameters = undefined;
 
@@ -328,6 +328,125 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
                     $scope.loadingTree = false;
                 });
         }
+    };
+
+    $scope.saveDate = function() {
+        var modalInstance = $modal.open({
+            templateUrl: 'newDateModal.html',
+            controller: 'ModalControllerWithConfig',
+            resolve: {
+                url: function() {
+                    return tfEncoder.encode("/reports/filter/saveDateRange");
+                },
+                object: function() {
+
+                    var date, startDate, endDate;
+
+                    if ($scope.parameters.endDate) {
+                        date = new Date($scope.parameters.endDate);
+                        if (date) {
+                            endDate = date.getTime();
+                        }
+                    }
+                    if ($scope.parameters.startDate) {
+                        date = new Date($scope.parameters.startDate);
+                        if (date) {
+                            startDate = date.getTime();
+                        }
+                    }
+
+                    return {
+                        startDate: startDate,
+                        endDate: endDate,
+                        id: $scope.currentDateRange ? $scope.currentDateRange.id : undefined,
+                        name: $scope.currentDateRange ? $scope.currentDateRange.name : undefined
+                    };
+                },
+                config: function() {
+                    return {
+                        label: $scope.currentDateRange ? "Edit Date Range" : "New Date Range"
+                    };
+                },
+                buttonText: function() {
+                    return "Save Date";
+                },
+                deleteUrl: function() {
+                    return $scope.currentDateRange ? tfEncoder.encode("/reports/filter/dateRange/" + $scope.currentDateRange.id + "/delete") : undefined;
+                }
+            }
+
+        });
+
+        modalInstance.result.then(function (newDateRange) {
+            if (newDateRange) {
+
+                if ($scope.currentDateRange) {
+                    deleteElement($scope.savedDateRanges, $scope.selectedDateRange);
+                    $scope.successDateRangeMessage = "Edited date range " + newDateRange.name;
+                } else {
+                    $scope.successDateRangeMessage = "Saved date range " + newDateRange.name;
+                }
+
+                threadFixModalService.addElement($scope.savedDateRanges, newDateRange);
+                $scope.savedDateRanges.sort(nameCompare);
+                $scope.currentDateRange = newDateRange;
+                $scope.selectedDateRange = newDateRange;
+            } else {
+                $scope.successDateRangeMessage = "Deleted date range " + $scope.currentDateRange.name;
+                deleteElement($scope.savedDateRanges, $scope.selectedDateRange);
+                $scope.currentDateRange = undefined;
+                $scope.selectedDateRange = undefined;
+
+            }
+
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    };
+
+    var deleteElement = function(collection, element) {
+        var index = getIndex(collection, element);
+        if (index > -1) {
+            collection.splice(index, 1);
+        }
+
+        if (collection.length === 0) {
+            collection = undefined;
+        }
+    };
+
+    var getIndex = function(collection, element) {
+        var index = -1;
+
+        if (collection) {
+            collection.some(function(e, i){
+                if (e.id == element.id) {
+                    index = i;
+                    return true;
+                }
+            });
+        }
+
+        return index;
+    };
+
+    $scope.selectDateRange = function(selectedDateRange) {
+        if (!selectedDateRange.id) {
+            resetAging();
+            $scope.currentDateRange = undefined;
+            $scope.parameters.startDate = undefined;
+            $scope.parameters.endDate = undefined;
+        } else {
+            resetAging();
+            $scope.currentDateRange = selectedDateRange;
+            $scope.parameters.startDate = $scope.currentDateRange.startDate;
+            $scope.parameters.endDate = $scope.currentDateRange.endDate;
+        }
+        $scope.refresh();
+    };
+
+    var nameCompare = function(a,b) {
+        return a.name.localeCompare(b.name);
     };
 
 });

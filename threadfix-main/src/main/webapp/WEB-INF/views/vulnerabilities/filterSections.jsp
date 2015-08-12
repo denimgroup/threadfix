@@ -1,4 +1,6 @@
 
+<%@ include file="newDateForm.jsp" %>
+
 <!-- Clear / select all -->
 <div class="accordion-group">
     <div class="accordion-heading" style="text-align:center">
@@ -344,13 +346,36 @@
 <div class="accordion-group" ng-hide="snapshotActive && reportId != OWASP_Report_Id">
     <div class="accordion-heading" ng-click="showDateRange = !showDateRange">
         <span id="showDateRange" class="icon" ng-class="{ 'icon-minus': showDateRange, 'icon-plus': !showDateRange }"></span> Date Range
+
     </div>
     <div class="filter-group-body" ng-show="showDateRange">
+
+        <div class="accordion-inner">
+            <h4>Select Date Range</h4>
+            <div class="col-md-6">
+                <div id="saveDateRangeSuccessMessage" ng-show="successDateRangeMessage" class="alert alert-success">
+                    <button id="closeSaveDateRangeSuccessMessage"
+                            class="close"
+                            ng-click="successDateRangeMessage = undefined"
+                            type="button">&times;</button>
+                    {{ successDateRangeMessage }}
+                </div>
+                <p class="input-group">
+                    <select ng-show="savedDateRanges" id="filterSelect" style="width: 135px;margin-bottom:0" ng-model="selectedDateRange" ng-change="selectDateRange(selectedDateRange)"
+                            ng-options="dateRange.name for dateRange in savedDateRanges">
+                    </select>
+                    <span class="input-group-btn">
+                        <button tooltip="{{currentDateRange && 'Edit' || 'Save'}} Date Range" type="button" ng-show="showDateRange" class="btn btn-default" ng-click="saveDate()"><i class="icon-edit"></i></button>
+                    </span>
+                </p>
+            </div>
+        </div>
+
         <div class="accordion-inner">
             <h4>Start Date</h4>
             <div class="col-md-6">
                 <p class="input-group">
-                    <input id="startDateInput" type="text" class="form-control" style="width:135px;margin-bottom:0" datepicker-popup="dd-MMMM-yyyy" ng-model="parameters.startDate"
+                    <input id="startDateInput" type="text" class="form-control" style="width:135px;margin-bottom:0" datepicker-popup="dd-MMM-yyyy" ng-model="parameters.startDate"
                            is-open="startDateOpened" min-date="minDate" max-date="maxDate" date-disabled="disabled(date, mode)" close-text="Close"
                            ng-change="refresh()"
                             />
@@ -365,7 +390,7 @@
             <h4>End Date</h4>
             <div class="col-md-6">
                 <p class="input-group">
-                    <input id="endDateInput" type="text" class="form-control" style="width:135px;margin-bottom:0" datepicker-popup="dd-MMMM-yyyy" ng-model="parameters.endDate"
+                    <input id="endDateInput" type="text" class="form-control" style="width:135px;margin-bottom:0" datepicker-popup="dd-MMM-yyyy" ng-model="parameters.endDate"
                            is-open="endDateOpened" min-date="startDate" max-date="maxDate" date-disabled="disabled(date, mode)" close-text="Close"
                            ng-change="refresh()"
                             />
