@@ -130,7 +130,11 @@ public class CustomUserDetailServiceImpl implements UserDetailsService, CustomUs
             throw new UsernameNotFoundException("");
         }
 
-        log.info("User " + user.getName() + " logged in successfully at " + new Date());
+        Date now = new Date();
+        user.setLastLoginDate(now);
+
+        log.info("User " + user.getName() + " logged in successfully at " + now);
+
         return loadUser(user);
     }
 
