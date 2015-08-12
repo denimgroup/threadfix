@@ -318,9 +318,14 @@ public class HibernateFindingDao
             sb.append("Scanner, Vulnerability Type, Severity\n");
 
         for (Finding unmappedFinding : unmappedFindings) {
-            sb.append(unmappedFinding.getScan().getApplicationChannel().getChannelType().getName()).append(",");
-            sb.append(unmappedFinding.getChannelVulnerability().getName()).append(",");
-            sb.append(unmappedFinding.getChannelSeverity().getName()).append("\n");
+            String severity = "";
+            String scanName = unmappedFinding.getScan().getApplicationChannel().getChannelType().getName();
+            String vulnName = unmappedFinding.getChannelVulnerability().getName();
+            if (unmappedFinding.getChannelSeverity() != null)
+                severity = unmappedFinding.getChannelSeverity().getName();
+            sb.append(scanName).append(",");
+            sb.append(vulnName).append(",");
+            sb.append(severity).append("\n");
         }
 
         try {
