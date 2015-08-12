@@ -168,7 +168,7 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
 
     };
 
-    $scope.$on("finishedretrievingPdfExportAllTagsVuln", function(){
+    $scope.$on("finishedRetrievingPdfExportAllTagsVuln", function(){
         $scope.numberVulnType +=1;
 
         // Done with loading both closed and open vulnerabilities

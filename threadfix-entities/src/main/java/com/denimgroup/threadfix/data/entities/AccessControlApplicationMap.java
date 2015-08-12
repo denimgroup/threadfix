@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -53,7 +54,7 @@ public class AccessControlApplicationMap extends AuditableEntity {
 	}
 	
 	@ManyToOne
-    @JsonView(Object.class)
+    @JsonView(AllViews.TableRow.class)
     @JoinColumn(name = "applicationId", nullable = false)
 	public Application getApplication() {
 		return application;
@@ -64,7 +65,7 @@ public class AccessControlApplicationMap extends AuditableEntity {
 	}
 	
 	@ManyToOne
-    @JsonView(Object.class)
+    @JsonView(AllViews.TableRow.class)
     @JoinColumn(name = "roleId", nullable = true)
 	public Role getRole() {
 		return role;

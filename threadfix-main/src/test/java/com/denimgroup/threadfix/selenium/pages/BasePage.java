@@ -524,6 +524,17 @@ public abstract class BasePage {
 		}
 	}
 
+    public void waitForElementPresenceByCss(String element, int number) {
+        int count = 0;
+        // wait til jsonResult2 is present
+        while (!driver.findElementByCssSelector(element).isDisplayed()) {
+            sleep(1000);
+            if (count++ > number) {
+                return;
+            }
+        }
+    }
+
 	protected void handleAlert() {
 		sleep(3000);
 		WebDriverWait wait = new WebDriverWait(driver,10);
