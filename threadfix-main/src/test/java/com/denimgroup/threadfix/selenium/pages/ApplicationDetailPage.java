@@ -384,9 +384,9 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage setSeverity(String Status) {
-        driver.findElementById("severityInput").sendKeys(Status);
-        sleep(500);
+    public ApplicationDetailPage setSeverity(String status) {
+        driver.findElementById("severityInput").sendKeys(status);
+        new Select(driver.findElementById("severityInput")).selectByVisibleText(status);
         return new ApplicationDetailPage(driver);
     }
 

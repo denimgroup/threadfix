@@ -401,6 +401,7 @@ public class ApplicationIT extends BaseDataTest {
                 .clickManualFindingButton()
                 .setCWE(cwe)
                 .setParameter(parameter)
+                .setSeverity("Critical")
                 .setDescription(description)
                 .clickDynamicSubmit()
                 .waitForResultsToLoad();
@@ -488,6 +489,7 @@ public class ApplicationIT extends BaseDataTest {
                 .setCWE(cwe)
                 .setSourceFile(sourceFile)
                 .setParameter(parameter)
+                .setSeverity("Critical")
                 .setDescription(description)
                 .clickDynamicSubmit()
                 .waitForResultsToLoad();
@@ -963,6 +965,7 @@ public class ApplicationIT extends BaseDataTest {
                 .setCWE(cwe)
                 .setSourceFile(sourceFile)
                 .setParameter(parameter)
+                .setSeverity("Critical")
                 .setDescription(description)
                 .clickDynamicSubmit();
 
@@ -1006,6 +1009,7 @@ public class ApplicationIT extends BaseDataTest {
                 .setCWE(cwe)
                 .setSourceFile(sourceFile)
                 .setParameter(parameter)
+                .setSeverity("Critical")
                 .setDescription(description)
                 .clickDynamicSubmit();
 
