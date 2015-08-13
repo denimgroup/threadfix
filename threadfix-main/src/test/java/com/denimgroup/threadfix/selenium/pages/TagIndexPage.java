@@ -103,7 +103,6 @@ public class TagIndexPage extends BasePage{
         try {
             waitForElement(driver.findElementById("tagName" + name));
         } catch (NoSuchElementException e) {
-            takeScreenShot();
             return false;
         }
         return true;
@@ -113,6 +112,7 @@ public class TagIndexPage extends BasePage{
         try {
             waitForElement(driver.findElementById("commentTagName" + name));
         } catch (NoSuchElementException e) {
+            takeScreenShot();
             return false;
         }
         return true;
