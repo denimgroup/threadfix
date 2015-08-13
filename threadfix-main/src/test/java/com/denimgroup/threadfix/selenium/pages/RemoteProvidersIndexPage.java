@@ -128,14 +128,14 @@ public class RemoteProvidersIndexPage extends BasePage {
     }
 
     public RemoteProvidersIndexPage setContrastAPI(String api) {
-        driver.findElementById("API Key").clear();
-        driver.findElementById("API Key").sendKeys(api);
+        driver.findElementById("APIKey").clear();
+        driver.findElementById("APIKey").sendKeys(api);
         return new RemoteProvidersIndexPage(driver);
     }
 
     public RemoteProvidersIndexPage setContrastService(String service) {
-        driver.findElementById("Service Key").clear();
-        driver.findElementById("Service Key").sendKeys(service);
+        driver.findElementById("ServiceKey").clear();
+        driver.findElementById("ServiceKey").sendKeys(service);
         return new RemoteProvidersIndexPage(driver);
     }
 
