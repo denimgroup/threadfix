@@ -40,9 +40,11 @@ import static com.denimgroup.threadfix.CollectionUtils.map;
  * @author zabdisubhan
  */
 @Entity
-@Table(name = "AcceptanceCriteriaStatus",
-        uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"Application_Id", "AcceptanceCriteria_Id"})})
+@Table(name = "AcceptanceCriteriaStatus"
+//        ,
+//        uniqueConstraints = {
+//        @UniqueConstraint(columnNames = {"Application_Id", "AcceptanceCriteria_Id"})}
+)
 public class AcceptanceCriteriaStatus extends AuditableEntity {
 
     private Boolean passing = false;

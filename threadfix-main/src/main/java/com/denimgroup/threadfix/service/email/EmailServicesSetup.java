@@ -1,10 +1,6 @@
 package com.denimgroup.threadfix.service.email;
 
-import java.util.Properties;
-
-import javax.annotation.Resource;
-import javax.servlet.ServletContext;
-
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +12,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
-import com.denimgroup.threadfix.logging.SanitizedLogger;
+import javax.annotation.Resource;
+import javax.servlet.ServletContext;
+import java.util.Properties;
 
 @Configuration
 @ComponentScan("com.denimgroup.threadfix")
@@ -50,11 +48,11 @@ public class EmailServicesSetup {
         if (port!=null && !port.isEmpty()) mailSender.setPort(Integer.parseInt(port));
 
 		if ( mailSender.getHost() == null ) {
-			LOG.info("email is not configured");
+			LOG.info("Email is not configured");
 			emailConfiguration.setConfiguredEmail(false);
 		}
 		else {
-			LOG.info("email is configured");
+			LOG.info("Email is configured");
 			emailConfiguration.setConfiguredEmail(true);
 		}
 		return mailSender;

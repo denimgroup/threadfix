@@ -61,6 +61,8 @@ public class ScannerMappingUpdater implements ApplicationContextAware {
     private ChannelTypeService channelTypeService;
     @Autowired
     private RemoteProviderTypeService remoteProviderTypeService;
+    @Autowired
+    private BootstrapService bootstrapService;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -70,6 +72,10 @@ public class ScannerMappingUpdater implements ApplicationContextAware {
         boolean hasGenericVulns =
                 genericVulnerabilityService.loadAll() != null &&
                         genericVulnerabilityService.loadAll().size() > 0;
+
+        if (!hasGenericVulns) {
+            bootstrapService.bootstrap();
+        }
 
         if (canUpdate && hasGenericVulns) {
             LOG.info("Updating mappings.");

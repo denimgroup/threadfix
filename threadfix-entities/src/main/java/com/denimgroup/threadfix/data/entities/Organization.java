@@ -23,30 +23,26 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
-import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
-import org.hibernate.annotations.Index;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.*;
-
-import static com.denimgroup.threadfix.CollectionUtils.list;
-import static java.util.Collections.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Organization")
-@org.hibernate.annotations.Table(appliesTo = "Organization",
-        indexes = {
-                @Index(name = "activeIndex",
-                        columnNames = { "id", "active" }
-                )
-        }
-)
+//@org.hibernate.annotations.Table(appliesTo = "Organization",
+//        indexes = {
+//                @Index(name = "activeIndex",
+//                        columnNames = { "id", "active" }
+//                )
+//        }
+//)
 public class Organization extends AuditableEntity {
 
     // These are used for caching and will require frequent updates.
