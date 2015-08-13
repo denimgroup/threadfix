@@ -77,8 +77,8 @@
                 <tr ng-repeat="field in object.authenticationFields">
                     <td class="no-color">{{ field.name }}</td>
                     <td class="no-color inputValue">
-                        <input ng-if="field.secret" type="password" focus-on="$index === 0" ng-model="field.value" id="{{ field.name }}" name="username" size="50" maxlength="60" ng-required="field.required" style="width:280px"/>
-                        <input ng-if="!field.secret" type="text" focus-on="$index === 0" ng-model="field.value" id="{{ field.name }}" name="username" size="50" maxlength="60" ng-required="field.required" style="width:280px"/>
+                        <input ng-if="field.secret" type="password" focus-on="$index === 0" ng-model="field.value" id="{{ field.name | removeSpace }}" name="username" size="50" maxlength="60" ng-required="field.required" style="width:280px"/>
+                        <input ng-if="!field.secret" type="text" focus-on="$index === 0" ng-model="field.value" id="{{ field.name | removeSpace }}" name="username" size="50" maxlength="60" ng-required="field.required" style="width:280px"/>
                     </td>
                     <td>
                         <span class="errors" ng-show="form.username.$dirty && form.username.$error.required">{{ field.name }} is required.</span>
