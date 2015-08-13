@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.listOf;
 
 @Service
 public class ManualFindingServiceImpl implements ManualFindingService {
@@ -178,13 +179,13 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		}
 
 		Scan tempScan = new Scan();
-		tempScan.setFindings(new ArrayList<Finding>());
+		tempScan.setFindings(listOf(Finding.class));
 		tempScan.getFindings().add(finding);
+		finding.setScan(scan);
 		applicationMerger.applicationMerge(tempScan, applicationId, null);
 
 		scan.getFindings().add(finding);
 		scan.setNumberTotalVulnerabilities(scan.getNumberTotalVulnerabilities() + 1);
-		finding.setScan(scan);
         scanCleanerUtils.clean(scan);
 
 		vulnerabilityService.storeVulnerability(finding.getVulnerability());
