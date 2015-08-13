@@ -293,9 +293,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 if (data.success) {
                     $scope.usersSuccessMessage = "Edit succeeded.";
 
-                    $scope.users = data.object;
-
-                    selectUserWithId($scope.currentUser.id);
+                    $scope.updatePage($scope.page);
                 } else {
 
                     if (data.errorMap && data.errorMap.name) {
