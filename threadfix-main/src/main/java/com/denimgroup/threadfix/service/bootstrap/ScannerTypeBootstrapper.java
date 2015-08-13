@@ -28,11 +28,9 @@ import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import static com.denimgroup.threadfix.service.bootstrap.ResourceLineIterable.getIterator;
 
 /**
  * Created by mcollins on 8/12/15.
@@ -45,54 +43,41 @@ public class ScannerTypeBootstrapper {
     @Autowired
     ChannelTypeDao channelTypeDao;
 
+    @Transactional
     public void bootstrap() {
         LOG.info("Creating initial scanner types.");
 
-        InputStream stream = ScannerTypeBootstrapper.class
-                .getClassLoader()
-                .getResourceAsStream("bootstrap/scanners/base.csv");
-
-        if (stream == null) {
-            throw new IllegalStateException("bootstrap/scanners/base.csv wasn't found.");
-        }
-
-        BufferedReader baseCSV = new BufferedReader(new InputStreamReader(stream));
-
-        String line;
         int lineNumber = 0;
-        try {
-            while ((line = baseCSV.readLine()) != null) {
-                String[] split = line.split("|");
 
-                lineNumber++;
+        for (String line : getIterator("bootstrap/scanners/base.csv")) {
+            String[] split = line.split("\\|");
 
-                if (split.length != 4) {
-                    throw new IllegalStateException(
-                            "Invalid data found in bootstrap/scanners/base.csv at line " + lineNumber);
-                }
+            lineNumber++;
 
-                String scannerName = split[0],
-                        url = split[1],
-                        version = split[2],
-                        exportInfo = split[3];
-
-                ChannelType channelType = channelTypeDao.retrieveByName(scannerName);
-                if (channelType != null) {
-                    LOG.debug("Channel type was already created for " + scannerName);
-                    continue;
-                }
-
-                ChannelType newChannelType = new ChannelType();
-                newChannelType.setName(scannerName);
-                newChannelType.setUrl(url);
-                newChannelType.setVersion(version);
-                newChannelType.setExportInfo(exportInfo);
-
-                channelTypeDao.saveOrUpdate(newChannelType);
-
+            if (split.length != 4) {
+                throw new IllegalStateException(
+                        "Got " + split.length + " sections instead of 4 in bootstrap/scanners/base.csv at line " + lineNumber);
             }
-        } catch (IOException e) {
-            throw new IllegalStateException("Error occured during bootstrap.", e);
+
+            String scannerName = split[0],
+                    url = split[1],
+                    version = split[2],
+                    exportInfo = split[3];
+
+            ChannelType channelType = channelTypeDao.retrieveByName(scannerName);
+            if (channelType != null) {
+                LOG.debug("Channel type was already created for " + scannerName);
+                continue;
+            }
+
+            ChannelType newChannelType = new ChannelType();
+            newChannelType.setName(scannerName);
+            newChannelType.setUrl(url);
+            newChannelType.setVersion(version);
+            newChannelType.setExportInfo(exportInfo);
+
+            channelTypeDao.saveOrUpdate(newChannelType);
+
         }
     }
 

@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
@@ -42,6 +43,7 @@ public class ApplicationCriticalityBootstrapper {
     @Autowired
     ApplicationCriticalityDao applicationCriticalityDao;
 
+    @Transactional
     public void bootstrap() {
         for (String level : list("Low", "Medium", "High", "Critical")) {
             ApplicationCriticality existingCriticality =

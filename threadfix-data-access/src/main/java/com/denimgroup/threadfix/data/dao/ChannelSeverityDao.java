@@ -68,5 +68,7 @@ public interface ChannelSeverityDao {
 	 */
 	void saveOrUpdate(ChannelSeverity channelSeverity);
 
+	void insert(List<ChannelSeverity> channelSeverities);
+
 	void updateExistingVulns(List<Integer> channelSeverityIds);
 }

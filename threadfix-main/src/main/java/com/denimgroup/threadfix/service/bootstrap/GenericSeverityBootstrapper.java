@@ -32,6 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
+import static java.lang.System.currentTimeMillis;
+
 /**
  * Created by mcollins on 8/12/15.
  */
@@ -47,6 +49,8 @@ public class GenericSeverityBootstrapper {
     public void bootstrap() {
 
         LOG.info("Adding generic severities.");
+
+        long start = currentTimeMillis();
 
         for (Map.Entry<String, Integer> entry : GenericSeverity.NUMERIC_MAP.entrySet()) {
             String name = entry.getKey();
@@ -65,6 +69,8 @@ public class GenericSeverityBootstrapper {
 
             genericSeverityService.saveOrUpdate(severity);
         }
+
+        LOG.info("Generic Severities took " + (currentTimeMillis() - start) + " ms.");
     }
 
 

@@ -33,6 +33,7 @@ import com.denimgroup.threadfix.data.entities.SeverityMap;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -55,8 +56,11 @@ public class ScannerSeverityMappingsBootstrapper {
     @Autowired
     ChannelTypeDao channelTypeDao;
 
+    @Transactional
     public void bootstrap() {
         LOG.info("Setting initial mappings for scanner severities to ThreadFix severities.");
+
+        long start = System.currentTimeMillis();
 
         Map<String, GenericSeverity> genericSeverityMap = map();
         for (String name : GenericSeverity.NUMERIC_MAP.keySet()) {
@@ -70,6 +74,7 @@ public class ScannerSeverityMappingsBootstrapper {
         }
 
         for (Map.Entry<String, List<String[]>> entry : getMappingsMap().entrySet()) {
+            long singleEntryStart = System.currentTimeMillis();
             String scanner = entry.getKey();
             List<String[]> mappings = entry.getValue();
 
@@ -102,7 +107,11 @@ public class ScannerSeverityMappingsBootstrapper {
                     channelSeverity.setSeverityMap(severityMap);
                 }
             }
+
+            LOG.info("Took " + (System.currentTimeMillis() - singleEntryStart) + " ms.");
         }
+
+        LOG.info("Took " + (System.currentTimeMillis() - start) + " ms total.");
     }
 
     private Map<String, List<String[]>> getMappingsMap() {
@@ -135,7 +144,6 @@ public class ScannerSeverityMappingsBootstrapper {
                         new String[] { "0", "High" }
                 ),
                 "Skipfish", list(
-                        new String[] { "0", "Info" },
                         new String[] { "1", "Low" },
                         new String[] { "2", "Medium" },
                         new String[] { "3", "High" },
@@ -202,8 +210,7 @@ public class ScannerSeverityMappingsBootstrapper {
                         new String[] { "4", "Low" },
                         new String[] { "5", "Info" }
                 ),
-                "Zaproxy", list(
-                        new String[] { "0", "Info" },
+                "OWASP Zed Attack Proxy", list(
                         new String[] { "1", "Low" },
                         new String[] { "2", "Medium" },
                         new String[] { "3", "High" }
@@ -219,7 +226,7 @@ public class ScannerSeverityMappingsBootstrapper {
                         new String[] { "2", "Medium" },
                         new String[] { "1", "Low" }
                 ),
-                "Acunetix", list(
+                "Acunetix WVS", list(
                         new String[] { "medium", "Medium" },
                         new String[] { "high", "Critical" },
                         new String[] { "info", "Info" },

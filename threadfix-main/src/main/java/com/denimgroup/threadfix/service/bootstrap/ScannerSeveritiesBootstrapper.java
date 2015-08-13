@@ -31,6 +31,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.util.Tuple3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -52,7 +53,10 @@ public class ScannerSeveritiesBootstrapper {
     @Autowired
     ChannelTypeDao channelTypeDao;
 
+    @Transactional
     public void bootstrap() {
+        LOG.info("Adding initial scanner severities.");
+
         for (Map.Entry<String, List<Tuple3<String, String, Integer>>> entry : getSeveritiesMap().entrySet()) {
             String scanner = entry.getKey();
             List<Tuple3<String, String, Integer>> severities = entry.getValue();
@@ -70,21 +74,16 @@ public class ScannerSeveritiesBootstrapper {
                 String code = severity.getSecond();
                 Integer numericValue = severity.getThird();
 
-                ChannelSeverity existingSeverity = channelSeverityDao.retrieveByCode(channelType, code);
+                LOG.debug("Adding new severity (" + code + ") for " + scanner);
 
-                if (existingSeverity == null) {
-                    LOG.debug("Adding new severity (" + code + ") for " + scanner);
+                ChannelSeverity newSeverity = new ChannelSeverity();
 
-                    ChannelSeverity newSeverity = new ChannelSeverity();
+                newSeverity.setName(name);
+                newSeverity.setCode(code);
+                newSeverity.setNumericValue(numericValue);
+                newSeverity.setChannelType(channelType);
 
-                    newSeverity.setName(name);
-                    newSeverity.setCode(code);
-                    newSeverity.setNumericValue(numericValue);
-
-                    channelSeverityDao.saveOrUpdate(newSeverity);
-                } else {
-                    LOG.debug("Already had severity (" + code + ") for " + scanner);
-                }
+                channelSeverityDao.saveOrUpdate(newSeverity);
             }
         }
     }
@@ -102,7 +101,7 @@ public class ScannerSeveritiesBootstrapper {
                         tuple3("Medium", "Medium", 2),
                         tuple3("Low", "Low", 1)
                 ),
-                "CAT.NET", list(
+                "Microsoft CAT.NET", list(
                         tuple3("Critical", "Critical", 5),
                         tuple3("High", "High", 4),
                         tuple3("Medium", "Medium", 3),
@@ -190,7 +189,7 @@ public class ScannerSeveritiesBootstrapper {
                         tuple3("4", "4", 4),
                         tuple3("5", "5", 5)
                 ),
-                "Zaproxy", list(
+                "OWASP Zed Attack Proxy", list(
                         tuple3("1", "1", 1),
                         tuple3("2", "2", 2),
                         tuple3("3", "3", 3),
@@ -208,7 +207,7 @@ public class ScannerSeveritiesBootstrapper {
                         tuple3("2", "2", 2),
                         tuple3("3", "3", 3)
                 ),
-                "Acunetix", list(
+                "Acunetix WVS", list(
                         tuple3("medium", "medium", 3),
                         tuple3("high", "high", 4),
                         tuple3("info", "info", 1),

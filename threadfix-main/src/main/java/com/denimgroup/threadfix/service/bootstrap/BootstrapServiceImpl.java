@@ -47,6 +47,14 @@ public class BootstrapServiceImpl implements BootstrapService {
     WafBootstrapper wafBootstrapper;
     @Autowired
     DefectTrackerBootstrapper defectTrackerBootstrapper;
+    @Autowired
+    ScannerSeveritiesBootstrapper scannerSeveritiesBootstrapper;
+    @Autowired
+    ScannerSeverityMappingsBootstrapper scannerSeverityMappingsBootstrapper;
+    @Autowired
+    GenericVulnerabilityBootstrapper genericVulnerabilityBootstrapper;
+    @Autowired
+    ScannerVulnerabilityTypeBootstrapper scannerVulnerabilityTypeBootstrapper;
 
     @Override
     @Transactional(readOnly = false)
@@ -57,5 +65,12 @@ public class BootstrapServiceImpl implements BootstrapService {
         applicationCriticalityBootstrapper.bootstrap();
         wafBootstrapper.bootstrap();
         defectTrackerBootstrapper.bootstrap();
+
+        scannerSeveritiesBootstrapper.bootstrap();
+        scannerSeverityMappingsBootstrapper.bootstrap();
+
+        genericVulnerabilityBootstrapper.bootstrap();
+
+        scannerVulnerabilityTypeBootstrapper.bootstrap();
     }
 }
