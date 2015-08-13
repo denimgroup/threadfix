@@ -23,39 +23,41 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.bootstrap;
 
+import com.denimgroup.threadfix.data.dao.ApplicationCriticalityDao;
+import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.BootstrapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
- * Created by mcollins on 8/12/15.
+ * Created by mcollins on 8/13/15.
  */
 @Component
-public class BootstrapServiceImpl implements BootstrapService {
+public class ApplicationCriticalityBootstrapper {
 
-    private static final SanitizedLogger LOG = new SanitizedLogger(BootstrapServiceImpl.class);
+    private static final SanitizedLogger LOG = new SanitizedLogger(ApplicationCriticalityBootstrapper.class);
 
     @Autowired
-    GenericSeverityBootstrapper genericSeverityBootstrapper;
-    @Autowired
-    ScannerTypeBootstrapper scannerTypeBootstrapper;
-    @Autowired
-    ApplicationCriticalityBootstrapper applicationCriticalityBootstrapper;
-    @Autowired
-    WafBootstrapper wafBootstrapper;
-    @Autowired
-    DefectTrackerBootstrapper defectTrackerBootstrapper;
+    ApplicationCriticalityDao applicationCriticalityDao;
 
-    @Override
-    @Transactional(readOnly = false)
     public void bootstrap() {
-        LOG.info("Bootstrapping.");
-        genericSeverityBootstrapper.bootstrap();
-        scannerTypeBootstrapper.bootstrap();
-        applicationCriticalityBootstrapper.bootstrap();
-        wafBootstrapper.bootstrap();
-        defectTrackerBootstrapper.bootstrap();
+        for (String level : list("Low", "Medium", "High", "Critical")) {
+            ApplicationCriticality existingCriticality =
+                    applicationCriticalityDao.retrieveByName(level);
+
+            if (existingCriticality == null) {
+                ApplicationCriticality criticality = new ApplicationCriticality();
+
+                criticality.setName(level);
+
+                applicationCriticalityDao.saveOrUpdate(criticality);
+            } else {
+                LOG.debug("Already had criticality " + level);
+            }
+
+        }
     }
+
 }
