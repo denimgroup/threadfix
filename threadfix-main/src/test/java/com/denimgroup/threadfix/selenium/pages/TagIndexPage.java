@@ -48,7 +48,6 @@ public class TagIndexPage extends BasePage{
         driver.findElementById("createTagModalButton").click();
         waitForElement(driver.findElementById("myModalLabel"));
         driver.findElementById("tagCreateNameInput").sendKeys(name);
-        driver.findElementById("tagType").sendKeys("comment");
         new Select(driver.findElementById("tagType")).selectByVisibleText("COMMENT");
         clickModalSubmit();
         waitForElementPresenceByCss("div.alert.alert-success:not(.ng-hide)", 5);
