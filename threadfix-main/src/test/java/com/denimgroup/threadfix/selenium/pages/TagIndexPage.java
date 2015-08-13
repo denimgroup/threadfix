@@ -38,6 +38,7 @@ public class TagIndexPage extends BasePage{
 
     public TagIndexPage createNewTag(String name) {
         driver.findElementById("createTagModalButton").click();
+        waitForElement(driver.findElementById("myModalLabel"));
         driver.findElementById("tagCreateNameInput").sendKeys(name);
         clickModalSubmit();
         return new TagIndexPage(driver);
@@ -45,6 +46,7 @@ public class TagIndexPage extends BasePage{
 
     public TagIndexPage createNewCommentTag(String name) {
         driver.findElementById("createTagModalButton").click();
+        waitForElement(driver.findElementById("myModalLabel"));
         driver.findElementById("tagCreateNameInput").sendKeys(name);
         driver.findElementById("tagType").sendKeys("comment");
         new Select(driver.findElementById("tagType")).selectByVisibleText("COMMENT");
