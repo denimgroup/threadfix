@@ -361,7 +361,7 @@
                     {{ successDateRangeMessage }}
                 </div>
                 <p class="input-group">
-                    <select ng-show="savedDateRanges" id="filterSelect" style="width: 135px;margin-bottom:0" ng-model="selectedDateRange" ng-change="selectDateRange(selectedDateRange)"
+                    <select ng-show="savedDateRanges" id="dateFilterSelect" style="width: 135px;margin-bottom:0" ng-model="selectedDateRange" ng-change="selectDateRange(selectedDateRange)"
                             ng-options="dateRange.name for dateRange in savedDateRanges">
                     </select>
                     <span class="input-group-btn">
