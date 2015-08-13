@@ -168,7 +168,11 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
 
     $scope.updatePage = function(page, searchString) {
         $scope.page = page;
-        $scope.searchUsers(searchString);
+        if (!searchString) {
+            reloadList();
+        } else {
+            $scope.searchUsers(searchString);
+        }
     };
 
     $scope.setCurrentUser = function(user) {
