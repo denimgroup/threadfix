@@ -366,13 +366,15 @@ public class User extends AuditableEntity {
 
                 List<Map<?, ?>> appMaps = list();
 
-                for (AccessControlApplicationMap appMap : accessControlTeamMap.getAccessControlApplicationMaps()) {
-                    appMaps.add(map(
-                                    "teamName", accessControlTeamMap.getOrganization().getName(),
-                                    "roleName", appMap.getRole() != null ? appMap.getRole().getDisplayName() : "-",
-                                    "appName", appMap.getApplication().getName()
-                            )
-                    );
+                if (accessControlTeamMap.getAccessControlApplicationMaps() != null) {
+                    for (AccessControlApplicationMap appMap : accessControlTeamMap.getAccessControlApplicationMaps()) {
+                        appMaps.add(map(
+                                        "teamName", accessControlTeamMap.getOrganization().getName(),
+                                        "roleName", appMap.getRole() != null ? appMap.getRole().getDisplayName() : "-",
+                                        "appName", appMap.getApplication().getName()
+                                )
+                        );
+                    }
                 }
 
                 teamMaps.add(map(
