@@ -320,7 +320,7 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage clickUpdateApplicationButton() {
         sleep(5000);
         driver.findElementById("submit").click();
-        sleep(5000);
+        waitForInvisibleElement("myModalLabel");
         return new ApplicationDetailPage(driver);
     }
 
