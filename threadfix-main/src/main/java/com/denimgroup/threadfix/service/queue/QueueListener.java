@@ -189,7 +189,7 @@ public class QueueListener implements MessageListener {
 			ChannelVulnerabilityFilter channelVulnerabilityFilter = channelVulnerabilityFilterDao.retrieveById(channelFilterId);
 			if (channelVulnerabilityFilter != null) {
 
-				int channelTypeId = channelVulnerabilityFilter.getId();
+				int channelTypeId = channelVulnerabilityFilter.getSourceChannelType().getId();
 				String channelVulnName = channelVulnerabilityFilter.getSourceChannelVulnerability().getName();
 				boolean isHiddenFilter = channelVulnerabilityFilter.getTargetGenericSeverity() == null;
 				channelVulnerabilityFilterDao.delete(channelVulnerabilityFilter);
