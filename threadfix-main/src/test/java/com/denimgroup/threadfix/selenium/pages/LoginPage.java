@@ -83,6 +83,10 @@ public class LoginPage extends BasePage {
             takeScreenShot();
             throw new LoginFailedException("Login Failed", e);
         }
+        String url = driver.getCurrentUrl();
+        if (url.contains("urlMismatch")) {
+            driver.findElementByLinkText("Ignore and continue").click();
+        }
 
         return new DashboardPage(driver);
     }
