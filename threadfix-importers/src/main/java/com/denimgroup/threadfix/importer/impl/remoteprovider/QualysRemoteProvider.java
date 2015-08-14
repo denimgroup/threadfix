@@ -376,11 +376,8 @@ public class QualysRemoteProvider extends AbstractRemoteProvider {
             return null;
         }
 
-        // POST with no parameters
-        // TODO include filters
         HttpResponse response = utils.postUrlWithConfigurer(getScansForAppUrl(app.getRemoteProviderType()),
                 getScanFilterRequestConfigurer(1000, app.getNativeName()));
-		//HttpResponse response = utils.postUrl(getScansForAppUrl(app.getRemoteProviderType()), new String[]{}, new String[]{}, username, password);
         InputStream stream;
 		if (response.isValid()) {
             stream = response.getInputStream();
