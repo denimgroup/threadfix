@@ -112,10 +112,16 @@ public abstract class BasePage {
     }
 
     public WafIndexPage clickWafsHeaderLink() {
-        clickConfigTab();
-        hover("manageIntegrations");
-        driver.findElementById("wafsLink").click();
-        sleep(1000);
+        //TODO: remove try catch after WAF tests stop failing
+        try {
+            clickConfigTab();
+            hover("manageIntegrations");
+            driver.findElementById("wafsLink").click();
+            sleep(1000);
+        } catch (ElementNotVisibleException e) {
+            takeScreenShot();
+            throw e;
+        }
         return new WafIndexPage(driver);
     }
 
