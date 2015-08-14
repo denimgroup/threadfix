@@ -62,8 +62,8 @@
        target="_blank"
        ng-show="vulnerability.defect"
        ng-class="{
-        'badge-critical': vulnerability.defect.bugImageName === 'icn_bug_red_stroke.png',
-        'badge-low': vulnerability.defect.bugImageName === 'icn_bug_grn_stroke.png',
+        'badge-critical': vulnerability.defect.opened,
+        'badge-low': !vulnerability.defect.opened,
         }"
        class="badge">
         Issue {{ vulnerability.defect.nativeId }} ({{ vulnerability.defect.status }})

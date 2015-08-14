@@ -25,18 +25,23 @@
 package com.denimgroup.threadfix.webapp.config;
 
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.NonceService;
+import com.denimgroup.threadfix.service.RequestUrlService;
+import com.denimgroup.threadfix.webapp.controller.UrlMismatchController;
 import com.denimgroup.threadfix.webapp.filter.CsrfPreventionFilter.LruCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.DefaultSavedRequest;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 
 /**
  * Created by dzabdi88 on 9/30/14.
@@ -51,9 +56,12 @@ public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             "org.apache.catalina.filters.CSRF_NONCE";
 
     private int nonceCacheSize = 5;
+    protected final SanitizedLogger log = new SanitizedLogger(CustomLoginSuccessHandler.class);
 
     @Autowired
     DefaultConfigService defaultConfigService;
+    @Autowired
+    private RequestUrlService requestUrlService;
 
     @Autowired
     private NonceService nonceService;
@@ -72,15 +80,30 @@ public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             request.getSession().setMaxInactiveInterval(sessionTimeout*SECONDS_IN_MIN);
         }
 
+        // Comparing saved and received base url
+        String baseUrl = requestUrlService.getBaseUrlFromRequest(request); // this should never be null
+        String savedUrl = config.getBaseUrl(); // could be null or empty
+        boolean differentBaseUrls = false;
+
+        if (savedUrl == null || savedUrl.isEmpty()) {;
+            config.setBaseUrl(baseUrl);
+            defaultConfigService.saveConfiguration(config);
+        }
+
+        if (!baseUrl.equals(savedUrl)) {
+            log.info("received: " + baseUrl);
+            log.info("expected: " + savedUrl);
+            differentBaseUrls = true;
+        }
+        String mismatchUrl = UrlMismatchController.class.getAnnotation(RequestMapping.class).value()[0];
+
+        // Getting the save request for deep linking
         DefaultSavedRequest defaultSavedRequest = (DefaultSavedRequest) request.getSession().getAttribute("SPRING_SECURITY_SAVED_REQUEST");
 
         if(defaultSavedRequest != null){
-
             String requestUrl = defaultSavedRequest.getRequestURL();
-
             String nonce = nonceService.generateNonce();
-
-            requestUrl = requestUrl + "?nonce=" + nonce;
+            String redirectUrl = requestUrl + "?nonce=" + nonce;
 
             @SuppressWarnings("unchecked")
             LruCache<String> nonceCache =
@@ -93,13 +116,20 @@ public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
                 request.getSession().setAttribute(
                         CSRF_NONCE_SESSION_ATTR_NAME, nonceCache);
             }
-
             nonceCache.add(nonce);
 
-            getRedirectStrategy().sendRedirect(request, response, requestUrl);
-        }else{
+            if (differentBaseUrls) {
+                redirectUrl = mismatchUrl + "?redirect=" + URLEncoder.encode(redirectUrl, "UTF-8");
+            }
 
-            super.onAuthenticationSuccess(request, response, authentication);
+            getRedirectStrategy().sendRedirect(request, response, redirectUrl);
+
+        } else {
+            if (differentBaseUrls) {
+                getRedirectStrategy().sendRedirect(request, response, mismatchUrl);
+            } else {
+                super.onAuthenticationSuccess(request, response, authentication);
+            }
         }
     }
 }

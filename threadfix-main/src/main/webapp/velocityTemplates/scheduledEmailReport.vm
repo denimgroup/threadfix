@@ -32,9 +32,10 @@
                     <ol style="border-left: 1px solid grey; margin-left:30px; padding-left:30px; margin-top:0;">
                         #foreach( $vulnerability in $treeElement.vulnerabilities )
                             #set( $finding = $vulnerability.findings.get(0))
-                            <li style="margin-bottom:7px;">$finding.channelVulnerability.name ($finding.scan.applicationChannel.channelType.name)<br>
-                                $vulnerability.surfaceLocation.getUrl()
-                                </li>
+                            <li style="margin-bottom:7px;">$finding.channelVulnerability.name ($finding.scan.applicationChannel.channelType.name) <a href="${baseUrl}$vulnerability.getUri()">[ThreadFix]</a><br>
+                                <a style="text-decoration:none">$vulnerability.surfaceLocation.getUrl()</a>
+                                ##surprisingly the <a> tag allows to prevent the link evaluation in some email clients
+                            </li>
                         #end
                     </ol>
                     #if( $treeElement.numResults > 10 )

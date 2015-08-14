@@ -4,6 +4,8 @@
 
 html {
 	background: #43678b url(../images/hdr-bg-repeat.png) top left repeat-x;
+	overflow-y: scroll;
+	/*will force scroll bar, to avoid shifting transition when expanding content*/
 }
 
 body {
@@ -400,6 +402,10 @@ table.noBorders tbody > tr:nth-child(2n+1) > td {
 	background-color:#F5F5F5;
 }
 
+.grey-background pre {
+	background-color:white;
+}
+
 .table tr.grey-background > td {
 	border-top:0px;
 	padding-top:0px;
@@ -521,6 +527,15 @@ table.padded tr td, table.padded tr th {
 
 table.bold-headers tr th {
 	font-weight:bold;
+}
+
+table.finding-table td {
+	vertical-align:top;
+}
+
+table.finding-table pre {
+	max-height:230px;
+	overflow-y:auto;
 }
 
 .pagination ul {
@@ -902,6 +917,32 @@ div.box-shadow {
     display:block;
 }
 
+#vulnHistory div {
+    display:inline-block;
+    vertical-align: top;
+}
+
+.vulnDetails h4 {
+    margin-top:45px;
+}
+
+.vulnDetails .table {
+    margin-bottom:0;
+}
+
+.vulnDetails .table td {
+    margin-bottom:0;
+}
+
+.finding-row {
+    border:1px solid #ddd;
+}
+
+.finding-row td {
+    padding-top:15px;
+    padding-bottom:15px;
+}
+
 .tableReportDiv {
     float:right;
     margin-right:-20px;
@@ -1274,25 +1315,29 @@ div.remote-provider-config-modal a {
     padding-left: 5px;
 }
 
+.badge {
+    text-decoration:none;
+}
+
 /* fix rows */
 .badge-critical{
-    background-color:#F7280C
+    background-color:#F7280C !important;
 }
 
 .badge-high {
-    background-color:#F27421
+    background-color:#F27421 !important;
 }
 
 .badge-medium {
-    background-color:#EFD20A
+    background-color:#EFD20A !important;
 }
 
 .badge-low {
-    background-color:#458A37
+    background-color:#458A37 !important;
 }
 
 .badge-info {
-    background-color:#014B6E
+    background-color:#014B6E !important;
 }
 
 .badge-inform {
