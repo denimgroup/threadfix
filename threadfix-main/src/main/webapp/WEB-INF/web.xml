@@ -92,7 +92,7 @@
                 /configuration/download,/configuration/acceptcriterias,/severities,
         		/configuration/settings,/configuration/filters,/configuration/scanqueue,/mappings/index,/configuration/tags,/teams,
         		/j_spring_security_check,/j_spring_security_logout,/images/*,/styles/*,/scripts/*,/rest/*,/configuration/download/*,
-                /configuration/scheduledEmailReports,/configuration/emailLists,
+                /configuration/scheduledEmailReports,/configuration/emailLists,/urlMismatch,
                 /configuration/scanResultFilters,/configuration/customCweText,/customize/scannerSeverities,
 				/history,
         		regex ^/rest/[a-zA-Z0-9/]*$,
@@ -121,6 +121,7 @@
         		regex ^/organizations/[0-9]+/applications/[0-9]+/filters$,
         		regex ^/organizations/[0-9]+/applications/[0-9]+/filters/tab$
                 regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+$,
+                regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/batch/[a-zA-Z0-9-]/[0-9]+$,
                 regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/defect,
                 regex ^/organizations/[0-9]+/applications/[0-9]+/documents/[0-9]+/download$,
                 regex ^/organizations/[0-9]+/applications/[0-9]+/documents/[0-9]+/view$,
