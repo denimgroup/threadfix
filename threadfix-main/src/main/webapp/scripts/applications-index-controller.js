@@ -130,6 +130,7 @@ myAppModule.controller('ApplicationsIndexController',
             });
 
             modalInstance.result.then(function (object) {
+                var sysMessage = "";
 
                 if (!$scope.teams || $scope.teams.length === 0) {
                     $scope.teams = [];
@@ -217,7 +218,16 @@ myAppModule.controller('ApplicationsIndexController',
 
                 team.applications.sort(nameCompare);
 
-                $scope.successMessage = "Successfully added application " + newApplication.name;
+                if (object.hasOwnProperty("applicationsAllowed") && object.hasOwnProperty("applicationCount")) {
+                    sysMessage = " Your license allows for " + object.applicationsAllowed + " applications, "
+                    + object.applicationCount + " have been created.";
+
+                    if (object.applicationCount === 1) {
+                        sysMessage = sysMessage.replace("have", "has");
+                    }
+                }
+
+                $scope.successMessage = "Successfully added application " + object.application.name + "." + sysMessage;
 
             }, function () {
                 $log.info('Modal dismissed at: ' + new Date());
