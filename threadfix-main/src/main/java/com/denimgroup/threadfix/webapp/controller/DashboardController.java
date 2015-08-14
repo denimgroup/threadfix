@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.util.DateUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -72,6 +74,8 @@ public class DashboardController {
     private ReportService reportService;
     @Autowired
     private CacheBustService cacheBustService;
+    @Autowired(required = false)
+    private LicenseService licenseService;
 
 	private final SanitizedLogger log = new SanitizedLogger(DashboardController.class);
 
@@ -87,6 +91,10 @@ public class DashboardController {
 		model.addAttribute("teams", organizationList);
         model.addAttribute("config", config);
         model.addAttribute("reportJsPaths", cacheBustService.notCachedJsPaths(request, config.getDashboardReports()));
+
+        if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_SYSTEM_SETTINGS)) {
+            model.addAttribute("expirationNotification", DateUtils.getDaysBetween(Calendar.getInstance(), licenseService.getExpirationDate()));
+        }
 
         if (defaultConfigService.isReportCacheDirty()) {
             for (Organization organization : organizationList) {
