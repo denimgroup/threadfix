@@ -354,9 +354,12 @@ public class QualysRemoteProvider extends AbstractRemoteProvider {
                 .withRequestBody(contents, null);
     }
 
-    private DefaultRequestConfigurer getScanFilterRequestConfigurer(String appName) {
+    private DefaultRequestConfigurer getScanFilterRequestConfigurer(int numResults, String appName) {
         String contents =
                 "<ServiceRequest>\n" +
+                "  <preferences>\n" +
+                "    <limitResults>" + numResults + "</limitResults>\n" +
+                "  </preferences>\n" +
                 "  <filters>\n" +
                 "    <Criteria field=\"webApp.name\" operator=\"CONTAINS\">" + appName + "</Criteria>\n" +
                 "    <Criteria field=\"status\" operator=\"EQUALS\">FINISHED</Criteria>\n" +
@@ -370,12 +373,13 @@ public class QualysRemoteProvider extends AbstractRemoteProvider {
 
     public List<String> mostRecentScanForApp(RemoteProviderApplication app) {
 		if (app == null || app.getNativeName() == null) {
-			return null;
-		}
+            return null;
+        }
 
-		// POST with no parameters
-		// TODO include filters
-        HttpResponse response = utils.postUrlWithConfigurer(getScansForAppUrl(app.getRemoteProviderType()), getScanFilterRequestConfigurer(app.getNativeName()));
+        // POST with no parameters
+        // TODO include filters
+        HttpResponse response = utils.postUrlWithConfigurer(getScansForAppUrl(app.getRemoteProviderType()),
+                getScanFilterRequestConfigurer(1000, app.getNativeName()));
 		//HttpResponse response = utils.postUrl(getScansForAppUrl(app.getRemoteProviderType()), new String[]{}, new String[]{}, username, password);
         InputStream stream;
 		if (response.isValid()) {
