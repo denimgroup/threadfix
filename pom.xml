@@ -357,7 +357,7 @@
         <log4j.version>1.2.17</log4j.version>
         <persistence.version>1.0.2</persistence.version>
         <quartz.version>2.2.1</quartz.version>
-        <selenium.version>2.45.0</selenium.version>
+        <selenium.version>2.47.0</selenium.version>
         <javamail.version>1.4</javamail.version>
         <velocity.version>1.7</velocity.version>
         <velocity-tools.version>2.0</velocity-tools.version>
