@@ -19,6 +19,6 @@ public class CommandLineIT extends BaseDataTest {
 
     @Test
     public void tryOutCli() {
-        utils.executeJarCommand("-ct", "Some Example");
+        utils.executeJarCommand("-ct", "Another Team");
     }
 }

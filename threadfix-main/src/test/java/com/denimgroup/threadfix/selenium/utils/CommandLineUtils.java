@@ -14,11 +14,16 @@ public class CommandLineUtils {
 
     private static List<String> startArgs;
     private static final String DIRECTORY = "C:\\Users\\rtimmons\\threadfix\\threadfix-cli\\target";
+    private static final String OS = System.getProperty("OperatingSystem");
 
     static {
         startArgs = list();
-        startArgs.add("CMD");
-        startArgs.add("/C");
+        if (("Windows").equals(OS)) {
+            startArgs.add("CMD");
+            startArgs.add("/C");
+        } else {
+            startArgs.add("/bin/sh");
+        }
         startArgs.add("java");
         startArgs.add("-jar");
         startArgs.add("threadfix-cli-2.2-SNAPSHOT-jar-with-dependencies.jar");
