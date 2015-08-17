@@ -10,13 +10,15 @@ public class CommandLineIT extends BaseDataTest {
 
     private static final String API_KEY = System.getProperty("API_KEY");
     private static final String REST_URL = System.getProperty("REST_URL");
+    private static CommandLineUtils utils = new CommandLineUtils();
 
-    private CommandLineUtils utils = new CommandLineUtils();
+    static {
+        utils.setApiKey(API_KEY);
+        utils.setUrl(REST_URL);
+    }
 
     @Test
     public void tryOutCli() {
-        utils.setApiKey(API_KEY);
-        utils.setUrl(REST_URL);
-        utils.executeJarCommand("-ct", "The Newest Name");
+        utils.executeJarCommand("-ct", "Some Example");
     }
 }
