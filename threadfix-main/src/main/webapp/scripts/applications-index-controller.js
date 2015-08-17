@@ -1,7 +1,7 @@
 var myAppModule = angular.module('threadfix')
 
 myAppModule.controller('ApplicationsIndexController',
-    function($scope, $log, $modal, $upload, $window, $rootScope, $timeout, tfEncoder, threadfixAPIService, customSeverityService, $http) {
+    function($scope, $log, $modal, $upload, $window, $rootScope, $timeout, tfEncoder, threadfixAPIService, appUsageService, customSeverityService, $http) {
 
         // Initialize
         $scope.initialized = false;
@@ -126,12 +126,9 @@ myAppModule.controller('ApplicationsIndexController',
                         return "Add Team";
                     }
                 }
-
             });
 
             modalInstance.result.then(function (object) {
-                var sysMessage = "";
-
                 if (!$scope.teams || $scope.teams.length === 0) {
                     $scope.teams = [];
                 }
@@ -218,16 +215,7 @@ myAppModule.controller('ApplicationsIndexController',
 
                 team.applications.sort(nameCompare);
 
-                if (object.hasOwnProperty("applicationsAllowed") && object.hasOwnProperty("applicationCount")) {
-                    sysMessage = " Your license allows for " + object.applicationsAllowed + " applications, "
-                    + object.applicationCount + " have been created.";
-
-                    if (object.applicationCount === 1) {
-                        sysMessage = sysMessage.replace("have", "has");
-                    }
-                }
-
-                $scope.successMessage = "Successfully added application " + object.application.name + "." + sysMessage;
+                $scope.successMessage = $scope.successMessage = appUsageService.getUsage(object);
 
             }, function () {
                 $log.info('Modal dismissed at: ' + new Date());
