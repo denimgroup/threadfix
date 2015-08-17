@@ -29,6 +29,8 @@ public class CommandLineUtils {
     }
 
     public void executeCommand(String workingDirectory, String... args) {
+        String output = "";
+
         List<String> finalArgs = new ArrayList<>();
         finalArgs.addAll(startArgs);
         for (String arg : args) {
