@@ -1,7 +1,10 @@
 package com.denimgroup.threadfix.selenium.utils;
 
+import org.json.JSONArray;
+
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
+import com.denimgroup.threadfix.importer.util.JsonUtils;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +50,9 @@ public class CommandLineUtils {
 
             while ((line = br.readLine()) != null) {
                 System.out.println(line);
+                if(line.startsWith("{")){
+                    System.out.println("SUCCESS: " + JsonUtils.getStringProperty(line, "success"));
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
