@@ -396,8 +396,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
         assertFalse("Merge With Other Findings Button is available",
                 findingDetailPage.isLinkPresent("Merge with Other Findings"));
 
-        findingDetailPage.clickViewVulnerability()
-                .clickToggleMoreInfoButton();
+        findingDetailPage.clickViewVulnerability();
 
         assertFalse("Close Vulnerability button is available",
                 findingDetailPage.isElementPresent("closeVulnerabilityLink"));

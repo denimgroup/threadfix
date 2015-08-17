@@ -595,7 +595,6 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .clickViewScanLink()
                 .clickViewFinding()
                 .clickViewVulnerability()
-                .clickToggleMoreInfoButton()
                 .clickMarkasFalsePositivebutton();
 
         AnalyticsPage analyticsPage = vulnerabilityDetailPage.clickAnalyticsLink()
