@@ -16,11 +16,10 @@ public class CommandLineUtils {
 
     private static List<String> startArgs;
     private static final String DIRECTORY = "..\\threadfix-cli\\target";
-    private static final String OS = System.getProperty("OperatingSystem");
 
     static {
         startArgs = list();
-        if (("Windows").equals(OS)) {
+        if (System.getProperty("os.name").startsWith("Windows")) {
             startArgs.add("CMD");
             startArgs.add("/C");
         } else {
@@ -31,7 +30,8 @@ public class CommandLineUtils {
         startArgs.add("threadfix-cli-2.2-SNAPSHOT-jar-with-dependencies.jar");
     }
 
-    public void executeCommand(String workingDirectory, String... args) {
+    //Executes command and returns JSON
+    public String executeCommand(String workingDirectory, String... args) {
         String output = "";
 
         List<String> finalArgs = new ArrayList<>();
@@ -54,15 +54,22 @@ public class CommandLineUtils {
                 System.out.println(line);
                 if(line.startsWith("{")){
                     System.out.println("SUCCESS: " + JsonUtils.getStringProperty(line, "success"));
+                    return line;
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return "No JSON found.";
     }
 
-    public void executeJarCommand(String... args) {
-        executeCommand(DIRECTORY, args);
+    public boolean isCommandResponseSuccessful(String response) {
+        String status = JsonUtils.getStringProperty(response, "success");
+        return ("true").equals(status.trim().toLowerCase()) ? true : false;
+    }
+
+    public String executeJarCommand(String... args) {
+        return executeCommand(DIRECTORY, args);
     }
 
     public void setApiKey(String apiKey) {
