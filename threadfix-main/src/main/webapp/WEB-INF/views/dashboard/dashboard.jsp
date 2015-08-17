@@ -36,6 +36,23 @@
 		</security:authorize>
 	</c:if>
 
+	<c:if test="${ expirationNotification < 30  && expirationNotification > 15}">
+		<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
+			<div class="alert alert-warning" ng-show="!dismissExpirationNotification">
+				<button type="button" class="close" ng-click="dismissExpirationNotification = true">&times;</button>
+				Your license will expire in ${ expirationNotification } days.
+			</div>
+		</security:authorize>
+	</c:if>
+	<c:if test="${ expirationNotification < 15 }">
+		<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
+			<div class="alert alert-danger" ng-show="!dismissExpirationNotification">
+				<button type="button" class="close" ng-click="dismissExpirationNotification = true">&times;</button>
+				Your license will expire in ${ expirationNotification } days. Please contact Denim Group.
+			</div>
+		</security:authorize>
+	</c:if>
+
     <div ng-controller="DashboardController" class="container-fluid">
 
         <c:if test="${ not empty teams }">
