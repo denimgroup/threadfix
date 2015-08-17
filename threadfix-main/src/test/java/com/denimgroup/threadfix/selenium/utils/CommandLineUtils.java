@@ -32,7 +32,7 @@ public class CommandLineUtils {
         startArgs.add("threadfix-cli-2.2-SNAPSHOT-jar-with-dependencies.jar");
     }
 
-    // Executes command and returns JSON string
+    // Executes command and returns JSON object
     public JSONObject executeCommand(String workingDirectory, String... args) {
         String output = "";
 
