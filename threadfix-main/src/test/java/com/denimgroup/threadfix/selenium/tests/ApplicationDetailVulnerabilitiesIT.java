@@ -296,7 +296,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
         VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage.clickViewMoreVulnerabilityLink("Critical790");
 
         assertTrue("Vulnerability Detail Page navigation failed after click view more link of vulnerability.",
-                vulnerabilityDetailPage.isToggleMoreInfoLinkPresent());
+                vulnerabilityDetailPage.isVulnHistoryPresent());
     }
 
     @Test
