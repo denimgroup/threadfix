@@ -2,8 +2,7 @@ package com.denimgroup.threadfix.selenium.utils;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +12,7 @@ import java.util.List;
 public class CommandLineUtils {
 
     private static List<String> startArgs;
-    private static final String DIRECTORY = "C:\\Users\\rtimmons\\threadfix\\threadfix-cli\\target";
+    private static final String DIRECTORY = "..\\threadfix-cli\\target";
 
     static {
         startArgs = list();
@@ -33,7 +32,17 @@ public class CommandLineUtils {
         ProcessBuilder pb = new ProcessBuilder(finalArgs);
         pb.directory(new File(workingDirectory));
         try {
-            pb.start();
+            Process process = pb.start();
+            InputStream is = process.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+            String line;
+
+            System.out.println("Output of running command is:");
+
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
