@@ -2,10 +2,10 @@
 
 <head>
     <title>Customize ThreadFix Severities</title>
-    <cbs:cachebustscript src="/scripts/custom-severity-text-controller.js"/>
+    <cbs:cachebustscript src="/scripts/community-severity-text-controller.js"/>
 </head>
 
-<body id="config" ng-controller="CustomSeverityTextController">
+<body id="config" ng-controller="CommunitySeverityTextController">
     <%@ include file="/WEB-INF/views/angular-init.jspf"%>
 
     <%@ include file="/WEB-INF/views/successMessage.jspf" %>
