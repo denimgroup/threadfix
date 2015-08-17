@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('TeamDetailPageController', function ($scope, $window, $http, $modal, $log, $rootScope, tfEncoder, $timeout) {
+myAppModule.controller('TeamDetailPageController', function ($scope, $window, $http, $modal, $log, $rootScope, tfEncoder, $timeout, appUsageService) {
 
     $scope.rightReportTitle = "Top 10 Vulnerable Applications";
     $scope.empty = false;
@@ -124,8 +124,6 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
         });
 
         modalInstance.result.then(function (object) {
-            var sysMessage = "";
-
             if (!$scope.applications || $scope.applications.length === 0) {
                 $scope.applications = [];
             }
@@ -133,16 +131,7 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
 
             $scope.applications.sort(nameCompare);
 
-            if (object.hasOwnProperty("applicationsAllowed") && object.hasOwnProperty("applicationCount")) {
-                sysMessage = " Your license allows for " + object.applicationsAllowed + " applications, "
-                    + object.applicationCount + " have been created.";
-
-                if (object.applicationCount === 1) {
-                    sysMessage = sysMessage.replace("have", "has");
-                }
-            }
-
-            $scope.successMessage = "Successfully added application " + object.application.name + "." + sysMessage;
+            $scope.successMessage = appUsageService.getUsage(object);
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
