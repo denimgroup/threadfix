@@ -1,7 +1,7 @@
 var myAppModule = angular.module('threadfix')
 
 myAppModule.controller('ApplicationsIndexController',
-    function($scope, $log, $modal, $upload, $window, $rootScope, $timeout, tfEncoder, threadfixAPIService) {
+    function($scope, $log, $modal, $upload, $window, $rootScope, $timeout, tfEncoder, threadfixAPIService, appUsageService) {
 
     // Initialize
     $scope.initialized = false;
@@ -183,7 +183,6 @@ myAppModule.controller('ApplicationsIndexController',
         });
 
         modalInstance.result.then(function (object) {
-
             if (!team.applications || team.applications.length === 0) {
                 team.applications = [];
             }
@@ -210,7 +209,7 @@ myAppModule.controller('ApplicationsIndexController',
                 team.expanded = true;
             }, 200);
 
-            $scope.successMessage = "Successfully added application " + newApplication.name;
+            $scope.successMessage = $scope.successMessage = appUsageService.getUsage(object);;
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());

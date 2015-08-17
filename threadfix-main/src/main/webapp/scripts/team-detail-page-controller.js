@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('TeamDetailPageController', function ($scope, $window, $http, $modal, $log, $rootScope, tfEncoder, $timeout) {
+myAppModule.controller('TeamDetailPageController', function ($scope, $window, $http, $modal, $log, $rootScope, tfEncoder, $timeout, appUsageService) {
 
     $scope.rightReportTitle = "Top 10 Vulnerable Applications";
     $scope.empty = false;
@@ -124,7 +124,6 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
         });
 
         modalInstance.result.then(function (object) {
-
             if (!$scope.applications || $scope.applications.length === 0) {
                 $scope.applications = [];
             }
@@ -132,7 +131,7 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
 
             $scope.applications.sort(nameCompare);
 
-            $scope.successMessage = "Successfully added application " + newApplication.name;
+            $scope.successMessage = appUsageService.getUsage(object);
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());

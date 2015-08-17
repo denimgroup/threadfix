@@ -678,3 +678,24 @@ threadfixModule.factory('timeoutService', function(tfEncoder, $timeout) {
 
     return timeoutService;
 });
+
+
+threadfixModule.factory('appUsageService', function() {
+    var appUsageService = {};
+
+    appUsageService.getUsage = function(object) {
+        var message = "Successfully added application " + object.application.name + ".";
+
+        if (object.hasOwnProperty("applicationCount") && object.hasOwnProperty("applicationCount")) {
+            message += "Your license allows for " + object.applicationsAllowed + " applications, " +
+                object.applicationCount + " have been created.";
+            if (object.applicationCount === 1) {
+                message = message.replace("have been", "has been");
+            }
+        }
+
+        return message;
+    }
+
+    return appUsageService;
+});
