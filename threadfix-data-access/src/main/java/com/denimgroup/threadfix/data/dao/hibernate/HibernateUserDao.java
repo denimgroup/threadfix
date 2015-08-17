@@ -263,6 +263,7 @@ public class HibernateUserDao
 						Restrictions.like("displayName", "%" + searchString + "%")
 				)).setMaxResults(number)
 				.setFirstResult((page - 1) * number)
+				.addOrder(Order.asc("name"))
 				.list();
 	}
 

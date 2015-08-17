@@ -172,7 +172,11 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
 
     $scope.updatePage = function(page, searchString) {
         $scope.page = page;
-        $scope.searchUsers(searchString);
+        if (!searchString) {
+            reloadList();
+        } else {
+            $scope.searchUsers(searchString);
+        }
     };
 
     $scope.setCurrentUser = function(user) {
@@ -293,9 +297,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 if (data.success) {
                     $scope.usersSuccessMessage = "Edit succeeded.";
 
-                    $scope.users = data.object;
-
-                    selectUserWithId($scope.currentUser.id);
+                    $scope.updatePage($scope.page);
                 } else {
 
                     if (data.errorMap && data.errorMap.name) {

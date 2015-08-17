@@ -61,6 +61,8 @@ public class DefectServiceImpl implements DefectService {
 	@Autowired
 	private TemplateBuilderService templateBuilderService;
 	@Autowired
+	private DefaultConfigService defaultConfigService;
+	@Autowired
 	private DefectTrackerService defectTrackerService;
 
 	private final SanitizedLogger log = new SanitizedLogger(DefectService.class);
@@ -190,6 +192,7 @@ public class DefectServiceImpl implements DefectService {
 				"vulnerabilities", vulnsWithoutDefects,
 				"metadata", metadata,
 				"defectTrackerName", defectTrackerName,
+				"baseUrl", defaultConfigService.loadCurrentConfiguration().getBaseUrl(),
 				"customTexts", getCustomText(vulnsWithoutDefects)
 				);
         String description = templateBuilderService.prepareMessageFromTemplate(templateModel, "defectDescription.vm");

@@ -20,3 +20,11 @@ filtersModule.filter('shortCweNames', function() {
     }
 });
 
+filtersModule.filter('removeSpace', function() {
+    return function(input) {
+        if (input) {
+            return input.replace(/ /g, '');
+        }
+    }
+});
+

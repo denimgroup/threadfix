@@ -77,11 +77,12 @@ public class ScannerMappingsController {
 	public RestResponse<Map<String, Object>> mapBackend() {
 		Map<String, Object> map = CollectionUtils.map();
 
+		map.put("genericSeverities", genericSeverityService.loadAll());
+
 		if (EnterpriseTest.isEnterprise()) {
 			if (channelVulnerabilityFilterService == null) {
 				throw new IllegalStateException();
 			}
-			map.put("genericSeverities", genericSeverityService.loadAll());
 
 			List<ChannelType> channelTypes = channelTypeService.loadAllHasVulnMapping();
 			map.put("channelVulnerabilitiesMap", channelVulnerabilityService.getChannelVulnsEachChannelType(channelTypes));
