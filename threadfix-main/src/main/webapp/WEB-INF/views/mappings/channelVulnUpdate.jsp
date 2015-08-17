@@ -1,7 +1,6 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <div id="scannerMappings" ng-controller="MappingsPageController">
-	<h3>Scanner Type to CWE Mappings</h3>
 
 	<%@ include file="/WEB-INF/views/angular-init.jspf"%>
 
@@ -9,13 +8,6 @@
 
 	<%@ include file="/WEB-INF/views/successMessage.jspf" %>
 	<%@ include file="/WEB-INF/views/errorMessage.jspf"%>
-
-	<c:if test="${ not empty pluginCheckBean.currentPluginDate }">
-		<div>
-			The current scanner plugin is dated
-			<fmt:formatDate value="${ pluginCheckBean.currentPluginDate.time }" type="both" dateStyle="short" timeStyle="short" />.
-		</div>
-	</c:if>
 
 	<c:if test="${ not empty exportText }">
 		<div>
