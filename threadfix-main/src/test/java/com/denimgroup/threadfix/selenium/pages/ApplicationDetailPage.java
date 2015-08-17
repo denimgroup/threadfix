@@ -892,6 +892,11 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public ApplicationDetailPage waitForModalToClose() {
+        waitForInvisibleElement("myModalLabel");
+        return new ApplicationDetailPage(driver);
+    }
+
     /*________________________________________ Get Methods ________________________________________*/
     public String checkWafName() {
         waitForElement(driver.findElementById("wafNameText"));

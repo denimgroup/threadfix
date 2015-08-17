@@ -57,6 +57,8 @@ public class ScheduledScanEntIT extends BaseDataTest {
                 .setScheduledScanScanner("OWASP Zed Attack Proxy",applicationDetailPage.getApplicationId())
                 .clickModalSubmit();
 
+        applicationDetailPage.waitForModalToClose();
+
         assertTrue("Scan was not scheduled properly.", applicationDetailPage.isScheduledScanCountCorrect("1"));
     }
 

@@ -180,7 +180,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
         sleep(2000);
         TeamAppCustomizeVulnerabilityTypesPage appCustomizeVulnerabilityTypesPage = applicationDetailPage.clickEditVulnerabilityFilters();
         sleep(1000);
-        assertTrue("Did not navigate to FilterPage.", appCustomizeVulnerabilityTypesPage.isElementVisible("createNewKeyModalButton"));
+        assertTrue("Did not navigate to FilterPage.", appCustomizeVulnerabilityTypesPage.isCreateNewFilterPresent());
     }
 
     @Test

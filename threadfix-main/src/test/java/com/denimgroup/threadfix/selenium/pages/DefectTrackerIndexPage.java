@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -142,5 +143,14 @@ public class DefectTrackerIndexPage extends BasePage {
         return driver.findElementById("addNewDTButton").isDisplayed();
 
 
+    }
+
+    public boolean isErrorPresent(String error) {
+        try {
+            waitForElement(driver.findElementByCssSelector("#" + error + ":not(.ng-hide)"));
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+        return true;
     }
 }

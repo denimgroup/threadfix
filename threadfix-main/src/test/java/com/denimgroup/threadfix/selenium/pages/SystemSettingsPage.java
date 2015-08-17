@@ -120,6 +120,7 @@ public class SystemSettingsPage extends BasePage {
     /*------------------------------ Boolean Methods ------------------------------*/
 
     public boolean isSaveSuccessful(){
+        waitForElement(driver.findElementByCssSelector(".alert-success:not(.ng-hide"));
         return driver.findElementByClassName("alert-success").getText().trim().contains("Configuration was saved successfully.");
     }
 }

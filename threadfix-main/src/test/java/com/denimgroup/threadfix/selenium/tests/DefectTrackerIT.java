@@ -406,7 +406,7 @@ public class DefectTrackerIT extends BaseDataTest {
                 .clickEditLink(newDefectTrackerName)
                 .setName(defectTrackerNameDuplicateTest)
                 .clickModalSubmitInvalid();
-        assertTrue("Error message was not visible.",defectTrackerIndexPage.isElementVisible("nameServerError"));
+        assertTrue("Error message was not visible.",defectTrackerIndexPage.isErrorPresent("nameServerError"));
         assertTrue("The correct error text was not present",defectTrackerIndexPage.getNameDuplicateErrorsText().contains("That name is already taken."));
 	}
 
