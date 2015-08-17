@@ -26,7 +26,9 @@ package com.denimgroup.threadfix.service;
 import com.denimgroup.threadfix.data.dao.AccessControlMapDao;
 import com.denimgroup.threadfix.data.dao.RoleDao;
 import com.denimgroup.threadfix.data.dao.UserDao;
+import com.denimgroup.threadfix.data.dao.UserEventNotificationMapDao;
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +56,8 @@ public class UserServiceImpl implements UserService {
     private RoleDao             roleDao             = null;
     @Autowired
     private AccessControlMapDao accessControlMapDao = null;
+	@Autowired
+	private UserEventNotificationMapDao userEventNotificationMapDao = null;
 
     private ThreadFixPasswordEncoder encoder = new ThreadFixPasswordEncoder();
     private Authentication authentication;
@@ -480,5 +484,64 @@ public class UserServiceImpl implements UserService {
 	public List<User> getUsersForRoleId(Integer id) {
 
 		return userDao.loadUsersForRole(id);
+	}
+
+	@Override
+	public List<EventAction> getNotificationEventActions(User user) {
+		List<UserEventNotificationMap> userEventNotificationMaps = userEventNotificationMapDao.loadUserEventNotificationMaps(user);
+		List<EventAction> notificationEventActions = list();
+		for (UserEventNotificationMap userEventNotificationMap : userEventNotificationMaps) {
+			notificationEventActions.add(userEventNotificationMap.getEventActionEnum());
+		}
+		return notificationEventActions;
+	}
+
+	@Override
+	public void setNotificationEventActions(User user, List<EventAction> notificationEventActions) {
+		List<EventAction> currentNotificationEventActions = list();
+		List<UserEventNotificationMap> userEventNotificationMapsToRemove = list();
+
+		List<UserEventNotificationMap> userEventNotificationMaps = userEventNotificationMapDao.loadUserEventNotificationMaps(user);
+		for (UserEventNotificationMap userEventNotificationMap : userEventNotificationMaps) {
+			if (!notificationEventActions.contains(userEventNotificationMap.getEventActionEnum())) {
+				userEventNotificationMapsToRemove.add(userEventNotificationMap);
+			} else {
+				currentNotificationEventActions.add(userEventNotificationMap.getEventActionEnum());
+			}
+		}
+
+		for (UserEventNotificationMap userEventNotificationMap : userEventNotificationMapsToRemove) {
+			userEventNotificationMap.setUser(null);
+			userEventNotificationMapDao.delete(userEventNotificationMap);
+		}
+
+		for (EventAction eventAction : notificationEventActions) {
+			if (!currentNotificationEventActions.contains(eventAction)) {
+				UserEventNotificationMap userEventNotificationMap = new UserEventNotificationMap();
+				userEventNotificationMap.setUser(user);
+				userEventNotificationMap.setEventAction(eventAction.toString());
+				userEventNotificationMap.setActive(true);
+				userEventNotificationMapDao.saveOrUpdate(userEventNotificationMap);
+			}
+		}
+	}
+
+	@Override
+	public Map<Integer, Map<String, Boolean>> getUserEventNotificationSettings(List<User> users) {
+		Map<Integer, Map<String, Boolean>> userEventNotificationSettings = new HashMap<>();
+		for (User user : users) {
+			Map<String, Boolean> eventNotificationSettings = new HashMap<>();
+			userEventNotificationSettings.put(user.getId(), eventNotificationSettings);
+
+			List<EventAction> notificationEventActions = getNotificationEventActions(user);
+			for (EventAction eventNotificationType : EventAction.values()) {
+				if (notificationEventActions.contains(eventNotificationType)) {
+					eventNotificationSettings.put(eventNotificationType.toString(), true);
+				} else {
+					eventNotificationSettings.put(eventNotificationType.toString(), false);
+				}
+			}
+		}
+		return userEventNotificationSettings;
 	}
 }

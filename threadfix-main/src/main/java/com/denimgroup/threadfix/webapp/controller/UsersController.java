@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.data.entities.Group;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
@@ -47,9 +48,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
@@ -162,6 +161,18 @@ public class UsersController {
 
 		returnMap.put("countUsers", userService.countUsers(null));
 		returnMap.put("teams", organizationService.loadAllActive());
+
+		List<EventAction> eventNotificationTypes = new ArrayList<>(Arrays.asList(EventAction.globalEventActions));
+		eventNotificationTypes.addAll(Arrays.asList(EventAction.globalGroupedEventAction));
+		Map<String, String> eventNotificationTypeDisplayNames = new HashMap<>();
+		for (EventAction eventNotificationType : eventNotificationTypes) {
+			eventNotificationTypeDisplayNames.put(eventNotificationType.toString(), eventNotificationType.getDisplayName());
+		}
+		returnMap.put("eventNotificationTypes", eventNotificationTypes);
+		returnMap.put("eventNotificationTypeDisplayNames", eventNotificationTypeDisplayNames);
+
+		Map<Integer, Map<String, Boolean>> userEventNotificationSettings = userService.getUserEventNotificationSettings(users);
+		returnMap.put("userEventNotificationSettings", userEventNotificationSettings);
 
 		return success(returnMap);
     }
