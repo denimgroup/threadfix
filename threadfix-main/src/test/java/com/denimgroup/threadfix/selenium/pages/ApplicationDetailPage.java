@@ -897,6 +897,11 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public ApplicationDetailPage setUniqueId(String uniqueId) {
+        driver.findElementById("uniqueIdInput").sendKeys(uniqueId);
+        return this;
+    }
+
     /*________________________________________ Get Methods ________________________________________*/
     public String checkWafName() {
         waitForElement(driver.findElementById("wafNameText"));

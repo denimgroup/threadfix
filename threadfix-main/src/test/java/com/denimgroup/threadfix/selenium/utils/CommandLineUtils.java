@@ -134,8 +134,32 @@ public class CommandLineUtils {
         return executeJarCommand("-ctg", tagName, tagType);
     }
 
-    public JSONObject searchTeam(String searchBy, String value) {
-        return executeJarCommand("-st", searchBy, value);
+    public JSONObject searchTeamByID(String id) {
+        return executeJarCommand("-st", "id", id);
+    }
+
+    public JSONObject searchTeamByName(String name) {
+        return executeJarCommand("-st", "name", name);
+    }
+
+    public JSONObject searchAppByID(String id) {
+        return executeJarCommand("-sa", "id", id);
+    }
+
+    public JSONObject searchAppByName(String appName, String teamName) {
+        return executeJarCommand("-sa", "name", appName, teamName);
+    }
+
+    public JSONObject searchAppByUniqueID(String id, String teamName) {
+        return executeJarCommand("-sa", "uniqueId", id, teamName);
+    }
+
+    public JSONObject searchWafByID(String id) {
+        return executeJarCommand("-sw", "id", id);
+    }
+
+    public JSONObject searchWafByName(String name) {
+        return executeJarCommand("-sw", "name", name);
     }
 
     public JSONObject getWafRules(int wafId) {

@@ -123,6 +123,7 @@ public class CommandLineIT extends BaseDataTest {
         assertTrue("Response was not successful.", cliUtils.isCommandResponseSuccessful(response));
     }
 
+    @Test
     public void testCreateTagApplication() {
         String tag = getName();
 
@@ -167,14 +168,95 @@ public class CommandLineIT extends BaseDataTest {
         DatabaseUtils.createTeam(teamName);
         String teamID = DatabaseUtils.getTeamID(teamName);
 
-        JSONObject response = cliUtils.searchTeam("id", teamID);
+        JSONObject response = cliUtils.searchTeamByID(teamID);
 
         assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
         assertTrue("Returned team was not correct.", cliUtils.getObjectField(response, "name").equals(teamName));
     }
 
     @Test
-    public void testQueueScan() {
+    public void testQueueScan() {}
 
+    @Test
+    public void testSearchTeamByName() {
+        String teamName = getName();
+        DatabaseUtils.createTeam(teamName);
+
+        JSONObject response = cliUtils.searchTeamByName(teamName);
+
+        assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
+        assertTrue("Returned team was not correct.", cliUtils.getObjectField(response, "name").equals(teamName));
+    }
+
+    @Test
+    public void testSearchApplicationByID() {
+        String teamName = getName();
+        String appName = getName();
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        String appID = DatabaseUtils.getApplicationID(teamName, appName);
+
+        JSONObject response = cliUtils.searchAppByID(appID);
+
+        assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
+        assertTrue("Returned application was not correct.", cliUtils.getObjectField(response, "name").equals(appName));
+    }
+
+    @Test
+    public void testSearchApplicationByName() {
+        String teamName = getName();
+        String appName = getName();
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        JSONObject response = cliUtils.searchAppByName(appName, teamName);
+
+        assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
+        assertTrue("Returned application was not correct.", cliUtils.getObjectField(response, "name").equals(appName));
+    }
+
+    @Test
+    public void testSearchApplicationByUniqueID() {
+        String teamName = getName();
+        String appName = getName();
+        String uniqueID = getName();
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandAllTeams()
+                .clickApplicationName(teamName, appName)
+                .clickEditDeleteBtn()
+                .setUniqueId(uniqueID)
+                .clickModalSubmit();
+
+        JSONObject response = cliUtils.searchAppByUniqueID(uniqueID, teamName);
+
+        assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
+        assertTrue("Returned application was not correct.", cliUtils.getObjectField(response, "name").equals(appName));
+    }
+
+    @Test
+    public void testSearchWafByID() {
+        String wafName = getName();
+        DatabaseUtils.createWaf(wafName, "mod_security");
+        String wafID = DatabaseUtils.getWafID(wafName);
+
+        JSONObject response = cliUtils.searchWafByID(wafID);
+
+        assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
+        assertTrue("Returned WAF was not correct.", cliUtils.getObjectField(response, "name").equals(wafName));
+    }
+
+    @Test
+    public void testSearchWafByName() {
+        String wafName = getName();
+        DatabaseUtils.createWaf(wafName, "mod_security");
+
+        JSONObject response = cliUtils.searchWafByName(wafName);
+
+        assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
+        assertTrue("Returned WAF was not correct.", cliUtils.getObjectField(response, "name").equals(wafName));
     }
 }
