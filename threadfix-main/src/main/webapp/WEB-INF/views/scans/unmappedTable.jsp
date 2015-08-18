@@ -1,4 +1,4 @@
-<div ng-form="unmappedForm" class="pagination" ng-show="numFindings > 100">
+<div ng-form="unmappedForm" class="pagination" ng-show="numFindings > numberPerPage">
     <pagination class="no-margin" total-items="numFindings / 10" max-size="5" page="page"></pagination>
 
     <input name="pageUnmappedInput"  ng-enter="goToPage(unmappedForm.$valid)" style="width:50px" type="number" ng-model="pageInput" max="{{numberOfUnmappedPages * 1}}" min="1"/>
