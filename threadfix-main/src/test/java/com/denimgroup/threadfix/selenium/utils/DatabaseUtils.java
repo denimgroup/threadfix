@@ -200,4 +200,11 @@ public class DatabaseUtils {
 
         return String.valueOf(response.object.getId());
     }
+
+    public static String getApplicationID(String teamName, String appName) {
+        RestResponse<Application> response = CLIENT.searchForApplicationByName(appName, teamName);
+        assertTrue("Request for application was unsuccessful. Message: " + response.message, response.success);
+
+        return String.valueOf(response.object.getId());
+    }
 }

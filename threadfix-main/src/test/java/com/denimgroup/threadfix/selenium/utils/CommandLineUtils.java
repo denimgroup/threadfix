@@ -126,7 +126,15 @@ public class CommandLineUtils {
         return executeJarCommand("-ctg", tagName, tagType);
     }
 
-    public JSONObject searchTeam(String searchBy, String value) {
-        return executeJarCommand("-st", searchBy, value);
+    public JSONObject searchTeamByID(String id) {
+        return executeJarCommand("-st", "id", id);
+    }
+
+    public JSONObject searchTeamByName(String name) {
+        return executeJarCommand("-st", "name", name);
+    }
+
+    public JSONObject searchAppByID(String id) {
+        return executeJarCommand("-sa", "id", id);
     }
 }

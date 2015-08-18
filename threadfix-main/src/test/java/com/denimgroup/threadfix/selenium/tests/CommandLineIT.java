@@ -121,7 +121,7 @@ public class CommandLineIT extends BaseDataTest {
         DatabaseUtils.createTeam(teamName);
         String teamID = DatabaseUtils.getTeamID(teamName);
 
-        JSONObject response = cliUtils.searchTeam("id", teamID);
+        JSONObject response = cliUtils.searchTeamByID(teamID);
 
         assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
         assertTrue("Returned team was not correct.", cliUtils.getObjectField(response, "name").equals(teamName));
@@ -132,9 +132,23 @@ public class CommandLineIT extends BaseDataTest {
         String teamName = getName();
         DatabaseUtils.createTeam(teamName);
 
-        JSONObject response = cliUtils.searchTeam("name", teamName);
+        JSONObject response = cliUtils.searchTeamByName(teamName);
 
         assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
         assertTrue("Returned team was not correct.", cliUtils.getObjectField(response, "name").equals(teamName));
+    }
+
+    @Test
+    public void testSearchApplicationByID() {
+        String teamName = getName();
+        String appName = getName();
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        String appID = DatabaseUtils.getApplicationID(teamName, appName);
+
+        JSONObject response = cliUtils.searchAppByID(appID);
+
+        assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
+        assertTrue("Returned application was not correct.", cliUtils.getObjectField(response, "name").equals(appName));
     }
 }
