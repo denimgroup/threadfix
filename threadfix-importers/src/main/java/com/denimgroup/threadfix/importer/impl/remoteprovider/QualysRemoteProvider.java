@@ -35,6 +35,7 @@ import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import javax.annotation.Nonnull;
 import javax.xml.bind.DatatypeConverter;
@@ -354,14 +355,30 @@ public class QualysRemoteProvider extends AbstractRemoteProvider {
                 .withRequestBody(contents, null);
     }
 
+    private DefaultRequestConfigurer getScanFilterRequestConfigurer(int numResults, String appName) {
+        String contents =
+                "<ServiceRequest>\n" +
+                "  <preferences>\n" +
+                "    <limitResults>" + numResults + "</limitResults>\n" +
+                "  </preferences>\n" +
+                "  <filters>\n" +
+                "    <Criteria field=\"webApp.name\" operator=\"CONTAINS\">" + StringEscapeUtils.escapeXml10(appName) + "</Criteria>\n" +
+                "    <Criteria field=\"status\" operator=\"EQUALS\">FINISHED</Criteria>\n" +
+                "  </filters>\n" +
+                "</ServiceRequest>";
+
+        return new DefaultRequestConfigurer()
+                .withUsernamePassword(username, password)
+                .withRequestBody(contents, null);
+    }
+
     public List<String> mostRecentScanForApp(RemoteProviderApplication app) {
 		if (app == null || app.getNativeName() == null) {
-			return null;
-		}
+            return null;
+        }
 
-		// POST with no parameters
-		// TODO include filters
-		HttpResponse response = utils.postUrl(getScansForAppUrl(app.getRemoteProviderType()),new String[]{},new String[]{}, username, password);
+        HttpResponse response = utils.postUrlWithConfigurer(getScansForAppUrl(app.getRemoteProviderType()),
+                getScanFilterRequestConfigurer(1000, app.getNativeName()));
         InputStream stream;
 		if (response.isValid()) {
             stream = response.getInputStream();
