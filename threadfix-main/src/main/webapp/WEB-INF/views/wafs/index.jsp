@@ -41,7 +41,7 @@
                 <td class="details" id="wafName{{ waf.name }}">
                     {{ waf.name }}
                 </td>
-                <td id="wafType{{ $index }}">
+                <td id="wafType{{ waf.name }}">
                     {{ waf.wafType.name }}
                 </td>
                 <td class="centered">
