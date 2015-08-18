@@ -1,6 +1,7 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
+import com.denimgroup.threadfix.selenium.pages.TagIndexPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
 import com.denimgroup.threadfix.selenium.utils.CommandLineUtils;
@@ -73,5 +74,44 @@ public class CommandLineIT extends BaseDataTest {
         assertTrue("WAF is not present.", wafIndexPage.isWafPresent(wafName));
         //TODO: Uncomment when ID is updated
         //assertTrue("WAF type is not correct.", wafIndexPage.getWafType(wafName).equals(wafType));
+    }
+
+    @Test
+    public void testCreateTagApplication() {
+        String tag = getName();
+
+        JSONObject response = cliUtils.createTag(tag);
+
+        assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
+
+        TagIndexPage tagIndexPage = loginPage.defaultLogin()
+                .clickTagsLink();
+        assertTrue("Tag is not present.", tagIndexPage.isAppTagNameLinkPresent(tag));
+    }
+
+    @Test
+    public void testCreateTagComment() {
+        String tag = getName();
+
+        JSONObject response = cliUtils.createTag(tag, "Comment");
+
+        assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
+
+        TagIndexPage tagIndexPage = loginPage.defaultLogin()
+                .clickTagsLink();
+        assertTrue("Tag is not present.", tagIndexPage.isCommentTagNameLinkPresent(tag));
+    }
+
+    @Test
+    public void testCreateTagVulnerability() {
+        String tag = getName();
+
+        JSONObject response = cliUtils.createTag(tag, "Vulnerability");
+
+        assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
+
+        TagIndexPage tagIndexPage = loginPage.defaultLogin()
+                .clickTagsLink();
+        assertTrue("Tag is not present.", tagIndexPage.isVulnerabilityTagNameLinkPresent(tag));
     }
 }

@@ -108,4 +108,12 @@ public class CommandLineUtils {
     public JSONObject createWaf(String wafName, String wafType) {
         return executeJarCommand("-cw", wafName, wafType);
     }
+
+    public JSONObject createTag(String tagName) {
+        return executeJarCommand("-ctg", tagName);
+    }
+
+    public JSONObject createTag(String tagName, String tagType) {
+        return executeJarCommand("-ctg", tagName, tagType);
+    }
 }
