@@ -126,4 +126,15 @@ public class CommandLineIT extends BaseDataTest {
         assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
         assertTrue("Returned team was not correct.", cliUtils.getObjectField(response, "name").equals(teamName));
     }
+
+    @Test
+    public void testSearchTeamByName() {
+        String teamName = getName();
+        DatabaseUtils.createTeam(teamName);
+
+        JSONObject response = cliUtils.searchTeam("name", teamName);
+
+        assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
+        assertTrue("Returned team was not correct.", cliUtils.getObjectField(response, "name").equals(teamName));
+    }
 }
