@@ -34,8 +34,6 @@ public class CommandLineUtils {
 
     // Executes command and returns JSON object
     public JSONObject executeCommand(String workingDirectory, String... args) {
-        String output = "";
-
         List<String> finalArgs = new ArrayList<>();
         finalArgs.addAll(startArgs);
         for (String arg : args) {
