@@ -56,7 +56,7 @@ public class FindingsDetailIT extends BaseDataTest{
         VulnerabilityDetailPage vulnerabilityDetailPage = findingDetailPage.clickViewVulnerability();
 
         assertTrue("Vulnerability Details Page is not Available",
-                vulnerabilityDetailPage.isVulnHistoryPresent());
+                vulnerabilityDetailPage.isUploadFileButtonPresent());
     }
 
     @Test
