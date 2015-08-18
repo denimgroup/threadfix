@@ -23,7 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
+import com.denimgroup.threadfix.selenium.utils.CommandLineUtils;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.json.JSONObject;
 
 public abstract class BaseDataTest extends BaseIT{
     protected static final String JIRA_USERNAME = System.getProperty("JIRA_USERNAME");
@@ -55,6 +57,9 @@ public abstract class BaseDataTest extends BaseIT{
 
     protected String userName;
     protected String roleName;
+
+    protected int teamId;
+    protected int appId;
 
     protected String testPassword = "TestPassword";
 
@@ -96,6 +101,18 @@ public abstract class BaseDataTest extends BaseIT{
         } else {
             throw new RuntimeException("Permission required to create a restricted user.");
         }
+    }
+
+    public void initializeTeamAndAppViaCli() {
+        CommandLineUtils cliUtils = new CommandLineUtils();
+        teamName = getName();
+        appName = getName();
+
+        JSONObject team = cliUtils.createTeam(teamName);
+        teamId = cliUtils.getObjectId(team);
+
+        JSONObject app = cliUtils.createApplication(teamId, appName, "http://test.com");
+        appId = cliUtils.getObjectId(app);
     }
 
 }

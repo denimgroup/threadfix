@@ -86,15 +86,8 @@ public class CommandLineIT extends BaseDataTest {
 
     @Test
     public void testUploadScanFile() {
-        String teamName = getName();
-        String appName = getName();
+        initializeTeamAndAppViaCli();
         String scanPath = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
-
-        JSONObject team = cliUtils.createTeam(teamName);
-        int teamId = cliUtils.getObjectId(team);
-
-        JSONObject app = cliUtils.createApplication(teamId, appName, "http://test.com");
-        int appId = cliUtils.getObjectId(app);
 
         JSONObject response = cliUtils.uploadScanFile(appId, scanPath);
         assertTrue("Upload status wasn't successful.", cliUtils.isCommandResponseSuccessful(response));
@@ -110,7 +103,25 @@ public class CommandLineIT extends BaseDataTest {
     }
 
     @Test
-    public void testGetWafRules() {}
+    public void testGetWafRules() {
+        initializeTeamAndAppWithIbmScan();
+        String wafName = getName();
+        JSONObject waf = cliUtils.createWaf(wafName, "Snort");
+        int wafId = cliUtils.getObjectId(waf);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName)
+                .clickEditDeleteBtn()
+                .clickSetWaf()
+                .addWaf(wafName)
+                .saveWafAdd()
+                .clickUpdateApplicationButton();
+
+        JSONObject response = cliUtils.getWafRules(wafId);
+        assertTrue("Response was not successful.", cliUtils.isCommandResponseSuccessful(response));
+    }
 
     public void testCreateTagApplication() {
         String tag = getName();
@@ -160,5 +171,10 @@ public class CommandLineIT extends BaseDataTest {
 
         assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
         assertTrue("Returned team was not correct.", cliUtils.getObjectField(response, "name").equals(teamName));
+    }
+
+    @Test
+    public void testQueueScan() {
+
     }
 }

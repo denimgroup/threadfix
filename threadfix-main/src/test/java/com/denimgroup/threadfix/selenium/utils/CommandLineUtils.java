@@ -137,4 +137,12 @@ public class CommandLineUtils {
     public JSONObject searchTeam(String searchBy, String value) {
         return executeJarCommand("-st", searchBy, value);
     }
+
+    public JSONObject getWafRules(int wafId) {
+        return executeJarCommand("-r", String.valueOf(wafId));
+    }
+
+    public JSONObject queueScan(int appId, String scannerName) {
+        return executeJarCommand("-q", String.valueOf(appId), scannerName);
+    }
 }
