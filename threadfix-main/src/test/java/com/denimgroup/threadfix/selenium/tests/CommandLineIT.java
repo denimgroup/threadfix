@@ -2,6 +2,7 @@ package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
+import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
 import com.denimgroup.threadfix.selenium.utils.CommandLineUtils;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.json.JSONObject;
@@ -56,5 +57,21 @@ public class CommandLineIT extends BaseDataTest {
         ApplicationDetailPage applicationDetailPage = teamIndexPage.clickApplicationName(teamName, appName)
                 .clickEditDeleteBtn();
         assertTrue("URL was not set correctly.", APP_URL.equals(applicationDetailPage.getUrlText()));
+    }
+
+    @Test
+    public void testCreateWaf() {
+        String wafName = getName();
+        String wafType = "mod_security";
+
+        JSONObject response = cliUtils.createWaf(wafName, wafType);
+
+        assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
+
+        WafIndexPage wafIndexPage = loginPage.defaultLogin()
+                .clickWafsHeaderLink();
+        assertTrue("WAF is not present.", wafIndexPage.isWafPresent(wafName));
+        //TODO: Uncomment when ID is updated
+        //assertTrue("WAF type is not correct.", wafIndexPage.getWafType(wafName).equals(wafType));
     }
 }
