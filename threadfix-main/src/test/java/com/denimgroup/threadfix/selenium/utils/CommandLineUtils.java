@@ -169,4 +169,8 @@ public class CommandLineUtils {
     public JSONObject queueScan(int appId, String scannerName) {
         return executeJarCommand("-q", String.valueOf(appId), scannerName);
     }
+
+    public JSONObject addUrlToApp(int appId, String url) {
+        return executeJarCommand("-au", String.valueOf(appId), url);
+    }
 }

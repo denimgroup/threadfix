@@ -175,7 +175,20 @@ public class CommandLineIT extends BaseDataTest {
     }
 
     @Test
-    public void testQueueScan() {}
+    public void testQueueScan() {
+        initializeTeamAndAppViaCli();
+
+        JSONObject response = cliUtils.queueScan(appId, "zap");
+        assertTrue("Response was unsuccessful.", cliUtils.isCommandResponseSuccessful(response));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName)
+                .clickScanAgentTasksTab(1);
+        assertTrue("Scheduled scan isn't present.",
+                ("OWASP Zed Attack Proxy").equals(applicationDetailPage.getScanAgentTaskScannerType(0)));
+    }
 
     @Test
     public void testSearchTeamByName() {
@@ -258,5 +271,21 @@ public class CommandLineIT extends BaseDataTest {
 
         assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
         assertTrue("Returned WAF was not correct.", cliUtils.getObjectField(response, "name").equals(wafName));
+    }
+
+    @Test
+    public void testAddUrl() {
+        initializeTeamAndAppViaCli();
+        String changedUrl = "http://changedurl.com";
+
+        JSONObject response = cliUtils.addUrlToApp(appId, changedUrl);
+        assertTrue("Response was unsuccessful.", cliUtils.isCommandResponseSuccessful(response));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName)
+                .clickEditDeleteBtn();
+        assertTrue("URL was not changed in modal.", changedUrl.equals(applicationDetailPage.getUrlText()));
     }
 }

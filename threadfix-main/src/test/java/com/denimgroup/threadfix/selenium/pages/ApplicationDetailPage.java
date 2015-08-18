@@ -1053,6 +1053,10 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementById("channelType0").getText();
     }
 
+    public String getScanAgentTaskScannerType(int position) {
+        return driver.findElementById("scannerType" + position).getText();
+    }
+
     /* _____________________ Boolean Methods _____________________ */
     public boolean vulnsFilteredOpen(int count) {
         return driver.findElementByLinkText(count + " Vulnerabilities").isDisplayed();
