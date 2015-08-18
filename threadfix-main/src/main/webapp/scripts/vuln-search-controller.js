@@ -12,6 +12,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             applications: [],
             tags: [],
             vulnTags: [],
+            commentTags: [],
             scanners: [],
             genericVulnerabilities: [],
             severities: {
@@ -29,7 +30,8 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             showDefectPresent: false,
             showDefectNotPresent: false,
             showDefectOpen: false,
-            showDefectClosed: false
+            showDefectClosed: false,
+            showCommentPresent: false
         };
 
         $scope.endDate = undefined;
