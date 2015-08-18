@@ -35,6 +35,7 @@ import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import javax.annotation.Nonnull;
 import javax.xml.bind.DatatypeConverter;
@@ -361,7 +362,7 @@ public class QualysRemoteProvider extends AbstractRemoteProvider {
                 "    <limitResults>" + numResults + "</limitResults>\n" +
                 "  </preferences>\n" +
                 "  <filters>\n" +
-                "    <Criteria field=\"webApp.name\" operator=\"CONTAINS\">" + appName + "</Criteria>\n" +
+                "    <Criteria field=\"webApp.name\" operator=\"CONTAINS\">" + StringEscapeUtils.escapeXml10(appName) + "</Criteria>\n" +
                 "    <Criteria field=\"status\" operator=\"EQUALS\">FINISHED</Criteria>\n" +
                 "  </filters>\n" +
                 "</ServiceRequest>";
