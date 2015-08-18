@@ -21,7 +21,7 @@
 	<div ng-controller="ScanUnmappedFindingTableController">
 		<h4 style="padding-top:30px">Unmapped Types</h4>
 		<%@ include file="/WEB-INF/views/successMessage.jspf" %>
-		<div id="unmappedTable" ng-if="numFindings && numFindings > 0">
+		<div id="unmappedTable" ng-show="numFindings && numFindings > 0">
 			<%@ include file="../scans/unmappedTable.jsp" %>
 		</div>
 		<div id="allFindingsHaveMappings" ng-if="!numFindings || numFindings == 0">
