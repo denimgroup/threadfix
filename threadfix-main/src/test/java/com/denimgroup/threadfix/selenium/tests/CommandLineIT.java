@@ -74,4 +74,42 @@ public class CommandLineIT extends BaseDataTest {
         //TODO: Uncomment when ID is updated
         //assertTrue("WAF type is not correct.", wafIndexPage.getWafType(wafName).equals(wafType));
     }
+
+    @Test
+    public void testSearchTagByName() {
+        dbUtils.createTag("ExampleTag", "Application");
+
+        JSONObject response = cliUtils.searchTagByName("ExampleTag");
+        assertTrue("Tag was not found.", cliUtils.isCommandResponseSuccessful(response));
+    }
+
+    @Test
+    public void testUploadScanFile() {
+        String teamName = getName();
+        String appName = getName();
+        String scanPath = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
+
+        JSONObject team = cliUtils.createTeam(teamName);
+        int teamId = cliUtils.getObjectId(team);
+
+        JSONObject app = cliUtils.createApplication(teamId, appName, "http://test.com");
+        int appId = cliUtils.getObjectId(app);
+
+        JSONObject response = cliUtils.uploadScanFile(appId, scanPath);
+        assertTrue("Upload status wasn't successful.", cliUtils.isCommandResponseSuccessful(response));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName)
+                .clickScansTab();
+
+        assertTrue("Scan is not present in Scans tab.",
+                applicationDetailPage.getFirstScanChannelType().equals("IBM Security AppScan Standard"));
+    }
+
+    @Test
+    public void testGetWafRules() {
+
+    }
 }

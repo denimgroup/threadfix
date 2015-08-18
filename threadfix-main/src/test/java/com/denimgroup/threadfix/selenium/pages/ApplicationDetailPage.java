@@ -1044,6 +1044,10 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementByClassName("alert-error").getText();
     }
 
+    public String getFirstScanChannelType() {
+        return driver.findElementById("channelType0").getText();
+    }
+
     /* _____________________ Boolean Methods _____________________ */
     public boolean vulnsFilteredOpen(int count) {
         return driver.findElementByLinkText(count + " Vulnerabilities").isDisplayed();
