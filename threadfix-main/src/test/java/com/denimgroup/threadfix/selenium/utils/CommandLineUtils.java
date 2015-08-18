@@ -137,4 +137,12 @@ public class CommandLineUtils {
     public JSONObject searchAppByID(String id) {
         return executeJarCommand("-sa", "id", id);
     }
+
+    public JSONObject searchAppByName(String appName, String teamName) {
+        return executeJarCommand("-sa", "name", appName, teamName);
+    }
+
+    public JSONObject searchAppByUniqueID(String id, String teamName) {
+        return executeJarCommand("-sa", "uniqueId", id, teamName);
+    }
 }

@@ -151,4 +151,39 @@ public class CommandLineIT extends BaseDataTest {
         assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
         assertTrue("Returned application was not correct.", cliUtils.getObjectField(response, "name").equals(appName));
     }
+
+    @Test
+    public void testSearchApplicationByName() {
+        String teamName = getName();
+        String appName = getName();
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        JSONObject response = cliUtils.searchAppByName(appName, teamName);
+
+        assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
+        assertTrue("Returned application was not correct.", cliUtils.getObjectField(response, "name").equals(appName));
+    }
+
+    @Test
+    public void testSearchApplicationByUniqueID() {
+        String teamName = getName();
+        String appName = getName();
+        String uniqueID = getName();
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandAllTeams()
+                .clickApplicationName(teamName, appName)
+                .clickEditDeleteBtn()
+                .setUniqueId(uniqueID)
+                .clickModalSubmit();
+
+        JSONObject response = cliUtils.searchAppByUniqueID(uniqueID, teamName);
+
+        assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
+        assertTrue("Returned application was not correct.", cliUtils.getObjectField(response, "name").equals(appName));
+    }
 }
