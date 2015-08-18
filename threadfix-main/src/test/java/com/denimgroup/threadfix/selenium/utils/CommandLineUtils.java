@@ -104,4 +104,8 @@ public class CommandLineUtils {
     public JSONObject createApplication(int teamId, String appName, String appUrl) {
         return executeJarCommand("-ca", String.valueOf(teamId), appName, appUrl);
     }
+
+    public JSONObject createWaf(String wafName, String wafType) {
+        return executeJarCommand("-cw", wafName, wafType);
+    }
 }

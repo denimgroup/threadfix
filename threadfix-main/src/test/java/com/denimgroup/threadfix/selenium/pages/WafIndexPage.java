@@ -125,6 +125,10 @@ public class WafIndexPage extends BasePage {
 		return 0;
 	}
 
+    public String getWafType(String wafName) {
+        return driver.findElementById("wafType" + wafName).getText();
+    }
+
     /*------------------------------------ Boolean Methods ------------------------------------*/
 
     public boolean isTextPresentInWafTableBody(String text) {
