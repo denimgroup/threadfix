@@ -234,22 +234,12 @@ public class ScanController {
 		}
 
 		long numFindings = scanService.getUnmappedFindingCount(scanId);
-		long numPages = numFindings / 100;
-
-		if (numFindings % 100 == 0) {
-			numPages -= 1;
-		}
-
-		if (bean.getPage() >= numPages) {
-			bean.setPage((int) (numPages + 1));
-		}
 
 		if (bean.getPage() < 1) {
 			bean.setPage(1);
 		}
 
 		Map<String, Object> responseMap = new HashMap<>();
-		responseMap.put("numPages", numPages);
 		responseMap.put("page", bean.getPage());
 		responseMap.put("numFindings", numFindings);
 		responseMap.put("findingList", findingService.getUnmappedFindingTable(scanId, bean));
