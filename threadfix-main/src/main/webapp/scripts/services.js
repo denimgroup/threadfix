@@ -353,6 +353,15 @@ threadfixModule.factory('vulnSearchParameterService', function() {
 
 
     updater.convertFromSpringToAngular = function($scope, filterParameters) {
+
+        $scope.parameters.severities = {
+            info: false,
+            low: false,
+            medium: false,
+            high: false,
+            critical: false
+        };
+
         filterParameters.genericSeverities.forEach(function (severity) {
             if (severity.intValue === 1)
                 $scope.parameters.severities.info = true;
