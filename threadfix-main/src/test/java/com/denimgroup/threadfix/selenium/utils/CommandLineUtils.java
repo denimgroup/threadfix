@@ -145,4 +145,12 @@ public class CommandLineUtils {
     public JSONObject searchAppByUniqueID(String id, String teamName) {
         return executeJarCommand("-sa", "uniqueId", id, teamName);
     }
+
+    public JSONObject searchWafByID(String id) {
+        return executeJarCommand("-sw", "id", id);
+    }
+
+    public JSONObject searchWafByName(String name) {
+        return executeJarCommand("-sw", "name", name);
+    }
 }

@@ -186,4 +186,27 @@ public class CommandLineIT extends BaseDataTest {
         assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
         assertTrue("Returned application was not correct.", cliUtils.getObjectField(response, "name").equals(appName));
     }
+
+    @Test
+    public void testSearchWafByID() {
+        String wafName = getName();
+        DatabaseUtils.createWaf(wafName, "mod_security");
+        String wafID = DatabaseUtils.getWafID(wafName);
+
+        JSONObject response = cliUtils.searchWafByID(wafID);
+
+        assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
+        assertTrue("Returned WAF was not correct.", cliUtils.getObjectField(response, "name").equals(wafName));
+    }
+
+    @Test
+    public void testSearchWafByName() {
+        String wafName = getName();
+        DatabaseUtils.createWaf(wafName, "mod_security");
+
+        JSONObject response = cliUtils.searchWafByName(wafName);
+
+        assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
+        assertTrue("Returned WAF was not correct.", cliUtils.getObjectField(response, "name").equals(wafName));
+    }
 }

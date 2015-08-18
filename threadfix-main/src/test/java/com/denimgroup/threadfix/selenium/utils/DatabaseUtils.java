@@ -207,4 +207,11 @@ public class DatabaseUtils {
 
         return String.valueOf(response.object.getId());
     }
+
+    public static String getWafID(String wafName) {
+        RestResponse<Waf> response = CLIENT.searchForWafByName(wafName);
+        assertTrue("Request for WAF was unsuccessful.  Message: " + response.message, response.success);
+
+        return String.valueOf(response.object.getId());
+    }
 }
