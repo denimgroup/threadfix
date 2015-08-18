@@ -1057,6 +1057,14 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementById("scannerType" + position).getText();
     }
 
+    public String getApplicationType() {
+        return driver.findElementById("frameworkType").getAttribute("value");
+    }
+
+    public String getRepositoryUrl() {
+         return driver.findElementById("repositoryUrl").getAttribute("value");
+    }
+
     /* _____________________ Boolean Methods _____________________ */
     public boolean vulnsFilteredOpen(int count) {
         return driver.findElementByLinkText(count + " Vulnerabilities").isDisplayed();
@@ -1475,6 +1483,15 @@ public class ApplicationDetailPage extends BasePage {
 
     public boolean isUploadedFilePresent(String fileName) {
         return driver.findElementByCssSelector("td#docName0").getText().contains(fileName);
+    }
+
+    public boolean isTagLinkPresent() {
+        try {
+            driver.findElementById("appTag0");
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+        return true;
     }
 
     /*___________________Void Methods__________________*/

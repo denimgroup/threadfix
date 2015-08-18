@@ -173,4 +173,20 @@ public class CommandLineUtils {
     public JSONObject addUrlToApp(int appId, String url) {
         return executeJarCommand("-au", String.valueOf(appId), url);
     }
+
+    public JSONObject setTaskConfigFile(int appId, String scanner, String filepath) {
+        return executeJarCommand("-stc", String.valueOf(appId), scanner, filepath);
+    }
+
+    public JSONObject setParameters(int appId, String framework) {
+        return executeJarCommand("-sp", String.valueOf(appId), framework);
+    }
+
+    public JSONObject setParameters(int appId, String framework, String repositoryUrl) {
+        return executeJarCommand("-sp", String.valueOf(appId), framework, repositoryUrl);
+    }
+
+    public JSONObject addTagToApplication(int appId, int tagId) {
+        return executeJarCommand("-aat", String.valueOf(appId), String.valueOf(tagId));
+    }
 }
