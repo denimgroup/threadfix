@@ -8,6 +8,8 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
 
     $scope.heading = "Unmapped Findings";
 
+    $scope.numberPerPage = 100;
+
     $scope.$on('rootScopeInitialized', function() {
 
         $http.get(tfEncoder.encode($scope.$parent.currentUrl + "/cwe"), getTableSortBean()).
@@ -41,11 +43,10 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
                 success(function(data) {
 
                     if (data.success) {
-                        $scope.numPages = data.object.numPages;
                         $scope.page = data.object.page;
                         $scope.numFindings = data.object.numFindings;
                         $scope.heading = $scope.numFindings + " Unmapped Findings";
-                        $scope.numberOfUnmappedPages = Math.ceil(data.object.numFindings/100);
+                        $scope.numberOfUnmappedPages = Math.ceil(data.object.numFindings/$scope.numberPerPage);
                         $scope.findingList = data.object.findingList;
                         $scope.scan = data.object.scan;
                     } else {
