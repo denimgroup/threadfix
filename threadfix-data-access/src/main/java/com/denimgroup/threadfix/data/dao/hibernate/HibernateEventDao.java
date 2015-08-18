@@ -37,6 +37,7 @@ import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -110,17 +111,17 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
             userEventActions.add(eventAction.name());
         }
 
-        return retrieveUngrouped(userEventActions, user, null, null);
+        return retrieveUngrouped(userEventActions, user, null, null, null);
     }
 
     @Override
     public List<Event> retrieveGroupedByUser(User user) {
         List<String> userGroupedEventAction = list();
-        for (EventAction eventAction : EventAction.userGroupedEventAction) {
+        for (EventAction eventAction : EventAction.userGroupedEventActions) {
             userGroupedEventAction.add(eventAction.name());
         }
 
-        return retrieveGrouped(userGroupedEventAction, user, null, null);
+        return retrieveGrouped(userGroupedEventAction, user, null, null, null);
     }
 
     @Override
@@ -130,29 +131,49 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
             globalEventActions.add(eventAction.name());
         }
 
-        return retrieveUngrouped(globalEventActions, null, appIds, teamIds);
+        return retrieveUngrouped(globalEventActions, null, null, appIds, teamIds);
     }
 
     @Override
     public List<Event> retrieveGlobalGrouped(Set<Integer> appIds, Set<Integer> teamIds) {
         List<String> globalGroupedEventAction = list();
-        for (EventAction eventAction : EventAction.globalGroupedEventAction) {
+        for (EventAction eventAction : EventAction.globalGroupedEventActions) {
             globalGroupedEventAction.add(eventAction.name());
         }
 
-        return retrieveGrouped(globalGroupedEventAction, null, appIds, teamIds);
+        return retrieveGrouped(globalGroupedEventAction, null, null, appIds, teamIds);
     }
 
-    private List<Event> retrieveUngrouped(List<String> eventActions, User user, Set<Integer> appIds, Set<Integer> teamIds) {
-        Criteria criteria = getEventCriteria(eventActions, user, appIds, teamIds);
+    @Override
+    public List<Event> retrieveRecentUngrouped(List<EventAction> userEventActions, Date startTime, Set<Integer> appIds, Set<Integer> teamIds) {
+        List<String> recentEventActions = list();
+        for (EventAction eventAction : userEventActions) {
+            recentEventActions.add(eventAction.name());
+        }
+
+        return retrieveUngrouped(recentEventActions, null, startTime, appIds, teamIds);
+    }
+
+    @Override
+    public List<Event> retrieveRecentGrouped(List<EventAction> userGroupedEventActions, Date startTime, Set<Integer> appIds, Set<Integer> teamIds) {
+        List<String> recentGroupedEventAction = list();
+        for (EventAction eventAction : userGroupedEventActions) {
+            recentGroupedEventAction.add(eventAction.name());
+        }
+
+        return retrieveGrouped(recentGroupedEventAction, null, startTime, appIds, teamIds);
+    }
+
+    private List<Event> retrieveUngrouped(List<String> eventActions, User user, Date startTime, Set<Integer> appIds, Set<Integer> teamIds) {
+        Criteria criteria = getEventCriteria(eventActions, user, startTime, appIds, teamIds);
 
         List<Event> events = criteria.list();
 
         return events;
     }
 
-    private List<Event> retrieveGrouped(List<String> eventActions, User user, Set<Integer> appIds, Set<Integer> teamIds) {
-        Criteria criteria = getEventCriteria(eventActions, user, appIds, teamIds);
+    private List<Event> retrieveGrouped(List<String> eventActions, User user, Date startTime, Set<Integer> appIds, Set<Integer> teamIds) {
+        Criteria criteria = getEventCriteria(eventActions, user, startTime, appIds, teamIds);
 
         criteria.setProjection(Projections.projectionList()
                         .add(Projections.count("id").as("groupCount"))
@@ -178,18 +199,25 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
         return events;
     }
 
-    private Criteria getEventCriteria(List<String> eventActions, User user, Set<Integer> appIds, Set<Integer> teamIds) {
+    private Criteria getEventCriteria(List<String> eventActions, User user, Date startTime, Set<Integer> appIds, Set<Integer> teamIds) {
         Criteria criteria = getSession()
                 .createCriteria(getClassReference())
-                .add(Restrictions.eq("active", true))
-                .add(Restrictions.in("eventAction", eventActions));
+                .add(Restrictions.eq("active", true));
 
         criteria.createAlias("scan", "scan", Criteria.LEFT_JOIN);
         criteria.createAlias("application", "application", Criteria.LEFT_JOIN);
         criteria.createAlias("application.organization", "application.organization", Criteria.LEFT_JOIN);
 
+        if ((eventActions != null) && (!eventActions.isEmpty())) {
+            criteria.add(Restrictions.in("eventAction", eventActions));
+        }
+
         if (user != null) {
             criteria.add(Restrictions.eq("user", user));
+        }
+
+        if (startTime != null) {
+            criteria.add(Restrictions.ge("date", startTime));
         }
 
         if ((appIds != null) && (!appIds.isEmpty()) && (teamIds != null) && (!teamIds.isEmpty())) {

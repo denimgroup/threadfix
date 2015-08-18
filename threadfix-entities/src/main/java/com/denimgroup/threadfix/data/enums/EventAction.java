@@ -77,7 +77,7 @@ public enum EventAction {
             VULNERABILITY_MARK_FALSE_POSITIVE, VULNERABILITY_UNMARK_FALSE_POSITIVE, VULNERABILITY_COMMENT,
             VULNERABILITY_OTHER, DEFECT_SUBMIT, DEFECT_STATUS_UPDATED, DEFECT_CLOSED, DEFECT_APPEARED_AFTER_CLOSED };
 
-    public static EventAction[] userGroupedEventAction = { VULNERABILITY_OPEN_SCAN_DELETED,
+    public static EventAction[] userGroupedEventActions = { VULNERABILITY_OPEN_SCAN_DELETED,
             VULNERABILITY_OPEN_SCAN_UPLOAD, VULNERABILITY_CLOSE_SCAN_DELETED,
             VULNERABILITY_CLOSE_SCAN_UPLOAD, VULNERABILITY_REOPEN_SCAN_UPLOAD };
 
@@ -87,7 +87,7 @@ public enum EventAction {
             VULNERABILITY_MARK_FALSE_POSITIVE, VULNERABILITY_UNMARK_FALSE_POSITIVE, VULNERABILITY_COMMENT,
             VULNERABILITY_OTHER, DEFECT_SUBMIT, DEFECT_STATUS_UPDATED, DEFECT_CLOSED, DEFECT_APPEARED_AFTER_CLOSED };
 
-    public static EventAction[] globalGroupedEventAction = { VULNERABILITY_OPEN_SCAN_DELETED,
+    public static EventAction[] globalGroupedEventActions = { VULNERABILITY_OPEN_SCAN_DELETED,
             VULNERABILITY_OPEN_SCAN_UPLOAD, VULNERABILITY_CLOSE_SCAN_DELETED,
             VULNERABILITY_CLOSE_SCAN_UPLOAD, VULNERABILITY_REOPEN_SCAN_UPLOAD };
 
@@ -144,7 +144,7 @@ public enum EventAction {
     }
 
     public boolean isUserGroupedEventAction() {
-        for (EventAction eventAction: userGroupedEventAction) {
+        for (EventAction eventAction: userGroupedEventActions) {
             if (eventAction.equals(this)) {
                 return true;
             }
@@ -162,7 +162,7 @@ public enum EventAction {
     }
 
     public boolean isGlobalGroupedEventAction() {
-        for (EventAction eventAction: globalGroupedEventAction) {
+        for (EventAction eventAction: globalGroupedEventActions) {
             if (eventAction.equals(this)) {
                 return true;
             }

@@ -25,7 +25,9 @@
 package com.denimgroup.threadfix.data.dao;
 
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.enums.EventAction;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -44,4 +46,8 @@ public interface EventDao extends GenericObjectDao<Event> {
     List<Event> retrieveGlobalUngrouped(Set<Integer> appIds, Set<Integer> teamIds);
 
     List<Event> retrieveGlobalGrouped(Set<Integer> appIds, Set<Integer> teamIds);
+
+    List<Event> retrieveRecentUngrouped(List<EventAction> userEventActions, Date startTime, Set<Integer> appIds, Set<Integer> teamIds);
+
+    List<Event> retrieveRecentGrouped(List<EventAction> userGroupedEventActions, Date startTime, Set<Integer> appIds, Set<Integer> teamIds);
 }

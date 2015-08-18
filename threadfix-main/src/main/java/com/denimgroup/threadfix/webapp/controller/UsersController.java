@@ -163,7 +163,7 @@ public class UsersController {
 		returnMap.put("teams", organizationService.loadAllActive());
 
 		List<EventAction> eventNotificationTypes = new ArrayList<>(Arrays.asList(EventAction.globalEventActions));
-		eventNotificationTypes.addAll(Arrays.asList(EventAction.globalGroupedEventAction));
+		eventNotificationTypes.addAll(Arrays.asList(EventAction.globalGroupedEventActions));
 		Map<String, String> eventNotificationTypeDisplayNames = new HashMap<>();
 		for (EventAction eventNotificationType : eventNotificationTypes) {
 			eventNotificationTypeDisplayNames.put(eventNotificationType.toString(), eventNotificationType.getDisplayName());
