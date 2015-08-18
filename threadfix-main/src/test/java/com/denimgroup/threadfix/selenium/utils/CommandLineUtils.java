@@ -173,4 +173,12 @@ public class CommandLineUtils {
     public JSONObject addUrlToApp(int appId, String url) {
         return executeJarCommand("-au", String.valueOf(appId), url);
     }
+
+    public JSONObject lookupTags() {
+        return executeJarCommand("-tg");
+    }
+
+    public JSONObject searchTagByID(int tagID) {
+        return executeJarCommand("-stg", "id", String.valueOf(tagID));
+    }
 }
