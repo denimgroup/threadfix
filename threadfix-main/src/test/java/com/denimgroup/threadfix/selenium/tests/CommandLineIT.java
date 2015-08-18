@@ -8,7 +8,6 @@ import com.denimgroup.threadfix.selenium.utils.CommandLineUtils;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.json.JSONObject;
 import org.junit.Test;
-import org.openqa.selenium.By;
 
 import static org.junit.Assert.assertTrue;
 

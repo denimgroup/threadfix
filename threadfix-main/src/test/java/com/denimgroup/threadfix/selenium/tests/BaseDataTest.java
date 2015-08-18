@@ -41,25 +41,19 @@ public abstract class BaseDataTest extends BaseIT{
     protected static final String TFS_PASSWORD = System.getProperty("TFS_PASSWORD");
     protected static final String TFS_URL = System.getProperty("TFS_URL");
     protected static final String TFS_PROJECTNAME = ("Vulnerability Manager Demo");
-    protected static String SENTINEL_API_KEY = System.getProperty("WHITEHAT_KEY");
-    protected static String VERACODE_USER = System.getProperty("VERACODE_USERNAME");
-    protected static String VERACODE_PASSWORD = System.getProperty("VERACODE_PASSWORD");
-    protected static String QUALYS_USER = System.getProperty("QUALYS_USER");
-    protected static String QUALYS_PASS = System.getProperty("QUALYS_PASS");
-    protected static String QUALYS_PLATFORM = System.getProperty("QUALYS_PLATFORM");
-    protected static String CONTRAST_USER = System.getProperty("CONTRAST_USER");
-    protected static String CONTRAST_API_KEY = System.getProperty("CONTRAST_API_KEY");
-    protected static String CONTRAST_SERVICE_KEY = System.getProperty("CONTRAST_SERVICE_KEY");
+    protected static final String SENTINEL_API_KEY = System.getProperty("WHITEHAT_KEY");
+    protected static final String VERACODE_USER = System.getProperty("VERACODE_USERNAME");
+    protected static final String VERACODE_PASSWORD = System.getProperty("VERACODE_PASSWORD");
+    protected static final String QUALYS_USER = System.getProperty("QUALYS_USER");
+    protected static final String QUALYS_PASS = System.getProperty("QUALYS_PASS");
+    protected static final String QUALYS_PLATFORM = System.getProperty("QUALYS_PLATFORM");
+    protected static final String CONTRAST_USER = System.getProperty("CONTRAST_USER");
+    protected static final String CONTRAST_API_KEY = System.getProperty("CONTRAST_API_KEY");
+    protected static final String CONTRAST_SERVICE_KEY = System.getProperty("CONTRAST_SERVICE_KEY");
 
 
-    protected String teamName;
-    protected String appName;
-
-    protected String userName;
-    protected String roleName;
-
-    protected int teamId;
-    protected int appId;
+    protected String teamName, appName, userName, roleName;
+    protected int teamId, appId;
 
     protected String testPassword = "TestPassword";
 
@@ -81,11 +75,6 @@ public abstract class BaseDataTest extends BaseIT{
     protected void initializeTeamAndAppWithAppScanEnterpriseScan() {
         initializeTeamAndApp();
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
-    }
-
-    protected void initializeTeamAndAppWithLargeZapScan() {
-        initializeTeamAndApp();
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
     }
 
     protected void uploadScanToApp(String team, String app, String scan){
