@@ -113,7 +113,15 @@ public class TagIndexPage extends BasePage{
         try {
             waitForElement(driver.findElementById("commentTagName" + name));
         } catch (NoSuchElementException e) {
-            takeScreenShot();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isVulnerabilityTagNameLinkPresent(String name) {
+        try {
+            waitForElement(driver.findElementById("vulnTagName" + name));
+        } catch (NoSuchElementException e) {
             return false;
         }
         return true;

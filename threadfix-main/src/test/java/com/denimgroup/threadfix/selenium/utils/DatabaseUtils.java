@@ -193,4 +193,11 @@ public class DatabaseUtils {
         RestResponse<Group> response = CLIENT.createGroup(groupName);
         assertTrue("Request for create group was unsuccessful.  Message: " + response.message, response.success);
     }
+
+    public static String getTeamID(String teamName) {
+        RestResponse<Organization> response = CLIENT.searchForTeamByName(teamName);
+        assertTrue("Request for team was unsuccessful. Message: " + response.message, response.success);
+
+        return String.valueOf(response.object.getId());
+    }
 }
