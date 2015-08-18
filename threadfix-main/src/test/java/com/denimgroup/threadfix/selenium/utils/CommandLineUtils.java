@@ -25,7 +25,8 @@ public class CommandLineUtils {
             startArgs.add("CMD");
             startArgs.add("/C");
         } else {
-            startArgs.add("/bin/sh");
+            startArgs.add("bash");
+            startArgs.add("-c");
         }
         startArgs.add("java");
         startArgs.add("-jar");
