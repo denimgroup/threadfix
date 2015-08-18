@@ -114,4 +114,16 @@ public class CommandLineIT extends BaseDataTest {
                 .clickTagsLink();
         assertTrue("Tag is not present.", tagIndexPage.isVulnerabilityTagNameLinkPresent(tag));
     }
+
+    @Test
+    public void testSearchTeamByID() {
+        String teamName = getName();
+        DatabaseUtils.createTeam(teamName);
+        String teamID = DatabaseUtils.getTeamID(teamName);
+
+        JSONObject response = cliUtils.searchTeam("id", teamID);
+
+        assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
+        assertTrue("Returned team was not correct.", cliUtils.getObjectField(response, "name").equals(teamName));
+    }
 }

@@ -93,6 +93,15 @@ public class CommandLineUtils {
         }
     }
 
+    public String getObjectField(JSONObject object, String field) {
+        try {
+            return object.getJSONObject("object").getString(field);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Field does not exist";
+        }
+    }
+
     //===========================================================================================================
     // REST Actions
     //===========================================================================================================
@@ -115,5 +124,9 @@ public class CommandLineUtils {
 
     public JSONObject createTag(String tagName, String tagType) {
         return executeJarCommand("-ctg", tagName, tagType);
+    }
+
+    public JSONObject searchTeam(String searchBy, String value) {
+        return executeJarCommand("-st", searchBy, value);
     }
 }
