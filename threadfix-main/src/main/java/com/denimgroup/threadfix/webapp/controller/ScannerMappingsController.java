@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.data.entities.ChannelType;
+import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.importer.interop.ScannerMappingsUpdaterService;
 import com.denimgroup.threadfix.remote.response.RestResponse;
@@ -33,15 +34,14 @@ import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
+import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -71,6 +71,11 @@ public class ScannerMappingsController {
 	private ChannelVulnerabilityFilterService channelVulnerabilityFilterService;
 	@Autowired
 	private GenericSeverityService genericSeverityService;
+
+	@InitBinder
+	protected void initBinder(WebDataBinder binder) {
+		binder.setValidator(new BeanValidator());
+	}
 
 	@RequestMapping(value = "/filters/map", method = RequestMethod.GET)
 	@ResponseBody
@@ -126,24 +131,13 @@ public class ScannerMappingsController {
 			return "403";
 		}
 
-		// TODO remove repeated code from here + application page + scan page
 		long numFindings = findingService.getTotalUnmappedFindings();
-		long numPages = numFindings / 100;
-
-		if (numFindings % 100 == 0) {
-			numPages -= 1;
-		}
-
-		if (bean.getPage() >= numPages) {
-			bean.setPage((int) (numPages + 1));
-		}
 
 		if (bean.getPage() < 1) {
 			bean.setPage(1);
 		}
 
 		Map<String, Object> responseMap = new HashMap<>();
-		responseMap.put("numPages", numPages);
 		responseMap.put("page", bean.getPage());
 		responseMap.put("numFindings", numFindings);
 		responseMap.put("findingList", findingService.getUnmappedFindingTable(bean));
