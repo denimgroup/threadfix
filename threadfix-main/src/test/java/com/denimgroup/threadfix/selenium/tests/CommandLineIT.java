@@ -7,6 +7,8 @@ import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
 import com.denimgroup.threadfix.selenium.utils.CommandLineUtils;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -352,5 +354,25 @@ public class CommandLineIT extends BaseDataTest {
                 .clickApplicationName(teamName, appName);
         System.out.println();
         assertTrue("Tag isn't present on application.", applicationDetailPage.isTagLinkPresent());
+    }
+
+    @Test
+    public void testLookupAllTags() throws JSONException{
+        String tagName = getName();
+        DatabaseUtils.createTag(tagName, "Application");
+
+        JSONObject response = cliUtils.lookupTags();
+        assertTrue("Response was unsuccessful.", cliUtils.isCommandResponseSuccessful(response));
+    }
+
+    @Test
+    public void testSearchTagByID() {
+        String tagName = getName();
+        DatabaseUtils.createTag(tagName, "Application");
+        int tagID = DatabaseUtils.getTagId(tagName, true);
+
+        JSONObject response = cliUtils.searchTagByID(tagID);
+        assertTrue("Response was unsuccessful.", cliUtils.isCommandResponseSuccessful(response));
+        assertTrue("TAg was not correct.", cliUtils.getObjectField(response, "name").equals(tagName));
     }
 }

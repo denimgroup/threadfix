@@ -181,6 +181,14 @@ public class CommandLineUtils {
         return executeJarCommand("-au", String.valueOf(appId), url);
     }
 
+    public JSONObject lookupTags() {
+        return executeJarCommand("-tg");
+    }
+
+    public JSONObject searchTagByID(int tagID) {
+        return executeJarCommand("-stg", "id", String.valueOf(tagID));
+    }
+
     public JSONObject setTaskConfigFile(int appId, String scanner, String filepath) {
         return executeJarCommand("-stc", String.valueOf(appId), scanner, filepath);
     }

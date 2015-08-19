@@ -38,6 +38,13 @@ public class FindingDetailPage extends BasePage {
         return new VulnerabilityDetailPage(driver);
     }
 
+    public VulnerabilityDetailPage clickViewVulnerabilityLimitedPermission() {
+        driver.findElementByLinkText("View Vulnerability").click();
+        sleep(3000);
+        waitForElement(driver.findElementById("cweLink"));
+        return new VulnerabilityDetailPage(driver);
+    }
+
     public MergeFindingPage clickMergeWithOtherFindings() {
         driver.findElementByLinkText("Merge with Other Findings").click();
         sleep(3000);
