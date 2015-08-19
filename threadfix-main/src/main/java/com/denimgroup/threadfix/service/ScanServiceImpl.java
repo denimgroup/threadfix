@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
@@ -37,6 +38,7 @@ import com.denimgroup.threadfix.importer.interop.ChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ChannelImporterFactory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.queue.QueueSender;
+import com.denimgroup.threadfix.util.CleanXML;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -170,6 +172,18 @@ public class ScanServiceImpl implements ScanService {
 
         if (!result.getScanCheckResult().equals(ScanImportStatus.SUCCESSFUL_SCAN)) {
             importer.deleteScanFile();
+            if (result.getScanCheckResult().equals(ScanImportStatus.BADLY_FORMED_XML)) {
+                String cleanFileName = fileName + "-clean";
+                CleanXML cleanXML = new CleanXML(new File((fileName)));
+                try {
+                    cleanXML.clean(DiskUtils.getScratchFile(cleanFileName));
+                } catch (Exception e) {
+                    LOG.debug("WAT");
+                }
+
+                importer.setFileName(cleanFileName);
+                result = importer.checkFile();
+            }
         }
 
         Calendar scanQueueDate = applicationChannelDao.getMostRecentQueueScanTime(channel.getId());

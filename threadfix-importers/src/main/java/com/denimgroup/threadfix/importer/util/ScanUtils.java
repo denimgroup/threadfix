@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.exception.RestInvalidScanFormatException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
@@ -73,7 +74,7 @@ public final class ScanUtils {
 
 		return true;
 	}
-	
+
 	/**
 	 * This method with one argument sets up the SAXParser and inputStream correctly
 	 * and executes the parsing. With two it adds a completion code and exception handling.
