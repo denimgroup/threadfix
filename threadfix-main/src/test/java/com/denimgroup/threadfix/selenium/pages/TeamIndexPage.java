@@ -290,6 +290,7 @@ public class TeamIndexPage extends BasePage {
     }
 
     public String getNameTakenErrorMessage() {
+        waitForElement(driver.findElementById("applicationNameInputNameError"));
         return driver.findElementById("applicationNameInputNameError").getText();
     }
 
