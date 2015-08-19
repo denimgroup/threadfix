@@ -217,7 +217,27 @@ public class CommandLineUtils {
     }
 
     public JSONObject vulnSearchByID(String id) {
-        return executeJarCommand("--search", "genericVulnerabilityIds=" + id, "numberVulnerabilities=1");
+        return executeJarCommand("--search", "genericVulnerabilityIds=" + id, "numberVulnerabilities=100");
+    }
+
+    public JSONObject vulnSearchByTeamID(int teamId) {
+        return executeJarCommand("--search", "teamIds=" + teamId, "numberVulnerabilities=100");
+    }
+
+    public JSONObject vulnSearchByApplicationID(int appId) {
+        return executeJarCommand("--search", "applicationIds=" + appId, "numberVulnerabilities=100");
+    }
+
+    public JSONObject vulnSearchByScannerName(String scannerName) {
+        return executeJarCommand("--search", "scannerNames=" + scannerName, "numberVulnerabilities=100");
+    }
+
+    public JSONObject vulnSearchBySeverity(String severity) {
+        return executeJarCommand("--search", "genericSeverityValues=" + severity, "numberVulnerabilities=100");
+    }
+
+    public JSONObject vulnSearchByNumberOfResults(int numberOfResults) {
+        return executeJarCommand("--search", "numberVulnerabilities=" + numberOfResults);
     }
 
     public JSONObject removeTagFromApplication(int appId, int tagId) {

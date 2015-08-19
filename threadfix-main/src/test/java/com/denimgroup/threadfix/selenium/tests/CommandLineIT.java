@@ -381,13 +381,83 @@ public class CommandLineIT extends BaseDataTest {
 
     @Test
     public void testVulnerabilitySearchByID() {
+        DatabaseUtils.deleteAllTeams();
         initializeTeamAndAppWithWebInspectScan();
 
         JSONObject response = cliUtils.vulnSearchByID("79");
-        assertTrue("Response was unsuccessful.", cliUtils.isCommandResponseSuccessful(response));
 
         JSONArray vulnerabilities = cliUtils.getObjectArray(response);
-        assertTrue("Number of vulnerabilities was incorrect.", vulnerabilities.length() == 1);
+        assertTrue("Number of vulnerabilities was incorrect.", vulnerabilities.length() == 3);
+    }
+
+    @Test
+    public void testVulnerabilitySearchByTeamID() {
+        initializeTeamAndAppViaCli();
+        uploadScanToApp(teamName, appName, "w3af");
+        initializeTeamAndAppViaCli();
+        uploadScanToApp(teamName, appName, "WebInspect");
+
+        JSONObject response = cliUtils.vulnSearchByTeamID(teamId);
+
+        JSONArray vulnerabilities = cliUtils.getObjectArray(response);
+        assertTrue("Number of vulnerabilities was incorrect.", vulnerabilities.length() == 29);
+    }
+
+    @Test
+    public void testVulnerabilitySearchByApplicationID() {
+        String applicationName = getName();
+        initializeTeamAndAppViaCli();
+        uploadScanToApp(teamName, appName, "w3af");
+        DatabaseUtils.createApplication(teamName, applicationName);
+        uploadScanToApp(teamName, applicationName, "WebInspect");
+
+        JSONObject response = cliUtils.vulnSearchByApplicationID(appId);
+
+        JSONArray vulnerabilities = cliUtils.getObjectArray(response);
+        assertTrue("Number of vulnerabilities was incorrect.", vulnerabilities.length() == 13);
+    }
+
+    @Test
+    public void testVulnerabilitySearchByScannerType() {
+        initializeTeamAndAppViaCli();
+        uploadScanToApp(teamName, appName, "AppScanEnterprise");
+        uploadScanToApp(teamName, appName, "w3af");
+
+        JSONObject response = cliUtils.vulnSearchByScannerName("IBM Security AppScan Enterprise");
+
+        JSONArray vulnerabilities = cliUtils.getObjectArray(response);
+        assertTrue("Number of vulnerabilities was incorrect.", vulnerabilities.length() == 72);
+    }
+
+    @Test
+    public void testVulnerabilitySearchBySeverity() {
+        DatabaseUtils.deleteAllTeams();
+        initializeTeamAndAppViaCli();
+        uploadScanToApp(teamName, appName, "AppScanEnterprise");
+
+        JSONObject response = cliUtils.vulnSearchBySeverity("5");
+
+        JSONArray vulnerabilities = cliUtils.getObjectArray(response);
+        assertTrue("Number of vulnerabilities was incorrect.", vulnerabilities.length() == 21);
+    }
+
+    @Test
+    public void testVulnerabilitySearchNumberOfResults() {
+        DatabaseUtils.deleteAllTeams();
+        initializeTeamAndAppViaCli();
+        uploadScanToApp(teamName, appName, "AppScanEnterprise");
+
+        JSONObject response = cliUtils.vulnSearchByNumberOfResults(5);
+
+        JSONArray vulnerabilities = cliUtils.getObjectArray(response);
+        assertTrue("Number of vulnerabilities was incorrect for returning less than total vulnerabilities.",
+                vulnerabilities.length() == 5);
+
+        JSONObject secondResponse = cliUtils.vulnSearchByNumberOfResults(100);
+
+        JSONArray secondVulnerabilities = cliUtils.getObjectArray(secondResponse);
+        assertTrue("Number of vulnerabilities was incorrect for returning more than total vulnerabilities.",
+                secondVulnerabilities.length() == 72);
     }
 
     @Test
