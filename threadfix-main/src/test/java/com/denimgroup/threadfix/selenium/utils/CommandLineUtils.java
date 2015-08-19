@@ -23,7 +23,7 @@ public class CommandLineUtils {
     protected final SanitizedLogger log = new SanitizedLogger(CommandLineUtils.class);
 
     private static List<String> startArgs = list();
-    private static final String DIRECTORY = ".." + File.separator + "threadfix-cli" + File.separator + "target";
+    private static final String DIRECTORY = System.getProperty("CliJarHome");
 
     static {
         if (System.getProperty("os.name").startsWith("Windows")) {
@@ -218,5 +218,9 @@ public class CommandLineUtils {
 
     public JSONObject vulnSearchByID(String id) {
         return executeJarCommand("--search", "genericVulnerabilityIds=" + id, "numberVulnerabilities=1");
+    }
+
+    public JSONObject removeTagFromApplication(int appId, int tagId) {
+        return executeJarCommand("-rat", String.valueOf(appId), String.valueOf(tagId));
     }
 }

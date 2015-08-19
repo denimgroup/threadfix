@@ -1,5 +1,6 @@
 package com.denimgroup.threadfix.selenium.tests;
 
+import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TagIndexPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
@@ -10,14 +11,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.util.List;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
  * Created by rtimmons on 8/17/2015.
  */
+@Category(CommunityTests.class)
 public class CommandLineIT extends BaseDataTest {
 
     private static final String API_KEY = System.getProperty("API_KEY");
@@ -384,5 +388,27 @@ public class CommandLineIT extends BaseDataTest {
 
         JSONArray vulnerabilities = cliUtils.getObject(response, "object");
         assertTrue("Number of vulnerabilities was incorrect.", vulnerabilities.length() == 1);
+    }
+
+    @Test
+    public void testRemoveTagFromApplication() {
+        final String TAG_NAME = getName();
+        final String TAG_TYPE = "Application";
+        initializeTeamAndAppViaCli();
+
+        JSONObject tag = cliUtils.createTag(TAG_NAME, TAG_TYPE);
+        int tagId = cliUtils.getObjectId(tag);
+        cliUtils.addTagToApplication(appId, tagId);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName);
+        assertTrue("Tag was not present on application.", applicationDetailPage.isTagLinkPresent());
+
+        cliUtils.removeTagFromApplication(appId, tagId);
+
+        applicationDetailPage.refreshPage();
+        assertFalse("Tag was still present after attempted removal.", applicationDetailPage.isTagLinkPresent());
     }
 }
