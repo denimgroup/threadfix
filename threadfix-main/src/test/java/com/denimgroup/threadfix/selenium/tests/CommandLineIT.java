@@ -278,9 +278,9 @@ public class CommandLineIT extends BaseDataTest {
     @Test
     public void testAddUrl() {
         initializeTeamAndAppViaCli();
-        String changedUrl = "http://changedurl.com";
+        final String CHANGED_URL = "http://changedurl.com";
 
-        JSONObject response = cliUtils.addUrlToApp(appId, changedUrl);
+        JSONObject response = cliUtils.addUrlToApp(appId, CHANGED_URL);
         assertTrue("Response was unsuccessful.", cliUtils.isCommandResponseSuccessful(response));
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
@@ -288,7 +288,69 @@ public class CommandLineIT extends BaseDataTest {
                 .expandTeamRowByName(teamName)
                 .clickApplicationName(teamName, appName)
                 .clickEditDeleteBtn();
-        assertTrue("URL was not changed in modal.", changedUrl.equals(applicationDetailPage.getUrlText()));
+        assertTrue("URL was not changed in modal.", CHANGED_URL.equals(applicationDetailPage.getUrlText()));
+    }
+
+    @Test
+    public void testSetTaskConfigFile() {
+        final String SCANNER = "zap";
+        final String CONFIG_FILEPATH = ScanContents.SCAN_FILE_MAP.get("Snort Log");
+
+        initializeTeamAndAppViaCli();
+        cliUtils.queueScan(appId, SCANNER);
+
+        JSONObject response = cliUtils.setTaskConfigFile(appId, SCANNER, CONFIG_FILEPATH);
+        assertTrue("Response was unsuccessful.", cliUtils.isCommandResponseSuccessful(response));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName)
+                .clickFilesTab();
+        assertTrue("Config file wasn't set properly.", applicationDetailPage.isUploadedFilePresent("zap"));
+    }
+
+    @Test
+    public void testSetParameters() {
+        final String FRAMEWORK_TYPE = "RAILS";
+        final String REPOSITORY_URL = "https://github.com/denimgroup/threadfix.git";
+        initializeTeamAndAppViaCli();
+
+        JSONObject response = cliUtils.setParameters(appId, FRAMEWORK_TYPE, REPOSITORY_URL);
+        assertTrue("Response was unsuccessful.", cliUtils.isCommandResponseSuccessful(response));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName)
+                .clickEditDeleteBtn();
+        assertTrue("Framework type was not set correctly.",
+                FRAMEWORK_TYPE.equals(applicationDetailPage.getApplicationType()));
+        applicationDetailPage.clickSourceInfo();
+        System.out.println("Repo URL is " + applicationDetailPage.getRepositoryUrl());
+
+        assertTrue("Repository URL was not set correctly.",
+                REPOSITORY_URL.equals(applicationDetailPage.getRepositoryUrl()));
+    }
+
+    @Test
+    public void testAddTagToApplication() {
+        final String TAG_NAME = getName();
+        final String TAG_TYPE = "Application";
+        initializeTeamAndAppViaCli();
+
+        JSONObject tag = cliUtils.createTag(TAG_NAME, TAG_TYPE);
+        int tagId = cliUtils.getObjectId(tag);
+
+        JSONObject response = cliUtils.addTagToApplication(appId, tagId);
+        assertTrue("Response was unsuccessful.", cliUtils.isCommandResponseSuccessful(response));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName);
+        System.out.println();
+        assertTrue("Tag isn't present on application.", applicationDetailPage.isTagLinkPresent());
     }
 
     @Test

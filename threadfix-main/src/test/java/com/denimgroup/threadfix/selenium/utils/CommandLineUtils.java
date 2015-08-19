@@ -1,31 +1,36 @@
 package com.denimgroup.threadfix.selenium.utils;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONArray;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
 import com.denimgroup.threadfix.importer.util.JsonUtils;
+
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Created by rtimmons on 8/17/2015.
  */
 public class CommandLineUtils {
+    protected final SanitizedLogger log = new SanitizedLogger(CommandLineUtils.class);
 
-    private static List<String> startArgs;
-    private static final String DIRECTORY = "..\\threadfix-cli\\target";
+    private static List<String> startArgs = list();
+    private static final String DIRECTORY = ".." + File.separator + "threadfix-cli" + File.separator + "target";
 
     static {
-        startArgs = list();
         if (System.getProperty("os.name").startsWith("Windows")) {
             startArgs.add("CMD");
             startArgs.add("/C");
         } else {
-            startArgs.add("/bin/sh");
+            startArgs.add("bash");
+            startArgs.add("-c");
         }
         startArgs.add("java");
         startArgs.add("-jar");
@@ -34,37 +39,39 @@ public class CommandLineUtils {
 
     // Executes command and returns JSON object
     public JSONObject executeCommand(String workingDirectory, String... args) {
+        JSONObject jsonResponse = null;
+
         List<String> finalArgs = new ArrayList<>();
         finalArgs.addAll(startArgs);
-        for (String arg : args) {
-            finalArgs.add(arg);
-        }
-        ProcessBuilder pb = new ProcessBuilder(finalArgs);
-        pb.directory(new File(workingDirectory));
+        Collections.addAll(finalArgs, args);
+        ProcessBuilder processBuilder = new ProcessBuilder(finalArgs);
+        processBuilder.directory(new File(workingDirectory));
         try {
-            Process process = pb.start();
-            InputStream is = process.getInputStream();
-            InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader br = new BufferedReader(isr);
+            Process process = processBuilder.start();
+            InputStream inputStream = process.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             String line;
 
             System.out.println("Output of running command is:");
 
-            while ((line = br.readLine()) != null) {
+            while ((line = bufferedReader.readLine()) != null) {
                 System.out.println(line);
-                if(line.startsWith("{")){
+                if (line.startsWith("{")) {
                     System.out.println("SUCCESS: " + JsonUtils.getStringProperty(line, "success"));
-                    return JsonUtils.getJSONObject(line);
+                    jsonResponse = JsonUtils.getJSONObject(line);
+                    return jsonResponse;
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Process Build command could not be executed gracefully.", e);
         }
-        return null;
+        return jsonResponse;
     }
 
     public JSONObject executeJarCommand(String... args) {
         return executeCommand(DIRECTORY, args);
+
     }
 
     public boolean isCommandResponseSuccessful(JSONObject response) {
@@ -180,5 +187,21 @@ public class CommandLineUtils {
 
     public JSONObject searchTagByID(int tagID) {
         return executeJarCommand("-stg", "id", String.valueOf(tagID));
+    }
+
+    public JSONObject setTaskConfigFile(int appId, String scanner, String filepath) {
+        return executeJarCommand("-stc", String.valueOf(appId), scanner, filepath);
+    }
+
+    public JSONObject setParameters(int appId, String framework) {
+        return executeJarCommand("-sp", String.valueOf(appId), framework);
+    }
+
+    public JSONObject setParameters(int appId, String framework, String repositoryUrl) {
+        return executeJarCommand("-sp", String.valueOf(appId), framework, repositoryUrl);
+    }
+
+    public JSONObject addTagToApplication(int appId, int tagId) {
+        return executeJarCommand("-aat", String.valueOf(appId), String.valueOf(tagId));
     }
 }
