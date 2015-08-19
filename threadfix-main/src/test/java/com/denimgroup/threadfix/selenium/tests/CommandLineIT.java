@@ -1,5 +1,6 @@
 package com.denimgroup.threadfix.selenium.tests;
 
+import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TagIndexPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
@@ -8,12 +9,14 @@ import com.denimgroup.threadfix.selenium.utils.CommandLineUtils;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.json.JSONObject;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.assertTrue;
 
 /**
  * Created by rtimmons on 8/17/2015.
  */
+@Category(CommunityTests.class)
 public class CommandLineIT extends BaseDataTest {
 
     private static final String API_KEY = System.getProperty("API_KEY");
