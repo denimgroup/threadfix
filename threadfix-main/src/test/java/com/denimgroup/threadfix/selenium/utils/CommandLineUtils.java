@@ -1,6 +1,7 @@
 package com.denimgroup.threadfix.selenium.utils;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -109,6 +110,16 @@ public class CommandLineUtils {
         }
     }
 
+    public JSONArray getObject(JSONObject object, String field) {
+        try {
+            return object.getJSONArray(field);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            log.error("Problem trying to obtain JSON list.", e);
+            return null;
+        }
+    }
+
     //===========================================================================================================
     // REST Actions
     //===========================================================================================================
@@ -203,5 +214,9 @@ public class CommandLineUtils {
 
     public JSONObject addTagToApplication(int appId, int tagId) {
         return executeJarCommand("-aat", String.valueOf(appId), String.valueOf(tagId));
+    }
+
+    public JSONObject vulnSearchByID(String id) {
+        return executeJarCommand("--search", "genericVulnerabilityIds=" + id, "numberVulnerabilities=1");
     }
 }

@@ -11,6 +11,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -370,6 +372,17 @@ public class CommandLineIT extends BaseDataTest {
 
         JSONObject response = cliUtils.searchTagByID(tagID);
         assertTrue("Response was unsuccessful.", cliUtils.isCommandResponseSuccessful(response));
-        assertTrue("TAg was not correct.", cliUtils.getObjectField(response, "name").equals(tagName));
+        assertTrue("Tag was not correct.", cliUtils.getObjectField(response, "name").equals(tagName));
+    }
+
+    @Test
+    public void testVulnerabilitySearchByID() {
+        initializeTeamAndAppWithWebInspectScan();
+
+        JSONObject response = cliUtils.vulnSearchByID("79");
+        assertTrue("Response was unsuccessful.", cliUtils.isCommandResponseSuccessful(response));
+
+        JSONArray vulnerabilities = cliUtils.getObject(response, "object");
+        assertTrue("Number of vulnerabilities was incorrect.", vulnerabilities.length() == 1);
     }
 }
