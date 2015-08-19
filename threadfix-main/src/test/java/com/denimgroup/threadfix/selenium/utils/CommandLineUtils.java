@@ -111,9 +111,9 @@ public class CommandLineUtils {
         }
     }
 
-    public JSONArray getObject(JSONObject object, String field) {
+    public JSONArray getObjectArray(JSONObject object) {
         try {
-            return object.getJSONArray(field);
+            return object.getJSONArray("object");
         } catch (JSONException e) {
             e.printStackTrace();
             log.error("Problem trying to obtain JSON list.", e);
