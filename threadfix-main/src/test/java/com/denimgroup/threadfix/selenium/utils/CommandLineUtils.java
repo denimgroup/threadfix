@@ -29,9 +29,9 @@ public class CommandLineUtils {
         if (System.getProperty("os.name").startsWith("Windows")) {
             startArgs.add("CMD");
             startArgs.add("/C");
-        } else {
-            startArgs.add("bash");
-            startArgs.add("-c");
+//        } else {
+//            startArgs.add("bash");
+//            startArgs.add("-c");
         }
         startArgs.add("java");
         startArgs.add("-jar");
