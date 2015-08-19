@@ -7,12 +7,12 @@ import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
 import com.denimgroup.threadfix.selenium.utils.CommandLineUtils;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -373,6 +373,28 @@ public class CommandLineIT extends BaseDataTest {
 
         JSONObject response = cliUtils.searchTagByID(tagID);
         assertTrue("Response was unsuccessful.", cliUtils.isCommandResponseSuccessful(response));
-        assertTrue("TAg was not correct.", cliUtils.getObjectField(response, "name").equals(tagName));
+        assertTrue("Tag was not correct.", cliUtils.getObjectField(response, "name").equals(tagName));
+    }
+
+    @Test
+    public void testRemoveTagFromApplication() {
+        final String TAG_NAME = getName();
+        final String TAG_TYPE = "Application";
+        initializeTeamAndAppViaCli();
+
+        JSONObject tag = cliUtils.createTag(TAG_NAME, TAG_TYPE);
+        int tagId = cliUtils.getObjectId(tag);
+        cliUtils.addTagToApplication(appId, tagId);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName);
+        assertTrue("Tag was not present on application.", applicationDetailPage.isTagLinkPresent());
+
+        cliUtils.removeTagFromApplication(appId, tagId);
+
+        applicationDetailPage.refreshPage();
+        assertFalse("Tag was still present after attempted removal.", applicationDetailPage.isTagLinkPresent());
     }
 }
