@@ -110,7 +110,7 @@ public class CommandLineUtils {
         }
     }
 
-    public JSONArray getObject(JSONObject object, String field) {
+    public JSONArray getObjectArray(JSONObject object, String field) {
         try {
             return object.getJSONArray(field);
         } catch (JSONException e) {
