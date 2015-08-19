@@ -47,6 +47,7 @@ public class CommandLineUtils {
         Collections.addAll(finalArgs, args);
         ProcessBuilder processBuilder = new ProcessBuilder(finalArgs);
         processBuilder.directory(new File(workingDirectory));
+        processBuilder.inheritIO();
         try {
             Process process = processBuilder.start();
             InputStream inputStream = process.getInputStream();
