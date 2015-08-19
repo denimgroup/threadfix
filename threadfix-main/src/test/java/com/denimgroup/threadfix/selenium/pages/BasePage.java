@@ -256,6 +256,13 @@ public abstract class BasePage {
         return new EmailListPage(driver);
     }
 
+    public AcceptancePolicyPage clickAcceptancePoliciesLink() {
+        clickConfigTab();
+        hover("manageCustomLink");
+        driver.findElementById("acceptCriteriaLink").click();
+        return new AcceptancePolicyPage(driver);
+    }
+
     /*---------------------------- Get Methods ----------------------------*/
 
     public int getNumTeamRows() {
