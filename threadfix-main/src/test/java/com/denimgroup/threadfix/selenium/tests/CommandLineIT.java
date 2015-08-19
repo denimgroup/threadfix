@@ -386,7 +386,7 @@ public class CommandLineIT extends BaseDataTest {
         JSONObject response = cliUtils.vulnSearchByID("79");
         assertTrue("Response was unsuccessful.", cliUtils.isCommandResponseSuccessful(response));
 
-        JSONArray vulnerabilities = cliUtils.getObjectArray(response, "object");
+        JSONArray vulnerabilities = cliUtils.getObjectArray(response);
         assertTrue("Number of vulnerabilities was incorrect.", vulnerabilities.length() == 1);
     }
 
