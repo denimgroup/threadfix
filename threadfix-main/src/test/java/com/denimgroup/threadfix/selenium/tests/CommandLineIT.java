@@ -13,8 +13,6 @@ import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import java.util.List;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -25,13 +23,13 @@ import static org.junit.Assert.assertTrue;
 public class CommandLineIT extends BaseDataTest {
 
     private static final String API_KEY = System.getProperty("API_KEY");
-    private static final String REST_URL = System.getProperty("REST_URL");
+    private static final String CLI_REST_URL = System.getProperty("CLI_REST_URL");
     private static CommandLineUtils cliUtils = new CommandLineUtils();
     private static DatabaseUtils dbUtils = new DatabaseUtils();
 
     static {
         cliUtils.setApiKey(API_KEY);
-        cliUtils.setUrl(REST_URL);
+        cliUtils.setUrl(CLI_REST_URL);
     }
 
     @Test

@@ -23,19 +23,13 @@ public class CommandLineUtils {
     protected final SanitizedLogger log = new SanitizedLogger(CommandLineUtils.class);
 
     private static List<String> startArgs = list();
-    private static final String DIRECTORY = System.getProperty("CliJarHome");
+    private static final String DIRECTORY = ".." + File.separator + "threadfix-cli" + File.separator + "target";
 
     static {
         if (System.getProperty("os.name").startsWith("Windows")) {
-            startArgs.add("CMD");
-            startArgs.add("/C");
-        } else {
-//            startArgs.add("bash");
-//            startArgs.add("-c");
+            startArgs.addAll(list("CMD", "/C"));
         }
-        startArgs.add("java");
-        startArgs.add("-jar");
-        startArgs.add("threadfix-cli-2.2-SNAPSHOT-jar-with-dependencies.jar");
+        startArgs.addAll(list("java", "-jar", "threadfix-cli-2.2-SNAPSHOT-jar-with-dependencies.jar"));
     }
 
     // Executes command and returns JSON object
