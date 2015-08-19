@@ -169,12 +169,12 @@ public class CommandLineIT extends BaseDataTest {
     }
 
     @Test
-    public void testSearchTeamByID() {
+    public void testSearchTeamById() {
         String teamName = getName();
         DatabaseUtils.createTeam(teamName);
         String teamID = DatabaseUtils.getTeamID(teamName);
 
-        JSONObject response = cliUtils.searchTeamByID(teamID);
+        JSONObject response = cliUtils.searchTeamById(teamID);
 
         assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
         assertTrue("Returned team was not correct.", cliUtils.getObjectField(response, "name").equals(teamName));
@@ -208,14 +208,14 @@ public class CommandLineIT extends BaseDataTest {
     }
 
     @Test
-    public void testSearchApplicationByID() {
+    public void testSearchApplicationById() {
         String teamName = getName();
         String appName = getName();
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
         String appID = DatabaseUtils.getApplicationID(teamName, appName);
 
-        JSONObject response = cliUtils.searchAppByID(appID);
+        JSONObject response = cliUtils.searchAppById(appID);
 
         assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
         assertTrue("Returned application was not correct.", cliUtils.getObjectField(response, "name").equals(appName));
@@ -235,7 +235,7 @@ public class CommandLineIT extends BaseDataTest {
     }
 
     @Test
-    public void testSearchApplicationByUniqueID() {
+    public void testSearchApplicationByUniqueId() {
         String teamName = getName();
         String appName = getName();
         String uniqueID = getName();
@@ -250,19 +250,19 @@ public class CommandLineIT extends BaseDataTest {
                 .setUniqueId(uniqueID)
                 .clickModalSubmit();
 
-        JSONObject response = cliUtils.searchAppByUniqueID(uniqueID, teamName);
+        JSONObject response = cliUtils.searchAppByUniqueId(uniqueID, teamName);
 
         assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
         assertTrue("Returned application was not correct.", cliUtils.getObjectField(response, "name").equals(appName));
     }
 
     @Test
-    public void testSearchWafByID() {
+    public void testSearchWafById() {
         String wafName = getName();
         DatabaseUtils.createWaf(wafName, "mod_security");
         String wafID = DatabaseUtils.getWafID(wafName);
 
-        JSONObject response = cliUtils.searchWafByID(wafID);
+        JSONObject response = cliUtils.searchWafById(wafID);
 
         assertTrue("JSON response was not successful.", cliUtils.isCommandResponseSuccessful(response));
         assertTrue("Returned WAF was not correct.", cliUtils.getObjectField(response, "name").equals(wafName));
@@ -367,49 +367,49 @@ public class CommandLineIT extends BaseDataTest {
     }
 
     @Test
-    public void testSearchTagByID() {
+    public void testSearchTagById() {
         String tagName = getName();
         DatabaseUtils.createTag(tagName, "Application");
         int tagID = DatabaseUtils.getTagId(tagName, true);
 
-        JSONObject response = cliUtils.searchTagByID(tagID);
+        JSONObject response = cliUtils.searchTagById(tagID);
         assertTrue("Response was unsuccessful.", cliUtils.isCommandResponseSuccessful(response));
         assertTrue("Tag was not correct.", cliUtils.getObjectField(response, "name").equals(tagName));
     }
 
     @Test
-    public void testVulnerabilitySearchByID() {
+    public void testVulnerabilitySearchById() {
         DatabaseUtils.deleteAllTeams();
         initializeTeamAndAppWithWebInspectScan();
 
-        JSONObject response = cliUtils.vulnSearchByID("79");
+        JSONObject response = cliUtils.vulnSearchById("79");
 
         JSONArray vulnerabilities = cliUtils.getObjectArray(response);
         assertTrue("Number of vulnerabilities was incorrect.", vulnerabilities.length() == 3);
     }
 
     @Test
-    public void testVulnerabilitySearchByTeamID() {
+    public void testVulnerabilitySearchByTeamId() {
         initializeTeamAndAppViaCli();
         uploadScanToApp(teamName, appName, "w3af");
         initializeTeamAndAppViaCli();
         uploadScanToApp(teamName, appName, "WebInspect");
 
-        JSONObject response = cliUtils.vulnSearchByTeamID(teamId);
+        JSONObject response = cliUtils.vulnSearchByTeamId(teamId);
 
         JSONArray vulnerabilities = cliUtils.getObjectArray(response);
         assertTrue("Number of vulnerabilities was incorrect.", vulnerabilities.length() == 29);
     }
 
     @Test
-    public void testVulnerabilitySearchByApplicationID() {
+    public void testVulnerabilitySearchByApplicationId() {
         String applicationName = getName();
         initializeTeamAndAppViaCli();
         uploadScanToApp(teamName, appName, "w3af");
         DatabaseUtils.createApplication(teamName, applicationName);
         uploadScanToApp(teamName, applicationName, "WebInspect");
 
-        JSONObject response = cliUtils.vulnSearchByApplicationID(appId);
+        JSONObject response = cliUtils.vulnSearchByApplicationId(appId);
 
         JSONArray vulnerabilities = cliUtils.getObjectArray(response);
         assertTrue("Number of vulnerabilities was incorrect.", vulnerabilities.length() == 13);
@@ -478,5 +478,36 @@ public class CommandLineIT extends BaseDataTest {
 
         applicationDetailPage.refreshPage();
         assertFalse("Tag was still present after attempted removal.", applicationDetailPage.isTagLinkPresent());
+    }
+
+    @Test
+    public void testUpdateTag() {
+        final String ORIGINAL_TAG_NAME = getName();
+        final String CHANGED_TAG_NAME = getName();
+        final String TAG_TYPE = "Application";
+
+        JSONObject tag = cliUtils.createTag(ORIGINAL_TAG_NAME, TAG_TYPE);
+        int tagId = cliUtils.getObjectId(tag);
+
+        cliUtils.updateTag(tagId, CHANGED_TAG_NAME);
+
+        JSONObject response = cliUtils.searchTagByName(CHANGED_TAG_NAME);
+        int searchedTagId = cliUtils.getNthObjectId(response, 0);
+        assertTrue("The tag wasn't found by the changed name.", tagId == searchedTagId);
+    }
+
+    @Test
+    public void testRemoveTag() {
+        final String TAG_NAME = getName();
+        final String TAG_TYPE = "Application";
+
+        JSONObject tag = cliUtils.createTag(TAG_NAME, TAG_TYPE);
+        int tagId = cliUtils.getObjectId(tag);
+
+        cliUtils.removeTag(tagId);
+        JSONObject response = cliUtils.lookupTags();
+        assertFalse("Tag was found after attempted deletion.",
+                cliUtils.isTagIdPresentInObjectArray(response, tagId));
+
     }
 }

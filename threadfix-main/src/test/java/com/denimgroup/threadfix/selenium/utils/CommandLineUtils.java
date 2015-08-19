@@ -114,6 +114,49 @@ public class CommandLineUtils {
         }
     }
 
+    public int getNthObjectId(JSONObject object, int n) {
+        int result = 0;
+        try {
+            result = object.getJSONArray("object").getJSONObject(0).getInt("id");
+        } catch (JSONException e) {
+            log.error("Error accessing JSON object at index " + n + ".");
+        }
+        assertTrue("Error accessing JSON object at index " + n + ".", result != 0);
+        return result;
+    }
+
+    public int getObjectArraySize(JSONObject object) {
+        int size = -1;
+        try {
+            size = object.getJSONArray("object").length();
+        } catch (JSONException e) {
+            log.error("Error accessing JSON object array's size.");
+        }
+        assertTrue("Error accessing JSON object array's size.", size > -1);
+        return size;
+    }
+
+    public boolean isTagIdPresentInObjectArray(JSONObject object, int id) {
+        JSONArray array = null;
+        try {
+            array = object.getJSONObject("object").getJSONArray("Application Tag");
+        } catch (JSONException e) {
+            log.error("Couldn't access Application Tag array in JSON object.");
+        }
+        for (int i = 0; i < array.length(); i++) {
+            int inspect = 0;
+            try {
+                inspect = array.getJSONObject(i).getInt("id");
+            } catch (JSONException e) {
+                log.error("Couldn't get ID from object #" + i + " in JSON array.");
+            }
+            if (inspect == id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     //===========================================================================================================
     // REST Actions
     //===========================================================================================================
@@ -146,7 +189,7 @@ public class CommandLineUtils {
         return executeJarCommand("-ctg", tagName, tagType);
     }
 
-    public JSONObject searchTeamByID(String id) {
+    public JSONObject searchTeamById(String id) {
         return executeJarCommand("-st", "id", id);
     }
 
@@ -154,7 +197,7 @@ public class CommandLineUtils {
         return executeJarCommand("-st", "name", name);
     }
 
-    public JSONObject searchAppByID(String id) {
+    public JSONObject searchAppById(String id) {
         return executeJarCommand("-sa", "id", id);
     }
 
@@ -162,11 +205,11 @@ public class CommandLineUtils {
         return executeJarCommand("-sa", "name", appName, teamName);
     }
 
-    public JSONObject searchAppByUniqueID(String id, String teamName) {
+    public JSONObject searchAppByUniqueId(String id, String teamName) {
         return executeJarCommand("-sa", "uniqueId", id, teamName);
     }
 
-    public JSONObject searchWafByID(String id) {
+    public JSONObject searchWafById(String id) {
         return executeJarCommand("-sw", "id", id);
     }
 
@@ -190,7 +233,7 @@ public class CommandLineUtils {
         return executeJarCommand("-tg");
     }
 
-    public JSONObject searchTagByID(int tagID) {
+    public JSONObject searchTagById(int tagID) {
         return executeJarCommand("-stg", "id", String.valueOf(tagID));
     }
 
@@ -210,15 +253,15 @@ public class CommandLineUtils {
         return executeJarCommand("-aat", String.valueOf(appId), String.valueOf(tagId));
     }
 
-    public JSONObject vulnSearchByID(String id) {
+    public JSONObject vulnSearchById(String id) {
         return executeJarCommand("--search", "genericVulnerabilityIds=" + id, "numberVulnerabilities=100");
     }
 
-    public JSONObject vulnSearchByTeamID(int teamId) {
+    public JSONObject vulnSearchByTeamId(int teamId) {
         return executeJarCommand("--search", "teamIds=" + teamId, "numberVulnerabilities=100");
     }
 
-    public JSONObject vulnSearchByApplicationID(int appId) {
+    public JSONObject vulnSearchByApplicationId(int appId) {
         return executeJarCommand("--search", "applicationIds=" + appId, "numberVulnerabilities=100");
     }
 
@@ -236,5 +279,13 @@ public class CommandLineUtils {
 
     public JSONObject removeTagFromApplication(int appId, int tagId) {
         return executeJarCommand("-rat", String.valueOf(appId), String.valueOf(tagId));
+    }
+
+    public JSONObject updateTag(int tagId, String newName) {
+        return executeJarCommand("-utg", String.valueOf(tagId), newName);
+    }
+
+    public JSONObject removeTag(int tagId) {
+        return executeJarCommand("-rtg", String.valueOf(tagId));
     }
 }
