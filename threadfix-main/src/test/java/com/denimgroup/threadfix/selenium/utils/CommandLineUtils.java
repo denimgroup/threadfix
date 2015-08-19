@@ -29,7 +29,7 @@ public class CommandLineUtils {
         if (System.getProperty("os.name").startsWith("Windows")) {
             startArgs.add("CMD");
             startArgs.add("/C");
-//        } else {
+        } else {
 //            startArgs.add("bash");
 //            startArgs.add("-c");
         }
@@ -47,7 +47,6 @@ public class CommandLineUtils {
         Collections.addAll(finalArgs, args);
         ProcessBuilder processBuilder = new ProcessBuilder(finalArgs);
         processBuilder.directory(new File(workingDirectory));
-        processBuilder.inheritIO();
         try {
             Process process = processBuilder.start();
             InputStream inputStream = process.getInputStream();
