@@ -29,18 +29,18 @@ import java.io.InputStream;
 
 public class FilteredXmlInputStream extends FilterInputStream{
 
-    public static final boolean[] INVAVLID_XML_CHARACTERS;
+    public static final boolean[] INVALID_XML_CHARACTERS;
 
     static {
-        INVAVLID_XML_CHARACTERS = new boolean[0x20];
+        INVALID_XML_CHARACTERS = new boolean[0x20];
 
-        for (int i = 0; i < INVAVLID_XML_CHARACTERS.length; ++i) {
-            INVAVLID_XML_CHARACTERS[i] = true;
+        for (int i = 0; i < INVALID_XML_CHARACTERS.length; ++i) {
+            INVALID_XML_CHARACTERS[i] = true;
         }
 
-        INVAVLID_XML_CHARACTERS[0x9] = false;
-        INVAVLID_XML_CHARACTERS[0xA] = false;
-        INVAVLID_XML_CHARACTERS[0xD] = false;
+        INVALID_XML_CHARACTERS[0x9] = false;
+        INVALID_XML_CHARACTERS[0xA] = false;
+        INVALID_XML_CHARACTERS[0xD] = false;
     }
 
     public FilteredXmlInputStream(InputStream inputStream) {
@@ -68,7 +68,7 @@ public class FilteredXmlInputStream extends FilterInputStream{
     }
 
     private byte filterCharacters(byte currentByte) {
-        if (currentByte < 0x20 && currentByte >= 0 && INVAVLID_XML_CHARACTERS[currentByte]) {
+        if (currentByte < 0x20 && currentByte >= 0 && INVALID_XML_CHARACTERS[currentByte]) {
             return 0x20;
         }
         return currentByte;
