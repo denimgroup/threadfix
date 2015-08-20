@@ -1,0 +1,17 @@
+type.info,,,
+Microsoft CAT.NET,http://msdn.microsoft.com/en-us/security/default.aspx,1 CTP,The CAT.NET importer requires the CAT.NET XML format.,
+type.vulnerabilities,,,
+Process Command Execution,ACESEC02,77
+Cross-Site Scripting,ACESEC05,79
+LDAP Injection,ACESEC08,90
+XPath Injection,ACESEC07,643
+SQL Injection,ACESEC01,89
+Exception Information,ACESEC04,209
+File Canonicalization,ACESEC03,180
+Redirection to User Controlled Site,ACESEC06,601
+type.severities,,,
+Info,Info,1,1
+Low,Low,2,2
+Medium,Medium,3,3
+High,High,4,4
+Critical,Critical,5,5

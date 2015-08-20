@@ -25,6 +25,8 @@ public class CommandLineUtils {
     private static List<String> startArgs = list();
     private static final String DIRECTORY = ".." + File.separator + "threadfix-cli" + File.separator + "target";
 
+    private final String INCREASE_RESULTS_ARG = "numberVulnerabilities=100";
+
     static {
         if (System.getProperty("os.name").startsWith("Windows")) {
             startArgs.addAll(list("CMD", "/C"));
@@ -68,15 +70,9 @@ public class CommandLineUtils {
         return executeCommand(DIRECTORY, args);
 
     }
-
-    public boolean isCommandResponseSuccessful(JSONObject response) {
-        try {
-            return response.getBoolean("success");
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+    //===========================================================================================================
+    // Configuration
+    //===========================================================================================================
 
     public void setApiKey(String apiKey) {
         executeJarCommand("-set", "key", apiKey);
@@ -85,6 +81,10 @@ public class CommandLineUtils {
     public void setUrl(String url) {
         executeJarCommand("-set", "url", url);
     }
+
+    //===========================================================================================================
+    // JSON Helper Methods
+    //===========================================================================================================
 
     public int getObjectId(JSONObject object) {
         try {
@@ -125,15 +125,21 @@ public class CommandLineUtils {
         return result;
     }
 
-    public int getObjectArraySize(JSONObject object) {
-        int size = -1;
+    public boolean isCommandResponseSuccessful(JSONObject response) {
         try {
-            size = object.getJSONArray("object").length();
+            return response.getBoolean("success");
         } catch (JSONException e) {
-            log.error("Error accessing JSON object array's size.");
+            e.printStackTrace();
+            return false;
         }
-        assertTrue("Error accessing JSON object array's size.", size > -1);
-        return size;
+    }
+
+    //===========================================================================================================
+    // Test Helper Methods
+    //===========================================================================================================
+
+    public int getNumberOfVulnerabilities(JSONObject object) {
+        return getObjectArray(object).length();
     }
 
     public boolean isTagIdPresentInObjectArray(JSONObject object, int id) {
@@ -254,23 +260,23 @@ public class CommandLineUtils {
     }
 
     public JSONObject vulnSearchById(String id) {
-        return executeJarCommand("--search", "genericVulnerabilityIds=" + id, "numberVulnerabilities=100");
+        return executeJarCommand("--search", "genericVulnerabilityIds=" + id, INCREASE_RESULTS_ARG);
     }
 
     public JSONObject vulnSearchByTeamId(int teamId) {
-        return executeJarCommand("--search", "teamIds=" + teamId, "numberVulnerabilities=100");
+        return executeJarCommand("--search", "teamIds=" + teamId, INCREASE_RESULTS_ARG);
     }
 
     public JSONObject vulnSearchByApplicationId(int appId) {
-        return executeJarCommand("--search", "applicationIds=" + appId, "numberVulnerabilities=100");
+        return executeJarCommand("--search", "applicationIds=" + appId, INCREASE_RESULTS_ARG);
     }
 
     public JSONObject vulnSearchByScannerName(String scannerName) {
-        return executeJarCommand("--search", "scannerNames=" + scannerName, "numberVulnerabilities=100");
+        return executeJarCommand("--search", "scannerNames=" + scannerName, INCREASE_RESULTS_ARG);
     }
 
     public JSONObject vulnSearchBySeverity(String severity) {
-        return executeJarCommand("--search", "genericSeverityValues=" + severity, "numberVulnerabilities=100");
+        return executeJarCommand("--search", "genericSeverityValues=" + severity, INCREASE_RESULTS_ARG);
     }
 
     public JSONObject vulnSearchByNumberOfResults(int numberOfResults) {
@@ -287,5 +293,29 @@ public class CommandLineUtils {
 
     public JSONObject removeTag(int tagId) {
         return executeJarCommand("-rtg", String.valueOf(tagId));
+    }
+
+    public JSONObject vulnSearchByParameter(String parameter) {
+        return executeJarCommand("--search", "parameter=" + parameter, INCREASE_RESULTS_ARG);
+    }
+
+    public JSONObject vulnSearchByPath(String path) {
+        return executeJarCommand("--search", "path=" + path, INCREASE_RESULTS_ARG);
+    }
+
+    public JSONObject vulnSearchByStartDate(String startDate) {
+        return executeJarCommand("--search", "startDate=" + startDate, INCREASE_RESULTS_ARG);
+    }
+
+    public JSONObject vulnSearchByEndDate(String endDate) {
+        return executeJarCommand("--search", "endDate=" + endDate, INCREASE_RESULTS_ARG);
+    }
+
+    public JSONObject vulnSearchShowOnlyHidden(String status) {
+        return executeJarCommand("--search", "showOpen=false", "showClosed=true", INCREASE_RESULTS_ARG);
+    }
+
+    public JSONObject vulnSearchByNumberMerged(int numberMerged) {
+        return executeJarCommand("--search", "numberMerged=" + String.valueOf(numberMerged), INCREASE_RESULTS_ARG);
     }
 }

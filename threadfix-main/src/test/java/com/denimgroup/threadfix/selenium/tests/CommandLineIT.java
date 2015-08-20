@@ -181,22 +181,6 @@ public class CommandLineIT extends BaseDataTest {
     }
 
     @Test
-    public void testQueueScan() {
-        initializeTeamAndAppViaCli();
-
-        JSONObject response = cliUtils.queueScan(appId, "zap");
-        assertTrue("Response was unsuccessful.", cliUtils.isCommandResponseSuccessful(response));
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickApplicationName(teamName, appName)
-                .clickScanAgentTasksTab(1);
-        assertTrue("Scheduled scan isn't present.",
-                ("OWASP Zed Attack Proxy").equals(applicationDetailPage.getScanAgentTaskScannerType(0)));
-    }
-
-    @Test
     public void testSearchTeamByName() {
         String teamName = getName();
         DatabaseUtils.createTeam(teamName);
@@ -296,25 +280,6 @@ public class CommandLineIT extends BaseDataTest {
     }
 
     @Test
-    public void testSetTaskConfigFile() {
-        final String SCANNER = "zap";
-        final String CONFIG_FILEPATH = ScanContents.SCAN_FILE_MAP.get("Snort Log");
-
-        initializeTeamAndAppViaCli();
-        cliUtils.queueScan(appId, SCANNER);
-
-        JSONObject response = cliUtils.setTaskConfigFile(appId, SCANNER, CONFIG_FILEPATH);
-        assertTrue("Response was unsuccessful.", cliUtils.isCommandResponseSuccessful(response));
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickApplicationName(teamName, appName)
-                .clickFilesTab();
-        assertTrue("Config file wasn't set properly.", applicationDetailPage.isUploadedFilePresent("zap"));
-    }
-
-    @Test
     public void testSetParameters() {
         final String FRAMEWORK_TYPE = "RAILS";
         final String REPOSITORY_URL = "https://github.com/denimgroup/threadfix.git";
@@ -384,8 +349,8 @@ public class CommandLineIT extends BaseDataTest {
 
         JSONObject response = cliUtils.vulnSearchById("79");
 
-        JSONArray vulnerabilities = cliUtils.getObjectArray(response);
-        assertTrue("Number of vulnerabilities was incorrect.", vulnerabilities.length() == 3);
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
+        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 3);
     }
 
     @Test
@@ -397,8 +362,8 @@ public class CommandLineIT extends BaseDataTest {
 
         JSONObject response = cliUtils.vulnSearchByTeamId(teamId);
 
-        JSONArray vulnerabilities = cliUtils.getObjectArray(response);
-        assertTrue("Number of vulnerabilities was incorrect.", vulnerabilities.length() == 29);
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
+        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 29);
     }
 
     @Test
@@ -411,8 +376,8 @@ public class CommandLineIT extends BaseDataTest {
 
         JSONObject response = cliUtils.vulnSearchByApplicationId(appId);
 
-        JSONArray vulnerabilities = cliUtils.getObjectArray(response);
-        assertTrue("Number of vulnerabilities was incorrect.", vulnerabilities.length() == 13);
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
+        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 13);
     }
 
     @Test
@@ -423,8 +388,8 @@ public class CommandLineIT extends BaseDataTest {
 
         JSONObject response = cliUtils.vulnSearchByScannerName("IBM Security AppScan Enterprise");
 
-        JSONArray vulnerabilities = cliUtils.getObjectArray(response);
-        assertTrue("Number of vulnerabilities was incorrect.", vulnerabilities.length() == 72);
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
+        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 72);
     }
 
     @Test
@@ -435,8 +400,8 @@ public class CommandLineIT extends BaseDataTest {
 
         JSONObject response = cliUtils.vulnSearchBySeverity("5");
 
-        JSONArray vulnerabilities = cliUtils.getObjectArray(response);
-        assertTrue("Number of vulnerabilities was incorrect.", vulnerabilities.length() == 21);
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
+        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 21);
     }
 
     @Test
@@ -447,15 +412,15 @@ public class CommandLineIT extends BaseDataTest {
 
         JSONObject response = cliUtils.vulnSearchByNumberOfResults(5);
 
-        JSONArray vulnerabilities = cliUtils.getObjectArray(response);
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
         assertTrue("Number of vulnerabilities was incorrect for returning less than total vulnerabilities.",
-                vulnerabilities.length() == 5);
+                numVulns == 5);
 
         JSONObject secondResponse = cliUtils.vulnSearchByNumberOfResults(100);
 
-        JSONArray secondVulnerabilities = cliUtils.getObjectArray(secondResponse);
+        int secondNumVulns = cliUtils.getNumberOfVulnerabilities(secondResponse);
         assertTrue("Number of vulnerabilities was incorrect for returning more than total vulnerabilities.",
-                secondVulnerabilities.length() == 72);
+                secondNumVulns == 72);
     }
 
     @Test
@@ -509,5 +474,75 @@ public class CommandLineIT extends BaseDataTest {
         assertFalse("Tag was found after attempted deletion.",
                 cliUtils.isTagIdPresentInObjectArray(response, tagId));
 
+    }
+
+    @Test
+    public void testVulnerabilitySearchByParameter() {
+        initializeTeamAndAppViaCli();
+        uploadScanToApp(teamName, appName, "AppScanEnterprise");
+
+        JSONObject response = cliUtils.vulnSearchByParameter("amUserId");
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
+        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 6);
+    }
+
+    @Test
+    public void testVulnerabilitySearchByPath() {
+        dbUtils.deleteAllTeams();
+        initializeTeamAndAppViaCli();
+        uploadScanToApp(teamName, appName, "AppScanEnterprise");
+
+        JSONObject response = cliUtils.vulnSearchByPath("/bank/account.aspx");
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
+        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 3);
+    }
+
+    @Test
+    public void testVulnerabilitySearchByStartDate() {
+        dbUtils.deleteAllTeams();
+        initializeTeamAndAppViaCli();
+        uploadScanToApp(teamName, appName, "Nessus");
+        uploadScanToApp(teamName, appName, "w3af");
+
+        JSONObject response = cliUtils.vulnSearchByStartDate("02-Aug-2011");
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
+        System.out.println(numVulns);
+        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 5);
+    }
+
+    @Test
+    public void testVulnerabilitySearchByEndDate() {
+        dbUtils.deleteAllTeams();
+        initializeTeamAndAppViaCli();
+        uploadScanToApp(teamName, appName, "Nessus");
+        uploadScanToApp(teamName, appName, "w3af");
+
+        JSONObject response = cliUtils.vulnSearchByEndDate("02-Aug-2011");
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
+        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 13);
+    }
+
+    @Test
+    public void testVulnerabilitySearchByStatus() {
+        dbUtils.deleteAllTeams();
+        initializeTeamAndAppViaCli();
+        uploadScanToApp(teamName, appName, "NTO Spider");
+        uploadScanToApp(teamName, appName, "NTO Spider6");
+
+        JSONObject response = cliUtils.vulnSearchShowOnlyHidden("Closed");
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
+        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 22);
+    }
+
+    @Test
+    public void testVulnerabilitySearchByNumberMerged() {
+        dbUtils.deleteAllTeams();
+        initializeTeamAndAppViaCli();
+        uploadScanToApp(teamName, appName, "NTO Spider");
+        uploadScanToApp(teamName, appName, "NTO Spider6");
+
+        JSONObject response = cliUtils.vulnSearchByNumberMerged(2);
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
+        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 6);
     }
 }
