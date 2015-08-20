@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('BulkOperationsController', function($rootScope, $http, $log, $modal, tfEncoder, $scope) {
+module.controller('BulkOperationsController', function($rootScope, $http, $log, $modal, $window, tfEncoder, urlIdShortener, $scope) {
 
     var $parent = $scope.$parent;
 
@@ -319,5 +319,19 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
             $log.info('Modal dismissed at: ' + new Date());
         });
     };
+
+    $scope.goToBatchReview = function(){
+        var filteredVulns = getFilteredVulns();
+        if (filteredVulns.length === 0) {
+            alert('You must select at least one vulnerability.');
+            return;
+        }
+
+        var encodedVulnIdsList = filteredVulns.map(function(vuln){
+            return urlIdShortener.encode(vuln.id);
+        });
+        var encodedVulnIds = encodedVulnIdsList.join("-");
+        $window.location.href = tfEncoder.encode(getAppUrlBase() + "/vulnerabilities/" + filteredVulns[0].id + "/batch/" + encodedVulnIds + "/1");
+    }
 
 });

@@ -353,6 +353,15 @@ threadfixModule.factory('vulnSearchParameterService', function() {
 
 
     updater.convertFromSpringToAngular = function($scope, filterParameters) {
+
+        $scope.parameters.severities = {
+            info: false,
+            low: false,
+            medium: false,
+            high: false,
+            critical: false
+        };
+
         filterParameters.genericSeverities.forEach(function (severity) {
             if (severity.intValue === 1)
                 $scope.parameters.severities.info = true;
@@ -820,4 +829,22 @@ threadfixModule.factory('timeoutService', function(tfEncoder, $timeout) {
     };
 
     return timeoutService;
+});
+
+threadfixModule.factory('urlIdShortener', function() {
+
+    var urlIdShortener = {};
+    var ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    var BASE = ALPHABET.length;
+
+    urlIdShortener.encode = function(num) {
+        encodingList = [];
+        while (num > 0) {
+            encodingList.push(ALPHABET.charAt(num % BASE));
+            num = num/BASE >> 0;
+        }
+        return encodingList.reverse().join("")
+    };
+
+    return urlIdShortener;
 });

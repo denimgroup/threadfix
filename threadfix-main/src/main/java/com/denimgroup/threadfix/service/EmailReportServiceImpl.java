@@ -39,6 +39,8 @@ public class EmailReportServiceImpl implements EmailReportService {
 	private EmailConfiguration emailConfiguration;
 	@Autowired
 	private EmailFilterService emailFilterService;
+	@Autowired
+	private DefaultConfigService defaultConfigService;
     @Nullable
     @Autowired(required = false)
     AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
@@ -133,6 +135,7 @@ public class EmailReportServiceImpl implements EmailReportService {
 		Object blockedEmailAddresses = emailFilterService.getBlockedEmailAddresses(scheduledEmailReport.getEmailAddresses());
 		model.put("blockedEmailAddresses", blockedEmailAddresses);
 		model.put("frequency", scheduledEmailReport.getFrequency());
+		model.put("baseUrl", defaultConfigService.loadCurrentConfiguration().getBaseUrl());
 		return templateBuilderService.prepareMessageFromTemplate(model, "scheduledEmailReport.vm");
 	}
 

@@ -38,20 +38,20 @@
                 <td colspan="5" style="text-align:center;">No WAFs found.</td>
             </tr>
             <tr ng-show="wafs" ng-repeat="waf in wafs" class="bodyRow">
-                <td class="details" id="wafName{{ waf.name }}">
+                <td class="details" id="wafName{{ waf.name | removeSpace }}">
                     {{ waf.name }}
                 </td>
-                <td id="wafType{{ $index }}">
+                <td id="wafType{{ waf.name | removeSpace }}">
                     {{ waf.wafType.name }}
                 </td>
                 <td class="centered">
-                    <a id="editWafModalButton{{ waf.name }}" ng-click="openEditModal(waf)" class="btn">Edit / Delete</a>
+                    <a id="editWafModalButton{{ waf.name | removeSpace }}" ng-click="openEditModal(waf)" class="btn">Edit / Delete</a>
                 </td>
                 <td class="centered">
                     <spring:url value="/wafs/{wafId}" var="wafUrl">
                         <spring:param name="wafId" value="{{ waf.id }}" />
                     </spring:url>
-                    <a id="rulesButton{{ waf.name }}" ng-click="goToWaf(waf)" role="button" class="btn">Rules</a>
+                    <a id="rulesButton{{ waf.name | removeSpace }}" ng-click="goToWaf(waf)" role="button" class="btn">Rules</a>
                 </td>
             </tr>
         </tbody>

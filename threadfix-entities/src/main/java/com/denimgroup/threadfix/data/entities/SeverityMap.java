@@ -51,7 +51,7 @@ public class SeverityMap extends BaseEntity {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "genericSeverityId")
-	@JsonView(AllViews.TableRow.class)
+	@JsonView({AllViews.TableRow.class, AllViews.VulnerabilityDetail.class})
 	public GenericSeverity getGenericSeverity() {
 		return genericSeverity;
 	}

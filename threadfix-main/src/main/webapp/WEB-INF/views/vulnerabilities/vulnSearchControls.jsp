@@ -34,6 +34,7 @@
                             <li><a class="pointer" id="addBatchCommentBtn" ng-click="addBatchComment(commentTags)">Batch Comment</a></li>
                         </c:if>
                     </c:if>
+                    <li><a class="pointer" id="goToBatchReviewBtn" ng-click="goToBatchReview()">Review all selected</a></li>
                 </ul>
 
                 <button id="submittingButton" ng-disabled class="btn" ng-show="submitting">
