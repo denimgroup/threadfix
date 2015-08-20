@@ -24,6 +24,8 @@
 
 package com.denimgroup.threadfix.selenium.pages;
 
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 
@@ -121,6 +123,24 @@ public class AcceptancePolicyPage extends BasePage {
         return new AcceptancePolicyPage(driver);
     }
 
+    public AcceptancePolicyPage expandAcceptancePolicy(String name) {
+        driver.findElementById("acceptcriteriaCaret" + name).click();
+        waitForElement(driver.findElementByCssSelector("#acceptcriteriaInfoDiv" + name + "[class*='expanded']"));
+        return new AcceptancePolicyPage(driver);
+    }
+
+    public AcceptancePolicyPage addAppToAcceptancePolicy(String policyName, String appName) {
+        driver.findElementById("applicationNameTypeahead" + policyName).sendKeys(appName);
+        driver.findElementById("applicationNameTypeahead" + policyName).sendKeys(Keys.ENTER);
+        driver.findElementById("submitButton" + policyName).click();
+        return new AcceptancePolicyPage(driver);
+    }
+
+    public AcceptancePolicyPage removeAppFromPolicy(String policyName, String appName) {
+        driver.findElementByCssSelector("#" + policyName + "AppRow" + appName + " #deleteButton" + appName).click();
+        return new AcceptancePolicyPage(driver);
+    }
+
     /*------------------------------------ Boolean Methods ------------------------------------*/
 
     public boolean isPolicyPresent(String name) {
@@ -137,6 +157,15 @@ public class AcceptancePolicyPage extends BasePage {
 
     public boolean isPolicyPassing(String name) {
         return driver.findElementById("acceptcriteriaPass" + name).getText().contains("PASS");
+    }
+
+    public boolean isAppPresent(String policyName, String appName) {
+        try {
+            waitForElement(driver.findElementByCssSelector("#" + policyName + "AppRow" + appName));
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 
 }
