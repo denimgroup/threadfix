@@ -27,9 +27,11 @@ package com.denimgroup.threadfix.importer.util;
 import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.exception.RestInvalidScanFormatException;
+import com.denimgroup.threadfix.importer.impl.upload.WebInspectChannelImporter;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
@@ -56,9 +58,14 @@ public final class ScanUtils {
 	 * This method checks through the XML with a blank parser to determine
 	 * whether SAX parsing will fail due to an exception.
 	 */
-	public static boolean isBadXml(InputStream inputStream) {
+	public static boolean isBadXml(InputStream inputStream, boolean filtered) {
 		try {
-			readSAXInput(new DefaultHandler(), inputStream);
+			if (filtered) {
+				FilteredXmlInputStream filteredXmlInputStream = new FilteredXmlInputStream(inputStream);
+				readSAXInput(new DefaultHandler(), filteredXmlInputStream);
+			} else {
+				readSAXInput(new DefaultHandler(), inputStream);
+			}
             return false;
 		} catch (SAXException e) {
             STATIC_LOGGER.warn("Trying to read XML returned the error " + e.getMessage(), e);
@@ -73,7 +80,7 @@ public final class ScanUtils {
 
 		return true;
 	}
-	
+
 	/**
 	 * This method with one argument sets up the SAXParser and inputStream correctly
 	 * and executes the parsing. With two it adds a completion code and exception handling.
@@ -103,7 +110,7 @@ public final class ScanUtils {
 			}
 		}
 	}
-	
+
 	private static void readSAXInput(DefaultHandler handler, InputStream stream) throws SAXException, IOException {
 		XMLReader xmlReader = XMLReaderFactory.createXMLReader();
 		xmlReader.setContentHandler(handler);
@@ -111,7 +118,7 @@ public final class ScanUtils {
 				
 		// Wrapping the inputStream in a BufferedInputStream allows us to mark and reset it
 		BufferedInputStream newStream = new BufferedInputStream(stream);
-		
+
 		// UTF-8 contains 3 characters at the start of a file, which is a problem.
 		// The SAX parser sees them as characters in the prolog and throws an exception.
 		// This code removes them if they are present.
