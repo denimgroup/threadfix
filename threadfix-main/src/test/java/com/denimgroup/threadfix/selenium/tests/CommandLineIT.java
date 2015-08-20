@@ -349,8 +349,8 @@ public class CommandLineIT extends BaseDataTest {
 
         JSONObject response = cliUtils.vulnSearchById("79");
 
-        JSONArray vulnerabilities = cliUtils.getObjectArray(response);
-        assertTrue("Number of vulnerabilities was incorrect.", vulnerabilities.length() == 3);
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
+        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 3);
     }
 
     @Test
@@ -362,8 +362,8 @@ public class CommandLineIT extends BaseDataTest {
 
         JSONObject response = cliUtils.vulnSearchByTeamId(teamId);
 
-        JSONArray vulnerabilities = cliUtils.getObjectArray(response);
-        assertTrue("Number of vulnerabilities was incorrect.", vulnerabilities.length() == 29);
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
+        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 29);
     }
 
     @Test
@@ -376,8 +376,8 @@ public class CommandLineIT extends BaseDataTest {
 
         JSONObject response = cliUtils.vulnSearchByApplicationId(appId);
 
-        JSONArray vulnerabilities = cliUtils.getObjectArray(response);
-        assertTrue("Number of vulnerabilities was incorrect.", vulnerabilities.length() == 13);
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
+        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 13);
     }
 
     @Test
@@ -388,8 +388,8 @@ public class CommandLineIT extends BaseDataTest {
 
         JSONObject response = cliUtils.vulnSearchByScannerName("IBM Security AppScan Enterprise");
 
-        JSONArray vulnerabilities = cliUtils.getObjectArray(response);
-        assertTrue("Number of vulnerabilities was incorrect.", vulnerabilities.length() == 72);
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
+        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 72);
     }
 
     @Test
@@ -400,8 +400,8 @@ public class CommandLineIT extends BaseDataTest {
 
         JSONObject response = cliUtils.vulnSearchBySeverity("5");
 
-        JSONArray vulnerabilities = cliUtils.getObjectArray(response);
-        assertTrue("Number of vulnerabilities was incorrect.", vulnerabilities.length() == 21);
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
+        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 21);
     }
 
     @Test
@@ -412,15 +412,15 @@ public class CommandLineIT extends BaseDataTest {
 
         JSONObject response = cliUtils.vulnSearchByNumberOfResults(5);
 
-        JSONArray vulnerabilities = cliUtils.getObjectArray(response);
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
         assertTrue("Number of vulnerabilities was incorrect for returning less than total vulnerabilities.",
-                vulnerabilities.length() == 5);
+                numVulns == 5);
 
         JSONObject secondResponse = cliUtils.vulnSearchByNumberOfResults(100);
 
-        JSONArray secondVulnerabilities = cliUtils.getObjectArray(secondResponse);
+        int secondNumVulns = cliUtils.getNumberOfVulnerabilities(secondResponse);
         assertTrue("Number of vulnerabilities was incorrect for returning more than total vulnerabilities.",
-                secondVulnerabilities.length() == 72);
+                secondNumVulns == 72);
     }
 
     @Test
@@ -474,5 +474,15 @@ public class CommandLineIT extends BaseDataTest {
         assertFalse("Tag was found after attempted deletion.",
                 cliUtils.isTagIdPresentInObjectArray(response, tagId));
 
+    }
+
+    @Test
+    public void testVulnerabilitySearchByParameter() {
+        initializeTeamAndAppViaCli();
+        uploadScanToApp(teamName, appName, "AppScanEnterprise");
+
+        JSONObject response = cliUtils.vulnSearchByParameter("amUserId");
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
+        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 6);
     }
 }
