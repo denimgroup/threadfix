@@ -228,7 +228,11 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
                 avoidPageSplit: true,
                 startY: 50,
                 overflow: 'linebreak',
-                overflowColumns: ['roles']
+                overflowColumns: ['roles', 'groups'],
+                columnWidths: [
+                    {width: 150, key: "groups"},
+                    {width: 200, key: "roles"}
+                ]
             });
 
             doc.save("user-audit-report-" + $filter('date')(now, 'yyyyMMddHHmmss') + ".pdf");

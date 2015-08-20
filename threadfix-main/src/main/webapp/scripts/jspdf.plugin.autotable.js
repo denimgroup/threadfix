@@ -51,7 +51,8 @@
             overflow: 'ellipsize', // false, ellipsize or linebreak (false passes the raw text to renderCell)
             overflowColumns: false, // Specify which columns that gets subjected to the overflow method chosen. false indicates all
             avoidPageSplit: false,
-            extendWidth: true
+            extendWidth: true,
+            columnWidths: []
         }
     };
 
@@ -212,25 +213,39 @@
         }
     }
 
-    function calculateColumnWidths(rows, columns) {
+    function calculateColumnWidths(rows, columns, options) {
         var widths = {};
+        var overrideColumnWidths = settings.columnWidths;
 
         // Optimal widths
         var optimalTableWidth = 0;
         columns.forEach(function (header) {
-            var widest = getStringWidth(header.title || '', true);
-            if(typeof header.width == "number") {
-                widest = header.width;
+            var widest;
+
+            var keys = overrideColumnWidths.map(function(column) {
+                return column.key;
+            });
+
+            var index = keys.indexOf(header.key);
+
+            if ( index > -1 ) {
+                widest = overrideColumnWidths[index].width;
             } else {
-                rows.forEach(function (row) {
-                    if (!header.hasOwnProperty('key'))
-                        throw new Error("The key attribute is required in every header");
-                    var w = getStringWidth(stringify(row, header.key));
-                    if (w > widest) {
-                        widest = w;
-                    }
-                });
+                widest = getStringWidth(header.title || '', true);
+                if(typeof header.width == "number") {
+                    widest = header.width;
+                } else {
+                    rows.forEach(function (row) {
+                        if (!header.hasOwnProperty('key'))
+                            throw new Error("The key attribute is required in every header");
+                        var w = getStringWidth(stringify(row, header.key));
+                        if (w > widest) {
+                            widest = w;
+                        }
+                    });
+                }
             }
+
             widths[header.key] = widest;
             optimalTableWidth += widest;
         });
@@ -328,7 +343,7 @@
             var row = rows[i];
 
             // First calculate the height of the row
-            // (to do that the maxium amount of rows first need to be found)
+            // (to do that the maximum amount of rows first need to be found)
             var maxRows = 1;
             if (settings.overflow === 'linebreak') {
                 headers.forEach(function (header) {
