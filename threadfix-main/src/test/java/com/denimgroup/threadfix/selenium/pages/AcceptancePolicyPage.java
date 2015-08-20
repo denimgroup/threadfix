@@ -151,8 +151,8 @@ public class AcceptancePolicyPage extends BasePage {
         return driver.findElementById("acceptcriteriaName" + name).getText().contains(name);
     }
 
-    public boolean isPolicyFilterCorrect(String name) {
-        return driver.findElementById("acceptcriteriaFilter" + name).getText().contains(name);
+    public boolean isPolicyFilterCorrect(String policyName, String filterName) {
+        return driver.findElementById("acceptcriteriaFilter" + policyName).getText().contains(filterName);
     }
 
     public boolean isPolicyPassing(String name) {

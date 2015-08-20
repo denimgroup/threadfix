@@ -60,7 +60,7 @@ public class AcceptancePolicyEntIT extends BaseDataTest {
 
         assertTrue("Acceptance Policy is not present.", acceptancePolicyPage.isPolicyPresent(policyName));
         assertTrue("Policy name is not correct.", acceptancePolicyPage.isPolicyNameCorrect(policyName));
-        assertTrue("Policy filter name is not correct.", acceptancePolicyPage.isPolicyFilterCorrect(filterName));
+        assertTrue("Policy filter name is not correct.", acceptancePolicyPage.isPolicyFilterCorrect(policyName, filterName));
         assertTrue("Default policy status is not correct.", acceptancePolicyPage.isPolicyPassing(policyName));
     }
 
@@ -93,7 +93,7 @@ public class AcceptancePolicyEntIT extends BaseDataTest {
                 .saveAcceptancePolicy();
 
         assertTrue("Acceptance Policy does not display edited name.", acceptancePolicyPage.isPolicyNameCorrect(editedPolicyName));
-        assertTrue("Policy filter name is not the new filter.", acceptancePolicyPage.isPolicyFilterCorrect(newFilter));
+        assertTrue("Policy filter name is not the new filter.", acceptancePolicyPage.isPolicyFilterCorrect(editedPolicyName, newFilter));
     }
 
     @Test
