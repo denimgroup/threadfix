@@ -132,6 +132,21 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
         }
     };
 
+    $scope.addNewObject = function(collection, obj) {
+        var found = false;
+
+        collection.forEach(function(item) {
+            if (item && item.id === obj.id) {
+                found = true;
+            }
+        });
+
+        if (!found) {
+            collection.push(obj);
+            $rootScope.$broadcast("resetParameters", $scope.parameters);
+        }
+    };
+
     $scope.remove = function(collection, index) {
         collection.splice(index, 1);
 
