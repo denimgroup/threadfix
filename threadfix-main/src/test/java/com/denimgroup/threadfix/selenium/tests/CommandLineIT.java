@@ -350,7 +350,7 @@ public class CommandLineIT extends BaseDataTest {
         JSONObject response = cliUtils.vulnSearchById("79");
 
         int numVulns = cliUtils.getNumberOfVulnerabilities(response);
-        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 3);
+        assertTrue("Number of vulnerabilities was incorrect.  Should be 3, but was " + numVulns, numVulns == 3);
     }
 
     @Test
@@ -390,7 +390,7 @@ public class CommandLineIT extends BaseDataTest {
         JSONObject response = cliUtils.vulnSearchByScannerName("IBM Security AppScan Enterprise");
 
         int numVulns = cliUtils.getNumberOfVulnerabilities(response);
-        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 72);
+        assertTrue("Number of vulnerabilities was incorrect.  Should be 72, but was " + numVulns, numVulns == 72);
     }
 
     @Test
@@ -402,7 +402,7 @@ public class CommandLineIT extends BaseDataTest {
         JSONObject response = cliUtils.vulnSearchBySeverity("5");
 
         int numVulns = cliUtils.getNumberOfVulnerabilities(response);
-        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 21);
+        assertTrue("Number of vulnerabilities was incorrect.  Should be 21, but was " + numVulns, numVulns == 21);
     }
 
     @Test
@@ -414,13 +414,13 @@ public class CommandLineIT extends BaseDataTest {
         JSONObject response = cliUtils.vulnSearchByNumberOfResults(5);
 
         int numVulns = cliUtils.getNumberOfVulnerabilities(response);
-        assertTrue("Number of vulnerabilities was incorrect for returning less than total vulnerabilities.",
+        assertTrue("Number of vulnerabilities was incorrect for returning less than total vulnerabilities.  Should be 5, but was " + numVulns,
                 numVulns == 5);
 
         JSONObject secondResponse = cliUtils.vulnSearchByNumberOfResults(100);
 
         int secondNumVulns = cliUtils.getNumberOfVulnerabilities(secondResponse);
-        assertTrue("Number of vulnerabilities was incorrect for returning more than total vulnerabilities.",
+        assertTrue("Number of vulnerabilities was incorrect for returning more than total vulnerabilities.  Should be 72, but was " + numVulns,
                 secondNumVulns == 72);
     }
 
@@ -508,7 +508,7 @@ public class CommandLineIT extends BaseDataTest {
         JSONObject response = cliUtils.vulnSearchByStartDate("02-Aug-2011");
         int numVulns = cliUtils.getNumberOfVulnerabilities(response);
         System.out.println(numVulns);
-        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 5);
+        assertTrue("Number of vulnerabilities was incorrect.  Should be 5, but was " + numVulns, numVulns == 5);
     }
 
     @Test
