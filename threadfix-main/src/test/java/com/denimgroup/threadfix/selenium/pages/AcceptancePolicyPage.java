@@ -97,6 +97,8 @@ public class AcceptancePolicyPage extends BasePage {
     public AcceptancePolicyPage saveAcceptancePolicy() {
         driver.findElementById("submit").click();
         waitForInvisibleElement("myModalLabel");
+        //TODO: Remove screenshot after testing
+        takeScreenShot();
         return new AcceptancePolicyPage(driver);
     }
 
