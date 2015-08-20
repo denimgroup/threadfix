@@ -309,6 +309,15 @@ public class CommandLineParser {
 
 			} else if (requestAboutTag(cmd)) {
 				processTagRequest(cmd);
+			} else if (cmd.hasOption("ac")) {
+				String[] cmtArgs = cmd.getOptionValues("ac");
+				if (cmtArgs.length < 2) {
+					throw new ParseException("Wrong number of arguments.'");
+				}
+				if (isInteger(cmtArgs[0])) {
+					addVulnComment(cmtArgs);
+				} else
+					LOGGER.warn("VulnId is not number, not doing anything.");
 			}  else {
 				throw new ParseException("No arguments found.");
 			}
@@ -318,6 +327,27 @@ public class CommandLineParser {
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("java -jar tfcli.jar", options);
 		}
+	}
+
+	private static void addVulnComment(String[] cmtArgs) {
+		if (cmtArgs[1] == null || cmtArgs[1].trim().isEmpty()) {
+			LOGGER.error("Comment cannot be empty");
+			return;
+		}
+		String tagIds = null;
+		if (cmtArgs.length > 2) {
+			tagIds = cmtArgs[2];
+			if (tagIds != null) {
+				String[] ids = tagIds.split(",");
+				for (String id: ids) {
+					if (!isInteger(id.trim())) {
+						LOGGER.error(id + " is not a number.");
+						return;
+					}
+				}
+			}
+		}
+		printOutput(client.addVulnComment(Integer.valueOf(cmtArgs[0]), cmtArgs[1], tagIds));
 	}
 
 	private static void processTagRequest(CommandLine cmd) throws ParseException {

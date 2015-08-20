@@ -403,4 +403,12 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
     public void setUnsafeFlag(boolean unsafeFlag) {
         this.httpRestUtils.setUnsafeFlag(unsafeFlag);
     }
+
+    @Override
+    public RestResponse<String> addVulnComment(Integer vulnId, String comment, String commentTagIds) {
+        return httpRestUtils.httpPost("/vulnerabilities/" + vulnId + "/addComment",
+                new String[] { "comment", "commentTagIds" },
+                new String[] { comment, commentTagIds }, String.class);
+    }
+
 }
