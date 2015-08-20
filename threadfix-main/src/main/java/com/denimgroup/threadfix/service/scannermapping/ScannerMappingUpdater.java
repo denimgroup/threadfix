@@ -77,13 +77,11 @@ public class ScannerMappingUpdater implements ApplicationContextAware {
             bootstrapService.bootstrap();
         }
 
-        if (canUpdate && hasGenericVulns) {
+        if (canUpdate) {
             LOG.info("Updating mappings.");
             scannerMappingsUpdaterService.updateMappings(applicationContext);
-        } else if (!canUpdate) {
-            LOG.info("Scanner mappings are up-to-date, continuing");
         } else {
-            LOG.info("No generic vulnerabilities found, skipping updates for now.");
+            LOG.info("Scanner mappings are up-to-date, continuing");
         }
 
         updateTags();
@@ -141,8 +139,10 @@ public class ScannerMappingUpdater implements ApplicationContextAware {
             }
             boolean needUpdate = false;
             for (Tag tag: tagList) {
-                needUpdate = (tag.getType() == null) ? true : false;
-                break;
+                if (tag.getType() == null) {
+                    needUpdate = true;
+                    break;
+                }
             }
             if (needUpdate) {
                 tagService.updateTagTypes();

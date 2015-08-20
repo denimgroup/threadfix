@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.data.entities.WafType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,7 @@ public class WafBootstrapper {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(WafBootstrapper.class);
 
+    @Transactional
     public void bootstrap() {
         LOG.info("Checking and adding missing WAF Types.");
 

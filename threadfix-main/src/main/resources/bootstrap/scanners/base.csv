@@ -20,4 +20,5 @@ WhiteHat Sentinel|http://www.whitehatsec.com/home/services/services.html|-|You s
 w3af|http://w3af.sourceforge.net/|1.0-rc6|The w3af importer needs a configured XML output plugin. The w3af standard scripts contain one called script-xml_output.w3af which generates a valid xml configuration for ThreadFix.
 WebInspect|https://www.fortify.com/products/web_inspect.html|9.00|The WebInspect importer requires the Full XML report format. To export in this format after you have conducted a scan, click Export, then Details, then Full.
 Veracode|http://www.veracode.com/|-|You shouldn't be seeing this.
-Dependency Check|https://github.com/jeremylong/DependencyCheck|1.02|You shouldn't be seeing this.');
+Dependency Check|https://github.com/jeremylong/DependencyCheck|1.02|You shouldn't be seeing this.
+Brakeman|http://brakemanscanner.org/|1.5.2|The Brakeman importer requires the Brakeman JSON output. To get this format, either specify a file with a JSON extension for output (-o example.json) or use the -f option to set it explicitly (-f json).

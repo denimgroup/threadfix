@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.bootstrap;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -80,6 +82,11 @@ public class ResourceLineIterable implements Iterable<String> {
                 }
 
                 return next != null;
+            }
+
+            @Autowired
+            public void remove() {
+                throw new UnsupportedOperationException();
             }
 
             @Override

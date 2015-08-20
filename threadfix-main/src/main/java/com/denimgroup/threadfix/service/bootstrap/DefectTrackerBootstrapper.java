@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
@@ -45,6 +46,7 @@ public class DefectTrackerBootstrapper {
     DefectTrackerTypeDao defectTrackerTypeDao;
 
     // There are more than this but this is just a replacement for import.sql at this point
+    @Transactional
     public void bootstrap() {
         LOG.info("Adding initial Defect Tracker mappings");
 

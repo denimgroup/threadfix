@@ -27,7 +27,8 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.BootstrapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+
+import static java.lang.System.currentTimeMillis;
 
 /**
  * Created by mcollins on 8/12/15.
@@ -55,22 +56,32 @@ public class BootstrapServiceImpl implements BootstrapService {
     GenericVulnerabilityBootstrapper genericVulnerabilityBootstrapper;
     @Autowired
     ScannerVulnerabilityTypeBootstrapper scannerVulnerabilityTypeBootstrapper;
+    @Autowired
+    UserRoleBootstrapper userRoleBootstrapper;
 
     @Override
-    @Transactional(readOnly = false)
     public void bootstrap() {
         LOG.info("Bootstrapping.");
-        genericSeverityBootstrapper.bootstrap();
-        scannerTypeBootstrapper.bootstrap();
-        applicationCriticalityBootstrapper.bootstrap();
-        wafBootstrapper.bootstrap();
-        defectTrackerBootstrapper.bootstrap();
 
-        scannerSeveritiesBootstrapper.bootstrap();
-        scannerSeverityMappingsBootstrapper.bootstrap();
+        long startTime = currentTimeMillis();
+        try {
 
-        genericVulnerabilityBootstrapper.bootstrap();
+            userRoleBootstrapper.bootstrap();
 
-        scannerVulnerabilityTypeBootstrapper.bootstrap();
+            genericSeverityBootstrapper.bootstrap();
+            scannerTypeBootstrapper.bootstrap();
+            applicationCriticalityBootstrapper.bootstrap();
+            wafBootstrapper.bootstrap();
+            defectTrackerBootstrapper.bootstrap();
+
+            scannerSeveritiesBootstrapper.bootstrap();
+            scannerSeverityMappingsBootstrapper.bootstrap();
+
+            genericVulnerabilityBootstrapper.bootstrap();
+
+            scannerVulnerabilityTypeBootstrapper.bootstrap();
+        } finally {
+            LOG.info("Bootstrapping took " + (currentTimeMillis() - startTime) + " ms.");
+        }
     }
 }

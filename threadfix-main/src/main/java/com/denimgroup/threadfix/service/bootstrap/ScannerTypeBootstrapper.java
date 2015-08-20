@@ -76,6 +76,8 @@ public class ScannerTypeBootstrapper {
             newChannelType.setVersion(version);
             newChannelType.setExportInfo(exportInfo);
 
+            LOG.info("Adding type " + scannerName);
+
             channelTypeDao.saveOrUpdate(newChannelType);
 
         }

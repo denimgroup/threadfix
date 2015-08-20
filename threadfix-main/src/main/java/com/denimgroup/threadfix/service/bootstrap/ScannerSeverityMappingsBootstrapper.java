@@ -74,7 +74,6 @@ public class ScannerSeverityMappingsBootstrapper {
         }
 
         for (Map.Entry<String, List<String[]>> entry : getMappingsMap().entrySet()) {
-            long singleEntryStart = System.currentTimeMillis();
             String scanner = entry.getKey();
             List<String[]> mappings = entry.getValue();
 
@@ -107,8 +106,6 @@ public class ScannerSeverityMappingsBootstrapper {
                     channelSeverity.setSeverityMap(severityMap);
                 }
             }
-
-            LOG.info("Took " + (System.currentTimeMillis() - singleEntryStart) + " ms.");
         }
 
         LOG.info("Took " + (System.currentTimeMillis() - start) + " ms total.");
@@ -232,7 +229,7 @@ public class ScannerSeverityMappingsBootstrapper {
                         new String[] { "info", "Info" },
                         new String[] { "low", "Low" }
                 ),
-                "Brakeman ", list(
+                "Brakeman", list(
                         new String[] { "3", "Medium" },
                         new String[] { "4", "High" },
                         new String[] { "1", "Info" },

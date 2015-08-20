@@ -628,13 +628,6 @@
             <version>${svnkit.version}</version>
         </dependency>
 
-        <!-- Test SQL Server -->
-        <dependency>
-            <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>sqljdbc</artifactId>
-            <version>4.1</version>
-        </dependency>
-
         <!-- the core, which includes Streaming API, shared low-level abstractions (but NOT data-binding) -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
