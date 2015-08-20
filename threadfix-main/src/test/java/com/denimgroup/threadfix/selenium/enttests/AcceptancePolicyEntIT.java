@@ -95,4 +95,32 @@ public class AcceptancePolicyEntIT extends BaseDataTest {
         assertTrue("Acceptance Policy does not display edited name.", acceptancePolicyPage.isPolicyNameCorrect(editedPolicyName));
         assertTrue("Policy filter name is not the new filter.", acceptancePolicyPage.isPolicyFilterCorrect(newFilter));
     }
+
+    @Test
+    public void testAddAppToAcceptancePolicy() {
+        initializeTeamAndApp();
+        String name = getName();
+        AcceptancePolicyPage acceptancePolicyPage = initialize(name);
+
+        acceptancePolicyPage.expandAcceptancePolicy(name)
+                .addAppToAcceptancePolicy(name, appName);
+
+        assertTrue("Application was not added.", acceptancePolicyPage.isAppPresent(name, appName));
+    }
+
+    @Test
+    public void testRemoveAppFromAcceptancePolicy() {
+        initializeTeamAndApp();
+        String name = getName();
+        AcceptancePolicyPage acceptancePolicyPage = initialize(name);
+
+        acceptancePolicyPage.expandAcceptancePolicy(name)
+                .addAppToAcceptancePolicy(name, appName);
+
+        assertTrue("Application was not added.", acceptancePolicyPage.isAppPresent(name, appName));
+
+        acceptancePolicyPage.removeAppFromPolicy(name, appName);
+
+        assertFalse("Application was not removed.", acceptancePolicyPage.isAppPresent(name, appName));
+    }
 }
