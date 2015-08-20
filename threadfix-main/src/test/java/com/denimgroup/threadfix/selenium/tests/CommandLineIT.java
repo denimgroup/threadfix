@@ -485,4 +485,64 @@ public class CommandLineIT extends BaseDataTest {
         int numVulns = cliUtils.getNumberOfVulnerabilities(response);
         assertTrue("Number of vulnerabilities was incorrect.", numVulns == 6);
     }
+
+    @Test
+    public void testVulnerabilitySearchByPath() {
+        dbUtils.deleteAllTeams();
+        initializeTeamAndAppViaCli();
+        uploadScanToApp(teamName, appName, "AppScanEnterprise");
+
+        JSONObject response = cliUtils.vulnSearchByPath("/bank/account.aspx");
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
+        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 3);
+    }
+
+    @Test
+    public void testVulnerabilitySearchByStartDate() {
+        dbUtils.deleteAllTeams();
+        initializeTeamAndAppViaCli();
+        uploadScanToApp(teamName, appName, "Nessus");
+        uploadScanToApp(teamName, appName, "w3af");
+
+        JSONObject response = cliUtils.vulnSearchByStartDate("02-Aug-2011");
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
+        System.out.println(numVulns);
+        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 5);
+    }
+
+    @Test
+    public void testVulnerabilitySearchByEndDate() {
+        dbUtils.deleteAllTeams();
+        initializeTeamAndAppViaCli();
+        uploadScanToApp(teamName, appName, "Nessus");
+        uploadScanToApp(teamName, appName, "w3af");
+
+        JSONObject response = cliUtils.vulnSearchByEndDate("02-Aug-2011");
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
+        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 13);
+    }
+
+    @Test
+    public void testVulnerabilitySearchByStatus() {
+        dbUtils.deleteAllTeams();
+        initializeTeamAndAppViaCli();
+        uploadScanToApp(teamName, appName, "NTO Spider");
+        uploadScanToApp(teamName, appName, "NTO Spider6");
+
+        JSONObject response = cliUtils.vulnSearchShowOnlyHidden("Closed");
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
+        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 22);
+    }
+
+    @Test
+    public void testVulnerabilitySearchByNumberMerged() {
+        dbUtils.deleteAllTeams();
+        initializeTeamAndAppViaCli();
+        uploadScanToApp(teamName, appName, "NTO Spider");
+        uploadScanToApp(teamName, appName, "NTO Spider6");
+
+        JSONObject response = cliUtils.vulnSearchByNumberMerged(2);
+        int numVulns = cliUtils.getNumberOfVulnerabilities(response);
+        assertTrue("Number of vulnerabilities was incorrect.", numVulns == 6);
+    }
 }

@@ -298,4 +298,24 @@ public class CommandLineUtils {
     public JSONObject vulnSearchByParameter(String parameter) {
         return executeJarCommand("--search", "parameter=" + parameter, INCREASE_RESULTS_ARG);
     }
+
+    public JSONObject vulnSearchByPath(String path) {
+        return executeJarCommand("--search", "path=" + path, INCREASE_RESULTS_ARG);
+    }
+
+    public JSONObject vulnSearchByStartDate(String startDate) {
+        return executeJarCommand("--search", "startDate=" + startDate, INCREASE_RESULTS_ARG);
+    }
+
+    public JSONObject vulnSearchByEndDate(String endDate) {
+        return executeJarCommand("--search", "endDate=" + endDate, INCREASE_RESULTS_ARG);
+    }
+
+    public JSONObject vulnSearchShowOnlyHidden(String status) {
+        return executeJarCommand("--search", "showOpen=false", "showClosed=true", INCREASE_RESULTS_ARG);
+    }
+
+    public JSONObject vulnSearchByNumberMerged(int numberMerged) {
+        return executeJarCommand("--search", "numberMerged=" + String.valueOf(numberMerged), INCREASE_RESULTS_ARG);
+    }
 }
