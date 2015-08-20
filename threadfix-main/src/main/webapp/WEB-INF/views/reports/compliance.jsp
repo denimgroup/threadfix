@@ -1,6 +1,6 @@
 <div class="vuln-tree">
 
-    <div ng-if="remediationEnterpriseActive" ng-init="newFilteredTagName = enterpriseTags[0].name; addNewTag(newFilteredTagName)">
+    <div ng-if="remediationActive" ng-init="newFilteredTagName = enterpriseTags[0].name; addNewTag(newFilteredTagName)">
         <c:if test="${isEnterprise}">
             <select ng-change="addNewTag(newFilteredTagName)" style="margin-bottom: 0" class="complianceTypeSelect" id="complianceTypeSelect" ng-model="newFilteredTagName">
                 <option ng-selected="newFilteredTagName === option.name" ng-repeat="option in enterpriseTags" value="{{ option.name }}">
@@ -13,7 +13,7 @@
             <span id="loadingSpinner" ng-if="loading" class="spinner dark"></span>
         </span>
 
-    <div ng-show="complianceActive || remediationEnterpriseActive">
+    <div ng-show="complianceActive || remediationActive">
         <d3-trending data="trendingScansData" label="title" width="670" height="400" margin="margin"
                      table-info="tableInfo" start-date="trendingStartDate" end-date="trendingEndDate" export-info="exportInfo" svg-id="graphName" sum-table-div-id = "sumTableDivId"></d3-trending>
     </div>
