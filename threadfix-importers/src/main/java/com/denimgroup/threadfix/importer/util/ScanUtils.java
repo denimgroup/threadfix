@@ -87,14 +87,7 @@ public final class ScanUtils {
 	 */
 	public static void readSAXInput(DefaultHandler handler, String completionCode, InputStream stream) {
 		try {
-			STATIC_LOGGER.info(handler.getClass().getName());
-			if (handler instanceof WebInspectChannelImporter.WebInspectSAXValidator ||
-					handler instanceof WebInspectChannelImporter.WebInspectSAXParser) {
-				FilteredXmlInputStream filteredXmlInputStream = new FilteredXmlInputStream(stream);
-				readSAXInput(handler, filteredXmlInputStream);
-			} else {
-				readSAXInput(handler, stream);
-			}
+			readSAXInput(handler, stream);
 		} catch (IOException e) {
             STATIC_LOGGER.error("Encountered IOException while trying to read the SAX input.");
             throw new RestIOException(e, "Encountered IOException while trying to read data. Can't continue.");
