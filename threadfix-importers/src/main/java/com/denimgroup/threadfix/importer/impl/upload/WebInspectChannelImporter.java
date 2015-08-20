@@ -32,6 +32,7 @@ import com.denimgroup.threadfix.data.entities.ScannerDatabaseNames;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
+import com.denimgroup.threadfix.importer.util.FilteredXmlInputStream;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.xml.sax.Attributes;
@@ -74,9 +75,11 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 	 */
 	@Override
 	public Scan parseInput() {
+		this.inputStream = new FilteredXmlInputStream(this.inputStream);
 		return parseSAXInput(new WebInspectSAXParser());
 	}
-	
+
+
 	public class WebInspectSAXParser extends HandlerWithBuilder {
 
 		private static final String CWE_PATTERN = "CWE-(.*)";
@@ -315,6 +318,7 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 	@Nonnull
     @Override
 	public ScanCheckResultBean checkFile() {
+		this.inputStream = new FilteredXmlInputStream(this.inputStream);
 		return testSAXInput(new WebInspectSAXValidator());
 	}
 	
