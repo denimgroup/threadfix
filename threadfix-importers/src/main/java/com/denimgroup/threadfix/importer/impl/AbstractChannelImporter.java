@@ -787,9 +787,20 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         }
 
         if (doSAXExceptionCheck) {
-            if (ScanUtils.isBadXml(inputStream)) {
+            if (ScanUtils.isBadXml(inputStream, false)) {
+                closeInputStream(inputStream);
                 log.warn("Bad XML format - ensure correct, uniform encoding.");
-                return new ScanCheckResultBean(ScanImportStatus.BADLY_FORMED_XML);
+
+                log.warn("Applying filter to XML.");
+                try {
+                    inputStream = new FileInputStream(inputFileName);
+                } catch (FileNotFoundException e) {
+                    log.error("Cannot find file '" + inputFileName + "'.", e);
+                }
+
+                if (ScanUtils.isBadXml(inputStream, true)) {
+                    return new ScanCheckResultBean(ScanImportStatus.BADLY_FORMED_XML);
+                }
             }
             closeInputStream(inputStream);
             try {
