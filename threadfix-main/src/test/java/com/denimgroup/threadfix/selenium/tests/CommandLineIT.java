@@ -181,22 +181,6 @@ public class CommandLineIT extends BaseDataTest {
     }
 
     @Test
-    public void testQueueScan() {
-        initializeTeamAndAppViaCli();
-
-        JSONObject response = cliUtils.queueScan(appId, "zap");
-        assertTrue("Response was unsuccessful.", cliUtils.isCommandResponseSuccessful(response));
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickApplicationName(teamName, appName)
-                .clickScanAgentTasksTab(1);
-        assertTrue("Scheduled scan isn't present.",
-                ("OWASP Zed Attack Proxy").equals(applicationDetailPage.getScanAgentTaskScannerType(0)));
-    }
-
-    @Test
     public void testSearchTeamByName() {
         String teamName = getName();
         DatabaseUtils.createTeam(teamName);
@@ -293,25 +277,6 @@ public class CommandLineIT extends BaseDataTest {
                 .clickApplicationName(teamName, appName)
                 .clickEditDeleteBtn();
         assertTrue("URL was not changed in modal.", CHANGED_URL.equals(applicationDetailPage.getUrlText()));
-    }
-
-    @Test
-    public void testSetTaskConfigFile() {
-        final String SCANNER = "zap";
-        final String CONFIG_FILEPATH = ScanContents.SCAN_FILE_MAP.get("Snort Log");
-
-        initializeTeamAndAppViaCli();
-        cliUtils.queueScan(appId, SCANNER);
-
-        JSONObject response = cliUtils.setTaskConfigFile(appId, SCANNER, CONFIG_FILEPATH);
-        assertTrue("Response was unsuccessful.", cliUtils.isCommandResponseSuccessful(response));
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickApplicationName(teamName, appName)
-                .clickFilesTab();
-        assertTrue("Config file wasn't set properly.", applicationDetailPage.isUploadedFilePresent("zap"));
     }
 
     @Test
