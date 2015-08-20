@@ -41,9 +41,9 @@ import static com.denimgroup.threadfix.CollectionUtils.map;
  */
 @Entity
 @Table(name = "AcceptanceCriteriaStatus"
-//        ,
-//        uniqueConstraints = {
-//        @UniqueConstraint(columnNames = {"Application_Id", "AcceptanceCriteria_Id"})}
+        ,
+        uniqueConstraints = {
+        @UniqueConstraint(columnNames = { "`applicationId`", "`acceptanceCriteriaId`" })}
 )
 public class AcceptanceCriteriaStatus extends AuditableEntity {
 
@@ -99,7 +99,7 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
 
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "Application_Id", nullable = false)
+    @JoinColumn(name = "`applicationId`", nullable = false)
     public Application getApplication() {
         return application;
     }
@@ -136,7 +136,7 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
 
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "AcceptanceCriteria_Id", nullable = false)
+    @JoinColumn(name = "`acceptanceCriteriaId`", nullable = false)
     public AcceptanceCriteria getAcceptanceCriteria() {
         return acceptanceCriteria;
     }
@@ -144,7 +144,6 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
     public void setAcceptanceCriteria(AcceptanceCriteria acceptanceCriteria) {
         this.acceptanceCriteria = acceptanceCriteria;
     }
-
 
     @Transient
     @JsonProperty("acceptanceCriteria")

@@ -36,13 +36,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "Organization")
-//@org.hibernate.annotations.Table(appliesTo = "Organization",
-//        indexes = {
-//                @Index(name = "activeIndex",
-//                        columnNames = { "id", "active" }
-//                )
-//        }
-//)
 public class Organization extends AuditableEntity {
 
     // These are used for caching and will require frequent updates.
