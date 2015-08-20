@@ -29,10 +29,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 import java.io.File;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
@@ -68,6 +65,7 @@ public class DefaultConfiguration extends BaseEntity {
 
     private String fileUploadLocation = null;
     private Boolean deleteUploadedFiles = false;
+    private List<String> csvExportFields;
 
     public static DefaultConfiguration getInitialConfig() {
         DefaultConfiguration config = new DefaultConfiguration();
@@ -596,5 +594,18 @@ public class DefaultConfiguration extends BaseEntity {
 
     public void setShouldProxyContrast(Boolean shouldProxyContrast) {
         this.shouldProxyContrast = shouldProxyContrast;
+    }
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "DefaultConfigCSVExportField", joinColumns = @JoinColumn(name = "DefaultConfigId"))
+    @Column(name = "csvExportField", length = 32)
+    @OrderColumn(name = "index_id")
+    @JsonView(AllViews.FormInfo.class)
+    public List<String> getCsvExportFields() {
+        return csvExportFields;
+    }
+
+    public void setCsvExportFields(List<String> csvExportFields) {
+        this.csvExportFields = csvExportFields;
     }
 }

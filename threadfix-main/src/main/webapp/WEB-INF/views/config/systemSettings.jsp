@@ -15,7 +15,7 @@
     <tabset>
         <security:authorize ifAnyGranted="ROLE_ENTERPRISE">
             <tab id="loginTab" heading="Login Settings" ng-click="setTab('login')" active="tab.login">
-                <div ng-form="configForm" name="form">
+                <div ng-form="configForm" name="loginForm">
                     <div class="panel panel-default">
                         <div id="defaultPermissionsPanel" class="panel-heading pointer" style="width:200px"
                              ng-click="editDefaultPermissions = !editDefaultPermissions">
@@ -67,7 +67,7 @@
                             <button class="close" ng-click="LDAPError = undefined" type="button">&times;</button>
                             {{ LDAPError }}
                         </div>
-                        <div ng-form="form" class="panel-body" ng-show="editLdapSettings">
+                        <div ng-form="loginForm" class="panel-body" ng-show="editLdapSettings">
                             <table>
                                 <tr>
                                     <td style="width:150px" class="no-color">Search Base</td>
@@ -82,7 +82,7 @@
                                                ng-model="object.activeDirectoryBase"/>
                                     </td>
                                     <td class="no-color" style="padding-left: 5px">
-                                        <span id="activeDirectoryBaseCharacterLimitError" class="errors" ng-show="form.activeDirectoryBase.$dirty && form.activeDirectoryBase.$error.maxlength">Over 255 characters limit!</span>
+                                        <span id="activeDirectoryBaseCharacterLimitError" class="errors" ng-show="loginForm.activeDirectoryBase.$dirty && loginForm.activeDirectoryBase.$error.maxlength">Over 255 characters limit!</span>
                                         <span id="activeDirectoryBaseServerError" class="errors" ng-show="object.activeDirectoryBase_error"> {{ object.activeDirectoryUsername_error }}</span>
                                     </td>
                                     <td class="no-color" style="padding-left: 5px">
@@ -102,7 +102,7 @@
                                                ng-model="object.activeDirectoryUsername"/>
                                     </td>
                                     <td class="no-color" style="padding-left: 5px">
-                                        <span id="activeDirectoryUsernameCharacterLimitError" class="errors" ng-show="form.activeDirectoryUsername.$dirty && form.activeDirectoryUsername.$error.maxlength">Over 255 characters limit!</span>
+                                        <span id="activeDirectoryUsernameCharacterLimitError" class="errors" ng-show="loginForm.activeDirectoryUsername.$dirty && loginForm.activeDirectoryUsername.$error.maxlength">Over 255 characters limit!</span>
                                         <span id="activeDirectoryUsernameServerError" class="errors" ng-show="object.activeDirectoryUsername_error"> {{ object.activeDirectoryUsername_error }}</span>
                                     </td>
                                 </tr>
@@ -119,7 +119,7 @@
                                                ng-model="object.activeDirectoryCredentials"/>
                                     </td>
                                     <td class="no-color" style="padding-left: 5px">
-                                        <span id="activeDirectoryCredentialsCharacterLimitError" class="errors" ng-show="form.activeDirectoryCredentials.$dirty && form.activeDirectoryCredentials.$error.maxlength">Over 255 characters limit!</span>
+                                        <span id="activeDirectoryCredentialsCharacterLimitError" class="errors" ng-show="loginForm.activeDirectoryCredentials.$dirty && loginForm.activeDirectoryCredentials.$error.maxlength">Over 255 characters limit!</span>
                                         <span id="activeDirectoryCredentialsServerError" class="errors" ng-show="object.activeDirectoryCredentials_error"> {{ object.activeDirectoryCredentials_error }}</span>
                                     </td>
                                 </tr>
@@ -136,13 +136,13 @@
                                                ng-model="object.activeDirectoryURL"/>
                                     </td>
                                     <td class="no-color" style="padding-left: 5px">
-                                        <span id="activeDirectoryURLCharacterLimitError" class="errors" ng-show="form.activeDirectoryURL.$dirty && form.activeDirectoryURL.$error.maxlength">Over 255 characters limit!</span>
+                                        <span id="activeDirectoryURLCharacterLimitError" class="errors" ng-show="loginForm.activeDirectoryURL.$dirty && loginForm.activeDirectoryURL.$error.maxlength">Over 255 characters limit!</span>
                                         <span id="activeDirectoryURLServerError" class="errors" ng-show="object.activeDirectoryURL_error"> {{ object.activeDirectoryURL }}</span>
                                     </td>
                                 </tr>
                             </table>
 
-                            <button id="checkLDAPSettings" ng-disabled="shouldDisable()" class="btn" ng-click="ok(form.$valid)">
+                            <button id="checkLDAPSettings" ng-disabled="shouldDisable()" class="btn" ng-click="ok(loginForm.$valid)">
                                 Check Connection
                             </button>
                         </div>
@@ -174,8 +174,8 @@
                                                ng-model="object.sessionTimeout"/>
                                     </td>
                                     <td class="no-color" style="padding-left: 5px">
-                                        <span id="sessionTimeoutNumberLimitError" class="errors" ng-show="form.sessionTimeout.$dirty && form.sessionTimeout.$error.max">Max value is 30 seconds.</span>
-                                        <span id="sessionTimeoutValidNumberError" class="errors" ng-show="form.sessionTimeout.$dirty && form.sessionTimeout.$error.number">Not valid number!</span>
+                                        <span id="sessionTimeoutNumberLimitError" class="errors" ng-show="loginForm.sessionTimeout.$dirty && loginForm.sessionTimeout.$error.max">Max value is 30 seconds.</span>
+                                        <span id="sessionTimeoutValidNumberError" class="errors" ng-show="loginForm.sessionTimeout.$dirty && loginForm.sessionTimeout.$error.number">Not valid number!</span>
                                         <span id="sessionTimeoutServerError" class="errors" ng-show="object.sessionTimeout_error"> {{ object.sessionTimeout_error }}</span>
                                     </td>
                                 </tr>
@@ -184,17 +184,17 @@
                     </div>
 
                     <button id="submit"
-                            ng-class="{ disabled : form.$invalid }"
+                            ng-class="{ disabled : loginForm.$invalid }"
                             class="btn btn-primary"
-                            ng-mouseenter="form.$dirty = true"
+                            ng-mouseenter="loginForm.$dirty = true"
                             ng-hide="loading"
-                            ng-click="submit(form.$valid)">Save Changes</button>
+                            ng-click="submit(loginForm.$valid)">Save Changes</button>
                 </div>
             </tab>
         </security:authorize>
 
         <tab id="reportTab" heading="Report Settings" ng-click="setTab('report')" active="tab.report">
-            <div ng-form="configForm" name="form">
+            <div ng-form="configForm" name="reportForm">
                 <div class="panel panel-default">
                     <div id="defaultDashboardSettingsPanel" class="panel-heading pointer" style="width:200px" ng-click="editDashboardSettings = !editDashboardSettings">
                         <h3 class="panel-title">
@@ -333,16 +333,44 @@
                 </div>
 
                 <button id="submit"
-                        ng-class="{ disabled : form.$invalid }"
+                        ng-class="{ disabled : reportForm.$invalid }"
                         class="btn btn-primary"
-                        ng-mouseenter="form.$dirty = true"
+                        ng-mouseenter="reportForm.$dirty = true"
                         ng-hide="loading"
-                        ng-click="submit(form.$valid)">Save Changes</button>
+                        ng-click="submit(reportForm.$valid)">Save Changes</button>
+            </div>
+        </tab>
+
+        <tab id="exportTab" heading="Export Settings" ng-click="setTab('export')" active="tab.export">
+            <div ng-form="configForm" name="exportForm">
+                <div style="padding:10px 0 10px">
+                    <select multiple size="12" ng-multiple="true" ng-model="selectedExportFields"
+                            ng-options="exportField.displayName for exportField in exportFields track by exportField.name"></select>
+
+                    <div id="buttons" style="display: inline-block; padding: 15px;">
+                        <div style="padding: 5px">
+                            <button id="addExportField" ng-click="addToRightPanel(selectedExportFields)" class="btn">&raquo;</button>
+                        </div>
+                        <div style="padding: 5px">
+                            <button id="removeExportField" ng-click="addToLeftPanel()" class="btn">&laquo;</button>
+                        </div>
+                    </div>
+
+                    <select multiple size="12" ng-multiple="true" ng-model="object.csvExportFields" name="csvExportFields"
+                            ng-options="exportField.displayName for exportField in object.csvExportFields"></select>
+
+                </div>
+                <button id="submit"
+                        ng-class="{ disabled : exportForm.$invalid }"
+                        class="btn btn-primary"
+                        ng-mouseenter="exportForm.$dirty = true"
+                        ng-hide="loading"
+                        ng-click="submit(exportForm.$valid)">Save Changes</button>
             </div>
         </tab>
 
         <tab id="otherTab" heading="Other Settings" ng-click="setTab('other')" active="tab.other">
-            <div ng-form="configForm" name="form">
+            <div ng-form="configForm" name="otherForm">
 
                 <security:authorize ifAnyGranted="ROLE_ENTERPRISE">
 
@@ -369,7 +397,7 @@
                                                ng-model="object.proxyHost"/>
                                     </td>
                                     <td class="no-color" style="padding-left: 5px">
-                                        <span id="proxyHostCharacterLimitError" class="errors" ng-show="form.proxyHost.$dirty && form.proxyHost.$error.maxlength">Over 255 characters limit!</span>
+                                        <span id="proxyHostCharacterLimitError" class="errors" ng-show="otherForm.proxyHost.$dirty && otherForm.proxyHost.$error.maxlength">Over 255 characters limit!</span>
                                         <span id="proxyHostServerError" class="errors" ng-show="object.proxyHost_error"> {{ object.proxyHost_error }}</span>
                                     </td>
                                 </tr>
@@ -386,7 +414,7 @@
                                     </td>
                                     <td class="no-color" style="padding-left: 5px">
                                         <span id="proxyPortServerError" class="errors" ng-show="object.proxyPort_error"> {{ object.proxyPort_error }}</span>
-                                        <span id="proxyPortCharacterLimitError" class="errors" ng-show="form.proxyPort.$dirty && form.proxyPort.$error.maxlength">Over 255 characters limit!</span>
+                                        <span id="proxyPortCharacterLimitError" class="errors" ng-show="otherForm.proxyPort.$dirty && otherForm.proxyPort.$error.maxlength">Over 255 characters limit!</span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -419,7 +447,7 @@
                                                placeholder="Use object username"/>
                                     </td>
                                     <td class="no-color" style="padding-left: 5px">
-                                        <span id="proxyUsernameCharacterLimitError" class="errors" ng-show="form.proxyUsername.$dirty && form.proxyUsername.$error.maxlength">Over 255 characters limit!</span>
+                                        <span id="proxyUsernameCharacterLimitError" class="errors" ng-show="otherForm.proxyUsername.$dirty && otherForm.proxyUsername.$error.maxlength">Over 255 characters limit!</span>
                                         <span id="proxyUsernameServerError" class="errors" ng-show="object.proxyUsername_error"> {{ object.proxyUsername_error }}</span>
                                     </td>
                                 </tr>
@@ -447,7 +475,7 @@
                                                placeholder="Use configured password"/>
                                     </td>
                                     <td class="no-color" style="padding-left: 5px">
-                                        <span id="proxyPasswordCharacterLimitError" class="errors" ng-show="form.proxyPassword.$dirty && form.proxyPassword.$error.maxlength">Over 255 characters limit!</span>
+                                        <span id="proxyPasswordCharacterLimitError" class="errors" ng-show="otherForm.proxyPassword.$dirty && otherForm.proxyPassword.$error.maxlength">Over 255 characters limit!</span>
                                         <span id="proxyPasswordServerError" class="errors" ng-show="object.proxyPassword_error"> {{ object.proxyPassword_error }}</span>
                                     </td>
                                 </tr>
@@ -529,7 +557,7 @@
                                            maxlength="1024" ng-model="object.fileUploadLocation"/>
                                 </td>
                                 <td class="no-color" style="padding-left: 5px">
-                                    <span id="fileUploadLocationCharacterLimitError" class="errors" ng-show="form.fileUploadLocation.$dirty && form.fileUploadLocation.$error.maxlength">Over 1024 characters limit!</span>
+                                    <span id="fileUploadLocationCharacterLimitError" class="errors" ng-show="otherForm.fileUploadLocation.$dirty && otherForm.fileUploadLocation.$error.maxlength">Over 1024 characters limit!</span>
                                     <span id="fileUploadLocationServerError" class="errors" ng-show="object.fileUploadLocation_error"> {{ object.fileUploadLocation_error }}</span>
                                 </td>
                             </tr>
@@ -538,11 +566,11 @@
                 </div>
 
                 <button id="submit"
-                        ng-class="{ disabled : form.$invalid }"
+                        ng-class="{ disabled : otherForm.$invalid }"
                         class="btn btn-primary"
-                        ng-mouseenter="form.$dirty = true"
+                        ng-mouseenter="otherForm.$dirty = true"
                         ng-hide="loading"
-                        ng-click="submit(form.$valid)">Save Changes</button>
+                        ng-click="submit(otherForm.$valid)">Save Changes</button>
             </div>
         </tab>
     </tabset>

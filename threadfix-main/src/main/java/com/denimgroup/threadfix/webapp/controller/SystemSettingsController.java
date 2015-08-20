@@ -8,6 +8,7 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.annotations.ReportLocation;
+import com.denimgroup.threadfix.data.entities.CSVExportField;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -27,11 +28,9 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.CollectionUtils.*;
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 
@@ -66,7 +65,7 @@ public class SystemSettingsController {
 				"dashboardTopLeft.id",
 				"dashboardTopRight.id", "dashboardBottomLeft.id", "dashboardBottomRight.id",
 				"applicationTopLeft.id", "applicationTopRight.id", "teamTopLeft.id", "teamTopRight.id",
-                "fileUploadLocation", "deleteUploadedFiles"
+                "fileUploadLocation", "deleteUploadedFiles", "csvExportFields"
 		};
 
 		String[] otherSections = {
@@ -173,6 +172,7 @@ public class SystemSettingsController {
         Map<String, Object> map = new HashMap<>();
         DefaultConfiguration configuration = defaultConfigurationWithMaskedPasswords();
 
+        map.put("exportFields", CSVExportField.getExportFields());
         map.put("roleList", roleService.loadAll());
         map.put("applicationCount", applicationService.getApplicationCount());
         map.put("licenseCount", licenseService == null ? 0 : licenseService.getAppLimit());

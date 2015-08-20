@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix');
 
-myAppModule.controller('SystemSettingsController', function ($scope, $window, $modal, $http, $log, $rootScope, tfEncoder) {
+myAppModule.controller('SystemSettingsController', function ($scope, $window, $modal, $http, $log, $rootScope, tfEncoder, threadFixModalService) {
 
     var prevFileUploadLocation;
 
@@ -18,6 +18,7 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
                     $scope.dashboardReports = data.object.dashboardReports;
                     $scope.applicationReports = data.object.applicationReports;
                     $scope.teamReports = data.object.teamReports;
+                    $scope.exportFields = data.object.exportFields;
 
                     prevFileUploadLocation = $scope.object.fileUploadLocation;
 
@@ -62,6 +63,10 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
                 $scope.object.deleteUploadedFiles = confirm("You've cleared the File Upload Location field. " +
                 "Would you like to delete the files residing in that directory?");
             }
+
+            $scope.object.csvExportFields = $scope.object.csvExportFields.map(function(csvExportField) {
+                return csvExportField.name;
+            });
 
             $http.post(url, $scope.object).
                 success(function(data) {
@@ -113,4 +118,14 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
                 });
         }
     };
+
+    $scope.addToRightPanel = function(selectedExportFields){
+        for (var i = 0; i < selectedExportFields.length; i++) {
+            var selectedExportField = selectedExportFields[i];
+            $scope.object.csvExportFields.push(selectedExportField);
+            threadFixModalService.deleteElement($scope.exportFields, selectedExportField);
+        }
+    };
+
+
 });
