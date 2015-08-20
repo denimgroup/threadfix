@@ -1,0 +1,5 @@
+Bugzilla,com.denimgroup.threadfix.service.defects.BugzillaDefectTracker
+Jira,com.denimgroup.threadfix.service.defects.JiraDefectTracker
+Microsoft TFS,com.denimgroup.threadfix.service.defects.TFSDefectTracker
+HP Quality Center,com.denimgroup.threadfix.service.defects.HPQualityCenterDefectTracker
+Version One,com.denimgroup.threadfix.service.defects.VersionOneDefectTracker

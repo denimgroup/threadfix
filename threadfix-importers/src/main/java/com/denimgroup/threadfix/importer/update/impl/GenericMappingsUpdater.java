@@ -153,9 +153,11 @@ public class GenericMappingsUpdater extends SpringBeanAutowiringSupport implemen
         if (oldName != null) {
             LOG.info("Update Manual Vulnerability: " + oldName + " to: " + newName);
             vulnerability = channelVulnerabilityDao.retrieveByName(channelType, oldName);
-            vulnerability.setCode(newName);
-            vulnerability.setName(newName);
-            channelVulnerabilityDao.saveOrUpdate(vulnerability);
+            if (vulnerability != null) {
+                vulnerability.setCode(newName);
+                vulnerability.setName(newName);
+                channelVulnerabilityDao.saveOrUpdate(vulnerability);
+            }
         } else {
             LOG.info("Create new Manual Vulnerability: " + newName);
             channelVulnerabilityUpdater.createNewChannelVulnerability(newName, newName, genericVulnerability, channelType);
