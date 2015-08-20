@@ -382,6 +382,7 @@ public class CommandLineIT extends BaseDataTest {
 
     @Test
     public void testVulnerabilitySearchByScannerType() {
+        dbUtils.deleteAllTeams();
         initializeTeamAndAppViaCli();
         uploadScanToApp(teamName, appName, "AppScanEnterprise");
         uploadScanToApp(teamName, appName, "w3af");
