@@ -1,0 +1,67 @@
+type.info,,
+Burp Suite,http://portswigger.net/burp/,1.4,The Burp importer accepts the XML output as input. After you are done scanning, navigate to scanner -> results, then highlight the results in the left panel that you want to include, then right click and select "report selected issues." In that menu pick XML and keep the default options.,
+type.vulnerabilities,,
+OS command injection,1048832,78
+HTML uses unrecognized charset,8389376,173
+XML injection,1050368,91
+File upload functionality,5245312,434
+Browser cross-site scripting filter disabled,5245360,89
+Private IP addresses disclosed,6292224,212
+Cross-site scripting (stored),2097408,79
+File path traversal,1049344,22
+Cross-domain script include,5244160,79
+HTTP PUT enabled,1050880,650
+Cacheable HTTPS response,7340288,525
+Cookie scoped to parent domain,5243648,79
+Password returned in later response,4194816,523
+SSL cookie without secure flag set,5243392,614
+Cross-site scripting (reflected),2097920,79
+Referer-dependent response,4194560,807
+Cleartext submission of password,3145984,319
+Password returned in URL query string,4195328,523
+Content type is not specified,8389888,173
+Credit card numbers disclosed,6292736,200
+Password field submitted using GET method ,4195072,523
+Password field with autocomplete enabled,5244928,525
+SQL injection,1049088,89
+Silverlight cross-domain policy,2098432,79
+TRACE method is enabled,5245440,200
+HTML does not specify charset,8389120,173
+Frameable response (potential Clickjacking),5245344,693
+Session token in URL,5244672,384
+LDAP injection,1049856,90
+XPath injection,1050112,643
+HTTP header injection,2097664,74
+Email addresses disclosed,6291968,200
+Database connection string disclosed,6291584,200
+Social security numbers disclosed,6292480,200
+ASP.NET ViewState without MAC enabled,4195840,642
+Source code disclosure,6291632,540
+User agent-dependent response,4194592,807
+SQL statement in request parameter,4195456,79
+Password value set in cookie,5245184,523
+Content type incorrectly stated,8389632,173
+ASP.NET debugging enabled,1050624,11
+Flash cross-domain policy,2098176,79
+Multiple content types specified,8388864,173
+Open redirection,5243136,601
+Cross-domain POST,4195584,79
+Cross-domain Referer leakage,5243904,212
+Directory listing,6291712,548
+Robots.txt file,6292992,200
+ASP.NET tracing enabled,1049216,10
+HTML5 cross-origin resource sharing,2098688,79
+XML external entity injection,1049600,611
+Remote file inclusion,1051136,94
+X-Forwarded-For dependent response,4194576,807
+XML entity expansion,4196096,776
+Long redirection response,4196352,601
+Cookie without HttpOnly flag set,5244416,312
+Base64-encoded data in parameter,7340544,20
+SSL certificate,16777472,298
+Extension-generated issue,134217728,16
+type.severities,,,
+Low,Low,2,2
+High,High,4,4
+Medium,Medium,3,3
+Information,Information,1,1

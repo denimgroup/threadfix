@@ -1,0 +1,24 @@
+Acunetix WVS|http://www.acunetix.com/vulnerability-scanner/|8|The Acunetix importer requires the XML output from Acunetix. To export in this format, use the /exportxml option on the command line.
+Arachni|https://github.com/Zapotek/arachni|.3|The Arachni importer requires the XML output from Arachni. To get this format, use an option with this format: --report=xml:outfile=example.xml
+Burp Suite|http://portswigger.net/burp/|1.4|The Burp importer accepts the XML output as input. After you are done scanning, navigate to scanner -> results, then highlight the results in the left panel that you want to include, then right click and select "report selected issues." In that menu pick XML and keep the default options.
+Brakeman|http://brakemanscanner.org/|1.5.2|The Brakeman importer requires the Brakeman JSON output. To get this format, either specify a file with a JSON extension for output (-o example.json) or use the -f option to set it explicitly (-f json).
+IBM Rational AppScan Enterprise|http://www-01.ibm.com/software/rational/products/appscan/source/|-|The Appscan Source Edition importer imports the .ozasmt format. This may not work with up-to-date versions of AppScan source edition.
+IBM Rational AppScan Source Edition|http://www-01.ibm.com/software/rational/products/appscan/enterprise/|-|The Appscan Enterprise importer requires the full xml report.
+IBM Rational AppScan|http://www-01.ibm.com/software/awdtools/appscan/|-|The AppScan importer accepts the XML output as input. Click File -> Export -> Scan Results as XML.
+FindBugs|http://findbugs.sourceforge.net/|1.3.9|The FindBugs importer requires the XML output of FindBugs (FindBugs -> Save XML).
+Fortify 360|http://www.fortify.com|2.5.0|The Fortify importer requires the Fortify FPR format. To export in this format, use the -f filename.fpr option.
+Manual|https://github.com/OWASP/SSVL|.3|This upload uses the SSVL format.
+Mavituna Security Netsparker|http://www.mavitunasecurity.com/|-|The Netsparker importer requires the Vulnerabilities List (XML) format from the Reporting menu in the Netsparker GUI.
+Microsoft CAT.NET|http://msdn.microsoft.com/en-us/security/default.aspx|1 CTP|The CAT.NET importer requires the CAT.NET XML format.
+Nessus|http://www.tenable.com/products/nessus|4.4|The Nessus importer requires the Nessus 5 v2 .nessus format. To export a report in this format, select the scan in the Reports screen, then click Download, then pick .nessus in the Download Format drop down.
+NTO Spider|http://www.ntobjectives.com/security-software/ntospider-application-security-scanner/|5.4|ThreadFix imports the VulnerabilitiesSummary generated in the Reports/scan-name/date directory after the scan finishes.
+OWASP Zed Attack Proxy|http://code.google.com/p/zaproxy/|1.3.2|The OWASP ZAP importer requires the XML format, which you can export with Report -> Generate XML Report...
+PMD|http://pmd.sourceforge.net/|5.1.1|The PMD importer requires the XML output of PMD.
+QualysGuard WAS|http://www.qualys.com/products/qg_suite/was/|2.1|You shouldn't be seeing this.
+Skipfish|http://code.google.com/p/skipfish/|1.92b|The Skipfish importer accepts a zipped version of the Skipfish output folder as input. Specify the output folder with -o example-folder-name, then zip the folder with whatever utility you prefer.
+WhiteHat Sentinel|http://www.whitehatsec.com/home/services/services.html|-|You shouldn't be seeing this.
+w3af|http://w3af.sourceforge.net/|1.0-rc6|The w3af importer needs a configured XML output plugin. The w3af standard scripts contain one called script-xml_output.w3af which generates a valid xml configuration for ThreadFix.
+WebInspect|https://www.fortify.com/products/web_inspect.html|9.00|The WebInspect importer requires the Full XML report format. To export in this format after you have conducted a scan, click Export, then Details, then Full.
+Veracode|http://www.veracode.com/|-|You shouldn't be seeing this.
+Dependency Check|https://github.com/jeremylong/DependencyCheck|1.02|You shouldn't be seeing this.
+Brakeman|http://brakemanscanner.org/|1.5.2|The Brakeman importer requires the Brakeman JSON output. To get this format, either specify a file with a JSON extension for output (-o example.json) or use the -f option to set it explicitly (-f json).
