@@ -1,0 +1,30 @@
+type.info,,,
+Brakeman,http://brakemanscanner.org/,1.5.2,The Brakeman importer requires the Brakeman JSON output. To get this format, either specify a file with a JSON extension for output (-o example.json) or use the -f option to set it explicitly (-f json).,
+type.vulnerabilities,,,
+Session Setting,Session Setting,384
+Format Validation,Format Validation,88
+Cross-Site Request Forgery,Cross-Site Request Forgery,352
+Redirect,Redirect,601
+Denial of Service,Denial of Service,400
+SQL Injection,SQL Injection,89
+Command Injection,Command Injection,78
+Dangerous Eval,Dangerous Eval,95
+Dynamic Render Path,Dynamic Render Path,73
+Cross Site Scripting,Cross Site Scripting,79
+Attribute Restriction,Attribute Restriction,472
+Response Splitting,Response Splitting,113
+Remote Code Execution,Remote Code Execution,94
+Nested Attributes,Nested Attributes,472
+Basic Auth,Basic Auth,311
+File Access,File Access,73
+Mass Assignment,Mass Assignment,472
+Mail Link,Mail Link,79
+Dangerous Send,Dangerous Send,77
+Default Routes,Default Routes,425
+Authentication,Authentication,287
+type.severities,,,
+5,Critical,5,5
+2,Low,2,2
+1,Info,1,1
+4,High,4,4
+3,Medium,3,3

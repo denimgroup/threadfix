@@ -61,6 +61,8 @@ public class ScannerMappingUpdater implements ApplicationContextAware {
     private ChannelTypeService channelTypeService;
     @Autowired
     private RemoteProviderTypeService remoteProviderTypeService;
+    @Autowired
+    private BootstrapService bootstrapService;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -71,13 +73,15 @@ public class ScannerMappingUpdater implements ApplicationContextAware {
                 genericVulnerabilityService.loadAll() != null &&
                         genericVulnerabilityService.loadAll().size() > 0;
 
-        if (canUpdate && hasGenericVulns) {
+        if (!hasGenericVulns) {
+            bootstrapService.bootstrap();
+        }
+
+        if (canUpdate) {
             LOG.info("Updating mappings.");
             scannerMappingsUpdaterService.updateMappings(applicationContext);
-        } else if (!canUpdate) {
-            LOG.info("Scanner mappings are up-to-date, continuing");
         } else {
-            LOG.info("No generic vulnerabilities found, skipping updates for now.");
+            LOG.info("Scanner mappings are up-to-date, continuing");
         }
 
         updateTags();
@@ -135,8 +139,10 @@ public class ScannerMappingUpdater implements ApplicationContextAware {
             }
             boolean needUpdate = false;
             for (Tag tag: tagList) {
-                needUpdate = (tag.getType() == null) ? true : false;
-                break;
+                if (tag.getType() == null) {
+                    needUpdate = true;
+                    break;
+                }
             }
             if (needUpdate) {
                 tagService.updateTagTypes();
