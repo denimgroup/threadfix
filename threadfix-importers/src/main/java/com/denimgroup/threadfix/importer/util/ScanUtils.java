@@ -27,6 +27,7 @@ package com.denimgroup.threadfix.importer.util;
 import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.exception.RestInvalidScanFormatException;
+import com.denimgroup.threadfix.importer.impl.upload.WebInspectChannelImporter;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -57,9 +58,14 @@ public final class ScanUtils {
 	 * This method checks through the XML with a blank parser to determine
 	 * whether SAX parsing will fail due to an exception.
 	 */
-	public static boolean isBadXml(InputStream inputStream) {
+	public static boolean isBadXml(InputStream inputStream, boolean filtered) {
 		try {
-			readSAXInput(new DefaultHandler(), inputStream);
+			if (filtered) {
+				FilteredXmlInputStream filteredXmlInputStream = new FilteredXmlInputStream(inputStream);
+				readSAXInput(new DefaultHandler(), filteredXmlInputStream);
+			} else {
+				readSAXInput(new DefaultHandler(), inputStream);
+			}
             return false;
 		} catch (SAXException e) {
             STATIC_LOGGER.warn("Trying to read XML returned the error " + e.getMessage(), e);
@@ -81,7 +87,14 @@ public final class ScanUtils {
 	 */
 	public static void readSAXInput(DefaultHandler handler, String completionCode, InputStream stream) {
 		try {
-			readSAXInput(handler, stream);
+			STATIC_LOGGER.info(handler.getClass().getName());
+			if (handler instanceof WebInspectChannelImporter.WebInspectSAXValidator ||
+					handler instanceof WebInspectChannelImporter.WebInspectSAXParser) {
+				FilteredXmlInputStream filteredXmlInputStream = new FilteredXmlInputStream(stream);
+				readSAXInput(handler, filteredXmlInputStream);
+			} else {
+				readSAXInput(handler, stream);
+			}
 		} catch (IOException e) {
             STATIC_LOGGER.error("Encountered IOException while trying to read the SAX input.");
             throw new RestIOException(e, "Encountered IOException while trying to read data. Can't continue.");
@@ -104,7 +117,7 @@ public final class ScanUtils {
 			}
 		}
 	}
-	
+
 	private static void readSAXInput(DefaultHandler handler, InputStream stream) throws SAXException, IOException {
 		XMLReader xmlReader = XMLReaderFactory.createXMLReader();
 		xmlReader.setContentHandler(handler);
@@ -112,7 +125,7 @@ public final class ScanUtils {
 				
 		// Wrapping the inputStream in a BufferedInputStream allows us to mark and reset it
 		BufferedInputStream newStream = new BufferedInputStream(stream);
-		
+
 		// UTF-8 contains 3 characters at the start of a file, which is a problem.
 		// The SAX parser sees them as characters in the prolog and throws an exception.
 		// This code removes them if they are present.
