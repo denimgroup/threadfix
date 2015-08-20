@@ -167,5 +167,7 @@ public interface FindingService {
 
 	long getTotalUnmappedFindings();
 
+    String getUnmappedTypesAsString();
+
     List<Finding> loadByGenericSeverityAndChannelType(GenericSeverity genericSeverity, ChannelType channelType);
 }

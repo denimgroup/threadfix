@@ -40,6 +40,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  * Hibernate Finding DAO implementation. Most basic methods are implemented in
  * the AbstractGenericDao
@@ -298,4 +300,17 @@ public class HibernateFindingDao
 
         return criteria.list();
     }
+
+    @Override
+    public List<Finding> getUnmappedFindings() {
+        List<Finding> unmappedFindings = list();
+
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Finding.class)
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.isNull("vulnerability"));
+
+        unmappedFindings = criteria.list();
+        return unmappedFindings;
+    }
+
 }
