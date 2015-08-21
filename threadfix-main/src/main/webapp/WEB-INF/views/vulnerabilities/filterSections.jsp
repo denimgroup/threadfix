@@ -293,7 +293,7 @@
 </div>
 
 <!-- Permissions -->
-<div class="accordion-group">
+<div class="accordion-group" ng-show="vulnSearch">
     <div class="accordion-heading" ng-click="showPermissions = !showPermissions">
         <span id="showPermissions" class="icon" ng-class="{ 'icon-minus': showPermissions, 'icon-plus': !showPermissions }"></span> Authentication / Authorization
     </div>
