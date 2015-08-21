@@ -85,12 +85,10 @@ public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         String savedUrl = config.getBaseUrl(); // could be null or empty
         boolean differentBaseUrls = false;
 
-        if (savedUrl == null || savedUrl.isEmpty()) {;
+        if (savedUrl == null || savedUrl.isEmpty()) {
             config.setBaseUrl(baseUrl);
             defaultConfigService.saveConfiguration(config);
-        }
-
-        if (!baseUrl.equals(savedUrl)) {
+        } else if (!baseUrl.equals(savedUrl)) {
             log.info("received: " + baseUrl);
             log.info("expected: " + savedUrl);
             differentBaseUrls = true;
@@ -100,7 +98,7 @@ public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         // Getting the save request for deep linking
         DefaultSavedRequest defaultSavedRequest = (DefaultSavedRequest) request.getSession().getAttribute("SPRING_SECURITY_SAVED_REQUEST");
 
-        if(defaultSavedRequest != null){
+        if (defaultSavedRequest != null) {
             String requestUrl = defaultSavedRequest.getRequestURL();
             String nonce = nonceService.generateNonce();
             String redirectUrl = requestUrl + "?nonce=" + nonce;
