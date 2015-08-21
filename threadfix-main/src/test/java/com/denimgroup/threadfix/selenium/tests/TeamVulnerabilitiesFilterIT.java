@@ -76,8 +76,8 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
         sleep(1000);
 
-        assertTrue("Only 4 critical vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
+        assertTrue("Only 4 high vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("High", "4"));
         assertTrue("Only 4 medium vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Medium", "4"));
 
@@ -85,8 +85,8 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
         teamDetailPage.clickVulnerabilitiesTab("44");
 
-        assertTrue("Critical vulnerabilities should be shown.",
-                teamDetailPage.isSeverityLevelShown("Critical"));
+        assertTrue("High vulnerabilities should be shown.",
+                teamDetailPage.isSeverityLevelShown("High"));
         assertTrue("Medium vulnerabilities should be shown.",
                 teamDetailPage.isSeverityLevelShown("Medium"));
         assertTrue("Low vulnerabilities should be shown.",
@@ -180,8 +180,8 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
         sleep(5000);
 
-        assertTrue("Only 4 critical vulnerabilities should be shown. There was a problem loading saved filter.",
-                teamDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
+        assertTrue("Only 4 high vulnerabilities should be shown. There was a problem loading saved filter.",
+                teamDetailPage.isVulnerabilityCountCorrect("High", "4"));
         assertTrue("Only 4 medium vulnerabilities should be shown. There was a problem loading saved filter.",
                 teamDetailPage.isVulnerabilityCountCorrect("Medium", "4"));
     }
@@ -205,8 +205,8 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         teamDetailPage.expandTeamApplication()
                 .addApplicationFilter(appName);
 
-        assertTrue("Only 10 critical vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+        assertTrue("Only 10 high vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("High", "10"));
         assertTrue("Only 9 medium vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Medium", "8"));
         assertTrue("Only 21 low vulnerabilities should be shown.",
@@ -218,8 +218,8 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
         teamDetailPage.clickVulnerabilitiesTab("69");
 
-        assertTrue("Only 16 critical vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Critical", "16"));
+        assertTrue("Only 16 high vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("High", "16"));
         assertTrue("Only 14 medium vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Medium", "14"));
         assertTrue("Only 25 low vulnerabilities should be shown.",
@@ -229,8 +229,8 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
         teamDetailPage.addApplicationFilter(appName2);
 
-        assertTrue("Only 6 critical vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Critical", "6"));
+        assertTrue("Only 6 high vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("High", "6"));
         assertTrue("Only 6 medium vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Medium", "6"));
         assertTrue("Only 4 low vulnerabilities should be shown.",
@@ -256,8 +256,8 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         teamDetailPage.expandScannerAndMerged()
                 .toggleTwoPlus();
 
-        assertTrue("Only 4 critical vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
+        assertTrue("Only 4 high vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("High", "4"));
 
         teamDetailPage.toggleFourPlus();
 
@@ -279,8 +279,8 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         teamDetailPage.expandScannerAndMerged()
                 .addScannerFilter(scanner);
 
-        assertTrue("Only 10 critical vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+        assertTrue("Only 10 high vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("High", "10"));
         assertTrue("Only 8 medium vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Medium", "8"));
         assertTrue("Only 21 low vulnerabilities should be shown.",
@@ -311,8 +311,8 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         teamDetailPage.expandFieldControls()
                 .addVulnerabilityTypeFilter(vulnerabilityType, defaultVulnerabilityType);
 
-        assertTrue("Only 5 critical vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Critical", "5"));
+        assertTrue("Only 5 high vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("High", "5"));
     }
 
     @Test
@@ -329,8 +329,8 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         teamDetailPage.expandFieldControls()
                 .setPathFilter(path);
 
-        assertTrue("Only 1 critical vulnerability should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Critical", "1"));
+        assertTrue("Only 1 high vulnerability should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("High", "1"));
         assertTrue("Only 1 info vulnerability should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Info", "1"));
     }
@@ -349,8 +349,8 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         teamDetailPage.expandFieldControls()
                 .setParameterFilter(parameter);
 
-        assertTrue("Only 4 critical vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
+        assertTrue("Only 4 high vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("High", "4"));
         assertTrue("Only 4 medium vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Medium", "4"));
         assertTrue("Only 3 info vulnerabilities should be shown.",
@@ -370,13 +370,13 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
                 .toggleSeverityFilter("Medium")
                 .toggleSeverityFilter("Info");
 
-        assertTrue("Critical vulnerabilities should be shown.",
-                teamDetailPage.isSeverityLevelShown("Critical"));
+        assertTrue("High vulnerabilities should be shown.",
+                teamDetailPage.isSeverityLevelShown("High"));
         assertTrue("Low vulnerabilities should be shown.",
                 teamDetailPage.isSeverityLevelShown("Low"));
 
-        assertFalse("High vulnerabilities should not be shown.",
-                teamDetailPage.isSeverityLevelShown("High"));
+        assertFalse("Critical vulnerabilities should not be shown.",
+                teamDetailPage.isSeverityLevelShown("Critical"));
         assertFalse("Medium vulnerabilities should not be shown.",
                 teamDetailPage.isSeverityLevelShown("Medium"));
         assertFalse("Info vulnerabilities should not be shown.",
@@ -427,8 +427,8 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
         teamDetailPage.toggleMoreThan();
 
-        assertTrue("6 critical vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Critical", "6"));
+        assertTrue("6 high vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("High", "6"));
         assertTrue("6 medium vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Medium", "6"));
         assertTrue("4 low vulnerabilities should be shown.",
@@ -438,8 +438,8 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
         teamDetailPage.toggle90Days();
 
-        assertTrue("6 critical vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Critical", "6"));
+        assertTrue("6 high vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("High", "6"));
         assertTrue("6 medium vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Medium", "6"));
         assertTrue("4 low vulnerabilities should be shown.",

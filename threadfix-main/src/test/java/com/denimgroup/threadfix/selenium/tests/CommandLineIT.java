@@ -498,6 +498,7 @@ public class CommandLineIT extends BaseDataTest {
         assertTrue("Number of vulnerabilities was incorrect.", numVulns == 3);
     }
 
+
     @Test
     public void testVulnerabilitySearchByStartDate() {
         dbUtils.deleteAllTeams();

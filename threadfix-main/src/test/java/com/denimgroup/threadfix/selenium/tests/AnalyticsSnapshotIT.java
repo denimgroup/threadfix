@@ -57,8 +57,8 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         sleep(10000);
 
-        assertTrue("Only 10 critical vulnerabilities should be shown.",
-                analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
+        assertTrue("Only 10 high vulnerabilities should be shown.",
+                analyticsPage.isVulnerabilityCountCorrect("High", "10"));
         assertTrue("Only 8 medium vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Medium", "8"));
         assertTrue("Only 21 low vulnerabilities should be shown.",
@@ -93,8 +93,8 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         sleep(10000);
         analyticsPage.takeScreenShot();
 
-        assertTrue("Only 10 critical vulnerabilities should be shown.",
-                analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
+        assertTrue("Only 10 high vulnerabilities should be shown.",
+                analyticsPage.isVulnerabilityCountCorrect("High", "10"));
         assertTrue("Only 8 medium vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Medium", "8"));
         assertTrue("Only 21 low vulnerabilities should be shown.",

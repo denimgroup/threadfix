@@ -193,7 +193,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
 
         applicationDetailPage = applicationDetailPage.expandScannerAndMerged()
                 .toggleTwoPlus();
-
+        
         assertTrue("Only 4 High vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("High", "4"));
 
