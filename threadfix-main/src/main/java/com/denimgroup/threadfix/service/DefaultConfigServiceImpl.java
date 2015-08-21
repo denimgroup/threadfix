@@ -25,6 +25,7 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.dao.DefaultConfigurationDao;
+import com.denimgroup.threadfix.data.entities.CSVExportField;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Report;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -34,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -166,5 +168,17 @@ public class DefaultConfigServiceImpl implements DefaultConfigService {
         }
 
         return false;
+    }
+
+    @Override
+    public List<CSVExportField> getUnassignedExportFields(List<CSVExportField> exportFields) {
+
+        List<CSVExportField> enumFields = Arrays.asList(CSVExportField.values());
+
+        if (exportFields != null && exportFields.size() > 0) {
+            enumFields.removeAll(exportFields);
+        }
+
+        return enumFields;
     }
 }

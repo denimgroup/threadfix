@@ -352,10 +352,10 @@
 
                 <div class="export-field-ui-container">
                     <div ui-sortable="sortableOptions" class="export-fields-container screen floatleft" ng-model="exportFields">
-                        <div class="exportField" ng-repeat="exportField in exportFields">{{ exportField.displayName }}</div>
+                        <div class="exportField" ng-repeat="exportField in exportFields">{{ exportFieldDisplayNames[exportField] }}</div>
                     </div>
                     <div ui-sortable="sortableOptions" class="export-fields-container screen floatleft" ng-model="object.csvExportFields">
-                        <div class="exportField" ng-repeat="exportField in object.csvExportFields">{{ exportField.displayName }}</div>
+                        <div class="exportField" ng-repeat="exportField in object.csvExportFields">{{ exportFieldDisplayNames[exportField] }}</div>
                     </div>
                     <div class="clear"></div>
                 </div>

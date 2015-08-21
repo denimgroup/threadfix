@@ -25,6 +25,7 @@
 package com.denimgroup.threadfix.data.entities;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -67,21 +68,15 @@ public enum CSVExportField {
         return null;
     }
 
-    public static List<Map<String, ? extends Serializable>> getExportFields() {
+    public static Map<String, String> getExportFields() {
 
-        List<Map<String, ? extends Serializable>>  exportFields = list();
+        Map<String, String> exportFieldDisplayNames = map();
         CSVExportField[] enumFields = CSVExportField.values();
 
-        for (Integer i = 0; i < enumFields.length; i++) {
-
-            CSVExportField enumField = enumFields[i];
-            exportFields.add(
-                    map("name", enumField.toString(),
-                        "displayName", enumField.getDisplayName(),
-                        "order", i)
-            );
+        for (CSVExportField enumField : enumFields) {
+            exportFieldDisplayNames.put(enumField.toString(), enumField.getDisplayName());
         }
 
-        return exportFields;
+        return exportFieldDisplayNames;
     }
 }

@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -67,11 +68,12 @@ public class DefaultConfiguration extends BaseEntity {
 
     private String fileUploadLocation = null;
     private Boolean deleteUploadedFiles = false;
-    private List<String> csvExportFields;
+    private List<CSVExportField> csvExportFields;
 
     public static DefaultConfiguration getInitialConfig() {
         DefaultConfiguration config = new DefaultConfiguration();
         config.setDefaultRoleId(1);
+        config.setCsvExportFields(CollectionUtils.<CSVExportField>list());
         config.setGlobalGroupEnabled(true);
         config.setHasAddedScheduledImports(false);
         config.setHasAddedScheduledDefectTrackerUpdates(false);
@@ -448,10 +450,21 @@ public class DefaultConfiguration extends BaseEntity {
     public List<Report> getDashboardReports() {
         List<Report> dashboardReports = list();
 
-        dashboardReports.add(getDashboardTopLeft());
-        dashboardReports.add(getDashboardTopRight());
-        dashboardReports.add(getDashboardBottomLeft());
-        dashboardReports.add(getDashboardBottomRight());
+        if (getDashboardTopLeft() != null) {
+            dashboardReports.add(getDashboardTopLeft());
+        }
+
+        if (getDashboardTopRight() != null) {
+            dashboardReports.add(getDashboardTopRight());
+        }
+
+        if (getDashboardBottomLeft() != null) {
+            dashboardReports.add(getDashboardBottomLeft());
+        }
+
+        if (getDashboardBottomRight() != null) {
+            dashboardReports.add(getDashboardBottomRight());
+        }
 
         return dashboardReports;
     }
@@ -460,8 +473,13 @@ public class DefaultConfiguration extends BaseEntity {
     public List<Report> getApplicationReports() {
         List<Report> applicationReports = list();
 
-        applicationReports.add(getApplicationTopLeft());
-        applicationReports.add(getApplicationTopRight());
+        if (getApplicationTopLeft() != null) {
+            applicationReports.add(getApplicationTopLeft());
+        }
+
+        if (getApplicationTopRight() != null) {
+            applicationReports.add(getApplicationTopRight());
+        }
 
         return applicationReports;
     }
@@ -470,8 +488,13 @@ public class DefaultConfiguration extends BaseEntity {
     public List<Report> getTeamReports() {
         List<Report> teamReports = list();
 
-        teamReports.add(getTeamTopLeft());
-        teamReports.add(getTeamTopRight());
+        if (getTeamTopLeft() != null) {
+            teamReports.add(getTeamTopLeft());
+        }
+
+        if (getTeamTopRight() != null) {
+            teamReports.add(getTeamTopRight());
+        }
 
         return teamReports;
     }
@@ -608,16 +631,16 @@ public class DefaultConfiguration extends BaseEntity {
         this.shouldProxyContrast = shouldProxyContrast;
     }
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.EAGER, targetClass = CSVExportField.class)
     @CollectionTable(name = "DefaultConfigCSVExportField", joinColumns = @JoinColumn(name = "DefaultConfigId"))
     @Column(name = "csvExportField", length = 32)
     @OrderColumn(name = "index_id")
     @JsonView(AllViews.FormInfo.class)
-    public List<String> getCsvExportFields() {
+    public List<CSVExportField> getCsvExportFields() {
         return csvExportFields;
     }
 
-    public void setCsvExportFields(List<String> csvExportFields) {
+    public void setCsvExportFields(List<CSVExportField> csvExportFields) {
         this.csvExportFields = csvExportFields;
     }
 }

@@ -28,6 +28,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
+import java.beans.PropertyEditorSupport;
 import java.io.File;
 import java.util.*;
 
@@ -60,34 +61,34 @@ public class SystemSettingsController {
     private ScanService scanService;
     @Autowired
     private RequestUrlService requestUrlService;
-	
-	@InitBinder
-	public void setAllowedFields(WebDataBinder dataBinder) {
 
+    @InitBinder
+    public void initBinder(WebDataBinder dataBinder) {
 		String[] reports = {
 				"dashboardTopLeft.id",
 				"dashboardTopRight.id", "dashboardBottomLeft.id", "dashboardBottomRight.id",
 				"applicationTopLeft.id", "applicationTopRight.id", "teamTopLeft.id", "teamTopRight.id",
-                "fileUploadLocation", "deleteUploadedFiles", "csvExportFields", "baseUrl"
+                "fileUploadLocation", "deleteUploadedFiles", "csvExportFields[*]", "baseUrl"
 		};
 
-		String[] otherSections = {
-				"defaultRoleId", "globalGroupEnabled", "activeDirectoryBase",
-				"activeDirectoryURL", "activeDirectoryUsername", "activeDirectoryCredentials",
-				"proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "shouldProxyVeracode",
-				"shouldProxyQualys", "shouldProxyTFS", "shouldProxyBugzilla", "shouldProxyJira",
-				"shouldProxyVersionOne", "shouldProxyHPQC", "shouldProxyWhiteHat", "shouldProxyTrustwaveHailstorm",
-				"shouldProxyContrast", "shouldUseProxyCredentials", "sessionTimeout"
-		};
+        String[] otherSections = {
+                "defaultRoleId", "globalGroupEnabled", "activeDirectoryBase",
+                "activeDirectoryURL", "activeDirectoryUsername", "activeDirectoryCredentials",
+                "proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "shouldProxyVeracode",
+                "shouldProxyQualys", "shouldProxyTFS", "shouldProxyBugzilla", "shouldProxyJira",
+                "shouldProxyVersionOne", "shouldProxyHPQC", "shouldProxyWhiteHat", "shouldProxyTrustwaveHailstorm",
+                "shouldProxyContrast", "shouldUseProxyCredentials", "sessionTimeout"
+        };
 
-		if (EnterpriseTest.isEnterprise()) {
-			dataBinder.setAllowedFields(ArrayUtils.addAll(otherSections, reports));
-		} else {
-			dataBinder.setAllowedFields(reports);
-		}
+        if (EnterpriseTest.isEnterprise()) {
+            dataBinder.setAllowedFields(ArrayUtils.addAll(otherSections, reports));
+        } else {
+            dataBinder.setAllowedFields(reports);
+        }
 
-	}
-
+        dataBinder.registerCustomEditor(CSVExportField.class, "csvExportFields[*]", new CSVExportFieldEnumConverter(CSVExportField.class));
+    }
+	
     @RequestMapping(method = RequestMethod.GET)
     public String setupForm(Model model) {
         model.addAttribute("defaultConfiguration", defaultConfigService.loadCurrentConfiguration());
@@ -180,7 +181,8 @@ public class SystemSettingsController {
         Map<String, Object> map = new HashMap<>();
         DefaultConfiguration configuration = defaultConfigurationWithMaskedPasswords();
 
-        map.put("exportFields", CSVExportField.getExportFields());
+        map.put("exportFields", defaultConfigService.getUnassignedExportFields(configuration.getCsvExportFields()));
+        map.put("exportFieldDisplayNames", CSVExportField.getExportFields());
         map.put("roleList", roleService.loadAll());
         map.put("applicationCount", applicationService.getApplicationCount());
         map.put("licenseCount", licenseService == null ? 0 : licenseService.getAppLimit());
@@ -204,5 +206,21 @@ public class SystemSettingsController {
         }
 
         return configuration;
+    }
+
+    class CSVExportFieldEnumConverter<T extends Enum<T>> extends PropertyEditorSupport {
+
+        private final Class<T> typeParameterClass;
+
+        public CSVExportFieldEnumConverter(Class<T> typeParameterClass) {
+            super();
+            this.typeParameterClass = typeParameterClass;
+        }
+
+        @Override
+        public void setAsText(final String text) throws IllegalArgumentException {
+            T value = T.valueOf(typeParameterClass, text);
+            setValue(value);
+        }
     }
 }
