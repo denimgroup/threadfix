@@ -1,0 +1,84 @@
+type.info,,,
+QualysGuard WAS,http://www.qualys.com/products/qg_suite/was/,2.1,You shouldn''t be seeing this.,
+type.vulnerabilities,,,
+Account Lockout Detected,150061,16
+Web Application Authentication Failed,150008,16
+DOM XSS vulnerability in web page content,150076,79
+.NET Viewstate Content does not include an HMAC,150064,16
+Slow HTTP POST vulnerability,150085,16
+Form Contains Credit Card Information,150043,201
+Slow HTTP headvers vulnerability,150079,16
+Flash Analysis,150058,16
+Web Application Scan Configuration Error,150025,16
+Reflected Cross-Site Scripting (XSS) in HTTP Header,150046,79
+Links discovered during User-Agent and mobile site checks,150067,16
+PHP Command Injection,150055,78
+HTTP NTLM Authentication Failed,150040,16
+Login Brute Force Vulnerability,150049,285
+Web Application Authentication Method,150007,16
+U.S. Social Security Number Pattern Identified in HTML,150034,201
+Browser-Specific Cross-Site Scripting (XSS),150013,79
+Cookies Collected,150028,16
+Unencoded characters,150084,79
+Reflected Cross-Site Scripting (XSS) Vulnerabilities,150001,79
+HTTP Digest Authentication,150037,16
+Syntax error occurred,150022,16
+Sensitive Content in HTML,150016,201
+Web Service Found,150087,16
+Summary of .NET Viewstate fields,150066,16
+Path-based Vulnerability,150004,22
+Server Returned Unexpected Response Code,150019,16
+External Links Discovered,150010,16
+Unmatching MIME type specified in the header,150069,16
+Response Splitting Vulnerabilities,150060,113
+Possible Clickjacking vulnerability,150081,16
+Browser-Specific Cross-Site Scripting (XSS) in HTTP Header,150048,79
+Email Addresses Collected,150054,16
+HTTP Basic Authentication Failed,150036,16
+Wildcard Use in Flash allowDomain Method,150063,601
+PHP Remote File Inclusion,150057,98
+Content of sitemap.xml,150078,16
+Server Returns HTTP 500 Message for Request,150042,16
+Web Application Scan Timed Out,150024,16
+Maximum URI Length Encountered,150030,16
+HTTP NTLM Authentication,150039,16
+Session Cookie Does Not Contain the "HTTPOnly" Attribute,150045,16
+Connection Error Occurred During Web Application Scan,150018,16
+Open Redirect,150051,601
+Credit Card Number Pattern Identified in HTML,150033,201
+Blind SQL Injection,150012,89
+Web Application Authentication Not Attempted,150006,16
+Scan Diagnostics,150021,16
+Server response contains NULL character before end of buffer.,150015,16
+Form is protected against Cross-Site Request Forgery (CSRF),150083,16
+Links Crawled,150009,16
+Content of robots.txt,150077,16
+Persistent Cross-Site Scripting (XSS) Vulnerabilities,150000,79
+SQL Injection,150003,89
+Form can be manipulated with cross-site request forgery (CSRF),150071,352
+Large amount of .NET Viewstate data,150065,16
+Server accepts unnecessarily large POST request body,150086,16
+Links to non-routeable resources discovered in externally facing content,150089,16
+Credit Card Number Pattern Reflected In HTML,150080,16
+SQL Injection in HTTP Header,150047,89
+Session Cookie Does Not Contain the "secure" Attribute,150032,311
+Links Rejected By Scan Permissions,150020,16
+Session Cookies,150029,16
+External Form Actions Discovered,150014,16
+Links Rejected,150041,16
+Flash Cross-Site Scripting (XSS) Vulnerabilities,150062,79
+HTTP Basic Authentication,150035,16
+HTTP Digest Authentication Failed,150038,16
+Directory Listing,150023,22
+Login Form Is Not Submitted Via HTTPS,150044,311
+Persistent Cross-Site Scripting (XSS) in HTTP Header,150002,79
+Nonspecific Web Application Vulnerability,150005,16
+Maximum Number of Links Reached During Crawl,150026,16
+Suspicious Web Serivce API Name,150088,676
+Local File Inclusion,150011,22
+type.severities,,,
+1,1,1,1
+2,2,2,2
+3,3,3,3
+4,4,4,4
+5,5,5,5

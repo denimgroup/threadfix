@@ -64,7 +64,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="email" style="margin: auto" id="emailList{{ emailList.name }}EmailInput" ng-model="emailList.newEmailAddress"/>
+                                    <input type="email" maxlength="128" style="margin: auto" id="emailList{{ emailList.name }}EmailInput" ng-model="emailList.newEmailAddress"/>
                                 </td>
                                 <td>
                                     <a class="btn btn-primary" id="emailList{{ emailList.name }}AddEmailButton" ng-click="addNewEmail(emailList)" ng-disabled="!emailList.newEmailAddress">Add Email</a>

@@ -32,7 +32,7 @@
                             id="acceptanceCriteriaSelect" ng-model="object.newAcceptanceCriteria"></select>
                 </div>
                 <div class="span2" style="padding-left: 10px">
-                    <a class="btn btn-primary" ng-click="addNewAcceptanceCriteria(object.newAcceptanceCriteria)" ng-disabled="!object.newAcceptanceCriteria">Add</a>
+                    <a class="btn btn-primary" id="addButton" ng-click="addNewAcceptanceCriteria(object.newAcceptanceCriteria)" ng-disabled="!object.newAcceptanceCriteria">Add</a>
                 </div>
                 <div class="span4">
                     <span ng-show="newAcceptanceCriteriaLoading" class="spinner dark"></span>
@@ -46,7 +46,7 @@
             <div class="row-fluid padding" ng-show="object.acceptanceCriteriasExpanded && object.acceptanceCriterias">
                 <div class="row-fluid" ng-repeat="acceptanceCriteria in object.acceptanceCriterias">
                     <div class="span1" style="width: 10px"></div>
-                    <div class="span11">
+                    <div class="span11" id="acceptcriteria{{ acceptanceCriteria.name | removeSpace}}">
                         <span class="icon-remove icon-red" style="cursor: pointer" ng-click="deleteAcceptanceCriteria(acceptanceCriteria)"></span>
                         {{ acceptanceCriteria.name }}
                     </div>

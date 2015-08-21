@@ -18,12 +18,20 @@
 		</div>
 	</c:if>
 
-	<div ng-controller="ScanUnmappedFindingTableController">
+    <div ng-controller="ScanUnmappedFindingTableController">
 		<h4 style="padding-top:30px">Unmapped Types</h4>
 		<%@ include file="/WEB-INF/views/successMessage.jspf" %>
 		<div id="unmappedTable" ng-show="numFindings && numFindings > 0">
 			<%@ include file="../scans/unmappedTable.jsp" %>
-		</div>
+            <c:if test="${ not empty exportUnmappedText }">
+                <div>
+                    <h4 style="padding-top:10px">Unmapped Types Export</h4>
+                    <a class="btn" href="mailto:support@threadfix.org?subject=Unmapped%20Types%20Update&body=<c:out value="${ fn:escapeXml(exportUnmappedText) }"/>" target="_top">
+                        Export Unmapped Types to Denim Group (Through Email)
+                    </a>
+                </div>
+            </c:if>
+        </div>
 		<div id="allFindingsHaveMappings" ng-if="!numFindings || numFindings == 0">
 			All Findings have vulnerability mappings.
 		</div>

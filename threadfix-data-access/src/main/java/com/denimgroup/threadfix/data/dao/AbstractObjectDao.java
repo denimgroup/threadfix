@@ -84,6 +84,12 @@ public abstract class AbstractObjectDao<T extends BaseEntity> implements Generic
         }
     }
 
+    public void insert(T object) {
+        sessionFactory.openStatelessSession().insert(object);
+    }
+
+
+
     protected Session getSession() {
         return sessionFactory.getCurrentSession();
     }
