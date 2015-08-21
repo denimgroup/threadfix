@@ -567,7 +567,7 @@ public abstract class BasePage {
 
 	public void waitForElement(WebElement e){
 		try {
-            WebDriverWait wait = new WebDriverWait(driver, 45);
+            WebDriverWait wait = new WebDriverWait(driver, 10);
             wait.until(ExpectedConditions.visibilityOf(e));
         } catch (TimeoutException t) {
             takeScreenShot();
@@ -576,7 +576,7 @@ public abstract class BasePage {
 	}
 
     public void waitForClickableElement(WebElement e){
-        WebDriverWait wait = new WebDriverWait(driver, 30);
+        WebDriverWait wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.elementToBeClickable(e));
     }
 
@@ -607,7 +607,7 @@ public abstract class BasePage {
 
     public void checkForAlert() {
         try {
-            WebDriverWait wait = new WebDriverWait(driver, 340);
+            WebDriverWait wait = new WebDriverWait(driver, 10);
             wait.until(ExpectedConditions.alertIsPresent());
         } catch (TimeoutException e) {
             takeScreenShot();
