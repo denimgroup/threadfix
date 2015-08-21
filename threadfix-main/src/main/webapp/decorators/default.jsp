@@ -23,7 +23,7 @@
         <cbs:cachebustscript src="/scripts/angular.min.js"/>
         <cbs:cachebustscript src="/scripts/angular-sanitize.min.js"/>
         <cbs:cachebustscript src="/scripts/ui-bootstrap-tpls-0.10.0.min.js"/>
-        <cbs:cachebustscript src="/scripts/sortable.js"></script>
+        <cbs:cachebustscript src="/scripts/ui-sortable.js"/>
 
         <cbs:cachebustscript src="/scripts/angular-file-upload.min.js"/>
         <cbs:cachebustscript src="/scripts/dynamic-forms.js"/>
