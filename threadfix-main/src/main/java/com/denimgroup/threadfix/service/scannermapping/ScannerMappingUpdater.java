@@ -77,15 +77,15 @@ public class ScannerMappingUpdater implements ApplicationContextAware {
             bootstrapService.bootstrap();
         }
 
+        updateTags();
+        updateChannelTypeNames();
+
         if (canUpdate) {
             LOG.info("Updating mappings.");
             scannerMappingsUpdaterService.updateMappings(applicationContext);
         } else {
             LOG.info("Scanner mappings are up-to-date, continuing");
         }
-
-        updateTags();
-        updateChannelTypeNames();
     }
 
     private void updateChannelTypeNames() {

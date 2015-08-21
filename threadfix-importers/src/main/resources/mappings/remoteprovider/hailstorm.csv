@@ -4,7 +4,7 @@ Trustwave Hailstorm
 type.credentials
 usernamepassword
 type.channelname
-Cenzic Hailstorm
+Trustwave Hailstorm
 type.authenticationfields
 Client Secret,false
 Access Token,false
