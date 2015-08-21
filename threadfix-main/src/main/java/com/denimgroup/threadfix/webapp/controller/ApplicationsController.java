@@ -174,7 +174,7 @@ public class ApplicationsController {
 		if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,appId)) {
 			model.addAttribute("users", userService.getPermissibleUsers(orgId, appId));
 		}
-		model.addAttribute("manualChannelVulnerabilities", channelVulnerabilityService.loadAllManual());
+		model.addAttribute("manualChannelVulnerabilities", genericVulnerabilityService.loadAll());
         addAttrForScheduledScanTab(model);
 		return "applications/detail";
 	}
@@ -192,7 +192,7 @@ public class ApplicationsController {
         map.put("manualSeverities", findingService.getManualSeverities());
         map.put("recentPathList", findingService.getRecentDynamicPaths(appId));
         map.put("recentFileList", findingService.getRecentStaticPaths(appId));
-        map.put("manualChannelVulnerabilities", channelVulnerabilityService.loadAllManual());
+        map.put("manualChannelVulnerabilities", genericVulnerabilityService.loadAll());
 
         // defect tracker add form
         map.put("defectTrackerList", defectTrackerService.loadAllDefectTrackers());
@@ -470,15 +470,6 @@ public class ApplicationsController {
         }
 
         long numFindings = applicationService.getUnmappedFindingCount(appId);
-        long numPages = numFindings / 100;
-
-        if (numFindings % 100 == 0) {
-            numPages -= 1;
-        }
-
-        if (bean.getPage() >= numPages) {
-            bean.setPage((int) (numPages + 1));
-        }
 
         if (bean.getPage() < 1) {
             bean.setPage(1);
@@ -487,7 +478,6 @@ public class ApplicationsController {
         bean.setApplicationId(appId);
 
         Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("numPages", numPages);
         responseMap.put("page", bean.getPage());
         responseMap.put("numFindings", numFindings);
         responseMap.put("findingList", findingService.getUnmappedFindingTable(bean));

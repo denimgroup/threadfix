@@ -262,11 +262,38 @@
                 <input id="showDefectClosed" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showDefectClosed"/>Closed
             </div>
         </div>
+
+        <div class="accordion-inner" ng-show="treeTeam || vulnSearch || treeApplication">
+            Comment
+            <br>
+            <div>
+                <input id="showCommentPresent" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showCommentPresent"/>Present<br>
+            </div>
+            <div>
+                Tags
+                <a ng-hide="showCommentTagInput" ng-click="showCommentTagInput = !showCommentTagInput">
+                    <span id="showCommentTagInput" class="icon" ng-class="{ 'icon-minus': showCommentTagInput, 'icon-plus': !showCommentTagInput }"></span>
+                </a>
+                <br>
+                <input id="commentTagNameTypeahead"
+                       focus-on="showCommentTagInput"
+                       ng-show="showCommentTagInput"
+                       typeahead="tag as tag.name for tag in commentTags | filter:$viewValue | limitTo:8"
+                       type="text"
+                       ng-model="newFilteredCommentTag"
+                       typeahead-on-select="addNewObject(parameters.commentTags, newFilteredCommentTag); newFilteredCommentTag = undefined; showCommentTagInput = false"/>
+                <div ng-repeat="filteredTag in parameters.commentTags">
+                    <span class="pointer icon icon-minus-sign" ng-click="remove(parameters.commentTags, $index)"></span>
+                    {{ filteredTag.name }}
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
 
 <!-- Permissions -->
-<div class="accordion-group">
+<div class="accordion-group" ng-show="vulnSearch">
     <div class="accordion-heading" ng-click="showPermissions = !showPermissions">
         <span id="showPermissions" class="icon" ng-class="{ 'icon-minus': showPermissions, 'icon-plus': !showPermissions }"></span> Authentication / Authorization
     </div>
@@ -361,7 +388,7 @@
                     {{ successDateRangeMessage }}
                 </div>
                 <p class="input-group">
-                    <select ng-show="savedDateRanges" id="filterSelect" style="width: 135px;margin-bottom:0" ng-model="selectedDateRange" ng-change="selectDateRange(selectedDateRange)"
+                    <select ng-show="savedDateRanges" id="dateFilterSelect" style="width: 135px;margin-bottom:0" ng-model="selectedDateRange" ng-change="selectDateRange(selectedDateRange)"
                             ng-options="dateRange.name for dateRange in savedDateRanges">
                     </select>
                     <span class="input-group-btn">

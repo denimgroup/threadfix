@@ -138,7 +138,8 @@ public class EditApplicationController {
 		application.setUserName(databaseApplication.getUserName());
         application.setPassword(databaseApplication.getPassword());
 		application.setEndpointPermissions(databaseApplication.getEndpointPermissions());
-		
+		application.setScans(databaseApplication.getScans());
+
 		if(!result.hasErrors()) {
 			applicationService.validateAfterEdit(application, result);
 		}

@@ -1,0 +1,122 @@
+type.info,,,
+OWASP Zed Attack Proxy,http://code.google.com/p/zaproxy/,1.3.2,The OWASP ZAP importer requires the XML format, which you can export with Report -> Generate XML Report...,
+type.vulnerabilities,,,
+Cross site scripting in SCRIPT section,Cross site scripting in SCRIPT section,79
+External redirect,External redirect,601
+Referer expose session ID,Referer expose session ID,200
+Error trace,Error trace,209
+Set-cookie header info,Set-cookie header info,200
+Brute Forcing Session Identifiers,Brute Forcing Session Identifiers,327
+Information disclosure - database error messages,Information disclosure - database error messages,200
+Tomcat source file disclosure,Tomcat source file disclosure,632
+XML Attribute Blowup,XML Attribute Blowup,400
+Insufficient Process Validation,Insufficient Process Validation,691
+Macromedia JRun default files,Macromedia JRun default files,632
+Routing Detour,Routing Detour,300
+LDAP Injection,LDAP Injection,90
+Cookie set without secure flag,Cookie set without secure flag,16
+Information disclosure - sensitive informations in URL,Information disclosure - sensitive informations in URL,200
+HTTP Request Smuggling,HTTP Request Smuggling,444
+URL Redirector Abuse,URL Redirector Abuse,601
+Directory Browsing,Directory Browsing,548
+Cross site scripting in TAG,Cross site scripting in TAG,79
+Weak HTTP authentication over an unsecured connection,Weak HTTP authentication over an unsecured connection,326
+Insufficient Transport Layer Protection,Insufficient Transport Layer Protection,311
+Null Byte Injection,Null Byte Injection,158
+pscanbeta.charsetmismatch.name,pscanbeta.charsetmismatch.name,16
+Improper Filesystem Permissions,Improper Filesystem Permissions,280
+Potential File Path Manipulation,Potential File Path Manipulation,22
+Microsoft IIS default files,Microsoft IIS default files,632
+SSI Injection,SSI Injection,97
+Cross site scripting without brackets,Cross site scripting without brackets,79
+Improper Input Handling,Improper Input Handling,89
+Lotus Domino default files,Lotus Domino default files,632
+Buffer Overflow,Buffer Overflow,120
+Denial of Service,Denial of Service,400
+Cipher suite with weak strength,Cipher suite with weak strength,326
+Integer Overflows,Integer Overflows,190
+Insufficient Anti automation,Insufficient Anti automation,116
+Improper Output Handling,Improper Output Handling,116
+Format String,Format String,134
+Obsolete file,Obsolete file,632
+XML Injection,XML Injection,91
+HTTP Response Smuggling,HTTP Response Smuggling,436
+Directory Indexing,Directory Indexing,548
+MS SQL Injection Enumeration,MS SQL Injection Enumeration,89
+Predictable Resource Location,Predictable Resource Location,425
+Session Fixation,Session Fixation,384
+Cipher suite without encryption,Cipher suite without encryption,311
+Server header info,Server header info,200
+Obsolete file extended check,Obsolete file extended check,632
+Secure page browser cache,Secure page browser cache,525
+Cookie set without HttpOnly flag,Cookie set without HttpOnly flag,16
+Absence of Anti-CSRF Tokens,Absence of Anti-CSRF Tokens,16
+Exceeding long paramter,Exceeding long paramter,20
+XPath Injection,XPath Injection,643
+Cross Site Request Forgery,Cross Site Request Forgery,352
+SQL Injection,SQL Injection,89
+Brute Forcing Log-in Credentials,Brute Forcing Log-in Credentials,307
+Perl command injection,Perl command injection,77
+Application Misconfiguration,Application Misconfiguration,16
+Abuse of Functionality,Abuse of Functionality,227
+X-Frame-Options header not set,X-Frame-Options header not set,16
+XML External Entities,XML External Entities,611
+Content-Type header missing,Content-Type header missing,16
+Insufficient Password Recovery,Insufficient Password Recovery,640
+Path Traversal,Path Traversal,22
+Cross Site Scripting (Reflected),Cross Site Scripting (Reflected),79
+Credential and Session Prediction,Credential and Session Prediction,330
+Cross Site Scripting,Cross Site Scripting,79
+BEA WebLogic example files,BEA WebLogic example files,632
+Remote File Inclusion,Remote File Inclusion,98
+XML Entity Expansion,XML Entity Expansion,776
+HTTP methods,HTTP methods,650
+Directory/Path traversal,Directory/Path traversal,548
+Information Leakage,Information Leakage,200
+Insecure Indexing,Insecure Indexing,612
+Insufficient Authentication,Insufficient Authentication,287
+OS Commanding,OS Commanding,78
+SQL Injection Fingerprinting,SQL Injection Fingerprinting,89
+Anti CSRF tokens scanner,Anti CSRF tokens scanner,352
+Cold Fusion default file,Cold Fusion default file,632
+Password Autocomplete in browser,Password Autocomplete in browser,525
+Private IP disclosure,Private IP disclosure,200
+Oracle SQL Injection Enumeration,Oracle SQL Injection Enumeration,89
+Password autocomplete,Password autocomplete,525
+IBM WebSphere default files,IBM WebSphere default files,632
+Brute Forcing Directories and Files,Brute Forcing Directories and Files,425
+Cross-site Scripting,Cross-site Scripting,79
+Server Side Include injection,Server Side Include injection,97
+Content Spoofing,Content Spoofing,345
+Secure page cache,Secure page cache,525
+SOAP Array Abuse,SOAP Array Abuse,789
+Parameter tampering,Parameter tampering,472
+Platform disclosure,Platform disclosure,200
+IIS default file,IIS default file,632
+Server side include,Server side include,97
+Mail Command Injection,Mail Command Injection,88
+Cross Site Scripting in TAG Attribute,Cross Site Scripting in TAG Attribute,79
+X-Content-Type-Options header missing,X-Content-Type-Options header missing,16
+Insufficient Session Expiration,Insufficient Session Expiration,613
+Information disclosure - debug error messages,Information disclosure - debug error messages,200
+ColdFusion default files,ColdFusion default files,632
+Server Misconfiguration,Server Misconfiguration,16
+Insufficient Authorization,Insufficient Authorization,284
+SQL Injection - Generic SQL RDBMS,SQL Injection - Generic SQL RDBMS,89
+Incomplete or no cache-control and pragma HTTPHeader set,Incomplete or no cache-control and pragma HTTPHeader set,16
+Format string buffer overflow,Format string buffer overflow,134
+Session ID in URL rewrite,Session ID in URL rewrite,200
+Cross-domain JavaScript source file inclusion,Cross-domain JavaScript source file inclusion,200
+Fingerprinting,Fingerprinting,205
+Brute Forcing Credit Card Information,Brute Forcing Credit Card Information,799
+XQuery Injection,XQuery Injection,652
+HTTP Request Splitting,HTTP Request Splitting,93
+HTTP Response Splitting,HTTP Response Splitting,113
+CRLF Injection,CRLF Injection,113
+SSL Cipher Suite,SSL Cipher Suite,326
+type.severities,,,
+5,5,5,5
+4,4,4,4
+3,3,3,3
+2,2,2,2
+1,1,1,1

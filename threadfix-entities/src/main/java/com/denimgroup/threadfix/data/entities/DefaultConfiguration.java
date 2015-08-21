@@ -63,6 +63,8 @@ public class DefaultConfiguration extends BaseEntity {
     private Report dashboardTopLeft, dashboardTopRight, dashboardBottomLeft,dashboardBottomRight,
             applicationTopLeft, applicationTopRight, teamTopLeft, teamTopRight;
 
+    private String baseUrl;
+
     private String fileUploadLocation = null;
     private Boolean deleteUploadedFiles = false;
     private List<String> csvExportFields;
@@ -95,6 +97,16 @@ public class DefaultConfiguration extends BaseEntity {
 
     public void setFileUploadLocation(String fileUploadLocation) {
         this.fileUploadLocation = fileUploadLocation;
+    }
+
+    @JsonView(AllViews.FormInfo.class)
+    @Column(length = 1024, nullable = true)
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
     }
 
     @Transient

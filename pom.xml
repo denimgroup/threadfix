@@ -313,7 +313,7 @@
         <javamail.version>1.4</javamail.version>
         <velocity.version>1.7</velocity.version>
         <velocity-tools.version>2.0</velocity-tools.version>
-        <selenium.version>2.38.0</selenium.version>
+        <selenium.version>2.47.0</selenium.version>
         <servlet-api.version>3.1.0</servlet-api.version>
         <sitemesh.version>2.4.2</sitemesh.version>
         <slf4j.version>1.7.10</slf4j.version>
@@ -329,6 +329,7 @@
         <zaphelp.version>2.2.2</zaphelp.version>
         <dependencycheck.version>1.2.3</dependencycheck.version>
         <svnkit.version>1.8.7</svnkit.version>
+        <joda.version>2.8.2</joda.version>
 
         <!-- Testing dependency versions -->
         <easymock.version>3.0</easymock.version>

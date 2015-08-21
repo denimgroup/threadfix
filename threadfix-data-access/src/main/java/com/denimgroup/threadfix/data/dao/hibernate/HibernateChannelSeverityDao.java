@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import org.hibernate.SessionFactory;
+import org.hibernate.StatelessSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -72,10 +73,24 @@ public class HibernateChannelSeverityDao implements ChannelSeverityDao {
 
 	@Override
 	public void saveOrUpdate(ChannelSeverity channelSeverity) {
-		sessionFactory.getCurrentSession().saveOrUpdate(channelSeverity.getSeverityMap());
+		if (channelSeverity.getSeverityMap() != null) {
+			sessionFactory.getCurrentSession().saveOrUpdate(channelSeverity.getSeverityMap());
+		}
 		sessionFactory.getCurrentSession().saveOrUpdate(channelSeverity);
 		sessionFactory.getCurrentSession().flush();
 		sessionFactory.getCurrentSession().refresh(channelSeverity);
+	}
+
+	@Override
+	public void insert(List<ChannelSeverity> channelSeverities) {
+		StatelessSession statelessSession = sessionFactory.openStatelessSession();
+		try {
+			for (ChannelSeverity channelSeverity : channelSeverities) {
+				statelessSession.insert(channelSeverity);
+			}
+		} finally {
+			statelessSession.close();
+		}
 	}
 
 	@Override

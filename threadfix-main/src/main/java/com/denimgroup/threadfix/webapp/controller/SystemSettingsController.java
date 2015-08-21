@@ -26,6 +26,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import javax.servlet.http.HttpServletRequest;
 
 import java.io.File;
 import java.util.*;
@@ -57,6 +58,8 @@ public class SystemSettingsController {
     LicenseService licenseService;
     @Autowired
     private ScanService scanService;
+    @Autowired
+    private RequestUrlService requestUrlService;
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
@@ -65,7 +68,7 @@ public class SystemSettingsController {
 				"dashboardTopLeft.id",
 				"dashboardTopRight.id", "dashboardBottomLeft.id", "dashboardBottomRight.id",
 				"applicationTopLeft.id", "applicationTopRight.id", "teamTopLeft.id", "teamTopRight.id",
-                "fileUploadLocation", "deleteUploadedFiles", "csvExportFields"
+                "fileUploadLocation", "deleteUploadedFiles", "csvExportFields", "baseUrl"
 		};
 
 		String[] otherSections = {
@@ -95,6 +98,11 @@ public class SystemSettingsController {
     @RequestMapping("/objects")
     public @ResponseBody Object getBaseObjects() {
         return success(addMapAttributes());
+    }
+
+    @RequestMapping("/currentlyUsedBaseUrl")
+    public @ResponseBody RestResponse<String> getCurrentlyUsedBaseUrl(HttpServletRequest request) {
+        return success(requestUrlService.getBaseUrlFromRequest(request));
     }
 
     @JsonView(AllViews.FormInfo.class)

@@ -109,7 +109,7 @@
                             <li class="dropdown-submenu left pull-left normalLinks">
                                 <a tabindex="-1" href="#" id="manageCustomLink">Customize</a>
                                 <ul class="dropdown-menu" style="text-align:right; width: 230px; left: -242px;" tabindex="-1">
-                                    <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_ENTERPRISE">
+                                    <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
                                         <li class="normalLinks">
                                             <a id="customizeThreadFixVulnerabilityTypesLink" href="<spring:url value="/configuration/filters" htmlEscape="true"/>">ThreadFix Vulnerability Types</a>
                                         </li>

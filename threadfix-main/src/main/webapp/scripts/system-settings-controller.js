@@ -53,6 +53,21 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
         return $scope.object.defaultRoleId == roleId;
     };
 
+    $scope.populateWithUserBaseUrl = function() {
+        var url = tfEncoder.encode('/configuration/settings/currentlyUsedBaseUrl');
+        $http.get(url)
+            .success(function(data) {
+                if (data.success) {
+                    $scope.object.baseUrl = data.object;
+                } else {
+                    $scope.errorMessage = "Failure. Message was : " + data.message;
+                }
+            })
+            .error(function(data, status) {
+                $scope.errorMessage = "Failed to get currently used base URL. HTTP status was " + status;
+            });
+    }
+
     $scope.submit = function (valid) {
         var url = tfEncoder.encode('/configuration/settings');
 

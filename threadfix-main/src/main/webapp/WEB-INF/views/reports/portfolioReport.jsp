@@ -80,9 +80,9 @@
 			<td id="{{row.name}}" colspan="6">{{row.name}}</td>
 			<td id="{{row.name}}{{row.criticality}}">{{row.criticality}}</td>
 			<td id="{{row.name}}{{row.noOfScans}}">{{row.noOfScans}}</td>
-			<td ng-if="row.daysScanedOld && row.daysScanedOld > 365" id="{{row.name}}{{row.daysScanedOld}}" style="background:orange;font-weight:bold;">{{row.daysScanedOld}}  days ago</td>
-			<td ng-if="row.daysScanedOld && !(row.daysScanedOld && row.daysScanedOld > 365)" id="{{row.name}}{{row.daysScanedOld}}" >{{row.daysScanedOld}}  days ago</td>
-			<td ng-if="!row.daysScanedOld" id="{{row.name}}daysScanedOld"></td>
+			<td ng-if="(row.daysScanedOld !== undefined) && (row.daysScanedOld > 365)" id="{{row.name}}{{row.daysScanedOld}}" style="background:orange;font-weight:bold;">{{row.daysScanedOld}}  days ago</td>
+			<td ng-if="(row.daysScanedOld !== undefined) && !(row.daysScanedOld && row.daysScanedOld > 365)" id="{{row.name}}{{row.daysScanedOld}}" >{{row.daysScanedOld}}  days ago</td>
+			<td ng-if="(row.daysScanedOld === undefined)" id="{{row.name}}daysScanedOld"></td>
 		</tr>
 		</tbody>
 	</table>

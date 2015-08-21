@@ -426,7 +426,7 @@ public class Event extends AuditableEntity {
                 description.append(".");
                 break;
             case VULNERABILITY_CLOSE_MANUAL:
-                description.append(getUserName()).append(" closed Vulnerability");
+                description.append(getUserName()).append(" manually closed Vulnerability");
                 appendVulnerabilityLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
@@ -461,7 +461,7 @@ public class Event extends AuditableEntity {
                 description.append(".");
                 break;
             case VULNERABILITY_REOPEN_MANUAL:
-                description.append(getUserName()).append(" reopened Vulnerability");
+                description.append(getUserName()).append(" manually reopened Vulnerability");
                 appendVulnerabilityLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;

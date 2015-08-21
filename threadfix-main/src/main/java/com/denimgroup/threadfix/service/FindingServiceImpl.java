@@ -39,11 +39,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.net.URLEncoder;
+import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
@@ -476,6 +476,47 @@ public class FindingServiceImpl implements FindingService {
 	public long getTotalUnmappedFindings() {
 		return findingDao.getTotalUnmappedFindings();
 	}
+
+    @Override
+    public String getUnmappedTypesAsString() {
+        List<Finding> unmappedFindings = findingDao.getUnmappedFindings();
+        StringBuilder sb = new StringBuilder();
+        Map<String, Set<String>> unmappedTypes = new HashMap<>();
+
+        for (Finding unmappedFinding : unmappedFindings) {
+            String scanName = unmappedFinding.getScan().getApplicationChannel().getChannelType().getName();
+            String vulnName = unmappedFinding.getChannelVulnerability().getName();
+            if (unmappedTypes.containsKey(scanName)) {
+                Set<String> vulnTypes = unmappedTypes.get(scanName);
+                vulnTypes.add(vulnName);
+                unmappedTypes.put(scanName, vulnTypes);
+            } else {
+                Set<String> vulnTypes = new HashSet<>();
+                vulnTypes.add(vulnName);
+                unmappedTypes.put(scanName, vulnTypes);
+            }
+        }
+
+        for (String scanName : unmappedTypes.keySet()) {
+            List<String> vulnTypes = new ArrayList(unmappedTypes.get(scanName));
+            Collections.sort(vulnTypes);
+
+            sb.append(scanName).append("\n");
+            for (String vulnType : vulnTypes) {
+                sb.append(vulnType).append("\n");
+            }
+            sb.append("\n");
+        }
+
+        try {
+            return URLEncoder.encode(sb.toString(), "UTF-8").replaceAll("\\+", "%20");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("UTF-8 was not supported.", e);
+        }
+
+
+
+    }
 
     @Override
     public List<Finding> loadByGenericSeverityAndChannelType(GenericSeverity genericSeverity, ChannelType channelType) {

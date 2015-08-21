@@ -565,6 +565,27 @@
                     </div>
                 </div>
 
+                <div class="panel panel-default">
+                    <div id="editBaseUrlSettingsPanel" class="panel-heading pointer" style="width:250px"
+                         ng-click="editBaseUrlSettings = !editBaseUrlSettings">
+                        <h3 class="panel-title">
+                            <span ng-hide="editBaseUrlSettings" class="icon icon-chevron-right"></span>
+                            <span ng-show="editBaseUrlSettings" class="icon icon-chevron-down"></span>
+                            Threadfix base URL
+                        </h3>
+                    </div>
+                    <div class="panel-body" ng-show="editBaseUrlSettings">
+                        <p>This field is used to construct absolute URLs for links included into emails or defect trackers descriptions.
+                            Being server and network configuration, it cannot be determined without any user connecting, so it needs to be kept in configurations.
+                            When null, this field is automatically populated on first connection.
+                            It will alert you and require a manual reconfiguration if you change your deployment configurations</p>
+                        <b style="display:inline-block">Base URL</b>
+                        <input style="display:inline-block; margin:0 10px 0 10px" id="baseUrl" type="text" name="baseUrl" class="focus" size="100"
+                               maxlength="1024" ng-model="object.baseUrl"/>
+                        <button class="btn" ng-click="populateWithUserBaseUrl()">Populate with current navigation</button>
+                    </div>
+                </div>
+
                 <button id="submit"
                         ng-class="{ disabled : otherForm.$invalid }"
                         class="btn btn-primary"
