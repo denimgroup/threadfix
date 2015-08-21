@@ -62,5 +62,17 @@ public class EnumTests {
 	public void testInformationSourceType() {
 		assertTrue("There were other than 3 values for InformationSourceType", InformationSourceType.values().length == 3);
 	}
-	
+
+	@Test
+	public void testSpringMVC() {
+		FrameworkType springMVC = FrameworkType.getFrameworkType("SPRING_MVC");
+		assert springMVC == FrameworkType.SPRING_MVC : "Got " + springMVC;
+	}
+
+	@Test
+	public void testSpringMVC2() {
+		FrameworkType springMVC = FrameworkType.getFrameworkType("SPRING MVC");
+		assert springMVC == FrameworkType.SPRING_MVC : "Got " + springMVC;
+	}
+
 }
