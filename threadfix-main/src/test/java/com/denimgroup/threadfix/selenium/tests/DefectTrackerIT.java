@@ -132,7 +132,7 @@ public class DefectTrackerIT extends BaseDataTest {
     public void testEditDefectTracker() {
         String originalDefectTrackerName = getName();
         String editedDefectTrackerName = getName();
-        String originalDefectTrackerType = "Jira";
+        String originalDefectTrackerType = "JIRA";
         String editedDefectTrackerType = "Bugzilla";
 
         defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
@@ -187,7 +187,7 @@ public class DefectTrackerIT extends BaseDataTest {
     public void testEditDefectTrackerFromJiraToHP() {
         String originalDefectTrackerName = getName();
         String editedDefectTrackerName = getName();
-        String originalDefectTrackerType = "Jira";
+        String originalDefectTrackerType = "JIRA";
         String editedDefectTrackerType = "HP Quality Center";
 
         DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
@@ -419,7 +419,7 @@ public class DefectTrackerIT extends BaseDataTest {
 	public void testJiraEdit() {
 		String defectTrackerName = getName();
         String replacementName = getName();
-		String defectTrackerType = "Jira";
+		String defectTrackerType = "JIRA";
 
         defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(defectTrackerName)

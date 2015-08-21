@@ -76,7 +76,7 @@ public class FindingsDetailIT extends BaseDataTest{
 
         ApplicationDetailPage applicationDetailPage = vulnerabilityDetailPage.clickApplicationLink(appName);
 
-        assertTrue("Merge wasn't added", applicationDetailPage.isVulnerabilityCountCorrect("Critical", "9"));
+        assertTrue("Merge wasn't added", applicationDetailPage.isVulnerabilityCountCorrect("High", "9"));
     }
 
 }

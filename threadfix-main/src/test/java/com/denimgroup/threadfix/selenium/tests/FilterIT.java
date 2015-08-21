@@ -43,7 +43,7 @@ public class FilterIT extends BaseIT {
         String file = ScanContents.getScanFilePath();
 
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
-        String severity = "High";
+        String severity = "Critical";
 
         DatabaseUtils.uploadScan(teamName, appName1, file);
         DatabaseUtils.uploadScan(teamName, appName2, file);
@@ -67,7 +67,9 @@ public class FilterIT extends BaseIT {
                 .expandTeamRowByName(teamName);
 
         assertTrue("Vulnerabilities were not filtered properly on team index page.",
-                teamIndexPage.applicationVulnerabilitiesFiltered(teamName, appName1, "High", "2"));
+                teamIndexPage.applicationVulnerabilitiesFiltered(teamName, appName1, "Critical", "2"));
+        assertTrue("Vulnerabilities were not filtered properly on team index page.",
+                teamIndexPage.applicationVulnerabilitiesFiltered(teamName, appName1, "High", "4"));
         assertTrue("Vulnerabilities were not filtered properly on team index page.",
                 teamIndexPage.applicationVulnerabilitiesFiltered(teamName, appName1, "Medium", "0"));
         assertTrue("Vulnerabilities were not filtered properly on team index page.",
@@ -86,7 +88,7 @@ public class FilterIT extends BaseIT {
         String file = ScanContents.getScanFilePath();
 
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
-        String severity = "High";
+        String severity = "Critical";
 
         DatabaseUtils.uploadScan(teamName, appName, file);
 
@@ -119,8 +121,10 @@ public class FilterIT extends BaseIT {
                 teamDetailPage.applicationVulnerabilitiesFiltered(appName, "Medium", "0"));
         assertTrue("The filter was not implemented correctly",
                 teamDetailPage.applicationVulnerabilitiesFiltered(appName, "Info", "0"));
-        assertTrue("The severity filter was implemented correctly",
-                teamDetailPage.applicationVulnerabilitiesFiltered(appName, "High", "2"));
+        assertTrue("The severity filter was not implemented correctly",
+                teamDetailPage.applicationVulnerabilitiesFiltered(appName, "High", "4"));
+        assertTrue("The severity filter was not implemented correctly",
+                teamDetailPage.applicationVulnerabilitiesFiltered(appName, "Critical", "2"));
     }
 
     @Test
@@ -144,14 +148,14 @@ public class FilterIT extends BaseIT {
 
         TeamIndexPage teamIndexPage = teamCustomizeVulnerabilityTypesPage.clickOrganizationHeaderLink();
 
-        // Set appName1 to hide 'Critical'
+        // Set appName1 to hide 'High'
         ApplicationDetailPage applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
         TeamAppCustomizeVulnerabilityTypesPage appCustomizeVulnerabilityTypesPage = applicationDetailPage.clickActionButton()
                 .clickEditVulnerabilityFilters()
                 .enableSeverityFilters()
-                .hideCritical()
+                .hideHigh()
                 .saveFilterChanges();
 
         // Check TeamIndexPage to for the results
@@ -172,16 +176,16 @@ public class FilterIT extends BaseIT {
                 .clickViewAppLink(appName, teamName)
                 .clickActionButton()
                 .clickEditVulnerabilityFilters()
-                .showCritical()
+                .showHigh()
                 .hideInfo()
                 .saveFilterChanges();
 
         teamIndexPage = appCustomizeVulnerabilityTypesPage.clickOrganizationHeaderLink();
 
         assertTrue("Critical vulnerability count was not correct.",
-                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Critical", "6"));
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Critical", "0"));
         assertTrue("High vulnerability count was not correct.",
-                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "High", "0"));
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "High", "6"));
         assertTrue("Medium vulnerability count was not correct.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Medium", "0"));
         assertTrue("Low vulnerability count was not correct.",

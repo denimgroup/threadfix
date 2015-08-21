@@ -390,7 +390,7 @@ public class CommandLineIT extends BaseDataTest {
         JSONObject response = cliUtils.vulnSearchByScannerName("IBM Security AppScan Enterprise");
 
         int numVulns = cliUtils.getNumberOfVulnerabilities(response);
-        assertTrue("Number of vulnerabilities was incorrect.  Should be 72, but was " + numVulns, numVulns == 72);
+        assertTrue("Number of vulnerabilities was incorrect.  Should be 72, but was " + numVulns, numVulns == 75);
     }
 
     @Test
@@ -399,7 +399,7 @@ public class CommandLineIT extends BaseDataTest {
         initializeTeamAndAppViaCli();
         uploadScanToApp(teamName, appName, "AppScanEnterprise");
 
-        JSONObject response = cliUtils.vulnSearchBySeverity("5");
+        JSONObject response = cliUtils.vulnSearchBySeverity("4");
 
         int numVulns = cliUtils.getNumberOfVulnerabilities(response);
         assertTrue("Number of vulnerabilities was incorrect.  Should be 21, but was " + numVulns, numVulns == 21);
@@ -421,7 +421,7 @@ public class CommandLineIT extends BaseDataTest {
 
         int secondNumVulns = cliUtils.getNumberOfVulnerabilities(secondResponse);
         assertTrue("Number of vulnerabilities was incorrect for returning more than total vulnerabilities.  Should be 72, but was " + numVulns,
-                secondNumVulns == 72);
+                secondNumVulns == 75);
     }
 
     @Test
