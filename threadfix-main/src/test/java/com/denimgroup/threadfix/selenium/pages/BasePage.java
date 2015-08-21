@@ -50,7 +50,7 @@ public abstract class BasePage {
     static {
         String waitTimeProperty = System.getProperty("WAIT_TIME");
         if (null == waitTimeProperty) {
-            NUM_SECONDS_TO_WAIT = 20;
+            NUM_SECONDS_TO_WAIT = 3;
         } else {
             int parsedTime = Integer.parseInt(waitTimeProperty);
             if (0 <= parsedTime) {
@@ -66,6 +66,7 @@ public abstract class BasePage {
 	
 	public BasePage(WebDriver webdriver){
 		driver =  (RemoteWebDriver) webdriver;
+        driver.manage().timeouts().implicitlyWait(NUM_SECONDS_TO_WAIT, TimeUnit.SECONDS);
         Dimension dimensions = new Dimension(1250,1020);
         driver.manage().window().setSize(dimensions);
 	}
