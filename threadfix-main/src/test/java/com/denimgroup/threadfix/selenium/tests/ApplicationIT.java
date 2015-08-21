@@ -672,7 +672,7 @@ public class ApplicationIT extends BaseDataTest {
                 .clickUploadScan()
                 .uploadScan(newScan);
 
-        assertTrue("Scan didn't Upload", applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+        assertTrue("Scan didn't Upload", applicationDetailPage.isVulnerabilityCountCorrect("High", "10"));
     }
 
     @Test

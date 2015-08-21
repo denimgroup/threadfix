@@ -83,8 +83,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
 
         sleep(1000);
 
-        assertTrue("Only 4 critical vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
+        assertTrue("Only 4 High vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "4"));
         assertTrue("Only 4 medium vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Medium", "4"));
         assertFalse("Low vulnerabilities should not be shown.",
@@ -94,8 +94,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
 
         applicationDetailPage = applicationDetailPage.toggleClear();
 
-        assertTrue("Critical vulnerabilities should be shown.",
-                applicationDetailPage.isSeverityLevelShown("Critical"));
+        assertTrue("High vulnerabilities should be shown.",
+                applicationDetailPage.isSeverityLevelShown("High"));
         assertTrue("Medium vulnerabilities should be shown.",
                 applicationDetailPage.isSeverityLevelShown("Medium"));
         assertTrue("Low vulnerabilities should be shown.",
@@ -163,8 +163,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
                 .expandSavedFilters()
                 .addSavedFilter(newFilter);
 
-        assertTrue("Only 4 critical vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
+        assertTrue("Only 4 High vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "4"));
         assertTrue("Only 4 medium vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Medium", "4"));
 
@@ -175,8 +175,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
                 .clickLoadFilters()
                 .loadSavedFilter(newFilter);
 
-        assertTrue("Only 4 critical vulnerabilities should be shown. There was a problem loading saved filter.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
+        assertTrue("Only 4 High vulnerabilities should be shown. There was a problem loading saved filter.",
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "4"));
         assertTrue("Only 4 medium vulnerabilities should be shown. There was a problem loading saved filter.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Medium", "4"));
     }
@@ -193,8 +193,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
 
         applicationDetailPage = applicationDetailPage.expandScannerAndMerged()
                 .toggleTwoPlus();
-
-        assertTrue("Only 4 critical vulnerabilities should be shown.",
+        
+        assertTrue("Only 4 High vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("High", "4"));
 
         applicationDetailPage = applicationDetailPage.toggleFourPlus();
@@ -213,7 +213,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
         applicationDetailPage = applicationDetailPage.expandScannerAndMerged()
                 .addScannerFilter(scanner);
 
-        assertTrue("Only 10 critical vulnerabilities should be shown.",
+        assertTrue("Only 10 High vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("High", "10"));
         assertTrue("Only 9 medium vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Medium", "8"));
@@ -236,8 +236,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
 
         sleep(2000);
 
-        assertTrue("Only 5 critical vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "5"));
+        assertTrue("Only 5 High vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "5"));
     }
 
     @Test
@@ -247,8 +247,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
         applicationDetailPage = applicationDetailPage.expandFieldControls()
                 .addPathFilter(path);
 
-        assertTrue("Only 1 critical vulnerability should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "1"));
+        assertTrue("Only 1 High vulnerability should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "1"));
         assertTrue("Only 1 info vulnerability should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Info", "1"));
     }
@@ -260,8 +260,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
         applicationDetailPage = applicationDetailPage.expandFieldControls()
                 .addParameterFilter(parameter);
 
-        assertTrue("Only 4 critical vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
+        assertTrue("Only 4 High vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "4"));
         assertTrue("Only 4 medium vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Medium", "4"));
         assertTrue("Only 3 info vulnerabilities should be shown.",
@@ -319,8 +319,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
         applicationDetailPage = applicationDetailPage.toggleMoreThan();
         sleep(1000);
 
-        assertTrue("Only 10 critical vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+        assertTrue("Only 10 High vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "10"));
         assertTrue("Only 8 medium vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Medium", "8"));
         assertTrue("Only 21 low vulnerabilities should be shown.",
@@ -331,8 +331,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
         applicationDetailPage = applicationDetailPage.toggle90Days();
         sleep(1000);
 
-        assertTrue("Only 10 critical vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+        assertTrue("Only 10 High vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "10"));
         assertTrue("Only 8 medium vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Medium", "8"));
         assertTrue("Only 21 low vulnerabilities should be shown.",
@@ -356,8 +356,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
         applicationDetailPage = applicationDetailPage.expandDateRange()
                 .enterStartDate("14-June-2012");
 
-        assertTrue("Only 10 critical vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+        assertTrue("Only 10 High vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "10"));
         assertTrue("Only 9 medium vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Medium", "9"));
         assertTrue("Only 21 low vulnerabilities should be shown.",

@@ -364,15 +364,15 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         analyticsPage.selectDropDownReport("Most Vulnerable Applications");
 
         assertTrue("Tip at level info does not match count", analyticsPage.mostVulnAppTip("Info", teamName, appName)
-                .equals("Info: 17"));
+                .equals("Info: 125"));
         assertTrue("Tip at level low does not match count", analyticsPage.mostVulnAppTip("Low",teamName,appName)
-                .equals("Low: 139"));
+                .equals("Low: 127"));
         assertTrue("Tip at level medium does not match count", analyticsPage.mostVulnAppTip("Medium",teamName,appName)
-                .equals("Medium: 117"));
+                .equals("Medium: 59"));
         assertTrue("Tip at level high does not match count", analyticsPage.mostVulnAppTip("High",teamName,appName)
-                .equals("High: 37"));
+                .equals("High: 23"));
         assertTrue("Tip at level critical does not match count", analyticsPage.mostVulnAppTip("Critical",teamName,appName)
-                .equals("Critical: 27"));
+                .equals("Critical: 6"));
     }
 
     @Test
@@ -390,7 +390,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         analyticsPage.selectDropDownReport("Most Vulnerable Applications");
 
         assertTrue("Tip at level info does not match count", analyticsPage.mostVulnAppModalHeader("Info", teamName, appName)
-                .equals("Info: 17"));
+                .equals("Info: 125"));
     }
 
     @Test
@@ -480,9 +480,9 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .expandTeamApplicationFilter("snapshotFilterDiv")
                 .addTeamFilter(teamName, "snapshotFilterDiv");
 
-        String[] owaspThirteen = {"13", "3", "9", "0", "11", "3", "0", "6", "0", "1"};
-        String[] owaspTen = {"10", "9", "0", "0", "6", "11", "3", "0", "2", "1"};
-        String[] owaspSeven = {"9", "13", "0", "0", "6", "14", "5", "2", "2", "0"};
+        String[] owaspThirteen = {"13", "3", "9", "0", "14", "3", "0", "0", "0", "1"};
+        String[] owaspTen = {"10", "9", "0", "0", "0", "11", "3", "0", "2", "1"};
+        String[] owaspSeven = {"9", "13", "0", "0", "0", "14", "5", "2", "2", "0"};
 
         for(int index = 0; index < 10; index++) {
             assertTrue("OWASP 2013: A" + (index + 1) + " did not contain correct number of vulnerabilities",

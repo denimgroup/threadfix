@@ -58,6 +58,8 @@ public class BootstrapServiceImpl implements BootstrapService {
     ScannerVulnerabilityTypeBootstrapper scannerVulnerabilityTypeBootstrapper;
     @Autowired
     UserRoleBootstrapper userRoleBootstrapper;
+    @Autowired
+    RemoteProviderBootstrapper remoteProviderBootstrapper;
 
     @Override
     public void bootstrap() {
@@ -69,6 +71,7 @@ public class BootstrapServiceImpl implements BootstrapService {
             userRoleBootstrapper.bootstrap();
 
             genericSeverityBootstrapper.bootstrap();
+            remoteProviderBootstrapper.bootstrap();
             scannerTypeBootstrapper.bootstrap();
             applicationCriticalityBootstrapper.bootstrap();
             wafBootstrapper.bootstrap();

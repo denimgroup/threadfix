@@ -92,23 +92,23 @@ public class DashboardIT extends BaseDataTest {
 
         dashboardPage.hover(teamName + appName + "InfoBar");
         assertTrue("The number of Info Vulnerabilities in report tip was not correct.",
-                dashboardPage.isMostVulnerableTipCorrect("Info: 60"));
+                dashboardPage.isMostVulnerableTipCorrect("Info: 167"));
 
         dashboardPage.hover(teamName + appName + "LowBar");
         assertTrue("The number of Low Vulnerabilities in report tip was not correct.",
-                dashboardPage.isMostVulnerableTipCorrect("Low: 134"));
+                dashboardPage.isMostVulnerableTipCorrect("Low: 120"));
 
         dashboardPage.hover(teamName + appName + "MediumBar");
         assertTrue("The number of Medium Vulnerabilities in report tip was not correct.",
-                dashboardPage.isMostVulnerableTipCorrect("Medium: 110"));
+                dashboardPage.isMostVulnerableTipCorrect("Medium: 52"));
 
         dashboardPage.hover(teamName + appName + "HighBar");
         assertTrue("The number of High Vulnerabilities in report tip was not correct.",
-                dashboardPage.isMostVulnerableTipCorrect("High: 51"));
+                dashboardPage.isMostVulnerableTipCorrect("High: 26"));
 
         dashboardPage.hover(teamName + appName + "CriticalBar");
         assertTrue("The number of Critical Vulnerabilities in report tip was not correct.",
-                dashboardPage.isMostVulnerableTipCorrect("Critical: 15"));
+                dashboardPage.isMostVulnerableTipCorrect("Critical: 5"));
     }
 
     @Test
@@ -125,7 +125,7 @@ public class DashboardIT extends BaseDataTest {
 
         assertTrue("Team name was not correct.", dashboardPage.isTeamNameCorrectInVulnerabilitySummaryModal(teamName));
         assertTrue("Application name was not correct.", dashboardPage.isApplicationNameCorrectInVulnerabilitySummaryModal(appName));
-        assertTrue("Count was not correct.", dashboardPage.isCountCorrectInVulnerabilitySummaryModal("60"));
+        assertTrue("Count was not correct.", dashboardPage.isCountCorrectInVulnerabilitySummaryModal("167"));
     }
 
     @Test
@@ -141,7 +141,7 @@ public class DashboardIT extends BaseDataTest {
         dashboardPage.clickSVGElement(teamName + appName + "InfoBar");
         AnalyticsPage analyticsPage = dashboardPage.clickDetails();
 
-        assertTrue("Info filtered results were not correct.", analyticsPage.isVulnerabilityCountCorrect("Info", "60"));
+        assertTrue("Info filtered results were not correct.", analyticsPage.isVulnerabilityCountCorrect("Info", "167"));
 
         assertFalse("Low vulnerabilities should have been filtered out.", analyticsPage.isSeverityLevelShown("Low"));
         assertFalse("Medium vulnerabilities should have been filtered out.", analyticsPage.isSeverityLevelShown("Medium"));
