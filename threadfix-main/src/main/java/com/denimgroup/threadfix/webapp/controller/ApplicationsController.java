@@ -174,7 +174,7 @@ public class ApplicationsController {
 		if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,appId)) {
 			model.addAttribute("users", userService.getPermissibleUsers(orgId, appId));
 		}
-		model.addAttribute("manualChannelVulnerabilities", channelVulnerabilityService.loadAllManual());
+		model.addAttribute("manualChannelVulnerabilities", genericVulnerabilityService.loadAll());
         addAttrForScheduledScanTab(model);
 		return "applications/detail";
 	}
@@ -192,7 +192,7 @@ public class ApplicationsController {
         map.put("manualSeverities", findingService.getManualSeverities());
         map.put("recentPathList", findingService.getRecentDynamicPaths(appId));
         map.put("recentFileList", findingService.getRecentStaticPaths(appId));
-        map.put("manualChannelVulnerabilities", channelVulnerabilityService.loadAllManual());
+        map.put("manualChannelVulnerabilities", genericVulnerabilityService.loadAll());
 
         // defect tracker add form
         map.put("defectTrackerList", defectTrackerService.loadAllDefectTrackers());

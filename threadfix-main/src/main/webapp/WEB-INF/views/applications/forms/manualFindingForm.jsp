@@ -23,7 +23,7 @@
                                class="form-control"
                                id="txtSearch"
                                style="width:300px"
-                               typeahead="vulnerability.name for vulnerability in config.manualChannelVulnerabilities | filter:$viewValue | limitTo:10"/>
+                               typeahead="(vulnerability.name + ' (CWE ' + vulnerability.displayId + ')') for vulnerability in config.manualChannelVulnerabilities | filter:$viewValue | limitTo:10"/>
                     </td>
                     <td>
                         <span class="errors" ng-show="form.channelVulnerabilityCode.$dirty && form.channelVulnerabilityCode.$error.required">CWE is required.</span>
