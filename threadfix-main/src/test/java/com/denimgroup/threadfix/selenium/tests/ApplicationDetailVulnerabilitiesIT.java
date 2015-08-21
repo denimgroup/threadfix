@@ -51,14 +51,14 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
 
     @Test
     public void testMarkSingleVulnerabilityClosed() {
-        applicationDetailPage.expandVulnerabilityByType("Critical79")
-                .checkVulnerabilityByType("Critical790")
+        applicationDetailPage.expandVulnerabilityByType("High79")
+                .checkVulnerabilityByType("High790")
                 .clickVulnerabilitiesActionButton()
                 .clickCloseVulnerabilitiesButton()
                 .sleepForResults();
 
-        assertTrue("There should only be 9 critical vulnerabilities shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "9"));
+        assertTrue("There should only be 9 High vulnerabilities shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "9"));
 
         TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
@@ -72,14 +72,14 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
 
     @Test
     public void testMarkMultipleVulnerabilitiesClosed() {
-        applicationDetailPage.expandVulnerabilityByType("Critical79")
-                .checkVulnerabilitiesByCategory("Critical79")
+        applicationDetailPage.expandVulnerabilityByType("High79")
+                .checkVulnerabilitiesByCategory("High79")
                 .clickVulnerabilitiesActionButton()
                 .clickCloseVulnerabilitiesButton()
                 .sleepForResults();
 
-        assertTrue("There should only be 5 critical vulnerabilities shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "5"));
+        assertTrue("There should only be 5 High vulnerabilities shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "5"));
 
         TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
@@ -94,8 +94,8 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
 
     @Test
     public void testReopenSingleVulnerability() {
-        applicationDetailPage.expandVulnerabilityByType("Critical79")
-                .checkVulnerabilityByType("Critical790")
+        applicationDetailPage.expandVulnerabilityByType("High79")
+                .checkVulnerabilityByType("High790")
                 .clickVulnerabilitiesActionButton()
                 .clickCloseVulnerabilitiesButton()
                 .sleepForResults();
@@ -105,10 +105,10 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
                 .toggleStatusFilter("Closed");
 
         assertTrue("There should only be 1 critical vulnerability shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "1"));
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "1"));
 
-        applicationDetailPage.expandVulnerabilityByType("Critical79")
-                .checkVulnerabilityByType("Critical790")
+        applicationDetailPage.expandVulnerabilityByType("High79")
+                .checkVulnerabilityByType("High790")
                 .clickVulnerabilitiesActionButton()
                 .clickOpenVulnerabilitiesButton()
                 .sleepForResults();
@@ -119,8 +119,8 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
         applicationDetailPage.toggleStatusFilter("Closed")
                 .toggleStatusFilter("Open");
 
-        assertTrue("There should be 10 critical vulnerabilities shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+        assertTrue("There should be 10 High vulnerabilities shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "10"));
 
         TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
@@ -132,8 +132,8 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
 
     @Test
     public void testReopenMultipleVulnerabilities() {
-        applicationDetailPage.expandVulnerabilityByType("Critical79")
-                .checkVulnerabilitiesByCategory("Critical79")
+        applicationDetailPage.expandVulnerabilityByType("High79")
+                .checkVulnerabilitiesByCategory("High79")
                 .clickVulnerabilitiesActionButton()
                 .clickCloseVulnerabilitiesButton()
                 .sleepForResults();
@@ -142,11 +142,11 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
                 .toggleStatusFilter("Open")
                 .toggleStatusFilter("Closed");
 
-        assertTrue("There should only be 5 critical vulnerability shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "5"));
+        assertTrue("There should only be 5 High vulnerability shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "5"));
 
-        applicationDetailPage.expandVulnerabilityByType("Critical79")
-                .checkVulnerabilitiesByCategory("Critical79")
+        applicationDetailPage.expandVulnerabilityByType("High79")
+                .checkVulnerabilitiesByCategory("High79")
                 .clickVulnerabilitiesActionButton()
                 .clickOpenVulnerabilitiesButton()
                 .sleepForResults();
@@ -157,8 +157,8 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
         applicationDetailPage.toggleSeverityFilter("Closed")
                 .toggleStatusFilter("Open");
 
-        assertTrue("There should be 10 critical vulnerabilities shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+        assertTrue("There should be 10 High vulnerabilities shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "10"));
 
         TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
@@ -170,14 +170,14 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
 
     @Test
     public void testMarkSingleVulnerabilityFalsePositive() {
-        applicationDetailPage.expandVulnerabilityByType("Critical79")
-                .checkVulnerabilityByType("Critical790")
+        applicationDetailPage.expandVulnerabilityByType("High79")
+                .checkVulnerabilityByType("High790")
                 .clickVulnerabilitiesActionButton()
                 .clickMarkFalseVulnerability()
                 .sleepForResults();
 
-        assertTrue("There should only be 9 critical vulnerabilities shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "9"));
+        assertTrue("There should only be 9 High vulnerabilities shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "9"));
 
         TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
@@ -190,8 +190,8 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
 
     @Test
     public void testUnmarkSingleVulnerabilityFalsePositive() {
-        applicationDetailPage.expandVulnerabilityByType("Critical79")
-                .checkVulnerabilityByType("Critical790")
+        applicationDetailPage.expandVulnerabilityByType("High79")
+                .checkVulnerabilityByType("High790")
                 .clickVulnerabilitiesActionButton()
                 .clickMarkFalseVulnerability()
                 .sleepForResults();
@@ -200,11 +200,11 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
                 .toggleStatusFilter("Open")
                 .toggleStatusFilter("FalsePositive");
 
-        assertTrue("There should only be 1 critical vulnerability shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "1"));
+        assertTrue("There should only be 1 High vulnerability shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "1"));
 
-        applicationDetailPage.expandVulnerabilityByType("Critical79")
-                .checkVulnerabilityByType("Critical790")
+        applicationDetailPage.expandVulnerabilityByType("High79")
+                .checkVulnerabilityByType("High790")
                 .clickVulnerabilitiesActionButton()
                 .clickUnMarkFalsePositive()
                 .sleepForResults();
@@ -216,7 +216,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
                 .toggleStatusFilter("Open");
 
         assertTrue("There should only be 10 vulnerabilities shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "10"));
 
         TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
@@ -228,14 +228,14 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
 
     @Test
     public void testMarkMultipleVulnerabilitiesFalsePositive() {
-        applicationDetailPage.expandVulnerabilityByType("Critical79")
-                .checkVulnerabilitiesByCategory("Critical79")
+        applicationDetailPage.expandVulnerabilityByType("High79")
+                .checkVulnerabilitiesByCategory("High79")
                 .clickVulnerabilitiesActionButton()
                 .clickMarkFalseVulnerability()
                 .sleepForResults();
 
-        assertTrue("There should only be 5 critical vulnerabilities shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "5"));
+        assertTrue("There should only be 5 High vulnerabilities shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "5"));
 
         TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
@@ -249,8 +249,8 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
 
     @Test
     public void testUnmarkMultipleVulnerabilitiesFalsePositive() {
-        applicationDetailPage.expandVulnerabilityByType("Critical79")
-                .checkVulnerabilitiesByCategory("Critical79")
+        applicationDetailPage.expandVulnerabilityByType("High79")
+                .checkVulnerabilitiesByCategory("High79")
                 .clickVulnerabilitiesActionButton()
                 .clickMarkFalseVulnerability()
                 .sleepForResults();
@@ -259,11 +259,11 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
                 .toggleStatusFilter("Open")
                 .toggleStatusFilter("FalsePositive");
 
-        assertTrue("There should only be 5 critical vulnerability shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "5"));
+        assertTrue("There should only be 5 High vulnerability shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "5"));
 
-        applicationDetailPage.expandVulnerabilityByType("Critical79")
-                .checkVulnerabilitiesByCategory("Critical79")
+        applicationDetailPage.expandVulnerabilityByType("High79")
+                .checkVulnerabilitiesByCategory("High79")
                 .clickVulnerabilitiesActionButton()
                 .clickUnMarkFalsePositive()
                 .sleepForResults();
@@ -275,7 +275,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
                 .toggleStatusFilter("Open");
 
         assertTrue("There should only be 10 vulnerabilities shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "10"));
 
         TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
@@ -287,13 +287,13 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
 
     @Test
     public void testViewMoreLink() {
-        applicationDetailPage.expandVulnerabilityByType("Critical79")
-                .expandCommentSection("Critical790")
-                .addComment("Critical790")
+        applicationDetailPage.expandVulnerabilityByType("High79")
+                .expandCommentSection("High790")
+                .addComment("High790")
                 .setComment(getName())
                 .clickModalSubmit();
 
-        VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage.clickViewMoreVulnerabilityLink("Critical790");
+        VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage.clickViewMoreVulnerabilityLink("High790");
 
         assertTrue("Vulnerability Detail Page navigation failed after click view more link of vulnerability.",
                 vulnerabilityDetailPage.isUploadFileButtonPresent());
@@ -303,14 +303,14 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
     public void testAddCommentToVulnerability() {
         String comment = getName();
 
-        applicationDetailPage.expandVulnerabilityByType("Critical79")
-                .expandCommentSection("Critical790")
-                .addComment("Critical790")
+        applicationDetailPage.expandVulnerabilityByType("High79")
+                .expandCommentSection("High790")
+                .addComment("High790")
                 .setComment(comment)
                 .clickModalSubmit();
 
         assertTrue("There should be 1 comment associated with this vulnerability.",
-                applicationDetailPage.isCommentCountCorrect("Critical790", "1"));
+                applicationDetailPage.isCommentCountCorrect("High790", "1"));
 
         assertTrue("The comment was not preserved correctly.",
                 applicationDetailPage.isCommentCorrect("0", comment));
@@ -330,9 +330,9 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
 
     @Test
     public void testVulnerabilityPaginationUnavailable() {
-        applicationDetailPage.expandVulnerabilityByType("Critical79");
+        applicationDetailPage.expandVulnerabilityByType("High79");
 
-        assertFalse("Pagination available", applicationDetailPage.isPaginationPresent("Critical79"));
+        assertFalse("Pagination available", applicationDetailPage.isPaginationPresent("High79"));
 
     }
 }
