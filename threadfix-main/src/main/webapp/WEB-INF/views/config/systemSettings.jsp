@@ -3,6 +3,7 @@
 <head>
 	<title>System Settings</title>
     <cbs:cachebustscript src="/scripts/system-settings-controller.js"/>
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/system-settings.css"/>
 </head>
 
 <body id="config" ng-controller="SystemSettingsController">
@@ -343,23 +344,22 @@
 
         <tab id="exportTab" heading="Export Settings" ng-click="setTab('export')" active="tab.export">
             <div ng-form="configForm" name="exportForm">
-                <div style="padding:10px 0 10px">
-                    <select multiple size="12" ng-multiple="true" ng-model="selectedExportFields"
-                            ng-options="exportField.displayName for exportField in exportFields track by exportField.name"></select>
 
-                    <div id="buttons" style="display: inline-block; padding: 15px;">
-                        <div style="padding: 5px">
-                            <button id="addExportField" ng-click="addToRightPanel(selectedExportFields)" class="btn">&raquo;</button>
-                        </div>
-                        <div style="padding: 5px">
-                            <button id="removeExportField" ng-click="addToLeftPanel()" class="btn">&laquo;</button>
-                        </div>
+                <h3>Vulnerability Export Settings</h3>
+                <span tooltip="vuln-export-settings">
+                    Drag preferred export field to second holding area.
+                </span>
+
+                <div class="export-field-ui-container">
+                    <div ui-sortable="sortableOptions" class="export-fields-container screen floatleft" ng-model="exportFields">
+                        <div class="exportField" ng-repeat="exportField in exportFields">{{ exportField.displayName }}</div>
                     </div>
-
-                    <select multiple size="12" ng-multiple="true" ng-model="object.csvExportFields" name="csvExportFields"
-                            ng-options="exportField.displayName for exportField in object.csvExportFields"></select>
-
+                    <div ui-sortable="sortableOptions" class="export-fields-container screen floatleft" ng-model="object.csvExportFields">
+                        <div class="exportField" ng-repeat="exportField in object.csvExportFields">{{ exportField.displayName }}</div>
+                    </div>
+                    <div class="clear"></div>
                 </div>
+
                 <button id="submit"
                         ng-class="{ disabled : exportForm.$invalid }"
                         class="btn btn-primary"

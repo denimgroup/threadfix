@@ -127,5 +127,8 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
         }
     };
 
-
+    $scope.sortableOptions = {
+        placeholder: "exportField",
+        connectWith: ".export-fields-container"
+    };
 });
