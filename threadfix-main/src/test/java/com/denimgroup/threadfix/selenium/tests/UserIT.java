@@ -464,15 +464,15 @@ public class UserIT extends BaseDataTest {
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-        applicationDetailPage.expandVulnerabilityByType("Critical79")
-                .expandCommentSection("Critical790")
-                .addComment("Critical790")
+        applicationDetailPage.expandVulnerabilityByType("High79")
+                .expandCommentSection("High790")
+                .addComment("High790")
                 .setComment(getName())
                 .clickModalSubmit()
                 .refreshPage();
 
-        applicationDetailPage.expandVulnerabilityByType("Critical79")
-                .expandCommentSection("Critical790");
+        applicationDetailPage.expandVulnerabilityByType("High79")
+                .expandCommentSection("High790");
 
         assertTrue("Display name was not used on comment.",
                 driver.findElement(By.id("commentUser0")).getText().equals(displayName));

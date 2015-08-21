@@ -422,7 +422,7 @@ public class AnalyticsPage extends BasePage {
     /* _____________________ Boolean Methods _____________________ */
 
     public boolean isVulnerabilityCountCorrect(String level, String expected) {
-        return expected.equals(driver.findElementById("totalBadge" + level).getText().trim());
+        return expected.equals(tryGetText(By.id("totalBadge" + level)).trim());
     }
 
     public boolean isOwaspCountCorrect(String number, String expected) {

@@ -195,7 +195,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
                 .toggleTwoPlus();
 
         assertTrue("Only 4 critical vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "4"));
 
         applicationDetailPage = applicationDetailPage.toggleFourPlus();
 
@@ -214,7 +214,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
                 .addScannerFilter(scanner);
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "10"));
         assertTrue("Only 9 medium vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Medium", "8"));
         assertTrue("Only 21 low vulnerabilities should be shown.",
@@ -274,13 +274,13 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
                 .toggleSeverityFilter("Medium")
                 .toggleSeverityFilter("Info");
 
-        assertTrue("Critical vulnerabilities should be shown.",
-                applicationDetailPage.isSeverityLevelShown("Critical"));
+        assertTrue("High vulnerabilities should be shown.",
+                applicationDetailPage.isSeverityLevelShown("High"));
         assertTrue("Low vulnerabilities should be shown.",
                 applicationDetailPage.isSeverityLevelShown("Low"));
 
-        assertFalse("High vulnerabilities should not be shown.",
-                applicationDetailPage.isSeverityLevelShown("High"));
+        assertFalse("Critical vulnerabilities should not be shown.",
+                applicationDetailPage.isSeverityLevelShown("Critical"));
         assertFalse("Medium vulnerabilities should not be shown.",
                 applicationDetailPage.isSeverityLevelShown("Medium"));
         assertFalse("Info vulnerabilities should not be shown.",
