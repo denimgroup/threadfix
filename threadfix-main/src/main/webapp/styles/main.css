@@ -1512,6 +1512,49 @@ table.eventHistory td.eventDate {
 	vertical-align: top;
 }
 
+#recentHistory ul#recentHistoryHeader {
+	width: 400px;;
+	color: black;
+	text-align: left;
+	white-space: normal;
+}
+
+#recentHistory ul#recentHistoryHeader li {
+	padding: 5px 0;
+}
+
+#recentHistory ul#recentHistoryHeader li.emptyList {
+	text-align: center;
+}
+
+#recentHistory ul#recentHistoryHeader li #allHistoryLink {
+	text-align: center;
+}
+
+#recentHistory ul#recentHistoryHeader .event {
+	border-bottom: 1px dotted lightgrey;
+}
+
+#recentHistory ul#recentHistoryHeader .event a:hover {
+	color: #e49518;
+}
+
+#recentHistory ul#recentHistoryHeader .event .eventDate {
+	padding: 0 15px;
+	font-weight: bold;
+}
+
+#recentHistory ul#recentHistoryHeader .event .eventDescription {
+	padding: 0 15px;
+}
+
+#recentHistory ul#recentHistoryHeader .event .eventDescription .detail {
+	display: block;
+	padding: 5px 5px 0;
+	font-size: 85%;
+	font-style: italic;
+}
+
 /* Submenu placement itself */
 .dropdown-submenu.left > .dropdown-menu { left: auto; right: 100%; }
 /* Arrow position */

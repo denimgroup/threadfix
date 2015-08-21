@@ -111,7 +111,7 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
             userEventActions.add(eventAction.name());
         }
 
-        return retrieveUngrouped(userEventActions, user, null, null, null);
+        return retrieveUngrouped(userEventActions, user);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
             userGroupedEventAction.add(eventAction.name());
         }
 
-        return retrieveGrouped(userGroupedEventAction, user, null, null, null);
+        return retrieveGrouped(userGroupedEventAction, user);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
             globalEventActions.add(eventAction.name());
         }
 
-        return retrieveUngrouped(globalEventActions, null, null, appIds, teamIds);
+        return retrieveUngrouped(globalEventActions, appIds, teamIds);
     }
 
     @Override
@@ -141,39 +141,57 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
             globalGroupedEventAction.add(eventAction.name());
         }
 
-        return retrieveGrouped(globalGroupedEventAction, null, null, appIds, teamIds);
+        return retrieveGrouped(globalGroupedEventAction, appIds, teamIds);
     }
 
     @Override
-    public List<Event> retrieveRecentUngrouped(List<EventAction> userEventActions, Date startTime, Set<Integer> appIds, Set<Integer> teamIds) {
+    public List<Event> retrieveRecentUngrouped(List<EventAction> userEventActions, Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds) {
         List<String> recentEventActions = list();
         for (EventAction eventAction : userEventActions) {
             recentEventActions.add(eventAction.name());
         }
 
-        return retrieveUngrouped(recentEventActions, null, startTime, appIds, teamIds);
+        return retrieveUngrouped(recentEventActions, startTime, stopTime, appIds, teamIds);
     }
 
     @Override
-    public List<Event> retrieveRecentGrouped(List<EventAction> userGroupedEventActions, Date startTime, Set<Integer> appIds, Set<Integer> teamIds) {
+    public List<Event> retrieveRecentGrouped(List<EventAction> userGroupedEventActions, Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds) {
         List<String> recentGroupedEventAction = list();
         for (EventAction eventAction : userGroupedEventActions) {
             recentGroupedEventAction.add(eventAction.name());
         }
 
-        return retrieveGrouped(recentGroupedEventAction, null, startTime, appIds, teamIds);
+        return retrieveGrouped(recentGroupedEventAction, startTime, stopTime, appIds, teamIds);
     }
 
-    private List<Event> retrieveUngrouped(List<String> eventActions, User user, Date startTime, Set<Integer> appIds, Set<Integer> teamIds) {
-        Criteria criteria = getEventCriteria(eventActions, user, startTime, appIds, teamIds);
+    private List<Event> retrieveUngrouped(List<String> eventActions, User user) {
+        return retrieveUngrouped(eventActions, user, null, null, null, null);
+    }
+    private List<Event> retrieveUngrouped(List<String> eventActions, Set<Integer> appIds, Set<Integer> teamIds) {
+        return retrieveUngrouped(eventActions, null, null, null, appIds, teamIds);
+    }
+    private List<Event> retrieveUngrouped(List<String> eventActions, Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds) {
+        return retrieveUngrouped(eventActions, null, startTime, stopTime, appIds, teamIds);
+    }
+    private List<Event> retrieveUngrouped(List<String> eventActions, User user, Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds) {
+        Criteria criteria = getEventCriteria(eventActions, user, startTime, stopTime, appIds, teamIds);
 
         List<Event> events = criteria.list();
 
         return events;
     }
 
-    private List<Event> retrieveGrouped(List<String> eventActions, User user, Date startTime, Set<Integer> appIds, Set<Integer> teamIds) {
-        Criteria criteria = getEventCriteria(eventActions, user, startTime, appIds, teamIds);
+    private List<Event> retrieveGrouped(List<String> eventActions, User user) {
+        return retrieveGrouped(eventActions, user, null, null, null, null);
+    }
+    private List<Event> retrieveGrouped(List<String> eventActions, Set<Integer> appIds, Set<Integer> teamIds) {
+        return retrieveGrouped(eventActions, null, null, null, appIds, teamIds);
+    }
+    private List<Event> retrieveGrouped(List<String> eventActions, Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds) {
+        return retrieveGrouped(eventActions, null, startTime, stopTime, appIds, teamIds);
+    }
+    private List<Event> retrieveGrouped(List<String> eventActions, User user, Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds) {
+        Criteria criteria = getEventCriteria(eventActions, user, startTime, stopTime, appIds, teamIds);
 
         criteria.setProjection(Projections.projectionList()
                         .add(Projections.count("id").as("groupCount"))
@@ -199,7 +217,7 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
         return events;
     }
 
-    private Criteria getEventCriteria(List<String> eventActions, User user, Date startTime, Set<Integer> appIds, Set<Integer> teamIds) {
+    private Criteria getEventCriteria(List<String> eventActions, User user, Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds) {
         Criteria criteria = getSession()
                 .createCriteria(getClassReference())
                 .add(Restrictions.eq("active", true));
@@ -218,6 +236,9 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
 
         if (startTime != null) {
             criteria.add(Restrictions.ge("date", startTime));
+        }
+        if (stopTime != null) {
+            criteria.add(Restrictions.lt("date", stopTime));
         }
 
         if ((appIds != null) && (!appIds.isEmpty()) && (teamIds != null) && (!teamIds.isEmpty())) {

@@ -47,7 +47,7 @@ public interface EventDao extends GenericObjectDao<Event> {
 
     List<Event> retrieveGlobalGrouped(Set<Integer> appIds, Set<Integer> teamIds);
 
-    List<Event> retrieveRecentUngrouped(List<EventAction> userEventActions, Date startTime, Set<Integer> appIds, Set<Integer> teamIds);
+    List<Event> retrieveRecentUngrouped(List<EventAction> userEventActions, Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds);
 
-    List<Event> retrieveRecentGrouped(List<EventAction> userGroupedEventActions, Date startTime, Set<Integer> appIds, Set<Integer> teamIds);
+    List<Event> retrieveRecentGrouped(List<EventAction> userGroupedEventActions, Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds);
 }

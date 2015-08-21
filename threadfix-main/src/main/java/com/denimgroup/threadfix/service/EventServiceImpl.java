@@ -53,7 +53,7 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
     @Autowired
     private UserService userService;
 
-    private EventComparator eventComparator = new EventComparator();
+    private EventComparator eventComparator = new EventComparator(false);
 
     @Override
     GenericObjectDao<Event> getDao() {
@@ -192,13 +192,13 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
 
     @Override
     public List<Event> getRecentEvents(List<EventAction> userEventActions, List<EventAction> userGroupedEventActions,
-                                       Date startTime, Set<Integer> appIds, Set<Integer> teamIds) {
+                                       Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds) {
         List<Event> recentEvents = list();
         if ((userEventActions != null) && (!userEventActions.isEmpty())) {
-            recentEvents.addAll(eventDao.retrieveRecentUngrouped(userEventActions, startTime, appIds, teamIds));
+            recentEvents.addAll(eventDao.retrieveRecentUngrouped(userEventActions, startTime, stopTime, appIds, teamIds));
         }
         if ((userGroupedEventActions != null) && (!userGroupedEventActions.isEmpty())) {
-            recentEvents.addAll(eventDao.retrieveRecentGrouped(userGroupedEventActions, startTime, appIds, teamIds));
+            recentEvents.addAll(eventDao.retrieveRecentGrouped(userGroupedEventActions, startTime, stopTime, appIds, teamIds));
         }
         Collections.sort(recentEvents, eventComparator);
         return recentEvents;
