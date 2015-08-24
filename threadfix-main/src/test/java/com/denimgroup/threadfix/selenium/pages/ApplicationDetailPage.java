@@ -902,6 +902,25 @@ public class ApplicationDetailPage extends BasePage {
         return this;
     }
 
+    public ApplicationDetailPage clickManageAcceptancePolicy() {
+        waitForElement(By.id("manageAcceptanceCriteriaButton"));
+        driver.findElementById("manageAcceptanceCriteriaButton").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage addAcceptancePolicy(String policyName) {
+        new Select(driver.findElementById("acceptanceCriteriaSelect")).selectByVisibleText(policyName);
+        driver.findElementById("addButton").click();
+        return this;
+    }
+
+    public ApplicationDetailPage removeAcceptancePolicy(String policyName) {
+        //TODO: remove extra clicks when policies appear automatically
+        driver.findElementByCssSelector("#acceptcriteria" + policyName + ">span").click();
+        handleAlert();
+        return this;
+    }
+
     /*________________________________________ Get Methods ________________________________________*/
     public String checkWafName() {
         waitForElement(By.id("wafNameText"));
@@ -1492,6 +1511,13 @@ public class ApplicationDetailPage extends BasePage {
             return false;
         }
         return true;
+    }
+
+    public boolean isAccetpancePolicyInModal(String appName, String policyName) {
+        //TODO: Get rid of extra clicks when policies appear automatically
+        driver.findElementById("acceptcriteriaCaret" + appName).click();
+        driver.findElementById("acceptcriteriaCaret" + appName).click();
+        return isElementPresent("acceptcriteria" + policyName);
     }
 
     /*___________________Void Methods__________________*/

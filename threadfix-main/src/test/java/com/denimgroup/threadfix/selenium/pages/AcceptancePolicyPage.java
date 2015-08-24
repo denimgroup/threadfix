@@ -100,6 +100,7 @@ public class AcceptancePolicyPage extends BasePage {
     }
 
     public AcceptancePolicyPage createAcceptancePolicy(String policyName, String filterName) {
+        waitForElement(By.id("acceptcriteriaTable"));
         clickCreateAcceptancePolicy()
                 .setAcceptancePolicyName(policyName)
                 .setFilterForPolicy(filterName)
@@ -121,6 +122,7 @@ public class AcceptancePolicyPage extends BasePage {
     }
 
     public AcceptancePolicyPage expandAcceptancePolicy(String name) {
+        waitForElement(By.id("acceptcriteriaCaret" + name));
         driver.findElementById("acceptcriteriaCaret" + name).click();
         waitForElement(By.cssSelector("#acceptcriteriaInfoDiv" + name + "[class*='expanded']"));
         return new AcceptancePolicyPage(driver);

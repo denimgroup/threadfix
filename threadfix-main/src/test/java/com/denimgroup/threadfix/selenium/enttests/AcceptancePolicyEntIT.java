@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.enttests;
 
 import com.denimgroup.threadfix.EnterpriseTests;
 import com.denimgroup.threadfix.selenium.pages.AcceptancePolicyPage;
+import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.tests.BaseDataTest;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -122,5 +123,51 @@ public class AcceptancePolicyEntIT extends BaseDataTest {
         acceptancePolicyPage.removeAppFromPolicy(name, appName);
 
         assertFalse("Application was not removed.", acceptancePolicyPage.isAppPresent(name, appName));
+    }
+
+    @Test
+    public void testAddAcceptancePolicyToApp() {
+        initializeTeamAndApp();
+        String name = getName();
+        AcceptancePolicyPage acceptancePolicyPage = initialize(name);
+
+        ApplicationDetailPage applicationDetailPage = acceptancePolicyPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName)
+                .clickEditDeleteBtn()
+                .clickManageAcceptancePolicy()
+                .addAcceptancePolicy(name);
+
+        assertTrue("Acceptance Policy is not present in application modal.", applicationDetailPage.isAccetpancePolicyInModal(appName, name));
+
+        acceptancePolicyPage = applicationDetailPage.clickCloseModalButton()
+                .clickAcceptancePoliciesLink()
+                .expandAcceptancePolicy(name);
+
+        assertTrue("Application is not present on acceptance policy page.", acceptancePolicyPage.isAppPresent(name, appName));
+    }
+
+    @Test
+    public void testRemoveAcceptancePolicyFromApp() {
+        initializeTeamAndApp();
+        String name = getName();
+        AcceptancePolicyPage acceptancePolicyPage = initialize(name)
+                .expandAcceptancePolicy(name)
+                .addAppToAcceptancePolicy(name, appName);
+
+        ApplicationDetailPage applicationDetailPage = acceptancePolicyPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName)
+                .clickEditDeleteBtn()
+                .clickManageAcceptancePolicy()
+                .removeAcceptancePolicy(name);
+
+        assertFalse("Acceptance Policy is still present in application modal.", applicationDetailPage.isAccetpancePolicyInModal(appName, name));
+
+        acceptancePolicyPage = applicationDetailPage.clickCloseModalButton()
+                .clickAcceptancePoliciesLink()
+                .expandAcceptancePolicy(name);
+
+        assertFalse("Application is still present on acceptance policy page.", acceptancePolicyPage.isAppPresent(name, appName));
     }
 }
