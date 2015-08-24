@@ -41,8 +41,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.setFrom;
 
 @Service
 @Transactional(readOnly = false) // used to be true
@@ -79,9 +81,11 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
         DefaultConfiguration configuration;
 
         List<DefaultConfiguration> list = defaultConfigurationDao.retrieveAll();
-        if (list.size() == 0) {
+        Set<DefaultConfiguration> set = setFrom(list);
+
+        if (set.size() == 0) {
             configuration = DefaultConfiguration.getInitialConfig();
-        } else if (list.size() > 1) {
+        } else if (set.size() > 1) {
             DefaultConfiguration config = list.get(0);
             list.remove(0);
             for (DefaultConfiguration defaultConfig : list) {
