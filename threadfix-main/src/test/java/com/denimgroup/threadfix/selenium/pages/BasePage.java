@@ -571,7 +571,6 @@ public abstract class BasePage {
             WebDriverWait wait = new WebDriverWait(driver, 10);
             wait.until(ExpectedConditions.visibilityOfElementLocated(by));
         } catch (TimeoutException t) {
-            takeScreenShot();
             throw t;
         }
 	}

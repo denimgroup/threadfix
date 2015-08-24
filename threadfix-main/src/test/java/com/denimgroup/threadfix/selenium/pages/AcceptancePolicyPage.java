@@ -24,10 +24,7 @@
 
 package com.denimgroup.threadfix.selenium.pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
 
 public class AcceptancePolicyPage extends BasePage {
@@ -92,7 +89,6 @@ public class AcceptancePolicyPage extends BasePage {
 
     public AcceptancePolicyPage setFilterForPolicy(String name) {
         //TODO: Replace CSS lookup with ID when unique ID is added
-        driver.findElementByCssSelector(".modal-form-table #filterSelect").sendKeys(name);
         new Select(driver.findElementByCssSelector(".modal-form-table #filterSelect")).selectByVisibleText(name);
         return this;
     }
@@ -138,7 +134,7 @@ public class AcceptancePolicyPage extends BasePage {
     }
 
     public AcceptancePolicyPage removeAppFromPolicy(String policyName, String appName) {
-        driver.findElementByCssSelector("#" + policyName + "AppRow" + appName + " #deleteButton" + appName).click();
+        driver.findElementByCssSelector("#ac" + policyName + "AppRow" + appName + " #deleteButton" + appName).click();
         return new AcceptancePolicyPage(driver);
     }
 
@@ -162,9 +158,9 @@ public class AcceptancePolicyPage extends BasePage {
 
     public boolean isAppPresent(String policyName, String appName) {
         try {
-            waitForElement(By.cssSelector("#" + policyName + "AppRow" + appName));
+            waitForElement(By.cssSelector("#ac" + policyName + "AppRow" + appName));
             return true;
-        } catch (NoSuchElementException e) {
+        } catch (TimeoutException e) {
             return false;
         }
     }
