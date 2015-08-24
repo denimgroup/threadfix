@@ -60,11 +60,10 @@ public class DefaultConfigServiceImpl implements DefaultConfigService {
         DefaultConfiguration configuration;
 
 		List<DefaultConfiguration> list = defaultConfigurationDao.retrieveAll();
-        Set<DefaultConfiguration> set = setFrom(list);
 
-		if (set.size() == 0) {
+		if (list.size() == 0) {
             configuration = DefaultConfiguration.getInitialConfig();
-		} else if (set.size() > 1) {
+		} else if (list.size() > 1) {
 			DefaultConfiguration config = list.get(0);
 			list.remove(0);
 			for (DefaultConfiguration defaultConfig : list) {

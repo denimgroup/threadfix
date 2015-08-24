@@ -27,10 +27,18 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.DefaultConfigurationDao;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.listFrom;
+import static com.denimgroup.threadfix.CollectionUtils.setFrom;
 
 @Repository
 @Transactional
@@ -52,5 +60,11 @@ public class HibernateDefaultConfigurationDao
 	public void delete(DefaultConfiguration config) {
 		sessionFactory.getCurrentSession().delete(config);
 	}
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<DefaultConfiguration> retrieveAll() {
+        return getSession().createQuery("from DefaultConfiguration").list();
+    }
 	
 }
