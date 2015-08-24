@@ -67,7 +67,7 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
             .error(function(data, status) {
                 $scope.errorMessage = "Failed to get currently used base URL. HTTP status was " + status;
             });
-    }
+    };
 
     $scope.submit = function (valid) {
         var url = tfEncoder.encode('/configuration/settings');
@@ -128,14 +128,6 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
                     $scope.loading = false;
                     $scope.error = "Failure. HTTP status was " + status;
                 });
-        }
-    };
-
-    $scope.addToRightPanel = function(selectedExportFields){
-        for (var i = 0; i < selectedExportFields.length; i++) {
-            var selectedExportField = selectedExportFields[i];
-            $scope.object.csvExportFields.push(selectedExportField);
-            threadFixModalService.deleteElement($scope.exportFields, selectedExportField);
         }
     };
 
