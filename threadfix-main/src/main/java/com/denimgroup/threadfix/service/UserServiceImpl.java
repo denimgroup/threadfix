@@ -54,6 +54,8 @@ public class UserServiceImpl implements UserService {
     private RoleDao             roleDao             = null;
     @Autowired
     private AccessControlMapDao accessControlMapDao = null;
+	@Autowired
+	private APIKeyService apiKeyService;
 
     private ThreadFixPasswordEncoder encoder = new ThreadFixPasswordEncoder();
     private Authentication authentication;
@@ -124,6 +126,13 @@ public class UserServiceImpl implements UserService {
             if (user.getName().length() > User.NAME_LENGTH) {
                 user.setName(user.getName().substring(0, User.NAME_LENGTH - 1));
             }
+
+			if (user.getApiKeys() != null) {
+				for (APIKey key : user.getApiKeys()) {
+					key.setActive(false);
+					apiKeyService.storeAPIKey(key);
+				}
+			}
 
             user.setActive(false);
             userDao.saveOrUpdate(user);

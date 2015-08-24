@@ -14,7 +14,7 @@ module.controller('ApiKeysController', function($scope, $http, $modal, $log, tfE
             success(function(data, status, headers, config) {
 
                 if (data.success) {
-                    $scope.keys = data.object;
+                    $scope.keys = data.object.filter(function(object) { return object.active && (!object.user || object.user.active); });
 
                     if ($scope.keys.length === 0) {
                         $scope.keys = undefined;
