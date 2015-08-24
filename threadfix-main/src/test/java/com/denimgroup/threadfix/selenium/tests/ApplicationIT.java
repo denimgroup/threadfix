@@ -740,9 +740,9 @@ public class ApplicationIT extends BaseDataTest {
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-        assertTrue("There should be one critical vulnerability.", applicationDetailPage.isVulnerabilityCountCorrect("Critical", "1"));
-        assertTrue("There should be seven high vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("High", "7"));
-        assertTrue("There should be 24 low vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Low", "24"));
+        assertTrue("There should be one critical vulnerability.", applicationDetailPage.isVulnerabilityCountCorrect("High", "1"));
+        assertTrue("There should be seven high vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Medium", "7"));
+        assertTrue("There should be 24 low vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Info", "24"));
 
         initializeTeamAndApp();
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Fortify OrAndOr"));
@@ -751,9 +751,9 @@ public class ApplicationIT extends BaseDataTest {
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-        assertTrue("There should be one critical vulnerability.", applicationDetailPage.isVulnerabilityCountCorrect("Critical", "1"));
-        assertTrue("There should be seven medium vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Medium", "7"));
-        assertTrue("There should be 24 low vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Low", "24"));
+        assertTrue("There should be one critical vulnerability.", applicationDetailPage.isVulnerabilityCountCorrect("High", "1"));
+        assertTrue("There should be seven medium vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Low", "7"));
+        assertTrue("There should be 24 low vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Info", "24"));
 
     }
 
