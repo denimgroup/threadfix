@@ -44,7 +44,7 @@ public enum CSVExportField {
     OPEN_DATE("Open Date"),
     DESCRIPTION("Description"),
     DEFECT_ID("Defect ID"),
-    APP_NAME("Application Name"),
+    APPLICATION_NAME("Application Name"),
     TEAM_NAME("Team Name"),
     PAYLOAD("Payload"),
     ATTACK_SURFACE_PATH("Attack Surface Path");
