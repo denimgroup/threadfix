@@ -50,7 +50,7 @@ public class SlowAnalyticsSnapshotIT extends BaseDataTest {
         for(int i = 0; i < 5; i++) {
             analyticsPage.clickSnapshotTab(true);
 
-            analyticsPage.waitForElement(driver.findElement(By.id("pointInTime" + levels[i] + "Arc")));
+            analyticsPage.waitForElement(By.id("pointInTime" + levels[i] + "Arc"));
 
             analyticsPage.clickSVGElement("pointInTime" + levels[i] + "Arc")
                     .clickModalSubmit();

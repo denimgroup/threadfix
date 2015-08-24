@@ -56,7 +56,7 @@ public class WafRulesPage extends BasePage {
     public WafRulesPage clickGenerateWafRulesButton() {
         sleep(2000);
         driver.findElementById("generateWafRulesButton").click();
-        waitForElement(driver.findElementByLinkText("Download Waf Rules"));
+        waitForElement(By.linkText("Download Waf Rules"));
         return new WafRulesPage(driver);
     }
 
@@ -75,14 +75,14 @@ public class WafRulesPage extends BasePage {
     }
 
     public WafRulesPage setLogFile(String file) {
-        waitForElement(driver.findElementById("fileInput"));
+        waitForElement(By.id("fileInput"));
         driver.findElementById("fileInput").sendKeys(file);
         return new WafRulesPage(driver);
     }
 
     public WafLogPage clickUploadLogFile() {
         driver.findElementById("submitButton").click();
-        waitForElement(driver.findElementByLinkText("Continue"));
+        waitForElement(By.linkText("Continue"));
         return new WafLogPage(driver);
     }
 

@@ -30,12 +30,9 @@ import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
-
-import java.util.Date;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -88,7 +85,7 @@ public class DashboardIT extends BaseDataTest {
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Mavituna Security Netsparker"));
 
         DashboardPage dashboardPage = loginPage.defaultLogin();
-        dashboardPage.waitForElement(driver.findElement(By.id(teamName + appName + "CriticalBar")));
+        dashboardPage.waitForElement(By.id(teamName + appName + "CriticalBar"));
 
         dashboardPage.hover(teamName + appName + "InfoBar");
         assertTrue("The number of Info Vulnerabilities in report tip was not correct.",
@@ -119,7 +116,7 @@ public class DashboardIT extends BaseDataTest {
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Mavituna Security Netsparker"));
 
         DashboardPage dashboardPage = loginPage.defaultLogin();
-        dashboardPage.waitForElement(driver.findElement(By.id(teamName + appName + "CriticalBar")));
+        dashboardPage.waitForElement(By.id(teamName + appName + "CriticalBar"));
 
         dashboardPage.clickSVGElement(teamName + appName + "InfoBar");
 
@@ -136,7 +133,7 @@ public class DashboardIT extends BaseDataTest {
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Mavituna Security Netsparker"));
 
         DashboardPage dashboardPage = loginPage.defaultLogin();
-        dashboardPage.waitForElement(driver.findElement(By.id(teamName + appName + "CriticalBar")));
+        dashboardPage.waitForElement(By.id(teamName + appName + "CriticalBar"));
 
         dashboardPage.clickSVGElement(teamName + appName + "InfoBar");
         AnalyticsPage analyticsPage = dashboardPage.clickDetails();

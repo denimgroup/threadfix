@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.selenium.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -39,7 +40,7 @@ public class GroupIndexPage extends BasePage {
 
     public GroupIndexPage clickCreateGroup() {
         driver.findElementById("newGroupModalLink").click();
-        waitForElement(driver.findElementById("submit"));
+        waitForElement(By.id("submit"));
         return new GroupIndexPage(driver);
     }
 
@@ -77,7 +78,7 @@ public class GroupIndexPage extends BasePage {
     public GroupIndexPage clickEditLink(String groupName) {
         refreshPage();
         driver.findElementById("group" + groupName).click();
-        waitForElement(driver.findElementById("submit"));
+        waitForElement(By.id("submit"));
         return new GroupIndexPage(driver);
     }
 
@@ -100,7 +101,7 @@ public class GroupIndexPage extends BasePage {
 
     public GroupIndexPage clickAddTeamRole() {
         driver.findElementByCssSelector("div#config[ng-show=\'currentGroup\'] a#addPermissionButton").click();
-        waitForElement(driver.findElementById("submit"));
+        waitForElement(By.id("submit"));
         return new GroupIndexPage(driver);
     }
 
@@ -117,7 +118,7 @@ public class GroupIndexPage extends BasePage {
 
     public GroupIndexPage clickEditTeamRole(String teamName, String roleName) {
         driver.findElementById("editAppMap" + teamName + "all" + roleName).click();
-        waitForElement(driver.findElementById("submit"));
+        waitForElement(By.id("submit"));
         return new GroupIndexPage(driver);
     }
 
@@ -129,7 +130,7 @@ public class GroupIndexPage extends BasePage {
 
     public GroupIndexPage clickAddApplicationRole() {
         driver.findElementByCssSelector("div#config[ng-show=\'currentGroup\'] a#addApplicationRoleButton").click();
-        waitForElement(driver.findElementById("submit"));
+        waitForElement(By.id("submit"));
         return new GroupIndexPage(driver);
     }
 
@@ -140,7 +141,7 @@ public class GroupIndexPage extends BasePage {
 
     public GroupIndexPage clickEditApplicationRole(String teamName, String appName, String roleName) {
         driver.findElementById("editAppMap" + teamName + appName + roleName).click();
-        waitForElement(driver.findElementById("submit"));
+        waitForElement(By.id("submit"));
         return new GroupIndexPage(driver);
     }
 

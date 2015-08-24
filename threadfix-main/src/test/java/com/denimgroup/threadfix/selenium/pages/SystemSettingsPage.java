@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.selenium.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 
@@ -120,7 +121,7 @@ public class SystemSettingsPage extends BasePage {
     /*------------------------------ Boolean Methods ------------------------------*/
 
     public boolean isSaveSuccessful(){
-        waitForElement(driver.findElementByCssSelector(".alert-success:not(.ng-hide"));
+        waitForElement(By.cssSelector(".alert-success:not(.ng-hide"));
         return driver.findElementByClassName("alert-success").getText().trim().contains("Configuration was saved successfully.");
     }
 }

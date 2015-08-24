@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.selenium.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 
@@ -35,7 +36,7 @@ public class EmailListPage extends BasePage {
 
     public EmailListPage clickCreateEmailList() {
         driver.findElementById("createEmailListModalButton").click();
-        waitForElement(driver.findElementById("submit"));
+        waitForElement(By.id("submit"));
         return new EmailListPage(driver);
     }
 
@@ -52,7 +53,7 @@ public class EmailListPage extends BasePage {
 
     public EmailListPage clickEditEmailList(String listName) {
         driver.findElementById("editEmailListModalButton" + listName).click();
-        waitForElement(driver.findElementById("submit"));
+        waitForElement(By.id("submit"));
         return new EmailListPage(driver);
     }
 

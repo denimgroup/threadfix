@@ -29,7 +29,6 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RolesIndexPage extends BasePage {
@@ -54,7 +53,7 @@ public class RolesIndexPage extends BasePage {
 	
 	public RolesIndexPage clickCreateRole(){
 		driver.findElementById("newRoleModalLink").click();
-		waitForElement(driver.findElementById("submit"));
+		waitForElement(By.id("submit"));
 		return new RolesIndexPage(driver);
 	}
 
@@ -82,7 +81,7 @@ public class RolesIndexPage extends BasePage {
 
 	public RolesIndexPage clickEditLink(String roleName) {
         driver.findElementById("role" + roleName).click();
-		waitForElement(driver.findElementById("submit"));
+		waitForElement(By.id("submit"));
         return new RolesIndexPage(driver);
 	}
 
@@ -133,7 +132,7 @@ public class RolesIndexPage extends BasePage {
     }
 	
 	public RolesIndexPage clickCloseModal(){
-        waitForElement(driver.findElementByClassName("modal-footer").findElement(By.className("btn")));
+        waitForElement(By.cssSelector(".modal-footer .btn"));
 		driver.findElementByClassName("modal-footer").findElement(By.className("btn")).click();
 		return new RolesIndexPage(driver);
 	}

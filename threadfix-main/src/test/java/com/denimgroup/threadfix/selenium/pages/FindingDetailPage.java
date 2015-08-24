@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 public class FindingDetailPage extends BasePage {
@@ -34,21 +35,21 @@ public class FindingDetailPage extends BasePage {
     public VulnerabilityDetailPage clickViewVulnerability() {
         driver.findElementByLinkText("View Vulnerability").click();
         sleep(3000);
-        waitForElement(driver.findElementById("uploadDocVulnModalLink"));
+        waitForElement(By.id("uploadDocVulnModalLink"));
         return new VulnerabilityDetailPage(driver);
     }
 
     public VulnerabilityDetailPage clickViewVulnerabilityLimitedPermission() {
         driver.findElementByLinkText("View Vulnerability").click();
         sleep(3000);
-        waitForElement(driver.findElementById("cweLink"));
+        waitForElement(By.id("cweLink"));
         return new VulnerabilityDetailPage(driver);
     }
 
     public MergeFindingPage clickMergeWithOtherFindings() {
         driver.findElementByLinkText("Merge with Other Findings").click();
         sleep(3000);
-        waitForElement(driver.findElementByClassName("dataTable"));
+        waitForElement(By.className("dataTable"));
         return new MergeFindingPage(driver);
     }
     public String getDetail(String detailId) {

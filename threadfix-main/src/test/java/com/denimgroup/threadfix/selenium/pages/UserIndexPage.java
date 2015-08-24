@@ -59,7 +59,7 @@ public class UserIndexPage extends BasePage {
     //TODO: Delete this method after updating user tests.
 	public UserPermissionsPage clickEditPermissions(String name){
 		driver.findElementById("editPermissions" + name).click();
-		//waitForElement(driver.findElementById("addPermissionButton"));
+		//waitForElement(By.id("addPermissionButton"));
         sleep(1000);
         return new UserPermissionsPage(driver);
 	}
@@ -67,7 +67,7 @@ public class UserIndexPage extends BasePage {
 	public UserIndexPage clickCreateUserButton() {
         refreshPage();
 		driver.findElementById("newUserModalLink").click();
-		waitForElement(driver.findElementById("submit"));
+		waitForElement(By.id("submit"));
 		return new UserIndexPage(driver);
 	}
 	
@@ -207,7 +207,7 @@ public class UserIndexPage extends BasePage {
     }
 	
 	public UserIndexPage clickUpdateUserBtnInvalid(String name){
-		waitForElement(driver.findElementById("submit"));
+		waitForElement(By.id("submit"));
 		driver.findElementById("submit").click();
 		return new UserIndexPage(driver);
 	}
@@ -429,7 +429,7 @@ public class UserIndexPage extends BasePage {
         if (userName != null) {
             clickUserLink(userName);
         }
-        waitForElement(driver.findElementById("roleSelect"));
+        waitForElement(By.id("roleSelect"));
 		return new Select(driver.findElementById("roleSelect")).getFirstSelectedOption().getText().contains(role);
 	}
 

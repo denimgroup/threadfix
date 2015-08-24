@@ -44,19 +44,19 @@ public class TeamDetailPage extends BasePage {
     }
 
     public String successAlert(){
-        waitForElement(driver.findElementByClassName("alert-success"));
+        waitForElement(By.className("alert-success"));
         return driver.findElementByClassName("alert-success").getText().trim();
     }
 
     public TeamDetailPage clickActionButton(){
         driver.findElementById("actionButton").click();
-        waitForElement(driver.findElementById("teamModalButton"));
+        waitForElement(By.id("teamModalButton"));
         return new TeamDetailPage(driver);
     }
 
     public  TeamDetailPage clickActionButtonWithoutEditButton() {
         driver.findElementById("actionButton").click();
-        waitForElement(driver.findElementById("editfiltersButton1"));
+        waitForElement(By.id("editfiltersButton1"));
         return new TeamDetailPage(driver);
     }
 
@@ -68,13 +68,13 @@ public class TeamDetailPage extends BasePage {
     public TeamDetailPage clickEditOrganizationLink() {
         clickActionButton();
         driver.findElementById("teamModalButton").click();
-        waitForElement(driver.findElementById("deleteTeamButton"));
+        waitForElement(By.id("deleteTeamButton"));
         return new TeamDetailPage(driver);
     }
 
     public TeamAppCustomizeVulnerabilityTypesPage clickEditTeamFilters() {
         driver.findElementById("editfiltersButton1").click();
-        waitForElement(driver.findElementById("createNewKeyModalButton"));
+        waitForElement(By.id("createNewKeyModalButton"));
         return new TeamAppCustomizeVulnerabilityTypesPage(driver);
     }
 
@@ -88,7 +88,7 @@ public class TeamDetailPage extends BasePage {
 
     public TeamDetailPage clickAddApplicationButton() {
         driver.findElementById("addApplicationModalButton").click();
-        waitForElement(driver.findElementById("applicationNameInput"));
+        waitForElement(By.id("applicationNameInput"));
         return new TeamDetailPage(driver);
     }
 
@@ -124,7 +124,7 @@ public class TeamDetailPage extends BasePage {
 
     public TeamDetailPage clickVulnerabilitiesTab() {
         driver.findElementByPartialLinkText("Vulnerabilities").click();
-        waitForElement(driver.findElementByClassName("filter-controls"));
+        waitForElement(By.className("filter-controls"));
         return new TeamDetailPage(driver);
     }
 
@@ -182,7 +182,7 @@ public class TeamDetailPage extends BasePage {
 
     public TeamDetailPage clickLoadFilters() {
         driver.findElementByLinkText("Load Filters").click();
-        waitForElement(driver.findElementById("filterSelect"));
+        waitForElement(By.id("filterSelect"));
         return new TeamDetailPage(driver);
     }
 
@@ -197,7 +197,7 @@ public class TeamDetailPage extends BasePage {
         driver.findElementById("filterNameInput").clear();
         driver.findElementById("filterNameInput").sendKeys(newFilter);
         driver.findElementById("saveFilterButton").click();
-        waitForElement(driver.findElementById("saveFilterSuccessMessage"));
+        waitForElement(By.id("saveFilterSuccessMessage"));
         return new TeamDetailPage(driver);
     }
 

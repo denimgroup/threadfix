@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -47,7 +48,7 @@ public class ApiKeysIndexPage extends BasePage {
 
 	public ApiKeysIndexPage clickNewLink() {
 		createNewKeyLink.click();
-		waitForElement(driver.findElementById("submit"));
+		waitForElement(By.id("submit"));
 		return new ApiKeysIndexPage(driver);
 	}
 

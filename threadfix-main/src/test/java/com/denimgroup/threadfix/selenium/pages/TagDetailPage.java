@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 public class TagDetailPage extends BasePage{
@@ -35,13 +36,13 @@ public class TagDetailPage extends BasePage{
 
     public ApplicationDetailPage clickAppName(String appName) {
         driver.findElementByLinkText(appName).click();
-        waitForElement(driver.findElementById("nameText"));
+        waitForElement(By.id("nameText"));
         return new ApplicationDetailPage(driver);
     }
 
     public TeamDetailPage clickTeamName(String teamName) {
         driver.findElementByLinkText(teamName).click();
-        waitForElement(driver.findElementById("name"));
+        waitForElement(By.id("name"));
         return new TeamDetailPage(driver);
     }
 

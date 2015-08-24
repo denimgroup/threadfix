@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -40,9 +41,9 @@ public class DefectTrackerIndexPage extends BasePage {
     /*----------------------------------- Action Methods -----------------------------------*/
 
 	public DefectTrackerIndexPage clickEditLink(String defectTrackerName) {
-		waitForElement(driver.findElementById("editDefectTrackerButton" + defectTrackerName));
+		waitForElement(By.id("editDefectTrackerButton" + defectTrackerName));
         driver.findElementById("editDefectTrackerButton" + defectTrackerName).click();
-        waitForElement(driver.findElementById("myModalLabel"));
+        waitForElement(By.id("myModalLabel"));
 		return new DefectTrackerIndexPage(driver);
 	}
 	
@@ -72,7 +73,7 @@ public class DefectTrackerIndexPage extends BasePage {
 
 	public DefectTrackerIndexPage clickAddDefectTrackerButton() {
 		driver.findElementById("addNewDTButton").click();
-		waitForElement(driver.findElementById("submit"));
+		waitForElement(By.id("submit"));
 		return new DefectTrackerIndexPage(driver);
 	}
 	
@@ -92,14 +93,14 @@ public class DefectTrackerIndexPage extends BasePage {
 
     public DefectTrackerIndexPage clickSaveDefectTrackerErrorExpected() {
         driver.findElementById("submit").click();
-        waitForElement(driver.findElementById("nameServerError"));
+        waitForElement(By.id("nameServerError"));
         return new DefectTrackerIndexPage(driver);
     }
 
     public DefectTrackerSchedulePage clickScheduleUpdateTab() {
             String linkText = driver.findElementById("scheduledUpdateTab").getAttribute("heading");
             driver.findElementByLinkText(linkText).click();
-            waitForElement(driver.findElementById("addUpdateQueueLink"));
+            waitForElement(By.id("addUpdateQueueLink"));
             return new DefectTrackerSchedulePage(driver);
     }
 
@@ -123,7 +124,7 @@ public class DefectTrackerIndexPage extends BasePage {
     /*----------------------------------- Boolean Methods -----------------------------------*/
 
 	public boolean isTextPresentInDefectTrackerTableBody(String newDefectTrackerName) {
-        waitForElement(driver.findElementById("addNewDTButton"));
+        waitForElement(By.id("addNewDTButton"));
 		return driver.findElementById("defectTrackerTableBody").getText().contains(newDefectTrackerName);
 	}
 
@@ -147,7 +148,7 @@ public class DefectTrackerIndexPage extends BasePage {
 
     public boolean isErrorPresent(String error) {
         try {
-            waitForElement(driver.findElementByCssSelector("#" + error + ":not(.ng-hide)"));
+            waitForElement(By.cssSelector("#" + error + ":not(.ng-hide)"));
         } catch (NoSuchElementException e) {
             return false;
         }

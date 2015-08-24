@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 
@@ -41,7 +42,7 @@ public class WafIndexPage extends BasePage {
 
 	public WafIndexPage clickDeleteWaf(String wafName){
 		clickEditWaf(wafName);
-        waitForElement(driver.findElementById("deleteWafButton"));
+        waitForElement(By.id("deleteWafButton"));
 		driver.findElementById("deleteWafButton").click();
 		handleAlert();
 		sleep(1000);
@@ -49,16 +50,16 @@ public class WafIndexPage extends BasePage {
 	}
 
 	public WafIndexPage clickAddWafLink() {
-        waitForElement(driver.findElementById("createWafModalButton"));
+        waitForElement(By.id("createWafModalButton"));
 		driver.findElementById("createWafModalButton").click();
-		waitForElement(driver.findElementById("submit"));
+		waitForElement(By.id("submit"));
 		return new WafIndexPage(driver);
 	}
 
     public WafIndexPage clickGenerateWafRulesButton() {
         sleep(2000);
         driver.findElementById("generateWafRulesButton").click();
-        waitForElement(driver.findElementByLinkText("Download Waf Rules"));
+        waitForElement(By.linkText("Download Waf Rules"));
         return new WafIndexPage(driver);
     }
 
@@ -89,18 +90,18 @@ public class WafIndexPage extends BasePage {
 
 	public WafIndexPage clickEditWaf(String wafName){
 		driver.findElementById("editWafModalButton"+wafName).click();
-		waitForElement(driver.findElementById("myModalLabel"));
+		waitForElement(By.id("myModalLabel"));
 		return new WafIndexPage(driver);
 	}
 
     public WafIndexPage clickSaveEditWaf(String editedWaf){
         driver.findElementById("submit").click();
-        waitForElement(driver.findElementByCssSelector("td[id*='"+ editedWaf +"']"));
+        waitForElement(By.cssSelector("td[id*='" + editedWaf + "']"));
         return new WafIndexPage(driver);
     }
 	
 	public WafIndexPage editWaf(String wafName, String newName, String type){
-        waitForElement(driver.findElementById("myModalLabel"));
+        waitForElement(By.id("myModalLabel"));
 		driver.findElementById("wafCreateNameInput").clear();
 		driver.findElementById("wafCreateNameInput").sendKeys(newName);
         new Select(driver.findElementById("typeSelect")).selectByVisibleText(type);

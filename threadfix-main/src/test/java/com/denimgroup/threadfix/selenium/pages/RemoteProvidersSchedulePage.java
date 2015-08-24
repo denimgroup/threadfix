@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 
@@ -36,7 +37,7 @@ public class RemoteProvidersSchedulePage extends BasePage{
 
     public RemoteProvidersSchedulePage clickScheduleNewImportButton() {
         driver.findElementById("addImportQueueLink").click();
-        waitForElement(driver.findElementById("submit"));
+        waitForElement(By.id("submit"));
         return new RemoteProvidersSchedulePage(driver);
     }
 

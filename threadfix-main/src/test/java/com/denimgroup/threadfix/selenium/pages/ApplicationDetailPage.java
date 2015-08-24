@@ -56,7 +56,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickTestConnection() {
-        waitForElement(driver.findElementById("getProductNames"));
+        waitForElement(By.id("getProductNames"));
         driver.findElementById("getProductNames").click();
         sleep(5000);
         return new ApplicationDetailPage(driver);
@@ -70,7 +70,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage selectDefectTracker(String defectTracker) {
-        waitForElement(driver.findElementById("defectTrackerId"));
+        waitForElement(By.id("defectTrackerId"));
         new Select(driver.findElementById("defectTrackerId"))
                 .selectByVisibleText(defectTracker);
         return new ApplicationDetailPage(driver);
@@ -112,7 +112,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickActionButton() {
-        waitForElement(driver.findElementById("actionButton1"));
+        waitForElement(By.id("actionButton1"));
         sleep(3000);
         driver.findElementById("actionButton1").click();
         return new ApplicationDetailPage(driver);
@@ -121,7 +121,7 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage clickViewPermUsers() {
         clickActionButton();
         driver.findElementById("userListModelButton").click();
-        waitForElement(driver.findElementById("myModalLabel"));
+        waitForElement(By.id("myModalLabel"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -133,15 +133,15 @@ public class ApplicationDetailPage extends BasePage {
         sleep(2000);
         clickActionButton();
         sleep(2000);
-        waitForElement(driver.findElementById("editApplicationModalButton"));
+        waitForElement(By.id("editApplicationModalButton"));
         driver.findElementById("editApplicationModalButton").click();
-        waitForElement(driver.findElementById("deleteLink"));
+        waitForElement(By.id("deleteLink"));
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage expandSourceCodeFields() {
         driver.findElementByLinkText("Source Code Information").click();
-        waitForElement(driver.findElementById("repositoryUrl"));
+        waitForElement(By.id("repositoryUrl"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -190,20 +190,20 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickVulnerabilitiesTab(int numberOfVulnerabilities) {
         driver.findElementByLinkText(numberOfVulnerabilities + " Vulnerabilities").click();
-        waitForElement(driver.findElementById("actionItems"));
+        waitForElement(By.id("actionItems"));
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage clickScansTab() {
         sleep(1000);
         driver.findElementByCssSelector("li#scanTab a").click();
-        waitForElement(driver.findElementByLinkText("Delete Scan"));
+        waitForElement(By.linkText("Delete Scan"));
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage clickUnmappedFindings(String unmappedFindingNumber) {
         driver.findElementByLinkText(unmappedFindingNumber).click();
-        waitForElement(driver.findElementById("unmappedVulnType"));
+        waitForElement(By.id("unmappedVulnType"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -221,7 +221,7 @@ public class ApplicationDetailPage extends BasePage {
             driver.findElementByLinkText(Integer.toString(numberOfScans) + " Scans").click();
         }
 
-        waitForElement(driver.findElementByLinkText("Delete Scan"));
+        waitForElement(By.linkText("Delete Scan"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -232,7 +232,7 @@ public class ApplicationDetailPage extends BasePage {
         } else {
             driver.findElementByLinkText(scheduledScans + " Scheduled Scans").click();
         }
-        waitForElement(driver.findElementByLinkText("Schedule New Scan"));
+        waitForElement(By.linkText("Schedule New Scan"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -265,7 +265,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickAddWaf() {
         driver.findElementById("addWafButton").click();
-        waitForElement(driver.findElementById("wafSelect"));
+        waitForElement(By.id("wafSelect"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -278,7 +278,7 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage clickCreateWafButton() {
         sleep(1000);
         driver.findElementById("submit").click();
-        // waitForElement(driver.findElementById("addWafButton"));
+        // waitForElement(By.id("addWafButton"));
         sleep(2000);
         return new ApplicationDetailPage(driver);
     }
@@ -333,7 +333,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickAttachWaf() {
         driver.findElementById("submit").click();
-        waitForElement(driver.findElementById("addWafButton"));
+        waitForElement(By.id("addWafButton"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -443,13 +443,13 @@ public class ApplicationDetailPage extends BasePage {
             driver.findElementByLinkText(count + " Scan Agent Tasks").click();
         }
         sleep(1000);
-        waitForElement(driver.findElementById("scanQueueTable"));
+        waitForElement(By.id("scanQueueTable"));
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage clickAddNewScanTask() {
         driver.findElementById("addScanQueueLink").click();
-        waitForElement(driver.findElementById("submit"));
+        waitForElement(By.id("submit"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -466,13 +466,13 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickDocumentTab(int count) {
         driver.findElementByLinkText( count + " Files").click();
-        waitForElement(driver.findElementByLinkText("Add File"));
+        waitForElement(By.linkText("Add File"));
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage clickUploadDocLink() {
         driver.findElementByLinkText("Add File").click();
-        waitForElement(driver.findElementById("docFileInput"));
+        waitForElement(By.id("docFileInput"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -505,7 +505,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage expandVulnerabilityByType(String type) {
-        waitForElement(driver.findElementById("expandVuln" + type));
+        waitForElement(By.id("expandVuln" + type));
         driver.findElementById("expandVuln" + type).click();
         return new ApplicationDetailPage(driver);
     }
@@ -529,7 +529,7 @@ public class ApplicationDetailPage extends BasePage {
     public AnalyticsPage clickViewMoreTopVulnerabilities(){
         driver.findElementById("rightViewMore").click();
         sleep(2500);
-        waitForElement(driver.findElementById("snapshotFilterDiv"));
+        waitForElement(By.id("snapshotFilterDiv"));
         return new AnalyticsPage(driver);
     }
 
@@ -564,19 +564,19 @@ public class ApplicationDetailPage extends BasePage {
 
     public TagDetailPage clickTagName(String tagName) {
         driver.findElementByLinkText(tagName).click();
-        waitForElement(driver.findElementByLinkText("Back to Tags Page"));
+        waitForElement(By.linkText("Back to Tags Page"));
         return new TagDetailPage(driver);
     }
 
     public TeamAppCustomizeVulnerabilityTypesPage clickEditVulnerabilityFilters() {
-        waitForElement(driver.findElementById("editVulnerabilityFiltersButton"));
+        waitForElement(By.id("editVulnerabilityFiltersButton"));
         driver.findElementById("editVulnerabilityFiltersButton").click();
         return new TeamAppCustomizeVulnerabilityTypesPage(driver);
     }
 
     public ApplicationDetailPage clickManualFindingButton() {
         driver.findElementById("addManualFindingModalLink").click();
-        waitForElement(driver.findElementById("txtSearch"));
+        waitForElement(By.id("txtSearch"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -589,12 +589,12 @@ public class ApplicationDetailPage extends BasePage {
         if (!tryClick(By.linkText("View Scan"))) {
             throw new StaleElementReferenceException("View Scan button could not be clicked.");
         }
-        waitForElement(driver.findElementById("statisticButton"));
+        waitForElement(By.id("statisticButton"));
         return new ScanDetailPage(driver);
     }
 
     public ApplicationDetailPage clickSourceInfo(){
-        waitForElement(driver.findElementByLinkText("Source Code Information"));
+        waitForElement(By.linkText("Source Code Information"));
         driver.findElementByLinkText("Source Code Information").click();
         return new ApplicationDetailPage(driver);
     }
@@ -618,20 +618,20 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickLoadFilters() {
         driver.findElementByLinkText("Load Filters").click();
-        waitForElement(driver.findElementById("filterSelect"));
+        waitForElement(By.id("filterSelect"));
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage clickFiltersTab() {
         driver.findElementByLinkText("Filters").click();
-        waitForElement(driver.findElementById("clearFiltersButton"));
+        waitForElement(By.id("clearFiltersButton"));
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage expandSavedFilters() {
         waitForResultsToLoad();
         driver.findElementById("showSaveFilter").click();
-        waitForElement(driver.findElementById("filterNameInput"));
+        waitForElement(By.id("filterNameInput"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -639,7 +639,7 @@ public class ApplicationDetailPage extends BasePage {
         driver.findElementById("filterNameInput").clear();
         driver.findElementById("filterNameInput").sendKeys(newFilter);
         driver.findElementById("saveFilterButton").click();
-        waitForElement(driver.findElementById("saveFilterSuccessMessage"));
+        waitForElement(By.id("saveFilterSuccessMessage"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -647,7 +647,7 @@ public class ApplicationDetailPage extends BasePage {
         driver.findElementById("filterNameInput").clear();
         driver.findElementById("filterNameInput").sendKeys(newFilter);
         driver.findElementById("saveFilterButton").click();
-        waitForElement(driver.findElementById("saveFilterErrorMessage"));
+        waitForElement(By.id("saveFilterErrorMessage"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -667,7 +667,7 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage expandScannerAndMerged() {
         waitForResultsToLoad();
         driver.findElementById("expandScannerFilters").click();
-        waitForElement(driver.findElementById("set2MergedFindings"));
+        waitForElement(By.id("set2MergedFindings"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -706,7 +706,7 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage expandFieldControls() {
         waitForResultsToLoad();
         driver.findElementById("showFieldControls").click();
-        waitForElement(driver.findElementById("pathInput"));
+        waitForElement(By.id("pathInput"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -747,7 +747,7 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage expandAging() {
         waitForResultsToLoad();
         driver.findElementById("showDateControls").click();
-        waitForElement(driver.findElementById("lessThan"));
+        waitForElement(By.id("lessThan"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -790,7 +790,7 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage expandDateRange() {
         waitForResultsToLoad();
         driver.findElementById("showDateRange").click();
-        waitForElement(driver.findElementById("startDateInput"));
+        waitForElement(By.id("startDateInput"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -816,7 +816,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage uploadScan(String file) {
         driver.findElementById("scanFileInput").sendKeys(file);
-        waitForElement(driver.findElementById("toggleVulnTree"));
+        waitForElement(By.id("toggleVulnTree"));
         sleep(1000);
         return new ApplicationDetailPage(driver);
     }
@@ -833,7 +833,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickCreateDefectTracker() {
         driver.findElementById("submit").click();
-        waitForElement(driver.findElementById("username"));
+        waitForElement(By.id("username"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -856,7 +856,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickGetProductNames() {
         driver.findElementById("getProductNames").click();
-        waitForElement(driver.findElementById("productNameSelect"));
+        waitForElement(By.id("productNameSelect"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -870,7 +870,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public TagDetailPage clickTagHeader(String number) {
         driver.findElementById("appTag" + number).click();
-        waitForElement(driver.findElementByLinkText("Back to Tags Page"));
+        waitForElement(By.linkText("Back to Tags Page"));
         return new TagDetailPage(driver);
     }
 
@@ -887,7 +887,7 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage uploadFile(String file) {
         sleep(2000);
         driver.findElementById("docFileInput").sendKeys(file);
-        waitForElement(driver.findElementByXPath("//a[text()='Download']"));
+        waitForElement(By.xpath("//a[text()='Download']"));
         sleep(1000);
         return new ApplicationDetailPage(driver);
     }
@@ -904,12 +904,12 @@ public class ApplicationDetailPage extends BasePage {
 
     /*________________________________________ Get Methods ________________________________________*/
     public String checkWafName() {
-        waitForElement(driver.findElementById("wafNameText"));
+        waitForElement(By.id("wafNameText"));
         return driver.findElementById("wafNameText").getText();
     }
 
     public String getWafText() {
-        waitForElement(driver.findElementById("wafName"));
+        waitForElement(By.id("wafName"));
         return driver.findElementById("wafName").getText();
     }
 
@@ -1313,7 +1313,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public boolean isVulnerabilityCountCorrect(String level, String expected) {
-        waitForElement(driver.findElementById("totalBadge" + level));
+        waitForElement(By.id("totalBadge" + level));
         return expected.equals(driver.findElementById("totalBadge" + level).getText().trim());
     }
 
@@ -1502,7 +1502,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public void waitForCWEBar(String teamName, String appName, String vulnerability) {
-        waitForElement(driver.findElementById(teamName + appName + vulnerability + "Bar"));
+        waitForElement(By.id(teamName + appName + vulnerability + "Bar"));
     }
 
     public void selectGitRepositoryType() {

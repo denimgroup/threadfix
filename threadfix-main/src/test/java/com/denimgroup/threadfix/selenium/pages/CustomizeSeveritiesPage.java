@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.selenium.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -80,7 +81,7 @@ public class CustomizeSeveritiesPage extends BasePage {
 
     public CustomizeSeveritiesPage saveFilterChanges() {
         driver.findElementById("submitSeverityFilterForm").click();
-        waitForElement(driver.findElementById("severitySuccessMessage"));
+        waitForElement(By.id("severitySuccessMessage"));
         return new CustomizeSeveritiesPage(driver);
     }
 

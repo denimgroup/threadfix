@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.selenium.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -37,19 +38,19 @@ public class AcceptancePolicyPage extends BasePage {
 
     public AcceptancePolicyPage clickAcceptancePolicyTab() {
         driver.findElementByLinkText("Acceptance Criteria").click();
-        waitForElement(driver.findElementById("createNewModalButton"));
+        waitForElement(By.id("createNewModalButton"));
         return new AcceptancePolicyPage(driver);
     }
 
     public AcceptancePolicyPage clickFiltersTab() {
         driver.findElementByLinkText("Filters").click();
-        waitForElement(driver.findElementById("saveFilterButton"));
+        waitForElement(By.id("saveFilterButton"));
         return new AcceptancePolicyPage(driver);
     }
 
     public AcceptancePolicyPage expandFieldControls() {
         driver.findElementById("showFieldControls").click();
-        waitForElement(driver.findElementById("showInfo"));
+        waitForElement(By.id("showInfo"));
         return this;
     }
 
@@ -63,7 +64,7 @@ public class AcceptancePolicyPage extends BasePage {
         driver.findElementById("filterNameInput").clear();
         driver.findElementById("filterNameInput").sendKeys(name);
         driver.findElementById("saveFilterButton").click();
-        waitForElement(driver.findElementByLinkText("Update Saved Filter"));
+        waitForElement(By.linkText("Update Saved Filter"));
         return this;
     }
 
@@ -79,7 +80,7 @@ public class AcceptancePolicyPage extends BasePage {
 
     public AcceptancePolicyPage clickCreateAcceptancePolicy() {
         driver.findElementById("createNewModalButton").click();
-        waitForElement(driver.findElementById("acCreateNameInput"));
+        waitForElement(By.id("acCreateNameInput"));
         return new AcceptancePolicyPage(driver);
     }
 
@@ -112,7 +113,7 @@ public class AcceptancePolicyPage extends BasePage {
 
     public AcceptancePolicyPage clickEditDeleteButton(String name) {
         driver.findElementById("editACModalButton" + name).click();
-        waitForElement(driver.findElementById("deleteButton"));
+        waitForElement(By.id("deleteButton"));
         return new AcceptancePolicyPage(driver);
     }
 
@@ -125,7 +126,7 @@ public class AcceptancePolicyPage extends BasePage {
 
     public AcceptancePolicyPage expandAcceptancePolicy(String name) {
         driver.findElementById("acceptcriteriaCaret" + name).click();
-        waitForElement(driver.findElementByCssSelector("#acceptcriteriaInfoDiv" + name + "[class*='expanded']"));
+        waitForElement(By.cssSelector("#acceptcriteriaInfoDiv" + name + "[class*='expanded']"));
         return new AcceptancePolicyPage(driver);
     }
 
@@ -161,7 +162,7 @@ public class AcceptancePolicyPage extends BasePage {
 
     public boolean isAppPresent(String policyName, String appName) {
         try {
-            waitForElement(driver.findElementByCssSelector("#" + policyName + "AppRow" + appName));
+            waitForElement(By.cssSelector("#" + policyName + "AppRow" + appName));
             return true;
         } catch (NoSuchElementException e) {
             return false;

@@ -48,7 +48,7 @@ public class TeamIndexPage extends BasePage {
 
     public TeamIndexPage clickAddTeamButton() {
         driver.findElementById("addTeamModalButton").click();
-        waitForElement(driver.findElementById("myModalLabel"));
+        waitForElement(By.id("myModalLabel"));
         return new TeamIndexPage(driver);
     }
 
@@ -60,7 +60,7 @@ public class TeamIndexPage extends BasePage {
 
     public TeamIndexPage addNewTeam(String teamName) {
         driver.findElementById("submit").click();
-        waitForElement(driver.findElementById("teamName" + teamName));
+        waitForElement(By.id("teamName" + teamName));
         sleep(1000);
         return new TeamIndexPage(driver);
     }
@@ -102,7 +102,7 @@ public class TeamIndexPage extends BasePage {
     public ApplicationDetailPage clickViewAppLink(String appName, String teamName) {
         sleep(500);
         driver.findElementById("applicationLink" + teamName + "-" + appName).click();
-        waitForElement(driver.findElementById("actionButton1"));
+        waitForElement(By.id("actionButton1"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -209,7 +209,7 @@ public class TeamIndexPage extends BasePage {
 
     public TeamIndexPage expandSourceCodeFields() {
         driver.findElementByLinkText("Source Code Information").click();
-        waitForElement(driver.findElementById("repositoryUrlInput"));
+        waitForElement(By.id("repositoryUrlInput"));
         return new TeamIndexPage(driver);
     }
 
@@ -239,10 +239,10 @@ public class TeamIndexPage extends BasePage {
     }
 
     public TeamIndexPage uploadNewScan(String file, String teamName, String appName) {
-        waitForElement(driver.findElementById("scanFileInput"));
+        waitForElement(By.id("scanFileInput"));
         driver.findElementById("scanFileInput").sendKeys(file);
         try {
-            waitForElement(driver.findElementById("applicationLink" + teamName + "-" + appName));
+            waitForElement(By.id("applicationLink" + teamName + "-" + appName));
         } catch (StaleElementReferenceException e) {
             refreshPage();
             expandTeamRowByName(teamName);
@@ -290,7 +290,7 @@ public class TeamIndexPage extends BasePage {
     }
 
     public String getNameTakenErrorMessage() {
-        waitForElement(driver.findElementById("applicationNameInputNameError"));
+        waitForElement(By.id("applicationNameInputNameError"));
         return driver.findElementById("applicationNameInputNameError").getText();
     }
 
@@ -299,7 +299,7 @@ public class TeamIndexPage extends BasePage {
     }
 
     public String successAlert() {
-        waitForElement(driver.findElementByClassName("alert-success"));
+        waitForElement(By.className("alert-success"));
         return driver.findElementByClassName("alert-success").getText().trim();
     }
 
@@ -421,7 +421,7 @@ public class TeamIndexPage extends BasePage {
     /*------------------------------------ Void Methods ----------------------------------------*/
 
     public void waitForPieWedge(String teamName, String level) {
-        waitForElement(driver.findElementById(teamName + level + "Arc"));
+        waitForElement(By.id(teamName + level + "Arc"));
     }
 }
 

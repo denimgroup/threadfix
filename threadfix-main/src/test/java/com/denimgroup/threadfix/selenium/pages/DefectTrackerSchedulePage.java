@@ -39,7 +39,7 @@ public class DefectTrackerSchedulePage extends BasePage{
 
     public DefectTrackerSchedulePage clickScheduleNewUpdateTab() {
         driver.findElementById("addUpdateQueueLink").click();
-        waitForElement(driver.findElementById("submit"));
+        waitForElement(By.id("submit"));
         return new DefectTrackerSchedulePage(driver);
     }
 
@@ -82,7 +82,7 @@ public class DefectTrackerSchedulePage extends BasePage{
     }
 
     public DefectTrackerSchedulePage waitForErrorMessage() {
-        waitForElement(driver.findElement(By.cssSelector("#dateError:not(.ng-hide)")));
+        waitForElement(By.cssSelector("#dateError:not(.ng-hide)"));
         return new DefectTrackerSchedulePage(driver);
     }
 

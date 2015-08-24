@@ -39,13 +39,13 @@ public class DashboardPage extends BasePage{
 
 	public AnalyticsPage clickLeftViewMore(){
 		driver.findElementById("leftViewMore").click();
-        waitForElement(driver.findElementById("trendingFilterDiv"));
+        waitForElement(By.id("trendingFilterDiv"));
 		return new AnalyticsPage(driver);
 	}
 	
 	public AnalyticsPage clickRightViewMore(){
 		driver.findElementById("rightViewMore").click();
-        waitForElement(driver.findElementById("snapshotFilterDiv"));
+        waitForElement(By.id("snapshotFilterDiv"));
 		return new AnalyticsPage(driver);
 	}
 	

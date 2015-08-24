@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import com.denimgroup.threadfix.views.AllViews;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
 
@@ -39,7 +38,7 @@ public class AnalyticsPage extends BasePage {
 
     public AnalyticsPage clickTrendingTab(Boolean usingD3) {
         driver.findElementByLinkText("Trending").click();
-        waitForElement(driver.findElementById("trendingFilterDiv"));
+        waitForElement(By.id("trendingFilterDiv"));
         if(usingD3){
             sleep(2500);
         }
@@ -52,7 +51,7 @@ public class AnalyticsPage extends BasePage {
         sleep(5000);
 
         driver.findElementByLinkText("Snapshot").click();
-        waitForElement(driver.findElementById("snapshotFilterDiv"));
+        waitForElement(By.id("snapshotFilterDiv"));
         if(usingD3){
             sleep(2500);
         }
@@ -69,7 +68,7 @@ public class AnalyticsPage extends BasePage {
 
     public AnalyticsPage clickRemediationTab(Boolean usingD3) {
         driver.findElementByLinkText("Remediation").click();
-        waitForElement(driver.findElementById("complianceFilterDiv"));
+        waitForElement(By.id("complianceFilterDiv"));
         if(usingD3){
             sleep(2500);
         }
@@ -82,7 +81,7 @@ public class AnalyticsPage extends BasePage {
         sleep(5000);
 
         driver.findElementByLinkText("Vulnerability Search").click();
-        waitForElement(driver.findElementById("vulnSearchDiv"));
+        waitForElement(By.id("vulnSearchDiv"));
         sleep(2500);
         return  new AnalyticsPage(driver);
     }
@@ -126,14 +125,14 @@ public class AnalyticsPage extends BasePage {
             sleep(5000);
             filterDiv.findElement(By.id("expandTeamAndApplicationFilters")).click();
         }
-        waitForElement(filterDiv.findElement(By.id("showApplicationInput")));
+        waitForElement(By.cssSelector("#" + divId + " #showApplicationInput"));
         return new AnalyticsPage(driver);
     }
 
     public AnalyticsPage expandTeamApplicationFilterReport(String divId) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("expandTeamAndApplicationFiltersReport")).click();
-        waitForElement(filterDiv.findElement(By.id("showTeamInputReport")));
+        waitForElement(By.cssSelector("#" + divId + " #showTeamInputReport"));
         sleep(2000);
         return new AnalyticsPage(driver);
     }
@@ -179,7 +178,7 @@ public class AnalyticsPage extends BasePage {
     public AnalyticsPage expandTagFilter(String divId) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("expandTagFilters")).click();
-        waitForElement(filterDiv.findElement(By.id("showTagInput")));
+        waitForElement(By.cssSelector("#" + divId + " #showTagInput"));
         sleep(2000);
         return new AnalyticsPage(driver);
     }
@@ -325,7 +324,7 @@ public class AnalyticsPage extends BasePage {
 
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("showOwasp")).click();
-        waitForElement(filterDiv.findElement(By.id("owasp2013")));
+        waitForElement(By.cssSelector("#" + divId + " #owasp2013"));
         return new AnalyticsPage(driver);
     }
 

@@ -383,7 +383,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
         initialize();
         String vulnerabilityBar = teamName + appName + "CWE20Bar";
 
-        applicationDetailPage.waitForElement(driver.findElement(By.id(vulnerabilityBar)));
+        applicationDetailPage.waitForElement(By.id(vulnerabilityBar));
         applicationDetailPage.clickScansTab().clickDeleteScanButton();
 
         assertTrue("Element bar not refreshed", driver.findElements(By.id(vulnerabilityBar)).isEmpty());

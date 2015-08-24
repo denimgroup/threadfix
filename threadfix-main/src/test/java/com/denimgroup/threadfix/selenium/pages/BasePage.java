@@ -78,7 +78,7 @@ public abstract class BasePage {
 		sleep(2000);
 		driver.findElementById("logoutLink").click();
 		sleep(6000);
-		waitForElement(driver.findElementById("login"));
+		waitForElement(By.id("login"));
         sleep(3000);
 		return new LoginPage(driver);
 	}
@@ -96,7 +96,7 @@ public abstract class BasePage {
 
     public TeamIndexPage clickOrganizationHeaderLink() {
         driver.findElementById("orgHeader").click();
-        waitForElement(driver.findElementById("expandAllButton"));
+        waitForElement(By.id("expandAllButton"));
         return new TeamIndexPage(driver);
     }
 
@@ -127,7 +127,7 @@ public abstract class BasePage {
 
     public AnalyticsPage clickAnalyticsLink() {
         driver.findElementById("reportsHeader").click();
-        waitForElement(driver.findElementByTagName("h2"));
+        waitForElement(By.tagName("h2"));
         sleep(5000);
         return new AnalyticsPage(driver);
     }
@@ -136,7 +136,7 @@ public abstract class BasePage {
         sleep(2000);
         driver.findElementById("tabConfigAnchor").click();
         sleep(2000);
-        waitForElement(driver.findElementById("configurationHeader"));
+        waitForElement(By.id("configurationHeader"));
     }
 
     public void clickUserTab(){
@@ -178,7 +178,7 @@ public abstract class BasePage {
     public UserChangePasswordPage clickChangePasswordLink(){
         clickUserTab();
         driver.findElementById("changePasswordLink").click();
-        waitForElement(driver.findElementById("currentPasswordInput"));
+        waitForElement(By.id("currentPasswordInput"));
         return new UserChangePasswordPage(driver);
     }
 
@@ -566,10 +566,10 @@ public abstract class BasePage {
         sleep(2000);
     }
 
-	public void waitForElement(WebElement e){
+	public void waitForElement(By by){
 		try {
             WebDriverWait wait = new WebDriverWait(driver, 10);
-            wait.until(ExpectedConditions.visibilityOf(e));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(by));
         } catch (TimeoutException t) {
             takeScreenShot();
             throw t;
@@ -627,7 +627,7 @@ public abstract class BasePage {
         Actions builder = new Actions(driver);
         builder.clickAndHold(d3Object).build().perform();
         builder.release(d3Object).build().perform();
-        waitForElement(driver.findElementById("myModalLabel"));
+        waitForElement(By.id("myModalLabel"));
         return (T) this;
     }
 

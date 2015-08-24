@@ -27,8 +27,6 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.data.enums.TagType;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import com.denimgroup.threadfix.views.AllViews;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -203,7 +201,7 @@ public class TagDetailPageIT extends BaseDataTest {
                 .setComment(teamName + appName)
                 .clickModalSubmit();
 
-        applicationDetailPage.waitForElement(driver.findElement(By.id("viewMoreLinkCritical790")));
+        applicationDetailPage.waitForElement(By.id("viewMoreLinkCritical790"));
 
         VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage
                 .clickViewMoreVulnerabilityLink("Critical790");

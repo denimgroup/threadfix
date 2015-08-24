@@ -27,9 +27,6 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import java.lang.reflect.Method;
-
-import java.rmi.Remote;
 
 public class RemoteProvidersIndexPage extends BasePage {
 
@@ -42,25 +39,25 @@ public class RemoteProvidersIndexPage extends BasePage {
 
     public RemoteProvidersIndexPage clickConfigureContrast(){
         driver.findElementById("configure0").click();
-        waitForElement(driver.findElementById("myModalLabel"));
+        waitForElement(By.id("myModalLabel"));
         return new RemoteProvidersIndexPage(driver);
     }
 
     public RemoteProvidersIndexPage clickConfigureQualys(){
 		driver.findElementById("configure2").click();
-		waitForElement(driver.findElementById("myModalLabel"));
+		waitForElement(By.id("myModalLabel"));
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
 	public RemoteProvidersIndexPage clickConfigureVeracode(){
 		driver.findElementById("configure5").click();
-		waitForElement(driver.findElementById("myModalLabel"));
+		waitForElement(By.id("myModalLabel"));
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
 	public RemoteProvidersIndexPage clickConfigureWhiteHat(){
 		driver.findElementById("configure6").click();
-		waitForElement(driver.findElementById("myModalLabel"));
+		waitForElement(By.id("myModalLabel"));
 		return new RemoteProvidersIndexPage(driver);
 	}
 
@@ -76,7 +73,7 @@ public class RemoteProvidersIndexPage extends BasePage {
         while(driver.findElements(By.id("configure0")).isEmpty() && i++ < 5) {
             sleep(20000);
         }
-        waitForElement(driver.findElementById("configure0"));
+        waitForElement(By.id("configure0"));
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
@@ -93,14 +90,14 @@ public class RemoteProvidersIndexPage extends BasePage {
         while(driver.findElements(By.id("clearConfig2")).isEmpty() && i++ < 5) {
             sleep(20000);
         }
-		waitForElement(driver.findElementById("clearConfig2"));
+		waitForElement(By.id("clearConfig2"));
 		return new RemoteProvidersIndexPage(driver);
 	}
 
     public RemoteProvidersIndexPage saveContrast(){
         driver.findElementById("submit").click();
         waitForInvisibleElement("myModalLabel");
-        waitForElement(driver.findElementById("clearConfig4"));
+        waitForElement(By.id("clearConfig4"));
         return new RemoteProvidersIndexPage(driver);
     }
 
@@ -117,7 +114,7 @@ public class RemoteProvidersIndexPage extends BasePage {
         while(driver.findElements(By.id("clearConfig1")).isEmpty() && i++ < 5) {
             sleep(20000);
         }
-        waitForElement(driver.findElementById("clearConfig1"));
+        waitForElement(By.id("clearConfig1"));
 		return new RemoteProvidersIndexPage(driver);
 	}
 
@@ -189,7 +186,7 @@ public class RemoteProvidersIndexPage extends BasePage {
         selectTeamMapping(teamName);
         selectAppMapping(appName);
         clickUpdateMappings();
-        waitForElement(driver.findElementById("provider3import" + appRow));
+        waitForElement(By.id("provider3import" + appRow));
         return new RemoteProvidersIndexPage(driver);
     }
 
@@ -208,7 +205,7 @@ public class RemoteProvidersIndexPage extends BasePage {
         selectTeamMapping(teamName);
         selectAppMapping(appName);
 		clickUpdateMappings();
-        waitForElement(driver.findElementById("provider1import" + appRow));
+        waitForElement(By.id("provider1import" + appRow));
 		return new RemoteProvidersIndexPage(driver);
 	}
 
@@ -231,7 +228,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 
     public ApplicationDetailPage clickWhiteHatImportScan(int appRow) {
         String elementToClick = "provider1import" + appRow;
-        waitForElement(driver.findElementById(elementToClick));
+        waitForElement(By.id(elementToClick));
         if (!tryClick(By.id(elementToClick))) {
             throw new ElementNotVisibleException(elementToClick);
         }
@@ -240,7 +237,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 
     public ApplicationDetailPage clickQualysGuardImportScan(int appRow) {
         String elementToClick = "provider3import" + appRow;
-        waitForElement(driver.findElementById(elementToClick));
+        waitForElement(By.id(elementToClick));
         if (!tryClick(By.id(elementToClick))) {
             throw new ElementNotVisibleException(elementToClick);
         }
@@ -249,7 +246,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 
     public ApplicationDetailPage clickContrastImportScan(int appRow) {
         String elementToClick = "provider4import" + appRow;
-        waitForElement(driver.findElementById(elementToClick));
+        waitForElement(By.id(elementToClick));
         if (!tryClick(By.id(elementToClick))) {
             throw new ElementNotVisibleException(elementToClick);
         }
@@ -271,13 +268,13 @@ public class RemoteProvidersIndexPage extends BasePage {
         selectTeamMapping(teamName);
         selectAppMapping(appName);
         clickUpdateMappings();
-        waitForElement(driver.findElementById("provider2import" + appRow));
+        waitForElement(By.id("provider2import" + appRow));
         return new RemoteProvidersIndexPage(driver);
     }
 
     public RemoteProvidersIndexPage clickVeraCodeEditMappingButton(int appRow) {
         driver.findElementById("provider2updateMapping" + appRow).click();
-        waitForElement(driver.findElementById("orgSelect1"));
+        waitForElement(By.id("orgSelect1"));
         return new RemoteProvidersIndexPage(driver);
     }
 
@@ -296,7 +293,7 @@ public class RemoteProvidersIndexPage extends BasePage {
         String linkText = driver.findElementById("scheduledImportTab").getAttribute("heading");
         driver.findElementByLinkText(linkText).click();
 
-        waitForElement(driver.findElementById("addImportQueueLink"));
+        waitForElement(By.id("addImportQueueLink"));
         return new RemoteProvidersSchedulePage(driver);
     }
 
@@ -345,7 +342,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 
     public RemoteProvidersIndexPage clickEditName(String provider, String appNum) {
         driver.findElementById("provider" + provider + "updateName" + appNum).click();
-        waitForElement(driver.findElementById("myModalLabel"));
+        waitForElement(By.id("myModalLabel"));
         return new RemoteProvidersIndexPage(driver);
     }
 
@@ -358,7 +355,7 @@ public class RemoteProvidersIndexPage extends BasePage {
     }
 
 	public String successAlert(){
-        waitForElement(driver.findElementByClassName("alert-success"));
+        waitForElement(By.className("alert-success"));
 		return driver.findElementByClassName("alert-success").getText().trim();
 	}
 

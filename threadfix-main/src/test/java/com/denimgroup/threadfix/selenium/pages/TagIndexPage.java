@@ -38,7 +38,7 @@ public class TagIndexPage extends BasePage{
 
     public TagIndexPage createNewTag(String name) {
         driver.findElementById("createTagModalButton").click();
-        waitForElement(driver.findElementById("myModalLabel"));
+        waitForElement(By.id("myModalLabel"));
         driver.findElementById("tagCreateNameInput").sendKeys(name);
         clickModalSubmit();
         return new TagIndexPage(driver);
@@ -46,7 +46,7 @@ public class TagIndexPage extends BasePage{
 
     public TagIndexPage createNewCommentTag(String name) {
         driver.findElementById("createTagModalButton").click();
-        waitForElement(driver.findElementById("myModalLabel"));
+        waitForElement(By.id("myModalLabel"));
         driver.findElementById("tagCreateNameInput").sendKeys(name);
         new Select(driver.findElementById("tagType")).selectByVisibleText("COMMENT");
         clickModalSubmit();
@@ -56,7 +56,7 @@ public class TagIndexPage extends BasePage{
 
     public TagIndexPage deleteTag(String name) {
         driver.findElementById("editTagModalButton" + name).click();
-        waitForElement(driver.findElementById("deleteTagButton"));
+        waitForElement(By.id("deleteTagButton"));
         driver.findElementById("deleteTagButton").click();
         driver.switchTo().alert().accept();
         sleep(1000);
@@ -65,7 +65,7 @@ public class TagIndexPage extends BasePage{
 
     public TagIndexPage deleteCommentTag(String name) {
         driver.findElementById("editCommentTagModalButton" + name).click();
-        waitForElement(driver.findElementById("deleteTagButton"));
+        waitForElement(By.id("deleteTagButton"));
         driver.findElementById("deleteTagButton").click();
         driver.switchTo().alert().accept();
         sleep(1000);
@@ -74,7 +74,7 @@ public class TagIndexPage extends BasePage{
 
     public TagIndexPage editTagName(String tagName, String newName) {
         driver.findElementById("editTagModalButton" + tagName).click();
-        waitForElement(driver.findElementById("tagCreateNameInput"));
+        waitForElement(By.id("tagCreateNameInput"));
         driver.findElementById("tagCreateNameInput").clear();
         driver.findElementById("tagCreateNameInput").sendKeys(newName);
         driver.findElementById("submit").click();
@@ -84,7 +84,7 @@ public class TagIndexPage extends BasePage{
 
     public TagIndexPage editCommentTagName(String tagName, String newName) {
         driver.findElementById("editCommentTagModalButton" + tagName).click();
-        waitForElement(driver.findElementById("tagCreateNameInput"));
+        waitForElement(By.id("tagCreateNameInput"));
         driver.findElementById("tagCreateNameInput").clear();
         driver.findElementById("tagCreateNameInput").sendKeys(newName);
         driver.findElementById("submit").click();
@@ -94,7 +94,7 @@ public class TagIndexPage extends BasePage{
 
     public TagDetailPage clickTagName(String name) {
         driver.findElementByLinkText(name).click();
-        waitForElement(driver.findElementByLinkText("Back to Tags Page"));
+        waitForElement(By.linkText("Back to Tags Page"));
         return new TagDetailPage(driver);
     }
 
@@ -102,7 +102,7 @@ public class TagIndexPage extends BasePage{
 
     public boolean isAppTagNameLinkPresent(String name) {
         try {
-            waitForElement(driver.findElementById("tagName" + name));
+            waitForElement(By.id("tagName" + name));
         } catch (NoSuchElementException e) {
             return false;
         }
@@ -111,7 +111,7 @@ public class TagIndexPage extends BasePage{
 
     public boolean isCommentTagNameLinkPresent(String name) {
         try {
-            waitForElement(driver.findElementById("commentTagName" + name));
+            waitForElement(By.id("commentTagName" + name));
         } catch (NoSuchElementException e) {
             return false;
         }
@@ -120,7 +120,7 @@ public class TagIndexPage extends BasePage{
 
     public boolean isVulnerabilityTagNameLinkPresent(String name) {
         try {
-            waitForElement(driver.findElementById("vulnTagName" + name));
+            waitForElement(By.id("vulnTagName" + name));
         } catch (NoSuchElementException e) {
             return false;
         }
