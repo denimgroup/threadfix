@@ -250,6 +250,8 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
             $scope.parameters.filterType = {isTrendingFilter : true};
         else if ($scope.$parent.snapshotActive)
             $scope.parameters.filterType = {isSnapshotFilter : true};
+        else if ($scope.$parent.remediationActive)
+            $scope.parameters.filterType = {isRemediationFilter : true};
         else if ($scope.$parent.complianceActive)
             $scope.parameters.filterType = {isComplianceFilter : true};
         else
@@ -264,10 +266,12 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
         if (!parameters.filterType)
             return false;
         else {
-            if ($scope.$parent.snapshotActive)
-                return (parameters.filterType.isSnapshotFilter);
-            else if ($scope.$parent.trendingActive)
+            if ($scope.$parent.trendingActive)
                 return (parameters.filterType.isTrendingFilter);
+            else if ($scope.$parent.snapshotActive)
+                return (parameters.filterType.isSnapshotFilter);
+            else if ($scope.$parent.remediationActive)
+                return (parameters.filterType.isRemediationFilter);
             else if ($scope.$parent.complianceActive)
                 return (parameters.filterType.isComplianceFilter);
             else

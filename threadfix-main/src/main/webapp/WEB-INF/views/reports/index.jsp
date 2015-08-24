@@ -55,7 +55,7 @@
                     </div>
                 </tab>
                 <c:if test="${isEnterprise}">
-                    <tab id="enterpriseTab" active="remediationEnterpriseActive" heading="Compliance" ng-click="loadEnterpriseRemediation()">
+                    <tab id="enterpriseTab" active="remediationActive" heading="Compliance" ng-click="loadRemediation()">
                         <div ng-controller="ComplianceReportController"
                              ng-init="remediationType = 2; graphName = 'complianceEnterpriseTrendingGraph'; sumTableDivId = 'complianceTable2'">
                             <%@ include file="compliance.jsp" %>

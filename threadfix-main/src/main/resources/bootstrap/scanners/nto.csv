@@ -1,5 +1,5 @@
 type.info,,,
-AppSpider,http://www.ntobjectives.com/security-software/ntospider-application-security-scanner/,5.4,ThreadFix imports the VulnerabilitiesSummary generated in the Reports/scan-name/date directory after the scan finishes.,
+NTO Spider,http://www.ntobjectives.com/security-software/ntospider-application-security-scanner/,5.4,ThreadFix imports the VulnerabilitiesSummary generated in the Reports/scan-name/date directory after the scan finishes.,
 type.vulnerabilities,,,
 Autocomplete Attribute,Autocomplete Attribute,525
 Session Strength Analysis,Session Strength Analysis,330

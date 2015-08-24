@@ -1,5 +1,5 @@
 type.info,,,
-IBM Security AppScan Source,http://www-01.ibm.com/software/rational/products/appscan/enterprise/,-,The Appscan Enterprise importer requires the full xml report.,
+IBM Rational AppScan Source Edition,http://www-01.ibm.com/software/rational/products/appscan/enterprise/,-,The Appscan Enterprise importer requires the full xml report.,
 type.vulnerabilities,,,
 Vulnerability.InputValidation.UnlimitedSize,Vulnerability.InputValidation.UnlimitedSize,130
 Vulnerability.Malicious.DynamicCode.Execution,Vulnerability.Malicious.DynamicCode.Execution,470
