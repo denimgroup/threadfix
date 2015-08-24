@@ -487,9 +487,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<EventAction> getNotificationEventActions(User user) {
+	public Set<EventAction> getNotificationEventActions(User user) {
 		List<UserEventNotificationMap> userEventNotificationMaps = userEventNotificationMapDao.loadUserEventNotificationMaps(user);
-		List<EventAction> notificationEventActions = list();
+		Set<EventAction> notificationEventActions = EnumSet.noneOf(EventAction.class);
 		for (UserEventNotificationMap userEventNotificationMap : userEventNotificationMaps) {
 			notificationEventActions.add(userEventNotificationMap.getEventActionEnum());
 		}
@@ -497,8 +497,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void setNotificationEventActions(User user, List<EventAction> notificationEventActions) {
-		List<EventAction> currentNotificationEventActions = list();
+	public void setNotificationEventActions(User user, Set<EventAction> notificationEventActions) {
+		Set<EventAction> currentNotificationEventActions = EnumSet.noneOf(EventAction.class);
 		List<UserEventNotificationMap> userEventNotificationMapsToRemove = list();
 
 		List<UserEventNotificationMap> userEventNotificationMaps = userEventNotificationMapDao.loadUserEventNotificationMaps(user);
@@ -533,7 +533,7 @@ public class UserServiceImpl implements UserService {
 			Map<String, Boolean> eventNotificationSettings = new HashMap<>();
 			userEventNotificationSettings.put(user.getId(), eventNotificationSettings);
 
-			List<EventAction> notificationEventActions = getNotificationEventActions(user);
+			Set<EventAction> notificationEventActions = getNotificationEventActions(user);
 			for (EventAction eventNotificationType : EventAction.values()) {
 				if (notificationEventActions.contains(eventNotificationType)) {
 					eventNotificationSettings.put(eventNotificationType.toString(), true);

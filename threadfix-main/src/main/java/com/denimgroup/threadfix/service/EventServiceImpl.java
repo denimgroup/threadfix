@@ -191,7 +191,7 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
     }
 
     @Override
-    public List<Event> getRecentEvents(List<EventAction> userEventActions, List<EventAction> userGroupedEventActions,
+    public List<Event> getRecentEvents(Set<EventAction> userEventActions, Set<EventAction> userGroupedEventActions,
                                        Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds) {
         List<Event> recentEvents = list();
         if ((userEventActions != null) && (!userEventActions.isEmpty())) {

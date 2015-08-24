@@ -53,6 +53,6 @@ public interface EventService extends GenericObjectService<Event> {
 
     List<Event> getGlobalEvents(Set<Integer> appIds, Set<Integer> teamIds);
 
-    List<Event> getRecentEvents(List<EventAction> userEventActions, List<EventAction> userGroupedEventActions,
+    List<Event> getRecentEvents(Set<EventAction> userEventActions, Set<EventAction> userGroupedEventActions,
                                 Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds);
 }

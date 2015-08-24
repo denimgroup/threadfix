@@ -162,9 +162,9 @@ public interface UserService {
 
 	List<User> getUsersForRoleId(Integer id);
 
-	List<EventAction> getNotificationEventActions(User user);
+	Set<EventAction> getNotificationEventActions(User user);
 
-	void setNotificationEventActions(User user, List<EventAction> notificationEventActions);
+	void setNotificationEventActions(User user, Set<EventAction> notificationEventActions);
 
 	Map<Integer,Map<String,Boolean>> getUserEventNotificationSettings(List<User> users);
 }

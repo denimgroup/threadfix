@@ -145,7 +145,7 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
     }
 
     @Override
-    public List<Event> retrieveRecentUngrouped(List<EventAction> userEventActions, Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds) {
+    public List<Event> retrieveRecentUngrouped(Set<EventAction> userEventActions, Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds) {
         List<String> recentEventActions = list();
         for (EventAction eventAction : userEventActions) {
             recentEventActions.add(eventAction.name());
@@ -155,7 +155,7 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
     }
 
     @Override
-    public List<Event> retrieveRecentGrouped(List<EventAction> userGroupedEventActions, Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds) {
+    public List<Event> retrieveRecentGrouped(Set<EventAction> userGroupedEventActions, Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds) {
         List<String> recentGroupedEventAction = list();
         for (EventAction eventAction : userGroupedEventActions) {
             recentGroupedEventAction.add(eventAction.name());
