@@ -29,11 +29,17 @@ import com.denimgroup.threadfix.data.entities.CSVExportField;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Report;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import org.apache.commons.beanutils.BeanToPropertyValueTransformer;
+import org.apache.commons.collections.CollectionUtils;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.set;
+import static com.denimgroup.threadfix.CollectionUtils.setFrom;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -54,9 +60,11 @@ public class DefaultConfigServiceImpl implements DefaultConfigService {
         DefaultConfiguration configuration;
 
 		List<DefaultConfiguration> list = defaultConfigurationDao.retrieveAll();
-		if (list.size() == 0) {
+        Set<DefaultConfiguration> set = setFrom(list);
+
+		if (set.size() == 0) {
             configuration = DefaultConfiguration.getInitialConfig();
-		} else if (list.size() > 1) {
+		} else if (set.size() > 1) {
 			DefaultConfiguration config = list.get(0);
 			list.remove(0);
 			for (DefaultConfiguration defaultConfig : list) {
@@ -171,12 +179,23 @@ public class DefaultConfigServiceImpl implements DefaultConfigService {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<CSVExportField> getUnassignedExportFields(List<CSVExportField> exportFields) {
 
-        List<CSVExportField> enumFields = Arrays.asList(CSVExportField.values());
+        List<CSVExportField> enumFields = list();
+        List<CSVExportField> tempEnumFields = Arrays.asList(CSVExportField.values());
 
-        if (exportFields != null && exportFields.size() > 0) {
-            enumFields.removeAll(exportFields);
+        List<String> exportFieldStringList = (List<String>)CollectionUtils.collect(exportFields,
+                new BeanToPropertyValueTransformer("displayName"));
+
+        if (exportFields.size() > 0) {
+            for (CSVExportField enumField : tempEnumFields) {
+                if (!exportFieldStringList.contains(enumField.getDisplayName())) {
+                    enumFields.add(enumField);
+                }
+            }
+        } else {
+            enumFields = tempEnumFields;
         }
 
         return enumFields;
