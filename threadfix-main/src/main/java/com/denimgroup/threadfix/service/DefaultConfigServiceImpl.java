@@ -184,12 +184,12 @@ public class DefaultConfigServiceImpl implements DefaultConfigService {
         List<CSVExportField> enumFields = list();
         List<CSVExportField> tempEnumFields = Arrays.asList(CSVExportField.values());
 
-        List<String> exportFieldStringList = (List<String>)CollectionUtils.collect(exportFields,
+        List<String> exportFieldDisplayNames = (List<String>)CollectionUtils.collect(exportFields,
                 new BeanToPropertyValueTransformer("displayName"));
 
         if (exportFields.size() > 0) {
             for (CSVExportField enumField : tempEnumFields) {
-                if (!exportFieldStringList.contains(enumField.getDisplayName())) {
+                if (!exportFieldDisplayNames.contains(enumField.getDisplayName())) {
                     enumFields.add(enumField);
                 }
             }
