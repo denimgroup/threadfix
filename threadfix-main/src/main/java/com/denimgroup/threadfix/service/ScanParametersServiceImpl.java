@@ -73,6 +73,10 @@ public class ScanParametersServiceImpl implements ScanParametersService {
 			if (scanParametersBean.getSourceCodeUrl() != null && 
 					scanParametersBean.getSourceCodeUrl().length() < Application.URL_LENGTH) {
 				application.setRepositoryUrl(scanParametersBean.getSourceCodeUrl());
+
+				if (application.getRepositoryType() == null || "".equals(application.getRepositoryType())) {
+					application.setRepositoryType("GIT");
+				}
 			}
 			
 			applicationDao.saveOrUpdate(application);
