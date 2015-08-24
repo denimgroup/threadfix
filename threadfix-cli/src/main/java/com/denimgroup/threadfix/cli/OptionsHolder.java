@@ -179,7 +179,6 @@ public class OptionsHolder {
                 .create("stg");
         options.addOption(searchTag);
 
-
         Option updateTag = OptionBuilder.withArgName("tagId> <name")
                 .hasArgs(2)
                 .withLongOpt("update-tag")
@@ -187,15 +186,12 @@ public class OptionsHolder {
                 .create("utg");
         options.addOption(updateTag);
 
-
         Option removeTag = OptionBuilder.withArgName("tagId")
                 .hasArgs(1)
                 .withLongOpt("remove-tag")
                 .withDescription("Remove ThreadFix Tag, and returns message.")
                 .create("rtg");
         options.addOption(removeTag);
-
-
 
         Option tags = OptionBuilder.withLongOpt("tags")
                 .withDescription("Fetches a list of ThreadFix tags.")
@@ -217,6 +213,13 @@ public class OptionsHolder {
                 .withDescription("Remove Tag for the given applicationId")
                 .create("rat");
         options.addOption(removeAppTag);
+
+        Option addComment = OptionBuilder.withArgName("vulnId> <comment> <[commentTagIds]")
+                .hasArgs(3)
+                .withLongOpt("add-comment")
+                .withDescription("Add comment to a vulnerability. CommentTagIds is optional, separated by comma.")
+                .create("ac");
+        options.addOption(addComment);
 
         return options;
     }
