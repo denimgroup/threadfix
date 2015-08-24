@@ -178,14 +178,13 @@ public class DefaultConfigServiceImpl implements DefaultConfigService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+
     public List<CSVExportField> getUnassignedExportFields(List<CSVExportField> exportFields) {
 
         List<CSVExportField> enumFields = list();
         List<CSVExportField> tempEnumFields = Arrays.asList(CSVExportField.values());
 
-        List<String> exportFieldDisplayNames = (List<String>)CollectionUtils.collect(exportFields,
-                new BeanToPropertyValueTransformer("displayName"));
+        List<String> exportFieldDisplayNames = getDisplayNamesFromExportFields(exportFields);
 
         if (exportFields.size() > 0) {
             for (CSVExportField enumField : tempEnumFields) {
@@ -198,5 +197,14 @@ public class DefaultConfigServiceImpl implements DefaultConfigService {
         }
 
         return enumFields;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<String> getDisplayNamesFromExportFields(List<CSVExportField> exportFields) {
+
+        return  (List<String>)CollectionUtils.collect(exportFields,
+                new BeanToPropertyValueTransformer("displayName"));
+
     }
 }

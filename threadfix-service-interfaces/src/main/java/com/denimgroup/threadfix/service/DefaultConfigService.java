@@ -49,4 +49,6 @@ public interface DefaultConfigService {
 
     List<CSVExportField> getUnassignedExportFields(List<CSVExportField> exportFields);
 
+    List<String> getDisplayNamesFromExportFields(List<CSVExportField> exportFields);
+
 }

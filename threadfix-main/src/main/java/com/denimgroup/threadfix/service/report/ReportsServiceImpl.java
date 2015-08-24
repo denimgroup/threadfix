@@ -28,10 +28,12 @@ import com.denimgroup.threadfix.data.dao.*;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.VulnerabilitySearchService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.controller.ReportCheckResultBean;
+import org.apache.commons.beanutils.BeanToPropertyValueTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,9 +42,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.map;
-import static com.denimgroup.threadfix.CollectionUtils.setFrom;
+import static com.denimgroup.threadfix.CollectionUtils.*;
+import static org.apache.commons.collections.CollectionUtils.collect;
 import static com.denimgroup.threadfix.util.CSVExportProperties.*;
 
 /**
@@ -70,6 +71,9 @@ public class ReportsServiceImpl implements ReportsService {
     private PermissionService permissionService = null;
     @Autowired
     private VulnerabilitySearchService vulnerabilitySearchService;
+    @Autowired
+    private DefaultConfigService defaultConfigService;
+
 
     @Override
     public ReportCheckResultBean generateDashboardReport(ReportParameters parameters, HttpServletRequest request) {
@@ -391,26 +395,68 @@ public class ReportsServiceImpl implements ReportsService {
                 }
             }
 
-            // create fields map
-            Map<String, String> csvMap = map(
-                    CWE_ID,              vuln.getGenericVulnerability().getId().toString(),
-                    CWE_NAME,            vuln.getGenericVulnerability().getName(),
-                    PATH,                vuln.getSurfaceLocation().getPath(),
-                    PARAMETER,           vuln.getSurfaceLocation().getParameter(),
-                    SEVERITY,            vuln.getGenericSeverity().getName(),
-                    OPEN_DATE,           openedDate,
-                    DESCRIPTION,         description,
-                    DEFECT_ID,           (vuln.getDefect() == null) ? "" : vuln.getDefect().getNativeId(),
-                    APPLICATION_NAME,    vuln.getApplication().getName(),
-                    TEAM_NAME,           vuln.getApplication().getOrganization().getName(),
-                    PAYLOAD,             vuln.getSurfaceLocation().getQuery() == null ? "" : vuln.getSurfaceLocation().getQuery(),
-                    ATTACK_SURFACE_PATH, vuln.getSurfaceLocation().getUrl() == null ? "" : vuln.getSurfaceLocation().getUrl().toString()
-            );
+            DefaultConfiguration configuration = defaultConfigService.loadCurrentConfiguration();
+            List<CSVExportField> exportFields = configuration.getCsvExportFields();
+
+            Map<String, String> csvMap = map();
+
+            for (CSVExportField exportField : exportFields) {
+                switch (exportField) {
+                    case CWE_ID:
+                        csvMap.put(CSVExportField.CWE_ID.getDisplayName(),
+                                vuln.getGenericVulnerability().getId().toString());
+                        break;
+                    case CWE_NAME:
+                        csvMap.put(CSVExportField.CWE_NAME.getDisplayName(),
+                                vuln.getGenericVulnerability().getName());
+                        break;
+                    case PATH:
+                        csvMap.put(CSVExportField.PATH.getDisplayName(),
+                                vuln.getSurfaceLocation().getPath());
+                        break;
+                    case PARAMETER:
+                        csvMap.put(CSVExportField.PARAMETER.getDisplayName(),
+                                vuln.getSurfaceLocation().getParameter());
+                        break;
+                    case SEVERITY:
+                        csvMap.put(CSVExportField.SEVERITY.getDisplayName(),
+                                vuln.getGenericSeverity().getName());
+                        break;
+                    case OPEN_DATE:
+                        csvMap.put(CSVExportField.OPEN_DATE.getDisplayName(),
+                                openedDate);
+                        break;
+                    case DESCRIPTION:
+                        csvMap.put(CSVExportField.DESCRIPTION.getDisplayName(),
+                                description);
+                        break;
+                    case DEFECT_ID:
+                        csvMap.put(CSVExportField.DEFECT_ID.getDisplayName(),
+                                (vuln.getDefect() == null) ? "" : vuln.getDefect().getNativeId());
+                        break;
+                    case APPLICATION_NAME:
+                        csvMap.put(CSVExportField.APPLICATION_NAME.getDisplayName(),
+                                vuln.getApplication().getName());
+                        break;
+                    case TEAM_NAME:
+                        csvMap.put(CSVExportField.TEAM_NAME.getDisplayName(),
+                                vuln.getApplication().getOrganization().getName());
+                        break;
+                    case PAYLOAD:
+                        csvMap.put(CSVExportField.PAYLOAD.getDisplayName(),
+                                vuln.getSurfaceLocation().getQuery() == null ? "" : vuln.getSurfaceLocation().getQuery());
+                        break;
+                    case ATTACK_SURFACE_PATH:
+                        csvMap.put(CSVExportField.ATTACK_SURFACE_PATH.getDisplayName(),
+                                vuln.getSurfaceLocation().getUrl() == null ? "" : vuln.getSurfaceLocation().getUrl().toString());
+                        break;
+                }
+            }
 
             // add configured fields only
             List<String> listToAdd = list();
 
-            for (String headerKey : getCSVExportHeaderList()) {
+            for (String headerKey : defaultConfigService.getDisplayNamesFromExportFields(exportFields)) {
                 listToAdd.add(csvMap.get(headerKey));
             }
 
@@ -419,6 +465,7 @@ public class ReportsServiceImpl implements ReportsService {
         return rowParamsList;
     }
 
+    @SuppressWarnings("unchecked")
     private StringBuffer getDataVulnListReport(List<List<String>> rowParamsList, List<Integer> applicationIdList) {
         StringBuffer data = new StringBuffer();
         data.append("Vulnerability List \n\n");
@@ -440,7 +487,11 @@ public class ReportsServiceImpl implements ReportsService {
             data.append("Application: ").append(appName).append(" \n \n");
         }
 
-		data.append(getCSVExportHeaderString());
+        DefaultConfiguration configuration = defaultConfigService.loadCurrentConfiguration();
+        String exportFieldsStr = join(", ", defaultConfigService.
+                getDisplayNamesFromExportFields(configuration.getCsvExportFields())) + "\n";
+
+		data.append(exportFieldsStr);
 		for (List<String> row: rowParamsList) {
 			for (int i=0;i<row.size();i++) {
 				String str = "";
