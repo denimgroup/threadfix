@@ -32,7 +32,12 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
         $scope.noData = false;
         $scope.savedFilters = $scope.$parent.savedFilters.filter(function(filter){
             var parameters = JSON.parse(filter.json);
-            return (parameters.filterType && parameters.filterType.isComplianceFilter);
+            if ($scope.$parent.complianceActive)
+                return (parameters.filterType && parameters.filterType.isComplianceFilter);
+            else if ($scope.$parent.remediationActive)
+                return (parameters.filterType && parameters.filterType.isRemediationFilter);
+            else
+                return (!parameters.filterType);
         });
 
         // Data for trending chart and table
@@ -76,7 +81,7 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
 
     var refreshData = function(parameters) {
         if (!$scope.$parent.complianceActive
-            && !$scope.$parent.remediationEnterpriseActive)
+            && !$scope.$parent.remediationActive)
             return;
 
         if ($scope.remediationType !== parameters.remediationType)
@@ -91,7 +96,7 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
 
     $scope.$on('updateDisplayData', function(event, parameters) {
         if (!$scope.$parent.complianceActive
-            && !$scope.$parent.remediationEnterpriseActive)
+            && !$scope.$parent.remediationActive)
             return;
         if ($scope.remediationType !== parameters.remediationType)
             return;

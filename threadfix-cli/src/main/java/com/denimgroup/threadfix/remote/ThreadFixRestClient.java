@@ -131,4 +131,6 @@ public interface ThreadFixRestClient {
     public RestResponse<String> removeTag(String tagId);
 
     void setUnsafeFlag(boolean unsafeFlag);
+
+    RestResponse<String> addVulnComment(Integer vulnId, String comment, String commentTagIds);
 }
