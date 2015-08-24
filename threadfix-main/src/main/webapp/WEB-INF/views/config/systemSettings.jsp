@@ -186,7 +186,7 @@
 
                     <button id="submit"
                             ng-class="{ disabled : loginForm.$invalid }"
-                            class="btn btn-primary"
+                            class="btn btn-primary save"
                             ng-mouseenter="loginForm.$dirty = true"
                             ng-hide="loading"
                             ng-click="submit(loginForm.$valid)">Save Changes</button>
@@ -335,7 +335,7 @@
 
                 <button id="submit"
                         ng-class="{ disabled : reportForm.$invalid }"
-                        class="btn btn-primary"
+                        class="btn btn-primary save"
                         ng-mouseenter="reportForm.$dirty = true"
                         ng-hide="loading"
                         ng-click="submit(reportForm.$valid)">Save Changes</button>
@@ -345,24 +345,27 @@
         <tab id="exportTab" heading="Export Settings" ng-click="setTab('export')" active="tab.export">
             <div ng-form="configForm" name="exportForm">
 
-                <h3>Vulnerability Export Settings</h3>
-                <span tooltip="vuln-export-settings">
-                    Drag preferred export field to second holding area.
-                </span>
+                <h4>Vulnerability Export Settings</h4>
 
                 <div class="export-field-ui-container">
-                    <div ui-sortable="sortableOptions" class="export-fields-container screen floatleft" ng-model="exportFields">
-                        <div class="exportField" ng-repeat="exportField in exportFields">{{ exportFieldDisplayNames[exportField] }}</div>
+                    <div class="floatleft">
+                        <h5>Export Column Options</h5>
+                        <div ui-sortable="sortableOptions" class="export-fields-container screen" ng-model="exportFields">
+                            <div class="exportField" ng-repeat="exportField in exportFields">{{ exportFieldDisplayNames[exportField] }}</div>
+                        </div>
                     </div>
-                    <div ui-sortable="sortableOptions" class="export-fields-container screen floatleft" ng-model="object.csvExportFields">
-                        <div class="exportField" ng-repeat="exportField in object.csvExportFields">{{ exportFieldDisplayNames[exportField] }}</div>
+                    <div class="floatleft">
+                        <h5>Columns To Export</h5>
+                        <div ui-sortable="sortableOptions" class="export-fields-container screen" ng-model="object.csvExportFields">
+                            <div class="exportField" ng-repeat="exportField in object.csvExportFields">{{ exportFieldDisplayNames[exportField] }}</div>
+                        </div>
                     </div>
                     <div class="clear"></div>
                 </div>
 
                 <button id="submit"
                         ng-class="{ disabled : exportForm.$invalid }"
-                        class="btn btn-primary"
+                        class="btn btn-primary save"
                         ng-mouseenter="exportForm.$dirty = true"
                         ng-hide="loading"
                         ng-click="submit(exportForm.$valid)">Save Changes</button>
@@ -588,7 +591,7 @@
 
                 <button id="submit"
                         ng-class="{ disabled : otherForm.$invalid }"
-                        class="btn btn-primary"
+                        class="btn btn-primary save"
                         ng-mouseenter="otherForm.$dirty = true"
                         ng-hide="loading"
                         ng-click="submit(otherForm.$valid)">Save Changes</button>
