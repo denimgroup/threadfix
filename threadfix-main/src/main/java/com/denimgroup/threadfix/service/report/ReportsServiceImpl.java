@@ -34,6 +34,7 @@ import com.denimgroup.threadfix.service.VulnerabilitySearchService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.controller.ReportCheckResultBean;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -594,6 +595,9 @@ public class ReportsServiceImpl implements ReportsService {
                     str = row.get(i);
                 }
 
+                if (str.length() > 31800) {
+                    str = StringUtils.abbreviate(str, 31800) + "\n...data exceeds space allotted for cell.";
+                }
                 str = StringEscapeUtils.escapeCsv(str);
 
                 if (i < row.size()-1) {
