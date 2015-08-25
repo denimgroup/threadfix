@@ -34,8 +34,11 @@ public class CommandLineUtils {
     //===========================================================================================================
 
     static {
-        if (System.getProperty("SPECIFIC_CLI_VERSION").trim().length() > 0) {
-            specificCliVersion = Double.parseDouble(System.getProperty("SPECIFIC_CLI_VERSION").trim());
+        try {
+            String cliVersionProperty = System.getProperty("SPECIFIC_CLI_VERSION").trim();
+            specificCliVersion = Double.parseDouble(cliVersionProperty);
+        } catch (NullPointerException ex) {
+            System.out.println("Optional system property SPECIFIC_CLI_VERSION not set.\nContinuing with default CLI jar.");
         }
 
         if (specificCliVersion > 0) {
