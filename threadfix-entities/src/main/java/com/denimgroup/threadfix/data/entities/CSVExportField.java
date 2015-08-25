@@ -24,18 +24,15 @@
 
 package com.denimgroup.threadfix.data.entities;
 
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
-import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * @author zabdisubhan
  */
 public enum CSVExportField {
+    UNIQUE_ID("Unique ID"),
     CWE_ID("CWE ID"),
     CWE_NAME("CWE Name"),
     PATH("Path"),
@@ -47,7 +44,12 @@ public enum CSVExportField {
     APPLICATION_NAME("Application Name"),
     TEAM_NAME("Team Name"),
     PAYLOAD("Payload"),
-    ATTACK_SURFACE_PATH("Attack Surface Path");
+    ATTACK_SURFACE_PATH("Attack Surface Path"),
+    ATTACK_STRING("Attack String"),
+    ATTACK_REQUEST("Attack Request"),
+    ATTACK_RESPONSE("Attack Response"),
+    SCANNER_DETAIL("Scanner Detail"),
+    SCANNER_RECOMMENDATION("Scanner Recommendation");
 
     private String displayName;
 
@@ -57,15 +59,6 @@ public enum CSVExportField {
 
     private CSVExportField(String displayName) {
         this.displayName = displayName;
-    }
-
-    public static CSVExportField getExportField(String keyword) {
-        for (CSVExportField t: values()) {
-            if (keyword.equalsIgnoreCase(t.getDisplayName())) {
-                return t;
-            }
-        }
-        return null;
     }
 
     public static Map<String, String> getExportFields() {
