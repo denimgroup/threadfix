@@ -308,6 +308,8 @@ public class RemoteProvidersIT extends BaseDataTest {
 
     @Test
     public void testInvalidVeracode(){
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared("Veracode");
+
         remoteProvidersIndexPage.clickConfigureVeracode()
                 .setVeraUsername("No Such User")
                 .setVeraPassword("Password Bad")
@@ -351,7 +353,7 @@ public class RemoteProvidersIT extends BaseDataTest {
         assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("Veracode"));
 
         remoteProvidersIndexPage.clickVeracodeImportScan(0)
-                .checkForAlert();
+                .checkForAlert(30);
 
         assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
         driver.switchTo().alert().dismiss();
