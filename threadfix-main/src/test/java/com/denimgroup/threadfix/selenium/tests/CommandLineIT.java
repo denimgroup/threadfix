@@ -7,12 +7,12 @@ import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
 import com.denimgroup.threadfix.selenium.utils.CommandLineUtils;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import static com.denimgroup.threadfix.selenium.utils.CommandLineUtils.checkVersion;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
