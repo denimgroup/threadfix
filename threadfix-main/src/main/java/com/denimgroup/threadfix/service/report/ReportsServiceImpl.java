@@ -33,16 +33,12 @@ import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.VulnerabilitySearchService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.controller.ReportCheckResultBean;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.translate.CharSequenceTranslator;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -591,22 +587,23 @@ public class ReportsServiceImpl implements ReportsService {
             data.append(getCSVExportHeaderString());
         }
 
-		for (List<String> row: rowParamsList) {
-			for (int i=0;i<row.size();i++) {
-				String str = "";
-				if (row.get(i) != null) {
+        for (List<String> row: rowParamsList) {
+            for (int i = 0; i < row.size(); i++) {
+                String str = "";
+                if (row.get(i) != null) {
                     str = row.get(i);
                 }
 
                 str = StringEscapeUtils.escapeCsv(str);
 
-				if (i<row.size()-1) {
+                if (i < row.size()-1) {
                     data.append(str).append(",");
                 } else {
                     data.append(str).append(" \n");
                 }
-			}
-		}
+            }
+        }
+
 		return data;
 	}
 }
