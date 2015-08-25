@@ -404,29 +404,28 @@ public class ReportsServiceImpl implements ReportsService {
                 String atkResponse = finding.getAttackResponse();
                 String scannerDet = finding.getScannerDetail();
 
-                if (longDescription != null && !longDescription.isEmpty()) {
-                    description = StringEscapeUtils.escapeCsv(longDescription);
+                if (longDescription != null && !longDescription.isEmpty() && description.isEmpty()) {
+                    description = longDescription;
                 }
 
-                if (atkString != null && !atkString.isEmpty()) {
-                    attackString = StringEscapeUtils.escapeCsv(atkString);
+                if (atkString != null && !atkString.isEmpty() && attackString.isEmpty()) {
+                    attackString = atkString;
                 }
 
-                if (atkRequest != null && !atkRequest.isEmpty()) {
-                    attackRequest = StringEscapeUtils.escapeCsv(atkRequest);
-                    attackRequest = attackRequest.replace("\\n", "'\\n'");
+                if (atkRequest != null && !atkRequest.isEmpty() && attackRequest.isEmpty()) {
+                    attackRequest = atkRequest;
                 }
 
-                if (atkResponse != null && !atkResponse.isEmpty()) {
-                    attackResponse = StringEscapeUtils.escapeCsv(atkResponse);
+                if (atkResponse != null && !atkResponse.isEmpty() && attackResponse.isEmpty()) {
+                    attackResponse = atkResponse;
                 }
 
-                if (scannerDet != null && !scannerDet.isEmpty()) {
-                    scannerDetail = StringEscapeUtils.escapeCsv(scannerDet);
+                if (scannerDet != null && !scannerDet.isEmpty() && scannerDetail.isEmpty()) {
+                    scannerDetail = scannerDet;
                 }
 
-                if (scannerRec != null && !scannerRec.isEmpty()) {
-                    scannerRecommendation = StringEscapeUtils.escapeCsv(scannerRec);
+                if (scannerRec != null && !scannerRec.isEmpty() && scannerRecommendation.isEmpty()) {
+                    scannerRecommendation = scannerRec;
                 }
 
                 if (!description.isEmpty() && !attackString.isEmpty() && !attackRequest.isEmpty()
@@ -597,12 +596,7 @@ public class ReportsServiceImpl implements ReportsService {
 				String str = "";
 				if (row.get(i) != null) str = row.get(i);//
 
-				if (str.contains(",")) {
-                    str = "\"" + str.replaceAll("\"", "\"\"") + "\"";
-                }
-                if (str.contains("\n")) {
-                    str = "\"" + str + "\"";
-                }
+                str = StringEscapeUtils.escapeCsv(str);
 
 				if (i<row.size()-1)
 					data.append(str).append(",");
