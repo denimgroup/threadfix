@@ -97,6 +97,10 @@ public abstract class BaseIT {
         return getRandomString(12);
     }
 
+    public String getEmailAddress() {
+        return getRandomString(8) + "@denimgroup.com";
+    }
+
     /**
      * This method will create a team in the ThreadFix DBS
      * @return String of the team's name that has just been created in ThreadFix

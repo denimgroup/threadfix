@@ -915,7 +915,6 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage removeAcceptancePolicy(String policyName) {
-        //TODO: remove extra clicks when policies appear automatically
         driver.findElementByCssSelector("#acceptcriteria" + policyName + ">span").click();
         handleAlert();
         return this;

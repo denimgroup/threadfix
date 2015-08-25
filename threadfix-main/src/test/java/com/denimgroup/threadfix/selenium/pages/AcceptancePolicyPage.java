@@ -76,6 +76,7 @@ public class AcceptancePolicyPage extends BasePage {
     }
 
     public AcceptancePolicyPage clickCreateAcceptancePolicy() {
+        waitForElement(By.id("acceptcriteriaTable"));
         driver.findElementById("createNewModalButton").click();
         waitForElement(By.id("acCreateNameInput"));
         return new AcceptancePolicyPage(driver);
@@ -100,7 +101,6 @@ public class AcceptancePolicyPage extends BasePage {
     }
 
     public AcceptancePolicyPage createAcceptancePolicy(String policyName, String filterName) {
-        waitForElement(By.id("acceptcriteriaTable"));
         clickCreateAcceptancePolicy()
                 .setAcceptancePolicyName(policyName)
                 .setFilterForPolicy(filterName)
@@ -140,6 +140,29 @@ public class AcceptancePolicyPage extends BasePage {
         return new AcceptancePolicyPage(driver);
     }
 
+    public AcceptancePolicyPage clickAddEmailsButton(String policyName) {
+        driver.findElementById("addEmailModalButton" + policyName).click();
+        return new AcceptancePolicyPage(driver);
+    }
+
+    public AcceptancePolicyPage addEmailAddress(String address) {
+        driver.findElementById("emailInput").clear();
+        driver.findElementById("emailInput").sendKeys(address);
+        driver.findElementById("addEmailButton").click();
+        return this;
+    }
+
+    public AcceptancePolicyPage addEmailList(String list) {
+        new Select(driver.findElementById("emailListSelect")).selectByVisibleText(list);
+        driver.findElementById("addEmailListButton").click();
+        return this;
+    }
+
+    public AcceptancePolicyPage clickAddEmailsButtonForApp(String appName, String policyName) {
+        driver.findElementByCssSelector("#ac" + policyName + "AppRow" + appName + " #addEmailModalButton" + appName).click();
+        return new AcceptancePolicyPage(driver);
+    }
+
     /*------------------------------------ Boolean Methods ------------------------------------*/
 
     public boolean isPolicyPresent(String name) {
@@ -167,4 +190,47 @@ public class AcceptancePolicyPage extends BasePage {
         }
     }
 
+    public boolean isEmailPresent(String email) {
+        if (driver.findElementById("emailExpanded").getAttribute("class").contains("expanded")) {
+            driver.findElementById("caretEmail").click();
+        }
+        driver.findElementById("caretEmail").click();
+        return isElementPresent(getIdForEmail(email));
+    }
+
+    public boolean isEmailListPresent(String list) {
+        if (driver.findElementById("emailListExpanded").getAttribute("class").contains("expanded")) {
+            driver.findElementById("acceptcriteriaCaretEmailList").click();
+        }
+        driver.findElementById("acceptcriteriaCaretEmailList").click();
+        return isElementPresent("emailList" + list);
+    }
+
+    public boolean isSubmitDisabled() {
+        return driver.findElementById("submit").getAttribute("class").contains("disabled");
+    }
+
+    public boolean isNameRequiredErrorDisplayed() {
+            return !driver.findElementById("nameRequiredError").getAttribute("class").contains("ng-hide");
+    }
+
+    public boolean isLengthErrorDisplayed() {
+        return !driver.findElementById("characterLimitError").getAttribute("class").contains("ng-hide");
+    }
+
+    public boolean canSaveDuplicateAcceptancePolicy() {
+        try {
+            driver.findElementById("submit").click();
+            waitForElement(By.cssSelector("#otherNameError:not(.ng-hide)"));
+            return false;
+        } catch (TimeoutException e) {
+            return true;
+        }
+    }
+
+    /*------------------------------------ String Methods ------------------------------------*/
+
+    public String getIdForEmail(String email) {
+        return "email" + email.replace("@", "").replace(".", "");
+    }
 }

@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.EnterpriseTests;
 import com.denimgroup.threadfix.selenium.pages.AcceptancePolicyPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.tests.BaseDataTest;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -95,6 +96,13 @@ public class AcceptancePolicyEntIT extends BaseDataTest {
 
         assertTrue("Acceptance Policy does not display edited name.", acceptancePolicyPage.isPolicyNameCorrect(editedPolicyName));
         assertTrue("Policy filter name is not the new filter.", acceptancePolicyPage.isPolicyFilterCorrect(editedPolicyName, newFilter));
+
+        acceptancePolicyPage.clickEditDeleteButton(editedPolicyName)
+                .setAcceptancePolicyName(policyName)
+                .saveAcceptancePolicy();
+
+        assertTrue("Acceptance Policy name could not be edited without changing filter.", acceptancePolicyPage.isPolicyNameCorrect(policyName));
+        assertTrue("Policy filter name was changed.", acceptancePolicyPage.isPolicyFilterCorrect(policyName, newFilter));
     }
 
     @Test
@@ -169,5 +177,122 @@ public class AcceptancePolicyEntIT extends BaseDataTest {
                 .expandAcceptancePolicy(name);
 
         assertFalse("Application is still present on acceptance policy page.", acceptancePolicyPage.isAppPresent(name, appName));
+    }
+
+    @Ignore("Awaiting ID changes")
+    @Test
+    public void testAddEmailsButtonForPolicy() {
+        String name = getName();
+        String email = getEmailAddress();
+        String listName = getName();
+        AcceptancePolicyPage acceptancePolicyPage = initialize(name);
+
+        acceptancePolicyPage.clickManageEmailListsLink()
+                .clickCreateEmailList()
+                .setEmailListName(listName)
+                .clickSaveEmailList()
+                .clickAcceptancePoliciesLink()
+                .clickAddEmailsButton(name)
+                .addEmailAddress(email)
+                .addEmailList(listName);
+
+        assertTrue("Email was not added to acceptance policy.", acceptancePolicyPage.isEmailPresent(email));
+        assertTrue("Email List was not added to acceptance policy.", acceptancePolicyPage.isEmailListPresent(listName));
+    }
+
+    @Ignore("Awaiting ID changes")
+    @Test
+    public void testAddEmailsButtonForApp() {
+        initializeTeamAndApp();
+        String name = getName();
+        String email = getEmailAddress();
+        String listName = getName();
+        AcceptancePolicyPage acceptancePolicyPage = initialize(name);
+
+        acceptancePolicyPage.clickManageEmailListsLink()
+                .clickCreateEmailList()
+                .setEmailListName(listName)
+                .clickSaveEmailList()
+                .clickAcceptancePoliciesLink()
+                .expandAcceptancePolicy(name)
+                .addAppToAcceptancePolicy(name, appName)
+                .clickAddEmailsButtonForApp(appName, name)
+                .addEmailAddress(email)
+                .addEmailList(listName);
+
+        assertTrue("Email was not added to app.", acceptancePolicyPage.isEmailPresent(email));
+        assertTrue("Email List was not added to app.", acceptancePolicyPage.isEmailListPresent(listName));
+    }
+
+    //================================================================================================
+    // Validation Tests
+    //================================================================================================
+
+    @Test
+    public void testCreateAcceptancePolicyValidation() {
+        String filterName = getName();
+        String secondFilterName = getName();
+        String whitespace = "        ";
+        String longName = getRandomString(51);
+        String duplicateName = getName();
+        AcceptancePolicyPage acceptancePolicyPage = loginPage.defaultLogin()
+                .clickAcceptancePoliciesLink()
+                .createGenericFilter(filterName)
+                .createGenericFilter(secondFilterName)
+                .clickCreateAcceptancePolicy()
+                .setAcceptancePolicyName(duplicateName);
+
+        assertTrue("Acceptance Policy could be created with no Filter set.", acceptancePolicyPage.isSubmitDisabled());
+
+        acceptancePolicyPage.setFilterForPolicy(filterName)
+                .setAcceptancePolicyName(whitespace);
+
+        assertTrue("Acceptance Policy could be created with empty name.", acceptancePolicyPage.isSubmitDisabled());
+        assertTrue("Name required error is not displayed.", acceptancePolicyPage.isNameRequiredErrorDisplayed());
+
+        acceptancePolicyPage.setAcceptancePolicyName(longName);
+
+        assertTrue("Acceptance Policy could be created with long name.", acceptancePolicyPage.isSubmitDisabled());
+        assertTrue("Name required error is not displayed.", acceptancePolicyPage.isLengthErrorDisplayed());
+
+        acceptancePolicyPage.setAcceptancePolicyName(duplicateName)
+                .saveAcceptancePolicy()
+                .clickCreateAcceptancePolicy()
+                .setAcceptancePolicyName(duplicateName)
+                .setFilterForPolicy(secondFilterName);
+
+        assertFalse("Duplicate Acceptance Policy name could be submitted.",
+                acceptancePolicyPage.canSaveDuplicateAcceptancePolicy());
+    }
+
+    @Test
+    public void testEditAcceptancePolicyValidation() {
+        String filterName = getName();
+        String secondFilterName = getName();
+        String whitespace = "        ";
+        String longName = getRandomString(51);
+        String name = getName();
+        String duplicateName = getName();
+        AcceptancePolicyPage acceptancePolicyPage = loginPage.defaultLogin()
+                .clickAcceptancePoliciesLink()
+                .createGenericFilter(filterName)
+                .createGenericFilter(secondFilterName)
+                .createAcceptancePolicy(duplicateName, filterName)
+                .createAcceptancePolicy(name, secondFilterName)
+                .clickEditDeleteButton(name)
+                .setAcceptancePolicyName(whitespace);
+
+        assertTrue("Acceptance Policy could be edited to have empty name.", acceptancePolicyPage.isSubmitDisabled());
+        assertTrue("Name required error is not displayed.", acceptancePolicyPage.isNameRequiredErrorDisplayed());
+
+        acceptancePolicyPage.setAcceptancePolicyName(longName);
+
+        assertTrue("Acceptance Policy could be edited to have long name.", acceptancePolicyPage.isSubmitDisabled());
+        assertTrue("Name required error is not displayed.", acceptancePolicyPage.isLengthErrorDisplayed());
+
+        acceptancePolicyPage.setAcceptancePolicyName(duplicateName);
+
+        assertFalse("Duplicate Acceptance Policy name could be submitted by editing.",
+                acceptancePolicyPage.canSaveDuplicateAcceptancePolicy());
     }
 }

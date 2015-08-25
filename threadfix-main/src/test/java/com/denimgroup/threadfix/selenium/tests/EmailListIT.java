@@ -24,12 +24,15 @@
 
 package com.denimgroup.threadfix.selenium.tests;
 
+import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.EmailListPage;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+@Category(CommunityTests.class)
 public class EmailListIT extends BaseDataTest {
 
     public EmailListPage initialize(String listName) {
@@ -38,10 +41,6 @@ public class EmailListIT extends BaseDataTest {
                 .clickCreateEmailList()
                 .setEmailListName(listName)
                 .clickSaveEmailList();
-    }
-
-    public String getEmailAddress() {
-        return getRandomString(8) + "@denimgroup.com";
     }
 
     @Test
