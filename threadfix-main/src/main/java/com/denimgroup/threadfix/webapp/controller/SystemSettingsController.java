@@ -144,9 +144,8 @@ public class SystemSettingsController {
             }
         }
 
-        List<CSVExportField> exportFields = list();
-
         // This was added because Spring autobinding was not saving the export fields properly
+        List<CSVExportField> exportFields = list();
         Map<String, String[]> params = request.getParameterMap();
         int index = 0;
 
