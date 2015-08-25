@@ -38,8 +38,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.set;
-import static com.denimgroup.threadfix.CollectionUtils.setFrom;
 
 import java.util.Arrays;
 import java.util.HashSet;
