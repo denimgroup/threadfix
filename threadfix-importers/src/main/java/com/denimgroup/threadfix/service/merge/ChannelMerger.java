@@ -23,8 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.merge;
 
+import com.denimgroup.threadfix.data.dao.DefaultConfigurationDao;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.VulnerabilityStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,7 @@ public class ChannelMerger {
 
     private Scan scan;
     private ApplicationChannel applicationChannel;
+    private DefaultConfiguration defaultConfiguration;
 
     List<Finding> newFindings = list();
     Map<String, Vulnerability> oldNativeIdVulnHash = map();
@@ -52,6 +55,7 @@ public class ChannelMerger {
     Integer closed = 0, resurfaced = 0, total = 0, numberNew = 0, old = 0,
             numberRepeatResults = 0, numberRepeatFindings = 0, oldVulnerabilitiesInitiallyFromThisChannel = 0;
     Map<String, Finding> scanHash;
+    List<Scan> otherFoundScans = list();
 
     /**
      * This is the first round of scan merge that only considers scans from the same scanner
@@ -62,7 +66,7 @@ public class ChannelMerger {
      * @param scan recent scan to merge
      * @param applicationChannel context information about the scan
      */
-    public static void channelMerge(VulnerabilityService vulnerabilityService, VulnerabilityStatusService vulnerabilityStatusService, Scan scan, ApplicationChannel applicationChannel) {
+    public static void channelMerge(VulnerabilityService vulnerabilityService, VulnerabilityStatusService vulnerabilityStatusService, Scan scan, ApplicationChannel applicationChannel, DefaultConfiguration defaultConfiguration) {
         if (scan == null || applicationChannel == null) {
             LOG.warn("Insufficient data to complete Application Channel-wide merging process.");
             return;
@@ -74,6 +78,7 @@ public class ChannelMerger {
         merger.applicationChannel = applicationChannel;
         merger.vulnerabilityService = vulnerabilityService;
         merger.vulnerabilityStatusService = vulnerabilityStatusService;
+        merger.defaultConfiguration = defaultConfiguration;
 
         merger.performMerge();
     }
@@ -127,8 +132,11 @@ public class ChannelMerger {
     private void closeMissingVulnerabilities() {
         // for every old native ID
         String name = scan.getApplicationChannel().getChannelType().getName();
+        // Immediately close
+        boolean closeVulnWhenNoScannersReport = defaultConfiguration.getCloseVulnWhenNoScannersReport();
 
         for (Map.Entry<String, Vulnerability> entry : oldNativeIdVulnHash.entrySet()) {
+            otherFoundScans = list();
             String nativeId = entry.getKey();
             Vulnerability vulnerability = entry.getValue();
 
@@ -139,11 +147,22 @@ public class ChannelMerger {
                 boolean shouldClose = true;
                 for (Finding finding : vulnerability.getFindings()) {
 
-                    // if the finding is from another channel or is contained in the new scan, it's not closed
-                    if (!name.equals(finding.getChannelNameOrNull()) ||
-                            scanHash.containsKey(finding.getNativeId())) {
+                    // if the finding is contained in the new scan, it's not closed
+                    if (scanHash.containsKey(finding.getNativeId())) {
                         shouldClose = false;
                         break;
+                    }
+
+                    // if the finding is from another channel, then check system setting and if it was closed in that channel
+                    if (!name.equals(finding.getChannelNameOrNull())) {
+
+                        List<String> otherFindingNativeIds = constructLatestScanNativeIds(finding);
+                        if (otherFindingNativeIds.contains(finding.getNativeId())) { // still present in other scanner
+                            if (closeVulnWhenNoScannersReport) {
+                                shouldClose = false;
+                                break;
+                            }
+                        }
                     }
                 }
 
@@ -152,13 +171,17 @@ public class ChannelMerger {
                 }
 
                 if (scan.getImportTime() != null) {
-                    vulnerabilityStatusService.closeVulnerability(oldNativeIdVulnHash.get(nativeId), scan,
+                    vulnerabilityStatusService.closeVulnerability(vulnerability, scan,
                             scan.getImportTime(), false, false);
                 } else {
-                    vulnerabilityStatusService.closeVulnerability(oldNativeIdVulnHash.get(nativeId), scan,
+                    vulnerabilityStatusService.closeVulnerability(vulnerability, scan,
                             Calendar.getInstance(), false, false);
                 }
-                vulnerabilityService.storeVulnerability(oldNativeIdVulnHash.get(nativeId));
+
+                vulnerabilityStatusService.createCloseVulnMaps(vulnerability, otherFoundScans);
+
+                vulnerabilityService.storeVulnerability(vulnerability);
+
                 closed += 1;
             }
         }
@@ -278,6 +301,31 @@ public class ChannelMerger {
                 oldNativeIdFindingHash.put(key, finding);
             }
         }
+    }
+
+    private List<String> constructLatestScanNativeIds(Finding finding) {
+        List<String> result = list();
+
+        if (finding.getScan() == null ||
+                finding.getScan().getApplicationChannel() == null
+                || finding.getScan().getApplicationChannel().getScanList() == null
+                || finding.getScan().getApplicationChannel().getScanList().size() == 0)
+            return result;
+
+        Scan latestScan = finding.getScan().getApplicationChannel().getLatestScan();
+
+        if (latestScan != null && latestScan.getId() != null) {
+
+            otherFoundScans.add(latestScan);
+
+            for (Finding otherFinding : latestScan.getFindings()) {
+                if (otherFinding != null && otherFinding.getNativeId() != null
+                        && !otherFinding.getNativeId().isEmpty()) {
+                    result.add(otherFinding.getNativeId());
+                }
+            }
+        }
+        return result;
     }
 
     private List<Finding> getOldFindingList(ApplicationChannel applicationChannel) {
