@@ -121,6 +121,7 @@ public class SystemSettingsController {
     @JsonView(AllViews.FormInfo.class)
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody Object processSubmit(@ModelAttribute DefaultConfiguration defaultConfiguration,
+                                              HttpServletRequest request,
                                               BindingResult bindingResult) {
 
         if (defaultConfiguration.getDeleteUploadedFiles()) {
@@ -136,11 +137,17 @@ public class SystemSettingsController {
             bindingResult.reject("sessionTimeout", null, "30 is the maximum.");
         }
 
-        if(defaultConfiguration.fileUploadLocationExists()) {
+        if (defaultConfiguration.fileUploadLocationExists()) {
             File directory = new File(defaultConfiguration.getFileUploadLocation());
             if (!directory.exists()){
                 bindingResult.rejectValue("fileUploadLocation", null, null, "Directory does not exist.");
             }
+        }
+
+        // This was added to prevent any duplicate export fields from being saved
+        if (defaultConfiguration.getCsvExportFields().size() > 0) {
+            TreeSet<CSVExportField> exportFields = new TreeSet<>(defaultConfiguration.getCsvExportFields());
+            defaultConfiguration.setCsvExportFields(listFrom(exportFields));
         }
 
         Map<String,String> errors = addReportErrors(defaultConfiguration);
