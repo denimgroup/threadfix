@@ -60,8 +60,8 @@ public enum FrameworkType {
         } else {
             for (FrameworkType frameworkType : values()) {
                 if (frameworkType.toString().equals(input) ||
-                        frameworkType.displayName.equals(input) ||
-                        frameworkType.displayName.replace(' ', '_').equals(input)) {
+                        frameworkType.displayName.toLowerCase().equals(input.toLowerCase()) ||
+                        frameworkType.displayName.toLowerCase().replace(' ', '_').equals(input.toLowerCase())) {
                     type = frameworkType;
                     break;
                 }

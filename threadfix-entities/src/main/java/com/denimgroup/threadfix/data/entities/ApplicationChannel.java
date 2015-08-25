@@ -138,6 +138,14 @@ public class ApplicationChannel extends AuditableEntity implements Iterable<Scan
 
 	@Override
 	public String toString() {
-		return channelType.getName() + "--" + application.getName();
+		if (channelType == null && application == null) {
+			return "Channel with no type or application";
+		} else if (channelType == null) {
+			return "Channel with no type for application " + application.getName();
+		} else if (application == null) {
+			return "Channel with type " + channelType.getName() + " and no application.";
+		} else {
+			return channelType.getName() + "--" + application.getName();
+		}
 	}
 }

@@ -13,7 +13,7 @@
 
 
 <!-- Teams and Applications section (should only show on Reports page -->
-<div class="accordion-group" ng-hide="treeApplication || treeTeam || complianceActive || remediationEnterpriseActive">
+<div class="accordion-group" ng-hide="treeApplication || treeTeam || complianceActive || remediationActive">
     <div class="accordion-heading" ng-click="showTeamAndApplicationControls = !showTeamAndApplicationControls">
         <span id="expandTeamAndApplicationFilters" class="icon" ng-class="{ 'icon-minus': showTeamAndApplicationControls, 'icon-plus': !showTeamAndApplicationControls }"></span> Teams And Applications
     </div>
@@ -293,7 +293,7 @@
 </div>
 
 <!-- Permissions -->
-<div class="accordion-group">
+<div class="accordion-group" ng-show="vulnSearch">
     <div class="accordion-heading" ng-click="showPermissions = !showPermissions">
         <span id="showPermissions" class="icon" ng-class="{ 'icon-minus': showPermissions, 'icon-plus': !showPermissions }"></span> Authentication / Authorization
     </div>

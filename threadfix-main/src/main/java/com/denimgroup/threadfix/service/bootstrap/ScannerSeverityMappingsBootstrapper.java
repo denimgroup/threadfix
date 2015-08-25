@@ -104,6 +104,8 @@ public class ScannerSeverityMappingsBootstrapper {
                     severityMap.setGenericSeverity(genericSeverity);
 
                     channelSeverity.setSeverityMap(severityMap);
+
+                    channelSeverityDao.saveOrUpdate(channelSeverity);
                 }
             }
         }

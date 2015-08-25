@@ -23,11 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.bootstrap;
 
+import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
+import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by mcollins on 8/21/15.
@@ -39,7 +43,10 @@ public class RemoteProviderBootstrapper {
 
     @Autowired
     RemoteProviderTypeService remoteProviderTypeService;
+    @Autowired
+    ChannelTypeDao channelTypeDao;
 
+    @Transactional
     public void bootstrap() {
 
         String whitehat = "WhiteHat Sentinel",
@@ -53,6 +60,9 @@ public class RemoteProviderBootstrapper {
         whitehatType.setHasApiKey(true);
         whitehatType.setHasUserNamePassword(false);
 
+        ChannelType whitehatChannelType = channelTypeDao.retrieveByName(ScannerType.SENTINEL.getDbName());
+        whitehatType.setChannelType(whitehatChannelType);
+
         remoteProviderTypeService.store(whitehatType);
 
 
@@ -61,6 +71,9 @@ public class RemoteProviderBootstrapper {
         veracodeType.setHasApiKey(false);
         veracodeType.setHasUserNamePassword(true);
 
+        ChannelType veracodeChannelType = channelTypeDao.retrieveByName(ScannerType.VERACODE.getDbName());
+        veracodeType.setChannelType(veracodeChannelType);
+
         remoteProviderTypeService.store(veracodeType);
 
 
@@ -68,6 +81,9 @@ public class RemoteProviderBootstrapper {
         qualysType.setName(qualys);
         qualysType.setHasApiKey(false);
         qualysType.setHasUserNamePassword(true);
+
+        ChannelType qualysChannelType = channelTypeDao.retrieveByName(ScannerType.QUALYSGUARD_WAS.getDbName());
+        qualysType.setChannelType(qualysChannelType);
 
         remoteProviderTypeService.store(qualysType);
 
