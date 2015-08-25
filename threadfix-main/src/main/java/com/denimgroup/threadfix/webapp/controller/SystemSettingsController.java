@@ -144,11 +144,25 @@ public class SystemSettingsController {
             }
         }
 
-        // This was added to prevent any duplicate export fields from being saved
-        if (defaultConfiguration.getCsvExportFields().size() > 0) {
-            TreeSet<CSVExportField> exportFields = new TreeSet<>(defaultConfiguration.getCsvExportFields());
-            defaultConfiguration.setCsvExportFields(listFrom(exportFields));
+        List<CSVExportField> exportFields = list();
+
+        // This was added because Spring autobinding was not saving the export fields properly
+        Map<String, String[]> params = request.getParameterMap();
+        int index = 0;
+
+        while (index != -1) {
+            String key = "csvExportFields["+index+"]";
+            String [] enumValue = params.get(key);
+
+            if (enumValue != null) {
+                exportFields.add(CSVExportField.valueOf(enumValue[0]));
+                index++;
+            } else {
+                index = -1;
+            }
         }
+
+        defaultConfiguration.setCsvExportFields(exportFields);
 
         Map<String,String> errors = addReportErrors(defaultConfiguration);
 
