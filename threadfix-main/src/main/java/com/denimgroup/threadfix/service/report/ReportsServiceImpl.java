@@ -517,9 +517,7 @@ public class ReportsServiceImpl implements ReportsService {
         if (exportFields.size() > 0) {
             String exportFieldsStr = join(", ", defaultConfigService.
                     getDisplayNamesFromExportFields(exportFields)) + "\n";
-
             data.append(exportFieldsStr);
-
         } else {
             data.append(getCSVExportHeaderString());
         }
