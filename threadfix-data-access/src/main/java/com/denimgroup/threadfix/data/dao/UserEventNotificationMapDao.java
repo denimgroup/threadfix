@@ -37,6 +37,4 @@ public interface UserEventNotificationMapDao extends GenericObjectDao<UserEventN
     void delete(UserEventNotificationMap userEventNotificationMap);
 
     List<UserEventNotificationMap> loadUserEventNotificationMaps(User user);
-
-    void saveUserEventNotificationMaps(List<UserEventNotificationMap> userEventNotificationMapsToRemove);
 }

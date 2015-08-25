@@ -137,10 +137,33 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = false)
     public Integer createUser(User user) {
+        initializeUserEventNotificationMaps(user);
         encryptPassword(user);
         userDao.saveOrUpdate(user);
         return user.getId();
     }
+
+    private void initializeUserEventNotificationMaps(User user) {
+		boolean initializationSuccessful = false;
+		try {
+			user.setUserEventNotificationMapsInitialized(true);
+			userDao.saveOrUpdate(user);
+
+			Set<EventAction> eventNotificationTypes = EnumSet.copyOf(EventAction.globalEventActions);
+			eventNotificationTypes.addAll(EventAction.globalGroupedEventActions);
+
+			setNotificationEventActions(user, eventNotificationTypes);
+
+			user.setUserEventNotificationMapsInitialized(true);
+			initializationSuccessful = true;
+		} catch (RuntimeException e) {
+			if (!initializationSuccessful) {
+				user.setUserEventNotificationMapsInitialized(false);
+				userDao.saveOrUpdate(user);
+			}
+			throw e;
+		}
+	}
 
     private void encryptPassword(User user) {
         try {
@@ -488,6 +511,10 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Set<EventAction> getNotificationEventActions(User user) {
+		if (!user.isUserEventNotificationMapsInitialized()) {
+			initializeUserEventNotificationMaps(user);
+			storeUser(user);
+		}
 		List<UserEventNotificationMap> userEventNotificationMaps = userEventNotificationMapDao.loadUserEventNotificationMaps(user);
 		Set<EventAction> notificationEventActions = EnumSet.noneOf(EventAction.class);
 		for (UserEventNotificationMap userEventNotificationMap : userEventNotificationMaps) {

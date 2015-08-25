@@ -69,9 +69,4 @@ public class HibernateUserEventNotificationMapDao
         List<UserEventNotificationMap> userEventNotificationMaps = criteria.list();
         return userEventNotificationMaps;
     }
-
-    @Override
-    public void saveUserEventNotificationMaps(List<UserEventNotificationMap> userEventNotificationMapsToRemove) {
-
-    }
 }
