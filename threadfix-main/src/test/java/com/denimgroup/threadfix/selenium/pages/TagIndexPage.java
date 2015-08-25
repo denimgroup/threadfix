@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 
@@ -103,7 +104,7 @@ public class TagIndexPage extends BasePage{
     public boolean isAppTagNameLinkPresent(String name) {
         try {
             waitForElement(By.id("tagName" + name));
-        } catch (NoSuchElementException e) {
+        } catch (TimeoutException e) {
             return false;
         }
         return true;
@@ -112,7 +113,7 @@ public class TagIndexPage extends BasePage{
     public boolean isCommentTagNameLinkPresent(String name) {
         try {
             waitForElement(By.id("commentTagName" + name));
-        } catch (NoSuchElementException e) {
+        } catch (TimeoutException e) {
             return false;
         }
         return true;
@@ -121,7 +122,7 @@ public class TagIndexPage extends BasePage{
     public boolean isVulnerabilityTagNameLinkPresent(String name) {
         try {
             waitForElement(By.id("vulnTagName" + name));
-        } catch (NoSuchElementException e) {
+        } catch (TimeoutException e) {
             return false;
         }
         return true;
