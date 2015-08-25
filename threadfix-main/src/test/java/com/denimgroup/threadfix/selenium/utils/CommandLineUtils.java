@@ -25,9 +25,9 @@ public class CommandLineUtils {
 
     private static List<String> startArgs = list();
     private static final String DIRECTORY;
-    static double specificCliVersion = 0;
-
     private final String INCREASE_RESULTS_ARG = "numberVulnerabilities=100";
+
+    static double specificCliVersion = 0;
 
     //===========================================================================================================
     // Startup
@@ -37,6 +37,7 @@ public class CommandLineUtils {
         try {
             String cliVersionProperty = System.getProperty("SPECIFIC_CLI_VERSION").trim();
             specificCliVersion = Double.parseDouble(cliVersionProperty);
+            System.out.println("Using CLI jar for ThreadFix " + specificCliVersion);
         } catch (NullPointerException ex) {
             System.out.println("Optional system property SPECIFIC_CLI_VERSION not set.\nContinuing with default CLI jar.");
         }
@@ -54,7 +55,7 @@ public class CommandLineUtils {
         }
         startArgs.addAll(list("java", "-jar"));
         if (specificCliVersion != 0) {
-            startArgs.add(String.valueOf(specificCliVersion) + ".jar");
+            startArgs.add(specificCliVersion + ".jar");
         } else {
             startArgs.add("threadfix-cli-2.2-SNAPSHOT-jar-with-dependencies.jar");
         }
@@ -96,9 +97,9 @@ public class CommandLineUtils {
         return executeCommand(DIRECTORY, args);
     }
 
-    public static void checkVersion(double version) {
+    public static void checkVersion(double introductionVersion) {
         if (specificCliVersion > 0) {
-            assumeTrue(version <= specificCliVersion);
+            assumeTrue(introductionVersion <= specificCliVersion);
         }
     }
 
