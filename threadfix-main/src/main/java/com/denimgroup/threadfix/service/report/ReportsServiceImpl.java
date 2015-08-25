@@ -594,13 +594,17 @@ public class ReportsServiceImpl implements ReportsService {
 		for (List<String> row: rowParamsList) {
 			for (int i=0;i<row.size();i++) {
 				String str = "";
-				if (row.get(i) != null) str = row.get(i);//
+				if (row.get(i) != null) {
+                    str = row.get(i);
+                }
 
                 str = StringEscapeUtils.escapeCsv(str);
 
-				if (i<row.size()-1)
-					data.append(str).append(",");
-				else data.append(str).append(" \n");
+				if (i<row.size()-1) {
+                    data.append(str).append(",");
+                } else {
+                    data.append(str).append(" \n");
+                }
 			}
 		}
 		return data;
