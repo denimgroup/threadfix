@@ -51,7 +51,7 @@ public class DatabaseUtils {
             throw new IllegalStateException("API_KEY system variable was null.");
         }
         if (REST_URL == null) {
-            throw new IllegalStateException("REST_URL system varteiable was null.");
+            throw new IllegalStateException("REST_URL system variable was null.");
         }
     }
 

@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static org.junit.Assume.assumeTrue;
 
 import com.denimgroup.threadfix.importer.util.JsonUtils;
 
@@ -23,15 +24,41 @@ public class CommandLineUtils {
     protected final SanitizedLogger log = new SanitizedLogger(CommandLineUtils.class);
 
     private static List<String> startArgs = list();
-    private static final String DIRECTORY = ".." + File.separator + "threadfix-cli" + File.separator + "target";
-
+    private static final String DIRECTORY;
     private final String INCREASE_RESULTS_ARG = "numberVulnerabilities=100";
+
+    static double specificCliVersion = 0;
+
+    //===========================================================================================================
+    // Startup
+    //===========================================================================================================
+
+    static {
+        try {
+            String cliVersionProperty = System.getProperty("SPECIFIC_CLI_VERSION").trim();
+            specificCliVersion = Double.parseDouble(cliVersionProperty);
+            System.out.println("Using CLI jar for ThreadFix " + specificCliVersion);
+        } catch (NullPointerException ex) {
+            System.out.println("Optional system property SPECIFIC_CLI_VERSION not set.\nContinuing with default CLI jar.");
+        }
+
+        if (specificCliVersion > 0) {
+            DIRECTORY = System.getProperty("CLI_JAR_DIRECTORY");
+        } else {
+            DIRECTORY = ".." + File.separator + "threadfix-cli" + File.separator + "target";
+        }
+    }
 
     static {
         if (System.getProperty("os.name").startsWith("Windows")) {
             startArgs.addAll(list("CMD", "/C"));
         }
-        startArgs.addAll(list("java", "-jar", "threadfix-cli-2.2-SNAPSHOT-jar-with-dependencies.jar"));
+        startArgs.addAll(list("java", "-jar"));
+        if (specificCliVersion != 0) {
+            startArgs.add(specificCliVersion + ".jar");
+        } else {
+            startArgs.add("threadfix-cli-2.2-SNAPSHOT-jar-with-dependencies.jar");
+        }
     }
 
     // Executes command and returns JSON object
@@ -68,8 +95,14 @@ public class CommandLineUtils {
 
     public JSONObject executeJarCommand(String... args) {
         return executeCommand(DIRECTORY, args);
-
     }
+
+    public static void checkVersion(double introductionVersion) {
+        if (specificCliVersion > 0) {
+            assumeTrue(introductionVersion <= specificCliVersion);
+        }
+    }
+
     //===========================================================================================================
     // Configuration
     //===========================================================================================================
