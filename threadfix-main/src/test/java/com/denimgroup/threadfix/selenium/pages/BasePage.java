@@ -575,6 +575,15 @@ public abstract class BasePage {
         }
 	}
 
+    public void waitForElement(By by, int timeInSeconds) {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, timeInSeconds);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(by));
+        } catch (TimeoutException t) {
+            throw t;
+        }
+    }
+
     public void waitForClickableElement(WebElement e){
         WebDriverWait wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.elementToBeClickable(e));
@@ -610,7 +619,15 @@ public abstract class BasePage {
             WebDriverWait wait = new WebDriverWait(driver, 10);
             wait.until(ExpectedConditions.alertIsPresent());
         } catch (TimeoutException e) {
-            takeScreenShot();
+            throw new RuntimeException("Alert was not displayed as it should have been.", e);
+        }
+    }
+
+    public void checkForAlert(int timeInSeconds) {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, timeInSeconds);
+            wait.until(ExpectedConditions.alertIsPresent());
+        } catch (TimeoutException e) {
             throw new RuntimeException("Alert was not displayed as it should have been.", e);
         }
     }

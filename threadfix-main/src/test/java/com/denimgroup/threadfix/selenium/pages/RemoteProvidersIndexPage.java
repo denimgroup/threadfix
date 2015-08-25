@@ -90,7 +90,7 @@ public class RemoteProvidersIndexPage extends BasePage {
         while(driver.findElements(By.id("clearConfig2")).isEmpty() && i++ < 5) {
             sleep(20000);
         }
-		waitForElement(By.id("clearConfig2"));
+		waitForElement(By.id("clearConfig2"), 45);
 		return new RemoteProvidersIndexPage(driver);
 	}
 
@@ -114,7 +114,7 @@ public class RemoteProvidersIndexPage extends BasePage {
         while(driver.findElements(By.id("clearConfig1")).isEmpty() && i++ < 5) {
             sleep(20000);
         }
-        waitForElement(By.id("clearConfig1"));
+        waitForElement(By.id("clearConfig1"), 20);
 		return new RemoteProvidersIndexPage(driver);
 	}
 
