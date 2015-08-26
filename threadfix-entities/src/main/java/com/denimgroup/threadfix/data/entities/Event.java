@@ -549,6 +549,20 @@ public class Event extends AuditableEntity {
                 appendDefectLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
+            case ACCEPTANCE_CRITERIA_PASSING:
+                description.append(getUserName()).append(" caused Application");
+                appendApplicationLink(description, descriptionUrlMap, historyView);
+                description.append(" to pass Acceptance Criteria");
+                appendAcceptanceCriteriaLink(description, descriptionUrlMap, historyView);
+                description.append(".");
+                break;
+            case ACCEPTANCE_CRITERIA_FAILING:
+                description.append(getUserName()).append(" caused Application");
+                appendApplicationLink(description, descriptionUrlMap, historyView);
+                description.append(" to fail Acceptance Criteria");
+                appendAcceptanceCriteriaLink(description, descriptionUrlMap, historyView);
+                description.append(".");
+                break;
             default:
                 description.append(getUserName()).append(" performed an action");
                 if (getGroupCount() != null) {
@@ -665,6 +679,20 @@ public class Event extends AuditableEntity {
                 "/vulnerabilities/" +
                 vulnerability.getId() +
                 "/defect";
+        return buildLink(urlString, linkText, urlMap);
+    }
+
+    private void appendAcceptanceCriteriaLink(StringBuilder description, Map<String, Object> descriptionUrlMap, HistoryView historyView) {
+        if (getAcceptanceCriteria() != null) {
+            description.append(" ").append(buildAcceptanceCriteriaLink(getAcceptanceCriteria(), getAcceptanceCriteria().getName(), descriptionUrlMap));
+        }
+    }
+
+    private String buildAcceptanceCriteriaLink(AcceptanceCriteria acceptanceCriteria, String linkText, Map<String, Object> urlMap) {
+        if ((acceptanceCriteria == null) || (!acceptanceCriteria.isActive())) {
+            return linkText;
+        }
+        String urlString = "/configuration/acceptcriterias";
         return buildLink(urlString, linkText, urlMap);
     }
 
