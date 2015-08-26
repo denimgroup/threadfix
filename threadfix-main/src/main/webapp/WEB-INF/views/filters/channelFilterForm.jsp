@@ -23,7 +23,7 @@
                            type="text"
                            name = "sourceChannelTypeName"
                            ng-model="object.sourceChannelType"
-                           typeahead="channelType as channelType.name for channelType in config.channelTypes | filter:$viewValue | limitTo:10"
+                           typeahead="channelType as channelType.mappingFilterName for channelType in config.channelTypes | filter:$viewValue | limitTo:10"
                            typeahead-on-select="object.sourceChannelVulnerability = undefined;"
                            class="form-control"/>
                     <span id="sourceChannelTypeRequiredError" class="errors" ng-show="form.sourceChannelTypeName.$dirty && form.sourceChannelTypeName.$error.required">Channel Type is required.</span>

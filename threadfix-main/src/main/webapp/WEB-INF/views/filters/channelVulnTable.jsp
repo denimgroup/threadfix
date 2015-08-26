@@ -18,7 +18,7 @@
                 {{ vulnFilter.sourceChannelVulnerability.name }}
             </td>
             <td>
-                {{ vulnFilter.sourceChannelType.name }}
+                {{ vulnFilter.sourceChannelType.mappingFilterName }}
             </td>
             <td style="word-wrap: break-word;">
                 <div id="genericSeverity{{ $index }}" ng-if="!vulnFilter.targetGenericSeverity">

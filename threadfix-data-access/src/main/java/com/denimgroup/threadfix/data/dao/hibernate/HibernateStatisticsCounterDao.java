@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.StatisticsCounterDao;
+import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.StatisticsCounter;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
@@ -81,13 +82,18 @@ public class HibernateStatisticsCounterDao
             List<Integer> filteredVulnerabilities,
             List<Integer> filteredChannelSeverities) {
 
+        return getFindingSeverityMap(filteredSeverities, filteredVulnerabilities, filteredChannelSeverities, null);
+    }
+
+    @Override
+    public List<Map<String, Object>> getFindingSeverityMap(List<Integer> filteredSeverities, List<Integer> filteredVulnerabilities, List<Integer> filteredChannelSeverities, Scan scan) {
         String hql = "select new map (" +
-                    "count(*) as total, " +
-                    "counter.scanId as scanId, " +
-                    "counter.currentGenericSeverityId as genericSeverityId) " +
+                "count(*) as total, " +
+                "counter.scanId as scanId, " +
+                "counter.currentGenericSeverityId as genericSeverityId) " +
                 "from StatisticsCounter counter ";
 
-        List<String> whereStatements = getWhereStatements(filteredSeverities, filteredVulnerabilities, filteredChannelSeverities);
+        List<String> whereStatements = getWhereStatements(filteredSeverities, filteredVulnerabilities, filteredChannelSeverities, scan);
 
         if (!whereStatements.isEmpty()) {
             hql += "where ";
@@ -99,7 +105,7 @@ public class HibernateStatisticsCounterDao
 
         Query query = getSession().createQuery(hql);
 
-        addParameterLists(filteredSeverities, filteredVulnerabilities, filteredChannelSeverities, query);
+        addParameterLists(filteredSeverities, filteredVulnerabilities, filteredChannelSeverities, scan, query);
 
         Object idsMap = query.list();
         return (List<Map<String, Object>>) idsMap;
@@ -108,6 +114,7 @@ public class HibernateStatisticsCounterDao
     private void addParameterLists(List<Integer> filteredSeverities,
                                    List<Integer> filteredVulnerabilities,
                                    List<Integer> filteredChannelSeverities,
+                                   Scan scan,
                                    Query query) {
         if (!filteredSeverities.isEmpty()) {
             query.setParameterList("filteredSeverities", filteredSeverities);
@@ -118,9 +125,12 @@ public class HibernateStatisticsCounterDao
         if (!filteredChannelSeverities.isEmpty()) {
             query.setParameterList("filteredChannelSeverities", filteredChannelSeverities);
         }
+        if (scan != null) {
+            query.setParameter("scanId", scan.getId());
+        }
     }
 
-    private List<String> getWhereStatements(List<Integer> filteredSeverities, List<Integer> filteredVulnerabilities, List<Integer> filteredChannelSeverities) {
+    private List<String> getWhereStatements(List<Integer> filteredSeverities, List<Integer> filteredVulnerabilities, List<Integer> filteredChannelSeverities, Scan scan) {
         List<String> whereStatements = list();
 
         if (!filteredSeverities.isEmpty()) {
@@ -132,6 +142,10 @@ public class HibernateStatisticsCounterDao
         if (!filteredChannelSeverities.isEmpty()) {
             whereStatements.add("counter.channelSeverityId not in (:filteredChannelSeverities)");
         }
+        if (scan != null) {
+            whereStatements.add("counter.scanId = (:scanId)");
+        }
+
 
         return whereStatements;
     }

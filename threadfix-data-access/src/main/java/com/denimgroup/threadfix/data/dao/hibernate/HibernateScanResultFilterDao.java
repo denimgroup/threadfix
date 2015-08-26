@@ -5,6 +5,7 @@ import com.denimgroup.threadfix.data.dao.ScanResultFilterDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import com.denimgroup.threadfix.data.entities.ScanResultFilter;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.LogicalExpression;
@@ -67,6 +68,21 @@ public class HibernateScanResultFilterDao extends AbstractObjectDao<ScanResultFi
 
         List<ScanResultFilter> filters = retrieveAll();
 
+       return retrieveAllChannelSeverities(filters);
+    }
+
+    @Override
+    public List<Integer> retrieveAllChannelSeveritiesByChannelType(ChannelType channelType) {
+
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ScanResultFilter.class)
+                .add(Restrictions.eq("channelType", channelType));
+
+        List<ScanResultFilter> filters = criteria.list();
+        return retrieveAllChannelSeverities(filters);
+    }
+
+    private List<Integer> retrieveAllChannelSeverities(List<ScanResultFilter> filters) {
+
         if (filters.isEmpty()) {
             return list();
         }
@@ -92,9 +108,34 @@ public class HibernateScanResultFilterDao extends AbstractObjectDao<ScanResultFi
     }
 
     private LogicalExpression getLogicalExpression(ScanResultFilter filter) {
+
+        ChannelType alternateChannelType = filter.getChannelType();
+
+        if (alternateChannelType.getName().equals(ScannerType.APPSCAN_ENTERPRISE.getDisplayName())) {
+            alternateChannelType = retrieveChannelTypeByName(ScannerType.APPSCAN_DYNAMIC.getDisplayName());
+        }
+
+        if (alternateChannelType.getName().equals(ScannerType.DEPENDENCY_CHECK.getDisplayName())
+                || alternateChannelType.getName().equals(ScannerType.SSVL.getDisplayName())) {
+            alternateChannelType = retrieveChannelTypeByName(ScannerType.MANUAL.getDisplayName());
+        }
+
         return Restrictions.and(
                 Restrictions.eq("genericSeverityAlias.intValue", filter.getGenericSeverity().getIntValue()),
-                Restrictions.eq("channelTypeAlias.id", filter.getChannelType().getId())
+                Restrictions.eq("channelTypeAlias.id", alternateChannelType.getId())
         );
+    }
+
+    private ChannelType retrieveChannelTypeByName(String name) {
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ChannelType.class)
+                .add(Restrictions.eq("name", name));
+
+        List<ChannelType> channelTypeList = criteria.list();
+
+        if(channelTypeList == null || channelTypeList.isEmpty()){
+            return null;
+        }
+
+        return channelTypeList.get(0);
     }
 }
