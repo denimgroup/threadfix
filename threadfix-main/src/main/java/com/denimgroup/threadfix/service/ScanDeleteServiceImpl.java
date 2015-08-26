@@ -38,6 +38,7 @@ import com.denimgroup.threadfix.data.dao.WafRuleDao;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -73,6 +74,8 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
     @Autowired(required = false)
     private AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
 
+	private DefaultConfiguration defaultConfiguration;
+
 	/**
 	 * Deleting a scan requires a lot of code to check and make sure that all mappings
 	 * are where they should be. A lot of this is facilitated by ScanReopenVulnerabilityMap
@@ -86,6 +89,9 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 	 */
 	@Override
 	public void deleteScan(Scan scan) {
+
+		defaultConfiguration = defaultConfigService.loadCurrentConfiguration();
+
 		// if the scan is missing one of these it is probably malformed
 		if (scan == null || scan.getApplication() == null
 				|| scan.getApplicationChannel() == null
@@ -183,8 +189,6 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 		scanDao.deleteFindingsAndScan(scan);
 
         // If file upload location exists and file associated with scan exists, delete file
-        DefaultConfiguration defaultConfiguration = defaultConfigService.loadCurrentConfiguration();
-
         if (defaultConfiguration.fileUploadLocationExists()) {
             String filePath = defaultConfiguration.getFullFilePath(scan);
             File file = new File(filePath);
@@ -323,12 +327,14 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 	 */
 	private void processLastScanDeletion(Scan scan) {
 
+		boolean immediatelyOpen = true;
+
 		if (scan != null && scan.getScanCloseVulnerabilityMaps() != null) {
 			for (ScanCloseVulnerabilityMap map : scan.getScanCloseVulnerabilityMaps()) {
 				if (map != null && map.getVulnerability() != null) {
 					
 					Vulnerability vuln = map.getVulnerability();
-					
+
 					if (vuln.getScanCloseVulnerabilityMaps() != null) {
 						if (vuln.getScanCloseVulnerabilityMaps().size() == 1) {
 							vuln.setCloseTime(null);
@@ -336,8 +342,10 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 
 							ScanCloseVulnerabilityMap closeMap = vuln.getScanCloseVulnerabilityMaps()
 												.get(vuln.getScanCloseVulnerabilityMaps().size() - 2);
-							
-							if (closeMap != null && closeMap.getScan() != null && 
+
+							immediatelyOpen = !defaultConfiguration.getCloseVulnWhenNoScannersReport();
+
+							if (closeMap != null && closeMap.getScan() != null &&
 									closeMap.getScan().getImportTime() != null) {
 								vuln.setCloseTime(closeMap.getScan().getImportTime());
 							}
@@ -347,7 +355,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					// TODO else if there are more older maps, change the close time to 
 					// what it was before
 					vuln.getScanCloseVulnerabilityMaps().remove(map);
-					if (map.getVulnerability().isFoundByScanner()) {
+					if (map.getVulnerability().isFoundByScanner() && immediatelyOpen) {
 						vulnerabilityStatusService.openVulnerability(vuln, scan, map.getVulnerability().getOpenTime(), true);
 					}
 					vulnerabilityService.storeVulnerability(vuln);
@@ -592,7 +600,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 	private void deleteOrphanVulnerabilities(Application app, Scan scan) {
 		List<Finding> findingsToRemove = list();
 		List<Vulnerability> vulnsToRemove = list();
-		
+
 		// Cycle through vulns and update
 		if (app.getVulnerabilities() == null || app.getVulnerabilities().size() == 0) {
 			return;
@@ -658,7 +666,8 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 				vulnsToRemove.add(vuln);
 				
 			} else {
-				updateVulnDates(vuln, scan);
+				updateVulnDates(vuln, scan, defaultConfiguration.getCloseVulnWhenNoScannersReport() == null ?
+						false : defaultConfiguration.getCloseVulnWhenNoScannersReport());
 				if (vuln.getOriginalFinding() == null || 
 						vuln.getOriginalFinding().getScan().getId().equals(scan.getId())) {
 					updateFirstFindingForVuln(null,vuln);
@@ -710,12 +719,17 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			// Vulns should not have any reopen maps if they are here
 			// but they can have close maps.
 			if (vuln.getScanCloseVulnerabilityMaps() != null) {
-				for (ScanCloseVulnerabilityMap map : vuln.getScanCloseVulnerabilityMaps()) {
+				List<ScanCloseVulnerabilityMap> vulnMapCopy = new ArrayList<>(vuln.getScanCloseVulnerabilityMaps());
+				for (ScanCloseVulnerabilityMap map : vulnMapCopy) {
 					map.getScan().getScanCloseVulnerabilityMaps().remove(map);
 					map.getScan().setNumberClosedVulnerabilities(
 							map.getScan().getNumberClosedVulnerabilities() - 1);
+
+					vuln.getScanCloseVulnerabilityMaps().remove(map);
+
 					scanDao.deleteMap(map);
 					scanDao.saveOrUpdate(map.getScan());
+
 				}
 			}
 
@@ -734,7 +748,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 	 * @param vuln
 	 * @param scanToDelete
 	 */
-	private void updateVulnDates(Vulnerability vuln, Scan scanToDelete) {
+	private void updateVulnDates(Vulnerability vuln, Scan scanToDelete, boolean closeVulnWhenNoScannersReport) {
 		if (vuln == null || vuln.getFindings() == null ||
 				vuln.getFindings().size() == 0 || scanToDelete == null ||
 				scanToDelete.getId() == null) {
@@ -805,11 +819,14 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			if (vuln.isFoundByScanner()) {
 				vuln.setCloseTime(newCloseTime);
 				
-				if (!vuln.isActive() || newCloseTime.before(newOpenTime)) {
+				if (!vuln.isActive() && newCloseTime.before(newOpenTime)
+						|| (!vuln.isActive() && !(vuln.getScanCloseVulnerabilityMaps().size() > 0 && closeVulnWhenNoScannersReport))) {
 					vulnerabilityStatusService.openVulnerability(vuln, scanToDelete, newOpenTime, true);
 				}
-				
-				if (vuln.isActive() || newCloseTime.after(newOpenTime)) {
+
+				boolean toClose = vuln.getScanCloseVulnerabilityMaps().size() == 0 || (vuln.getScanCloseVulnerabilityMaps().size() > 0 && closeVulnWhenNoScannersReport);
+
+				if (vuln.isActive() && newCloseTime.after(newOpenTime) && toClose) {
 					vulnerabilityStatusService.closeVulnerability(vuln, scanToDelete, newCloseTime, true, false);
 				}
 			}

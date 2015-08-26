@@ -379,7 +379,7 @@
                 <h3 class="panel-title">
                     <span ng-hide="editBaseUrlSettings" class="icon icon-chevron-right"></span>
                     <span ng-show="editBaseUrlSettings" class="icon icon-chevron-down"></span>
-                    Threadfix base URL
+                    ThreadFix base URL
                 </h3>
             </div>
             <div class="panel-body" ng-show="editBaseUrlSettings">
@@ -530,6 +530,32 @@
                 </table>
             </div>
         </div>
+
+        <div class="panel panel-default">
+            <div id="defaultCloseSettingsPanel" class="panel-heading pointer" style="width:250px"
+                 ng-click="editCloseSettings = !editCloseSettings">
+                <h3 class="panel-title">
+                    <span ng-hide="editCloseSettings" class="icon icon-chevron-right"></span>
+                    <span ng-show="editCloseSettings" class="icon icon-chevron-down"></span>
+                    Vulnerability Close Settings
+                </h3>
+            </div>
+            <div class="panel-body" ng-show="editCloseSettings">
+                <table class="dataTable">
+                        <tr>
+                            <td>
+                                Check this box to close vulnerabilities only when all scanners report them closed. This only applies to merged vulnerabilities.<br>
+                                By default, ThreadFix will close vulnerabilities when any scanner that has found the vulnerability reports the vulnerability fixed.
+                            </td>
+                            <td class="inputValue" style="text-align: left;">
+                                <input type="checkbox" id="vulnCloseCheckbox" name="closeVulnWhenNoScannersReport" ng-model="object.closeVulnWhenNoScannersReport"/>
+                            </td>
+                        </tr>
+                </table>
+            </div>
+        </div>
+
+        <br/>
 
         <button id="submit"
                 ng-class="{ disabled : form.$invalid }"

@@ -32,6 +32,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 @Transactional
 public class HibernateDefaultConfigurationDao
@@ -52,5 +54,27 @@ public class HibernateDefaultConfigurationDao
 	public void delete(DefaultConfiguration config) {
 		sessionFactory.getCurrentSession().delete(config);
 	}
-	
+
+    @Override
+    public DefaultConfiguration loadCurrentConfiguration() {
+        DefaultConfiguration configuration;
+
+        List<DefaultConfiguration> list = retrieveAll();
+        if (list.size() == 0) {
+            configuration = DefaultConfiguration.getInitialConfig();
+        } else if (list.size() > 1) {
+            DefaultConfiguration config = list.get(0);
+            list.remove(0);
+            for (DefaultConfiguration defaultConfig : list) {
+                delete(defaultConfig);
+            }
+            configuration = config;
+        } else {
+            configuration = list.get(0);
+        }
+
+        return  configuration;
+
+    }
+
 }
