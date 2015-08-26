@@ -23,9 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.merge;
 
+import com.denimgroup.threadfix.data.dao.DefaultConfigurationDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.ScanResultFilterService;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.VulnerabilityStatusService;
@@ -56,6 +58,9 @@ public class ScanMergerImpl implements ScanMerger {
     private PermissionsHandler permissionsHandler;
     @Autowired(required=false) // will be null in offline contexts
     private ScanResultFilterService scanResultFilterService;
+    @Autowired
+    private DefaultConfigurationDao defaultConfigurationDao;
+
 
     @Override
     public void merge(Scan scan, ApplicationChannel applicationChannel) {
@@ -91,7 +96,8 @@ public class ScanMergerImpl implements ScanMerger {
         scan.setApplication(applicationChannel.getApplication());
 
         PathGuesser.generateGuesses(application, scan);
-        ChannelMerger.channelMerge(vulnerabilityService, vulnerabilityStatusService, scan, applicationChannel);
+        DefaultConfiguration defaultConfiguration = defaultConfigurationDao.loadCurrentConfiguration();
+        ChannelMerger.channelMerge(vulnerabilityService, vulnerabilityStatusService, scan, applicationChannel, defaultConfiguration);
         applicationMerger.applicationMerge(scan, application, null);
 
         if (scan.getNumberTotalVulnerabilities() != null

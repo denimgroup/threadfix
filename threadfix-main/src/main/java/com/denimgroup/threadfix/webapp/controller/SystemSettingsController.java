@@ -69,7 +69,7 @@ public class SystemSettingsController {
 				"dashboardTopLeft.id",
 				"dashboardTopRight.id", "dashboardBottomLeft.id", "dashboardBottomRight.id",
 				"applicationTopLeft.id", "applicationTopRight.id", "teamTopLeft.id", "teamTopRight.id",
-                "fileUploadLocation", "deleteUploadedFiles", "baseUrl"
+                "fileUploadLocation", "deleteUploadedFiles", "baseUrl", "closeVulnWhenNoScannersReport"
 		};
 
 		String[] otherSections = {

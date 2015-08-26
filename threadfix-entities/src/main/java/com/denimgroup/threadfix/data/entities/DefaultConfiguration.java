@@ -70,6 +70,7 @@ public class DefaultConfiguration extends BaseEntity {
 
     private String fileUploadLocation = null;
     private Boolean deleteUploadedFiles = false;
+    private Boolean closeVulnWhenNoScannersReport = null;
 
     public static DefaultConfiguration getInitialConfig() {
         DefaultConfiguration config = new DefaultConfiguration();
@@ -486,6 +487,18 @@ public class DefaultConfiguration extends BaseEntity {
 
     public void setDeleteUploadedFiles(Boolean deleteUploadedFiles) {
         this.deleteUploadedFiles = deleteUploadedFiles;
+    }
+
+    @Column
+    @JsonView(AllViews.FormInfo.class)
+    public Boolean getCloseVulnWhenNoScannersReport() {
+        if (closeVulnWhenNoScannersReport == null)
+            closeVulnWhenNoScannersReport = false;
+        return closeVulnWhenNoScannersReport;
+    }
+
+    public void setCloseVulnWhenNoScannersReport(Boolean closeVulnWhenNoScannersReport) {
+        this.closeVulnWhenNoScannersReport = closeVulnWhenNoScannersReport;
     }
 
     Boolean shouldProxyVeracode = false;

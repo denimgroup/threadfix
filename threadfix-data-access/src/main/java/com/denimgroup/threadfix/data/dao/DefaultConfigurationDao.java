@@ -30,4 +30,6 @@ public interface DefaultConfigurationDao extends GenericObjectDao<DefaultConfigu
 
 	void delete(DefaultConfiguration config);
 
+	DefaultConfiguration loadCurrentConfiguration();
+
 }

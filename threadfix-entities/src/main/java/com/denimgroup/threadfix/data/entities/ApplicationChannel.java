@@ -110,6 +110,27 @@ public class ApplicationChannel extends AuditableEntity implements Iterable<Scan
         return fileName.matches("(.*)scan-file-[0-9]+-[0-9]+");
     }
 
+	@Transient
+	@JsonIgnore
+	public Scan getLatestScan() {
+
+		if (scanList == null || scanList.size() == 0)
+			return null;
+
+		Scan latestScan = scanList.get(0);
+
+		for (Scan scan : scanList) {
+			if (scan != null && scan.getImportTime() != null) {
+				int result = scan.getImportTime().compareTo(latestScan.getImportTime());
+				 if (result > 0) {
+					 latestScan = scan;
+				}
+			}
+		}
+
+		return latestScan;
+	}
+
 	@Override
 	public Iterator<Scan> iterator() {
 		return getScanList() == null ? listOf(Scan.class).iterator() : getScanList().iterator();
