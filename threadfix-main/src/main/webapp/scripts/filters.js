@@ -28,3 +28,11 @@ filtersModule.filter('removeSpace', function() {
     }
 });
 
+filtersModule.filter('removeNonWord', function() {
+    return function(input) {
+        if (input) {
+            return input.replace(/\W/g, '');
+        }
+    }
+});
+
