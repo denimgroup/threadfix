@@ -72,7 +72,7 @@ public class User extends AuditableEntity {
 
     private List<Event> events;
     private List<UserEventNotificationMap> userEventNotificationMaps;
-    private boolean userEventNotificationMapsInitialized = false;
+    private Boolean userEventNotificationMapsInitialized = false;
 
     private List<APIKey> apiKeys;
 
@@ -314,13 +314,13 @@ public class User extends AuditableEntity {
         this.userEventNotificationMaps = userEventNotificationMaps;
     }
 
-    @Column(nullable = false)
+    @Column
     @JsonIgnore
-    public boolean isUserEventNotificationMapsInitialized() {
-        return userEventNotificationMapsInitialized;
+    public Boolean getUserEventNotificationMapsInitialized() {
+        return userEventNotificationMapsInitialized != null && userEventNotificationMapsInitialized;
     }
 
-    public void setUserEventNotificationMapsInitialized(boolean userEventNotificationMapsInitialized) {
+    public void setUserEventNotificationMapsInitialized(Boolean userEventNotificationMapsInitialized) {
         this.userEventNotificationMapsInitialized = userEventNotificationMapsInitialized;
     }
 

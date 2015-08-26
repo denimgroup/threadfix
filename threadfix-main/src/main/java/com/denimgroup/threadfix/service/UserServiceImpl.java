@@ -511,7 +511,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Set<EventAction> getNotificationEventActions(User user) {
-		if (!user.isUserEventNotificationMapsInitialized()) {
+		if (!user.getUserEventNotificationMapsInitialized()) {
 			initializeUserEventNotificationMaps(user);
 			storeUser(user);
 		}
