@@ -379,7 +379,7 @@
                 <h3 class="panel-title">
                     <span ng-hide="editBaseUrlSettings" class="icon icon-chevron-right"></span>
                     <span ng-show="editBaseUrlSettings" class="icon icon-chevron-down"></span>
-                    Threadfix base URL
+                    ThreadFix base URL
                 </h3>
             </div>
             <div class="panel-body" ng-show="editBaseUrlSettings">
@@ -544,8 +544,8 @@
                 <table class="dataTable">
                         <tr>
                             <td>
-                                Vulnerability will be closed when it is no longer present in all scanners.
-                                By default, it will be closed when one of scanners reports it is no longer present
+                                Check this box to close vulnerabilities only when all scanners report them closed. This only applies to merged vulnerabilities.<br>
+                                By default, ThreadFix will close vulnerabilities when any scanner that has found the vulnerability reports the vulnerability fixed.
                             </td>
                             <td class="inputValue" style="text-align: left;">
                                 <input type="checkbox" id="vulnCloseCheckbox" name="closeVulnWhenNoScannersReport" ng-model="object.closeVulnWhenNoScannersReport"/>
