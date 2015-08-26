@@ -27,7 +27,7 @@ public class CommandLineUtils {
     private static final String DIRECTORY;
     private final String INCREASE_RESULTS_ARG = "numberVulnerabilities=100";
 
-    static double specificCliVersion = 0;
+    static double cliVersion = 0;
 
     //===========================================================================================================
     // Startup
@@ -36,13 +36,13 @@ public class CommandLineUtils {
     static {
         try {
             String cliVersionProperty = System.getProperty("SPECIFIC_CLI_VERSION").trim();
-            specificCliVersion = Double.parseDouble(cliVersionProperty);
-            System.out.println("Using CLI jar for ThreadFix " + specificCliVersion);
+            cliVersion = Double.parseDouble(cliVersionProperty);
+            System.out.println("Using CLI jar for ThreadFix " + cliVersion);
         } catch (NullPointerException ex) {
             System.out.println("Optional system property SPECIFIC_CLI_VERSION not set.\nContinuing with default CLI jar.");
         }
 
-        if (specificCliVersion > 0) {
+        if (cliVersion > 0) {
             DIRECTORY = System.getProperty("CLI_JAR_DIRECTORY");
         } else {
             DIRECTORY = ".." + File.separator + "threadfix-cli" + File.separator + "target";
@@ -54,8 +54,8 @@ public class CommandLineUtils {
             startArgs.addAll(list("CMD", "/C"));
         }
         startArgs.addAll(list("java", "-jar"));
-        if (specificCliVersion != 0) {
-            startArgs.add(specificCliVersion + ".jar");
+        if (cliVersion != 0) {
+            startArgs.add(cliVersion + ".jar");
         } else {
             startArgs.add("threadfix-cli-2.2-SNAPSHOT-jar-with-dependencies.jar");
         }
@@ -98,8 +98,8 @@ public class CommandLineUtils {
     }
 
     public static void checkVersion(double introductionVersion) {
-        if (specificCliVersion > 0) {
-            assumeTrue(introductionVersion <= specificCliVersion);
+        if (cliVersion > 0) {
+            assumeTrue(introductionVersion <= cliVersion);
         }
     }
 
