@@ -96,8 +96,9 @@ public class DashboardController {
         model.addAttribute("config", config);
         model.addAttribute("reportJsPaths", cacheBustService.notCachedJsPaths(request, config.getDashboardReports()));
 
-        if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_SYSTEM_SETTINGS)) {
-            model.addAttribute("expirationNotification", DateUtils.getDaysBetween(Calendar.getInstance(), licenseService.getExpirationDate()));
+        if (licenseService != null && PermissionUtils.isAuthorized(Permission.CAN_MANAGE_SYSTEM_SETTINGS)) {
+            model.addAttribute("expirationNotification",
+                    DateUtils.getDaysBetween(Calendar.getInstance(), licenseService.getExpirationDate()));
         }
 
         if (defaultConfigService.isReportCacheDirty()) {
