@@ -95,4 +95,14 @@ public class EventBuilder {
         event.setStatus(status);
         return this;
     }
+
+    public EventBuilder setAcceptanceCriteria(AcceptanceCriteria acceptanceCriteria) {
+        event.setAcceptanceCriteria(acceptanceCriteria);
+        return this;
+    }
+
+    public EventBuilder setAcceptanceCriteriaStatus(AcceptanceCriteriaStatus acceptanceCriteriaStatus) {
+        event.setAcceptanceCriteriaStatus(acceptanceCriteriaStatus);
+        return this;
+    }
 }

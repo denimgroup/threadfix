@@ -105,6 +105,38 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
     }
 
     @Override
+    public List<Event> retrieveAllByAcceptanceCriteria(AcceptanceCriteria acceptanceCriteria) {
+
+        Criteria criteria = getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.eq("acceptanceCriteria", acceptanceCriteria));
+
+        Order order = getOrder();
+        if (order != null) {
+            criteria.addOrder(order);
+        }
+
+        return criteria.list();
+    }
+
+    @Override
+    public List<Event> retrieveAllByAcceptanceCriteriaStatus(AcceptanceCriteriaStatus acceptanceCriteriaStatus) {
+
+        Criteria criteria = getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.eq("acceptanceCriteriaStatus", acceptanceCriteriaStatus));
+
+        Order order = getOrder();
+        if (order != null) {
+            criteria.addOrder(order);
+        }
+
+        return criteria.list();
+    }
+
+    @Override
     public List<Event> retrieveUngroupedByUser(User user) {
         List<String> userEventActions = list();
         for (EventAction eventAction : EventAction.userEventActions) {

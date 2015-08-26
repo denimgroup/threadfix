@@ -58,6 +58,8 @@ public class Event extends AuditableEntity {
     private VulnerabilityComment comment;
     private String detail;
     private String status;
+    private AcceptanceCriteria acceptanceCriteria;
+    private AcceptanceCriteriaStatus acceptanceCriteriaStatus;
 
     private Long groupCount;
 
@@ -266,6 +268,29 @@ public class Event extends AuditableEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+
+    @ManyToOne
+    @JoinColumn(name = "acceptanceCriteriaId")
+    @JsonIgnore
+    public AcceptanceCriteria getAcceptanceCriteria() {
+        return acceptanceCriteria;
+    }
+
+    public void setAcceptanceCriteria(AcceptanceCriteria acceptanceCriteria) {
+        this.acceptanceCriteria = acceptanceCriteria;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "acceptanceCriteriaStatusId")
+    @JsonIgnore
+    public AcceptanceCriteriaStatus getAcceptanceCriteriaStatus() {
+        return acceptanceCriteriaStatus;
+    }
+
+    public void setAcceptanceCriteriaStatus(AcceptanceCriteriaStatus acceptanceCriteriaStatus) {
+        this.acceptanceCriteriaStatus = acceptanceCriteriaStatus;
     }
 
     @Transient
