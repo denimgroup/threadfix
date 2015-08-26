@@ -35,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -52,7 +53,7 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
     @Autowired
     private UserService userService;
 
-    private EventComparator eventComparator = new EventComparator();
+    private EventComparator eventComparator = new EventComparator(false);
 
     @Override
     GenericObjectDao<Event> getDao() {
@@ -182,11 +183,25 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
 
     @Override
     public List<Event> getGlobalEvents(Set<Integer> appIds, Set<Integer> teamIds) {
-        List<Event> userEvents = list();
-        userEvents.addAll(eventDao.retrieveGlobalUngrouped(appIds, teamIds));
-        userEvents.addAll(eventDao.retrieveGlobalGrouped(appIds, teamIds));
-        Collections.sort(userEvents, eventComparator);
-        return userEvents;
+        List<Event> globalEvents = list();
+        globalEvents.addAll(eventDao.retrieveGlobalUngrouped(appIds, teamIds));
+        globalEvents.addAll(eventDao.retrieveGlobalGrouped(appIds, teamIds));
+        Collections.sort(globalEvents, eventComparator);
+        return globalEvents;
+    }
+
+    @Override
+    public List<Event> getRecentEvents(Set<EventAction> userEventActions, Set<EventAction> userGroupedEventActions,
+                                       Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds) {
+        List<Event> recentEvents = list();
+        if ((userEventActions != null) && (!userEventActions.isEmpty())) {
+            recentEvents.addAll(eventDao.retrieveRecentUngrouped(userEventActions, startTime, stopTime, appIds, teamIds));
+        }
+        if ((userGroupedEventActions != null) && (!userGroupedEventActions.isEmpty())) {
+            recentEvents.addAll(eventDao.retrieveRecentGrouped(userGroupedEventActions, startTime, stopTime, appIds, teamIds));
+        }
+        Collections.sort(recentEvents, eventComparator);
+        return recentEvents;
     }
 
 }

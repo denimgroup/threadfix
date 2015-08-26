@@ -21,33 +21,20 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-
 package com.denimgroup.threadfix.data.dao;
 
-import com.denimgroup.threadfix.data.entities.*;
-import com.denimgroup.threadfix.data.enums.EventAction;
+import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.data.entities.UserEventNotificationMap;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
-public interface EventDao extends GenericObjectDao<Event> {
+/**
+ * Basic DAO class for the UserEventNotificationMap entity.
+ *
+ * @author dshannon
+ */
+public interface UserEventNotificationMapDao extends GenericObjectDao<UserEventNotificationMap> {
+    void delete(UserEventNotificationMap userEventNotificationMap);
 
-    List<Event> retrieveAllByScan(Scan scan);
-
-    List<Event> retrieveAllByVulnerability(Vulnerability vulnerability);
-
-    List<Event> retrieveAllByDefect(Defect defect);
-
-    List<Event> retrieveUngroupedByUser(User user);
-
-    List<Event> retrieveGroupedByUser(User user);
-
-    List<Event> retrieveGlobalUngrouped(Set<Integer> appIds, Set<Integer> teamIds);
-
-    List<Event> retrieveGlobalGrouped(Set<Integer> appIds, Set<Integer> teamIds);
-
-    List<Event> retrieveRecentUngrouped(Set<EventAction> userEventActions, Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds);
-
-    List<Event> retrieveRecentGrouped(Set<EventAction> userGroupedEventActions, Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds);
+    List<UserEventNotificationMap> loadUserEventNotificationMaps(User user);
 }

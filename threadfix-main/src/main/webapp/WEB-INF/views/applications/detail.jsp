@@ -12,9 +12,6 @@
 	<cbs:cachebustscript src="/scripts/grc-control-submission-modal-controller.js"/>
 	<cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
     <cbs:cachebustscript src="/scripts/edit-application-modal-controller.js"/>
-    <c:if test="${isEnterprise}">
-        <cbs:cachebustscript src="/scripts/history-table-controller.js"/>
-    </c:if>
 	<cbs:cachebustscript src="/scripts/scan-table-controller.js"/>
 	<cbs:cachebustscript src="/scripts/upload-scan-controller.js"/>
 	<cbs:cachebustscript src="/scripts/scheduled-scan-tab-controller.js"/>

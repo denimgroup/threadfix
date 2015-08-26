@@ -30,6 +30,7 @@ import java.util.Set;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.data.enums.EventAction;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -160,4 +161,10 @@ public interface UserService {
 	List<User> search(HttpServletRequest request);
 
 	List<User> getUsersForRoleId(Integer id);
+
+	Set<EventAction> getNotificationEventActions(User user);
+
+	void setNotificationEventActions(User user, Set<EventAction> notificationEventActions);
+
+	Map<Integer,Map<String,Boolean>> getUserEventNotificationSettings(List<User> users);
 }

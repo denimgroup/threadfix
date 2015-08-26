@@ -60,6 +60,9 @@
 					</ul>
 				   </div>
 				</td>
+                <security:authorize ifAllGranted="ROLE_ENTERPRISE">
+                    <jsp:include page="/app/history/recent"/>
+                </security:authorize>
 				<td id="tab-config" style="width: 30px;padding-left:0;">
 					
 					<div class="dropdown normalLinks">
