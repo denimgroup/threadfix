@@ -113,7 +113,12 @@ public class StrutsEndpointMappings implements EndpointGenerator {
                     continue;
 
                 File actionFile = getJavaFileByName(strutsAction.getActClass());
-                String modelName = actionFile.getName().substring(0,actionFile.getName().lastIndexOf(".java"));
+                if (actionFile == null || actionFile.getName() == null) {
+                    continue;
+                }
+
+                String modelName = actionFile.getName().substring(0, actionFile.getName().lastIndexOf(".java"));
+
                 EntityParser entityParser = EntityParser.parse(actionFile);
                 String filePath = FilePathUtils.getRelativePath(actionFile, rootDirectory);
                 Set<ModelField> fieldMappings = entityMappings.getPossibleParametersForModelType(modelName).getFieldSet();
