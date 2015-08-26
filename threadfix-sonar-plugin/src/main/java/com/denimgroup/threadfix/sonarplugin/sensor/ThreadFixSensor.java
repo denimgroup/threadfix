@@ -35,12 +35,14 @@ import com.denimgroup.threadfix.sonarplugin.ThreadFixMetrics;
 import com.denimgroup.threadfix.sonarplugin.configuration.Mode;
 import com.denimgroup.threadfix.sonarplugin.configuration.ThreadFixInfo;
 import com.denimgroup.threadfix.sonarplugin.util.SonarTools;
+import com.denimgroup.threadfix.util.SimilarityCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
-import org.sonar.api.batch.SonarIndex;
+import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
 import org.sonar.api.issue.Issuable;
@@ -53,6 +55,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
+
 /**
  * Created by mcollins on 1/28/15.
  */
@@ -63,21 +68,42 @@ public class ThreadFixSensor implements Sensor {
 
     private ThreadFixInfo info = null;
     private final ResourcePerspectives resourcePerspectives;
-    private SonarIndex sonarIndex;
+
+    private Map<String, InputFile> inputFileMap = map();
 
     public ThreadFixSensor(ResourcePerspectives resourcePerspectives,
                            Settings settings,
-                           FileSystem moduleFileSystem,
-                           SonarIndex sonarIndex) {
-        this.sonarIndex = sonarIndex;
+                           FileSystem moduleFileSystem) {
+
         checkProperties(settings);
         this.moduleFileSystem = moduleFileSystem;
         runHAM(this.moduleFileSystem);
+
+        populateInitialMaps(moduleFileSystem);
 
         if (resourcePerspectives == null) {
             LOG.error("Got null resources perspective from autowiring. Will probably die.");
         }
         this.resourcePerspectives = resourcePerspectives;
+    }
+
+    private void populateInitialMaps(FileSystem moduleFileSystem) {
+        Iterable<InputFile> inputFiles = moduleFileSystem.inputFiles(new FilePredicate() {
+            @Override
+            public boolean apply(InputFile inputFile) {
+                return true;
+            }
+        });
+
+        List<InputFile> results = list();
+
+        for (InputFile inputFile : inputFiles) {
+            results.add(inputFile);
+            inputFileMap.put(inputFile.relativePath(), inputFile);
+            LOG.debug("Adding " + inputFile.absolutePath());
+        }
+
+        LOG.debug("There were " + results.size() + " results.");
     }
 
     private void runHAM(FileSystem moduleFileSystem) {
@@ -131,7 +157,7 @@ public class ThreadFixSensor implements Sensor {
             for (VulnerabilityMarker vulnerabilityMarker : endpoints) {
                 LOG.debug("Got endpoint " + vulnerabilityMarker);
 
-                processMarker(vulnerabilityMarker, sensorContext);
+                processMarker(project, vulnerabilityMarker, sensorContext);
             }
 
             LOG.info("Setting total vulns to " + endpoints.length);
@@ -166,28 +192,33 @@ public class ThreadFixSensor implements Sensor {
         return SpringConfiguration.getSpringBean(Merger.class).mergeFromDifferentScannersInternal(sourceRoot, filePaths);
     }
 
-    private void processMarker(VulnerabilityMarker vulnerabilityMarker, SensorContext sensorContext) {
+    private void processMarker(Project project, VulnerabilityMarker vulnerabilityMarker, SensorContext sensorContext) {
 
-        Resource resource = SonarTools.resourceOf(sonarIndex,
-                sensorContext,
-                vulnerabilityMarker.getFilePath());
+        String key = SimilarityCalculator.findMostSimilarFilePath(vulnerabilityMarker.getFilePath(), inputFileMap.keySet());
 
-        if (resource != null) {
+        if (key == null) {
+            LOG.info("No similar files found for " + vulnerabilityMarker.getFilePath());
+            return;
+        }
 
-            Issuable issuable = resourcePerspectives.as(Issuable.class, resource);
+        InputFile file = inputFileMap.get(key);
 
-            if (issuable != null) {
-                SonarTools.addIssue(issuable, resource, vulnerabilityMarker);
-            } else {
-                LOG.error("Failed to get issuable for resource " + resource);
-            }
+        if (file == null) {
+            LOG.info("Got a key from SimilarityCalculator but no corresponding InputFile at " + vulnerabilityMarker.getFilePath());
+            return;
+        }
+
+        Issuable issuable = resourcePerspectives.as(Issuable.class, file);
+
+        Resource resource = sensorContext.getResource(file);
+
+        if (issuable != null && resource != null) {
+            SonarTools.addIssue(file, issuable, resource, vulnerabilityMarker);
         } else {
-            LOG.debug("Got null resource for path " + vulnerabilityMarker.getFilePath());
+            LOG.error("Failed to get issuable for resource " + file);
         }
 
     }
-
-
 
     public PluginClient getConfiguredClient() {
         return new PluginClient(info.getUrl(), info.getApiKey());
