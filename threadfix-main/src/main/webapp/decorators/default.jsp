@@ -46,6 +46,11 @@
         <cbs:cachebustscript src="/scripts/report/d3-donut.js"/>
         <cbs:cachebustscript src="/scripts/report/report-services.js"/>
 
+        <security:authorize ifAllGranted="ROLE_ENTERPRISE">
+            <cbs:cachebustscript src="/scripts/recent-history-page-controller.js"/>
+            <cbs:cachebustscript src="/scripts/history-table-controller.js"/>
+        </security:authorize>
+
         <!--[if lt IE 7]>
             <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/ie6.css"/>
             <cbs:cachebustscript src="/scripts/iepngfix_tilebg.js"/>

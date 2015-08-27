@@ -25,7 +25,9 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.enums.EventAction;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -50,4 +52,7 @@ public interface EventService extends GenericObjectService<Event> {
     List<Event> getUserEvents(User user);
 
     List<Event> getGlobalEvents(Set<Integer> appIds, Set<Integer> teamIds);
+
+    List<Event> getRecentEvents(Set<EventAction> userEventActions, Set<EventAction> userGroupedEventActions,
+                                Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds);
 }

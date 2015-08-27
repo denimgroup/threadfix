@@ -38,6 +38,10 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                         $scope.roles = data.object.roles;
                         $scope.users = data.object.users;
 
+                        $scope.eventNotificationTypes = data.object.eventNotificationTypes;
+                        $scope.eventNotificationTypeDisplayNames = data.object.eventNotificationTypeDisplayNames;
+                        $scope.userEventNotificationSettings = data.object.userEventNotificationSettings;
+
                         $scope.teams = data.object.teams;
                         $scope.teams.sort(nameCompare);
 
@@ -178,11 +182,11 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     $scope.setCurrentUser = function(user) {
         if (user.wasSelected) {
             $scope.currentUser = user.formUser;
-            $scope.currentUrl = "/configuration/users/" + $scope.currentUser.id;
+            $scope.baseHistoryUrl = "/configuration/users/" + $scope.currentUser.id;
             $rootScope.$broadcast('userSelected');
         } else {
             $scope.currentUser = angular.copy(user);
-            $scope.currentUrl = "/configuration/users/" + $scope.currentUser.id;
+            $scope.baseHistoryUrl = "/configuration/users/" + $scope.currentUser.id;
             addMapsToUser($scope.currentUser, function() {
                 user.formUser = $scope.currentUser;
                 if (!$scope.currentUser.hasGlobalGroupAccess) {
@@ -254,7 +258,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     function selectUserWithId(targetId) {
         if (!targetId) {
             $scope.currentUser = undefined;
-            $scope.currentUrl = undefined;
+            $scope.baseHistoryUrl = undefined;
             $rootScope.$broadcast('userNotAvailable');
             return;
         }
@@ -294,6 +298,44 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                     $scope.usersSuccessMessage = "Edit succeeded.";
 
                     $scope.updatePage($scope.page);
+                } else {
+
+                    if (data.errorMap && data.errorMap.name) {
+                        $scope.errorMessage = "Failure. " + data.errorMap.name;
+                    } else {
+                        $scope.errorMessage = "Failure. Message was : " + data.message;
+                    }
+                }
+
+                $scope.initialized = true;
+            }).
+            error(function(data, status) {
+                $scope.initialized = true;
+                $scope.errorMessage = "Failed to retrieve user list. HTTP status was " + status;
+            });
+    };
+
+    ////////////////////////////////////////////////////////////////////////////////
+    //                              Update (Save Edits)
+    ////////////////////////////////////////////////////////////////////////////////
+
+    $scope.submitNotificationSettingsUpdate = function(valid) {
+        if (!valid) {
+            return;
+        }
+
+        $scope.currentUser.hasGlobalGroupAccess = $scope.currentUser.globalRole.id != -1;
+
+        $http.post(tfEncoder.encode("/configuration/users/" + $scope.currentUser.id + "/editNotificationSettings"), $scope.userEventNotificationSettings[$scope.currentUser.id]).
+            success(function(data) {
+
+                if (data.success) {
+                    $scope.usersSuccessMessage = "Notification settings saved.";
+
+                    //$scope.userEventNotificationSettings[$scope.currentUser.id] = data.object[$scope.currentUser.id];
+                    $scope.userEventNotificationSettings = data.object;
+
+                    selectUserWithId($scope.currentUser.id);
                 } else {
 
                     if (data.errorMap && data.errorMap.name) {

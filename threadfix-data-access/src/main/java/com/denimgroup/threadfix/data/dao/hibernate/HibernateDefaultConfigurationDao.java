@@ -61,4 +61,27 @@ public class HibernateDefaultConfigurationDao
         return getSession().createQuery("from DefaultConfiguration").list();
     }
 	
+
+    @Override
+    public DefaultConfiguration loadCurrentConfiguration() {
+        DefaultConfiguration configuration;
+
+        List<DefaultConfiguration> list = retrieveAll();
+        if (list.size() == 0) {
+            configuration = DefaultConfiguration.getInitialConfig();
+        } else if (list.size() > 1) {
+            DefaultConfiguration config = list.get(0);
+            list.remove(0);
+            for (DefaultConfiguration defaultConfig : list) {
+                delete(defaultConfig);
+            }
+            configuration = config;
+        } else {
+            configuration = list.get(0);
+        }
+
+        return  configuration;
+
+    }
+
 }

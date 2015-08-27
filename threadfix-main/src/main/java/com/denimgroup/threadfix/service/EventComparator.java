@@ -28,8 +28,27 @@ import com.denimgroup.threadfix.data.entities.Event;
 import java.util.Comparator;
 
 public class EventComparator implements Comparator<Event> {
+    boolean ascending = true;
+
+    public EventComparator() {
+        super();
+    }
+
+    public EventComparator(boolean ascending) {
+        this();
+        this.ascending = ascending;
+    }
+
     @Override
     public int compare(Event e1, Event e2) {
+        if (ascending) {
+            return compareInternal(e1, e2);
+        } else {
+            return compareInternal(e2, e1);
+        }
+    }
+
+    public int compareInternal(Event e1, Event e2) {
         Integer compared = compareForNulls(e1, e2);
         if (compared != null) {
             return compared;

@@ -21,15 +21,20 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-
 package com.denimgroup.threadfix.data.dao;
 
-import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
+import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.data.entities.UserEventNotificationMap;
 
-public interface DefaultConfigurationDao extends GenericObjectDao<DefaultConfiguration> {
+import java.util.List;
 
-	void delete(DefaultConfiguration config);
+/**
+ * Basic DAO class for the UserEventNotificationMap entity.
+ *
+ * @author dshannon
+ */
+public interface UserEventNotificationMapDao extends GenericObjectDao<UserEventNotificationMap> {
+    void delete(UserEventNotificationMap userEventNotificationMap);
 
-	DefaultConfiguration loadCurrentConfiguration();
-
+    List<UserEventNotificationMap> loadUserEventNotificationMaps(User user);
 }

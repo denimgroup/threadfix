@@ -55,22 +55,7 @@ public class DefaultConfigServiceImpl implements DefaultConfigService {
     @Transactional(readOnly = false)
 	@Override
 	public DefaultConfiguration loadCurrentConfiguration() {
-        DefaultConfiguration configuration;
-
-		List<DefaultConfiguration> list = defaultConfigurationDao.retrieveAll();
-
-		if (list.size() == 0) {
-            configuration = DefaultConfiguration.getInitialConfig();
-		} else if (list.size() > 1) {
-			DefaultConfiguration config = list.get(0);
-			list.remove(0);
-			for (DefaultConfiguration defaultConfig : list) {
-				defaultConfigurationDao.delete(defaultConfig);
-			}
-			configuration = config;
-		} else {
-		    configuration = list.get(0);
-        }
+        DefaultConfiguration configuration = defaultConfigurationDao.loadCurrentConfiguration();
 
         assert configuration != null;
 

@@ -541,6 +541,71 @@
                         </div>
                     </div>
                 </security:authorize>
+        <div class="panel panel-default">
+            <div id="defaultTeamDetailPageSettingsPanel" class="panel-heading pointer" style="width:250px"
+                 ng-click="editTeamDetailPageSettings = !editTeamDetailPageSettings">
+                <h3 class="panel-title">
+                    <span ng-hide="editTeamDetailPageSettings" class="icon icon-chevron-right"></span>
+                    <span ng-show="editTeamDetailPageSettings" class="icon icon-chevron-down"></span>
+                    Team Detail Page Settings
+                </h3>
+            </div>
+            <div class="panel-body" ng-show="editTeamDetailPageSettings">
+                <table>
+                    <tr ng-show="object.teamReport_error">
+                        <td style="padding: 0 0 5px 5px" colspan="4">
+                            <div id="teamReportServerError" class="errors" ng-show="object.teamReport_error">{{ object.teamReport_error }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-left: 5px">
+                            <div>
+                                <b>Top Left Report</b>
+                            </div>
+                            <div>
+                                <select ng-options="teamReport.displayName for teamReport in teamReports track by teamReport.id"
+                                        id="teamTopLeftSelect" name="teamTopLeft" ng-model="object.teamTopLeft" ></select>
+                            </div>
+                        </td>
+                        <td style="padding-left: 5px">
+                            <div>
+                                <b>Top Right Report</b>
+                            </div>
+                            <div>
+                                <select ng-options="teamReport.displayName for teamReport in teamReports track by teamReport.id"
+                                        id="teamTopRightSelect" name="teamTopRight" ng-model="object.teamTopRight"></select>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div id="defaultCloseSettingsPanel" class="panel-heading pointer" style="width:250px"
+                 ng-click="editCloseSettings = !editCloseSettings">
+                <h3 class="panel-title">
+                    <span ng-hide="editCloseSettings" class="icon icon-chevron-right"></span>
+                    <span ng-show="editCloseSettings" class="icon icon-chevron-down"></span>
+                    Vulnerability Close Settings
+                </h3>
+            </div>
+            <div class="panel-body" ng-show="editCloseSettings">
+                <table class="dataTable">
+                        <tr>
+                            <td>
+                                Check this box to close vulnerabilities only when all scanners report them closed. This only applies to merged vulnerabilities.<br>
+                                By default, ThreadFix will close vulnerabilities when any scanner that has found the vulnerability reports the vulnerability fixed.
+                            </td>
+                            <td class="inputValue" style="text-align: left;">
+                                <input type="checkbox" id="vulnCloseCheckbox" name="closeVulnWhenNoScannersReport" ng-model="object.closeVulnWhenNoScannersReport"/>
+                            </td>
+                        </tr>
+                </table>
+            </div>
+        </div>
+
+        <br/>
 
                 <div class="panel panel-default">
                     <div id="defaultFileUploadLocationSettingsPanel" class="panel-heading pointer" style="width:250px"
@@ -568,26 +633,26 @@
                     </div>
                 </div>
 
-                <div class="panel panel-default">
-                    <div id="editBaseUrlSettingsPanel" class="panel-heading pointer" style="width:250px"
-                         ng-click="editBaseUrlSettings = !editBaseUrlSettings">
-                        <h3 class="panel-title">
-                            <span ng-hide="editBaseUrlSettings" class="icon icon-chevron-right"></span>
-                            <span ng-show="editBaseUrlSettings" class="icon icon-chevron-down"></span>
-                            Threadfix base URL
-                        </h3>
-                    </div>
-                    <div class="panel-body" ng-show="editBaseUrlSettings">
-                        <p>This field is used to construct absolute URLs for links included into emails or defect trackers descriptions.
+                    <div class="panel panel-default">
+                        <div id="editBaseUrlSettingsPanel" class="panel-heading pointer" style="width:250px"
+                            ng-click="editBaseUrlSettings = !editBaseUrlSettings">
+                            <h3 class="panel-title">
+                                <span ng-hide="editBaseUrlSettings" class="icon icon-chevron-right"></span>
+                                <span ng-show="editBaseUrlSettings" class="icon icon-chevron-down"></span>
+                                ThreadFix base URL
+                            </h3>
+                        </div>
+                        <div class="panel-body" ng-show="editBaseUrlSettings">
+                            <p>This field is used to construct absolute URLs for links included into emails or defect trackers descriptions.
                             Being server and network configuration, it cannot be determined without any user connecting, so it needs to be kept in configurations.
                             When null, this field is automatically populated on first connection.
                             It will alert you and require a manual reconfiguration if you change your deployment configurations</p>
-                        <b style="display:inline-block">Base URL</b>
-                        <input style="display:inline-block; margin:0 10px 0 10px" id="baseUrl" type="text" name="baseUrl" class="focus" size="100"
-                               maxlength="1024" ng-model="object.baseUrl"/>
-                        <button class="btn" ng-click="populateWithUserBaseUrl()">Populate with current navigation</button>
+                                <b style="display:inline-block">Base URL</b>
+                                <input style="display:inline-block; margin:0 10px 0 10px" id="baseUrl" type="text" name="baseUrl" class="focus" size="100"
+                                    maxlength="1024" ng-model="object.baseUrl"/>
+                                <button class="btn" ng-click="populateWithUserBaseUrl()">Populate with current navigation</button>
+                        </div>
                     </div>
-                </div>
 
                 <button id="submit"
                         ng-class="{ disabled : otherForm.$invalid }"
