@@ -11,7 +11,7 @@ Operation on Resource in Wrong Phase of Lifetime,Operation on Resource in Wrong 
 Improper Locking,Improper Locking,667
 OWASP Top Ten 2004 Category A7 - Improper Error Handling,OWASP Top Ten 2004 Category A7 - Improper Error Handling,728
 Operator Precedence Logic Error,Operator Precedence Logic Error,783
-Improper Neutralization of Input During Web Page Generation (''Cross-site Scripting''),Improper Neutralization of Input During Web Page Generation (''Cross-site Scripting''),79
+Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting'),Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting'),79
 Source Code,Source Code,18
 Empty Password in Configuration File,Empty Password in Configuration File,258
 Uncaught Exception,Uncaught Exception,248
@@ -21,11 +21,11 @@ Return of Pointer Value Outside of Expected Range,Return of Pointer Value Outsid
 Mac Virtual File Problems,Mac Virtual File Problems,70
 Addition of Data Structure Sentinel,Addition of Data Structure Sentinel,464
 Use of Inner Class Containing Sensitive Data,Use of Inner Class Containing Sensitive Data,492
-Improper Fulfillment of API Contract (''API Abuse''),Improper Fulfillment of API Contract (''API Abuse''),227
+Improper Fulfillment of API Contract ('API Abuse'),Improper Fulfillment of API Contract ('API Abuse'),227
 CERT C++ Secure Coding Section 03 - Expressions (EXP),CERT C++ Secure Coding Section 03 - Expressions (EXP),871
 OWASP Top Ten 2004 Category A10 - Insecure Configuration Management,OWASP Top Ten 2004 Category A10 - Insecure Configuration Management,731
 2009 Top 25 - Insecure Interaction Between Components,2009 Top 25 - Insecure Interaction Between Components,751
-Improper Neutralization of Special Elements used in an LDAP Query (''LDAP Injection''),Improper Neutralization of Special Elements used in an LDAP Query (''LDAP Injection''),90
+Improper Neutralization of Special Elements used in an LDAP Query ('LDAP Injection'),Improper Neutralization of Special Elements used in an LDAP Query ('LDAP Injection'),90
 SFP Cluster: Risky Values,SFP Cluster: Risky Values,885
 CERT Java Secure Coding Section 13 - Serialization (SER),CERT Java Secure Coding Section 13 - Serialization (SER),858
 Embedded Malicious Code,Embedded Malicious Code,506
@@ -38,9 +38,9 @@ CERT C++ Secure Coding Section 04 - Integers (INT),CERT C++ Secure Coding Sectio
 Use of Incorrect Operator,Use of Incorrect Operator,480
 Reliance on Obfuscation or Encryption of Security-Relevant Inputs without Integrity Checking,Reliance on Obfuscation or Encryption of Security-Relevant Inputs without Integrity Checking,649
 Windows Hard Link,Windows Hard Link,65
-Path Equivalence: ''filename.'' (Trailing Dot),Path Equivalence: ''filename.'' (Trailing Dot),42
+Path Equivalence: 'filename.' (Trailing Dot),Path Equivalence: 'filename.' (Trailing Dot),42
 Signal Handler with Functionality that is not Asynchronous-Safe,Signal Handler with Functionality that is not Asynchronous-Safe,828
-Path Traversal: ''...'' (Triple Dot),Path Traversal: ''...'' (Triple Dot),32
+Path Traversal: '...' (Triple Dot),Path Traversal: '...' (Triple Dot),32
 EJB Bad Practices: Use of AWT Swing,EJB Bad Practices: Use of AWT Swing,575
 Not Using Complete Mediation,Not Using Complete Mediation,638
 Allocation of Resources Without Limits or Throttling,Allocation of Resources Without Limits or Throttling,770
@@ -54,7 +54,7 @@ Unquoted Search Path or Element,Unquoted Search Path or Element,428
 Improper Cleanup on Thrown Exception,Improper Cleanup on Thrown Exception,460
 SFP Cluster: Other,SFP Cluster: Other,907
 Use of Hard-coded Credentials,Use of Hard-coded Credentials,798
-URL Redirection to Untrusted Site (''Open Redirect''),URL Redirection to Untrusted Site (''Open Redirect''),601
+URL Redirection to Untrusted Site ('Open Redirect'),URL Redirection to Untrusted Site ('Open Redirect'),601
 Argument Injection or Modification,Argument Injection or Modification,88
 Byte/Object Code,Byte/Object Code,503
 Use of Invariant Value in Dynamically Changing Context,Use of Invariant Value in Dynamically Changing Context,344
@@ -77,18 +77,18 @@ CERT C++ Secure Coding Section 02 - Declarations and Initialization (DCL),CERT C
 SFP Cluster: Exception Management,SFP Cluster: Exception Management,889
 CERT Java Secure Coding Section 10 - Thread Pools (TPS),CERT Java Secure Coding Section 10 - Thread Pools (TPS),855
 Response Discrepancy Information Exposure,Response Discrepancy Information Exposure,204
-Path Equivalence: ''fakedir/../realdir/filename'',Path Equivalence: ''fakedir/../realdir/filename'',57
+Path Equivalence: 'fakedir/../realdir/filename',Path Equivalence: 'fakedir/../realdir/filename',57
 Error Handling,Error Handling,388
 Weaknesses Used by NVD,Weaknesses Used by NVD,635
 Origin Validation Error,Origin Validation Error,346
 Only Filtering One Instance of a Special Element,Only Filtering One Instance of a Special Element,793
 Lack of Administrator Control over Security,Lack of Administrator Control over Security,671
 Product UI does not Warn User of Unsafe Actions,Product UI does not Warn User of Unsafe Actions,356
-Unprotected Windows Messaging Channel (''Shatter''),Unprotected Windows Messaging Channel (''Shatter''),422
+Unprotected Windows Messaging Channel ('Shatter'),Unprotected Windows Messaging Channel ('Shatter'),422
 String Errors,String Errors,133
 CERT C Secure Coding Section 49 - Miscellaneous (MSC),CERT C Secure Coding Section 49 - Miscellaneous (MSC),747
 UNIX Hard Link,UNIX Hard Link,62
-Path Equivalence: ''filename/'' (Trailing Slash),Path Equivalence: ''filename/'' (Trailing Slash),49
+Path Equivalence: 'filename/' (Trailing Slash),Path Equivalence: 'filename/' (Trailing Slash),49
 Missing Report of Error Condition,Missing Report of Error Condition,392
 Inadvertently Introduced Weakness,Inadvertently Introduced Weakness,518
 Incorrect Privilege Assignment,Incorrect Privilege Assignment,266
@@ -97,7 +97,7 @@ Improper Restriction of Operations within the Bounds of a Memory Buffer,Improper
 Improper Enforcement of a Single&comma; Unique Action,Improper Enforcement of a Single&comma; Unique Action,837
 Missing Initialization of a Variable,Missing Initialization of a Variable,456
 Improper Handling of Exceptional Conditions,Improper Handling of Exceptional Conditions,755
-Path Traversal: ''/dir/../filename'',Path Traversal: ''/dir/../filename'',26
+Path Traversal: '/dir/../filename',Path Traversal: '/dir/../filename',26
 Improper Authentication,Improper Authentication,287
 Cleartext Storage of Sensitive Information in GUI,Cleartext Storage of Sensitive Information in GUI,317
 Execution with Unnecessary Privileges,Execution with Unnecessary Privileges,250
@@ -107,9 +107,9 @@ External Influence of Sphere Definition,External Influence of Sphere Definition,
 Buffer Access Using Size of Source Buffer,Buffer Access Using Size of Source Buffer,806
 Dangerous Signal Handler not Disabled During Sensitive Operations,Dangerous Signal Handler not Disabled During Sensitive Operations,432
 OWASP Top Ten 2010 Category A8 - Failure to Restrict URL Access,OWASP Top Ten 2010 Category A8 - Failure to Restrict URL Access,817
-Improper Neutralization of Special Elements used in an OS Command (''OS Command Injection''),Improper Neutralization of Special Elements used in an OS Command (''OS Command Injection''),78
+Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection'),Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection'),78
 CERT C++ Secure Coding Section 09 - Input Output (FIO),CERT C++ Secure Coding Section 09 - Input Output (FIO),877
-Path Equivalence: ''file name'' (Internal Whitespace),Path Equivalence: ''file name'' (Internal Whitespace),48
+Path Equivalence: 'file name' (Internal Whitespace),Path Equivalence: 'file name' (Internal Whitespace),48
 EJB Bad Practices: Use of Java I/O,EJB Bad Practices: Use of Java I/O,576
 Trust Boundary Violation,Trust Boundary Violation,501
 J2EE Environment Issues,J2EE Environment Issues,4
@@ -133,24 +133,24 @@ Improper Enforcement of Behavioral Workflow,Improper Enforcement of Behavioral W
 Only Filtering Special Elements at an Absolute Position,Only Filtering Special Elements at an Absolute Position,797
 Incorrect Implementation of Authentication Algorithm,Incorrect Implementation of Authentication Algorithm,303
 Information Exposure Through Comments,Information Exposure Through Comments,615
-Path Traversal: ''\absolute\pathname\here'',Path Traversal: ''\absolute\pathname\here'',38
-Improper Control of Generation of Code (''Code Injection''),Improper Control of Generation of Code (''Code Injection''),94
+Path Traversal: '\absolute\pathname\here',Path Traversal: '\absolute\pathname\here',38
+Improper Control of Generation of Code ('Code Injection'),Improper Control of Generation of Code ('Code Injection'),94
 Permissions&comma; Privileges&comma; and Access Controls,Permissions&comma; Privileges&comma; and Access Controls,264
 Concurrency Issues,Concurrency Issues,557
 Improper Validation of Function Hook Arguments,Improper Validation of Function Hook Arguments,622
 SFP Cluster: Privilege,SFP Cluster: Privilege,901
 Small Space of Random Values,Small Space of Random Values,334
 Use of Insufficiently Random Values,Use of Insufficiently Random Values,330
-Inconsistent Interpretation of HTTP Requests (''HTTP Request Smuggling''),Inconsistent Interpretation of HTTP Requests (''HTTP Request Smuggling''),444
-Path Traversal: ''dir\..\..\filename'',Path Traversal: ''dir\..\..\filename'',31
+Inconsistent Interpretation of HTTP Requests ('HTTP Request Smuggling'),Inconsistent Interpretation of HTTP Requests ('HTTP Request Smuggling'),444
+Path Traversal: 'dir\..\..\filename',Path Traversal: 'dir\..\..\filename',31
 OWASP Top Ten 2010 Category A3 - Broken Authentication and Session Management,OWASP Top Ten 2010 Category A3 - Broken Authentication and Session Management,812
 Exposure of CVS Repository to an Unauthorized Control Sphere,Exposure of CVS Repository to an Unauthorized Control Sphere,527
 Use of Multiple Resources with Duplicate Identifier,Use of Multiple Resources with Duplicate Identifier,694
 Information Exposure Through Servlet Runtime Error Message,Information Exposure Through Servlet Runtime Error Message,536
 File and Directory Information Exposure,File and Directory Information Exposure,538
 Use of Low-Level Functionality,Use of Low-Level Functionality,695
-Selection of Less-Secure Algorithm During Negotiation (''Algorithm Downgrade''),Selection of Less-Secure Algorithm During Negotiation (''Algorithm Downgrade''),757
-Path Equivalence: ''/multiple/trailing/slash//'',Path Equivalence: ''/multiple/trailing/slash//'',52
+Selection of Less-Secure Algorithm During Negotiation ('Algorithm Downgrade'),Selection of Less-Secure Algorithm During Negotiation ('Algorithm Downgrade'),757
+Path Equivalence: '/multiple/trailing/slash//',Path Equivalence: '/multiple/trailing/slash//',52
 Improper Neutralization of Section Delimiters,Improper Neutralization of Section Delimiters,145
 Information Exposure Through Shell Error Message,Information Exposure Through Shell Error Message,535
 CERT C Secure Coding Section 09 - Input Output (FIO),CERT C Secure Coding Section 09 - Input Output (FIO),743
@@ -193,7 +193,7 @@ Improper Handling of Inconsistent Structural Elements,Improper Handling of Incon
 EJB Bad Practices: Use of Sockets,EJB Bad Practices: Use of Sockets,577
 Use of Less Trusted Source,Use of Less Trusted Source,348
 Unused Variable,Unused Variable,563
-Path Equivalence: ''/./'' (Single Dot Directory),Path Equivalence: ''/./'' (Single Dot Directory),55
+Path Equivalence: '/./' (Single Dot Directory),Path Equivalence: '/./' (Single Dot Directory),55
 SFP Cluster: Synchronization,SFP Cluster: Synchronization,894
 Function Call With Incorrect Order of Arguments,Function Call With Incorrect Order of Arguments,683
 Time-of-check Time-of-use (TOCTOU) Race Condition,Time-of-check Time-of-use (TOCTOU) Race Condition,367
@@ -202,17 +202,17 @@ Use of Singleton Pattern Without Synchronization in a Multithreaded Context,Use 
 Weaknesses in the 2010 CWE/SANS Top 25 Most Dangerous Programming Errors,Weaknesses in the 2010 CWE/SANS Top 25 Most Dangerous Programming Errors,800
 Improper Neutralization of Script in an Error Message Web Page,Improper Neutralization of Script in an Error Message Web Page,81
 Use After Free,Use After Free,416
-Use of Externally-Controlled Input to Select Classes or Code (''Unsafe Reflection''),Use of Externally-Controlled Input to Select Classes or Code (''Unsafe Reflection''),470
+Use of Externally-Controlled Input to Select Classes or Code ('Unsafe Reflection'),Use of Externally-Controlled Input to Select Classes or Code ('Unsafe Reflection'),470
 Insufficient Verification of Data Authenticity,Insufficient Verification of Data Authenticity,345
-Path Traversal: ''/../filedir'',Path Traversal: ''/../filedir'',25
+Path Traversal: '/../filedir',Path Traversal: '/../filedir',25
 Insufficient UI Warning of Dangerous Operations,Insufficient UI Warning of Dangerous Operations,357
 ASP.NET Environment Issues,ASP.NET Environment Issues,10
 Data Structure Issues,Data Structure Issues,461
 Information Exposure Through Externally-generated Error Message,Information Exposure Through Externally-generated Error Message,211
-Improper Following of a Certificate''s Chain of Trust,Improper Following of a Certificate''s Chain of Trust,296
+Improper Following of a Certificate's Chain of Trust,Improper Following of a Certificate's Chain of Trust,296
 Improper Neutralization of Script in Attributes in a Web Page,Improper Neutralization of Script in Attributes in a Web Page,83
 Deprecated Entries,Deprecated Entries,604
-Improper Restriction of Recursive Entity References in DTDs (''XML Entity Expansion''),Improper Restriction of Recursive Entity References in DTDs (''XML Entity Expansion''),776
+Improper Restriction of Recursive Entity References in DTDs ('XML Entity Expansion'),Improper Restriction of Recursive Entity References in DTDs ('XML Entity Expansion'),776
 Improper Handling of Apple HFS+ Alternate Data Stream Path,Improper Handling of Apple HFS+ Alternate Data Stream Path,72
 CERT C++ Secure Coding Section 13 - Object Oriented Programming (OOP),CERT C++ Secure Coding Section 13 - Object Oriented Programming (OOP),881
 OWASP Top Ten 2010 Category A1 - Injection,OWASP Top Ten 2010 Category A1 - Injection,810
@@ -265,14 +265,14 @@ Attempt to Access Child of a Non-structure Pointer,Attempt to Access Child of a 
 Use of Client-Side Authentication,Use of Client-Side Authentication,603
 OWASP Top Ten 2007 Category A8 - Insecure Cryptographic Storage,OWASP Top Ten 2007 Category A8 - Insecure Cryptographic Storage,719
 Authorization Bypass Through User-Controlled SQL Primary Key,Authorization Bypass Through User-Controlled SQL Primary Key,566
-Loop with Unreachable Exit Condition (''Infinite Loop''),Loop with Unreachable Exit Condition (''Infinite Loop''),835
+Loop with Unreachable Exit Condition ('Infinite Loop'),Loop with Unreachable Exit Condition ('Infinite Loop'),835
 Signal Handler Function Associated with Multiple Signals,Signal Handler Function Associated with Multiple Signals,831
 Covert Storage Channel,Covert Storage Channel,515
 OWASP Top Ten 2004 Category A2 - Broken Access Control,OWASP Top Ten 2004 Category A2 - Broken Access Control,723
 Overly Restrictive Account Lockout Mechanism,Overly Restrictive Account Lockout Mechanism,645
 Technology-Specific Special Elements,Technology-Specific Special Elements,169
 User Interface Errors,User Interface Errors,445
-Path Equivalence: '' filename'' (Leading Space),Path Equivalence: '' filename'' (Leading Space),47
+Path Equivalence: ' filename' (Leading Space),Path Equivalence: ' filename' (Leading Space),47
 Missing Support for Integrity Check,Missing Support for Integrity Check,353
 Comparison of Classes by Name,Comparison of Classes by Name,486
 Missing Default Case in Switch Statement,Missing Default Case in Switch Statement,478
@@ -291,16 +291,16 @@ Weaknesses in OWASP Top Ten (2007),Weaknesses in OWASP Top Ten (2007),629
 Resource Management Errors,Resource Management Errors,399
 Inappropriate Encoding for Output Context,Inappropriate Encoding for Output Context,838
 Incorrect Default Permissions,Incorrect Default Permissions,276
-Path Traversal: ''....//'',Path Traversal: ''....//'',34
-Improper Restriction of XML External Entity Reference (''XXE''),Improper Restriction of XML External Entity Reference (''XXE''),611
+Path Traversal: '....//',Path Traversal: '....//',34
+Improper Restriction of XML External Entity Reference ('XXE'),Improper Restriction of XML External Entity Reference ('XXE'),611
 Struts: Plug-in Framework not in Use,Struts: Plug-in Framework not in Use,106
 Improper Input Validation,Improper Input Validation,20
 DEPRECATED: Failure to Protect Stored Data from Modification,DEPRECATED: Failure to Protect Stored Data from Modification,217
 Trapdoor,Trapdoor,510
 Struts: Form Field Without Validator,Struts: Form Field Without Validator,105
 OWASP Top Ten 2010 Category A7 - Insecure Cryptographic Storage,OWASP Top Ten 2010 Category A7 - Insecure Cryptographic Storage,816
-Improper Neutralization of Directives in Statically Saved Code (''Static Code Injection''),Improper Neutralization of Directives in Statically Saved Code (''Static Code Injection''),96
-Unintended Proxy or Intermediary (''Confused Deputy''),Unintended Proxy or Intermediary (''Confused Deputy''),441
+Improper Neutralization of Directives in Statically Saved Code ('Static Code Injection'),Improper Neutralization of Directives in Statically Saved Code ('Static Code Injection'),96
+Unintended Proxy or Intermediary ('Confused Deputy'),Unintended Proxy or Intermediary ('Confused Deputy'),441
 File Descriptor Exhaustion,File Descriptor Exhaustion,769
 Missing Reference to Active Allocated Resource,Missing Reference to Active Allocated Resource,771
 Improper Neutralization of Alternate XSS Syntax,Improper Neutralization of Alternate XSS Syntax,87
@@ -324,12 +324,12 @@ Out-of-bounds Write,Out-of-bounds Write,787
 Reliance on Reverse DNS Resolution for a Security-Critical Action,Reliance on Reverse DNS Resolution for a Security-Critical Action,350
 Critical Public Variable Without Final Modifier,Critical Public Variable Without Final Modifier,493
 Symbolic Name not Mapping to Correct Object,Symbolic Name not Mapping to Correct Object,386
-Public cloneable() Method Without Final (''Object Hijack''),Public cloneable() Method Without Final (''Object Hijack''),491
+Public cloneable() Method Without Final ('Object Hijack'),Public cloneable() Method Without Final ('Object Hijack'),491
 UI Discrepancy for Security Feature,UI Discrepancy for Security Feature,446
 OWASP Top Ten 2013 Category A1 - Injection,OWASP Top Ten 2013 Category A1 - Injection,929
 Web Problems,Web Problems,442
 Weaknesses Examined by SAMATE,Weaknesses Examined by SAMATE,630
-Improper Neutralization of CRLF Sequences in HTTP Headers (''HTTP Response Splitting''),Improper Neutralization of CRLF Sequences in HTTP Headers (''HTTP Response Splitting''),113
+Improper Neutralization of CRLF Sequences in HTTP Headers ('HTTP Response Splitting'),Improper Neutralization of CRLF Sequences in HTTP Headers ('HTTP Response Splitting'),113
 DEPRECATED: Incorrect Initialization,DEPRECATED: Incorrect Initialization,458
 J2EE Misconfiguration: Entity Bean Declared Remote,J2EE Misconfiguration: Entity Bean Declared Remote,8
 CERT C Secure Coding Section 10 - Environment (ENV),CERT C Secure Coding Section 10 - Environment (ENV),744
@@ -339,7 +339,7 @@ Information Management Errors,Information Management Errors,199
 Use of Hard-coded Password,Use of Hard-coded Password,259
 Information Exposure Through Test Code,Information Exposure Through Test Code,531
 Privilege / Sandbox Issues,Privilege / Sandbox Issues,265
-Improper Limitation of a Pathname to a Restricted Directory (''Path Traversal''),Improper Limitation of a Pathname to a Restricted Directory (''Path Traversal''),22
+Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal'),Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal'),22
 Use of a Non-reentrant Function in a Concurrent Context,Use of a Non-reentrant Function in a Concurrent Context,663
 Use of Function with Inconsistent Implementations,Use of Function with Inconsistent Implementations,474
 Buffer Under-read,Buffer Under-read,127
@@ -348,7 +348,7 @@ CERT C++ Secure Coding Section 14 - Concurrency (CON),CERT C++ Secure Coding Sec
 Development Concepts,Development Concepts,699
 SFP Cluster: Malware,SFP Cluster: Malware,904
 Direct Use of Unsafe JNI,Direct Use of Unsafe JNI,111
-Path Traversal: ''....'' (Multiple Dot),Path Traversal: ''....'' (Multiple Dot),33
+Path Traversal: '....' (Multiple Dot),Path Traversal: '....' (Multiple Dot),33
 Missing XML Validation,Missing XML Validation,112
 Use of umask() with chmod-style Argument,Use of umask() with chmod-style Argument,560
 Permissive Regular Expression,Permissive Regular Expression,625
@@ -364,7 +364,7 @@ Improper Handling of Windows Device Names,Improper Handling of Windows Device Na
 Handler Errors,Handler Errors,429
 SFP Cluster: Predictability,SFP Cluster: Predictability,905
 SFP Cluster: Resource Management,SFP Cluster: Resource Management,892
-Dangling Database Cursor (''Cursor Injection''),Dangling Database Cursor (''Cursor Injection''),619
+Dangling Database Cursor ('Cursor Injection'),Dangling Database Cursor ('Cursor Injection'),619
 Weaknesses that Affect Memory,Weaknesses that Affect Memory,633
 EJB Bad Practices: Use of Class Loader,EJB Bad Practices: Use of Class Loader,578
 Information Exposure Through Caching,Information Exposure Through Caching,524
@@ -409,10 +409,10 @@ Windows Virtual File Problems,Windows Virtual File Problems,68
 Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS),Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS),80
 Weaknesses in OWASP Top Ten (2010),Weaknesses in OWASP Top Ten (2010),809
 Improper Validation of Array Index,Improper Validation of Array Index,129
-Apple ''.DS_Store'',Apple ''.DS_Store'',71
+Apple '.DS_Store',Apple '.DS_Store',71
 CERT C++ Secure Coding Section 10 - Environment (ENV),CERT C++ Secure Coding Section 10 - Environment (ENV),878
 Improper Handling of Missing Values,Improper Handling of Missing Values,230
-Improper Neutralization of CRLF Sequences (''CRLF Injection''),Improper Neutralization of CRLF Sequences (''CRLF Injection''),93
+Improper Neutralization of CRLF Sequences ('CRLF Injection'),Improper Neutralization of CRLF Sequences ('CRLF Injection'),93
 Off-by-one Error,Off-by-one Error,193
 Inclusion of Functionality from Untrusted Control Sphere,Inclusion of Functionality from Untrusted Control Sphere,829
 Not Using Password Aging,Not Using Password Aging,262
@@ -428,7 +428,7 @@ Struts: Validator Turned Off,Struts: Validator Turned Off,109
 Weaknesses in Software Written in C,Weaknesses in Software Written in C,658
 Insecure Preserved Inherited Permissions,Insecure Preserved Inherited Permissions,278
 Session Fixation,Session Fixation,384
-Path Equivalence: ''filedir\\'' (Trailing Backslash),Path Equivalence: ''filedir\\'' (Trailing Backslash),54
+Path Equivalence: 'filedir\\' (Trailing Backslash),Path Equivalence: 'filedir\\' (Trailing Backslash),54
 Out-of-bounds Read,Out-of-bounds Read,125
 Path Equivalence: Windows 8.3 Filename,Path Equivalence: Windows 8.3 Filename,58
 Improper Neutralization of Trailing Special Elements,Improper Neutralization of Trailing Special Elements,162
@@ -454,13 +454,13 @@ Failure to Handle Missing Parameter,Failure to Handle Missing Parameter,234
 Information Exposure Through Indexing of Private Data,Information Exposure Through Indexing of Private Data,612
 Use of a One-Way Hash without a Salt,Use of a One-Way Hash without a Salt,759
 Use of sizeof() on a Pointer Type,Use of sizeof() on a Pointer Type,467
-Buffer Copy without Checking Size of Input (''Classic Buffer Overflow''),Buffer Copy without Checking Size of Input (''Classic Buffer Overflow''),120
-Concurrent Execution using Shared Resource with Improper Synchronization (''Race Condition''),Concurrent Execution using Shared Resource with Improper Synchronization (''Race Condition''),362
+Buffer Copy without Checking Size of Input ('Classic Buffer Overflow'),Buffer Copy without Checking Size of Input ('Classic Buffer Overflow'),120
+Concurrent Execution using Shared Resource with Improper Synchronization ('Race Condition'),Concurrent Execution using Shared Resource with Improper Synchronization ('Race Condition'),362
 Information Exposure Through Environmental Variables,Information Exposure Through Environmental Variables,526
 Race Condition within a Thread,Race Condition within a Thread,366
 Improperly Implemented Security Check for Standard,Improperly Implemented Security Check for Standard,358
 Same Seed in PRNG,Same Seed in PRNG,336
-Path Equivalence: ''filename '' (Trailing Space),Path Equivalence: ''filename '' (Trailing Space),46
+Path Equivalence: 'filename ' (Trailing Space),Path Equivalence: 'filename ' (Trailing Space),46
 Failure to Sanitize Paired Delimiters,Failure to Sanitize Paired Delimiters,157
 Use of Dynamic Class Loading,Use of Dynamic Class Loading,545
 Incorrect Synchronization,Incorrect Synchronization,821
@@ -469,10 +469,10 @@ Wrap-around Error,Wrap-around Error,128
 Missing Authorization,Missing Authorization,862
 Incorrect Short Circuit Evaluation,Incorrect Short Circuit Evaluation,768
 DEPRECATED: Improper Sanitization of Custom Special Characters,DEPRECATED: Improper Sanitization of Custom Special Characters,92
-Not Failing Securely (''Failing Open''),Not Failing Securely (''Failing Open''),636
+Not Failing Securely ('Failing Open'),Not Failing Securely ('Failing Open'),636
 Incorrect Behavior Order: Early Validation,Incorrect Behavior Order: Early Validation,179
 Returning a Mutable Object to an Untrusted Caller,Returning a Mutable Object to an Untrusted Caller,375
-Improper Neutralization of Special Elements used in an SQL Command (''SQL Injection''),Improper Neutralization of Special Elements used in an SQL Command (''SQL Injection''),89
+Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection'),Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection'),89
 Information Exposure Through Directory Listing,Information Exposure Through Directory Listing,548
 Missing Required Cryptographic Step,Missing Required Cryptographic Step,325
 Improper Ownership Management,Improper Ownership Management,282
@@ -498,11 +498,11 @@ Dynamic Variable Evaluation,Dynamic Variable Evaluation,627
 Improper Validation of Certificate Expiration,Improper Validation of Certificate Expiration,298
 Data Handling,Data Handling,19
 Unsafe ActiveX Control Marked Safe For Scripting,Unsafe ActiveX Control Marked Safe For Scripting,623
-Path Equivalence: ''\\multiple\\internal\\backslash'',Path Equivalence: ''\multiple\\internal\\backslash'',53
+Path Equivalence: '\\multiple\\internal\\backslash',Path Equivalence: '\multiple\\internal\\backslash',53
 Improper Handling of Insufficient Permissions or Privileges,Improper Handling of Insufficient Permissions or Privileges,280
 Improper Handling of Extra Values,Improper Handling of Extra Values,231
 Using Referer Field for Authentication,Using Referer Field for Authentication,293
-Transmission of Private Resources into a New Sphere (''Resource Leak''),Transmission of Private Resources into a New Sphere (''Resource Leak''),402
+Transmission of Private Resources into a New Sphere ('Resource Leak'),Transmission of Private Resources into a New Sphere ('Resource Leak'),402
 CERT C Secure Coding Section 12 - Error Handling (ERR),CERT C Secure Coding Section 12 - Error Handling (ERR),746
 SFP Cluster: Memory Management,SFP Cluster: Memory Management,891
 Reliance on Security Through Obscurity,Reliance on Security Through Obscurity,656
@@ -548,7 +548,7 @@ J2EE Misconfiguration: Missing Custom Error Page,J2EE Misconfiguration: Missing 
 Improper Output Neutralization for Logs,Improper Output Neutralization for Logs,117
 Integer Underflow (Wrap or Wraparound),Integer Underflow (Wrap or Wraparound),191
 Missing Password Field Masking,Missing Password Field Masking,549
-Improper Access of Indexable Resource (''Range Error''),Improper Access of Indexable Resource (''Range Error''),118
+Improper Access of Indexable Resource ('Range Error'),Improper Access of Indexable Resource ('Range Error'),118
 Use of Pointer Subtraction to Determine Size,Use of Pointer Subtraction to Determine Size,469
 Leftover Debug Code,Leftover Debug Code,489
 Weaknesses Addressed by the CERT C++ Secure Coding Standard,Weaknesses Addressed by the CERT C++ Secure Coding Standard,868
@@ -593,7 +593,7 @@ Improper Handling of Syntactically Invalid Structure,Improper Handling of Syntac
 Double-Checked Locking,Double-Checked Locking,609
 Weaknesses in Software Written in Java,Weaknesses in Software Written in Java,660
 Mismatched Memory Management Routines,Mismatched Memory Management Routines,762
-Improper Neutralization of Directives in Dynamically Evaluated Code (''Eval Injection''),Improper Neutralization of Directives in Dynamically Evaluated Code (''Eval Injection''),95
+Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection'),Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection'),95
 Cleartext Storage of Sensitive Information,Cleartext Storage of Sensitive Information,312
 Improper Resource Shutdown or Release,Improper Resource Shutdown or Release,404
 Often Misused: Arguments and Parameters,Often Misused: Arguments and Parameters,559
@@ -603,7 +603,7 @@ Exposed IOCTL with Insufficient Access Control,Exposed IOCTL with Insufficient A
 Buffer Access with Incorrect Length Value,Buffer Access with Incorrect Length Value,805
 Heap-based Buffer Overflow,Heap-based Buffer Overflow,122
 Function Call With Incorrect Argument Type,Function Call With Incorrect Argument Type,686
-Channel Accessible by Non-Endpoint (''Man-in-the-Middle''),Channel Accessible by Non-Endpoint (''Man-in-the-Middle''),300
+Channel Accessible by Non-Endpoint ('Man-in-the-Middle'),Channel Accessible by Non-Endpoint ('Man-in-the-Middle'),300
 Logging of Excessive Data,Logging of Excessive Data,779
 Predictable Exact Value from Previous Values,Predictable Exact Value from Previous Values,342
 Insecure Inherited Permissions,Insecure Inherited Permissions,277
@@ -656,10 +656,10 @@ Improper Neutralization of Leading Special Elements,Improper Neutralization of L
 Unverified Ownership,Unverified Ownership,283
 Improper Handling of Inconsistent Special Elements,Improper Handling of Inconsistent Special Elements,168
 OWASP Top Ten 2007 Category A9 - Insecure Communications,OWASP Top Ten 2007 Category A9 - Insecure Communications,720
-Path Traversal: ''C:dirname'',Path Traversal: ''C:dirname'',39
+Path Traversal: 'C:dirname',Path Traversal: 'C:dirname',39
 Cloneable Class Containing Sensitive Information,Cloneable Class Containing Sensitive Information,498
 DEPRECATED (Duplicate): Miscalculated Null Termination,DEPRECATED (Duplicate): Miscalculated Null Termination,132
-Path Traversal: ''.../...//'',Path Traversal: ''.../...//'',35
+Path Traversal: '.../...//',Path Traversal: '.../...//',35
 Missing Custom Error Page,Missing Custom Error Page,756
 clone() Method Without super.clone(),clone() Method Without super.clone(),580
 J2EE Framework: Saving Unserializable Objects to Disk,J2EE Framework: Saving Unserializable Objects to Disk,594
@@ -675,7 +675,7 @@ Only Filtering Special Elements Relative to a Marker,Only Filtering Special Elem
 Incomplete Filtering of Multiple Instances of Special Elements,Incomplete Filtering of Multiple Instances of Special Elements,794
 OWASP Top Ten 2004 Category A8 - Insecure Storage,OWASP Top Ten 2004 Category A8 - Insecure Storage,729
 Undefined Behavior for Input to API,Undefined Behavior for Input to API,475
-Path Traversal: ''\..\filename'',Path Traversal: ''\..\filename'',29
+Path Traversal: '\..\filename',Path Traversal: '\..\filename',29
 .NET Environment Issues,.NET Environment Issues,519
 Weaknesses in Software Written in C++,Weaknesses in Software Written in C++,659
 2010 Top 25 - Insecure Interaction Between Components,2010 Top 25 - Insecure Interaction Between Components,801
@@ -703,20 +703,20 @@ Resource Locking Problems,Resource Locking Problems,411
 CERT Java Secure Coding Section 15 - Runtime Environment (ENV),CERT Java Secure Coding Section 15 - Runtime Environment (ENV),860
 SFP Cluster: Information Leak,SFP Cluster: Information Leak,895
 CERT C++ Secure Coding Section 01 - Preprocessor (PRE),CERT C++ Secure Coding Section 01 - Preprocessor (PRE),869
-Buffer Underwrite (''Buffer Underflow''),Buffer Underwrite (''Buffer Underflow''),124
+Buffer Underwrite ('Buffer Underflow'),Buffer Underwrite ('Buffer Underflow'),124
 Business Logic Errors,Business Logic Errors,840
 Use of RSA Algorithm without OAEP,Use of RSA Algorithm without OAEP,780
 Improper Resolution of Path Equivalence,Improper Resolution of Path Equivalence,41
 Externally Controlled Reference to a Resource in Another Sphere,Externally Controlled Reference to a Resource in Another Sphere,610
-Path Equivalence: ''file...name'' (Multiple Internal Dot),Path Equivalence: ''file...name'' (Multiple Internal Dot),45
+Path Equivalence: 'file...name' (Multiple Internal Dot),Path Equivalence: 'file...name' (Multiple Internal Dot),45
 Exposed Dangerous Method or Function,Exposed Dangerous Method or Function,749
 OWASP Top Ten 2007 Category A10 - Failure to Restrict URL Access,OWASP Top Ten 2007 Category A10 - Failure to Restrict URL Access,721
 2010 Top 25 - Porous Defenses,2010 Top 25 - Porous Defenses,803
 Improper Handling of Insufficient Privileges,Improper Handling of Insufficient Privileges,274
-Improper Neutralization of Special Elements in Output Used by a Downstream Component (''Injection''),Improper Neutralization of Special Elements in Output Used by a Downstream Component (''Injection''),74
+Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection'),Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection'),74
 J2EE Time and State Issues,J2EE Time and State Issues,381
 Public Static Field Not Marked Final,Public Static Field Not Marked Final,500
-Path Equivalence: ''file.name'' (Internal Dot),Path Equivalence: ''file.name'' (Internal Dot),44
+Path Equivalence: 'file.name' (Internal Dot),Path Equivalence: 'file.name' (Internal Dot),44
 Intentionally Introduced Nonmalicious Weakness,Intentionally Introduced Nonmalicious Weakness,513
 Improper Neutralization of Input Leaders,Improper Neutralization of Input Leaders,148
 CERT C Secure Coding Section 07 - Characters and Strings (STR),CERT C Secure Coding Section 07 - Characters and Strings (STR),741
@@ -731,16 +731,16 @@ Hidden Functionality,Hidden Functionality,912
 Weaknesses in the 2011 CWE/SANS Top 25 Most Dangerous Software Errors,Weaknesses in the 2011 CWE/SANS Top 25 Most Dangerous Software Errors,900
 Security Features,Security Features,254
 Replicating Malicious Code (Virus or Worm),Replicating Malicious Code (Virus or Worm),509
-Sensitive Cookie in HTTPS Session Without ''Secure'' Attribute,Sensitive Cookie in HTTPS Session Without ''Secure'' Attribute,614
+Sensitive Cookie in HTTPS Session Without 'Secure' Attribute,Sensitive Cookie in HTTPS Session Without 'Secure' Attribute,614
 Incorrect Authorization,Incorrect Authorization,863
 Covert Channel,Covert Channel,514
 Insufficient Psychological Acceptability,Insufficient Psychological Acceptability,655
 DEPRECATED (Duplicate): Failure to provide confidentiality for stored data,DEPRECATED (Duplicate): Failure to provide confidentiality for stored data,218
 Only Filtering Special Elements at a Specified Location,Only Filtering Special Elements at a Specified Location,795
-Path Equivalence: ''filedir*'' (Wildcard),Path Equivalence: ''filedir*'' (Wildcard),56
+Path Equivalence: 'filedir*' (Wildcard),Path Equivalence: 'filedir*' (Wildcard),56
 CERT Java Secure Coding Section 02 - Expressions (EXP),CERT Java Secure Coding Section 02 - Expressions (EXP),847
 SFP Cluster: Access Control,SFP Cluster: Access Control,899
-Path Traversal: ''/absolute/pathname/here'',Path Traversal: ''/absolute/pathname/here'',37
+Path Traversal: '/absolute/pathname/here',Path Traversal: '/absolute/pathname/here',37
 CERT Java Secure Coding Section 08 - Locking (LCK),CERT Java Secure Coding Section 08 - Locking (LCK),853
 Improper Restriction of Power Consumption,Improper Restriction of Power Consumption,920
 Collapse of Data into Unsafe Value,Collapse of Data into Unsafe Value,182
@@ -753,7 +753,7 @@ Location,Location,1
 Signed to Unsigned Conversion Error,Signed to Unsigned Conversion Error,195
 Cleartext Storage in the Registry,Cleartext Storage in the Registry,314
 Improper Address Validation in IOCTL with METHOD_NEITHER I/O Control Code,Improper Address Validation in IOCTL with METHOD_NEITHER I/O Control Code,781
-Improper Link Resolution Before File Access (''Link Following''),Improper Link Resolution Before File Access (''Link Following''),59
+Improper Link Resolution Before File Access ('Link Following'),Improper Link Resolution Before File Access ('Link Following'),59
 Incorrect Conversion between Numeric Types,Incorrect Conversion between Numeric Types,681
 J2EE Bad Practices: Direct Management of Connections,J2EE Bad Practices: Direct Management of Connections,245
 Incomplete Blacklist to Cross-Site Scripting,Incomplete Blacklist to Cross-Site Scripting,692
@@ -766,7 +766,7 @@ Storage of Sensitive Data in a Mechanism without Access Control,Storage of Sensi
 Behavioral Problems,Behavioral Problems,438
 Information Exposure Through an Error Message,Information Exposure Through an Error Message,209
 Incorrect Type Conversion or Cast,Incorrect Type Conversion or Cast,704
-Improper Clearing of Heap Memory Before Release (''Heap Inspection''),Improper Clearing of Heap Memory Before Release (''Heap Inspection''),244
+Improper Clearing of Heap Memory Before Release ('Heap Inspection'),Improper Clearing of Heap Memory Before Release ('Heap Inspection'),244
 Uncontrolled Format String,Uncontrolled Format String,134
 Return Inside Finally Block,Return Inside Finally Block,584
 Information Exposure Through Cleanup Log Files,Information Exposure Through Cleanup Log Files,542
@@ -783,12 +783,12 @@ Improper Neutralization of Comment Delimiters,Improper Neutralization of Comment
 Authentication Bypass Issues,Authentication Bypass Issues,592
 OWASP Top Ten 2007 Category A1 - Cross Site Scripting (XSS),OWASP Top Ten 2007 Category A1 - Cross Site Scripting (XSS),712
 Passing Mutable Objects to an Untrusted Method,Passing Mutable Objects to an Untrusted Method,374
-Path Traversal: ''..\filedir'',Path Traversal: ''..\filedir'',28
+Path Traversal: '..\filedir',Path Traversal: '..\filedir',28
 Spyware,Spyware,512
 Cleansing&comma; Canonicalization&comma; and Comparison Errors,Cleansing&comma; Canonicalization&comma; and Comparison Errors,171
-Path Traversal: ''\UNC share name'' (Windows UNC Share),Path Traversal: ''\UNC share name'' (Windows UNC Share),40
+Path Traversal: '\UNC share name' (Windows UNC Share),Path Traversal: '\UNC share name' (Windows UNC Share),40
 OWASP Top Ten 2010 Category A5 - Cross-Site Request Forgery(CSRF),OWASP Top Ten 2010 Category A5 - Cross-Site Request Forgery(CSRF),814
-Uncontrolled Resource Consumption (''Resource Exhaustion''),Uncontrolled Resource Consumption (''Resource Exhaustion''),400
+Uncontrolled Resource Consumption ('Resource Exhaustion'),Uncontrolled Resource Consumption ('Resource Exhaustion'),400
 Improper Control of Document Type Definition,Improper Control of Document Type Definition,827
 Improper Handling of Windows ::DATA Alternate Data Stream,Improper Handling of Windows ::DATA Alternate Data Stream,69
 J2EE Bad Practices: Direct Use of Sockets,J2EE Bad Practices: Direct Use of Sockets,246
@@ -804,12 +804,12 @@ Use of a One-Way Hash with a Predictable Salt,Use of a One-Way Hash with a Predi
 Exposure of Resource to Wrong Sphere,Exposure of Resource to Wrong Sphere,668
 Signal Handler Use of a Non-reentrant Function,Signal Handler Use of a Non-reentrant Function,479
 Use of Wrong Operator in String Comparison,Use of Wrong Operator in String Comparison,597
-Path Equivalence: ''filename....'' (Multiple Trailing Dot),Path Equivalence: ''filename....'' (Multiple Trailing Dot),43
+Path Equivalence: 'filename....' (Multiple Trailing Dot),Path Equivalence: 'filename....' (Multiple Trailing Dot),43
 Small Seed Space in PRNG,Small Seed Space in PRNG,339
 Creation of chroot Jail Without Changing Working Directory,Creation of chroot Jail Without Changing Working Directory,243
-Improper Control of Resource Identifiers (''Resource Injection''),Improper Control of Resource Identifiers (''Resource Injection''),99
+Improper Control of Resource Identifiers ('Resource Injection'),Improper Control of Resource Identifiers ('Resource Injection'),99
 Information Exposure,Information Exposure,200
-Improper Neutralization of Special Elements used in a Command (''Command Injection''),Improper Neutralization of Special Elements used in a Command (''Command Injection''),77
+Improper Neutralization of Special Elements used in a Command ('Command Injection'),Improper Neutralization of Special Elements used in a Command ('Command Injection'),77
 Use of Uninitialized Resource,Use of Uninitialized Resource,908
 Use of Password System for Primary Authentication,Use of Password System for Primary Authentication,309
 Uncontrolled Recursion,Uncontrolled Recursion,674
@@ -821,12 +821,12 @@ CERT C Secure Coding Section 02 - Declarations and Initialization (DCL),CERT C S
 OWASP Top Ten 2010 Category A4 - Insecure Direct Object References,OWASP Top Ten 2010 Category A4 - Insecure Direct Object References,813
 Encoding Error,Encoding Error,172
 Interpretation Conflict,Interpretation Conflict,436
-Path Traversal: ''\dir\..\filename'',Path Traversal: ''\dir\..\filename'',30
+Path Traversal: '\dir\..\filename',Path Traversal: '\dir\..\filename',30
 Information Exposure Through Java Runtime Error Message,Information Exposure Through Java Runtime Error Message,537
 Improper Handling of File Names that Identify Virtual Resources,Improper Handling of File Names that Identify Virtual Resources,66
 Integer Overflow to Buffer Overflow,Integer Overflow to Buffer Overflow,680
-Path Traversal: ''dir/../../filename'',Path Traversal: ''dir/../../filename'',27
-Improper Release of Memory Before Removing Last Reference (''Memory Leak''),Improper Release of Memory Before Removing Last Reference (''Memory Leak''),401
+Path Traversal: 'dir/../../filename',Path Traversal: 'dir/../../filename',27
+Improper Release of Memory Before Removing Last Reference ('Memory Leak'),Improper Release of Memory Before Removing Last Reference ('Memory Leak'),401
 Missing Check for Certificate Revocation after Initial Check,Missing Check for Certificate Revocation after Initial Check,370
 Call to Non-ubiquitous API,Call to Non-ubiquitous API,589
 Information Exposure Through Sent Data,Information Exposure Through Sent Data,201
@@ -839,11 +839,11 @@ Information Exposure Through Process Environment,Information Exposure Through Pr
 Cross-Site Request Forgery (CSRF),Cross-Site Request Forgery (CSRF),352
 Improper Following of Specification by Caller,Improper Following of Specification by Caller,573
 Variable Extraction Error,Variable Extraction Error,621
-Improper Neutralization of Special Elements used in an Expression Language Statement (''Expression Language Injection''),Improper Neutralization of Special Elements used in an Expression Language Statement (''Expression Language Injection''),917
+Improper Neutralization of Special Elements used in an Expression Language Statement ('Expression Language Injection'),Improper Neutralization of Special Elements used in an Expression Language Statement ('Expression Language Injection'),917
 UNIX Path Link Problems,UNIX Path Link Problems,60
 Technology-Specific Input Validation Problems,Technology-Specific Input Validation Problems,100
 Incorrect Use of Privileged APIs,Incorrect Use of Privileged APIs,648
-Path Equivalence: ''/multiple//internal/slash'',Path Equivalence: ''/multiple//internal/slash'',51
+Path Equivalence: '/multiple//internal/slash',Path Equivalence: '/multiple//internal/slash',51
 Missing Validation of OpenSSL Certificate,Missing Validation of OpenSSL Certificate,599
 Pathname Traversal and Equivalence Errors,Pathname Traversal and Equivalence Errors,21
 Assignment of a Fixed Address to a Pointer,Assignment of a Fixed Address to a Pointer,587
@@ -857,12 +857,12 @@ Expired Pointer Dereference,Expired Pointer Dereference,825
 Information Exposure Through Source Code,Information Exposure Through Source Code,540
 finalize() Method Without super.finalize(),finalize() Method Without super.finalize(),568
 SFP Cluster: UI,SFP Cluster: UI,906
-Direct Request (''Forced Browsing''),Direct Request (''Forced Browsing''),425
+Direct Request ('Forced Browsing'),Direct Request ('Forced Browsing'),425
 Improper Enforcement of Message Integrity During Transmission in a Communication Channel,Improper Enforcement of Message Integrity During Transmission in a Communication Channel,924
 Authentication Bypass by Primary Weakness,Authentication Bypass by Primary Weakness,305
 Use of Potentially Dangerous Function,Use of Potentially Dangerous Function,676
 Use of Single-factor Authentication,Use of Single-factor Authentication,308
-Improper Control of Filename for Include/Require Statement in PHP Program (''PHP Remote File Inclusion''),Improper Control of Filename for Include/Require Statement in PHP Program (''PHP Remote File Inclusion''),98
+Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion'),Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion'),98
 Chain Elements,Chain Elements,679
 Process Control,Process Control,114
 Incomplete Model of Endpoint Features,Incomplete Model of Endpoint Features,437
@@ -871,7 +871,7 @@ Improper Check for Certificate Revocation,Improper Check for Certificate Revocat
 Configuration,Configuration,16
 Improper Encoding or Escaping of Output,Improper Encoding or Escaping of Output,116
 2011 Top 25 - Insecure Interaction Between Components,2011 Top 25 - Insecure Interaction Between Components,864
-Unnecessary Complexity in Protection Mechanism (Not Using ''Economy of Mechanism''),Unnecessary Complexity in Protection Mechanism (Not Using ''Economy of Mechanism''),637
+Unnecessary Complexity in Protection Mechanism (Not Using 'Economy of Mechanism'),Unnecessary Complexity in Protection Mechanism (Not Using 'Economy of Mechanism'),637
 Incomplete Identification of Uploaded File Variables (PHP),Incomplete Identification of Uploaded File Variables (PHP),616
 Improper Null Termination,Improper Null Termination,170
 Overly Restrictive Regular Expression,Overly Restrictive Regular Expression,186
@@ -889,7 +889,7 @@ Initialization and Cleanup Errors,Initialization and Cleanup Errors,452
 Improper Initialization,Improper Initialization,665
 Improper Restriction of Content Provider Export to Other Applications,Improper Restriction of Content Provider Export to Other Applications,926
 Trust of System Event Data,Trust of System Event Data,360
-Exposure of File Descriptor to Unintended Control Sphere (''File Descriptor Leak''),Exposure of File Descriptor to Unintended Control Sphere (''File Descriptor Leak''),403
+Exposure of File Descriptor to Unintended Control Sphere ('File Descriptor Leak'),Exposure of File Descriptor to Unintended Control Sphere ('File Descriptor Leak'),403
 Composites,Composites,678
 Improper Handling of Unexpected Data Type,Improper Handling of Unexpected Data Type,241
 Key Exchange without Entity Authentication,Key Exchange without Entity Authentication,322
@@ -907,7 +907,7 @@ Improper Neutralization of Macro Symbols,Improper Neutralization of Macro Symbol
 Improper Handling of URL Encoding (Hex Encoding),Improper Handling of URL Encoding (Hex Encoding),177
 Incorrect Ownership Assignment,Incorrect Ownership Assignment,708
 Placement of User into Incorrect Group,Placement of User into Incorrect Group,842
-Path Traversal: ''../filedir'',Path Traversal: ''../filedir'',24
+Path Traversal: '../filedir',Path Traversal: '../filedir',24
 Coding Standards Violation,Coding Standards Violation,710
 Information Exposure Through Query Strings in GET Request,Information Exposure Through Query Strings in GET Request,598
 OWASP Top Ten 2004 Category A6 - Injection Flaws,OWASP Top Ten 2004 Category A6 - Injection Flaws,727
@@ -918,7 +918,7 @@ Storing Passwords in a Recoverable Format,Storing Passwords in a Recoverable For
 Windows Path Link Problems,Windows Path Link Problems,63
 Improper Handling of Additional Special Element,Improper Handling of Additional Special Element,167
 Improper Handling of Extra Parameters,Improper Handling of Extra Parameters,235
-Improper Neutralization of Data within XQuery Expressions (''XQuery Injection''),Improper Neutralization of Data within XQuery Expressions (''XQuery Injection''),652
+Improper Neutralization of Data within XQuery Expressions ('XQuery Injection'),Improper Neutralization of Data within XQuery Expressions ('XQuery Injection'),652
 Often Misused: String Management,Often Misused: String Management,251
 Other Intentional&comma; Nonmalicious Weakness,Other Intentional&comma; Nonmalicious Weakness,517
 Improper Handling of Insufficient Entropy in TRNG,Improper Handling of Insufficient Entropy in TRNG,333
@@ -932,13 +932,13 @@ The UI Performs the Wrong Action,The UI Performs the Wrong Action,449
 Weaknesses in Mobile Applications,Weaknesses in Mobile Applications,919
 Private Array-Typed Field Returned From A Public Method,Private Array-Typed Field Returned From A Public Method,495
 Improper Neutralization of Script in Attributes of IMG Tags in a Web Page,Improper Neutralization of Script in Attributes of IMG Tags in a Web Page,82
-Access of Resource Using Incompatible Type (''Type Confusion''),Access of Resource Using Incompatible Type (''Type Confusion''),843
-Improper Neutralization of Data within XPath Expressions (''XPath Injection''),Improper Neutralization of Data within XPath Expressions (''XPath Injection''),643
+Access of Resource Using Incompatible Type ('Type Confusion'),Access of Resource Using Incompatible Type ('Type Confusion'),843
+Improper Neutralization of Data within XPath Expressions ('XPath Injection'),Improper Neutralization of Data within XPath Expressions ('XPath Injection'),643
 CERT Java Secure Coding Section 06 - Exceptional Behavior (ERR),CERT Java Secure Coding Section 06 - Exceptional Behavior (ERR),851
 Missing Initialization of Resource,Missing Initialization of Resource,909
 Code,Code,17
 CERT C Secure Coding Section 01 - Preprocessor (PRE),CERT C Secure Coding Section 01 - Preprocessor (PRE),735
-Path Equivalence: ''//multiple/leading/slash'',Path Equivalence: ''//multiple/leading/slash'',50
+Path Equivalence: '//multiple/leading/slash',Path Equivalence: '//multiple/leading/slash',50
 type.severities,,,
 Info,Info,1,1
 Low,Low,2,2

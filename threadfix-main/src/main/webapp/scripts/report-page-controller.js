@@ -9,8 +9,9 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     $scope.base = window.location.pathname;
 
     $scope.trendingActive = false;
-    $scope.complianceActive = false;
     $scope.snapshotActive = false;
+    $scope.remediationActive = false;
+    $scope.complianceActive = false;
 
     $scope.formatId = 1;
 
@@ -101,22 +102,22 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     }
 
     $scope.loadVulnSearch = function() {
-        $scope.vulnSearch = true;
         $scope.trendingActive = false;
         $scope.snapshotActive = false;
+        $scope.remediationActive = false;
         $scope.complianceActive = false;
-        $scope.filterParameters = undefined;
-        $scope.remediationEnterpriseActive = false;
+        $scope.vulnSearch = true;
         $scope.customActive = false;
+        $scope.filterParameters = undefined;
         $scope.$broadcast('loadVulnerabilitySearchTable');
     }
 
     $scope.loadTrending = function() {
         $scope.trendingActive = true;
         $scope.snapshotActive = false;
+        $scope.remediationActive = false;
         $scope.complianceActive = false;
         $scope.vulnSearch = false;
-        $scope.remediationEnterpriseActive = false;
         $scope.customActive = false;
         $scope.$broadcast('loadTrendingReport');
 
@@ -125,9 +126,9 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     $scope.loadCompliance = function() {
         $scope.trendingActive = false;
         $scope.snapshotActive = false;
+        $scope.remediationActive = false;
         $scope.complianceActive = true;
         $scope.vulnSearch = false;
-        $scope.remediationEnterpriseActive = false;
         $scope.customActive = false;
         $scope.$broadcast('loadComplianceReport');
 
@@ -136,30 +137,39 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     $scope.loadSnapshot = function() {
         $scope.trendingActive = false;
         $scope.snapshotActive = true;
+        $scope.remediationActive = false;
         $scope.complianceActive = false;
         $scope.vulnSearch = false;
-        $scope.remediationEnterpriseActive = false;
         $scope.customActive = false;
         $scope.$broadcast('loadSnapshotReport');
 
     };
 
-    $scope.loadEnterpriseRemediation = function() {
-        $scope.remediationEnterpriseActive = true;
+    $scope.loadRemediation = function() {
         $scope.trendingActive = false;
         $scope.snapshotActive = false;
+        $scope.remediationActive = true;
         $scope.complianceActive = false;
         $scope.vulnSearch = false;
         $scope.customActive = false;
         $scope.$broadcast('loadComplianceReport');
+    };
 
+    $scope.loadCompliance = function() {
+        $scope.trendingActive = false;
+        $scope.snapshotActive = false;
+        $scope.remediationActive = false;
+        $scope.complianceActive = true;
+        $scope.vulnSearch = false;
+        $scope.customActive = false;
+        $scope.$broadcast('loadComplianceReport');
     };
 
     $scope.loadCustom = function() {
         $scope.customActive = true;
-        $scope.remediationEnterpriseActive = false;
         $scope.trendingActive = false;
         $scope.snapshotActive = false;
+        $scope.remediationActive = false;
         $scope.complianceActive = false;
         $scope.vulnSearch = false;
         $scope.$broadcast('loadCustomReport');

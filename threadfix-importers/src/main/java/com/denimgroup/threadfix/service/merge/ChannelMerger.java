@@ -125,6 +125,10 @@ public class ChannelMerger {
     }
 
     private void closeMissingVulnerabilities() {
+        if (scan.getApplicationChannel() == null || scan.getApplicationChannel().getChannelType() == null) {
+            throw new IllegalStateException("Got a null application channel or channel type.");
+        }
+
         // for every old native ID
         String name = scan.getApplicationChannel().getChannelType().getName();
 
