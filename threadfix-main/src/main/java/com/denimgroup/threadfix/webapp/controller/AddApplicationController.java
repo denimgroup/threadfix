@@ -133,7 +133,7 @@ public class AddApplicationController {
             map.put("uploadScan", PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId,
                     application.getId()));
 
-            if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_SYSTEM_SETTINGS)) {
+            if (licenseService != null && PermissionUtils.isAuthorized(Permission.CAN_MANAGE_SYSTEM_SETTINGS)) {
                 map.put("applicationsAllowed", licenseService.getAppLimit());
                 map.put("applicationCount", applicationService.getApplicationCount());
             }
