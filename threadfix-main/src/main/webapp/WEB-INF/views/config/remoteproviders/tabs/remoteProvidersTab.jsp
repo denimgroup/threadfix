@@ -31,18 +31,18 @@
                 <td colspan="4" style="text-align:center;"> No providers found.</td>
             </tr>
             <tr ng-repeat="provider in providers" class="bodyRow">
-                <td id="name{{ $index }}">
+                <td id="name{{ provider.name | removeSpace }}">
                     {{ provider.name }}
                 </td>
                 <c:if test="${ canManageRemoteProviders }">
-                    <td id="username{{ $index }}">
+                    <td id="username{{ provider.name | removeSpace }}">
                         {{ provider.authInformation }}
                     </td>
-                    <td id="apiKey{{ $index }}">
+                    <td id="apiKey{{ provider.name | removeSpace }}">
                         {{ provider.hasCredentials }}
                     </td>
                     <td>
-                        <a id="configure{{ $index }}" class="btn" ng-click="configure(provider)">Configure</a>
+                        <a id="configure{{ provider.name | removeSpace }}" class="btn" ng-click="configure(provider)">Configure</a>
                     </td>
                 </c:if>
             </tr>
@@ -60,7 +60,7 @@
             <c:if test="${ canManageRemoteProviders }">
                 <a ng-hide="provider.updatingApps"
                    class="btn header-button"
-                   id="updateApps{{ provider.id }}"
+                   id="updateApps{{ provider.name | removeSpace }}"
                    style="font-size:60%;padding-left:10px;padding-right:8px;"
                    ng-click="updateApplications(provider)">
                     Update Applications
@@ -74,7 +74,7 @@
             <c:if test="${ canUploadScans }">
                 <a ng-show="provider.showImportAll && !provider.importingScans"
                    class="btn header-button"
-                   id="updateApps{{ provider.id }}"
+                   id="importAll{{ provider.name | removeSpace }}"
                    style="font-size:60%;padding-left:10px;padding-right:8px;"
                    ng-click="importAllScans(provider)">
                     Import All Scans
@@ -87,7 +87,7 @@
 
             <c:if test="${ canManageRemoteProviders }">
                 <button ng-hide="provider.clearingConfiguration"
-                        id="clearConfig{{ provider.id }}"
+                        id="clearConfig{{ provider.name | removeSpace }}"
                         ng-click="clearConfiguration(provider)"
                         class="btn btn-primary"
                         type="submit">
@@ -135,22 +135,22 @@
             <tbody>
 
             <tr ng-repeat="app in provider.displayApps">
-                <td id="provider{{ provider.id }}appid{{ app.id }}" style="word-wrap: break-word">
+                <td id="provider{{ provider.name | removeSpace }}appid{{ $index }}" style="word-wrap: break-word">
                     {{ app.customName || app.nativeName }}
                 </td>
                 <c:if test="${ canManageRemoteProviders }">
                     <td>
-                        <a id="provider{{ provider.id }}updateName{{ $index }}" class="btn" ng-click="openNameModal(provider, app)">Edit Name</a>
+                        <a id="provider{{ provider.name | removeSpace }}updateName{{ $index }}" class="btn" ng-click="openNameModal(provider, app)">Edit Name</a>
                     </td>
                 </c:if>
-                <td id="provider{{ provider.id }}tfteamname{{ $index }}">
+                <td id="provider{{ provider.name | removeSpace }}tfteamname{{ $index }}">
                     <div ng-show="app.application" style="word-wrap: break-word;max-width:170px;text-align:left;">
                         <a class="pointer" ng-click="goToTeam(app.application.team)">
                             {{ app.application.team.name }}
                         </a>
                     </div>
                 </td>
-                <td id="provider{{ provider.id }}tfappname{{ $index }}">
+                <td id="provider{{ provider.name | removeSpace }}tfappname{{ $index }}">
                     <div ng-show="app.application" style="word-wrap: break-word;max-width:170px;text-align:left;">
                         <a class="pointer" ng-click="goToApp(app.application)">
                             {{ app.application.name }}
@@ -159,13 +159,13 @@
                 </td>
                 <c:if test="${ canManageRemoteProviders }">
                     <td>
-                        <a id="provider{{ provider.id }}updateMapping{{ $index }}" class="btn" ng-click="openAppModal(provider, app)">Edit Mapping</a>
+                        <a id="provider{{ provider.name | removeSpace }}updateMapping{{ $index }}" class="btn" ng-click="openAppModal(provider, app)">Edit Mapping</a>
                     </td>
                 </c:if>
                 <td>
                     <a ng-show="app.application && !app.importingScans"
                        class="btn"
-                       id="provider{{ provider.id }}import{{ $index }}"
+                       id="provider{{ provider.name | removeSpace }}import{{ $index }}"
                        ng-click="importScansApp(provider, app)">
                         Import
                     </a>
