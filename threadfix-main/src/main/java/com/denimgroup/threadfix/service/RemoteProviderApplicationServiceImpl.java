@@ -225,7 +225,7 @@ public class RemoteProviderApplicationServiceImpl implements
 				if (applicationChannel.getScanList() != null &&
 						applicationChannel.getScanList().size() > 0) {
 					List<Scan> scans = applicationChannel.getScanList();
-					Collections.sort(scans,Scan.getTimeComparator());
+					Collections.sort(scans, Scan.getTimeComparator());
 					remoteProviderApplication.setLastImportTime(
 							scans.get(scans.size() - 1).getImportTime());
 				} else {
