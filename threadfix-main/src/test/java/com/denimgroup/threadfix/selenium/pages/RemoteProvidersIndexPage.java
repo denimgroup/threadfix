@@ -36,68 +36,22 @@ public class RemoteProvidersIndexPage extends BasePage {
 
 	/*------------------------------ Action Methods ------------------------------*/
 
-
-    public RemoteProvidersIndexPage clickConfigureContrast(){
-        driver.findElementById("configure0").click();
+    public RemoteProvidersIndexPage clickConfigure(String provider) {
+        driver.findElementById("configure" + provider).click();
         waitForElement(By.id("myModalLabel"));
         return new RemoteProvidersIndexPage(driver);
     }
-
-    public RemoteProvidersIndexPage clickConfigureQualys(){
-		driver.findElementById("configure2").click();
-		waitForElement(By.id("myModalLabel"));
-		return new RemoteProvidersIndexPage(driver);
-	}
-	
-	public RemoteProvidersIndexPage clickConfigureVeracode(){
-		driver.findElementById("configure5").click();
-		waitForElement(By.id("myModalLabel"));
-		return new RemoteProvidersIndexPage(driver);
-	}
-	
-	public RemoteProvidersIndexPage clickConfigureWhiteHat(){
-		driver.findElementById("configure6").click();
-		waitForElement(By.id("myModalLabel"));
-		return new RemoteProvidersIndexPage(driver);
-	}
-
-    public RemoteProvidersIndexPage clickSubmitWait() {
-        driver.findElementById("submit").click();
-        sleep(6000);
-        return new RemoteProvidersIndexPage(driver);
-    }
-	
-	public RemoteProvidersIndexPage saveQualys(){
-		driver.findElementById("submit").click();
-        int i = 1;
-        while(driver.findElements(By.id("configure0")).isEmpty() && i++ < 5) {
-            sleep(20000);
-        }
-        waitForElement(By.id("configure0"));
-		return new RemoteProvidersIndexPage(driver);
-	}
 	
 	public RemoteProvidersIndexPage closeModal(){
 		driver.findElementById("closeModalButton").click();
         sleep(1000);
 		return new RemoteProvidersIndexPage(driver);
 	}
-	
-	public RemoteProvidersIndexPage saveVera(){
-		driver.findElementById("submit").click();
-        waitForSuccessMessage();
-        int i = 1;
-        while(driver.findElements(By.id("clearConfig2")).isEmpty() && i++ < 5) {
-            sleep(20000);
-        }
-		waitForElement(By.id("clearConfig2"), 45);
-		return new RemoteProvidersIndexPage(driver);
-	}
 
-    public RemoteProvidersIndexPage saveContrast(){
+    public RemoteProvidersIndexPage saveConfiguration(String provider) {
         driver.findElementById("submit").click();
         waitForInvisibleElement("myModalLabel");
-        waitForElement(By.id("clearConfig4"));
+        waitForElement(By.id("clearConfig" + provider));
         return new RemoteProvidersIndexPage(driver);
     }
 
@@ -105,18 +59,6 @@ public class RemoteProvidersIndexPage extends BasePage {
         driver.findElementByLinkText("WhiteHat").click();
         return this;
     }
-
-	public RemoteProvidersIndexPage saveWhiteHat(){
-        selectWhiteHatImportStyle();
-		driver.findElementById("submit").click();
-        waitForSuccessMessage();
-        int i = 1;
-        while(driver.findElements(By.id("clearConfig1")).isEmpty() && i++ < 5) {
-            sleep(20000);
-        }
-        waitForElement(By.id("clearConfig1"), 20);
-		return new RemoteProvidersIndexPage(driver);
-	}
 
     public RemoteProvidersIndexPage setContrastUser(String user) {
         driver.findElementById("Username").clear();
@@ -181,38 +123,19 @@ public class RemoteProvidersIndexPage extends BasePage {
 		return this;
 	}
 
-    public RemoteProvidersIndexPage mapQualysToTeamAndApp(int appRow, String teamName, String appName) {
-        clickEditMappingQualysButton(appRow);
+    public RemoteProvidersIndexPage mapProviderToTeamAndApp(String provider, int appRow, String teamName, String appName) {
+        clickEditMappingButton(provider, appRow);
         selectTeamMapping(teamName);
         selectAppMapping(appName);
         clickUpdateMappings();
-        waitForElement(By.id("provider3import" + appRow));
+        waitForElement(By.id("provider" + provider + "import" + appRow));
         return new RemoteProvidersIndexPage(driver);
     }
 
-    public RemoteProvidersIndexPage clickEditMappingQualysButton(int row) {
-        driver.findElementById("provider3updateMapping" + row).click();
+    public RemoteProvidersIndexPage clickEditMappingButton(String provider, int row) {
+        driver.findElementById("provider" + provider + "updateMapping" + row).click();
         return new RemoteProvidersIndexPage(driver);
     }
-
-    public RemoteProvidersIndexPage clickEditMappingContrastButton(int row) {
-        driver.findElementById("provider4updateMapping" + row).click();
-        return new RemoteProvidersIndexPage(driver);
-    }
-
-	public RemoteProvidersIndexPage mapWhiteHatToTeamAndApp(int appRow, String teamName, String appName){
-		clickEditWhiteHatButton(appRow);
-        selectTeamMapping(teamName);
-        selectAppMapping(appName);
-		clickUpdateMappings();
-        waitForElement(By.id("provider1import" + appRow));
-		return new RemoteProvidersIndexPage(driver);
-	}
-
-	public RemoteProvidersIndexPage clickEditWhiteHatButton(int row){
-		driver.findElementById("provider1updateMapping" + row).click();
-		return new RemoteProvidersIndexPage(driver);
-	}
 	
 	public RemoteProvidersIndexPage selectTeamMapping(String teamName){
 		WebElement webElement = driver.findElementById("orgSelect1");
@@ -226,26 +149,8 @@ public class RemoteProvidersIndexPage extends BasePage {
 		return this;
 	}
 
-    public ApplicationDetailPage clickWhiteHatImportScan(int appRow) {
-        String elementToClick = "provider1import" + appRow;
-        waitForElement(By.id(elementToClick));
-        if (!tryClick(By.id(elementToClick))) {
-            throw new ElementNotVisibleException(elementToClick);
-        }
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage clickQualysGuardImportScan(int appRow) {
-        String elementToClick = "provider3import" + appRow;
-        waitForElement(By.id(elementToClick));
-        if (!tryClick(By.id(elementToClick))) {
-            throw new ElementNotVisibleException(elementToClick);
-        }
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage clickContrastImportScan(int appRow) {
-        String elementToClick = "provider4import" + appRow;
+    public ApplicationDetailPage clickImportScan(String provider, int appRow) {
+        String elementToClick = "provider" + provider + "import" + appRow;
         waitForElement(By.id(elementToClick));
         if (!tryClick(By.id(elementToClick))) {
             throw new ElementNotVisibleException(elementToClick);
@@ -263,30 +168,10 @@ public class RemoteProvidersIndexPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public RemoteProvidersIndexPage mapVeracodeToTeamAndApp(int appRow, String teamName, String appName) {
-        clickVeraCodeEditMappingButton(appRow);
-        selectTeamMapping(teamName);
-        selectAppMapping(appName);
-        clickUpdateMappings();
-        waitForElement(By.id("provider2import" + appRow));
-        return new RemoteProvidersIndexPage(driver);
-    }
-
-    public RemoteProvidersIndexPage clickVeraCodeEditMappingButton(int appRow) {
-        driver.findElementById("provider2updateMapping" + appRow).click();
-        waitForElement(By.id("orgSelect1"));
-        return new RemoteProvidersIndexPage(driver);
-    }
-
     public RemoteProvidersIndexPage clickUpdateMappings(){
         driver.findElementById("submit").click();
         sleep(1000);
         return new RemoteProvidersIndexPage(driver);
-    }
-
-    public ApplicationDetailPage clickVeracodeImportScan(int appRow) {
-        driver.findElementById("provider2import" + appRow).click();
-        return new ApplicationDetailPage(driver);
     }
 
     public RemoteProvidersSchedulePage clickScheduleTab() {
@@ -308,17 +193,14 @@ public class RemoteProvidersIndexPage extends BasePage {
 		return new RemoteProvidersIndexPage(driver);
 	}
 
-    public RemoteProvidersIndexPage clearPreviousWhiteHat() {
-        if (driver.findElementById("clearConfig1").isDisplayed()) {
-            driver.findElementById("clearConfig1").click();
-            handleAlert();
-            return new RemoteProvidersIndexPage(driver);
-        }
+    public RemoteProvidersIndexPage clickCloseButton() {
+        driver.findElementById("closeModalButton").click();
         return new RemoteProvidersIndexPage(driver);
     }
 
-    public RemoteProvidersIndexPage clickCloseButton() {
-        driver.findElementById("closeModalButton").click();
+    public RemoteProvidersIndexPage clearConfiguration(String provider) {
+        driver.findElementById("clearConfig" + provider).click();
+        handleAlert();
         return new RemoteProvidersIndexPage(driver);
     }
 
@@ -361,7 +243,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 
     /*------------------------------ Boolean Methods ------------------------------*/
     //Note: Qualys = 3, Veracode = 2, Whitehat = 1
-    public boolean isMappingCorrect(int provider, int appRow, String teamName, String appName) {
+    public boolean isMappingCorrect(String provider, int appRow, String teamName, String appName) {
         if(!driver.findElementById("provider"+ provider + "tfteamname" + appRow).getText().contains(teamName) ||
                 !driver.findElementById("provider" + provider + "tfappname" + appRow).getText().contains(appName)) {
             return false;
@@ -373,7 +255,7 @@ public class RemoteProvidersIndexPage extends BasePage {
         return driver.findElementsByLinkText(appName).size() != 0;
     }
 
-    public boolean checkConfigurationMessage(int provider, String status) {
+    public boolean checkConfigurationMessage(String provider, String status) {
         return driver.findElementById("apiKey" + provider).getText().contains(status);
     }
 
@@ -388,6 +270,16 @@ public class RemoteProvidersIndexPage extends BasePage {
     public boolean isSuccessMessagePresent(String expectedMessage) {
         return driver.findElementByClassName("alert-success").getText()
                 .contains(expectedMessage);
+    }
+
+    /*-------------------------------- String Methods --------------------------------*/
+
+    public String getAppName(String provider, String appNum) {
+        return driver.findElementById("provider" + provider + "appid" + appNum).getText();
+    }
+
+    public String getModalText() {
+        return driver.findElementById("myModalLabel").getText();
     }
 
     /*-------------------------------- Helper Methods --------------------------------*/
@@ -405,54 +297,9 @@ public class RemoteProvidersIndexPage extends BasePage {
         }
     }
 
-    //Todo: Create clear methods for remaining providers.
     public RemoteProvidersIndexPage ensureRemoteProviderConfigurationIsCleared(String provider) {
-        String providerKey;
-        switch (provider) {
-            case "Contrast":
-                providerKey = "0";
-                break;
-            case "AppScanEnterprise":
-                providerKey = "1";
-                break;
-            case "QualysGuard":
-                providerKey = "2";
-                break;
-            case "Sonatype":
-                providerKey = "3";
-                break;
-            case "Hailstorm":
-                providerKey = "4";
-                break;
-            case "Veracode":
-                providerKey = "5";
-                break;
-            case "WhiteHat":
-                providerKey = "6";
-                break;
-            case "WhiteHat Source":
-                providerKey = "7";
-                break;
-            default:
-                providerKey = null;
-        }
-        if (("Yes").equals(driver.findElementById("apiKey" + providerKey).getText().trim())) {
-            switch (provider) {
-                case ("Contrast"):
-                    clearContrast();
-                    break;
-                case ("QualysGuard"):
-                    clearQualys();
-                    break;
-                case ("Veracode"):
-                    clearVeraCode();
-                    break;
-                case ("WhiteHat"):
-                    clearWhiteHat();
-                    break;
-                default:
-                    System.out.println("Method to clear provider doesn't exist.");
-            }
+        if (("Yes").equals(driver.findElementById("apiKey" + provider).getText().trim())) {
+            clearConfiguration(provider);
         }
         return new RemoteProvidersIndexPage(driver);
     }
