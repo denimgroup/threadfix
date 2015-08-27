@@ -51,7 +51,7 @@ public class RemoteProvidersIndexPage extends BasePage {
     public RemoteProvidersIndexPage saveConfiguration(String provider) {
         driver.findElementById("submit").click();
         waitForInvisibleElement("myModalLabel");
-        waitForElement(By.id("clearConfig" + provider));
+        waitForElement(By.id("clearConfig" + provider), 45);
         return new RemoteProvidersIndexPage(driver);
     }
 
