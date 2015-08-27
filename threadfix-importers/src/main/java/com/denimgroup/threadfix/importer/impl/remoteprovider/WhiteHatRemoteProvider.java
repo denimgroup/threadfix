@@ -439,7 +439,7 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 	    	else if (creatingVuln) {
                 currentRawFinding.append(makeTag(name, qName , atts));
                 if (qName.equals("request")) {
-		    		map.put(FindingKey.PATH, getPath(atts.getValue("url")));
+		    		map.put(FindingKey.PATH, atts.getValue("url"));
 		    	} else if (qName.equals("param")) {
 		    		map.put(FindingKey.PARAMETER, atts.getValue("name"));
 		    	}
@@ -472,23 +472,6 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
             }
 	    }
 	}
-
-    private String getPath(String fullUrl) {
-
-        String returnPath = "/";
-
-        String urlWithHttp = fullUrl.startsWith("http") ? fullUrl : "http://" + fullUrl;
-        try {
-            URL url = new URL(urlWithHttp);
-            if (url.getPath() != null && !url.getPath().isEmpty()) {
-                returnPath = url.getPath();
-            }
-        } catch (MalformedURLException e) {
-            LOG.warn("Tried to parse a URL out of a url in Attack Vector String but failed: " + urlWithHttp);
-        }
-
-        return returnPath;
-    }
 
 	public class MatchingParser extends HandlerWithBuilder {
 
@@ -551,7 +534,7 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 	    		map.put(FindingKey.URL_REFERENCE, buildUrlReference(siteId, nativeId));
 
                 // was in the attack_vector
-	    		map.put(FindingKey.PATH, getPath(atts.getValue("url")));
+	    		map.put(FindingKey.PATH, atts.getValue("url"));
 	    		map.put(FindingKey.PARAMETER, null);
 	    		creatingVuln = true;
 	    		dateStatus = new DateStatus();
