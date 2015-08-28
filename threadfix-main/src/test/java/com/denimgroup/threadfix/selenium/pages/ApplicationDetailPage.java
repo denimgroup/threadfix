@@ -833,7 +833,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickCreateDefectTracker() {
         driver.findElementById("submit").click();
-        waitForElement(By.id("username"));
+        waitForElement(By.id("username"), 20);
         return new ApplicationDetailPage(driver);
     }
 

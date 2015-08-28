@@ -180,6 +180,8 @@ public class RemoteProvidersIT extends BaseDataTest {
 
     @Test
     public void testConfigureQualys() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared(QUALYS);
+
         remoteProvidersIndexPage.clickConfigure(QUALYS)
                 .setQualysUsername(QUALYS_USER)
                 .setQualysPassword(QUALYS_PASS)
@@ -200,6 +202,8 @@ public class RemoteProvidersIT extends BaseDataTest {
 
     @Test
     public void testInvalidQualys(){
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared(QUALYS);
+
         remoteProvidersIndexPage.clickConfigure(QUALYS)
                 .setQualysUsername("No Such User")
                 .setQualysPassword("Password Bad")
@@ -213,6 +217,8 @@ public class RemoteProvidersIT extends BaseDataTest {
 
     @Test
     public void testEditQualysMapping() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared(QUALYS);
+
         remoteProvidersIndexPage.clickConfigure(QUALYS)
                 .setQualysUsername(QUALYS_USER)
                 .setQualysPassword(QUALYS_PASS)
@@ -230,11 +236,13 @@ public class RemoteProvidersIT extends BaseDataTest {
 
     @Test
     public void testImportQualysGuardScan() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared(QUALYS);
+
         remoteProvidersIndexPage.clickConfigure(QUALYS)
                 .setQualysUsername(QUALYS_USER)
                 .setQualysPassword(QUALYS_PASS)
                 .setQualysPlatform(QUALYS_PLATFORM)
-                .clickModalSubmitInvalid();
+                .saveConfiguration(QUALYS);
 
         assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS"));
 
@@ -244,7 +252,7 @@ public class RemoteProvidersIT extends BaseDataTest {
                 .clickUpdateMappings();
 
         remoteProvidersIndexPage.clickImportScan(QUALYS, 3)
-                .checkForAlert();
+                .checkForAlert(60);
 
         assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
         driver.switchTo().alert().dismiss();
@@ -257,11 +265,13 @@ public class RemoteProvidersIT extends BaseDataTest {
 
     @Test
     public void testQualysEditNameModalHeader() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared(QUALYS);
+
         remoteProvidersIndexPage.clickConfigure(QUALYS)
                 .setQualysUsername(QUALYS_USER)
                 .setQualysPassword(QUALYS_PASS)
                 .setQualysPlatform(QUALYS_PLATFORM)
-                .clickModalSubmitInvalid();
+                .saveConfiguration(QUALYS);
 
         assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(),
                 remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS"));
@@ -361,7 +371,7 @@ public class RemoteProvidersIT extends BaseDataTest {
         assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("Veracode"));
 
         remoteProvidersIndexPage.clickImportScan(VERACODE, 0)
-                .checkForAlert(30);
+                .checkForAlert(45);
 
         assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
         driver.switchTo().alert().dismiss();
@@ -633,9 +643,9 @@ public class RemoteProvidersIT extends BaseDataTest {
         assertTrue("Number of Open Vulnerabilities is not correct", teamDetailPage.isNumberOfOpenVulnerabilityCorrect("53", 0));
         assertTrue("Number of Critical Vulnerability is not correct", teamDetailPage.isNumberOfCriticalCorrect("10", 0));
         assertTrue("Number of High Vulnerability is not correct", teamDetailPage.isNumberOfHighCorrect("11", 0));
-        assertTrue("Number of Medium Vulnerability is not correct", teamDetailPage.isNumberOfMediumCorrect("31", 0));
+        assertTrue("Number of Medium Vulnerability is not correct", teamDetailPage.isNumberOfMediumCorrect("30", 0));
         assertTrue("Number of Low Vulnerability is not correct", teamDetailPage.isNumberOfLowCorrect("1", 0));
-        assertTrue("Number of Info Vulnerability is not correct", teamDetailPage.isNumberOfInfoCorrect("0", 0));
+        assertTrue("Number of Info Vulnerability is not correct", teamDetailPage.isNumberOfInfoCorrect("1", 0));
 
         remoteProvidersIndexPage = teamDetailPage.clickRemoteProvidersLink()
                                     .clearConfiguration(WHITEHAT);

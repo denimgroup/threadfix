@@ -23,10 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
 
 public class WafRulesPage extends BasePage {
@@ -92,6 +89,7 @@ public class WafRulesPage extends BasePage {
     }
 
     public WafRulesDetailPage clickLogLink() {
+        waitForElement(By.linkText("100000 - fired 52 times"));
         driver.findElementByLinkText("100000 - fired 52 times").click();
         return new WafRulesDetailPage(driver);
     }
@@ -164,7 +162,12 @@ public class WafRulesPage extends BasePage {
         return driver.findElementByLinkText("Download Waf Rules").isDisplayed();
     }
     public boolean isLogsNumberPresent() {
-        return driver.findElementByLinkText("100000 - fired 52 times").isDisplayed();
+        try {
+            waitForElement(By.linkText("100000 - fired 52 times"));
+            return true;
+        } catch (TimeoutException e) {
+            return false;
+        }
     }
 
 }

@@ -73,7 +73,7 @@ public class DefectTrackerIndexPage extends BasePage {
 
 	public DefectTrackerIndexPage clickAddDefectTrackerButton() {
 		driver.findElementById("addNewDTButton").click();
-		waitForElement(By.id("submit"));
+		waitForElement(By.id("submit"), 20);
 		return new DefectTrackerIndexPage(driver);
 	}
 	
