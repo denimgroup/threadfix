@@ -71,7 +71,7 @@ public class ScheduledScanEntIT extends BaseDataTest {
                 .clickModalSubmit();
 
         boolean scanScanner = applicationDetailPage.getScheduledScanScanner().trim().equals("OWASP Zed Attack Proxy");
-        boolean scanDay = applicationDetailPage.getScheduledScanDay().trim().equals("8:15   PM");
+        boolean scanDay = applicationDetailPage.getScheduledScanDay().trim().equals("8:15 PM");
         boolean scanFrequency = applicationDetailPage.getScheduledScanFrequency().trim().equals("Daily");
 
         assertTrue("Daily scan validation failed", scanScanner && scanDay && scanFrequency);
@@ -113,7 +113,7 @@ public class ScheduledScanEntIT extends BaseDataTest {
                 .clickModalSubmit();
 
         boolean scanScanner = applicationDetailPage.getScheduledScanScanner().trim().equals("OWASP Zed Attack Proxy");
-        boolean scanDay = applicationDetailPage.getScheduledScanDay().trim().equals("Friday   6:30   AM");
+        boolean scanDay = applicationDetailPage.getScheduledScanDay().trim().equals("Friday 6:30 AM");
         boolean scanFrequency = applicationDetailPage.getScheduledScanFrequency().trim().equals("Weekly");
 
         assertTrue("Daily scan validation failed", scanScanner && scanDay && scanFrequency);
