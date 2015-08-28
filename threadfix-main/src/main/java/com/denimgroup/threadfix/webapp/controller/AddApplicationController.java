@@ -74,7 +74,8 @@ public class AddApplicationController {
 		dataBinder.setAllowedFields("name", "url", "defectTracker.id", "uniqueId",
                 "userName", "password", "waf.id", "projectName", "applicationCriticality.id",
                 "frameworkType", "repositoryUrl", "repositoryBranch",
-                "repositoryUserName", "repositoryPassword", "repositoryFolder", "skipApplicationMerge", "tags[*].id", "tags[*].name");
+                "repositoryUserName", "repositoryPassword", "repositoryFolder", "skipApplicationMerge",
+                "tags[*].id", "tags[*].name", "tags[*].enterpriseTag", "tags[*].defaultJsonFilter");
 	}
 
 	public AddApplicationController(){}
