@@ -35,7 +35,9 @@ public class TagIndexPage extends BasePage{
         super(webDriver);
     }
 
-    /*------------------------------ Action Methods ------------------------------*/
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
 
     public TagIndexPage createNewTag(String name) {
         driver.findElementById("createTagModalButton").click();
@@ -99,7 +101,9 @@ public class TagIndexPage extends BasePage{
         return new TagDetailPage(driver);
     }
 
-    /*------------------------------ Boolean Methods ------------------------------*/
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
 
     public boolean isAppTagNameLinkPresent(String name) {
         try {

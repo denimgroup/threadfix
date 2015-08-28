@@ -33,7 +33,9 @@ public class WafIndexPage extends BasePage {
 		super(webdriver);
 	}
 
-    /*------------------------------------ Action Methods ------------------------------------*/
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
 
 	public WafRulesPage clickRules(String wafName){
 		driver.findElementById("rulesButton" + wafName).click();
@@ -130,7 +132,9 @@ public class WafIndexPage extends BasePage {
         return driver.findElementById("wafType" + wafName).getText();
     }
 
-    /*------------------------------------ Boolean Methods ------------------------------------*/
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
 
     public boolean isTextPresentInWafTableBody(String text) {
         return driver.findElementById("wafTableBody").getText().contains(text);

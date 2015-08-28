@@ -32,6 +32,10 @@ public class FindingDetailPage extends BasePage {
         super(webDriver);
     }
 
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
+
     public VulnerabilityDetailPage clickViewVulnerability() {
         driver.findElementByLinkText("View Vulnerability").click();
         sleep(3000);
@@ -52,9 +56,18 @@ public class FindingDetailPage extends BasePage {
         waitForElement(By.className("dataTable"));
         return new MergeFindingPage(driver);
     }
+
+    //===========================================================================================================
+    // Get Methods
+    //===========================================================================================================
+
     public String getDetail(String detailId) {
         return driver.findElementById(detailId).getText().trim();
     }
+
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
 
     public boolean isViewVulnetabilityButtonDisplayed() {
         return driver.findElementByLinkText("View Vulnerability").isDisplayed();

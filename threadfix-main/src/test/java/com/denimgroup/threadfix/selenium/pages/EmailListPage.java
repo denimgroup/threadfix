@@ -32,7 +32,9 @@ public class EmailListPage extends BasePage {
 
     public EmailListPage(WebDriver webDriver) { super(webDriver); }
 
-    /*------------------------------------ Utility Methods ------------------------------------*/
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
 
     public EmailListPage clickCreateEmailList() {
         driver.findElementById("createEmailListModalButton").click();
@@ -81,7 +83,9 @@ public class EmailListPage extends BasePage {
         return this;
     }
 
-    /*------------------------------------ Boolean Methods ------------------------------------*/
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
 
     public boolean isEmailListPresent(String listName) {
         try {
@@ -128,7 +132,9 @@ public class EmailListPage extends BasePage {
         return true;
     }
 
-    /*------------------------------------ Getter Methods ------------------------------------*/
+    //===========================================================================================================
+    // Get Methods
+    //===========================================================================================================
 
     public String getSuccessMessage() {
         return driver.findElementByCssSelector("div.alert-success:not(.ng-hide)").getText();

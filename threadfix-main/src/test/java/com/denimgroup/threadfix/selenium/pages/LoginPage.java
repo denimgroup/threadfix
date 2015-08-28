@@ -57,8 +57,11 @@ public class LoginPage extends BasePage {
 			driver.get("javascript:document.getElementById('overridelink').click();");
 		}
 	}
-	
-	/*----------------perform functions----------------*/
+
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
+
 	public static LoginPage open(WebDriver webdriver) {
 		return new LoginPage(webdriver);
 	}
@@ -102,8 +105,11 @@ public class LoginPage extends BasePage {
 		sleep(3000);
 		return new LoginPage(driver);
 	}
-	
-	/*----------------get Functions----------------*/
+
+    //===========================================================================================================
+    // Get Methods
+    //===========================================================================================================
+
 	public boolean isLoginErrorPresent(){
 		return driver.findElementById("loginError").getText().trim().equals("Error: Username or Password incorrect");
 	}
@@ -136,7 +142,10 @@ public class LoginPage extends BasePage {
         return isClickable("login");
 	}
 
-	/*----------------set functions----------------*/
+    //===========================================================================================================
+    // Set Methods
+    //===========================================================================================================
+
 	public LoginPage setUsername(String user) {
         WebElement usernameField = driver.findElementById("username");
         usernameField.sendKeys(user);

@@ -37,7 +37,9 @@ public class TeamDetailPage extends BasePage {
         driver.findElementById("applicationsTableBody");
     }
 
-    /*------------------------------ Action Methods ------------------------------*/
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
 
     public String getOrgName() {
         return driver.findElementById("name").getText();
@@ -357,7 +359,9 @@ public class TeamDetailPage extends BasePage {
         }
     }
 
-    /*------------------------------ Get Methods ------------------------------*/
+    //===========================================================================================================
+    // Get Methods
+    //===========================================================================================================
 
     //TODO When ids are added change this!
     public String getErrorText() {
@@ -387,7 +391,9 @@ public class TeamDetailPage extends BasePage {
         return driver.findElementById("editFormDiv").findElement(By.className("ellipsis")).getSize().width;
     }
 
-    /*------------------------------ Boolean Methods ------------------------------*/
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
 
     public boolean isAppPresent(String appName){
         return driver.findElementsByLinkText(appName).size() != 0;

@@ -33,7 +33,9 @@ public class RemoteProvidersSchedulePage extends BasePage{
         super(webDriver);
     }
 
-    /*------------------------------ Action Methods ------------------------------*/
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
 
     public RemoteProvidersSchedulePage clickScheduleNewImportButton() {
         driver.findElementById("addImportQueueLink").click();
@@ -46,7 +48,9 @@ public class RemoteProvidersSchedulePage extends BasePage{
         return new RemoteProvidersIndexPage(driver);
     }
 
-    /*------------------------------ Set Methods ------------------------------*/
+    //===========================================================================================================
+    // Set Methods
+    //===========================================================================================================
 
     public RemoteProvidersSchedulePage setFrequency(String frequency) {
         new Select(driver.findElementById("frequency")).selectByVisibleText(frequency);
@@ -84,7 +88,9 @@ public class RemoteProvidersSchedulePage extends BasePage{
         return new DefectTrackerSchedulePage(driver);
     }
 
-    /*------------------------------ Boolean Methods ------------------------------*/
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
 
     public boolean isNewImportButtonDisplayed() {
         return driver.findElementById("addImportQueueLink").isDisplayed();

@@ -34,7 +34,9 @@ public class RemoteProvidersIndexPage extends BasePage {
 		super(webDriver);
 	}
 
-	/*------------------------------ Action Methods ------------------------------*/
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
 
     public RemoteProvidersIndexPage clickConfigure(String provider) {
         driver.findElementById("configure" + provider).click();
@@ -241,7 +243,10 @@ public class RemoteProvidersIndexPage extends BasePage {
 		return driver.findElementByClassName("alert-success").getText().trim();
 	}
 
-    /*------------------------------ Boolean Methods ------------------------------*/
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
+
     //Note: Qualys = 3, Veracode = 2, Whitehat = 1
     public boolean isMappingCorrect(String provider, int appRow, String teamName, String appName) {
         if(!driver.findElementById("provider"+ provider + "tfteamname" + appRow).getText().contains(teamName) ||
@@ -272,7 +277,9 @@ public class RemoteProvidersIndexPage extends BasePage {
                 .contains(expectedMessage);
     }
 
-    /*-------------------------------- String Methods --------------------------------*/
+    //===========================================================================================================
+    // String Methods
+    //===========================================================================================================
 
     public String getAppName(String provider, String appNum) {
         return driver.findElementById("provider" + provider + "appid" + appNum).getText();
@@ -282,7 +289,9 @@ public class RemoteProvidersIndexPage extends BasePage {
         return driver.findElementById("myModalLabel").getText();
     }
 
-    /*-------------------------------- Helper Methods --------------------------------*/
+    //===========================================================================================================
+    // Helper Methods
+    //===========================================================================================================
 
     public void waitForErrorMessage() {
         sleep(5000);

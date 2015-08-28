@@ -36,6 +36,10 @@ public class RolesIndexPage extends BasePage {
 	public RolesIndexPage(WebDriver webdriver) {
 		super(webdriver);
 	}
+
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
 		
 	public RolesIndexPage clickDeleteButton(String roleName) {
 		clickEditLink(roleName);
@@ -57,12 +61,6 @@ public class RolesIndexPage extends BasePage {
 		return new RolesIndexPage(driver);
 	}
 
-    public RolesIndexPage setRoleName(String roleName) {
-        driver.findElementById("roleNameInput").clear();
-        driver.findElementById("roleNameInput").sendKeys(roleName);
-        return this;
-    }
-
     public RolesIndexPage clickSaveRole() {
         driver.findElementById("submit").click();
         return new RolesIndexPage(driver);
@@ -73,42 +71,22 @@ public class RolesIndexPage extends BasePage {
         return new RolesIndexPage(driver);
     }
 
-	public RolesIndexPage clickSaveRoleInvalid(){
+    public RolesIndexPage clickSaveRoleInvalid(){
         driver.findElementById("submit").click();
-		sleep(1000);
-		return new RolesIndexPage(driver);
-	}
-
-	public RolesIndexPage clickEditLink(String roleName) {
-        driver.findElementById("role" + roleName).click();
-		waitForElement(By.id("submit"));
+        sleep(1000);
         return new RolesIndexPage(driver);
-	}
-
-	public String getEditRoleError() {
-		return driver.findElementById("errorSpan").getText();
-	}
-
-    public String getDupNameError() {
-        return driver.findElementById("roleNameInputNameError").getText();
     }
 
-    public String getNameError(){
-		return driver.findElementById("roleNameInputRequiredError").getText();
-	}
-
-    public boolean getPermissionValue(String permissionName) {
-        return isElementActive(driver.findElement(By.id(permissionName + "True")));
+    public RolesIndexPage clickEditLink(String roleName) {
+        driver.findElementById("role" + roleName).click();
+        waitForElement(By.id("submit"));
+        return new RolesIndexPage(driver);
     }
 
-    public RolesIndexPage setPermissionValue(String permissionValue, boolean value) {
-        if (value) {
-            driver.findElementById(permissionValue + "True").click();
-        } else {
-            driver.findElementById(permissionValue + "False").click();
-        }
-
-        return this;
+    public RolesIndexPage clickCloseModal(){
+        waitForElement(By.cssSelector(".modal-footer .btn"));
+        driver.findElementByClassName("modal-footer").findElement(By.className("btn")).click();
+        return new RolesIndexPage(driver);
     }
 
     public RolesIndexPage toggleAllPermissions(boolean status) {
@@ -130,12 +108,50 @@ public class RolesIndexPage extends BasePage {
         sleep(1000);
         return this;
     }
-	
-	public RolesIndexPage clickCloseModal(){
-        waitForElement(By.cssSelector(".modal-footer .btn"));
-		driver.findElementByClassName("modal-footer").findElement(By.className("btn")).click();
-		return new RolesIndexPage(driver);
+
+    //===========================================================================================================
+    // Set Methods
+    //===========================================================================================================
+
+    public RolesIndexPage setRoleName(String roleName) {
+        driver.findElementById("roleNameInput").clear();
+        driver.findElementById("roleNameInput").sendKeys(roleName);
+        return this;
+    }
+
+    public RolesIndexPage setPermissionValue(String permissionValue, boolean value) {
+        if (value) {
+            driver.findElementById(permissionValue + "True").click();
+        } else {
+            driver.findElementById(permissionValue + "False").click();
+        }
+
+        return this;
+    }
+
+    //===========================================================================================================
+    // Get Methods
+    //===========================================================================================================
+
+	public String getEditRoleError() {
+		return driver.findElementById("errorSpan").getText();
 	}
+
+    public String getDupNameError() {
+        return driver.findElementById("roleNameInputNameError").getText();
+    }
+
+    public String getNameError(){
+		return driver.findElementById("roleNameInputRequiredError").getText();
+	}
+
+    public boolean getPermissionValue(String permissionName) {
+        return isElementActive(driver.findElement(By.id(permissionName + "True")));
+    }
+
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
 
     //TODO: Specify validation text
     public boolean isValidationPresent(){

@@ -34,7 +34,9 @@ public class UserIndexPage extends BasePage {
         super(webdriver);
     }
 
-    /*------------------------------------ Action Methods ------------------------------------*/
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
 
     public UserIndexPage clickDeleteButton(String roleName) {
 		clickUserLink(roleName);
@@ -373,7 +375,9 @@ public class UserIndexPage extends BasePage {
         return new UserIndexPage(driver);
     }
 
-    /*----------------------------------- Boolean Methods -----------------------------------*/
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
 
     public boolean isPasswordFieldEnabled() {
         try {
@@ -500,14 +504,18 @@ public class UserIndexPage extends BasePage {
         return driver.findElementById("addPermissionButton").getAttribute("ng-disabled") != null;
     }
 
-    /*----------------------------------- Helper Methods -----_------------------------------*/
+    //===========================================================================================================
+    // Helper Methods
+    //===========================================================================================================
 
     public UserIndexPage waitForDeleteUserButton() {
         waitForClickableElement(driver.findElementByLinkText("Delete User"));
         return new UserIndexPage(driver);
     }
 
-    /*------------------------------------ Modal Methods ------------------------------------*/
+    //===========================================================================================================
+    // Modal Methods
+    //===========================================================================================================
 
     public UserIndexPage setNameModal(String username) {
         WebElement modal = driver.findElementByClassName("modal");

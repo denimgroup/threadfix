@@ -31,7 +31,6 @@ import org.openqa.selenium.WebDriver;
  */
 public class WafSecurityEventDetailsPage extends BasePage {
 
-
     public WafSecurityEventDetailsPage(WebDriver webdriver) {
         super(webdriver);
     }

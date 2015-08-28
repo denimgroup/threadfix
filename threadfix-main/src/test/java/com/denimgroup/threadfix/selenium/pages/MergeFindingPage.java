@@ -42,7 +42,10 @@ public class MergeFindingPage extends BasePage {
         return new VulnerabilityDetailPage(driver);
     }
 
-    //-------------------------------------Boolean Functions-------------------------------------------------------------
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
+
     public boolean isMergeFindingPagePresent() {
         return driver.findElementByClassName("dataTable").isDisplayed();
     }

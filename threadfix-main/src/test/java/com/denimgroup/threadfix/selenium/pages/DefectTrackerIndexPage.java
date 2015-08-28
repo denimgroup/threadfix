@@ -38,7 +38,9 @@ public class DefectTrackerIndexPage extends BasePage {
 		super(webdriver);
 	}
 
-    /*----------------------------------- Action Methods -----------------------------------*/
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
 
 	public DefectTrackerIndexPage clickEditLink(String defectTrackerName) {
 		waitForElement(By.id("editDefectTrackerButton" + defectTrackerName));
@@ -121,7 +123,9 @@ public class DefectTrackerIndexPage extends BasePage {
         return driver.findElementByClassName("alert-success").getText();
     }
 
-    /*----------------------------------- Boolean Methods -----------------------------------*/
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
 
 	public boolean isTextPresentInDefectTrackerTableBody(String newDefectTrackerName) {
         waitForElement(By.id("addNewDTButton"));

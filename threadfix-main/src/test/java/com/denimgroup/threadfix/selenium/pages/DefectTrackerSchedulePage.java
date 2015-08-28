@@ -37,11 +37,32 @@ public class DefectTrackerSchedulePage extends BasePage{
         super(webDriver);
     }
 
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
+
     public DefectTrackerSchedulePage clickScheduleNewUpdateTab() {
         driver.findElementById("addUpdateQueueLink").click();
         waitForElement(By.id("submit"));
         return new DefectTrackerSchedulePage(driver);
     }
+
+    public DefectTrackerSchedulePage clickDeleteDefectTrackerButton(String expectedId) {
+        driver.findElementById("scheduledUpdateDeleteButton" + expectedId).click();
+        handleAlert();
+        return new DefectTrackerSchedulePage(driver);
+    }
+
+    //TODO Refactor when issue #618 is resolved
+    public DefectTrackerSchedulePage clickAddScheduledUpdated() {
+        driver.findElementById("submit").click();
+        sleep(2000);
+        return this;
+    }
+
+    //===========================================================================================================
+    // Set Methods
+    //===========================================================================================================
 
     public DefectTrackerSchedulePage setFrequency(String frequency) {
         new Select(driver.findElementById("frequency")).selectByVisibleText(frequency);
@@ -68,25 +89,9 @@ public class DefectTrackerSchedulePage extends BasePage{
         return this;
     }
 
-    public DefectTrackerSchedulePage clickDeleteDefectTrackerButton(String expectedId) {
-        driver.findElementById("scheduledUpdateDeleteButton" + expectedId).click();
-        handleAlert();
-        return new DefectTrackerSchedulePage(driver);
-    }
-
-    //TODO Refactor when issue #618 is resolved
-    public DefectTrackerSchedulePage clickAddScheduledUpdated() {
-        driver.findElementById("submit").click();
-        sleep(2000);
-        return this;
-    }
-
-    public DefectTrackerSchedulePage waitForErrorMessage() {
-        waitForElement(By.cssSelector("#dateError:not(.ng-hide)"));
-        return new DefectTrackerSchedulePage(driver);
-    }
-
-      /*------------------------------ Boolean Methods ------------------------------*/
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
 
     public boolean isNewSchedulePresent(String expectedTime) {
         return driver.findElementById("scheduledUpdateDay" + expectedTime).isDisplayed();
@@ -98,6 +103,15 @@ public class DefectTrackerSchedulePage extends BasePage{
 
     public boolean isDeleteButtonPresent(String elementId) {
         return driver.findElementsById("scheduledUpdateDeleteButton" + elementId).size() !=0;
+    }
+
+    //===========================================================================================================
+    // Helper Methods
+    //===========================================================================================================
+
+    public DefectTrackerSchedulePage waitForErrorMessage() {
+        waitForElement(By.cssSelector("#dateError:not(.ng-hide)"));
+        return new DefectTrackerSchedulePage(driver);
     }
 
 }

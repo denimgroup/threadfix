@@ -71,7 +71,9 @@ public abstract class BasePage {
         driver.manage().window().setSize(dimensions);
 	}
 
-    /*---------------------------- Action Methods ----------------------------*/
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
 
 	public LoginPage logout() {
 		clickUserTab();
@@ -263,7 +265,9 @@ public abstract class BasePage {
         return new AcceptancePolicyPage(driver);
     }
 
-    /*---------------------------- Get Methods ----------------------------*/
+    //===========================================================================================================
+    // Get Methods
+    //===========================================================================================================
 
     public int getNumTeamRows() {
         if (!(driver.findElementById("teamTable").getText().equals("Add Team"))) {
@@ -280,7 +284,9 @@ public abstract class BasePage {
         return RandomStringUtils.random(length,"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
     }
 
-    /*---------------------------- Boolean Methods ----------------------------*/
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
 
 	public boolean isElementPresent(String elementId) {
 		try {
@@ -517,7 +523,10 @@ public abstract class BasePage {
         return element.getAttribute("class").contains("active");
     }
 
-    /*--------------------------------- Helper Methods ---------------------------------*/
+    //===========================================================================================================
+    // Helper Methods
+    //===========================================================================================================
+
 	public void sleep(int num) {
 		try {
 			Thread.sleep(num);

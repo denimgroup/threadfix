@@ -48,6 +48,10 @@ public class ConfigurationIndexPage extends BasePage {
 		changeMyPasswordLink = driver.findElementById("changePasswordLink");
 	}
 
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
+
 	public DefectTrackerIndexPage clickDefectTrackersLink() {
 		defectTrackersLink.click();
 		return new DefectTrackerIndexPage(driver);

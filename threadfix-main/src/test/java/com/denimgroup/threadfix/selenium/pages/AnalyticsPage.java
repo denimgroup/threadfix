@@ -34,7 +34,9 @@ public class AnalyticsPage extends BasePage {
 		super(webdriver);
 	}
 
-    /* _____________________ Action Methods _____________________ */
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
 
     public AnalyticsPage clickTrendingTab(Boolean usingD3) {
         driver.findElementByLinkText("Trending").click();
@@ -93,23 +95,9 @@ public class AnalyticsPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
-    public AnalyticsPage toggleAllFilterReport(String divId, Boolean expanding) {
-        WebElement filterDiv = driver.findElementById(divId);
-        filterDiv.findElement(By.id("toggleAllButtonReport")).click();
-        sleep(2000);
-        return new AnalyticsPage(driver);
-    }
-
     public AnalyticsPage clearFilter(String divId) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("clearFiltersButton")).click();
-        sleep(1000);
-        return new AnalyticsPage(driver);
-    }
-
-    public AnalyticsPage clearFilterReport(String divId) {
-        WebElement filterDiv = driver.findElementById(divId);
-        filterDiv.findElement(By.id("clearFiltersButtonReport")).click();
         sleep(1000);
         return new AnalyticsPage(driver);
     }
@@ -195,14 +183,6 @@ public class AnalyticsPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
-    public AnalyticsPage saveCurrentFilterReport(String name, String divId) {
-        WebElement filterDiv = driver.findElementById(divId);
-        filterDiv.findElement(By.id("showSaveFilterReport")).click();
-        filterDiv.findElement(By.id("filterNameInputReport")).sendKeys(name);
-        filterDiv.findElement(By.id("saveFilterButtonReport")).click();
-        return new AnalyticsPage(driver);
-    }
-
     public AnalyticsPage saveCurrentFilter(String name, String divId) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("showSaveFilter")).click();
@@ -211,21 +191,9 @@ public class AnalyticsPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
-    public AnalyticsPage expandAgingFilterReport(String divId) {
-        WebElement filterDiv = driver.findElementById(divId);
-        filterDiv.findElement(By.id("showDateControlsReport")).click();
-        return new AnalyticsPage(driver);
-    }
-
     public AnalyticsPage expandAgingFilter(String divId) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("showDateControls")).click();
-        return new AnalyticsPage(driver);
-    }
-
-    public AnalyticsPage expandFieldControlsReport(String divId) {
-        WebElement filterDiv = driver.findElementById(divId);
-        filterDiv.findElement(By.id("showFieldControlsReport")).click();
         return new AnalyticsPage(driver);
     }
 
@@ -238,13 +206,6 @@ public class AnalyticsPage extends BasePage {
     public AnalyticsPage selectFieldControls(String level, String divId) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("show" + level)).click();
-        return new AnalyticsPage(driver);
-    }
-
-    public AnalyticsPage toggleAgingFilterReport(String age, String divId) {
-        WebElement filterDiv = driver.findElementById(divId);
-        filterDiv.findElement(By.linkText(age)).click();
-        sleep(1000);
         return new AnalyticsPage(driver);
     }
 
@@ -273,16 +234,6 @@ public class AnalyticsPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
-    public AnalyticsPage loadFilterReport(String name, String divId) {
-        WebElement filterDiv = driver.findElementById(divId);
-        filterDiv.findElement(By.linkText("Load Filters")).click();
-        filterDiv.findElement(By.id("filterSelectReport")).sendKeys(name);
-        filterDiv.findElement(By.id("filterSelectReport")).sendKeys(Keys.ENTER);
-        filterDiv.findElement(By.linkText("Filters")).click();
-        sleep(1000);
-        return new AnalyticsPage(driver);
-    }
-
     public AnalyticsPage loadFilter(String name, String divId) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.linkText("Load Filters")).click();
@@ -297,17 +248,6 @@ public class AnalyticsPage extends BasePage {
         WebElement filterDiv = driver.findElementById(divId);
         WebElement applicationNameSpace = filterDiv.findElement(By.id("applicationNameTypeahead"));
         filterDiv.findElement(By.id("showApplicationInput")).click();
-        applicationNameSpace.clear();
-        applicationNameSpace.sendKeys(appName);
-        applicationNameSpace.sendKeys(Keys.ENTER);
-        waitForResultsToLoad();
-        return new AnalyticsPage(driver);
-    }
-
-    public AnalyticsPage addApplicationFilterReport(String appName, String divId) {
-        WebElement filterDiv = driver.findElementById(divId);
-        WebElement applicationNameSpace = filterDiv.findElement(By.id("applicationNameTypeaheadReport"));
-        filterDiv.findElement(By.id("showApplicationInputReport")).click();
         applicationNameSpace.clear();
         applicationNameSpace.sendKeys(appName);
         applicationNameSpace.sendKeys(Keys.ENTER);
@@ -343,9 +283,13 @@ public class AnalyticsPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
-    /* _____________________ Set Methods _____________________ */
+    //===========================================================================================================
+    // Set Methods
+    //===========================================================================================================
 
-    /* _____________________ Get Methods _____________________ */
+    //===========================================================================================================
+    // Get Methods
+    //===========================================================================================================
 
     public int getFilterDivHeight(String divId) {
         return driver.findElement(By.id(divId)).getSize().getHeight();
@@ -405,7 +349,9 @@ public class AnalyticsPage extends BasePage {
         return driver.findElementById("descriptionVuln" + rowNumber).getText();
     }
 
-    /* _____________________ Helper Methods _____________________ */
+    //===========================================================================================================
+    // Helper Methods
+    //===========================================================================================================
 
     public void waitForResultsToLoad() {
         while (driver.findElementById("vulnTreeLoadingSpinner").isDisplayed()) {
@@ -418,7 +364,9 @@ public class AnalyticsPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
-    /* _____________________ Boolean Methods _____________________ */
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
 
     public boolean isVulnerabilityCountCorrect(String level, String expected) {
         return expected.equals(tryGetText(By.id("totalBadge" + level)).trim());

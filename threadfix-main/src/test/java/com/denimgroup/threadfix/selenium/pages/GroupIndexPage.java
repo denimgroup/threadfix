@@ -36,7 +36,9 @@ public class GroupIndexPage extends BasePage {
         super(webdriver);
     }
 
-    /*------------------------------------ Utility Methods ------------------------------------*/
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
 
     public GroupIndexPage clickCreateGroup() {
         driver.findElementById("newGroupModalLink").click();
@@ -151,7 +153,9 @@ public class GroupIndexPage extends BasePage {
         return this;
     }
 
-    /*------------------------------------ Boolean Methods ------------------------------------*/
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
 
     public boolean isGroupPresent(String groupName) {
         try{
@@ -207,7 +211,9 @@ public class GroupIndexPage extends BasePage {
         return true;
     }
 
-    /*------------------------------------ Getter Methods ------------------------------------*/
+    //===========================================================================================================
+    // Get Methods
+    //===========================================================================================================
 
     public String getValidationMessage() {
         return driver.findElementByCssSelector("div.alert-success:not(.ng-hide)").getText();

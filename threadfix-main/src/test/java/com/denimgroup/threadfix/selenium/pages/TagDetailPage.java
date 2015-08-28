@@ -32,7 +32,9 @@ public class TagDetailPage extends BasePage{
         super(webDriver);
     }
 
-    /*------------------------------ Action Methods ------------------------------*/
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
 
     public ApplicationDetailPage clickAppName(String appName) {
         driver.findElementByLinkText(appName).click();
@@ -46,7 +48,9 @@ public class TagDetailPage extends BasePage{
         return new TeamDetailPage(driver);
     }
 
-    /*------------------------------ Get Methods ------------------------------*/
+    //===========================================================================================================
+    // Get Methods
+    //===========================================================================================================
 
     public String getNumberofAttachedApps() {
         return driver.findElementById("numApps").getText().trim();
@@ -56,7 +60,9 @@ public class TagDetailPage extends BasePage{
         return driver.findElementById("numVulnComments").getText().trim();
     }
 
-    /*------------------------------ Boolean Methods ------------------------------*/
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
 
     public boolean isTagAttachedtoApp(String appName) { return !driver.findElementsByLinkText(appName).isEmpty(); }
 }

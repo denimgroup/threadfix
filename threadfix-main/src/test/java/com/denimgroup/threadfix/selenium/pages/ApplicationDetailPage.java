@@ -36,7 +36,10 @@ public class ApplicationDetailPage extends BasePage {
         super(webdriver);
     }
 
-    /* _____________________ Action Methods _____________________ */
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
+
     public ApplicationDetailPage clickAddDefectTrackerButton() {
         driver.findElementById("addDefectTrackerButton").click();
         sleep(1000);
@@ -920,7 +923,10 @@ public class ApplicationDetailPage extends BasePage {
         return this;
     }
 
-    /*________________________________________ Get Methods ________________________________________*/
+    //===========================================================================================================
+    // Get Methods
+    //===========================================================================================================
+
     public String checkWafName() {
         waitForElement(By.id("wafNameText"));
         return driver.findElementById("wafNameText").getText();
@@ -1083,7 +1089,10 @@ public class ApplicationDetailPage extends BasePage {
          return driver.findElementById("repositoryUrl").getAttribute("value");
     }
 
-    /* _____________________ Boolean Methods _____________________ */
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
+
     public boolean vulnsFilteredOpen(int count) {
         return driver.findElementByLinkText(count + " Vulnerabilities").isDisplayed();
     }
@@ -1519,7 +1528,10 @@ public class ApplicationDetailPage extends BasePage {
         return isElementPresent("acceptcriteria" + policyName);
     }
 
-    /*___________________Void Methods__________________*/
+    //===========================================================================================================
+    // Helper Methods
+    //===========================================================================================================
+
     public void waitForResultsToLoad() {
         while (driver.findElementById("vulnTreeLoadingSpinner").isDisplayed()) {
             sleep(1000);

@@ -36,7 +36,9 @@ public class UserPermissionsPage extends BasePage {
         super(webdriver);
     }
 
-    /*------------------------------------ Action Methods ------------------------------------*/
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
 
     public UserPermissionsPage clickAddPermissionsLink() {
         sleep(1000);
@@ -99,7 +101,9 @@ public class UserPermissionsPage extends BasePage {
         return driver.findElementByClassName("alert-error").getText();
     }
 
-    /*------------------------------------ Boolean Methods ------------------------------------*/
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
 
     public boolean isUserNamePresent(String userName) {
         return driver.findElementByTagName("h2").getText().contains(userName);

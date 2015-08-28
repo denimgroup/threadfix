@@ -35,7 +35,9 @@ public class DashboardPage extends BasePage{
 		super(webdriver);
 	}
 
-    /*---------------------------- Action Methods ----------------------------*/
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
 
 	public AnalyticsPage clickLeftViewMore(){
 		driver.findElementById("leftViewMore").click();
@@ -84,7 +86,9 @@ public class DashboardPage extends BasePage{
 		return driver.findElementsByClassName("bodyRow").size()-getNumUploads();
 	}
 
-    /*---------------------------- Boolean Methods ----------------------------*/
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
 
     public boolean isViewMoreLinkPresent() {
         return driver.findElementsById("leftViewMore").size() != 0;
@@ -146,7 +150,9 @@ public class DashboardPage extends BasePage{
         return driver.findElementById("header2").getText().contains(count);
     }
 
-    /*---------------------------- Other Methods ----------------------------*/
+    //===========================================================================================================
+    // Get Methods
+    //===========================================================================================================
 
     public String getMostRecentUploadDate() {
         return driver.findElementByCssSelector("#wafTableBody .thick-left").getText().trim();

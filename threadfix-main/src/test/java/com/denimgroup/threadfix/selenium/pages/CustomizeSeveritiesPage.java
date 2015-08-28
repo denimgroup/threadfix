@@ -47,7 +47,9 @@ public class CustomizeSeveritiesPage extends BasePage {
         return this;
     }
 
-    /*---------------------------- Severity Filter ----------------------------*/
+    //===========================================================================================================
+    // Severity Filters
+    //===========================================================================================================
 
     public CustomizeSeveritiesPage enableSeverityFilters() {
         if (driver.findElementById("enabledBox").getAttribute("checked") == null) {

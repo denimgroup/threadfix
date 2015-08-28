@@ -61,7 +61,10 @@ public class ScanAgentTasksPage extends BasePage{
         return driver.findElementById("goToTaskLink"+scanId).getText().trim();
     }
 
-    /*________________ Boolean Functions ________________*/
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
+
     public boolean isScanAgentTaskPresent(String taskId) {
         int rowCnt = driver.findElementsByCssSelector("tr[ng-repeat]").size();
         for (int i = 0; i < rowCnt; i++) {

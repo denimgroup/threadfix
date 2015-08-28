@@ -37,7 +37,9 @@ public class TeamIndexPage extends BasePage {
         super(webdriver);
     }
 
-    /*------------------------------------ Action Methods ----------------------------------------*/
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
 
     public int getNumTeamRows() {
         if (!(driver.findElementById("teamTable").getText().equals("Add Team"))) {
@@ -271,7 +273,9 @@ public class TeamIndexPage extends BasePage {
         return new TeamIndexPage(driver);
     }
 
-    /*------------------------------------ Get Methods ----------------------------------------*/
+    //===========================================================================================================
+    // Get Methods
+    //===========================================================================================================
 
     public String getLengthError() {
         return driver.findElementById("lengthError").getText();
@@ -307,7 +311,9 @@ public class TeamIndexPage extends BasePage {
         return driver.findElementByClassName("alert-error").getText().trim();
     }
 
-    /*----------------------------------- Boolean Methods -----------------------------------*/
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
 
     public boolean isAppPresent(String teamName, String appName) {
         return driver.findElementsById("applicationLink" + teamName + "-" + appName).size() != 0;
@@ -418,7 +424,9 @@ public class TeamIndexPage extends BasePage {
         return true;
     }
 
-    /*------------------------------------ Void Methods ----------------------------------------*/
+    //===========================================================================================================
+    // Void Methods
+    //===========================================================================================================
 
     public void waitForPieWedge(String teamName, String level) {
         waitForElement(By.id(teamName + level + "Arc"));

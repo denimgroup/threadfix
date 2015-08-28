@@ -31,7 +31,9 @@ public class AcceptancePolicyPage extends BasePage {
 
     public AcceptancePolicyPage(WebDriver webDriver) { super(webDriver); }
 
-    /*------------------------------------ Utility Methods ------------------------------------*/
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
 
     public AcceptancePolicyPage clickAcceptancePolicyTab() {
         driver.findElementByLinkText("Acceptance Criteria").click();
@@ -163,7 +165,9 @@ public class AcceptancePolicyPage extends BasePage {
         return new AcceptancePolicyPage(driver);
     }
 
-    /*------------------------------------ Boolean Methods ------------------------------------*/
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
 
     public boolean isPolicyPresent(String name) {
         return isElementPresent("acceptcriteriaName" + name);
@@ -228,7 +232,9 @@ public class AcceptancePolicyPage extends BasePage {
         }
     }
 
-    /*------------------------------------ String Methods ------------------------------------*/
+    //===========================================================================================================
+    // Get Methods
+    //===========================================================================================================
 
     public String getIdForEmail(String email) {
         return "email" + email.replace("@", "").replace(".", "");

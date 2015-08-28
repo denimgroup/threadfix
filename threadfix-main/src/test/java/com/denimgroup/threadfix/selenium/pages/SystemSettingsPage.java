@@ -34,7 +34,9 @@ public class SystemSettingsPage extends BasePage {
 		super(webdriver);
 	}
 
-    /*------------------------------ DEFAULT LDAP ROLE ------------------------------*/
+    //===========================================================================================================
+    // Default LDAP Role
+    //===========================================================================================================
 
     public SystemSettingsPage expandDefaultLDAPRole() {
         driver.findElementById("defaultPermissionsPanel").click();
@@ -58,7 +60,9 @@ public class SystemSettingsPage extends BasePage {
         return this;
     }
 
-    /*------------------------------ LDAP SETTINGS ------------------------------*/
+    //===========================================================================================================
+    // LDAP Settings
+    //===========================================================================================================
 
     public SystemSettingsPage expandLDAPSettings() {
         driver.findElementById("ldapSettingsPanel").click();
@@ -89,14 +93,18 @@ public class SystemSettingsPage extends BasePage {
         return this;
     }
 
-    /*------------------------------ Proxy Settings ------------------------------*/
+    //===========================================================================================================
+    // Proxy Settings
+    //===========================================================================================================
 
     public SystemSettingsPage expandProxySettings() {
         driver.findElementById("proxySettingsPanel").click();
         return new SystemSettingsPage(driver);
     }
 
-    /*------------------------------ Session Timeout Settings ------------------------------*/
+    //===========================================================================================================
+    // Session Timeout Settings
+    //===========================================================================================================
 
     public SystemSettingsPage expandSessionTimeoutSettings() {
         driver.findElementById("defaultSessionTimeoutPermissionsPanel").click();
@@ -109,16 +117,18 @@ public class SystemSettingsPage extends BasePage {
         return new SystemSettingsPage(driver);
     }
 
-    /*------------------------------ Page Methods ------------------------------*/
-
-
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
 
 	public SystemSettingsPage clickSaveChanges() {
 		driver.findElementById("submit").click();
 		return new SystemSettingsPage(driver);
 	}
 
-    /*------------------------------ Boolean Methods ------------------------------*/
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
 
     public boolean isSaveSuccessful(){
         waitForElement(By.cssSelector(".alert-success:not(.ng-hide"));
