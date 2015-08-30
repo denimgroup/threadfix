@@ -53,22 +53,26 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 	private static final int PAGE_LIMIT = 1000;
 
 	private String apiKey = null;
-	
+
+	private Calendar appLastImportDate = null;
+
 	private List<Calendar> scanDateList = null;
 	private Map<Finding, List<DateStatus>> findingDateStatusMap = null;
 
-    RemoteProviderHttpUtils utils = getImpl(this.getClass());
+	RemoteProviderHttpUtils utils = getImpl(this.getClass());
 
-    public WhiteHatRemoteProvider() {
+	public WhiteHatRemoteProvider() {
 		super(ScannerType.SENTINEL);
 	}
 
 	@Override
 	public List<Scan> getScans(RemoteProviderApplication remoteProviderApplication) {
+		appLastImportDate = remoteProviderApplication.getLastImportTime();
+
 		LOG.info("Retrieving a WhiteHat scan.");
 
 		apiKey = remoteProviderApplication.getRemoteProviderType().getApiKey();
-		
+
 		String appName = remoteProviderApplication.getNativeName();
 
 		// TODO take these calls out entirely and save the data in the RemoteProviderApplication object instead
@@ -82,66 +86,67 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 		} else {
 			LOG.info("Retrieved build ID " + siteId + " for application " + appName);
 		}
-		
+
 		String url = VULNS_URL + "?key=" + apiKey + EXTRA_PARAMS + siteId;
-		
+
 		LOG.info("Requesting site ID " + siteId);
 
-        HttpResponse response = utils.getUrl(url);
-        if (response.isValid()) {
-            inputStream = response.getInputStream();
-        } else {
+		HttpResponse response = utils.getUrl(url);
+		if (response.isValid()) {
+			inputStream = response.getInputStream();
+		} else {
 			LOG.warn("Received a bad response from WhiteHat servers, returning null.");
 			return null;
 		}
 
 		DefaultHandler scanParser =
-                remoteProviderApplication.getRemoteProviderType().getMatchSourceNumbersNullSafe() ?
-                        new MatchingParser() :
-                        new ThreadFixStyleParser();
+				remoteProviderApplication.getRemoteProviderType().getMatchSourceNumbersNullSafe() ?
+						new MatchingParser() :
+						new ThreadFixStyleParser();
 
 		List<Scan> scans = parseSAXInputWhiteHat(scanParser);
-		
+
 		if (scans == null || scans.size() == 0) {
 			LOG.warn("No scan was parsed, returning null.");
 			return null;
 		}
-		
+
 		for (Scan resultScan : scans) {
 			resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
-        }
-		
-		LOG.info("WhiteHat "+ scans.size() +" scans successfully parsed.");
-		
+		}
+
+		LOG.info("WhiteHat " + scans.size() + " scans successfully parsed.");
+
 		return filterScans(scans);
 	}
 
 	/**
 	 * This method checks if there are 2 scans with consecutive imported dates and same finding list. If any, remove the earlier one.
+	 *
 	 * @param scans
 	 * @return
 	 */
 	private List<Scan> filterScans(List<Scan> scans) {
 		List<Scan> resultList = list();
 
-		for (Scan s: scans) {
+		for (Scan s : scans) {
 			resultList.add(s);
-        }
+		}
 
 		for (int i = 0; i < scans.size() - 1; i++) {
 			Scan scan1 = scans.get(i);
 			Calendar date1 = scan1.getImportTime();
-			Scan scan2 = scans.get(i+1);
+			Scan scan2 = scans.get(i + 1);
 			Calendar date2 = scan2.getImportTime();
-			
+
 			// Checking if they have consecutive imported dates
-			if ((date2.getTimeInMillis()-date1.getTimeInMillis())/(24*60*60*1000)==1) {
+			if ((date2.getTimeInMillis() - date1.getTimeInMillis()) / (24 * 60 * 60 * 1000) == 1) {
 				if (scan1.getFindings().size() == scan2.getFindings().size()) {
 					boolean isDuplicatedScan = true;
 					List<Finding> findingList1 = scan1.getFindings();
 					List<Finding> findingList2 = scan2.getFindings();
 
-					for (Finding f: findingList1) {
+					for (Finding f : findingList1) {
 						if (!findingList2.contains(f)) {
 							isDuplicatedScan = false;
 							break;
@@ -181,85 +186,121 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 		HttpResponse response = utils.getUrl(SITES_URL + "?key=" + apiKey + paginationSettings);
 
 		if (response.isValid()) {
-            parse(response.getInputStream(), parser);
-        } else {
-            LOG.error("Unable to retrieve applications due to " + response.getStatus() +
-                    " response status from WhiteHat servers.");
+			parse(response.getInputStream(), parser);
+		} else {
+			LOG.error("Unable to retrieve applications due to " + response.getStatus() +
+					" response status from WhiteHat servers.");
 			return null;
-        }
+		}
 
 		int totalSitesAvailable = parser.getTotalSites();
 
 		while (parser.getApplications().size() < totalSitesAvailable) {
-            pageOffset += PAGE_LIMIT;
-            paginationSettings = "&page:limit=" + PAGE_LIMIT + "&page:offset=" + pageOffset;
+			pageOffset += PAGE_LIMIT;
+			paginationSettings = "&page:limit=" + PAGE_LIMIT + "&page:offset=" + pageOffset;
 
-            response = utils.getUrl(SITES_URL + "?key=" + apiKey + paginationSettings);
+			response = utils.getUrl(SITES_URL + "?key=" + apiKey + paginationSettings);
 
-            if (response.isValid()) {
-                parse(response.getInputStream(), parser);
-            } else {
-                LOG.error("Unable to retrieve applications due to " + response.getStatus() +
-                        " response status from WhiteHat servers.");
+			if (response.isValid()) {
+				parse(response.getInputStream(), parser);
+			} else {
+				LOG.error("Unable to retrieve applications due to " + response.getStatus() +
+						" response status from WhiteHat servers.");
 				return null;
-            }
-        }
+			}
+		}
 		return parser;
 	}
 
 	/**
 	 * This method parses input file to list of scan
+	 *
 	 * @param handler
 	 * @return
 	 */
 	private List<Scan> parseSAXInputWhiteHat(DefaultHandler handler) {
 		LOG.debug("Starting WhiteHat SAX Parsing.");
-		
+
+		Calendar currentScanDate = null;
+
 		if (inputStream == null)
 			return null;
-		
+
 		List<Scan> scanList = list();
-		
+
 		ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
 		Collections.sort(scanDateList);
-		
+
 		for (Calendar d : scanDateList) {
 			date = d;
-			saxFindingList = list();
-			for (Finding finding : findingDateStatusMap.keySet()) {
-				List<DateStatus> dateInfo = findingDateStatusMap.get(finding);
-				Collections.sort(dateInfo);
-				boolean isAdded = false;
 
-				// Checking if Finding is open at this time
-				for (int i=0; i < dateInfo.size() - 1; i++) {
-					if (date.compareTo(dateInfo.get(i).getDate()) >= 0 &&
-                            date.compareTo(dateInfo.get(i+1).getDate()) < 0) {
-						if (dateInfo.get(i).getStatus().equals("open")) {
+			if (currentScanDate == null ||
+					com.denimgroup.threadfix.util.DateUtils.getDaysBetween(date, currentScanDate) != 0) {
+				if (saxFindingList != null && !saxFindingList.isEmpty()) {
+					date = currentScanDate;
+					scanList.add(makeNewScan(false));
+					date = d;
+				}
+				currentScanDate = date;
+				saxFindingList = list();
+			} else {
+				currentScanDate = date;
+			}
+
+			for (Finding finding : findingDateStatusMap.keySet()) {
+				List<DateStatus> findingDateInfo = findingDateStatusMap.get(finding);
+				Collections.sort(findingDateInfo);
+
+				//if the found date of the finding is after the scan skip it
+				if (date.compareTo(findingDateInfo.get(0).getDate()) < 0) {
+					continue;
+				}
+
+				//if the tested date is before the scan we can use the status to add or remove from saxfindinglist
+				if (date.compareTo(findingDateInfo.get(findingDateInfo.size() - 1).getDate()) >= 0) {
+					if (findingDateInfo.get(findingDateInfo.size() - 1).getStatus().equals("open")) {
+						if (!saxFindingList.contains(finding)) {
 							saxFindingList.add(finding);
-							isAdded = true;
-							break;
 						}
+						continue;
+					} else {
+						if (saxFindingList.contains(finding)) {
+							saxFindingList.remove(finding);
+						}
+						continue;
 					}
 				}
-				if (!isAdded) {
-					if (date.compareTo(dateInfo.get(dateInfo.size()-1).getDate()) >= 0
-							&& dateInfo.get(dateInfo.size()-1).getStatus().equals("open"))
-						saxFindingList.add(finding);
+
+				//tested date is after date
+				//found date is before
+				if (date.compareTo(findingDateInfo.get(0).getDate()) >= 0 &&
+						date.compareTo(findingDateInfo.get(findingDateInfo.size() - 1).getDate()) < 0) {
+					if (findingDateInfo.get(0).getStatus().equals("open")) {
+						if (!saxFindingList.contains(finding)) {
+							saxFindingList.add(finding);
+						}
+					}
+					continue;
 				}
 			}
-			
-			scanList.add(makeNewScan());
 		}
-		
+
+		if (!saxFindingList.isEmpty()) {
+			scanList.add(makeNewScan(false));
+		} else {
+			if (date.compareTo(appLastImportDate) > 0) {
+				scanList.add(makeNewScan(true));
+			}
+		}
+
 		return scanList;
 	}
-	
-	private Scan makeNewScan() {
+
+	private Scan makeNewScan(boolean isEmpty) {
 		Scan scan = new Scan();
 		scan.setFindings(saxFindingList);
 		scan.setApplicationChannel(applicationChannel);
-		
+
 		if (date != null) {
 			LOG.debug("SAX Parser found the scan date: " + date.getTime().toString());
 			scan.setImportTime(date);
@@ -267,11 +308,18 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 			LOG.warn("SAX Parser did not find the date.");
 		}
 
-		if (scan.getFindings() != null && scan.getFindings().size() != 0)
-			LOG.debug("SAX Parsing successfully parsed " + scan.getFindings().size() +" Findings.");
-		else
-			LOG.warn("SAX Parsing did not find any Findings.");
-		
+		if (scan.getFindings() != null) {
+			if (!isEmpty) {
+				if (scan.getFindings().size() != 0) {
+					LOG.debug("SAX Parsing successfully parsed " + scan.getFindings().size() + " Findings.");
+				} else {
+					LOG.warn("SAX Parsing did not find any Findings.");
+				}
+			} else {
+				LOG.warn("All findings have been closed. SAX Parsing did not find any Findings. Scan date has been found to be after last import date.");
+			}
+		}
+
 		return scan;
 	}
 
@@ -416,18 +464,11 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 				String testedState  = atts.getValue("state");
 				String found        = atts.getValue("found");
 
-				Calendar testedDate = getCalendarAtMidnight(tested);
-				Calendar foundDate  = getCalendarAtMidnight(found);
+				Calendar testedDate = DateUtils.getCalendarFromUTCString(tested);
+				Calendar foundDate  = DateUtils.getCalendarFromUTCString(found);
 
 				currentDateStatus = getDateStatus(testedState, testedDate);
 				initialDateStatus = getDateStatus("open", foundDate);
-
-				if (initialDateStatus.getTimeMillis() ==
-						currentDateStatus.getTimeMillis() &&
-						currentDateStatus.getDate() != null) {
-					//same day. this can mess things up.
-					currentDateStatus.getDate().add(Calendar.DAY_OF_YEAR, 1);
-				}
 
 	    		if (scanDateList != null && !scanDateList.contains(testedDate)) {
 					scanDateList.add(testedDate);
