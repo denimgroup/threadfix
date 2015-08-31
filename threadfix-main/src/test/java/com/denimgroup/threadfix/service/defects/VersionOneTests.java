@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -62,6 +63,7 @@ public class VersionOneTests {
     }
 
     @Test
+    @Ignore
     public void testResponseWithSpecialCharacters() {
         AbstractDefectTracker tracker = getTracker();
         List<String> productNames = tracker.getProductNames();

@@ -37,17 +37,6 @@ import java.util.List;
  */
 public class ChannelMergeTests {
 
-    @Test
-    public void testBasicChannelMerge() {
-        List<Scan> scans = Merger.getScanListFromPaths(ScannerType.DEPENDENCY_CHECK, DependencyCheckTests.FILE_PATH);
-
-        assert scans.size() == 1 : "Had " + scans.size() + " scans instead of 1 scan.";
-
-        int size = scans.get(0).getFindings().size();
-
-        assert size == 109 : "Got " + size + " instead of 109 findings.";
-    }
-
     /**
      * This name is terrible, let's think about renaming channel merge
      * Should have 124 findings with no merges
