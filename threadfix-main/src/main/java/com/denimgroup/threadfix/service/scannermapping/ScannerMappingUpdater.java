@@ -63,6 +63,8 @@ public class ScannerMappingUpdater implements ApplicationContextAware {
     private RemoteProviderTypeService remoteProviderTypeService;
     @Autowired
     private BootstrapService bootstrapService;
+    @Autowired
+    private RoleService roleService;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -79,6 +81,7 @@ public class ScannerMappingUpdater implements ApplicationContextAware {
 
         updateTags();
         updateChannelTypeNames();
+        updateRoles();
 
         if (canUpdate) {
             LOG.info("Updating mappings.");
@@ -86,6 +89,17 @@ public class ScannerMappingUpdater implements ApplicationContextAware {
         } else {
             LOG.info("Scanner mappings are up-to-date, continuing");
         }
+    }
+
+    private void updateRoles() {
+
+        List<Role> roles = roleService.loadAll();
+
+        for (Role role : roles) {
+            role.unNullPermissions();
+            roleService.storeRole(role);
+        }
+
     }
 
     private void updateChannelTypeNames() {

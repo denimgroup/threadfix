@@ -48,6 +48,7 @@ public class RoleServiceImpl implements RoleService {
 	private UserDao userDao;
 
 	@Override
+	@Transactional
 	public List<Role> loadAll() {
 		return roleDao.retrieveAll();
 	}
