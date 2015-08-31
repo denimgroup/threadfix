@@ -78,7 +78,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Autowired private GenericVulnerabilityDao genericVulnerabilityDao;
     @Autowired private ScheduledScanDao scheduledScanDao;
     @Autowired private ApplicationCriticalityService applicationCriticalityService;
-
+    @Autowired private DefaultDefectProfileServiceImpl defectProfileService;
 
     @Nullable
     @Autowired(required = false)
@@ -179,6 +179,9 @@ public class ApplicationServiceImpl implements ApplicationService {
         // Delete WafRules attached with application
         deleteWafRules(application);
 
+        // delete DefectTrackerProfiles attached with application
+        deleteDefectTrackerProfilesByApplication(application);
+
         if (applicationDao.retrieveByName(possibleName, application.getOrganization().getId()) == null) {
             application.setName(possibleName);
         }
@@ -227,6 +230,30 @@ public class ApplicationServiceImpl implements ApplicationService {
                 }
             }
         }
+    }
+
+    private void deleteDefectTrackerProfilesByApplication(Application app) {
+        DefectTracker defectTracker = app.getDefectTracker();
+        if (defectTracker == null)
+            return;
+
+        List<Application> dtApps = defectTracker.getApplications();
+        dtApps.remove(app);
+        defectTracker.setApplications(dtApps);
+
+        List<DefaultDefectProfile> deletedProfiles = list();
+        List<DefaultDefectProfile> dtProfiles = defectTracker.getDefaultDefectProfiles();
+        for (DefaultDefectProfile dtProfile : dtProfiles) {
+            if (dtProfile.getReferenceApplication().getId().equals(app.getId())) {
+                deletedProfiles.add(dtProfile);
+            }
+        }
+        for (DefaultDefectProfile deletedProfile : deletedProfiles) {
+            dtProfiles.remove(deletedProfile);
+            defectProfileService.deleteProfileById(deletedProfile.getId());
+        }
+        defectTrackerDao.saveOrUpdate(defectTracker);
+        app.setDefectTracker(null);
     }
 
 	private String getNewName(Application application) {
