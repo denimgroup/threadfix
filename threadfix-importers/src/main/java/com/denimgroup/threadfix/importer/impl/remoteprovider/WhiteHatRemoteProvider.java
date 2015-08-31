@@ -47,291 +47,291 @@ import static com.denimgroup.threadfix.importer.impl.remoteprovider.utils.Remote
 @RemoteProvider(name = "WhiteHat Sentinel")
 public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 
-	private static final String SITES_URL = "https://sentinel.whitehatsec.com/api/site/";
-	private static final String VULNS_URL = "https://sentinel.whitehatsec.com/api/vuln/";
-	private static final String EXTRA_PARAMS = "&display_attack_vectors=1&query_site=";
-	private static final int PAGE_LIMIT = 1000;
+    private static final String SITES_URL = "https://sentinel.whitehatsec.com/api/site/";
+    private static final String VULNS_URL = "https://sentinel.whitehatsec.com/api/vuln/";
+    private static final String EXTRA_PARAMS = "&display_attack_vectors=1&query_site=";
+    private static final int PAGE_LIMIT = 1000;
 
-	private String apiKey = null;
+    private String apiKey = null;
 
-	private Calendar appLastImportDate = null;
+    private Calendar appLastImportDate = null;
 
-	private List<Calendar> scanDateList = null;
-	private Map<Finding, List<DateStatus>> findingDateStatusMap = null;
+    private List<Calendar> scanDateList = null;
+    private Map<Finding, List<DateStatus>> findingDateStatusMap = null;
 
-	RemoteProviderHttpUtils utils = getImpl(this.getClass());
+    RemoteProviderHttpUtils utils = getImpl(this.getClass());
 
-	public WhiteHatRemoteProvider() {
-		super(ScannerType.SENTINEL);
-	}
+    public WhiteHatRemoteProvider() {
+        super(ScannerType.SENTINEL);
+    }
 
-	@Override
-	public List<Scan> getScans(RemoteProviderApplication remoteProviderApplication) {
-		appLastImportDate = remoteProviderApplication.getLastImportTime();
+    @Override
+    public List<Scan> getScans(RemoteProviderApplication remoteProviderApplication) {
+        appLastImportDate = remoteProviderApplication.getLastImportTime();
 
-		LOG.info("Retrieving a WhiteHat scan.");
+        LOG.info("Retrieving a WhiteHat scan.");
 
-		apiKey = remoteProviderApplication.getRemoteProviderType().getApiKey();
+        apiKey = remoteProviderApplication.getRemoteProviderType().getApiKey();
 
-		String appName = remoteProviderApplication.getNativeName();
+        String appName = remoteProviderApplication.getNativeName();
 
-		// TODO take these calls out entirely and save the data in the RemoteProviderApplication object instead
-		// we need to follow through with this pagination too.
-		WhiteHatSitesParser parser = getParserWithAllApps();
+        // TODO take these calls out entirely and save the data in the RemoteProviderApplication object instead
+        // we need to follow through with this pagination too.
+        WhiteHatSitesParser parser = getParserWithAllApps();
 
-		String siteId = parser.map.get(appName);
-		if (siteId == null) {
-			LOG.warn("No build ID was parsed.");
-			return null; // we failed.
-		} else {
-			LOG.info("Retrieved build ID " + siteId + " for application " + appName);
-		}
+        String siteId = parser.map.get(appName);
+        if (siteId == null) {
+            LOG.warn("No build ID was parsed.");
+            return null; // we failed.
+        } else {
+            LOG.info("Retrieved build ID " + siteId + " for application " + appName);
+        }
 
-		String url = VULNS_URL + "?key=" + apiKey + EXTRA_PARAMS + siteId;
+        String url = VULNS_URL + "?key=" + apiKey + EXTRA_PARAMS + siteId;
 
-		LOG.info("Requesting site ID " + siteId);
+        LOG.info("Requesting site ID " + siteId);
 
-		HttpResponse response = utils.getUrl(url);
-		if (response.isValid()) {
-			inputStream = response.getInputStream();
-		} else {
-			LOG.warn("Received a bad response from WhiteHat servers, returning null.");
-			return null;
-		}
+        HttpResponse response = utils.getUrl(url);
+        if (response.isValid()) {
+            inputStream = response.getInputStream();
+        } else {
+            LOG.warn("Received a bad response from WhiteHat servers, returning null.");
+            return null;
+        }
 
-		DefaultHandler scanParser =
-				remoteProviderApplication.getRemoteProviderType().getMatchSourceNumbersNullSafe() ?
-						new MatchingParser() :
-						new ThreadFixStyleParser();
+        DefaultHandler scanParser =
+                remoteProviderApplication.getRemoteProviderType().getMatchSourceNumbersNullSafe() ?
+                        new MatchingParser() :
+                        new ThreadFixStyleParser();
 
-		List<Scan> scans = parseSAXInputWhiteHat(scanParser);
+        List<Scan> scans = parseSAXInputWhiteHat(scanParser);
 
-		if (scans == null || scans.size() == 0) {
-			LOG.warn("No scan was parsed, returning null.");
-			return null;
-		}
+        if (scans == null || scans.size() == 0) {
+            LOG.warn("No scan was parsed, returning null.");
+            return null;
+        }
 
-		for (Scan resultScan : scans) {
-			resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
-		}
+        for (Scan resultScan : scans) {
+            resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
+        }
 
-		LOG.info("WhiteHat " + scans.size() + " scans successfully parsed.");
+        LOG.info("WhiteHat " + scans.size() + " scans successfully parsed.");
 
-		return filterScans(scans);
-	}
+        return filterScans(scans);
+    }
 
-	/**
-	 * This method checks if there are 2 scans with consecutive imported dates and same finding list. If any, remove the earlier one.
-	 *
-	 * @param scans
-	 * @return
-	 */
-	private List<Scan> filterScans(List<Scan> scans) {
-		List<Scan> resultList = list();
+    /**
+     * This method checks if there are 2 scans with consecutive imported dates and same finding list. If any, remove the earlier one.
+     *
+     * @param scans
+     * @return
+     */
+    private List<Scan> filterScans(List<Scan> scans) {
+        List<Scan> resultList = list();
 
-		for (Scan s : scans) {
-			resultList.add(s);
-		}
+        for (Scan s : scans) {
+            resultList.add(s);
+        }
 
-		for (int i = 0; i < scans.size() - 1; i++) {
-			Scan scan1 = scans.get(i);
-			Calendar date1 = scan1.getImportTime();
-			Scan scan2 = scans.get(i + 1);
-			Calendar date2 = scan2.getImportTime();
+        for (int i = 0; i < scans.size() - 1; i++) {
+            Scan scan1 = scans.get(i);
+            Calendar date1 = scan1.getImportTime();
+            Scan scan2 = scans.get(i + 1);
+            Calendar date2 = scan2.getImportTime();
 
-			// Checking if they have consecutive imported dates
-			if ((date2.getTimeInMillis() - date1.getTimeInMillis()) / (24 * 60 * 60 * 1000) == 1) {
-				if (scan1.getFindings().size() == scan2.getFindings().size()) {
-					boolean isDuplicatedScan = true;
-					List<Finding> findingList1 = scan1.getFindings();
-					List<Finding> findingList2 = scan2.getFindings();
+            // Checking if they have consecutive imported dates
+            if ((date2.getTimeInMillis() - date1.getTimeInMillis()) / (24 * 60 * 60 * 1000) == 1) {
+                if (scan1.getFindings().size() == scan2.getFindings().size()) {
+                    boolean isDuplicatedScan = true;
+                    List<Finding> findingList1 = scan1.getFindings();
+                    List<Finding> findingList2 = scan2.getFindings();
 
-					for (Finding f : findingList1) {
-						if (!findingList2.contains(f)) {
-							isDuplicatedScan = false;
-							break;
-						}
-					}
-					if (isDuplicatedScan) resultList.remove(scan1);
-				}
-			}
-		}
+                    for (Finding f : findingList1) {
+                        if (!findingList2.contains(f)) {
+                            isDuplicatedScan = false;
+                            break;
+                        }
+                    }
+                    if (isDuplicatedScan) resultList.remove(scan1);
+                }
+            }
+        }
 
-		return resultList;
-	}
+        return resultList;
+    }
 
-	@Override
-	public List<RemoteProviderApplication> fetchApplications() {
-		if (remoteProviderType == null || remoteProviderType.getApiKey() == null) {
-			LOG.warn("Insufficient credentials.");
-			return null;
-		}
+    @Override
+    public List<RemoteProviderApplication> fetchApplications() {
+        if (remoteProviderType == null || remoteProviderType.getApiKey() == null) {
+            LOG.warn("Insufficient credentials.");
+            return null;
+        }
 
-		apiKey = remoteProviderType.getApiKey();
+        apiKey = remoteProviderType.getApiKey();
 
-		WhiteHatSitesParser parser = getParserWithAllApps();
-		if (parser == null) {
-			return null;
-		}
+        WhiteHatSitesParser parser = getParserWithAllApps();
+        if (parser == null) {
+            return null;
+        }
 
-		return parser.getApplications();
-	}
+        return parser.getApplications();
+    }
 
-	private WhiteHatSitesParser getParserWithAllApps() {
-		int pageOffset = 0;
-		String paginationSettings = "&page:limit=" + PAGE_LIMIT + "&page:offset=" + pageOffset;
+    private WhiteHatSitesParser getParserWithAllApps() {
+        int pageOffset = 0;
+        String paginationSettings = "&page:limit=" + PAGE_LIMIT + "&page:offset=" + pageOffset;
 
-		WhiteHatSitesParser parser = new WhiteHatSitesParser();
+        WhiteHatSitesParser parser = new WhiteHatSitesParser();
 
-		HttpResponse response = utils.getUrl(SITES_URL + "?key=" + apiKey + paginationSettings);
+        HttpResponse response = utils.getUrl(SITES_URL + "?key=" + apiKey + paginationSettings);
 
-		if (response.isValid()) {
-			parse(response.getInputStream(), parser);
-		} else {
-			LOG.error("Unable to retrieve applications due to " + response.getStatus() +
-					" response status from WhiteHat servers.");
-			return null;
-		}
+        if (response.isValid()) {
+            parse(response.getInputStream(), parser);
+        } else {
+            LOG.error("Unable to retrieve applications due to " + response.getStatus() +
+                    " response status from WhiteHat servers.");
+            return null;
+        }
 
-		int totalSitesAvailable = parser.getTotalSites();
+        int totalSitesAvailable = parser.getTotalSites();
 
-		while (parser.getApplications().size() < totalSitesAvailable) {
-			pageOffset += PAGE_LIMIT;
-			paginationSettings = "&page:limit=" + PAGE_LIMIT + "&page:offset=" + pageOffset;
+        while (parser.getApplications().size() < totalSitesAvailable) {
+            pageOffset += PAGE_LIMIT;
+            paginationSettings = "&page:limit=" + PAGE_LIMIT + "&page:offset=" + pageOffset;
 
-			response = utils.getUrl(SITES_URL + "?key=" + apiKey + paginationSettings);
+            response = utils.getUrl(SITES_URL + "?key=" + apiKey + paginationSettings);
 
-			if (response.isValid()) {
-				parse(response.getInputStream(), parser);
-			} else {
-				LOG.error("Unable to retrieve applications due to " + response.getStatus() +
-						" response status from WhiteHat servers.");
-				return null;
-			}
-		}
-		return parser;
-	}
+            if (response.isValid()) {
+                parse(response.getInputStream(), parser);
+            } else {
+                LOG.error("Unable to retrieve applications due to " + response.getStatus() +
+                        " response status from WhiteHat servers.");
+                return null;
+            }
+        }
+        return parser;
+    }
 
-	/**
-	 * This method parses input file to list of scan
-	 *
-	 * @param handler
-	 * @return
-	 */
-	private List<Scan> parseSAXInputWhiteHat(DefaultHandler handler) {
-		LOG.debug("Starting WhiteHat SAX Parsing.");
+    /**
+     * This method parses input file to list of scan
+     *
+     * @param handler
+     * @return
+     */
+    private List<Scan> parseSAXInputWhiteHat(DefaultHandler handler) {
+        LOG.debug("Starting WhiteHat SAX Parsing.");
 
-		Calendar currentScanDate = null;
+        Calendar currentScanDate = null;
 
-		if (inputStream == null)
-			return null;
+        if (inputStream == null)
+            return null;
 
-		List<Scan> scanList = list();
+        List<Scan> scanList = list();
 
-		ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
-		Collections.sort(scanDateList);
+        ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
+        Collections.sort(scanDateList);
 
-		for (Calendar d : scanDateList) {
-			date = d;
+        for (Calendar d : scanDateList) {
+            date = d;
 
-			if (currentScanDate == null ||
-					com.denimgroup.threadfix.util.DateUtils.getDaysBetween(date, currentScanDate) != 0) {
-				if (saxFindingList != null && !saxFindingList.isEmpty()) {
-					date = currentScanDate;
-					scanList.add(makeNewScan());
-					date = d;
-				}
-				currentScanDate = date;
-				saxFindingList = list();
-			} else {
-				currentScanDate = date;
-			}
+            if (currentScanDate == null ||
+                    com.denimgroup.threadfix.util.DateUtils.getDaysBetween(date, currentScanDate) != 0) {
+                if (saxFindingList != null && !saxFindingList.isEmpty()) {
+                    date = currentScanDate;
+                    scanList.add(makeNewScan());
+                    date = d;
+                }
+                currentScanDate = date;
+                saxFindingList = list();
+            } else {
+                currentScanDate = date;
+            }
 
-			for (Finding finding : findingDateStatusMap.keySet()) {
-				List<DateStatus> findingDateInfo = findingDateStatusMap.get(finding);
-				Collections.sort(findingDateInfo);
+            for (Finding finding : findingDateStatusMap.keySet()) {
+                List<DateStatus> findingDateInfo = findingDateStatusMap.get(finding);
+                Collections.sort(findingDateInfo);
 
-				//if the found date of the finding is after the scan skip it
-				if (date.compareTo(findingDateInfo.get(0).getDate()) < 0) {
-					continue;
-				}
+                //if the found date of the finding is after the scan skip it
+                if (date.compareTo(findingDateInfo.get(0).getDate()) < 0) {
+                    continue;
+                }
 
-				//if the tested date is before the scan we can use the status to add or remove from saxfindinglist
-				if (date.compareTo(findingDateInfo.get(findingDateInfo.size() - 1).getDate()) >= 0) {
-					if (findingDateInfo.get(findingDateInfo.size() - 1).getStatus().equals("open")) {
-						if (!saxFindingList.contains(finding)) {
-							saxFindingList.add(finding);
-						}
-						continue;
-					} else {
-						if (saxFindingList.contains(finding)) {
-							saxFindingList.remove(finding);
-						}
-						continue;
-					}
-				}
+                //if the tested date is before the scan we can use the status to add or remove from saxfindinglist
+                if (date.compareTo(findingDateInfo.get(findingDateInfo.size() - 1).getDate()) >= 0) {
+                    if (findingDateInfo.get(findingDateInfo.size() - 1).getStatus().equals("open")) {
+                        if (!saxFindingList.contains(finding)) {
+                            saxFindingList.add(finding);
+                        }
+                        continue;
+                    } else {
+                        if (saxFindingList.contains(finding)) {
+                            saxFindingList.remove(finding);
+                        }
+                        continue;
+                    }
+                }
 
-				//tested date is after date
-				//found date is before
-				if (date.compareTo(findingDateInfo.get(0).getDate()) >= 0 &&
-						date.compareTo(findingDateInfo.get(findingDateInfo.size() - 1).getDate()) < 0) {
-					if (findingDateInfo.get(0).getStatus().equals("open")) {
-						if (!saxFindingList.contains(finding)) {
-							saxFindingList.add(finding);
-						}
-					}
-					continue;
-				}
-			}
-		}
+                //tested date is after date
+                //found date is before
+                if (date.compareTo(findingDateInfo.get(0).getDate()) >= 0 &&
+                        date.compareTo(findingDateInfo.get(findingDateInfo.size() - 1).getDate()) < 0) {
+                    if (findingDateInfo.get(0).getStatus().equals("open")) {
+                        if (!saxFindingList.contains(finding)) {
+                            saxFindingList.add(finding);
+                        }
+                    }
+                    continue;
+                }
+            }
+        }
 
-		scanList.add(makeNewScan());
+        scanList.add(makeNewScan());
 
-		return scanList;
-	}
+        return scanList;
+    }
 
-	private Scan makeNewScan() {
-		Scan scan = new Scan();
-		scan.setFindings(saxFindingList);
-		scan.setApplicationChannel(applicationChannel);
+    private Scan makeNewScan() {
+        Scan scan = new Scan();
+        scan.setFindings(saxFindingList);
+        scan.setApplicationChannel(applicationChannel);
 
-		if (date != null) {
-			LOG.debug("SAX Parser found the scan date: " + date.getTime().toString());
-			scan.setImportTime(date);
-		} else {
-			LOG.warn("SAX Parser did not find the date.");
-		}
+        if (date != null) {
+            LOG.debug("SAX Parser found the scan date: " + date.getTime().toString());
+            scan.setImportTime(date);
+        } else {
+            LOG.warn("SAX Parser did not find the date.");
+        }
 
-		if (scan.getFindings() != null && scan.getFindings().size() != 0) {
-			LOG.debug("SAX Parsing successfully parsed " + scan.getFindings().size() + " Findings.");
-		} else {
-			LOG.warn("SAX Parsing did not find any Findings.");
-		}
+        if (scan.getFindings() != null && scan.getFindings().size() != 0) {
+            LOG.debug("SAX Parsing successfully parsed " + scan.getFindings().size() + " Findings.");
+        } else {
+            LOG.warn("SAX Parsing did not find any Findings.");
+        }
 
-		return scan;
-	}
+        return scan;
+    }
 
-	public class WhiteHatSitesParser extends HandlerWithBuilder {
-		
-		public Map<String, String> map = map();
-		
-		private String currentId = null;
-		private boolean grabLabel;
+    public class WhiteHatSitesParser extends HandlerWithBuilder {
+
+        public Map<String, String> map = map();
+        
+        private String currentId = null;
+        private boolean grabLabel;
 
         private boolean grabTotalSites;
         private String totalSites = null;
 
-		public List<RemoteProviderApplication> getApplications() {
-			List<RemoteProviderApplication> apps = list();
-			for (String label : map.keySet()) {
-				RemoteProviderApplication remoteProviderApplication = new RemoteProviderApplication();
-	    		remoteProviderApplication.setNativeName(label);
-	    		remoteProviderApplication.setNativeId(map.get(label));
-	    		remoteProviderApplication.setRemoteProviderType(remoteProviderType);
-	    		apps.add(remoteProviderApplication);
-			}
-			return apps;
-		}
+        public List<RemoteProviderApplication> getApplications() {
+            List<RemoteProviderApplication> apps = list();
+            for (String label : map.keySet()) {
+                RemoteProviderApplication remoteProviderApplication = new RemoteProviderApplication();
+                remoteProviderApplication.setNativeName(label);
+                remoteProviderApplication.setNativeId(map.get(label));
+                remoteProviderApplication.setRemoteProviderType(remoteProviderType);
+                apps.add(remoteProviderApplication);
+            }
+            return apps;
+        }
 
         public int getTotalSites() {
             int total = 0;
@@ -345,74 +345,74 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
             return total;
         }
 
-	    public void startElement(String uri, String name, String qName, Attributes atts) throws SAXException {
-	    	if ("site".equals(qName)) {
-	    		currentId = atts.getValue("id");
-	    	} else if ("label".equals(qName)) {
-	    		grabLabel = true;
-	    	} else if ("total_sites".equals(qName)) {
+        public void startElement(String uri, String name, String qName, Attributes atts) throws SAXException {
+            if ("site".equals(qName)) {
+                currentId = atts.getValue("id");
+            } else if ("label".equals(qName)) {
+                grabLabel = true;
+            } else if ("total_sites".equals(qName)) {
                 grabTotalSites = true;
-	    	}
-	    }
-	    
-	    public void endElement(String uri, String name, String qName) {
-	    	if (grabLabel) {
-	    		String text = getBuilderText();
-	    		if (text != null) {
-	    			map.put(text, currentId);
-	    		}
-	    		currentId = null;
-	    		grabLabel = false;
-	    	}
+            }
+        }
+
+        public void endElement(String uri, String name, String qName) {
+            if (grabLabel) {
+                String text = getBuilderText();
+                if (text != null) {
+                    map.put(text, currentId);
+                }
+                currentId = null;
+                grabLabel = false;
+            }
             if (grabTotalSites) {
                 totalSites = getBuilderText();
                 grabTotalSites = false;
-	        }
-	    }
-	    
-	    public void characters (char ch[], int start, int length) {
-	    	if (grabLabel) {
-	    		addTextToBuilder(ch, start, length);
-	    	}
+            }
+        }
+
+        public void characters (char ch[], int start, int length) {
+            if (grabLabel) {
+                addTextToBuilder(ch, start, length);
+            }
             if (grabTotalSites) {
-	    		addTextToBuilder(ch, start, length);
-	    	}
-	    }
-	}
-	
-	public class ThreadFixStyleParser extends HandlerWithBuilder {
-		
-		public Finding finding = new Finding();
-		
-		private Map<FindingKey, String> map = enumMap(FindingKey.class);
-		
-		private boolean creatingVuln = false;
-		
-		private DateStatus currentDateStatus = null;
-		private DateStatus initialDateStatus = null;
+                addTextToBuilder(ch, start, length);
+            }
+        }
+    }
+
+    public class ThreadFixStyleParser extends HandlerWithBuilder {
+
+        public Finding finding = new Finding();
+
+        private Map<FindingKey, String> map = enumMap(FindingKey.class);
+
+        private boolean creatingVuln = false;
+
+        private DateStatus currentDateStatus = null;
+        private DateStatus initialDateStatus = null;
 
         private String vulnTag = null;
         private boolean inAttackVector = false;
         private StringBuffer currentRawFinding = new StringBuffer();
-		
-		private void addFinding() {
-			Finding finding = constructFinding(map);
-			
-			if (finding == null) {
-				LOG.warn("Finding was null.");
-			} else {
-				String nativeId = hashFindingInfo(map.get(FindingKey.VULN_CODE), map.get(FindingKey.PATH), map.get(FindingKey.PARAMETER));
-				finding.setNativeId(nativeId);
-				finding.setDisplayId(map.get(FindingKey.NATIVE_ID));
-			}
-			
-			if (findingDateStatusMap.containsKey(finding)){
-				findingDateStatusMap.get(finding).add(currentDateStatus);
-				findingDateStatusMap.get(finding).add(initialDateStatus);
-			} else {
-				findingDateStatusMap.put(finding, Arrays.asList(currentDateStatus, initialDateStatus));
-			}
-		}
+
+        private void addFinding() {
+            Finding finding = constructFinding(map);
+
+            if (finding == null) {
+                LOG.warn("Finding was null.");
+            } else {
+                String nativeId = hashFindingInfo(map.get(FindingKey.VULN_CODE), map.get(FindingKey.PATH), map.get(FindingKey.PARAMETER));
+                finding.setNativeId(nativeId);
+                finding.setDisplayId(map.get(FindingKey.NATIVE_ID));
+            }
+
+            if (findingDateStatusMap.containsKey(finding)){
+                findingDateStatusMap.get(finding).add(currentDateStatus);
+                findingDateStatusMap.get(finding).add(initialDateStatus);
+            } else {
+                findingDateStatusMap.put(finding, Arrays.asList(currentDateStatus, initialDateStatus));
+            }
+        }
 
         private String buildUrlReference(String siteId, String nativeId) {
 
@@ -424,66 +424,66 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 
             return urlReference;
         }
-		
-		public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
-	    
-	    	if ("vulnerabilities".equals(qName)) {
-	    		scanDateList = list();
-	    		findingDateStatusMap = map();
-	    	}
-	    	else if ("vulnerability".equals(qName)) {
+
+        public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
+
+            if ("vulnerabilities".equals(qName)) {
+                scanDateList = list();
+                findingDateStatusMap = map();
+            }
+            else if ("vulnerability".equals(qName)) {
                 vulnTag = makeTag(name, qName, atts) + "\n";
-	    		map.clear();
+                map.clear();
 
                 String nativeId = atts.getValue("id");
                 String siteId = atts.getValue("site");
 
                 map.put(FindingKey.NATIVE_ID, nativeId);
-	    		map.put(FindingKey.VULN_CODE, atts.getValue("class"));
-	    		map.put(FindingKey.SEVERITY_CODE, atts.getValue("severity"));
+                map.put(FindingKey.VULN_CODE, atts.getValue("class"));
+                map.put(FindingKey.SEVERITY_CODE, atts.getValue("severity"));
                 map.put(FindingKey.URL_REFERENCE, buildUrlReference(siteId, nativeId));
-	    	} else if ("attack_vector".equals(qName)) {
+            } else if ("attack_vector".equals(qName)) {
                 currentRawFinding.append(makeTag(name, qName , atts));
-	    		map.put(FindingKey.PATH, null);
-	    		map.put(FindingKey.PARAMETER, null);
+                map.put(FindingKey.PATH, null);
+                map.put(FindingKey.PARAMETER, null);
 
-	    		creatingVuln = true;
-				String tested       = atts.getValue("tested");
-				String testedState  = atts.getValue("state");
-				String found        = atts.getValue("found");
+                creatingVuln = true;
+                String tested       = atts.getValue("tested");
+                String testedState  = atts.getValue("state");
+                String found        = atts.getValue("found");
 
-				Calendar testedDate = DateUtils.getCalendarFromUTCString(tested);
-				Calendar foundDate  = DateUtils.getCalendarFromUTCString(found);
+                Calendar testedDate = DateUtils.getCalendarFromUTCString(tested);
+                Calendar foundDate  = DateUtils.getCalendarFromUTCString(found);
 
-				currentDateStatus = getDateStatus(testedState, testedDate);
-				initialDateStatus = getDateStatus("open", foundDate);
+                currentDateStatus = getDateStatus(testedState, testedDate);
+                initialDateStatus = getDateStatus("open", foundDate);
 
-	    		if (scanDateList != null && !scanDateList.contains(testedDate)) {
-					scanDateList.add(testedDate);
-				}
-				if (scanDateList != null && !scanDateList.contains(foundDate)) {
-					scanDateList.add(foundDate);
-				}
-	    	}
-	    	else if (creatingVuln) {
+                if (scanDateList != null && !scanDateList.contains(testedDate)) {
+                    scanDateList.add(testedDate);
+                }
+                if (scanDateList != null && !scanDateList.contains(foundDate)) {
+                    scanDateList.add(foundDate);
+                }
+            }
+            else if (creatingVuln) {
                 currentRawFinding.append(makeTag(name, qName , atts));
                 if (qName.equals("request")) {
-		    		map.put(FindingKey.PATH, getPath(atts.getValue("url")));
-		    	} else if (qName.equals("param")) {
-		    		map.put(FindingKey.PARAMETER, atts.getValue("name"));
-		    	}
-	    	}
-	    }
+                    map.put(FindingKey.PATH, getPath(atts.getValue("url")));
+                } else if (qName.equals("param")) {
+                    map.put(FindingKey.PARAMETER, atts.getValue("name"));
+                }
+            }
+        }
 
-		private DateStatus getDateStatus(String testedState, Calendar testedDate) {
-			DateStatus dateStatus = new DateStatus();
-			dateStatus.setDate(testedDate);
-			dateStatus.setStatus(testedState);
-			return dateStatus;
-		}
+        private DateStatus getDateStatus(String testedState, Calendar testedDate) {
+            DateStatus dateStatus = new DateStatus();
+            dateStatus.setDate(testedDate);
+            dateStatus.setStatus(testedState);
+            return dateStatus;
+        }
 
-		@Override
-	    public void endElement (String uri, String localName, String qName) throws SAXException {
+        @Override
+        public void endElement (String uri, String localName, String qName) throws SAXException {
             if (creatingVuln) {
                 currentRawFinding.append("</").append(qName).append(">");
             }
@@ -491,16 +491,16 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
             if (qName.equals("attack_vector")) {
                 currentRawFinding.append("\n</").append("vulnerability").append(">");
                 map.put(FindingKey.RAWFINDING, vulnTag + currentRawFinding.toString());
-	    		addFinding();
-	    		creatingVuln = false;
+                addFinding();
+                creatingVuln = false;
                 currentRawFinding.setLength(0);
-	    	}
+            }
 
             if ("vulnerability".equals(qName)) {
                 vulnTag = null;
             }
-	    }
-	}
+        }
+    }
 
     private String getPath(String fullUrl) {
 
@@ -519,36 +519,36 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
         return returnPath;
     }
 
-	public class MatchingParser extends HandlerWithBuilder {
+    public class MatchingParser extends HandlerWithBuilder {
 
-		public Finding finding = new Finding();
+        public Finding finding = new Finding();
 
-		private Map<FindingKey, String> map = enumMap(FindingKey.class);
+        private Map<FindingKey, String> map = enumMap(FindingKey.class);
 
-		private boolean creatingVuln = false;
+        private boolean creatingVuln = false;
 
-		private DateStatus dateStatus = null;
+        private DateStatus dateStatus = null;
 
         private String vulnTag = null;
         private StringBuffer currentRawFinding	  = new StringBuffer();
 
-		private void addFinding() {
-			Finding finding = constructFinding(map);
+        private void addFinding() {
+            Finding finding = constructFinding(map);
 
-			if (finding == null) {
-				LOG.warn("Finding was null.");
-			} else {
-				String nativeId = hashFindingInfo(map.get(FindingKey.VULN_CODE), map.get(FindingKey.PATH), map.get(FindingKey.PARAMETER));
-				finding.setNativeId(nativeId);
-				finding.setDisplayId(map.get(FindingKey.NATIVE_ID));
-			}
+            if (finding == null) {
+                LOG.warn("Finding was null.");
+            } else {
+                String nativeId = hashFindingInfo(map.get(FindingKey.VULN_CODE), map.get(FindingKey.PATH), map.get(FindingKey.PARAMETER));
+                finding.setNativeId(nativeId);
+                finding.setDisplayId(map.get(FindingKey.NATIVE_ID));
+            }
 
-			if (findingDateStatusMap.containsKey(finding)){
-				findingDateStatusMap.get(finding).add(dateStatus);
-			} else {
-				findingDateStatusMap.put(finding, Arrays.asList(dateStatus));
-			}
-		}
+            if (findingDateStatusMap.containsKey(finding)){
+                findingDateStatusMap.get(finding).add(dateStatus);
+            } else {
+                findingDateStatusMap.put(finding, Arrays.asList(dateStatus));
+            }
+        }
 
         private String buildUrlReference(String siteId, String nativeId) {
 
@@ -561,48 +561,48 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
             return urlReference;
         }
 
-		public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
+        public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
 
-	    	if ("vulnerabilities".equals(qName)) {
-	    		scanDateList = list();
-	    		findingDateStatusMap = map();
-	    	}
-	    	else if ("vulnerability".equals(qName)) {
+            if ("vulnerabilities".equals(qName)) {
+                scanDateList = list();
+                findingDateStatusMap = map();
+            }
+            else if ("vulnerability".equals(qName)) {
                 vulnTag = makeTag(name, qName, atts) + "\n";
-	    		map.clear();
+                map.clear();
 
                 String nativeId = atts.getValue("id");
                 String siteId = atts.getValue("site");
 
-	    		map.put(FindingKey.NATIVE_ID, nativeId);
-	    		map.put(FindingKey.VULN_CODE, atts.getValue("class"));
-	    		map.put(FindingKey.SEVERITY_CODE, atts.getValue("severity"));
-	    		map.put(FindingKey.URL_REFERENCE, buildUrlReference(siteId, nativeId));
+                map.put(FindingKey.NATIVE_ID, nativeId);
+                map.put(FindingKey.VULN_CODE, atts.getValue("class"));
+                map.put(FindingKey.SEVERITY_CODE, atts.getValue("severity"));
+                map.put(FindingKey.URL_REFERENCE, buildUrlReference(siteId, nativeId));
 
                 // was in the attack_vector
-	    		map.put(FindingKey.PATH, getPath(atts.getValue("url")));
-	    		map.put(FindingKey.PARAMETER, null);
-	    		creatingVuln = true;
-	    		dateStatus = new DateStatus();
-				String found = atts.getValue("found");
-				String tested = atts.getValue("tested");
-				Calendar testedDate = getCalendarAtMidnight(found);
-	    		dateStatus.setDate(testedDate);
-	    		dateStatus.setStatus(atts.getValue("status"));
-	    		if (scanDateList != null && !scanDateList.contains(testedDate)) {
+                map.put(FindingKey.PATH, getPath(atts.getValue("url")));
+                map.put(FindingKey.PARAMETER, null);
+                creatingVuln = true;
+                dateStatus = new DateStatus();
+                String found = atts.getValue("found");
+                String tested = atts.getValue("tested");
+                Calendar testedDate = getCalendarAtMidnight(found);
+                dateStatus.setDate(testedDate);
+                dateStatus.setStatus(atts.getValue("status"));
+                if (scanDateList != null && !scanDateList.contains(testedDate)) {
                     scanDateList.add(testedDate);
                 }
-	    	}
-	    	else if (creatingVuln) {
+            }
+            else if (creatingVuln) {
                 currentRawFinding.append(makeTag(name, qName , atts));
-		    	if (qName.equals("param")) {
-		    		map.put(FindingKey.PARAMETER, atts.getValue("name"));
-		    	}
-	    	}
-	    }
+                if (qName.equals("param")) {
+                    map.put(FindingKey.PARAMETER, atts.getValue("name"));
+                }
+            }
+        }
 
-	    @Override
-	    public void endElement (String uri, String localName, String qName) throws SAXException {
+        @Override
+        public void endElement (String uri, String localName, String qName) throws SAXException {
             if (creatingVuln) {
                 currentRawFinding.append("</").append(qName).append(">");
             }
@@ -616,50 +616,50 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
                 creatingVuln = false;
                 currentRawFinding.setLength(0);
             }
-	    }
-	}
+        }
+    }
 
-	private Calendar getCalendarAtMidnight(String found) {
-		Calendar testedDate = DateUtils.getCalendarFromString("yyyy-MM-dd", found);
-		if (testedDate != null) {
+    private Calendar getCalendarAtMidnight(String found) {
+        Calendar testedDate = DateUtils.getCalendarFromString("yyyy-MM-dd", found);
+        if (testedDate != null) {
             testedDate.set(Calendar.HOUR_OF_DAY, 0);
             testedDate.set(Calendar.MINUTE, 0);
             testedDate.set(Calendar.SECOND, 0);
             testedDate.set(Calendar.MILLISECOND, 0);
         }
-		return testedDate;
-	}
+        return testedDate;
+    }
 
-	public class DateStatus implements Comparable<DateStatus> {
-		
-		private Calendar date;
-		private String status;
+    public class DateStatus implements Comparable<DateStatus> {
 
-		public Calendar getDate() {
-			return date;
-		}
+        private Calendar date;
+        private String status;
 
-		public void setDate(Calendar date) {
-			this.date = date;
-		}
+        public Calendar getDate() {
+            return date;
+        }
 
-		public String getStatus() {
-			return status;
-		}
+        public void setDate(Calendar date) {
+            this.date = date;
+        }
 
-		public void setStatus(String status) {
-			this.status = status;
-		}
+        public String getStatus() {
+            return status;
+        }
 
-		public long getTimeMillis() {
-			return date == null ? 0 : date.getTimeInMillis();
-		}
+        public void setStatus(String status) {
+            this.status = status;
+        }
 
-		@Override
-		public int compareTo(DateStatus other) {
-			return this.getDate().compareTo(other.getDate());
-		}
-	}
+        public long getTimeMillis() {
+            return date == null ? 0 : date.getTimeInMillis();
+        }
 
-	
+        @Override
+        public int compareTo(DateStatus other) {
+            return this.getDate().compareTo(other.getDate());
+        }
+    }
+
+
 }
