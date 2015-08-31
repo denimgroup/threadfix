@@ -285,18 +285,12 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 			}
 		}
 
-		if (!saxFindingList.isEmpty()) {
-			scanList.add(makeNewScan(false));
-		} else {
-			if (date.compareTo(appLastImportDate) > 0) {
-				scanList.add(makeNewScan(true));
-			}
-		}
+		scanList.add(makeNewScan());
 
 		return scanList;
 	}
 
-	private Scan makeNewScan(boolean isEmpty) {
+	private Scan makeNewScan() {
 		Scan scan = new Scan();
 		scan.setFindings(saxFindingList);
 		scan.setApplicationChannel(applicationChannel);
@@ -308,16 +302,10 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 			LOG.warn("SAX Parser did not find the date.");
 		}
 
-		if (scan.getFindings() != null) {
-			if (!isEmpty) {
-				if (scan.getFindings().size() != 0) {
-					LOG.debug("SAX Parsing successfully parsed " + scan.getFindings().size() + " Findings.");
-				} else {
-					LOG.warn("SAX Parsing did not find any Findings.");
-				}
-			} else {
-				LOG.warn("All findings have been closed. SAX Parsing did not find any Findings. Scan date has been found to be after last import date.");
-			}
+		if (scan.getFindings() != null && scan.getFindings().size() != 0) {
+			LOG.debug("SAX Parsing successfully parsed " + scan.getFindings().size() + " Findings.");
+		} else {
+			LOG.warn("SAX Parsing did not find any Findings.");
 		}
 
 		return scan;
