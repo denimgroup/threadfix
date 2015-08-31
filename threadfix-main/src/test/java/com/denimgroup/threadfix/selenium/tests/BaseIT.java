@@ -72,8 +72,8 @@ public abstract class BaseIT {
 
 	@After
 	public void shutDown() {
-//        DatabaseUtils.deleteAllTeams();
-//        DatabaseUtils.deleteExtraUsers();
+        DatabaseUtils.deleteAllTeams();
+        DatabaseUtils.deleteExtraUsers();
         driver.quit();
 	}
 	
