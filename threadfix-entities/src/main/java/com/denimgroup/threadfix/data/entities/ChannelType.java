@@ -26,10 +26,7 @@ package com.denimgroup.threadfix.data.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -165,6 +162,22 @@ public class ChannelType extends BaseEntity {
 
 	public void setRemoteProviderTypes(List<RemoteProviderType> remoteProviderTypes) {
 		this.remoteProviderTypes = remoteProviderTypes;
+	}
+
+	@Transient
+	@JsonView(Object.class)
+	public String getMappingFilterName() {
+		String mappingFilterName = name;
+
+		if (mappingFilterName.equals(ScannerType.APPSCAN_DYNAMIC.getDisplayName())) {
+			mappingFilterName = mappingFilterName + "/Enterprise";
+		}
+
+		if (mappingFilterName.equals(ScannerType.MANUAL.getDisplayName())) {
+			mappingFilterName += "/" + ScannerType.DEPENDENCY_CHECK.getDisplayName() + "/" + ScannerType.SSVL.getDisplayName();
+		}
+
+		return mappingFilterName;
 	}
 
 }

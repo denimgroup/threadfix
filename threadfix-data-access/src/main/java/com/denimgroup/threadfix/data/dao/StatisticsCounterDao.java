@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
+import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.StatisticsCounter;
 
 import java.util.List;
@@ -39,6 +40,11 @@ public interface StatisticsCounterDao extends GenericObjectDao<StatisticsCounter
     List<Map<String, Object>> getFindingSeverityMap(List<Integer> filteredSeverities,
                                                     List<Integer> filteredVulnerabilities,
                                                     List<Integer> filteredChannelSeverities);
+
+    List<Map<String, Object>> getFindingSeverityMap(List<Integer> filteredSeverities,
+                                                    List<Integer> filteredVulnerabilities,
+                                                    List<Integer> filteredChannelSeverities,
+                                                    Scan scan);
 
     List<Map<String,Object>> getRawFindingTotalMap();
 
