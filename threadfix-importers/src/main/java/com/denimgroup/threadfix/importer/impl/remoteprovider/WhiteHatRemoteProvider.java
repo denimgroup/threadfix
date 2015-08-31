@@ -175,6 +175,8 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 	 */
 	private List<Scan> parseSAXInputWhiteHat(DefaultHandler handler) {
 		LOG.debug("Starting WhiteHat SAX Parsing.");
+
+		Calendar currentScanDate = null;
 		
 		if (inputStream == null)
 			return null;
@@ -183,37 +185,55 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 		
 		ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
 		Collections.sort(scanDateList);
-		
+
 		for (Calendar d : scanDateList) {
 			date = d;
-			saxFindingList = list();
-			for (Finding originalFinding : findingDateStatusMap.keySet()) {
-				Finding finding = new Finding(originalFinding);
-				List<DateStatus> dateInfo = findingDateStatusMap.get(originalFinding);
-				Collections.sort(dateInfo);
-				boolean isAdded = false;
 
-				// Checking if Finding is open at this time
-				for (int i=0; i < dateInfo.size() - 1; i++) {
-					if (date.compareTo(dateInfo.get(i).getDate()) >= 0 &&
-                            date.compareTo(dateInfo.get(i+1).getDate()) < 0) {
-						if (dateInfo.get(i).getStatus().equals("open")) {
+			if (currentScanDate == null ||
+					com.denimgroup.threadfix.util.DateUtils.getDaysBetween(date, currentScanDate) != 0) {
+				if (saxFindingList != null && !saxFindingList.isEmpty()) {
+					date = currentScanDate;
+					scanList.add(makeNewScan());
+					date = d;
+				}
+				currentScanDate = date;
+				saxFindingList = list();
+			} else {
+				currentScanDate = date;
+			}
+
+			for (Finding finding : findingDateStatusMap.keySet()) {
+				List<DateStatus> findingDateInfo = findingDateStatusMap.get(finding);
+				Collections.sort(findingDateInfo);
+
+				if (date.compareTo(findingDateInfo.get(0).getDate()) < 0) {
+					continue;
+				}
+
+				if (date.compareTo(findingDateInfo.get(findingDateInfo.size() - 1).getDate()) >= 0) {
+					if (findingDateInfo.get(findingDateInfo.size() - 1).getStatus().equals("open")) {
+						if (!saxFindingList.contains(finding)) {
 							saxFindingList.add(finding);
-							isAdded = true;
-							break;
+						}
+					} else {
+						if (saxFindingList.contains(finding)) {
+							saxFindingList.remove(finding);
 						}
 					}
+					continue;
 				}
-				if (!isAdded) {
-					if (date.compareTo(dateInfo.get(dateInfo.size()-1).getDate()) >= 0
-							&& dateInfo.get(dateInfo.size()-1).getStatus().equals("open"))
+
+				if (date.compareTo(findingDateInfo.get(0).getDate()) >= 0 &&
+						date.compareTo(findingDateInfo.get(findingDateInfo.size() - 1).getDate()) < 0) {
+					if (!saxFindingList.contains(finding)) {
 						saxFindingList.add(finding);
+					}
 				}
 			}
-			
-			scanList.add(makeNewScan());
 		}
-		
+
+		scanList.add(makeNewScan());
+
 		return scanList;
 	}
 	
@@ -378,18 +398,11 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 				String testedState  = atts.getValue("state");
 				String found        = atts.getValue("found");
 
-				Calendar testedDate = getCalendarAtMidnight(tested);
-				Calendar foundDate  = getCalendarAtMidnight(found);
+				Calendar testedDate = DateUtils.getCalendarFromUTCString(tested);
+				Calendar foundDate  = DateUtils.getCalendarFromUTCString(found);
 
 				currentDateStatus = getDateStatus(testedState, testedDate);
 				initialDateStatus = getDateStatus("open", foundDate);
-
-				if (initialDateStatus.getTimeMillis() ==
-						currentDateStatus.getTimeMillis() &&
-						currentDateStatus.getDate() != null) {
-					//same day. this can mess things up.
-					currentDateStatus.getDate().add(Calendar.DAY_OF_YEAR, 1);
-				}
 
 	    		if (scanDateList != null && !scanDateList.contains(testedDate)) {
 					scanDateList.add(testedDate);
