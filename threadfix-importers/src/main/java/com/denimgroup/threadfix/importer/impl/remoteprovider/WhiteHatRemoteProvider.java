@@ -238,7 +238,7 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 					com.denimgroup.threadfix.util.DateUtils.getDaysBetween(date, currentScanDate) != 0) {
 				if (saxFindingList != null && !saxFindingList.isEmpty()) {
 					date = currentScanDate;
-					scanList.add(makeNewScan(false));
+					scanList.add(makeNewScan());
 					date = d;
 				}
 				currentScanDate = date;
