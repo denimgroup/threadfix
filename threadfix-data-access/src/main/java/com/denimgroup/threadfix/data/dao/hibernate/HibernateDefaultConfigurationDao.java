@@ -56,6 +56,13 @@ public class HibernateDefaultConfigurationDao
 	}
 
     @Override
+    @SuppressWarnings("unchecked")
+    public List<DefaultConfiguration> retrieveAll() {
+        return getSession().createQuery("from DefaultConfiguration").list();
+    }
+	
+
+    @Override
     public DefaultConfiguration loadCurrentConfiguration() {
         DefaultConfiguration configuration;
 

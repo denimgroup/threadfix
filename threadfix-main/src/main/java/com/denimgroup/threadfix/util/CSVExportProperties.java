@@ -43,20 +43,27 @@ public class CSVExportProperties {
             PROPERTY_NAME = "csvExportFields";
 
     public static final String
-            CWE_ID              = "CWE ID",
-            CWE_NAME            = "CWE Name",
-            PATH                = "Path",
-            PARAMETER           = "Parameter",
-            SEVERITY            = "Severity",
-            OPEN_DATE           = "Open Date",
-            DESCRIPTION         = "Description",
-            DEFECT_ID           = "Defect ID",
-            APPLICATION_NAME    = "Application Name",
-            TEAM_NAME           = "Team Name",
-            PAYLOAD             = "Payload",
-            ATTACK_SURFACE_PATH = "Attack Surface Path";
+            UNIQUE_ID               = "Unique ID",
+            CWE_ID                  = "CWE ID",
+            CWE_NAME                = "CWE Name",
+            PATH                    = "Path",
+            PARAMETER               = "Parameter",
+            SEVERITY                = "Severity",
+            OPEN_DATE               = "Open Date",
+            DESCRIPTION             = "Description",
+            DEFECT_ID               = "Defect ID",
+            APPLICATION_NAME        = "Application Name",
+            TEAM_NAME               = "Team Name",
+            PAYLOAD                 = "Payload",
+            ATTACK_SURFACE_PATH     = "Attack Surface Path",
+            ATTACK_STRING           = "Attack String",
+            ATTACK_REQUEST          = "Attack Request",
+            ATTACK_RESPONSE         = "AttackResponse",
+            SCANNER_DETAIL          = "Scanner Detail",
+            SCANNER_RECOMMENDATION  = "Scanner Recommendation";
 
     private static List<String> DEFAULT_HEADERS_LIST = list(
+            UNIQUE_ID,
             CWE_ID,
             CWE_NAME,
             PATH,
@@ -68,7 +75,12 @@ public class CSVExportProperties {
             APPLICATION_NAME,
             TEAM_NAME,
             PAYLOAD,
-            ATTACK_SURFACE_PATH
+            ATTACK_SURFACE_PATH,
+            ATTACK_STRING,
+            ATTACK_REQUEST,
+            ATTACK_RESPONSE,
+            SCANNER_DETAIL,
+            SCANNER_RECOMMENDATION
     );
 
     private static Set<String> VALID_HEADERS_SET = setFrom(DEFAULT_HEADERS_LIST);

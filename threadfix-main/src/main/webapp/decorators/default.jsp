@@ -18,9 +18,12 @@
 
         <cbs:cachebustscript src="/scripts/angular-file-upload-shim.min.js"/>
 
+        <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
         <cbs:cachebustscript src="/scripts/angular.min.js"/>
         <cbs:cachebustscript src="/scripts/angular-sanitize.min.js"/>
         <cbs:cachebustscript src="/scripts/ui-bootstrap-tpls-0.10.0.min.js"/>
+        <cbs:cachebustscript src="/scripts/ui-sortable.js"/>
 
         <cbs:cachebustscript src="/scripts/angular-file-upload.min.js"/>
         <cbs:cachebustscript src="/scripts/dynamic-forms.js"/>

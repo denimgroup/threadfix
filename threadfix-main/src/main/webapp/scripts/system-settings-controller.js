@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix');
 
-myAppModule.controller('SystemSettingsController', function ($scope, $window, $modal, $http, $log, $rootScope, tfEncoder) {
+myAppModule.controller('SystemSettingsController', function ($scope, $window, $modal, $http, $log, $rootScope, tfEncoder, threadFixModalService) {
 
     var prevFileUploadLocation;
 
@@ -18,6 +18,8 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
                     $scope.dashboardReports = data.object.dashboardReports;
                     $scope.applicationReports = data.object.applicationReports;
                     $scope.teamReports = data.object.teamReports;
+                    $scope.exportFieldDisplayNames = data.object.exportFieldDisplayNames;
+                    $scope.exportFields = data.object.exportFields;
 
                     prevFileUploadLocation = $scope.object.fileUploadLocation;
 
@@ -65,7 +67,7 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
             .error(function(data, status) {
                 $scope.errorMessage = "Failed to get currently used base URL. HTTP status was " + status;
             });
-    }
+    };
 
     $scope.submit = function (valid) {
         var url = tfEncoder.encode('/configuration/settings');
@@ -127,5 +129,10 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
                     $scope.error = "Failure. HTTP status was " + status;
                 });
         }
+    };
+
+    $scope.sortableOptions = {
+        placeholder: "exportField",
+        connectWith: ".export-fields-container"
     };
 });
