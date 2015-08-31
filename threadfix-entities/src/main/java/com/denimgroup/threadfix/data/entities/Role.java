@@ -447,5 +447,82 @@ public class Role extends AuditableEntity {
     public void setGroups(List<Group> groups) {
         this.groups = groups;
     }
+
+
+    public void unNullPermissions() {
+        boolean newPermissionStatus = getCanManageRoles();
+
+        if (canGenerateReports == null)
+            setCanGenerateReports(newPermissionStatus);
+
+        if (canGenerateWafRules == null)
+            setCanGenerateWafRules(newPermissionStatus);
+
+        if (canManageScanAgents == null)
+            setCanManageScanAgents(newPermissionStatus);
+
+        if (canManageApiKeys == null)
+            setCanManageApiKeys(newPermissionStatus);
+
+        if (canManageApplications == null)
+            setCanManageApplications(newPermissionStatus);
+
+        if (canManageDefectTrackers == null)
+            setCanManageDefectTrackers(newPermissionStatus);
+
+        if (canManageGrcTools == null)
+            setCanManageGrcTools(newPermissionStatus);
+
+        if (canManageRemoteProviders == null)
+            setCanManageRemoteProviders(newPermissionStatus);
+
+        if (canManageRoles == null)
+            setCanManageRoles(newPermissionStatus);
+
+        if (canManageTeams == null)
+            setCanManageTeams(newPermissionStatus);
+
+        if (canManageUsers == null)
+            setCanManageUsers(newPermissionStatus);
+
+        if (canManageSystemSettings == null)
+            setCanManageSystemSettings(newPermissionStatus);
+
+        if (canManageWafs == null)
+            setCanManageWafs(newPermissionStatus);
+
+        if (canModifyVulnerabilities == null)
+            setCanModifyVulnerabilities(newPermissionStatus);
+
+        if (canManageVulnFilters == null)
+            setCanManageVulnFilters(newPermissionStatus);
+
+        if (canSubmitDefects == null)
+            setCanSubmitDefects(newPermissionStatus);
+
+        if (canUploadScans == null)
+            setCanUploadScans(newPermissionStatus);
+
+        if (canViewErrorLogs == null)
+            setCanViewErrorLogs(newPermissionStatus);
+
+        if (canManageTags == null)
+            setCanManageTags(newPermissionStatus);
+
+        if (canSubmitComments == null)
+            setCanSubmitComments(newPermissionStatus);
+
+        if (canManageScanResultFilters == null)
+            setCanManageScanResultFilters(newPermissionStatus); {
+        }
+
+        if (canManageCustomCweText == null)
+            setCanManageCustomCweText(newPermissionStatus); {
+        }
+
+        if (canManageEmailReports == null)
+            setCanManageEmailReports(newPermissionStatus); {
+        }
+    }
 }
 

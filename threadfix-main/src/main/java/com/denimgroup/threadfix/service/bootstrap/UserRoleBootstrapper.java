@@ -67,7 +67,7 @@ public class UserRoleBootstrapper {
         admin.setCanManageTeams(true);
         admin.setCanManageUsers(true);
         admin.setCanManageWafs(true);
-        admin.setCanManageVulnFilters(true);
+//        admin.setCanManageVulnFilters(true);
         admin.setCanModifyVulnerabilities(true);
         admin.setCanSubmitDefects(true);
         admin.setCanUploadScans(true);
