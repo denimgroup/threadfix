@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.data.entities.CSVExportField;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Report;
 
@@ -45,5 +46,9 @@ public interface DefaultConfigService {
     boolean reportDuplicateExists(List<Report> reports);
 
     boolean isReportCacheDirty();
+
+    List<CSVExportField> getUnassignedExportFields(List<CSVExportField> exportFields);
+
+    List<String> getDisplayNamesFromExportFields(List<CSVExportField> exportFields);
 
 }
