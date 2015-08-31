@@ -76,6 +76,16 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
     }
 
     @Override
+    public List<Event> loadAllByAcceptanceCriteria(AcceptanceCriteria acceptanceCriteria) {
+        return eventDao.retrieveAllByAcceptanceCriteria(acceptanceCriteria);
+    }
+
+    @Override
+    public List<Event> loadAllByAcceptanceCriteriaStatus(AcceptanceCriteriaStatus acceptanceCriteriaStatus) {
+        return eventDao.retrieveAllByAcceptanceCriteriaStatus(acceptanceCriteriaStatus);
+    }
+
+    @Override
     public String buildUploadScanString(Scan scan) {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM d, yyyy h:mm:ss a");
 

@@ -203,11 +203,16 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 
         scanDao.saveOrUpdate(scan);
 
+		scan.getApplicationChannel().getApplication().getScans().add(scan);
+
 		// set auth parameters
 		permissionsHandler.setPermissions(scan, scan.getApplicationChannel().getApplication().getId());
 
 		// set numbers correctly
         updateScanCounts(scan);
+		vulnerabilityFilterService.updateVulnerabilities(
+				scan.getApplicationChannel().getApplication().getOrganization().getId(),
+				scan.getApplicationChannel().getApplication().getId());
 	
 		return scan;
 	}

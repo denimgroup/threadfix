@@ -158,7 +158,7 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
             }
 
         } catch (IOException e1) {
-            LOG.error("Encountered IOException while making request to Veracode.", e1);
+            LOG.error("Encountered IOException while making request to remote provider.", e1);
         }
 
         LOG.warn("There was an error and the POST request was not finished.");

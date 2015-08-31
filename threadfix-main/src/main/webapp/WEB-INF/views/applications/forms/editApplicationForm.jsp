@@ -108,11 +108,11 @@
                 <tr id="appACDiv" ng-show="config.isEnterprise">
                     <td>Acceptance Criteria</td>
                     <td>
-                        <button ng-show="config.acceptanceCriterias" class="btn"
+                        <button ng-show="config.acceptanceCriteriaExist" class="btn"
                                 ng-click="switchTo('manageAcceptanceCriteria')" id="manageAcceptanceCriteriaButton">
                             Manage Acceptance Criteria
                         </button>
-                        <a ng-hide="config.acceptanceCriterias" class="btn btn-primary"
+                        <a ng-hide="config.acceptanceCriteriaExist" class="btn btn-primary"
                                 ng-click="goToAcceptanceCriteriaPage()" id="goToAcceptanceCriteriaButton">
                             Create Acceptance Criteria
                         </a>
