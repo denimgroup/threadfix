@@ -234,9 +234,11 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 					date = currentScanDate;
 					scanList.add(makeNewScan());
 					date = d;
-				} else {
-					currentScanDate = date;
 				}
+				currentScanDate = date;
+				saxFindingList = list();
+			} else {
+				currentScanDate = date;
 			}
 
 			for (Finding finding : findingDateStatusMap.keySet()) {
