@@ -27,40 +27,32 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ApiKeysIndexPage extends BasePage {
-	private List<WebElement> notes = new ArrayList<>();
-	private WebElement createNewKeyLink;
+	private WebElement createNewKeyLink = driver.findElementById("createNewKeyModalButton");
 
+    public ApiKeysIndexPage(WebDriver webdriver) { super(webdriver); }
 
     //===========================================================================================================
     // Action Methods
     //===========================================================================================================
 
-	public ApiKeysIndexPage(WebDriver webdriver) {
-		super(webdriver);
-		createNewKeyLink = driver.findElementById("createNewKeyModalButton");
-	}
-
-	public ApiKeysIndexPage clickEdit(String note) {
+	public ApiKeysIndexPage clickEditDeleteButton(String note) {
 		driver.findElementById("editKeyModal" + note).click();
 		return new ApiKeysIndexPage(driver);
 	}
 
-	public ApiKeysIndexPage clickNewLink() {
+	public ApiKeysIndexPage clickCreateNewKeyLink() {
 		createNewKeyLink.click();
 		waitForElement(By.id("submit"));
 		return new ApiKeysIndexPage(driver);
 	}
 
-	public ApiKeysIndexPage clickDelete(String note) {
-		clickEdit(note);
+	public ApiKeysIndexPage deleteApiKey(String note) {
+		clickEditDeleteButton(note);
 		driver.findElementById("deleteButton").click();
 		handleAlert();
-		sleep(1000);
-
 		return new ApiKeysIndexPage(driver);
 	}
 
@@ -68,11 +60,13 @@ public class ApiKeysIndexPage extends BasePage {
         return clickModalSubmit();
     }
 
-    public ApiKeysIndexPage clickInvalidSubmitButton() {
-        driver.findElementById("submit").click();
-        sleep(1000);
-        return new ApiKeysIndexPage(driver);
+    public ApiKeysIndexPage clickSubmitButtonInvalid() {
+        return clickModalSubmitInvalid();
     }
+
+    //===========================================================================================================
+    // Set Methods
+    //===========================================================================================================
 
     public ApiKeysIndexPage setNote(String newNote){
         driver.findElementById("modalNote").clear();
@@ -86,43 +80,48 @@ public class ApiKeysIndexPage extends BasePage {
     }
 
     //===========================================================================================================
-    // Boolean Methods
-    //===========================================================================================================
-
-	public boolean isCreationSuccessAlertPresent(){
-		return driver.findElementByClassName("alert-success").getText().contains("Successfully created key");
-	}
-	
-	public boolean isEditSuccessAlertPresent(){
-		return driver.findElementByClassName("alert-success").getText().contains("Successfully edited key");
-	}
-	
-	public boolean isDeleteSuccessAlertPresent(){
-		return driver.findElementByClassName("alert-success").getText().contains("API key was successfully deleted.");
-	}
-
-    public boolean isAPINotePresent(String note) {
-        List<WebElement> elements  = driver.findElementsById("note" + note);
-        return elements != null && elements.size() > 0;
-    }
-	
-	public boolean isAPIRestricted(String note){
-		return driver.findElementById("restricted" + note).getText().trim().contains("true");
-	}
-	
-	public boolean isCorrectLength(String note){
-		return driver.findElementById("note" + note).getText().trim().length()<=255;
-	}
-
-    //===========================================================================================================
     // Get Methods
     //===========================================================================================================
 
     public String getNoteError() {
         return driver.findElementById("lengthLimitError").getText();
     }
-	
-	public int getTableWidth(){
-		return driver.findElementById("table").getSize().width;
+
+    public int getTableWidth() {
+        return driver.findElementById("table").getSize().width;
+    }
+
+    //===========================================================================================================
+    // Boolean Methods
+    //===========================================================================================================
+
+    public boolean isCreationSuccessAlertPresent(){
+		return isSuccessAlertPresent("Successfully created key");
 	}
+	
+	public boolean isEditSuccessAlertPresent(){
+		return isSuccessAlertPresent("Successfully edited key");
+	}
+	
+	public boolean isDeleteSuccessAlertPresent(){
+		return isSuccessAlertPresent("API key was successfully deleted.");
+	}
+
+    public boolean isApiKeyNotePresent(String note) {
+        List<WebElement> elements  = driver.findElementsById("note" + note);
+        return elements != null && elements.size() > 0;
+    }
+	
+	public boolean isApiKeyRestricted(String note){
+		return driver.findElementById("restricted" + note).getText().trim().contains("true");
+	}
+
+    //===========================================================================================================
+    // Helper Methods
+    //===========================================================================================================
+
+    private boolean isSuccessAlertPresent(String message) {
+        return driver.findElementByClassName("alert-success").getText().contains(message);
+    }
+
 }

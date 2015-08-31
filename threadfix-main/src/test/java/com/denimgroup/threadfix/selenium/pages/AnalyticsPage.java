@@ -41,10 +41,10 @@ public class AnalyticsPage extends BasePage {
     public AnalyticsPage clickTrendingTab(Boolean usingD3) {
         driver.findElementByLinkText("Trending").click();
         waitForElement(By.id("trendingFilterDiv"));
-        if(usingD3){
-            sleep(2500);
-        }
-        sleep(2500);
+//        if(usingD3){
+//            sleep(2500);
+//        }
+//        sleep(2500);
         return new AnalyticsPage(driver);
     }
 

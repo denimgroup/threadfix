@@ -33,7 +33,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
-public class APIKeysIT extends BaseIT {
+public class ApiKeysIT extends BaseIT {
 	
     private ApiKeysIndexPage apiIndexPage;
 	
@@ -47,54 +47,59 @@ public class APIKeysIT extends BaseIT {
 
 	@Test
 	public void testNavigateToPage() {
-		assertTrue("API Keys Page not found", apiIndexPage.getH2Tag().contains("API Keys"));
+		assertTrue("API Keys page not found", apiIndexPage.getH2Tag().contains("API Keys"));
 	}
 
 	@Test
 	public void testCreateApiKey() {
-        apiIndexPage = apiIndexPage.clickNewLink()
-                .setNote("createAPIKey")
+        final String NOTE = "createApiKey";
+
+        apiIndexPage = apiIndexPage.clickCreateNewKeyLink()
+                .setNote(NOTE)
                 .setRestricted()
                 .clickSubmitButton();
 
-		assertTrue("Api note was not present.", apiIndexPage.isAPINotePresent("createAPIKey"));
-		assertTrue("Api was not marked restricted as it should have been.",apiIndexPage.isAPIRestricted("createAPIKey"));
-		assertTrue("Creation validation message not present.", apiIndexPage.isCreationSuccessAlertPresent());
+		assertTrue("API key note was not present.", apiIndexPage.isApiKeyNotePresent(NOTE));
+		assertTrue("API key was not marked restricted.", apiIndexPage.isApiKeyRestricted(NOTE));
+		assertTrue("Creation success message was not present.", apiIndexPage.isCreationSuccessAlertPresent());
 	}
 
 	@Test
 	public void testEditKey() {
-		apiIndexPage = apiIndexPage.clickNewLink()
-                .setNote("editAPIKeyNote")
+        final String NOTE = getName();
+        final String EDITED_NOTE = getName();
+
+		apiIndexPage = apiIndexPage.clickCreateNewKeyLink()
+                .setNote(NOTE)
                 .clickSubmitButton();
 
-        apiIndexPage =	apiIndexPage.clickEdit("editAPIKeyNote")
-                .setNote("editAPIKeyNote-Edited")
+        apiIndexPage =	apiIndexPage.clickEditDeleteButton(NOTE)
+                .setNote(EDITED_NOTE)
                 .clickSubmitButton();
 
-		assertTrue("API note was not edited properly.", apiIndexPage.isAPINotePresent("editAPIKeyNote-Edited"));
-		assertFalse("Previous API note still present.", apiIndexPage.isAPINotePresent("editAPIKeyNote"));
-		assertTrue("Edit validation message not present.", apiIndexPage.isEditSuccessAlertPresent());
+		assertTrue("API note was not edited properly.", apiIndexPage.isApiKeyNotePresent(EDITED_NOTE));
+		assertFalse("Previous API note is still present.", apiIndexPage.isApiKeyNotePresent(NOTE));
+		assertTrue("Edit API key success message is not present.", apiIndexPage.isEditSuccessAlertPresent());
 
         apiIndexPage.refreshPage();
-        assertTrue("API note was not edited properly.", apiIndexPage.isAPINotePresent("editAPIKeyNote-Edited"));
-        assertFalse("Previous API note still present.", apiIndexPage.isAPINotePresent("editAPIKeyNote"));
+        assertTrue("API note was not edited properly.", apiIndexPage.isApiKeyNotePresent(EDITED_NOTE));
+        assertFalse("Previous API key note is still present.", apiIndexPage.isApiKeyNotePresent(NOTE));
 	}
 
 	@Test
 	public void testMarkKeyRestricted() {
         String note = getName();
         //Create API Key
-        apiIndexPage = apiIndexPage.clickNewLink()
+        apiIndexPage = apiIndexPage.clickCreateNewKeyLink()
                 .setNote(note)
                 .clickSubmitButton();
 
         //Mark the API restricted
-		apiIndexPage =	apiIndexPage.clickEdit(note)
+		apiIndexPage =	apiIndexPage.clickEditDeleteButton(note)
                 .setRestricted()
                 .clickSubmitButton();
 
-		assertTrue("Api was not marked restricted.", apiIndexPage.isAPIRestricted(note));
+		assertTrue("Api was not marked restricted.", apiIndexPage.isApiKeyRestricted(note));
 	}
 
 	@Test
@@ -102,19 +107,19 @@ public class APIKeysIT extends BaseIT {
         String apiKeyNote = getRandomString(10);
 
         //Create API Key
-		apiIndexPage = apiIndexPage.clickNewLink()
+		apiIndexPage = apiIndexPage.clickCreateNewKeyLink()
                 .setNote(apiKeyNote)
                 .clickSubmitButton();
 
-        apiIndexPage = apiIndexPage.clickDelete(apiKeyNote);
+        apiIndexPage = apiIndexPage.deleteApiKey(apiKeyNote);
 
 		assertTrue("Validation Message not present.",apiIndexPage.isDeleteSuccessAlertPresent());
-        assertFalse("API Key was not deleted properly.", apiIndexPage.isAPINotePresent(apiKeyNote));
+        assertFalse("API Key was not deleted properly.", apiIndexPage.isApiKeyNotePresent(apiKeyNote));
 
         apiIndexPage.refreshPage();
 
         assertFalse("Deleted API key was still present after refresh.",
-                apiIndexPage.isAPINotePresent(apiKeyNote));
+                apiIndexPage.isApiKeyNotePresent(apiKeyNote));
 	}
 
 	@Test
@@ -125,16 +130,16 @@ public class APIKeysIT extends BaseIT {
 		int width, newWidth;
 
         //Create API Key with a short note
-		apiIndexPage = apiIndexPage.clickNewLink()
+		apiIndexPage = apiIndexPage.clickCreateNewKeyLink()
                 .setNote(shortNote)
 				.clickSubmitButton();
 
 		width = apiIndexPage.getTableWidth();
 
         //Create API Key with a really long note
-		apiIndexPage = apiIndexPage.clickNewLink()
+		apiIndexPage = apiIndexPage.clickCreateNewKeyLink()
 				   .setNote(longNoteA)
-				   .clickInvalidSubmitButton();
+				   .clickSubmitButtonInvalid();
 
         assertTrue("Character limit error message should have shown.",
                 apiIndexPage.getNoteError().equals("Over 255 characters limit!"));
@@ -147,7 +152,7 @@ public class APIKeysIT extends BaseIT {
 		assertTrue("Width of table is incorrect after creating an API Key with a long note", width == newWidth);
 
         //Edit API Key with short note to have long note
-        apiIndexPage = apiIndexPage.clickEdit(shortNote)
+        apiIndexPage = apiIndexPage.clickEditDeleteButton(shortNote)
                 .setNote(longNoteB)
                 .clickSubmitButton();
 
