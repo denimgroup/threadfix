@@ -1,4 +1,4 @@
-10/16/2014 09:00:00
+9/1/2015 09:00:00
 type.info,,,
 Clang,http://clang-analyzer.llvm.org/,checker-276,NOTE HERE ON FILE INPUT TYPE
 type.vulnerabilities,,,
@@ -102,6 +102,7 @@ Unix API:Improper arguments,Unix API:Improper arguments,628
 Unix API:Improper use of 'open',Unix API:Improper use of 'open',227
 Unix API:Improper use of 'pthread_once',Unix API:Improper use of 'pthread_once',227
 Unix API:malloc() size overflow,Unix API:malloc() size overflow,131
+Unix API:Undefined allocation of 0 bytes (CERT MEM04-C; CWE-131),Unix API:Undefined allocation of 0 bytes (CERT MEM04-C; CWE-131),131
 Unix API:Null pointer argument in call to byte string function,Unix API:Null pointer argument in call to byte string function,119
 Unix Stream API Error:Double fclose,Unix Stream API Error:Double fclose,672
 Unix Stream API Error:Resource Leak,Unix Stream API Error:Resource Leak,775
