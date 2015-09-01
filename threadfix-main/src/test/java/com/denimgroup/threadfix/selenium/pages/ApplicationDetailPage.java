@@ -946,8 +946,8 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public String getApplicationId() {
-        String hrefText = driver.findElementById("editVulnerabilityFiltersButton").getAttribute("href");
-        return hrefText.substring(hrefText.indexOf("applications/") + 13, hrefText.indexOf("/filters"));
+        String hrefText = driver.getCurrentUrl();
+        return hrefText.substring(hrefText.indexOf("applications/") + 13, hrefText.indexOf("?"));
     }
 
     public String getScheduledScanScanner() {
