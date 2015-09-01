@@ -87,7 +87,8 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
                     return {
                         channelVulnerabilityCode: finding.channelVulnerability.name,
                         channelVulnerabilityId: finding.channelVulnerability.id,
-                        channelName : finding.scannerName
+                        channelName : finding.scannerName,
+                        findingId: finding.id
                     };
                 },
                 config: function() {
