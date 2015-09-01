@@ -60,5 +60,6 @@ public final class ScannerDatabaseNames {
             CLANG_DB_NAME = "Clang",
             CPPCHECK_DB_NAME = "Cppcheck",
             CONTRAST_DB_NAME = "Contrast",
-            SONATYPE_DB_NAME = "Manual";
+            SONATYPE_DB_NAME = "Manual",
+            SCARF_DB_NAME = "SWAMP SCARF";
 }
