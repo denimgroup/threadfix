@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.data.entities;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.annotations.Index;
 
 import javax.persistence.*;
@@ -213,6 +214,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
     }
 
 	@CollectionTable(name="ScanFileNames", joinColumns=@JoinColumn(name="scanId"))
+	@CollectionOfElements // for sonar
 	@ElementCollection
 	@JsonView({AllViews.FormInfo.class, AllViews.RestView2_1.class, AllViews.RestViewScanStatistic.class})
     public List<String> getOriginalFileNames() {

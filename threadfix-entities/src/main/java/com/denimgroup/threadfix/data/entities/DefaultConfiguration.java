@@ -27,6 +27,7 @@ package com.denimgroup.threadfix.data.entities;
 import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.hibernate.annotations.CollectionOfElements;
 
 import javax.persistence.*;
 import java.io.File;
@@ -644,6 +645,7 @@ public class DefaultConfiguration extends BaseEntity {
         this.shouldProxyContrast = shouldProxyContrast;
     }
 
+    @CollectionOfElements // for sonar
     @ElementCollection(fetch = FetchType.EAGER, targetClass = CSVExportField.class)
     @CollectionTable(name = "DefaultConfigCSVExportField", joinColumns = @JoinColumn(name = "DefaultConfigId"))
     @Column(name = "csvExportField", length = 32)
