@@ -28,8 +28,11 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-public class LdapAuthenticator implements AuthenticationProvider {
+@Service
+public class LdapAuthenticator implements AuthenticationProvider, LdapAuthenticatorService {
 
     protected final SanitizedLogger log = new SanitizedLogger(LdapService.class);
 
@@ -40,6 +43,7 @@ public class LdapAuthenticator implements AuthenticationProvider {
     }
 
     @Override
+    @Transactional
     public Authentication authenticate(Authentication authentication) {
         try {
             log.debug("Attempting to authenticate with LDAP authenticator.");
