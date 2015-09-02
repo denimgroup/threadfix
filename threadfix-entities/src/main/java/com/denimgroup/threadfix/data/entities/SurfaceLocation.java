@@ -183,7 +183,11 @@ public class SurfaceLocation extends BaseEntity {
                     tempHost = (tempHost != null && !tempHost.isEmpty()) ? tempHost : host;
 					url = new URL(host.contains("https") ? "https" : "http", tempHost, tempPort, path);
 				} else if (path != null) {
-					url = new URL("http", "localhost", tempPort, path);
+					if (path.contains("http")) {
+						url = new URL(path);
+					} else {
+						url = new URL("http", "localhost", tempPort, path);
+					}
 				} else {
 					return null;
 				}
