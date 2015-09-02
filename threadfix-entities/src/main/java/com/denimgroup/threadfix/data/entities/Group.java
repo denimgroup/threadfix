@@ -48,6 +48,7 @@ public class Group extends AuditableEntity implements Iterable<User> {
     private List<AccessControlTeamMap> accessControlTeamMaps;
     private Role globalRole;
     private Boolean hasGlobalAccess = true;
+    private Boolean ldapGroup = false;
     private String name;
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -102,6 +103,16 @@ public class Group extends AuditableEntity implements Iterable<User> {
 
     public void setHasGlobalAccess(Boolean hasGlobalAccess) {
         this.hasGlobalAccess = hasGlobalAccess;
+    }
+
+    @Column
+    @JsonView(AllViews.TableRow.class)
+    public Boolean isLdapGroup() {
+        return ldapGroup;
+    }
+
+    public void setLdapGroup(Boolean ldapGroup) {
+        this.ldapGroup = ldapGroup;
     }
 
     @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})

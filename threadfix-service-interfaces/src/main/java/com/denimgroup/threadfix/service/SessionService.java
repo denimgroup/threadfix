@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.service;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import org.springframework.ldap.core.DirContextOperations;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -44,6 +45,10 @@ public interface SessionService {
     void reloadSession(Iterable<User> users);
 
     void invalidateSessions(User user);
+
+
+    UserDetails mapUserFromContext(DirContextOperations arg0,
+                                   String userName, Collection<? extends GrantedAuthority> arg2, LdapTemplate ldapTemplate);
 
 
     UserDetails mapUserFromContext(DirContextOperations arg0,
