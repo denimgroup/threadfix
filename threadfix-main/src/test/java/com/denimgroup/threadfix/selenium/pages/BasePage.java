@@ -289,16 +289,12 @@ public abstract class BasePage {
     //===========================================================================================================
 
 	public boolean isElementPresent(String elementId) {
-		try {
-			return driver.findElementById(elementId) != null;
-		} catch (NoSuchElementException e) {
-			return false;
-		}
+		return isElementPresent(By.id(elementId));
 	}
 
-    public boolean isElementPresentByXpath(String xpath) {
+    public boolean isElementPresent(By by) {
         try {
-            return driver.findElementByXPath(xpath) != null;
+            return driver.findElement(by) != null;
         } catch (NoSuchElementException e) {
             return false;
         }

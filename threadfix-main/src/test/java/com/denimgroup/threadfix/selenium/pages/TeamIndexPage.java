@@ -416,12 +416,7 @@ public class TeamIndexPage extends BasePage {
     }
 
     public boolean isSourceFolderInvalidErrorPresent() {
-        try {
-            driver.findElementById("sourceFolderOtherError");
-        } catch (NoSuchElementException e) {
-            return false;
-        }
-        return true;
+        return isElementPresent(By.cssSelector("#sourceFolderOtherError:not(.ng-hide)"));
     }
 
     //===========================================================================================================
