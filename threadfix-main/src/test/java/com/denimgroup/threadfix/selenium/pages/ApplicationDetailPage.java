@@ -853,7 +853,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage setDefectTrackerType(String type) {
-        driver.findElementById("defectTrackerTypeSelect").sendKeys(type);
+        new Select(driver.findElementById("defectTrackerTypeSelect")).selectByVisibleText(type);
         return this;
     }
 
