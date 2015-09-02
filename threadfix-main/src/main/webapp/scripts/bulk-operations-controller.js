@@ -10,7 +10,7 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
 
     var getTeam = function(){
         return ($parent.treeApplication) ? $parent.treeApplication.team : $parent.treeTeam;
-    }
+    };
 
     var getAppUrlBase = function () {
         return "/organizations/" + getTeam().id + "/applications/" + getApplication().id;
