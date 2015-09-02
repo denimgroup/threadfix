@@ -621,16 +621,7 @@ public abstract class BasePage {
 
     public void checkForAlert() {
         try {
-            WebDriverWait wait = new WebDriverWait(driver, 10);
-            wait.until(ExpectedConditions.alertIsPresent());
-        } catch (TimeoutException e) {
-            throw new RuntimeException("Alert was not displayed as it should have been.", e);
-        }
-    }
-
-    public void checkForAlert(int timeInSeconds) {
-        try {
-            WebDriverWait wait = new WebDriverWait(driver, timeInSeconds);
+            WebDriverWait wait = new WebDriverWait(driver, 120);
             wait.until(ExpectedConditions.alertIsPresent());
         } catch (TimeoutException e) {
             throw new RuntimeException("Alert was not displayed as it should have been.", e);
