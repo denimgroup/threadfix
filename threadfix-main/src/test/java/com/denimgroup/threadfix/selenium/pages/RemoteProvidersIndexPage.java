@@ -185,7 +185,7 @@ public class RemoteProvidersIndexPage extends BasePage {
     }
 
 	public String getErrorMessage(){
-        waitForElementPresence("errorSpan", 60);
+        waitForElement(By.xpath("//span[@id='errorSpan' and string-length(text()) > 0]"));
 		return driver.findElementById("errorSpan").getText();
 	}
 	

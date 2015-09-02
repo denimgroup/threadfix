@@ -474,7 +474,7 @@ public class RemoteProvidersIT extends BaseDataTest {
         assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel"));
 
         remoteProvidersIndexPage.clickImportScan(WHITEHAT, 1)
-                .checkForAlert();
+                .checkForAlert(20);
 
         assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
         driver.switchTo().alert().dismiss();
@@ -530,7 +530,7 @@ public class RemoteProvidersIT extends BaseDataTest {
         remoteProvidersIndexPage.mapProviderToTeamAndApp(WHITEHAT, 1, teamName, appName);
 
         ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickImportScan(WHITEHAT, 1);
-        applicationDetailPage.checkForAlert();
+        applicationDetailPage.checkForAlert(20);
 
         assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
         driver.switchTo().alert().accept();
@@ -631,7 +631,7 @@ public class RemoteProvidersIT extends BaseDataTest {
         assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel"));
 
         remoteProvidersIndexPage.clickImportScan(WHITEHAT, 1)
-                .checkForAlert();
+                .checkForAlert(20);
 
         assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
         driver.switchTo().alert().dismiss();
@@ -640,10 +640,10 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         sleep(10000);
 
-        assertTrue("Number of Open Vulnerabilities is not correct", teamDetailPage.isNumberOfOpenVulnerabilityCorrect("53", 0));
+        assertTrue("Number of Open Vulnerabilities is not correct", teamDetailPage.isNumberOfOpenVulnerabilityCorrect("50", 0));
         assertTrue("Number of Critical Vulnerability is not correct", teamDetailPage.isNumberOfCriticalCorrect("10", 0));
         assertTrue("Number of High Vulnerability is not correct", teamDetailPage.isNumberOfHighCorrect("11", 0));
-        assertTrue("Number of Medium Vulnerability is not correct", teamDetailPage.isNumberOfMediumCorrect("30", 0));
+        assertTrue("Number of Medium Vulnerability is not correct", teamDetailPage.isNumberOfMediumCorrect("27", 0));
         assertTrue("Number of Low Vulnerability is not correct", teamDetailPage.isNumberOfLowCorrect("1", 0));
         assertTrue("Number of Info Vulnerability is not correct", teamDetailPage.isNumberOfInfoCorrect("1", 0));
 
