@@ -7,6 +7,7 @@
             <groupId>org.codehaus.sonar</groupId>
             <artifactId>sonar-plugin-api</artifactId>
             <version>5.1</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.denimgroup.threadfix</groupId>
@@ -94,6 +95,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
             <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${springsecurity.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

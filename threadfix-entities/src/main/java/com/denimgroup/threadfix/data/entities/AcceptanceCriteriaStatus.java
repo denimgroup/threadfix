@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.hibernate.annotations.CollectionOfElements;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -55,6 +56,7 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
     private Boolean sendEmail = false;
     private transient boolean statusChanged = false;
 
+    @CollectionOfElements // for sonar
     @ElementCollection
     @Column(name = "emailAddress", length = 128)
     @CollectionTable(name = "AcceptanceCriteriaStatusEmailAddress", joinColumns = @JoinColumn(name = "AcceptanceCriteriaStatusId"))
