@@ -85,7 +85,7 @@ public class TeamRestController extends TFRestController {
 
         Organization org = organizationService.loadById(teamId);
 
-        if (org == null) {
+        if (org == null || !org.isActive()) {
             log.warn("Team lookup failed for ID " + teamId + ".");
             return RestResponse.failure(LOOKUP_FAILED);
         } else {
