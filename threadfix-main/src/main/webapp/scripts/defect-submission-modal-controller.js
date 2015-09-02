@@ -32,7 +32,7 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
 
                 // Only Bugzilla is not yet implemented Dynamic form
                 if ($scope.config.typeName === 'HP Quality Center'
-                    || $scope.config.typeName === 'Jira'
+                    || $scope.config.typeName === 'JIRA'
                     || $scope.config.typeName === 'Version One'
                     || $scope.config.typeName === 'Microsoft TFS')
                     $scope.isDynamicForm = true;
@@ -334,7 +334,7 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
             if (!$scope.fieldsMap[field.name] && field.required)
                 $scope.fieldsMap[field.name] = key;
 
-        };
+        }
         return options;
     };
 
