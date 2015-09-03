@@ -90,7 +90,7 @@ public class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	    		saxFindingList.add(finding);
     		}
 	    }
-		d
+		
 		// this md5 algorithm is the same as mysql's, so people can update their databases
 		//
 		public String md5(String input) {
