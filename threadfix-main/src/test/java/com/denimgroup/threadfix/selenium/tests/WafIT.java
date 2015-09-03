@@ -423,6 +423,7 @@ public class WafIT extends BaseDataTest {
     public void testUploadLogFile() {
         initializeTeamAndAppWithIbmScan();
         String wafName = getName();
+        String wafType = "Snort";
         String logFile = ScanContents.SCAN_FILE_MAP.get("Snort Log");
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
@@ -435,10 +436,12 @@ public class WafIT extends BaseDataTest {
         if (applicationDetailPage.isWafPresent()) {
             applicationDetailPage.clickCreateNewWaf()
                     .setWafName(wafName)
+                    .setWafType(wafType)
                     .clickCreateWafButton()
                     .clickModalSubmit();
         } else {
             applicationDetailPage.setWafName(wafName)
+                    .setWafType(wafType)
                     .clickCreateWafButton()
                     .clickModalSubmit();
         }
@@ -488,6 +491,7 @@ public class WafIT extends BaseDataTest {
     public void testCheckWafLogFileLink() {
         initializeTeamAndAppWithIbmScan();
         String wafName = getName();
+        String wafType = "Snort";
         String logFile = ScanContents.SCAN_FILE_MAP.get("Snort Log");
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
@@ -500,6 +504,7 @@ public class WafIT extends BaseDataTest {
         if (applicationDetailPage.isWafPresent()) {
             applicationDetailPage.clickCreateNewWaf()
                     .setWafName(wafName)
+                    .setWafType(wafType)
                     .clickCreateWafButton()
                     .clickModalSubmit();
         } else {
