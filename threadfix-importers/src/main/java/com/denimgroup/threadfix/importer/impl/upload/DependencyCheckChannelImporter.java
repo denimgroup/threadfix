@@ -38,6 +38,9 @@ import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
 import java.util.Calendar;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.enumMap;
@@ -84,10 +87,31 @@ public class DependencyCheckChannelImporter extends AbstractChannelImporter {
 					    
 	    public void add(Finding finding) {
 			if (finding != null) {
-    			finding.setNativeId(finding.getDependency().getCve() + finding.getDependency().getComponentName());
+				finding.setNativeId(md5(finding.getDependency().getCve() + finding.getDependency().getComponentName()));
 	    		saxFindingList.add(finding);
     		}
 	    }
+
+		// this md5 algorithm is the same as mysql's, so people can update their databases
+		//
+		public String md5(String input) {
+			String result = input;
+			if (input != null) {
+				MessageDigest md;
+				try {
+					md = MessageDigest.getInstance("MD5");
+				} catch (NoSuchAlgorithmException e) {
+					throw new IllegalStateException("Can't find MD5 algorithm.", e);
+				}
+				md.update(input.getBytes());
+				BigInteger hash = new BigInteger(1, md.digest());
+				result = hash.toString(16);
+				while (result.length() < 32) {
+					result = "0" + result;
+				}
+			}
+			return result;
+		}
 
 	    ////////////////////////////////////////////////////////////////////
 	    // Event handlers.
