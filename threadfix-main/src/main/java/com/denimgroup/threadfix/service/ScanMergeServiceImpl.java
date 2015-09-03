@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
@@ -34,12 +35,16 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.merge.FindingMatcher;
 import com.denimgroup.threadfix.service.merge.PermissionsHandler;
 import com.denimgroup.threadfix.service.merge.ScanMerger;
+import edu.emory.mathcs.backport.java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.security.auth.login.AppConfigurationEntry;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 // TODO figure out this Transactional stuff
@@ -87,7 +92,6 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			return null;
 		}
 
-		updateScanCounts(scan);
 		Integer id = scan.getApplication().getId();
 		defectService.updateScannerSuppliedStatuses(id);
 		vulnerabilityFilterService.updateVulnerabilities(scan);
@@ -109,10 +113,6 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 						continue;
 					}
 					String newPath = "";
-//					StaticFindingPathUtils.getFindingPathWithRoot(finding,
-//							application.getProjectRoot());
-//					if (newPath == null)
-//						continue;
 					if (finding.getSurfaceLocation() != null) {
 						finding.getSurfaceLocation().setPath(newPath);
 					}
@@ -182,7 +182,6 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		
 		scanDao.saveOrUpdate(scan);
 		
-		updateScanCounts(scan);
 		vulnerabilityFilterService.updateVulnerabilities(scan);
 
 		return true;
@@ -209,7 +208,6 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		permissionsHandler.setPermissions(scan, scan.getApplicationChannel().getApplication().getId());
 
 		// set numbers correctly
-        updateScanCounts(scan);
 		vulnerabilityFilterService.updateVulnerabilities(
 				scan.getApplicationChannel().getApplication().getOrganization().getId(),
 				scan.getApplicationChannel().getApplication().getId());
@@ -217,85 +215,44 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		return scan;
 	}
 
-	private Scan processScanFiles(Integer channelId, List<String> fileNames, List<String> originalFileNames, Integer statusId) {
-		if (channelId == null || fileNames == null || fileNames.isEmpty()) {
-			log.error("processScanFile() received null input and was unable to finish.");
+	@Override
+	public List<Scan> saveRemoteScansAndRun(List<Integer> channelIds, List<String> fileNames, List<String> originalNames) {
+
+		List<Scan> scans = CollectionUtils.list();
+		if (channelIds.size() != fileNames.size() || channelIds.size() != originalNames.size()) {
 			return null;
 		}
 
-        Scan combinedScan = new Scan();
-        ApplicationChannel applicationChannel = applicationChannelDao.retrieveById(channelId);
+		for (int i = 0; i < channelIds.size() ; i++) {
+			Scan scan = parseScan(channelIds.get(i), new ArrayList(Arrays.asList(new String[]{fileNames.get(i)})), new ArrayList(Arrays.asList(new String[]{originalNames.get(i)})), null);
+			if (scan == null)
+				return null;
+			scans.add(scan);
+		}
+		Collections.sort(scans, Scan.getTimeComparator());
 
-        Calendar importTime = null;
+		if (channelIds.size() != scans.size())
+			return null;
 
-        for(int i = 0; i < fileNames.size(); i++){
-            String fileName = fileNames.get(i);
+		for (int i=0; i<channelIds.size(); i++) {
+			Scan scan = mergeScan(channelIds.get(i), scans.get(i), null);
+			if (scan == null)
+				return null;
+		}
 
-            File file = DiskUtils.getScratchFile(fileName);
+		for (Integer channelId: channelIds) {
+			updateReportInfo(channelId);
+		}
 
-            if (applicationChannel == null
-                    || applicationChannel.getChannelType() == null
-                    || !file.exists()) {
-                log.warn("Invalid Application Channel, unable to find a ChannelImporter implementation.");
-                return null;
-            }
+		return scans;
+	}
 
-            // pick the appropriate parser
-            ChannelImporter importer = channelImporterFactory.getChannelImporter(applicationChannel);
+	private Scan processScanFiles(Integer channelId, List<String> fileNames, List<String> originalFileNames, Integer statusId) {
 
-            if (importer == null) {
-                log.warn("Unable to find suitable ChannelImporter implementation for "
-                        + applicationChannel.getChannelType().getName()
-                        + ". Returning null.");
-                return null;
-            }
+		Scan combinedScan = mergeScan(channelId, parseScan(channelId, fileNames, originalFileNames, statusId), statusId);
+		updateReportInfo(channelId);
 
-            updateJobStatus(statusId, "Parsing findings from " +
-                    applicationChannel.getChannelType().getName() + " scan file.");
-            log.info("Processing file " + fileName + " on channel "
-                    + applicationChannel.getChannelType().getName() + ".");
-
-            importer.setFileName(fileName);
-
-            Scan scan = importer.parseInput();
-
-            if (scan == null) {
-                log.warn("The " + applicationChannel.getChannelType().getName()
-                        + " import failed for file " + fileName + ".");
-                return null;
-            }
-			scan.setOriginalFileNames(originalFileNames);
-
-            if(i == 0){
-                combinedScan = scan;
-                importTime = scan.getImportTime();
-            } else {
-                combinedScan.getFindings().addAll(scan.getFindings());
-                if(scan.getImportTime() != null && scan.getImportTime().after(importTime)){
-                    importTime = scan.getImportTime();
-                }
-            }
-
-            importer.deleteScanFile();
-        }
-
-        combinedScan.setImportTime(importTime);
-
-		updateJobStatus(statusId, "Findings successfully parsed, starting channel merge.");
-
-		scanMerger.merge(combinedScan, applicationChannel);
-
-        scanDao.saveOrUpdate(combinedScan);
-
-		applicationChannel.getApplication().getScans().add(combinedScan);
-
-        vulnerabilityFilterService.updateVulnerabilities(
-				applicationChannel.getApplication().getOrganization().getId(),
-				applicationChannel.getApplication().getId());
-
-        vulnerabilityService.updateVulnerabilityReport(applicationChannel.getApplication());
-
-        return combinedScan;
+		return combinedScan;
 	}
 
 	private void updateJobStatus(Integer statusId, String statusString) {
@@ -304,18 +261,105 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		}
 	}
 
-	public void updateScanCounts(Scan scan) {
-//		Map<String, Object> mapMap = scanDao.getMapSeverityMap(scan);
-//		Map<String, Object> findingMap = scanDao.getFindingSeverityMap(scan);
-//		if (mapMap.get("id").equals(scan.getId()) && mapMap.get("id").equals(scan.getId())) {
-//			scan.setNumberInfoVulnerabilities((Long)mapMap.get("info") + (Long)findingMap.get("info"));
-//			scan.setNumberLowVulnerabilities((Long)mapMap.get("low") + (Long)findingMap.get("low"));
-//			scan.setNumberMediumVulnerabilities((Long)mapMap.get("medium") + (Long)findingMap.get("medium"));
-//			scan.setNumberHighVulnerabilities((Long)mapMap.get("high") + (Long)findingMap.get("high"));
-//			scan.setNumberCriticalVulnerabilities((Long)mapMap.get("critical") + (Long)findingMap.get("critical"));
-//			scanDao.saveOrUpdate(scan);
-//		} else {
-//			log.warn("ID from the database didn't match the scan ID, counts will not be added to the scan.");
-//		}
+	private Scan parseScan(Integer channelId, List<String> fileNames, List<String> originalFileNames, Integer statusId) {
+		if (channelId == null || fileNames == null || fileNames.isEmpty()) {
+			log.error("processScanFile() received null input and was unable to finish.");
+			return null;
+		}
+
+		Scan combinedScan = new Scan();
+		ApplicationChannel applicationChannel = applicationChannelDao.retrieveById(channelId);
+
+		Calendar importTime = null;
+
+		for(int i = 0; i < fileNames.size(); i++){
+			String fileName = fileNames.get(i);
+
+			File file = DiskUtils.getScratchFile(fileName);
+
+			if (applicationChannel == null
+					|| applicationChannel.getChannelType() == null
+					|| !file.exists()) {
+				log.warn("Invalid Application Channel, unable to find a ChannelImporter implementation.");
+				return null;
+			}
+
+			// pick the appropriate parser
+			ChannelImporter importer = channelImporterFactory.getChannelImporter(applicationChannel);
+
+			if (importer == null) {
+				log.warn("Unable to find suitable ChannelImporter implementation for "
+						+ applicationChannel.getChannelType().getName()
+						+ ". Returning null.");
+				return null;
+			}
+
+			updateJobStatus(statusId, "Parsing findings from " +
+					applicationChannel.getChannelType().getName() + " scan file.");
+			log.info("Processing file " + fileName + " on channel "
+					+ applicationChannel.getChannelType().getName() + ".");
+
+			importer.setFileName(fileName);
+
+			Scan scan = importer.parseInput();
+
+			if (scan == null) {
+				log.warn("The " + applicationChannel.getChannelType().getName()
+						+ " import failed for file " + fileName + ".");
+				return null;
+			}
+			scan.setOriginalFileNames(originalFileNames);
+
+			if(i == 0){
+				combinedScan = scan;
+				importTime = scan.getImportTime();
+			} else {
+				combinedScan.getFindings().addAll(scan.getFindings());
+				if(scan.getImportTime() != null && scan.getImportTime().after(importTime)){
+					importTime = scan.getImportTime();
+				}
+			}
+
+			importer.deleteScanFile();
+		}
+
+		combinedScan.setImportTime(importTime);
+
+		return combinedScan;
 	}
+
+	private Scan mergeScan(Integer channelId, Scan combinedScan, Integer statusId) {
+
+		ApplicationChannel applicationChannel = applicationChannelDao.retrieveById(channelId);
+
+		if (combinedScan == null || applicationChannel == null)
+			return null;
+
+		updateJobStatus(statusId, "Findings successfully parsed, starting channel merge.");
+
+		scanMerger.merge(combinedScan, applicationChannel);
+
+		scanDao.saveOrUpdate(combinedScan);
+
+		applicationChannel.getApplication().getScans().add(combinedScan);
+		applicationChannel.getScanList().add(combinedScan);
+
+		return combinedScan;
+	}
+
+	private void updateReportInfo(Integer channelId){
+
+		ApplicationChannel applicationChannel = applicationChannelDao.retrieveById(channelId);
+
+		if (applicationChannel == null)
+			return;
+
+		vulnerabilityFilterService.updateVulnerabilities(
+				applicationChannel.getApplication().getOrganization().getId(),
+				applicationChannel.getApplication().getId());
+
+		vulnerabilityService.updateVulnerabilityReport(applicationChannel.getApplication());
+
+	}
+
 }

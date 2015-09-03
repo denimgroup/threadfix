@@ -505,7 +505,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                 resolve: {
                     url: function() {
                         var app = $scope.config.application;
-                        return tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/upload/remote");
+                        return "/organizations/" + app.team.id + "/applications/" + app.id + "/upload/remote";
                     },
                     files: function() {
                         return files;

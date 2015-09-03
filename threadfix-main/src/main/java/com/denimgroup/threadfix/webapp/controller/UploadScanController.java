@@ -85,6 +85,27 @@ public class UploadScanController {
         }
 
         return uploadScanService.processMultiFileUpload(multiPartRequest.getFileMap().values(),
-                orgId, appId, request.getParameter("channelId"));
+                orgId, appId, request.getParameter("channelId"), false);
+    }
+
+    /**
+     * Allows the user to upload bulk scans to an existing application.
+     *
+     */
+    @RequestMapping(value = "/organizations/{orgId}/applications/{appId}/upload/remote/bulk", method = RequestMethod.POST, produces = "application/json")
+    @JsonView(AllViews.TableRow.class)
+    public Object bulkUploadScans(@PathVariable("appId") int appId,
+                             @PathVariable("orgId") int orgId,
+                             HttpServletRequest request,
+                             MultipartRequest multiPartRequest) throws IOException {
+
+        LOG.info("Received REST request to upload multiple scan to application " + appId + ".");
+
+        if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
+            return failure("You don't have permission to upload scans.");
+        }
+
+        return uploadScanService.processMultiFileUpload(multiPartRequest.getFileMap().values(),
+                orgId, appId, request.getParameter("channelId"), true);
     }
 }
