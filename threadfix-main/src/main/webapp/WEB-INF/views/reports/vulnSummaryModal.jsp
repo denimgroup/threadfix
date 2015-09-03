@@ -42,9 +42,11 @@
     <div class="modal-footer">
         <span id="errorSpan" class="errors" style="float:left">{{ error }}</span>
         <button class="btn" data-dismiss="modal" aria-hidden="true" ng-click="cancel()">Close</button>
-        <button id="submit"
-                class="btn btn-primary"
-                ng-hide="loading"
-                ng-click="goToDetail()">Details</button>
+        <c:if test="${ canGenerateReports }">
+            <button id="submit"
+                    class="btn btn-primary"
+                    ng-hide="loading"
+                    ng-click="goToDetail()">Details</button>
+        </c:if>
     </div>
 </script>
