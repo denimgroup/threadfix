@@ -49,29 +49,6 @@
                         </select>
                     </td>
                 </tr>
-                <tr ng-if="object.isWhiteHat">
-                    <td class="no-color">Result Style</td>
-                    <td class="no-color inputValue">
-
-                        <ul id="matchSourceNumbers" class="nav nav-pills">
-                            <li id="threadFixNumbers" ng-class="{ active: object.matchSourceNumbers === false }">
-                                <a popover-trigger="mouseenter"
-                                        ng-click="setMatchSourceNumbers(false)"
-                                        popover-placement="bottom" popover="With this option selected, ThreadFix will parse the WhiteHat attack vectors as separate vulnerabilities. More data from WhiteHat improves ThreadFix's ability to present data, apply hybrid analysis, and merge WhiteHat findings with data from other sources.">
-                                    ThreadFix
-                                </a>
-                            </li>
-                            <li id="whiteHatNumbers" ng-class="{ active: object.matchSourceNumbers === true }">
-                                <a popover-trigger="mouseenter"
-                                    ng-click="setMatchSourceNumbers(true)"
-                                    popover-placement="bottom"
-                                    popover="With this option selected, ThreadFix will attempt to match the numbers that WhiteHat displays in its web UI. Selecting this option can hinder ThreadFix's ability to present data, apply hybrid analysis, and merge WhiteHat findings with data from other sources.">
-                                    WhiteHat
-                                </a>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
             </tbody>
             <tbody ng-if="object.authenticationFields.length !== 0">
                 <tr ng-repeat="field in object.authenticationFields">

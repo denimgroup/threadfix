@@ -2,9 +2,17 @@
 
 <div class="span6" ng-controller="RightReportController" ng-init="csrfToken = '${ csrfToken }'">
   <c:if test="${ canGenerateReports }">
-    <h4>{{ rightReportTitle }}<span style="font-size:12px;float:right;">
-      <a id="rightViewMore" ng-href="{{ urlRoot }}/reports/10{{ seeMoreExtension }}{{ csrfToken }}">View More</a></span>
+
+    <h4>{{ rightReportTitle }}
+
+      <security:authorize ifAnyGranted="CAN_GENERATE_REPORTS">
+      <span style="font-size:12px;float:right;">
+        <a id="rightViewMore" ng-href="{{ urlRoot }}/reports/10{{ seeMoreExtension }}{{ csrfToken }}">View More</a>
+      </span>
+      </security:authorize>
     </h4>
+
+
     <div id="rightTileReport">
       <div ng-show="topAppsData" class="team-report-wrapper report-image">
         <d3-hbars data="topAppsData" label = "label" width="422" height="250" margin="rightMargin"></d3-hbars>
