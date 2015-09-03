@@ -789,6 +789,7 @@ public class ApplicationIT extends BaseDataTest {
 
         TeamIndexPage teamIndexPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName, "http://testapp.com", "Low")
                 .addRemoteSourceCodeInformation(repositoryURL, repositoryRevision, repositoryUserName, repositoryPassword)
                 .clickModalSubmit();
@@ -825,6 +826,7 @@ public class ApplicationIT extends BaseDataTest {
 
         TeamIndexPage teamIndexPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName, "http://testapp.com", "Low")
                 .addRemoteSourceCodeInformation(repositoryURL, repositoryRevision, repositoryUserName, repositoryPassword)
                 .clickModalSubmit();
@@ -859,6 +861,7 @@ public class ApplicationIT extends BaseDataTest {
 
         TeamIndexPage teamIndexPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName, "http://testapp.com", "High")
                 .setSourceCodeFolder(repositoryPath)
                 .clickModalSubmit();
@@ -1079,6 +1082,7 @@ public class ApplicationIT extends BaseDataTest {
 
         TeamIndexPage teamIndexPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName, "http://testapp.com", "Low")
                 .setUniqueId(uniqueId)
                 .clickModalSubmit();

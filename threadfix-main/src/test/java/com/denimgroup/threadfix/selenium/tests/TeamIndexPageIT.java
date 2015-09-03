@@ -141,6 +141,7 @@ public class TeamIndexPageIT extends BaseDataTest {
                 .clickAddNewApplication(team)
                 .setApplicationName(app)
                 .saveApplication()
+                .expandTeamRowByName(team)
                 .uploadScanButton(team, app)
                 .uploadNewScan(ScanContents.SCAN_FILE_MAP.get("Burp Suite"), team, app);
 
