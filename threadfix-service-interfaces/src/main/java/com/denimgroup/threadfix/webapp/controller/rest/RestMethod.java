@@ -81,7 +81,7 @@ public enum RestMethod {
     WAF_LIST(CAN_MANAGE_WAFS, true),
     WAF_DETAIL(CAN_MANAGE_WAFS, true),
     WAF_LOOKUP(CAN_MANAGE_WAFS, true),
-    WAF_RULES(CAN_MANAGE_WAFS, true),
+    WAF_RULES(CAN_GENERATE_WAF_RULES, true),
     WAF_NEW(CAN_MANAGE_WAFS, true),
     WAF_LOG(CAN_MANAGE_WAFS, true),
 
