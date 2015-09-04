@@ -28,6 +28,16 @@
             <div style="position:absolute;left:50%;top:50%;margin-left:-250px;margin-top:-191px;">
                 <img src="<%=request.getContextPath()%>/images/ThreadFix_72.jpg" alt="Denim Group" width="177px" height="81px"/>
             </div>
+            <c:if test="${param.sessionTimeout =='true'}">
+                <div id="loginError" class="sessionTimeout" style="position:absolute;left:50%;top:50%;margin-left:-250px;margin-top:-68px;width:500px;text-align:center;color:red;font-weight:bold">
+                    This session has been expired due to inactivity.
+                </div>
+            </c:if>
+            <c:if test="${param.concurrentSessions =='true'}">
+                <div id="loginError" class="concurrentSessions" style="position:absolute;left:50%;top:50%;margin-left:-250px;margin-top:-68px;width:500px;text-align:center;color:red;font-weight:bold">
+                    This session has been expired (possibly due to multiple concurrent logins being attempted as the same user).
+                </div>
+            </c:if>
             <c:if test="${SPRING_SECURITY_LAST_EXCEPTION.message =='Bad credentials'}">
                 <div id="loginError" style="position:absolute;left:50%;top:50%;margin-left:-250px;margin-top:-68px;width:500px;text-align:center;color:red;font-weight:bold">
                     Error: Username or Password incorrect
