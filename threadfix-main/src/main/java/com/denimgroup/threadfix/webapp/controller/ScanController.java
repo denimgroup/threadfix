@@ -91,14 +91,9 @@ public class ScanController {
 			scan = scanService.loadScan(scanId);
 			scanService.loadStatistics(scan);
 		}
-		if (scan == null) {
-			if (orgId != null && appId != null) {
-				return new ModelAndView("redirect:/organizations/" + orgId + "/applications/" + appId + "/scans");
-			} else if (orgId != null) {
-				return new ModelAndView("redirect:/organizations/" + orgId);
-			} else {
-				return new ModelAndView("redirect:/");
-			}
+		if ((scan == null) || (scan.getApplication() == null) || (!scan.getApplication().isActive())) {
+			log.warn(ResourceNotFoundException.getLogMessage("Scan", scanId));
+			throw new ResourceNotFoundException();
 		}
 
 		long numFindings = scanService.getFindingCount(scanId);
@@ -123,7 +118,7 @@ public class ScanController {
 
 		if (scanId != null) {
 			Scan scan = scanService.loadScan(scanId);
-			if (scan != null) {
+			if ((scan != null) && (scan.getApplication() != null) && (scan.getApplication().isActive())) {
 				scanDeleteService.deleteScan(scan);
 				vulnerabilityService.updateVulnerabilityReport(
 						applicationService.loadApplication(appId), scanId);
@@ -151,7 +146,7 @@ public class ScanController {
 
 		if (scanId != null) {
 			Scan scan = scanService.loadScan(scanId);
-			if (scan != null) {
+			if ((scan != null) && (scan.getApplication() != null) && (scan.getApplication().isActive())) {
 
 				if (scan.getFileName()== null || scan.getFileName().isEmpty()){
 					return RestResponse.failure("There is no scan file uploaded associated with this Scan.");
@@ -185,7 +180,7 @@ public class ScanController {
 		}
 
 		Scan scan = scanService.loadScan(scanId);
-		if (scan == null) {
+		if ((scan == null) || (scan.getApplication() == null) || (!scan.getApplication().isActive())) {
 			log.warn(ResourceNotFoundException.getLogMessage("Scan", scanId));
 			throw new ResourceNotFoundException();
 		}
@@ -228,7 +223,7 @@ public class ScanController {
 		}
 
 		Scan scan = scanService.loadScan(scanId);
-		if (scan == null) {
+		if ((scan == null) || (scan.getApplication() == null) || (!scan.getApplication().isActive())) {
 			log.warn(ResourceNotFoundException.getLogMessage("Scan", scanId));
 			throw new ResourceNotFoundException();
 		}
@@ -254,7 +249,7 @@ public class ScanController {
 		Map<String, Object> map = new HashMap<>();
 
 		Scan scan = scanService.loadScan(scanId);
-		if (scan == null) {
+		if ((scan == null) || (scan.getApplication() == null) || (!scan.getApplication().isActive())) {
 			log.warn(ResourceNotFoundException.getLogMessage("Scan", scanId));
 			throw new ResourceNotFoundException();
 		}
