@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.views.AllViews;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.CollectionOfElements;
 
@@ -121,6 +122,15 @@ public class DefaultConfiguration extends BaseEntity {
     @Transient
     public String getFullFilePath(Scan scan) {
         return fileUploadLocation + File.separator + scan.getFileName();
+    }
+
+    @Transient
+    public List<String> getFullFilePaths(Scan scan) {
+        List<String> filePaths = list();
+        for (String path: scan.getSavedFileNames()) {
+            filePaths.add(fileUploadLocation + File.separator + path);
+        }
+        return filePaths;
     }
 
     @OneToOne

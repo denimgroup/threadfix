@@ -40,12 +40,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.security.auth.login.AppConfigurationEntry;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 // TODO figure out this Transactional stuff
 // TODO reorganize methods - not in a very good order right now.
@@ -55,35 +58,39 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 
 	private final SanitizedLogger log = new SanitizedLogger("ScanMergeService");
 
-    @Autowired
+	@Autowired
 	private ScanDao scanDao;
-    @Autowired
+	@Autowired
 	private ApplicationChannelDao applicationChannelDao;
-    @Autowired
+	@Autowired
 	private UserDao userDao;
-    @Autowired
+	@Autowired
 	private JobStatusService jobStatusService;
-    @Autowired
+	@Autowired
 	private ScanMerger scanMerger;
-    @Autowired
+	@Autowired
 	private VulnerabilityFilterService vulnerabilityFilterService;
 	@Autowired
 	private VulnerabilityStatusService vulnerabilityStatusService;
-    @Autowired
-    private ChannelImporterFactory channelImporterFactory;
-    @Autowired
-    private VulnerabilityService vulnerabilityService;
+	@Autowired
+	private ChannelImporterFactory channelImporterFactory;
+	@Autowired
+	private VulnerabilityService vulnerabilityService;
 	@Autowired
 	private DefectService defectService;
 	@Autowired
 	private PermissionsHandler permissionsHandler;
+	@Autowired
+	private DefaultConfigService defaultConfigService;
+
+	private Pattern scanFileRegex = Pattern.compile("(.*)(scan-file-[0-9]+-[0-9]+)");
 
 	@Override
 	public Scan saveRemoteScanAndRun(Integer channelId, List<String> fileNames, List<String> originalFileNames) {
-        if(channelId == null || fileNames == null || fileNames.isEmpty()){
-            log.error("Unable to run RPC scan due to null input.");
-            return null;
-        }
+		if(channelId == null || fileNames == null || fileNames.isEmpty()){
+			log.error("Unable to run RPC scan due to null input.");
+			return null;
+		}
 
 		Scan scan = processScanFiles(channelId, fileNames, originalFileNames, null);
 
@@ -99,7 +106,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		return scan;
 	}
 
-    @Override
+	@Override
 	@Transactional(readOnly = false)
 	public void updateSurfaceLocation(Application application) {
 		if (application != null && application.getProjectRoot() != null
@@ -125,7 +132,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	@Transactional(readOnly = false)
 	public void updateVulnerabilities(Application application, boolean shouldSaveVulnerabilites) {
 		List<Vulnerability> vulnerabilities = application.getVulnerabilities();
-		
+
 		FindingMatcher matcher = new FindingMatcher(null);
 
 		if (vulnerabilities != null) {
@@ -160,10 +167,10 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		}
 	}
 
-    @Override
+	@Override
 	public boolean processScan(Integer channelId, List<String> fileNames, List<String> originalFileNames,
-			Integer statusId, String userName) {
-				
+							   Integer statusId, String userName) {
+
 		if (channelId == null || fileNames == null || fileNames.isEmpty()) {
 			log.error("processScan() received null input and was unable to finish.");
 			return false;
@@ -174,14 +181,14 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			log.warn("processScanFile() failed to return a scan.");
 			return false;
 		}
-		
+
 		if (userName != null) {
 			User user = userDao.retrieveByName(userName);
 			scan.setUser(user);
 		}
-		
+
 		scanDao.saveOrUpdate(scan);
-		
+
 		vulnerabilityFilterService.updateVulnerabilities(scan);
 
 		return true;
@@ -192,15 +199,15 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	 */
 	@Override
 	public Scan processRemoteScan(Scan scan) {
-	
+
 		if (scan == null) {
 			log.warn("The remote import failed.");
 			return null;
 		}
-	
+
 		scanMerger.merge(scan, scan.getApplicationChannel());
 
-        scanDao.saveOrUpdate(scan);
+		scanDao.saveOrUpdate(scan);
 
 		scan.getApplicationChannel().getApplication().getScans().add(scan);
 
@@ -211,7 +218,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		vulnerabilityFilterService.updateVulnerabilities(
 				scan.getApplicationChannel().getApplication().getOrganization().getId(),
 				scan.getApplicationChannel().getApplication().getId());
-	
+
 		return scan;
 	}
 
@@ -309,6 +316,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 				return null;
 			}
 			scan.setOriginalFileNames(originalFileNames);
+			scan.setSavedFileNames(getFileNames(fileNames));
 
 			if(i == 0){
 				combinedScan = scan;
@@ -360,6 +368,23 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 
 		vulnerabilityService.updateVulnerabilityReport(applicationChannel.getApplication());
 
+	}
+
+	private List<String> getFileNames(List<String> fullPathNames) {
+		List<String> names = null;
+			DefaultConfiguration defaultConfiguration = defaultConfigService.loadCurrentConfiguration();
+			if (defaultConfiguration.fileUploadLocationExists()) {
+				names = list();
+				for (String fullPathName : fullPathNames) {
+					if (fullPathName != null) {
+						Matcher m = scanFileRegex.matcher(fullPathName);
+						if (m.matches()) {
+							names.add(m.group(2));
+						}
+					}
+				}
+			}
+		return names;
 	}
 
 }
