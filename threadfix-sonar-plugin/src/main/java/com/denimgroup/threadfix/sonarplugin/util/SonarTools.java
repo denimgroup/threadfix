@@ -28,8 +28,7 @@ import com.denimgroup.threadfix.data.entities.VulnerabilityMarker;
 import com.denimgroup.threadfix.sonarplugin.rules.ThreadFixCWERulesDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.SensorContext;
-import org.sonar.api.batch.SonarIndex;
+import org.sonar.api.batch.fs.InputPath;
 import org.sonar.api.issue.Issuable;
 import org.sonar.api.issue.Issue;
 import org.sonar.api.resources.Resource;
@@ -40,7 +39,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Collection;
 
 import static com.denimgroup.threadfix.CloseableUtils.closeQuietly;
 
@@ -53,50 +51,14 @@ public class SonarTools {
 
     private SonarTools(){}
 
-    public static Resource resourceOf(SonarIndex sonarIndex, SensorContext context, final String filePath) {
-
-        Resource resource = searchAllResources(sonarIndex, filePath);
-
-        if (context.getResource(resource) != null) {
-            return resource;
-        } else {
-            LOG.debug("File \"{}\" is not indexed. Skip it.", filePath);
-            return null;
-        }
-    }
-
-    private static Resource searchAllResources(SonarIndex sonarIndex, final String componentKey) {
-        if (componentKey == null || "".equals(componentKey)) {
-            LOG.debug("Empty marker passed to searchAllResources.");
-            return null;
-        }
-
-        final Collection<Resource> resources = sonarIndex.getResources();
-
-        for (final Resource resource : resources) {
-            if (resource.getKey().endsWith(componentKey) || componentKey.endsWith(resource.getKey())) {
-                LOG.debug("Found resource for [" + componentKey + "]");
-                LOG.debug("Resource class type: [" + resource.getClass().getName() + "]");
-                LOG.debug("Resource key: [" + resource.getKey() + "]");
-                LOG.debug("Resource id: [" + resource.getId() + "]");
-                return resource;
-            } else {
-                LOG.debug("no match for " + resource.getKey());
-            }
-        }
-
-        LOG.debug("No resource found for component [" + componentKey + "]");
-        return null;
-    }
-
-    public static void addIssue(@Nonnull Issuable issuable, @Nonnull Resource resource, VulnerabilityMarker vulnerability) {
+    public static void addIssue(InputPath inputPath, @Nonnull Issuable issuable, @Nonnull Resource resource, VulnerabilityMarker vulnerability) {
 
         String repositoryKey = ThreadFixCWERulesDefinition.getKey(resource.getLanguage().getKey());
         RuleKey key = RuleKey.of(repositoryKey, "cwe-" + vulnerability.getGenericVulnId());
 
         Integer line = getLineNumber(vulnerability);
 
-        File file = getValidFile(resource);
+        File file = getValidFile(inputPath);
         Integer lineCount = file == null ? 0 : getLineCount(file);
 
         if (lineCount != 0) {
@@ -133,10 +95,10 @@ public class SonarTools {
         return Integer.valueOf(lineNumber);
     }
 
-    private static File getValidFile(Resource resource) {
+    private static File getValidFile(InputPath inputPath) {
 
-        if (resource.getPath() != null) {
-            File file = new File(resource.getPath());
+        if (inputPath.absolutePath() != null) {
+            File file = new File(inputPath.absolutePath());
 
             if (file.exists()) {
                 LOG.info("Found file at " + file.getAbsolutePath());
@@ -146,7 +108,7 @@ public class SonarTools {
                 LOG.info("No file found for " + file.getPath());
             }
         } else {
-            LOG.info("Path was null for " + resource);
+            LOG.info("Path was null for " + inputPath);
         }
 
         return null;

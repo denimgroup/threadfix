@@ -32,7 +32,6 @@ import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -152,21 +151,12 @@ public class UserServiceImpl implements UserService {
     }
 
     private void initializeUserEventNotificationMaps(User user) {
-		try {
-			user.setUserEventNotificationMapsInitialized(true);
-			userDao.saveOrUpdate(user);
+		Set<EventAction> eventNotificationTypes = EnumSet.copyOf(EventAction.globalEventActions);
+		eventNotificationTypes.addAll(EventAction.globalGroupedEventActions);
 
-			Set<EventAction> eventNotificationTypes = EnumSet.copyOf(EventAction.globalEventActions);
-			eventNotificationTypes.addAll(EventAction.globalGroupedEventActions);
+		setNotificationEventActions(user, eventNotificationTypes);
 
-			setNotificationEventActions(user, eventNotificationTypes);
-
-			user.setUserEventNotificationMapsInitialized(true);
-		} catch (RuntimeException e) {
-			user.setUserEventNotificationMapsInitialized(false);
-			userDao.saveOrUpdate(user);
-			throw e;
-		}
+		user.setUserEventNotificationMapsInitialized(true);
 	}
 
     private void encryptPassword(User user) {
@@ -175,7 +165,7 @@ public class UserServiceImpl implements UserService {
             user.setPassword(encoder.generatePasswordHash(user.getUnencryptedPassword(),
                     user.getSalt()));
         } catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			throw new IllegalStateException("Unable to generate password.", e);
 		}
 	}
 
@@ -189,7 +179,7 @@ public class UserServiceImpl implements UserService {
 				return encodedPassword != null && encodedPassword.equals(user.getPassword());
 			} catch (NoSuchAlgorithmException e) {
 				// This should never happen but let's log it
-				log.warn("Failed to encrypt a password - something is broken.", e);
+				throw new IllegalStateException("Failed to encrypt a password - something is broken.", e);
 			}
 		} 
 
@@ -530,20 +520,24 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void setNotificationEventActions(User user, Set<EventAction> notificationEventActions) {
 		Set<EventAction> currentNotificationEventActions = EnumSet.noneOf(EventAction.class);
-		List<UserEventNotificationMap> userEventNotificationMapsToRemove = list();
 
-		List<UserEventNotificationMap> userEventNotificationMaps = userEventNotificationMapDao.loadUserEventNotificationMaps(user);
-		for (UserEventNotificationMap userEventNotificationMap : userEventNotificationMaps) {
-			if (!notificationEventActions.contains(userEventNotificationMap.getEventActionEnum())) {
-				userEventNotificationMapsToRemove.add(userEventNotificationMap);
-			} else {
-				currentNotificationEventActions.add(userEventNotificationMap.getEventActionEnum());
+		if (!user.isNew()) {
+			List<UserEventNotificationMap> userEventNotificationMapsToRemove = list();
+
+			List<UserEventNotificationMap> userEventNotificationMaps =
+					userEventNotificationMapDao.loadUserEventNotificationMaps(user);
+			for (UserEventNotificationMap userEventNotificationMap : userEventNotificationMaps) {
+				if (!notificationEventActions.contains(userEventNotificationMap.getEventActionEnum())) {
+					userEventNotificationMapsToRemove.add(userEventNotificationMap);
+				} else {
+					currentNotificationEventActions.add(userEventNotificationMap.getEventActionEnum());
+				}
 			}
-		}
 
-		for (UserEventNotificationMap userEventNotificationMap : userEventNotificationMapsToRemove) {
-			userEventNotificationMap.setUser(null);
-			userEventNotificationMapDao.delete(userEventNotificationMap);
+			for (UserEventNotificationMap userEventNotificationMap : userEventNotificationMapsToRemove) {
+				userEventNotificationMap.setUser(null);
+				userEventNotificationMapDao.delete(userEventNotificationMap);
+			}
 		}
 
 		for (EventAction eventAction : notificationEventActions) {

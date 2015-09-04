@@ -38,11 +38,18 @@ myAppModule.controller('LeftReportController', function ($scope, $window, thread
                     $log.info("trendingUtilities.refreshScans took " + ((new Date()).getTime() - start.getTime()) + " ms");
 
                     var hasResultsFilter = function(scan) {
-                        return scan[customSeverityService.getCustomSeverity('Critical')] +
-                            scan[customSeverityService.getCustomSeverity('High')] +
-                            scan[customSeverityService.getCustomSeverity('Medium')] +
-                            scan[customSeverityService.getCustomSeverity('Low')] +
-                            scan[customSeverityService.getCustomSeverity('Info')] > 0;
+                        totVuln = 0;
+                        if (scan[customSeverityService.getCustomSeverity('Critical')])
+                            totVuln += scan[customSeverityService.getCustomSeverity('Critical')];
+                        if (scan[customSeverityService.getCustomSeverity('High')])
+                            totVuln += scan[customSeverityService.getCustomSeverity('High')];
+                        if (scan[customSeverityService.getCustomSeverity('Medium')])
+                            totVuln += scan[customSeverityService.getCustomSeverity('Medium')];
+                        if (scan[customSeverityService.getCustomSeverity('Low')])
+                            totVuln += scan[customSeverityService.getCustomSeverity('Low')];
+                        if (scan[customSeverityService.getCustomSeverity('Info')])
+                            totVuln += scan[customSeverityService.getCustomSeverity('Info')];
+                        return totVuln > 0;
                     };
 
                     if ($scope.trendingScansData &&

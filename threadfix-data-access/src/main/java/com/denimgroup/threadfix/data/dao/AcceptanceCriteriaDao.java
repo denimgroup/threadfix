@@ -23,29 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.StatisticsCounter;
-
-import java.util.List;
-import java.util.Map;
+import com.denimgroup.threadfix.data.entities.AcceptanceCriteria;
 
 /**
- * Created by mcollins on 5/13/15.
+ * Created by sgerick on 5/27/2015.
  */
-public interface StatisticsCounterDao extends GenericObjectDao<StatisticsCounter> {
+public interface AcceptanceCriteriaDao extends GenericNamedObjectDao<AcceptanceCriteria> {
 
-    Long getCountForSeverity(int scanId, int severity);
-
-    @SuppressWarnings("unchecked")
-    List<Map<String, Object>> getFindingSeverityMap(List<Integer> filteredSeverities,
-                                                    List<Integer> filteredVulnerabilities,
-                                                    List<Integer> filteredChannelSeverities);
-
-    List<Map<String, Object>> getFindingSeverityMap(List<Integer> filteredSeverities,
-                                                    List<Integer> filteredVulnerabilities,
-                                                    List<Integer> filteredChannelSeverities,
-                                                    Scan scan);
-
-    List<Map<String,Object>> getRawFindingTotalMap();
+    void delete(AcceptanceCriteria acceptanceCriteria);
 
 }

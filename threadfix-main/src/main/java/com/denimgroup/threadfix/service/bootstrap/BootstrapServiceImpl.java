@@ -71,8 +71,8 @@ public class BootstrapServiceImpl implements BootstrapService {
             userRoleBootstrapper.bootstrap();
 
             genericSeverityBootstrapper.bootstrap();
-            remoteProviderBootstrapper.bootstrap();
             scannerTypeBootstrapper.bootstrap();
+            remoteProviderBootstrapper.bootstrap();
             applicationCriticalityBootstrapper.bootstrap();
             wafBootstrapper.bootstrap();
             defectTrackerBootstrapper.bootstrap();

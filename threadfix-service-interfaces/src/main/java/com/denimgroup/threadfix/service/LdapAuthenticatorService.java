@@ -24,31 +24,8 @@
 
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.CSVExportField;
-import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
-import com.denimgroup.threadfix.data.entities.Report;
-
-import java.util.List;
-
-public interface DefaultConfigService {
-
-	/**
-	 * Load the current system settings
-	 * @return
-	 */
-	DefaultConfiguration loadCurrentConfiguration();
-	
-	/**
-	 * Save new system settings
-	 */
-	void saveConfiguration(DefaultConfiguration config);
-
-    boolean reportDuplicateExists(List<Report> reports);
-
-    boolean isReportCacheDirty();
-
-    List<CSVExportField> getUnassignedExportFields(List<CSVExportField> exportFields);
-
-    List<String> getDisplayNamesFromExportFields(List<CSVExportField> exportFields);
-
+/**
+ * @author zabdisubhan
+ */
+public interface LdapAuthenticatorService {
 }

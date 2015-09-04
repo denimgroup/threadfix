@@ -128,6 +128,7 @@ public class SpringConfiguration {
         bean.setDataSource(dataSource());
         bean.setPackagesToScan("com.denimgroup.threadfix.data.entities");
         bean.setHibernateProperties(getHibernateProperties());
+
         Map<String, Object> merge = CollectionUtils.map("merge", (Object) new IdTransferringMergeEventListener());
         bean.setEventListeners(merge);
 

@@ -39,6 +39,10 @@ public interface EventService extends GenericObjectService<Event> {
 
     List<Event> loadAllByDefect(Defect defect);
 
+    List<Event> loadAllByAcceptanceCriteria(AcceptanceCriteria acceptanceCriteria);
+
+    List<Event> loadAllByAcceptanceCriteriaStatus(AcceptanceCriteriaStatus acceptanceCriteriaStatus);
+
     String buildUploadScanString(Scan scan);
 
     String buildDeleteScanString(Scan scan);

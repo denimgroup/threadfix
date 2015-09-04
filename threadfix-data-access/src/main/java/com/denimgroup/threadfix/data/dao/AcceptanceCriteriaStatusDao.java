@@ -22,33 +22,14 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.data.dao;
 
-import com.denimgroup.threadfix.data.entities.CSVExportField;
-import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
-import com.denimgroup.threadfix.data.entities.Report;
+import com.denimgroup.threadfix.data.entities.AcceptanceCriteriaStatus;
 
-import java.util.List;
+/**
+ * @author zabdisubhan
+ */
+public interface AcceptanceCriteriaStatusDao extends GenericObjectDao<AcceptanceCriteriaStatus> {
 
-public interface DefaultConfigService {
-
-	/**
-	 * Load the current system settings
-	 * @return
-	 */
-	DefaultConfiguration loadCurrentConfiguration();
-	
-	/**
-	 * Save new system settings
-	 */
-	void saveConfiguration(DefaultConfiguration config);
-
-    boolean reportDuplicateExists(List<Report> reports);
-
-    boolean isReportCacheDirty();
-
-    List<CSVExportField> getUnassignedExportFields(List<CSVExportField> exportFields);
-
-    List<String> getDisplayNamesFromExportFields(List<CSVExportField> exportFields);
-
+    void delete(AcceptanceCriteriaStatus acceptanceCriteriaStatus);
 }

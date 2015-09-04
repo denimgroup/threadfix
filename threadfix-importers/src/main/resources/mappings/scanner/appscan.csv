@@ -1,4 +1,4 @@
-6/9/2015 11:47:00
+09/02/2015 11:47:00
 type.info,,
 IBM Security AppScan Standard,,
 type.vulnerabilities,,
@@ -72,7 +72,7 @@ Weak SSL Cipher Suites are Supported,Weak SSL Cipher Suites are Supported,327
 Internal IP Disclosure Pattern Found,Internal IP Disclosure Pattern Found,200
 Potential File Upload,Potential File Upload,434
 Email-Parameter Spoofing,Email-Parameter Spoofing,472
-Directory Listing Pattern Found,Directory Listing Pattern Found,Directory Listing Pattern Found,Directory Listing Pattern Found,548
+Directory Listing Pattern Found,Directory Listing Pattern Found,548
 Microsoft Windows MHTML Cross-Site Scripting,Microsoft Windows MHTML Cross-Site Scripting,79
 Microsoft ASP.NET Debugging Enabled,Microsoft ASP.NET Debugging Enabled,11
 Apache server-status Information Disclosure,Apache server-status Information Disclosure,200

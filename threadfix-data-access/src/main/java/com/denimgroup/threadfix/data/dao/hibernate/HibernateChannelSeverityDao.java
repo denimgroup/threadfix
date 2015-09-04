@@ -55,14 +55,27 @@ public class HibernateChannelSeverityDao implements ChannelSeverityDao {
 
 	@Override
 	public ChannelSeverity retrieveByCode(ChannelType channelType, String code) {
-		return (ChannelSeverity) sessionFactory
+
+		// To avoid case insensitive query in MySQL
+		List<ChannelSeverity> channelSeverities = (List<ChannelSeverity>) sessionFactory
 				.getCurrentSession()
 				.createQuery(
 						"from ChannelSeverity cs where cs.code = :code "
 								+ "and cs.channelType = :channelTypeId")
 				.setString("code", code)
 				.setInteger("channelTypeId", channelType.getId())
-				.uniqueResult();
+				.list();
+
+		if (channelSeverities == null || channelSeverities.size() == 0)
+			return null;
+
+		for (ChannelSeverity channelSeverity: channelSeverities) {
+			if (code.equals(channelSeverity.getCode()))
+				return channelSeverity;
+		}
+
+		return null;
+
 	}
 
 	@Override

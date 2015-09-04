@@ -237,6 +237,7 @@ public class ApplicationsController {
         if (EnterpriseTest.isEnterprise()) {
             map.put("acceptanceCriterias", applicationService.loadUnassociatedAcceptanceCriteria(application));
             map.put("scanAgentSupportedList", ScannerType.getScanAgentSupportedListInString());
+            map.put("acceptanceCriteriaExist", acceptanceCriteriaService.loadAll().size() > 0);
         }
 
         // permissions

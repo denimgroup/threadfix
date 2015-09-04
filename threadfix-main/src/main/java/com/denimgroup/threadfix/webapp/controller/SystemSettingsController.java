@@ -8,6 +8,7 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.annotations.ReportLocation;
+import com.denimgroup.threadfix.data.entities.CSVExportField;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -27,12 +28,11 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
+import java.beans.PropertyEditorSupport;
 import java.io.File;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.CollectionUtils.*;
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 
@@ -61,34 +61,35 @@ public class SystemSettingsController {
     private ScanService scanService;
     @Autowired
     private RequestUrlService requestUrlService;
-	
-	@InitBinder
-	public void setAllowedFields(WebDataBinder dataBinder) {
 
+    @InitBinder
+    public void initBinder(WebDataBinder dataBinder) {
 		String[] reports = {
 				"dashboardTopLeft.id",
 				"dashboardTopRight.id", "dashboardBottomLeft.id", "dashboardBottomRight.id",
 				"applicationTopLeft.id", "applicationTopRight.id", "teamTopLeft.id", "teamTopRight.id",
-                "fileUploadLocation", "deleteUploadedFiles", "baseUrl", "closeVulnWhenNoScannersReport"
+                "fileUploadLocation", "deleteUploadedFiles", "csvExportFields[*]", "baseUrl", 
+                "closeVulnWhenNoScannersReport"
 		};
 
-		String[] otherSections = {
-				"defaultRoleId", "globalGroupEnabled", "activeDirectoryBase",
-				"activeDirectoryURL", "activeDirectoryUsername", "activeDirectoryCredentials",
-				"proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "shouldProxyVeracode",
-				"shouldProxyQualys", "shouldProxyTFS", "shouldProxyBugzilla", "shouldProxyJira",
-				"shouldProxyVersionOne", "shouldProxyHPQC", "shouldProxyWhiteHat", "shouldProxyTrustwaveHailstorm",
-				"shouldProxyContrast", "shouldUseProxyCredentials", "sessionTimeout"
-		};
+        String[] otherSections = {
+                "defaultRoleId", "globalGroupEnabled", "activeDirectoryBase",
+                "activeDirectoryURL", "activeDirectoryUsername", "activeDirectoryCredentials",
+                "proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "shouldProxyVeracode",
+                "shouldProxyQualys", "shouldProxyTFS", "shouldProxyBugzilla", "shouldProxyJira",
+                "shouldProxyVersionOne", "shouldProxyHPQC", "shouldProxyWhiteHat", "shouldProxyTrustwaveHailstorm",
+                "shouldProxyContrast", "shouldUseProxyCredentials", "sessionTimeout"
+        };
 
-		if (EnterpriseTest.isEnterprise()) {
-			dataBinder.setAllowedFields(ArrayUtils.addAll(otherSections, reports));
-		} else {
-			dataBinder.setAllowedFields(reports);
-		}
+        if (EnterpriseTest.isEnterprise()) {
+            dataBinder.setAllowedFields(ArrayUtils.addAll(otherSections, reports));
+        } else {
+            dataBinder.setAllowedFields(reports);
+        }
 
-	}
-
+        dataBinder.registerCustomEditor(CSVExportField.class, "csvExportFields[*]", new CSVExportFieldEnumConverter(CSVExportField.class));
+    }
+	
     @RequestMapping(method = RequestMethod.GET)
     public String setupForm(Model model) {
         model.addAttribute("defaultConfiguration", defaultConfigService.loadCurrentConfiguration());
@@ -121,6 +122,7 @@ public class SystemSettingsController {
     @JsonView(AllViews.FormInfo.class)
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody Object processSubmit(@ModelAttribute DefaultConfiguration defaultConfiguration,
+                                              HttpServletRequest request,
                                               BindingResult bindingResult) {
 
         if (defaultConfiguration.getDeleteUploadedFiles()) {
@@ -136,12 +138,31 @@ public class SystemSettingsController {
             bindingResult.reject("sessionTimeout", null, "30 is the maximum.");
         }
 
-        if(defaultConfiguration.fileUploadLocationExists()) {
+        if (defaultConfiguration.fileUploadLocationExists()) {
             File directory = new File(defaultConfiguration.getFileUploadLocation());
             if (!directory.exists()){
                 bindingResult.rejectValue("fileUploadLocation", null, null, "Directory does not exist.");
             }
         }
+
+        // This was added because Spring autobinding was not saving the export fields properly
+        List<CSVExportField> exportFields = list();
+        Map<String, String[]> params = request.getParameterMap();
+        int index = 0;
+
+        while (index != -1) {
+            String key = "csvExportFields["+index+"]";
+            String [] enumValue = params.get(key);
+
+            if (enumValue != null) {
+                exportFields.add(CSVExportField.valueOf(enumValue[0]));
+                index++;
+            } else {
+                index = -1;
+            }
+        }
+
+        defaultConfiguration.setCsvExportFields(exportFields);
 
         Map<String,String> errors = addReportErrors(defaultConfiguration);
 
@@ -181,6 +202,8 @@ public class SystemSettingsController {
         Map<String, Object> map = new HashMap<>();
         DefaultConfiguration configuration = defaultConfigurationWithMaskedPasswords();
 
+        map.put("exportFields", defaultConfigService.getUnassignedExportFields(configuration.getCsvExportFields()));
+        map.put("exportFieldDisplayNames", CSVExportField.getExportFields());
         map.put("roleList", roleService.loadAll());
         map.put("applicationCount", applicationService.getApplicationCount());
         map.put("licenseCount", licenseService == null ? 0 : licenseService.getAppLimit());
@@ -204,5 +227,21 @@ public class SystemSettingsController {
         }
 
         return configuration;
+    }
+
+    class CSVExportFieldEnumConverter<T extends Enum<T>> extends PropertyEditorSupport {
+
+        private final Class<T> typeParameterClass;
+
+        public CSVExportFieldEnumConverter(Class<T> typeParameterClass) {
+            super();
+            this.typeParameterClass = typeParameterClass;
+        }
+
+        @Override
+        public void setAsText(final String text) throws IllegalArgumentException {
+            T value = T.valueOf(typeParameterClass, text);
+            setValue(value);
+        }
     }
 }

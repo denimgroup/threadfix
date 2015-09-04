@@ -29,7 +29,6 @@ import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
 import com.denimgroup.threadfix.framework.impl.dotNet.DotNetFrameworkChecker;
 import com.denimgroup.threadfix.framework.impl.dotNetWebForm.WebFormsFrameworkChecker;
 import com.denimgroup.threadfix.framework.impl.rails.RailsFrameworkChecker;
-import com.denimgroup.threadfix.framework.impl.rails.model.RailsController;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 import javax.annotation.Nonnull;
@@ -86,7 +85,7 @@ public class FrameworkCalculator {
         }
 		
 		log.info("Source tree framework type detection returned: " + frameworkType.getDisplayName());
-		
+
 		return frameworkType;
 	}
 

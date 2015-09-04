@@ -217,12 +217,6 @@ myAppModule.controller('ApplicationsIndexController',
 
                 team.applications.sort(nameCompare);
 
-                team.expanded = false;
-
-                $timeout(function() {
-                    team.expanded = true;
-                }, 200);
-
                 $scope.successMessage = "Successfully added application " + newApplication.name;
 
             }, function () {

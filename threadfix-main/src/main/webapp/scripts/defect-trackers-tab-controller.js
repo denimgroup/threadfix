@@ -150,7 +150,7 @@ module.controller('DefectTrackersTabController', function($window, $scope, $http
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     $scope.deleteDefaultProfile = function(tracker, defaultDefectProfile) {
         if (confirm("Are you sure you want to delete this profile " + defaultDefectProfile.name + "?")) {
@@ -165,7 +165,7 @@ module.controller('DefectTrackersTabController', function($window, $scope, $http
                 })
             threadFixModalService.deleteElement(tracker.defaultDefectProfiles, defaultDefectProfile);
         }
-    }
+    };
 
     $scope.openCreateProfileModal = function(tracker) {
         if (!tracker.applications || tracker.applications == 0){
@@ -208,7 +208,7 @@ module.controller('DefectTrackersTabController', function($window, $scope, $http
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     $scope.openUpdateProfileModal = function(tracker,originalDefaultProfile) {
         if (tracker.applications == 0){
@@ -259,7 +259,7 @@ module.controller('DefectTrackersTabController', function($window, $scope, $http
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     $scope.showDefaultProfiles = function(tracker){
         if  ("showDefaultProfiles" in tracker){

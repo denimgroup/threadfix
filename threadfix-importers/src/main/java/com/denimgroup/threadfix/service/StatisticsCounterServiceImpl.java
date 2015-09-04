@@ -194,7 +194,7 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
     private void processScans(int orgID, int appID, List<Scan> scans) {
 
-        Map<Integer, Long[]> scanStatsMap = getIntegerMap(orgID, appID);
+        Map<Integer, Long[]> scanStatsMap = getIntegerMap(orgID, appID, scans);
 
         List<Integer> ignoredVulnerabilityIds = getVulnerabilityIdsToIgnore(orgID, appID);
 
@@ -315,19 +315,21 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
         return condenseMap(rawTotals);
     }
 
-    private Map<Integer, Long[]> getIntegerMap(int orgID, int appID) {
+    private Map<Integer, Long[]> getIntegerMap(int orgID, int appID, List<Scan> scans) {
         List<Integer> filteredSeverities = getFilteredSeverities(orgID, appID),
-                filteredVulnerabilities = getFilteredVulnerabilities(orgID, appID),
-                filteredChannelSeverities = scanResultFilterDao.retrieveAllChannelSeverities();
+                filteredVulnerabilities = getFilteredVulnerabilities(orgID, appID);
+        List<Integer> filteredChannelSeverities;
 
         Map<Integer, Integer> genericSeverityIdToSeverityMap = generateGenericSeverityMap();
 
-        List<Map<String, Object>> totalMap =
-                statisticsCounterDao.getFindingSeverityMap(
-                        filteredSeverities,
-                        filteredVulnerabilities,
-                        filteredChannelSeverities);
-
+        List<Map<String, Object>> totalMap = list();
+        for (Scan scan: scans) {
+            filteredChannelSeverities = scanResultFilterDao.retrieveAllChannelSeveritiesByChannelType(scan.getApplicationChannel().getChannelType());
+            totalMap.addAll(statisticsCounterDao.getFindingSeverityMap(
+                            filteredSeverities,
+                            filteredVulnerabilities,
+                            filteredChannelSeverities, scan));
+        }
         Map<Integer, Long[]> scanStatsMap = map();
 
         for (Map<String, Object> stringLongMap : totalMap) {

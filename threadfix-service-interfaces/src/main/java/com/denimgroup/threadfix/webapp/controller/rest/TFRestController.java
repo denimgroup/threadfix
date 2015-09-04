@@ -115,13 +115,11 @@ public abstract class TFRestController {
 	}
 
 	protected Result<String> checkKey(HttpServletRequest request, RestMethod method, int teamId, int appId) {
-
 		if (checkAPIKeyService == null) {
 			return checkKeyGlobal(request, method);
 		} else {
 			return checkAPIKeyService.checkKey(request, method, teamId, appId);
 		}
-
 	}
 
 	protected ThreadFixUserDetails getUserDetailsFromApiKeyInRequest(HttpServletRequest request) {

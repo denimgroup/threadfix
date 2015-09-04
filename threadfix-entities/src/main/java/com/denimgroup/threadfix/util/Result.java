@@ -72,4 +72,14 @@ public class Result<T> {
         result.result = resultObject;
         return result;
     }
+
+    @Override
+    public String toString() {
+        if (success) {
+            return result.toString();
+        } else {
+            return "Failure: " + errorMessage;
+        }
+    }
+
 }

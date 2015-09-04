@@ -65,6 +65,9 @@ public class RemoteProviderBootstrapper {
 
         remoteProviderTypeService.store(whitehatType);
 
+        if (whitehatChannelType == null) {
+            throw new IllegalStateException("WhiteHat channel type not found.");
+        }
 
         RemoteProviderType veracodeType = new RemoteProviderType();
         veracodeType.setName(veracode);
@@ -73,6 +76,10 @@ public class RemoteProviderBootstrapper {
 
         ChannelType veracodeChannelType = channelTypeDao.retrieveByName(ScannerType.VERACODE.getDbName());
         veracodeType.setChannelType(veracodeChannelType);
+
+        if (veracodeChannelType == null) {
+            throw new IllegalStateException("Veracode channel type not found.");
+        }
 
         remoteProviderTypeService.store(veracodeType);
 
@@ -84,6 +91,10 @@ public class RemoteProviderBootstrapper {
 
         ChannelType qualysChannelType = channelTypeDao.retrieveByName(ScannerType.QUALYSGUARD_WAS.getDbName());
         qualysType.setChannelType(qualysChannelType);
+
+        if (qualysChannelType == null) {
+            throw new IllegalStateException("Qualys channel type not found.");
+        }
 
         remoteProviderTypeService.store(qualysType);
 
