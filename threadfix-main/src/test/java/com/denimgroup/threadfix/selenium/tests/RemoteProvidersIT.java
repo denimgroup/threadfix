@@ -409,7 +409,6 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         remoteProvidersIndexPage.clickConfigure(WHITEHAT)
                 .setWhiteHatAPI(SENTINEL_API_KEY)
-                .selectWhiteHatImportStyle()
                 .saveConfiguration(WHITEHAT);
 
         assertTrue("WhiteHat Sentinel was not configured properly",
@@ -445,7 +444,6 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         remoteProvidersIndexPage.clickConfigure(WHITEHAT)
                 .setWhiteHatAPI(SENTINEL_API_KEY)
-                .selectWhiteHatImportStyle()
                 .saveConfiguration(WHITEHAT);
 
         remoteProvidersIndexPage.mapProviderToTeamAndApp(WHITEHAT, 0, teamName, appName);
@@ -464,7 +462,6 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         remoteProvidersIndexPage.clickConfigure(WHITEHAT)
                 .setWhiteHatAPI(SENTINEL_API_KEY)
-                .selectWhiteHatImportStyle()
                 .saveConfiguration(WHITEHAT)
                 .mapProviderToTeamAndApp(WHITEHAT, 1, teamName, appName);
 
@@ -488,7 +485,6 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         remoteProvidersIndexPage.clickConfigure(WHITEHAT)
                 .setWhiteHatAPI(SENTINEL_API_KEY)
-                .selectWhiteHatImportStyle()
                 .saveConfiguration(WHITEHAT);
 
         remoteProvidersIndexPage.clickEditName(WHITEHAT, "0");
@@ -520,7 +516,6 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         remoteProvidersIndexPage.clickConfigure(WHITEHAT)
                 .setWhiteHatAPI(SENTINEL_API_KEY)
-                .selectWhiteHatImportStyle()
                 .saveConfiguration(WHITEHAT);
 
         assertTrue("Success message was " + remoteProvidersIndexPage.getSuccessAlert(), remoteProvidersIndexPage.getSuccessAlert().contains("WhiteHat Sentinel"));
@@ -573,7 +568,6 @@ public class RemoteProvidersIT extends BaseDataTest {
         RemoteProvidersIndexPage remoteProvidersIndexPage = teamDetailPage.clickRemoteProvidersLink()
                 .clickConfigure(WHITEHAT)
                 .setWhiteHatAPI(SENTINEL_API_KEY)
-                .selectWhiteHatImportStyle()
                 .saveConfiguration(WHITEHAT)
                 .clickEditMappingButton(WHITEHAT, 1);
 
@@ -602,7 +596,6 @@ public class RemoteProvidersIT extends BaseDataTest {
         RemoteProvidersIndexPage remoteProvidersIndexPage = teamIndexPage.clickRemoteProvidersLink()
                 .clickConfigure(WHITEHAT)
                 .setWhiteHatAPI(SENTINEL_API_KEY)
-                .selectWhiteHatImportStyle()
                 .saveConfiguration(WHITEHAT)
                 .clickEditMappingButton(WHITEHAT, 1);
 
@@ -621,7 +614,6 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         remoteProvidersIndexPage.clickConfigure(WHITEHAT)
                 .setWhiteHatAPI(SENTINEL_API_KEY)
-                .selectWhiteHatImportStyle()
                 .saveConfiguration(WHITEHAT)
                 .mapProviderToTeamAndApp(WHITEHAT, 1, teamName, appName);
 
@@ -637,12 +629,12 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         sleep(10000);
 
-        assertTrue("Number of Open Vulnerabilities is not correct", teamDetailPage.isNumberOfOpenVulnerabilityCorrect("50", 0));
+        assertTrue("Number of Open Vulnerabilities is not correct", teamDetailPage.isNumberOfOpenVulnerabilityCorrect("77", 0));
         assertTrue("Number of Critical Vulnerability is not correct", teamDetailPage.isNumberOfCriticalCorrect("10", 0));
         assertTrue("Number of High Vulnerability is not correct", teamDetailPage.isNumberOfHighCorrect("11", 0));
-        assertTrue("Number of Medium Vulnerability is not correct", teamDetailPage.isNumberOfMediumCorrect("27", 0));
+        assertTrue("Number of Medium Vulnerability is not correct", teamDetailPage.isNumberOfMediumCorrect("47", 0));
         assertTrue("Number of Low Vulnerability is not correct", teamDetailPage.isNumberOfLowCorrect("1", 0));
-        assertTrue("Number of Info Vulnerability is not correct", teamDetailPage.isNumberOfInfoCorrect("1", 0));
+        assertTrue("Number of Info Vulnerability is not correct", teamDetailPage.isNumberOfInfoCorrect("8", 0));
 
         remoteProvidersIndexPage = teamDetailPage.clickRemoteProvidersLink()
                                     .clearConfiguration(WHITEHAT);
@@ -657,7 +649,6 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         remoteProvidersIndexPage.clickConfigure(WHITEHAT)
                 .setWhiteHatAPI(SENTINEL_API_KEY)
-                .selectWhiteHatImportStyle()
                 .saveConfiguration(WHITEHAT)
                 .mapProviderToTeamAndApp(WHITEHAT, 1, teamName, appName);
 
@@ -684,7 +675,6 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         remoteProvidersIndexPage.clickConfigure(WHITEHAT)
                 .setWhiteHatAPI(SENTINEL_API_KEY)
-                .selectWhiteHatImportStyle()
                 .saveConfiguration(WHITEHAT)
                 .mapProviderToTeamAndApp(WHITEHAT, 1, teamName, appName);
 

@@ -206,11 +206,6 @@ public class RemoteProvidersIndexPage extends BasePage {
         return new RemoteProvidersIndexPage(driver);
     }
 
-    public RemoteProvidersIndexPage selectWhiteHatImportStyle() {
-        driver.findElementByLinkText("WhiteHat").click();
-        return this;
-    }
-
     public RemoteProvidersIndexPage selectTeamMapping(String teamName){
         WebElement webElement = driver.findElementById("orgSelect1");
         new Select(webElement).selectByVisibleText(teamName);
