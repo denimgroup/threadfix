@@ -163,14 +163,14 @@
                                         <li class="normalLinks">
                                             <a id="manageUsersLink" href="<spring:url value="/configuration/users" htmlEscape="true"/>">Users</a>
                                         </li>
-                                        <security:authorize ifAnyGranted="ROLE_ENTERPRISE">
-                                            <li class="normalLinks">
-                                                <a id="manageGroupsLink" href="<spring:url value="/configuration/groups" htmlEscape="true"/>">Groups</a>
-                                            </li>
-                                        </security:authorize>
                                         <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_ROLES">
                                             <li class="normalLinks">
                                                 <a id="manageRolesLink" href="<spring:url value="/configuration/roles" htmlEscape="true"/>">Roles</a>
+                                            </li>
+                                        </security:authorize>
+                                        <security:authorize ifAnyGranted="ROLE_ENTERPRISE">
+                                            <li class="normalLinks">
+                                                <a id="manageGroupsLink" href="<spring:url value="/configuration/groups" htmlEscape="true"/>">Groups</a>
                                             </li>
                                         </security:authorize>
                                     </security:authorize>
