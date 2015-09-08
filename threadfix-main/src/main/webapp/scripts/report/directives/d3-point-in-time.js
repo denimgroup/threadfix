@@ -94,7 +94,9 @@ d3ThreadfixModule.directive('d3Pointintime', ['$window', '$timeout', 'd3', 'd3do
                         .attr("y", 9)
                         .attr("dy", ".70em")
                         .style("text-anchor", "start")
-                        .text(function(d) { return d.Severity; });
+                        .text(function(d) {
+                            return (d.Severity.length > 8 ? d.Severity.substring(0,8).concat("...") : d.Severity) ;
+                        });
 
                     legend.append("text")
                         .attr("x", 120)
