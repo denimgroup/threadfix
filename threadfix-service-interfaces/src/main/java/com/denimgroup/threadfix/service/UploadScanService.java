@@ -7,5 +7,5 @@ import java.util.Collection;
 public interface UploadScanService {
 
     Object processMultiFileUpload(Collection<MultipartFile> files, Integer orgId, Integer appId,
-                                  String channelIdString);
+                                  String channelIdString, boolean isBulkScans);
 }
