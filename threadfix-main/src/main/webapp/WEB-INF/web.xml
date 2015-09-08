@@ -130,6 +130,7 @@
                 regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/documents/[0-9]+/download$,
                 regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/documents/[0-9]+/view$,
                 regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/manual/[0-9]+/edit$,
+				regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/findings/[0-9]+/editDescription$,
                 regex ^/organizations/[0-9]+/applications/[0-9]+/scans/[0-9]+/findings/[0-9]+$,
                 regex ^/organizations/[0-9]+/applications/[0-9]+/progress/[0-9]+$,
                 regex ^/reports/[0-9]+$,
