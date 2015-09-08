@@ -231,7 +231,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		}
 
 		for (int i = 0; i < channelIds.size() ; i++) {
-			Scan scan = parseScan(channelIds.get(i), new ArrayList(Arrays.asList(new String[]{fileNames.get(i)})), new ArrayList(Arrays.asList(new String[]{originalNames.get(i)})), null);
+			Scan scan = parseScan(channelIds.get(i), list(fileNames.get(i)), list(originalNames.get(i)), null);
 			if (scan == null)
 				return null;
 			scans.add(scan);

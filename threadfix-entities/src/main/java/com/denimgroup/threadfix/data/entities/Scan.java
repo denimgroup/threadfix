@@ -231,7 +231,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	@JsonView({AllViews.FormInfo.class, AllViews.RestView2_1.class, AllViews.RestViewScanStatistic.class})
 	public List<String> getSavedFileNames() {
 		if ((savedFileNames == null || savedFileNames.size() == 0) && fileName != null)
-			savedFileNames = Arrays.asList(new String[]{fileName});
+			savedFileNames = list(fileName);
 
 		return savedFileNames;
 	}
