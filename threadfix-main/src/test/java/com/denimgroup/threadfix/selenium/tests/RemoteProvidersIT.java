@@ -529,6 +529,8 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         ApplicationDetailPage applicationDetailPage1 = new ApplicationDetailPage(driver);
 
+        applicationDetailPage1.waitForResultsToLoad();
+
         assertFalse("The critical vulnerability count was not updated.",
                 applicationDetailPage1.isVulnerabilityCountNonZero("Critical"));
         assertFalse("The high vulnerability count was not updated.",
