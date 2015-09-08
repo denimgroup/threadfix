@@ -24,8 +24,10 @@
 	<security:http auto-config="true" security-context-repository-ref="securityContextRepository">
 
 		<security:session-management>
-			<security:concurrency-control session-registry-alias="sessionRegistry"/>
+			<security:concurrency-control session-registry-alias="sessionRegistry" expired-url="/login.jsp?concurrentSessions=true"/>
 		</security:session-management>
+
+		<security:custom-filter before="CONCURRENT_SESSION_FILTER" ref="sessionTimeoutFilter" />
 
 		<security:intercept-url pattern="/login*" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 		<security:intercept-url pattern="/styles/*" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
@@ -44,8 +46,6 @@
 	<bean id="customAuthenticationProvider" class="com.denimgroup.threadfix.service.LdapAuthenticator">
 	</bean>
 
-	<bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl"/>
-
 	<security:authentication-manager>
 
 		<security:authentication-provider ref="customAuthenticationProvider"/>
@@ -62,6 +62,10 @@
 
 	<bean id="securityContextPersistenceFilter" class="org.springframework.security.web.context.SecurityContextPersistenceFilter">
 		<constructor-arg index="0" ref="securityContextRepository"/>
+	</bean>
+
+	<bean id="sessionTimeoutFilter" class="com.denimgroup.threadfix.webapp.filter.SessionTimeoutFilter">
+		<constructor-arg name="expiredUrl" value="/login.jsp?sessionTimeout=true"/>
 	</bean>
 
 </beans>

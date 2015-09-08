@@ -4,12 +4,20 @@ threadfixModule.factory('tfEncoder', function($rootScope, $location) {
 
     var tfEncoder = {};
 
-    tfEncoder.encode = function(path) {
-        return $rootScope.urlRoot + path + $rootScope.csrfToken;
+    tfEncoder.encode = function(path, omitCsrfToken) {
+        var encodedUrl = $rootScope.urlRoot + path;
+        if (!omitCsrfToken) {
+            encodedUrl = encodedUrl + $rootScope.csrfToken;
+        }
+        return encodedUrl;
     };
 
-    tfEncoder.encodeRelative = function(path) {
-        return $location.path() + path + $rootScope.csrfToken;
+    tfEncoder.encodeRelative = function(path, omitCsrfToken) {
+        var encodedUrl = $location.path() + path;
+        if (!omitCsrfToken) {
+            encodedUrl = encodedUrl + $rootScope.csrfToken;
+        }
+        return encodedUrl;
     };
 
     tfEncoder.urlRoot = $rootScope.urlRoot;
