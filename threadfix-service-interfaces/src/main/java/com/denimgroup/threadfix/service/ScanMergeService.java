@@ -80,4 +80,5 @@ public interface ScanMergeService {
 	 */
 	Scan processRemoteScan(Scan scan);
 
+	List<Scan> saveRemoteScansAndRun(List<Integer> channelIds, List<String> fileNames, List<String> originalNames);
 }

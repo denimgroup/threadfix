@@ -230,7 +230,7 @@ myAppModule.controller('ApplicationsIndexController',
                 controller: 'UploadScanController',
                 resolve: {
                     url: function() {
-                        return tfEncoder.encode("/organizations/" + team.id + "/applications/" + app.id + "/upload/remote");
+                        return "/organizations/" + team.id + "/applications/" + app.id + "/upload/remote";
                     },
                     files: function() {
                         return false;
@@ -261,7 +261,7 @@ myAppModule.controller('ApplicationsIndexController',
                     controller: 'UploadScanController',
                     resolve: {
                         url: function() {
-                            return tfEncoder.encode("/organizations/" + team.id + "/applications/" + app.id + "/upload/remote");
+                            return "/organizations/" + team.id + "/applications/" + app.id + "/upload/remote";
                         },
                         files: function() {
                             return $files;

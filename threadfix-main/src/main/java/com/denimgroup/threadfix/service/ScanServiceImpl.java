@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.service;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
-import com.denimgroup.threadfix.data.dao.EmptyScanDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
@@ -36,7 +35,6 @@ import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.importer.interop.ChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ChannelImporterFactory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.queue.QueueSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,10 +60,6 @@ public class ScanServiceImpl implements ScanService {
     private ScanDao                scanDao                = null;
     @Autowired
     private ApplicationChannelDao  applicationChannelDao  = null;
-    @Autowired
-    private EmptyScanDao           emptyScanDao           = null;
-    @Autowired
-    private QueueSender            queueSender            = null;
     @Autowired(required = false)
     @Nullable
     private PermissionService      permissionService      = null;
@@ -95,16 +89,7 @@ public class ScanServiceImpl implements ScanService {
 
         File scanFile = new File(fullFilePath);
 
-        List<String> originalFileNames = scan.getOriginalFileNames();
-        String finalName = null;
-
-        if (originalFileNames != null && !originalFileNames.isEmpty()) {
-            finalName = originalFileNames.get(0);
-        } else {
-            finalName = scan.getFileName();
-        }
-
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + finalName + "\"");
+        response.setHeader("Content-Disposition", "attachment; filename=\"fileExport.xml\"");
         response.setHeader("Content-Transfer-Encoding", "binary");
         response.setContentLength((int)scanFile.length());
         response.setContentType("application/xml");
