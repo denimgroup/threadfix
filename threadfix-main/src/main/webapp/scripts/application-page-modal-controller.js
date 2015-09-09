@@ -63,7 +63,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                    $rootScope.$broadcast('application', $scope.config.application);
                    $rootScope.$broadcast('scans', $scope.config.scans);
                    $rootScope.$broadcast('documents', $scope.config.documents);
-                   $rootScope.$broadcast('acceptanceCriteriaStatuses', $scope.config.application.acceptanceCriteriaStatuses);
+                   $rootScope.$broadcast('policyStatuses', $scope.config.application.policyStatuses);
 
                    $rootScope.$broadcast('loadVulnerabilitySearchTable');
 
@@ -198,9 +198,9 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             }
             $scope.currentModal.dismiss('modalChanged');
             $scope.showCreateDefectProfileModal();
-        } else if (name === 'manageAcceptanceCriteria') {
+        } else if (name === 'managePolicy') {
             $scope.currentModal.dismiss('modalChanged');
-            $scope.showAcceptanceCriteriaModal();
+            $scope.showPolicyModal();
         }
     });
 
@@ -610,24 +610,24 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
         });
     };
 
-    $scope.showAcceptanceCriteriaModal = function() {
+    $scope.showPolicyModal = function() {
 
         var modalInstance = $modal.open({
-            templateUrl: 'manageAcceptanceCriteriaModal.html',
-            controller: 'ManageAcceptanceCriteriaModalController',
+            templateUrl: 'managePolicyModal.html',
+            controller: 'ManagePolicyModalController',
             resolve: {
                 object: function() {
                     return angular.copy($scope.config.application);
                 },
-                acceptanceCriterias: function() {
-                    return angular.copy($scope.config.acceptanceCriterias)
+                policys: function() {
+                    return angular.copy($scope.config.policys)
                 }
             }
         });
 
         modalInstance.result.then(function (result) {
-            $scope.config.application.acceptanceCriterias = result.assignedAcceptanceCriterias;
-            $scope.config.acceptanceCriterias = result.availableAcceptanceCriterias;
+            $scope.config.application.policys = result.assignedPolicys;
+            $scope.config.policys = result.availablePolicys;
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
@@ -646,8 +646,8 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             $scope.$parent.tab = { scanAgentTasks: true };
         } else if (tab === 'Scheduled Scans') {
             $scope.$parent.tab = { scheduledScans: true };
-        } else if (tab === 'Acceptance Criteria') {
-            $scope.$parent.tab = { acceptanceCriteria: true };
+        } else if (tab === 'Policy') {
+            $scope.$parent.tab = { policy: true };
         }
     };
 

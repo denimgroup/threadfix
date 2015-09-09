@@ -1,26 +1,25 @@
 package com.denimgroup.threadfix.service;
 
-import java.util.*;
-
-import static com.denimgroup.threadfix.CollectionUtils.map;
-import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.listOf;
-
-import javax.annotation.Nullable;
-import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
 import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.email.EmailConfiguration;
+import com.denimgroup.threadfix.service.email.EmailFilterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.email.EmailConfiguration;
-import com.denimgroup.threadfix.service.email.EmailFilterService;
+import javax.annotation.Nullable;
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.*;
 
 @Service
 public class EmailReportServiceImpl implements EmailReportService {
@@ -43,7 +42,7 @@ public class EmailReportServiceImpl implements EmailReportService {
 	private DefaultConfigService defaultConfigService;
     @Nullable
     @Autowired(required = false)
-    AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
+	PolicyStatusService policyStatusService;
 
     private Set<String> getFilteredEmailAddresses(ScheduledEmailReport scheduledEmailReport) {
 
@@ -222,20 +221,20 @@ public class EmailReportServiceImpl implements EmailReportService {
 	}
 
     @Override
-    public void sendAcceptanceCriteriaReport(List<AcceptanceCriteriaStatus> acceptanceCriteriaStatuses) {
+    public void sendPolicyReport(List<PolicyStatus> policyStatuses) {
 
-        if (acceptanceCriteriaStatusService != null) {
-            Map<String, List<AcceptanceCriteriaStatus>> emailMap = map();
+        if (policyStatusService != null) {
+            Map<String, List<PolicyStatus>> emailMap = map();
 
-            for (AcceptanceCriteriaStatus acs : acceptanceCriteriaStatuses) {
+            for (PolicyStatus acs : policyStatuses) {
                 Set<String> filteredEmailAddresses = emailFilterService.getFilteredEmailAddresses(
-                        acceptanceCriteriaStatusService.getNotificationEmailAddresses(acs));
+                        policyStatusService.getNotificationEmailAddresses(acs));
 
                 LOG.info("Filtered email addresses: " + filteredEmailAddresses.toString());
 
                 for (String email : filteredEmailAddresses) {
                     if (!emailMap.containsKey(email)) {
-                        emailMap.put(email, CollectionUtils.<AcceptanceCriteriaStatus>list());
+                        emailMap.put(email, CollectionUtils.<PolicyStatus>list());
                     }
                     emailMap.get(email).add(acs);
                 }
@@ -244,18 +243,18 @@ public class EmailReportServiceImpl implements EmailReportService {
             if(emailMap.size() == 0)
                 return;
 
-            for (Map.Entry<String, List<AcceptanceCriteriaStatus>> entry : emailMap.entrySet()) {
+            for (Map.Entry<String, List<PolicyStatus>> entry : emailMap.entrySet()) {
                 String emailAddress = entry.getKey();
-                List<AcceptanceCriteriaStatus> statuses = entry.getValue();
+                List<PolicyStatus> statuses = entry.getValue();
 
                 Map<String, Object> model = map();
                 model.put("statuses", statuses);
 
-                String emailBody = templateBuilderService.prepareMessageFromTemplate(model, "acceptanceCriteriaReport.vm");
+                String emailBody = templateBuilderService.prepareMessageFromTemplate(model, "policyReport.vm");
                 MimeMessage message = javaMailSender.createMimeMessage();
 
                 try {
-                    message.setSubject("Acceptance Criteria Status Update");
+                    message.setSubject("Policy Status Update");
                     message.setContent(emailBody, "text/html; charset=utf-8");
                     message.addRecipient(MimeMessage.RecipientType.TO, new InternetAddress(emailAddress));
                 } catch (MessagingException e) {

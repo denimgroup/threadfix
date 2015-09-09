@@ -27,7 +27,7 @@ import com.denimgroup.threadfix.data.entities.FilterDate;
 import com.denimgroup.threadfix.data.entities.FilterJsonBlob;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.AcceptanceCriteriaStatusService;
+import com.denimgroup.threadfix.service.PolicyStatusService;
 import com.denimgroup.threadfix.service.FilterDateService;
 import com.denimgroup.threadfix.service.FilterJsonBlobService;
 import com.denimgroup.threadfix.views.AllViews;
@@ -51,7 +51,7 @@ public class JsonFilterBlobController {
     @Autowired
     private FilterDateService filterDateService;
     @Autowired(required = false)
-    private AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
+    private PolicyStatusService policyStatusService;
 
     // Turn Date.getTime() javascript numbers into java.util.Date objects.
     @InitBinder
@@ -75,14 +75,14 @@ public class JsonFilterBlobController {
                 LOG.info("Number of FilterJsonBlob objects updated to non-default trending report: " + String.valueOf(filtersNo));
             }
 
-            if (dbBlob != null && dbBlob.getAcceptanceCriteria() != null) {
-                filterJsonBlob.setAcceptanceCriteria(dbBlob.getAcceptanceCriteria());
+            if (dbBlob != null && dbBlob.getPolicy() != null) {
+                filterJsonBlob.setPolicy(dbBlob.getPolicy());
             }
 
             filterJsonBlobService.saveOrUpdate(filterJsonBlob);
 
-            if (acceptanceCriteriaStatusService != null && filterJsonBlob.getAcceptanceCriteria() != null) {
-                acceptanceCriteriaStatusService.runStatusCheck(filterJsonBlob.getAcceptanceCriteria());
+            if (policyStatusService != null && filterJsonBlob.getPolicy() != null) {
+                policyStatusService.runStatusCheck(filterJsonBlob.getPolicy());
             }
 
             return RestResponse.success(filterJsonBlobService.loadAllActive());

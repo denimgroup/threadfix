@@ -67,10 +67,10 @@
     <%@ include file="/WEB-INF/views/successMessage.jspf" %>
     <%@ include file="/WEB-INF/views/errorMessage.jspf"%>
 
-    <div ng-show="config.application.acceptanceCriteriaStatuses">
-        Acceptance Criteria Status:
-        <span id="appFilterPassing" ng-show="config.passFilters" style="cursor: pointer" ng-click="setTab('Acceptance Criteria')" class="badge" ng-class="{'badge-ac-status-passing': true}">PASSING</span>
-        <span id="appFilterFailing" ng-hide="config.passFilters" style="cursor: pointer" ng-click="setTab('Acceptance Criteria')" class="badge" ng-class="{'badge-ac-status-failing': true}">FAILING</span>
+    <div ng-show="config.application.policyStatuses">
+        Policy Status:
+        <span id="appFilterPassing" ng-show="config.passFilters" style="cursor: pointer" ng-click="setTab('Policy')" class="badge" ng-class="{'badge-ac-status-passing': true}">PASSING</span>
+        <span id="appFilterFailing" ng-hide="config.passFilters" style="cursor: pointer" ng-click="setTab('Policy')" class="badge" ng-class="{'badge-ac-status-failing': true}">FAILING</span>
     </div>
     <c:if test="${ canManageTags }">
         <span style="font-weight: bold;" ng-repeat="appTag in config.applicationTags" class="pointer badge" id="appTag{{ $index }}" ng-click="goToTag(appTag)" class="badge" ng-class="{'badge-application-tag': true}">{{appTag.name}}&nbsp;

@@ -1,6 +1,6 @@
 <html style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif">
     <body>
-        <p>Report of new Acceptance Criteria status changes</p>
+        <p>Report of new Policy status changes</p>
         <ul>
             #foreach( $status in $statuses )
                 #if ( $status.hasStatusChanged() )
@@ -17,7 +17,7 @@
                             $currentStatus
                         </span>
                         <span style="font-size: 14px">
-                            &nbsp;$status.name: $status.acceptanceCriteria.name ($status.acceptanceCriteria.getFilterJsonBlob().getName())
+                            &nbsp;$status.name: $status.policy.name ($status.policy.getFilterJsonBlob().getName())
                         </span>
                     </li>
                 #end

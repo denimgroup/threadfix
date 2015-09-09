@@ -148,7 +148,7 @@ public class Application extends AuditableEntity {
 	private List<RemoteProviderApplication> remoteProviderApplications;
 	private List<Document> documents;
 	private List<VulnerabilityFilter> filters;
-    private List<AcceptanceCriteriaStatus> acceptanceCriteriaStatuses;
+    private List<PolicyStatus> policyStatuses;
 
 	// these are here so we don't generate them more than we need to
 	private List<Integer> reportList = null;
@@ -435,12 +435,12 @@ public class Application extends AuditableEntity {
 
     @OneToMany(mappedBy = "application")
     @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class })
-    public List<AcceptanceCriteriaStatus> getAcceptanceCriteriaStatuses() {
-        return acceptanceCriteriaStatuses;
+    public List<PolicyStatus> getPolicyStatuses() {
+        return policyStatuses;
     }
 
-    public void setAcceptanceCriteriaStatuses(List<AcceptanceCriteriaStatus> acceptanceCriteriaStatuses) {
-        this.acceptanceCriteriaStatuses = acceptanceCriteriaStatuses;
+    public void setPolicyStatuses(List<PolicyStatus> policyStatuses) {
+        this.policyStatuses = policyStatuses;
     }
 
 	public void setVulnerabilities(List<Vulnerability> vulnerabilities) {
@@ -863,7 +863,7 @@ public class Application extends AuditableEntity {
     // TODO exclude from default ObjectMapper
     @Transient
     @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.VulnSearchApplications.class,
-            AllViews.RestViewTag.class, AllViews.DefectTrackerInfos.class, AllViews.AcceptanceCriteriaPageView.class })
+            AllViews.RestViewTag.class, AllViews.DefectTrackerInfos.class, AllViews.PolicyPageView.class })
     public Map<String, Object> getTeam() {
         Organization team = getOrganization();
 
@@ -927,14 +927,14 @@ public class Application extends AuditableEntity {
 
     @Transient
     @JsonView(AllViews.FormInfo.class)
-    public List<AcceptanceCriteria> getAcceptanceCriterias(){
-        List<AcceptanceCriteria> acceptanceCriteriaList = list();
+    public List<Policy> getPolicies(){
+        List<Policy> policyList = list();
 
-        for (AcceptanceCriteriaStatus acceptanceCriteriaStatus : acceptanceCriteriaStatuses) {
-            acceptanceCriteriaList.add(acceptanceCriteriaStatus.getAcceptanceCriteria());
+        for (PolicyStatus policyStatus : policyStatuses) {
+            policyList.add(policyStatus.getPolicy());
         }
 
-        return acceptanceCriteriaList;
+        return policyList;
     }
 
     @Column

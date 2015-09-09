@@ -130,9 +130,11 @@
                                         </li>
                                     </security:authorize>
 
+                                    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS">
                                         <li class="normalLinks">
                                             <a id="customizeScannerSeveritiesLink" href="<spring:url value="/customize/scannerSeverities" htmlEscape="true"/>">Scanner Severities</a>
                                         </li>
+                                    </security:authorize>
 
                                     <security:authorize ifAllGranted="ROLE_CAN_MANAGE_TAGS">
                                         <li class="normalLinks">
@@ -142,7 +144,7 @@
 
                                     <security:authorize ifAllGranted="ROLE_ENTERPRISE">
                                         <li class="normalLinks">
-                                            <a id="acceptCriteriaLink" href="<spring:url value="/configuration/acceptcriterias" htmlEscape="true"/>">Acceptance Criteria</a>
+                                            <a id="policiesLink" href="<spring:url value="/configuration/policies" htmlEscape="true"/>">Policies</a>
                                         </li>
                                     </security:authorize>
                                 </ul>

@@ -100,8 +100,8 @@ myAppModule.controller('EditApplicationModalController', function ($log, $scope,
         }
     };
 
-    $scope.goToAcceptanceCriteriaPage = function() {
-        $window.location.href = tfEncoder.encode("/configuration/acceptcriterias");
+    $scope.goToPolicyPage = function() {
+        $window.location.href = tfEncoder.encode("/configuration/policies");
     }
 
 });

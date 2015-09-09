@@ -76,13 +76,13 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
     }
 
     @Override
-    public List<Event> loadAllByAcceptanceCriteria(AcceptanceCriteria acceptanceCriteria) {
-        return eventDao.retrieveAllByAcceptanceCriteria(acceptanceCriteria);
+    public List<Event> loadAllByPolicy(Policy policy) {
+        return eventDao.retrieveAllByPolicy(policy);
     }
 
     @Override
-    public List<Event> loadAllByAcceptanceCriteriaStatus(AcceptanceCriteriaStatus acceptanceCriteriaStatus) {
-        return eventDao.retrieveAllByAcceptanceCriteriaStatus(acceptanceCriteriaStatus);
+    public List<Event> loadAllByPolicyStatus(PolicyStatus policyStatus) {
+        return eventDao.retrieveAllByPolicyStatus(policyStatus);
     }
 
     @Override
