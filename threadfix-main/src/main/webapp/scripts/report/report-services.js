@@ -708,6 +708,13 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities, customSev
 
             $log.info("refreshScans.initialize took " + ((new Date()).getTime() - start.getTime()) + " ms");
 
+            $scope.totalVulnsByChannelMap = {};
+            $scope.infoVulnsByChannelMap = {};
+            $scope.lowVulnsByChannelMap = {};
+            $scope.mediumVulnsByChannelMap = {};
+            $scope.highVulnsByChannelMap = {};
+            $scope.criticalVulnsByChannelMap = {};
+
             var _scan = trendingUtilities.filterDisplayData($scope.filterScans[$scope.filterScans.length - 1], $scope);
 
             $log.info("refreshScans.filterDisplayData took " + ((new Date()).getTime() - start.getTime()) + " ms");
