@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.apache.commons.validator.routines.UrlValidator;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -166,6 +167,8 @@ public class SurfaceLocation extends BaseEntity {
     @JsonIgnore
     @JsonView(AllViews.RestView2_1.class)
 	public URL getUrl() {
+		String[] httpSchemes = {"http", "https"};
+		UrlValidator urlValidator = new UrlValidator(httpSchemes);
 		if (url == null) {
 			try {
 				int tempPort = -1;
@@ -183,9 +186,9 @@ public class SurfaceLocation extends BaseEntity {
                     tempHost = (tempHost != null && !tempHost.isEmpty()) ? tempHost : host;
 					url = new URL(host.contains("https") ? "https" : "http", tempHost, tempPort, path);
 				} else if (path != null) {
-					if (path.contains("http")) {
+					if (urlValidator.isValid(path)) {
 						url = new URL(path);
-					} else {
+					}else {
 						url = new URL("http", "localhost", tempPort, path);
 					}
 				} else {
