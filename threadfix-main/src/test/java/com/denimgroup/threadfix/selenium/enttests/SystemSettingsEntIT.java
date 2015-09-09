@@ -214,21 +214,17 @@ public class SystemSettingsEntIT extends BaseDataTest {
 
     @Test
     public void testSessionTimeout() {
-        createTeam();
-
         systemSettingsPage.expandSessionTimeoutSettings()
                 .setTimeout("1")
                 .clickSaveChanges();
 
         assertTrue("Save validation alert was not present." ,systemSettingsPage.isSaveSuccessful());
 
-        systemSettingsPage.logout()
+        DashboardPage dashboardPage = systemSettingsPage.logout()
                 .defaultLogin()
-                .clickOrganizationHeaderLink();
+                .clickDashboardLink();
 
         sleep(63000);
-
-        DashboardPage dashboardPage = systemSettingsPage.clickDashboardLink();
 
         assertFalse("Session was still valid.", dashboardPage.isLoggedin());
 
