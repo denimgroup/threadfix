@@ -619,15 +619,15 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                 object: function() {
                     return angular.copy($scope.config.application);
                 },
-                policys: function() {
-                    return angular.copy($scope.config.policys)
+                policies: function() {
+                    return angular.copy($scope.config.policies)
                 }
             }
         });
 
         modalInstance.result.then(function (result) {
-            $scope.config.application.policys = result.assignedPolicys;
-            $scope.config.policys = result.availablePolicys;
+            $scope.config.application.policies = result.assignedPolicys;
+            $scope.config.policies = result.availablePolicys;
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });

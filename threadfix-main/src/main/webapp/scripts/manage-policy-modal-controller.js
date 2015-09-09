@@ -1,8 +1,8 @@
 var myAppModule = angular.module('threadfix');
 
-myAppModule.controller('ManagePolicyModalController', function ($scope, $rootScope, $modalInstance, $http, threadFixModalService, tfEncoder, object, policys) {
+myAppModule.controller('ManagePolicyModalController', function ($scope, $rootScope, $modalInstance, $http, threadFixModalService, tfEncoder, object, policies) {
 
-    $scope.policys = policys;
+    $scope.policies = policies;
     $scope.object = object;
     $scope.object.policysExpanded = true;
 
@@ -10,7 +10,8 @@ myAppModule.controller('ManagePolicyModalController', function ($scope, $rootSco
         return a.name.localeCompare(b.name);
     };
 
-    $scope.object.policys.sort(nameCompare);
+    $scope.policies.sort(nameCompare);
+    $scope.object.policies.sort(nameCompare);
 
     $scope.togglePolicys = function(object) {
         if (typeof $scope.object.policysExpanded === "undefined") {
@@ -23,25 +24,25 @@ myAppModule.controller('ManagePolicyModalController', function ($scope, $rootSco
         object.newPolicyId = policy.id;
     };
 
-    $scope.addNewPolicy = function(acceptcriteria){
+    $scope.addNewPolicy = function(policy){
         if (!$scope.object.newPolicy) return;
         $scope.object.newPolicyError = null;
         $scope.object.newPolicyLoading = true;
 
-        $http.get(tfEncoder.encode("/configuration/policies/" + acceptcriteria.id + "/add/" + $scope.object.id)).
+        $http.get(tfEncoder.encode("/configuration/policies/" + policy.id + "/add/" + $scope.object.id)).
             success(function(data, status, headers, config) {
                 if (data.success) {
                     $scope.object.newPolicy = null;
-                    threadFixModalService.addElement($scope.object.policys, data.object);
+                    threadFixModalService.addElement($scope.object.policies, data.object);
 
-                    for (var i = 0; i < $scope.policys.length; i++ ) {
-                        if (acceptcriteria.id == $scope.policys[i].id){
-                            $scope.policys.splice(i,1);
+                    for (var i = 0; i < $scope.policies.length; i++ ) {
+                        if (policy.id == $scope.policies[i].id){
+                            $scope.policies.splice(i,1);
                             break;
                         }
                     }
 
-                    $scope.object.policys.sort(nameCompare);
+                    $scope.object.policies.sort(nameCompare);
                 }
                 else {
                     $scope.object.newPolicyError = data.message;
@@ -59,9 +60,9 @@ myAppModule.controller('ManagePolicyModalController', function ($scope, $rootSco
             $http.get(tfEncoder.encode("/configuration/policies/" + policy.id + "/remove/" + $scope.object.id)).
                 success(function(data, status, headers, config) {
                     if (data.success) {
-                        threadFixModalService.deleteElement($scope.object.policys, policy);
-                        threadFixModalService.addElement($scope.policys, policy);
-                        $scope.policys.sort(nameCompare);
+                        threadFixModalService.deleteElement($scope.object.policies, policy);
+                        threadFixModalService.addElement($scope.policies, policy);
+                        $scope.policies.sort(nameCompare);
                     }
                     else {
                         $scope.errorMessage = "Failure. Message was : " + data.message;
@@ -77,8 +78,8 @@ myAppModule.controller('ManagePolicyModalController', function ($scope, $rootSco
 
     $scope.cancel = function () {
         $modalInstance.close({
-            assignedPolicys: $scope.object.policys,
-            availablePolicys: $scope.policys
+            assignedPolicys: $scope.object.policies,
+            availablePolicys: $scope.policies
         });
     };
 });

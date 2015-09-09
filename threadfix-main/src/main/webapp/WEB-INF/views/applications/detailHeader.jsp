@@ -68,7 +68,7 @@
     <%@ include file="/WEB-INF/views/errorMessage.jspf"%>
 
     <div ng-show="config.application.policyStatuses">
-        Policy Status:
+        Policy Status
         <span id="appFilterPassing" ng-show="config.passFilters" style="cursor: pointer" ng-click="setTab('Policy')" class="badge" ng-class="{'badge-ac-status-passing': true}">PASSING</span>
         <span id="appFilterFailing" ng-hide="config.passFilters" style="cursor: pointer" ng-click="setTab('Policy')" class="badge" ng-class="{'badge-ac-status-failing': true}">FAILING</span>
     </div>

@@ -20,7 +20,7 @@
     </div>
 
     <div class="modal-body">
-        <div id="policys">
+        <div id="policies">
             <div class="row-fluid padding">
                 <div class="span1" id="acceptcriteriaCaret{{ object.name }}" style="width: 10px;" ng-click="togglePolicys(object)">
                     <div style="margin-top:10px">
@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 <div class="span5">
-                    <select ng-options="policy.name for policy in policys track by policy.id"
+                    <select ng-options="policy.name for policy in policies track by policy.id"
                             id="policySelect" ng-model="object.newPolicy"></select>
                 </div>
                 <div class="span2" style="padding-left: 10px">
@@ -39,14 +39,14 @@
                     <span class="errors" ng-show="object.newPolicyError"> {{ object.newPolicyError }}</span>
                 </div>
             </div>
-            <div class="row-fluid padding" ng-show="object.policysExpanded && !object.policys">
+            <div class="row-fluid padding" ng-show="object.policysExpanded && (!object.policies || object.policies.length == 0)">
                 <div class="span1" style="width: 10px"></div>
                 <div class="span11">No Policy</div>
             </div>
-            <div class="row-fluid padding" ng-show="object.policysExpanded && object.policys">
-                <div class="row-fluid" ng-repeat="policy in object.policys">
+            <div class="row-fluid padding" ng-show="object.policysExpanded && object.policies && object.policies.length > 0">
+                <div class="row-fluid" ng-repeat="policy in object.policies">
                     <div class="span1" style="width: 10px"></div>
-                    <div class="span11" id="acceptcriteria{{ policy.name | removeSpace}}">
+                    <div class="span11" id="policy{{ policy.name | removeSpace}}">
                         <span class="icon-remove icon-red" style="cursor: pointer" ng-click="deletePolicy(policy)"></span>
                         {{ policy.name }}
                     </div>

@@ -235,7 +235,7 @@ public class ApplicationsController {
         map.put("isEnterprise", EnterpriseTest.isEnterprise());
 
         if (EnterpriseTest.isEnterprise()) {
-            map.put("policys", applicationService.loadUnassociatedPolicies(application));
+            map.put("policies", applicationService.loadUnassociatedPolicies(application));
             map.put("scanAgentSupportedList", ScannerType.getScanAgentSupportedListInString());
             map.put("policyExist", policyService.loadAll().size() > 0);
         }
