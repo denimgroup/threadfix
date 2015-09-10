@@ -51,7 +51,7 @@ public interface ThreadFixRestClient {
     public RestResponse<Application> setParameters(String appId, String frameworkType, String repositoryUrl);
     public RestResponse<Application> searchForApplicationById(String id);
     public RestResponse<Application> searchForApplicationByName(String name, String teamName);
-    public RestResponse<Application> searchForApplicationByUniqueId(String uniqueId, String teamName);
+    public RestResponse<Application[]> searchForApplicationByUniqueId(String uniqueId, String teamName);
 
     public RestResponse<Organization[]> getAllTeams();
     public RestResponse<Organization> createTeam(String name);

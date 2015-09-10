@@ -213,33 +213,49 @@ public class ApplicationRestController extends TFRestController {
         }
 
         Application application = null;
+        List<Application> applications = null;
         int teamId = org.getId();
         if (appName != null)
             application = applicationService.loadApplication(appName, teamId);
         if (appUniqueId != null)
-            application = applicationService.loadApplicationByUniqueId(appUniqueId, teamId);
+            applications = applicationService.loadApplicationByUniqueId(appUniqueId, teamId);
 
-        if (application == null) {
+        if (application == null && applications == null) {
             if ((appName != null) && (appName.contains("+"))) {
                 appName = appName.replace("+", " ");
                 application = applicationService.loadApplication(appName, teamId);
             }
             if ((appUniqueId != null) && (appUniqueId.contains("+"))) {
                 appUniqueId = appUniqueId.replace("+", " ");
-                application = applicationService.loadApplicationByUniqueId(appUniqueId, teamId);
+                applications = applicationService.loadApplicationByUniqueId(appUniqueId, teamId);
             }
-            if (application == null) {
+            if (application == null && applications == null) {
                 log.warn(APPLICATION_LOOKUP_FAILED);
                 return failure(APPLICATION_LOOKUP_FAILED);
             }
         }
 
-        keyCheck = checkKey(request, APPLICATION_LOOKUP, teamId, application.getId());
-        if (!keyCheck.success()) {
-            return resultError(keyCheck);
+        List<Application> returnApps = list();
+
+        if (application != null) {
+            keyCheck = checkKey(request, APPLICATION_LOOKUP, teamId, application.getId());
+            if (!keyCheck.success()) {
+                return resultError(keyCheck);
+            }
         }
 
-        return RestResponse.success(application);
+        if (applications != null) {
+            for (Application app: applications) {
+                keyCheck = checkKey(request, APPLICATION_LOOKUP, teamId, app.getId());
+                if (!keyCheck.success()) {
+                    log.error(keyCheck.getErrorMessage());
+                } else {
+                    returnApps.add(app);
+                }
+            }
+        }
+
+        return application != null ? RestResponse.success(application) : RestResponse.success(returnApps);
     }
 
     /**
