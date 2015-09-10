@@ -37,7 +37,7 @@ import static com.denimgroup.threadfix.CollectionUtils.map;
 
 @Entity
 @Table(name = "GenericSeverity")
-public class GenericSeverity extends BaseEntity {
+public class GenericSeverity extends BaseEntity implements Comparable<GenericSeverity> {
 
 	private static final long serialVersionUID = 8187838743225832281L;
 	
@@ -136,4 +136,14 @@ public class GenericSeverity extends BaseEntity {
 	public String getDisplayName() {
 		return customName == null || customName.trim().length() == 0 ? name : customName;
 	}
+
+    /**
+     * @param genericSeverity the object to be compared.
+     * @return a negative integer, zero, or a positive integer as this object
+     * is less than, equal to, or greater than the specified object.
+     */
+    @Override
+    public int compareTo(GenericSeverity genericSeverity) {
+        return genericSeverity.getIntValue() - this.getIntValue();
+    }
 }
