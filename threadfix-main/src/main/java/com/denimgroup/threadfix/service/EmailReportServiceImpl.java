@@ -226,9 +226,9 @@ public class EmailReportServiceImpl implements EmailReportService {
         if (policyStatusService != null) {
             Map<String, List<PolicyStatus>> emailMap = map();
 
-            for (PolicyStatus acs : policyStatuses) {
+            for (PolicyStatus policyStatus : policyStatuses) {
                 Set<String> filteredEmailAddresses = emailFilterService.getFilteredEmailAddresses(
-                        policyStatusService.getNotificationEmailAddresses(acs));
+                        policyStatusService.getNotificationEmailAddresses(policyStatus));
 
                 LOG.info("Filtered email addresses: " + filteredEmailAddresses.toString());
 
@@ -236,7 +236,7 @@ public class EmailReportServiceImpl implements EmailReportService {
                     if (!emailMap.containsKey(email)) {
                         emailMap.put(email, CollectionUtils.<PolicyStatus>list());
                     }
-                    emailMap.get(email).add(acs);
+                    emailMap.get(email).add(policyStatus);
                 }
             }
 

@@ -17,8 +17,8 @@
                 <td id="policyName{{ $index }}"> {{ policyStatus.policy.name }} </td>
                 <td id="acFilterName{{ $index }}"> {{ policyStatus.policy.filterName }} </td>
                 <td id="policyStatus{{ $index }}">
-                    <span id="acsStatusPass" ng-show="policyStatus.passing" class="badge" ng-class="{'badge-ac-status-passing': true}">PASS</span>
-                    <span id="acsStatusFail" ng-hide="policyStatus.passing" class="badge" ng-class="{'badge-ac-status-failing': true}">FAIL</span>
+                    <span id="policyStatusStatusPass" ng-show="policyStatus.passing" class="badge" ng-class="{'badge-ac-status-passing': true}">PASS</span>
+                    <span id="policyStatusStatusFail" ng-hide="policyStatus.passing" class="badge" ng-class="{'badge-ac-status-failing': true}">FAIL</span>
                 </td>
             </tr>
             </tbody>
