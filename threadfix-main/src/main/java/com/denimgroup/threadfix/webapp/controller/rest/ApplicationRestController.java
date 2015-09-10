@@ -42,7 +42,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 
@@ -220,28 +222,29 @@ public class ApplicationRestController extends TFRestController {
                 return failure(APPLICATION_LOOKUP_FAILED);
         }
         Application application = null;
+        List<Application> applications = null;
         int teamId = org.getId();
         if (appName != null)
             application = applicationService.loadApplication(appName, teamId);
         if (appUniqueId != null)
-            application = applicationService.loadApplicationByUniqueId(appUniqueId, teamId);
+            applications = applicationService.loadApplicationByUniqueId(appUniqueId, teamId);
 
-        if (application == null) {
+        if (application == null && applications == null) {
             if ((appName != null) && (appName.contains("+"))) {
                 appName = appName.replace("+", " ");
                 application = applicationService.loadApplication(appName, teamId);
             }
             if ((appUniqueId != null) && (appUniqueId.contains("+"))) {
                 appUniqueId = appUniqueId.replace("+", " ");
-                application = applicationService.loadApplicationByUniqueId(appUniqueId, teamId);
+                applications = applicationService.loadApplicationByUniqueId(appUniqueId, teamId);
             }
-            if (application == null) {
+            if (application == null && applications == null) {
                 log.warn(APPLICATION_LOOKUP_FAILED);
                 return failure(APPLICATION_LOOKUP_FAILED);
             }
         }
 
-        return RestResponse.success(application);
+        return application != null ? RestResponse.success(application) : RestResponse.success(applications);
     }
 
     /**

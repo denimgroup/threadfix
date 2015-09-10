@@ -50,7 +50,7 @@ public interface ApplicationDao extends GenericObjectDao<Application> {
      * @param teamId
      * @return
      */
-    public Application retrieveByUniqueId(String uniqueId, int teamId);
+    public List<Application> retrieveByUniqueId(String uniqueId, int teamId);
 
     /**
 	 * 

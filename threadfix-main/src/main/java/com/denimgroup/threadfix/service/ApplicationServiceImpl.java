@@ -119,7 +119,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 
 	@Override
-    public Application loadApplicationByUniqueId(String uniqueId, int teamId) {
+    public List<Application> loadApplicationByUniqueId(String uniqueId, int teamId) {
         return applicationDao.retrieveByUniqueId(uniqueId, teamId);
     }
 
