@@ -380,9 +380,9 @@ threadfixModule.factory('reportConstants', function() {
     var reportConstants = {};
 
     reportConstants.vulnTypeColorList = ["#014B6E", "#458A37", "#EFD20A", "#F27421", "#F7280C", "#C2A677",
-        "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd" ];
+        "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#006699" ];
     reportConstants.vulnTypeTextColorList = ["#688c9d", "#458A37", "#EFD20A", "#F27421", "#F7280C", "#C2A677",
-        "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd" ];
+        "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#006699" ];
     reportConstants.vulnTypeList = ["Info", "Low", "Medium", "High", "Critical"];
     reportConstants.vulnTypeColorMap = {
         Info: {
@@ -424,6 +424,10 @@ threadfixModule.factory('reportConstants', function() {
         Total: {
             graphColor: reportConstants.vulnTypeColorList[9],
             textColor: reportConstants.vulnTypeTextColorList[9]
+        },
+        Hidden: {
+            graphColor: reportConstants.vulnTypeColorList[10],
+            textColor: reportConstants.vulnTypeTextColorList[10]
         }
 
     };
