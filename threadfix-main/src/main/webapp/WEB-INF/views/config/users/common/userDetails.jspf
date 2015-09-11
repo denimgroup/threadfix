@@ -84,6 +84,7 @@
             Submitting
         </button>
         <button id="submit"
+                ng-disabled="compare(form, user)"
                 ng-class="{ disabled : compare(form, user) }"
                 class="btn btn-primary"
                 ng-hide="loading"
