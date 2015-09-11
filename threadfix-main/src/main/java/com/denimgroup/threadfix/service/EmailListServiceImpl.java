@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.dao.EmailListDao;
 import com.denimgroup.threadfix.data.dao.GenericNamedObjectDao;
-import com.denimgroup.threadfix.data.dao.GenericObjectDao;
 import com.denimgroup.threadfix.data.entities.EmailList;
 import com.denimgroup.threadfix.data.entities.ScheduledEmailReport;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -88,7 +87,13 @@ public class EmailListServiceImpl extends AbstractNamedObjectService<EmailList> 
         }
 
         markInactive(emailList);
-
+        emailList.setName("del-" + emailList.getId() + "_" + emailList.getName());
         saveOrUpdate(emailList);
+    }
+
+    @Override
+    public boolean nameExists(String name) {
+        EmailList emailList = loadByName(name);
+        return (emailList != null && emailList.isActive());
     }
 }

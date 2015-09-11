@@ -86,7 +86,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Nullable
     @Autowired(required = false)
-    private AcceptanceCriteriaService acceptanceCriteriaService;
+    private PolicyService policyService;
 
     @Nullable
 	@Autowired(required = false)
@@ -101,7 +101,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Nullable
     @Autowired(required = false)
-    private AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
+    private PolicyStatusService policyStatusService;
 
     @Override
 	public List<Application> loadAllActive() {
@@ -202,10 +202,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 
 		application.getOrganization().updateVulnerabilityReport();
 
-        if (acceptanceCriteriaStatusService != null && application.getAcceptanceCriteriaStatuses() != null) {
-            for (AcceptanceCriteriaStatus acceptanceCriteriaStatus: application.getAcceptanceCriteriaStatuses()) {
-                acceptanceCriteriaStatusService.delete(acceptanceCriteriaStatus);
-                acceptanceCriteriaStatus.setApplication(null);
+        if (policyStatusService != null && application.getPolicyStatuses() != null) {
+            for (PolicyStatus policyStatus : application.getPolicyStatuses()) {
+                policyStatusService.delete(policyStatus);
+                policyStatus.setApplication(null);
             }
         }
 
@@ -891,16 +891,16 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public List<AcceptanceCriteria> loadUnassociatedAcceptanceCriteria(Application application) {
+    public List<Policy> loadUnassociatedPolicies(Application application) {
 
-        if (acceptanceCriteriaService == null)
+        if (policyService == null)
             return list();
 
-        List<AcceptanceCriteria> acceptanceCriterias = acceptanceCriteriaService.loadAll();
+        List<Policy> policies = policyService.loadAll();
 
-        if(acceptanceCriterias != null && acceptanceCriterias.size() > 0)
-            acceptanceCriterias.removeAll(application.getAcceptanceCriterias());
+        if(policies != null && policies.size() > 0)
+            policies.removeAll(application.getPolicies());
 
-        return acceptanceCriterias;
+        return policies;
     }
 }

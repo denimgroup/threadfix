@@ -3,6 +3,7 @@ var module = angular.module('threadfix')
 module.controller('ScheduledEmailReportsController', function($scope, $http, $modal, $log, tfEncoder, threadFixModalService){
 
     $scope.scheduledEmailReports = [];
+    $scope.isConfiguredEmail = true;
 
     var scheduleCompare = function(a,b){
         if (a.id < b.id) return -1;

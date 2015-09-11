@@ -271,7 +271,7 @@ public class ApplicationRestController extends TFRestController {
             }
         }
 
-        return uploadScanService.processMultiFileUpload(fileList, null, appId, request.getParameter("channelId"));
+        return uploadScanService.processMultiFileUpload(fileList, null, appId, request.getParameter("channelId"), false);
     }
 
     /**

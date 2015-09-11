@@ -96,13 +96,13 @@ public class EventBuilder {
         return this;
     }
 
-    public EventBuilder setAcceptanceCriteria(AcceptanceCriteria acceptanceCriteria) {
-        event.setAcceptanceCriteria(acceptanceCriteria);
+    public EventBuilder setPolicy(Policy policy) {
+        event.setPolicy(policy);
         return this;
     }
 
-    public EventBuilder setAcceptanceCriteriaStatus(AcceptanceCriteriaStatus acceptanceCriteriaStatus) {
-        event.setAcceptanceCriteriaStatus(acceptanceCriteriaStatus);
+    public EventBuilder setPolicyStatus(PolicyStatus policyStatus) {
+        event.setPolicyStatus(policyStatus);
         return this;
     }
 }

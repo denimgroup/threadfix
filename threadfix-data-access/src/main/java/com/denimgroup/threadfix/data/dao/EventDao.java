@@ -39,9 +39,9 @@ public interface EventDao extends GenericObjectDao<Event> {
 
     List<Event> retrieveAllByDefect(Defect defect);
 
-    List<Event> retrieveAllByAcceptanceCriteria(AcceptanceCriteria acceptanceCriteria);
+    List<Event> retrieveAllByPolicy(Policy policy);
 
-    List<Event> retrieveAllByAcceptanceCriteriaStatus(AcceptanceCriteriaStatus acceptanceCriteriaStatus);
+    List<Event> retrieveAllByPolicyStatus(PolicyStatus policyStatus);
 
     List<Event> retrieveUngroupedByUser(User user);
 

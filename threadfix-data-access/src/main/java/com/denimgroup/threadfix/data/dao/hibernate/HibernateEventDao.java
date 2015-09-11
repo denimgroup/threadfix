@@ -105,12 +105,12 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
     }
 
     @Override
-    public List<Event> retrieveAllByAcceptanceCriteria(AcceptanceCriteria acceptanceCriteria) {
+    public List<Event> retrieveAllByPolicy(Policy policy) {
 
         Criteria criteria = getSession()
                 .createCriteria(getClassReference())
                 .add(Restrictions.eq("active", true))
-                .add(Restrictions.eq("acceptanceCriteria", acceptanceCriteria));
+                .add(Restrictions.eq("policy", policy));
 
         Order order = getOrder();
         if (order != null) {
@@ -121,12 +121,12 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
     }
 
     @Override
-    public List<Event> retrieveAllByAcceptanceCriteriaStatus(AcceptanceCriteriaStatus acceptanceCriteriaStatus) {
+    public List<Event> retrieveAllByPolicyStatus(PolicyStatus policyStatus) {
 
         Criteria criteria = getSession()
                 .createCriteria(getClassReference())
                 .add(Restrictions.eq("active", true))
-                .add(Restrictions.eq("acceptanceCriteriaStatus", acceptanceCriteriaStatus));
+                .add(Restrictions.eq("policyStatus", policyStatus));
 
         Order order = getOrder();
         if (order != null) {

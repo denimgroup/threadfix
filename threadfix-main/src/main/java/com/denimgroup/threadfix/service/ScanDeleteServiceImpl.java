@@ -72,7 +72,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
     private DefaultConfigService defaultConfigService;
     @Nullable
     @Autowired(required = false)
-    private AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
+    private PolicyStatusService policyStatusService;
 
 	private DefaultConfiguration defaultConfiguration;
 
@@ -202,8 +202,8 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
         }
 
         // Run status check on delete
-        if (acceptanceCriteriaStatusService != null) {
-            acceptanceCriteriaStatusService.runStatusCheck(app.getId());
+        if (policyStatusService != null) {
+            policyStatusService.runStatusCheck(app.getId());
         }
 
 		log.info("The scan deletion has finished.");

@@ -24,12 +24,12 @@
 
 package com.denimgroup.threadfix.data.dao;
 
-import com.denimgroup.threadfix.data.entities.AcceptanceCriteriaStatus;
+import com.denimgroup.threadfix.data.entities.PolicyStatus;
 
 /**
  * @author zabdisubhan
  */
-public interface AcceptanceCriteriaStatusDao extends GenericObjectDao<AcceptanceCriteriaStatus> {
+public interface PolicyStatusDao extends GenericObjectDao<PolicyStatus> {
 
-    void delete(AcceptanceCriteriaStatus acceptanceCriteriaStatus);
+    void delete(PolicyStatus policyStatus);
 }

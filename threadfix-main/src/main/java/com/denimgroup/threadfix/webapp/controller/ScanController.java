@@ -47,6 +47,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
@@ -91,14 +92,9 @@ public class ScanController {
 			scan = scanService.loadScan(scanId);
 			scanService.loadStatistics(scan);
 		}
-		if (scan == null) {
-			if (orgId != null && appId != null) {
-				return new ModelAndView("redirect:/organizations/" + orgId + "/applications/" + appId + "/scans");
-			} else if (orgId != null) {
-				return new ModelAndView("redirect:/organizations/" + orgId);
-			} else {
-				return new ModelAndView("redirect:/");
-			}
+		if ((scan == null) || (scan.getApplication() == null) || (!scan.getApplication().isActive())) {
+			log.warn(ResourceNotFoundException.getLogMessage("Scan", scanId));
+			throw new ResourceNotFoundException();
 		}
 
 		long numFindings = scanService.getFindingCount(scanId);
@@ -123,7 +119,7 @@ public class ScanController {
 
 		if (scanId != null) {
 			Scan scan = scanService.loadScan(scanId);
-			if (scan != null) {
+			if ((scan != null) && (scan.getApplication() != null) && (scan.getApplication().isActive())) {
 				scanDeleteService.deleteScan(scan);
 				vulnerabilityService.updateVulnerabilityReport(
 						applicationService.loadApplication(appId), scanId);
@@ -133,10 +129,11 @@ public class ScanController {
 		return RestResponse.success("Successfully deleted scan.");
 	}
 
-	@RequestMapping(value = "/{scanId}/download", method = RequestMethod.GET)
+	@RequestMapping(value = "/{scanId}/download/{scanFileName}", method = RequestMethod.GET)
 	public @ResponseBody RestResponse<String> downloadScan(@PathVariable("orgId") Integer orgId,
 														   @PathVariable("appId") Integer appId,
 														   @PathVariable("scanId") Integer scanId,
+														   @PathVariable("scanFileName") String scanFileName,
 														   HttpServletResponse response) {
 
 		if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
@@ -151,18 +148,27 @@ public class ScanController {
 
 		if (scanId != null) {
 			Scan scan = scanService.loadScan(scanId);
-			if (scan != null) {
+			if ((scan != null) && (scan.getApplication() != null) && (scan.getApplication().isActive())) {
 
 				if (scan.getFileName()== null || scan.getFileName().isEmpty()){
 					return RestResponse.failure("There is no scan file uploaded associated with this Scan.");
 				}
 
-				String fullFilePath = defaultConfiguration.getFullFilePath(scan);
-				String failureMessage = scanService.downloadScan(scan, fullFilePath, response);
+				List<String> fullFilePaths = defaultConfiguration.getFullFilePaths(scan);
+				String failureMsg;
 
-				if (failureMessage != null) {
-					return RestResponse.failure(failureMessage);
+				for (String fullFileName: fullFilePaths) {
+					if (fullFileName.endsWith(scanFileName)) {
+						failureMsg = scanService.downloadScan(scan, fullFileName, response);
+						if (failureMsg != null) {
+							return RestResponse.failure(failureMsg);
+						}
+						return null;
+					}
 				}
+
+				return RestResponse.failure("Unable to find file with name " + scanFileName);
+
 			} else {
 				return RestResponse.failure("There is no valid scan file.");
 			}
@@ -172,7 +178,7 @@ public class ScanController {
 		return null;
 	}
 
-    @JsonView(AllViews.TableRow.class)
+	@JsonView(AllViews.TableRow.class)
 	@RequestMapping(value = "/{scanId}/table", method = RequestMethod.POST)
 	public @ResponseBody Object scanTable(
 			@ModelAttribute TableSortBean bean,
@@ -185,7 +191,7 @@ public class ScanController {
 		}
 
 		Scan scan = scanService.loadScan(scanId);
-		if (scan == null) {
+		if ((scan == null) || (scan.getApplication() == null) || (!scan.getApplication().isActive())) {
 			log.warn(ResourceNotFoundException.getLogMessage("Scan", scanId));
 			throw new ResourceNotFoundException();
 		}
@@ -228,7 +234,7 @@ public class ScanController {
 		}
 
 		Scan scan = scanService.loadScan(scanId);
-		if (scan == null) {
+		if ((scan == null) || (scan.getApplication() == null) || (!scan.getApplication().isActive())) {
 			log.warn(ResourceNotFoundException.getLogMessage("Scan", scanId));
 			throw new ResourceNotFoundException();
 		}
@@ -248,13 +254,13 @@ public class ScanController {
 		return RestResponse.success(responseMap);
 	}
 
-    @JsonView(AllViews.TableRow.class)
+	@JsonView(AllViews.TableRow.class)
 	@RequestMapping(value = "/{scanId}/objects")
 	public @ResponseBody Object getBaseObjects(@PathVariable("scanId") Integer scanId) throws IOException {
 		Map<String, Object> map = new HashMap<>();
 
 		Scan scan = scanService.loadScan(scanId);
-		if (scan == null) {
+		if ((scan == null) || (scan.getApplication() == null) || (!scan.getApplication().isActive())) {
 			log.warn(ResourceNotFoundException.getLogMessage("Scan", scanId));
 			throw new ResourceNotFoundException();
 		}

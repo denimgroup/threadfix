@@ -3,21 +3,28 @@
 
 
 // the httpProvider stuff configures things to work like x-www-form-urlencoded
-angular.module('threadfix', ['ui.bootstrap', 'angularFileUpload', 'threadfixFilters', 'd3', 'dynform', 'ngSanitize', 'ui.sortable'], function($httpProvider)
-{
-    // Use x-www-form-urlencoded Content-Type
-    $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+var threadfixModule = angular.module('threadfix', ['ui.bootstrap', 'angularFileUpload', 'threadfixFilters', 'd3', 'dynform', 'ngSanitize', 'ui.sortable']);
 
-    $httpProvider.defaults.transformResponse.push(function(data) {
+threadfixModule.run(function($http, tfEncoder) {
+    // Use x-www-form-urlencoded Content-Type
+    $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+
+    $http.defaults.transformResponse.push(function(data) {
         if (/<div ng\-controller="LoginController">/.exec(data)) {
-            // this self-assignment makes the page reload, forcing a redirect to login.jsp
-            window.location.pathname = window.location.pathname;
+            if (/<div id="loginError" class="sessionTimeout"/.exec(data)) {
+                window.location.pathname = tfEncoder.encode('/login.jsp?sessionTimeout=true', true);
+            } else if (/<div id="loginError" class="concurrentSessions"/.exec(data)) {
+                window.location.pathname = tfEncoder.encode('/login.jsp?concurrentSessions=true', true);
+            } else {
+                // this self-assignment makes the page reload, forcing a redirect to login.jsp
+                window.location.pathname = window.location.pathname;
+            }
         }
 
         return data;
     });
 
-    $httpProvider.defaults.transformResponse.push(function (data, headerGetter) {
+    $http.defaults.transformResponse.push(function (data, headerGetter) {
         if (data === "") {
             return {
                 "message": "Please refresh the page (CSRF error.)",
@@ -30,7 +37,7 @@ angular.module('threadfix', ['ui.bootstrap', 'angularFileUpload', 'threadfixFilt
     });
 
     // Override $http service's default transformRequest
-    $httpProvider.defaults.transformRequest = [function(data)
+    $http.defaults.transformRequest = [function(data)
     {
         /**
          * The workhorse; converts an object to x-www-form-urlencoded serialization.
