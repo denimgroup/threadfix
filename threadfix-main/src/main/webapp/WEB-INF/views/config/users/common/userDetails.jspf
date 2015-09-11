@@ -118,8 +118,8 @@
                     </tbody>
                     <tbody ng-if="currentUser.apiKeys">
                     <tr ng-repeat="key in currentUser.apiKeys">
-                        <td>{{ key.apiKey }}</td>
-                        <td>{{ key.note }}</td>
+                        <td style="vertical-align:text-top;">{{ key.apiKey }}</td>
+                        <td style="vertical-align:text-top; word-break:break-all;">{{ key.note }}</td>
                         <td><a class="btn" ng-click="openEditModal(user, key)">Edit / Delete</a></td>
                     </tr>
                     </tbody>
