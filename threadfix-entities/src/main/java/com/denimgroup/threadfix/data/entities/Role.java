@@ -54,7 +54,7 @@ public class Role extends AuditableEntity {
 			canManageUsers, canManageWafs, canManageVulnFilters, canModifyVulnerabilities,
 			canSubmitDefects, canUploadScans, canViewErrorLogs, canManageScanAgents, canManageSystemSettings,
             canViewJobStatuses, enterprise, canManageTags, canSubmitComments, canManageScanResultFilters,
-            canManageCustomCweText, canManageEmailReports;
+            canManageCustomCweText, canManageEmailReports, canManageGroups;
 
     public static final String[] PROTECTED_PERMISSIONS = {
             "canManageRoles", "canManageUsers"
@@ -335,6 +335,16 @@ public class Role extends AuditableEntity {
         this.canManageEmailReports = canManageEmailReports;
     }
 
+    @Column
+    @JsonView(AllViews.TableRow.class)
+    public Boolean getCanManageGroups() {
+        return canManageGroups != null && canManageGroups;
+    }
+
+    public void setCanManageGroups(Boolean canManageGroups) {
+        this.canManageGroups = canManageGroups;
+    }
+
     @Transient
 	public Set<Permission> getPermissions() {
 		Set<Permission> permissions = new HashSet<Permission>();
@@ -401,6 +411,9 @@ public class Role extends AuditableEntity {
 
         if (getCanSubmitComments() != null && getCanSubmitComments())
             permissions.add(Permission.CAN_SUBMIT_COMMENTS);
+
+        if (getCanManageGroups() != null && getCanManageGroups())
+            permissions.add(Permission.CAN_MANAGE_GROUPS);
 
         if (getCanManageScanResultFilters() != null && getCanManageScanResultFilters()) {
             permissions.add(Permission.CAN_MANAGE_SCAN_RESULT_FILTERS);
@@ -511,6 +524,9 @@ public class Role extends AuditableEntity {
 
         if (canSubmitComments == null)
             setCanSubmitComments(newPermissionStatus);
+
+        if (canManageGroups == null)
+            setCanManageGroups(newPermissionStatus);
 
         if (canManageScanResultFilters == null)
             setCanManageScanResultFilters(newPermissionStatus); {

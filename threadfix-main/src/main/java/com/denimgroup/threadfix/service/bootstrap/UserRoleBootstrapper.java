@@ -65,6 +65,7 @@ public class UserRoleBootstrapper {
         admin.setCanManageRemoteProviders(true);
         admin.setCanManageRoles(true);
         admin.setCanManageTeams(true);
+        admin.setCanManageGroups(true);
         admin.setCanManageUsers(true);
         admin.setCanManageWafs(true);
         admin.setCanManageVulnFilters(true);
