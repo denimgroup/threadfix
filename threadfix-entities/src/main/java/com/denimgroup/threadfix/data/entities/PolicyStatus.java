@@ -41,16 +41,16 @@ import static com.denimgroup.threadfix.CollectionUtils.map;
  * @author zabdisubhan
  */
 @Entity
-@Table(name = "AcceptanceCriteriaStatus"
+@Table(name = "PolicyStatus"
         ,
         uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "`Application_Id`", "`AcceptanceCriteria_Id`" })}
+        @UniqueConstraint(columnNames = { "`Application_Id`", "`Policy_Id`" })}
 )
-public class AcceptanceCriteriaStatus extends AuditableEntity {
+public class PolicyStatus extends AuditableEntity {
 
     private Boolean passing = false;
     private Application application;
-    private AcceptanceCriteria acceptanceCriteria;
+    private Policy policy;
     private List<EmailList> emailLists;
     private List<String> emailAddresses;
     private Boolean sendEmail = false;
@@ -59,8 +59,8 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
     @CollectionOfElements // for sonar
     @ElementCollection
     @Column(name = "emailAddress", length = 128)
-    @CollectionTable(name = "AcceptanceCriteriaStatusEmailAddress", joinColumns = @JoinColumn(name = "AcceptanceCriteriaStatusId"))
-    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
+    @CollectionTable(name = "PolicyStatusEmailAddress", joinColumns = @JoinColumn(name = "PolicyStatusId"))
+    @JsonView(AllViews.PolicyPageView.class)
     public List<String> getEmailAddresses() {
         return emailAddresses;
     }
@@ -71,7 +71,7 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
 
     @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "emailListId")
-    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
+    @JsonView(AllViews.PolicyPageView.class)
     public List<EmailList> getEmailLists() {
         return emailLists;
     }
@@ -81,7 +81,7 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
     }
 
     @Column
-    @JsonView({AllViews.FormInfo.class, AllViews.AcceptanceCriteriaPageView.class})
+    @JsonView({AllViews.FormInfo.class, AllViews.PolicyPageView.class})
     public Boolean isPassing() {
         return passing != null && passing;
     }
@@ -111,7 +111,7 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
     }
 
     @Column
-    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
+    @JsonView(AllViews.PolicyPageView.class)
     public Boolean isSendEmail() {
         return sendEmail != null && sendEmail;
     }
@@ -122,7 +122,7 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
 
     @Transient
     @JsonProperty("application")
-    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
+    @JsonView(AllViews.PolicyPageView.class)
     public Map<String, Object> getApplicationJson() {
         if(application != null) {
             return map(
@@ -138,31 +138,31 @@ public class AcceptanceCriteriaStatus extends AuditableEntity {
 
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "`AcceptanceCriteria_Id`", nullable = false)
-    public AcceptanceCriteria getAcceptanceCriteria() {
-        return acceptanceCriteria;
+    @JoinColumn(name = "`Policy_Id`", nullable = false)
+    public Policy getPolicy() {
+        return policy;
     }
 
-    public void setAcceptanceCriteria(AcceptanceCriteria acceptanceCriteria) {
-        this.acceptanceCriteria = acceptanceCriteria;
+    public void setPolicy(Policy policy) {
+        this.policy = policy;
     }
 
     @Transient
-    @JsonProperty("acceptanceCriteria")
-    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.AcceptanceCriteriaPageView.class})
-    public Map<String, ? extends Serializable> getAcceptanceCriteriaJson() {
-        if(acceptanceCriteria != null) {
+    @JsonProperty("policy")
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.PolicyPageView.class})
+    public Map<String, ? extends Serializable> getPolicyJson() {
+        if(policy != null) {
             return map(
-                    "id", acceptanceCriteria.getId(),
-                    "name", acceptanceCriteria.getName(),
-                    "filterName", acceptanceCriteria.getFilterJsonBlob().getName());
+                    "id", policy.getId(),
+                    "name", policy.getName(),
+                    "filterName", policy.getFilterJsonBlob().getName());
         } else {
             return null;
         }
     }
 
     @Transient
-    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.AcceptanceCriteriaPageView.class})
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.PolicyPageView.class})
     public String getName() {
         return application.getName();
     }

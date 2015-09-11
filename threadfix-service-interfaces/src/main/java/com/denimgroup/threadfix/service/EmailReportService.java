@@ -3,8 +3,7 @@ package com.denimgroup.threadfix.service;
 import java.util.List;
 import java.util.Map;
 
-import com.denimgroup.threadfix.data.entities.AcceptanceCriteria;
-import com.denimgroup.threadfix.data.entities.AcceptanceCriteriaStatus;
+import com.denimgroup.threadfix.data.entities.PolicyStatus;
 import com.denimgroup.threadfix.data.entities.ScheduledEmailReport;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 
@@ -20,5 +19,5 @@ public interface EmailReportService {
 
 	public Map<String, Object> getNewVulnerabilitiesHierarchicalModel(ScheduledEmailReport scheduledEmailReport);
 
-    public void sendAcceptanceCriteriaReport(List<AcceptanceCriteriaStatus> acceptanceCriteriaStatuses);
+    public void sendPolicyReport(List<PolicyStatus> policyStatuses);
 }

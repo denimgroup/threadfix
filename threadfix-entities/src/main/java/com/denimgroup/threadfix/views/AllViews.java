@@ -71,7 +71,7 @@ public class AllViews {
 
     public static interface ScheduledEmailReportView {}
 
-    public static interface AcceptanceCriteriaPageView {}
+    public static interface PolicyPageView {}
 
     public static interface HistoryView {}
 

@@ -37,7 +37,7 @@ public class UploadScanServiceImpl implements UploadScanService{
     @Autowired
     private DefaultConfigService defaultConfigService;
     @Autowired(required = false)
-    private AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
+    private PolicyStatusService policyStatusService;
 
     @Override
     public Object processMultiFileUpload(Collection<MultipartFile> files, Integer orgId, Integer appId, String channelIdString, boolean isBulkScans) {
@@ -120,8 +120,8 @@ public class UploadScanServiceImpl implements UploadScanService{
                 }
             }
 
-            if (acceptanceCriteriaStatusService != null) {
-                acceptanceCriteriaStatusService.runStatusCheck(appId);
+            if (policyStatusService != null) {
+                policyStatusService.runStatusCheck(appId);
             }
         }
     }

@@ -23,13 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
-import com.denimgroup.threadfix.data.entities.AcceptanceCriteria;
+import com.denimgroup.threadfix.data.entities.Policy;
 
 /**
  * Created by sgerick on 5/27/2015.
  */
-public interface AcceptanceCriteriaDao extends GenericNamedObjectDao<AcceptanceCriteria> {
+public interface PolicyDao extends GenericNamedObjectDao<Policy> {
 
-    void delete(AcceptanceCriteria acceptanceCriteria);
+    void delete(Policy policy);
 
 }

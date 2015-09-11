@@ -44,7 +44,7 @@ public class FilterJsonBlobServiceImpl extends AbstractNamedObjectService<Filter
     private FilterJsonBlobDao filterJsonBlobDao;
 
     @Autowired(required = false)
-    private AcceptanceCriteriaService acceptanceCriteriaService;
+    private PolicyService policyService;
 
     @Override
     public GenericNamedObjectDao<FilterJsonBlob> getDao() {
@@ -60,11 +60,11 @@ public class FilterJsonBlobServiceImpl extends AbstractNamedObjectService<Filter
     @SuppressWarnings("unchecked")
     public List<FilterJsonBlob> loadAllAssociated() {
 
-        if (acceptanceCriteriaService == null) {
+        if (policyService == null) {
             return list();
         }
         return (List<FilterJsonBlob>)
-                CollectionUtils.collect(acceptanceCriteriaService.loadAll(),
+                CollectionUtils.collect(policyService.loadAll(),
                         new BeanToPropertyValueTransformer("filterJsonBlob"));
     }
 }

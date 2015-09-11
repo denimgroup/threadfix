@@ -58,8 +58,8 @@ public enum EventAction {
     DEFECT_STATUS_UPDATED("Update Defect Status"),
     DEFECT_CLOSED("Close Defect"),
     DEFECT_APPEARED_AFTER_CLOSED("Appeared In Scan After Defect Closed"),
-    ACCEPTANCE_CRITERIA_PASSING("Acceptance Criteria Passing"),
-    ACCEPTANCE_CRITERIA_FAILING("Acceptance Criteria Failing");
+    ACCEPTANCE_CRITERIA_PASSING("Policy Passing"),
+    ACCEPTANCE_CRITERIA_FAILING("Policy Failing");
 
     public static Set<EventAction> organizationEventActions = EnumSet.of(APPLICATION_CREATE, APPLICATION_EDIT,
             APPLICATION_SET_TAGS, APPLICATION_SCAN_UPLOADED, APPLICATION_SCAN_DELETED, VULNERABILITY_CLOSE_MANUAL,
