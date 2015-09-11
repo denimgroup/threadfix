@@ -105,9 +105,9 @@ public class ApplicationsController {
     @Autowired
     private CacheBustService cacheBustService;
     @Autowired(required = false)
-    private AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
+    private PolicyStatusService policyStatusService;
     @Autowired(required = false)
-    private AcceptanceCriteriaService acceptanceCriteriaService;
+    private PolicyService policyService;
 
 
 	@InitBinder
@@ -208,8 +208,8 @@ public class ApplicationsController {
         // basic information
         map.put("application", application);
 
-        if (acceptanceCriteriaStatusService != null) {
-            map.put("passFilters", acceptanceCriteriaStatusService.passFilters(application));
+        if (policyStatusService != null) {
+            map.put("passFilters", policyStatusService.passFilters(application));
         }
 
         // scans tab
@@ -235,9 +235,9 @@ public class ApplicationsController {
         map.put("isEnterprise", EnterpriseTest.isEnterprise());
 
         if (EnterpriseTest.isEnterprise()) {
-            map.put("acceptanceCriterias", applicationService.loadUnassociatedAcceptanceCriteria(application));
+            map.put("policies", applicationService.loadUnassociatedPolicies(application));
             map.put("scanAgentSupportedList", ScannerType.getScanAgentSupportedListInString());
-            map.put("acceptanceCriteriaExist", acceptanceCriteriaService.loadAll().size() > 0);
+            map.put("policyExist", policyService.loadAll().size() > 0);
         }
 
         // permissions

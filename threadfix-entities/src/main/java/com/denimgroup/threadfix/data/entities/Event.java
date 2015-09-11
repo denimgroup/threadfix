@@ -58,8 +58,8 @@ public class Event extends AuditableEntity {
     private VulnerabilityComment comment;
     private String detail;
     private String status;
-    private AcceptanceCriteria acceptanceCriteria;
-    private AcceptanceCriteriaStatus acceptanceCriteriaStatus;
+    private Policy policy;
+    private PolicyStatus policyStatus;
 
     private Long groupCount;
 
@@ -272,25 +272,25 @@ public class Event extends AuditableEntity {
 
 
     @ManyToOne
-    @JoinColumn(name = "acceptanceCriteriaId")
+    @JoinColumn(name = "policyId")
     @JsonIgnore
-    public AcceptanceCriteria getAcceptanceCriteria() {
-        return acceptanceCriteria;
+    public Policy getPolicy() {
+        return policy;
     }
 
-    public void setAcceptanceCriteria(AcceptanceCriteria acceptanceCriteria) {
-        this.acceptanceCriteria = acceptanceCriteria;
+    public void setPolicy(Policy policy) {
+        this.policy = policy;
     }
 
     @ManyToOne
-    @JoinColumn(name = "acceptanceCriteriaStatusId")
+    @JoinColumn(name = "policyStatusId")
     @JsonIgnore
-    public AcceptanceCriteriaStatus getAcceptanceCriteriaStatus() {
-        return acceptanceCriteriaStatus;
+    public PolicyStatus getPolicyStatus() {
+        return policyStatus;
     }
 
-    public void setAcceptanceCriteriaStatus(AcceptanceCriteriaStatus acceptanceCriteriaStatus) {
-        this.acceptanceCriteriaStatus = acceptanceCriteriaStatus;
+    public void setPolicyStatus(PolicyStatus policyStatus) {
+        this.policyStatus = policyStatus;
     }
 
     @Transient
@@ -552,15 +552,15 @@ public class Event extends AuditableEntity {
             case ACCEPTANCE_CRITERIA_PASSING:
                 description.append(getUserName()).append(" caused Application");
                 appendApplicationLink(description, descriptionUrlMap, historyView);
-                description.append(" to pass Acceptance Criteria");
-                appendAcceptanceCriteriaLink(description, descriptionUrlMap, historyView);
+                description.append(" to pass Policy");
+                appendPolicyLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
             case ACCEPTANCE_CRITERIA_FAILING:
                 description.append(getUserName()).append(" caused Application");
                 appendApplicationLink(description, descriptionUrlMap, historyView);
-                description.append(" to fail Acceptance Criteria");
-                appendAcceptanceCriteriaLink(description, descriptionUrlMap, historyView);
+                description.append(" to fail Policy");
+                appendPolicyLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
             default:
@@ -682,14 +682,14 @@ public class Event extends AuditableEntity {
         return buildLink(urlString, linkText, urlMap);
     }
 
-    private void appendAcceptanceCriteriaLink(StringBuilder description, Map<String, Object> descriptionUrlMap, HistoryView historyView) {
-        if (getAcceptanceCriteria() != null) {
-            description.append(" ").append(buildAcceptanceCriteriaLink(getAcceptanceCriteria(), getAcceptanceCriteria().getName(), descriptionUrlMap));
+    private void appendPolicyLink(StringBuilder description, Map<String, Object> descriptionUrlMap, HistoryView historyView) {
+        if (getPolicy() != null) {
+            description.append(" ").append(buildPolicyLink(getPolicy(), getPolicy().getName(), descriptionUrlMap));
         }
     }
 
-    private String buildAcceptanceCriteriaLink(AcceptanceCriteria acceptanceCriteria, String linkText, Map<String, Object> urlMap) {
-        if ((acceptanceCriteria == null) || (!acceptanceCriteria.isActive())) {
+    private String buildPolicyLink(Policy policy, String linkText, Map<String, Object> urlMap) {
+        if ((policy == null) || (!policy.isActive())) {
             return linkText;
         }
         String urlString = "/configuration/acceptcriterias";

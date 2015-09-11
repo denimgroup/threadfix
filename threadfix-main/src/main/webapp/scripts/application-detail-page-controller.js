@@ -45,8 +45,8 @@ myAppModule.controller('ApplicationDetailPageController', function ($scope, $win
         $scope.numVulns = numVulns;
     });
 
-    $scope.$on('acceptanceCriteriaStatuses', function(event, acceptanceCriteriaStatuses) {
-        $scope.acceptanceCriteriaStatuses = acceptanceCriteriaStatuses;
+    $scope.$on('policyStatuses', function(event, policyStatuses) {
+        $scope.policyStatuses = policyStatuses;
     });
 
     $scope.$on('successMessage', function(event, message) {
@@ -70,8 +70,8 @@ myAppModule.controller('ApplicationDetailPageController', function ($scope, $win
             $scope.tab = { scanAgentTasks: true };
         } else if (tab === 'Scheduled Scans') {
             $scope.tab = { scheduledScans: true };
-        } else if (tab === 'Acceptance Criteria') {
-            $scope.tab = { acceptanceCriteria: true };
+        } else if (tab === 'Policy') {
+            $scope.tab = { policy: true };
         }
     };
 

@@ -39,8 +39,8 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
  */
 
 @Entity
-@Table(name = "AcceptanceCriteria")
-public class AcceptanceCriteria extends AuditableEntity {
+@Table(name = "Policy")
+public class Policy extends AuditableEntity {
 
     private static final long serialVersionUID = 7188109163348903139L;
 
@@ -49,7 +49,7 @@ public class AcceptanceCriteria extends AuditableEntity {
     @NotEmpty(message = "{errors.required}")
     @Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
     private String name;
-    private List<AcceptanceCriteriaStatus> acceptanceCriteriaStatuses;
+    private List<PolicyStatus> policyStatuses;
     private FilterJsonBlob filterJsonBlob;
 
     private List<EmailList> emailLists;
@@ -59,8 +59,8 @@ public class AcceptanceCriteria extends AuditableEntity {
     @CollectionOfElements // for sonar
     @ElementCollection
     @Column(name = "emailAddress", length = 128)
-    @CollectionTable(name = "AcceptanceCriteriaEmailAddress", joinColumns = @JoinColumn(name = "AcceptanceCriteriaId"))
-    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
+    @CollectionTable(name = "PolicyEmailAddress", joinColumns = @JoinColumn(name = "PolicyId"))
+    @JsonView(AllViews.PolicyPageView.class)
     public List<String> getEmailAddresses() {
         return emailAddresses;
     }
@@ -71,7 +71,7 @@ public class AcceptanceCriteria extends AuditableEntity {
 
     @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "emailListId")
-    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
+    @JsonView(AllViews.PolicyPageView.class)
     public List<EmailList> getEmailLists() {
         return emailLists;
     }
@@ -81,7 +81,7 @@ public class AcceptanceCriteria extends AuditableEntity {
     }
 
     @Column(length = NAME_LENGTH, nullable = false)
-    @JsonView({AllViews.AcceptanceCriteriaPageView.class, AllViews.FormInfo.class})
+    @JsonView({AllViews.PolicyPageView.class, AllViews.FormInfo.class})
     public String getName() {
         return name;
     }
@@ -90,18 +90,18 @@ public class AcceptanceCriteria extends AuditableEntity {
         this.name = name;
     }
 
-    @OneToMany(mappedBy = "acceptanceCriteria", cascade = CascadeType.REMOVE)
-    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
-    public List<AcceptanceCriteriaStatus> getAcceptanceCriteriaStatuses() {
-        return acceptanceCriteriaStatuses;
+    @OneToMany(mappedBy = "policy", cascade = CascadeType.REMOVE)
+    @JsonView(AllViews.PolicyPageView.class)
+    public List<PolicyStatus> getPolicyStatuses() {
+        return policyStatuses;
     }
 
-    public void setAcceptanceCriteriaStatuses(List<AcceptanceCriteriaStatus> acceptanceCriteriaStatuses) {
-        this.acceptanceCriteriaStatuses = acceptanceCriteriaStatuses;
+    public void setPolicyStatuses(List<PolicyStatus> policyStatuses) {
+        this.policyStatuses = policyStatuses;
     }
 
     @Column
-    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
+    @JsonView(AllViews.PolicyPageView.class)
     public Boolean isSendEmail() {
         return sendEmail != null && sendEmail;
     }
@@ -111,15 +111,15 @@ public class AcceptanceCriteria extends AuditableEntity {
     }
 
     @Transient
-    @JsonView(AllViews.AcceptanceCriteriaPageView.class)
+    @JsonView(AllViews.PolicyPageView.class)
     public List<Application> getApplications(){
         List<Application> applications = list();
 
-        if(acceptanceCriteriaStatuses != null && acceptanceCriteriaStatuses.size() > 0) {
+        if(policyStatuses != null && policyStatuses.size() > 0) {
 
-            for (AcceptanceCriteriaStatus acceptanceCriteriaStatus : acceptanceCriteriaStatuses) {
-                if (acceptanceCriteriaStatus != null)
-                    applications.add(acceptanceCriteriaStatus.getApplication());
+            for (PolicyStatus policyStatus : policyStatuses) {
+                if (policyStatus != null)
+                    applications.add(policyStatus.getApplication());
             }
         }
 
@@ -128,7 +128,7 @@ public class AcceptanceCriteria extends AuditableEntity {
 
     @OneToOne
     @JoinColumn(name = "filterJsonBlobId")
-    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.AcceptanceCriteriaPageView.class})
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.PolicyPageView.class})
     public FilterJsonBlob getFilterJsonBlob() {
         return filterJsonBlob;
     }
@@ -140,9 +140,9 @@ public class AcceptanceCriteria extends AuditableEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof AcceptanceCriteria)) return false;
+        if (!(o instanceof Policy)) return false;
 
-        AcceptanceCriteria that = (AcceptanceCriteria) o;
+        Policy that = (Policy) o;
 
         return name.equals(that.name);
 

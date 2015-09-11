@@ -106,15 +106,15 @@
             </tr>
             <security:authorize ifAllGranted="ROLE_ENTERPRISE">
                 <tr id="appACDiv" ng-show="config.isEnterprise">
-                    <td>Acceptance Criteria</td>
+                    <td>Policy</td>
                     <td>
-                        <button ng-show="config.acceptanceCriteriaExist" class="btn"
-                                ng-click="switchTo('manageAcceptanceCriteria')" id="manageAcceptanceCriteriaButton">
-                            Manage Acceptance Criteria
+                        <button ng-show="config.policyExist" class="btn"
+                                ng-click="switchTo('managePolicy')" id="managePolicyButton">
+                            Manage Policy
                         </button>
-                        <a ng-hide="config.acceptanceCriteriaExist" class="btn btn-primary"
-                                ng-click="goToAcceptanceCriteriaPage()" id="goToAcceptanceCriteriaButton">
-                            Create Acceptance Criteria
+                        <a ng-hide="config.policyExist" class="btn btn-primary"
+                                ng-click="goToPolicyPage()" id="goToPolicyButton">
+                            Create Policy
                         </a>
                     </td>
                 </tr>
