@@ -27,38 +27,38 @@ package com.denimgroup.threadfix.selenium.pages;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
 
-public class AcceptancePolicyPage extends BasePage {
+public class PolicyPage extends BasePage {
 
-    public AcceptancePolicyPage(WebDriver webDriver) { super(webDriver); }
+    public PolicyPage(WebDriver webDriver) { super(webDriver); }
 
     //===========================================================================================================
     // Action Methods
     //===========================================================================================================
 
-    public AcceptancePolicyPage clickAcceptancePolicyTab() {
-        driver.findElementByLinkText("Acceptance Criteria").click();
+    public PolicyPage clickPolicyTab() {
+        driver.findElementByLinkText("Policy").click();
         waitForElement(By.id("createNewModalButton"));
-        return new AcceptancePolicyPage(driver);
+        return new PolicyPage(driver);
     }
 
-    public AcceptancePolicyPage clickFiltersTab() {
+    public PolicyPage clickFiltersTab() {
         driver.findElementByLinkText("Filters").click();
         waitForElement(By.id("saveFilterButton"));
-        return new AcceptancePolicyPage(driver);
+        return new PolicyPage(driver);
     }
 
-    public AcceptancePolicyPage expandFieldControls() {
+    public PolicyPage expandFieldControls() {
         driver.findElementById("showFieldControls").click();
         waitForElement(By.id("showInfo"));
         return this;
     }
 
-    public AcceptancePolicyPage clickFieldControl(String label) {
+    public PolicyPage clickFieldControl(String label) {
         driver.findElementById("show" + label).click();
         return this;
     }
 
-    public AcceptancePolicyPage setFilterName(String name) {
+    public PolicyPage setFilterName(String name) {
         //TODO: Replace LinkText with ID when ID is added to success alert
         driver.findElementById("filterNameInput").clear();
         driver.findElementById("filterNameInput").sendKeys(name);
@@ -67,102 +67,102 @@ public class AcceptancePolicyPage extends BasePage {
         return this;
     }
 
-    public AcceptancePolicyPage createGenericFilter(String name) {
-        //TODO: When DGTF-1868 is resolved replace refreshPage with clickAcceptancePolicyTab
+    public PolicyPage createGenericFilter(String name) {
+        //TODO: When DGTF-1868 is resolved replace refreshPage with clickPolicyTab
         clickFiltersTab()
                 .expandFieldControls()
                 .clickFieldControl("Critical")
                 .setFilterName(name)
                 .refreshPage();
-        return new AcceptancePolicyPage(driver);
+        return new PolicyPage(driver);
     }
 
-    public AcceptancePolicyPage clickCreateAcceptancePolicy() {
-        waitForElement(By.id("acceptcriteriaTable"));
+    public PolicyPage clickCreatePolicy() {
+        waitForElement(By.id("policyTable"));
         driver.findElementById("createNewModalButton").click();
-        waitForElement(By.id("acCreateNameInput"));
-        return new AcceptancePolicyPage(driver);
+        waitForElement(By.id("policyCreateNameInput"));
+        return new PolicyPage(driver);
     }
 
-    public AcceptancePolicyPage setAcceptancePolicyName(String name) {
-        driver.findElementById("acCreateNameInput").clear();
-        driver.findElementById("acCreateNameInput").sendKeys(name);
+    public PolicyPage setPolicyName(String name) {
+        driver.findElementById("policyCreateNameInput").clear();
+        driver.findElementById("policyCreateNameInput").sendKeys(name);
         return this;
     }
 
-    public AcceptancePolicyPage setFilterForPolicy(String name) {
+    public PolicyPage setFilterForPolicy(String name) {
         //TODO: Replace CSS lookup with ID when unique ID is added
         new Select(driver.findElementByCssSelector(".modal-form-table #filterSelect")).selectByVisibleText(name);
         return this;
     }
 
-    public AcceptancePolicyPage saveAcceptancePolicy() {
+    public PolicyPage savePolicy() {
         driver.findElementById("submit").click();
         waitForInvisibleElement("myModalLabel");
-        return new AcceptancePolicyPage(driver);
+        return new PolicyPage(driver);
     }
 
-    public AcceptancePolicyPage createAcceptancePolicy(String policyName, String filterName) {
-        clickCreateAcceptancePolicy()
-                .setAcceptancePolicyName(policyName)
+    public PolicyPage createPolicy(String policyName, String filterName) {
+        clickCreatePolicy()
+                .setPolicyName(policyName)
                 .setFilterForPolicy(filterName)
-                .saveAcceptancePolicy();
+                .savePolicy();
         return this;
     }
 
-    public AcceptancePolicyPage clickEditDeleteButton(String name) {
+    public PolicyPage clickEditDeleteButton(String name) {
         driver.findElementById("editACModalButton" + name).click();
         waitForElement(By.id("deleteButton"));
-        return new AcceptancePolicyPage(driver);
+        return new PolicyPage(driver);
     }
 
-    public AcceptancePolicyPage deletePolicy() {
+    public PolicyPage deletePolicy() {
         driver.findElementById("deleteButton").click();
         handleAlert();
         waitForInvisibleElement("myModalLabel");
-        return new AcceptancePolicyPage(driver);
+        return new PolicyPage(driver);
     }
 
-    public AcceptancePolicyPage expandAcceptancePolicy(String name) {
-        waitForElement(By.id("acceptcriteriaCaret" + name));
-        driver.findElementById("acceptcriteriaCaret" + name).click();
-        waitForElement(By.cssSelector("#acceptcriteriaInfoDiv" + name + "[class*='expanded']"));
-        return new AcceptancePolicyPage(driver);
+    public PolicyPage expandPolicy(String name) {
+        waitForElement(By.id("policyCaret" + name));
+        driver.findElementById("policyCaret" + name).click();
+        waitForElement(By.cssSelector("#policyInfoDiv" + name + "[class*='expanded']"));
+        return new PolicyPage(driver);
     }
 
-    public AcceptancePolicyPage addAppToAcceptancePolicy(String policyName, String appName) {
+    public PolicyPage addAppToPolicy(String policyName, String appName) {
         driver.findElementById("applicationNameTypeahead" + policyName).sendKeys(appName);
         driver.findElementById("applicationNameTypeahead" + policyName).sendKeys(Keys.ENTER);
         driver.findElementById("submitButton" + policyName).click();
-        return new AcceptancePolicyPage(driver);
+        return new PolicyPage(driver);
     }
 
-    public AcceptancePolicyPage removeAppFromPolicy(String policyName, String appName) {
-        driver.findElementByCssSelector("#ac" + policyName + "AppRow" + appName + " #deleteButton" + appName).click();
-        return new AcceptancePolicyPage(driver);
+    public PolicyPage removeAppFromPolicy(String policyName, String appName) {
+        driver.findElementByCssSelector("#policy" + policyName + "AppRow" + appName + " #deleteButton" + appName).click();
+        return new PolicyPage(driver);
     }
 
-    public AcceptancePolicyPage clickAddEmailsButton(String policyName) {
+    public PolicyPage clickAddEmailsButton(String policyName) {
         driver.findElementById("addEmailModalButton" + policyName).click();
-        return new AcceptancePolicyPage(driver);
+        return new PolicyPage(driver);
     }
 
-    public AcceptancePolicyPage addEmailAddress(String address) {
+    public PolicyPage addEmailAddress(String address) {
         driver.findElementById("emailInput").clear();
         driver.findElementById("emailInput").sendKeys(address);
         driver.findElementById("addEmailButton").click();
         return this;
     }
 
-    public AcceptancePolicyPage addEmailList(String list) {
+    public PolicyPage addEmailList(String list) {
         new Select(driver.findElementById("emailListSelect")).selectByVisibleText(list);
         driver.findElementById("addEmailListButton").click();
         return this;
     }
 
-    public AcceptancePolicyPage clickAddEmailsButtonForApp(String appName, String policyName) {
+    public PolicyPage clickAddEmailsButtonForApp(String appName, String policyName) {
         driver.findElementByCssSelector("#ac" + policyName + "AppRow" + appName + " #addEmailModalButton" + appName).click();
-        return new AcceptancePolicyPage(driver);
+        return new PolicyPage(driver);
     }
 
     //===========================================================================================================
@@ -170,24 +170,24 @@ public class AcceptancePolicyPage extends BasePage {
     //===========================================================================================================
 
     public boolean isPolicyPresent(String name) {
-        return isElementPresent("acceptcriteriaName" + name);
+        return isElementPresent("policyName" + name);
     }
 
     public boolean isPolicyNameCorrect(String name) {
-        return driver.findElementById("acceptcriteriaName" + name).getText().contains(name);
+        return driver.findElementById("policyName" + name).getText().contains(name);
     }
 
     public boolean isPolicyFilterCorrect(String policyName, String filterName) {
-        return driver.findElementById("acceptcriteriaFilter" + policyName).getText().contains(filterName);
+        return driver.findElementById("policyFilter" + policyName).getText().contains(filterName);
     }
 
     public boolean isPolicyPassing(String name) {
-        return driver.findElementById("acceptcriteriaPass" + name).getText().contains("PASS");
+        return driver.findElementById("policyPass" + name).getText().contains("PASS");
     }
 
     public boolean isAppPresent(String policyName, String appName) {
         try {
-            waitForElement(By.cssSelector("#ac" + policyName + "AppRow" + appName));
+            waitForElement(By.cssSelector("#policy" + policyName + "AppRow" + appName));
             return true;
         } catch (TimeoutException e) {
             return false;
@@ -222,7 +222,7 @@ public class AcceptancePolicyPage extends BasePage {
         return !driver.findElementById("characterLimitError").getAttribute("class").contains("ng-hide");
     }
 
-    public boolean canSaveDuplicateAcceptancePolicy() {
+    public boolean canSaveDuplicatePolicy() {
         try {
             driver.findElementById("submit").click();
             waitForElement(By.cssSelector("#otherNameError:not(.ng-hide)"));

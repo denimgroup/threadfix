@@ -258,11 +258,11 @@ public abstract class BasePage {
         return new EmailListPage(driver);
     }
 
-    public AcceptancePolicyPage clickAcceptancePoliciesLink() {
+    public PolicyPage clickPoliciesLink() {
         clickConfigTab();
         hover("manageCustomLink");
-        driver.findElementById("acceptCriteriaLink").click();
-        return new AcceptancePolicyPage(driver);
+        driver.findElementById("policiesLink").click();
+        return new PolicyPage(driver);
     }
 
     //===========================================================================================================

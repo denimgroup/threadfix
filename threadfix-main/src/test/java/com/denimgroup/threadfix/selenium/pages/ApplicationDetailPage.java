@@ -905,20 +905,20 @@ public class ApplicationDetailPage extends BasePage {
         return this;
     }
 
-    public ApplicationDetailPage clickManageAcceptancePolicy() {
-        waitForElement(By.id("manageAcceptanceCriteriaButton"));
-        driver.findElementById("manageAcceptanceCriteriaButton").click();
+    public ApplicationDetailPage clickManagePolicy() {
+        waitForElement(By.id("managePolicyButton"));
+        driver.findElementById("managePolicyButton").click();
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage addAcceptancePolicy(String policyName) {
-        new Select(driver.findElementById("acceptanceCriteriaSelect")).selectByVisibleText(policyName);
+    public ApplicationDetailPage addPolicy(String policyName) {
+        new Select(driver.findElementById("policySelect")).selectByVisibleText(policyName);
         driver.findElementById("addButton").click();
         return this;
     }
 
-    public ApplicationDetailPage removeAcceptancePolicy(String policyName) {
-        driver.findElementByCssSelector("#acceptcriteria" + policyName + ">span").click();
+    public ApplicationDetailPage removePolicy(String policyName) {
+        driver.findElementByCssSelector("#policy" + policyName + ">span").click();
         handleAlert();
         return this;
     }
@@ -1521,11 +1521,8 @@ public class ApplicationDetailPage extends BasePage {
         return true;
     }
 
-    public boolean isAccetpancePolicyInModal(String appName, String policyName) {
-        //TODO: Get rid of extra clicks when policies appear automatically
-        driver.findElementById("acceptcriteriaCaret" + appName).click();
-        driver.findElementById("acceptcriteriaCaret" + appName).click();
-        return isElementPresent("acceptcriteria" + policyName);
+    public boolean isPolicyInModal(String appName, String policyName) {
+        return isElementPresent("policy" + policyName);
     }
 
     //===========================================================================================================
