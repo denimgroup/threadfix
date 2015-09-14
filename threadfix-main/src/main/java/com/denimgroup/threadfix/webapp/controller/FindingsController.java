@@ -27,20 +27,21 @@ import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.VulnerabilityStatusService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.Calendar;
 import java.util.List;
 
@@ -107,6 +108,31 @@ public class FindingsController {
 		} else{
 			log.warn(ResourceNotFoundException.getLogMessage("Finding", findingId));
 			throw new ResourceNotFoundException();
+		}
+	}
+
+	@JsonView(AllViews.VulnerabilityDetail.class)
+	@RequestMapping(value = "/organizations/{orgId}/applications/{appId}/vulnerabilities/{vulnId}/findings/{findingId}/editDescription", method = RequestMethod.POST)
+	@ResponseBody
+	public Object editDescription(@PathVariable("orgId") int orgId,
+								  @PathVariable("appId") int appId,
+								  @PathVariable("vulnId") int vulnId,
+								  @PathVariable("findingId") int findingId,
+								  @Valid @ModelAttribute Finding finding,
+								  Model model) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
+			RestResponse.failure("You do not have permission to modify vulnerabilities.");
+		}
+
+		log.info("Editing description for finding with Id " + findingId);
+
+		Finding dbfinding = findingService.loadFinding(findingId);
+		if (dbfinding != null && dbfinding.getVulnerability() != null) {
+			dbfinding.setLongDescription(finding.getLongDescription());
+			findingService.storeFinding(dbfinding);
+			return RestResponse.success(dbfinding);
+		} else{
+			return RestResponse.failure("Invalid finding Id.");
 		}
 	}
 	
