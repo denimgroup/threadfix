@@ -67,6 +67,10 @@ public class SonarTools {
                 line = lineCount - 1;
             }
 
+            if (line == 0) {
+                line = null;
+            }
+
             Issue issue = issuable
                     .newIssueBuilder()
                     .ruleKey(key)
