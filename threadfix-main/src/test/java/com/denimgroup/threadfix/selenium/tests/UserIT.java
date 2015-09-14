@@ -371,7 +371,8 @@ public class UserIT extends BaseDataTest {
                 .setConfirmPassword("")
                 .clickUpdateUserBtnInvalid(baseUserName);
 
-		assertTrue("Name error not present", userIndexPage.isSaveChangesButtonClickable(baseUserName));
+        assertTrue("Name error not present.", userIndexPage.getRequiredNameError().equals("Name is required."));
+		assertFalse("Save changes should not be clickable.", userIndexPage.isSaveChangesButtonClickable(baseUserName));
     }
 
     @Test
