@@ -514,6 +514,7 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean isSuccessMessageDisplayed() {
+        waitForElement(By.cssSelector(".alert-success:not(.ng-hide)"), 3);
         return driver.findElementByClassName("alert-success").isDisplayed();
     }
 
