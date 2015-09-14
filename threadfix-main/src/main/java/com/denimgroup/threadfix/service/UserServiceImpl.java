@@ -193,9 +193,10 @@ public class UserServiceImpl implements UserService {
 
 		User user = loadUser(userId);
 
-		if (user != null && user.getHasGlobalGroupAccess() && user.getGlobalRole() != null) {
-			returnList.addAll(user.getGlobalRole().getPermissions());
-			returnList.add(Permission.READ_ACCESS);
+		if (user != null && user.getHasGlobalGroupAccess()) {
+			returnList.add(Permission.READ_ACCESS); // true even in the case user has Global Read Access role
+			if (user.getGlobalRole() != null)
+				returnList.addAll(user.getGlobalRole().getPermissions());
 		}
 
 		returnList.addAll(getGroupPermissions(userId));
