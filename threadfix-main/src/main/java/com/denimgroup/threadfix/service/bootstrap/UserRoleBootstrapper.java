@@ -78,6 +78,7 @@ public class UserRoleBootstrapper {
         admin.setCanSubmitComments(true);
         admin.setCanManageScanResultFilters(true);
         admin.setCanManageCustomCweText(true);
+        admin.setCanManagePolicies(true);
         admin.setDisplayName("Administrator");
 
         roleService.storeRole(admin);

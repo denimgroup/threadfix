@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -41,7 +42,9 @@ public class GenericSeverityServiceImpl
 
 	@Override
 	public List<GenericSeverity> loadAll() {
-		return getDao().retrieveAll();
+        List<GenericSeverity> genericSeverityList = getDao().retrieveAll();
+        Collections.sort(genericSeverityList);
+        return genericSeverityList;
 	}
 
 	@Override

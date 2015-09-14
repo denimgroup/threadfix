@@ -15,7 +15,7 @@ myAppModule.controller('DocumentFormController', function ($scope, $window, $mod
             controller: 'UploadScanController',
             resolve: {
                 url: function() {
-                    return tfEncoder.encode($scope.currentUrl + "/documents/upload");
+                    return $scope.currentUrl + "/documents/upload";
                 },
                 files: function() {
                     return undefined;

@@ -84,6 +84,7 @@
             Submitting
         </button>
         <button id="submit"
+                ng-disabled="compare(form, user)"
                 ng-class="{ disabled : compare(form, user) }"
                 class="btn btn-primary"
                 ng-hide="loading"
@@ -92,6 +93,8 @@
             <a id="deleteUserLink" ng-show="currentUser" class="btn btn-danger" ng-click="deleteUser()">Delete User</a>
         </security:authorize>
     </div>
+
+    <br/>
 
     <security:authorize ifAllGranted="ROLE_ENTERPRISE">
         <security:authorize ifAllGranted="ROLE_CAN_MANAGE_API_KEYS">
@@ -118,8 +121,8 @@
                     </tbody>
                     <tbody ng-if="currentUser.apiKeys">
                     <tr ng-repeat="key in currentUser.apiKeys">
-                        <td>{{ key.apiKey }}</td>
-                        <td>{{ key.note }}</td>
+                        <td style="vertical-align:text-top;">{{ key.apiKey }}</td>
+                        <td style="vertical-align:text-top; word-break:break-all;">{{ key.note }}</td>
                         <td><a class="btn" ng-click="openEditModal(user, key)">Edit / Delete</a></td>
                     </tr>
                     </tbody>

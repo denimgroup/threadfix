@@ -54,7 +54,7 @@ public class Role extends AuditableEntity {
 			canManageUsers, canManageWafs, canManageVulnFilters, canModifyVulnerabilities,
 			canSubmitDefects, canUploadScans, canViewErrorLogs, canManageScanAgents, canManageSystemSettings,
             canViewJobStatuses, enterprise, canManageTags, canSubmitComments, canManageScanResultFilters,
-            canManageCustomCweText, canManageEmailReports;
+            canManageCustomCweText, canManageEmailReports, canManagePolicies;
 
     public static final String[] PROTECTED_PERMISSIONS = {
             "canManageRoles", "canManageUsers"
@@ -335,6 +335,16 @@ public class Role extends AuditableEntity {
         this.canManageEmailReports = canManageEmailReports;
     }
 
+    @Column
+    @JsonView(AllViews.TableRow.class)
+    public Boolean getCanManagePolicies() {
+        return canManagePolicies != null && canManagePolicies;
+    }
+
+    public void setCanManagePolicies(Boolean canManagePolicies) {
+        this.canManagePolicies = canManagePolicies;
+    }
+
     @Transient
 	public Set<Permission> getPermissions() {
 		Set<Permission> permissions = new HashSet<Permission>();
@@ -409,8 +419,13 @@ public class Role extends AuditableEntity {
         if (getCanManageCustomCweText() != null && getCanManageCustomCweText()) {
             permissions.add(Permission.CAN_MANAGE_CUSTOM_CWE_TEXT);
         }
+
         if (getCanManageEmailReports() != null && getCanManageEmailReports()) {
             permissions.add(Permission.CAN_MANAGE_EMAIL_REPORTS);
+        }
+
+        if (getCanManagePolicies() != null && getCanManagePolicies()) {
+            permissions.add(Permission.CAN_MANAGE_POLICIES);
         }
 
 		return permissions;
@@ -513,16 +528,16 @@ public class Role extends AuditableEntity {
             setCanSubmitComments(newPermissionStatus);
 
         if (canManageScanResultFilters == null)
-            setCanManageScanResultFilters(newPermissionStatus); {
-        }
+            setCanManageScanResultFilters(newPermissionStatus);
 
         if (canManageCustomCweText == null)
-            setCanManageCustomCweText(newPermissionStatus); {
-        }
+            setCanManageCustomCweText(newPermissionStatus);
 
         if (canManageEmailReports == null)
-            setCanManageEmailReports(newPermissionStatus); {
-        }
+            setCanManageEmailReports(newPermissionStatus);
+
+        if (canManagePolicies == null)
+            setCanManagePolicies(newPermissionStatus);
     }
 }
 

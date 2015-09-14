@@ -23,11 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.AcceptanceCriteria;
-import com.denimgroup.threadfix.data.entities.AcceptanceCriteriaStatus;
+import com.denimgroup.threadfix.data.entities.Policy;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by sgerick on 5/27/2015.
@@ -36,38 +34,38 @@ import java.util.Map;
 /**
  *
  */
-public interface AcceptanceCriteriaService {
+public interface PolicyService {
 
     /**
-     * @return all AcceptanceCriteria
+     * @return all Policy
      */
-    List<AcceptanceCriteria> loadAll();
+    List<Policy> loadAll();
 
     /**
-     * @param acceptanceCriteriaName
-     * @return AcceptanceCriteria by name
+     * @param policyName
+     * @return Policy by name
      */
-    AcceptanceCriteria loadAcceptanceCriteria(String acceptanceCriteriaName);
+    Policy loadPolicy(String policyName);
 
     /**
-     * @param acceptanceCriteriaId
-     * @return AcceptanceCriteria by id
+     * @param policyId
+     * @return Policy by id
      */
-    AcceptanceCriteria loadAcceptanceCriteria(int acceptanceCriteriaId);
+    Policy loadPolicy(int policyId);
 
     /**
-     * @param acceptanceCriteriaId
+     * @param policyId
      */
-    void deleteById(int acceptanceCriteriaId);
+    void deleteById(int policyId);
 
     /**
-     * @param acceptanceCriteria
+     * @param policy
      */
-    void delete(AcceptanceCriteria acceptanceCriteria);
+    void delete(Policy policy);
 
     /**
-     * @param acceptanceCriteria
+     * @param policy
      */
-    void storeAcceptanceCriteria(AcceptanceCriteria acceptanceCriteria);
+    void storePolicy(Policy policy);
 
 }

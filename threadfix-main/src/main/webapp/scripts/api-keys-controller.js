@@ -14,7 +14,8 @@ module.controller('ApiKeysController', function($scope, $http, $modal, $log, tfE
             success(function(data, status, headers, config) {
 
                 if (data.success) {
-                    $scope.keys = data.object.filter(function(object) { return object.active && (!object.user || object.user.active); });
+                    $scope.keys = data.object.keys.filter(function(object) { return object.active && (!object.user || object.user.active); });
+                    $scope.users = data.object.users;
 
                     if ($scope.keys.length === 0) {
                         $scope.keys = undefined;
@@ -36,10 +37,13 @@ module.controller('ApiKeysController', function($scope, $http, $modal, $log, tfE
     $scope.openNewModal = function() {
         var modalInstance = $modal.open({
             templateUrl: 'newKeyModal.html',
-            controller: 'GenericModalController',
+            controller: 'ModalControllerWithConfig',
             resolve: {
                 url: function() {
                     return tfEncoder.encode("/configuration/keys/new");
+                },
+                config: function() {
+                    return {users: $scope.users};
                 },
                 object: function() {
                     return {};

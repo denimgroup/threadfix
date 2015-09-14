@@ -408,9 +408,9 @@ threadfixModule.factory('reportConstants', function(customSeverityService) {
     var reportConstants = {};
 
     reportConstants.vulnTypeColorList = ["#014B6E", "#458A37", "#EFD20A", "#F27421", "#F7280C", "#C2A677",
-        "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd" ];
+        "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#006699" ];
     reportConstants.vulnTypeTextColorList = ["#688c9d", "#458A37", "#EFD20A", "#F27421", "#F7280C", "#C2A677",
-        "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd" ];
+        "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#006699" ];
     reportConstants.vulnTypeList = ["Info", "Low", "Medium", "High", "Critical"];
 
     customSeverityService.addCallback(function() {
@@ -442,8 +442,11 @@ threadfixModule.factory('reportConstants', function(customSeverityService) {
             Total: {
                 graphColor: reportConstants.vulnTypeColorList[9],
                 textColor: reportConstants.vulnTypeTextColorList[9]
+            },
+            Hidden: {
+                graphColor: reportConstants.vulnTypeColorList[10],
+                textColor: reportConstants.vulnTypeTextColorList[10]
             }
-
         };
 
         reportConstants.vulnTypeColorMap[customSeverityService.getCustomSeverity('Info')] = {
@@ -707,6 +710,13 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities, customSev
                 return trendingScansData;
 
             $log.info("refreshScans.initialize took " + ((new Date()).getTime() - start.getTime()) + " ms");
+
+            $scope.totalVulnsByChannelMap = {};
+            $scope.infoVulnsByChannelMap = {};
+            $scope.lowVulnsByChannelMap = {};
+            $scope.mediumVulnsByChannelMap = {};
+            $scope.highVulnsByChannelMap = {};
+            $scope.criticalVulnsByChannelMap = {};
 
             var _scan = trendingUtilities.filterDisplayData($scope.filterScans[$scope.filterScans.length - 1], $scope);
 

@@ -197,6 +197,15 @@ public class ThreadFixSensor implements Sensor {
         String key = SimilarityCalculator.findMostSimilarFilePath(vulnerabilityMarker.getFilePath(), inputFileMap.keySet());
 
         if (key == null) {
+            key = getDefaultFile();
+            if (key != null) {
+                LOG.info("Using default file " + key + " for " + vulnerabilityMarker.getFilePath());
+            } else {
+                LOG.debug("Default file was null.");
+            }
+        }
+
+        if (key == null) {
             LOG.info("No similar files found for " + vulnerabilityMarker.getFilePath());
             return;
         }
@@ -217,7 +226,10 @@ public class ThreadFixSensor implements Sensor {
         } else {
             LOG.error("Failed to get issuable for resource " + file);
         }
+    }
 
+    private String getDefaultFile() {
+        return SimilarityCalculator.findMostSimilarFilePath(info.getDefaultFile(), inputFileMap.keySet());
     }
 
     public PluginClient getConfiguredClient() {

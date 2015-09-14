@@ -133,7 +133,7 @@ public class EditApplicationController {
 		// TODO split into 3 controllers and use setAllowedFields
 		application.setWaf(databaseApplication.getWaf());
 		application.setDefectTracker(databaseApplication.getDefectTracker());
-		application.setAcceptanceCriteriaStatuses(databaseApplication.getAcceptanceCriteriaStatuses());
+		application.setPolicyStatuses(databaseApplication.getPolicyStatuses());
 
 		application.setUserName(databaseApplication.getUserName());
         application.setPassword(databaseApplication.getPassword());

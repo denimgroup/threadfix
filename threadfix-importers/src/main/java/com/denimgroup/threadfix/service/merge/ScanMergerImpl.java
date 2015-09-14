@@ -27,7 +27,6 @@ import com.denimgroup.threadfix.data.dao.DefaultConfigurationDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.ScanResultFilterService;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.VulnerabilityStatusService;
@@ -60,7 +59,6 @@ public class ScanMergerImpl implements ScanMerger {
     private ScanResultFilterService scanResultFilterService;
     @Autowired
     private DefaultConfigurationDao defaultConfigurationDao;
-
 
     @Override
     public void merge(Scan scan, ApplicationChannel applicationChannel) {
@@ -142,4 +140,5 @@ public class ScanMergerImpl implements ScanMerger {
             }
         }
     }
+
 }

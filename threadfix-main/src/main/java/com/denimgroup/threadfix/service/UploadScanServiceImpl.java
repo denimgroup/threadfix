@@ -3,7 +3,6 @@ package com.denimgroup.threadfix.service;
 import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
-import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
@@ -38,12 +37,10 @@ public class UploadScanServiceImpl implements UploadScanService{
     @Autowired
     private DefaultConfigService defaultConfigService;
     @Autowired(required = false)
-    private AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
-    @Autowired
-    private ApplicationService applicationService;
+    private PolicyStatusService policyStatusService;
 
     @Override
-    public Object processMultiFileUpload(Collection<MultipartFile> files, Integer orgId, Integer appId, String channelIdString) {
+    public Object processMultiFileUpload(Collection<MultipartFile> files, Integer orgId, Integer appId, String channelIdString, boolean isBulkScans) {
         if(files.isEmpty()){
             return failure("No files selected.");
         }
@@ -53,25 +50,23 @@ public class UploadScanServiceImpl implements UploadScanService{
         }
 
         Integer channelId = null;
-
-        for(MultipartFile file : files){
-            Integer myChannelId = scanTypeCalculationService.calculateScanType(appId, file, channelIdString);
-
-            if (myChannelId == null) {
-                return failure("Failed to determine the scan type.");
-            }
-
-            if(channelId != null && !channelId.equals(myChannelId)){
-                return failure("Scans are not of the same type.");
-            }
-
-            channelId = myChannelId;
-        }
-
+        List<Integer> channelIds = list();
         List<String> fileNames = list(), originalNames = list();
         try {
 
             for(MultipartFile file : files){
+                Integer myChannelId = scanTypeCalculationService.calculateScanType(appId, file, channelIdString);
+
+                if (myChannelId == null) {
+                    return failure("Failed to determine the scan type.");
+                }
+
+                if(channelId != null && !channelId.equals(myChannelId) && !isBulkScans){
+                    return failure("Scans are not of the same type.");
+                }
+
+                channelId = myChannelId;
+                channelIds.add(myChannelId);
 
                 String fileName = scanTypeCalculationService.saveFile(channelId, file);
 
@@ -85,14 +80,20 @@ public class UploadScanServiceImpl implements UploadScanService{
                 }
             }
 
-            Scan scan = scanMergeService.saveRemoteScanAndRun(channelId, fileNames, originalNames);
+            List<Scan> resultScans = list();
+            Scan scan = null;
+            if (!isBulkScans) {
+                scan = scanMergeService.saveRemoteScanAndRun(channelId, fileNames, originalNames);
+            } else {
+                resultScans = scanMergeService.saveRemoteScansAndRun(channelIds, fileNames, originalNames);
+            }
 
-            if (scan != null) {
+            if (scan != null || resultScans.size() > 0) {
                 if (orgId != null) {
                     Organization organization = organizationService.loadById(orgId);
                     return success(organization);
                 } else {
-                    return success(scan);
+                    return success(isBulkScans ? resultScans : scan);
                 }
             } else {
                 return failure("Something went wrong while processing the scan.");
@@ -119,8 +120,8 @@ public class UploadScanServiceImpl implements UploadScanService{
                 }
             }
 
-            if (acceptanceCriteriaStatusService != null) {
-                acceptanceCriteriaStatusService.runStatusCheck(appId);
+            if (policyStatusService != null) {
+                policyStatusService.runStatusCheck(appId);
             }
         }
     }

@@ -24,32 +24,31 @@
 
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.AcceptanceCriteria;
-import com.denimgroup.threadfix.data.entities.AcceptanceCriteriaStatus;
+import com.denimgroup.threadfix.data.entities.Policy;
+import com.denimgroup.threadfix.data.entities.PolicyStatus;
 import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.FilterJsonBlob;
 
 import java.util.List;
 
 /**
  * @author zabdisubhan
  */
-public interface AcceptanceCriteriaStatusService extends GenericObjectService<AcceptanceCriteriaStatus> {
+public interface PolicyStatusService extends GenericObjectService<PolicyStatus> {
 
-    void delete(AcceptanceCriteriaStatus acceptanceCriteriaStatus);
+    void delete(PolicyStatus policyStatus);
 
-    void addStatus(AcceptanceCriteria acceptanceCriteria, Application application);
+    void addStatus(Policy policy, Application application);
 
-    void removeStatus(AcceptanceCriteria acceptanceCriteria, Integer applicationId);
+    void removeStatus(Policy policy, Integer applicationId);
 
-    void runStatusCheck(AcceptanceCriteria acceptanceCriteria);
+    void runStatusCheck(Policy policy);
 
     void runStatusCheck(int applicationId);
 
     boolean passFilters(Application application);
 
-    boolean passFilters(AcceptanceCriteria acceptanceCriteria);
+    boolean passFilters(Policy policy);
 
-    List<String> getNotificationEmailAddresses(AcceptanceCriteriaStatus acceptanceCriteriaStatus);
+    List<String> getNotificationEmailAddresses(PolicyStatus policyStatus);
 
 }

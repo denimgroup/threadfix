@@ -4,6 +4,7 @@
   <title>Manage Users</title>
   <cbs:cachebustscript src="/scripts/user-modal-controller.js"/>
   <cbs:cachebustscript src="/scripts/user-page-controller.js"/>
+  <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
 </head>
 
 <body id="config" ng-controller="UserPageController">

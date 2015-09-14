@@ -33,6 +33,7 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 // Only Bugzilla is not yet implemented Dynamic form
                 if ($scope.config.typeName === 'HP Quality Center'
                     || $scope.config.typeName === 'JIRA'
+                    || $scope.config.typeName === 'Jira'
                     || $scope.config.typeName === 'Version One'
                     || $scope.config.typeName === 'Microsoft TFS')
                     $scope.isDynamicForm = true;

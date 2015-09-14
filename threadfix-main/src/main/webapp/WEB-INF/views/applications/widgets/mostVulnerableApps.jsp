@@ -5,7 +5,7 @@
 
     <h4>{{ rightReportTitle }}
 
-      <security:authorize ifAnyGranted="CAN_GENERATE_REPORTS">
+      <security:authorize ifAnyGranted="ROLE_CAN_GENERATE_REPORTS">
       <span style="font-size:12px;float:right;">
         <a id="rightViewMore" ng-href="{{ urlRoot }}/reports/10{{ seeMoreExtension }}{{ csrfToken }}">View More</a>
       </span>

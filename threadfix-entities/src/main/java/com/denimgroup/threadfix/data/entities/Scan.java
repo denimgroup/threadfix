@@ -118,6 +118,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
     @Size(max = 32, message = "{errors.maxlength} 32.")
     private String fileName;
     private List<String> originalFileNames;
+	private List<String> savedFileNames;
 
 	private boolean isDownloadable;
 
@@ -225,7 +226,22 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
         this.originalFileNames = originalFileNames;
     }
 
-    @OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)
+	@CollectionTable(name="ScanSavedFileNames", joinColumns=@JoinColumn(name="scanId"))
+	@CollectionOfElements
+	@ElementCollection
+	@JsonView({AllViews.FormInfo.class, AllViews.RestView2_1.class, AllViews.RestViewScanStatistic.class})
+	public List<String> getSavedFileNames() {
+		if ((savedFileNames == null || savedFileNames.size() == 0) && fileName != null)
+			savedFileNames = list(fileName);
+
+		return savedFileNames;
+	}
+
+	public void setSavedFileNames(List<String> savedFileNames) {
+		this.savedFileNames = savedFileNames;
+	}
+
+	@OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)
     @JsonIgnore
     public List<ScanRepeatFindingMap> getScanRepeatFindingMaps() {
         return scanRepeatFindingMaps;

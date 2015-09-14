@@ -69,7 +69,7 @@ public class RemoteProvidersController {
 	@Autowired
 	private QueueSender queueSender;
     @Autowired(required = false)
-    private AcceptanceCriteriaStatusService acceptanceCriteriaStatusService;
+    private PolicyStatusService policyStatusService;
 
     @InitBinder
     public void setAllowedFields(WebDataBinder dataBinder) {
@@ -159,12 +159,12 @@ public class RemoteProvidersController {
 			log.error("No apps were configured with applications.");
 		}
 
-		if (acceptanceCriteriaStatusService != null) {
+		if (policyStatusService != null) {
 			for (RemoteProviderApplication remoteProviderApplication :
 					remoteProviderType.getRemoteProviderApplications()) {
 				if (remoteProviderApplication.getApplication() != null &&
 						remoteProviderApplication.getApplication().getId() != null) {
-					acceptanceCriteriaStatusService.runStatusCheck(remoteProviderApplication.getApplication().getId());
+					policyStatusService.runStatusCheck(remoteProviderApplication.getApplication().getId());
 				}
 			}
 		}
@@ -196,8 +196,8 @@ public class RemoteProvidersController {
 		ResponseCode response = remoteProviderTypeService.importScansForApplication(remoteProviderApplication);
 		
 		if (response.equals(ResponseCode.SUCCESS)) {
-			if (acceptanceCriteriaStatusService != null) {
-				acceptanceCriteriaStatusService.runStatusCheck(appId);
+			if (policyStatusService != null) {
+				policyStatusService.runStatusCheck(appId);
 			}
             return RestResponse.success("Do the redirect");
 		} else {

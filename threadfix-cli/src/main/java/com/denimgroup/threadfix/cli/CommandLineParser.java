@@ -44,7 +44,7 @@ public class CommandLineParser {
 
 	private static final Map<String, String[]> scanOptions = map(
 			"Source Code Access Level", new String[]{ "None", "Detect", "Partial", "Full" },
-			"Framework Type", new String[]{ "None", "Detect", "JSP", "Spring MVC", "Rails", "Struts", ".NET MVC", "ASP.NET WebForms" },
+			"Framework Type", new String[]{ "None", "Detect", "JSP", "Spring MVC", "Spring_MVC", "Rails", "Struts", ".NET MVC", "ASP.NET WebForms" },
 			"Repository URL", new String[]{ "Arbitrary Git URL" }
 	);
 
