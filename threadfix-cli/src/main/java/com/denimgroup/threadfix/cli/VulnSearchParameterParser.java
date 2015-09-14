@@ -50,7 +50,8 @@ public class VulnSearchParameterParser {
     static final private List<String> validParameters = list("genericVulnerabilityIds", "teamIds",
             "applicationIds", "scannerNames", "genericSeverityValues", "numberVulnerabilities", "parameter",
             "path", "startDate", "endDate", "showOpen", "showClosed", "showFalsePositive", "showHidden", "numberMerged",
-            "showDefectPresent", "showDefectNotPresent", "showDefectOpen", "showDefectClosed");
+            "showDefectPresent", "showDefectNotPresent", "showDefectOpen", "showDefectClosed",
+            "showInconsistentClosedDefectNeedsScan", "showInconsistentClosedDefectOpenInScan", "showInconsistentOpenDefect");
 
     public static RestResponse<VulnerabilityInfo[]> processVulnerabilitySearchParameters(ThreadFixRestClient client,
                                                                                          String... args) {
@@ -78,7 +79,10 @@ public class VulnSearchParameterParser {
                 getBooleanValue("showDefectPresent"),
                 getBooleanValue("showDefectNotPresent"),
                 getBooleanValue("showDefectOpen"),
-                getBooleanValue("showDefectClosed")
+                getBooleanValue("showDefectClosed"),
+                getBooleanValue("showInconsistentClosedDefectNeedsScan"),
+                getBooleanValue("showInconsistentClosedDefectOpenInScan"),
+                getBooleanValue("showInconsistentOpenDefect")
         );
     }
 

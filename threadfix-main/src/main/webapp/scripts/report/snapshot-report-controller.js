@@ -350,6 +350,9 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             showDefectNotPresent: false,
             showDefectOpen: false,
             showDefectClosed: false,
+            showInconsistentClosedDefectNeedsScan: false,
+            showInconsistentClosedDefectOpenInScan: false,
+            showInconsistentOpenDefect: false,
             endDate: undefined,
             startDate: undefined,
             selectedOwasp: $scope.OWASP_TOP10[0]

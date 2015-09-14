@@ -41,6 +41,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 // TODO figure out this Transactional stuff
 // TODO reorganize methods - not in a very good order right now.
@@ -271,6 +274,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
                 importTime = scan.getImportTime();
             } else {
                 combinedScan.getFindings().addAll(scan.getFindings());
+                combinedScan.getScanRepeatFindingMaps().addAll(scan.getScanRepeatFindingMaps());
                 if(scan.getImportTime() != null && scan.getImportTime().after(importTime)){
                     importTime = scan.getImportTime();
                 }
@@ -294,6 +298,22 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 				applicationChannel.getApplication().getId());
 
         vulnerabilityService.updateVulnerabilityReport(applicationChannel.getApplication());
+
+		Set<Finding> findings = set();
+		findings.addAll(combinedScan.getFindings());
+		List<ScanRepeatFindingMap> scanRepeatFindingMaps = combinedScan.getScanRepeatFindingMaps();
+		if (scanRepeatFindingMaps != null) {
+			for (ScanRepeatFindingMap scanRepeatFindingMap : scanRepeatFindingMaps) {
+				findings.add(scanRepeatFindingMap.getFinding());
+			}
+		}
+
+		for (Finding finding : findings) {
+			Vulnerability vulnerability = finding.getVulnerability();
+			if (vulnerability != null) {
+				vulnerabilityService.determineVulnerabilityDefectConsistencyState(vulnerability);
+			}
+		}
 
         return combinedScan;
 	}

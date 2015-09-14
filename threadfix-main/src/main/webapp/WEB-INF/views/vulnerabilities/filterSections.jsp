@@ -259,7 +259,10 @@
                 <input id="showDefectPresent" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showDefectPresent"/>Present<br>
                 <input id="showDefectNotPresent" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showDefectNotPresent"/>Not Present<br>
                 <input id="showDefectOpen" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showDefectOpen"/>Open<br>
-                <input id="showDefectClosed" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showDefectClosed"/>Closed
+                <input id="showDefectClosed" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showDefectClosed"/>Closed<br>
+                <input id="showInconsistentClosedDefectNeedsScan" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showInconsistentClosedDefectNeedsScan"/>Inconsistent Closed Needing Scan<br>
+                <input id="showInconsistentClosedDefectOpenInScan" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showInconsistentClosedDefectOpenInScan"/>Inconsistent Closed After Scan<br>
+                <input id="showInconsistentOpenDefect" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showInconsistentOpenDefect"/>Inconsistent Open
             </div>
         </div>
 
