@@ -54,7 +54,7 @@ public class Role extends AuditableEntity {
 			canManageUsers, canManageWafs, canManageVulnFilters, canModifyVulnerabilities,
 			canSubmitDefects, canUploadScans, canViewErrorLogs, canManageScanAgents, canManageSystemSettings,
             canViewJobStatuses, enterprise, canManageTags, canSubmitComments, canManageScanResultFilters,
-            canManageCustomCweText, canManageEmailReports, canManageGroups;
+            canManageCustomCweText, canManageEmailReports, canManageGroups, canManagePolicies;
 
     public static final String[] PROTECTED_PERMISSIONS = {
             "canManageRoles", "canManageUsers"
@@ -345,6 +345,16 @@ public class Role extends AuditableEntity {
         this.canManageGroups = canManageGroups;
     }
 
+    @Column
+    @JsonView(AllViews.TableRow.class)
+    public Boolean getCanManagePolicies() {
+        return canManagePolicies != null && canManagePolicies;
+    }
+
+    public void setCanManagePolicies(Boolean canManagePolicies) {
+        this.canManagePolicies = canManagePolicies;
+    }
+
     @Transient
 	public Set<Permission> getPermissions() {
 		Set<Permission> permissions = new HashSet<Permission>();
@@ -415,16 +425,17 @@ public class Role extends AuditableEntity {
         if (getCanManageGroups() != null && getCanManageGroups())
             permissions.add(Permission.CAN_MANAGE_GROUPS);
 
-        if (getCanManageScanResultFilters() != null && getCanManageScanResultFilters()) {
+        if (getCanManageScanResultFilters() != null && getCanManageScanResultFilters())
             permissions.add(Permission.CAN_MANAGE_SCAN_RESULT_FILTERS);
-        }
 
-        if (getCanManageCustomCweText() != null && getCanManageCustomCweText()) {
+        if (getCanManageCustomCweText() != null && getCanManageCustomCweText())
             permissions.add(Permission.CAN_MANAGE_CUSTOM_CWE_TEXT);
-        }
-        if (getCanManageEmailReports() != null && getCanManageEmailReports()) {
+
+        if (getCanManageEmailReports() != null && getCanManageEmailReports())
             permissions.add(Permission.CAN_MANAGE_EMAIL_REPORTS);
-        }
+
+        if (getCanManagePolicies() != null && getCanManagePolicies())
+            permissions.add(Permission.CAN_MANAGE_POLICIES);
 
 		return permissions;
 	}
@@ -529,16 +540,16 @@ public class Role extends AuditableEntity {
             setCanManageGroups(newPermissionStatus);
 
         if (canManageScanResultFilters == null)
-            setCanManageScanResultFilters(newPermissionStatus); {
-        }
+            setCanManageScanResultFilters(newPermissionStatus);
 
         if (canManageCustomCweText == null)
-            setCanManageCustomCweText(newPermissionStatus); {
-        }
+            setCanManageCustomCweText(newPermissionStatus);
 
         if (canManageEmailReports == null)
-            setCanManageEmailReports(newPermissionStatus); {
-        }
+            setCanManageEmailReports(newPermissionStatus);
+
+        if (canManagePolicies == null)
+            setCanManagePolicies(newPermissionStatus);
     }
 }
 

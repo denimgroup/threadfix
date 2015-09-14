@@ -227,6 +227,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
     }
 
 	@CollectionTable(name="ScanSavedFileNames", joinColumns=@JoinColumn(name="scanId"))
+	@CollectionOfElements
 	@ElementCollection
 	@JsonView({AllViews.FormInfo.class, AllViews.RestView2_1.class, AllViews.RestViewScanStatistic.class})
 	public List<String> getSavedFileNames() {

@@ -50,7 +50,8 @@ public enum Permission {
     CAN_SUBMIT_COMMENTS("ROLE_CAN_SUBMIT_COMMENTS","canSubmitComments"),
 	CAN_MANAGE_GROUPS("ROLE_CAN_MANAGE_GROUPS", "canManageGroups"),
     CAN_MANAGE_SCAN_RESULT_FILTERS("ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS", "canManageScanResultFilters"),
-    CAN_MANAGE_CUSTOM_CWE_TEXT("ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT", "canManageCustomCweText");
+    CAN_MANAGE_CUSTOM_CWE_TEXT("ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT", "canManageCustomCweText"),
+	CAN_MANAGE_POLICIES("ROLE_CAN_MANAGE_POLICIES", "canManagePolicies");
 
 	private String text, camelCase;
 	

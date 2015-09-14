@@ -155,7 +155,7 @@ public class PolicyStatus extends AuditableEntity {
             return map(
                     "id", policy.getId(),
                     "name", policy.getName(),
-                    "filterName", policy.getFilterJsonBlob().getName());
+                    "filterName", policy.getFilterJsonBlob() != null ? policy.getFilterJsonBlob().getName() : null);
         } else {
             return null;
         }
