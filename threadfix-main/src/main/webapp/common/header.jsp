@@ -108,7 +108,7 @@
                                  </ul>
                             </li>
                         </security:authorize>
-                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_ENTERPRISE,ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT, ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS, ROLE_CAN_MANAGE_TAGS, ROLE_CAN_MODIFY_VULNERABILITIES">
+                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_ENTERPRISE,ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT, ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS, ROLE_CAN_MANAGE_TAGS,ROLE_CAN_MANAGE_POLICIES, ROLE_CAN_MODIFY_VULNERABILITIES">
                             <li class="dropdown-submenu left pull-left normalLinks">
                                 <a tabindex="-1" href="#" id="manageCustomLink">Customize</a>
                                 <ul class="dropdown-menu" style="text-align:right; width: 230px; left: -242px;" tabindex="-1">
@@ -142,7 +142,7 @@
                                         </li>
                                     </security:authorize>
 
-                                    <security:authorize ifAllGranted="ROLE_ENTERPRISE">
+                                    <security:authorize ifAllGranted="ROLE_CAN_MANAGE_POLICIES">
                                         <li class="normalLinks">
                                             <a id="policiesLink" href="<spring:url value="/configuration/policies" htmlEscape="true"/>">Policies</a>
                                         </li>
@@ -170,7 +170,7 @@
                                                 <a id="manageRolesLink" href="<spring:url value="/configuration/roles" htmlEscape="true"/>">Roles</a>
                                             </li>
                                         </security:authorize>
-                                        <security:authorize ifAnyGranted="ROLE_ENTERPRISE">
+                                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_GROUPS">
                                             <li class="normalLinks">
                                                 <a id="manageGroupsLink" href="<spring:url value="/configuration/groups" htmlEscape="true"/>">Groups</a>
                                             </li>

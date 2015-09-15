@@ -65,6 +65,7 @@ public class UserRoleBootstrapper {
         admin.setCanManageRemoteProviders(true);
         admin.setCanManageRoles(true);
         admin.setCanManageTeams(true);
+        admin.setCanManageGroups(true);
         admin.setCanManageUsers(true);
         admin.setCanManageWafs(true);
         admin.setCanManageVulnFilters(true);
@@ -78,6 +79,7 @@ public class UserRoleBootstrapper {
         admin.setCanSubmitComments(true);
         admin.setCanManageScanResultFilters(true);
         admin.setCanManageCustomCweText(true);
+        admin.setCanManagePolicies(true);
         admin.setDisplayName("Administrator");
 
         roleService.storeRole(admin);
