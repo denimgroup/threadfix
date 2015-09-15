@@ -170,7 +170,7 @@
                                                 <a id="manageRolesLink" href="<spring:url value="/configuration/roles" htmlEscape="true"/>">Roles</a>
                                             </li>
                                         </security:authorize>
-                                        <security:authorize ifAnyGranted="ROLE_ENTERPRISE">
+                                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_GROUPS">
                                             <li class="normalLinks">
                                                 <a id="manageGroupsLink" href="<spring:url value="/configuration/groups" htmlEscape="true"/>">Groups</a>
                                             </li>
