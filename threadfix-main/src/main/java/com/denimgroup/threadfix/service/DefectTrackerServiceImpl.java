@@ -27,12 +27,15 @@ import com.denimgroup.threadfix.data.dao.DefectDao;
 import com.denimgroup.threadfix.data.dao.DefectTrackerDao;
 import com.denimgroup.threadfix.data.dao.DefectTrackerTypeDao;
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.data.interfaces.ProjectMetadataSource;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
+import com.denimgroup.threadfix.service.defects.VersionOneDefectTracker;
+import com.denimgroup.threadfix.viewmodel.DynamicFormField;
 import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;
@@ -41,7 +44,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
+import javax.annotation.Nonnull;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
@@ -54,6 +60,8 @@ public class DefectTrackerServiceImpl implements DefectTrackerService {
 	private DefectDao defectDao = null;
 
 	private final SanitizedLogger log = new SanitizedLogger("DefectTrackerService");
+
+    private static final String ERROR_MSG = "error_msg";
 	
 	@Autowired
 	public DefectTrackerServiceImpl(DefectTrackerDao defectTrackerDao,
@@ -133,7 +141,49 @@ public class DefectTrackerServiceImpl implements DefectTrackerService {
 
     @Override
     public ProjectMetadata getProjectMetadata(ProjectMetadataSource tracker) {
-        return tracker == null ? null : tracker.getProjectMetadata();
+
+        ProjectMetadata data = null;
+
+        if (tracker != null) {
+
+            data = tracker.getProjectMetadata();
+
+            // adding additional scanner info checkbox, checking for null DynamicFormFields
+            List<DynamicFormField> editableFields = data.getEditableFields();
+
+            if (editableFields != null) {
+                addAdditionalScannerInfoField(editableFields);
+
+                //remove Order field in Version One dynamic form
+                if (tracker.getClass().equals(VersionOneDefectTracker.class)) {
+                    DynamicFormField orderField = null;
+                    for (DynamicFormField field : editableFields) {
+                        if (field.getName().equals("Order")) {
+                            orderField = field;
+                        }
+                    }
+
+                    if (orderField != null) {
+                        editableFields.remove(orderField);
+                    }
+                }
+            }
+        }
+
+        return data;
+    }
+
+    private void addAdditionalScannerInfoField(@Nonnull List<DynamicFormField> formFields){
+        DynamicFormField additionalScannerInfoField = new DynamicFormField();
+        additionalScannerInfoField.setName("AdditionalScannerInfo");
+        additionalScannerInfoField.setLabel("Additional Scanner Info");
+        additionalScannerInfoField.setRequired(false);
+        additionalScannerInfoField.setType("checkbox");
+        additionalScannerInfoField.setActive(true);
+        additionalScannerInfoField.setEditable(true);
+        additionalScannerInfoField.setSupportsMultivalue(false);
+
+        formFields.add(additionalScannerInfoField);
     }
 
 	@Override

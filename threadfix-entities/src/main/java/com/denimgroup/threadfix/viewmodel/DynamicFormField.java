@@ -24,6 +24,9 @@
 
 package com.denimgroup.threadfix.viewmodel;
 
+import com.denimgroup.threadfix.views.AllViews;
+import com.fasterxml.jackson.annotation.JsonView;
+
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
@@ -84,6 +87,7 @@ public class DynamicFormField {
         this.placeholder = placeholder;
     }
 
+    @JsonView(AllViews.RestViewScan2_1.class)
     public String getName() {
         return name;
     }
@@ -100,6 +104,7 @@ public class DynamicFormField {
         this.label = label;
     }
 
+    @JsonView(AllViews.RestViewScan2_1.class)
     public int getMaxLength() {
         return maxLength;
     }
@@ -109,6 +114,7 @@ public class DynamicFormField {
         this.setError("maxlength", "Input up to " + maxLength +" characters only.");
     }
 
+    @JsonView(AllViews.RestViewScan2_1.class)
     public int getMinLength() {
         return minLength;
     }
@@ -117,6 +123,7 @@ public class DynamicFormField {
         this.minLength = minLength;
     }
 
+    @JsonView(AllViews.RestViewScan2_1.class)
     public boolean isRequired() {
         return required;
     }
@@ -127,6 +134,7 @@ public class DynamicFormField {
             this.setError("required", "This field cannot be empty.");
     }
 
+    @JsonView(AllViews.RestViewScan2_1.class)
     public String getType() {
         return type;
     }
@@ -138,6 +146,7 @@ public class DynamicFormField {
         }
     }
 
+    @JsonView(AllViews.RestViewScan2_1.class)
     public boolean isActive() {
         return active;
     }
@@ -158,6 +167,7 @@ public class DynamicFormField {
      * the key is the value of the option tag and the value is what gets displayed.
      * @return
      */
+    @JsonView(AllViews.RestViewScan2_1.class)
     public Map<String, String> getOptionsMap() {
         return optionsMap;
     }
@@ -166,6 +176,7 @@ public class DynamicFormField {
         this.optionsMap = sortByValues(optionsMap);
     }
 
+    @JsonView(AllViews.RestViewScan2_1.class)
     public boolean isSupportsMultivalue() {
         return supportsMultivalue;
     }
@@ -174,6 +185,7 @@ public class DynamicFormField {
         this.supportsMultivalue = supportsMultivalue;
     }
 
+    @JsonView(AllViews.RestViewScan2_1.class)
     public String getShow() {
         return show;
     }
@@ -210,6 +222,7 @@ public class DynamicFormField {
         return sortedMap;
     }
 
+    @JsonView(AllViews.RestViewScan2_1.class)
     public String getStep() {
         return step;
     }
@@ -218,6 +231,7 @@ public class DynamicFormField {
         this.step = step;
     }
 
+    @JsonView(AllViews.RestViewScan2_1.class)
     public Integer getMinValue() {
         return minValue;
     }
@@ -227,6 +241,7 @@ public class DynamicFormField {
         this.setError("min", "Input min is " + minValue + ".");
     }
 
+    @JsonView(AllViews.RestViewScan2_1.class)
     public Integer getMaxValue() {
         return maxValue;
     }
@@ -236,6 +251,7 @@ public class DynamicFormField {
         this.setError("max", "Input max is " + maxValue + ".");
     }
 
+    @JsonView(AllViews.RestViewScan2_1.class)
     public Object getValue() {
         return value;
     }
