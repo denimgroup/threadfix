@@ -598,7 +598,7 @@
                         <h3 class="panel-title">
                             <span ng-hide="editBaseUrlSettings" class="icon icon-chevron-right"></span>
                             <span ng-show="editBaseUrlSettings" class="icon icon-chevron-down"></span>
-                            Threadfix base URL
+                            ThreadFix Base URL
                         </h3>
                     </div>
                     <div class="panel-body" ng-show="editBaseUrlSettings">
