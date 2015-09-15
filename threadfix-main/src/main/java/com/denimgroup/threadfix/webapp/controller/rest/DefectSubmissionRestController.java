@@ -26,9 +26,7 @@ package com.denimgroup.threadfix.webapp.controller.rest;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Defect;
-import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectService;
@@ -40,7 +38,7 @@ import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
 import com.fasterxml.jackson.annotation.JsonView;
-import org.apache.http.HttpRequest;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -124,7 +122,9 @@ public class DefectSubmissionRestController extends TFRestController {
                 if (!param.getKey().equals("vulnerabilityIds"))
                     fieldsMap.put(param.getKey(), param.getValue()[0]);
             }
-            defectViewModel.setFieldsMap(fieldsMap);
+
+            Gson gson = new Gson();
+            defectViewModel.setFieldsMapStr(gson.toJson(fieldsMap));
         }
 
         Map fieldsMap = defectViewModel.getFieldsMap();
