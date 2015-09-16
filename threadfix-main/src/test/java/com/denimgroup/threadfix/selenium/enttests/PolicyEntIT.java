@@ -179,7 +179,6 @@ public class PolicyEntIT extends BaseDataTest {
         assertFalse("Application is still present on acceptance policy page.", policyPage.isAppPresent(name, appName));
     }
 
-    @Ignore("Awaiting ID changes")
     @Test
     public void testAddEmailsButtonForPolicy() {
         String name = getName();
@@ -200,7 +199,6 @@ public class PolicyEntIT extends BaseDataTest {
         assertTrue("Email List was not added to policy.", policyPage.isEmailListPresent(listName));
     }
 
-    @Ignore("Awaiting ID changes")
     @Test
     public void testAddEmailsButtonForApp() {
         initializeTeamAndApp();
@@ -295,4 +293,88 @@ public class PolicyEntIT extends BaseDataTest {
         assertFalse("Duplicate Policy name could be submitted by editing.",
                 policyPage.canSaveDuplicatePolicy());
     }
+
+    @Test
+    public void testAddEmailsButtonValidationForPolicy() {
+        String name = getName();
+        String validEmail = getEmailAddress();
+        String invalidEmail = "@";
+        String invalidCharEmail = "asdf)@asdf.asdf";
+        String longEmail = getRandomString(100) + "@" + getRandomString(100);
+        String listName = getName();
+
+        PolicyPage policyPage = initialize(name)
+                .clickManageEmailListsLink()
+                .clickCreateEmailList()
+                .setEmailListName(listName)
+                .clickSaveEmailList()
+                .clickPoliciesLink()
+                .clickAddEmailsButton(name)
+                .addEmailAddress(invalidEmail);
+
+        assertFalse("Invalid email was added to policy.", policyPage.isEmailPresent(invalidEmail));
+
+        policyPage.addEmailAddress(invalidCharEmail);
+
+        assertFalse("Email with invalid characters was added to policy.", policyPage.isEmailPresent(invalidCharEmail));
+
+        policyPage.addEmailAddress(longEmail);
+
+        assertFalse("Email with invalid length was added to policy.", policyPage.isEmailPresent(longEmail));
+
+        policyPage.addEmailAddress(validEmail)
+                .addEmailAddress(validEmail);
+
+        assertTrue("Duplicate email was added to policy.", policyPage.getEmailError().contains("Email address already exists."));
+
+        policyPage.addEmailList(listName)
+                .addEmailList(listName);
+
+        assertTrue("Duplicate email list was added to policy.", policyPage.getEmailListError().contains("Email list already added."));
+    }
+
+    @Test
+    public void testAddEmailsButtonValidationForApp() {
+        initializeTeamAndApp();
+        String name = getName();
+        String validEmail = getEmailAddress();
+        String invalidEmail = "@";
+        String invalidCharEmail = "asdf)@asdf.asdf";
+        String longEmail = getRandomString(100) + "@" + getRandomString(100);
+        String listName = getName();
+
+        PolicyPage policyPage = initialize(name)
+                .clickManageEmailListsLink()
+                .clickCreateEmailList()
+                .setEmailListName(listName)
+                .clickSaveEmailList()
+                .clickPoliciesLink()
+                .expandPolicy(name)
+                .addAppToPolicy(name, appName)
+                .clickAddEmailsButtonForApp(appName, name);
+
+        assertFalse("Invalid email was added to app.", policyPage.isEmailPresent(invalidEmail));
+
+        policyPage.addEmailAddress(invalidCharEmail);
+
+        assertFalse("Email with invalid characters was added to app.", policyPage.isEmailPresent(invalidCharEmail));
+
+        policyPage.addEmailAddress(longEmail);
+
+        assertFalse("Email with invalid length was added to app.", policyPage.isEmailPresent(longEmail));
+
+        policyPage.addEmailAddress(validEmail)
+                .addEmailAddress(validEmail);
+
+        assertTrue("Duplicate email was added to app.", policyPage.getEmailError().contains("Email address already exists."));
+
+        policyPage.addEmailList(listName)
+                .addEmailList(listName);
+
+        assertTrue("Duplicate email list was added to app.", policyPage.getEmailListError().contains("Email list already added."));
+    }
+
+    //================================================================================================
+    // Functionality Tests
+    //================================================================================================
 }

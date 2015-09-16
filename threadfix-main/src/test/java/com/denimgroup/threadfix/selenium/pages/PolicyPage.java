@@ -32,6 +32,28 @@ public class PolicyPage extends BasePage {
     public PolicyPage(WebDriver webDriver) { super(webDriver); }
 
     //===========================================================================================================
+    // Procedure Methods
+    //===========================================================================================================
+
+    public PolicyPage createGenericFilter(String name) {
+        //TODO: When DGTF-1868 is resolved replace refreshPage with clickPolicyTab
+        clickFiltersTab()
+                .expandFieldControls()
+                .clickFieldControl("Critical")
+                .setFilterName(name)
+                .refreshPage();
+        return new PolicyPage(driver);
+    }
+
+    public PolicyPage createPolicy(String policyName, String filterName) {
+        clickCreatePolicy()
+                .setPolicyName(policyName)
+                .setFilterForPolicy(filterName)
+                .savePolicy();
+        return this;
+    }
+
+    //===========================================================================================================
     // Action Methods
     //===========================================================================================================
 
@@ -58,25 +80,6 @@ public class PolicyPage extends BasePage {
         return this;
     }
 
-    public PolicyPage setFilterName(String name) {
-        //TODO: Replace LinkText with ID when ID is added to success alert
-        driver.findElementById("filterNameInput").clear();
-        driver.findElementById("filterNameInput").sendKeys(name);
-        driver.findElementById("saveFilterButton").click();
-        waitForElement(By.linkText("Update Saved Filter"));
-        return this;
-    }
-
-    public PolicyPage createGenericFilter(String name) {
-        //TODO: When DGTF-1868 is resolved replace refreshPage with clickPolicyTab
-        clickFiltersTab()
-                .expandFieldControls()
-                .clickFieldControl("Critical")
-                .setFilterName(name)
-                .refreshPage();
-        return new PolicyPage(driver);
-    }
-
     public PolicyPage clickCreatePolicy() {
         waitForElement(By.id("policyTable"));
         driver.findElementById("createNewModalButton").click();
@@ -84,30 +87,10 @@ public class PolicyPage extends BasePage {
         return new PolicyPage(driver);
     }
 
-    public PolicyPage setPolicyName(String name) {
-        driver.findElementById("policyCreateNameInput").clear();
-        driver.findElementById("policyCreateNameInput").sendKeys(name);
-        return this;
-    }
-
-    public PolicyPage setFilterForPolicy(String name) {
-        //TODO: Replace CSS lookup with ID when unique ID is added
-        new Select(driver.findElementByCssSelector(".modal-form-table #filterSelect")).selectByVisibleText(name);
-        return this;
-    }
-
     public PolicyPage savePolicy() {
         driver.findElementById("submit").click();
         waitForInvisibleElement("myModalLabel");
         return new PolicyPage(driver);
-    }
-
-    public PolicyPage createPolicy(String policyName, String filterName) {
-        clickCreatePolicy()
-                .setPolicyName(policyName)
-                .setFilterForPolicy(filterName)
-                .savePolicy();
-        return this;
     }
 
     public PolicyPage clickEditDeleteButton(String name) {
@@ -161,9 +144,42 @@ public class PolicyPage extends BasePage {
     }
 
     public PolicyPage clickAddEmailsButtonForApp(String appName, String policyName) {
-        driver.findElementByCssSelector("#ac" + policyName + "AppRow" + appName + " #addEmailModalButton" + appName).click();
+        driver.findElementByCssSelector("#policy" + policyName + "AppRow" + appName + " #addEmailModalButton" + appName).click();
         return new PolicyPage(driver);
     }
+
+    //===========================================================================================================
+    // Set Methods
+    //===========================================================================================================
+
+    public PolicyPage setPolicyName(String name) {
+        driver.findElementById("policyCreateNameInput").clear();
+        driver.findElementById("policyCreateNameInput").sendKeys(name);
+        return this;
+    }
+
+    public PolicyPage setFilterForPolicy(String name) {
+        //TODO: Replace CSS lookup with ID when unique ID is added
+        new Select(driver.findElementByCssSelector(".modal-form-table #filterSelect")).selectByVisibleText(name);
+        return this;
+    }
+
+    public PolicyPage setFilterName(String name) {
+        //TODO: Replace LinkText with ID when ID is added to success alert
+        driver.findElementById("filterNameInput").clear();
+        driver.findElementById("filterNameInput").sendKeys(name);
+        driver.findElementById("saveFilterButton").click();
+        waitForElement(By.linkText("Update Saved Filter"));
+        return this;
+    }
+
+    //===========================================================================================================
+    // Get Methods
+    //===========================================================================================================
+
+    public String getEmailError() { return driver.findElementById("emailErrors").getText(); }
+
+    public String getEmailListError() { return driver.findElementById("emailListErrors").getText(); }
 
     //===========================================================================================================
     // Boolean Methods
@@ -233,7 +249,7 @@ public class PolicyPage extends BasePage {
     }
 
     //===========================================================================================================
-    // Get Methods
+    // Helper Methods
     //===========================================================================================================
 
     public String getIdForEmail(String email) {
