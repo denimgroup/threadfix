@@ -308,6 +308,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 }
 
                 $scope.initialized = true;
+                $rootScope.$broadcast('refreshUsers');
             }).
             error(function(data, status) {
                 $scope.initialized = true;
