@@ -103,7 +103,7 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
 
     $scope.paginate = function(provider) {
 
-        if (!provider.backUpRemoteProviderApplications) {
+        if (!provider.backUpRemoteProviderApplications || provider.backUpRemoteProviderApplications.length == 0) {
             provider.backUpRemoteProviderApplications = provider.remoteProviderApplications;
         }
 
@@ -145,6 +145,7 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                                 field.value = undefined;
                             });
                         }
+                        provider.backUpRemoteProviderApplications = undefined;
                         provider.successMessage = undefined;
                         provider.errorMessage = undefined;
                         provider.hasCredentials = "No";
