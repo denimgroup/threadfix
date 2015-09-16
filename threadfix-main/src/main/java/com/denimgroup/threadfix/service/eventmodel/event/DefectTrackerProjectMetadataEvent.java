@@ -24,7 +24,7 @@
 package com.denimgroup.threadfix.service.eventmodel.event;
 
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
-import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
+import com.denimgroup.threadfix.viewmodels.ProjectMetadata;
 
 /**
  * Created by mac on 11/11/14.

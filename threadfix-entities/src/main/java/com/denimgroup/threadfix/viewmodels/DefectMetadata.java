@@ -22,7 +22,7 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.viewmodel;
+package com.denimgroup.threadfix.viewmodels;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 

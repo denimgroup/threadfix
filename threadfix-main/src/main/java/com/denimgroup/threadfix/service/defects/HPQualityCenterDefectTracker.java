@@ -29,9 +29,9 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
 import com.denimgroup.threadfix.service.defects.utils.hpqc.HPQCUtils;
 import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.*;
-import com.denimgroup.threadfix.viewmodel.DefectMetadata;
-import com.denimgroup.threadfix.viewmodel.DynamicFormField;
-import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
+import com.denimgroup.threadfix.viewmodels.DefectMetadata;
+import com.denimgroup.threadfix.viewmodels.DynamicFormField;
+import com.denimgroup.threadfix.viewmodels.ProjectMetadata;
 
 import javax.annotation.Nonnull;
 import java.net.MalformedURLException;

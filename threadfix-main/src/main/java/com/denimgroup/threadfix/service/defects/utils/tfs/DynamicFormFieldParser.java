@@ -25,10 +25,9 @@ package com.denimgroup.threadfix.service.defects.utils.tfs;
 
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.viewmodel.DynamicFormField;
+import com.denimgroup.threadfix.viewmodels.DynamicFormField;
 import com.microsoft.tfs.core.clients.workitem.WorkItem;
 import com.microsoft.tfs.core.clients.workitem.fields.Field;
-import com.microsoft.tfs.core.clients.workitem.fields.FieldDefinitionCollection;
 import com.microsoft.tfs.core.clients.workitem.fields.FieldStatus;
 import com.microsoft.tfs.core.clients.workitem.fields.FieldType;
 import com.microsoft.tfs.core.clients.workitem.form.WIFormControl;
