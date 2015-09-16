@@ -35,16 +35,6 @@ public class PolicyPage extends BasePage {
     // Procedure Methods
     //===========================================================================================================
 
-    public PolicyPage createGenericFilter(String name) {
-        //TODO: When DGTF-1868 is resolved replace refreshPage with clickPolicyTab
-        clickFiltersTab()
-                .expandFieldControls()
-                .clickFieldControl("Critical")
-                .setFilterName(name)
-                .refreshPage();
-        return new PolicyPage(driver);
-    }
-
     public PolicyPage createPolicy(String policyName, String filterName) {
         clickCreatePolicy()
                 .setPolicyName(policyName)
@@ -53,24 +43,130 @@ public class PolicyPage extends BasePage {
         return this;
     }
 
+    public PolicyPage createGenericFilter(String name) {
+        clickFiltersTab()
+                .expandFilters()
+                .clickFieldControl("Critical")
+                .setFilterName(name)
+                .clickPolicyTab();
+        return new PolicyPage(driver);
+    }
+
+    public PolicyPage createNumberMergedFilter(String name) {
+        clickFiltersTab()
+                .expandFilters()
+                .clickMergedFindingsThreePlus()
+                .setFilterName(name)
+                .clickPolicyTab();
+        return new PolicyPage(driver);
+    }
+
+    public PolicyPage createScannerFilter(String name, String scanner) {
+        clickFiltersTab()
+                .expandFilters()
+                .setScannerFilter(scanner)
+                .setFilterName(name)
+                .clickPolicyTab();
+        return new PolicyPage(driver);
+    }
+
+    public PolicyPage createVulnerabilityFilter(String name, String vulnerability) {
+        clickFiltersTab()
+                .expandFilters()
+                .setVulnerabilityFilter(vulnerability)
+                .setFilterName(name)
+                .clickPolicyTab();
+        return new PolicyPage(driver);
+    }
+
+    public PolicyPage createPathFilter(String name, String path) {
+        clickFiltersTab()
+                .expandFilters()
+                .setPathFilter(path)
+                .setFilterName(name)
+                .clickPolicyTab();
+        return new PolicyPage(driver);
+    }
+
+    public PolicyPage createParameterFilter(String name, String parameter) {
+        clickFiltersTab()
+                .expandFilters()
+                .setParameterFilter(parameter)
+                .setFilterName(name)
+                .clickPolicyTab();
+        return new PolicyPage(driver);
+    }
+
+    public PolicyPage createOpenFilter(String name) {
+        clickFiltersTab()
+                .expandFilters()
+                .clickFieldControl("Open")
+                .setFilterName(name)
+                .clickPolicyTab();
+        return new PolicyPage(driver);
+    }
+
+    public PolicyPage createFalsePositiveFilter(String name) {
+        clickFiltersTab()
+                .expandFilters()
+                .clickFieldControl("FalsePositive")
+                .setFilterName(name)
+                .clickPolicyTab();
+        return new PolicyPage(driver);
+    }
+
+    public PolicyPage createHiddenFilter(String name) {
+        clickFiltersTab()
+                .expandFilters()
+                .clickFieldControl("Hidden")
+                .setFilterName(name)
+                .clickPolicyTab();
+        return new PolicyPage(driver);
+    }
+
+    public PolicyPage createAgingFilter(String name) {
+        clickFiltersTab()
+                .expandFilters()
+                .clickMoreThan()
+                .click90Days()
+                .setFilterName(name)
+                .clickPolicyTab();
+        return new PolicyPage(driver);
+    }
+
+    public PolicyPage createDateRangeFilter(String name) {
+        clickFiltersTab()
+                .expandFilters()
+                .setDateRange("11-1-14", "1-1-15")
+                .setFilterName(name)
+                .clickPolicyTab();
+        return new PolicyPage(driver);
+    }
+
     //===========================================================================================================
     // Action Methods
     //===========================================================================================================
 
     public PolicyPage clickPolicyTab() {
         driver.findElementByLinkText("Policy").click();
+        //This sleep is necessary; the page elements are all present upon page load but will
+        //update shortly afterward, reverting any actions you make
+        sleep(500);
         waitForElement(By.id("createNewModalButton"));
         return new PolicyPage(driver);
     }
 
     public PolicyPage clickFiltersTab() {
         driver.findElementByLinkText("Filters").click();
+        //This sleep is necessary; the page elements are all present upon page load but will
+        //update shortly afterward, reverting any actions you make
+        sleep(500);
         waitForElement(By.id("saveFilterButton"));
         return new PolicyPage(driver);
     }
 
-    public PolicyPage expandFieldControls() {
-        driver.findElementById("showFieldControls").click();
+    public PolicyPage expandFilters() {
+        driver.findElementById("toggleAllButton").click();
         waitForElement(By.id("showInfo"));
         return this;
     }
@@ -114,6 +210,7 @@ public class PolicyPage extends BasePage {
     }
 
     public PolicyPage addAppToPolicy(String policyName, String appName) {
+        driver.findElementById("applicationNameTypeahead" + policyName).clear();
         driver.findElementById("applicationNameTypeahead" + policyName).sendKeys(appName);
         driver.findElementById("applicationNameTypeahead" + policyName).sendKeys(Keys.ENTER);
         driver.findElementById("submitButton" + policyName).click();
@@ -148,6 +245,31 @@ public class PolicyPage extends BasePage {
         return new PolicyPage(driver);
     }
 
+    public PolicyPage clickMergedFindingsThreePlus() {
+        driver.findElementByCssSelector("#set3MergedFindings>a").click();
+        return this;
+    }
+
+    public PolicyPage clickSaveFilterButton() {
+        driver.findElementById("saveFilterButton").click();
+        return this;
+    }
+
+    public PolicyPage clickLessThan() {
+        driver.findElementByCssSelector("#lessThan>a").click();
+        return this;
+    }
+
+    public PolicyPage clickMoreThan() {
+        driver.findElementByCssSelector("#moreThan>a").click();
+        return this;
+    }
+
+    public PolicyPage click90Days() {
+        driver.findElementByCssSelector("#ninetyDays>a").click();
+        return this;
+    }
+
     //===========================================================================================================
     // Set Methods
     //===========================================================================================================
@@ -170,6 +292,43 @@ public class PolicyPage extends BasePage {
         driver.findElementById("filterNameInput").sendKeys(name);
         driver.findElementById("saveFilterButton").click();
         waitForElement(By.linkText("Update Saved Filter"));
+        return this;
+    }
+
+    public PolicyPage selectFilterToEdit(String name) {
+        new Select(driver.findElementByCssSelector("div.saved-filters-tab>#filterSelect")).selectByVisibleText(name);
+        return this;
+    }
+
+    public PolicyPage setScannerFilter(String scanner) {
+        driver.findElementById("showScannerInput").click();
+        driver.findElementById("scannerTypeahead").sendKeys(scanner);
+        driver.findElementById("scannerTypeahead").sendKeys(Keys.ENTER);
+        return this;
+    }
+
+    public PolicyPage setVulnerabilityFilter(String vulnerability) {
+        driver.findElementById("showTypeInput").click();
+        driver.findElementById("vulnerabilityTypeTypeahead").sendKeys(vulnerability);
+        driver.findElementById("vulnerabilityTypeTypeahead").sendKeys(Keys.ENTER);
+        return this;
+    }
+
+    public PolicyPage setPathFilter(String path) {
+        driver.findElementById("pathInput").sendKeys(path);
+        driver.findElementById("pathInput").sendKeys(Keys.ENTER);
+        return this;
+    }
+
+    public PolicyPage setParameterFilter(String paramter) {
+        driver.findElementById("parameterFilterInput").sendKeys(paramter);
+        driver.findElementById("parameterFilterInput").sendKeys(Keys.ENTER);
+        return this;
+    }
+
+    public PolicyPage setDateRange(String startDate, String endDate) {
+        driver.findElementById("startDateInput").sendKeys(startDate);
+        driver.findElementById("endDateInput").sendKeys(endDate);
         return this;
     }
 
@@ -246,6 +405,10 @@ public class PolicyPage extends BasePage {
         } catch (TimeoutException e) {
             return true;
         }
+    }
+
+    public boolean isAppPassing(String appName) {
+        return driver.findElementByCssSelector("#policyStatus" + appName + ":not(.ng-hide)").getText().contains("PASS");
     }
 
     //===========================================================================================================

@@ -27,7 +27,9 @@ package com.denimgroup.threadfix.selenium.enttests;
 import com.denimgroup.threadfix.EnterpriseTests;
 import com.denimgroup.threadfix.selenium.pages.PolicyPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
+import com.denimgroup.threadfix.selenium.pages.TeamAppCustomizeVulnerabilityTypesPage;
 import com.denimgroup.threadfix.selenium.tests.BaseDataTest;
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -377,4 +379,315 @@ public class PolicyEntIT extends BaseDataTest {
     //================================================================================================
     // Functionality Tests
     //================================================================================================
+
+    @Test
+    public void testPassFailForNumberMerged() {
+        String team = createTeam();
+        String appFail = createApplication(team);
+        uploadScanToApp(team, appFail, "New ZAP Scan");
+        String appPass = createApplication(team);
+        uploadScanToApp(team, appPass, "w3af");
+
+        String policyName = getName();
+        String filterName = getName();
+
+        PolicyPage policyPage = loginPage.defaultLogin()
+                .clickPoliciesLink()
+                .createNumberMergedFilter(filterName)
+                .createPolicy(policyName, filterName)
+                .expandPolicy(policyName)
+                .addAppToPolicy(policyName, appFail)
+                .addAppToPolicy(policyName, appPass);
+
+        assertFalse("Application should be failing.", policyPage.isAppPassing(appFail));
+        assertTrue("Application should be passing.", policyPage.isAppPassing(appPass));
+    }
+
+    @Test
+    public void testPassFailForScanner() {
+        String team = createTeam();
+        String appFail = createApplication(team);
+        uploadScanToApp(team, appFail, "w3af");
+        String appPass = createApplication(team);
+        uploadScanToApp(team, appPass, "Fortify 360");
+
+        String policyName = getName();
+        String filterName = getName();
+
+        PolicyPage policyPage = loginPage.defaultLogin()
+                .clickPoliciesLink()
+                .createScannerFilter(filterName, "w3af")
+                .createPolicy(policyName, filterName)
+                .expandPolicy(policyName)
+                .addAppToPolicy(policyName, appFail)
+                .addAppToPolicy(policyName, appPass);
+
+        assertFalse("Application should be failing.", policyPage.isAppPassing(appFail));
+        assertTrue("Application should be passing.", policyPage.isAppPassing(appPass));
+    }
+
+    @Test
+    public void testPassFailForVulnerabilityType() {
+        String team = createTeam();
+        String appFail = createApplication(team);
+        uploadScanToApp(team, appFail, "WebInspect");
+        String appPass = createApplication(team);
+        uploadScanToApp(team, appPass, "NTO Spider");
+
+        String policyName = getName();
+        String filterName = getName();
+
+        PolicyPage policyPage = loginPage.defaultLogin()
+                .clickPoliciesLink()
+                .createVulnerabilityFilter(filterName, "79")
+                .createPolicy(policyName, filterName)
+                .expandPolicy(policyName)
+                .addAppToPolicy(policyName, appFail)
+                .addAppToPolicy(policyName, appPass);
+
+        assertFalse("Application should be failing.", policyPage.isAppPassing(appFail));
+        assertTrue("Application should be passing.", policyPage.isAppPassing(appPass));
+    }
+
+    @Test
+    public void testPassFailForPath() {
+        String team = createTeam();
+        String appFail = createApplication(team);
+        uploadScanToApp(team, appFail, "w3af");
+        String appPass = createApplication(team);
+        uploadScanToApp(team, appPass, "Fortify OrAndOr");
+
+        String policyName = getName();
+        String filterName = getName();
+
+        PolicyPage policyPage = loginPage.defaultLogin()
+                .clickPoliciesLink()
+                .createPathFilter(filterName, "/demo/SQLI2.php")
+                .createPolicy(policyName, filterName)
+                .expandPolicy(policyName)
+                .addAppToPolicy(policyName, appFail)
+                .addAppToPolicy(policyName, appPass);
+
+        assertFalse("Application should be failing.", policyPage.isAppPassing(appFail));
+        assertTrue("Application should be passing.", policyPage.isAppPassing(appPass));
+    }
+
+    @Test
+    public void testPassFailForParameter() {
+        String team = createTeam();
+        String appFail = createApplication(team);
+        uploadScanToApp(team, appFail, "IBM Rational AppScan");
+        String appPass = createApplication(team);
+        uploadScanToApp(team, appPass, "Fortify OrAndOr");
+
+        String policyName = getName();
+        String filterName = getName();
+
+        PolicyPage policyPage = loginPage.defaultLogin()
+                .clickPoliciesLink()
+                .createParameterFilter(filterName, "command")
+                .createPolicy(policyName, filterName)
+                .expandPolicy(policyName)
+                .addAppToPolicy(policyName, appFail)
+                .addAppToPolicy(policyName, appPass);
+
+        assertFalse("Application should be failing.", policyPage.isAppPassing(appFail));
+        assertTrue("Application should be passing.", policyPage.isAppPassing(appPass));
+    }
+
+    @Test
+    public void testPassFailForSeverity() {
+        String team = createTeam();
+        String appFail = createApplication(team);
+        uploadScanToApp(team, appFail, "Nessus");
+        String appPass = createApplication(team);
+        uploadScanToApp(team, appPass, "IBM Rational AppScan");
+
+        String policyName = getName();
+        String filterName = getName();
+
+        PolicyPage policyPage = loginPage.defaultLogin()
+                .clickPoliciesLink()
+                .createGenericFilter(filterName)
+                .createPolicy(policyName, filterName)
+                .expandPolicy(policyName)
+                .addAppToPolicy(policyName, appFail)
+                .addAppToPolicy(policyName, appPass);
+
+        assertFalse("Application should be failing critical filter.", policyPage.isAppPassing(appFail));
+        assertTrue("Application should be passing critical filter.", policyPage.isAppPassing(appPass));
+
+        policyPage.clickFiltersTab()
+                .selectFilterToEdit(filterName)
+                .clickFieldControl("Critical")
+                .clickFieldControl("High")
+                .clickSaveFilterButton()
+                .clickPolicyTab()
+                .expandPolicy(policyName);
+
+        assertTrue("Application should be passing high filter.", policyPage.isAppPassing(appFail));
+        assertFalse("Application should be failing high filter.", policyPage.isAppPassing(appPass));
+    }
+
+    @Test
+    public void testPassFailForOpenClosed() {
+        String team = createTeam();
+        String appFail = createApplication(team);
+        DatabaseUtils.addManualFindingToApp(team, appFail);
+        String appPass = createApplication(team);
+        DatabaseUtils.addManualFindingToApp(team, appPass);
+
+        String policyName = getName();
+        String filterName = getName();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(team)
+                .clickApplicationName(team, appPass)
+                .expandVulnerabilityByType("Medium1")
+                .checkVulnerabilityByType("Medium10")
+                .clickVulnerabilitiesActionButton()
+                .clickCloseVulnerabilitiesButton();
+
+        PolicyPage policyPage = applicationDetailPage.clickPoliciesLink()
+                .createOpenFilter(filterName)
+                .createPolicy(policyName, filterName)
+                .expandPolicy(policyName)
+                .addAppToPolicy(policyName, appFail)
+                .addAppToPolicy(policyName, appPass);
+
+        assertFalse("Application should be failing open filter.", policyPage.isAppPassing(appFail));
+        assertTrue("Application should be passing open filter.", policyPage.isAppPassing(appPass));
+
+        policyPage.clickFiltersTab()
+                .selectFilterToEdit(filterName)
+                .clickFieldControl("Open")
+                .clickFieldControl("Closed")
+                .clickSaveFilterButton()
+                .clickPolicyTab()
+                .expandPolicy(policyName);
+
+        assertTrue("Application should be passing closed filter.", policyPage.isAppPassing(appFail));
+        assertFalse("Application should be failing closed filter.", policyPage.isAppPassing(appPass));
+    }
+
+    @Test
+    public void testPassFailForFalsePositive() {
+        String team = createTeam();
+        String appFail = createApplication(team);
+        DatabaseUtils.addManualFindingToApp(team, appFail);
+        String appPass = createApplication(team);
+        DatabaseUtils.addManualFindingToApp(team, appPass);
+
+        String policyName = getName();
+        String filterName = getName();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(team)
+                .clickApplicationName(team, appFail)
+                .expandVulnerabilityByType("Medium1")
+                .checkVulnerabilityByType("Medium10")
+                .clickVulnerabilitiesActionButton()
+                .clickMarkFalseVulnerability();
+
+        PolicyPage policyPage = applicationDetailPage.clickPoliciesLink()
+                .createFalsePositiveFilter(filterName)
+                .createPolicy(policyName, filterName)
+                .expandPolicy(policyName)
+                .addAppToPolicy(policyName, appFail)
+                .addAppToPolicy(policyName, appPass);
+
+        assertFalse("Application should be failing.", policyPage.isAppPassing(appFail));
+        assertTrue("Application should be passing.", policyPage.isAppPassing(appPass));
+    }
+
+    @Test
+    public void testPassFailForHidden() {
+        String team = createTeam();
+        String appFail = createApplication(team);
+        DatabaseUtils.addManualFindingToApp(team, appFail);
+        String appPass = createApplication(team);
+        DatabaseUtils.addManualFindingToApp(team, appPass);
+
+        String policyName = getName();
+        String filterName = getName();
+
+        TeamAppCustomizeVulnerabilityTypesPage appCustomizeVulnerabilityTypesPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(team)
+                .clickApplicationName(team, appFail)
+                .clickActionButton()
+                .clickEditVulnerabilityFilters()
+                .enableSeverityFilters()
+                .hideMedium()
+                .saveFilterChanges();
+
+        PolicyPage policyPage = appCustomizeVulnerabilityTypesPage.clickPoliciesLink()
+                .createHiddenFilter(filterName)
+                .createPolicy(policyName, filterName)
+                .expandPolicy(policyName)
+                .addAppToPolicy(policyName, appFail)
+                .addAppToPolicy(policyName, appPass);
+
+        assertFalse("Application should be failing.", policyPage.isAppPassing(appFail));
+        assertTrue("Application should be passing.", policyPage.isAppPassing(appPass));
+    }
+
+    @Test
+    public void testPassFailForAging() {
+        String team = createTeam();
+        String appFail = createApplication(team);
+        uploadScanToApp(team, appFail, "IBM Rational AppScan");
+        String appPass = createApplication(team);
+        uploadScanToApp(team, appPass, "AppScanEnterprise");
+
+        String policyName = getName();
+        String filterName = getName();
+
+        PolicyPage policyPage = loginPage.defaultLogin()
+                .clickPoliciesLink()
+                .createAgingFilter(filterName)
+                .createPolicy(policyName, filterName)
+                .expandPolicy(policyName)
+                .addAppToPolicy(policyName, appFail)
+                .addAppToPolicy(policyName, appPass);
+
+        assertFalse("Application should be failing less than filter.", policyPage.isAppPassing(appFail));
+        assertTrue("Application should be passing less than filter.", policyPage.isAppPassing(appPass));
+
+        policyPage.clickFiltersTab()
+                .selectFilterToEdit(filterName)
+                .clickMoreThan()
+                .clickSaveFilterButton()
+                .clickPolicyTab()
+                .expandPolicy(policyName);
+
+        assertTrue("Application should be passing more than filter.", policyPage.isAppPassing(appFail));
+        assertFalse("Application should be failing more than filter.", policyPage.isAppPassing(appPass));
+    }
+
+    @Ignore("Date Range filter doesn't respond to Selenium")
+    @Test
+    public void testPassFailForDateRange() {
+        String team = createTeam();
+        String appFail = createApplication(team);
+        uploadScanToApp(team, appFail, "IBM Rational AppScan");
+        String appPass = createApplication(team);
+        uploadScanToApp(team, appPass, "AppScanEnterprise");
+
+        String policyName = getName();
+        String filterName = getName();
+
+        PolicyPage policyPage = loginPage.defaultLogin()
+                .clickPoliciesLink()
+                .createDateRangeFilter(filterName)
+                .createPolicy(policyName, filterName)
+                .expandPolicy(policyName)
+                .addAppToPolicy(policyName, appFail)
+                .addAppToPolicy(policyName, appPass);
+
+        assertFalse("Application should be failing more than filter.", policyPage.isAppPassing(appFail));
+        assertTrue("Application should be passing more than filter.", policyPage.isAppPassing(appPass));
+    }
 }

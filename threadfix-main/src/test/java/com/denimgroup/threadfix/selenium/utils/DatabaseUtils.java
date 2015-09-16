@@ -214,4 +214,13 @@ public class DatabaseUtils {
 
         return String.valueOf(response.object.getId());
     }
+
+    public static void addManualFindingToApp(String teamName, String appName) {
+        RestResponse<Application> response = CLIENT.searchForApplicationByName(appName, teamName);
+        assertTrue("Request for Application was unsuccessful. Message:" + response.message, response.success);
+
+        RestResponse<Finding> secondResponse = CLIENT.addDynamicFinding(String.valueOf(response.object.getId()),"Location",
+                "3", "qa", "parameter", "description", "", "path");
+        assertTrue("Request for Finding was unsuccessful. Message:" + secondResponse.message, secondResponse.success);
+    }
 }
