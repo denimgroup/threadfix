@@ -364,15 +364,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean shouldReloadUserIfRoleChanged(Role role) {
+		User user = null;
 
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        if (name == null) {
-            assert false;
-            return true;
-        }
-
-        User user = loadUser(name);
+		Object auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (auth instanceof ThreadFixUserDetails) {
+			user = userDao.retrieveById(((ThreadFixUserDetails) auth).getUserId());
+		}
 
         if (user == null) {
             assert false;
