@@ -356,7 +356,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					// what it was before
 					vuln.getScanCloseVulnerabilityMaps().remove(map);
 					if (map.getVulnerability().isFoundByScanner() && immediatelyOpen) {
-						vulnerabilityStatusService.openVulnerability(vuln, scan, map.getVulnerability().getOpenTime(), true);
+						vulnerabilityStatusService.openVulnerability(vuln, scan, null, map.getVulnerability().getOpenTime(), true);
 					}
 					vulnerabilityService.storeVulnerability(vuln);
 				}
@@ -821,7 +821,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 				
 				if (!vuln.isActive() && newCloseTime.before(newOpenTime)
 						|| (!vuln.isActive() && !(vuln.getScanCloseVulnerabilityMaps().size() > 0 && closeVulnWhenNoScannersReport))) {
-					vulnerabilityStatusService.openVulnerability(vuln, scanToDelete, newOpenTime, true);
+					vulnerabilityStatusService.openVulnerability(vuln, scanToDelete, null, newOpenTime, true);
 				}
 
 				boolean toClose = vuln.getScanCloseVulnerabilityMaps().size() == 0 || (vuln.getScanCloseVulnerabilityMaps().size() > 0 && closeVulnWhenNoScannersReport);
@@ -878,7 +878,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 
 		if (!vuln.isActive() && (newCloseTime == null || newOpenTime == null ||
 				newCloseTime.before(newOpenTime))) {
-			vulnerabilityStatusService.openVulnerability(vuln, scanToDelete, newOpenTime, true);
+			vulnerabilityStatusService.openVulnerability(vuln, scanToDelete, null, newOpenTime, true);
 		}
 		
 		if (vuln.isActive() && newCloseTime != null &&

@@ -53,6 +53,7 @@ public class Event extends AuditableEntity {
     private User user;
     private Vulnerability vulnerability;
     private Scan scan;
+    private Finding finding;
     private Integer deletedScanId;
     private Defect defect;
     private VulnerabilityComment comment;
@@ -186,6 +187,17 @@ public class Event extends AuditableEntity {
 
     public void setScan(Scan scan) {
         this.scan = scan;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "findingId")
+    @JsonIgnore
+    public Finding getFinding() {
+        return finding;
+    }
+
+    public void setFinding(Finding finding) {
+        this.finding = finding;
     }
 
     @Transient
@@ -385,6 +397,15 @@ public class Event extends AuditableEntity {
             case VULNERABILITY_CREATE:
                 description.append(getUserName()).append(" created Vulnerability");
                 appendVulnerabilityLink(description, descriptionUrlMap, historyView);
+                description.append(".");
+                break;
+            case VULNERABILITY_OPEN_MANUAL:
+                description.append(getUserName()).append(" created Vulnerability");
+                appendVulnerabilityLink(description, descriptionUrlMap, historyView);
+                description.append(" manually adding a ")
+                        .append(buildFindingLink(getFinding(), "Finding", descriptionUrlMap))
+                        .append(" to Application");
+                appendApplicationLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
             case VULNERABILITY_OPEN_SCAN_UPLOAD:
@@ -620,6 +641,39 @@ public class Event extends AuditableEntity {
                 scan.getApplication().getId() +
                 "/scans/" +
                 scan.getId();
+        return buildLink(urlString, linkText, urlMap);
+    }
+
+    private String buildFindingLink(Finding finding, String linkText, Map<String, Object> urlMap) {
+        if (finding == null) {
+            return linkText;
+        }
+        Scan scan = getScan();
+        if (scan == null) {
+            scan = finding.getScan();
+        }
+        if (scan == null) {
+            return linkText;
+        }
+        Application application = getApplication();
+        if (application == null) {
+            application = scan.getApplication();
+        }
+        if ((application == null) || (!application.isActive())) {
+            return linkText;
+        }
+        Organization organization = application.getOrganization();
+        if ((organization == null) || (!organization.isActive())) {
+            return linkText;
+        }
+        String urlString = "/organizations/" +
+                scan.getApplication().getOrganization().getId() +
+                "/applications/" +
+                scan.getApplication().getId() +
+                "/scans/" +
+                scan.getId() +
+                "/findings/" +
+                finding.getId();
         return buildLink(urlString, linkText, urlMap);
     }
 

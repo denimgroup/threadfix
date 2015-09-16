@@ -93,7 +93,7 @@ public class APIKeyController {
 		}
 
 		List<User> users = null;
-		if (username != null) {
+		if (username != null && !"".equals(username.trim())) {
 			users = userService.loadUsers(username);
 			if (users.isEmpty()) {
 				result.rejectValue("username", null, null, "Invalid user name");
