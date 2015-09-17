@@ -177,7 +177,7 @@ public class DashboardIT extends BaseDataTest {
                 .clickApplicationName(teamName, appName)
                 .expandVulnerabilityByType("High79")
                 .expandCommentSection("High790")
-                .addComment("High790")
+                .clickAddComment("High790")
                 .setComment(COMMENT_TEXT)
                 .clickModalSubmit()
                 .clickDashboardLink();
