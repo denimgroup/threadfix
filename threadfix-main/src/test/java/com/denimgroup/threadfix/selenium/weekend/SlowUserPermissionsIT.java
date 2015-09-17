@@ -111,7 +111,7 @@ public class SlowUserPermissionsIT extends BaseIT{
                 .clickCreateNewDefectTracker();
 
         assertTrue("Was able to begin creating a new Defect Tracker without permission.",
-                applicationDetailPage.isCreateDefectTrackerDisplay());
+                applicationDetailPage.isCreateDefectTrackerPresent());
 
 
         applicationDetailPage.clickCloseModalButton()

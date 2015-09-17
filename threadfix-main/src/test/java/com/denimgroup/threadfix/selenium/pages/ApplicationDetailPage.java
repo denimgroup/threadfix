@@ -37,47 +37,8 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     //===========================================================================================================
-    // Action Methods
+    // Procedure Methods
     //===========================================================================================================
-
-    public ApplicationDetailPage clickAddDefectTrackerButton() {
-        driver.findElementById("addDefectTrackerButton").click();
-        sleep(1000);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage setUsername(String dtName) {
-        driver.findElementById("username").clear();
-        driver.findElementById("username").sendKeys(dtName);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage setPassword(String dtPass) {
-        driver.findElementById("password").clear();
-        driver.findElementById("password").sendKeys(dtPass);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage clickTestConnection() {
-        waitForElement(By.id("getProductNames"));
-        driver.findElementById("getProductNames").click();
-        sleep(5000);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage selectProduct(String product) {
-        sleep(4000);
-        new Select(driver.findElementById("productNameSelect"))
-                .selectByVisibleText(product);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage selectDefectTracker(String defectTracker) {
-        waitForElement(By.id("defectTrackerId"));
-        new Select(driver.findElementById("defectTrackerId"))
-                .selectByVisibleText(defectTracker);
-        return new ApplicationDetailPage(driver);
-    }
 
     public ApplicationDetailPage addDefectTracker(String defectTracker, String username,
                                                   String password, String productName) {
@@ -94,14 +55,79 @@ public class ApplicationDetailPage extends BasePage {
         sleep(2000);
 
         return new ApplicationDetailPage(driver);
-
     }
 
-    public ApplicationDetailPage addWaf(String wafName) {
-        Select select = new Select(driver.findElementById("wafSelect"));
-        select.selectByVisibleText(wafName);
-        sleep(4000);
+    public ApplicationDetailPage addSavedFilter(String newFilter) {
+        driver.findElementById("filterNameInput").clear();
+        driver.findElementById("filterNameInput").sendKeys(newFilter);
+        driver.findElementById("saveFilterButton").click();
+        waitForElement(By.id("saveFilterSuccessMessage"));
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage addSavedFilterInvalid(String newFilter) {
+        driver.findElementById("filterNameInput").clear();
+        driver.findElementById("filterNameInput").sendKeys(newFilter);
+        driver.findElementById("saveFilterButton").click();
+        waitForElement(By.id("saveFilterErrorMessage"));
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage addScannerFilter(String scanner) {
+        driver.findElementById("showScannerInput").click();
+        driver.findElementById("scannerTypeahead").sendKeys(scanner);
+        driver.findElementById("scannerTypeahead").sendKeys(Keys.RETURN);
+        waitForResultsToLoad();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage addVulnerabilityTypeFilter(String vulnerabilityType) {
+        driver.findElementById("showTypeInput").click();
+        driver.findElementById("vulnerabilityTypeTypeahead").sendKeys(vulnerabilityType);
+        driver.findElementById("vulnerabilityTypeTypeahead").sendKeys(Keys.RETURN);
+        waitForResultsToLoad();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage attachTag(String tagName) {
+        driver.findElementById("tagsButton").click();
+        driver.findElementByXPath("//*[@id=\'tagSelect\']//input[contains(@class,'inputFilter')]").sendKeys(tagName);
+        driver.findElementById(tagName).click();
+        driver.findElementById("tagsButton").click();
         return this;
+    }
+
+    public TagDetailPage clickTagHeader(String number) {
+        driver.findElementById("appTag" + number).click();
+        waitForElement(By.linkText("Back to Tags Page"));
+        return new TagDetailPage(driver);
+    }
+
+    public ApplicationDetailPage clickFilesTab() {
+        driver.findElement(By.xpath("//a[contains(text(), ' Files')]")).click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage clickAddFileButton() {
+        driver.findElementByLinkText("Add File").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    //===========================================================================================================
+    // Action Methods
+    //===========================================================================================================
+
+    public ApplicationDetailPage clickAddDefectTrackerButton() {
+        driver.findElementById("addDefectTrackerButton").click();
+        sleep(1000);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage clickTestConnection() {
+        waitForElement(By.id("getProductNames"));
+        driver.findElementById("getProductNames").click();
+        sleep(5000);
+        return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage saveWafAdd() {
@@ -128,10 +154,6 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public int getNumPermUsers() {
-        return driver.findElementById("userTableBody").findElements(By.className("bodyRow")).size();
-    }
-
     public ApplicationDetailPage clickEditDeleteBtn() {
         sleep(2000);
         clickActionButton();
@@ -146,43 +168,6 @@ public class ApplicationDetailPage extends BasePage {
         driver.findElementByLinkText("Source Code Information").click();
         waitForElement(By.id("repositoryUrl"));
         return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage setRemoteSourceCodeInformation(String url, String revision, String userName, String password) {
-        selectGitRepositoryType();
-        setRepositoryURLEdited(url);
-        setRepositoryRevisionEdited(revision);
-        setRepositoryUserNameEdited(userName);
-        setRepositoryPasswordEdited(password);
-        return this;
-    }
-
-    public ApplicationDetailPage setRepositoryURLEdited(String url) {
-        selectGitRepositoryType();
-        driver.findElementById("repositoryUrl").clear();
-        driver.findElementById("repositoryUrl").sendKeys(url);
-        return this;
-    }
-
-    public ApplicationDetailPage setRepositoryRevisionEdited(String revision) {
-        sleep(1000);
-        driver.findElementById("repositoryBranch").clear();
-        driver.findElementById("repositoryBranch").sendKeys(revision);
-        return this;
-    }
-
-    public ApplicationDetailPage setRepositoryUserNameEdited(String userName) {
-        sleep(1000);
-        driver.findElementById("repositoryUsername").clear();
-        driver.findElementById("repositoryUsername").sendKeys(userName);
-        return this;
-    }
-
-    public ApplicationDetailPage setRepositoryPasswordEdited(String password){
-        sleep(1000);
-        driver.findElementById("repositoryPassword").clear();
-        driver.findElementById("repositoryPassword").sendKeys(password);
-        return this;
     }
 
     public TeamDetailPage clickDeleteLink() {
@@ -215,19 +200,6 @@ public class ApplicationDetailPage extends BasePage {
         return new FindingDetailPage(driver);
     }
 
-    public ApplicationDetailPage clickScansTab(int numberOfScans) {
-        sleep(1000);
-
-        if (numberOfScans == 1) {
-            driver.findElementByLinkText("1 Scan").click();
-        } else {
-            driver.findElementByLinkText(Integer.toString(numberOfScans) + " Scans").click();
-        }
-
-        waitForElement(By.linkText("Delete Scan"));
-        return new ApplicationDetailPage(driver);
-    }
-
     public ApplicationDetailPage clickScheduleScanTab(int scheduledScans) {
         sleep(1000);
         if (scheduledScans == 1) {
@@ -242,28 +214,6 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage clickScheduleNewScanButton() {
         driver.findElementByLinkText("Schedule New Scan").click();
         return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage setScheduledScanFrequency(String frequency) {
-        new Select(driver.findElementById("frequency")).selectByVisibleText(frequency);
-        return this;
-    }
-
-    public ApplicationDetailPage setScheduledScanTime(String hour, String minute, String period){
-        new Select(driver.findElementById("hour")).selectByVisibleText(hour);
-        new Select(driver.findElementById("minute")).selectByVisibleText(minute);
-        new Select(driver.findElementById("selectedPeriod")).selectByVisibleText(period);
-        return this;
-    }
-
-    public ApplicationDetailPage setScheduledScanDay(String day) {
-        new Select(driver.findElementById("selectedDay")).selectByVisibleText(day);
-        return this;
-    }
-
-    public ApplicationDetailPage setScheduledScanScanner(String scanner, String appId) {
-        new Select(driver.findElementById("scanner" + appId)).selectByVisibleText(scanner);
-        return this;
     }
 
     public ApplicationDetailPage clickAddWaf() {
@@ -286,33 +236,10 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage setWafName(String name) {
-        sleep(1000);
-        driver.findElementById("wafCreateNameInput").sendKeys(name);
-        return this;
-    }
-
     public ApplicationDetailPage clickSetWaf() {
         driver.findElementById("addWafButton").click();
         sleep(1500);
         return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage setWafType(String type){
-        new Select(driver.findElementById("typeSelect")).selectByVisibleText(type);
-        return this;
-    }
-
-    public ApplicationDetailPage setNameInput(String appName2) {
-        driver.findElementById("nameInput").clear();
-        driver.findElementById("nameInput").sendKeys(appName2);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage setUrlInput(String url) {
-        driver.findElementById("urlInput").clear();
-        driver.findElementById("urlInput").sendKeys(url);
-        return this;
     }
 
     public ApplicationDetailPage clickCloseModalButton() {
@@ -366,54 +293,6 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage setCWE(String Status) {
-        driver.findElementById("txtSearch").clear();
-        driver.findElementById("txtSearch").sendKeys(Status);
-        sleep(500);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage setSourceFile(String Status) {
-        driver.findElementById("urlStaticSearch").clear();
-        driver.findElementById("urlStaticSearch").sendKeys(Status);
-        sleep(500);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage setLineNumber(String Status) {
-        driver.findElementById("lineNumberInput").clear();
-        driver.findElementById("lineNumberInput").sendKeys(Status);
-        sleep(500);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage setSeverity(String status) {
-        driver.findElementById("severityInput").sendKeys(status);
-        new Select(driver.findElementById("severityInput")).selectByVisibleText(status);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage setURL(String Status) {
-        driver.findElementById("urlDynamicSearch").clear();
-        driver.findElementById("urlDynamicSearch").sendKeys(Status);
-        sleep(500);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage setParameter(String Status) {
-        driver.findElementById("parameterInput").clear();
-        driver.findElementById("parameterInput").sendKeys(Status);
-        sleep(500);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage setDescription(String Status) {
-        driver.findElementById("descriptionInput").clear();
-        driver.findElementById("descriptionInput").sendKeys(Status);
-        sleep(500);
-        return new ApplicationDetailPage(driver);
-    }
-
     public ApplicationDetailPage clickVulnerabilitiesActionButton() {
         driver.findElementById("actionItems").click();
         return  new ApplicationDetailPage(driver);
@@ -456,11 +335,6 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage setDocFileInput(String file) {
-        driver.findElementById("docFileInput").sendKeys(file);
-        return new ApplicationDetailPage(driver);
-    }
-
     public ApplicationDetailPage submitScanQueue() {
         driver.findElementById("submit").click();
         sleep(1000);
@@ -468,7 +342,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickDocumentTab(int count) {
-        driver.findElementByLinkText( count + " Files").click();
+        driver.findElementByLinkText(count + " Files").click();
         waitForElement(By.linkText("Add File"));
         return new ApplicationDetailPage(driver);
     }
@@ -479,31 +353,8 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage setScanQueueType(String scanQueueType) {
-        new Select(driver.findElementById("scan"))
-                .selectByVisibleText(scanQueueType);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage submitDoc() {
-        driver.findElementById("submitDocModal" + modalNumber()).click();
-        sleep(3000);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage setTeam(String team) {
-        new Select(driver.findElementById("organizationId")).selectByVisibleText(team);
-        sleep(2000);
-        return new ApplicationDetailPage(driver);
-    }
-
     public ApplicationDetailPage clickTeamSelector() {
         driver.findElementById("organizationId").click();
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage expandCriticalVulns() {
-        driver.findElementById("expandCritical").click();
         return new ApplicationDetailPage(driver);
     }
 
@@ -554,15 +405,9 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage addComment(String level) {
+    public ApplicationDetailPage clickAddComment(String level) {
         driver.findElementById("addCommentButton" + level).click();
         return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage setComment(String comment) {
-        driver.findElementById("commentInputBox").clear();
-        driver.findElementById("commentInputBox").sendKeys(comment);
-        return this;
     }
 
     public TagDetailPage clickTagName(String tagName) {
@@ -638,29 +483,6 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage addSavedFilter(String newFilter) {
-        driver.findElementById("filterNameInput").clear();
-        driver.findElementById("filterNameInput").sendKeys(newFilter);
-        driver.findElementById("saveFilterButton").click();
-        waitForElement(By.id("saveFilterSuccessMessage"));
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage addSavedFilterInvalid(String newFilter) {
-        driver.findElementById("filterNameInput").clear();
-        driver.findElementById("filterNameInput").sendKeys(newFilter);
-        driver.findElementById("saveFilterButton").click();
-        waitForElement(By.id("saveFilterErrorMessage"));
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage addInvalidNameSavedFilter(String newFilter) {
-        driver.findElementById("filterNameInput").clear();
-        driver.findElementById("filterNameInput").sendKeys(newFilter);
-        return this;
-    }
-
-
     public ApplicationDetailPage loadSavedFilter(String savedFilter) {
         new Select(driver.findElementById("filterSelect")).selectByVisibleText(savedFilter);
         waitForResultsToLoad();
@@ -698,26 +520,10 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage addScannerFilter(String scanner) {
-        driver.findElementById("showScannerInput").click();
-        driver.findElementById("scannerTypeahead").sendKeys(scanner);
-        driver.findElementById("scannerTypeahead").sendKeys(Keys.RETURN);
-        waitForResultsToLoad();
-        return new ApplicationDetailPage(driver);
-    }
-
     public ApplicationDetailPage expandFieldControls() {
         waitForResultsToLoad();
         driver.findElementById("showFieldControls").click();
         waitForElement(By.id("pathInput"));
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage addVulnerabilityTypeFilter(String vulnerabilityType) {
-        driver.findElementById("showTypeInput").click();
-        driver.findElementById("vulnerabilityTypeTypeahead").sendKeys(vulnerabilityType);
-        driver.findElementById("vulnerabilityTypeTypeahead").sendKeys(Keys.RETURN);
-        waitForResultsToLoad();
         return new ApplicationDetailPage(driver);
     }
 
@@ -797,35 +603,8 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage enterStartDate(String date) {
-        driver.findElementById("startDateInput").sendKeys(date);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage enterEndDate(String date) {
-        driver.findElementById("endDateInput").sendKeys(date);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage sleepForResults() {
-        sleep(1500);
-        return new ApplicationDetailPage(driver);
-    }
-
     public ApplicationDetailPage clickUploadScan() {
         driver.findElementById("uploadScanModalLink").click();
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage uploadScan(String file) {
-        driver.findElementById("scanFileInput").sendKeys(file);
-        waitForElement(By.id("toggleVulnTree"));
-        sleep(1000);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage uploadEmptyScan(String file) {
-        driver.findElementById("scanFileInput").sendKeys(file);
         return new ApplicationDetailPage(driver);
     }
 
@@ -846,44 +625,21 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage setDefectTrackerName(String name) {
-        driver.findElementById("nameInput").clear();
-        driver.findElementById("nameInput").sendKeys(name);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage setDefectTrackerType(String type) {
-        new Select(driver.findElementById("defectTrackerTypeSelect")).selectByVisibleText(type);
-        return this;
-    }
-
     public ApplicationDetailPage clickGetProductNames() {
         driver.findElementById("getProductNames").click();
         waitForElement(By.id("productNameSelect"));
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage attachTag(String tagName) {
-        driver.findElementById("tagsButton").click();
-        driver.findElementByXPath("//*[@id=\'tagSelect\']//input[contains(@class,'inputFilter')]").sendKeys(tagName);
-        driver.findElementById(tagName).click();
-        driver.findElementById("tagsButton").click();
-        return this;
-    }
-
-    public TagDetailPage clickTagHeader(String number) {
-        driver.findElementById("appTag" + number).click();
-        waitForElement(By.linkText("Back to Tags Page"));
-        return new TagDetailPage(driver);
-    }
-
-    public ApplicationDetailPage clickFilesTab() {
-        driver.findElement(By.xpath("//a[contains(text(), ' Files')]")).click();
+    public ApplicationDetailPage uploadScan(String file) {
+        driver.findElementById("scanFileInput").sendKeys(file);
+        waitForElement(By.id("toggleVulnTree"));
+        sleep(1000);
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage clickAddFileButton() {
-        driver.findElementByLinkText("Add File").click();
+    public ApplicationDetailPage uploadEmptyScan(String file) {
+        driver.findElementById("scanFileInput").sendKeys(file);
         return new ApplicationDetailPage(driver);
     }
 
@@ -895,26 +651,10 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage waitForModalToClose() {
-        waitForInvisibleElement("myModalLabel");
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage setUniqueId(String uniqueId) {
-        driver.findElementById("uniqueIdInput").sendKeys(uniqueId);
-        return this;
-    }
-
     public ApplicationDetailPage clickManagePolicy() {
         waitForElement(By.id("managePolicyButton"));
         driver.findElementById("managePolicyButton").click();
         return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage addPolicy(String policyName) {
-        new Select(driver.findElementById("policySelect")).selectByVisibleText(policyName);
-        driver.findElementById("addButton").click();
-        return this;
     }
 
     public ApplicationDetailPage removePolicy(String policyName) {
@@ -923,18 +663,247 @@ public class ApplicationDetailPage extends BasePage {
         return this;
     }
 
+    public void clickGitRepositoryType() {
+        driver.findElementById("gitRadioButton").click();
+    }
+
+    //===========================================================================================================
+    // Set Methods
+    //===========================================================================================================
+
+    public ApplicationDetailPage setUsername(String dtName) {
+        driver.findElementById("username").clear();
+        driver.findElementById("username").sendKeys(dtName);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setPassword(String dtPass) {
+        driver.findElementById("password").clear();
+        driver.findElementById("password").sendKeys(dtPass);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage selectProduct(String product) {
+        sleep(4000);
+        new Select(driver.findElementById("productNameSelect"))
+                .selectByVisibleText(product);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage selectDefectTracker(String defectTracker) {
+        waitForElement(By.id("defectTrackerId"));
+        new Select(driver.findElementById("defectTrackerId"))
+                .selectByVisibleText(defectTracker);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage selectWaf(String wafName) {
+        new Select(driver.findElementById("wafSelect")).selectByVisibleText(wafName);
+        sleep(4000);
+        return this;
+    }
+
+    public ApplicationDetailPage setRemoteSourceCodeInformation(String url, String revision, String userName, String password) {
+        clickGitRepositoryType();
+        setRepositoryURLEdited(url);
+        setRepositoryRevisionEdited(revision);
+        setRepositoryUserNameEdited(userName);
+        setRepositoryPasswordEdited(password);
+        return this;
+    }
+
+    public ApplicationDetailPage setRepositoryURLEdited(String url) {
+        clickGitRepositoryType();
+        driver.findElementById("repositoryUrl").clear();
+        driver.findElementById("repositoryUrl").sendKeys(url);
+        return this;
+    }
+
+    public ApplicationDetailPage setRepositoryRevisionEdited(String revision) {
+        sleep(1000);
+        driver.findElementById("repositoryBranch").clear();
+        driver.findElementById("repositoryBranch").sendKeys(revision);
+        return this;
+    }
+
+    public ApplicationDetailPage setRepositoryUserNameEdited(String userName) {
+        sleep(1000);
+        driver.findElementById("repositoryUsername").clear();
+        driver.findElementById("repositoryUsername").sendKeys(userName);
+        return this;
+    }
+
+    public ApplicationDetailPage setRepositoryPasswordEdited(String password){
+        sleep(1000);
+        driver.findElementById("repositoryPassword").clear();
+        driver.findElementById("repositoryPassword").sendKeys(password);
+        return this;
+    }
+
+    public ApplicationDetailPage setScheduledScanFrequency(String frequency) {
+        new Select(driver.findElementById("frequency")).selectByVisibleText(frequency);
+        return this;
+    }
+
+    public ApplicationDetailPage setScheduledScanTime(String hour, String minute, String period){
+        new Select(driver.findElementById("hour")).selectByVisibleText(hour);
+        new Select(driver.findElementById("minute")).selectByVisibleText(minute);
+        new Select(driver.findElementById("selectedPeriod")).selectByVisibleText(period);
+        return this;
+    }
+
+    public ApplicationDetailPage setScheduledScanDay(String day) {
+        new Select(driver.findElementById("selectedDay")).selectByVisibleText(day);
+        return this;
+    }
+
+    public ApplicationDetailPage setScheduledScanScanner(String scanner, String appId) {
+        new Select(driver.findElementById("scanner" + appId)).selectByVisibleText(scanner);
+        return this;
+    }
+
+    public ApplicationDetailPage setWafName(String name) {
+        sleep(1000);
+        driver.findElementById("wafCreateNameInput").sendKeys(name);
+        return this;
+    }
+
+    public ApplicationDetailPage setWafType(String type){
+        new Select(driver.findElementById("typeSelect")).selectByVisibleText(type);
+        return this;
+    }
+
+    public ApplicationDetailPage setNameInput(String appName2) {
+        driver.findElementById("nameInput").clear();
+        driver.findElementById("nameInput").sendKeys(appName2);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setUrlInput(String url) {
+        driver.findElementById("urlInput").clear();
+        driver.findElementById("urlInput").sendKeys(url);
+        return this;
+    }
+
+    public ApplicationDetailPage setCWE(String Status) {
+        driver.findElementById("txtSearch").clear();
+        driver.findElementById("txtSearch").sendKeys(Status);
+        sleep(500);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setSourceFile(String Status) {
+        driver.findElementById("urlStaticSearch").clear();
+        driver.findElementById("urlStaticSearch").sendKeys(Status);
+        sleep(500);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setLineNumber(String Status) {
+        driver.findElementById("lineNumberInput").clear();
+        driver.findElementById("lineNumberInput").sendKeys(Status);
+        sleep(500);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setSeverity(String status) {
+        driver.findElementById("severityInput").sendKeys(status);
+        new Select(driver.findElementById("severityInput")).selectByVisibleText(status);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setURL(String Status) {
+        driver.findElementById("urlDynamicSearch").clear();
+        driver.findElementById("urlDynamicSearch").sendKeys(Status);
+        sleep(500);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setParameter(String Status) {
+        driver.findElementById("parameterInput").clear();
+        driver.findElementById("parameterInput").sendKeys(Status);
+        sleep(500);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setDescription(String Status) {
+        driver.findElementById("descriptionInput").clear();
+        driver.findElementById("descriptionInput").sendKeys(Status);
+        sleep(500);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setDocFileInput(String file) {
+        driver.findElementById("docFileInput").sendKeys(file);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setScanQueueType(String scanQueueType) {
+        new Select(driver.findElementById("scan")).selectByVisibleText(scanQueueType);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setTeam(String team) {
+        new Select(driver.findElementById("organizationId")).selectByVisibleText(team);
+        sleep(2000);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setComment(String comment) {
+        driver.findElementById("commentInputBox").clear();
+        driver.findElementById("commentInputBox").sendKeys(comment);
+        return this;
+    }
+
+    public ApplicationDetailPage setInvalidNameSavedFilter(String newFilter) {
+        driver.findElementById("filterNameInput").clear();
+        driver.findElementById("filterNameInput").sendKeys(newFilter);
+        return this;
+    }
+
+    public ApplicationDetailPage setStartDate(String date) {
+        driver.findElementById("startDateInput").sendKeys(date);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setEndDate(String date) {
+        driver.findElementById("endDateInput").sendKeys(date);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setDefectTrackerName(String name) {
+        driver.findElementById("nameInput").clear();
+        driver.findElementById("nameInput").sendKeys(name);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setDefectTrackerType(String type) {
+        new Select(driver.findElementById("defectTrackerTypeSelect")).selectByVisibleText(type);
+        return this;
+    }
+
+    public ApplicationDetailPage setUniqueId(String uniqueId) {
+        driver.findElementById("uniqueIdInput").sendKeys(uniqueId);
+        return this;
+    }
+
+    public ApplicationDetailPage selectPolicy(String policyName) {
+        new Select(driver.findElementById("policySelect")).selectByVisibleText(policyName);
+        driver.findElementById("addButton").click();
+        return this;
+    }
+
     //===========================================================================================================
     // Get Methods
     //===========================================================================================================
 
-    public String checkWafName() {
-        waitForElement(By.id("wafNameText"));
-        return driver.findElementById("wafNameText").getText();
+    public int getNumPermUsers() {
+        return driver.findElementById("userTableBody").findElements(By.className("bodyRow")).size();
     }
 
-    public String getWafText() {
-        waitForElement(By.id("wafName"));
-        return driver.findElementById("wafName").getText();
+    public String getWafName() {
+        waitForElement(By.id("wafNameText"));
+        return driver.findElementById("wafNameText").getText();
     }
 
     public String getNameText() {
@@ -978,27 +947,11 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementById("sourceUrlValidError").getText().trim();
     }
 
-    public int modalNumber() {
-        String s = driver.findElementByClassName("modal").getAttribute("id");
-        Pattern pattern = Pattern.compile("^\\D+([0-9]+)$");
-        Matcher matcher = pattern.matcher(s);
-        if (matcher.find()) {
-            return Integer.parseInt(matcher.group(1));
-        }
-        return -1;
-    }
-
     public String getAlert() {
         return driver.findElementByClassName("alert-success").getText();
     }
 
-    public String selectSeverityList(String text) {
-        Select severity = new Select(driver.findElementById("severityInput"));
-        severity.selectByVisibleText(text);
-        return severity.getFirstSelectedOption().getText();
-    }
-
-    public int scanQueueCount() {
+    public int getScanQueueCount() {
         WebElement scanQueueTab;
         try {
             scanQueueTab = driver.findElementById("scanAgentTasksTab");
@@ -1016,7 +969,7 @@ public class ApplicationDetailPage extends BasePage {
         return -1;
     }
 
-    public int docsCount() {
+    public int getDocsCount() {
         WebElement scanQueueTab;
         try {
             scanQueueTab = driver.findElementById("documentsTab");
@@ -1033,7 +986,7 @@ public class ApplicationDetailPage extends BasePage {
         return -1;
     }
 
-    public String specificVulnerabilityCount(String level) {
+    public String getSpecificVulnerabilityCount(String level) {
         List<WebElement> headers = driver.findElementsByClassName("vulnSectionHeader");
 
         for (WebElement header : headers) {
@@ -1048,10 +1001,6 @@ public class ApplicationDetailPage extends BasePage {
 
     public int getFilterDivHeight() {
         return driver.findElement(By.className("filter-controls")).getSize().getHeight();
-    }
-
-    public String getScannerDate(int row) {
-        return driver.findElementById("scanAgentTaskStartTime" + row).getText().trim();
     }
 
     public String getScanTaskId(int row) {
@@ -1069,10 +1018,6 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementById("myModalLabel").getText();
     }
 
-    public String alertError() {
-        return driver.findElementByClassName("alert-error").getText();
-    }
-
     public String getFirstScanChannelType() {
         return driver.findElementById("channelType0").getText();
     }
@@ -1086,14 +1031,14 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public String getRepositoryUrl() {
-         return driver.findElementById("repositoryUrl").getAttribute("value");
+        return driver.findElementById("repositoryUrl").getAttribute("value");
     }
 
     //===========================================================================================================
     // Boolean Methods
     //===========================================================================================================
 
-    public boolean vulnsFilteredOpen(int count) {
+    public boolean isVulnsFilteredOpen(int count) {
         return driver.findElementByLinkText(count + " Vulnerabilities").isDisplayed();
     }
 
@@ -1115,10 +1060,6 @@ public class ApplicationDetailPage extends BasePage {
 
     public boolean isApplicationBreadcrumbPresent() {
         return driver.findElementById("teamLink").isDisplayed();
-    }
-
-    public boolean vulnerabilitiesFiltered(String level, String expected) {
-        return specificVulnerabilityCount(level).equals(expected);
     }
 
     public boolean isScanAgentTaskPresent(String taskId) {
@@ -1255,14 +1196,6 @@ public class ApplicationDetailPage extends BasePage {
 
     public boolean isWAFAddButtonClickable() {
         return isClickable("addWafButton");
-    }
-
-    public boolean isSaveChangesButtonPresent() {
-        return driver.findElementById("submitAppModal").isDisplayed();
-    }
-
-    public boolean isSaveChangesButtonClickable() {
-        return isClickable("submitAppModal");
     }
 
     public boolean isDynamicRadioPresent() {
@@ -1411,10 +1344,6 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementById("repositoryFolderInput").getAttribute("value").isEmpty();
     }
 
-    public boolean isApplicationSaveChangesButtonClickable() {
-        return driver.findElementsByCssSelector("#submit.disabled").isEmpty();
-    }
-
     public boolean isWafPresent() {
         String temp = driver.findElementById("myModalLabel").getText().trim();
         return temp.equals("Add WAF");
@@ -1429,19 +1358,15 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public boolean isUniqueIdAvailabe(String uniqueName) {
-     return driver.findElementById("uniqueIdInput").getAttribute("value").equals(uniqueName);
+        return driver.findElementById("uniqueIdInput").getAttribute("value").equals(uniqueName);
     }
 
-    public boolean checkNumberOfUnmappedCorrect(int expectedNumberOfFindings) {
+    public boolean isNumberOfUnmappedCorrect(int expectedNumberOfFindings) {
         List<WebElement> bodyRows = driver.findElementById("1").findElements(By.className("bodyRow"));
         return bodyRows.size() == expectedNumberOfFindings;
     }
 
-    public boolean applicationErrorMessage() {
-        return driver.findElementById("errorSpan").getText().contains("Failure. HTTP status was 401");
-    }
-
-    public boolean errorMessagePresent() {
+    public boolean isMessagePresent() {
         return !driver.findElementById("errorSpan").getText().equals("");
     }
 
@@ -1453,7 +1378,7 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementsById("rightTileReport").size() != 0;
     }
 
-    public boolean isCreateDefectTrackerDisplay() {
+    public boolean isCreateDefectTrackerPresent() {
         return driver.findElementById("createDefectTrackerButton").isDisplayed();
     }
 
@@ -1467,7 +1392,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public boolean isDetailLinkDisply() { return driver.findElementById("viewApplicationModalButton").isDisplayed();}
 
-    public boolean compareOrderOfSelector(String firstTeam, String secondTeam) {
+    public boolean isOrderOfSelectorCorrect(String firstTeam, String secondTeam) {
         int firstTeamValue;
         int secondTeamValue;
 
@@ -1529,6 +1454,16 @@ public class ApplicationDetailPage extends BasePage {
     // Helper Methods
     //===========================================================================================================
 
+    public ApplicationDetailPage sleepForResults() {
+        sleep(1500);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage waitForModalToClose() {
+        waitForInvisibleElement("myModalLabel");
+        return new ApplicationDetailPage(driver);
+    }
+
     public void waitForResultsToLoad() {
         while (driver.findElementById("vulnTreeLoadingSpinner").isDisplayed()) {
             sleep(1000);
@@ -1537,9 +1472,5 @@ public class ApplicationDetailPage extends BasePage {
 
     public void waitForCWEBar(String teamName, String appName, String vulnerability) {
         waitForElement(By.id(teamName + appName + vulnerability + "Bar"));
-    }
-
-    public void selectGitRepositoryType() {
-        driver.findElementById("gitRadioButton").click();
     }
 }

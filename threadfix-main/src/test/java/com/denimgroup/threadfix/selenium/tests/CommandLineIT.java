@@ -121,7 +121,7 @@ public class CommandLineIT extends BaseDataTest {
                 .clickApplicationName(teamName, appName)
                 .clickEditDeleteBtn()
                 .clickSetWaf()
-                .addWaf(wafName)
+                .selectWaf(wafName)
                 .saveWafAdd()
                 .clickUpdateApplicationButton();
 

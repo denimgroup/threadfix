@@ -289,7 +289,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
     public void testViewMoreLink() {
         applicationDetailPage.expandVulnerabilityByType("High79")
                 .expandCommentSection("High790")
-                .addComment("High790")
+                .clickAddComment("High790")
                 .setComment(getName())
                 .clickModalSubmit();
 
@@ -305,7 +305,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
 
         applicationDetailPage.expandVulnerabilityByType("High79")
                 .expandCommentSection("High790")
-                .addComment("High790")
+                .clickAddComment("High790")
                 .setComment(comment)
                 .clickModalSubmit();
 

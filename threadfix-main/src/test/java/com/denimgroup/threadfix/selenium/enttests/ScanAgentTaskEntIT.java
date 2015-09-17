@@ -73,7 +73,7 @@ public class ScanAgentTaskEntIT extends BaseDataTest {
         scanTaskId = applicationDetailPage.getScanTaskId(0);
 
         assertTrue("Scan Queue Task is not present on the Application Detail Page.", applicationDetailPage.isScanAgentTaskPresent(scanTaskId));
-        assertTrue("Scan Queue Task tab count is incorrect after adding ", 1 == applicationDetailPage.scanQueueCount());
+        assertTrue("Scan Queue Task tab count is incorrect after adding ", 1 == applicationDetailPage.getScanQueueCount());
 
         ScanAgentTasksPage scanAgentTasksPage = applicationDetailPage.clickScanAgentTasksLink();
 
@@ -163,9 +163,9 @@ public class ScanAgentTaskEntIT extends BaseDataTest {
 			assertTrue("Scan Queue Task is not present " + mapEntry.getKey(),
                     applicationDetailPage.isScanAgentTaskPresent(scanTaskId));
 			assertTrue("Scan Queue Task count is incorrect after adding " + mapEntry.getKey(),
-                    scanQueueCount == applicationDetailPage.scanQueueCount());
+                    scanQueueCount == applicationDetailPage.getScanQueueCount());
 		}
-		assertTrue("Scan Queue Task count is incorrect", scanQueueCount == applicationDetailPage.scanQueueCount());
+		assertTrue("Scan Queue Task count is incorrect", scanQueueCount == applicationDetailPage.getScanQueueCount());
 	}
 
 

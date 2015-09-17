@@ -1026,11 +1026,11 @@ public class ApplicationIT extends BaseDataTest {
 
         applicationDetailPage.expandVulnerabilityByType(appVuln)
                 .expandCommentSection(appVuln + "0")
-                .addComment(appVuln + "0")
+                .clickAddComment(appVuln + "0")
                 .setComment("")
                 .clickDynamicSubmit();
 
-        assertTrue("Blank comment accepted as valid submission", applicationDetailPage.errorMessagePresent());
+        assertTrue("Blank comment accepted as valid submission", applicationDetailPage.isMessagePresent());
 
         applicationDetailPage.setComment(longComment);
 
@@ -1070,7 +1070,7 @@ public class ApplicationIT extends BaseDataTest {
                 .clickViewAppLink(appName, teamName)
                 .clickUnmappedFindings("20 Unmapped Findings");
 
-        assertTrue("Unmapped findings displayed does not match scan.", applicationDetailPage.checkNumberOfUnmappedCorrect(21));
+        assertTrue("Unmapped findings displayed does not match scan.", applicationDetailPage.isNumberOfUnmappedCorrect(21));
     }
 
     @Test
@@ -1113,7 +1113,7 @@ public class ApplicationIT extends BaseDataTest {
                 .clickTeamSelector();
 
         assertTrue("The teams weren't sorted in alphabetical order.",
-                applicationDetailPage.compareOrderOfSelector(firstTeamName, secondTeamName));
+                applicationDetailPage.isOrderOfSelectorCorrect(firstTeamName, secondTeamName));
     }
 
     //TODO wait till the bug for Scheduling to fix
@@ -1130,7 +1130,7 @@ public class ApplicationIT extends BaseDataTest {
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
                 .expandDateRange()
-                .enterStartDate("03-September-2014")
+                .setStartDate("03-September-2014")
                 .clickVulnerabilitiesTab(45);
 
 

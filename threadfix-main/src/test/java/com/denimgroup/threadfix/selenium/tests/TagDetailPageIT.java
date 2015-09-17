@@ -88,7 +88,7 @@ public class TagDetailPageIT extends BaseDataTest {
 
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .expandCommentSection("Critical790")
-                .addComment("Critical790")
+                .clickAddComment("Critical790")
                 .attachTag(tagName)
                 .setComment(teamName + appName)
                 .clickModalSubmit();
@@ -112,13 +112,13 @@ public class TagDetailPageIT extends BaseDataTest {
 
         applicationDetailPage.expandVulnerabilityByType("High79")
                 .expandCommentSection("High790")
-                .addComment("High790")
+                .clickAddComment("High790")
                 .attachTag(tagName)
                 .setComment(teamName + appName)
                 .clickModalSubmit();
 
         applicationDetailPage.expandCommentSection("High791")
-                .addComment("High791")
+                .clickAddComment("High791")
                 .setComment(teamName + appName)
                 .clickModalSubmit();
 
@@ -171,7 +171,7 @@ public class TagDetailPageIT extends BaseDataTest {
 
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .expandCommentSection("Critical790")
-                .addComment("Critical790")
+                .clickAddComment("Critical790")
                 .attachTag(tagName)
                 .setComment(teamName + appName)
                 .clickModalSubmit();
@@ -196,7 +196,7 @@ public class TagDetailPageIT extends BaseDataTest {
 
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .expandCommentSection("Critical790")
-                .addComment("Critical790")
+                .clickAddComment("Critical790")
                 .attachTag(tagName)
                 .setComment(teamName + appName)
                 .clickModalSubmit();

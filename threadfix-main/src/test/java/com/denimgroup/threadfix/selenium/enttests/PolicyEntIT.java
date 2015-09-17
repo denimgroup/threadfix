@@ -146,7 +146,7 @@ public class PolicyEntIT extends BaseDataTest {
                 .clickApplicationName(teamName, appName)
                 .clickEditDeleteBtn()
                 .clickManagePolicy()
-                .addPolicy(name);
+                .selectPolicy(name);
 
         assertTrue("Policy is not present in application modal.", applicationDetailPage.isPolicyInModal(appName, name));
 

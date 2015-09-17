@@ -404,7 +404,7 @@ public class RestApplicationIT extends BaseRestIT {
 //		assertFalse(RESTRICTED_URL_RETURNED,
 //				result.equals(RestController.RESTRICTED_URL_ERROR));
 //
-//		result = restrictedClient.addWaf(appId, wafId);
+//		result = restrictedClient.selectWaf(appId, wafId);
 //		assertTrue(RESTRICTED_URL_NOT_RETURNED,
 //				result.equals(RestController.RESTRICTED_URL_ERROR));
 	}

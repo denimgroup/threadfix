@@ -39,6 +39,10 @@ public class DefectTrackerIndexPage extends BasePage {
 	}
 
     //===========================================================================================================
+    // Procedure Methods
+    //===========================================================================================================
+
+    //===========================================================================================================
     // Action Methods
     //===========================================================================================================
 
@@ -47,23 +51,6 @@ public class DefectTrackerIndexPage extends BasePage {
         driver.findElementById("editDefectTrackerButton" + defectTrackerName).click();
         waitForElement(By.id("myModalLabel"));
 		return new DefectTrackerIndexPage(driver);
-	}
-	
-	public DefectTrackerIndexPage setName(String newName){
-        driver.findElementById("nameInput").clear();
-        driver.findElementById("nameInput").sendKeys(newName);
-		return this;
-	}
-	
-	public DefectTrackerIndexPage setType(String newType){
-		new Select(driver.findElementById("defectTrackerTypeSelect")).selectByVisibleText(newType);
-		return this;
-	}
-	
-	public DefectTrackerIndexPage setURL(String newURL){
-			driver.findElementById("urlInput").clear();
-			driver.findElementById("urlInput").sendKeys(newURL);
-		return this;
 	}
 	
 	public DefectTrackerIndexPage clickDeleteButton(){
@@ -100,24 +87,72 @@ public class DefectTrackerIndexPage extends BasePage {
     }
 
     public DefectTrackerSchedulePage clickScheduleUpdateTab() {
-            String linkText = driver.findElementById("scheduledUpdateTab").getAttribute("heading");
-            driver.findElementByLinkText(linkText).click();
-            waitForElement(By.id("addUpdateQueueLink"));
-            return new DefectTrackerSchedulePage(driver);
+        String linkText = driver.findElementById("scheduledUpdateTab").getAttribute("heading");
+        driver.findElementByLinkText(linkText).click();
+        waitForElement(By.id("addUpdateQueueLink"));
+        return new DefectTrackerSchedulePage(driver);
     }
 
-	public String getNameRequiredErrorsText() {
-		return driver.findElementById("nameRequiredError").getText();
-	}
+    public DefectTrackerIndexPage clickGetProductNames() {
+        driver.findElementById("getProductNames").click();
+        waitForElement(By.cssSelector("#getProductNames:not(.ng-hide)"));
+        return new DefectTrackerIndexPage(driver);
+    }
+
+    //===========================================================================================================
+    // Set Methods
+    //===========================================================================================================
+
+    public DefectTrackerIndexPage setName(String newName){
+        driver.findElementById("nameInput").clear();
+        driver.findElementById("nameInput").sendKeys(newName);
+        return this;
+    }
+
+    public DefectTrackerIndexPage setType(String newType){
+        new Select(driver.findElementById("defectTrackerTypeSelect")).selectByVisibleText(newType);
+        return this;
+    }
+
+    public DefectTrackerIndexPage setURL(String newURL){
+        driver.findElementById("urlInput").clear();
+        driver.findElementById("urlInput").sendKeys(newURL);
+        return this;
+    }
+
+    public DefectTrackerIndexPage setDefaultUsername(String username) {
+        driver.findElementById("defaultUsername").clear();
+        driver.findElementById("defaultUsername").sendKeys(username);
+        return this;
+    }
+
+    public DefectTrackerIndexPage setDefaultPassword(String password) {
+        driver.findElementById("defaultPassword").clear();
+        driver.findElementById("defaultPassword").sendKeys(password);
+        return this;
+    }
+
+    public DefectTrackerIndexPage selectProduct(String productName) {
+        new Select(driver.findElementById("productNameSelect")).selectByVisibleText(productName);
+        return this;
+    }
+
+    //===========================================================================================================
+    // Get Methods
+    //===========================================================================================================
+
+    public String getNameRequiredErrorsText() {
+        return driver.findElementById("nameRequiredError").getText();
+    }
 
     public String getNameDuplicateErrorsText() {
         return driver.findElementById("nameServerError").getText();
     }
 
-	public String getUrlErrorsText() {
-		sleep(2000);
-		return driver.findElementById("url.errors").getText();
-	}
+    public String getUrlErrorsText() {
+        sleep(2000);
+        return driver.findElementById("url.errors").getText();
+    }
 
     public String getSuccessMessage(){
         return driver.findElementByClassName("alert-success").getText();
@@ -158,4 +193,10 @@ public class DefectTrackerIndexPage extends BasePage {
         }
         return true;
     }
+
+    //===========================================================================================================
+    // Helper Methods
+    //===========================================================================================================
+
+
 }

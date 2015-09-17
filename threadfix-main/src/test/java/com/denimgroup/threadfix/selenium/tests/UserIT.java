@@ -467,7 +467,7 @@ public class UserIT extends BaseDataTest {
 
         applicationDetailPage.expandVulnerabilityByType("High79")
                 .expandCommentSection("High790")
-                .addComment("High790")
+                .clickAddComment("High790")
                 .setComment(getName())
                 .clickModalSubmit()
                 .refreshPage();

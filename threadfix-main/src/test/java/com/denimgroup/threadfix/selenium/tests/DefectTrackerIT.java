@@ -42,6 +42,9 @@ import static org.junit.Assert.assertTrue;
 public class DefectTrackerIT extends BaseDataTest {
     private DefectTrackerIndexPage defectTrackerIndexPage;
 
+    private static final String BUGZILLA = "Bugzilla";
+    private static final String JIRA = "JIRA";
+
     static {
         if (JIRA_USERNAME == null){
             throw new RuntimeException("Please set JIRA_USERNAME property.");
@@ -94,11 +97,10 @@ public class DefectTrackerIT extends BaseDataTest {
     @Test
 	public void testCreateDefectTracker() {
 		String newDefectTrackerName = getName();
-		String defectTrackerType = "Bugzilla";
 
         defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(newDefectTrackerName)
-				.setType(defectTrackerType)
+				.setType(BUGZILLA)
                 .setURL(BUGZILLA_URL)
                 .clickSaveDefectTracker();
 
@@ -112,11 +114,10 @@ public class DefectTrackerIT extends BaseDataTest {
     @Test
     public void testDeleteDefectTracker() {
         String newDefectTrackerName = getName();
-        String defectTrackerType = "Bugzilla";
 
         defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(newDefectTrackerName)
-                .setType(defectTrackerType)
+                .setType(BUGZILLA)
                 .setURL(BUGZILLA_URL)
                 .clickSaveDefectTracker();
 
@@ -132,12 +133,10 @@ public class DefectTrackerIT extends BaseDataTest {
     public void testEditDefectTracker() {
         String originalDefectTrackerName = getName();
         String editedDefectTrackerName = getName();
-        String originalDefectTrackerType = "JIRA";
-        String editedDefectTrackerType = "Bugzilla";
 
         defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(originalDefectTrackerName)
-                .setType(originalDefectTrackerType)
+                .setType(JIRA)
                 .setURL(JIRA_URL)
                 .clickSaveDefectTracker();
 
@@ -146,14 +145,14 @@ public class DefectTrackerIT extends BaseDataTest {
         //Edit previously created defect tracker
         defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(originalDefectTrackerName)
                 .setName(editedDefectTrackerName)
-                .setType(editedDefectTrackerType)
+                .setType(BUGZILLA)
                 .setURL(BUGZILLA_URL)
                 .clickSaveDefectTracker();
 
         assertTrue("Edit did not change the name.",
                 defectTrackerIndexPage.isNamePresent(editedDefectTrackerName));
         assertTrue("Edit did not change the type.",
-                defectTrackerIndexPage.isTypeCorrect(editedDefectTrackerType, editedDefectTrackerName));
+                defectTrackerIndexPage.isTypeCorrect(BUGZILLA, editedDefectTrackerName));
         assertTrue("Edit did not change url.",
                 defectTrackerIndexPage.isUrlCorrect(BUGZILLA_URL, editedDefectTrackerName));
     }
@@ -161,11 +160,10 @@ public class DefectTrackerIT extends BaseDataTest {
     @Test
     public void testDeleteAddDefectTrackerWithSameName() {
         String defectTrackerName = getName();
-        String defectTrackerType = "Bugzilla";
 
         defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(defectTrackerName)
-                .setType(defectTrackerType)
+                .setType(BUGZILLA)
                 .setURL(BUGZILLA_URL)
                 .clickSaveDefectTracker();
 
@@ -174,7 +172,7 @@ public class DefectTrackerIT extends BaseDataTest {
 
         defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(defectTrackerName)
-                .setType(defectTrackerType)
+                .setType(BUGZILLA)
                 .setURL(BUGZILLA_URL)
                 .clickSaveDefectTracker();
 
@@ -187,7 +185,6 @@ public class DefectTrackerIT extends BaseDataTest {
     public void testEditDefectTrackerFromJiraToHP() {
         String originalDefectTrackerName = getName();
         String editedDefectTrackerName = getName();
-        String originalDefectTrackerType = "JIRA";
         String editedDefectTrackerType = "HP Quality Center";
 
         DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
@@ -195,7 +192,7 @@ public class DefectTrackerIT extends BaseDataTest {
 
         defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(originalDefectTrackerName)
-                .setType(originalDefectTrackerType)
+                .setType(JIRA)
                 .setURL(JIRA_URL)
                 .clickSaveDefectTracker();
 
@@ -223,14 +220,13 @@ public class DefectTrackerIT extends BaseDataTest {
 
         String defectTrackerName = getName();
         String replacementName = getName();
-        String defectTrackerType = "Bugzilla";
 
         defectTrackerIndexPage.refreshPage();
 
         defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(defectTrackerName)
                 .setURL(BUGZILLA_URL)
-                .setType(defectTrackerType)
+                .setType(BUGZILLA)
                 .clickSaveDefectTracker();
 
         ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
@@ -262,7 +258,6 @@ public class DefectTrackerIT extends BaseDataTest {
     public void testSwitchDefectTrackers() {
         String defectTracker1 = getName();
         String defectTracker2 = getName();
-        String defectTrackerType = "Bugzilla";
 
         String teamName = createTeam();
         String appName = createApplication(teamName);
@@ -271,14 +266,14 @@ public class DefectTrackerIT extends BaseDataTest {
 
         defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(defectTracker1)
-                .setType(defectTrackerType)
+                .setType(BUGZILLA)
                 .setURL(BUGZILLA_URL)
                 .clickSaveDefectTracker();
 
         defectTrackerIndexPage = defectTrackerIndexPage.clickDefectTrackersLink()
                 .clickAddDefectTrackerButton()
                 .setName(defectTracker2)
-                .setType(defectTrackerType)
+                .setType(BUGZILLA)
                 .setURL(BUGZILLA_URL)
                 .clickSaveDefectTracker();
 
@@ -298,6 +293,88 @@ public class DefectTrackerIT extends BaseDataTest {
         assertTrue("Defect tracker wasn't attached correctly",
                 applicationDetailPage.clickEditDeleteBtn().isDefectTrackerAttached());
         //assertTrue("Defect Tracker wasn't attached correctly",applicationDetailPage.getDefectTrackerName().contains(defectTracker2));
+    }
+
+    @Test
+    public void testCreateDefectTrackerWithDefaultCredentials() {
+        String defectTracker = getName();
+
+        defectTrackerIndexPage.clickAddDefectTrackerButton()
+                .setName(defectTracker)
+                .setType(BUGZILLA)
+                .setURL(BUGZILLA_URL)
+                .setDefaultUsername(BUGZILLA_USERNAME)
+                .setDefaultPassword(BUGZILLA_PASSWORD)
+                .clickGetProductNames()
+                .selectProduct(BUGZILLA_PROJECTNAME)
+                .clickSaveDefectTracker();
+
+        assertTrue("Success message error.",
+                defectTrackerIndexPage.getSuccessMessage().contains("Successfully created defect tracker " + defectTracker));
+
+        assertTrue("The defectTracker was not present in the table.",
+                defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(defectTracker));
+    }
+
+    @Test
+    public void testEditDefectTrackerWithDefaultCredentials() {
+        String defectTracker = getName();
+        String editedDefectTrackerName = getName();
+
+        defectTrackerIndexPage.clickAddDefectTrackerButton()
+                .setName(defectTracker)
+                .setType(JIRA)
+                .setURL(JIRA_URL)
+                .setDefaultUsername(JIRA_USERNAME)
+                .setDefaultPassword(JIRA_PASSWORD)
+                .clickGetProductNames()
+                .selectProduct(JIRAPROJECTNAME)
+                .clickSaveDefectTracker();
+
+        assertTrue("Success message error.",
+                defectTrackerIndexPage.getSuccessMessage().contains("Successfully created defect tracker " + defectTracker));
+
+        assertTrue("The defectTracker was not present in the table.",
+                defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(defectTracker));
+
+        defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(defectTracker)
+                .setName(editedDefectTrackerName)
+                .setType(BUGZILLA)
+                .setURL(BUGZILLA_URL)
+                .setDefaultUsername(BUGZILLA_USERNAME)
+                .setDefaultPassword(BUGZILLA_PASSWORD)
+                .clickGetProductNames()
+                .selectProduct(BUGZILLA_PROJECTNAME)
+                .clickSaveDefectTracker();
+
+        assertTrue("Edit did not change the name.",
+                defectTrackerIndexPage.isNamePresent(editedDefectTrackerName));
+        assertTrue("Edit did not change the type.",
+                defectTrackerIndexPage.isTypeCorrect(BUGZILLA, editedDefectTrackerName));
+        assertTrue("Edit did not change url.",
+                defectTrackerIndexPage.isUrlCorrect(BUGZILLA_URL, editedDefectTrackerName));
+    }
+
+    @Test
+    public void testCreateDefectTrackerFromApplication() {
+        initializeTeamAndApp();
+        String defectTracker = getName();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName)
+                .clickEditDeleteBtn()
+                .clickAddDefectTrackerButton();
+
+        if (applicationDetailPage.isCreateDefectTrackerPresent()) {
+            applicationDetailPage.clickCreateNewDefectTracker();
+        }
+
+        applicationDetailPage.setDefectTrackerName(defectTracker)
+                .setDefectTrackerType(BUGZILLA)
+                .setUrlInput(BUGZILLA_URL);
+
     }
 
     //===========================================================================================================
@@ -343,7 +420,7 @@ public class DefectTrackerIT extends BaseDataTest {
         defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(longName)
                 .setURL(BUGZILLA_URL)
-                .setType("Bugzilla")
+                .setType(BUGZILLA)
                 .clickSaveDefectTracker();
 
         assertTrue("Success message error.",
@@ -360,13 +437,11 @@ public class DefectTrackerIT extends BaseDataTest {
 
 		String newDefectTrackerName = getName();
 		String defectTrackerNameDuplicateTest = getName();
-
-		String defectTrackerType = "Bugzilla";
         String longInput = getRandomString(55);
 
         defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(defectTrackerNameDuplicateTest)
-                .setType(defectTrackerType)
+                .setType(BUGZILLA)
                 .setURL(BUGZILLA_URL)
                 .clickSaveDefectTracker();
 
@@ -374,7 +449,7 @@ public class DefectTrackerIT extends BaseDataTest {
 
 		defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(newDefectTrackerName)
-                .setType(defectTrackerType)
+                .setType(BUGZILLA)
                 .setURL(BUGZILLA_URL)
                 .clickSaveDefectTracker();
 
@@ -419,11 +494,10 @@ public class DefectTrackerIT extends BaseDataTest {
 	public void testJiraEdit() {
 		String defectTrackerName = getName();
         String replacementName = getName();
-		String defectTrackerType = "JIRA";
 
         defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(defectTrackerName)
-                .setType(defectTrackerType)
+                .setType(JIRA)
                 .setURL(JIRA_URL)
                 .clickSaveDefectTracker();
 
@@ -445,11 +519,10 @@ public class DefectTrackerIT extends BaseDataTest {
 	public void testBugzillaEdit() {
 		String defectTrackerName = getName();
         String replacementName = getName();
-		String defectTrackerType = "Bugzilla";
 
         defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(defectTrackerName)
-                .setType(defectTrackerType)
+                .setType(BUGZILLA)
                 .setURL(BUGZILLA_URL)
                 .clickSaveDefectTracker();
 
@@ -469,7 +542,6 @@ public class DefectTrackerIT extends BaseDataTest {
     @Test
     public void testAttachBugzillaTracker() {
         String defectTrackerName = getName();
-        String defectTrackerType = "Bugzilla";
         String teamName = getName();
         String appName = getName();
 
@@ -480,7 +552,7 @@ public class DefectTrackerIT extends BaseDataTest {
 
         defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(defectTrackerName)
-                .setType(defectTrackerType)
+                .setType(BUGZILLA)
                 .setURL(BUGZILLA_URL)
                 .clickSaveDefectTracker();
 
@@ -496,7 +568,6 @@ public class DefectTrackerIT extends BaseDataTest {
     @Test
     public void testDeleteAttachedBugzillaTracker() {
         String defectTrackerName = getName();
-        String defectTrackerType = "Bugzilla";
 
         String teamName = createTeam();
         String appName = createApplication(teamName);
@@ -505,7 +576,7 @@ public class DefectTrackerIT extends BaseDataTest {
 
         defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(defectTrackerName)
-                .setType(defectTrackerType)
+                .setType(BUGZILLA)
                 .setURL(BUGZILLA_URL)
                 .clickSaveDefectTracker();
 
