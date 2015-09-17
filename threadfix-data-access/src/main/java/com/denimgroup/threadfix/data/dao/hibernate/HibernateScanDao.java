@@ -117,6 +117,10 @@ public class HibernateScanDao
 	@SuppressWarnings("unchecked")
 	public List<Scan> retrieveByApplicationIdList(List<Integer> applicationIdList) {
 
+		if (applicationIdList == null || applicationIdList.isEmpty()) {
+			return list();
+		}
+
 		List<Integer> scanIds =  sessionFactory.getCurrentSession()
 				.createCriteria(Application.class)
 				.add(Restrictions.in("id", applicationIdList))

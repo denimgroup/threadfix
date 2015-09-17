@@ -35,6 +35,8 @@ public interface EventDao extends GenericObjectDao<Event> {
 
     List<Event> retrieveAllByScan(Scan scan);
 
+    List<Event> retrieveAllByFinding(Finding finding);
+
     List<Event> retrieveAllByVulnerability(Vulnerability vulnerability);
 
     List<Event> retrieveAllByDefect(Defect defect);

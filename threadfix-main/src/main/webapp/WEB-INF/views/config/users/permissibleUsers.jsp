@@ -9,15 +9,19 @@
             <thead>
             <tr>
                 <th class="medium first">User</th>
-                <th class="short">Role</th>
-                <th class="short"></th>
-            </tr>
+				<th class="short">Role</th>
+				<c:if test="${ canManageUsers }">
+					<security:authorize ifAllGranted="ROLE_CAN_MANAGE_USERS">
+						<th class="short"></th>
+					</security:authorize>
+				</c:if>
+			</tr>
             </thead>
             <tbody id="userTableBody">
 		<c:forEach var="user" items="${ users }" varStatus="status">
 			<tr class="bodyRow">
                 <td id="name${ status.count }">
-					<c:out value="${ user.name }"/>
+					<c:out value="${ user.bestName }"/>
 				</td>
                 <td id="role${ status.count }">
 					<c:if test="${ user.hasGlobalGroupAccess }">
@@ -48,13 +52,16 @@
 						</c:forEach>
 					</c:if>
 				</td>
-                <td id="name${ status.count }">
-					<spring:url value="/configuration/users/{userId}/permissions" var="editPermissionsUrl">
-						<spring:param name="userId" value="${ user.id }"/>
-					</spring:url>
-					<a id="editPermissions${ status.count }" style="font-size:12px;float:right;" href="${ fn:escapeXml(editPermissionsUrl) }">Edit Permissions</a>
-                </td>
-            </tr>
+				<c:if test="${ canManageUsers }">
+					<security:authorize ifAllGranted="ROLE_CAN_MANAGE_USERS">
+						<td id="name${ status.count }">
+							<c:out value="${ canManageUsers }"/>
+							<spring:url value="/configuration/users" var="editPermissionsUrl"/>
+							<a id="editPermissions${ status.count }" style="font-size:12px;float:right;" href="${ fn:escapeXml(editPermissionsUrl) }">Manage Users</a>
+						</td>
+					</security:authorize>
+				</c:if>
+			</tr>
 		</c:forEach>
 		</tbody>
         </table>

@@ -262,6 +262,12 @@ module.controller('DefectTrackersTabController', function($window, $scope, $http
     };
 
     $scope.showDefaultProfiles = function(tracker){
+
+        if (tracker.defectTrackerType.name === "Bugzilla") {
+            alert("Default Profiles are not supported for Bugzilla.");
+            return;
+        }
+
         if  ("showDefaultProfiles" in tracker){
             tracker.showDefaultProfiles = !tracker.showDefaultProfiles;
         }
@@ -271,7 +277,7 @@ module.controller('DefectTrackersTabController', function($window, $scope, $http
 
         if (tracker.defaultDefectProfiles)
             tracker.defaultDefectProfiles.sort(nameCompare);
-    }
+    };
 
     $scope.goToApp = function(app) {
         $window.location.href = tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id);

@@ -114,7 +114,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
         String goodLength = getRandomString(25);
 
         applicationDetailPage.expandSavedFilters()
-                .addInvalidNameSavedFilter(tooLong);
+                .setInvalidNameSavedFilter(tooLong);
 
         assertTrue("The name should be too long to save.", applicationDetailPage.isSaveFilterDisabled());
 
@@ -354,7 +354,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
         applicationDetailPage.refreshPage();
 
         applicationDetailPage = applicationDetailPage.expandDateRange()
-                .enterStartDate("14-June-2012");
+                .setStartDate("14-June-2012");
 
         assertTrue("Only 10 High vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("High", "10"));
@@ -365,7 +365,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
         assertTrue("Only 5 info vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Info", "5"));
 
-        applicationDetailPage = applicationDetailPage.enterEndDate("15-June-2012")
+        applicationDetailPage = applicationDetailPage.setEndDate("15-June-2012")
                 .toggleStatusFilter("Open");
 
         assertTrue("No Results Found should be displayed.", applicationDetailPage.areAllVulnerabilitiesHidden());

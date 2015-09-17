@@ -73,7 +73,7 @@ public class DocumentIT extends BaseIT {
 
 			docCnt++;
 		}
-		assertTrue("Document count is incorrect", docCnt == applicationDetailPage.docsCount());
+		assertTrue("Document count is incorrect", docCnt == applicationDetailPage.getDocsCount());
 	}
 
 	@Test

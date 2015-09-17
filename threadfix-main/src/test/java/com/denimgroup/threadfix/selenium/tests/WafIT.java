@@ -190,7 +190,7 @@ public class WafIT extends BaseDataTest {
         ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName)
                 .clickEditDeleteBtn()
                 .clickAddWaf()
-                .addWaf(wafName)
+                .selectWaf(wafName)
                 .clickDynamicSubmit();
 
         assertTrue("waf was not added.", driver.findElement(By.id("wafName")).getText().contains(wafName));
@@ -256,7 +256,7 @@ public class WafIT extends BaseDataTest {
         applicationDetailPage.clickEditDeleteBtn();
 
         assertTrue("The correct error did not appear for the url field.",
-                applicationDetailPage.checkWafName().equals(wafName));
+                applicationDetailPage.getWafName().equals(wafName));
     }
 
     //===========================================================================================================
@@ -551,7 +551,7 @@ public class WafIT extends BaseDataTest {
                 .clickViewAppLink(appName, teamName)
                 .clickEditDeleteBtn()
                 .clickAddWaf()
-                .addWaf(wafName)
+                .selectWaf(wafName)
                 .clickUpdateApplicationButton();
 
         // Check that it also appears on the WAF page.
@@ -580,10 +580,10 @@ public class WafIT extends BaseDataTest {
                 .clickViewAppLink(appName, teamName)
                 .clickEditDeleteBtn()
                 .clickAddWaf()
-                .addWaf(wafName1)
+                .selectWaf(wafName1)
                 .saveWafAdd();
 
-        assertTrue("Waf wasn't added correctly", applicationDetailPage.checkWafName().contains(wafName1));
+        assertTrue("Waf wasn't added correctly", applicationDetailPage.getWafName().contains(wafName1));
 
         applicationDetailPage.clickUpdateApplicationButton();
 
@@ -592,12 +592,12 @@ public class WafIT extends BaseDataTest {
 
         applicationDetailPage.clickEditDeleteBtn()
                 .clickAddWaf()
-                .addWaf(wafName2)
+                .selectWaf(wafName2)
                 .saveWafAdd()
                 .clickUpdateApplicationButton()
                 .clickEditDeleteBtn();
 
-        assertTrue("Did not properly save changing of Wafs.", applicationDetailPage.getWafText().contains(wafName2));
+        assertTrue("Did not properly save changing of Wafs.", applicationDetailPage.getWafName().contains(wafName2));
     }
 
     //FIX THIS TEST
@@ -671,7 +671,7 @@ public class WafIT extends BaseDataTest {
                     .clickCreateWafButton();
         }
 
-        assertTrue("Waf wasn't created", applicationDetailPage.checkWafName().contains(wafName));
+        assertTrue("Waf wasn't created", applicationDetailPage.getWafName().contains(wafName));
 
         applicationDetailPage.clickModalSubmit();
 
@@ -685,7 +685,7 @@ public class WafIT extends BaseDataTest {
                 .clickViewAppLink(appName, teamName)
                 .clickEditDeleteBtn()
                 .clickSetWaf()
-                .addWaf("None")
+                .selectWaf("None")
                 .clickUpdateApplicationButton();
 
         wafIndexPage = applicationDetailPage.clickWafsHeaderLink()
@@ -732,7 +732,7 @@ public class WafIT extends BaseDataTest {
                 .clickApplicationName(teamName, appName)
                 .clickEditDeleteBtn()
                 .clickAddWaf()
-                .addWaf(wafName)
+                .selectWaf(wafName)
                 .clickAttachWaf()
                 .clickUpdateApplicationButton()
                 .clickWafsHeaderLink()
@@ -755,7 +755,7 @@ public class WafIT extends BaseDataTest {
                 .clickApplicationName(teamName, appName)
                 .clickEditDeleteBtn()
                 .clickAddWaf()
-                .addWaf(wafName)
+                .selectWaf(wafName)
                 .clickAttachWaf()
                 .clickUpdateApplicationButton()
                 .clickWafsHeaderLink()
@@ -782,7 +782,7 @@ public class WafIT extends BaseDataTest {
                 .clickApplicationName(teamName, appName)
                 .clickEditDeleteBtn()
                 .clickAddWaf()
-                .addWaf(wafName)
+                .selectWaf(wafName)
                 .clickAttachWaf()
                 .clickUpdateApplicationButton()
                 .clickWafsHeaderLink()

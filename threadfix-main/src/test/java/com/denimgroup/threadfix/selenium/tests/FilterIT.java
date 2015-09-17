@@ -78,7 +78,7 @@ public class FilterIT extends BaseIT {
         ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName1, teamName);
 
         assertTrue("Vulnerabilities were not filtered properly on application detail page.",
-                applicationDetailPage.vulnsFilteredOpen(10));
+                applicationDetailPage.isVulnsFilteredOpen(10));
     }
 
     @Test

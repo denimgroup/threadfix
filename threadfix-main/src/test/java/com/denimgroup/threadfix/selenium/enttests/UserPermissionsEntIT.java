@@ -439,7 +439,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
         WafIndexPage wafIndexPage = applicationDetailPage.clickCloseModalButton()
                 .clickEditDeleteBtn()
                 .clickSetWaf()
-                .addWaf(wafName)
+                .selectWaf(wafName)
                 .saveWafAdd()
                 .clickWafNameLink();
 

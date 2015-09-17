@@ -66,6 +66,11 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
     }
 
     @Override
+    public List<Event> loadAllByFinding(Finding finding) {
+        return eventDao.retrieveAllByFinding(finding);
+    }
+
+    @Override
     public List<Event> loadAllByVulnerability(Vulnerability vulnerability) {
         return eventDao.retrieveAllByVulnerability(vulnerability);
     }
