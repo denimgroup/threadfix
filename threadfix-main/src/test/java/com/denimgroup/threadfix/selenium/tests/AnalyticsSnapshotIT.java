@@ -364,9 +364,9 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         analyticsPage.selectDropDownReport("Most Vulnerable Applications");
 
         assertTrue("Tip at level info does not match count", analyticsPage.mostVulnAppTip("Info", teamName, appName)
-                .equals("Info: 125"));
+                .equals("Info: 126"));
         assertTrue("Tip at level low does not match count", analyticsPage.mostVulnAppTip("Low",teamName,appName)
-                .equals("Low: 127"));
+                .equals("Low: 126"));
         assertTrue("Tip at level medium does not match count", analyticsPage.mostVulnAppTip("Medium",teamName,appName)
                 .equals("Medium: 59"));
         assertTrue("Tip at level high does not match count", analyticsPage.mostVulnAppTip("High",teamName,appName)
@@ -390,7 +390,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         analyticsPage.selectDropDownReport("Most Vulnerable Applications");
 
         assertTrue("Tip at level info does not match count", analyticsPage.mostVulnAppModalHeader("Info", teamName, appName)
-                .equals("Info: 125"));
+                .equals("Info: 126"));
     }
 
     @Test

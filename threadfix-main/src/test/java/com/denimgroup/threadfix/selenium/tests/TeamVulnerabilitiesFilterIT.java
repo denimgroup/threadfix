@@ -220,23 +220,23 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
         assertTrue("Only 16 high vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("High", "16"));
-        assertTrue("Only 14 medium vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Medium", "14"));
+        assertTrue("Only 13 medium vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Medium", "13"));
         assertTrue("Only 25 low vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Low", "25"));
-        assertTrue("Only 14 info vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Info", "14"));
+        assertTrue("Only 15 info vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Info", "15"));
 
         teamDetailPage.addApplicationFilter(appName2);
 
         assertTrue("Only 6 high vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("High", "6"));
         assertTrue("Only 6 medium vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Medium", "6"));
+                teamDetailPage.isVulnerabilityCountCorrect("Medium", "5"));
         assertTrue("Only 4 low vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Low", "4"));
         assertTrue("Only 9 info vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Info", "9"));
+                teamDetailPage.isVulnerabilityCountCorrect("Info", "10"));
     }
 
     //===========================================================================================================

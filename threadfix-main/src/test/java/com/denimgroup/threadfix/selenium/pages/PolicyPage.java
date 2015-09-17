@@ -166,6 +166,10 @@ public class PolicyPage extends BasePage {
     }
 
     public PolicyPage expandFilters() {
+        if(driver.findElementById("toggleAllButton").getText().contains("Collapse")) {
+            driver.findElementById("toggleAllButton").click();
+            waitForInvisibleElement("showInfo");
+        }
         driver.findElementById("toggleAllButton").click();
         waitForElement(By.id("showInfo"));
         return this;
