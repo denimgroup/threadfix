@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.service.eventmodel.aspect;
 import com.denimgroup.threadfix.data.entities.Event;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.EventService;
+import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.ScanService;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.service.eventmodel.event.EventTrackingEvent;
@@ -48,6 +49,9 @@ public abstract class EventTrackingAspect implements ApplicationEventPublisherAw
 
     @Autowired
     ScanService scanService;
+
+    @Autowired
+    FindingService findingService;
 
     @Autowired
     UserService userService;

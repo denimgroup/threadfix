@@ -73,6 +73,22 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
     }
 
     @Override
+    public List<Event> retrieveAllByFinding(Finding finding) {
+
+        Criteria criteria = getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.eq("finding", finding));
+
+        Order order = getOrder();
+        if (order != null) {
+            criteria.addOrder(order);
+        }
+
+        return criteria.list();
+    }
+
+    @Override
     public List<Event> retrieveAllByVulnerability(Vulnerability vulnerability) {
 
         Criteria criteria = getSession()
