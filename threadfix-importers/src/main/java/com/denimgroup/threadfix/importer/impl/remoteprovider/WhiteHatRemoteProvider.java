@@ -439,7 +439,7 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 	    	else if (creatingVuln) {
                 currentRawFinding.append(makeTag(name, qName , atts));
                 if (qName.equals("request")) {
-		    		map.put(FindingKey.PATH, atts.getValue("url"));
+		    		map.put(FindingKey.PATH, urlMod(atts.getValue("url")));
 		    	} else if (qName.equals("param")) {
 		    		map.put(FindingKey.PARAMETER, atts.getValue("name"));
 		    	}
@@ -534,7 +534,7 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 	    		map.put(FindingKey.URL_REFERENCE, buildUrlReference(siteId, nativeId));
 
                 // was in the attack_vector
-	    		map.put(FindingKey.PATH, atts.getValue("url"));
+	    		map.put(FindingKey.PATH, urlMod(atts.getValue("url")));
 	    		map.put(FindingKey.PARAMETER, null);
 	    		creatingVuln = true;
 	    		dateStatus = new DateStatus();
@@ -583,6 +583,17 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
         }
 		return testedDate;
 	}
+
+	public String urlMod(String url) {
+		if (url.isEmpty()) {
+			return "/";
+		} else if (!url.startsWith("http")){
+			return "http://" + url;
+		}
+
+		return url;
+	}
+
 
 	public class DateStatus implements Comparable<DateStatus> {
 		
