@@ -124,9 +124,14 @@ public class TeamDetailPageController {
             mav.addObject("applicationTypes", FrameworkType.values());
             mav.addObject("tags", tagService.loadAllApplicationTags());
             mav.addObject("successMessage", ControllerUtils.getSuccessMessage(request));
-            if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,null)) {
-                mav.addObject("users", userService.getPermissibleUsers(orgId, null));
+
+            if (EnterpriseTest.isEnterprise()) {
+                if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_USERS, orgId, null)
+                        || PermissionUtils.isAuthorized(Permission.CAN_MANAGE_TEAMS, orgId, null)) {
+                    mav.addObject("users", userService.getPermissibleUsers(orgId, null));
+                }
             }
+
             return mav;
         }
     }

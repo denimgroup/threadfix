@@ -51,7 +51,7 @@
                             </a>
                         </li>
                     </c:if>
-                    <c:if test="${ canManageUsers && isEnterprise }">
+                    <c:if test="${ (canManageTeams || canManageUsers) && isEnterprise }">
                         <li><a id="userListModelButton" href="#" ng-click="showUsers()">View Permissible Users</a></li>
                     </c:if>
                 </ul>
