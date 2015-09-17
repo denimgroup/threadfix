@@ -18,6 +18,7 @@ def deploy_war():
     local('scp -i ~/.ssh/id_rsa %s/threadfix-main/target/*.war %s@%s:threadfix.war' % (local_working_folder_loc, env.user, env.host))
     run('w')
     sudo('service tomcat7 stop')   #stop tomcat
+    sudo('mysqladmin -uthreadfix -ptfpassword -f drop threadfix')
     with settings(warn_only=True):
         sudo('rm -rf %s/threadfix' % (server_base_loc))
         sudo('rm -rf %s/threadfix.war' % (server_base_loc))
