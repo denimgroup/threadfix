@@ -420,11 +420,15 @@ public class TeamIndexPage extends BasePage {
     }
 
     //===========================================================================================================
-    // Void Methods
+    // Helper Methods
     //===========================================================================================================
 
     public void waitForPieWedge(String teamName, String level) {
         waitForElement(By.id(teamName + level + "Arc"));
+    }
+
+    public void waitForErrorMessage(String id, int numPolls) {
+        waitForElementText("errorSpan", 5);
     }
 }
 

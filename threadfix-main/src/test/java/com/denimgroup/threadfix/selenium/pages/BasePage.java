@@ -603,6 +603,15 @@ public abstract class BasePage {
         }
 	}
 
+    public void waitForElementText(String elementId, int timeInSeconds) {
+        int attempts = 0;
+        int numPolls = timeInSeconds * 4;
+        while (driver.findElementById(elementId).getText().length() < 1 && attempts <= numPolls) {
+            sleep(250);
+            attempts++;
+        }
+    }
+
     public void takeScreenShot() {
         File screenShot = driver.getScreenshotAs(OutputType.FILE);
         String fileName = System.getProperty("SCREENSHOT_BASE") + DateFormatUtils.format(new Date(), "HH-MM-SS") + ".jpg";

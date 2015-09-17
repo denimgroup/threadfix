@@ -299,4 +299,27 @@ public class TeamIndexPageIT extends BaseDataTest {
         assertTrue("Number of modal vulnerabilities does not match",
                 driver.findElement(By.id("header1")).getText().split("\\s+")[1].trim().equals(numVulns));
     }
+
+    //===========================================================================================================
+    // Validation
+    //===========================================================================================================
+
+    @Test
+    public void testDuplicateTeamNameValidation() {
+        final String TEAM_NAME = getName();
+
+        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .clickAddTeamButton()
+                .setTeamName(TEAM_NAME)
+                .clickModalSubmit();
+
+        teamIndexPage.clickAddTeamButton()
+                .setTeamName(TEAM_NAME)
+                .clickModalSubmitInvalid();
+
+        teamIndexPage.waitForErrorMessage("errorSpan", 10);
+        assertTrue("Invalid duplicate name message was not displayed properly.",
+                teamIndexPage.getErrorMessage("errorSpan").contains("That name was already taken."));
+    }
 }
