@@ -167,11 +167,31 @@ public class DashboardIT extends BaseDataTest {
         assertTrue("Comments are not displayed on Dashboard Page.", dashboardPage.isCommentDisplayed());
     }
 
+    @Test
+    public void testRecentCommentsNavigation() {
+        final String COMMENT_TEXT = "This is a comment.";
+
+        DashboardPage dashboardPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName)
+                .expandVulnerabilityByType("High79")
+                .expandCommentSection("High790")
+                .addComment("High790")
+                .setComment(COMMENT_TEXT)
+                .clickModalSubmit()
+                .clickDashboardLink();
+        assertTrue("View Comment link was not displayed on Dashboard.", dashboardPage.isViewCommentLinkPresent());
+
+        dashboardPage.clickLatestCommentLink();
+        assertTrue("Did not successfully navigate to Vulnerability Detail page.", dashboardPage.isVulnerabilityDetailPageDisplayed());
+    }
+
     //===========================================================================================================
     // Recent Uploads
     //===========================================================================================================
     @Test
-    public void testRecentUploadsDisplay(){
+    public void testRecentUploadsDisplay() {
         DashboardPage dashboardPage = loginPage.defaultLogin();
 
         assertFalse("Recent Scan Uploads are not displayed.", dashboardPage.isRecentUploadsNoScanFound());
@@ -180,5 +200,15 @@ public class DashboardIT extends BaseDataTest {
         assertTrue("Most recent upload application is incorrect", dashboardPage.getMostRecentUploadApp().equals(appName));
         assertTrue("Most recent upload results are incorrect.",
                 dashboardPage.getMostRecentUploadName().contains("44 Vulnerabilities from IBM Security AppScan Standard (Dynamic)"));
+    }
+
+    @Test
+    public void testRecentUploadNavigation() {
+        DashboardPage dashboardPage = loginPage.defaultLogin();
+
+        assertTrue("View Scan link is not present.", dashboardPage.isViewScanLinkPresent());
+
+        dashboardPage.clickLatestUploadScan();
+        assertTrue("Did not successfully navigate to Scan Detail page.", dashboardPage.isScanDetailPageDisplayed());
     }
 }

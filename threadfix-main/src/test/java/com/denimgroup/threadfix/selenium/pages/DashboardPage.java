@@ -64,7 +64,6 @@ public class DashboardPage extends BasePage{
 	
 	public ApplicationDetailPage clickLatestCommentApp(){
 		driver.findElementById("commentUser1").click();
-		sleep(1000);
 		return new ApplicationDetailPage(driver);
 	}
 	
@@ -148,6 +147,22 @@ public class DashboardPage extends BasePage{
 
     public boolean isCountCorrectInVulnerabilitySummaryModal(String count) {
         return driver.findElementById("header2").getText().contains(count);
+    }
+
+    public boolean isViewScanLinkPresent() {
+        return driver.findElementsById("scanLink1").size() != 0;
+    }
+
+    public boolean isViewCommentLinkPresent() {
+        return driver.findElementsById("viewMoreLink1").size() != 0;
+    }
+
+    public boolean isScanDetailPageDisplayed() {
+        return isElementPresent("statisticButton");
+    }
+
+    public boolean isVulnerabilityDetailPageDisplayed() {
+        return driver.findElementByCssSelector("h2").getText().contains("Vulnerability Details");
     }
 
     //===========================================================================================================
