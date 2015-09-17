@@ -360,8 +360,7 @@ public class DefectTrackerIT extends BaseDataTest {
         initializeTeamAndApp();
         String defectTracker = getName();
 
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
+        ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickApplicationName(teamName, appName)
                 .clickEditDeleteBtn()
@@ -373,8 +372,18 @@ public class DefectTrackerIT extends BaseDataTest {
 
         applicationDetailPage.setDefectTrackerName(defectTracker)
                 .setDefectTrackerType(BUGZILLA)
-                .setUrlInput(BUGZILLA_URL);
+                .setUrlInput(BUGZILLA_URL)
+                .setDefectTrackerDefaultUsername(BUGZILLA_USERNAME)
+                .setDefectTrackerDefaultPassword(BUGZILLA_PASSWORD)
+                .clickGetProductNames()
+                .selectProduct(BUGZILLA_PROJECTNAME)
+                .clickCreateDefectTracker()
+                .clickCloseModalButton();
 
+        defectTrackerIndexPage = applicationDetailPage.clickDefectTrackersLink();
+
+        assertTrue("The defectTracker was not present in the table.",
+                defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(defectTracker));
     }
 
     //===========================================================================================================

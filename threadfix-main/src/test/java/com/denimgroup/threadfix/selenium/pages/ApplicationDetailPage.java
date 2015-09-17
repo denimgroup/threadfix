@@ -627,7 +627,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickGetProductNames() {
         driver.findElementById("getProductNames").click();
-        waitForElement(By.id("productNameSelect"));
+        waitForElement(By.cssSelector("#productNameSelect:not(.ng-hide)"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -684,9 +684,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage selectProduct(String product) {
-        sleep(4000);
-        new Select(driver.findElementById("productNameSelect"))
-                .selectByVisibleText(product);
+        new Select(driver.findElementById("productNameSelect")).selectByVisibleText(product);
         return new ApplicationDetailPage(driver);
     }
 
@@ -890,6 +888,16 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage selectPolicy(String policyName) {
         new Select(driver.findElementById("policySelect")).selectByVisibleText(policyName);
         driver.findElementById("addButton").click();
+        return this;
+    }
+
+    public ApplicationDetailPage setDefectTrackerDefaultUsername(String username) {
+        driver.findElementById("defaultUsername").sendKeys(username);
+        return this;
+    }
+
+    public ApplicationDetailPage setDefectTrackerDefaultPassword(String password) {
+        driver.findElementById("defaultPassword").sendKeys(password);
         return this;
     }
 
