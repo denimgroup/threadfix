@@ -1,4 +1,4 @@
-7/7/2015 11:45:00
+9/17/2015 11:45:00
 type.info,,
 Fortify SCA
 type.vulnerabilities,,
@@ -115,5 +115,17 @@ Fortify 360 Struts Misconfiguration: Missing Forward Name,Fortify 360 Struts Mis
 Fortify 360 Struts: Unused Action Form,Fortify 360 Struts: Unused Action Form,16
 Fortify 360 System Information Leak: Internal,Fortify 360 System Information Leak: Internal,200
 Fortify 360 System Information Leak: Struts 2,Fortify 360 System Information Leak: Struts 2,200
+Code Correctness: Non-Synchronized Method Overrides Synchronized Method,Code Correctness: Non-Synchronized Method Overrides Synchronized Method,362
+System Information Leak: Internal,System Information Leak: Internal,200
+Access Specifier Manipulation,Access Specifier Manipulation,284
+Database Bad Practices: Use of Restricted Accounts,Database Bad Practices: Use of Restricted Accounts,272
+Code Correctness: Comparison of Boxed Primitive Types,Code Correctness: Comparison of Boxed Primitive Types,398
+J2EE Bad Practices: JVM Termination,J2EE Bad Practices: JVM Termination,382
+Portability Flaw: Locale Dependent Comparison,Portability Flaw: Locale Dependent Comparison,474
+Denial of Service: Regular Expression,Denial of Service: Regular Expression,185
+Code Correctness: Constructor Invokes Overridable Function,Code Correctness: Constructor Invokes Overridable Function,358
+Mass Assignment: Insecure Binder Configuration,Mass Assignment: Insecure Binder Configuration,915
+Code Correctness: clone() Invokes Overridable Function,Code Correctness: clone() Invokes Overridable Function,358
+Code Correctness: Invalid Call to Object.equals(),Code Correctness: Invalid Call to Object.equals(),398
 type.severities,,
 Code Quality,Code Quality,1,1
