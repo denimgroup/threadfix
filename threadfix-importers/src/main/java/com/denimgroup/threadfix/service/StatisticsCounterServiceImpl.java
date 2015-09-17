@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.service;
 import com.denimgroup.threadfix.data.dao.*;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.interfaces.MultiLevelFilter;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,8 @@ import static com.denimgroup.threadfix.data.entities.StatisticsCounter.getStatis
  */
 @Service
 public class StatisticsCounterServiceImpl implements StatisticsCounterService {
+
+    private static final SanitizedLogger LOG = new SanitizedLogger(StatisticsCounterServiceImpl.class);
 
     @Autowired
     ScanDao scanDao;
@@ -73,13 +76,13 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
         long start = System.currentTimeMillis();
 
-        System.out.println("Total: " + total);
+        LOG.debug("Total maps missing counters: " + total);
 
         int current = total.intValue() / 100;
 
         while (current >= 0) {
 
-            System.out.print(".");
+            LOG.debug("Processing " + current + " out of " + total + ".");
 
             List<ScanRepeatFindingMap> mapsThatNeedCounters = scanDao.getMapsThatNeedCounters(current);
 
@@ -90,14 +93,13 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
                 StatisticsCounter statisticsCounter = getStatisticsCounter(map);
                 if (statisticsCounter != null) {
-                    System.out.print("-");
                     statisticsCounterDao.saveOrUpdate(statisticsCounter);
                 }
             }
             current --;
         }
 
-        System.out.println("Took " + (System.currentTimeMillis() - start) + " ms to add missing map counters.");
+        LOG.debug("Took " + (System.currentTimeMillis() - start) + " ms to add missing map counters.");
     }
 
     private void addMissingFindingCounters() {
@@ -105,13 +107,13 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
         long start = System.currentTimeMillis();
 
-        System.out.println("Total: " + total);
+        LOG.debug("Total: " + total);
 
         int current = total.intValue() / 100;
 
         while (current >= 0) {
 
-            System.out.print(".");
+            LOG.debug("Processing at index " + current + " out of " + total);
 
             List<Finding> findingsThatNeedCounters = scanDao.getFindingsThatNeedCounters(current);
 
@@ -122,7 +124,6 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
                 StatisticsCounter statisticsCounter = getStatisticsCounter(finding);
                 if (statisticsCounter != null) {
-                    System.out.print(",");
                     statisticsCounterDao.saveOrUpdate(statisticsCounter);
                 }
                 finding.setHasStatisticsCounter(true);
@@ -131,7 +132,7 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
             current --;
         }
 
-        System.out.println("Took " + (System.currentTimeMillis() - start) + " ms to add missing finding counters.");
+        LOG.debug("Took " + (System.currentTimeMillis() - start) + " ms to add missing finding counters.");
     }
 
     private void runQueries(List<Scan> scans) {
@@ -167,7 +168,7 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
             processScans(entry.getKey().getOrganization().getId(), entry.getKey().getId(), entry.getValue());
         }
 
-        System.out.println("Critical/High/Medium/Low/Info calculated in " + (System.currentTimeMillis() - start) + " ms.");
+        LOG.debug("Critical/High/Medium/Low/Info calculated in " + (System.currentTimeMillis() - start) + " ms.");
 
     }
 
@@ -240,7 +241,7 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
                 }
 
                 scanDao.saveOrUpdate(scan);
-                System.out.print(")");
+                LOG.debug("Successfully processed scan with ID " + scan.getId());
             } else {
                 scan.setNumberCriticalVulnerabilities(0L);
                 scan.setNumberHighVulnerabilities(0L);
@@ -271,7 +272,7 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
                 }
 
                 scanDao.saveOrUpdate(scan);
-                System.out.print("(");
+                LOG.debug("Unsuccessfully processed scan with ID " + scan.getId());
             }
         }
     }

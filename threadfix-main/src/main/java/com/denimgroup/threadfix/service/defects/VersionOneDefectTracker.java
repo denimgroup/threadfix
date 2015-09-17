@@ -31,9 +31,8 @@ import com.denimgroup.threadfix.exception.RestUrlException;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
-import com.denimgroup.threadfix.service.defects.utils.versionone.Assets;
-import com.denimgroup.threadfix.service.defects.utils.versionone.AttributeDefinition;
-import com.denimgroup.threadfix.service.defects.utils.versionone.AttributeDefinitionParser;
+import com.denimgroup.threadfix.service.defects.utils.versionone.*;
+import com.denimgroup.threadfix.service.defects.utils.versionone.Error;
 import com.denimgroup.threadfix.viewmodel.DefectMetadata;
 import com.denimgroup.threadfix.viewmodel.DynamicFormField;
 import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
@@ -347,6 +346,12 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         if (response == null) {
             lastError = "Null response was received from VersionOne server.";
             log.warn(lastError);
+        } else if (response.startsWith("<Error")) {
+            Error error = MarshallingUtils.marshal(Error.class, response);
+            if (error != null) {
+                lastError = error.getMessage();
+                log.warn(lastError);
+            }
         } else if (!response.toLowerCase().contains(getUsername().toLowerCase())) {
             lastError = "The returned name did not match the username.";
             log.warn(lastError);
