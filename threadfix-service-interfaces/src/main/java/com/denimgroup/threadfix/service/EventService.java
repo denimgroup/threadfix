@@ -35,6 +35,8 @@ public interface EventService extends GenericObjectService<Event> {
 
     List<Event> loadAllByScan(Scan scan);
 
+    List<Event> loadAllByFinding(Finding finding);
+
     List<Event> loadAllByVulnerability(Vulnerability vulnerability);
 
     List<Event> loadAllByDefect(Defect defect);
