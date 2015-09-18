@@ -35,7 +35,7 @@ import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.queue.QueueSender;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
-import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
+import com.denimgroup.threadfix.viewmodels.DefectViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

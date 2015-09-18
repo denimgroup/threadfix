@@ -11,7 +11,7 @@ import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 import com.denimgroup.threadfix.viewmodels.ProjectMetadata;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
-import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
+import com.denimgroup.threadfix.viewmodels.DefectViewModel;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

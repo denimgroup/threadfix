@@ -40,7 +40,7 @@ import com.denimgroup.threadfix.viewmodels.ProjectMetadata;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
-import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
+import com.denimgroup.threadfix.viewmodels.DefectViewModel;
 import com.denimgroup.threadfix.webapp.viewmodels.VulnerabilityCollectionModel;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.json.JSONObject;
