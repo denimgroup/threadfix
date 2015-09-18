@@ -1387,7 +1387,11 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public boolean isCreateDefectTrackerPresent() {
-        return driver.findElementById("createDefectTrackerButton").isDisplayed();
+        try {
+            return driver.findElementById("createDefectTrackerButton").isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 
     public boolean isDefectTrackerNameLinkDisplay() {
