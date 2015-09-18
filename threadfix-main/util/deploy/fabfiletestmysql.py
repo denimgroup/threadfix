@@ -19,6 +19,7 @@ def deploy_war():
     run('w')
     sudo('service tomcat7 stop')   #stop tomcat
     sudo('mysqladmin -uthreadfix -ptfpassword -f drop threadfix')
+    sudo('mysqladmin -uthreadfix -ptfpassword -f create threadfix')
     with settings(warn_only=True):
         sudo('rm -rf %s/threadfix' % (server_base_loc))
         sudo('rm -rf %s/threadfix.war' % (server_base_loc))
