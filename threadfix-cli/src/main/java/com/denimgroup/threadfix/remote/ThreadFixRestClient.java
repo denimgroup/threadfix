@@ -100,5 +100,11 @@ public interface ThreadFixRestClient {
 
     void setUnsafeFlag(boolean unsafeFlag);
 
+//    public RestResponse<Object> submitDefect()
+
     RestResponse<String> addVulnComment(Integer vulnId, String comment, String commentTagIds);
+
+    public RestResponse<Object> submitDefect(String[] paramNames, String[] paramValues, Integer appId);
+
+    public RestResponse<Object> getDefectTrackerFields(Integer appId);
 }

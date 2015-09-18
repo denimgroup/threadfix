@@ -86,11 +86,13 @@ public class CommandLineParser {
 					throw new ParseException("First argument to set must be url or key");
 				}
 			} else if (cmd.hasOption("search")) {
-
 				String[] setArgs = cmd.getOptionValues("search");
 				printOutput(VulnSearchParameterParser.processVulnerabilitySearchParameters(client, setArgs));
 
-			} else if (cmd.hasOption("ct")) {
+			} else if (cmd.hasOption("sd")) {
+                String[] setArgs = cmd.getOptionValues("sd");
+                printOutput(DefectSubmissionParameterParser.processDefectSubmissionParameters(client, setArgs));
+            } else if (cmd.hasOption("ct")) {
 				String[] createArgs = cmd.getOptionValues("ct");
 				if (createArgs.length != 1) {
 					throw new ParseException("Wrong number of arguments.");
@@ -318,7 +320,7 @@ public class CommandLineParser {
 					addVulnComment(cmtArgs);
 				} else
 					LOGGER.warn("VulnId is not number, not doing anything.");
-			}  else {
+			} else {
 				throw new ParseException("No arguments found.");
 			}
 

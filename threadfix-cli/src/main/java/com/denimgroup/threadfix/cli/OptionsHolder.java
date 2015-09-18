@@ -221,6 +221,14 @@ public class OptionsHolder {
                 .create("ac");
         options.addOption(addComment);
 
+        Option submitDefect = OptionBuilder.withArgName("applicationId> <[vulnerabilityIds]> <[*]")
+                .hasArgs(1)
+                .hasOptionalArgs()
+                .withLongOpt("submit-defect")
+                .withDescription("Submit a defect to the defect tracker configured for a specific applicaiton.")
+                .create("sd");
+        options.addOption(submitDefect);
+
         return options;
     }
 

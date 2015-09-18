@@ -411,4 +411,15 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
                 new String[] { comment, commentTagIds }, String.class);
     }
 
+    public RestResponse<Object> submitDefect(String[] paramNames, String[] paramValues, Integer appId) {
+        return httpRestUtils.httpPost("/defects/" + appId + "/defectSubmission",
+                paramNames,
+                paramValues,
+                Object.class);
+
+    }
+
+    public RestResponse<Object> getDefectTrackerFields(Integer appId) {
+        return httpRestUtils.httpGet("/defects/" + appId + "/defectTrackerFields", Object.class);
+    }
 }

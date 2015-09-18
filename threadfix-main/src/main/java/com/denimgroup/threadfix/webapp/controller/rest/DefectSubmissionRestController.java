@@ -166,7 +166,7 @@ public class DefectSubmissionRestController extends TFRestController {
 
     @RequestMapping(headers="Accept=application/json", value="/defectTrackerFields", method= RequestMethod.GET)
     @JsonView(AllViews.RestViewScan2_1.class)
-    public Object getDefectTrackerFields(@PathVariable("appId") int appId) throws IOException {
+    public RestResponse<List<DynamicFormField>> getDefectTrackerFields(@PathVariable("appId") int appId) throws IOException {
 
         log.info("Received REST request for defect submission inputs.");
 
