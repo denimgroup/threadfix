@@ -227,7 +227,7 @@ public class PolicyPage extends BasePage {
     }
 
     public PolicyPage clickAddEmailsButton(String policyName) {
-        driver.findElementById("addEmailModalButton" + policyName).click();
+        tryClick(By.id("addEmailModalButton" + policyName));
         return new PolicyPage(driver);
     }
 
@@ -412,7 +412,7 @@ public class PolicyPage extends BasePage {
     }
 
     public boolean isAppPassing(String appName) {
-        return driver.findElementByCssSelector("#policyStatus" + appName + ":not(.ng-hide)").getText().contains("PASS");
+        return tryGetText(By.cssSelector("#policyStatus" + appName + ":not(.ng-hide)")).contains("PASS");
     }
 
     //===========================================================================================================
