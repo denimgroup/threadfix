@@ -27,6 +27,7 @@ package com.denimgroup.threadfix.remote;
 import com.denimgroup.threadfix.VulnerabilityInfo;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.viewmodels.DynamicFormField;
 
 import java.util.Date;
 import java.util.List;
@@ -106,5 +107,5 @@ public interface ThreadFixRestClient {
 
     public RestResponse<Object> submitDefect(String[] paramNames, String[] paramValues, Integer appId);
 
-    public RestResponse<Object> getDefectTrackerFields(Integer appId);
+    public RestResponse<DynamicFormField[]> getDefectTrackerFields(Integer appId);
 }

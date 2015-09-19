@@ -159,7 +159,7 @@ public class DefectSubmissionRestController extends TFRestController {
         if (newDefect != null) {
             return success("The Defect was submitted to the tracker.");
         } else {
-            return RestResponse.failure(map.get(DefectService.ERROR) == null ?
+            return failure(map.get(DefectService.ERROR) == null ?
                     "The Defect couldn't be submitted to the tracker." : map.get(DefectService.ERROR).toString());
         }
     }

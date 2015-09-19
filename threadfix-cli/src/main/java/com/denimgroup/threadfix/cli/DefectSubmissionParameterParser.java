@@ -26,14 +26,8 @@ package com.denimgroup.threadfix.cli;
 
 import com.denimgroup.threadfix.remote.ThreadFixRestClient;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.google.gson.Gson;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.denimgroup.threadfix.viewmodels.DynamicFormField;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
@@ -88,14 +82,12 @@ public class DefectSubmissionParameterParser extends GenericParameterParser {
             throw new IllegalArgumentException("No application id was provided in arguments");
         }
 
-        String jsonString = client.getDefectTrackerFields(appId).getOriginalJson();
-        Map<?, ?> response = new Gson().fromJson(jsonString, HashMap.class);
+        RestResponse<DynamicFormField[]> response = client.getDefectTrackerFields(appId);
+        DynamicFormField[] dynamicFormFields = response.object;
 
-        if (response == null) {
-            throw new IllegalArgumentException("No fields to return from Defect Tracker");
+        if (dynamicFormFields == null || dynamicFormFields.length == 0) {
+            throw new IllegalArgumentException("No fields returned from Defect Tracker");
         }
-
-        List<Map<String, String>> dynamicFormFields = (List<Map<String, String>>)response.get("object");
 
         for (String parameter : getParameters()) {
             if (!parameter.contains("=")) {
@@ -104,12 +96,9 @@ public class DefectSubmissionParameterParser extends GenericParameterParser {
 
             String shorterName = getParameterName(parameter);
 
-            if (dynamicFormFields == null) {
-                throw new IllegalArgumentException("No fields to return from Defect Tracker");
-            }
 
-            for (Map<String,String> map : dynamicFormFields) {
-                validParameters.add(map.get("name"));
+            for (DynamicFormField dynamicFormField : dynamicFormFields) {
+                validParameters.add(dynamicFormField.getName());
             }
 
             if (!validParameters.contains(shorterName)) {
