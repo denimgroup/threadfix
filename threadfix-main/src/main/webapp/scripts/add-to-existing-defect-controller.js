@@ -26,6 +26,15 @@ myAppModule.controller('AddToExistingDefectController', function ($scope, $rootS
 
             if (data.success) {
                 $scope.config.defects = data.object.defectList;
+
+                $scope.config.placeholder = "Enter "
+                    + (data.object.defectTrackerName == null ? "defect" : data.object.defectTrackerName)
+                    + " id.";
+
+                if ($scope.config.defects && $scope.config.defects.length > 0) {
+                    $scope.config.placeholder += " Example, " + $scope.config.defects[0];
+                }
+
             } else {
 
                 // setting these two booleans will hide the form.

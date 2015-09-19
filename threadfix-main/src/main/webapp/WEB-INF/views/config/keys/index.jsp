@@ -3,6 +3,7 @@
 <head>
 	<title>API Keys</title>
     <cbs:cachebustscript src="/scripts/api-keys-controller.js"/>
+    <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
 </head>
 
 <body>
@@ -11,7 +12,7 @@
         <h2>API Keys</h2>
 
         <%@ include file="/WEB-INF/views/successMessage.jspf" %>
-        <%@ include file="/WEB-INF/views/errorMessage.jsp" %>
+        <%@ include file="/WEB-INF/views/errorMessage.jspf" %>
         <%@ include file="newForm.jsp" %>
         <%@ include file="editForm.jsp" %>
 

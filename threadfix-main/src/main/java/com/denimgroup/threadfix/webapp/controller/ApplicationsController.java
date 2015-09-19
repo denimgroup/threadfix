@@ -168,9 +168,12 @@ public class ApplicationsController {
 		model.addAttribute("finding", new Finding());
 		model.addAttribute(new DefectViewModel());
         model.addAttribute("isEnterprise", EnterpriseTest.isEnterprise());
-		if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,appId)) {
-			model.addAttribute("users", userService.getPermissibleUsers(orgId, appId));
-		}
+		if (EnterpriseTest.isEnterprise()) {
+            if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_USERS, orgId, appId)
+                    || PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+                model.addAttribute("users", userService.getPermissibleUsers(orgId, appId));
+            }
+        }
 		model.addAttribute("manualChannelVulnerabilities", genericVulnerabilityService.loadAll());
         addAttrForScheduledScanTab(model);
 		return "applications/detail";

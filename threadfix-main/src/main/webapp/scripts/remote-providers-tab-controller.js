@@ -89,17 +89,39 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
             });
     });
 
+    var filterRemoteProviderApplication = function(filterText) {
+        return function(app) {
+            if (!filterText || filterText.length === 0) {
+                return true;
+            }
+
+            var name = app.customName || app.nativeName;
+
+            return !!name.match(new RegExp(filterText, "i"));
+        }
+    };
+
     $scope.paginate = function(provider) {
-        if (provider.remoteProviderApplications) {
+
+        if (!provider.backUpRemoteProviderApplications || provider.backUpRemoteProviderApplications.length == 0) {
+            provider.backUpRemoteProviderApplications = provider.remoteProviderApplications;
+        }
+
+        if (provider.backUpRemoteProviderApplications) {
             if (!provider.page) {
                 provider.page = 1;
             }
+
+            provider.remoteProviderApplications =
+                provider.backUpRemoteProviderApplications.filter(
+                    filterRemoteProviderApplication(provider.filterText));
 
             var targetPage = provider.page - 1;
 
             if (provider.remoteProviderApplications.length > (provider.page * 100)) {
                 provider.displayApps = provider.remoteProviderApplications.slice(targetPage * 100, 100 * provider.page)
             } else {
+                provider.page = 1;
                 provider.displayApps = provider.remoteProviderApplications.slice(targetPage * 100)
             }
         }
@@ -123,6 +145,7 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                                 field.value = undefined;
                             });
                         }
+                        provider.backUpRemoteProviderApplications = undefined;
                         provider.successMessage = undefined;
                         provider.errorMessage = undefined;
                         provider.hasCredentials = "No";

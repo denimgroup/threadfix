@@ -43,6 +43,7 @@ public class ThreadFixInfo {
     String url, apiKey, applicationName, applicationId;
 
     String localFiles, localDirectories;
+    String defaultFile;
 
     Set<String> files = set();
 
@@ -55,6 +56,7 @@ public class ThreadFixInfo {
         this.apiKey = properties.get("threadfix.apiKey");
         this.applicationName = properties.get("threadfix.applicationName");
         this.applicationId = properties.get("threadfix.applicationId");
+        this.defaultFile = properties.get("threadfix.defaultFile");
 
         this.localDirectories = properties.get("threadfix.localDirectories");
         this.localFiles = properties.get("threadfix.localFiles");
@@ -96,5 +98,9 @@ public class ThreadFixInfo {
 
     public List<String> getErrors() {
         return errors;
+    }
+
+    public String getDefaultFile() {
+        return defaultFile == null ? "threadfix.xml" : defaultFile;
     }
 }

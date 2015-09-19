@@ -58,7 +58,7 @@ public class InstallCert {
         File file = new File(JAVA_KEY_STORE_FILE);
 
         char[] passphrase = null;
-        InputStream in = new FileInputStream(file);
+        InputStream in;
         KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
         int attempedNo = 0;
         while (attempedNo < 3) {
@@ -71,11 +71,12 @@ public class InstallCert {
             passphrase = password.toCharArray();
             try {
                 LOGGER.info("Loading KeyStore " + file + "...");
+                in = new FileInputStream(file);
                 ks.load(in, passphrase);
                 in.close();
                 break;
             } catch (Exception e) {
-               LOGGER.error("Loaded KeyStore file error. Message: " + e.getMessage());
+               LOGGER.error("Loaded KeyStore file error. Message: " + e);
                 if (attempedNo >= 3){
                     LOGGER.error("You have tried entering password " + attempedNo + " times. Exiting...");
                     return false;

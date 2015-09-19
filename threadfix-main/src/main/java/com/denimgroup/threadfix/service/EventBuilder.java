@@ -71,6 +71,11 @@ public class EventBuilder {
         return this;
     }
 
+    public EventBuilder setFinding(Finding finding) {
+        event.setFinding(finding);
+        return this;
+    }
+
     public EventBuilder setDeletedScanId(Integer deletedScanId) {
         event.setDeletedScanId(deletedScanId);
         return this;

@@ -42,7 +42,7 @@
                     <c:if test="${ !canManageApplications }">
                         <li><a class="pointer" id="viewApplicationModalButton" ng-click="viewApplicationDetail()">Details	</a></li>
                     </c:if>
-                    <c:if test="${ canManageUsers && isEnterprise}">
+                    <c:if test="${ (canManageApplications || canManageUsers) && isEnterprise}">
                         <li><a class="pointer" id="userListModelButton" ng-click="showUsers()">View Permissible Users</a></li>
                     </c:if>
                     <c:if test="${ canUploadScans }">

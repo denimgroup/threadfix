@@ -21,21 +21,28 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.webapp.controller.rest;
+package com.denimgroup.threadfix.service.defects.utils.versionone;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import javax.xml.bind.annotation.*;
+import java.util.List;
 
-import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
-@RestController
-public class UnknownRestController extends TFRestController {
+/**
+ * Created by stran on 9/16/15.
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "Error")
+public class Error {
 
-    @RequestMapping("/rest/**")
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public Object badRestRequest() {
-        return failure("Bad rest request due to unrecognized path.");
+    @XmlElement(name="Message")
+    String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

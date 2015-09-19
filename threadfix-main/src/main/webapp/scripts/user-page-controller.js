@@ -308,6 +308,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 }
 
                 $scope.initialized = true;
+                $rootScope.$broadcast('refreshUsers');
             }).
             error(function(data, status) {
                 $scope.initialized = true;
@@ -623,10 +624,16 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     $scope.createNewKey = function(user) {
         var modalInstance = $modal.open({
             templateUrl: 'newKeyModal.html',
-            controller: 'GenericModalController',
+            controller: 'ModalControllerWithConfig',
             resolve: {
                 url: function() {
                     return tfEncoder.encode("/users/" + user.id + "/keys/new");
+                },
+                config: function() {
+                    return {
+                        users: $scope.users,
+                        edit: true
+                    };
                 },
                 object: function() {
                     return { username: user.name };

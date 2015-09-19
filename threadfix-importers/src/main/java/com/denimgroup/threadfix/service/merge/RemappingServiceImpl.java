@@ -222,7 +222,7 @@ public class RemappingServiceImpl implements RemappingService {
 
         if (shouldBeOpen != null && shouldBeOpen != isOpen) {
             if (shouldBeOpen) {
-                vulnerabilityStatusService.openVulnerability(newVulnerability, scanTimeMap.get(lastActionDate), lastActionDate, false);
+                vulnerabilityStatusService.openVulnerability(newVulnerability, scanTimeMap.get(lastActionDate), null, lastActionDate, false);
             } else {
                 vulnerabilityStatusService.closeVulnerability(newVulnerability, scanTimeMap.get(lastActionDate), lastActionDate, false, false);
             }
@@ -266,6 +266,7 @@ public class RemappingServiceImpl implements RemappingService {
             }
 
             oldestFinding.setFirstFindingForVuln(true);
+            newVulnerability.clearOriginalFinding();
         }
     }
 

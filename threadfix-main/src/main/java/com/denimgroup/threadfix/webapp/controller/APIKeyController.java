@@ -26,9 +26,12 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.data.entities.APIKey;
 import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.APIKeyService;
+import com.denimgroup.threadfix.service.UserService;
+import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +39,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 import static com.denimgroup.threadfix.service.util.PermissionUtils.hasGlobalPermission;
 
@@ -52,6 +58,8 @@ public class APIKeyController {
 
 	@Autowired
 	private APIKeyService apiKeyService;
+	@Autowired
+	private UserService userService;
 	
 	private final SanitizedLogger log = new SanitizedLogger(APIKeyController.class);
 
@@ -62,7 +70,7 @@ public class APIKeyController {
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields("note");
+		dataBinder.setAllowedFields("note", "isRestrictedKey", "user.id", "user.name", "username");
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
@@ -74,15 +82,35 @@ public class APIKeyController {
 	}
 
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<APIKey> newSubmit(HttpServletRequest request,
-                                                        @RequestParam(required = false) String note) {
+	public @ResponseBody Object newSubmit(HttpServletRequest request,
+                                                        @RequestParam(required = false) String note,
+														@Valid @ModelAttribute APIKey submittedKey, BindingResult result) {
+
+		String username = request.getParameter("username");
+
+		if (!hasGlobalPermission(Permission.CAN_MANAGE_USERS) && username != null) {
+			RestResponse.failure("You don't have permission to manage users.");
+		}
+
+		List<User> users = null;
+		if (username != null && !"".equals(username.trim())) {
+			users = userService.loadUsers(username);
+			if (users.isEmpty()) {
+				result.rejectValue("username", null, null, "Invalid user name");
+				return FormRestResponse.failure("Errors", result);
+			} else if (users.size() > 1) {
+				result.rejectValue("username", null, null, "Found more than one users with this name.");
+				return FormRestResponse.failure("Errors", result);
+			}
+		}
 
         // checkboxes can be difficult
 		boolean restricted = request.getParameter("isRestrictedKey") != null;
 		
 		APIKey newAPIKey = apiKeyService.createAPIKey(note, restricted);
+		newAPIKey.setUser(users != null && users.size() == 1 ? users.get(0) : null);
 		apiKeyService.storeAPIKey(newAPIKey);
-		
+
 		String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 		log.debug(currentUser + " has created an API key with the note " + note +
 				", and the ID " + newAPIKey.getId());
@@ -93,7 +121,7 @@ public class APIKeyController {
     // TODO authenticate
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
-	public RestResponse<List<APIKey>> list() {
+	public Object list() {
 		List<APIKey> list = apiKeyService.loadAll();
 
 		// if they don't also have CAN_MANAGE_USERS then we don't want to allow the edit
@@ -111,7 +139,14 @@ public class APIKeyController {
 			list = finalList;
 		}
 
-		return RestResponse.success(list);
+		List<User> users = null;
+
+		if (hasGlobalPermission(Permission.CAN_MANAGE_USERS)) {
+			users = userService.loadAllUsers();
+		}
+
+		return RestResponse.success(map("keys", list,
+				"users", users));
 	}
 	
 	@RequestMapping(value = "/{keyId}/delete", method = RequestMethod.POST)

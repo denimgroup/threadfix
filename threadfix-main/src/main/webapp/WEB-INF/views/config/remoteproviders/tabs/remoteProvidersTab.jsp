@@ -54,7 +54,7 @@
 
     <div ng-repeat="provider in providers">
 
-        <h2 ng-show="provider.remoteProviderApplications" style="padding-top:15px">
+        <h2 ng-show="provider.backUpRemoteProviderApplications" style="padding-top:15px">
             {{ provider.name }} Applications
 
             <c:if test="${ canManageRemoteProviders }">
@@ -109,7 +109,7 @@
             {{ provider.errorMessage }}
         </div>
 
-        <div ng-show="provider.remoteProviderApplications" class="pagination" ng-init="provider.page = 1">
+        <div ng-show="provider.backUpRemoteProviderApplications" class="pagination" ng-init="provider.page = 1">
             <pagination class="no-margin"
                         total-items="provider.remoteProviderApplications.length / 10"
                         max-size="5"
@@ -117,22 +117,26 @@
                         ng-click="paginate(provider)"></pagination>
         </div>
 
-        <table ng-show="provider.remoteProviderApplications" class="table table-striped" style="table-layout:fixed;">
+        <table ng-show="provider.backUpRemoteProviderApplications" class="table table-striped" style="table-layout:fixed;">
             <thead>
-            <tr>
-                <th class="medium first">Name / ID</th>
-                <c:if test="${ canManageRemoteProviders }">
-                    <th class="medium"></th>
-                </c:if>
-                <th class="medium">Team</th>
-                <th class="medium">Application</th>
-                <c:if test="${ canManageRemoteProviders }">
-                    <th class="medium">Edit</th>
-                </c:if>
-                <th class="medium last">Import Scan</th>
-            </tr>
+                <tr>
+                    <th class="medium first">Name / ID</th>
+                    <c:if test="${ canManageRemoteProviders }">
+                        <th class="medium"></th>
+                    </c:if>
+                    <th class="medium">Team</th>
+                    <th class="medium">Application</th>
+                    <c:if test="${ canManageRemoteProviders }">
+                        <th class="medium">Edit</th>
+                    </c:if>
+                    <th class="medium last">Import Scan</th>
+                </tr>
+
             </thead>
             <tbody>
+            <tr>
+                <td colspan="6">Filter <input id="filter{{provider.name | removeSpace }}" ng-change="paginate(provider)" ng-model="provider.filterText"/></td>
+            </tr>
 
             <tr ng-repeat="app in provider.displayApps">
                 <td id="provider{{ provider.name | removeSpace }}appid{{ $index }}" style="word-wrap: break-word">

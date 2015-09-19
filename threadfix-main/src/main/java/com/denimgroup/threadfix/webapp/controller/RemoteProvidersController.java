@@ -131,7 +131,8 @@ public class RemoteProvidersController {
 			}
 		}
 	}
-	
+
+	@JsonView(AllViews.TableRow.class)
 	@RequestMapping(value="/{typeId}/update", method = RequestMethod.GET)
 	public @ResponseBody RestResponse<List<RemoteProviderApplication>> updateApps(@PathVariable("typeId") int typeId) {
 		log.info("Processing request for RemoteProviderType update.");
@@ -146,7 +147,8 @@ public class RemoteProvidersController {
             return RestResponse.success(returnApps);
         }
     }
-	
+
+	@JsonView(AllViews.TableRow.class)
 	@RequestMapping(value="/{typeId}/importAll", method = RequestMethod.GET)
 	public @ResponseBody RestResponse<String> importAllScans(@PathVariable("typeId") int typeId) {
 		log.info("Processing request for RemoteProviderType bulk import.");
@@ -171,7 +173,8 @@ public class RemoteProvidersController {
 
 		return RestResponse.success("Importing scans.");
 	}
-	
+
+	@JsonView(AllViews.TableRow.class)
 	@RequestMapping(value="/{typeId}/apps/{appId}/import", method = RequestMethod.GET)
 	public @ResponseBody RestResponse<String> importScan(@PathVariable("appId") int appId) {
 		
@@ -213,7 +216,8 @@ public class RemoteProvidersController {
 			return RestResponse.failure(errorMsg);
 		}
 	}
-	
+
+	@JsonView(AllViews.TableRow.class)
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
 	@RequestMapping(value="/{typeId}/apps/{remoteProviderApplicationId}/edit", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<RemoteProviderApplication> configureAppSubmit(
@@ -230,6 +234,7 @@ public class RemoteProvidersController {
 		return RestResponse.success(remoteProviderApplicationService.load(remoteProviderApplicationId));
 	}
 
+	@JsonView(AllViews.TableRow.class)
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
 	@RequestMapping(value="/{typeId}/apps/{remoteProviderApplicationId}/setName", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<RemoteProviderApplication> configureApplicationName(
