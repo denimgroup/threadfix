@@ -110,11 +110,7 @@ public class SurfaceLocation extends BaseEntity {
 	@Column(length = PATH_LENGTH)
     @JsonView(Object.class)
 	public String getPath() {
-		if (path.isEmpty()) {
-			return "/";
-		} else {
-			return path;
-		}
+		return path;
 	}
 
 	public void setPath(String path) {

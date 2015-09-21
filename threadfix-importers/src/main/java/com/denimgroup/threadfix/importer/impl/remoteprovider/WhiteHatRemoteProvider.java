@@ -361,7 +361,9 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 		
 		private void addFinding() {
 			Finding finding = constructFinding(map);
-			
+
+			finding.getSurfaceLocation().setPath(pathMod(finding.getSurfaceLocation().getPath().trim()));
+
 			if (finding == null) {
 				LOG.warn("Finding was null.");
 			} else {
@@ -489,6 +491,8 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 		private void addFinding() {
 			Finding finding = constructFinding(map);
 
+			finding.getSurfaceLocation().setPath(pathMod(finding.getSurfaceLocation().getPath().trim()));
+
 			if (finding == null) {
 				LOG.warn("Finding was null.");
 			} else {
@@ -585,13 +589,20 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 	}
 
 	public String urlMod(String url) {
-		if (url.isEmpty()) {
+		if (url.isEmpty() || url.trim().equals("")) {
 			return "/";
 		} else if (!url.startsWith("http")){
 			return "http://" + url;
 		}
 
 		return url;
+	}
+
+	public String pathMod(String path) {
+		if (path == null || path.equals("")) {
+			return "/";
+		}
+		return path;
 	}
 
 
