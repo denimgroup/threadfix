@@ -105,4 +105,13 @@ public class AccessControlTeamMap extends AuditableEntity {
 	public void setAllApps(Boolean allApps) {
 		this.allApps = allApps;
 	}
+
+
+	@Override
+	public String toString() {
+		return "AccessControlTeamMap{" +
+				"organization=" + organization +
+				", role=" + role +
+				'}';
+	}
 }
