@@ -121,7 +121,7 @@
         		regex ^/organizations/[0-9]+/applications/[0-9]+/scans/[0-9]+/unmappedTable$,
 				regex ^/organizations/[0-9]+/applications/[0-9]+/scans/[0-9]+/download/.*$,
         		regex ^/organizations/[0-9]+/applications/[0-9]+/filters$,
-        		regex ^/organizations/[0-9]+/applications/[0-9]+/filters/tab$
+        		regex ^/organizations/[0-9]+/applications/[0-9]+/filters/tab$,
                 regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+$,
                 regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/batch/[a-zA-Z0-9-]/[0-9]+$,
                 regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/defect,

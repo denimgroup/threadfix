@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.ExceptionLog;
+import com.denimgroup.threadfix.exception.AuthenticationRestException;
 import com.denimgroup.threadfix.exception.RestException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
@@ -60,9 +61,10 @@ public class RestExceptionControllerAdvice {
 
     private static final SimpleDateFormat format = new SimpleDateFormat("MMM d, y h:mm:ss a");
 
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = RestException.class)
-    public @ResponseBody RestResponse<String> resolveRestException(Exception ex) {
+    @ResponseBody
+    public RestResponse<String> resolveRestException(Exception ex) {
 
         ExceptionLog exceptionLog = new ExceptionLog(ex);
 
@@ -75,9 +77,10 @@ public class RestExceptionControllerAdvice {
         return failure(((RestException) ex).getResponseString());
     }
 
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = HibernateJdbcException.class)
-    public @ResponseBody RestResponse<String> resolveException(HibernateJdbcException ex) {
+    @ResponseBody
+    public RestResponse<String> resolveException(HibernateJdbcException ex) {
 
         ExceptionLog exceptionLog = new ExceptionLog(ex);
 
@@ -93,6 +96,14 @@ public class RestExceptionControllerAdvice {
         }
     }
 
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(value = AuthenticationRestException.class)
+    @ResponseBody
+    public RestResponse<String> resolveAuthenticationException(AuthenticationRestException ex) {
+        return resolveRestException(ex);
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoHandlerFoundException.class)
     public ModelAndView handleError404(HttpServletRequest request, Exception e) {
 

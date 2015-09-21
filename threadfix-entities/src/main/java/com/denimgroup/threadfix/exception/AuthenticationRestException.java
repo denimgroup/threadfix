@@ -21,21 +21,25 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.webapp.controller.rest;
+package com.denimgroup.threadfix.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+/**
+ * Created by mcollins on 9/17/15.
+ */
+public class AuthenticationRestException extends RestException {
+    public AuthenticationRestException(Throwable cause, String responseString) {
+        super(cause, responseString);
+    }
 
-import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
+    public AuthenticationRestException(String responseString) {
+        super(responseString);
+    }
 
-@RestController
-public class UnknownRestController extends TFRestController {
+    public AuthenticationRestException(String responseString, String exceptionMessageString) {
+        super(responseString, exceptionMessageString);
+    }
 
-    @RequestMapping("/rest/**")
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public Object badRestRequest() {
-        return failure("Bad rest request due to unrecognized path.");
+    public AuthenticationRestException(Exception e, String responseString, String exceptionMessageString) {
+        super(e, responseString, exceptionMessageString);
     }
 }
