@@ -118,8 +118,11 @@ public class AddDefectTrackerController {
                 }
             } else if((defectTracker.getDefaultUsername() != null || defectTracker.getDefaultPassword() != null)
                     && !defectTrackerService.checkCredentials(defectTracker, result)){
-                if (!result.hasFieldErrors("defaultUsername")) {
-                    result.rejectValue("defaultUsername", null, null, defectTracker.getDefectTrackerType().getName() + " Credentials are invalid.");
+                if ( (defectTracker.getDefaultUsername() != null && defectTracker.getDefaultPassword() == null)
+                  || (defectTracker.getDefaultUsername() == null && defectTracker.getDefaultPassword() != null) )
+                    result.rejectValue("defaultUsername", null, null, "The username or password you entered is not valid.");
+                else if (!result.hasFieldErrors("defaultUsername")) {
+                    result.rejectValue("defaultUsername", null, null, "Credentials are invalid for "+ defectTracker.getName());
                 }
             }
 			

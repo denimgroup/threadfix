@@ -498,7 +498,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
 
         modalInstance.result.then(function (editedPermissionsObject) {
 
-            addMapsToUser($scope.currentUser);
+            reloadList();
 
             if (editedPermissionsObject) {
                 $scope.usersSuccessMessage = "Successfully edited permissions.";

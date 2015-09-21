@@ -214,4 +214,8 @@ public class Organization extends AuditableEntity {
         return (activeApps == null) ? 0 : activeApps.size();
     }
 
+    @Override
+    public String toString() {
+        return name == null ? "Unnamed Role" : name + " (Role)";
+    }
 }

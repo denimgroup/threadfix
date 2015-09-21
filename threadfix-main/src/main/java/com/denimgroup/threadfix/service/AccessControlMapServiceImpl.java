@@ -80,12 +80,15 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 			}
 			map.setRole(role);
 
-			AccessControlTeamMap dbMap = accessControlMapDao.retrieveTeamMapByUserTeamAndRole(
-					map.getUser().getId(), org.getId(), role.getId());
+			AccessControlTeamMap dbMap;
+			if (map.getUser() != null && map.getUser().getId() != null) {
+				dbMap = accessControlMapDao.retrieveTeamMapByUserTeamAndRole(
+						map.getUser().getId(), org.getId(), role.getId());
+				if (dbMap != null && dbMap.isActive() && !dbMap.getId().equals(mapId)) {
+					return "That team / role combination already exists for this user.";
+				}
+				log.debug("Assigned role " + role.getDisplayName() + " to user " + map.getUser().getName());
 
-			if (map.getUser() != null && map.getUser().getId() != null && dbMap != null
-					&& dbMap.isActive() && !dbMap.getId().equals(mapId)) {
-				return "That team / role combination already exists for this user.";
 			} else if (map.getGroup() != null && map.getGroup().getId() != null) {
 
 				dbMap = accessControlMapDao.retrieveTeamMapByGroupTeamAndRole(
@@ -93,6 +96,7 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 				if (dbMap != null && !dbMap.getId().equals(mapId)) {
 					return "That team / role combination already exists for this group.";
 				}
+				log.debug("Assigned role " + role.getDisplayName() + " to group " + map.getGroup().getName());
 			}
 		} else {
 			map.setRole(null);
