@@ -104,10 +104,12 @@ public class EditUserController {
 		new UserValidator(roleService).validate(user, result);
 
 		if (userService.hasRemovedAdminPermissions(user) && !userService.canRemoveAdminPermissions(user)) {
+			model.addAttribute("user", new User());
 			return RestResponse.failure("This would leave users unable to access the user management portion of ThreadFix.");
 		}
 
 		if (result.hasErrors()) {
+			model.addAttribute("user", new User());
 			return FormRestResponse.failure("Errors", result);
 		} else {
 
