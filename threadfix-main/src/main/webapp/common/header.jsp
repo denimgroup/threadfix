@@ -142,7 +142,7 @@
                                         </li>
                                     </security:authorize>
 
-                                    <security:authorize ifAllGranted="ROLE_CAN_MANAGE_POLICIES">
+                                    <security:authorize ifAllGranted="ROLE_ENTERPRISE,ROLE_CAN_MANAGE_POLICIES">
                                         <li class="normalLinks">
                                             <a id="policiesLink" href="<spring:url value="/configuration/policies" htmlEscape="true"/>">Policies</a>
                                         </li>
@@ -165,12 +165,12 @@
                                         <li class="normalLinks">
                                             <a id="manageUsersLink" href="<spring:url value="/configuration/users" htmlEscape="true"/>">Users</a>
                                         </li>
-                                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_ROLES">
+                                        <security:authorize ifAnyGranted="ROLE_ENTERPRISE,ROLE_CAN_MANAGE_ROLES">
                                             <li class="normalLinks">
                                                 <a id="manageRolesLink" href="<spring:url value="/configuration/roles" htmlEscape="true"/>">Roles</a>
                                             </li>
                                         </security:authorize>
-                                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_GROUPS">
+                                        <security:authorize ifAllGranted="ROLE_ENTERPRISE,ROLE_CAN_MANAGE_GROUPS">
                                             <li class="normalLinks">
                                                 <a id="manageGroupsLink" href="<spring:url value="/configuration/groups" htmlEscape="true"/>">Groups</a>
                                             </li>
