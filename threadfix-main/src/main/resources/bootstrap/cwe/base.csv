@@ -95,7 +95,7 @@ Improper Control of Generation of Code ('Code Injection')|94
 Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')|95
 Improper Neutralization of Directives in Statically Saved Code ('Static Code Injection')|96
 Improper Neutralization of Server-Side Includes (SSI) Within a Web Page|97
-Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')|9
+Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')|98
 "Improper Control of Resource Identifiers ('Resource Injection')|99
 Technology-Specific Input Validation Problems|100
 Struts Validation Problems|101
