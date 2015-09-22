@@ -25,7 +25,7 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.data.interfaces.DefectSubmitter;
-import com.denimgroup.threadfix.viewmodel.DefectMetadata;
+import com.denimgroup.threadfix.viewmodels.DefectMetadata;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -24,7 +24,7 @@
 package com.denimgroup.threadfix.data.interfaces;
 
 import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.viewmodel.DefectMetadata;
+import com.denimgroup.threadfix.viewmodels.DefectMetadata;
 
 import java.util.List;
 

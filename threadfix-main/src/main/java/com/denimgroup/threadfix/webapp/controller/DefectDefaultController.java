@@ -9,11 +9,9 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
-import com.denimgroup.threadfix.service.defects.VersionOneDefectTracker;
-import com.denimgroup.threadfix.viewmodel.DynamicFormField;
-import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
+import com.denimgroup.threadfix.viewmodels.ProjectMetadata;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
-import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
+import com.denimgroup.threadfix.viewmodels.DefectViewModel;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -146,27 +144,6 @@ public class DefectDefaultController {
 			if (dt.getLastError() != null && !dt.getLastError().isEmpty()) {
 				map.put(ERROR_MSG, dt.getLastError());
 				return map;
-			}
-
-			// adding additional scanner info checkbox, checking for null dynamicformfields
-			List<DynamicFormField> editableFields = data.getEditableFields();
-
-			if (editableFields != null) {
-				//addAdditionalScannerInfoField(editableFields);
-				//not bothering with this checkbox for defaults as default system doesn't currently support booleans (ignores them)
-
-				//remove Order field in Version One dynamic form
-				if (dt.getClass().equals(VersionOneDefectTracker.class)) {
-					DynamicFormField orderField = null;
-					for (DynamicFormField field : editableFields) {
-						if (field.getName().equals("Order")) {
-							orderField = field;
-						}
-					}
-					if (orderField != null) {
-						editableFields.remove(orderField);
-					}
-				}
 			}
 		}
 		map.put("defectTrackerName", application.getDefectTracker().getDefectTrackerType().getName());

@@ -33,9 +33,9 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
 import com.denimgroup.threadfix.service.defects.utils.versionone.*;
 import com.denimgroup.threadfix.service.defects.utils.versionone.Error;
-import com.denimgroup.threadfix.viewmodel.DefectMetadata;
-import com.denimgroup.threadfix.viewmodel.DynamicFormField;
-import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
+import com.denimgroup.threadfix.viewmodels.DefectMetadata;
+import com.denimgroup.threadfix.viewmodels.DynamicFormField;
+import com.denimgroup.threadfix.viewmodels.ProjectMetadata;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.properties.PropertiesManager;
 import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.viewmodels.DynamicFormField;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -411,4 +412,15 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
                 new String[] { comment, commentTagIds }, String.class);
     }
 
+    public RestResponse<Object> submitDefect(String[] paramNames, String[] paramValues, Integer appId) {
+        return httpRestUtils.httpPost("/defects/" + appId + "/defectSubmission",
+                paramNames,
+                paramValues,
+                Object.class);
+
+    }
+
+    public RestResponse<DynamicFormField[]> getDefectTrackerFields(Integer appId) {
+        return httpRestUtils.httpGet("/defects/" + appId + "/defectTrackerFields", DynamicFormField[].class);
+    }
 }
