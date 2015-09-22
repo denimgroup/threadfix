@@ -32,6 +32,7 @@ import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
 import com.denimgroup.threadfix.service.defects.utils.versionone.*;
+import com.denimgroup.threadfix.service.defects.utils.versionone.Error;
 import com.denimgroup.threadfix.viewmodels.DefectMetadata;
 import com.denimgroup.threadfix.viewmodels.DynamicFormField;
 import com.denimgroup.threadfix.viewmodels.ProjectMetadata;

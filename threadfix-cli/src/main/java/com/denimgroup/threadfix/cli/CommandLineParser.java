@@ -92,6 +92,18 @@ public class CommandLineParser {
 			} else if (cmd.hasOption("sd")) {
                 String[] setArgs = cmd.getOptionValues("sd");
                 printOutput(DefectSubmissionParameterParser.processDefectSubmissionParameters(client, setArgs));
+
+            } else if (cmd.hasOption("gdp")) {
+                String[] setArgs = cmd.getOptionValues("gdp");
+
+				if (setArgs == null || setArgs.length != 1) {
+					System.out.println("This method requires one argument, the application's ID. Got " + setArgs);
+				} else if (!setArgs[0].matches("^[0-9]+$")) {
+					System.out.println("Non-numeric ID argument given");
+				} else {
+					printOutput(client.getDefectTrackerFields(Integer.valueOf(setArgs[0])));
+				}
+
             } else if (cmd.hasOption("ct")) {
 				String[] createArgs = cmd.getOptionValues("ct");
 				if (createArgs.length != 1) {

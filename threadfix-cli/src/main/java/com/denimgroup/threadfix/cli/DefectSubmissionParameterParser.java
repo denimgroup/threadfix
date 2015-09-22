@@ -27,9 +27,12 @@ package com.denimgroup.threadfix.cli;
 import com.denimgroup.threadfix.remote.ThreadFixRestClient;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.viewmodels.DynamicFormField;
+
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
+import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 
 /**
  * @author zabdisubhan
@@ -43,7 +46,10 @@ public class DefectSubmissionParameterParser extends GenericParameterParser {
 
         setParameters(collapseParameters(args)); // This makes me cringe but it's single-threaded right?
 
-        checkArguments(client);
+        RestResponse<?> result = checkArguments(client);
+        if (!result.success) {
+            return (RestResponse<Object>) result;
+        }
 
         String[] params = getParameters();
         List<String> paramNames  = list();
@@ -74,36 +80,41 @@ public class DefectSubmissionParameterParser extends GenericParameterParser {
     }
 
     @SuppressWarnings("unchecked")
-    private static void checkArguments(ThreadFixRestClient client) {
+    private static RestResponse checkArguments(ThreadFixRestClient client) {
         List<String> validParameters = list("applicationId", "vulnerabilityIds");
         Integer appId = getIntegerValue("applicationId");
 
         if (appId == null) {
-            throw new IllegalArgumentException("No application id was provided in arguments");
+            return failure("Please specify the application's ID with applicationId={id here}");
         }
 
         RestResponse<DynamicFormField[]> response = client.getDefectTrackerFields(appId);
+        if (!response.success) {
+            return response;
+        }
+
         DynamicFormField[] dynamicFormFields = response.object;
 
         if (dynamicFormFields == null || dynamicFormFields.length == 0) {
-            throw new IllegalArgumentException("No fields returned from Defect Tracker");
+            return failure("No fields returned from Defect Tracker");
         }
 
         for (String parameter : getParameters()) {
             if (!parameter.contains("=")) {
-                throw new IllegalArgumentException(parameter + " was invalid. Expected format is <key>=<value>");
+                return failure(parameter + " was invalid. Expected format is <key>=<value>");
             }
 
             String shorterName = getParameterName(parameter);
-
 
             for (DynamicFormField dynamicFormField : dynamicFormFields) {
                 validParameters.add(dynamicFormField.getName());
             }
 
             if (!validParameters.contains(shorterName)) {
-                throw new IllegalArgumentException(parameter + " was invalid. The key should be one of " + validParameters);
+                return failure(parameter + " was invalid. The key should be one of " + validParameters);
             }
         }
+
+        return success(null);
     }
 }

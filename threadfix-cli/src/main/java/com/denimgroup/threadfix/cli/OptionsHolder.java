@@ -225,9 +225,16 @@ public class OptionsHolder {
                 .hasArgs(1)
                 .hasOptionalArgs()
                 .withLongOpt("submit-defect")
-                .withDescription("Submit a defect to the defect tracker configured for a specific applicaiton.")
+                .withDescription("Submit a defect to the defect tracker configured for a specific application.")
                 .create("sd");
         options.addOption(submitDefect);
+
+        Option getDefectParameters = OptionBuilder.withArgName("applicationId>")
+                .hasArgs(1)
+                .withLongOpt("get-defect-parameters")
+                .withDescription("Get a list of parameters from the defect tracker given an application ID.")
+                .create("gdp");
+        options.addOption(getDefectParameters);
 
         return options;
     }
