@@ -128,7 +128,7 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
 		try {
 			test = IOUtils.toString(responseStream);
 		} catch (IOException e) {
-			throw new RestIOException(e, "Unable to get response from server.");
+			throw new RestIOException(e, "Unable to get response from server." + e.toString());
 		} finally {
 			closeInputStream(responseStream);
 		}
@@ -198,10 +198,10 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
 				} catch (IOException e2) {
 					LOG.warn("IOException encountered trying to read the reason for the previous IOException: "
                             + e2.getMessage(), e2);
-                    throw new RestIOException(e2, "Unable to read response from server.", getStatusCode(httpConnection));
+                    throw new RestIOException(e2, "Unable to read response from server." + e2.getMessage(), getStatusCode(httpConnection));
 				}
 			}
-            throw new RestIOException(e, "Unable to read response from server.");
+            throw new RestIOException(e, "Unable to read response from server." + e.toString());
         } finally {
 			if (outputWriter != null) {
 				try {

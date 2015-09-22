@@ -54,7 +54,7 @@ myAppModule.controller('RemoteProviderModalController', function ($scope, $modal
                     }).
                     error(function(data, status, headers, config) {
                         $scope.loading = false;
-                        $scope.error = "Failure. HTTP status was " + status;
+                        $scope.error = "Failure. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
                     });
             }
         }

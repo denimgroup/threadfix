@@ -41,7 +41,7 @@ module.controller('DefectTrackersTabController', function($window, $scope, $http
             }).
             error(function(data, status, headers, config) {
                 $scope.initialized = true;
-                $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
+                $scope.errorMessage = "Failure. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
             });
     });
 
@@ -161,7 +161,7 @@ module.controller('DefectTrackersTabController', function($window, $scope, $http
                     threadFixModalService.deleteElement(tracker.defaultDefectProfiles, defaultDefectProfile);
                 }).
                 error(function(data, status, headers, config) {
-                    $scope.error = "Failure. HTTP status was " + status;
+                    $scope.error = "Failure. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
                 })
             threadFixModalService.deleteElement(tracker.defaultDefectProfiles, defaultDefectProfile);
         }

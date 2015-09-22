@@ -219,7 +219,7 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
 
             }).
             error(function(data, status, headers, config) {
-                $scope.errorMessage = "Failed. HTTP status was " + status;
+                $scope.errorMessage = "Failure. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
                 $scope.submitting = false;
             });
     };
