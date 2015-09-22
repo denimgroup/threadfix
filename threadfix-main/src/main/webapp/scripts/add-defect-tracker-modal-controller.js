@@ -32,7 +32,7 @@ myAppModule.controller('AddDefectTrackerModalController', function ($scope, $htt
             error(function(data, status, headers, config) {
                 timeoutService.cancel();
                 $scope.loading = false;
-                $scope.error = "Failure. HTTP status was " + status;
+                $scope.error = "Failure. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
             });
     };
 
@@ -78,7 +78,7 @@ myAppModule.controller('AddDefectTrackerModalController', function ($scope, $htt
                 error(function(data, status, headers, config) {
                     timeoutService.cancel();
                     $scope.loading = false;
-                    $scope.error = "Failure. HTTP status was " + status;
+                    $scope.error = "Failure. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
                 });
         }
     };

@@ -22,6 +22,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.remoteprovider.utils;
 
+import com.denimgroup.threadfix.exception.RestException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ProxyService;
 import org.apache.commons.httpclient.HttpClient;
@@ -102,9 +103,9 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
             }
 
         } catch (IOException e) {
-            LOG.error("Encountered IOException while making request in " + classInstance.getName() + ".", e);
+            LOG.error("Encountered IOException while making request in " + classInstance.getName() + ". " + e.toString());
+            throw new RestException(e, e.toString());
         }
-        return HttpResponse.failure(status);
     }
 
     @Override
@@ -158,11 +159,11 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
             }
 
         } catch (IOException e1) {
-            LOG.error("Encountered IOException while making request to remote provider.", e1);
+            LOG.error("Encountered IOException while making request to remote provider. " + e1.toString());
+            LOG.warn("There was an error and the POST request was not finished.");
+            throw new RestException(e1, e1.toString());
         }
 
-        LOG.warn("There was an error and the POST request was not finished.");
-        return HttpResponse.failure(status);
     }
 
     protected HttpClient getConfiguredHttpClient(Class<T> classToProxy) {

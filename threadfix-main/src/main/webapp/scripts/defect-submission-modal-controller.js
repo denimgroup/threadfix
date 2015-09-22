@@ -69,7 +69,7 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
         error(function(data, status, headers, config) {
             timeoutService.cancel();
             $scope.initialized = true;
-            $scope.errorMessage = "Failure. HTTP status was " + status;
+            $scope.errorMessage = "Failure. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
         });
 
     //load existing default profiles for this defectTracker
@@ -84,7 +84,7 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
             }
         }).
         error(function(data, status, headers, config) {
-            $scope.errorMessage = "Couldn't load default profiles. HTTP status was " + status;
+            $scope.errorMessage = "Couldn't load default profiles. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
         });
 
     $scope.ok = function (form) {
@@ -133,7 +133,7 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 error(function(data, status, headers, config) {
                     timeoutService.cancel();
                     $scope.loading = false;
-                    $scope.errorMessage = "Failure. HTTP status was " + status;
+                    $scope.errorMessage = "Failure. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
                 });
         }
     };
@@ -196,7 +196,7 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 $scope.loadingProfileDefaults = false;
             }).
             error(function(data, status, headers, config) {
-                $scope.errorMessage = "Couldn't load defaults. HTTP status was " + status;
+                $scope.errorMessage = "Couldn't load defaults. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
                 $scope.loadingProfileDefaults = false;
             });
 
