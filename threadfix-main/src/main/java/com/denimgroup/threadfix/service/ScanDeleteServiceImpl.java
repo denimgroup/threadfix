@@ -666,6 +666,18 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 				vulnsToRemove.add(vuln);
 				
 			} else {
+				// Update severity to vuln if the higher severity findings are removed
+				GenericSeverity highestRemovedFindingSeverity = getHighestGenericSeverity(findingsToRemove);
+				GenericSeverity highestRemainFindingSeverity = getHighestGenericSeverity(vuln.getFindings());
+				GenericSeverity currentVulnSeverity = vuln.getGenericSeverity();
+
+				if (currentVulnSeverity.getIntValue() != null &&
+						highestRemovedFindingSeverity != null &&
+						currentVulnSeverity.getIntValue() == highestRemovedFindingSeverity.getIntValue()) {
+					vuln.setGenericSeverity(highestRemainFindingSeverity);
+				}
+
+				
 				updateVulnDates(vuln, scan, defaultConfiguration.getCloseVulnWhenNoScannersReport() == null ?
 						false : defaultConfiguration.getCloseVulnWhenNoScannersReport());
 				if (vuln.getOriginalFinding() == null || 
@@ -740,6 +752,32 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			
 			vulnerabilityService.deleteVulnerability(vuln);
 		}
+	}
+
+	private GenericSeverity getHighestGenericSeverity(List<Finding> findings) {
+		if (findings == null || findings.size() == 0)
+			return null;
+
+		if (findings.get(0).getChannelSeverity() != null
+				&& findings.get(0).getChannelSeverity().getSeverityMap() != null
+				&& findings.get(0).getChannelSeverity().getSeverityMap().getGenericSeverity() != null) {
+
+			GenericSeverity returnSeverity = findings.get(0).getChannelSeverity().getSeverityMap().getGenericSeverity();
+
+			for (Finding finding : findings) {
+				if (finding.getChannelSeverity() != null
+						&& finding.getChannelSeverity().getSeverityMap() != null
+						&& finding.getChannelSeverity().getSeverityMap().getGenericSeverity() != null) {
+					if (returnSeverity.getIntValue() < finding.getChannelSeverity().getSeverityMap().getGenericSeverity().getIntValue()) {
+						returnSeverity = finding.getChannelSeverity().getSeverityMap().getGenericSeverity();
+					}
+				}
+			}
+
+			return returnSeverity;
+		}
+
+		return null;
 	}
 
 	/**
