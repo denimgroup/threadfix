@@ -491,7 +491,7 @@ threadfixModule.factory('vulnTreeTransformer', function() {
 
                 var newTreeCategory = getCategory(owaspVuln.name, 5);
                 vulnList.forEach(function(element) {
-                    if (owaspVuln.members.indexOf(element.genericVulnerability.displayId) > -1
+                    if ((owaspVuln.members.indexOf(element.genericVulnerability.displayId) > -1 && !element.memberOf)
                         || (element.memberOf && owaspVuln.members.indexOf(element.memberOf) > -1)) {
                         newTreeCategory.total = newTreeCategory.total + element.numResults;
                         newTreeCategory.entries.push(element);
