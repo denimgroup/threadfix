@@ -35,9 +35,9 @@
                     {{ scan.numberHiddenVulnerabilities }}
                 </td>
                 <c:if test="${ canUploadScans }">
-                    <td>
-                        <a ng-hide="scan.deleting" class="btn btn-danger" ng-click="deleteScan(scan)">Delete Scan</a>
-                        <a ng-show="scan.deleting" class="btn btn-danger" ng-disabled>
+                    <td id="delete{{ $index }}">
+                        <a id="deleteScan" ng-hide="scan.deleting" class="btn btn-danger" ng-click="deleteScan(scan)">Delete Scan</a>
+                        <a id="scanDeleting" ng-show="scan.deleting" class="btn btn-danger" ng-disabled>
                             <span class="spinner"></span>
                             Deleting
                         </a>
