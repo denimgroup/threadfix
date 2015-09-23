@@ -229,7 +229,7 @@ public abstract class AbstractVulnFilterController {
             return FormRestResponse.failure(FAILURE_MESSAGE, bindingResult);
 		} else {
 			vulnerabilityFilterService.save(vulnerabilityFilter, orgId, appId);
-			vulnerabilityFilterService.updateStatistics(orgId, appId);
+			vulnerabilityFilterService.updateStatistics(orgId, appId, null);
 			status.setComplete();
 			log.info(SUCCESS_MESSAGE);
             return RestResponse.success(vulnerabilityFilter);
@@ -247,7 +247,9 @@ public abstract class AbstractVulnFilterController {
 		if (!isAuthorized(CAN_MANAGE_VULN_FILTERS, orgId, appId)) {
 			return RestResponse.failure(AUTHORIZATION_FAILED);
 		}
-		
+
+		VulnerabilityFilter dataVulnFilter = vulnerabilityFilterService.load(filterId);
+
 		vulnerabilityFilter.setApplication(applicationService.loadApplication(appId));
 
 		if (!bindingResult.hasErrors()) {
@@ -260,7 +262,9 @@ public abstract class AbstractVulnFilterController {
         } else {
             vulnerabilityFilter.setId(filterId);
             vulnerabilityFilterService.save(vulnerabilityFilter, orgId, appId);
-			vulnerabilityFilterService.updateStatistics(orgId, appId);
+
+			vulnerabilityFilterService.updateStatistics(orgId, appId,
+					dataVulnFilter.getTargetGenericSeverity() == null ? null : dataVulnFilter.getSourceGenericVulnerability().getId());
             status.setComplete();
             log.info(SUCCESS_MESSAGE);
             return RestResponse.success(vulnerabilityFilter);

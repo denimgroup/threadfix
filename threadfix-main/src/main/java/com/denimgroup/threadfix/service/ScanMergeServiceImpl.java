@@ -220,7 +220,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		// set numbers correctly
 		vulnerabilityFilterService.updateVulnerabilities(
 				scan.getApplicationChannel().getApplication().getOrganization().getId(),
-				scan.getApplicationChannel().getApplication().getId());
+				scan.getApplicationChannel().getApplication().getId(),
+				null);
 
 		return scan;
 	}
@@ -383,7 +384,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 
 		vulnerabilityFilterService.updateVulnerabilities(
 				applicationChannel.getApplication().getOrganization().getId(),
-				applicationChannel.getApplication().getId());
+				applicationChannel.getApplication().getId(),
+				null);
 
 		vulnerabilityService.updateVulnerabilityReport(applicationChannel.getApplication());
 

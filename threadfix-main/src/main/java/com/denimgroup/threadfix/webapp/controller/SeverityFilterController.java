@@ -134,7 +134,7 @@ public class SeverityFilterController {
 			updateSeverityFilter(severityFilter, orgId, appId);
 			severityFilterService.clean(severityFilter, orgId, appId);
 			severityFilterService.save(severityFilter, orgId, appId);
-			vulnerabilityFilterService.updateVulnerabilities(orgId, appId);
+			vulnerabilityFilterService.updateVulnerabilities(orgId, appId, null);
 
 	    	return RestResponse.success(severityFilter);
 		}

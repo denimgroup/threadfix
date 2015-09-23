@@ -353,6 +353,21 @@ public class QueueSenderImpl implements QueueSender {
     }
 
 	@Override
+	public void updateVulnFilterWithOldGenericVulnId(int oldGenericVulnId) {
+		MapMessage scheduledScanMap = new ActiveMQMapMessage();
+
+		try {
+			scheduledScanMap.setInt("oldGenericVulnId", oldGenericVulnId);
+			scheduledScanMap.setString("type", QueueConstants.EDIT_VULNS_FILTER);
+		} catch (JMSException e) {
+			log.error(jmsErrorString);
+			addExceptionLog(e);
+		}
+
+		sendMap(scheduledScanMap);
+	}
+
+	@Override
 	public void updateTeamCachedStatistics(int orgId) {
 		MapMessage scheduledScanMap = new ActiveMQMapMessage();
 
