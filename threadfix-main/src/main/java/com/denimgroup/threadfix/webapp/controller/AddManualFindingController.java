@@ -29,7 +29,6 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.ChannelVulnerabilityService;
 import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.ManualFindingService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
@@ -47,7 +46,6 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans/new")
-@SessionAttributes("application")
 public class AddManualFindingController {
 
     protected final SanitizedLogger log = new SanitizedLogger(AddManualFindingController.class);
@@ -56,8 +54,6 @@ public class AddManualFindingController {
     private ApplicationService          applicationService;
     @Autowired
     private ManualFindingService        manualFindingService;
-    @Autowired
-    private ChannelVulnerabilityService channelVulnerabilityService;
     @Autowired
     private FindingService              findingService;
 
