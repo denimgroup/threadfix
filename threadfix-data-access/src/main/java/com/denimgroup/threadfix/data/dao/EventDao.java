@@ -37,6 +37,8 @@ public interface EventDao extends GenericObjectDao<Event> {
 
     List<Event> retrieveAllByFinding(Finding finding);
 
+    List<Event> retrieveAllByApplication(Application application);
+
     List<Event> retrieveAllByVulnerability(Vulnerability vulnerability);
 
     List<Event> retrieveAllByDefect(Defect defect);
@@ -44,6 +46,12 @@ public interface EventDao extends GenericObjectDao<Event> {
     List<Event> retrieveAllByPolicy(Policy policy);
 
     List<Event> retrieveAllByPolicyStatus(PolicyStatus policyStatus);
+
+    List<Event> retrieveUngroupedByApplication(Application application);
+
+    List<Event> retrieveUngroupedByOrganization(Organization organization);
+
+    List<Event> retrieveUngroupedByVulnerability(Vulnerability vulnerability);
 
     List<Event> retrieveUngroupedByUser(User user);
 

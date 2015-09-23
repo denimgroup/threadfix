@@ -32,6 +32,8 @@ import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,18 +78,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getCurrentUser() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = null;
 
-        User user = null;
+		SecurityContext context = SecurityContextHolder.getContext();
+		if (context != null) {
+			Authentication authentication = context.getAuthentication();
+			if (authentication != null) {
+				Object principal = authentication.getPrincipal();
 
-        if (principal instanceof ThreadFixUserDetails) {
+				if (principal instanceof ThreadFixUserDetails) {
 
-            ThreadFixUserDetails details = (ThreadFixUserDetails) principal;
+					ThreadFixUserDetails details = (ThreadFixUserDetails) principal;
 
-            Integer userId = details.getUserId();
+					Integer userId = details.getUserId();
 
-            user = userDao.retrieveById(userId);
-        }
+					user = userDao.retrieveById(userId);
+				}
+			}
+		}
 
         return user;
     }
