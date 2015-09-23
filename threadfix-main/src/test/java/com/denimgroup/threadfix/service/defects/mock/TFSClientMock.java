@@ -24,8 +24,8 @@
 package com.denimgroup.threadfix.service.defects.mock;
 
 import com.denimgroup.threadfix.service.defects.utils.tfs.TFSClient;
-import com.denimgroup.threadfix.viewmodel.DefectMetadata;
-import com.denimgroup.threadfix.viewmodel.DynamicFormField;
+import com.denimgroup.threadfix.viewmodels.DefectMetadata;
+import com.denimgroup.threadfix.viewmodels.DynamicFormField;
 
 import java.util.Arrays;
 import java.util.List;
