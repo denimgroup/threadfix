@@ -62,7 +62,8 @@ public class ApplicationRestController extends TFRestController {
             APPLICATION_LOOKUP_FAILED = "Application lookup failed. Check your ID.",
             WAF_LOOKUP_FAILED = "WAF lookup failed. Check your ID.",
             TAG_LOOKUP_FAILED = "Tag lookup failed. Check your ID.",
-            TAG_INVALID = "Invalid Tag ID. It is not an Application Tag.";
+            TAG_INVALID = "Invalid Tag ID. It is not an Application Tag.",
+    APPLICATION_LOOKUP_INVALID = "More than one application found. Check your search criteria.";
 
     @Autowired
     private ApplicationService applicationService;
@@ -216,8 +217,15 @@ public class ApplicationRestController extends TFRestController {
         int teamId = org.getId();
         if (appName != null)
             application = applicationService.loadApplication(appName, teamId);
-        if (appUniqueId != null)
-            application = applicationService.loadApplicationByUniqueId(appUniqueId, teamId);
+        if (appUniqueId != null) {
+            List<Application> applicationList = applicationService.loadApplicationByUniqueId(appUniqueId, teamId);
+            if (applicationList != null && applicationList.size() > 0) {
+                if (applicationList.size() > 1) {
+                    return failure(APPLICATION_LOOKUP_INVALID);
+                }
+                application = applicationList.get(0);
+            }
+        }
 
         if (application == null) {
             if ((appName != null) && (appName.contains("+"))) {
@@ -226,7 +234,14 @@ public class ApplicationRestController extends TFRestController {
             }
             if ((appUniqueId != null) && (appUniqueId.contains("+"))) {
                 appUniqueId = appUniqueId.replace("+", " ");
-                application = applicationService.loadApplicationByUniqueId(appUniqueId, teamId);
+
+                List<Application> applicationList = applicationService.loadApplicationByUniqueId(appUniqueId, teamId);
+                if (applicationList != null && applicationList.size() > 0) {
+                    if (applicationList.size() > 1) {
+                        return failure(APPLICATION_LOOKUP_INVALID);
+                    }
+                    application = applicationList.get(0);
+                }
             }
             if (application == null) {
                 log.warn(APPLICATION_LOOKUP_FAILED);
