@@ -259,7 +259,23 @@
                 <input id="showDefectPresent" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showDefectPresent"/>Present<br>
                 <input id="showDefectNotPresent" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showDefectNotPresent"/>Not Present<br>
                 <input id="showDefectOpen" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showDefectOpen"/>Open<br>
-                <input id="showDefectClosed" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showDefectClosed"/>Closed
+                <input id="showDefectClosed" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showDefectClosed"/>Closed<br>
+            </div>
+        </div>
+
+        <div class="accordion-inner" ng-show="treeTeam || vulnSearch || treeApplication">
+            Remediation
+            <br>
+            <div>
+                <span tooltip="The defect's status has been closed since the last scan updated this vulnerability, but the vulnerability is still open.">
+                    <input id="showInconsistentClosedDefectNeedsScan" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showInconsistentClosedDefectNeedsScan"/>Needs Scan
+                </span><br>
+                <span tooltip="The defect is closed, but a scan has shown the vulnerability is still open since the defect's status was last updated.">
+                    <input id="showInconsistentClosedDefectOpenInScan" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showInconsistentClosedDefectOpenInScan"/>Remediation Failure
+                </span><br>
+                <span tooltip="The vulnerability is closed, but the defect is still open.">
+                    <input id="showInconsistentOpenDefect" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showInconsistentOpenDefect"/>Needs Verification
+                </span>
             </div>
         </div>
 
