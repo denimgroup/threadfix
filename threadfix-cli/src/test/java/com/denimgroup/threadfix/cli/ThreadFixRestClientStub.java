@@ -40,7 +40,9 @@ public class ThreadFixRestClientStub extends ThreadFixRestClientImpl {
     String parameter, path;
     Date startDate, endDate;
     Boolean showOpen, showClosed, showFalsePositive, showHidden,
-            showDefectPresent, showDefectNotPresent, showDefectOpen, showDefectClosed;
+            showDefectPresent, showDefectNotPresent, showDefectOpen, showDefectClosed,
+            showInconsistentClosedDefectNeedsScan, showInconsistentClosedDefectOpenInScan,
+            showInconsistentOpenDefect;
     Integer numberMerged, numberVulnerabilities;
 
     @Override
@@ -49,7 +51,8 @@ public class ThreadFixRestClientStub extends ThreadFixRestClientImpl {
                List<Integer> genericSeverityValues, Integer numberVulnerabilities, String parameter, String path,
                Date startDate, Date endDate, Boolean showOpen, Boolean showClosed, Boolean showFalsePositive,
                Boolean showHidden, Integer numberMerged,  Boolean showDefectPresent, Boolean showDefectNotPresent,
-               Boolean showDefectOpen, Boolean showDefectClosed) {
+               Boolean showDefectOpen, Boolean showDefectClosed, Boolean showInconsistentClosedDefectNeedsScan,
+               Boolean showInconsistentClosedDefectOpenInScan, Boolean showInconsistentOpenDefect) {
         this.genericVulnerabilityIds = genericVulnerabilityIds;
         this.teamIds = teamIds;
         this.applicationIds = applicationIds;
@@ -69,6 +72,9 @@ public class ThreadFixRestClientStub extends ThreadFixRestClientImpl {
         this.showDefectNotPresent = showDefectNotPresent;
         this.showDefectOpen = showDefectOpen;
         this.showDefectClosed = showDefectClosed;
+        this.showInconsistentClosedDefectNeedsScan = showInconsistentClosedDefectNeedsScan;
+        this.showInconsistentClosedDefectOpenInScan = showInconsistentClosedDefectOpenInScan;
+        this.showInconsistentOpenDefect = showInconsistentOpenDefect;
         return null;
     }
 

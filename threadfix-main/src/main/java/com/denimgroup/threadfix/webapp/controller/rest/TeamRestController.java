@@ -263,6 +263,7 @@ public class TeamRestController extends TFRestController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "")
+    @JsonView(AllViews.RestViewTeam2_1.class)
 	public Object alsoTeamList(HttpServletRequest request) {
 		return teamList(request);
 	}

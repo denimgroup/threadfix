@@ -33,16 +33,14 @@ import com.denimgroup.threadfix.service.beans.DefectTrackerBean;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
-import com.denimgroup.threadfix.service.defects.VersionOneDefectTracker;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
-import com.denimgroup.threadfix.viewmodel.DynamicFormField;
-import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
+import com.denimgroup.threadfix.viewmodels.ProjectMetadata;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
-import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
+import com.denimgroup.threadfix.viewmodels.DefectViewModel;
 import com.denimgroup.threadfix.webapp.viewmodels.VulnerabilityCollectionModel;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.json.JSONObject;
@@ -54,7 +52,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
-import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Collections;
@@ -291,19 +288,6 @@ public class ApplicationsController {
         model.addAttribute("scheduledDays", DayInWeek.values());
     }
 
-    private void addAdditionalScannerInfoField(@Nonnull List<DynamicFormField> formFields){
-        DynamicFormField additionalScannerInfoField = new DynamicFormField();
-        additionalScannerInfoField.setName("AdditionalScannerInfo");
-        additionalScannerInfoField.setLabel("Additional Scanner Info");
-        additionalScannerInfoField.setRequired(false);
-        additionalScannerInfoField.setType("checkbox");
-        additionalScannerInfoField.setActive(true);
-        additionalScannerInfoField.setEditable(true);
-        additionalScannerInfoField.setSupportsMultivalue(false);
-
-        formFields.add(additionalScannerInfoField);
-    }
-	
 	// TODO move this to a different spot so as to be less annoying
 	private Map<String, Object> addDefectModelAttributes(int appId, int orgId, boolean addDefectIds) {
 		if (!PermissionUtils.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
@@ -328,6 +312,7 @@ public class ApplicationsController {
 
         List<Defect> defectList = null;
         Map<String, Object> map = new HashMap<>();
+
 		if (dt != null) {
             if (addDefectIds) {
                 defectList = dt.getDefectList();
@@ -343,27 +328,6 @@ public class ApplicationsController {
             if (dt.getLastError() != null && !dt.getLastError().isEmpty()) {
                 map.put(ERROR_MSG, dt.getLastError());
                 return map;
-            }
-
-            // adding additional scanner info checkbox, checking for null dynamicformfields
-            List<DynamicFormField> editableFields = data.getEditableFields();
-
-            if (editableFields != null) {
-                addAdditionalScannerInfoField(editableFields);
-
-                //remove Order field in Version One dynamic form
-                if (dt.getClass().equals(VersionOneDefectTracker.class)) {
-                    DynamicFormField orderField = null;
-                    for (DynamicFormField field : editableFields) {
-                        if (field.getName().equals("Order")) {
-                            orderField = field;
-                        }
-                    }
-
-                    if (orderField != null) {
-                        editableFields.remove(orderField);
-                    }
-                }
             }
 		}
 

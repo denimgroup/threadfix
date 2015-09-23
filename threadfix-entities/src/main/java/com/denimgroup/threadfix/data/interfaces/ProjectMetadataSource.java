@@ -23,7 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.interfaces;
 
-import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
+import com.denimgroup.threadfix.viewmodels.ProjectMetadata;
 
 /**
  * Created by mac on 11/12/14.

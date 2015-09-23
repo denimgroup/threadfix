@@ -23,7 +23,7 @@
 	</rule>
 	<rule>
 		<from>/</from>
-		<to>/index.jsp</to>
+		<to>/app/dashboard</to>
 	</rule>
 	<rule>
 		<from>/**</from>

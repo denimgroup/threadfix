@@ -77,7 +77,7 @@ public class HibernateApplicationDao implements ApplicationDao {
     @SuppressWarnings("unchecked")
     public List<Application> retrieveAllActiveFilter(Set<Integer> authenticatedTeamIds) {
         return sessionFactory.getCurrentSession()
-                .createQuery("from Application app where app.organization.id in (:ids) order by app.name")
+                .createQuery("from Application app where app.active = true and app.organization.id in (:ids) order by app.name")
                 .setParameterList("ids", authenticatedTeamIds)
                 .list();
     }

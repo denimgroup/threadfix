@@ -38,24 +38,18 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 /**
  * Created by mac on 5/22/14.
  */
-public class VulnSearchParameterParser {
-
-    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MMM-yyyy");
-
-    private static final Pattern integerPattern = Pattern.compile("[\\,=]([0-9]+)");
-    private static final Pattern stringPattern  = Pattern.compile("[\\,=]([^,=]+)");
-
-    static String[] parameters = null;
+public class VulnSearchParameterParser extends GenericParameterParser {
 
     static final private List<String> validParameters = list("genericVulnerabilityIds", "teamIds",
             "applicationIds", "scannerNames", "genericSeverityValues", "numberVulnerabilities", "parameter",
             "path", "startDate", "endDate", "showOpen", "showClosed", "showFalsePositive", "showHidden", "numberMerged",
-            "showDefectPresent", "showDefectNotPresent", "showDefectOpen", "showDefectClosed");
+            "showDefectPresent", "showDefectNotPresent", "showDefectOpen", "showDefectClosed",
+            "showInconsistentClosedDefectNeedsScan", "showInconsistentClosedDefectOpenInScan", "showInconsistentOpenDefect");
 
     public static RestResponse<VulnerabilityInfo[]> processVulnerabilitySearchParameters(ThreadFixRestClient client,
                                                                                          String... args) {
 
-        parameters = collapseParameters(args); // This makes me cringe but it's single-threaded right?
+        setParameters(collapseParameters(args)); // This makes me cringe but it's single-threaded right?
 
         checkArguments();
 
@@ -78,36 +72,15 @@ public class VulnSearchParameterParser {
                 getBooleanValue("showDefectPresent"),
                 getBooleanValue("showDefectNotPresent"),
                 getBooleanValue("showDefectOpen"),
-                getBooleanValue("showDefectClosed")
+                getBooleanValue("showDefectClosed"),
+                getBooleanValue("showInconsistentClosedDefectNeedsScan"),
+                getBooleanValue("showInconsistentClosedDefectOpenInScan"),
+                getBooleanValue("showInconsistentOpenDefect")
         );
     }
 
-    // This lets us handle fun stuff like scannerNames=Arachni,Cenzic Hailstorm
-    private static String[] collapseParameters(String[] parameters) {
-        List<String> newList = new ArrayList<String>();
-        String lastValue = null;
-        if (parameters != null) {
-            for (String parameter : parameters) {
-                if (parameter.contains("=")) {
-                    if (lastValue != null) {
-                        newList.add(lastValue);
-                    }
-                    lastValue = parameter;
-                } else if (lastValue != null) {
-                    lastValue = lastValue.concat(" ");
-                    lastValue = lastValue.concat(parameter);
-                }
-            }
-        }
-        if (lastValue != null) {
-            newList.add(lastValue);
-        }
-        System.out.println("Args: " + newList);
-        return newList.toArray(new String[newList.size()]);
-    }
-
     private static void checkArguments() {
-        for (String parameter : parameters) {
+        for (String parameter : getParameters()) {
             if (!parameter.contains("=")) {
                 throw new IllegalArgumentException(parameter + " was invalid. Expected format is <key>=<value>");
             }
@@ -119,92 +92,4 @@ public class VulnSearchParameterParser {
             }
         }
     }
-
-    private static List<Integer> getIntegerArray(String key) {
-        String argument = getArgument(key);
-        return argument != null ? getIntegerValues(argument) : null;
-    }
-
-    private static List<String> getStringArray(String key) {
-        String argument = getArgument(key);
-        return argument != null ? getStringValues(argument) : null;
-    }
-
-    private static Boolean getBooleanValue(String key) {
-        String stringValue = getStringValue(key);
-        return Boolean.parseBoolean(stringValue);
-    }
-
-    private static Date getDateValue(String key) {
-        String stringValue = getStringValue(key);
-        try {
-            return stringValue == null ? null : DATE_FORMAT.parse(stringValue);
-        } catch (ParseException e) {
-            throw new IllegalArgumentException(stringValue + " was not a valid date string. Please use the format " +
-                    DATE_FORMAT.toPattern());
-        }
-    }
-
-    private static String getStringValue(String key) {
-        String argument = getArgument(key);
-        if (argument != null) {
-            List<String> stringArray = getStringValues(argument);
-            if (!stringArray.isEmpty()) {
-                return stringArray.get(0);
-            }
-        }
-        return null;
-    }
-
-    private static Integer getIntegerValue(String key) {
-        String argument = getArgument(key);
-        if (argument != null) {
-            List<Integer> integerArray = getIntegerValues(argument);
-            if (!integerArray.isEmpty()) {
-                return integerArray.get(0);
-            }
-        }
-        return null;
-    }
-
-    private static String getArgument(String key) {
-        for (String argument : parameters) {
-            if (argument.startsWith(key)) {
-                return argument.substring(key.length());
-            }
-        }
-        return null;
-    }
-
-    private static List<Integer> getIntegerValues(String parameterString) {
-        Matcher matcher = integerPattern.matcher(parameterString);
-
-        List<Integer> returnList = new ArrayList<Integer>();
-
-        while (matcher.find()) {
-            String stringValue = parameterString.substring(matcher.start() + 1, matcher.end());
-            try {
-                returnList.add(Integer.valueOf(stringValue));
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException(stringValue + " couldn't be parsed as an integer.");
-            }
-        }
-
-        return returnList;
-    }
-
-
-    private static List<String> getStringValues(String parameterString) {
-        Matcher matcher = stringPattern.matcher(parameterString);
-
-        List<String> returnList = new ArrayList<String>();
-
-        while (matcher.find()) {
-            String stringValue = parameterString.substring(matcher.start() + 1, matcher.end());
-            returnList.add(stringValue);
-        }
-
-        return returnList;
-    }
-
 }

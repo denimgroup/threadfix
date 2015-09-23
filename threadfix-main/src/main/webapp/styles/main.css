@@ -133,10 +133,22 @@ body#apps #tab-apps a,
 body.dashboard #tab-dashboard a,
 body#wafs #tab-wafs a,
 body#scans #tab-scans a,
-body#reports #tab-reports a,
-body#config #tab-config a {
+body#reports #tab-reports a {
 	color: #43678b;
-	
+	width: 100%;
+	height: 100%;
+	display: inline-block;
+	padding-top: 5px;
+}
+
+#menu #tab-apps a,
+#menu #tab-dashboard a,
+#menu #tab-scans a,
+#menu #tab-reports a {
+	width: 100%;
+	height: 100%;
+	display: inline-block;
+	padding-top: 5px;
 }
 
 body#apps #tab-apps a:hover,

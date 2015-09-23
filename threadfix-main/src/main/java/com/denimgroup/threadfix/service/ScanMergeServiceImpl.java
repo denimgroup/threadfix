@@ -45,10 +45,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 // TODO figure out this Transactional stuff
 // TODO reorganize methods - not in a very good order right now.
@@ -323,6 +326,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 				importTime = scan.getImportTime();
 			} else {
 				combinedScan.getFindings().addAll(scan.getFindings());
+				combinedScan.getScanRepeatFindingMaps().addAll(scan.getScanRepeatFindingMaps());
 				if(scan.getImportTime() != null && scan.getImportTime().after(importTime)){
 					importTime = scan.getImportTime();
 				}
@@ -351,6 +355,21 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 
 		applicationChannel.getApplication().getScans().add(combinedScan);
 		applicationChannel.getScanList().add(combinedScan);
+
+		Set<Finding> findings = set();
+		findings.addAll(combinedScan.getFindings());
+		List<ScanRepeatFindingMap> scanRepeatFindingMaps = combinedScan.getScanRepeatFindingMaps();
+		if (scanRepeatFindingMaps != null) {
+			for (ScanRepeatFindingMap scanRepeatFindingMap : scanRepeatFindingMaps) {
+				findings.add(scanRepeatFindingMap.getFinding());
+			}
+		}
+		for (Finding finding : findings) {
+			Vulnerability vulnerability = finding.getVulnerability();
+			if (vulnerability != null) {
+				vulnerabilityService.determineVulnerabilityDefectConsistencyState(vulnerability);
+			}
+		}
 
 		return combinedScan;
 	}

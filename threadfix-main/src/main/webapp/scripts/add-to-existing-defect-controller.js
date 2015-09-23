@@ -48,7 +48,7 @@ myAppModule.controller('AddToExistingDefectController', function ($scope, $rootS
         error(function(data, status, headers, config) {
             timeoutService.cancel();
             $scope.initialized = true;
-            $scope.errorMessage = "Failure. HTTP status was " + status;
+            $scope.errorMessage = "Failure. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
         });
 
 
@@ -77,7 +77,7 @@ myAppModule.controller('AddToExistingDefectController', function ($scope, $rootS
                 error(function(data, status, headers, config) {
                     timeoutService.cancel();
                     $scope.loading = false;
-                    $scope.errorMessage = "Failure. HTTP status was " + status;
+                    $scope.errorMessage = "Failure. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
                 });
         }
     };

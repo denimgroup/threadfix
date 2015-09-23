@@ -27,6 +27,7 @@ package com.denimgroup.threadfix.remote;
 import com.denimgroup.threadfix.VulnerabilityInfo;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.viewmodels.DynamicFormField;
 
 import java.util.Date;
 import java.util.List;
@@ -66,7 +67,10 @@ public interface ThreadFixRestClient {
                List<String> scannerNames, List<Integer> genericSeverityValues, Integer numberVulnerabilities,
                String parameter, String path, Date startDate, Date endDate, Boolean showOpen, Boolean showClosed,
                Boolean showFalsePositive, Boolean showHidden, Integer numberMerged, Boolean showDefectPresent,
-               Boolean showDefectNotPresent, Boolean showDefectOpen, Boolean showDefectClosed);
+               Boolean showDefectNotPresent, Boolean showDefectOpen, Boolean showDefectClosed,
+               Boolean showInconsistentClosedDefectNeedsScan, Boolean showInconsistentClosedDefectOpenInScan,
+               Boolean showInconsistentOpenDefect
+    );
 
     public void setKey(String key);
     public void setUrl(String url);
@@ -100,5 +104,11 @@ public interface ThreadFixRestClient {
 
     void setUnsafeFlag(boolean unsafeFlag);
 
+//    public RestResponse<Object> submitDefect()
+
     RestResponse<String> addVulnComment(Integer vulnId, String comment, String commentTagIds);
+
+    public RestResponse<Object> submitDefect(String[] paramNames, String[] paramValues, Integer appId);
+
+    public RestResponse<DynamicFormField[]> getDefectTrackerFields(Integer appId);
 }

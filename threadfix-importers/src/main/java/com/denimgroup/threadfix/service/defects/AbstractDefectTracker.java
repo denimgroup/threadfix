@@ -29,8 +29,8 @@ import com.denimgroup.threadfix.data.interfaces.DefectSubmitter;
 import com.denimgroup.threadfix.data.interfaces.ProjectMetadataSource;
 import com.denimgroup.threadfix.exception.IllegalStateRestException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.viewmodel.DefectMetadata;
-import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
+import com.denimgroup.threadfix.viewmodels.DefectMetadata;
+import com.denimgroup.threadfix.viewmodels.ProjectMetadata;
 
 import javax.annotation.Nonnull;
 import java.io.UnsupportedEncodingException;
@@ -125,7 +125,7 @@ public abstract class AbstractDefectTracker implements ProjectMetadataSource, De
 	 * These choices will be presented to the user and the choices will come back 
 	 * in the DefectMetadata bean for the createDefect() method.
 	 * 
-	 * @see com.denimgroup.threadfix.viewmodel.ProjectMetadata
+	 * @see com.denimgroup.threadfix.viewmodels.ProjectMetadata
 	 * @return a ProjectMetadata bean
 	 */
 	public abstract ProjectMetadata getProjectMetadata();

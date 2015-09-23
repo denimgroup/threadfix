@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.service.eventmodel.aspect;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.eventmodel.event.PreDefectSubmissionEvent;
-import com.denimgroup.threadfix.viewmodel.DefectMetadata;
+import com.denimgroup.threadfix.viewmodels.DefectMetadata;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;

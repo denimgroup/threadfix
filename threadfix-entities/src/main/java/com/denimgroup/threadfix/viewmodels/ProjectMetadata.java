@@ -21,7 +21,10 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.viewmodel;
+package com.denimgroup.threadfix.viewmodels;
+
+import com.denimgroup.threadfix.views.AllViews;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -48,7 +51,7 @@ public class ProjectMetadata {
         this.editableFields = editableFields;
     }
 
-
+    @JsonView(AllViews.RestViewScan2_1.class)
 	public List<String> getComponents() {
 		return components;
 	}
@@ -57,6 +60,7 @@ public class ProjectMetadata {
 		this.components = components;
 	}
 
+    @JsonView(AllViews.RestViewScan2_1.class)
 	public List<String> getVersions() {
 		return versions;
 	}
@@ -65,6 +69,7 @@ public class ProjectMetadata {
 		this.versions = versions;
 	}
 
+    @JsonView(AllViews.RestViewScan2_1.class)
 	public List<String> getSeverities() {
 		return severities;
 	}
@@ -72,7 +77,8 @@ public class ProjectMetadata {
 	public void setSeverities(List<String> severities) {
 		this.severities = severities;
 	}
-	
+
+    @JsonView(AllViews.RestViewScan2_1.class)
 	public List<String> getStatuses() {
 		return statuses;
 	}
@@ -80,7 +86,8 @@ public class ProjectMetadata {
 	public void setStatuses(List<String> statuses) {
 		this.statuses = statuses;
 	}
-	
+
+    @JsonView(AllViews.RestViewScan2_1.class)
 	public List<String> getPriorities() {
 		return priorities;
 	}
@@ -90,6 +97,7 @@ public class ProjectMetadata {
 	}
 
     @Nullable
+    @JsonView(AllViews.RestViewScan2_1.class)
     public List<DynamicFormField> getEditableFields() {
         return editableFields;
     }

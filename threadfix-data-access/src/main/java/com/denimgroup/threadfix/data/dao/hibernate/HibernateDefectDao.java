@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.DefectDao;
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.DeletedDefect;
+import com.denimgroup.threadfix.data.entities.Vulnerability;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -108,6 +109,13 @@ public class HibernateDefectDao
 
     @Override
 	public void delete(Defect defect) {
+		List<Vulnerability> vulnerabilities = defect.getVulnerabilities();
+		if (defect.getVulnerabilities() != null) {
+			for (Vulnerability vulnerability : vulnerabilities) {
+				vulnerability.setVulnerabilityDefectConsistencyState((String)null);
+				sessionFactory.getCurrentSession().save(vulnerability);
+			}
+		}
 		sessionFactory.getCurrentSession().save(new DeletedDefect(defect));
 		sessionFactory.getCurrentSession().delete(defect);
 	}

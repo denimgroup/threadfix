@@ -25,7 +25,7 @@ package com.denimgroup.threadfix.service.eventmodel.event;
 
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
-import com.denimgroup.threadfix.viewmodel.DefectMetadata;
+import com.denimgroup.threadfix.viewmodels.DefectMetadata;
 import org.springframework.context.ApplicationEvent;
 
 import java.util.List;

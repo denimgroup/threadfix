@@ -85,7 +85,7 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
             }).
             error(function(data, status, headers, config) {
                 $scope.initialized = true;
-                $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
+                $scope.errorMessage = "Failure. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
             });
     });
 
@@ -157,7 +157,7 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                 }).
                 error(function(data, status, headers, config) {
                     provider.clearingConfiguration = false;
-                    provider.errorMessage = "Failed to clear configuration. HTTP status was " + status;
+                    provider.errorMessage = "Failed to clear configuration. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
                 });
         }
     };
@@ -188,7 +188,7 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                 provider.importingScans = false;
             }).
             error(function(data, status, headers, config) {
-                provider.errorMessage = "Failed to import scans. HTTP status was " + status;
+                provider.errorMessage = "Failed to import scans. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
                 provider.importingScans = false;
             });
     };
@@ -210,7 +210,7 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                 app.importingScans = false;
             }).
             error(function(data, status, headers, config) {
-                provider.errorMessage = "Failed to delete team. HTTP status was " + status;
+                provider.errorMessage = "Failed to delete team. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
                 app.importingScans = false;
             });
     };
@@ -412,7 +412,7 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                 provider.updatingApps = false;
             }).
             error(function(data, status, headers, config) {
-                provider.errorMessage = "Failed to update applications. HTTP status was " + status;
+                provider.errorMessage = "Failed to update applications. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
                 provider.updatingApps = false;
             });
     };
