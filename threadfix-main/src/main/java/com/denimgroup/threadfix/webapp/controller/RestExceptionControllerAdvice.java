@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.orm.hibernate3.HibernateJdbcException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -64,7 +65,7 @@ public class RestExceptionControllerAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = RestException.class)
     @ResponseBody
-    public RestResponse<String> resolveRestException(Exception ex) {
+    public RestResponse<String> resolveRestException(RestException ex) {
 
         ExceptionLog exceptionLog = new ExceptionLog(ex);
 
@@ -72,9 +73,7 @@ public class RestExceptionControllerAdvice {
 
         log.error("Uncaught exception - logging at " + format.format(exceptionLog.getTime().getTime()) + ".");
 
-        assert ex instanceof RestException;
-
-        return failure(((RestException) ex).getResponseString());
+        return failure(ex.getResponseString());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -88,7 +87,7 @@ public class RestExceptionControllerAdvice {
 
         log.error("Uncaught exception - logging at " + format.format(exceptionLog.getTime().getTime()) + ".");
 
-        if(ex.getRootCause().getClass().equals(PacketTooBigException.class)){
+        if (ex.getRootCause().getClass().equals(PacketTooBigException.class)) {
             return failure("Scan is too large to be handled by your MySQL Server. You can remediate this " +
                     "by increasing the 'max_allowed_packet' size for your MySQL Server instance.");
         }  else {
@@ -101,6 +100,19 @@ public class RestExceptionControllerAdvice {
     @ResponseBody
     public RestResponse<String> resolveAuthenticationException(AuthenticationRestException ex) {
         return resolveRestException(ex);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = BindException.class)
+    @ResponseBody
+    public RestResponse<String> resolveBindException(BindException e) {
+        ExceptionLog exceptionLog = new ExceptionLog(e);
+
+        exceptionLogService.storeExceptionLog(exceptionLog);
+
+        log.error("Uncaught exception - logging at " + format.format(exceptionLog.getTime().getTime()) + ".");
+
+        return failure(e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
