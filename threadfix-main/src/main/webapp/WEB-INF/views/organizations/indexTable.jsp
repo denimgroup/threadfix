@@ -82,7 +82,7 @@
 
         </td>
         <td colspan="3">
-            <input id="appSelectTypeahead{{team.id}}"
+            <input id="appSelectTypeahead{{team.name}}"
                    type="text"
                    class="form-control"
                    ng-model="team.goToApp"
