@@ -102,7 +102,8 @@ public class WhiteHatSourceRemoteProvider extends AbstractRemoteProvider {
 		for (Calendar d : scanDateList) {
 			date = d;
 			newScanFindings = list();
-			for (Finding finding: saxFindingList) {
+			for (Finding originalFinding: saxFindingList) {
+				Finding finding = new Finding(originalFinding);
 				if (findingStatusMap.containsKey(finding.getNativeId())) {
 					FindingStatus findingStatus = findingStatusMap.get(finding.getNativeId());
 					if (d.compareTo(findingStatus.getOpenedDate()) >= 0) {
@@ -145,45 +146,6 @@ public class WhiteHatSourceRemoteProvider extends AbstractRemoteProvider {
 		}
 
 		parseSAXInputWhiteHat(new WhiteHatSourceParser());
-	}
-
-	/**
-	 * This method checks if there are 2 scans with consecutive imported dates and same finding list. If any, remove the earlier one.
-	 * @param scans
-	 * @return
-	 */
-	private List<Scan> filterScans(List<Scan> scans) {
-		List<Scan> resultList = list();
-
-		for (Scan s: scans) {
-			resultList.add(s);
-		}
-
-		for (int i = 0; i < scans.size() - 1; i++) {
-			Scan scan1 = scans.get(i);
-			Calendar date1 = scan1.getImportTime();
-			Scan scan2 = scans.get(i+1);
-			Calendar date2 = scan2.getImportTime();
-
-			// Checking if they have consecutive imported dates
-			if ((date2.getTimeInMillis()-date1.getTimeInMillis())/(24*60*60*1000)==1) {
-				if (scan1.getFindings().size() == scan2.getFindings().size()) {
-					boolean isDuplicatedScan = true;
-					List<Finding> findingList1 = scan1.getFindings();
-					List<Finding> findingList2 = scan2.getFindings();
-
-					for (Finding f: findingList1) {
-						if (!findingList2.contains(f)) {
-							isDuplicatedScan = false;
-							break;
-						}
-					}
-					if (isDuplicatedScan) resultList.remove(scan1);
-				}
-			}
-		}
-
-		return resultList;
 	}
 
 	@Override

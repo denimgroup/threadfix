@@ -217,7 +217,7 @@
                                         <b>Top Left Report</b>
                                     </div>
                                     <div>
-                                        <select ng-options="dashboardReport.displayName for dashboardReport in dashboardReports track by dashboardReport.id"
+                                        <select style="width:auto" ng-options="dashboardReport.displayName for dashboardReport in dashboardReports track by dashboardReport.id"
                                                 id="dashboardTopLeftSelect" name="dashboardTopLeft" ng-model="object.dashboardTopLeft" ></select>
                                     </div>
                                 </td>
@@ -226,7 +226,7 @@
                                         <b>Top Right Report</b>
                                     </div>
                                     <div>
-                                        <select ng-options="dashboardReport.displayName for dashboardReport in dashboardReports track by dashboardReport.id"
+                                        <select style="width:auto"  ng-options="dashboardReport.displayName for dashboardReport in dashboardReports track by dashboardReport.id"
                                                 id="dashboardTopRightSelect" name="dashboardTopRight" ng-model="object.dashboardTopRight" ></select>
                                     </div>
                                 </td>
@@ -235,7 +235,7 @@
                                         <b>Bottom Left Report</b>
                                     </div>
                                     <div>
-                                        <select ng-options="dashboardReport.displayName for dashboardReport in dashboardReports track by dashboardReport.id"
+                                        <select style="width:auto" ng-options="dashboardReport.displayName for dashboardReport in dashboardReports track by dashboardReport.id"
                                                 id="dashboardBottomLeftSelect" name="dashboardBottomLeft" ng-model="object.dashboardBottomLeft" ></select>
                                     </div>
                                 </td>
@@ -244,7 +244,7 @@
                                         <b>Bottom Right Report</b>
                                     </div>
                                     <div>
-                                        <select ng-options="dashboardReport.displayName for dashboardReport in dashboardReports track by dashboardReport.id"
+                                        <select style="width:auto" ng-options="dashboardReport.displayName for dashboardReport in dashboardReports track by dashboardReport.id"
                                                 id="dashboardBottomRightSelect" name="dashboardBottomRight" ng-model="object.dashboardBottomRight" ></select>
                                     </div>
                                 </td>
@@ -275,7 +275,7 @@
                                         <b>Top Left Report</b>
                                     </div>
                                     <div>
-                                        <select ng-options="applicationReport.displayName for applicationReport in applicationReports track by applicationReport.id"
+                                        <select style="width:auto" ng-options="applicationReport.displayName for applicationReport in applicationReports track by applicationReport.id"
                                                 id="applicationTopLeftSelect" name="applicationTopLeft" ng-model="object.applicationTopLeft" ></select>
                                     </div>
                                 </td>
@@ -284,7 +284,7 @@
                                         <b>Top Right Report</b>
                                     </div>
                                     <div>
-                                        <select ng-options="applicationReport.displayName for applicationReport in applicationReports track by applicationReport.id"
+                                        <select style="width:auto" ng-options="applicationReport.displayName for applicationReport in applicationReports track by applicationReport.id"
                                                 id="applicationTopRightSelect" name="applicationTopRight" ng-model="object.applicationTopRight" ></select>
                                     </div>
                                 </td>
@@ -315,7 +315,7 @@
                                         <b>Top Left Report</b>
                                     </div>
                                     <div>
-                                        <select ng-options="teamReport.displayName for teamReport in teamReports track by teamReport.id"
+                                        <select style="width:auto" ng-options="teamReport.displayName for teamReport in teamReports track by teamReport.id"
                                                 id="teamTopLeftSelect" name="teamTopLeft" ng-model="object.teamTopLeft" ></select>
                                     </div>
                                 </td>
@@ -324,7 +324,7 @@
                                         <b>Top Right Report</b>
                                     </div>
                                     <div>
-                                        <select ng-options="teamReport.displayName for teamReport in teamReports track by teamReport.id"
+                                        <select style="width:auto" ng-options="teamReport.displayName for teamReport in teamReports track by teamReport.id"
                                                 id="teamTopRightSelect" name="teamTopRight" ng-model="object.teamTopRight"></select>
                                     </div>
                                 </td>

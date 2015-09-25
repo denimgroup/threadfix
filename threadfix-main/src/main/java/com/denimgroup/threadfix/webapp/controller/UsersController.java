@@ -59,7 +59,6 @@ import static com.denimgroup.threadfix.remote.response.RestResponse.success;
  */
 @Controller
 @SessionAttributes({"user", "role", "editRole"})
-@PreAuthorize("hasRole('ROLE_CAN_MANAGE_USERS')")
 public class UsersController {
 
 	@Autowired
@@ -87,18 +86,19 @@ public class UsersController {
 		return roleService.loadAll();
 	}
 
-	@PreAuthorize("hasRole('ROLE_ENTERPRISE')")
+	@PreAuthorize("hasRole('ROLE_ENTERPRISE') AND hasRole('ROLE_CAN_MANAGE_ROLES')")
 	@RequestMapping(value="/configuration/roles")
 	public String rolesIndex(ModelMap model, HttpServletRequest request) {
 		return indexInner(model, request, "roles");
 	}
 
-	@PreAuthorize("hasRole('ROLE_ENTERPRISE')")
+	@PreAuthorize("hasRole('ROLE_ENTERPRISE') AND hasRole('ROLE_CAN_MANAGE_GROUPS')")
 	@RequestMapping(value="/configuration/groups")
 	public String groupsIndex(ModelMap model, HttpServletRequest request) {
 		return indexInner(model, request, "groups");
 	}
 
+	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_USERS')")
 	@RequestMapping(value="/configuration/users", method = RequestMethod.GET)
 	public String index(ModelMap model, HttpServletRequest request) {
 

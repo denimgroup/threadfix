@@ -356,7 +356,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					// what it was before
 					vuln.getScanCloseVulnerabilityMaps().remove(map);
 					if (map.getVulnerability().isFoundByScanner() && immediatelyOpen) {
-						vulnerabilityStatusService.openVulnerability(vuln, scan, null, map.getVulnerability().getOpenTime(), true);
+						vulnerabilityStatusService.openVulnerability(vuln, scan, null, map.getVulnerability().getOpenTime(), true, false);
 					}
 					vulnerabilityService.storeVulnerability(vuln);
 				}
@@ -694,12 +694,15 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			app.getVulnerabilities().remove(vuln);
 			
 			// Since WAF Rules can only have one vulnerability, just delete them.
-			if (vuln.getWafRules() != null && vuln.getWafRules().size() > 0) {
-				for (WafRule wafRule : vuln.getWafRules()) {
+			List<WafRule> wafRules = vuln.getWafRules();
+			if (wafRules != null && wafRules.size() > 0) {
+				for (WafRule wafRule : wafRules) {
 					log.debug("Deleting WAF Rule with ID " + wafRule.getId() 
 							+ " because it was attached to the Vulnerability with ID " + vuln.getId());
 					wafRuleDao.delete(wafRule);
 				}
+				wafRules = list();
+				vuln.setWafRules(wafRules);
 			}
 			
 			if (vuln.getVulnerabilityComments() != null && !vuln.getVulnerabilityComments().isEmpty()) {
@@ -859,7 +862,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 				
 				if (!vuln.isActive() && newCloseTime.before(newOpenTime)
 						|| (!vuln.isActive() && !(vuln.getScanCloseVulnerabilityMaps().size() > 0 && closeVulnWhenNoScannersReport))) {
-					vulnerabilityStatusService.openVulnerability(vuln, scanToDelete, null, newOpenTime, true);
+					vulnerabilityStatusService.openVulnerability(vuln, scanToDelete, null, newOpenTime, true, false);
 				}
 
 				boolean toClose = vuln.getScanCloseVulnerabilityMaps().size() == 0 || (vuln.getScanCloseVulnerabilityMaps().size() > 0 && closeVulnWhenNoScannersReport);
@@ -916,7 +919,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 
 		if (!vuln.isActive() && (newCloseTime == null || newOpenTime == null ||
 				newCloseTime.before(newOpenTime))) {
-			vulnerabilityStatusService.openVulnerability(vuln, scanToDelete, null, newOpenTime, true);
+			vulnerabilityStatusService.openVulnerability(vuln, scanToDelete, null, newOpenTime, true, false);
 		}
 		
 		if (vuln.isActive() && newCloseTime != null &&

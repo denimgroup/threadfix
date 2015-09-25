@@ -64,7 +64,7 @@ public class WafRuleController {
 		this.wafService = wafService;
 		this.wafRuleService = wafRuleService;
 	}
-	
+
 	public WafRuleController(){}
 
 	@PreAuthorize("hasRole('ROLE_CAN_GENERATE_WAF_RULES')")

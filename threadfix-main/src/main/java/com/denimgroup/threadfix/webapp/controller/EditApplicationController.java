@@ -140,6 +140,14 @@ public class EditApplicationController {
 		application.setEndpointPermissions(databaseApplication.getEndpointPermissions());
 		application.setScans(databaseApplication.getScans());
 
+		//Edit application after uploading scans: refresh count numbers
+		application.setCriticalVulnCount(databaseApplication.getCriticalVulnCount());
+		application.setHighVulnCount(databaseApplication.getHighVulnCount());
+		application.setMediumVulnCount(databaseApplication.getMediumVulnCount());
+		application.setLowVulnCount(databaseApplication.getLowVulnCount());
+		application.setInfoVulnCount(databaseApplication.getInfoVulnCount());
+		application.setTotalVulnCount(databaseApplication.getTotalVulnCount());
+
 		if(!result.hasErrors()) {
 			applicationService.validateAfterEdit(application, result);
 		}
