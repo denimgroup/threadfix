@@ -694,12 +694,15 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			app.getVulnerabilities().remove(vuln);
 			
 			// Since WAF Rules can only have one vulnerability, just delete them.
-			if (vuln.getWafRules() != null && vuln.getWafRules().size() > 0) {
-				for (WafRule wafRule : vuln.getWafRules()) {
+			List<WafRule> wafRules = vuln.getWafRules();
+			if (wafRules != null && wafRules.size() > 0) {
+				for (WafRule wafRule : wafRules) {
 					log.debug("Deleting WAF Rule with ID " + wafRule.getId() 
 							+ " because it was attached to the Vulnerability with ID " + vuln.getId());
 					wafRuleDao.delete(wafRule);
 				}
+				wafRules = list();
+				vuln.setWafRules(wafRules);
 			}
 			
 			if (vuln.getVulnerabilityComments() != null && !vuln.getVulnerabilityComments().isEmpty()) {
