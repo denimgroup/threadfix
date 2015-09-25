@@ -229,7 +229,7 @@ public abstract class AbstractVulnFilterController {
             return FormRestResponse.failure(FAILURE_MESSAGE, bindingResult);
 		} else {
 			vulnerabilityFilterService.save(vulnerabilityFilter, orgId, appId);
-			vulnerabilityFilterService.updateStatistics(orgId, appId, null);
+			vulnerabilityFilterService.updateStatistics(orgId, appId);
 			status.setComplete();
 			log.info(SUCCESS_MESSAGE);
             return RestResponse.success(vulnerabilityFilter);
