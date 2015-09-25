@@ -186,7 +186,7 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 				"&name=" + name, Application.class);
 	}
 
-    public RestResponse<Application> searchForApplicationByUniqueId(String uniqueId, String teamName) {
+    public RestResponse<Application> searchForApplicationInTeamByUniqueId(String uniqueId, String teamName) {
         return httpRestUtils.httpGet("/applications/" + teamName + "/lookup",
                 "&uniqueId=" + uniqueId, Application.class);
     }
@@ -250,26 +250,26 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 		String nativeId, String parameter, String longDescription,
 		String fullUrl, String path) {
 		return httpRestUtils.httpPost("/applications/" + applicationId +
-					"/addFinding",
-				new String[] {"vulnType", "severity",
-								"nativeId", "parameter", "longDescription",
-								"fullUrl", "path" },
-				new String[] {  vulnType, severity,
-								nativeId, parameter, longDescription,
-								fullUrl, path }, Finding.class);
+                        "/addFinding",
+                new String[]{"vulnType", "severity",
+                        "nativeId", "parameter", "longDescription",
+                        "fullUrl", "path"},
+                new String[]{vulnType, severity,
+                        nativeId, parameter, longDescription,
+                        fullUrl, path}, Finding.class);
 	}
 	
 	public RestResponse<Finding> addStaticFinding(String applicationId, String vulnType, String severity,
 			String nativeId, String parameter, String longDescription,
 			String filePath, String column, String lineText, String lineNumber) {
 		return httpRestUtils.httpPost("/applications/" + applicationId +
-				"/addFinding",
-				new String[] {"vulnType", "severity",
-								"nativeId", "parameter", "longDescription",
-								"filePath", "column", "lineText", "lineNumber"},
-				new String[] {  vulnType, severity,
-								nativeId, parameter, longDescription,
-								filePath, column, lineText, lineNumber }, Finding.class);
+                        "/addFinding",
+                new String[]{"vulnType", "severity",
+                        "nativeId", "parameter", "longDescription",
+                        "filePath", "column", "lineText", "lineNumber"},
+                new String[]{vulnType, severity,
+                        nativeId, parameter, longDescription,
+                        filePath, column, lineText, lineNumber}, Finding.class);
 	}
 
     @Override
@@ -423,5 +423,16 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 
     public RestResponse<DynamicFormField[]> getDefectTrackerFields(Integer appId) {
         return httpRestUtils.httpGet("/defects/" + appId + "/defectTrackerFields", DynamicFormField[].class);
+    }
+
+    @Override
+    public RestResponse<Application[]> searchForApplicationsByUniqueId(String uniqueId) {
+        return httpRestUtils.httpGet("/applications/allTeamLookup",
+                "&uniqueId=" + uniqueId, Application[].class);
+    }
+
+    @Override
+    public RestResponse<Application[]> searchForApplicationsByTagId(String tagId) {
+        return httpRestUtils.httpGet("/tags/" + tagId + "/listApplications", Application[].class);
     }
 }

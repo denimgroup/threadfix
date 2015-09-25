@@ -97,9 +97,12 @@ public class HibernateApplicationDao implements ApplicationDao {
 
     @Override
     public List<Application> retrieveByUniqueId(String uniqueId, int teamId) {
-        return (List<Application>) getActiveAppCriteria().add(Restrictions.eq("uniqueId",uniqueId))
-                .add(Restrictions.eq("organization.id", teamId))
-                .list();
+
+        Criteria criteria = getActiveAppCriteria().add(Restrictions.eq("uniqueId",uniqueId));
+        if (teamId != -1) {
+            criteria.add(Restrictions.eq("organization.id", teamId));
+        }
+        return (List<Application>)criteria.list();
     }
 
     private Criteria getActiveAppCriteria() {

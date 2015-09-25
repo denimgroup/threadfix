@@ -285,14 +285,29 @@ public class CommandLineParser {
 					LOGGER.info("Searching for application with the name " + searchArgs[1] + " of team " + searchArgs[2]);
 					System.out.println(client.searchForApplicationByName(searchArgs[1], searchArgs[2]));
 				} else if ("uniqueId".equals(searchArgs[0])) {
-					if (searchArgs.length != 3) {
-						System.out.println("Wrong number of arguments. You need to input application uniqueId and team name as well.");
+					if (searchArgs.length > 3) {
+						System.out.println("Wrong number of arguments. You need to input application uniqueId and maybe with team name as well.");
+						return;
+					} else if (searchArgs.length == 2) {
+						LOGGER.info("Searching for application with the uniqueId " + searchArgs[1]);
+						printOutput(client.searchForApplicationsByUniqueId(searchArgs[1]));
+					} else if (searchArgs.length == 3) {
+						LOGGER.info("Searching for application with the uniqueId " + searchArgs[1] + " of team " + searchArgs[2]);
+						System.out.println(client.searchForApplicationInTeamByUniqueId(searchArgs[1], searchArgs[2]));
+					}
+				} else if ("tagId".equals(searchArgs[0])) {
+					if (searchArgs.length != 2) {
+						System.out.println("Wrong number of arguments.");
 						return;
 					}
-					LOGGER.info("Searching for application with the uniqueId " + searchArgs[1] + " of team " + searchArgs[2]);
-					System.out.println(client.searchForApplicationByUniqueId(searchArgs[1], searchArgs[2]));
+					if (isInteger(searchArgs[1])) {
+						LOGGER.info("Searching for applications with the tagId " + searchArgs[1]);
+						printOutput(client.searchForApplicationsByTagId(searchArgs[1]));
+					} else {
+						LOGGER.warn("TagId is not number, not doing anything.");
+					}
 				} else {
-					LOGGER.error("Unknown property argument. Try either id, uniqueId or name.");
+					LOGGER.error("Unknown property argument. Try either id, uniqueId, tagId, or name.");
 				}
 
 			} else if (cmd.hasOption("r")) {

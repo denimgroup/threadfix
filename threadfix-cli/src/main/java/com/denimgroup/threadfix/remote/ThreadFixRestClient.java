@@ -52,7 +52,7 @@ public interface ThreadFixRestClient {
     public RestResponse<Application> setParameters(String appId, String frameworkType, String repositoryUrl);
     public RestResponse<Application> searchForApplicationById(String id);
     public RestResponse<Application> searchForApplicationByName(String name, String teamName);
-    public RestResponse<Application> searchForApplicationByUniqueId(String uniqueId, String teamName);
+    public RestResponse<Application> searchForApplicationInTeamByUniqueId(String uniqueId, String teamName);
 
     public RestResponse<Organization[]> getAllTeams();
     public RestResponse<Organization> createTeam(String name);
@@ -111,4 +111,8 @@ public interface ThreadFixRestClient {
     public RestResponse<Object> submitDefect(String[] paramNames, String[] paramValues, Integer appId);
 
     public RestResponse<DynamicFormField[]> getDefectTrackerFields(Integer appId);
+
+    public RestResponse<Application[]> searchForApplicationsByUniqueId(String uniqueId);
+
+    public RestResponse<Application[]> searchForApplicationsByTagId(String tagId);
 }
