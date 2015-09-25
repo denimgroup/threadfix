@@ -90,7 +90,7 @@ public class ApplicationMergerImpl implements ApplicationMerger {
 
         if (application.getSkipApplicationMerge()) {
             for (Finding finding : scan.getFindings()) {
-                Vulnerability newVuln = vulnerabilityParser.parse(finding);
+                Vulnerability newVuln = vulnerabilityParser.parse(finding, false);
                 scanStatisticsUpdater.addFindingToNewVulnUpdate(finding, newVuln);
             }
         } else {
@@ -126,7 +126,7 @@ public class ApplicationMergerImpl implements ApplicationMerger {
                 // if it wasn't found there either, we need to save it.
                 // it gets counted as new if a vuln is successfully parsed.
                 if (!match) {
-                    Vulnerability newVuln = vulnerabilityParser.parse(finding);
+                    Vulnerability newVuln = vulnerabilityParser.parse(finding, false);
                     scanStatisticsUpdater.addFindingToNewVulnUpdate(finding, newVuln);
                     if (newVuln != null) {
                         newGuesser.add(newVuln);

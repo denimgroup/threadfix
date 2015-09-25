@@ -165,7 +165,7 @@
                                         <li class="normalLinks">
                                             <a id="manageUsersLink" href="<spring:url value="/configuration/users" htmlEscape="true"/>">Users</a>
                                         </li>
-                                        <security:authorize ifAnyGranted="ROLE_ENTERPRISE,ROLE_CAN_MANAGE_ROLES">
+                                        <security:authorize ifAllGranted="ROLE_ENTERPRISE,ROLE_CAN_MANAGE_ROLES">
                                             <li class="normalLinks">
                                                 <a id="manageRolesLink" href="<spring:url value="/configuration/roles" htmlEscape="true"/>">Roles</a>
                                             </li>
