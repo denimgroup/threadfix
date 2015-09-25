@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.service.defects.utils.jira;
 import com.denimgroup.threadfix.exception.IllegalStateRestException;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.viewmodel.DynamicFormField;
+import com.denimgroup.threadfix.viewmodels.DynamicFormField;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 

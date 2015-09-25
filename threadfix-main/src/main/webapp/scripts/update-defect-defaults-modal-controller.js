@@ -65,7 +65,7 @@ myAppModule.controller('UpdateDefectDefaultsModalController', function ($scope, 
         error(function(data, status, headers, config) {
             timeoutService.cancel();
             $scope.initialized = true;
-            $scope.errorMessage = "Failure. HTTP status was " + status;
+            $scope.errorMessage = "Failure. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
         });
 
     var getExistingDefaultsAndTags = function(){
@@ -156,7 +156,7 @@ myAppModule.controller('UpdateDefectDefaultsModalController', function ($scope, 
         error(function(data, status, headers, config) {
             timeoutService.cancel();
             $scope.loading = false;
-            $scope.errorMessage = "Failure. HTTP status was " + status;
+            $scope.errorMessage = "Failure. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
         });
     };
 

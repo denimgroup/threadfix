@@ -45,6 +45,7 @@ public class Policy extends AuditableEntity {
     private static final long serialVersionUID = 7188109163348903139L;
 
     private static final int NAME_LENGTH = 60;
+    private static final int EMAIL_LENGTH = 128;
 
     @NotEmpty(message = "{errors.required}")
     @Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
@@ -53,12 +54,13 @@ public class Policy extends AuditableEntity {
     private FilterJsonBlob filterJsonBlob;
 
     private List<EmailList> emailLists;
+    @Size(max = EMAIL_LENGTH, message = "{errors.maxlength} " + EMAIL_LENGTH + ".")
     private List<String> emailAddresses;
     private Boolean sendEmail = false;
 
     @CollectionOfElements // for sonar
     @ElementCollection
-    @Column(name = "emailAddress", length = 128)
+    @Column(name = "emailAddress", length = EMAIL_LENGTH)
     @CollectionTable(name = "PolicyEmailAddress", joinColumns = @JoinColumn(name = "PolicyId"))
     @JsonView(AllViews.PolicyPageView.class)
     public List<String> getEmailAddresses() {

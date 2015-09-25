@@ -34,4 +34,9 @@ public class LoginRedirectController {
 	public String processLinkDelete() {
 		return "redirect:/login.jsp";
 	}
+
+	@RequestMapping("/index.jsp")
+	public String processIndexRequest() {
+		return "redirect:/dashboard";
+	}
 }

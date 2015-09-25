@@ -350,6 +350,9 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             showDefectNotPresent: false,
             showDefectOpen: false,
             showDefectClosed: false,
+            showInconsistentClosedDefectNeedsScan: false,
+            showInconsistentClosedDefectOpenInScan: false,
+            showInconsistentOpenDefect: false,
             endDate: undefined,
             startDate: undefined,
             selectedOwasp: $scope.OWASP_TOP10[0]
@@ -1044,12 +1047,15 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             if (app.noOfScans && app.latestScanTime) {
                 teamMap[app.teamId].noOfScans += app.noOfScans;
                 daysOld = Math.round((now.getTime() - app.latestScanTime)/(24*60*60*1000));
-                if (!teamMap[app.teamId].lowBound || !teamMap[app.teamId].upBound) {
-                    teamMap[app.teamId].lowBound = daysOld; teamMap[app.teamId].upBound = daysOld;
-                } else {
-                    if (teamMap[app.teamId].lowBound > daysOld) teamMap[app.teamId].lowBound = daysOld;
-                    if (teamMap[app.teamId].upBound < daysOld) teamMap[app.teamId].upBound = daysOld;
-                }
+
+                if (teamMap[app.teamId].lowBound === undefined)
+                    teamMap[app.teamId].lowBound = daysOld;
+                if (teamMap[app.teamId].upBound === undefined)
+                    teamMap[app.teamId].upBound = daysOld;
+
+                if (teamMap[app.teamId].lowBound > daysOld) teamMap[app.teamId].lowBound = daysOld;
+                if (teamMap[app.teamId].upBound < daysOld) teamMap[app.teamId].upBound = daysOld;
+
                 app.daysScanedOld = daysOld;
             }
 

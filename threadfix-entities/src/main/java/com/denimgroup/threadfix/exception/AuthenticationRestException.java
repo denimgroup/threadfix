@@ -21,26 +21,25 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.exception;
 
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
+/**
+ * Created by mcollins on 9/17/15.
+ */
+public class AuthenticationRestException extends RestException {
+    public AuthenticationRestException(Throwable cause, String responseString) {
+        super(cause, responseString);
+    }
 
-import java.util.Calendar;
-import java.util.List;
+    public AuthenticationRestException(String responseString) {
+        super(responseString);
+    }
 
-public interface VulnerabilityStatusService {
+    public AuthenticationRestException(String responseString, String exceptionMessageString) {
+        super(responseString, exceptionMessageString);
+    }
 
-    void openVulnerability(Vulnerability vulnerability, Scan scan, Finding finding, Calendar openTime, Boolean fromScanDeletion, Boolean remapFinding);
-
-    void closeVulnerability(Vulnerability vulnerability, Scan scan, Calendar closeTime, Boolean fromScanDeletion, Boolean fromFindingsMerge);
-
-    void createCloseVulnMaps(Vulnerability vulnerability, List<Scan> scans);
-
-    void reopenVulnerability(Vulnerability vulnerability, Scan scan, Calendar reopenTime);
-
-    void markVulnerabilityFalsePositive(Vulnerability vulnerability);
-
-    void unmarkVulnerabilityFalsePositive(Vulnerability vulnerability);
+    public AuthenticationRestException(Exception e, String responseString, String exceptionMessageString) {
+        super(e, responseString, exceptionMessageString);
+    }
 }

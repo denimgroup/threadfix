@@ -41,7 +41,7 @@ module.controller('DefectTrackersTabController', function($window, $scope, $http
             }).
             error(function(data, status, headers, config) {
                 $scope.initialized = true;
-                $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
+                $scope.errorMessage = "Failure. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
             });
     });
 
@@ -161,7 +161,7 @@ module.controller('DefectTrackersTabController', function($window, $scope, $http
                     threadFixModalService.deleteElement(tracker.defaultDefectProfiles, defaultDefectProfile);
                 }).
                 error(function(data, status, headers, config) {
-                    $scope.error = "Failure. HTTP status was " + status;
+                    $scope.error = "Failure. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
                 })
             threadFixModalService.deleteElement(tracker.defaultDefectProfiles, defaultDefectProfile);
         }
@@ -262,6 +262,12 @@ module.controller('DefectTrackersTabController', function($window, $scope, $http
     };
 
     $scope.showDefaultProfiles = function(tracker){
+
+        if (tracker.defectTrackerType.name === "Bugzilla") {
+            alert("Default Profiles are not supported for Bugzilla.");
+            return;
+        }
+
         if  ("showDefaultProfiles" in tracker){
             tracker.showDefaultProfiles = !tracker.showDefaultProfiles;
         }
@@ -271,7 +277,7 @@ module.controller('DefectTrackersTabController', function($window, $scope, $http
 
         if (tracker.defaultDefectProfiles)
             tracker.defaultDefectProfiles.sort(nameCompare);
-    }
+    };
 
     $scope.goToApp = function(app) {
         $window.location.href = tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id);

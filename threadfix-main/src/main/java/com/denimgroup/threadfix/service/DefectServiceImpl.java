@@ -30,7 +30,7 @@ import com.denimgroup.threadfix.exception.IllegalStateRestException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
-import com.denimgroup.threadfix.viewmodel.DefectMetadata;
+import com.denimgroup.threadfix.viewmodels.DefectMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -217,13 +217,16 @@ public class DefectServiceImpl implements DefectService {
                 status = "Open";
             }
 
+			Calendar now = Calendar.getInstance();
             defect.setStatus(status);
+			defect.setStatusUpdatedDate(now);
 			defect.setDefectURL(dt.getBugURL(application.getDefectTracker().getUrl(), defectId));
 			defectDao.saveOrUpdate(defect);
 
 			for (Vulnerability vulnerability : vulnsWithoutDefects) {
 				vulnerability.setDefect(defect);
-				vulnerability.setDefectSubmittedTime(Calendar.getInstance());
+				vulnerability.setDefectSubmittedTime(now);
+				vulnerabilityService.determineVulnerabilityDefectConsistencyState(vuln);
 				vulnerabilityService.storeVulnerability(vulnerability);
 			}
 
@@ -355,6 +358,11 @@ public class DefectServiceImpl implements DefectService {
 			return false;
 		}
 
+		Map<Defect, Boolean> oldDefectMap = map();
+		for (Defect defect : application.getDefectList()) {
+			oldDefectMap.put(defect, defect.isOpen());
+		}
+
 		Map<Defect, Boolean> defectMap = dt.getMultipleDefectStatus(
 				application.getDefectList());
 		if (defectMap == null) {
@@ -364,17 +372,26 @@ public class DefectServiceImpl implements DefectService {
 		}
 
 		log.info("About to update vulnerability information from the defect tracker.");
-		
+
+		Calendar now = Calendar.getInstance();
 		for (Defect defect : defectMap.keySet()) {
+			Boolean defectOpenStatus = defectMap.get(defect);
+			Boolean oldDefectOpenStatus = oldDefectMap.get(defect);
+			boolean defectStatusHasChanged = (defectOpenStatus != null) && (oldDefectOpenStatus != null) && !defectOpenStatus.equals(oldDefectOpenStatus);
+			if (defectStatusHasChanged) {
+				defect.setStatusUpdatedDate(now);
+			}
 			if (defect != null && defect.getVulnerabilities() != null
 					&& defectMap.containsKey(defect)) {
 				for (Vulnerability vuln : defect.getVulnerabilities()) {
-					Boolean defectOpenStatus = defectMap.get(defect);
+					if (defectStatusHasChanged) {
+						vulnerabilityService.determineVulnerabilityDefectConsistencyState(vuln);
+					}
 
 					if (vuln.isActive() && defectOpenStatus != null &&
 							!defectOpenStatus) {
 						if (vuln.getDefectClosedTime() == null) {
-							vuln.setDefectClosedTime(Calendar.getInstance());
+							vuln.setDefectClosedTime(now);
 							vulnerabilityService.storeVulnerability(vuln);
 							numUpdated += 1;
 						}
@@ -504,6 +521,7 @@ public class DefectServiceImpl implements DefectService {
 						defect.setDefectURL(tracker.getBugURL(url, issueId));
 						defect.setVulnerabilities(list(vulnerability));
 						defect.setStatus("Open");
+						defect.setStatusUpdatedDate(Calendar.getInstance());
 						defect.setApplication(application);
 
 						vulnerability.setDefect(defect);

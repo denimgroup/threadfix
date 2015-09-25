@@ -53,10 +53,9 @@
         </td>
     </tr>
     <tr ng-show="tags">
-        <td></td>
-        <td></td>
-        <td class="vuln-tree-checkbox">
-            <a ng-show="initialized" id="batchTaggingButton" ng-click="goToBatchTagging()" class="btn">Batch Tagging</a>
+        <td colspan="2"></td>
+        <td>
+            <a class="btn vuln-tree-checkbox" ng-show="initialized" id="batchTaggingButton" ng-click="goToBatchTagging()" class="btn">Batch Tagging</a>
         </td>
     </tr>
     </tbody>

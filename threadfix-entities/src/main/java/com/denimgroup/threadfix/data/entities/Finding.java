@@ -139,6 +139,30 @@ public class Finding extends AuditableEntity implements FindingLike {
 
     private Boolean hidden;
 
+	public Finding() {}
+
+	public Finding(Finding finding) {
+		this.issueId = finding.getIssueId();
+		this.surfaceLocation = finding.getSurfaceLocation();
+		this.attackString = finding.getAttackString();
+		this.attackRequest = finding.getAttackRequest();
+		this.attackResponse = finding.getAttackResponse();
+		this.scannerDetail = finding.getScannerDetail();
+		this.scannerRecommendation = finding.getScannerRecommendation();
+		this.rawFinding = finding.getRawFinding();
+		this.urlReference = finding.getUrlReference();
+		this.attackString = finding.getAttackString();
+		this.channelVulnerability = finding.getChannelVulnerability();
+		this.channelSeverity = finding.getChannelSeverity();
+		this.sourceFileLocation = finding.getSourceFileLocation();
+		this.nativeId = finding.getNativeId();
+		this.isStatic = finding.getIsStatic();
+		this.displayId = finding.getDisplayId();
+		this.dataFlowElements = finding.getDataFlowElements();
+		this.dependency = finding.getDependency();
+		this.longDescription = finding.getLongDescription();
+	}
+
 	@Temporal(TemporalType.TIMESTAMP)
 	public Calendar getScannedDate() {
 		return scannedDate;

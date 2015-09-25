@@ -62,6 +62,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 /**
  * Provides basic CSRF protection for a web application. The filter assumes
@@ -90,6 +91,9 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
     public static final String CSRF_NONCE_REQUEST_PARAM =
         "nonce";
 
+    public Set<String> noRedirectPaths = set(
+            "/rest/", "/scripts/", "/images/", "/styles/", "/history/recent", "/login.jsp");
+
     @Autowired
     private NonceService nonceService;
 
@@ -108,7 +112,13 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
         for (String value : values) {
         	if (value == null) {
         		continue;
-        	} else if (value.trim().startsWith("regex ")) {
+        	}
+
+            if (value.trim().contains("\n")) {
+                String error = "Newlines are not allowed in patterns. line: " + value;
+                log.error(error);
+                throw new IllegalStateException(error);
+            } else if (value.trim().startsWith("regex ")) {
         		this.entryPointRegexPatterns.add(value.trim().substring(6));
         	} else if (value.trim().startsWith("protected-regex ")) {
         		this.protectedRegexPatterns.add(value.trim().substring(16));
@@ -138,17 +148,17 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
             FilterChain chain) throws IOException, ServletException {
 
         ServletResponse wResponse = response;
-        
+
         if (request instanceof HttpServletRequest &&
                 response instanceof HttpServletResponse) {
             
             HttpServletRequest req = (HttpServletRequest) request;
             HttpServletResponse res = (HttpServletResponse) response;
 
-            boolean skipNonceCheck = false, skipNonceGeneration = false;
-            
+            boolean skipNonceCheck = false, skipNonceGeneration = false, canRedirect = true;
+
+            String path = req.getServletPath();
             if ("GET".equals(req.getMethod())) {
-            	String path = req.getServletPath();
             	if (req.getPathInfo() != null) {
             		path = path + req.getPathInfo();
             	}
@@ -158,6 +168,10 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
             	} else {
             		for (String pattern : entryPointStartPatterns) {
             			if (path.startsWith(pattern)) {
+                            if (noRedirectPaths.contains(pattern)) {
+                                canRedirect = false;
+                            }
+
             				skipNonceCheck = true;
             				skipNonceGeneration = true;
             				break;
@@ -168,7 +182,6 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
             
             // Check the POST requests too for the regex patterns, then preserve the cache contents.
             if (!skipNonceCheck) {
-            	String path = req.getServletPath();
             	if (req.getPathInfo() != null) {
             		path = path + req.getPathInfo();
             	}
@@ -176,7 +189,13 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
     				if (path.matches(regex)) {
     					skipNonceCheck = true;
     					skipNonceGeneration = true;
-    					break;
+
+                        for (String noRedirectPath : noRedirectPaths) {
+                            if (regex.contains(noRedirectPath)) {
+                                canRedirect = false;
+                            }
+                        }
+                        break;
     				}
     			}
     			
@@ -184,7 +203,7 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
     				for (String regex : protectedRegexPatterns) {
     					if (path.matches(regex)) {
     						skipNonceGeneration = true;
-        					break;
+                            break;
     					}
     				}
     			}
@@ -203,9 +222,12 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
             }
             
             // if it matches one of the patterns for GET requests, don't check.
+
             String previousNonce = req.getParameter(CSRF_NONCE_REQUEST_PARAM);
 
-            if (!skipNonceCheck && !nonceCache.contains(previousNonce)) {
+            boolean hasValidNonce = nonceCache.contains(previousNonce);
+
+            if (!skipNonceCheck && !hasValidNonce) {
             	
             	String nonceStatus = previousNonce == null ? "Missing nonce" : "Incorrect nonce";
             	
@@ -220,14 +242,27 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
             	res.sendError(HttpServletResponse.SC_NO_CONTENT);
             	return;
             }
-            
-            // If it matched one of the regexes, don't generate any new nonces.
-            // This way links still work with AJAX around.
-            if (!skipNonceGeneration) {
-            	log.debug("Generating new nonce. Path: " + req.getServletPath());
-	            String newNonce = nonceService.generateNonce();
-	            nonceCache.add(newNonce);
-	            wResponse = new CsrfResponseWrapper(res, newNonce);
+
+            // if the request doesn't need CSRF protection and doesn't have a valid token,
+            // let's give them one. This avoids all sorts of issues with non-sensitive pages expiring
+            boolean redirect = canRedirect && !hasValidNonce && skipNonceCheck;
+            if (redirect) {
+                String newNonce = nonceService.generateNonce();
+                nonceCache.add(newNonce);
+
+                String newPath = req.getContextPath() + path + "?nonce=" + newNonce;
+                log.info("Redirecting " + path);
+
+                res.sendRedirect(newPath);
+            } else if (!skipNonceGeneration) {
+
+                // If it matched one of the regexes, don't generate any new nonces.
+                // This way links still work with AJAX around.
+                log.debug("Generating new nonce. Path: " + req.getServletPath());
+                String newNonce = nonceService.generateNonce();
+                nonceCache.add(newNonce);
+
+                wResponse = new CsrfResponseWrapper(res, newNonce);
             } else {
             	wResponse = new CsrfResponseWrapper(res, previousNonce);
             }

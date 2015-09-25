@@ -57,7 +57,7 @@ myAppModule.controller('CreateEditDefectTrackerModalController', function ($log,
             error(function(data, status, headers, config) {
                 timeoutService.cancel();
                 $scope.loadingProductNames = false;
-                $scope.error = "Failure. HTTP status was " + status;
+                $scope.error = "Failure. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
             });
     };
 
@@ -103,7 +103,7 @@ myAppModule.controller('CreateEditDefectTrackerModalController', function ($log,
                 error(function(data, status, headers, config) {
                     timeoutService.cancel();
                     $scope.loading = false;
-                    $scope.error = "Failure. HTTP status was " + status;
+                    $scope.error = "Failure. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
                 });
         }
     };
@@ -126,7 +126,7 @@ myAppModule.controller('CreateEditDefectTrackerModalController', function ($log,
                     $modalInstance.close(false);
                 }).
                 error(function(data, status, headers, config) {
-                    $scope.error = "Failure. HTTP status was " + status;
+                    $scope.error = "Failure. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
                 });
         }
     };

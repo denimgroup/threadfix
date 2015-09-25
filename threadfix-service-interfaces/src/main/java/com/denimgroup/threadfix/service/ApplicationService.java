@@ -68,7 +68,7 @@ public interface ApplicationService {
      * @param applicationUniqueId
      * @return
      */
-    Application loadApplicationByUniqueId(String applicationUniqueId, int teamId);
+    List<Application> loadApplicationByUniqueId(String applicationUniqueId, int teamId);
 
     /**
 	 * @param application

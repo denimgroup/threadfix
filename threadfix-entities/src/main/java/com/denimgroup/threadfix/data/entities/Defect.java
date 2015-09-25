@@ -30,6 +30,7 @@ import org.hibernate.annotations.Index;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 
@@ -63,6 +64,8 @@ public class Defect extends AuditableEntity {
 
     @Size(max = URL_LENGTH, message = "{errors.maxlength} " + URL_LENGTH + ".")
     private String defectURL;
+
+    private Calendar statusUpdatedDate;
 
     /**
      * Stores the ID used by the defect tracking system.
@@ -108,6 +111,15 @@ public class Defect extends AuditableEntity {
         } else {
             this.defectURL = defectURL;
         }
+    }
+
+    @Temporal(TemporalType.TIMESTAMP)
+    public Calendar getStatusUpdatedDate() {
+        return statusUpdatedDate;
+    }
+
+    public void setStatusUpdatedDate(Calendar statusUpdatedDate) {
+        this.statusUpdatedDate = statusUpdatedDate;
     }
 
     @ManyToOne

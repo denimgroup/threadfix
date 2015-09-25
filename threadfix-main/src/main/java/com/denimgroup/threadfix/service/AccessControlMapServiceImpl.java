@@ -45,21 +45,14 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 	
 	protected final SanitizedLogger log = new SanitizedLogger(ApplicationServiceImpl.class);
 	
-	private AccessControlMapDao accessControlMapDao;
-	private RoleDao roleDao;
-	private OrganizationDao organizationDao;
-	private ApplicationDao applicationDao;
-	
 	@Autowired
-	public AccessControlMapServiceImpl(RoleDao roleDao,
-			ApplicationDao applicationDao,
-			OrganizationDao organizationDao,
-			AccessControlMapDao accessControlMapDao) {
-		this.accessControlMapDao = accessControlMapDao;
-		this.roleDao = roleDao;
-		this.applicationDao = applicationDao;
-		this.organizationDao = organizationDao;
-	}
+	private AccessControlMapDao accessControlMapDao;
+	@Autowired
+	private RoleDao roleDao;
+	@Autowired
+	private OrganizationDao organizationDao;
+	@Autowired
+	private ApplicationDao applicationDao;
 	
 	@Override
 	public String validateMap(AccessControlTeamMap map, Integer mapId) {
@@ -86,18 +79,24 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 				return "You must pick a Role.";
 			}
 			map.setRole(role);
-			
-			if (map.getUser() != null && map.getUser().getId() != null &&
-					accessControlMapDao.retrieveTeamMapByUserTeamAndRole(
-							map.getUser().getId(), org.getId(), role.getId()) != null) {
-				return "That team / role combination already exists for this user.";
+
+			AccessControlTeamMap dbMap;
+			if (map.getUser() != null && map.getUser().getId() != null) {
+				dbMap = accessControlMapDao.retrieveTeamMapByUserTeamAndRole(
+						map.getUser().getId(), org.getId(), role.getId());
+				if (dbMap != null && dbMap.isActive() && !dbMap.getId().equals(mapId)) {
+					return "That team / role combination already exists for this user.";
+				}
+				log.debug("Assigned role " + role.getDisplayName() + " to user " + map.getUser().getName());
+
 			} else if (map.getGroup() != null && map.getGroup().getId() != null) {
 
-				AccessControlTeamMap dbMap = accessControlMapDao.retrieveTeamMapByGroupTeamAndRole(
+				dbMap = accessControlMapDao.retrieveTeamMapByGroupTeamAndRole(
 						map.getGroup().getId(), org.getId(), role.getId());
-				if (dbMap != null && dbMap.getId().equals(mapId)) {
+				if (dbMap != null && !dbMap.getId().equals(mapId)) {
 					return "That team / role combination already exists for this group.";
 				}
+				log.debug("Assigned role " + role.getDisplayName() + " to group " + map.getGroup().getName());
 			}
 		} else {
 			map.setRole(null);

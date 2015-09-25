@@ -27,8 +27,8 @@ import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.defects.utils.tfs.TFSClient;
 import com.denimgroup.threadfix.service.defects.utils.tfs.TFSClientImpl;
-import com.denimgroup.threadfix.viewmodel.DefectMetadata;
-import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
+import com.denimgroup.threadfix.viewmodels.DefectMetadata;
+import com.denimgroup.threadfix.viewmodels.ProjectMetadata;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

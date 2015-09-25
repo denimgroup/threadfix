@@ -23,8 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.defects.utils.tfs;
 
-import com.denimgroup.threadfix.viewmodel.DefectMetadata;
-import com.denimgroup.threadfix.viewmodel.DynamicFormField;
+import com.denimgroup.threadfix.viewmodels.DefectMetadata;
+import com.denimgroup.threadfix.viewmodels.DynamicFormField;
 
 import java.util.List;
 import java.util.Map;

@@ -23,7 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller.rest;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
@@ -32,7 +34,8 @@ import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 public class UnknownRestController extends TFRestController {
 
     @RequestMapping("/rest/**")
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public Object badRestRequest() {
-        return failure("Bad rest request");
+        return failure("Bad rest request due to unrecognized path.");
     }
 }

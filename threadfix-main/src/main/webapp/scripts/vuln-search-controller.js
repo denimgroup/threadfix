@@ -31,6 +31,9 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             showDefectNotPresent: false,
             showDefectOpen: false,
             showDefectClosed: false,
+            showInconsistentClosedDefectNeedsScan: false,
+            showInconsistentClosedDefectOpenInScan: false,
+            showInconsistentOpenDefect: false,
             showCommentPresent: false
         };
 

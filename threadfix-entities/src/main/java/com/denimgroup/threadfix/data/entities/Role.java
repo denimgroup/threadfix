@@ -551,5 +551,10 @@ public class Role extends AuditableEntity {
         if (canManagePolicies == null)
             setCanManagePolicies(newPermissionStatus);
     }
+
+    @Override
+    public String toString() {
+        return displayName == null ? "Unnamed Role." : displayName + " (Role)";
+    }
 }
 

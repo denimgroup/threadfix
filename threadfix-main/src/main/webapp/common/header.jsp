@@ -7,7 +7,7 @@
 	</a>
 </div>
 
-<div id="menu" ng-controller="HeaderController">
+<div id="menu">
 	<table>
 		<tbody>
 			<tr>
@@ -16,17 +16,17 @@
 				</security:authorize>
 
                 <spring:url value="/dashboard" htmlEscape="true" var="dashboardLink"/>
-				<td class="pointer" ng-click="goTo('/dashboard')" id="tab-dashboard" style="width: 130px;">
+				<td class="pointer" id="tab-dashboard" style="width: 130px;">
 					<a id="dashboardHeader" href="<spring:url value="/dashboard" htmlEscape="true"/>">Dashboard</a>
 				</td>
-				<td class="pointer" ng-click="goTo('/organizations')"  id="tab-apps" style="width: 120px;">
+				<td class="pointer" id="tab-apps" style="width: 120px;">
 					<a id="orgHeader" href="<spring:url value="/teams" htmlEscape="true"/>">Teams</a>
 				</td>
-				<td class="pointer" ng-click="goTo('/scans')" id="tab-scans" style="width: 90px;">
+				<td class="pointer" id="tab-scans" style="width: 90px;">
 					<a id="scansHeader" href="<spring:url value="/scans" htmlEscape="true"/>">Scans</a>
 				</td>
 				<security:authorize ifAnyGranted="ROLE_CAN_GENERATE_REPORTS">
-					<td class="pointer" ng-click="goTo('/reports')" id="tab-reports" style="width: 110px;">
+					<td class="pointer" id="tab-reports" style="width: 110px;">
 						<a id="reportsHeader" href="<spring:url value="/reports" htmlEscape="true"/>">Analytics</a>
 					</td>
 				</security:authorize>
@@ -142,7 +142,7 @@
                                         </li>
                                     </security:authorize>
 
-                                    <security:authorize ifAllGranted="ROLE_CAN_MANAGE_POLICIES">
+                                    <security:authorize ifAllGranted="ROLE_ENTERPRISE,ROLE_CAN_MANAGE_POLICIES">
                                         <li class="normalLinks">
                                             <a id="policiesLink" href="<spring:url value="/configuration/policies" htmlEscape="true"/>">Policies</a>
                                         </li>
@@ -165,12 +165,12 @@
                                         <li class="normalLinks">
                                             <a id="manageUsersLink" href="<spring:url value="/configuration/users" htmlEscape="true"/>">Users</a>
                                         </li>
-                                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_ROLES">
+                                        <security:authorize ifAllGranted="ROLE_ENTERPRISE,ROLE_CAN_MANAGE_ROLES">
                                             <li class="normalLinks">
                                                 <a id="manageRolesLink" href="<spring:url value="/configuration/roles" htmlEscape="true"/>">Roles</a>
                                             </li>
                                         </security:authorize>
-                                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_GROUPS">
+                                        <security:authorize ifAllGranted="ROLE_ENTERPRISE,ROLE_CAN_MANAGE_GROUPS">
                                             <li class="normalLinks">
                                                 <a id="manageGroupsLink" href="<spring:url value="/configuration/groups" htmlEscape="true"/>">Groups</a>
                                             </li>

@@ -121,7 +121,7 @@ public class RemappingServiceImpl implements RemappingService {
             attemptToAddFromCache(newCache, finding);
 
             if (finding.getVulnerability() == null) {
-                Vulnerability parse = vulnerabilityParser.parse(finding);
+                Vulnerability parse = vulnerabilityParser.parse(finding, true);
 
                 newVulnerabilities.add(parse);
                 newCache.add(parse);
@@ -222,7 +222,7 @@ public class RemappingServiceImpl implements RemappingService {
 
         if (shouldBeOpen != null && shouldBeOpen != isOpen) {
             if (shouldBeOpen) {
-                vulnerabilityStatusService.openVulnerability(newVulnerability, scanTimeMap.get(lastActionDate), null, lastActionDate, false);
+                vulnerabilityStatusService.openVulnerability(newVulnerability, scanTimeMap.get(lastActionDate), null, lastActionDate, false, false);
             } else {
                 vulnerabilityStatusService.closeVulnerability(newVulnerability, scanTimeMap.get(lastActionDate), lastActionDate, false, false);
             }

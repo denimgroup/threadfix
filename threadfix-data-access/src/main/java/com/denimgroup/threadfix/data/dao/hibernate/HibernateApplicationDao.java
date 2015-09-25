@@ -77,7 +77,7 @@ public class HibernateApplicationDao implements ApplicationDao {
     @SuppressWarnings("unchecked")
     public List<Application> retrieveAllActiveFilter(Set<Integer> authenticatedTeamIds) {
         return sessionFactory.getCurrentSession()
-                .createQuery("from Application app where app.organization.id in (:ids) order by app.name")
+                .createQuery("from Application app where app.active = true and app.organization.id in (:ids) order by app.name")
                 .setParameterList("ids", authenticatedTeamIds)
                 .list();
     }
@@ -96,10 +96,10 @@ public class HibernateApplicationDao implements ApplicationDao {
     }
 
     @Override
-    public Application retrieveByUniqueId(String uniqueId, int teamId) {
-        return (Application) getActiveAppCriteria().add(Restrictions.eq("uniqueId",uniqueId))
+    public List<Application> retrieveByUniqueId(String uniqueId, int teamId) {
+        return (List<Application>) getActiveAppCriteria().add(Restrictions.eq("uniqueId",uniqueId))
                 .add(Restrictions.eq("organization.id", teamId))
-                .uniqueResult();
+                .list();
     }
 
     private Criteria getActiveAppCriteria() {
