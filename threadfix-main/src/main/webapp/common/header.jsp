@@ -108,7 +108,7 @@
                                  </ul>
                             </li>
                         </security:authorize>
-                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_ENTERPRISE,ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT, ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS, ROLE_CAN_MANAGE_TAGS,ROLE_CAN_MANAGE_POLICIES, ROLE_CAN_MODIFY_VULNERABILITIES">
+                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT, ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS, ROLE_CAN_MANAGE_TAGS,ROLE_CAN_MANAGE_POLICIES, ROLE_CAN_MODIFY_VULNERABILITIES">
                             <li class="dropdown-submenu left pull-left normalLinks">
                                 <a tabindex="-1" href="#" id="manageCustomLink">Customize</a>
                                 <ul class="dropdown-menu" style="text-align:right; width: 230px; left: -242px;" tabindex="-1">
@@ -150,21 +150,25 @@
                                 </ul>
                             </li>
                         </security:authorize>
-						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_CAN_MANAGE_USERS,ROLE_CAN_MANAGE_ROLES,ROLE_CAN_VIEW_ERROR_LOGS">
-							<li class="divider" role="presentation"></li>
+
+                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_DEFECT_TRACKERS,ROLE_CAN_MANAGE_GRC_TOOLS,ROLE_CAN_MANAGE_REMOTE_PROVIDERS, ROLE_CAN_MANAGE_SCAN_AGENTS, ROLE_CAN_MANAGE_WAFS, ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT, ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS, ROLE_CAN_MANAGE_TAGS,ROLE_CAN_MANAGE_POLICIES, ROLE_CAN_MODIFY_VULNERABILITIES">
+                            <li class="divider" role="presentation"></li>
+                        </security:authorize>
+
+                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_CAN_MANAGE_USERS,ROLE_CAN_MANAGE_ROLES,ROLE_CAN_VIEW_ERROR_LOGS">
 
                                 <li class="dropdown-submenu left pull-left normalLinks">
-                                <a tabindex="-1" href="#" id="adminLink">Administration</a>
-                                <ul class="dropdown-menu" style="text-align:right; left: -177px;" tabindex="-1">
-                                    <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
-                                        <li class="normalLinks">
-                                            <a id="configureDefaultsLink" href="<spring:url value="/configuration/settings" htmlEscape="true"/>">System Settings</a>
-                                        </li>
-                                    </security:authorize>
-                                    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_USERS">
-                                        <li class="normalLinks">
-                                            <a id="manageUsersLink" href="<spring:url value="/configuration/users" htmlEscape="true"/>">Users</a>
-                                        </li>
+                                    <ul class="dropdown-menu" style="text-align:right; left: -177px;" tabindex="-1">
+                                        <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
+                                            <li class="normalLinks">
+                                                <a id="configureDefaultsLink" href="<spring:url value="/configuration/settings" htmlEscape="true"/>">System Settings</a>
+                                            </li>
+                                        </security:authorize>
+                                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_USERS">
+                                            <li class="normalLinks">
+                                                <a id="manageUsersLink" href="<spring:url value="/configuration/users" htmlEscape="true"/>">Users</a>
+                                            </li>
+                                        </security:authorize>
                                         <security:authorize ifAllGranted="ROLE_ENTERPRISE,ROLE_CAN_MANAGE_ROLES">
                                             <li class="normalLinks">
                                                 <a id="manageRolesLink" href="<spring:url value="/configuration/roles" htmlEscape="true"/>">Roles</a>
@@ -175,25 +179,25 @@
                                                 <a id="manageGroupsLink" href="<spring:url value="/configuration/groups" htmlEscape="true"/>">Groups</a>
                                             </li>
                                         </security:authorize>
-                                    </security:authorize>
-                                    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_API_KEYS">
-                                        <li class="normalLinks">
-                                            <a id="apiKeysLink" href="<spring:url value="/configuration/keys" htmlEscape="true"/>">API Keys</a>
-                                        </li>
-                                    </security:authorize>
+                                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_API_KEYS">
+                                            <li class="normalLinks">
+                                                <a id="apiKeysLink" href="<spring:url value="/configuration/keys" htmlEscape="true"/>">API Keys</a>
+                                            </li>
+                                        </security:authorize>
 
-                                    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_EMAIL_REPORTS">
-                                        <li class="normalLinks">
-                                            <a id="emailReportConfiguration" href="<spring:url value="/configuration/scheduledEmailReports" htmlEscape="true"/>">Email Reports</a>
-                                        </li>
-                                    </security:authorize>
+                                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_EMAIL_REPORTS">
+                                            <li class="normalLinks">
+                                                <a id="emailReportConfiguration" href="<spring:url value="/configuration/scheduledEmailReports" htmlEscape="true"/>">Email Reports</a>
+                                            </li>
+                                        </security:authorize>
 
-                                    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_EMAIL_REPORTS">
-                                        <li class="normalLinks">
-                                            <a id="emailListsLink" href="<spring:url value="/configuration/emailLists" htmlEscape="true"/>">Email Lists</a>
-                                        </li>
-                                    </security:authorize>
+                                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_EMAIL_REPORTS">
+                                            <li class="normalLinks">
+                                                <a id="emailListsLink" href="<spring:url value="/configuration/emailLists" htmlEscape="true"/>">Email Lists</a>
+                                            </li>
+                                        </security:authorize>
                                     </ul>
+                                    <a tabindex="-1" href="#" id="adminLink">Administration</a>
                                 </li>
 						    </security:authorize>
                             <security:authorize ifAnyGranted="ROLE_ENTERPRISE">
