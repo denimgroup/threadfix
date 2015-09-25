@@ -96,12 +96,16 @@ public class VersionOneRestUtilsMock implements RestUtils {
     }
 
     @Override
-    public boolean requestHas401Error(String urlString) {
-        return urlString.equals(
+    public ConnectionStatus checkConnectionStatus(String urlString) {
+        if (urlString.equals(
                 VERSION_ONE_URL +
-                "/rest-1.v1/Data/Member?where=Username='" +
-                VERSION_ONE_USERNAME +
-                "'&sel=Scopes");
+                        "/rest-1.v1/Data/Member?where=Username='" +
+                        VERSION_ONE_USERNAME +
+                        "'&sel=Scopes")) {
+            return ConnectionStatus.UNAUTHORIZED;
+        } else {
+            return ConnectionStatus.OTHER;
+        }
     }
 
     // TODO actually test this
