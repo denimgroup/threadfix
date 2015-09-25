@@ -183,25 +183,29 @@ public class DefectSubmissionRestController extends TFRestController {
         applicationService.decryptCredentials(application);
 
         AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
-        ProjectMetadata data = null;
 
-        if (dt != null) {
-            data = defectTrackerService.getProjectMetadata(dt);
-            if (dt.getLastError() != null && !dt.getLastError().isEmpty()) {
-                return failure(dt.getLastError());
-            }
-
-            List<DynamicFormField> editableFields = data.getEditableFields();
-
-            if (editableFields != null) {
-                addVulnerabilityIdsField(editableFields);
-                if (dt.getClass().equals(BugzillaDefectTracker.class)) {
-                    addGenericDefectFields(editableFields, dt);
-                }
-            }
+        if (dt == null) {
+            return failure("Unable to find defect tracker implementation for application " + application.getId());
         }
 
-        if (data == null || data.getEditableFields() == null || data.getEditableFields().isEmpty()) {
+        ProjectMetadata data = defectTrackerService.getProjectMetadata(dt);
+        if (dt.getLastError() != null && !dt.getLastError().isEmpty()) {
+            return failure(dt.getLastError());
+        }
+
+        List<DynamicFormField> editableFields = data.getEditableFields();
+
+        if (editableFields != null) {
+            addVulnerabilityIdsField(editableFields);
+        }
+
+        if (dt.getClass().equals(BugzillaDefectTracker.class)) {
+            editableFields = list();
+            addGenericDefectFields(editableFields, dt);
+            data.setEditableFields(editableFields);
+        }
+
+        if (data.getEditableFields() == null || data.getEditableFields().isEmpty()) {
             return failure("Error retrieving fields from Defect Tracker.");
         }
 
@@ -209,13 +213,14 @@ public class DefectSubmissionRestController extends TFRestController {
     }
 
     private void addGenericDefectFields(@Nonnull List<DynamicFormField> formFields, AbstractDefectTracker dt) {
-        DynamicFormField summary = new DynamicFormField();
-        DynamicFormField preamble = new DynamicFormField();
-        DynamicFormField component = new DynamicFormField();
-        DynamicFormField version = new DynamicFormField();
-        DynamicFormField severity = new DynamicFormField();
-        DynamicFormField priority = new DynamicFormField();
-        DynamicFormField status = new DynamicFormField();
+        DynamicFormField
+                summary   = new DynamicFormField(),
+                preamble  = new DynamicFormField(),
+                component = new DynamicFormField(),
+                version   = new DynamicFormField(),
+                severity  = new DynamicFormField(),
+                priority  = new DynamicFormField(),
+                status    = new DynamicFormField();
 
         component.setName("selectedComponent");
         component.setRequired(false);
