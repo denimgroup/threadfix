@@ -35,6 +35,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.set;
+
 @Aspect
 @Component
 public class DefectEventTrackingAspect extends EventTrackingAspect {
@@ -84,11 +86,12 @@ public class DefectEventTrackingAspect extends EventTrackingAspect {
             exceptionLogService.storeExceptionLog(new ExceptionLog(e));
         }
         Object proceed = joinPoint.proceed();
+        Set<Defect> checkedDefects = set();
         try {
             if (!errorLoggingEvent && (application != null)) {
                 for (Vulnerability vuln : application.getVulnerabilities()) {
                     Defect defect = vuln.getDefect();
-                    if (defect != null) {
+                    if ((defect != null) && !checkedDefects.contains(defect)) {
                         User user = null;
                         try {
                             user = userService.loadUser(userId);
@@ -107,6 +110,8 @@ public class DefectEventTrackingAspect extends EventTrackingAspect {
                             Event event = generateCloseDefectEvent(defect, user);
                             publishEventTrackingEvent(event);
                         }
+
+                        checkedDefects.add(defect);
                     }
                 }
             }
