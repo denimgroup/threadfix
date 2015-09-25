@@ -96,6 +96,7 @@ public class DynamicFormField {
         this.name = name;
     }
 
+    @JsonView(AllViews.RestViewScan2_1.class)
     public String getLabel() {
         return label;
     }
