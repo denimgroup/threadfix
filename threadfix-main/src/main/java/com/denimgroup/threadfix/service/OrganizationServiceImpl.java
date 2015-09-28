@@ -26,10 +26,7 @@ package com.denimgroup.threadfix.service;
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.GenericNamedObjectDao;
 import com.denimgroup.threadfix.data.dao.OrganizationDao;
-import com.denimgroup.threadfix.data.entities.AccessControlTeamMap;
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
@@ -61,6 +58,8 @@ public class OrganizationServiceImpl extends AbstractNamedObjectService<Organiza
 	private AccessControlMapService accessControlMapService = null;
     @Autowired
     private ApplicationDao applicationDao;
+    @Autowired
+    private ScheduledEmailReportService scheduledEmailReportService;
 
 	@Override
 	@Transactional(readOnly = false)
@@ -87,7 +86,14 @@ public class OrganizationServiceImpl extends AbstractNamedObjectService<Organiza
 				accessControlMapService.deactivate(map);
 			}
 		}
-		
+
+        // Delete this team from all ScheduledEmailReport records
+        if (organization.getScheduledEmailReports() != null) {
+            for (ScheduledEmailReport scheduledEmailReport : organization.getScheduledEmailReports()) {
+                scheduledEmailReportService.removeTeam(scheduledEmailReport, organization);
+            }
+        }
+
 		organizationDao.saveOrUpdate(organization);
 	}
 	

@@ -34,6 +34,7 @@ public class ScheduledEmailReportServiceImpl extends ScheduledJobServiceImpl<Sch
 	@Autowired
 	ScheduledEmailReportScheduler scheduledEmailReportScheduler;
 
+
 	@Override
 	protected ScheduledJobDao<ScheduledEmailReport> getScheduledJobDao() {
 		return scheduledEmailReportDao;
@@ -124,5 +125,23 @@ public class ScheduledEmailReportServiceImpl extends ScheduledJobServiceImpl<Sch
 				return addResult;
 		}
 		return null;
+	}
+
+	@Override
+	public void removeTeam(ScheduledEmailReport scheduledEmailReport, Organization organization) {
+		if (scheduledEmailReport.getOrganizations() != null && scheduledEmailReport.getOrganizations().contains(organization)) {
+			scheduledEmailReport.getOrganizations().remove(organization);
+			if (scheduledEmailReport.getOrganizations().isEmpty()) {
+				String resultMessage = removeJobFromScheduler(scheduledEmailReport);
+				if (resultMessage==null){
+					delete(scheduledEmailReport);
+				} else {
+					log.warn(resultMessage);
+				}
+			} else {
+				save(scheduledEmailReport);
+			}
+
+		}
 	}
 }
