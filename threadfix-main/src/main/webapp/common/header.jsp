@@ -155,7 +155,7 @@
                             <li class="divider" role="presentation"></li>
                         </security:authorize>
 
-                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_CAN_MANAGE_USERS,ROLE_CAN_MANAGE_ROLES,ROLE_CAN_VIEW_ERROR_LOGS">
+                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_CAN_MANAGE_USERS,ROLE_CAN_MANAGE_ROLES,ROLE_CAN_MANAGE_GROUPS, ROLE_CAN_MANAGE_API_KEYS, ROLE_CAN_MANAGE_EMAIL_REPORTS">
 
                                 <li class="dropdown-submenu left pull-left normalLinks">
                                     <ul class="dropdown-menu" style="text-align:right; left: -177px;" tabindex="-1">

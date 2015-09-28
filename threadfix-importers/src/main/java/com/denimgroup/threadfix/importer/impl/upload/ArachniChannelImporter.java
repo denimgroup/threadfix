@@ -160,9 +160,13 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 
     public class ArachniSAXParser extends HandlerWithBuilder {
 
+        private boolean gettingVersion = false;
         private boolean getDate   = false;
         private boolean inFinding = false;
         private boolean inRequest = false; //for accumulating request headers
+        private boolean inResponse = false;
+        private boolean captureText = false;
+        private int version = 0;
 
         boolean gettingSeed = false;
         String lastSeed;
@@ -185,37 +189,57 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 
         public void startElement(String uri, String name,
                                  String qName, Attributes atts) {
+
+            if ((version > 0) && (inRequest || inResponse)
+                    && ("raw".equals(qName)||"raw_headers".equals(qName)||"body".equals(qName))) {
+                captureText = true;
+                if (builder.length() > 0)
+                    builder.append("\n");
+            }
+
             if ("finish_datetime".equals(qName)) {
                 getDate = true;
+            } else if ("version".equals(qName)) {
+                gettingVersion = true;
             } else if ("issue".equals(qName)) {
                 findingMap = enumMap(FindingKey.class);
                 // set the inFinding flag to accumulate elements and character info for raw xml synthesis
                 inFinding = true;
-
+            } else if (version > 0 && "request".equals(qName))  {
+                inRequest = true;
+                getBuilderText();
+            } else if (version > 0 && "response".equals(qName))  {
+                inResponse = true;
+                getBuilderText();
             } else if (inFinding && tagMap.containsKey(qName)) {
                 itemKey = tagMap.get(qName);
-                //the Arachni finding request is stored in a list of header element 'field' tags rather than the raw request itself
-                //so we need to rebuild it.  we start tracking 'field' elements when we hit the request element
-                if ("request".equals(qName)) {
-                    inRequest = true;
-                    // this will be the first line of the request
-                    String requestLine = findingMap.get(FindingKey.PATH); //sane default
 
-                    try { //mimicry
-                        requestLine = requestMethod + " " + (new URL(findingMap.get(FindingKey.PATH))).getPath() + " HTTP/1.x (computed)\n";
-                    } catch (Exception ignored) {
-                        log.error("Got exception while attempting to construct a request line: " + ignored.getMessage());
-                        log.error("Continuing.");
+
+                if (version == 0) {
+                    //the Arachni finding request is stored in a list of header element 'field' tags rather than the raw request itself
+                    //so we need to rebuild it.  we start tracking 'field' elements when we hit the request element
+                    if ("request".equals(qName)) {
+                        inRequest = true;
+                        // this will be the first line of the request
+                        String requestLine = findingMap.get(FindingKey.PATH); //sane default
+
+                        try { //mimicry
+                            requestLine = requestMethod + " " + (new URL(findingMap.get(FindingKey.PATH))).getPath() + " HTTP/1.x (computed)\n";
+                        } catch (Exception ignored) {
+                            log.error("Got exception while attempting to construct a request line: " + ignored.getMessage());
+                            log.error("Continuing.");
+                        }
+
+                        //store this first line
+                        findingMap.put(FindingKey.REQUEST, requestMethod + " " + requestLine);
+                    } else {
+
+                        //ensure that we stop recording these so we don't pick up response headers
+                        inRequest = false;
                     }
-
-                    //store this first line
-                    findingMap.put(FindingKey.REQUEST, requestMethod + " " + requestLine);
-                } else {
-
-                    //ensure that we stop recording these so we don't pick up response headers
-                    inRequest = false;
+                    getBuilderText(); //resets the stringbuffer so we aren't pulling in data from unrelated elements
                 }
-                getBuilderText(); //resets the stringbuffer so we aren't pulling in data from unrelated elements
+
             } else if ("method".equals(qName)) {
                 getMethodText = true;
                 getBuilderText(); //empty out buffer so we get the method alone for request header rebuilding above
@@ -257,6 +281,12 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
                 getMethodText = false;
             }
 
+            if ((version > 0) && (inRequest || inResponse)
+                    && ("raw".equals(qName)||"raw_headers".equals(qName)||"body".equals(qName))) {
+                captureText = false;
+            }
+
+
             if ("issue".equals(qName)) {
                 // TODO instead look into why this error occurs
 
@@ -286,11 +316,18 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
                 findingMap = null;
                 inFinding = false;
                 currentRawFinding.setLength(0);
-
+            } else if (version > 0 && "request".equals(qName))  {
+                String currentItem = getBuilderText();
+                findingMap.put(FindingKey.REQUEST, currentItem);
+                inRequest = false;
+            } else if (version > 0 && "response".equals(qName))  {
+                String currentItem = getBuilderText();
+                findingMap.put(FindingKey.RESPONSE, currentItem);
+                inResponse = false;
             } else if (inFinding && itemKey != null) {
                 String currentItem = getBuilderText();
 
-                if (currentItem != null && "RESPONSE".equals(itemKey.toString())) {
+                if (currentItem != null && "RESPONSE".equals(itemKey.toString()) && version==0) {
                     //these are base64 encoded in the xml
                     try {
                         currentItem = new String(javax.xml.bind.DatatypeConverter.parseBase64Binary(currentItem));
@@ -299,11 +336,8 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
                     }
                 }
 
-                if ("request".equals(qName)) {
-                    inRequest = false;
-                }
-
-                if (currentItem != null && findingMap.get(itemKey) == null) {
+                if ((currentItem != null) && (findingMap.get(itemKey) == null)
+                        && !(version > 0 && "html".equals(qName))) {
                     findingMap.put(itemKey, currentItem);
                 }
                 itemKey = null;
@@ -319,11 +353,23 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
                     date = getDateFromString(tempDateString);
                 }
 	    		getDate = false;
-	    	} 
+	    	}
+
+            if (gettingVersion) {
+                String tempVerString = getBuilderText();
+                if (tempVerString.startsWith("1")) {
+                    version = 1;
+                }
+                gettingVersion = false;
+            }
+
 	    }
 
 	    public void characters (char ch[], int start, int length) {
-	    	if (getDate || itemKey != null || getMethodText || gettingSeed) {
+	    	if (getDate || itemKey != null || getMethodText || gettingSeed || gettingVersion) {
+                addTextToBuilder(ch, start, length);
+            }
+            if ((inRequest||inResponse) && captureText) {
                 addTextToBuilder(ch, start, length);
             }
 	    	if (inFinding){
@@ -351,7 +397,7 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 		private boolean hasDate = false;
 		private boolean correctFormat = false;
 		private boolean getDate = false;
-		
+
 	    private void setTestStatus() {
 	    	if (!correctFormat)
 	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
@@ -379,7 +425,7 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 	    	if ("finish_datetime".equals(qName)) {
 	    		getDate = true;
 	    	}
-	    	
+
 	    	if ("issue".equals(qName)) {
 	    		hasFindings = true;
 	    		setTestStatus();
