@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import com.denimgroup.threadfix.data.entities.EmailList;
 import com.denimgroup.threadfix.service.EmailListService;
+import com.denimgroup.threadfix.views.AllViews;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -52,7 +53,7 @@ public class EditScheduledEmailReportController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	@JsonView(Object.class)
+	@JsonView(AllViews.ScheduledEmailReportView.class)
 	public @ResponseBody RestResponse<ScheduledEmailReport> addScheduledEmailReport(
 			@Valid @ModelAttribute ScheduledEmailReport scheduledEmailReport,
 			BindingResult result,
@@ -71,6 +72,7 @@ public class EditScheduledEmailReportController {
 		scheduledEmailReportService.validateDate(scheduledEmailReport, result);
 		scheduledEmailReportService.validateScheduleEmailReport(scheduledEmailReport, result);
 		scheduledEmailReport.setEmailAddresses(dbScheduledEmailReport.getEmailAddresses());//don't know how to make it stick only with allowed fields
+		scheduledEmailReport.setEmailLists(dbScheduledEmailReport.getEmailLists());
 
 		if (result.hasErrors()) {
 			return FormRestResponse.failure("Encountered errors.", result);
@@ -91,6 +93,7 @@ public class EditScheduledEmailReportController {
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	@JsonView(AllViews.ScheduledEmailReportView.class)
 	public @ResponseBody RestResponse<String> delete(
 			@PathVariable("scheduledEmailReportId") int scheduledEmailReportId) {
 
@@ -115,6 +118,7 @@ public class EditScheduledEmailReportController {
 	}
 
 	@RequestMapping(value = "/addEmail", method = RequestMethod.POST)
+	@JsonView(AllViews.ScheduledEmailReportView.class)
 	public @ResponseBody RestResponse<String> addEmailAddress(
 			@PathVariable("scheduledEmailReportId") int scheduledEmailReportId,
 			@RequestParam("emailAddress") String emailAddress) {
@@ -143,6 +147,7 @@ public class EditScheduledEmailReportController {
 	}
 
 	@RequestMapping(value = "/deleteEmail", method = RequestMethod.POST)
+	@JsonView(AllViews.ScheduledEmailReportView.class)
 	public @ResponseBody RestResponse<String> deleteEmailAddress(
 			@PathVariable("scheduledEmailReportId") int scheduledEmailReportId,
 			@RequestParam("emailAddress") String emailAddress) {
@@ -168,6 +173,7 @@ public class EditScheduledEmailReportController {
 	}
 
 	@RequestMapping(value = "/addEmailList", method = RequestMethod.POST)
+	@JsonView(AllViews.ScheduledEmailReportView.class)
 	public @ResponseBody RestResponse<EmailList> addEmailList(
 			@PathVariable("scheduledEmailReportId") int scheduledEmailReportId,
 			@RequestParam("emailListId") Integer emailListId) {
@@ -195,6 +201,7 @@ public class EditScheduledEmailReportController {
 	}
 
 	@RequestMapping(value = "/deleteEmailList", method = RequestMethod.POST)
+	@JsonView(AllViews.ScheduledEmailReportView.class)
 	public @ResponseBody RestResponse<EmailList> deleteEmailList(
 			@PathVariable("scheduledEmailReportId") int scheduledEmailReportId,
             @RequestParam("emailListId") Integer emailListId) {

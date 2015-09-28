@@ -2,6 +2,8 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import javax.validation.Valid;
 
+import com.denimgroup.threadfix.data.entities.EmailList;
+import com.denimgroup.threadfix.views.AllViews;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -23,6 +25,10 @@ import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.fasterxml.jackson.annotation.JsonView;
 
+import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 @Controller
 @RequestMapping("/configuration/scheduledEmailReports/add")
 public class AddScheduledEmailReportController {
@@ -42,7 +48,7 @@ public class AddScheduledEmailReportController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	@JsonView(Object.class)
+	@JsonView(AllViews.ScheduledEmailReportView.class)
 	public @ResponseBody RestResponse<ScheduledEmailReport> addScheduledEmailReport(
 			@Valid @ModelAttribute ScheduledEmailReport scheduledEmailReport,
 			BindingResult result) {
@@ -55,6 +61,11 @@ public class AddScheduledEmailReportController {
 
 		scheduledEmailReportService.validateDate(scheduledEmailReport, result);
 		scheduledEmailReportService.validateScheduleEmailReport(scheduledEmailReport, result);
+
+		List<EmailList> emptyEmailLists = list();
+		scheduledEmailReport.setEmailLists(emptyEmailLists);
+		List<String> emptyEmailAddresses = list();
+		scheduledEmailReport.setEmailAddresses(emptyEmailAddresses);
 
 		if (result.hasErrors()) {
 			return FormRestResponse.failure("Encountered errors.", result);

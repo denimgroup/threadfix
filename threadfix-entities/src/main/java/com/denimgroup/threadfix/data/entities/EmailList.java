@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.data.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.CollectionOfElements;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -75,6 +76,7 @@ public class EmailList extends AuditableEntity {
     }
 
     @ManyToMany(mappedBy = "emailLists")
+    @JsonIgnore()
     public List<ScheduledEmailReport> getScheduledEmailReports() {
         return scheduledEmailReports;
     }
