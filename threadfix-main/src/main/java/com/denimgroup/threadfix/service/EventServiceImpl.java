@@ -125,9 +125,6 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
                         Application application = remoteProviderApplication.getApplication();
                         if ((application != null) && application.equals(scan.getApplication())) {
                             remoteProviderString = remoteProviderApplication.getNativeName();
-                            System.err.println(remoteProviderApplication);
-                            System.err.println(remoteProviderApplication.getNativeName());
-                            System.err.println(remoteProviderApplication.getCustomName());
                         }
                     }
                 }
