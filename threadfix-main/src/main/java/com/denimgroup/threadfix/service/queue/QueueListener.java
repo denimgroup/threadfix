@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service.queue;
 
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityFilterDao;
+import com.denimgroup.threadfix.data.dao.VulnerabilityFilterDao;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.*;
@@ -80,6 +81,10 @@ public class QueueListener implements MessageListener {
 	private ChannelSeverityService channelSeverityService;
 	@Autowired(required = false)
 	private ChannelVulnerabilityFilterDao channelVulnerabilityFilterDao;
+	@Autowired
+	private VulnerabilityFilterDao vulnerabilityFilterDao;
+	@Autowired
+	private GenericVulnerabilityService genericVulnerabilityService;
 
 	/*
 	 * (non-Javadoc)
@@ -146,6 +151,9 @@ public class QueueListener implements MessageListener {
                     case QueueConstants.VULNS_FILTER:
                         updateVulnsFilter();
                         break;
+					case QueueConstants.EDIT_VULNS_FILTER:
+						updateVulnsFilterWithOldGenericVulnId(map.getInt("oldGenericVulnId"));
+						break;
 					case QueueConstants.CHANNEL_SEVERITY_MAPPINGS:
 						updateChannelSeverityMappings(map.getString("channelSeverityIds"));
 						break;
@@ -181,6 +189,14 @@ public class QueueListener implements MessageListener {
         vulnerabilityFilterService.updateAllVulnerabilities();
         log.info("Updating all filter vulnerabilities finished.");
     }
+
+	private void updateVulnsFilterWithOldGenericVulnId(int oldGenericVulnId) {
+
+		log.info("Change all severities of vulnerability with CWE ID " + oldGenericVulnId + " back to original.");
+		vulnerabilityFilterDao.resetVulnFilterAffect(genericVulnerabilityService.loadById(oldGenericVulnId), -1, -1);
+
+		updateVulnsFilter();
+	}
 
 	private void deleteVulnsFilter(int channelFilterId) {
 

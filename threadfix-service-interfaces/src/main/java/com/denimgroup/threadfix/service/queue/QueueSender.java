@@ -104,6 +104,8 @@ public interface QueueSender {
 
     void updateVulnFilter();
 
+	void updateVulnFilterWithOldGenericVulnId(int oldGenericVulnId);
+
 	void updateTeamCachedStatistics(int orgId);
 
 	void updateChannelSeverityMappings(String channelSeverityIds);
