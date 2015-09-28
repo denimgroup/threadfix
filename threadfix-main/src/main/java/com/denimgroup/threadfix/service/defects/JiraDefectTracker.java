@@ -220,12 +220,18 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 			return false;
 		}
 
-		boolean valid = restUtils.requestHas401Error(getUrlWithRest() + "user");
+		RestUtils.ConnectionStatus connectionStatus = restUtils.checkConnectionStatus(getUrlWithRest() + "user");
+        boolean valid = false;
 		
-		if (valid) {
-            setLastError(BAD_URL);
-			log.info("JIRA URL was valid, returned 401 response as expected because we do not yet have credentials.");
+		if (connectionStatus == RestUtils.ConnectionStatus.UNAUTHORIZED) {
+            valid = true;
+            setLastError(LOGIN_FAILURE);
+            log.info("JIRA URL was valid, returned 401 response as expected because we do not yet have credentials.");
+        } else if (connectionStatus == RestUtils.ConnectionStatus.INVALID_CERTIFICATE) {
+            setLastError(INVALID_CERTIFICATE);
+            log.warn("JIRA URL had a bad certificate, 401 response was expected but Certificate Error was encountered.");
 		} else {
+            setLastError(BAD_URL);
 			log.warn("JIRA URL was invalid or some other problem occurred, 401 response was expected but not returned.");
 		}
 		
