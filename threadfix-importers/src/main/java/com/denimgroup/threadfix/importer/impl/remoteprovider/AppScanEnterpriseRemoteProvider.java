@@ -28,7 +28,7 @@ import static com.denimgroup.threadfix.importer.util.JsonUtils.toJSONObjectItera
 /**
  * Created by skakani on 5/26/2015.
  */
-@RemoteProvider(name = "IBM Rational AppScan Enterprise")
+@RemoteProvider(name = "IBM Security AppScan Enterprise")
 public class AppScanEnterpriseRemoteProvider extends AbstractRemoteProvider{
     public static final String
                 USERNAME = "Username",
@@ -145,16 +145,19 @@ public class AppScanEnterpriseRemoteProvider extends AbstractRemoteProvider{
         assert remoteProviderType != null : "Remote Provider Type is null, Please set it before trying to log in";
 
         HttpResponse response = httpUtils.postUrlWithConfigurer(getAuthenticationFieldValue(URL) + BASE_URL + LOGIN_SERVICE, getLoginRequestConfigurer());
-        if(response.isValid()){
+        if (response.isValid()) {
             String responseBody = response.getBodyAsString();
+            if (responseBody == null) {
+                throw new RestIOException("Invalid response. Please enter correct credentials. Check logs for more details", response.getStatus());
+            }
 
             JSONObject jsonObject = getJSONObject(responseBody);
-            try{
+            try {
                 return jsonObject.get("sessionId").toString();
-            }catch(JSONException e){
+            } catch(JSONException e) {
                 throw new RestIOException(e, "Invalid response received. May not be JSON");
             }
-        }else{
+        } else {
             String body = response.getBodyAsString();
             log.info("Rest response from App Scan Enterprise Login Service:" + body);
             throw new RestIOException("Invalid response. Please enter correct credentials. Check logs for more details", response.getStatus());

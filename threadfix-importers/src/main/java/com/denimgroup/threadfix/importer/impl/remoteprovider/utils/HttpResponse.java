@@ -76,10 +76,14 @@ public class HttpResponse {
     }
 
     public String getBodyAsString() {
-        try {
-            return IOUtils.toString(getInputStream());
-        } catch (IOException e) {
-            throw new RestIOException(e, "Got IOException while trying to read a string from an inputstream.");
+        if (isValid()) {
+            try {
+                return IOUtils.toString(getInputStream());
+            } catch (IOException e) {
+                throw new RestIOException(e, "Got IOException while trying to read a string from an inputstream.");
+            }
+        } else {
+            return null;
         }
     }
 
