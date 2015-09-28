@@ -248,13 +248,16 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
     /**
      *
      * @param urlString JIRA URL to connect to
-     * @return true if we get an HTTP 401, false if we get another HTTP response code (such as 200:OK)
-     * 		or if an exception occurs
+     * @return VALID if we get a HTTP 200,
+     *      UNAUTHORIZED if we get an HTTP 401,
+     *      OTHER if we get another HTTP response code,
+     *      INVALID if a MalformedURLException or IOException is thrown,
+     *      INVALID_CERTIFICATE if a SSLHandshakeException is thrown.
      */
-    public boolean requestHas401Error(String urlString) {
+    public ConnectionStatus checkConnectionStatus(String urlString) {
         LOG.info("Checking to see if we get an HTTP 401 error for the URL '" + urlString + "'");
 
-        boolean retVal;
+        ConnectionStatus retVal;
 
         HttpClient httpClient;
         try {
@@ -267,22 +270,25 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
             GetMethod get = new GetMethod(urlString);
 
             int responseCode = httpClient.executeMethod(get);
+            LOG.info("Got HTTP response code of: " + responseCode);
 
-            retVal = responseCode == HttpURLConnection.HTTP_UNAUTHORIZED;
-
-            if (!retVal) {
-                LOG.info("Got a non-401 HTTP response code of: " + responseCode);
+            if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                retVal = ConnectionStatus.UNAUTHORIZED;
+            } else if (responseCode == HttpURLConnection.HTTP_OK) {
+                retVal = ConnectionStatus.VALID;
+            } else {
+                retVal = ConnectionStatus.OTHER;
             }
 
         } catch (MalformedURLException e) {
             LOG.warn("URL string of '" + urlString + "' is not a valid URL.", e);
-            retVal = false;
+            retVal = ConnectionStatus.INVALID;
         } catch (SSLHandshakeException e) {
             LOG.warn("Certificate Error encountered while trying to find the response code.", e);
-            retVal = false;
+            retVal = ConnectionStatus.INVALID_CERTIFICATE;
         } catch (IOException e) {
             LOG.warn("IOException encountered while trying to find the response code: " + e.getMessage(), e);
-            retVal = false;
+            retVal = ConnectionStatus.INVALID;
         }
 
         LOG.info("Return value will be " + retVal);

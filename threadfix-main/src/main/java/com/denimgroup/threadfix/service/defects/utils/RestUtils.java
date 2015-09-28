@@ -40,12 +40,19 @@ public interface RestUtils {
     @Nullable
     public String getPostErrorResponse();
 
+    enum ConnectionStatus {
+        VALID, UNAUTHORIZED, OTHER, INVALID, INVALID_CERTIFICATE
+    }
+
     /**
      *
      * @param urlString JIRA URL to connect to
-     * @return true if we get an HTTP 401, false if we get another HTTP response code (such as 200:OK)
-     * 		or if an exception occurs
+     * @return VALID if we get a HTTP 200,
+     *      UNAUTHORIZED if we get an HTTP 401,
+     *      OTHER if we get another HTTP response code,
+     *      INVALID if a MalformedURLException or IOException is thrown,
+     *      INVALID_CERTIFICATE if a SSLHandshakeException is thrown.
      */
-    public boolean requestHas401Error(String urlString);
+    public ConnectionStatus checkConnectionStatus(String urlString);
 
 }

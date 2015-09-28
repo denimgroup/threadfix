@@ -47,6 +47,7 @@ public class Organization extends AuditableEntity {
 	private List<Application> activeApps;
 	private List<AccessControlTeamMap> accessControlTeamMaps;
     private List<Event> events;
+    private List<ScheduledEmailReport> scheduledEmailReports;
 
 	public static final int NAME_LENGTH = 60;
 
@@ -212,6 +213,16 @@ public class Organization extends AuditableEntity {
     public Integer getNumApps(){
         List<Application> activeApps = getActiveApplications();
         return (activeApps == null) ? 0 : activeApps.size();
+    }
+
+    @ManyToMany(mappedBy = "organizations")
+    @JsonIgnore
+    public List<ScheduledEmailReport> getScheduledEmailReports() {
+        return scheduledEmailReports;
+    }
+
+    public void setScheduledEmailReports(List<ScheduledEmailReport> scheduledEmailReports) {
+        this.scheduledEmailReports = scheduledEmailReports;
     }
 
     @Override

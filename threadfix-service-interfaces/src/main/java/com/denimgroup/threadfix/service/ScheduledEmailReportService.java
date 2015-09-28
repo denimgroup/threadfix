@@ -1,5 +1,6 @@
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.data.entities.Organization;
 import org.springframework.validation.BindingResult;
 
 import com.denimgroup.threadfix.data.entities.ScheduledEmailReport;
@@ -19,4 +20,6 @@ public interface ScheduledEmailReportService extends ScheduledJobService<Schedul
 	public String removeJobFromScheduler(ScheduledEmailReport oldScheduledEmailReport);
 
 	public String replaceJobFromScheduler(ScheduledEmailReport oldScheduledEmailReport, ScheduledEmailReport newScheduledEmailReport);
+
+	void removeTeam(ScheduledEmailReport scheduledEmailReport, Organization organization);
 }

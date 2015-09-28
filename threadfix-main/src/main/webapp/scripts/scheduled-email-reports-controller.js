@@ -1,6 +1,6 @@
 var module = angular.module('threadfix')
 
-module.controller('ScheduledEmailReportsController', function($scope, $http, $modal, $log, tfEncoder, threadFixModalService){
+module.controller('ScheduledEmailReportsController', function($window, $scope, $http, $modal, $log, tfEncoder, threadFixModalService){
 
     $scope.scheduledEmailReports = [];
     $scope.isConfiguredEmail = true;
@@ -231,5 +231,9 @@ module.controller('ScheduledEmailReportsController', function($scope, $http, $mo
                 });
             scheduledReport.newEmailLoading = false;
         }
+    };
+
+    $scope.goToTeam = function(team) {
+        $window.location.href = tfEncoder.encode("/organizations/" + team.id);
     };
 });

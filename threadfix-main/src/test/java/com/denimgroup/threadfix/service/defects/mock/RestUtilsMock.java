@@ -129,8 +129,12 @@ public class RestUtilsMock implements RestUtils {
     }
 
     @Override
-    public boolean requestHas401Error(String urlString) {
-        return urlString.equals(JIRA_BASE_URL + "/rest/api/2/user");
+    public ConnectionStatus checkConnectionStatus(String urlString) {
+        if (urlString.equals(JIRA_BASE_URL + "/rest/api/2/user")) {
+            return ConnectionStatus.UNAUTHORIZED;
+        } else {
+            return ConnectionStatus.OTHER;
+        }
     }
 
     // TODO actually test this

@@ -119,6 +119,9 @@ public class JsonUtils {
 
     @Nonnull
     public static Iterable<JSONObject> toJSONObjectIterable(final String jsonString) throws JSONException {
+        if (jsonString == null) {
+            return toJSONObjectIterable(new JSONArray());
+        }
         return toJSONObjectIterable(new JSONArray(jsonString));
     }
 

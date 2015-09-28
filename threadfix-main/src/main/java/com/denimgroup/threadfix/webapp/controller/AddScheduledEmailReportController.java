@@ -2,7 +2,6 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import javax.validation.Valid;
 
-import com.denimgroup.threadfix.data.entities.EmailList;
 import com.denimgroup.threadfix.views.AllViews;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.denimgroup.threadfix.data.entities.EmailList;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ScheduledEmailReport;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
