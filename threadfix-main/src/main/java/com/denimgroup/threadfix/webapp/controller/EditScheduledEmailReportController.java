@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import com.denimgroup.threadfix.data.entities.EmailList;
 import com.denimgroup.threadfix.service.EmailListService;
+import com.denimgroup.threadfix.views.AllViews;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -52,7 +53,7 @@ public class EditScheduledEmailReportController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	@JsonView(Object.class)
+	@JsonView(AllViews.ScheduledEmailReportView.class)
 	public @ResponseBody RestResponse<ScheduledEmailReport> addScheduledEmailReport(
 			@Valid @ModelAttribute ScheduledEmailReport scheduledEmailReport,
 			BindingResult result,
