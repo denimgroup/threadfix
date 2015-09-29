@@ -238,6 +238,7 @@
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/defectSubmissionWithIssues$,
 		    	protected-regex ^/organizations/[0-9]+/applications/[0-9]+/docsTab$,
 		    	protected-regex ^/organizations/[0-9]+/applications/[0-9]+/objects$,
+		    	protected-regex ^/organizations/[0-9]+/applications/[0-9]+/policyStatus$,
 		    	protected-regex ^/organizations/[0-9]+/applications/[0-9]+/scanQueueTab$,
 		    	protected-regex ^/organizations/[0-9]+/applications/[0-9]+/scanQueueTask/[0-9]+/delete,
 		    	protected-regex ^/organizations/[0-9]+/applications/[0-9]+/addScanQueueTask$,
