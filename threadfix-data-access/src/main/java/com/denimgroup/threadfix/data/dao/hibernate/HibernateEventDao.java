@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.enums.EventAction;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -42,6 +43,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 @Repository
 public class HibernateEventDao extends AbstractObjectDao<Event> implements EventDao {
@@ -79,6 +81,22 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
                 .createCriteria(getClassReference())
                 .add(Restrictions.eq("active", true))
                 .add(Restrictions.eq("finding", finding));
+
+        Order order = getOrder();
+        if (order != null) {
+            criteria.addOrder(order);
+        }
+
+        return criteria.list();
+    }
+
+    @Override
+    public List<Event> retrieveAllByApplication(Application application) {
+
+        Criteria criteria = getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.eq("application", application));
 
         Order order = getOrder();
         if (order != null) {
@@ -153,6 +171,36 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
     }
 
     @Override
+    public List<Event> retrieveUngroupedByApplication(Application application) {
+        List<String> applicationEventActions = list();
+        for (EventAction eventAction : EventAction.applicationEventActions) {
+            applicationEventActions.add(eventAction.name());
+        }
+
+        return retrieveUngrouped(applicationEventActions, application);
+    }
+
+    @Override
+    public List<Event> retrieveUngroupedByOrganization(Organization organization) {
+        List<String> organizationEventActions = list();
+        for (EventAction eventAction : EventAction.organizationEventActions) {
+            organizationEventActions.add(eventAction.name());
+        }
+
+        return retrieveUngrouped(organizationEventActions, organization);
+    }
+
+    @Override
+    public List<Event> retrieveUngroupedByVulnerability(Vulnerability vulnerability) {
+        List<String> vulnerabilityEventActions = list();
+        for (EventAction eventAction : EventAction.vulnerabilityEventActions) {
+            vulnerabilityEventActions.add(eventAction.name());
+        }
+
+        return retrieveUngrouped(vulnerabilityEventActions, vulnerability);
+    }
+
+    @Override
     public List<Event> retrieveUngroupedByUser(User user) {
         List<String> userEventActions = list();
         for (EventAction eventAction : EventAction.userEventActions) {
@@ -212,17 +260,37 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
         return retrieveGrouped(recentGroupedEventAction, startTime, stopTime, appIds, teamIds);
     }
 
+    private List<Event> retrieveUngrouped(List<String> eventActions, Application application) {
+        Set<Integer> appIds = set();
+        appIds.add(application.getId());
+        return retrieveUngrouped(eventActions, null, null, null, appIds, null, null, null);
+    }
+    private List<Event> retrieveUngrouped(List<String> eventActions, Organization organization) {
+        Set<Integer> teamIds = set();
+        teamIds.add(organization.getId());
+        return retrieveUngrouped(eventActions, null, null, null, null, teamIds, null, null);
+    }
+    private List<Event> retrieveUngrouped(List<String> eventActions, Vulnerability vulnerability) {
+        Set<Integer> vulnIds = set();
+        vulnIds.add(vulnerability.getId());
+        Set<Integer> defectIds = null;
+        if (vulnerability.getDefect() != null) {
+            defectIds = set();
+            defectIds.add(vulnerability.getDefect().getId());
+        }
+        return retrieveUngrouped(eventActions, null, null, null, null, null, vulnIds, defectIds);
+    }
     private List<Event> retrieveUngrouped(List<String> eventActions, User user) {
-        return retrieveUngrouped(eventActions, user, null, null, null, null);
+        return retrieveUngrouped(eventActions, user, null, null, null, null, null, null);
     }
     private List<Event> retrieveUngrouped(List<String> eventActions, Set<Integer> appIds, Set<Integer> teamIds) {
-        return retrieveUngrouped(eventActions, null, null, null, appIds, teamIds);
+        return retrieveUngrouped(eventActions, null, null, null, appIds, teamIds, null, null);
     }
     private List<Event> retrieveUngrouped(List<String> eventActions, Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds) {
-        return retrieveUngrouped(eventActions, null, startTime, stopTime, appIds, teamIds);
+        return retrieveUngrouped(eventActions, null, startTime, stopTime, appIds, teamIds, null, null);
     }
-    private List<Event> retrieveUngrouped(List<String> eventActions, User user, Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds) {
-        Criteria criteria = getEventCriteria(eventActions, user, startTime, stopTime, appIds, teamIds);
+    private List<Event> retrieveUngrouped(List<String> eventActions, User user, Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds, Set<Integer> vulnIds, Set<Integer> defectIds) {
+        Criteria criteria = getEventCriteria(eventActions, user, startTime, stopTime, appIds, teamIds, vulnIds, defectIds);
 
         List<Event> events = criteria.list();
 
@@ -230,16 +298,16 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
     }
 
     private List<Event> retrieveGrouped(List<String> eventActions, User user) {
-        return retrieveGrouped(eventActions, user, null, null, null, null);
+        return retrieveGrouped(eventActions, user, null, null, null, null, null, null);
     }
     private List<Event> retrieveGrouped(List<String> eventActions, Set<Integer> appIds, Set<Integer> teamIds) {
-        return retrieveGrouped(eventActions, null, null, null, appIds, teamIds);
+        return retrieveGrouped(eventActions, null, null, null, appIds, teamIds, null, null);
     }
     private List<Event> retrieveGrouped(List<String> eventActions, Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds) {
-        return retrieveGrouped(eventActions, null, startTime, stopTime, appIds, teamIds);
+        return retrieveGrouped(eventActions, null, startTime, stopTime, appIds, teamIds, null, null);
     }
-    private List<Event> retrieveGrouped(List<String> eventActions, User user, Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds) {
-        Criteria criteria = getEventCriteria(eventActions, user, startTime, stopTime, appIds, teamIds);
+    private List<Event> retrieveGrouped(List<String> eventActions, User user, Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds, Set<Integer> vulnIds, Set<Integer> defectIds) {
+        Criteria criteria = getEventCriteria(eventActions, user, startTime, stopTime, appIds, teamIds, vulnIds, defectIds);
 
         criteria.setProjection(Projections.projectionList()
                         .add(Projections.count("id").as("groupCount"))
@@ -265,7 +333,7 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
         return events;
     }
 
-    private Criteria getEventCriteria(List<String> eventActions, User user, Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds) {
+    private Criteria getEventCriteria(List<String> eventActions, User user, Date startTime, Date stopTime, Set<Integer> appIds, Set<Integer> teamIds, Set<Integer> vulnIds, Set<Integer> defectIds) {
         Criteria criteria = getSession()
                 .createCriteria(getClassReference())
                 .add(Restrictions.eq("active", true));
@@ -273,6 +341,8 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
         criteria.createAlias("scan", "scan", Criteria.LEFT_JOIN);
         criteria.createAlias("application", "application", Criteria.LEFT_JOIN);
         criteria.createAlias("application.organization", "application.organization", Criteria.LEFT_JOIN);
+        criteria.createAlias("vulnerability", "vulnerability", Criteria.LEFT_JOIN);
+        criteria.createAlias("defect", "defect", Criteria.LEFT_JOIN);
 
         if ((eventActions != null) && (!eventActions.isEmpty())) {
             criteria.add(Restrictions.in("eventAction", eventActions));
@@ -289,15 +359,21 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
             criteria.add(Restrictions.lt("date", stopTime));
         }
 
-        if ((appIds != null) && (!appIds.isEmpty()) && (teamIds != null) && (!teamIds.isEmpty())) {
-            criteria.add(Restrictions.or(
-                    Restrictions.in("application.id", appIds),
-                    Restrictions.in("application.organization.id", teamIds)
-            ));
-        } else if ((appIds != null) && (!appIds.isEmpty())) {
-            criteria.add(Restrictions.in("application.id", appIds));
-        } else if ((teamIds != null) && (!teamIds.isEmpty())) {
-            criteria.add(Restrictions.in("application.organization.id", teamIds));
+        Criterion associationRestrictions = null;
+        if ((appIds != null) && (!appIds.isEmpty())) {
+            associationRestrictions = disjoinRestrictions(associationRestrictions, Restrictions.in("application.id", appIds));
+        }
+        if ((teamIds != null) && (!teamIds.isEmpty())) {
+            associationRestrictions = disjoinRestrictions(associationRestrictions, Restrictions.in("application.organization.id", teamIds));
+        }
+        if ((vulnIds != null) && (!vulnIds.isEmpty())) {
+            associationRestrictions = disjoinRestrictions(associationRestrictions, Restrictions.in("vulnerability.id", vulnIds));
+        }
+        if ((defectIds != null) && (!defectIds.isEmpty())) {
+            associationRestrictions = disjoinRestrictions(associationRestrictions, Restrictions.in("defect.id", defectIds));
+        }
+        if (associationRestrictions != null) {
+            criteria.add(associationRestrictions);
         }
 
         Order order = getOrder();
@@ -306,5 +382,16 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
         }
 
         return criteria;
+    }
+
+    private Criterion disjoinRestrictions(Criterion restriction1, Criterion restriction2) {
+        if (restriction1 == null) {
+            return restriction2;
+        } else {
+            return Restrictions.or(
+                    restriction1,
+                    restriction2
+            );
+        }
     }
 }

@@ -34,10 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static java.util.Collections.sort;
@@ -92,19 +89,11 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
 
     @Override
     public String buildUploadScanString(Scan scan) {
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM d, yyyy h:mm:ss a");
-
-        String uploadScanString = scan.getApplicationChannel().getChannelType().getName() +
-                " Scan dated " + dateFormatter.format(scan.getImportTime().getTime()) + " with " + scan.getNumberTotalVulnerabilities() +
-                " Vulnerabilities. The scan was uploaded from " + buildFileNamesString(scan.getOriginalFileNames()) + ".";
-
-        return uploadScanString;
+        return buildScanDescriptionString(scan, null);
     }
 
     @Override
     public String buildDeleteScanString(Scan scan) {
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM d, yyyy h:mm:ss a");
-
         Event scanUploadEvent = null;
         for (Event scanEvent: loadAllByScan(scan)) {
             if (scanEvent.getEventActionEnum().equals(EventAction.APPLICATION_SCAN_UPLOADED)) {
@@ -112,17 +101,77 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
                 break;
             }
         }
+        return buildScanDescriptionString(scan, scanUploadEvent);
+    }
 
-        String deleteScanString = scan.getApplicationChannel().getChannelType().getName() +
-                " Scan dated " + dateFormatter.format(scan.getImportTime().getTime()) + " with " + scan.getNumberTotalVulnerabilities() +
-                " Vulnerabilities. The scan was uploaded from " + buildFileNamesString(scan.getOriginalFileNames());
-        if (scanUploadEvent != null) {
-            deleteScanString += " on " + dateFormatter.format(scanUploadEvent.getDate());
+    public String buildScanDescriptionString(Scan scan, Event scanUploadEvent) {
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM d, yyyy h:mm:ss a");
+
+        StringBuilder scanDescription = new StringBuilder();
+
+        String applicationChannelTypeName = null;
+        String remoteProviderString = null;
+        ApplicationChannel applicationChannel = scan.getApplicationChannel();
+        ChannelType channelType = null;
+        if (applicationChannel != null) {
+            channelType = applicationChannel.getChannelType();
+            if (channelType != null) {
+                applicationChannelTypeName = channelType.getName();
+
+                List<RemoteProviderType> remoteProviderTypes = channelType.getRemoteProviderTypes();
+                for (RemoteProviderType remoteProviderType : remoteProviderTypes) {
+                    List<RemoteProviderApplication> remoteProviderApplications = remoteProviderType.getRemoteProviderApplications();
+                    for (RemoteProviderApplication remoteProviderApplication : remoteProviderApplications) {
+                        Application application = remoteProviderApplication.getApplication();
+                        if ((application != null) && application.equals(scan.getApplication())) {
+                            remoteProviderString = remoteProviderApplication.getNativeName();
+                        }
+                    }
+                }
+            }
         }
-        deleteScanString += ".";
+        if (applicationChannelTypeName != null) {
+            scanDescription.append(applicationChannelTypeName).append(" ");
+        }
 
-        return deleteScanString;
+        scanDescription.append("Scan");
 
+        String formattedImportTime = null;
+        Calendar importTime = scan.getImportTime();
+        if (importTime != null) {
+            Date importTimeTime = importTime.getTime();
+            formattedImportTime = dateFormatter.format(importTimeTime);
+        }
+        if (formattedImportTime != null) {
+            scanDescription.append(" dated ").append(formattedImportTime);
+        }
+
+        scanDescription.append(" with ").append(scan.getNumberTotalVulnerabilities()).append(" Vulnerabilities.");
+
+        if (remoteProviderString != null) {
+            scanDescription.append(" The scan was imported from remote application ").append(remoteProviderString);
+        } else {
+            scanDescription.append(" The scan was uploaded");
+        }
+
+        String fileNamesString = null;
+        List<String> originalFileNames = scan.getOriginalFileNames();
+        if ((originalFileNames != null) && (originalFileNames.size() > 0)) {
+            fileNamesString = buildFileNamesString(scan.getOriginalFileNames());
+            if (fileNamesString != null) {
+                scanDescription.append(" from ").append(fileNamesString);
+            }
+        }
+
+        if (scanUploadEvent != null) {
+            Date scanUploadEventDate = scanUploadEvent.getDate();
+            if (scanUploadEventDate != null) {
+                scanDescription.append(" on ").append(dateFormatter.format(scanUploadEventDate));
+            }
+        }
+
+        scanDescription.append(".");
+        return scanDescription.toString();
     }
 
     private String buildFileNamesString(List<String> fileNameList) {
@@ -145,45 +194,24 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
     @Override
     public List<Event> getApplicationEvents(Application application) {
         List<Event> applicationEvents = list();
-        for (Event event : application.getEvents()) {
-            if (event.getEventActionEnum().isApplicationEventAction()) {
-                applicationEvents.add(event);
-            }
-        }
-        sort(applicationEvents, eventComparator);
+        applicationEvents.addAll(eventDao.retrieveUngroupedByApplication(application));
+        Collections.sort(applicationEvents, eventComparator);
         return applicationEvents;
     }
 
     @Override
     public List<Event> getOrganizationEvents(Organization organization) {
         List<Event> organizationEvents = list();
-        for (Application application: organization.getApplications()) {
-            for (Event event: application.getEvents()) {
-                if (event.getEventActionEnum().isOrganizationEventAction()) {
-                    organizationEvents.add(event);
-                }
-            }
-        }
-        sort(organizationEvents, eventComparator);
+        organizationEvents.addAll(eventDao.retrieveUngroupedByOrganization(organization));
+        Collections.sort(organizationEvents, eventComparator);
         return organizationEvents;
     }
 
     @Override
     public List<Event> getVulnerabilityEvents(Vulnerability vulnerability) {
         List<Event> vulnerabilityEvents = list();
-        for (Event event : vulnerability.getEvents()) {
-            if (event.getEventActionEnum().isVulnerabilityEventAction()) {
-                vulnerabilityEvents.add(event);
-            }
-        }
-        if (vulnerability.getDefect() != null) {
-            for (Event event : vulnerability.getDefect().getEvents()) {
-                if (event.getEventActionEnum().isVulnerabilityEventAction()) {
-                    vulnerabilityEvents.add(event);
-                }
-            }
-        }
-        sort(vulnerabilityEvents, eventComparator);
+        vulnerabilityEvents.addAll(eventDao.retrieveUngroupedByVulnerability(vulnerability));
+        Collections.sort(vulnerabilityEvents, eventComparator);
         return vulnerabilityEvents;
     }
 
