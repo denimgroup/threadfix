@@ -112,10 +112,12 @@
                                 ng-click="switchTo('managePolicy')" id="managePolicyButton">
                             Manage Policy
                         </button>
-                        <a ng-hide="config.policyExist" class="btn btn-primary"
-                                ng-click="goToPolicyPage()" id="goToPolicyButton">
-                            Create Policy
-                        </a>
+                        <security:authorize ifAllGranted="ROLE_CAN_MANAGE_POLICIES">
+                            <a ng-hide="config.policyExist" class="btn btn-primary"
+                                    ng-click="goToPolicyPage()" id="goToPolicyButton">
+                                Create Policy
+                            </a>
+                        </security:authorize>
                     </td>
                 </tr>
             </security:authorize>
