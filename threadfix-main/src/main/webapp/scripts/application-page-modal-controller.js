@@ -12,72 +12,72 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
     // initialize objects for forms
     $scope.$on('rootScopeInitialized', function() {
-       $http.get(tfEncoder.encode(currentUrl + "/objects")).
-           success(function(data, status, headers, config) {
+        $http.get(tfEncoder.encode(currentUrl + "/objects")).
+            success(function(data, status, headers, config) {
 
-               if (data.success) {
-                   $scope.config = data.object;
+                if (data.success) {
+                    $scope.config = data.object;
 
-                   if (!$scope.config.wafList){
-                       $scope.config.wafList = [];
-                   }
-                   if (!$scope.config.defectTrackerList) {
-                       $scope.config.defectTrackerList = [];
-                   }
-                   if (!$scope.config.recentFileList) {
-                       $scope.config.recentFileList = [];
-                   }
-                   if (!$scope.config.recentPathList) {
-                       $scope.config.recentPathList = [];
-                   }
-                   if ($scope.config.teams) {
-                       $scope.config.teams.sort(nameCompare);
-                   }
-                   if (!$scope.config.tags)
-                       $scope.config.tags = [];
+                    if (!$scope.config.wafList){
+                        $scope.config.wafList = [];
+                    }
+                    if (!$scope.config.defectTrackerList) {
+                        $scope.config.defectTrackerList = [];
+                    }
+                    if (!$scope.config.recentFileList) {
+                        $scope.config.recentFileList = [];
+                    }
+                    if (!$scope.config.recentPathList) {
+                        $scope.config.recentPathList = [];
+                    }
+                    if ($scope.config.teams) {
+                        $scope.config.teams.sort(nameCompare);
+                    }
+                    if (!$scope.config.tags)
+                        $scope.config.tags = [];
 
-                   if (!$scope.config.applicationTags)
-                       $scope.config.applicationTags = [];
+                    if (!$scope.config.applicationTags)
+                        $scope.config.applicationTags = [];
 
-                   $scope.config.tags.forEach(function(dbTag){
-                       $scope.config.applicationTags.some(function(appTag){
-                           if (dbTag.id === appTag.id) {
-                               dbTag.selected = true;
-                               return true;
-                           }
-                       })
-                   });
+                    $scope.config.tags.forEach(function(dbTag){
+                        $scope.config.applicationTags.some(function(appTag){
+                            if (dbTag.id === appTag.id) {
+                                dbTag.selected = true;
+                                return true;
+                            }
+                        })
+                    });
 
-                   $scope.config.tags.sort(nameCompare);
-                   $scope.config.applicationTags.sort(nameCompare);
+                    $scope.config.tags.sort(nameCompare);
+                    $scope.config.applicationTags.sort(nameCompare);
 
-                   $scope.config.trackerTypes = $scope.config.defectTrackerTypeList;
-                   $scope.$parent.scanAgentSupportedList = $scope.config.scanAgentSupportedList;
-                   $scope.$parent.documents = $scope.config.documents;
-                   $scope.$parent.application = $scope.config.application;
+                    $scope.config.trackerTypes = $scope.config.defectTrackerTypeList;
+                    $scope.$parent.scanAgentSupportedList = $scope.config.scanAgentSupportedList;
+                    $scope.$parent.documents = $scope.config.documents;
+                    $scope.$parent.application = $scope.config.application;
 
-                   $rootScope.$broadcast('seeMoreExtension', "/" + $scope.config.application.team.id + "/" + $scope.config.application.id);
+                    $rootScope.$broadcast('seeMoreExtension', "/" + $scope.config.application.team.id + "/" + $scope.config.application.id);
 
-                   $rootScope.$broadcast('scheduledScans', $scope.config.scheduledScans);
-                   $rootScope.$broadcast('scanAgentTasks', $scope.config.scanAgentTasks);
-                   $rootScope.$broadcast('application', $scope.config.application);
-                   $rootScope.$broadcast('scans', $scope.config.scans);
-                   $rootScope.$broadcast('documents', $scope.config.documents);
-                   $rootScope.$broadcast('policyStatuses', $scope.config.application.policyStatuses);
+                    $rootScope.$broadcast('scheduledScans', $scope.config.scheduledScans);
+                    $rootScope.$broadcast('scanAgentTasks', $scope.config.scanAgentTasks);
+                    $rootScope.$broadcast('application', $scope.config.application);
+                    $rootScope.$broadcast('scans', $scope.config.scans);
+                    $rootScope.$broadcast('documents', $scope.config.documents);
+                    $rootScope.$broadcast('policyStatuses', $scope.config.application.policyStatuses);
 
-                   $rootScope.$broadcast('loadVulnerabilitySearchTable');
+                    $rootScope.$broadcast('loadVulnerabilitySearchTable');
 
-                   $scope.config.application.organization = $scope.config.application.team;
-                   $scope.$parent.application = $scope.config.application;
-               } else {
-                   $log.info("HTTP request for form objects failed. Error was " + data.message);
-               }
-           }).
-           error(function(data, status, headers, config) {
+                    $scope.config.application.organization = $scope.config.application.team;
+                    $scope.$parent.application = $scope.config.application;
+                } else {
+                    $log.info("HTTP request for form objects failed. Error was " + data.message);
+                }
+            }).
+            error(function(data, status, headers, config) {
                 $log.info("HTTP request for form objects failed.");
-               // TODO improve error handling and pass something back to the users
-               $scope.$parent.errorMessage = "Request to server failed. Got " + status + " response code.";
-           });
+                // TODO improve error handling and pass something back to the users
+                $scope.$parent.errorMessage = "Request to server failed. Got " + status + " response code.";
+            });
     });
 
     $scope.updateDefectStatus = function() {
@@ -650,5 +650,31 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             $scope.$parent.tab = { policy: true };
         }
     };
+
+    $scope.$on('scanDeleted', function() {
+        updatePolicyStatus();
+    });
+
+    $scope.$on('scansUploaded', function() {
+        updatePolicyStatus();
+    });
+
+    var updatePolicyStatus = function() {
+        $http.get(tfEncoder.encode(currentUrl + "/policyStatus")).
+            success(function(data, status, headers, config) {
+                if (data.success) {
+                    $scope.config.passFilters = data.object;
+                } else {
+                    $scope.config.passFilters = false;
+                    $log.info("HTTP request for form objects failed. Error was " + data.message);
+                }
+            }).
+            error(function(data, status, headers, config) {
+                $log.info("HTTP request for form objects failed.");
+                $scope.config.passFilters = false;
+                // TODO improve error handling and pass something back to the users
+                $scope.$parent.errorMessage = "Request to server failed. Got " + status + " response code.";
+            });
+    }
 
 });

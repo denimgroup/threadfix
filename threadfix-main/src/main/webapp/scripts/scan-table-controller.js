@@ -8,10 +8,6 @@ myAppModule.controller('ScanTableController', function ($scope, $window, $http, 
 
     $scope.isIE = /*@cc_on!@*/false || !!document.documentMode;
 
-    $scope.refresh = function() {
-
-    };
-
     $scope.deleteScan = function(scan) {
 
         if (confirm('Are you sure you want to delete this scan?')) {

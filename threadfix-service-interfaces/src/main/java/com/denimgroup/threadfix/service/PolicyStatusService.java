@@ -45,9 +45,9 @@ public interface PolicyStatusService extends GenericObjectService<PolicyStatus> 
 
     void runStatusCheck(int applicationId);
 
-    boolean passFilters(Application application);
+    Boolean passFilters(Application application);
 
-    boolean passFilters(Policy policy);
+    Boolean passFilters(Policy policy);
 
     List<String> getNotificationEmailAddresses(PolicyStatus policyStatus);
 
