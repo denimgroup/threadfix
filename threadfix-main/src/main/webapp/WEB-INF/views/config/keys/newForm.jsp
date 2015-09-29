@@ -25,7 +25,7 @@
                         <span id="lengthLimitError" class="errors" ng-show="form.note.$dirty && form.note.$error.maxlength">Over 255 characters limit!</span>
                     </td>
                 </tr>
-                <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_USERS">
+                <security:authorize ifAllGranted="ROLE_ENTERPRISE, ROLE_CAN_MANAGE_USERS">
                     <tr>
                         <td>User </td>
                         <td class="inputValue">
