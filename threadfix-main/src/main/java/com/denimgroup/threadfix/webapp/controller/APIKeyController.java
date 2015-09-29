@@ -31,9 +31,11 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.APIKeyService;
 import com.denimgroup.threadfix.service.UserService;
+import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -121,6 +123,7 @@ public class APIKeyController {
     // TODO authenticate
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
+	@JsonView(AllViews.TableRow.class)
 	public Object list() {
 		List<APIKey> list = apiKeyService.loadAll();
 
