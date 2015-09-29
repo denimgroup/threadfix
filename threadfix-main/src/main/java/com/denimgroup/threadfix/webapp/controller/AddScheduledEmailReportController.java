@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.denimgroup.threadfix.data.entities.EmailList;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ScheduledEmailReport;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -23,6 +24,10 @@ import com.denimgroup.threadfix.service.queue.scheduledjob.ScheduledEmailReportS
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.fasterxml.jackson.annotation.JsonView;
+
+import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Controller
 @RequestMapping("/configuration/scheduledEmailReports/add")
@@ -56,6 +61,11 @@ public class AddScheduledEmailReportController {
 
 		scheduledEmailReportService.validateDate(scheduledEmailReport, result);
 		scheduledEmailReportService.validateScheduleEmailReport(scheduledEmailReport, result);
+
+		List<EmailList> emptyEmailLists = list();
+		scheduledEmailReport.setEmailLists(emptyEmailLists);
+		List<String> emptyEmailAddresses = list();
+		scheduledEmailReport.setEmailAddresses(emptyEmailAddresses);
 
 		if (result.hasErrors()) {
 			return FormRestResponse.failure("Encountered errors.", result);
