@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.DiskUtils;
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
@@ -35,22 +34,17 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.merge.FindingMatcher;
 import com.denimgroup.threadfix.service.merge.PermissionsHandler;
 import com.denimgroup.threadfix.service.merge.ScanMerger;
-import edu.emory.mathcs.backport.java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.CollectionUtils.set;
 
 // TODO figure out this Transactional stuff
@@ -228,26 +222,38 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	@Override
 	public List<Scan> saveRemoteScansAndRun(List<Integer> channelIds, List<String> fileNames, List<String> originalNames) {
 
-		List<Scan> scans = CollectionUtils.list();
-		if (channelIds.size() != fileNames.size() || channelIds.size() != originalNames.size()) {
+		List<Scan> scans = list();
+
+		// this is so we don't lose the channel ID when we re-sort the scans
+		Map<Scan, Integer> channelIdMap = map();
+
+		if (channelIds.size() != fileNames.size() ||
+				channelIds.size() != originalNames.size()) {
 			return null;
 		}
 
 		for (int i = 0; i < channelIds.size() ; i++) {
 			Scan scan = parseScan(channelIds.get(i), list(fileNames.get(i)), list(originalNames.get(i)), null);
-			if (scan == null)
+			if (scan == null) {
 				return null;
+			}
 			scans.add(scan);
+
+			channelIdMap.put(scan, channelIds.get(i));
 		}
+
 		Collections.sort(scans, Scan.getTimeComparator());
 
-		if (channelIds.size() != scans.size())
+		if (channelIds.size() != scans.size()) {
 			return null;
+		}
 
-		for (int i=0; i<channelIds.size(); i++) {
-			Scan scan = mergeScan(channelIds.get(i), scans.get(i), null);
-			if (scan == null)
+		for (int i = 0; i < channelIds.size(); i++) {
+			Scan theScan = scans.get(i);
+			Scan scan = mergeScan(channelIdMap.get(theScan), theScan, null);
+			if (scan == null) {
 				return null;
+			}
 		}
 
 		for (Integer channelId: channelIds) {
