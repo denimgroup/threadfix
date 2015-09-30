@@ -326,7 +326,7 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
         for (Event event : events) {
             EventAction eventAction = event.getEventActionEnum();
             EventAction groupedEventAction = eventAction.getGroupedEventAction();
-            String groupedEventActionString = groupedEventAction.toString();
+            String groupedEventActionString = groupedEventAction.name();
             event.setEventAction(groupedEventActionString);
         }
 

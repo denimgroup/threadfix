@@ -29,6 +29,7 @@ import java.util.EnumSet;
 import java.util.Set;
 
 public enum EventAction {
+    UNKOWN_EVENT("Unknown Event"),
     GROUPED_VULNERABILITY_OPEN_SCAN_DELETED("Open Vulnerabilities From Scan Deletion"),
     GROUPED_VULNERABILITY_OPEN_SCAN_UPLOAD("Create Vulnerabilities From Scan Upload"),
     GROUPED_VULNERABILITY_CLOSE_SCAN_DELETED("Close Vulnerabilities From Scan Deletion"),
@@ -179,10 +180,13 @@ public enum EventAction {
     }
 
     public static EventAction getEventAction(String input) {
-        EventAction action = null; // no default event action
+        if (input == null) {
+            return null;
+        }
+        EventAction action = UNKOWN_EVENT;
 
         for (EventAction eventAction : values()) {
-            if (eventAction.toString().equals(input) ||
+            if (eventAction.name().equals(input) ||
                     eventAction.displayName.equals(input) ||
                     eventAction.displayName.replace(' ', '_').equals(input)) {
                 action = eventAction;
