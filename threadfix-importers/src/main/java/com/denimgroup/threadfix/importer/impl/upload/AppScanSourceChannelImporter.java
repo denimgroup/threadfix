@@ -27,18 +27,21 @@ import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.exception.IllegalStateRestException;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.RegexUtils;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.listFrom;
 import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
@@ -50,6 +53,8 @@ import static com.denimgroup.threadfix.CollectionUtils.map;
         startingXMLTags = { "AssessmentRun", "AssessmentStats" }
 )
 public class AppScanSourceChannelImporter extends AbstractChannelImporter {
+
+	private static final SanitizedLogger LOG = new SanitizedLogger(AppScanSourceChannelImporter.class);
 
 	private static final Map<String, String> REGEX_MAP = map();
 	static {
@@ -178,6 +183,9 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	    		taintMap.put(atts.getValue("id"), map);
 	    	} else if ("Finding".equals(qName)) {
 	    		Map<String,String> findingMap = findingDataMap.get(atts.getValue("data_id"));
+				if (findingMap == null) {
+					throw new IllegalStateRestException("The submitted AppScan Source file has a missing data_id.");
+				}
 	    		String currentChannelVulnCode = stringValueMap.get(findingMap.get("vulnType"));
 	    		String currentPath = fileMap.get(siteMap.get(findingMap.get("siteId")).get("fileId"));
 	    		String currentSeverityCode = findingMap.get("severity");
@@ -280,19 +288,17 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	@Nonnull
     @Override
 	public ScanCheckResultBean checkFile() {
-        // TODO more validation
-		return new ScanCheckResultBean(ScanImportStatus.SUCCESSFUL_SCAN);
-		
-		//return testSAXInput(new AppScanSourceSAXValidator());
+		return testSAXInput(new AppScanSourceSAXValidator());
 	}
 	
 	public class AppScanSourceSAXValidator extends DefaultHandler {
 		private boolean hasFindings = false;
+		private boolean noVersion = true;
 		private boolean hasDate = false;
 		private boolean correctFormat = false;
 		
 	    private void setTestStatus() {
-	    	if (!correctFormat)
+	    	if (!correctFormat || noVersion)
 	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
 	    	else if (hasDate)
 	    		testStatus = checkTestDate();
@@ -311,8 +317,12 @@ public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
 	    	if ("Finding".equals(qName) && atts.getValue("vuln_type_id") != null) {
 	    		hasFindings = true;
-	    	} else if ("AssessmentFile".equals(qName)) {
-	    		correctFormat = true;
+			} else if ("AssessmentRun".equals(qName)) {
+				noVersion = atts.getValue("version") == null;
+				correctFormat = true;
+				if (noVersion) {
+					LOG.error("No version found in XML. We don't support Ounce scans.");
+				}
 	    	} else if ("AssessmentStats".equals(qName)) {
 	    		testDate = getCalendarFromTimeInMillisString(atts.getValue("date"));
 	    		hasDate = testDate != null;
