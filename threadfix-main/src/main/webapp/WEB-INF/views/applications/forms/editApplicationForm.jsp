@@ -110,7 +110,7 @@
                     <td>
                         <button ng-show="config.policyExist" class="btn"
                                 ng-click="switchTo('managePolicy')" id="managePolicyButton">
-                            Manage Policy
+                            Manage Policies
                         </button>
                         <security:authorize ifAllGranted="ROLE_CAN_MANAGE_POLICIES">
                             <a ng-hide="config.policyExist" class="btn btn-primary"
