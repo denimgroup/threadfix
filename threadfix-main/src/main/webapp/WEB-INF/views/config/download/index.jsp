@@ -73,7 +73,7 @@
                 </tr>
                 <tr>
                     <td>Sonar Plugin</td>
-                    <td><a target="_blank" href="https://github.com/denimgroup/threadfix/wiki/Using-the-Sonar-Plugin">
+                    <td><a target="_blank" href="https://github.com/denimgroup/threadfix/wiki/Sonar-Plugin">
                         Wiki
                     </a></td>
                     <td><a href="<spring:url value="/configuration/download/sonar" htmlEscape="true"/>">
