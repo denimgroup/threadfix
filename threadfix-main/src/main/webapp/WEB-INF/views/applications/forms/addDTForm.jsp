@@ -60,7 +60,7 @@
                     <input type="checkbox" ng-model="object.useDefaultProduct" id="useDefaultProduct" ng-change="toggleUseDefaultProduct()">
                 </td>
             </tr>
-            <tr ng-show="productNames" class="left-align">
+            <tr ng-show="productNames" class="left-align" id="productNamesSection">
                 <td id="projectname">Product Name</td>
                 <td class="inputValue">
                     <select ng-model="object.projectName" id="productNameSelect" name="productName" ng-disabled="object.useDefaultProduct">

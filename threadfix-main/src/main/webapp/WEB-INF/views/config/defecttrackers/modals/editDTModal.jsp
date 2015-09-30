@@ -96,7 +96,7 @@
                                 ng-click="getProductNames()">Get Product Names</button>
                     </td>
                 </tr>
-                <tr ng-show="productNames || object.defaultProductName" class="left-align">
+                <tr ng-show="productNames || object.defaultProductName" class="left-align" id="productNamesSection">
                     <td id="projectname">Product Name</td>
                     <td class="inputValue">
                         <select ng-model="object.defaultProductName" id="productNameSelect" name="productName">
