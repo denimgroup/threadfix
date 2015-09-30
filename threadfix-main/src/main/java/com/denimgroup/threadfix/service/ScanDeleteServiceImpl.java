@@ -626,9 +626,10 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					continue;
 				}
 				
-				if (newFirstFinding == null || earliestTime == null ||
+				if ((newFirstFinding == null || earliestTime == null ||
 						(finding.getScan().getImportTime() != null 
-						 && finding.getScan().getImportTime().before(earliestTime))) {
+						 && finding.getScan().getImportTime().before(earliestTime)))
+						&& !finding.getScan().getId().equals(scan.getId())) {
 					newFirstFinding = finding;
 					earliestTime = finding.getScan().getImportTime();
 				}
