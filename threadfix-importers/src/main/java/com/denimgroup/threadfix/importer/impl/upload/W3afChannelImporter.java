@@ -72,13 +72,6 @@ public class W3afChannelImporter extends AbstractChannelImporter {
      */
     @Override
     public Scan parseInput() {
-        try {
-            removeTagFromInputStream("httpresponse");
-            removeTagFromInputStream("http-response");
-        } catch (IOException e) {
-            log.error("Encountered IOException while trying to remove the httpresponse tag in parseInput.", e);
-        }
-
         return parseSAXInput(new W3afSAXParser());
     }
 
@@ -137,13 +130,15 @@ public class W3afChannelImporter extends AbstractChannelImporter {
     public class W3afSAXParser extends HandlerWithBuilder {
 
         private StringBuffer currentRawFinding = new StringBuffer();
+        private StringBuffer currentRequest = new StringBuffer();
+        private StringBuffer currentResponse = new StringBuffer();
         private Map<FindingKey, String> findingMap = map();
         private Boolean inVuln = false;
         private String path, param, vuln, severity;
         private String description = null,
-                        detailDescription = null,
-                        fixGuidance = null;
-        private boolean getText = false;
+                detailDescription = null,
+                fixGuidance = null;
+        private boolean getText = false, inRequest, inResponse;
 
 
 
@@ -155,6 +150,8 @@ public class W3afChannelImporter extends AbstractChannelImporter {
             findingMap.put(FindingKey.RAWFINDING, currentRawFinding.toString());
             findingMap.put(FindingKey.RECOMMENDATION, fixGuidance);
             findingMap.put(FindingKey.DETAIL, detailDescription);
+            findingMap.put(FindingKey.REQUEST, currentRequest.toString());
+            findingMap.put(FindingKey.RESPONSE, currentResponse.toString());
 
             Finding finding = constructFinding(findingMap);
 
@@ -178,7 +175,6 @@ public class W3afChannelImporter extends AbstractChannelImporter {
 
             if ("vulnerability".equals(qName) && atts.getValue("url") != null &&
                     !atts.getValue("url").isEmpty()) {
-                currentRawFinding.append(makeTag(name, qName , atts));
                 inVuln = true;
 
                 param = atts.getValue("var");
@@ -193,7 +189,6 @@ public class W3afChannelImporter extends AbstractChannelImporter {
 
             if ("information".equals(qName) && POTENTIALLY_INTERESTING_FILE.equals(atts.getValue("name")) &&
                     atts.getValue("url") != null && !atts.getValue("url").isEmpty()) {
-                currentRawFinding.append(makeTag(name, qName , atts));
                 inVuln = true;
                 param = null;
                 path = atts.getValue("url");
@@ -212,23 +207,59 @@ public class W3afChannelImporter extends AbstractChannelImporter {
                 fixGuidance = null;
                 getText = true;
             }
-            else
+            else if ("httprequest".equals(qName)){
+                if (currentRequest.toString().isEmpty()) {
+                    inRequest = true;
+                }
+            }
+            else if ("httpresponse".equals(qName) || "http-response".equals(qName)){
+                if (currentResponse.toString().isEmpty()) {
+                    inResponse = true;
+                }
+            }
+            else {
                 getText = false;
+            }
+
+            if (inVuln) {
+                currentRawFinding.append(makeTag(name, qName , atts));
+            }
+
+            if (inRequest) {
+                currentRequest.append(makeTag(name, qName , atts));
+            }
+            if (inResponse) {
+                currentResponse.append(makeTag(name, qName , atts));
+            }
         }
 
         public void endElement(String uri, String name, String qName) {
+            if (inVuln) {
+                currentRawFinding.append("</").append(qName).append(">");
+            }
+
+            if (inRequest) {
+                currentRequest.append("</").append(qName).append(">");
+            }
+            if (inResponse) {
+                currentResponse.append("</").append(qName).append(">");
+            }
+
             if (inVuln
                     && "vulnerability".equals(qName)|"information".equals(qName)) {
-                currentRawFinding.append("</").append(qName).append(">");
 
                 addFinding();
 
                 inVuln = false;
+                inRequest = false;
+                inResponse = false;
                 param = null;
                 path = null;
                 vuln = null;
                 severity = null;
                 currentRawFinding.setLength(0);
+                currentRequest.setLength(0);
+                currentResponse.setLength(0);
 
                 description = null;
                 detailDescription = null;
@@ -247,12 +278,24 @@ public class W3afChannelImporter extends AbstractChannelImporter {
                 fixGuidance = getBuilderText();
                 getText = false;
             }
+            if ("httprequest".equals(qName)){
+                inRequest = false;
+            }
+            if ("httpresponse".equals(qName) || "http-response".equals(qName)){
+                inResponse = false;
+            }
         }
 
         public void characters (char ch[], int start, int length)
         {
             if (inVuln)
                 currentRawFinding.append(ch,start,length);
+            if (inRequest) {
+                currentRequest.append(ch,start,length);
+            }
+            if (inResponse) {
+                currentResponse.append(ch,start,length);
+            }
             if (getText)
                 addTextToBuilder(ch, start, length);
         }
