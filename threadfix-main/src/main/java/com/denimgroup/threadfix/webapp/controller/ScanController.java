@@ -24,10 +24,7 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.DiskUtils;
-import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
@@ -65,13 +62,11 @@ public class ScanController {
 	@Autowired
 	private FindingService findingService;
 	@Autowired
-	private VulnerabilityService vulnerabilityService;
-	@Autowired
-	private ApplicationService applicationService;
-	@Autowired
 	private GenericVulnerabilityService genericVulnerabilityService;
 	@Autowired
 	private DefaultConfigService defaultConfigService;
+	@Autowired
+	private VulnerabilityFilterService vulnerabilityFilterService;
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
@@ -119,10 +114,14 @@ public class ScanController {
 
 		if (scanId != null) {
 			Scan scan = scanService.loadScan(scanId);
+
 			if ((scan != null) && (scan.getApplication() != null) && (scan.getApplication().isActive())) {
+				Application application = scan.getApplication();
+				List<Scan> scans = scan.getApplication().getScans();
 				scanDeleteService.deleteScan(scan);
-				vulnerabilityService.updateVulnerabilityReport(
-						applicationService.loadApplication(appId), scanId);
+
+				scans.remove(scan);
+				vulnerabilityFilterService.updateStatistics(application.getOrganization().getId(), application.getId());
 			}
 		}
 
