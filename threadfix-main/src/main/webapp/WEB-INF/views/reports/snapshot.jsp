@@ -1,7 +1,7 @@
 <div ng-controller="SnapshotReportController">
 
     <div class="vuln-tree">
-        <select ng-change="loadReport()" style="margin-bottom: 0" class="reportTypeSelect" id="reportSnapshotSelect" ng-model="reportId">
+        <select ng-change="loadReport()" style="margin-bottom: 0; width:auto" class="reportTypeSelect" id="reportSnapshotSelect" ng-model="reportId">
             <option ng-selected="reportId === option.id" ng-repeat="option in snapshotOptions" value="{{ option.id }}">
                 {{ option.name }}
             </option>
