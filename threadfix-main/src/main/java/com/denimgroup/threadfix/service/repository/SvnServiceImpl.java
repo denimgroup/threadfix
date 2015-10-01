@@ -103,10 +103,10 @@ public class SvnServiceImpl extends RepositoryServiceImpl implements RepositoryS
                 result.rejectValue("repositoryUrl", null, null, "Authorization failed.");
             }
 
-            log.info("Got an error from the SVN server, logging to database (visible under View Error Messages)");
+            log.info("Got an error from the SVN server, logging to database (visible under Error Messages)");
             exceptionLogService.storeExceptionLog(new ExceptionLog(e));
         } else {
-            log.info("Got an error, logging to database (visible under View Error Messages)");
+            log.info("Got an error, logging to database (visible under Error Messages)");
             exceptionLogService.storeExceptionLog(new ExceptionLog(e));
         }
     }
