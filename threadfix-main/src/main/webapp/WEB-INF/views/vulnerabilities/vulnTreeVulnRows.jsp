@@ -52,10 +52,10 @@
     </div>
 
     <!-- Scanner Badges -->
-    <span id="channel{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}{{ name }}" ng-repeat="name in vulnerability.channelNames" class="badge">{{ name }}</span>
+    <span id="channel{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $parent.$index }}{{ name | removeSpace }}" ng-repeat="name in vulnerability.channelNames" class="badge">{{ name }}</span>
     <br>
     <!-- Tag Badges -->
-    <span id="tag{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}{{ name }}" ng-repeat="tag in vulnerability.tags" class="badge pointer" ng-class="{'badge-vulnerability-tag': true}" ng-click="goToTag(tag)">{{ tag.name }}</span>
+    <span id="tag{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $parent.$index }}{{ tag.name | removeSpace }}" ng-repeat="tag in vulnerability.tags" class="badge pointer" ng-class="{'badge-vulnerability-tag': true}" ng-click="goToTag(tag)">{{ tag.name }}</span>
     <br ng-show="vulnerability.tags">
     <a id="defectBadge{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}"
        ng-href="{{ vulnerability.defect.defectURL }}"
