@@ -155,6 +155,7 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
                 if (oldField.getName().equals(field.getName())) {
                     oldField.setRequired(field.getRequired());
                     oldField.setSecret(field.isSecret());
+                    oldField.setPlaceholder(field.getPlaceholder());
                     found = true;
                 }
             }
@@ -190,6 +191,9 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
             } else {
                 throw new IllegalArgumentException("The third section in " + line + " should be true or false.");
             }
+
+        if (split.length > 3)
+            field.setPlaceholder(split[3]);
 
         field.setName(split[0]);
 

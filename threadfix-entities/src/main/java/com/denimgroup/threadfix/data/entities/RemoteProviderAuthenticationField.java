@@ -35,7 +35,7 @@ import javax.persistence.*;
 @Table(name = "RemoteProviderAuthenticationField")
 public class RemoteProviderAuthenticationField extends BaseEntity {
 
-    String name, value, encryptedValue;
+    String name, value, encryptedValue, placeholder;
 
     Boolean secret = false, required = false;
 
@@ -59,6 +59,16 @@ public class RemoteProviderAuthenticationField extends BaseEntity {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @Column(length = 255)
+    @JsonView(Object.class)
+    public String getPlaceholder() {
+        return placeholder;
+    }
+
+    public void setPlaceholder(String placeholder) {
+        this.placeholder = placeholder;
     }
 
     @Column

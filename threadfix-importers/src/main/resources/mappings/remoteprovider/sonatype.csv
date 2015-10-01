@@ -1,4 +1,4 @@
-1/31/2015 15:31:00
+10/1/2015 15:31:00
 type.name
 Sonatype,http://www.sonatype.org/nexus/,1,Use as a Remote Provider
 type.credentials
@@ -6,6 +6,6 @@ usernamepassword
 type.channelname
 Sonatype
 type.authenticationfields
-URL,false,true
+URL,false,true,http://api.cs.sonatype.com:8070
 Username,false,true
 Password,true,true

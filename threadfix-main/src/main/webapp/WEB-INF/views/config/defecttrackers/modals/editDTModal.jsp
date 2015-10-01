@@ -28,25 +28,6 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="no-color">URL</td>
-                    <td class="no-color inputValue">
-                        <input id="urlInput"
-                               type="url"
-                               name="url"
-                               size="50"
-                               ng-model="object.url"
-                               maxlength="255"
-                               value="${ defectTracker.url }" required/>
-                    </td>
-                    <td>
-                        <span id="urlRequiredError" class="errors" ng-show="form.url.$dirty && form.url.$error.required">URL is required.</span>
-                        <span id="urlInvalidError" class="errors" ng-show="form.url.$dirty && form.url.$error.url">URL is invalid.</span>
-                        <span id="urlCharacterLimitError" class="errors" ng-show="form.url.$dirty && form.url.$error.maxlength">Over 255 characters limit!</span>
-                        <span id="urlServerError" class="errors" ng-show="object.url_error"> {{ object.url_error }}</span>
-                        <span id="urlSelfSignedCertificateError" class="errors" ng-show="showKeytoolLink">Instructions for importing a self-signed certificate can be found <a target="_blank" href="https://github.com/denimgroup/threadfix/wiki/Importing-Self-Signed-Certificates">here</a>.</span>
-                    </td>
-                </tr>
-                <tr>
                     <td class="no-color">Type</td>
                     <td class="no-color inputValue">
                         <select id="defectTrackerTypeSelect"
@@ -59,6 +40,26 @@
                     </td>
                     <td>
                         <span id="typeServerError" class="errors" ng-show="object.defectTrackerType_id_error"> {{ object.defectTrackerType_id_error }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="no-color">URL</td>
+                    <td class="no-color inputValue">
+                        <input id="urlInput"
+                               type="url"
+                               name="url"
+                               size="50"
+                               ng-model="object.url"
+                               placeholder="{{object.defectTrackerType.urlPlaceholder}}"
+                               maxlength="255"
+                               value="${ defectTracker.url }" required/>
+                    </td>
+                    <td>
+                        <span id="urlRequiredError" class="errors" ng-show="form.url.$dirty && form.url.$error.required">URL is required.</span>
+                        <span id="urlInvalidError" class="errors" ng-show="form.url.$dirty && form.url.$error.url">URL is invalid.</span>
+                        <span id="urlCharacterLimitError" class="errors" ng-show="form.url.$dirty && form.url.$error.maxlength">Over 255 characters limit!</span>
+                        <span id="urlServerError" class="errors" ng-show="object.url_error"> {{ object.url_error }}</span>
+                        <span id="urlSelfSignedCertificateError" class="errors" ng-show="showKeytoolLink">Instructions for importing a self-signed certificate can be found <a target="_blank" href="https://github.com/denimgroup/threadfix/wiki/Importing-Self-Signed-Certificates">here</a>.</span>
                     </td>
                 </tr>
                 <tr>
