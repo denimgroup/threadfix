@@ -519,16 +519,50 @@ public class Event extends AuditableEntity {
                 appendApplicationLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
-            case VULNERABILITY_MARK_FALSE_POSITIVE:
+            case VULNERABILITY_MARK_FALSE_POSITIVE_MANUAL:
                 description.append(getUserName()).append(" marked Vulnerability");
                 appendVulnerabilityLink(description, descriptionUrlMap, historyView);
                 description.append(" as false positive");
                 description.append(".");
                 break;
-            case VULNERABILITY_UNMARK_FALSE_POSITIVE:
+            case VULNERABILITY_MARK_FALSE_POSITIVE_SCAN_UPLOAD:
+                description.append(getUserName()).append(" marked Vulnerability");
+                appendVulnerabilityLink(description, descriptionUrlMap, historyView);
+                description.append(" as false positive uploading a ")
+                        .append(buildScanLink(getScan(), "Scan", descriptionUrlMap))
+                        .append(" to Application");
+                appendApplicationLink(description, descriptionUrlMap, historyView);
+                description.append(".");
+                break;
+            case GROUPED_VULNERABILITY_MARK_FALSE_POSITIVE_SCAN_UPLOAD:
+                description.append(getUserName()).append(" marked ").append(getGroupCount()).append(" Vulnerabilities");
+                description.append(" as false positive uploading a ")
+                        .append(buildScanLink(getScan(), "Scan", descriptionUrlMap))
+                        .append(" to Application");
+                appendApplicationLink(description, descriptionUrlMap, historyView);
+                description.append(".");
+                break;
+            case VULNERABILITY_UNMARK_FALSE_POSITIVE_MANUAL:
                 description.append(getUserName()).append(" unmarked Vulnerability");
                 appendVulnerabilityLink(description, descriptionUrlMap, historyView);
                 description.append(" as false positive");
+                description.append(".");
+                break;
+            case VULNERABILITY_UNMARK_FALSE_POSITIVE_SCAN_UPLOAD:
+                description.append(getUserName()).append(" unmarked Vulnerability");
+                appendVulnerabilityLink(description, descriptionUrlMap, historyView);
+                description.append(" as false positive uploading a ")
+                        .append(buildScanLink(getScan(), "Scan", descriptionUrlMap))
+                        .append(" to Application");
+                appendApplicationLink(description, descriptionUrlMap, historyView);
+                description.append(".");
+                break;
+            case GROUPED_VULNERABILITY_UNMARK_FALSE_POSITIVE_SCAN_UPLOAD:
+                description.append(getUserName()).append(" unmarked ").append(getGroupCount()).append(" Vulnerabilities");
+                description.append(" as false positive uploading a ")
+                        .append(buildScanLink(getScan(), "Scan", descriptionUrlMap))
+                        .append(" to Application");
+                appendApplicationLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
             case VULNERABILITY_COMMENT:
