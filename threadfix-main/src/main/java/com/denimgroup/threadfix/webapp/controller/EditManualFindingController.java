@@ -34,8 +34,10 @@ import com.denimgroup.threadfix.service.ScanService;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.queue.QueueSender;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -116,6 +118,7 @@ public class EditManualFindingController {
 	}
 	
     @RequestMapping(params = "group=static", method = RequestMethod.POST)
+    @JsonView(AllViews.VulnerabilityDetail.class)
 	public @ResponseBody RestResponse<Vulnerability> staticSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
             @PathVariable("findingId") int findingId,
@@ -171,6 +174,7 @@ public class EditManualFindingController {
 	}
 	
     @RequestMapping(params = "group=dynamic", method = RequestMethod.POST)
+    @JsonView(AllViews.VulnerabilityDetail.class)
 	public @ResponseBody RestResponse<Vulnerability> dynamicSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
             @PathVariable("findingId") int findingId,
