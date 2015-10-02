@@ -712,26 +712,8 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 				}
 			}
 			
-			// We need to check to see if the associated Defect has any valid vulns still
-			// attached to it before deleting.
-			if (vuln.getDefect() != null && 
-					vuln.getDefect().getVulnerabilities() != null) {
-				boolean keepIt = false;
-				for (Vulnerability loopVuln : vuln.getDefect().getVulnerabilities()) {
-					if (loopVuln.getFindings() != null && 
-							loopVuln.getFindings().size() != 0) {
-						keepIt = true;
-						break;
-					}
-				}
-				if (!keepIt) {
-					log.debug("Deleting orphaned defect with ID " + vuln.getDefect().getId() + ".");
-					Defect defect = vuln.getDefect();
-					vuln.setDefect(null);
-					defectDao.delete(defect);
-				}
-			}
-			
+			vuln.setDefect(null);
+
 			// Vulns should not have any reopen maps if they are here
 			// but they can have close maps.
 			if (vuln.getScanCloseVulnerabilityMaps() != null) {
