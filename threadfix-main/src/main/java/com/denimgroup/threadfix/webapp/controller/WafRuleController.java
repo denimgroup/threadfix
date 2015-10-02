@@ -91,9 +91,9 @@ public class WafRuleController {
             }
         }
 
-        List<WafRule> newWafRuleList = wafService.generateWafRules(waf, wafDirective, application);
+        wafService.generateWafRules(waf, wafDirective, application);
 
-        String rulesText = wafService.getRulesText(waf, newWafRuleList);
+        String rulesText = wafService.getAllRuleText(waf);
 
         if (rulesText == null || rulesText.isEmpty()) {
             return failure("No Rules generated for WAF. It is possible none of the vulnerability types in the applications attached are supported by this WAF.");
