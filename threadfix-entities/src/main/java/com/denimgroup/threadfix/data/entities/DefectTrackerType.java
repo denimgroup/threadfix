@@ -49,8 +49,8 @@ public class DefectTrackerType extends BaseEntity {
 			BUGZILLA, "http://10.2.4.176",
 			JIRA, "https://threadfix.atlassian.net",
 			MICROSOFT_TFS, "http://dgvm-tfsx:8080/tfs",
-			HP_QUALITYCENTER, "http://10.2.4.124:8080/qcbin",
-			VERSION_ONE, "https://www15.v1host.com/DenimGroup");
+			HP_QUALITYCENTER, "http://host/qcbin",
+			VERSION_ONE, "https://www1.v1host.com/YourOrganization");
 
 	private String name;
 	private String version;
