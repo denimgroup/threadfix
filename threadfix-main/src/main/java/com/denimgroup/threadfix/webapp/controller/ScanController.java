@@ -156,9 +156,13 @@ public class ScanController {
 				List<String> fullFilePaths = defaultConfiguration.getFullFilePaths(scan);
 				String failureMsg;
 
-				for (String fullFileName: fullFilePaths) {
+				for (int i = 0; i< fullFilePaths.size(); i++ ) {
+
+					String fullFileName = fullFilePaths.get(i);
+
 					if (fullFileName.endsWith(scanFileName)) {
-						failureMsg = scanService.downloadScan(scan, fullFileName, response);
+						String originalFileName = (scan.getOriginalFileNames().size() > i ? scan.getOriginalFileNames().get(i) : scanFileName);
+						failureMsg = scanService.downloadScan(scan, fullFileName, response, originalFileName);
 						if (failureMsg != null) {
 							return RestResponse.failure(failureMsg);
 						}

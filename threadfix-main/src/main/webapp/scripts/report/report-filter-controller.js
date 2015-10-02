@@ -337,15 +337,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
         if (reportExporter.checkOldIE()) {
             window.location.href = tfEncoder.encode(url);
         } else {
-            $http.post(tfEncoder.encode(url), parameters).
-                success(function(data)
-                {
-                    reportExporter.exportCSV(data, "application/octet-stream", reportName);
-                }).
-                error(function(data, status) {
-                    $scope.errorMessage = "Failed to retrieve vulnerability report. HTTP status was " + status;
-                    $scope.loadingTree = false;
-                });
+            reportExporter.downloadFileByForm(tfEncoder.encode(url), parameters, "post");
         }
     };
 

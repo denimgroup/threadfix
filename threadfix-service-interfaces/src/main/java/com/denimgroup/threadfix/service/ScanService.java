@@ -55,7 +55,7 @@ public interface ScanService {
 	/**
 	 * @param scan
 	 */
-	String downloadScan(Scan scan, String fullFilePath, HttpServletResponse response);
+	String downloadScan(Scan scan, String fullFilePath, HttpServletResponse response, String originalFileName);
 	
 	/**
 	 * This method delegates the checking to the appropriate importer and returns the code

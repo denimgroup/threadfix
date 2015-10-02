@@ -5,6 +5,75 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
     var reportExporter = {};
     var browerErrMsg = "Sorry, your browser does not support this feature. Please upgrade IE version or change to Chrome which is recommended.";
 
+    reportExporter.downloadFileByForm = function(path, params, method) {
+        method = method || "post";
+
+        var form = document.createElement("form");
+        form.setAttribute("method", method);
+        form.setAttribute("action", path);
+
+        //Move the submit function to another variable
+        //so that it doesn't get overwritten.
+        form._submit_function_ = form.submit;
+
+        for(var key in params) {
+            if(params.hasOwnProperty(key)) {
+                appendChildToForm(form, params[key], key);
+            }
+        }
+
+        document.body.appendChild(form);
+        form._submit_function_();
+    };
+
+    // Create hidden form to submit post request downloading file
+    var appendChildToForm = function(form, object, key) {
+        if (getTypeOfValue(object) === "String" || getTypeOfValue(object) === "Other"){
+
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", key);
+            hiddenField.setAttribute("value", object);
+
+            form.appendChild(hiddenField);
+
+        } else if (getTypeOfValue(object) === "Object") {
+            for(var keyChild in object) {
+                if (object.hasOwnProperty(keyChild)) {
+                    appendChildToForm(form, object[keyChild], key + "." + keyChild);
+                }
+            }
+        } else if (getTypeOfValue(object) === "Array") {
+            object.forEach(function(item, i){
+                appendChildToForm(form, item, key + "[" + i + "]");
+            });
+        }
+    };
+
+    var getTypeOfValue = function(object) {
+        var stringConstructor = "test".constructor;
+        var arrayConstructor = [].constructor;
+        var objectConstructor = {}.constructor;
+        if (object === null) {
+            return "null";
+        }
+        else if (object === undefined) {
+            return "undefined";
+        }
+        else if (object.constructor === stringConstructor) {
+            return "String";
+        }
+        else if (object.constructor === arrayConstructor) {
+            return "Array";
+        }
+        else if (object.constructor === objectConstructor) {
+            return "Object";
+        }
+        else {
+            return "Other";
+        }
+    }
+
     reportExporter.exportScan = function(data, contentType, fileName) {
 
         $timeout(function() {
