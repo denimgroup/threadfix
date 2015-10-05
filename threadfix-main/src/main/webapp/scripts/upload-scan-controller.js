@@ -58,8 +58,8 @@ myAppModule.controller('UploadScanController', function ($scope, $modalInstance,
                 $rootScope.$broadcast('scansUploaded');
             } else {
                 if (!data.message) {
-                    // If there's no message, this is often an uncaught RuntimeException. It should be stored in View Error Messages.
-                    $scope.alerts = [{ type: 'danger', msg: "An error has occurred. Please go to the 'View Error Messages' page (under the cog) for more details." }];
+                    // If there's no message, this is often an uncaught RuntimeException. It should be stored in Error Messages.
+                    $scope.alerts = [{ type: 'danger', msg: "An error has occurred. Please go to the 'Error Messages' page (under the cog) for more details." }];
                 } else {
                     $scope.alerts = [{ type: 'danger', msg: data.message }];
                 }

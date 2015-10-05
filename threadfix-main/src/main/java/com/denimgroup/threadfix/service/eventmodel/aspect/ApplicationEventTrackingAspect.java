@@ -54,7 +54,7 @@ public class ApplicationEventTrackingAspect extends EventTrackingAspect {
                 publishEventTrackingEvent(event);
             }
         } catch (Exception e) {
-            log.error("Error while logging Event: " + eventAction + ", logging to database (visible under View Error Messages)");
+            log.error("Error while logging Event: " + eventAction + ", logging to database (visible under Error Messages)");
             exceptionLogService.storeExceptionLog(new ExceptionLog(e));
         }
         return proceed;
@@ -98,7 +98,7 @@ public class ApplicationEventTrackingAspect extends EventTrackingAspect {
             Event event = generateUploadScanEvent(scan);
             publishEventTrackingEvent(event);
         } catch (Exception e) {
-            log.error("Error while logging Event: " + EventAction.APPLICATION_SCAN_UPLOADED + ", logging to database (visible under View Error Messages)");
+            log.error("Error while logging Event: " + EventAction.APPLICATION_SCAN_UPLOADED + ", logging to database (visible under Error Messages)");
             exceptionLogService.storeExceptionLog(new ExceptionLog(e));
         }
     }
@@ -141,7 +141,7 @@ public class ApplicationEventTrackingAspect extends EventTrackingAspect {
             Event event = generateDeleteScanEvent(application, eventDescription, scanId);
             publishEventTrackingEvent(event);
         } catch (Exception e) {
-            log.error("Error while logging Event: " + EventAction.APPLICATION_SCAN_DELETED + ", logging to database (visible under View Error Messages)");
+            log.error("Error while logging Event: " + EventAction.APPLICATION_SCAN_DELETED + ", logging to database (visible under Error Messages)");
             exceptionLogService.storeExceptionLog(new ExceptionLog(e));
         }
     }

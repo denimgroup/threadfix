@@ -53,7 +53,7 @@ public class PolicyEventTrackingAspect extends EventTrackingAspect {
             List<PolicyStatus> policyStatuses = policy.getPolicyStatuses();
             emitPolicyStatusCheckEvents(policyStatuses);
         } catch (Exception e) {
-            log.error("Error while logging Policy Status Check Events, logging to database (visible under View Error Messages)");
+            log.error("Error while logging Policy Status Check Events, logging to database (visible under Error Messages)");
             exceptionLogService.storeExceptionLog(new ExceptionLog(e));
         }
         return proceed;
@@ -69,7 +69,7 @@ public class PolicyEventTrackingAspect extends EventTrackingAspect {
                 emitPolicyStatusCheckEvents(policyStatuses);
             }
         } catch (Exception e) {
-            log.error("Error while logging Policy Status Check Events, logging to database (visible under View Error Messages)");
+            log.error("Error while logging Policy Status Check Events, logging to database (visible under Error Messages)");
             exceptionLogService.storeExceptionLog(new ExceptionLog(e));
         }
         return proceed;
@@ -95,7 +95,7 @@ public class PolicyEventTrackingAspect extends EventTrackingAspect {
                 }
             }
         } catch (Exception e) {
-            log.error("Error while logging Policy Status Check Events, logging to database (visible under View Error Messages)");
+            log.error("Error while logging Policy Status Check Events, logging to database (visible under Error Messages)");
             exceptionLogService.storeExceptionLog(new ExceptionLog(e));
         }
         return proceed;
@@ -112,7 +112,7 @@ public class PolicyEventTrackingAspect extends EventTrackingAspect {
             Event event = generatePolicyStatusUpdateEvent(policyStatus, eventAction);
             publishEventTrackingEvent(event);
         } catch (Exception e) {
-            log.error("Error while logging Event: " + eventAction + ", logging to database (visible under View Error Messages)");
+            log.error("Error while logging Event: " + eventAction + ", logging to database (visible under Error Messages)");
             exceptionLogService.storeExceptionLog(new ExceptionLog(e));
         }
     }

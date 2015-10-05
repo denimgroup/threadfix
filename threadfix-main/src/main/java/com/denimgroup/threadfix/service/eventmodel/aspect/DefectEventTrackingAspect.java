@@ -59,7 +59,7 @@ public class DefectEventTrackingAspect extends EventTrackingAspect {
                 publishEventTrackingEvent(event);
             }
         } catch (Exception e) {
-            log.error("Error while logging Event: " + EventAction.DEFECT_SUBMIT + ", logging to database (visible under View Error Messages)");
+            log.error("Error while logging Event: " + EventAction.DEFECT_SUBMIT + ", logging to database (visible under Error Messages)");
             exceptionLogService.storeExceptionLog(new ExceptionLog(e));
         }
         return proceed;
@@ -82,7 +82,7 @@ public class DefectEventTrackingAspect extends EventTrackingAspect {
             }
         } catch (Exception e) {
             errorLoggingEvent = true;
-            log.error("Error while logging Event: " + EventAction.DEFECT_STATUS_UPDATED + ", logging to database (visible under View Error Messages)");
+            log.error("Error while logging Event: " + EventAction.DEFECT_STATUS_UPDATED + ", logging to database (visible under Error Messages)");
             exceptionLogService.storeExceptionLog(new ExceptionLog(e));
         }
         Object proceed = joinPoint.proceed();
@@ -116,7 +116,7 @@ public class DefectEventTrackingAspect extends EventTrackingAspect {
                 }
             }
         } catch (Exception e) {
-            log.error("Error while logging Event: " + EventAction.DEFECT_STATUS_UPDATED + ", logging to database (visible under View Error Messages)");
+            log.error("Error while logging Event: " + EventAction.DEFECT_STATUS_UPDATED + ", logging to database (visible under Error Messages)");
             exceptionLogService.storeExceptionLog(new ExceptionLog(e));
         }
         return proceed;
@@ -156,7 +156,7 @@ public class DefectEventTrackingAspect extends EventTrackingAspect {
                 }
             }
         } catch (Exception e) {
-            log.error("Error while logging Event: " + EventAction.DEFECT_APPEARED_AFTER_CLOSED + ", logging to database (visible under View Error Messages)");
+            log.error("Error while logging Event: " + EventAction.DEFECT_APPEARED_AFTER_CLOSED + ", logging to database (visible under Error Messages)");
             exceptionLogService.storeExceptionLog(new ExceptionLog(e));
         }
         return proceed;
