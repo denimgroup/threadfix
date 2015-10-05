@@ -41,8 +41,10 @@ import javax.annotation.Nonnull;
 import javax.net.ssl.SSLHandshakeException;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 
 public class HttpRestUtils {
 
@@ -259,6 +261,15 @@ public class HttpRestUtils {
         LOGGER.debug("Returning " + finishedUrl);
 
         return finishedUrl;
+    }
+
+    public static String encode(String input) {
+        try {
+            return URLEncoder.encode(input, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Nonnull
