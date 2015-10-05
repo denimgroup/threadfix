@@ -41,6 +41,10 @@ module.controller('WafDetailPageController', function($scope, $window, $http, $m
     }
 
     $scope.generateRules = function() {
+
+        $scope.wafApplicationId = this.wafApplicationId;
+        $scope.wafDirective = this.wafDirective;
+
         $http.post(tfEncoder.encode('/wafs/' + $scope.wafId + '/generateRules/' +  $scope.wafApplicationId + '/' +  $scope.wafDirective)).
             success(function(data, status, headers, config) {
 
