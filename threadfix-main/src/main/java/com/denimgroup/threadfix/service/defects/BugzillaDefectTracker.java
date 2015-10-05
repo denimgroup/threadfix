@@ -95,7 +95,10 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			if (metadata.getDescription() == null    || metadata.getComponent() == null
 					|| metadata.getVersion() == null || metadata.getSeverity() == null 
 					|| metadata.getStatus() == null  || metadata.getPriority() == null) {
-                log.error("DefectMetadata was missing a field. Please fix this and try again.");
+				String message = "DefectMetadata was missing a field. Please fix this and try again. " +
+						"Required fields are: description, version, status, component, severity, and priority";
+				log.error(message);
+				setLastError(message);
 
 				return null;
 			}
