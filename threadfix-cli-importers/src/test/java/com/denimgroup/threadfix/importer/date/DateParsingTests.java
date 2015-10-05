@@ -23,10 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.date;
 
+import com.denimgroup.threadfix.importer.impl.upload.DependencyCheckChannelImporter;
 import org.junit.Test;
 
+import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
@@ -47,6 +51,22 @@ public class DateParsingTests {
 
         for (Map.Entry<String, Long> entry : map.entrySet()) {
             ScanDateParsingChecker.compare(entry.getKey(), entry.getValue());
+        }
+    }
+
+    @Test
+    public void testDependencyCheckDateParsing() {
+        List<String> newDateFormat = list(
+                "2015-03-27T11:32:55.830-0500",
+                "2014-07-25T22:29:16.327-0500",
+                "Feb 11, 2014 2:09:21 PM",
+                "Aug 19, 2013 10:26:55 AM"
+        );
+
+        for (String dateSample : newDateFormat) {
+            Calendar calendar = DependencyCheckChannelImporter.parseDate(dateSample);
+
+            assert calendar != null : "Null for " + dateSample;
         }
     }
 
