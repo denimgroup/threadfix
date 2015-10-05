@@ -176,9 +176,17 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         }
     };
 
+    var refreshNoParamUpdate = function() {
+        $scope.loading = true;
+        vulnSearchParameterService.updateParameters($scope, $scope.parameters);
+
+        $scope.$broadcast("refreshVulnSearchTree", $scope.parameters);
+        $scope.lastLoadedFilterName = undefined;
+    };
+
     $scope.$on('updateDisplayData', function(event, parameters) {
         $scope.parameters = angular.copy(parameters);
-        $scope.refresh();
+        refreshNoParamUpdate();
     });
 
     $scope.$on('resetParameters', function(event, parameters) {
