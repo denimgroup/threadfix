@@ -659,6 +659,14 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
         updatePolicyStatus();
     });
 
+    $scope.$on('scanUploaded', function() {
+        updatePolicyStatus();
+    });
+
+    $scope.$on('severityChanged', function() {
+        updatePolicyStatus();
+    });
+
     var updatePolicyStatus = function() {
         $http.get(tfEncoder.encode(currentUrl + "/policyStatus")).
             success(function(data, status, headers, config) {
