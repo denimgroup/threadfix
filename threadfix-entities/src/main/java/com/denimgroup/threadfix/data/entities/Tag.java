@@ -134,8 +134,8 @@ public class Tag extends AuditableEntity {
     public boolean getDeletable() {
         if (enterpriseTag == null)
             enterpriseTag = false;
-        return applications.size()==0
-                && getVulnCommentsCount()==0
+        return applications.size() == 0
+                && getVulnCommentsCount() == 0
                 && vulnerabilities.size() == 0
                 && !enterpriseTag;
     }
