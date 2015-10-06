@@ -185,12 +185,12 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 
 	public RestResponse<Application> searchForApplicationByName(String name, String teamName) {
 		return httpRestUtils.httpGet("/applications/" + encode(teamName) + "/lookup",
-				"&name=" + name, Application.class);
+				"&name=" + encode(name), Application.class);
 	}
 
     public RestResponse<Application> searchForApplicationInTeamByUniqueId(String uniqueId, String teamName) {
         return httpRestUtils.httpGet("/applications/" + encode(teamName) + "/lookup",
-                "&uniqueId=" + uniqueId, Application.class);
+                "&uniqueId=" + encode(uniqueId), Application.class);
     }
 
 	public RestResponse<Organization> searchForTeamById(String id) {
