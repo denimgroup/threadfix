@@ -189,6 +189,16 @@ public class Event extends AuditableEntity {
         this.scan = scan;
     }
 
+    @Transient
+    @JsonView({ AllViews.HistoryView.class})
+    public Integer getScanId() {
+        Scan scan = getScan();
+        if (scan != null) {
+            return scan.getId();
+        }
+        return null;
+    }
+
     @ManyToOne
     @JoinColumn(name = "findingId")
     @JsonIgnore
@@ -198,16 +208,6 @@ public class Event extends AuditableEntity {
 
     public void setFinding(Finding finding) {
         this.finding = finding;
-    }
-
-    @Transient
-    @JsonView({ AllViews.HistoryView.class})
-    public Integer getScanId() {
-        Scan scan = getScan();
-        if (scan != null) {
-            return scan.getId();
-        }
-        return null;
     }
 
     @JoinColumn(name = "deletedScanId")
