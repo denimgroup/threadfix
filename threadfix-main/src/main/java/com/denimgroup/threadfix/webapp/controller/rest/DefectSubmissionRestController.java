@@ -108,7 +108,7 @@ public class DefectSubmissionRestController extends TFRestController {
         defectViewModel.setVulnerabilityIds(vulnerabilityIds);
 
         if (dt.getClass().equals(BugzillaDefectTracker.class)) {
-            defectViewModel.setSelectedComponent(getFirstOrNull(params, "component"));
+            defectViewModel.setSelectedComponent(getFirstOrNull(params, "selectedComponent"));
             defectViewModel.setSummary(getFirstOrNull(params, "summary"));
             defectViewModel.setPriority(getFirstOrNull(params, "priority"));
             defectViewModel.setVersion(getFirstOrNull(params, "version"));
