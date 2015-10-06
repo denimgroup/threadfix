@@ -108,11 +108,11 @@
                                  </ul>
                             </li>
                         </security:authorize>
-                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT, ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS, ROLE_CAN_MANAGE_TAGS,ROLE_CAN_MANAGE_POLICIES, ROLE_CAN_MODIFY_VULNERABILITIES">
+                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT, ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS, ROLE_CAN_MANAGE_TAGS,ROLE_CAN_MANAGE_POLICIES, ROLE_CAN_MODIFY_VULNERABILITIES,ROLE_CAN_MANAGE_VULN_FILTERS">
                             <li class="dropdown-submenu left pull-left normalLinks">
                                 <a tabindex="-1" href="#" id="manageCustomLink">Customize</a>
                                 <ul class="dropdown-menu" style="text-align:right; width: 230px; left: -242px;" tabindex="-1">
-                                    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT,CAN_MANAGE_VULN_FILTERS">
+                                    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT,ROLE_CAN_MANAGE_VULN_FILTERS">
                                         <li class="normalLinks">
                                             <a id="customizeThreadFixVulnerabilityTypesLink" href="<spring:url value="/configuration/filters" htmlEscape="true"/>">ThreadFix Vulnerability Types</a>
                                         </li>
