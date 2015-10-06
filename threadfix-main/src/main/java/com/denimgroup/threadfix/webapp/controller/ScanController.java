@@ -121,6 +121,7 @@ public class ScanController {
 				scanDeleteService.deleteScan(scan);
 
 				scans.remove(scan);
+				scan.getApplicationChannel().getScanList().remove(scan);
 				vulnerabilityFilterService.updateStatistics(application.getOrganization().getId(), application.getId());
 			}
 		}
