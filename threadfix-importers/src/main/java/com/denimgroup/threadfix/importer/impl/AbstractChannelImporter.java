@@ -472,12 +472,12 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
         request = getTruncated(request, Finding.ATTACK_REQUEST_LENGTH);
         if (finding.getAttackRequest() == null) {
-            finding.setAttackRequest(request);
+            finding.setAttackRequest(removeSurrogateCharacters(request));
         }
 
         response = getTruncated(response, Finding.ATTACK_RESPONSE_LENGTH);
         if (finding.getAttackResponse() == null) {
-            finding.setAttackResponse(response);
+            finding.setAttackResponse(removeSurrogateCharacters(response));
         }
 
         detail = getTruncated(detail, Finding.SCANNER_DETAIL_LENGTH);
@@ -492,7 +492,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
         rawFinding = getTruncated(rawFinding, Finding.RAW_FINDING_LENGTH);
         if (finding.getRawFinding() == null) {
-            finding.setRawFinding(rawFinding);
+            finding.setRawFinding(removeSurrogateCharacters(rawFinding));
         }
 
         urlReference = getTruncated(urlReference, Finding.URL_REFERENCE_LENGTH);
@@ -502,8 +502,28 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
         attackString = getTruncated(attackString, Finding.ATTACK_STRING_LENGTH);
         if (finding.getAttackString() == null) {
-            finding.setAttackString(attackString);
+            finding.setAttackString(removeSurrogateCharacters(attackString));
         }
+    }
+
+
+    private String removeSurrogateCharacters(String originalStr) {
+        if (originalStr == null)
+            return null;
+
+        if (!isEntirelyInBasicMultilingualPlane(originalStr)) {
+            return originalStr.replaceAll("[^\\x20-\\x7e]", ""); // get rid of non-ASCII characters
+        }
+        return originalStr;
+    }
+
+    private boolean isEntirelyInBasicMultilingualPlane(String text) {
+        for (int i = 0; i < text.length(); i++) {
+            if (Character.isSurrogate(text.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private String getTruncated(String parameterValue, int length) {
