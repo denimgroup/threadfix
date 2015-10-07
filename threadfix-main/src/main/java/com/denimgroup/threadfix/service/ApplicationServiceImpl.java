@@ -526,7 +526,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         encryptRepositoryCredentials(application);
 	}
-	
+
 	@Override
 	public void validateDefectTracker(Application application, BindingResult result) {
 		boolean hasNewDefectTracker = validateApplicationDefectTracker(application, result);
@@ -535,15 +535,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 		if (hasNewDefectTracker || application.getDefectTracker() == null
 				&& application.getDefectList() != null) {
 			defectDao.deleteByApplicationId(application.getId());
-			
-			List<Vulnerability> vulns = applicationDao.getVulns(application);
-			
-			if (vulns != null) {
-				for (Vulnerability vuln : vulns) {
-					vuln.setDefect(null);
-					vulnerabilityService.storeVulnerability(vuln);
-				}
-			}
 		}
 	}
 

@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 
 import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.DefectDao;
+import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.DeletedDefect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
@@ -55,21 +56,24 @@ public class HibernateDefectDao
 	@SuppressWarnings("unchecked")
 	@Override
 	public void deleteByApplicationId(Integer applicationId) {
-		sessionFactory.getCurrentSession()
-			.createQuery("update Vulnerability set defect = null where application = :appId")
-			.setInteger("appId", applicationId)
-			.executeUpdate();
-		
-		List<Defect> defects = ((List<Defect>) sessionFactory.getCurrentSession()
-			.createQuery("from Defect where application = :appId")
-			.setInteger("appId", applicationId)
-			.list());
-		
-		if (defects != null && defects.size() > 0) {
-			for (Defect defect : defects) {
-				delete(defect);
-			}
+		for (Defect defect : retrieveAllActive()) {
+			sessionFactory.getCurrentSession().save(new DeletedDefect(defect));
 		}
+
+		sessionFactory.getCurrentSession()
+				.createQuery("update Vulnerability set defectId = null where applicationId = :appId")
+				.setInteger("appId", applicationId)
+				.executeUpdate();
+		sessionFactory.getCurrentSession()
+				.createQuery("update Vulnerability set vulnerabilityDefectConsistencyState = null where application = :appId")
+				.setInteger("appId", applicationId)
+				.executeUpdate();
+		sessionFactory.getCurrentSession().createQuery("update Event set defectId = null where applicationId = :appId")
+				.setInteger("appId", applicationId)
+				.executeUpdate();
+		sessionFactory.getCurrentSession().createQuery("delete from Defect where application = :appId")
+				.setInteger("appId", applicationId)
+				.executeUpdate();
 	}
 
 	// TODO keep track of the vulns that were associated with each Defect
@@ -109,13 +113,6 @@ public class HibernateDefectDao
 
     @Override
 	public void delete(Defect defect) {
-		List<Vulnerability> vulnerabilities = defect.getVulnerabilities();
-		if (defect.getVulnerabilities() != null) {
-			for (Vulnerability vulnerability : vulnerabilities) {
-				vulnerability.setVulnerabilityDefectConsistencyState((String)null);
-				sessionFactory.getCurrentSession().save(vulnerability);
-			}
-		}
 		sessionFactory.getCurrentSession().save(new DeletedDefect(defect));
 		sessionFactory.getCurrentSession().delete(defect);
 	}
