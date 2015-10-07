@@ -211,9 +211,7 @@ public class WafServiceImpl implements WafService {
 				waf.getWafRules().size() == 0){
 			return null;
 		}
-		
-		List<WafRule> rules = loadCurrentRules(waf);
-
+        List<WafRule> rules = waf.getWafRules();
         return getRulesText(waf, rules);
 	}
 
@@ -259,12 +257,12 @@ public class WafServiceImpl implements WafService {
 
     @Override
     public List<WafRule> getAppRules(Waf waf, Application application) {
-        List<WafRule> allRules = loadCurrentRules(waf);
+        List<WafRule> allRules = waf.getWafRules();
         if (waf==null || application == null)
             return allRules;
         List<WafRule> returnList = list();
         for (WafRule rule: allRules) {
-            if (rule.getVulnerability().getApplication().getId()==application.getId())
+            if (rule.getVulnerability().getApplication().getId().equals(application.getId()))
                 returnList.add(rule);
         }
         return returnList;

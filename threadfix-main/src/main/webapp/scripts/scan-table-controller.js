@@ -8,10 +8,6 @@ myAppModule.controller('ScanTableController', function ($scope, $window, $http, 
 
     $scope.isIE = /*@cc_on!@*/false || !!document.documentMode;
 
-    $scope.refresh = function() {
-
-    };
-
     $scope.deleteScan = function(scan) {
 
         if (confirm('Are you sure you want to delete this scan?')) {
@@ -51,27 +47,8 @@ myAppModule.controller('ScanTableController', function ($scope, $window, $http, 
 
     $scope.downloadScan = function(scan) {
 
-        scan.downloading = true;
-
         scan.savedFileNames.forEach(function(fileName, i){
-            $http.get(tfEncoder.encode(currentUrl + '/scans/' + scan.id + '/download/' + fileName)).
-                success(function(data, status, headers, config) {
-                    if (i == scan.savedFileNames.length - 1)
-                        scan.downloading = false;
-
-                    if (data.success == false) {
-                        $rootScope.$broadcast('downloadScanFail', data.message);
-                    } else {
-                        reportExporter.exportScan(data, "application/octet-stream", scan.originalFileNames.length > i ? scan.originalFileNames[i] : fileName);
-                    }
-
-                }).
-                error(function(data, status, headers, config) {
-                    $log.info("HTTP request for form objects failed.");
-                    $scope.errorMessage = "Failed to retrieve uploaded scan file. HTTP status was " + status;
-                    if (i == scan.savedFileNames.length - 1)
-                        scan.downloading = false;
-                });
+            reportExporter.downloadFileByForm(tfEncoder.encode(currentUrl + '/scans/' + scan.id + '/download/' + fileName), null, "get");
         });
 
     };

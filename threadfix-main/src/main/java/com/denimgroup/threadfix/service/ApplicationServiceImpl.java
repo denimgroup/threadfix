@@ -209,6 +209,8 @@ public class ApplicationServiceImpl implements ApplicationService {
             }
         }
 
+		application.setPolicyStatuses(null);
+
 		applicationDao.saveOrUpdate(application);
 	}
 

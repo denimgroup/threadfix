@@ -161,16 +161,6 @@ public class RemoteProvidersController {
 			log.error("No apps were configured with applications.");
 		}
 
-		if (policyStatusService != null) {
-			for (RemoteProviderApplication remoteProviderApplication :
-					remoteProviderType.getRemoteProviderApplications()) {
-				if (remoteProviderApplication.getApplication() != null &&
-						remoteProviderApplication.getApplication().getId() != null) {
-					policyStatusService.runStatusCheck(remoteProviderApplication.getApplication().getId());
-				}
-			}
-		}
-
 		return RestResponse.success("Importing scans.");
 	}
 

@@ -249,6 +249,7 @@ public abstract class AbstractVulnFilterController {
 		}
 
 		VulnerabilityFilter dataVulnFilter = vulnerabilityFilterService.load(filterId);
+		Integer oldGenericSeverityId = dataVulnFilter.getTargetGenericSeverity() == null ? null : dataVulnFilter.getSourceGenericVulnerability().getId();
 
 		vulnerabilityFilter.setApplication(applicationService.loadApplication(appId));
 
@@ -263,8 +264,7 @@ public abstract class AbstractVulnFilterController {
             vulnerabilityFilter.setId(filterId);
             vulnerabilityFilterService.save(vulnerabilityFilter, orgId, appId);
 
-			vulnerabilityFilterService.updateStatistics(orgId, appId,
-					dataVulnFilter.getTargetGenericSeverity() == null ? null : dataVulnFilter.getSourceGenericVulnerability().getId());
+			vulnerabilityFilterService.updateStatistics(orgId, appId, oldGenericSeverityId);
             status.setComplete();
             log.info(SUCCESS_MESSAGE);
             return RestResponse.success(vulnerabilityFilter);
@@ -276,10 +276,16 @@ public abstract class AbstractVulnFilterController {
 		if (!isAuthorized(CAN_MANAGE_VULN_FILTERS, orgId, appId)) {
 			return "403";
 		}
-		
+
+		VulnerabilityFilter dataVulnFilter = vulnerabilityFilterService.load(filterId);
+		Integer oldGenericSeverityId = dataVulnFilter.getTargetGenericSeverity() == null ? null : dataVulnFilter.getSourceGenericVulnerability().getId();
+
 		vulnerabilityFilterService.delete(filterId, orgId, appId);
-		
+
 		log.info("Vulnerability Filter was successfully deleted");
+
+		vulnerabilityFilterService.updateVulnerabilities(orgId, appId, oldGenericSeverityId);
+
 		model.addAttribute("successMessage", "Vulnerability Filter was successfully deleted");
 		return returnSuccess(model, orgId, appId);
 	}

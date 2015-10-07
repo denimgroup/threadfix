@@ -85,11 +85,11 @@ public class ScanServiceImpl implements ScanService {
     }
 
     @Override
-    public String downloadScan(Scan scan, String fullFilePath, HttpServletResponse response) {
+    public String downloadScan(Scan scan, String fullFilePath, HttpServletResponse response, String originalFileName) {
 
         File scanFile = new File(fullFilePath);
 
-        response.setHeader("Content-Disposition", "attachment; filename=\"fileExport.xml\"");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + originalFileName + "\"");
         response.setHeader("Content-Transfer-Encoding", "binary");
         response.setContentLength((int)scanFile.length());
         response.setContentType("application/xml");

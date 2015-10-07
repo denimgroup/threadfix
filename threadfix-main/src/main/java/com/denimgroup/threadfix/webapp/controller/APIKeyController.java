@@ -189,16 +189,11 @@ public class APIKeyController {
 		
 		boolean restricted = (isRestrictedKeyStr != null && isRestrictedKeyStr.equalsIgnoreCase("true"));
 		
-		if (note != null) {
-			apiKey.setNote(note);
-			apiKey.setIsRestrictedKey(restricted);
-			apiKeyService.storeAPIKey(apiKey);
+		apiKey.setNote(note);
+		apiKey.setIsRestrictedKey(restricted);
+		apiKeyService.storeAPIKey(apiKey);
 
-            return RestResponse.success(apiKey);
-		} else {
-			log.warn(ResourceNotFoundException.getLogMessage("API Key", keyId));
-			throw new ResourceNotFoundException();
-		}
+		return RestResponse.success(apiKey);
 	}
 
 }

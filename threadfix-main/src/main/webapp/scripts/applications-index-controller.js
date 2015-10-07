@@ -1,7 +1,7 @@
 var myAppModule = angular.module('threadfix')
 
 myAppModule.controller('ApplicationsIndexController',
-    function($scope, $log, $modal, $upload, $window, $rootScope, $timeout, tfEncoder, threadfixAPIService, customSeverityService, $http) {
+    function($scope, $log, $modal, $upload, $window, $rootScope, $timeout, tfEncoder, threadfixAPIService, appUsageService, customSeverityService, $http) {
 
         // Initialize
         $scope.initialized = false;
@@ -126,11 +126,9 @@ myAppModule.controller('ApplicationsIndexController',
                         return "Add Team";
                     }
                 }
-
             });
 
             modalInstance.result.then(function (object) {
-
                 if (!$scope.teams || $scope.teams.length === 0) {
                     $scope.teams = [];
                 }
@@ -217,7 +215,7 @@ myAppModule.controller('ApplicationsIndexController',
 
                 team.applications.sort(nameCompare);
 
-                $scope.successMessage = "Successfully added application " + newApplication.name;
+                $scope.successMessage = $scope.successMessage = appUsageService.getUsage(object);
 
             }, function () {
                 $log.info('Modal dismissed at: ' + new Date());

@@ -178,10 +178,9 @@ public class EditApplicationController {
 			return FormRestResponse.failure("Errors", result);
 
 		} else {
-			if (application.getMainDefaultDefectProfile()==null || application.getMainDefaultDefectProfile().getId()==null) {
+			if (application.getMainDefaultDefectProfile() == null || application.getMainDefaultDefectProfile().getId() == null) {
 				application.setMainDefaultDefectProfile(null);
-				}
-			else application.setMainDefaultDefectProfile(defaultDefectProfileService.loadDefaultProfile(application.getMainDefaultDefectProfile().getId()));
+			} else application.setMainDefaultDefectProfile(defaultDefectProfileService.loadDefaultProfile(application.getMainDefaultDefectProfile().getId()));
 			application.setOrganization(organizationService.loadById(application.getOrganization().getId()));
 			applicationService.storeApplication(application, EventAction.APPLICATION_EDIT);
             vulnerabilityService.updateOrgsVulnerabilityReport();

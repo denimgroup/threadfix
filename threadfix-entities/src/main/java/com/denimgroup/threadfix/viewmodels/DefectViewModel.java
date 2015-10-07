@@ -119,7 +119,10 @@ public class DefectViewModel {
 	}
 
     public Map getFieldsMap() {
-//        return fieldsMap;
+		if (fieldsMapStr == null) {
+			return null;
+		}
+
         try {
             return new ObjectMapper().readValue(fieldsMapStr, HashMap.class);
         } catch (IOException e) {

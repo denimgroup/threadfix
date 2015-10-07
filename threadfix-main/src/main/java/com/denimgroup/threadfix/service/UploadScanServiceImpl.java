@@ -41,11 +41,11 @@ public class UploadScanServiceImpl implements UploadScanService{
 
     @Override
     public Object processMultiFileUpload(Collection<MultipartFile> files, Integer orgId, Integer appId, String channelIdString, boolean isBulkScans) {
-        if(files.isEmpty()){
+        if (files.isEmpty()) {
             return failure("No files selected.");
         }
 
-        if(appId == null){
+        if (appId == null) {
             return failure("No appId");
         }
 
@@ -54,14 +54,14 @@ public class UploadScanServiceImpl implements UploadScanService{
         List<String> fileNames = list(), originalNames = list();
         try {
 
-            for(MultipartFile file : files){
+            for (MultipartFile file : files) {
                 Integer myChannelId = scanTypeCalculationService.calculateScanType(appId, file, channelIdString);
 
                 if (myChannelId == null) {
                     return failure("Failed to determine the scan type.");
                 }
 
-                if(channelId != null && !channelId.equals(myChannelId) && !isBulkScans){
+                if (channelId != null && !channelId.equals(myChannelId) && !isBulkScans) {
                     return failure("Scans are not of the same type.");
                 }
 
@@ -75,17 +75,17 @@ public class UploadScanServiceImpl implements UploadScanService{
 
                 ScanCheckResultBean returnValue = scanService.checkFile(channelId, fileName);
 
-                if(!ScanImportStatus.SUCCESSFUL_SCAN.equals(returnValue.getScanCheckResult())){
+                if (!ScanImportStatus.SUCCESSFUL_SCAN.equals(returnValue.getScanCheckResult())) {
                     return failure(returnValue.getScanCheckResult().toString());
                 }
             }
 
             List<Scan> resultScans = list();
             Scan scan = null;
-            if (!isBulkScans) {
-                scan = scanMergeService.saveRemoteScanAndRun(channelId, fileNames, originalNames);
-            } else {
+            if (isBulkScans) {
                 resultScans = scanMergeService.saveRemoteScansAndRun(channelIds, fileNames, originalNames);
+            } else {
+                scan = scanMergeService.saveRemoteScanAndRun(channelId, fileNames, originalNames);
             }
 
             if (scan != null || resultScans.size() > 0) {

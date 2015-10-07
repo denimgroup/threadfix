@@ -108,13 +108,13 @@ public class DefectSubmissionRestController extends TFRestController {
         defectViewModel.setVulnerabilityIds(vulnerabilityIds);
 
         if (dt.getClass().equals(BugzillaDefectTracker.class)) {
-            defectViewModel.setSelectedComponent(params.get("component")[0]);
-            defectViewModel.setSummary(params.get("summary")[0]);
-            defectViewModel.setPriority(params.get("priority")[0]);
-            defectViewModel.setVersion(params.get("version")[0]);
-            defectViewModel.setSeverity(params.get("severity")[0]);
-            defectViewModel.setStatus(params.get("status")[0]);
-            defectViewModel.setAdditionalScannerInfo(params.get("additionalScannerInfo")[0].equals("true"));
+            defectViewModel.setSelectedComponent(getFirstOrNull(params, "selectedComponent"));
+            defectViewModel.setSummary(getFirstOrNull(params, "summary"));
+            defectViewModel.setPriority(getFirstOrNull(params, "priority"));
+            defectViewModel.setVersion(getFirstOrNull(params, "version"));
+            defectViewModel.setSeverity(getFirstOrNull(params, "severity"));
+            defectViewModel.setStatus(getFirstOrNull(params, "status"));
+            defectViewModel.setAdditionalScannerInfo("true".equals(getFirstOrNull(params, "additionalScannerInfo")));
 
         } else {
             Map<String, Object> fieldsMap = map();
@@ -128,6 +128,9 @@ public class DefectSubmissionRestController extends TFRestController {
         }
 
         Map fieldsMap = defectViewModel.getFieldsMap();
+        if (fieldsMap == null) {
+            fieldsMap = map();
+        }
         Object asi = fieldsMap.get("AdditionalScannerInfo");
 
         if (asi != null) {
@@ -162,6 +165,23 @@ public class DefectSubmissionRestController extends TFRestController {
             return failure(map.get(DefectService.ERROR) == null ?
                     "The Defect couldn't be submitted to the tracker." : map.get(DefectService.ERROR).toString());
         }
+    }
+    
+    private String getFirstOrNull(Map<String, String[]> map, String field) {
+        if (map == null) {
+            return null;
+        }
+
+        String[] value = map.get(field);
+        if (value == null) {
+            return null;
+        }
+        
+        if (value.length == 0) {
+            return null;
+        }
+        
+        return value[0];
     }
 
     @RequestMapping(headers="Accept=application/json", value="/defectTrackerFields", method= RequestMethod.GET)

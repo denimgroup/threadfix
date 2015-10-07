@@ -15,7 +15,7 @@
 
     <div class="modal-header">
         <h4 id="myModalLabel">
-            Policy for {{ object.name }}
+            Manage Policies for {{ object.name }}
         </h4>
     </div>
 
@@ -41,7 +41,7 @@
             </div>
             <div class="row-fluid padding" ng-show="object.policysExpanded && (!object.policies || object.policies.length == 0)">
                 <div class="span1" style="width: 10px"></div>
-                <div class="span11">No Policy</div>
+                <div class="span11">No Policies</div>
             </div>
             <div class="row-fluid padding" ng-show="object.policysExpanded && object.policies && object.policies.length > 0">
                 <div class="row-fluid" ng-repeat="policy in object.policies">

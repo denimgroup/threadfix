@@ -109,11 +109,11 @@ public class GitServiceImpl extends RepositoryServiceImpl implements RepositoryS
             }
 
             if (shouldLog) {
-                log.info("Got an error from the Git server, logging to database (visible under View Error Messages)");
+                log.info("Got an error from the Git server, logging to database (visible under Error Messages)");
                 exceptionLogService.storeExceptionLog(new ExceptionLog(e));
             }
         } else {
-            log.info("Got an error, logging to database (visible under View Error Messages)");
+            log.info("Got an error, logging to database (visible under Error Messages)");
             exceptionLogService.storeExceptionLog(new ExceptionLog(e));
         }
     }

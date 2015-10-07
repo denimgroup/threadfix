@@ -1,4 +1,4 @@
-<tab id='vulnTab' heading="{{ policyStatuses.length }} Policy" ng-click="setTab('Policy')"
+<tab id='vulnTab' heading="{{ policyStatuses.length }} Polic{{ policyStatuses.length == 1 ? 'y' : 'ies' }}" ng-click="setTab('Policy')"
      active="tab.policy" ng-show="policyStatuses">
     <div id="policyDiv${ application.id }">
         <table class="table">

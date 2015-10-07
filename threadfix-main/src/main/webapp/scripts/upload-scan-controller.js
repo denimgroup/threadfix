@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('UploadScanController', function ($scope, $modalInstance, threadFixModalService, files, url, $upload, tfEncoder) {
+myAppModule.controller('UploadScanController', function ($scope, $modalInstance, threadFixModalService, files, url, $upload, tfEncoder, $rootScope) {
 
     $scope.uploading = false;
 
@@ -31,8 +31,7 @@ myAppModule.controller('UploadScanController', function ($scope, $modalInstance,
         $scope.confirmingScanUploadStyle = false;
         var newUrl = (isMultiScans) ? url + "/bulk" : url;
         uploadScans(newUrl, $scope.files);
-
-    }
+    };
 
     var uploadScans = function(requestUrl, $files) {
         //$files: an array of files selected, each file has name, size, and type.
@@ -56,10 +55,11 @@ myAppModule.controller('UploadScanController', function ($scope, $modalInstance,
 
             if (data.success) {
                 $modalInstance.close(data.object); // pass the team back up to update stats
+                $rootScope.$broadcast('scansUploaded');
             } else {
                 if (!data.message) {
-                    // If there's no message, this is often an uncaught RuntimeException. It should be stored in View Error Messages.
-                    $scope.alerts = [{ type: 'danger', msg: "An error has occurred. Please go to the 'View Error Messages' page (under the cog) for more details." }];
+                    // If there's no message, this is often an uncaught RuntimeException. It should be stored in Error Messages.
+                    $scope.alerts = [{ type: 'danger', msg: "An error has occurred. Please go to the 'Error Messages' page (under the cog) for more details." }];
                 } else {
                     $scope.alerts = [{ type: 'danger', msg: data.message }];
                 }

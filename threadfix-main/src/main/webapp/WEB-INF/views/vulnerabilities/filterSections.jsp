@@ -487,8 +487,11 @@
                        type="text"/>
 
                 <div ng-show="trendingActive">
-                    <input id="defaultTrendingSelReport" type="checkbox" class="btn" ng-model="parameters.defaultTrending"/>
-                    Default Trending Field Controls And Date Range
+                    <span tooltip="Save the Field Controls and Date Range filters as the default for Trending Report.">
+                        <input id="defaultTrendingSelReport" type="checkbox" class="btn"
+                               ng-model="parameters.defaultTrending"/>
+                        Save Field Controls and Date Range as default for Trending
+                    </span>
                     <br>
                 </div>
 

@@ -85,6 +85,8 @@ public class QueueListener implements MessageListener {
 	private VulnerabilityFilterDao vulnerabilityFilterDao;
 	@Autowired
 	private GenericVulnerabilityService genericVulnerabilityService;
+    @Autowired(required = false)
+    private PolicyStatusService policyStatusService;
 
 	/*
 	 * (non-Javadoc)
@@ -270,10 +272,24 @@ public class QueueListener implements MessageListener {
 		switch (response) {
 			case BAD_ID:   message = "Remote Provider Bulk Import job failed because no remote provider type was found."; break;
 			case NO_APPS:  message = "Remote Provider Bulk Import job failed because no apps were found";                 break;
-			case SUCCESS:  message = "Remote Provider Bulk Import job completed.";                                        break;
+			case SUCCESS:
+                message = "Remote Provider Bulk Import job completed.";
+
+                RemoteProviderType remoteProviderType = remoteProviderTypeService.load(remoteProviderTypeId);
+
+                if (policyStatusService != null) {
+                    for (RemoteProviderApplication remoteProviderApplication :
+                            remoteProviderType.getRemoteProviderApplications()) {
+                        if (remoteProviderApplication.getApplication() != null &&
+                                remoteProviderApplication.getApplication().getId() != null) {
+                            policyStatusService.runStatusCheck(remoteProviderApplication.getApplication().getId());
+                        }
+                    }
+                }
+                break;
 			default:       message = "Remote Provider Bulk Import encountered an unknown error";
 		}
-		
+
 		log.info(message);
 
         queueSender.updateAllCachedStatistics();

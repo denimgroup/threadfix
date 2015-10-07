@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('TeamDetailPageController', function ($scope, $window, $http, $modal, $log, $rootScope, tfEncoder, customSeverityService) {
+myAppModule.controller('TeamDetailPageController', function ($scope, $window, $http, $modal, $log, $rootScope, tfEncoder, customSeverityService, $timeout, appUsageService) {
 
     $scope.rightReportTitle = "Top 10 Vulnerable Applications";
     $scope.empty = false;
@@ -139,7 +139,6 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
         });
 
         modalInstance.result.then(function (object) {
-
             if (!$scope.applications || $scope.applications.length === 0) {
                 $scope.applications = [];
                 $scope.currentApplications = [];
@@ -150,7 +149,7 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
             $scope.applications.sort(nameCompare);
             $scope.currentApplications.sort(nameCompare);
 
-            $scope.successMessage = "Successfully added application " + newApplication.name;
+            $scope.successMessage = appUsageService.getUsage(object);
 
             $scope.$broadcast('applicationAdded');
 

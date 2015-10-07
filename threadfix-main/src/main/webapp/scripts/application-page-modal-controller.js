@@ -651,4 +651,38 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
         }
     };
 
+    $scope.$on('scanDeleted', function() {
+        updatePolicyStatus();
+    });
+
+    $scope.$on('scansUploaded', function() {
+        updatePolicyStatus();
+    });
+
+    $scope.$on('scanUploaded', function() {
+        updatePolicyStatus();
+    });
+
+    $scope.$on('severityChanged', function() {
+        updatePolicyStatus();
+    });
+
+    var updatePolicyStatus = function() {
+        $http.get(tfEncoder.encode(currentUrl + "/policyStatus")).
+            success(function(data, status, headers, config) {
+                if (data.success) {
+                    $scope.config.passFilters = data.object;
+                } else {
+                    $scope.config.passFilters = false;
+                    $log.info("HTTP request for form objects failed. Error was " + data.message);
+                }
+            }).
+            error(function(data, status, headers, config) {
+                $log.info("HTTP request for form objects failed.");
+                $scope.config.passFilters = false;
+                // TODO improve error handling and pass something back to the users
+                $scope.$parent.errorMessage = "Request to server failed. Got " + status + " response code.";
+            });
+    }
+
 });

@@ -95,7 +95,10 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			if (metadata.getDescription() == null    || metadata.getComponent() == null
 					|| metadata.getVersion() == null || metadata.getSeverity() == null 
 					|| metadata.getStatus() == null  || metadata.getPriority() == null) {
-                log.error("DefectMetadata was missing a field. Please fix this and try again.");
+				String message = "DefectMetadata was missing a field. Please fix this and try again. " +
+						"Required fields are: summary, preamble, version, status, selectedComponent, severity, and priority";
+				log.error(message);
+				setLastError(message);
 
 				return null;
 			}
@@ -120,6 +123,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			log.error("Got IllegalArgumentException.", e2);
 		} catch (XmlRpcException e) {
             log.error("Got XmlRpcException.", e);
+			setLastError(e.getMessage());
         }
 
 		return bugzillaId;

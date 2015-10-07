@@ -26,15 +26,15 @@ package com.denimgroup.threadfix.importer.util;
 
 import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.google.gson.Gson;
+import com.google.gson.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Iterator;
-import java.util.List;
+import java.lang.reflect.Type;
+import java.util.*;
 
 /**
  * Created by mac on 4/4/14.
@@ -160,16 +160,37 @@ public class JsonUtils {
 
     @Nonnull
     public static <T> T toObject (final String jsonString, Class<T> tClass) {
-        return new Gson().fromJson(jsonString, tClass);
+        return getGson().fromJson(jsonString, tClass);
     }
 
     @Nonnull
     public static <T> List<T> toObjectList (final String jsonString, Class<T> tClass) throws JSONException {
         List<T> result = CollectionUtils.list();
         for (JSONObject jsonObject: toJSONObjectIterable(jsonString)) {
-            result.add(new Gson().fromJson(String.valueOf(jsonObject), tClass));
+            result.add(getGson().fromJson(String.valueOf(jsonObject), tClass));
         }
         return result;
+    }
+
+    static class DateSerializer implements JsonSerializer<Date>, JsonDeserializer<Date> {
+
+        @Override
+        public JsonElement serialize(Date src, Type typeOfSrc,	JsonSerializationContext context) {
+            return new JsonPrimitive(src.getTime());
+        }
+
+        @Override
+        public Date deserialize(JsonElement json, Type typeOfT,  JsonDeserializationContext context) throws JsonParseException {
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(json.getAsJsonPrimitive().getAsLong());
+            return cal.getTime();
+        }
+    }
+
+    private static Gson getGson() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Date.class, new DateSerializer());
+        return gsonBuilder.create();
     }
 
 }

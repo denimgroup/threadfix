@@ -92,8 +92,13 @@ module.controller('TagsPageController', function($scope, $http, $modal, $log, tf
         });
 
         modalInstance.result.then(function (tagsMap) {
-            $scope.successMessage = "Successfully edited tag " + tag.name;
-            $scope.refresh();
+            if (tagsMap) {
+                $scope.successMessage = "Successfully edited tag " + tag.name;
+                $scope.refresh();
+            } else {
+                $scope.errorMessage = "Failed to delete tag " + tag.name +
+                    ". Make sure there are no applications or tags associated with the tag and try again.";
+            }
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());

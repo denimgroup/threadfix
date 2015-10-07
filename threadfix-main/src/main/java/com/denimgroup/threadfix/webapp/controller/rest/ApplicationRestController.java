@@ -257,6 +257,56 @@ public class ApplicationRestController extends TFRestController {
         return RestResponse.success(application);
     }
 
+
+    /**
+     * Return details about applications.
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#searchForApplicationsByUniqueId(String)
+     */
+    @JsonView(AllViews.RestViewApplication2_1.class)
+    @RequestMapping(headers="Accept=application/json", value="/allTeamLookup", method=RequestMethod.GET)
+    public Object applicationLookupInAllTeam(HttpServletRequest request) throws IOException {
+        String appUniqueId = request.getParameter("uniqueId");
+
+        // we check again after the application lookup to see if the user actually has permissions
+        Result<String> keyCheck = checkKeyGlobal(request, APPLICATION_LOOKUP);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
+        }
+        if (appUniqueId == null) {
+            return failure(APPLICATION_LOOKUP_FAILED);
+        }
+
+        log.info("Received REST request for Applications.");
+
+        List<Application> applicationList = list();
+        if (appUniqueId != null) {
+            applicationList = applicationService.loadApplicationByUniqueId(appUniqueId, -1);
+        }
+
+        if (applicationList == null || applicationList.isEmpty()) {
+            if ((appUniqueId != null) && (appUniqueId.contains("+"))) {
+                appUniqueId = appUniqueId.replace("+", " ");
+
+                applicationList = applicationService.loadApplicationByUniqueId(appUniqueId, -1);
+            }
+            if (applicationList == null || applicationList.isEmpty()) {
+                log.warn(APPLICATION_LOOKUP_FAILED);
+                return failure(APPLICATION_LOOKUP_FAILED);
+            }
+        }
+
+        List<Application> resultList = list();
+        for (Application application: applicationList) {
+            keyCheck = checkKey(request, APPLICATION_LOOKUP, application.getOrganization().getId(), application.getId());
+            if (keyCheck.success()) {
+                resultList.add(application);
+            }
+        }
+
+        return RestResponse.success(resultList);
+    }
+
+
     /**
      * Allows the user to upload a scan to an existing application channel.
      *

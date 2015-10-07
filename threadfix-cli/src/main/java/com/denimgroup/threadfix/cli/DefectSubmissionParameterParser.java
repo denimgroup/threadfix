@@ -29,8 +29,10 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.viewmodels.DynamicFormField;
 
 import java.util.List;
+import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.set;
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 
@@ -81,7 +83,7 @@ public class DefectSubmissionParameterParser extends GenericParameterParser {
 
     @SuppressWarnings("unchecked")
     private static RestResponse checkArguments(ThreadFixRestClient client) {
-        List<String> validParameters = list("applicationId", "vulnerabilityIds");
+        Set<String> validParameters = set("applicationId", "vulnerabilityIds");
         Integer appId = getIntegerValue("applicationId");
 
         if (appId == null) {

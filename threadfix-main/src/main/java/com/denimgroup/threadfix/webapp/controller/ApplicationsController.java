@@ -180,6 +180,19 @@ public class ApplicationsController {
 	}
 
     @JsonView(AllViews.FormInfo.class)
+    @RequestMapping("{appId}/policyStatus")
+    public @ResponseBody RestResponse<Boolean> getPolicyStatus(@PathVariable("appId") Integer appId) throws IOException {
+
+        Application application = applicationService.loadApplication(appId);
+
+        if (policyStatusService != null) {
+            return success(policyStatusService.passFilters(application));
+        } else {
+            return failure("No Policy Status assigned to this application.");
+        }
+    }
+
+    @JsonView(AllViews.FormInfo.class)
     @RequestMapping("{appId}/objects")
     public @ResponseBody Object getBaseObjects(@PathVariable("appId") Integer appId) throws IOException {
         Map<String, Object> map = new HashMap<>();
