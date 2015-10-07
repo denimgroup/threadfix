@@ -87,13 +87,21 @@ module.controller('TagsPageController', function($scope, $http, $modal, $log, tf
                 },
                 deleteUrl: function() {
                     return tfEncoder.encode("/configuration/tags/" + tag.id + "/delete");
+                },
+                returnFullResponse: function() {
+                    return true;
                 }
             }
         });
 
-        modalInstance.result.then(function (tagsMap) {
-            if (tagsMap) {
-                $scope.successMessage = "Successfully edited tag " + tag.name;
+        modalInstance.result.then(function (data) {
+
+            if (data.success) {
+                if (data.delete) {
+                    $scope.successMessage = "Successfully deleted tag " + tag.name;
+                } else {
+                    $scope.successMessage = "Successfully edited tag " + tag.name;
+                }
                 $scope.refresh();
             } else {
                 $scope.errorMessage = "Failed to delete tag " + tag.name +

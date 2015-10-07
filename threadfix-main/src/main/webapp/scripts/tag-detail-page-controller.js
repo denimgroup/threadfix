@@ -40,7 +40,7 @@ myAppModule.controller('TagDetailPageController', function ($scope, $window, $ht
     $scope.init = function(vulnPage){
         $scope.vulnPage = vulnPage;
         $scope.vulnListOfVulnTags = $scope.allVulnListOfVulnTags.slice(($scope.vulnPage-1) * $scope.numberToShow, $scope.vulnPage * $scope.numberToShow);
-    }
+    };
 
     $scope.goToPage = function(valid, vulnPageInput) {
         if (valid) {
@@ -100,7 +100,7 @@ myAppModule.controller('TagDetailPageController', function ($scope, $window, $ht
         });
 
         $scope.$broadcast("complianceVulnList", $scope.allVulnList);
-    }
+    };
 
     $scope.goToApp = function(app) {
         $window.location.href = tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id);
@@ -112,15 +112,15 @@ myAppModule.controller('TagDetailPageController', function ($scope, $window, $ht
 
     $scope.goToAppFromVuln = function (vuln) {
         $window.location.href = tfEncoder.encode("/organizations/" + vuln.team.id + "/applications/" + vuln.app.id);
-    }
+    };
 
     $scope.goToTeamFromVuln = function (vuln) {
         $window.location.href = tfEncoder.encode("/organizations/" + vuln.team.id);
-    }
+    };
 
     $scope.goToTag = function (tag) {
         window.location.href = tfEncoder.encode("/configuration/tags/" + tag.id + "/view");
-    }
+    };
 
     $scope.goToVuln = function (vuln) {
         $window.location.href = tfEncoder.encode("/organizations/" + vuln.team.id + "/applications/" + vuln.app.id + "/vulnerabilities/" + vuln.id);

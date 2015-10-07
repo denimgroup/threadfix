@@ -3,10 +3,11 @@ var myAppModule = angular.module('threadfix');
 
 // this is a shim for optional dependencies
 myAppModule.value('deleteUrl', null);
+myAppModule.value('returnFullResponse', false);
 
 // TODO wrap this back into genericModalController and make config optional
 
-myAppModule.controller('ModalControllerWithConfig', function ($log, $scope, $rootScope, $modalInstance, $http, threadFixModalService, object, config, url, buttonText, deleteUrl, timeoutService, tfEncoder) {
+myAppModule.controller('ModalControllerWithConfig', function ($log, $scope, $rootScope, $modalInstance, $http, threadFixModalService, object, config, url, buttonText, deleteUrl, timeoutService, tfEncoder, returnFullResponse) {
 
     $scope.object = object;
 
@@ -31,7 +32,11 @@ myAppModule.controller('ModalControllerWithConfig', function ($log, $scope, $roo
                     $scope.loading = false;
 
                     if (data.success) {
-                        $modalInstance.close(data.object);
+                        if (returnFullResponse) {
+                            $modalInstance.close(data);
+                        } else {
+                            $modalInstance.close(data.object);
+                        }
                     } else {
                         if (data.errorMap) {
 
@@ -81,7 +86,14 @@ myAppModule.controller('ModalControllerWithConfig', function ($log, $scope, $roo
         if (confirm("Are you sure you want to delete this " + itemName + "?")) {
             $http.post(deleteUrl).
                 success(function(data, status, headers, config) {
-                    $modalInstance.close(false);
+
+                    if (returnFullResponse) {
+                        data.delete = true;
+                        $modalInstance.close(data);
+                    } else {
+                        $modalInstance.close(false);
+                    }
+
                 }).
                 error(function(data, status, headers, config) {
                     $scope.error = "Failure. HTTP status was " + status;
