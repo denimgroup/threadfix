@@ -104,8 +104,7 @@ body#config #tab-config li.normalLinks a:hover {
 }
 
 #menu table tr td {
-	height: 27px;
-	padding:0 0 0 5px; 
+	padding:0 0 0 5px;
 	background: url(../images/btn-bg-out.png) left center repeat-x;
 	text-align:center;
 }
