@@ -263,6 +263,14 @@ public class HttpRestUtils {
         return finishedUrl;
     }
 
+    // this is necessary because Spring double-decodes %s in the URL for some reason
+    public static String encodeDoublePercent(String input) {
+        if (input.contains("%")) {
+            input = input.replaceAll("%", "%25");
+        }
+        return encode(input);
+    }
+
     public static String encode(String input) {
         try {
             return URLEncoder.encode(input, "UTF-8");

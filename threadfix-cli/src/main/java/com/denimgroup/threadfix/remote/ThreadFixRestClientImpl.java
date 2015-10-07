@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.remote.HttpRestUtils.encode;
+import static com.denimgroup.threadfix.remote.HttpRestUtils.encodeDoublePercent;
 
 public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 
@@ -184,12 +185,12 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 	}
 
 	public RestResponse<Application> searchForApplicationByName(String name, String teamName) {
-		return httpRestUtils.httpGet("/applications/" + encode(teamName) + "/lookup",
+		return httpRestUtils.httpGet("/applications/" + encodeDoublePercent(teamName) + "/lookup",
 				"&name=" + encode(name), Application.class);
 	}
 
     public RestResponse<Application> searchForApplicationInTeamByUniqueId(String uniqueId, String teamName) {
-        return httpRestUtils.httpGet("/applications/" + encode(teamName) + "/lookup",
+        return httpRestUtils.httpGet("/applications/" + encodeDoublePercent(teamName) + "/lookup",
                 "&uniqueId=" + encode(uniqueId), Application.class);
     }
 
