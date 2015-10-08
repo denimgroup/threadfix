@@ -205,6 +205,8 @@ module.controller('DefectTrackersTabController', function($window, $scope, $http
 
             $scope.successMessage = "Successfully created new tracker default profile " + newDefaultProfile.name;
 
+            $scope.openUpdateDefectDefaultsModal(newDefaultProfile);
+
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
