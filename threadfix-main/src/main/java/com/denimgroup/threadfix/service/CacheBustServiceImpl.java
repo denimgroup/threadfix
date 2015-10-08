@@ -25,7 +25,6 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.Report;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,8 +37,6 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
  */
 @Service
 public class CacheBustServiceImpl implements CacheBustService {
-
-    private final SanitizedLogger log = new SanitizedLogger(CacheBustServiceImpl.class);
 
     public String notCachedAsset(HttpServletRequest request, String relUrl) {
 

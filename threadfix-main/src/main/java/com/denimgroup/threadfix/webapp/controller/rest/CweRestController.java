@@ -34,7 +34,7 @@ public class CweRestController extends TFRestController {
     @RequestMapping(value="/{cweId}/setCustomText", method= RequestMethod.POST, headers ="Accept=application/json")
     public Object setCustomText(HttpServletRequest request, @PathVariable("cweId") int cweId,@RequestParam("customText") String customText){
 
-        log.info("Got REST request to set the custom text to CWE with id = " + cweId + ".");
+        LOG.info("Got REST request to set the custom text to CWE with id = " + cweId + ".");
 
         Result<String> keyCheck = checkKey(request, RestMethod.CWE_SET_CUSTOM_TEXT, -1, -1);
         if (!keyCheck.success()) {
@@ -44,7 +44,7 @@ public class CweRestController extends TFRestController {
         GenericVulnerability genericVulnerability = genericVulnerabilityService.loadByDisplayId(cweId);
 
         if (genericVulnerability == null) {
-            log.warn(CWE_LOOK_UP_FAILED);
+            LOG.warn(CWE_LOOK_UP_FAILED);
             return RestResponse.failure(CWE_LOOK_UP_FAILED);
         } else {
             genericVulnerability.setCustomText(customText);
@@ -63,10 +63,10 @@ public class CweRestController extends TFRestController {
             return jsonObject.toString();
 
         } catch(JsonProcessingException e) {
-            log.warn("Exception occurred during parsing/generating JSON");
+            LOG.warn("Exception occurred during parsing/generating JSON");
             e.printStackTrace();
         } catch(JSONException e) {
-            log.warn("JSON Exception occurred");
+            LOG.warn("JSON Exception occurred");
             e.printStackTrace();
         }
         return response;

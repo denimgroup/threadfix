@@ -43,15 +43,18 @@ import javax.validation.Valid;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
+import static com.denimgroup.threadfix.util.ValidationUtils.HTML_ERROR;
+import static com.denimgroup.threadfix.util.ValidationUtils.containsHTML;
 
 @Controller
 @RequestMapping("/organizations/modalAdd")
 public class AddOrganizationController {
 
+	private static final SanitizedLogger LOG = new SanitizedLogger(AddOrganizationController.class);
+
     @Autowired
 	private OrganizationService organizationService = null;
-	
-	private final SanitizedLogger log = new SanitizedLogger(AddOrganizationController.class);
 
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -81,6 +84,11 @@ public class AddOrganizationController {
 				result.rejectValue("name", null, null, "This field cannot be blank");
 				return RestResponse.failure("Failed to add the team.");
 			}
+
+			if (containsHTML(organization.getName())) {
+				LOG.error(HTML_ERROR);
+				return failure(HTML_ERROR);
+			}
 			
 			if (organizationService.nameExists(organization.getName().trim())) {
 				result.rejectValue("name", "errors.nameTaken");
@@ -90,7 +98,7 @@ public class AddOrganizationController {
 			organizationService.saveOrUpdate(organization);
 			
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
-			log.debug(user + " has created a new Organization with the name " + organization.getName() + 
+			LOG.debug(user + " has created a new Organization with the name " + organization.getName() +
 					" and ID " + organization.getId());
 
 			status.setComplete();

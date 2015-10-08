@@ -28,7 +28,7 @@ public class ScansRestController extends TFRestController {
     public Object getScanDetails(HttpServletRequest request,
                                  @PathVariable("scanId") int scanId) throws IOException {
 
-        log.info("Received REST request for details of scan " + scanId + ".");
+        LOG.info("Received REST request for details of scan " + scanId + ".");
 
         Scan scan = scanService.loadScan(scanId);
 

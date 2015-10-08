@@ -2,16 +2,16 @@
 
 <html>
     <head>
-        <title>Base url mismatch</title>
+        <title>Base URL mismatch</title>
     </head>
     <body>
-        <h2>Base Url Mismatch</h2>
+        <h2>Base URL Mismatch</h2>
         <div>
             <p>
                 The saved base URL is not the same as the one you use to connect to ThreadFix:
                 <table>
-                    <tr><td style="padding-right:20px; font-weight: bold;">saved</td><td>${savedBaseUrl}</td></tr>
-                    <tr><td style="padding-right:20px; font-weight: bold;">currently using</td><td>${currentBaseUrl}</td></tr>
+                    <tr><td style="padding-right:20px; font-weight: bold;">Saved</td><td><c:out value="${savedBaseUrl}"/></td></tr>
+                    <tr><td style="padding-right:20px; font-weight: bold;">Currently using</td><td><c:out value="${currentBaseUrl}"/></td></tr>
                 </table>
             </p>
             <p>

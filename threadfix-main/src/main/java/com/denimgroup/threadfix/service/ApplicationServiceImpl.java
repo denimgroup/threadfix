@@ -51,12 +51,14 @@ import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
+import static com.denimgroup.threadfix.util.ValidationUtils.HTML_ERROR;
+import static com.denimgroup.threadfix.util.ValidationUtils.containsHTML;
 
 @Service
 @Transactional(readOnly = false)
 public class ApplicationServiceImpl implements ApplicationService {
 	
-	protected final SanitizedLogger log = new SanitizedLogger(ApplicationServiceImpl.class);
+	private static final SanitizedLogger LOG = new SanitizedLogger(ApplicationServiceImpl.class);
 	
 	private String invalidProjectName = "The selected Project Name was invalid. " +
 			"Either a non-existent project or a project with no components was selected.";
@@ -221,9 +223,9 @@ public class ApplicationServiceImpl implements ApplicationService {
                 if (vulnerability != null && vulnerability.getWafRules() != null) {
                     // Since WAF Rules can only have one vulnerability, just delete them.
                     for (WafRule wafRule : vulnerability.getWafRules()) {
-                        log.debug("Deleting WAF Rule with ID " + wafRule.getId()
-                                + " because it was attached to the Vulnerability with ID " + vulnerability.getId() +
-                                " of application with ID " + application.getId());
+                        LOG.debug("Deleting WAF Rule with ID " + wafRule.getId()
+								+ " because it was attached to the Vulnerability with ID " + vulnerability.getId() +
+								" of application with ID " + application.getId());
                         wafRuleDao.delete(wafRule);
                     }
                 }
@@ -273,11 +275,11 @@ public class ApplicationServiceImpl implements ApplicationService {
 	private void removeRemoteApplicationLinks(Application application) {
 		if (application.getRemoteProviderApplications() != null &&
 				application.getRemoteProviderApplications().size() > 0) {
-			log.info("Removing remote applications from the application " + application.getName() +
-					 " (id=" + application.getId() + ")");
+			LOG.info("Removing remote applications from the application " + application.getName() +
+					" (id=" + application.getId() + ")");
 			for (RemoteProviderApplication app : application.getRemoteProviderApplications()) {
-				log.info("Removing remote application " + app.getNativeName() +
-						 " from application " + app.getApplication().getName());
+				LOG.info("Removing remote application " + app.getNativeName() +
+						" from application " + app.getApplication().getName());
 				app.setApplication(null);
 				app.setLastImportTime(null);
 				app.setApplicationChannel(null);
@@ -382,13 +384,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 		if (application == null || application.getName() == null
 				|| application.getName().trim().isEmpty()
 				|| application.getName().length() > Application.NAME_LENGTH) {
-			log.warn("The application's name was invalid.");
+			LOG.warn("The application's name was invalid.");
 			return false;
 		}
 		
 		if (application.getUrl() != null &&
 				application.getUrl().length() > Application.URL_LENGTH) {
-			log.warn("The application's url was too long.");
+			LOG.warn("The application's url was too long.");
 			return false;
 		}
 		
@@ -435,6 +437,12 @@ public class ApplicationServiceImpl implements ApplicationService {
 				result.rejectValue("name", null, null, "This field cannot be blank");
 			}
 			return;
+		}
+
+
+		if (containsHTML(application.getName())) {
+			LOG.error(HTML_ERROR);
+			result.rejectValue("name", null, null, HTML_ERROR);
 		}
 		
 		if (application.getRepositoryFolder() != null && !application.getRepositoryFolder().trim().equals("")) {
@@ -570,6 +578,11 @@ public class ApplicationServiceImpl implements ApplicationService {
 				result.rejectValue("name", null, null, "This field cannot be blank");
 			}
 			return;
+		}
+
+		if (containsHTML(application.getName())) {
+			LOG.error(HTML_ERROR);
+			result.rejectValue("name", null, null, HTML_ERROR);
 		}
 		
 		if (application.getApplicationCriticality() == null ||
@@ -741,7 +754,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 				application.setEncryptedUserName(ESAPI.encryptor().encrypt(application.getUserName()));
 			}
 		} catch (EncryptionException e) {
-			log.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
+			LOG.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
 		}
 		return application;
 	}
@@ -771,7 +784,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 			}
 
 		} catch (EncryptionException e) {
-			log.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
+			LOG.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
 		}
 		return application;
 	}
@@ -786,7 +799,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             }
 
         } catch (EncryptionException e) {
-            log.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
+            LOG.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
         }
         return application;
     }
@@ -800,7 +813,7 @@ public class ApplicationServiceImpl implements ApplicationService {
                 application.setRepositoryUserName(ESAPI.encryptor().decrypt(application.getRepositoryEncryptedUserName()));
             }
         } catch (EncryptionException e) {
-            log.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
+            LOG.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
         }
         return application;
     }
@@ -837,7 +850,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         Application dbApplication = loadApplication(applicationId);
 
         if(dbApplication == null){
-            log.info("No application found for id: " + applicationId);
+            LOG.info("No application found for id: " + applicationId);
             throw new RuntimeException("No application found for id: " + applicationId);
         }
 

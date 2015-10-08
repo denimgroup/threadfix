@@ -75,7 +75,7 @@ public class DefectSubmissionRestController extends TFRestController {
     public Object submitDefect(HttpServletRequest request,
                                @PathVariable("appId") int appId) throws IOException {
 
-        log.info("Received REST request for defect submission.");
+        LOG.info("Received REST request for defect submission.");
 
         Application application = applicationService.loadApplication(appId);
         if (application == null || !application.isActive()) {
@@ -188,7 +188,7 @@ public class DefectSubmissionRestController extends TFRestController {
     @JsonView(AllViews.RestViewScan2_1.class)
     public RestResponse<List<DynamicFormField>> getDefectTrackerFields(@PathVariable("appId") int appId) throws IOException {
 
-        log.info("Received REST request for defect submission inputs.");
+        LOG.info("Received REST request for defect submission inputs.");
 
         Application application = applicationService.loadApplication(appId);
         if (application == null || !application.isActive()) {

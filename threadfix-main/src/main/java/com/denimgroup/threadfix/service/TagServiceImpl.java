@@ -38,11 +38,14 @@ import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
+import static com.denimgroup.threadfix.util.ValidationUtils.HTML_ERROR;
+import static com.denimgroup.threadfix.util.ValidationUtils.containsHTML;
+
 @Service
 @Transactional(readOnly = false) // used to be true
 public class TagServiceImpl implements TagService {
 
-    private final SanitizedLogger log = new SanitizedLogger("TagService");
+    private static final SanitizedLogger LOG = new SanitizedLogger("TagService");
 
     @Autowired
     private TagDao tagDao;
@@ -84,7 +87,7 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional(readOnly = false)
     public void deleteById(int tagId) {
-        log.info("Deleting Tag with ID " + tagId);
+        LOG.info("Deleting Tag with ID " + tagId);
         Tag tag = loadTag(tagId);
         tag.setActive(false);
         tagDao.saveOrUpdate(tag);
@@ -94,13 +97,13 @@ public class TagServiceImpl implements TagService {
     public void copyAppTagsToCommentTags() {
         List<Tag> appTags = loadAllApplicationTags();
         if (appTags == null) {
-            log.info("There is no tags in system.");
+            LOG.info("There is no tags in system.");
             return;
         }
-        log.info("About to copy " + appTags.size() + " application tags to comment tags.");
+        LOG.info("About to copy " + appTags.size() + " application tags to comment tags.");
         for (Tag appTag : appTags) {
             if (loadCommentTag(appTag.getName()) == null) {
-                log.info("Copying " + appTag.getName());
+                LOG.info("Copying " + appTag.getName());
                 Tag newCommentTag = new Tag();
                 newCommentTag.setName(appTag.getName());
                 newCommentTag.setEnterpriseTag(appTag.getEnterpriseTag());
@@ -116,13 +119,13 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public void changeTagInVulnComments() {
-        log.info("About to update all tags in Vulnerability Comments from Application Tag to Comment Tag.");
+        LOG.info("About to update all tags in Vulnerability Comments from Application Tag to Comment Tag.");
         List<VulnerabilityComment> vulnerabilityComments = vulnerabilityCommentDao.retrieveAllActive();
         if (vulnerabilityComments == null) {
-            log.info("There is no vulnerability comments in the system.");
+            LOG.info("There is no vulnerability comments in the system.");
             return;
         }
-        log.info("Looking for tags in " + vulnerabilityComments.size() + " vulnerability comments, and change them if found.");
+        LOG.info("Looking for tags in " + vulnerabilityComments.size() + " vulnerability comments, and change them if found.");
         for (VulnerabilityComment comment: vulnerabilityComments) {
             List<Tag> newTags = CollectionUtils.list();
             for (Tag tag: comment.getTags()) {
@@ -131,7 +134,7 @@ public class TagServiceImpl implements TagService {
                     if (sameTagInComment != null)
                         newTags.add(sameTagInComment);
                     else
-                        log.warn("Can't find comment tag " + tag.getName() + " to change for comment in vulnerability ID " + comment.getVulnerability().getId());
+                        LOG.warn("Can't find comment tag " + tag.getName() + " to change for comment in vulnerability ID " + comment.getVulnerability().getId());
                 } else
                     newTags.add(tag);
             }
@@ -154,7 +157,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public void updateTagTypes() {
-        log.info("About to update type for all tags.");
+        LOG.info("About to update type for all tags.");
         for (Tag tag: tagDao.retrieveAll()) {
             if (!tag.getTagForComment()) { // this is an application tag
                 tag.setType(TagType.APPLICATION);
@@ -182,6 +185,11 @@ public class TagServiceImpl implements TagService {
             result.rejectValue("name", null, null, "This field cannot be blank");
         }
 
+        if (containsHTML(tag.getName())) {
+            LOG.error(HTML_ERROR);
+            result.rejectValue("name", null, null, HTML_ERROR);
+        }
+
         if (tag.getType() == null) {
             result.rejectValue("type", null, null, "This field cannot be blank");
         } else { // Checking if type is valid
@@ -205,7 +213,7 @@ public class TagServiceImpl implements TagService {
     public boolean isValidTags(List<Tag> allTags, List<Tag> tags) {
         for (Tag tag: tags) {
             if (!containTag(allTags, tag)) {
-                log.warn("Tag ID " + tag.getId() + " is invalid.");
+                LOG.warn("Tag ID " + tag.getId() + " is invalid.");
                 return false;
             }
         }

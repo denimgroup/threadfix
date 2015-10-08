@@ -64,7 +64,7 @@ public class PluginRestController extends TFRestController {
     public RestResponse<VulnerabilityMarker[]> getMarkers(
             HttpServletRequest request,
             @PathVariable("appId") int appId) {
-        log.info("Received REST request for marker information for application with id = " + appId);
+        LOG.info("Received REST request for marker information for application with id = " + appId);
 
         Result<String> keyCheck = checkKey(request, RestMethod.PLUGIN_MARKERS, -1, -1);
         if (!keyCheck.success()) {
@@ -75,7 +75,7 @@ public class PluginRestController extends TFRestController {
 
         if (application == null) {
             String message = "Couldn't find the application with ID " + appId;
-            log.warn(message);
+            LOG.warn(message);
             return RestResponse.failure(message);
         }
 
@@ -93,7 +93,7 @@ public class PluginRestController extends TFRestController {
     @RequestMapping(value = "/applications", method = RequestMethod.GET)
     @ResponseBody
     public RestResponse<Application.Info[]> getApplicationList(HttpServletRequest request) {
-        log.info("Received REST request for application CSV list");
+        LOG.info("Received REST request for application CSV list");
 
         Result<String> keyCheck = checkKey(request, RestMethod.PLUGIN_APPLICATIONS, -1, -1);
         if (!keyCheck.success()) {
@@ -104,7 +104,7 @@ public class PluginRestController extends TFRestController {
 
         if (applications == null) {
             String response = "Couldn't find any active applications.";
-            log.warn(response);
+            LOG.warn(response);
             RestResponse.failure(response);
         }
         return RestResponse.success(getApplicationInfo(applications));
@@ -118,7 +118,7 @@ public class PluginRestController extends TFRestController {
     @ResponseBody
     RestResponse<Endpoint.Info[]> getEndpoints(@PathVariable int appId,
                                                HttpServletRequest request) {
-        log.info("Received REST request for application CSV list");
+        LOG.info("Received REST request for application CSV list");
 
         Result<String> keyCheck = checkKey(request, RestMethod.PLUGIN_ENDPOINTS, -1, -1);
         if (!keyCheck.success()) {
@@ -129,7 +129,7 @@ public class PluginRestController extends TFRestController {
 		
 		if (application == null) {
             String message = "Couldn't find the application.";
-			log.warn(message);
+			LOG.warn(message);
 			return RestResponse.failure(message);
 		}
 		

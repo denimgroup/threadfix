@@ -23,12 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.validator;
 
+import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.denimgroup.threadfix.data.entities.User;
-import com.denimgroup.threadfix.service.RoleService;
+import static com.denimgroup.threadfix.util.ValidationUtils.containsHTML;
 
 public class UserValidator implements Validator {
 	
@@ -61,6 +62,8 @@ public class UserValidator implements Validator {
 			errors.rejectValue("name", MessageConstants.ERROR_REQUIRED, new String[] { "Name" }, null);
 		} else if (user.getName() != null && user.getName().length() > 25) {
 			errors.rejectValue("name", null, "Name has a maximum length of 25.");
+		} else if (containsHTML(user.getName())) {
+			errors.rejectValue("name", null, "HTML is not allowed in user names");
 		}
 
 		// Validate password
@@ -76,13 +79,13 @@ public class UserValidator implements Validator {
 					user.getUnencryptedPassword().length() < 12){
 				errors.rejectValue("password", null, "Password has a minimum length of 12.");
 			}
-			
+
 			if (errors.getFieldError("password") == null && user.getUnencryptedPassword() != null &&
 					user.getUnencryptedPassword().length() < 12 &&
 					user.getUnencryptedPassword().length() != 0) {
 				errors.rejectValue("password", null, "Password has a minimum length of 12.");
 			}
-	
+
 			// Confirm password
 			if (errors.getFieldError("password") == null) {
 				if (!isEmptyOrWhitespace(user.getUnencryptedPassword())

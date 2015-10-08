@@ -41,12 +41,17 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
+import static com.denimgroup.threadfix.util.ValidationUtils.HTML_ERROR;
+import static com.denimgroup.threadfix.util.ValidationUtils.containsHTML;
 
 
 @Controller
 @RequestMapping("/organizations/{orgId}/edit")
 @SessionAttributes("organization")
 public class EditOrganizationController {
+
+	private static final SanitizedLogger LOG = new SanitizedLogger(EditOrganizationController.class);
 
     @Autowired
 	private OrganizationService organizationService = null;
@@ -79,6 +84,11 @@ public class EditOrganizationController {
 			
 			if (organization.getName() == null || organization.getName().trim().isEmpty()) {
                 return RestResponse.failure("Name cannot be blank.");
+			}
+
+			if (containsHTML(organization.getName())) {
+				LOG.error(HTML_ERROR);
+				return failure(HTML_ERROR);
 			}
 			
 			Organization databaseOrganization = organizationService.loadByName(organization.getName().trim());

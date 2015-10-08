@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.webapp.controller.rest;
 
 import com.denimgroup.threadfix.data.entities.Tag;
 import com.denimgroup.threadfix.data.enums.TagType;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.TagService;
 import com.denimgroup.threadfix.util.Result;
@@ -41,10 +42,14 @@ import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.remote.response.RestResponse.*;
+import static com.denimgroup.threadfix.util.ValidationUtils.HTML_ERROR;
+import static com.denimgroup.threadfix.util.ValidationUtils.containsHTML;
 
 @RestController
 @RequestMapping("/rest/tags")
 public class TagRestController extends TFRestController {
+
+    private static final SanitizedLogger LOG = new SanitizedLogger(TagRestController.class);
 
     @Autowired
     private TagService tagService;
@@ -61,7 +66,7 @@ public class TagRestController extends TFRestController {
     @RequestMapping(headers="Accept=application/json", value="/new", method=RequestMethod.POST)
     @JsonView(AllViews.RestView2_1.class)
     public Object createTag(HttpServletRequest request) {
-        log.info("Received REST request for a new tag.");
+        this.LOG.info("Received REST request for a new tag.");
 
         Result<String> keyCheck = checkKey(request, RestMethod.TAG_CREATE, -1, -1);
         if (!keyCheck.success()) {
@@ -83,11 +88,16 @@ public class TagRestController extends TFRestController {
             return RestResponse.failure("The name is already taken.");
         }
 
+        if (containsHTML(name)) {
+            LOG.error(HTML_ERROR);
+            return failure(HTML_ERROR);
+        }
+
         Tag newTag = new Tag();
         newTag.setName(name);
         newTag.setType(tagTypeEnum);
 
-        log.info("Saving new Tag " + newTag.getName());
+        this.LOG.info("Saving new Tag " + newTag.getName());
         tagService.storeTag(newTag);
         return RestResponse.success(newTag);
     }
@@ -102,7 +112,7 @@ public class TagRestController extends TFRestController {
     @JsonView(AllViews.RestViewApplication2_1.class)
     public Object tagDetail(HttpServletRequest request,
                             @PathVariable("tagId") int tagId) {
-        log.info("Received REST request for tag with id = " + tagId + ".");
+        this.LOG.info("Received REST request for tag with id = " + tagId + ".");
 
         Result<String> keyCheck = checkKey(request, RestMethod.TAG_LOOKUP, -1, -1);
         if (!keyCheck.success()) {
@@ -112,7 +122,7 @@ public class TagRestController extends TFRestController {
         Tag tag = tagService.loadTag(tagId);
 
         if (tag == null) {
-            log.warn(TAG_LOOKUP_FAILED);
+            this.LOG.warn(TAG_LOOKUP_FAILED);
             return failure(TAG_LOOKUP_FAILED);
         }
 
@@ -134,7 +144,7 @@ public class TagRestController extends TFRestController {
         if ((tagName == null)) {
             return failure(TAG_LOOKUP_FAILED);
         }
-        log.info("Received REST request for Tag " + tagName + ".");
+        this.LOG.info("Received REST request for Tag " + tagName + ".");
         List<Tag> tags = tagService.loadTagsByName(tagName);
 
         if (tags == null)
@@ -154,7 +164,7 @@ public class TagRestController extends TFRestController {
         if (!keyCheck.success()) {
             return resultError(keyCheck);
         }
-        log.info("Received REST request to query all tags.");
+        this.LOG.info("Received REST request to query all tags.");
         Map<String, Object> map = map();
         map.put("Application Tag", tagService.loadAllApplicationTags());
         map.put("Vulnerability Tag", tagService.loadAllVulnTags());
@@ -167,7 +177,7 @@ public class TagRestController extends TFRestController {
     @JsonView(RestViewTag.class)
     public Object list(HttpServletRequest request){
 
-        log.info("Received REST request for Tag list.");
+        this.LOG.info("Received REST request for Tag list.");
 
         Result<String> keyCheck = checkKey(request, RestMethod.TAG_LIST, -1, -1);
         if (!keyCheck.success()) {
@@ -183,7 +193,7 @@ public class TagRestController extends TFRestController {
     @JsonView(RestViewTag.class)
     public Object updateTag(@PathVariable("tagId") Integer tagId, @RequestParam("name") String tagName, HttpServletRequest request){
 
-        log.info("Received REST request for updating an existing Tag.");
+        this.LOG.info("Received REST request for updating an existing Tag.");
 
         Result<String> keyCheck = checkKey(request, RestMethod.TAG_EDIT, -1, -1);
         if (!keyCheck.success()) {
@@ -216,7 +226,7 @@ public class TagRestController extends TFRestController {
     @RequestMapping(value = "/{tagId}/delete", method = RequestMethod.POST, headers = "Accept=application/json")
     public Object deleteTag(@PathVariable("tagId") Integer tagId, HttpServletRequest request){
 
-        log.info("Received REST request for deleting an existing Tag.");
+        this.LOG.info("Received REST request for deleting an existing Tag.");
 
         Result<String> keyCheck = checkKey(request, RestMethod.TAG_DELETE, -1, -1);
         if (!keyCheck.success()) {
@@ -237,7 +247,7 @@ public class TagRestController extends TFRestController {
     @JsonView(RestViewTag.class)
     public Object listApplications(@PathVariable("tagId") Integer tagId, HttpServletRequest request){
 
-        log.info("Received REST request for listing Applications with a Tag.");
+        this.LOG.info("Received REST request for listing Applications with a Tag.");
 
         Result<String> keyCheck = checkKey(request, RestMethod.TAG_APPLICATION_LIST, -1, -1);
         if (!keyCheck.success()) {

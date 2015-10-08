@@ -90,7 +90,7 @@ public class ApplicationRestController extends TFRestController {
     @JsonView(AllViews.RestViewApplication2_1.class)
     public Object applicationDetail(HttpServletRequest request,
                                                   @PathVariable("appId") int appId) throws IOException {
-        log.info("Received REST request for Applications with id = " + appId + ".");
+        LOG.info("Received REST request for Applications with id = " + appId + ".");
 
         Result<String> keyCheck = checkKey(request, RestMethod.APPLICATION_DETAIL, -1, appId);
         if (!keyCheck.success()) {
@@ -100,7 +100,7 @@ public class ApplicationRestController extends TFRestController {
         Application application = applicationService.loadApplication(appId);
 
         if (application == null) {
-            log.warn(APPLICATION_LOOKUP_FAILED);
+            LOG.warn(APPLICATION_LOOKUP_FAILED);
             return failure(APPLICATION_LOOKUP_FAILED);
         }
 
@@ -120,7 +120,7 @@ public class ApplicationRestController extends TFRestController {
                                          @PathVariable("appId") int appId,
                                          @RequestParam("file") MultipartFile file,
                                          @RequestParam("filename") String filename) {
-        log.info("Received REST request to attach a file to application with id = " + appId + ".");
+        LOG.info("Received REST request to attach a file to application with id = " + appId + ".");
 
         Result<String> keyCheck = checkKey(request, APPLICATION_ATTACH_FILE, -1, appId);
         if (!keyCheck.success()) {
@@ -144,7 +144,7 @@ public class ApplicationRestController extends TFRestController {
     @RequestMapping(headers="Accept=application/json", value="/{appId}/setParameters", method=RequestMethod.POST)
     public Object setParameters(HttpServletRequest request,
                                               @PathVariable("appId") int appId) throws IOException {
-        log.info("Received REST request to set parameters for application with id = " + appId + ".");
+        LOG.info("Received REST request to set parameters for application with id = " + appId + ".");
 
         Result<String> keyCheck = checkKey(request, APPLICATION_SET_PARAMS, -1, appId);
         if (!keyCheck.success()) {
@@ -154,7 +154,7 @@ public class ApplicationRestController extends TFRestController {
         Application application = applicationService.loadApplication(appId);
 
         if (application == null) {
-            log.warn(APPLICATION_LOOKUP_FAILED);
+            LOG.warn(APPLICATION_LOOKUP_FAILED);
             return failure(APPLICATION_LOOKUP_FAILED);
         }
 
@@ -197,15 +197,15 @@ public class ApplicationRestController extends TFRestController {
             return failure(APPLICATION_LOOKUP_FAILED);
         }
 
-        log.info("Received REST request for Applications in team = " + teamName + ".");
+        LOG.info("Received REST request for Applications in team = " + teamName + ".");
         Organization org = organizationService.loadByName(teamName);
         if (org == null) {
-            log.warn(APPLICATION_LOOKUP_FAILED);
+            LOG.warn(APPLICATION_LOOKUP_FAILED);
 
             // In case Go encodes spaces to '+'
             if (teamName.contains("+")) {
                 teamName = teamName.replace("+", " ");
-                log.info("Trying to look up again for Applications in team = " + teamName + ".");
+                LOG.info("Trying to look up again for Applications in team = " + teamName + ".");
                 org = organizationService.loadByName(teamName);
             }
 
@@ -244,7 +244,7 @@ public class ApplicationRestController extends TFRestController {
                 }
             }
             if (application == null) {
-                log.warn(APPLICATION_LOOKUP_FAILED);
+                LOG.warn(APPLICATION_LOOKUP_FAILED);
                 return failure(APPLICATION_LOOKUP_FAILED);
             }
         }
@@ -276,7 +276,7 @@ public class ApplicationRestController extends TFRestController {
             return failure(APPLICATION_LOOKUP_FAILED);
         }
 
-        log.info("Received REST request for Applications.");
+        LOG.info("Received REST request for Applications.");
 
         List<Application> applicationList = list();
         if (appUniqueId != null) {
@@ -290,7 +290,7 @@ public class ApplicationRestController extends TFRestController {
                 applicationList = applicationService.loadApplicationByUniqueId(appUniqueId, -1);
             }
             if (applicationList == null || applicationList.isEmpty()) {
-                log.warn(APPLICATION_LOOKUP_FAILED);
+                LOG.warn(APPLICATION_LOOKUP_FAILED);
                 return failure(APPLICATION_LOOKUP_FAILED);
             }
         }
@@ -319,7 +319,7 @@ public class ApplicationRestController extends TFRestController {
     public Object uploadScan(@PathVariable("appId") int appId,
                              HttpServletRequest request,
                              MultipartRequest multiPartRequest) throws IOException {
-        log.info("Received REST request to upload a scan to application " + appId + ".");
+        LOG.info("Received REST request to upload a scan to application " + appId + ".");
 
         Result<String> keyCheck = checkKey(request, APPLICATION_UPLOAD, -1, appId);
         if (!keyCheck.success()) {
@@ -357,10 +357,10 @@ public class ApplicationRestController extends TFRestController {
             try {
                 wafId = Integer.valueOf(idString);
             } catch (NumberFormatException e) {
-                log.warn("Non-integer parameter was submitted to setWaf.");
+                LOG.warn("Non-integer parameter was submitted to setWaf.");
             }
             if (wafId != null) {
-                log.info("Received REST request to add WAF " + wafId + " to Application " + appId + ".");
+                LOG.info("Received REST request to add WAF " + wafId + " to Application " + appId + ".");
             }
         }
 
@@ -370,7 +370,7 @@ public class ApplicationRestController extends TFRestController {
         }
 
         if (wafId == null) {
-            log.warn("Received incomplete REST request to add a WAF");
+            LOG.warn("Received incomplete REST request to add a WAF");
             return failure(WAF_LOOKUP_FAILED);
         }
 
@@ -378,10 +378,10 @@ public class ApplicationRestController extends TFRestController {
         Waf waf = wafService.loadWaf(wafId);
 
         if (application == null) {
-            log.warn(APPLICATION_LOOKUP_FAILED);
+            LOG.warn(APPLICATION_LOOKUP_FAILED);
             return failure(APPLICATION_LOOKUP_FAILED);
         } else if (waf == null) {
-            log.warn(WAF_LOOKUP_FAILED);
+            LOG.warn(WAF_LOOKUP_FAILED);
             return failure(WAF_LOOKUP_FAILED);
         } else {
 
@@ -420,7 +420,7 @@ public class ApplicationRestController extends TFRestController {
         Application application = applicationService.loadApplication(appId);
 
         if (application == null) {
-            log.warn("Invalid Application ID.");
+            LOG.warn("Invalid Application ID.");
             return failure(APPLICATION_LOOKUP_FAILED);
         } else {
             application.setUrl(url);
@@ -435,7 +435,7 @@ public class ApplicationRestController extends TFRestController {
                                     Application application,
                                     BindingResult bindingResult, HttpServletRequest request) {
 
-        log.info("Received REST request for updating Application with id = " + appId + ".");
+        LOG.info("Received REST request for updating Application with id = " + appId + ".");
 
         Result<String> keyCheck = checkKey(request, APPLICATION_UPDATE, -1, appId);
         if (!keyCheck.success()) {
@@ -459,7 +459,7 @@ public class ApplicationRestController extends TFRestController {
     public Object addTag(@PathVariable("appId") Integer appId, @PathVariable("tagId") Integer tagId,
                          HttpServletRequest request){
 
-            log.info("Received REST request adding Tag " + tagId + " for Application " + appId + ".");
+            LOG.info("Received REST request adding Tag " + tagId + " for Application " + appId + ".");
         Result<String> keyCheck = checkKey(request, APPLICATION_ADD_TAG, -1, appId);
         if (!keyCheck.success()) {
             return resultError(keyCheck);
@@ -468,24 +468,24 @@ public class ApplicationRestController extends TFRestController {
         Application application = applicationService.loadApplication(appId);
 
         if(application == null){
-            log.warn("Invalid Application ID.");
+            LOG.warn("Invalid Application ID.");
             return failure(APPLICATION_LOOKUP_FAILED);
         }
 
         Tag tag = tagService.loadTag(tagId);
 
         if(tag == null){
-            log.warn("Invalid Tag ID.");
+            LOG.warn("Invalid Tag ID.");
             return failure(TAG_LOOKUP_FAILED);
         }
 
         if (tag.getType() != null && TagType.APPLICATION != tag.getType()) {
-            log.warn(TAG_INVALID);
+            LOG.warn(TAG_INVALID);
             return failure(TAG_INVALID);
         }
 
         if(application.containTag(tag)){
-            log.warn("Tag has already been set on this application");
+            LOG.warn("Tag has already been set on this application");
             return failure("Tag has already been set on this application");
         }
 
@@ -508,7 +508,7 @@ public class ApplicationRestController extends TFRestController {
                          @PathVariable("appId") int appId,
                          @PathVariable("tagId") int tagId) throws IOException {
 
-        log.info("Received REST request removing Tag " + tagId + " from Application " + appId + ".");
+        LOG.info("Received REST request removing Tag " + tagId + " from Application " + appId + ".");
         Result<String> keyCheck = checkKey(request, APPLICATION_REMOVE_TAG, -1, appId);
         if (!keyCheck.success()) {
             return resultError(keyCheck);
@@ -517,14 +517,14 @@ public class ApplicationRestController extends TFRestController {
         Application application = applicationService.loadApplication(appId);
 
         if(application == null){
-            log.warn("Invalid Application ID.");
+            LOG.warn("Invalid Application ID.");
             return failure(APPLICATION_LOOKUP_FAILED);
         }
 
         Tag tag = tagService.loadTag(tagId);
 
         if(tag == null){
-            log.warn("Invalid Tag ID.");
+            LOG.warn("Invalid Tag ID.");
             return failure(TAG_LOOKUP_FAILED);
         }
 
@@ -551,11 +551,11 @@ public class ApplicationRestController extends TFRestController {
         Application application = applicationService.loadApplication(appId);
 
         if (application == null) {
-            log.warn("Invalid Application ID.");
+            LOG.warn("Invalid Application ID.");
             return failure(APPLICATION_LOOKUP_FAILED);
         } else if (application.getScans() == null || application.getScans().isEmpty()) {
             String message = "No scans associated with application: " + appId;
-            log.warn(message);
+            LOG.warn(message);
             return failure(message);
         } else {
             return success(application.getScans());

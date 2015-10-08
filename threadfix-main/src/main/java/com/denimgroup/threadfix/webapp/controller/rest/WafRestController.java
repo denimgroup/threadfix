@@ -70,7 +70,7 @@ public class WafRestController extends TFRestController {
 	@JsonView(AllViews.RestViewWaf2_1.class)
 	@RequestMapping(headers="Accept=application/json", value="/", method=RequestMethod.GET)
 	public Object wafIndex(HttpServletRequest request) {
-		log.info("Received REST request for WAFs");
+		LOG.info("Received REST request for WAFs");
 
 		Result<String> keyCheck = checkKey(request, RestMethod.WAF_LIST, -1, -1);
 		if (!keyCheck.success()) {
@@ -80,7 +80,7 @@ public class WafRestController extends TFRestController {
 		List<Waf> wafs = wafService.loadAll();
 		
 		if (wafs == null || wafs.isEmpty()) {
-			log.warn("wafService.loadAll() returned null.");
+			LOG.warn("wafService.loadAll() returned null.");
             return failure("No WAFs found.");
 		} else {
             return RestResponse.success(wafs);
@@ -105,12 +105,12 @@ public class WafRestController extends TFRestController {
 			try {
 				wafIdInt = Integer.parseInt(wafId);
 			} catch (NumberFormatException e) {
-				log.warn("Invalid WAF ID");
+				LOG.warn("Invalid WAF ID");
 				return failure("Bad rest request.");
 			}
 		}
 
-		log.info("Received REST request for WAF with ID = " + wafId + ".");
+		LOG.info("Received REST request for WAF with ID = " + wafId + ".");
 
 		Result<String> keyCheck = checkKey(request, RestMethod.WAF_DETAIL, -1, -1);
 		if (!keyCheck.success()) {
@@ -119,7 +119,7 @@ public class WafRestController extends TFRestController {
 
 		Waf waf = wafService.loadWaf(wafIdInt);
 		if (waf == null) {
-			log.warn("Invalid WAF ID.");
+			LOG.warn("Invalid WAF ID.");
 			return failure(LOOKUP_FAILED);
 		} else {
             return RestResponse.success(waf);
@@ -136,9 +136,9 @@ public class WafRestController extends TFRestController {
 	public Object wafLookup(HttpServletRequest request) {
 		
 		if (request.getParameter("name") == null) {
-			log.info("Received REST request for WAF with name = " + request.getParameter("name") + ".");
+			LOG.info("Received REST request for WAF with name = " + request.getParameter("name") + ".");
 		} else {
-			log.info("Received REST request for WAF with a missing name parameter.");
+			LOG.info("Received REST request for WAF with a missing name parameter.");
 		}
 
 		Result<String> keyCheck = checkKey(request, RestMethod.WAF_LOOKUP, -1, -1);
@@ -153,7 +153,7 @@ public class WafRestController extends TFRestController {
 		Waf waf = wafService.loadWaf(request.getParameter("name"));
 		
 		if (waf == null) {
-			log.warn("Invalid WAF Name.");
+			LOG.warn("Invalid WAF Name.");
 			return failure("Invalid WAF Name.");
 		}
         return RestResponse.success(waf);
@@ -167,7 +167,7 @@ public class WafRestController extends TFRestController {
 	public RestResponse<String> getRules(HttpServletRequest request,
 			@PathVariable("wafId") int wafId,
             @PathVariable("appId") int wafAppId) {
-		log.info("Received REST request for rules from WAF with ID = " + wafId + ".");
+		LOG.info("Received REST request for rules from WAF with ID = " + wafId + ".");
 
 		Result<String> keyCheck = checkKey(request, RestMethod.WAF_RULES, -1, -1);
 		if (!keyCheck.success()) {
@@ -177,14 +177,14 @@ public class WafRestController extends TFRestController {
 		Waf waf = wafService.loadWaf(wafId);
 		
 		if (waf == null) {
-			log.warn("Invalid WAF ID.");
+			LOG.warn("Invalid WAF ID.");
 			return failure("Invalid WAF ID.");
 		}
 
 		List<Application> wafApplications = waf.getApplications();
 
 		if (wafApplications.isEmpty()) {
-			log.warn("You need to attach an Application to this WAF before you can start to generate rules.");
+			LOG.warn("You need to attach an Application to this WAF before you can start to generate rules.");
 			return failure("You need to attach an Application to this WAF before you can start to generate rules.");
 		}
 
@@ -193,14 +193,14 @@ public class WafRestController extends TFRestController {
             application = applicationService.loadApplication(wafAppId);
 
 			if (!wafApplications.contains(application)) {
-				log.warn("This application is not attached to this WAF.");
+				LOG.warn("This application is not attached to this WAF.");
 				return failure("This application is not attached to this WAF.");
 			}
 
             if (application == null
                     || application.getWaf() == null
                     || application.getWaf().getId() != wafId) {
-                log.warn("Invalid Application ID.");
+                LOG.warn("Invalid Application ID.");
                 return failure("Invalid Application ID.");
             }
         }
@@ -217,7 +217,7 @@ public class WafRestController extends TFRestController {
 	@JsonView(AllViews.RestViewWaf2_1.class)
 	@RequestMapping(headers="Accept=application/json", value="/new", method=RequestMethod.POST)
 	public Object newWaf(HttpServletRequest request) {
-		log.info("Received REST request for a new WAF.");
+		LOG.info("Received REST request for a new WAF.");
 		
 		Result<String> keyCheck = checkKey(request, RestMethod.WAF_NEW, -1, -1);
 		if (!keyCheck.success()) {
@@ -228,14 +228,14 @@ public class WafRestController extends TFRestController {
 		String type = request.getParameter("type");
 		
 		if (name == null || type == null) {
-			log.warn("Request for WAF creation failed because it was missing one or both parameters.");
+			LOG.warn("Request for WAF creation failed because it was missing one or both parameters.");
 			return failure(CREATION_FAILED);
 		}
 		
 		WafType wafType = wafService.loadWafType(type);
 		
 		if (wafType == null) {
-			log.warn("Invalid WAF type requested.");
+			LOG.warn("Invalid WAF type requested.");
 			return failure(NOT_FOUND_WAF);
 		}
 
@@ -263,7 +263,7 @@ public class WafRestController extends TFRestController {
 	@RequestMapping(headers="Accept=application/json", value="/{wafId}/uploadLog", method=RequestMethod.POST)
 	public RestResponse uploadWafLog(HttpServletRequest request,
 			@PathVariable("wafId") int wafId, @RequestParam("file") MultipartFile file) {
-		log.info("Received REST request for a new WAF.");
+		LOG.info("Received REST request for a new WAF.");
 
 		Result<String> keyCheck = checkKey(request, RestMethod.WAF_LOG, -1, -1);
 		if (!keyCheck.success()) {
@@ -278,12 +278,12 @@ public class WafRestController extends TFRestController {
 			byte[] bytes = file.getBytes();
 			logContents = new String(bytes);
 		} catch (IOException e) {
-			log.warn("Malformed file uploaded (or bad code on our part).");
+			LOG.warn("Malformed file uploaded (or bad code on our part).");
 			e.printStackTrace();
 		}
 		
 		if (waf == null || logContents == null || logContents.isEmpty()) {
-			log.debug("Invalid input.");
+			LOG.debug("Invalid input.");
 			return failure("Invalid input");
 		}
 				
@@ -292,9 +292,9 @@ public class WafRestController extends TFRestController {
 		List<SecurityEvent> events = logParserService.parseInput();
 		
 		if (events == null || events.size() == 0) {
-			log.debug("No Security Events found.");
+			LOG.debug("No Security Events found.");
 		} else {
-			log.debug("Found " + events.size() + " security events.");
+			LOG.debug("Found " + events.size() + " security events.");
 		}
 		
 		return success(events);

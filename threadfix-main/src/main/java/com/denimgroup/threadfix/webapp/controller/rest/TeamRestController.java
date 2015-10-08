@@ -28,7 +28,6 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.enums.EventAction;
-import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.LicenseService;
@@ -46,7 +45,9 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-import static com.denimgroup.threadfix.remote.response.RestResponse.resultError;
+import static com.denimgroup.threadfix.remote.response.RestResponse.*;
+import static com.denimgroup.threadfix.util.ValidationUtils.HTML_ERROR;
+import static com.denimgroup.threadfix.util.ValidationUtils.containsHTML;
 import static com.denimgroup.threadfix.webapp.controller.rest.RestMethod.*;
 
 @RestController
@@ -76,7 +77,7 @@ public class TeamRestController extends TFRestController {
     @JsonView(AllViews.RestViewTeam2_1.class)
 	public Object teamIDLookup(@PathVariable("teamID") int teamId,
                         HttpServletRequest request) {
-        log.info("Received REST request for Team with ID " + teamId + ".");
+        LOG.info("Received REST request for Team with ID " + teamId + ".");
 
         Result<String> keyCheck = checkKey(request, TEAM_LOOKUP, teamId, -1);
         if (!keyCheck.success()) {
@@ -86,12 +87,12 @@ public class TeamRestController extends TFRestController {
         Organization org = organizationService.loadById(teamId);
 
         if (org == null || !org.isActive()) {
-            log.warn("Team lookup failed for ID " + teamId + ".");
-            return RestResponse.failure(LOOKUP_FAILED);
+            LOG.warn("Team lookup failed for ID " + teamId + ".");
+            return failure(LOOKUP_FAILED);
         } else {
-            log.info("REST request for Team with ID " + teamId
+            LOG.info("REST request for Team with ID " + teamId
                     + " completed successfully.");
-            return RestResponse.success(org);
+            return success(org);
         }
     }
 
@@ -104,7 +105,7 @@ public class TeamRestController extends TFRestController {
     @RequestMapping(headers = "Accept=application/json", value = "/{teamId}/applications/new", method = RequestMethod.POST)
     public Object newApplication(HttpServletRequest request,
                           @PathVariable("teamId") int teamId) {
-        log.info("Received REST request for a new Application.");
+        LOG.info("Received REST request for a new Application.");
 
         Result<String> keyCheck = checkKey(request, TEAM_NEW_APPLICATION, teamId, -1);
         if (!keyCheck.success()) {
@@ -112,7 +113,7 @@ public class TeamRestController extends TFRestController {
         }
 
         if (licenseService != null && !licenseService.canAddApps()) {
-            return RestResponse.failure("The current license does not allow the creation of any more applications.");
+            return failure("The current license does not allow the creation of any more applications.");
         }
 
         // By not using @RequestParam notations, we can catch the error in the code
@@ -121,9 +122,14 @@ public class TeamRestController extends TFRestController {
         String url = request.getParameter("url");
 
         if (name == null) {
-            log.warn("Call to New Application was missing the name parameter.");
-			return RestResponse.failure(CREATION_FAILED);
+            LOG.warn("Call to New Application was missing the name parameter.");
+			return failure(CREATION_FAILED);
 		}
+
+        if (containsHTML(name)) {
+            LOG.error(HTML_ERROR);
+            return failure(HTML_ERROR);
+        }
 		
 		if (url != null) {
 			// test URL format
@@ -131,16 +137,16 @@ public class TeamRestController extends TFRestController {
                 // TODO substitute commons url validator to avoid performance hit of creating exception
 				new URL(url);
 			} catch (MalformedURLException e) {
-				log.warn("The supplied URL was not formatted correctly.");
-				return RestResponse.failure(CREATION_FAILED);
+				LOG.warn("The supplied URL was not formatted correctly.");
+				return failure(CREATION_FAILED);
 			}
 		}
 		
 		Organization organization = organizationService.loadById(teamId);
 		
 		if (organization == null) {
-			log.warn("Invalid Team ID.");
-			return RestResponse.failure(CREATION_FAILED);
+			LOG.warn("Invalid Team ID.");
+			return failure(CREATION_FAILED);
 		}
 		
 		Application application = new Application();
@@ -156,12 +162,12 @@ public class TeamRestController extends TFRestController {
 
 		if (applicationService.checkApplication(application)) {
 			applicationService.storeApplication(application, EventAction.APPLICATION_CREATE);
-			log.info("Application creation was successful. Returning application.");
-            return RestResponse.success(application);
+			LOG.info("Application creation was successful. Returning application.");
+            return success(application);
 		} else {
 			//	TODO - We could really use some better debug here
-			log.warn("Something was invalid.");
-			return RestResponse.failure("Problems creating application.");
+			LOG.warn("Something was invalid.");
+			return failure("Problems creating application.");
 		}
 	}
 
@@ -176,7 +182,7 @@ public class TeamRestController extends TFRestController {
 		
 		String teamName = request.getParameter("name");
 		
-		log.info("Received REST request for Team with name " + teamName + ".");
+		LOG.info("Received REST request for Team with name " + teamName + ".");
 
         // we'll check again for access to the actual team later
         Result<String> keyCheck = checkKeyGlobal(request, TEAM_LOOKUP);
@@ -187,8 +193,8 @@ public class TeamRestController extends TFRestController {
 		Organization org = organizationService.loadByName(teamName);
 
 		if (org == null) {
-			log.warn("Team lookup failed for name " + teamName + ".");
-			return RestResponse.failure("No team found with name '" + teamName + "'");
+			LOG.warn("Team lookup failed for name " + teamName + ".");
+			return failure("No team found with name '" + teamName + "'");
 		} else {
 
             keyCheck = checkKey(request, TEAM_LOOKUP, org.getId(), -1);
@@ -196,9 +202,9 @@ public class TeamRestController extends TFRestController {
                 return resultError(keyCheck);
             }
 
-			log.info("REST request for Team with name " + teamName
-					+ " completed successfully.");
-            return RestResponse.success(org);
+			LOG.info("REST request for Team with name " + teamName
+                    + " completed successfully.");
+            return success(org);
 		}
 	}
 
@@ -211,7 +217,7 @@ public class TeamRestController extends TFRestController {
             produces = "application/json; charset=utf-8")
 	@JsonView(AllViews.RestViewTeam2_1.class)
 	public Object newTeam(HttpServletRequest request) {
-		log.info("Received REST request for new Team.");
+		LOG.info("Received REST request for new Team.");
 
         Result<String> keyCheck = checkKey(request, TEAM_NEW, -1, -1);
         if (!keyCheck.success()) {
@@ -222,19 +228,24 @@ public class TeamRestController extends TFRestController {
 			
 			Organization organization = new Organization();
 			organization.setName(request.getParameter("name"));
+
+            if (containsHTML(organization.getName())) {
+                LOG.error(HTML_ERROR);
+                return failure(HTML_ERROR);
+            }
 			
 			if (organizationService.isValidOrganization(organization)) {
 				organizationService.saveOrUpdate(organization);
-				log.info("Successfully created new Team.");
-				return RestResponse.success(organization);
+				LOG.info("Successfully created new Team.");
+				return success(organization);
 			} else {
-				log.info(CREATION_FAILED);
-				return RestResponse.failure(CREATION_FAILED);
+				LOG.info(CREATION_FAILED);
+				return failure(CREATION_FAILED);
 			}
 			
 		} else {
-			log.warn("\"name\" parameter was not present, new Team creation failed.");
-			return RestResponse.failure("\"name\" parameter was not present, new Team creation failed.");
+			LOG.warn("\"name\" parameter was not present, new Team creation failed.");
+			return failure("\"name\" parameter was not present, new Team creation failed.");
 		}
 	}
 
@@ -246,7 +257,7 @@ public class TeamRestController extends TFRestController {
 	@RequestMapping(method = RequestMethod.GET, value = "/")
 	@JsonView(AllViews.RestViewTeam2_1.class)
 	public Object teamList(HttpServletRequest request) {
-		log.info("Received REST request for Team list.");
+		LOG.info("Received REST request for Team list.");
 		
         Result<String> keyCheck = checkKey(request, TEAM_LIST, -1, -1);
         if (!keyCheck.success()) {
@@ -256,9 +267,9 @@ public class TeamRestController extends TFRestController {
         List<Organization> organizations = organizationService.loadAllActive();
 
         if (organizations == null) {
-            return RestResponse.failure("No organizations found.");
+            return failure("No organizations found.");
         } else {
-            return RestResponse.success(organizations);
+            return success(organizations);
         }
 	}
 	
@@ -271,7 +282,7 @@ public class TeamRestController extends TFRestController {
     @RequestMapping(method = RequestMethod.PUT, value = "/{teamId}/update", consumes = "application/x-www-form-urlencoded")
     public Object putTeam(HttpServletRequest request, @PathVariable("teamId") int teamId, @RequestBody MultiValueMap<String, String> params){
 
-        log.info("Received REST request to update Team");
+        LOG.info("Received REST request to update Team");
         Result<String> keyCheck = checkKey(request, TEAM_UPDATE, teamId, -1);
         if (!keyCheck.success()) {
             return resultError(keyCheck);
@@ -280,17 +291,17 @@ public class TeamRestController extends TFRestController {
         Organization organization = organizationService.loadById(teamId);
 
         if (organization == null) {
-            return RestResponse.failure(LOOKUP_FAILED);
+            return failure(LOOKUP_FAILED);
         } else {
             Map<String, String> map = params.toSingleValueMap();
             if (map.get("name") != null && !(map.get("name").isEmpty())) {
                 organization.setName(map.get("name"));
                 organizationService.saveOrUpdate(organization);
-                log.info("REST Request (PUT method) to update Team resource with name " + teamId + " is completed successfully");
-                return RestResponse.success(PUT_SUCCESS);
+                LOG.info("REST Request (PUT method) to update Team resource with name " + teamId + " is completed successfully");
+                return success(PUT_SUCCESS);
             } else {
-                log.warn("Name parameter in the REST request is invalid. Returning failure response");
-                return RestResponse.failure(INVALID_PARAMS);
+                LOG.warn("Name parameter in the REST request is invalid. Returning failure response");
+                return failure(INVALID_PARAMS);
             }
         }
     }

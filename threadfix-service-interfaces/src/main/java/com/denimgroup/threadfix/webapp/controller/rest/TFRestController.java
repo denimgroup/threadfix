@@ -45,7 +45,7 @@ import static com.denimgroup.threadfix.util.Result.success;
  */
 public abstract class TFRestController {
 
-	protected final SanitizedLogger log = new SanitizedLogger(this.getClass());
+	protected final SanitizedLogger LOG = new SanitizedLogger(this.getClass());
 
 	public final static String API_KEY_SUCCESS = "Authentication was successful.";
 	public final static String API_KEY_NOT_FOUND_ERROR = "Authentication failed, check your API Key.";
@@ -75,18 +75,18 @@ public abstract class TFRestController {
 		boolean validRequest = key != null;
 
 		if (validRequest) {
-			log.debug("API key with ID: " + key.getId() + " authenticated successfully on path: "
+			LOG.debug("API key with ID: " + key.getId() + " authenticated successfully on path: "
 					+ request.getPathInfo() + " for methodName: " + method);
 			
 			if (key.getIsRestrictedKey() && method.restricted) {
-					log.info("The API key attempted to request a protected URL.");
+					LOG.info("The API key attempted to request a protected URL.");
 					return failure(RESTRICTED_URL_ERROR);
 			} else {
 				return success(API_KEY_SUCCESS);
 			}
 			
 		} else {
-			log.warn("API key " + request.getParameter("apiKey")
+			LOG.warn("API key " + request.getParameter("apiKey")
 					+ " did not authenticate successfully on "
 					+ request.getPathInfo() + ".");
 			return failure(API_KEY_NOT_FOUND_ERROR);
@@ -97,11 +97,11 @@ public abstract class TFRestController {
 		String apiKey = request.getParameter("apiKey");
 
 		if (apiKey == null) {
-			log.warn("Request to " + request.getPathInfo()
+			LOG.warn("Request to " + request.getPathInfo()
 					+ " did not contain an API Key(null).");
 			return failure(API_KEY_NOT_FOUND_ERROR);
 		} else if (apiKey.length() == 0) {
-			log.warn("Request to " + request.getPathInfo()
+			LOG.warn("Request to " + request.getPathInfo()
 					+ " did not contain an API Key(blank).");
 			return failure(API_KEY_NOT_FOUND_ERROR);
 		}

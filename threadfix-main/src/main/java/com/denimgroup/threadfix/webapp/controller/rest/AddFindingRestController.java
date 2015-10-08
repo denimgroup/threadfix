@@ -70,7 +70,7 @@ public class AddFindingRestController extends TFRestController {
 	@JsonView(AllViews.RestView2_1.class)
 	public Object createFinding(HttpServletRequest request,
 			@PathVariable("appId") int appId) {
-		log.info("Received REST request for a new Finding.");
+		LOG.info("Received REST request for a new Finding.");
 
 		Result<String> keyCheck = checkKey(request, RestMethod.CREATE_FINDING, -1, appId);
 		if (!keyCheck.success()) {
