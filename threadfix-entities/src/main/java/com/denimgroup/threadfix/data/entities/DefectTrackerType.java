@@ -46,9 +46,9 @@ public class DefectTrackerType extends BaseEntity {
     public static final String HP_QUALITYCENTER = "HP Quality Center";
     public static final String VERSION_ONE = "Version One";
 	public static final Map<String, String> DT_URL_PLACEHOLDER_MAP = CollectionUtils.map(
-			BUGZILLA, "http://10.2.4.176",
-			JIRA, "https://threadfix.atlassian.net",
-			MICROSOFT_TFS, "http://dgvm-tfsx:8080/tfs",
+			BUGZILLA, "http://your.bugzilla.url",
+			JIRA, "https://yourproject.atlassian.net",
+			MICROSOFT_TFS, "http://tfs-server:8080/tfs",
 			HP_QUALITYCENTER, "http://host/qcbin",
 			VERSION_ONE, "https://www1.v1host.com/YourOrganization");
 
