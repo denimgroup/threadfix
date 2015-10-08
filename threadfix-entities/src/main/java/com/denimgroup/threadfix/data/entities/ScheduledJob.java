@@ -103,10 +103,10 @@ public abstract class ScheduledJob extends AuditableEntity {
         String scheduledDate;
 
         if (this.day==null){
-            scheduledDate = this.frequency + " at " + this.hour
+            scheduledDate = this.frequency + " at " + (this.hour == 0 ? 12 : this.hour)
                     + ":" + (this.minute == 0 ? "00" : this.minute);
         } else {
-            scheduledDate = this.day + "s at " + this.hour
+            scheduledDate = this.day + "s at " + (this.hour == 0 ? 12 : this.hour)
                     + ":" + (this.minute == 0 ? "00" : this.minute);
         }
 
