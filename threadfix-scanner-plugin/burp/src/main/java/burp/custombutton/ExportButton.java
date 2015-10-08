@@ -51,34 +51,39 @@ public class ExportButton extends JButton {
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 boolean configured = ConfigurationDialogs.show(view, ConfigurationDialogs.DialogMode.THREADFIX_APPLICATION);
                 if (configured) {
-                    File file = generateXml(callbacks);
-                    if (file != null && file.exists()) {
-                        RestResponse<Object> object = RestUtils.uploadScan(file);
-                        if (object.responseCode == 0) {
-                            JOptionPane.showMessageDialog(view, "The response code was 0, indicating that the ThreadFix server " +
-                                    "was unreachable. Make sure that the server is running and not blocked by the BURP " +
-                                    "local proxy.", "Warning", JOptionPane.WARNING_MESSAGE);
-                        } else if (object.success) {
-                            JOptionPane.showMessageDialog(view, "The scan was uploaded to ThreadFix successfully.");
-                        } else {
-                            JOptionPane.showMessageDialog(view, "The upload failed. The response code was " +
-                                    object.responseCode +
-                                    " and the error message was " +
-                                    object.message);
-                        }
-                    } else {
-                        // file didn't exist
-                        JOptionPane.showMessageDialog(view, "Unable to create scan file.",
+                    IScanIssue[] issues = callbacks.getScanIssues(BurpPropertiesManager.getBurpPropertiesManager().getTargetUrl());
+                    if ((issues == null) || (issues.length == 0)) {
+                        JOptionPane.showMessageDialog(view, "There are currently no issues to upload to ThreadFix.",
                                 "Warning", JOptionPane.WARNING_MESSAGE);
+                    } else {
+                        File file = generateXml(callbacks, issues);
+                        if (file != null && file.exists()) {
+                            RestResponse<Object> object = RestUtils.uploadScan(file);
+                            if (object.responseCode == 0) {
+                                JOptionPane.showMessageDialog(view, "The response code was 0, indicating that the ThreadFix server " +
+                                        "was unreachable. Make sure that the server is running and not blocked by the BURP " +
+                                        "local proxy.", "Warning", JOptionPane.WARNING_MESSAGE);
+                            } else if (object.success) {
+                                JOptionPane.showMessageDialog(view, "The scan was uploaded to ThreadFix successfully.");
+                            } else {
+                                JOptionPane.showMessageDialog(view, "The upload failed. The response code was " +
+                                        object.responseCode +
+                                        " and the error message was " +
+                                        object.message);
+                            }
+                        } else {
+                            // file didn't exist
+                            JOptionPane.showMessageDialog(view, "Unable to create scan file.",
+                                    "Warning", JOptionPane.WARNING_MESSAGE);
+                        }
                     }
                 }
             }
         });
     }
 
-    private File generateXml(IBurpExtenderCallbacks callbacks) {
+    private File generateXml(IBurpExtenderCallbacks callbacks, IScanIssue[] issues) {
         File file = new File("burp_threadfix.xml");
-        IScanIssue[] issues = callbacks.getScanIssues(BurpPropertiesManager.getBurpPropertiesManager().getTargetUrl());
         callbacks.generateScanReport("XML", issues, file);
         return file;
 
