@@ -17,19 +17,6 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>URL</td>
-                    <td class="no-color inputValue">
-                        <input required type="url" ng-model="object.url" id="urlInput" name="url" size="50" ng-maxlength="255" value="http://"/>
-                    </td>
-                    <td>
-                        <span id="urlRequiredError" class="errors" ng-show="form.url.$dirty && form.url.$error.required">URL is required.</span>
-                        <span id="urlInvalidError" class="errors" ng-show="form.url.$dirty && form.url.$error.url">URL is invalid.</span>
-                        <span id="urlCharacterLimitError" class="errors" ng-show="form.url.$dirty && form.url.$error.maxlength">Over 255 characters limit!</span>
-                        <span id="urlServerError" class="errors" ng-show="object.url_error"> {{ object.url_error }}</span>
-                        <span id="urlSelfSignedCertificateError" class="errors" ng-show="showKeytoolLink">Instructions for importing a self-signed certificate can be found <a target="_blank" href="https://github.com/denimgroup/threadfix/wiki/Importing-Self-Signed-Certificates">here</a>.</span>
-                    </td>
-                </tr>
-                <tr>
                     <td>Type</td>
                     <td>
                         <select ng-options="type.name for type in config.trackerTypes"
@@ -40,6 +27,20 @@
                     </td>
                     <td>
                         <span id="typeServerError" class="errors" ng-show="object.defectTrackerType_id_error"> {{ object.defectTrackerType_id_error }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>URL</td>
+                    <td class="no-color inputValue">
+                        <input required type="url" ng-model="object.url" id="urlInput" name="url" size="50" ng-maxlength="255"
+                               placeholder="{{object.defectTrackerType.urlPlaceholder}}" value="http://"/>
+                    </td>
+                    <td>
+                        <span id="urlRequiredError" class="errors" ng-show="form.url.$dirty && form.url.$error.required">URL is required.</span>
+                        <span id="urlInvalidError" class="errors" ng-show="form.url.$dirty && form.url.$error.url">URL is invalid.</span>
+                        <span id="urlCharacterLimitError" class="errors" ng-show="form.url.$dirty && form.url.$error.maxlength">Over 255 characters limit!</span>
+                        <span id="urlServerError" class="errors" ng-show="object.url_error"> {{ object.url_error }}</span>
+                        <span id="urlSelfSignedCertificateError" class="errors" ng-show="showKeytoolLink">Instructions for importing a self-signed certificate can be found <a target="_blank" href="https://github.com/denimgroup/threadfix/wiki/Importing-Self-Signed-Certificates">here</a>.</span>
                     </td>
                 </tr>
                 <tr>

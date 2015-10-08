@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.CollectionUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -31,6 +32,7 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "DefectTrackerType")
@@ -39,14 +41,21 @@ public class DefectTrackerType extends BaseEntity {
 	private static final long serialVersionUID = 1135227457979044959L;
 
 	public static final String BUGZILLA = "Bugzilla";
-	public static final String JIRA = "Jira";
+	public static final String JIRA = "JIRA";
 	public static final String MICROSOFT_TFS = "Microsoft TFS";
     public static final String HP_QUALITYCENTER = "HP Quality Center";
     public static final String VERSION_ONE = "Version One";
+	public static final Map<String, String> DT_URL_PLACEHOLDER_MAP = CollectionUtils.map(
+			BUGZILLA, "http://your.bugzilla.url",
+			JIRA, "https://yourproject.atlassian.net",
+			MICROSOFT_TFS, "http://tfs-server:8080/tfs",
+			HP_QUALITYCENTER, "http://host/qcbin",
+			VERSION_ONE, "https://www1.v1host.com/YourOrganization");
 
 	private String name;
 	private String version;
 	private String fullClassName;
+	private String urlPlaceholder;
 
 	private List<DefectTracker> defectTrackerList;
 
@@ -86,5 +95,15 @@ public class DefectTrackerType extends BaseEntity {
 
 	public void setFullClassName(String fullClassName) {
 		this.fullClassName = fullClassName;
+	}
+
+	@Column(length = 255)
+	@JsonView(Object.class)
+	public String getUrlPlaceholder() {
+		return urlPlaceholder;
+	}
+
+	public void setUrlPlaceholder(String urlPlaceholder) {
+		this.urlPlaceholder = urlPlaceholder;
 	}
 }

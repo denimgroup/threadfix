@@ -128,7 +128,11 @@ public class DefectTrackerServiceImpl implements DefectTrackerService {
 
 	@Override
 	public List<DefectTrackerType> loadAllDefectTrackerTypes() {
-		return defectTrackerTypeDao.retrieveAll();
+        List<DefectTrackerType> types = defectTrackerTypeDao.retrieveAll();
+        for (DefectTrackerType trackerType: types) {
+            trackerType.setUrlPlaceholder(DefectTrackerType.DT_URL_PLACEHOLDER_MAP.get(trackerType.getName()));
+        }
+		return types;
 	}
 
 	@Override
