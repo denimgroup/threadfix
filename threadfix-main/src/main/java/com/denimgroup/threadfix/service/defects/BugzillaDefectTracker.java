@@ -153,11 +153,10 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			if (defect != null && defect.getNativeId() != null) {
                 List<Defect> defects = idDefectMap.get(defect.getNativeId());
                 if (defects == null) {
-                    defects = list(defect);
+                    idDefectMap.put(defect.getNativeId(), list(defect));
                 } else {
                     defects.add(defect);
                 }
-                idDefectMap.put(defect.getNativeId(), defects);
 			}
 		}
 		
