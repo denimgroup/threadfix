@@ -147,11 +147,18 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
             return null;
         }
 
-		Map<String, Defect> idDefectMap = new HashMap<>();
+		Map<String, List<Defect>> idDefectMap = new HashMap<>();
 		
 		for (Defect defect : defectList) {
 			if (defect != null && defect.getNativeId() != null) {
-				idDefectMap.put(defect.getNativeId(), defect);
+                List<Defect> defects = idDefectMap.get(defect.getNativeId());
+                if (defects == null) {
+                    defects = list(defect);
+                    idDefectMap.put(defect.getNativeId(), defects);
+                } else {
+                    defects.add(defect);
+                    idDefectMap.put(defect.getNativeId(), defects);
+                }
 			}
 		}
 		
@@ -171,29 +178,31 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		if (queryResult instanceof HashMap) {
 			Map<String,Object[]> returnedData = (HashMap<String, Object[]>) queryResult;
 			Object[] bugsArray = returnedData.get("bugs");
-			for (int i = 0; i < bugsArray.length; i++) {
-				Object currentBug = bugsArray[i];
-				Map<String,Object> currentBugHash = (HashMap<String, Object>) currentBug;
-				if (currentBugHash == null) {
-					continue;
-				}
 
-				Boolean isOpen = (Boolean) currentBugHash.get("is_open");
-				Object result = currentBugHash.get("status");
-				
-				Integer id = (Integer) currentBugHash.get("id");
-				
-				if (idDefectMap.containsKey(id.toString()) &&
-						idDefectMap.get(id.toString()) != null) {
-					Defect defect = idDefectMap.get(id.toString());
-					
-					if (result instanceof String) {
-						defect.setStatus((String) result);
-					}
-					
-					returnList.put(defect, isOpen);
-				}
-			}
+            for (Object currentBug : bugsArray) {
+                Map<String, Object> currentBugHash = (HashMap<String, Object>) currentBug;
+                if (currentBugHash == null) {
+                    continue;
+                }
+
+                Boolean isOpen = (Boolean) currentBugHash.get("is_open");
+                Object result = currentBugHash.get("status");
+
+                Integer id = (Integer) currentBugHash.get("id");
+
+                if (idDefectMap.containsKey(id.toString()) &&
+                        idDefectMap.get(id.toString()) != null) {
+
+                    List<Defect> defects = idDefectMap.get(id.toString());
+
+                    for (Defect defect : defects) {
+                        if (result instanceof String) {
+                            defect.setStatus((String) result);
+                        }
+                        returnList.put(defect, isOpen);
+                    }
+                }
+            }
 		} else {
 			log.error("Expected a HashMap return value, but got something else instead: " + queryResult);
 		}
