@@ -628,6 +628,9 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
         modalInstance.result.then(function (result) {
             $scope.config.application.policies = result.assignedPolicys;
             $scope.config.policies = result.availablePolicys;
+
+            updatePolicyStatus();
+
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
@@ -671,7 +674,9 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
         $http.get(tfEncoder.encode(currentUrl + "/policyStatus")).
             success(function(data, status, headers, config) {
                 if (data.success) {
-                    $scope.config.passFilters = data.object;
+                    $scope.config.passFilters = data.object.passFilters;
+                    $rootScope.$broadcast('policyStatuses', data.object.policyStatuses);
+                    $scope.config.application.policyStatuses = data.object.policyStatuses;
                 } else {
                     $scope.config.passFilters = false;
                     $log.info("HTTP request for form objects failed. Error was " + data.message);

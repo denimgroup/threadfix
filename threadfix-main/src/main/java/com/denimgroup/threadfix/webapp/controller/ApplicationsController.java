@@ -181,12 +181,15 @@ public class ApplicationsController {
 
     @JsonView(AllViews.FormInfo.class)
     @RequestMapping("{appId}/policyStatus")
-    public @ResponseBody RestResponse<Boolean> getPolicyStatus(@PathVariable("appId") Integer appId) throws IOException {
+    public @ResponseBody RestResponse getPolicyStatus(@PathVariable("appId") Integer appId) throws IOException {
 
         Application application = applicationService.loadApplication(appId);
 
         if (policyStatusService != null) {
-            return success(policyStatusService.passFilters(application));
+            return success(map(
+                    "passFilters", policyStatusService.passFilters(application),
+                    "policyStatuses", application.getPolicyStatuses()
+            ));
         } else {
             return failure("No Policy Status assigned to this application.");
         }

@@ -73,7 +73,7 @@ public class CustomHttpSessionSecurityContextRepository
             Object threadfixPrincipal = principal.getPrincipal();
 
             if (threadfixPrincipal instanceof ThreadFixUserDetails) {
-                User user  = userService.loadUser(((ThreadFixUserDetails) threadfixPrincipal).getUserId());
+                User user = userService.loadUser(((ThreadFixUserDetails) threadfixPrincipal).getUserId());
                 if (user == null) {
                     LOG.error("Unable to look up user");
                     return;
