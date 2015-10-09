@@ -27,9 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.Role;
-import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.enums.EventAction;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -120,6 +118,13 @@ public interface UserService {
 	 * @return
 	 */
 	Map<Integer, Set<Permission>> getApplicationPermissions(User user);
+
+
+    /**
+     *
+     * @param maps
+     */
+    Map<Integer, Set<Permission>> getApplicationPermissions(List<AccessControlTeamMap> maps);
 	
 	/**
 	 * 
@@ -127,6 +132,12 @@ public interface UserService {
 	 * @return
 	 */
 	Map<Integer, Set<Permission>> getOrganizationPermissions(User user);
+
+    /**
+     *
+     * @param maps
+     */
+    Map<Integer, Set<Permission>> getOrganizationPermissions(List<AccessControlTeamMap> maps);
 
 	/**
 	 * 

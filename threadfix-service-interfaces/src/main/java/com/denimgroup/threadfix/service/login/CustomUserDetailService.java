@@ -23,8 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.login;
 
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.User;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by mac on 7/29/14.
@@ -32,5 +36,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public interface CustomUserDetailService {
 
     public UserDetails loadUser(User user);
+
+    public boolean hasReportsOnAnyObject(Map<Integer, Set<Permission>> map);
 
 }

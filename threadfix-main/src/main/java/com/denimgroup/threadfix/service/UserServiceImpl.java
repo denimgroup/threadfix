@@ -277,51 +277,58 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional(readOnly = false) // used to be true
-	public Map<Integer, Set<Permission>> getApplicationPermissions(
-			User user) {
-		
-		Map<Integer, Set<Permission>> applicationPermissions = new HashMap<>();
-		List<AccessControlTeamMap> maps = getMapsForUser(user.getId());
-		
-		for (AccessControlTeamMap teamMap : maps) {
-			if (teamMap != null && teamMap.getAccessControlApplicationMaps() != null) {
-				for (AccessControlApplicationMap appMap : teamMap.getAccessControlApplicationMaps()) {
-					if (appMap != null && appMap.isActive() &&
-							appMap.getApplication() != null &&
-							appMap.getApplication().getId() != null &&
-							appMap.getRole() != null &&
-							appMap.getRole().getPermissions() != null) {
-						applicationPermissions.put(appMap.getApplication().getId(),
-								appMap.getRole().getPermissions());
-						applicationPermissions.get(appMap.getApplication().getId()).add(Permission.READ_ACCESS);
-					}
-				}
-			}
-		}
-
-		return applicationPermissions;
+	public Map<Integer, Set<Permission>> getApplicationPermissions(User user) {
+		return getApplicationPermissions(getMapsForUser(user.getId()));
 	}
+
+    @Override
+    @Transactional(readOnly = false) // used to be true
+    public Map<Integer, Set<Permission>> getApplicationPermissions(List<AccessControlTeamMap> maps) {
+        Map<Integer, Set<Permission>> applicationPermissions = new HashMap<>();
+
+        for (AccessControlTeamMap teamMap : maps) {
+            if (teamMap != null && teamMap.getAccessControlApplicationMaps() != null) {
+                for (AccessControlApplicationMap appMap : teamMap.getAccessControlApplicationMaps()) {
+                    if (appMap != null && appMap.isActive() &&
+                            appMap.getApplication() != null &&
+                            appMap.getApplication().getId() != null &&
+                            appMap.getRole() != null &&
+                            appMap.getRole().getPermissions() != null) {
+                        applicationPermissions.put(appMap.getApplication().getId(),
+                                appMap.getRole().getPermissions());
+                        applicationPermissions.get(appMap.getApplication().getId()).add(Permission.READ_ACCESS);
+                    }
+                }
+            }
+        }
+
+        return applicationPermissions;
+    }
 
 	@Override
 	@Transactional(readOnly = false) // used to be true
-	public Map<Integer, Set<Permission>> getOrganizationPermissions(
-			User user) {
-		Map<Integer, Set<Permission>> organizationPermissions = new HashMap<>();
-		List<AccessControlTeamMap> maps = getMapsForUser(user.getId());
-
-		for (AccessControlTeamMap map : maps) {
-			if (map != null && map.getOrganization() != null &&
-					map.getOrganization().getId() != null &&
-					map.getRole() != null &&
-					map.getRole().getPermissions() != null) {
-				organizationPermissions.put(map.getOrganization().getId(),
-						map.getRole().getPermissions());
-				organizationPermissions.get(map.getOrganization().getId()).add(Permission.READ_ACCESS);
-			}
-		}
-
-		return organizationPermissions;
+	public Map<Integer, Set<Permission>> getOrganizationPermissions(User user) {
+		return getOrganizationPermissions(getMapsForUser(user.getId()));
 	}
+
+    @Override
+    @Transactional(readOnly = false) // used to be true
+    public Map<Integer, Set<Permission>> getOrganizationPermissions(List<AccessControlTeamMap> maps) {
+        Map<Integer, Set<Permission>> organizationPermissions = new HashMap<>();
+
+        for (AccessControlTeamMap map : maps) {
+            if (map != null && map.getOrganization() != null &&
+                    map.getOrganization().getId() != null &&
+                    map.getRole() != null &&
+                    map.getRole().getPermissions() != null) {
+                organizationPermissions.put(map.getOrganization().getId(),
+                        map.getRole().getPermissions());
+                organizationPermissions.get(map.getOrganization().getId()).add(Permission.READ_ACCESS);
+            }
+        }
+
+        return organizationPermissions;
+    }
 
 	private List<AccessControlTeamMap> getMapsForUser(Integer userId) {
 		List<AccessControlTeamMap> maps = list();
@@ -369,13 +376,10 @@ public class UserServiceImpl implements UserService {
 
         Set<Permission> newPerms = newRole.getPermissions();
 
-		if (newPerms == null) {
-			return false;
-            }
+        return newPerms != null && (user.getGlobalRole() != null && (!newPerms.contains(Permission.CAN_MANAGE_USERS)
+                && dbPerms.contains(Permission.CAN_MANAGE_USERS)) || (!newPerms.contains(Permission.CAN_MANAGE_ROLES)
+                && dbPerms.contains(Permission.CAN_MANAGE_ROLES)));
 
-		return user.getGlobalRole() != null &&
-				(!newPerms.contains(Permission.CAN_MANAGE_USERS) && dbPerms.contains(Permission.CAN_MANAGE_USERS)) ||
-				(!newPerms.contains(Permission.CAN_MANAGE_ROLES) && dbPerms.contains(Permission.CAN_MANAGE_ROLES));
     }
 
 	@Override
