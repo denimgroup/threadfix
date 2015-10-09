@@ -138,7 +138,8 @@ public class CustomUserDetailServiceImpl implements UserDetailsService, CustomUs
         return loadUser(user);
     }
 
-    private boolean hasReportsOnAnyObject(Map<Integer, Set<Permission>> map) {
+    @Override
+    public boolean hasReportsOnAnyObject(Map<Integer, Set<Permission>> map) {
         if (map == null || map.isEmpty()) {
 			return false;
 		}
