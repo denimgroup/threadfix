@@ -203,6 +203,9 @@ public class TagsController {
 
         List<Application> applications = batchTaggingParameters.getApplications();
         List<Tag> tags = batchTaggingParameters.getTags();
+
+        tags = tagService.setEnterpriseTag(tags);
+
         log.info("About to add " + tags.size() + " tags to " + applications.size() + " applications.");
         for (Application application: applications) {
             Application dbApp = applicationService.loadApplication(application.getId());

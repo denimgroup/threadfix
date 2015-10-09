@@ -40,6 +40,7 @@ import java.util.List;
 
 import static com.denimgroup.threadfix.util.ValidationUtils.HTML_ERROR;
 import static com.denimgroup.threadfix.util.ValidationUtils.containsHTML;
+import static com.denimgroup.threadfix.CollectionUtils.listFrom;
 
 @Service
 @Transactional(readOnly = false) // used to be true
@@ -228,5 +229,19 @@ public class TagServiceImpl implements TagService {
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public List<Tag> setEnterpriseTag(List<Tag> tags) {
+        for (Tag tag : listFrom(tags)) {
+            Tag databaseTag = tagDao.retrieveById(tag.getId());
+            if (databaseTag == null) {
+                tags.remove(tag);
+            } else {
+                tag.setEnterpriseTag(databaseTag.getEnterpriseTag());
+            }
+        }
+
+        return tags;
     }
 }

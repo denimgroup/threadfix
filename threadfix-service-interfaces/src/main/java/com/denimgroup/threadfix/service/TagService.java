@@ -57,4 +57,6 @@ public interface TagService {
     boolean isValidTags(List<Tag> allTags, List<Tag> tags);
 
     boolean containTag(List<Tag> allTags, Tag tag);
+
+    List<Tag> setEnterpriseTag(List<Tag> tags);
 }
