@@ -1566,6 +1566,12 @@ table.eventHistory td.eventDate {
 	font-style: italic;
 }
 
+td.doc-name {
+    width: 122px;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
 /* Submenu placement itself */
 .dropdown-submenu.left > .dropdown-menu { left: auto; right: 100%; }
 /* Arrow position */

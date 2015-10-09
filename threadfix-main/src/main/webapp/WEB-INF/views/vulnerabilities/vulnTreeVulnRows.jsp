@@ -131,7 +131,7 @@
                 <td style="text-align:center" colspan="5">No Documents Found</td>
             </tr>
             <tr ng-repeat="document in vulnerability.documents" class="bodyRow">
-                <td id="docName{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ document.name }}</td>
+                <td id="docName{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" class="doc-name">{{ document.name }}</td>
                 <td id="type{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" >{{ document.type }}</td>
                 <td id="uploadDate{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" >
                     {{ document.uploadedDate | date:'medium' }}
