@@ -340,13 +340,11 @@ public class BurpExtender implements IBurpExtender, ITab
 
         @Override
         public void focusGained(FocusEvent e) {
-            System.out.println("focusGained -- " + jTextField.getText());
             lastValue = jTextField.getText().trim();
         }
 
         @Override
         public void focusLost(FocusEvent e) {
-            System.out.println("focusLost -- " + jTextField.getText());
             String currentValue = jTextField.getText().trim();
             if (!currentValue.equals(lastValue)) {
                 update();

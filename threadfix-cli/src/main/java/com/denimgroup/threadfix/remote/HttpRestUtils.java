@@ -36,6 +36,7 @@ import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.protocol.Protocol;
+import org.apache.commons.validator.routines.UrlValidator;
 
 import javax.annotation.Nonnull;
 import javax.net.ssl.SSLHandshakeException;
@@ -77,6 +78,12 @@ public class HttpRestUtils {
             Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 
         String completeUrl = makePostUrl(path);
+        if (completeUrl == null) {
+            LOGGER.debug("The POST url could not be generated. Aborting request.");
+            return ResponseParser.getErrorResponse(
+                    "The POST url could not be generated and the request was not attempted.",
+                    0);
+        }
 
 		PostMethod filePost = new PostMethod(completeUrl);
 
@@ -136,6 +143,12 @@ public class HttpRestUtils {
             Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 
         String urlString = makePostUrl(path);
+        if (urlString == null) {
+            LOGGER.debug("The POST url could not be generated. Aborting request.");
+            return ResponseParser.getErrorResponse(
+                    "The POST url could not be generated and the request was not attempted.",
+                    0);
+        }
 
 		PostMethod post = new PostMethod(urlString);
 
@@ -206,6 +219,12 @@ public class HttpRestUtils {
                                        @Nonnull Class<T> targetClass) {
 
         String urlString = makeGetUrl(path, params);
+        if (urlString == null) {
+            LOGGER.debug("The GET url could not be generated. Aborting request.");
+            return ResponseParser.getErrorResponse(
+                    "The GET url could not be generated and the request was not attempted.",
+                    0);
+        }
 
 		LOGGER.debug("Requesting " + urlString);
         if (isUnsafeFlag())
@@ -248,6 +267,14 @@ public class HttpRestUtils {
     @Nonnull
     private String makeGetUrl(@Nonnull String path, @Nonnull String params) {
         String baseUrl = propertiesManager.getUrl();
+
+        String[] schemes = {"http","https"};
+        UrlValidator urlValidator = new UrlValidator(schemes, UrlValidator.ALLOW_LOCAL_URLS);
+        if (!urlValidator.isValid(baseUrl)) {
+            LOGGER.debug("Base url " + baseUrl + " is not a valid url. Cannot build GET url with path " + path + ". Returning null.");
+            return null;
+        }
+
         String apiKey  = propertiesManager.getKey();
 
         LOGGER.debug("Building GET url with path " + path + " and base url " + baseUrl);
@@ -283,6 +310,13 @@ public class HttpRestUtils {
     @Nonnull
     private String makePostUrl(@Nonnull String path) {
         String baseUrl = propertiesManager.getUrl();
+
+        String[] schemes = {"http","https"};
+        UrlValidator urlValidator = new UrlValidator(schemes, UrlValidator.ALLOW_LOCAL_URLS);
+        if (!urlValidator.isValid(baseUrl)) {
+            LOGGER.debug("Base url " + baseUrl + " is not a valid url. Cannot build POST url with path " + path + ". Returning null.");
+            return null;
+        }
 
         LOGGER.debug("Building POST url with path " + path + " and base url " + baseUrl);
 
