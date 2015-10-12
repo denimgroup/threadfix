@@ -37,6 +37,10 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
         reloadList();
     });
 
+    $scope.$on('updateAuditRoles', function() {
+        reloadList();
+    });
+
     $scope.$on('reloadRoles', function() {
         reloadList();
     });
