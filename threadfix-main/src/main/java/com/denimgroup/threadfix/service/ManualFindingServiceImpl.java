@@ -185,6 +185,25 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 
 		scan.getFindings().add(finding);
 		scan.setNumberTotalVulnerabilities(scan.getNumberTotalVulnerabilities() + 1);
+
+        switch (finding.getChannelSeverity().getCode()) {
+            case GenericSeverity.CRITICAL:
+                scan.setNumberCriticalVulnerabilities( scan.getNumberCriticalVulnerabilities() + 1 );
+                break;
+            case GenericSeverity.HIGH:
+                scan.setNumberHighVulnerabilities(scan.getNumberHighVulnerabilities() + 1);
+                break;
+            case GenericSeverity.MEDIUM:
+                scan.setNumberMediumVulnerabilities(scan.getNumberMediumVulnerabilities() + 1);
+                break;
+            case GenericSeverity.LOW:
+                scan.setNumberLowVulnerabilities(scan.getNumberLowVulnerabilities() + 1);
+                break;
+            case GenericSeverity.INFO:
+                scan.setNumberInfoVulnerabilities( scan.getNumberInfoVulnerabilities() + 1 );
+                break;
+        }
+
         scanCleanerUtils.clean(scan);
 
 		vulnerabilityService.storeVulnerability(finding.getVulnerability());
