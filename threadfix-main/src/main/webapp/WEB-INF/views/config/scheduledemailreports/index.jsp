@@ -16,8 +16,8 @@
         <%@ include file="modals/createScheduledReportModal.jsp" %>
         <%@ include file="modals/editScheduledReportModal.jsp" %>
 
-        <button class="btn" ng-click="openNewModal()">New Schedule Email Report</button>
-        <span class="errors" ng-hide="isConfiguredEmail">Your email.properties file is not configured, the emails won't be sent.</span>
+        <button class="btn" id="scheduleNewReportButton" ng-click="openNewModal()">New Schedule Email Report</button>
+        <span class="errors" id="configurationError" ng-hide="isConfiguredEmail">Your email.properties file is not configured, the emails won't be sent.</span>
 
         <div ng-show="loading" style="float:right" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
 
@@ -37,14 +37,14 @@
                     <td colspan="6" style="text-align:center;">No email reports scheduled.</td>
                 </tr>
                 <tr ng-repeat-start="scheduledReport in scheduledEmailReports">
-                    <td>{{ scheduledReport.scheduledDate }} {{ scheduledReport.period }}</td>
-                    <td class="pointer" style="max-width:500px; word-wrap: break-word;"><span ng-repeat="organization in scheduledReport.organizations"><a ng-click="goToTeam(organization)">{{ organization.name }}</a> </span></td>
-                    <td>{{ scheduledReport.severityLevel.displayName }}</td>
+                    <td id="scheduledTime{{ $index }}">{{ scheduledReport.scheduledDate }} {{ scheduledReport.period }}</td>
+                    <td class="pointer" id="teams{{ $index }}" style="max-width:500px; word-wrap: break-word;"><span ng-repeat="organization in scheduledReport.organizations"><a ng-click="goToTeam(organization)" id="teamLink{{ $parent.$index }}Name{{ organization.name | removeSpace }}">{{ organization.name }}</a> </span></td>
+                    <td id="severity{{ $index }}">{{ scheduledReport.severityLevel.displayName }}</td>
                     <td class="centered">
-                        <button class="btn" ng-click="showEmailAddresses(scheduledReport)">Show/Hide</button>
+                        <button class="btn" id="showHideEmails{{ $index }}" ng-click="showEmailAddresses(scheduledReport)">Show/Hide</button>
                     </td>
                     <td class="centered">
-                        <button class="btn" ng-click="openEditModal(scheduledReport)">Edit / Delete</button>
+                        <button class="btn" id="editDelete{{ $index }}" ng-click="openEditModal(scheduledReport)">Edit / Delete</button>
                     </td>
                     <td></td>
                 </tr>
