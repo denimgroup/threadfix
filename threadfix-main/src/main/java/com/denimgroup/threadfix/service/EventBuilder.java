@@ -39,7 +39,7 @@ public class EventBuilder {
 
     public EventBuilder setEventAction(EventAction eventAction) {
         if (eventAction != null) {
-            event.setEventAction(eventAction.toString());
+            event.setEventAction(eventAction.name());
         } else {
             event.setEventAction(null);
         }

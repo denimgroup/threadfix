@@ -359,8 +359,12 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 						vulnerabilityStatusService.openVulnerability(vuln, scan, null, map.getVulnerability().getOpenTime(), true, false);
 					}
 					vulnerabilityService.storeVulnerability(vuln);
+					scanDao.deleteMap(map);
+					map.setVulnerability(null);
+					map.setScan(null);
 				}
 			}
+			scan.getScanCloseVulnerabilityMaps().clear();
 		}
 		
 		if (scan != null && scan.getScanReopenVulnerabilityMaps() != null) {
@@ -372,8 +376,12 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					}
 					map.getVulnerability().getScanReopenVulnerabilityMaps().remove(map);
 					vulnerabilityService.storeVulnerability(map.getVulnerability());
+					scanDao.deleteMap(map);
+					map.setVulnerability(null);
+					map.setScan(null);
 				}
 			}
+			scan.getScanReopenVulnerabilityMaps().clear();
 		}
 	}
 	
@@ -719,14 +727,15 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			if (vuln.getScanCloseVulnerabilityMaps() != null) {
 				List<ScanCloseVulnerabilityMap> vulnMapCopy = new ArrayList<>(vuln.getScanCloseVulnerabilityMaps());
 				for (ScanCloseVulnerabilityMap map : vulnMapCopy) {
-					map.getScan().getScanCloseVulnerabilityMaps().remove(map);
-					map.getScan().setNumberClosedVulnerabilities(
-							map.getScan().getNumberClosedVulnerabilities() - 1);
+					scan.getScanCloseVulnerabilityMaps().remove(map);
+					scan.setNumberClosedVulnerabilities(
+							scan.getNumberClosedVulnerabilities() - 1);
 
 					vuln.getScanCloseVulnerabilityMaps().remove(map);
 
 					scanDao.deleteMap(map);
-					scanDao.saveOrUpdate(map.getScan());
+					map.setVulnerability(null);
+					map.setScan(null);
 
 				}
 			}

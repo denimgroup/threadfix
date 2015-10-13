@@ -266,7 +266,7 @@ public class ChannelMerger {
                     + "in the scan results. Marking the finding and Vulnerability.");
             oldFinding.setMarkedFalsePositive(true);
             if (oldFinding.getVulnerability() != null) {
-                vulnerabilityStatusService.markVulnerabilityFalsePositive(oldFinding.getVulnerability());
+                vulnerabilityStatusService.markVulnerabilityFalsePositive(oldFinding.getVulnerability(), newFinding.getScan(), false, false);
                 vulnerabilityService.storeVulnerability(oldFinding.getVulnerability());
             }
         }
@@ -279,7 +279,7 @@ public class ChannelMerger {
                     + "in the scan results. Unmarking the finding and Vulnerability.");
             oldFinding.setMarkedFalsePositive(false);
             if (oldFinding.getVulnerability() != null) {
-                vulnerabilityStatusService.unmarkVulnerabilityFalsePositive(oldFinding.getVulnerability());
+                vulnerabilityStatusService.unmarkVulnerabilityFalsePositive(oldFinding.getVulnerability(), newFinding.getScan(), false, false);
                 vulnerabilityService.storeVulnerability(oldFinding.getVulnerability());
             }
         }

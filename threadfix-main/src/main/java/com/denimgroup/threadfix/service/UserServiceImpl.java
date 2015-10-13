@@ -560,7 +560,7 @@ public class UserServiceImpl implements UserService {
 			if (!currentNotificationEventActions.contains(eventAction)) {
 				UserEventNotificationMap userEventNotificationMap = new UserEventNotificationMap();
 				userEventNotificationMap.setUser(user);
-				userEventNotificationMap.setEventAction(eventAction.toString());
+				userEventNotificationMap.setEventAction(eventAction.name());
 				userEventNotificationMap.setActive(true);
 				userEventNotificationMapDao.saveOrUpdate(userEventNotificationMap);
 			}
@@ -577,9 +577,9 @@ public class UserServiceImpl implements UserService {
 			Set<EventAction> notificationEventActions = getNotificationEventActions(user);
 			for (EventAction eventNotificationType : EventAction.values()) {
 				if (notificationEventActions.contains(eventNotificationType)) {
-					eventNotificationSettings.put(eventNotificationType.toString(), true);
+					eventNotificationSettings.put(eventNotificationType.name(), true);
 				} else {
-					eventNotificationSettings.put(eventNotificationType.toString(), false);
+					eventNotificationSettings.put(eventNotificationType.name(), false);
 				}
 			}
 		}

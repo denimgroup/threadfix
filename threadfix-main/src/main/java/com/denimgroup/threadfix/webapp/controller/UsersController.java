@@ -166,7 +166,7 @@ public class UsersController {
 		eventNotificationTypes.addAll(EventAction.globalGroupedEventActions);
 		Map<String, String> eventNotificationTypeDisplayNames = new HashMap<>();
 		for (EventAction eventNotificationType : eventNotificationTypes) {
-			eventNotificationTypeDisplayNames.put(eventNotificationType.toString(), eventNotificationType.getDisplayName());
+			eventNotificationTypeDisplayNames.put(eventNotificationType.name(), eventNotificationType.getDisplayName());
 		}
 		returnMap.put("eventNotificationTypes", eventNotificationTypes);
 		returnMap.put("eventNotificationTypeDisplayNames", eventNotificationTypeDisplayNames);
