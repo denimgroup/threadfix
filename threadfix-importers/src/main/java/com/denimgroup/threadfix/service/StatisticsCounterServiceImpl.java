@@ -182,12 +182,20 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
         filters.addAll(vulnerabilityFilters);
 
         for (MultiLevelFilter filter : filters) {
-            if (filter.getOrganization() != null) {
-                for (Application application : filter.getOrganization().getApplications()) {
-                    appsWithTheirOwnFilters.add(application.getId());
+
+            boolean isEnabled = true;
+            if (filter instanceof SeverityFilter && !((SeverityFilter) filter).getEnabled()) {
+                isEnabled = false;
+            }
+
+            if (isEnabled) {
+                if (filter.getOrganization() != null) {
+                    for (Application application : filter.getOrganization().getApplications()) {
+                        appsWithTheirOwnFilters.add(application.getId());
+                    }
+                } else if (filter.getApplication() != null) {
+                    appsWithTheirOwnFilters.add(filter.getApplication().getId());
                 }
-            } else if (filter.getApplication() != null) {
-                appsWithTheirOwnFilters.add(filter.getApplication().getId());
             }
         }
         return appsWithTheirOwnFilters;
@@ -377,24 +385,32 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
         SeverityFilter severityFilter = severityFilterService.loadFilter(orgID, appID);
 
-        if (severityFilter == null) {
-            return list();
+        if (severityFilter == null || !severityFilter.getEnabled()) {
+            severityFilter = severityFilterService.getParentFilter(orgID, appID);
+
+            if (severityFilter == null || !severityFilter.getEnabled())
+                return list();
         }
 
         if (!severityFilter.getShowInfo()) {
-            severityIds.add(1);
+            GenericSeverity infoSeverity = genericSeverityDao.retrieveByIntValue(1);
+            severityIds.add(infoSeverity.getId());
         }
         if (!severityFilter.getShowLow()) {
-            severityIds.add(2);
+            GenericSeverity lowSeverity = genericSeverityDao.retrieveByIntValue(2);
+            severityIds.add(lowSeverity.getId());
         }
         if (!severityFilter.getShowMedium()) {
-            severityIds.add(3);
+            GenericSeverity medSeverity = genericSeverityDao.retrieveByIntValue(3);
+            severityIds.add(medSeverity.getId());
         }
         if (!severityFilter.getShowHigh()) {
-            severityIds.add(4);
+            GenericSeverity highSeverity = genericSeverityDao.retrieveByIntValue(4);
+            severityIds.add(highSeverity.getId());
         }
         if (!severityFilter.getShowCritical()) {
-            severityIds.add(5);
+            GenericSeverity criticalSeverity = genericSeverityDao.retrieveByIntValue(5);
+            severityIds.add(criticalSeverity.getId());
         }
 
         return severityIds;
@@ -406,7 +422,9 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
         List<Integer> filteredIds = list();
 
         for (VulnerabilityFilter vulnerabilityFilter : vulnerabilityFilters) {
-            filteredIds.add(vulnerabilityFilter.getId());
+            if (vulnerabilityFilter.getTargetGenericSeverity() == null) {
+                filteredIds.add(vulnerabilityFilter.getSourceGenericVulnerability().getId());
+            }
         }
 
         return filteredIds;
