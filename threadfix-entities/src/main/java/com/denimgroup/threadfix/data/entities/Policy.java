@@ -71,7 +71,7 @@ public class Policy extends AuditableEntity {
         this.emailAddresses = emailAddresses;
     }
 
-    @ManyToMany(cascade = CascadeType.REMOVE)
+    @ManyToMany
     @JoinColumn(name = "emailListId")
     @JsonView(AllViews.PolicyPageView.class)
     public List<EmailList> getEmailLists() {
