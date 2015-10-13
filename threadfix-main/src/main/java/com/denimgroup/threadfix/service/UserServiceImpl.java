@@ -219,9 +219,12 @@ public class UserServiceImpl implements UserService {
 
 		if (user != null && user.getGroups() != null && user.getGroups().size() != 0) {
 			for (Group group : user.getGroups()) {
-				if (group.isActive() && group.getHasGlobalAccess() && group.getGlobalRole() != null) {
-					returnList.addAll(group.getGlobalRole().getPermissions());
+				if (group.isActive() && group.getHasGlobalAccess()) {
 					returnList.add(Permission.READ_ACCESS);
+				}
+
+				if (group.isActive() && group.getGlobalRole() != null) {
+					returnList.addAll(group.getGlobalRole().getPermissions());
 				}
 			}
 		}
