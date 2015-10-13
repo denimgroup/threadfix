@@ -172,7 +172,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                     if (!data || data.length < 1) return;
 
                     if (scope.label && (scope.label.teams || scope.label.apps || scope.label.tags))
-                        reportUtilities.drawTitle(svg1, scope.width, scope.label, "Most Vulnerable Applications", 20 - margin.top);
+                        reportUtilities.drawTitle(svg1, (scope.width - 170), scope.label, "Most Vulnerable Applications", 20 - margin.top);
 
                     barGraphData(d3, data, color, false, scope.label, reportConstants, textColor);
 
