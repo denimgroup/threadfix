@@ -150,7 +150,7 @@ public class DefectEventTrackingAspect extends EventTrackingAspect {
                 if (vulnerability != null) {
                     Defect defect = vulnerability.getDefect();
                     if ((defect != null) && (defect.isClosed())) {
-                        Event event = generateDefectAppearedAfterClosedEvent(defect, scan);
+                        Event event = generateDefectAppearedAfterClosedEvent(defect, scan, vulnerability);
                         publishEventTrackingEvent(event);
                     }
                 }
@@ -163,28 +163,29 @@ public class DefectEventTrackingAspect extends EventTrackingAspect {
     }
 
     protected Event generateSubmitDefectEvent(Defect defect) {
-        return generateDefectEvent(EventAction.DEFECT_SUBMIT, defect, null, userService.getCurrentUser());
+        return generateDefectEvent(EventAction.DEFECT_SUBMIT, defect, null, null, userService.getCurrentUser());
     }
 
     protected Event generateUpdateDefectStatusEvent(Defect defect, User user) {
-        return generateDefectEvent(EventAction.DEFECT_STATUS_UPDATED, defect, null, user);
+        return generateDefectEvent(EventAction.DEFECT_STATUS_UPDATED, defect, null, null, user);
     }
 
     protected Event generateCloseDefectEvent(Defect defect, User user) {
-        return generateDefectEvent(EventAction.DEFECT_CLOSED, defect, null, user);
+        return generateDefectEvent(EventAction.DEFECT_CLOSED, defect, null, null, user);
     }
 
-    protected Event generateDefectAppearedAfterClosedEvent(Defect defect, Scan scan) {
-        return generateDefectEvent(EventAction.DEFECT_APPEARED_AFTER_CLOSED, defect, scan, userService.getCurrentUser());
+    protected Event generateDefectAppearedAfterClosedEvent(Defect defect, Scan scan, Vulnerability vulnerability) {
+        return generateDefectEvent(EventAction.DEFECT_APPEARED_AFTER_CLOSED, defect, scan, vulnerability, userService.getCurrentUser());
     }
 
-    protected Event generateDefectEvent(EventAction eventAction, Defect defect, Scan scan, User user) {
+    protected Event generateDefectEvent(EventAction eventAction, Defect defect, Scan scan, Vulnerability vulnerability, User user) {
         EventBuilder eventBuilder = new EventBuilder();
         eventBuilder.setUser(user);
         eventBuilder.setEventAction(eventAction);
         eventBuilder.setDefect(defect);
         eventBuilder.setApplication(defect.getApplication());
         eventBuilder.setScan(scan);
+        eventBuilder.setVulnerability(vulnerability);
         eventBuilder.setStatus(defect.getStatus());
         Event event = eventBuilder.generateEvent();
         eventService.saveOrUpdate(event);
