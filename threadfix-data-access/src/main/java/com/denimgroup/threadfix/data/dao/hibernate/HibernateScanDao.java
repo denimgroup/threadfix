@@ -510,7 +510,10 @@ public class HibernateScanDao
 
 	private Criteria getBaseCounterCriteria() {
 		return sessionFactory.getCurrentSession().createCriteria(Finding.class)
+				.createAlias("vulnerability", "vulnAlias")
+				.createAlias("vulnAlias.application", "appAlias")
 				.add(eq("firstFindingForVuln", true))
+				.add(eq("appAlias.active", true))
 				.add(isEmpty("statisticsCounters"))
 				;
 	}
@@ -534,6 +537,9 @@ public class HibernateScanDao
 
 	private Criteria getBasicMapCriteria() {
 		return sessionFactory.getCurrentSession().createCriteria(ScanRepeatFindingMap.class)
+				.createAlias("scan", "scanAlias")
+				.createAlias("scanAlias.application", "appAlias")
+				.add(eq("appAlias.active", true))
 				.add(isEmpty("statisticsCounters"))
 				;
 	}
