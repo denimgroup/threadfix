@@ -1,7 +1,7 @@
 <div ng-form="form" class="modal-body" style="padding-bottom: 65px">
     <table class="modal-form-table">
         <tr>
-            <td>Teams concerned</td>
+            <td>Teams</td>
             <td>
                 <multi-select
                         id-prefix="tags"
@@ -16,9 +16,9 @@
             </td>
         </tr>
         <tr>
-            <td>Severity threshold</td>
+            <td>Severity Threshold</td>
             <td>
-                <select ng-options="genericSeverity.id as genericSeverity.displayName for genericSeverity in config.genericSeverities" ng-model="object.severityLevel.id" required/></select>
+                <select ng-options="genericSeverity.id as genericSeverity.displayName for genericSeverity in config.genericSeverities" ng-model="object.severityLevel.id" id="severityThresholdSelect" required/></select>
                 <span class="errors" ng-show="object.severityLevel_error"> {{ object.severityLevel_error }}</span>
             </td>
         </tr>
