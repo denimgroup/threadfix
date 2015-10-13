@@ -405,6 +405,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
             modalInstance.result.then(function (permissions) {
 
                 addMapsToUser($scope.currentUser);
+                $rootScope.$broadcast('updateAuditRoles');
 
                 $scope.usersSuccessMessage = "Successfully added permissions.";
 
@@ -547,7 +548,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                     } else {
                         $scope.errorMessage = "Failure. Message was : " + data.message;
                     }
-
+                    $rootScope.$broadcast('updateAuditRoles');
                     $scope.initialized = true;
                 }).
                 error(function(data, status, headers, config) {

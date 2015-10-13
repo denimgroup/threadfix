@@ -393,7 +393,8 @@ public class User extends AuditableEntity {
                         appMaps.add(map(
                                         "teamName", accessControlTeamMap.getOrganization().getName(),
                                         "roleName", appMap.getRole() != null ? appMap.getRole().getDisplayName() : "-",
-                                        "appName", appMap.getApplication().getName()
+                                        "appName", appMap.getApplication().getName(),
+                                        "active", appMap.isActive()
                                 )
                         );
                     }
