@@ -17,7 +17,7 @@
         <%@ include file="modals/editScheduledReportModal.jsp" %>
 
         <button class="btn" id="scheduleNewReportButton" ng-click="openNewModal()">New Scheduled Email Report</button>
-        <span class="errors" id="configurationError" ng-hide="isConfiguredEmail">Your email.properties file is not configured, the emails won't be sent.</span>
+        <span class="errors" id="configurationError" ng-hide="isConfiguredEmail">The email.properties file is not configured.  Emails will not be sent.</span>
 
         <div ng-show="loading" style="float:right" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
 
