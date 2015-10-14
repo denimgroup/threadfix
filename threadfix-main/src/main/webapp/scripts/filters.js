@@ -36,3 +36,11 @@ filtersModule.filter('removeNonWord', function() {
     }
 });
 
+filtersModule.filter('removeEmailDomain', function() {
+    return function(input) {
+        if (input) {
+            return input.substring(0, input.indexOf("@"));
+        }
+    }
+});
+
