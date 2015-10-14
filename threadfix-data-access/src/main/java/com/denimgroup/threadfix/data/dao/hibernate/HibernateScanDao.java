@@ -424,7 +424,15 @@ public class HibernateScanDao
 		
         return filteredCriteria.list();
 	}
-	
+
+	@Override
+	public List<Scan> retrieveAll() {
+		Criteria criteria = getBaseScanCriteria()
+				.addOrder(getOrder());
+
+		return criteria.list();
+	}
+
 	@Override
 	public int getScanCount() {
 
@@ -508,6 +516,33 @@ public class HibernateScanDao
 				.list();
 	}
 
+	@Override
+	public List<Finding> getFindingsThatNeedCountersInApps(int page, List<Integer> appIds) {
+		if (appIds == null)
+			return getFindingsThatNeedCounters(page);
+
+		return getBaseCounterCriteria()
+				.add(in("appAlias.id", appIds))
+				.setMaxResults(100)
+				.setFirstResult(page * 100)
+				.list();
+	}
+
+	@Override
+	public Long totalFindingsThatNeedCounters() {
+		return (Long) getBaseCounterCriteria().setProjection(rowCount()).uniqueResult();
+	}
+
+	@Override
+	public Long totalFindingsThatNeedCountersInApps(List<Integer> appIds) {
+		if (appIds == null)
+			return totalFindingsThatNeedCounters();
+
+		return (Long) getBaseCounterCriteria()
+				.add(in("appAlias.id", appIds))
+				.setProjection(rowCount()).uniqueResult();
+	}
+
 	private Criteria getBaseCounterCriteria() {
 		return sessionFactory.getCurrentSession().createCriteria(Finding.class)
 				.createAlias("vulnerability", "vulnAlias")
@@ -516,11 +551,6 @@ public class HibernateScanDao
 				.add(eq("appAlias.active", true))
 				.add(isEmpty("statisticsCounters"))
 				;
-	}
-
-	@Override
-	public Long totalFindingsThatNeedCounters() {
-		return (Long) getBaseCounterCriteria().setProjection(rowCount()).uniqueResult();
 	}
 
 	@Override
@@ -533,6 +563,28 @@ public class HibernateScanDao
 	@Override
 	public Long totalMapsThatNeedCounters() {
 		return (Long) getBasicMapCriteria().setProjection(rowCount()).uniqueResult();
+	}
+
+	@Override
+	public List<ScanRepeatFindingMap> getMapsThatNeedCountersInApps(int current, List<Integer> appIds) {
+		if (appIds == null)
+			return getMapsThatNeedCounters(current);
+
+		return getBasicMapCriteria()
+				.add(in("appAlias.id", appIds))
+				.setMaxResults(100)
+				.setFirstResult(current * 100)
+				.list();
+	}
+
+	@Override
+	public Long totalMapsThatNeedCountersInApps(List<Integer> appIds) {
+		if (appIds == null)
+			return totalMapsThatNeedCounters();
+
+		return (Long) getBasicMapCriteria()
+				.add(in("appAlias.id", appIds))
+				.setProjection(rowCount()).uniqueResult();
 	}
 
 	private Criteria getBasicMapCriteria() {

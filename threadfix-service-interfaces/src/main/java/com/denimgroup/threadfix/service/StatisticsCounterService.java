@@ -35,4 +35,6 @@ public interface StatisticsCounterService {
     void updateStatistics(List<Scan> scan);
 
     void checkStatisticsCounters();
+
+    void checkStatisticsCountersInApps(List<Integer> appIds);
 }
