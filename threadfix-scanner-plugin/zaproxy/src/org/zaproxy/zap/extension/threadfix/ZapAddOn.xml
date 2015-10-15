@@ -6,7 +6,7 @@
     <author>Denim Group (Mac Collins)</author>
     <url/>
     <changes>First Version</changes>
-    <dependcies/>
+    <dependencies/>
     <extensions>
         <extension>org.zaproxy.zap.extension.threadfix.ThreadFixExtension</extension>
     </extensions>
