@@ -77,7 +77,7 @@ public class AddApplicationController {
                 "userName", "password", "waf.id", "projectName", "applicationCriticality.id",
                 "frameworkType", "repositoryUrl", "repositoryBranch", "repositoryRevision",
                 "repositoryUserName", "repositoryPassword", "repositoryFolder", "repositoryType",
-                "skipApplicationMerge", "tags[*].id", "tags[*].name");
+                "skipApplicationMerge", "tags[*].id", "tags[*].name", "tags[*].enterpriseTag", "tags[*].defaultJsonFilter");
 	}
 
 	public AddApplicationController(){}

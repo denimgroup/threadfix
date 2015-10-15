@@ -169,6 +169,9 @@ public class JiraDefectTracker extends AbstractDefectTracker {
             if (e.getStatusCode() == 401) {
                 lastError = "Jira Credentials are invalid.";
                 return false;
+            } else if (e.getStatusCode() == 403) {
+                lastError = "There was a problem connecting to Jira. Check if captcha is enabled.";
+                return false;
             }
             throw e;
         }
@@ -252,6 +255,8 @@ public class JiraDefectTracker extends AbstractDefectTracker {
         } catch (RestIOException e) {
             if (e.getStatusCode() == 401) {
                 throw new RestIOException(e, "Invalid JIRA credentials, server returned 401 Unauthorized.");
+            } else if (e.getStatusCode() == 403) {
+                throw new RestIOException(e, "There was a problem connecting to Jira. Check if captcha is enabled.");
             } else {
                 throw e;
             }
