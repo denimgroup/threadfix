@@ -437,7 +437,9 @@ public class UserServiceImpl implements UserService {
 		user.setSalt(returnUser.getSalt());
 		user.setPassword(returnUser.getPassword());
 		user.setWasLdapUser(returnUser.getIsLdapUser());
-		
+		user.setUserEventNotificationMaps(returnUser.getUserEventNotificationMaps());
+		user.setUserEventNotificationMapsInitialized(returnUser.getUserEventNotificationMapsInitialized());
+
 		return user;
 	}
 
