@@ -182,13 +182,7 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
         filters.addAll(vulnerabilityFilters);
 
         for (MultiLevelFilter filter : filters) {
-
-            boolean isEnabled = true;
-            if (filter instanceof SeverityFilter && !((SeverityFilter) filter).getEnabled()) {
-                isEnabled = false;
-            }
-
-            if (isEnabled) {
+            if (!(filter instanceof SeverityFilter) || ((SeverityFilter) filter).getEnabled()) {
                 if (filter.getOrganization() != null) {
                     for (Application application : filter.getOrganization().getApplications()) {
                         appsWithTheirOwnFilters.add(application.getId());
