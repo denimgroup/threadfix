@@ -6,8 +6,8 @@
     </div>
 </c:if>
 
-<div id="scanQueueDiv${ application.id }">
-	<table class="table">
+<div id="scheduledScanDiv${ application.id }">
+	<table class="table" id="scheduledScanTable">
         <thead>
             <tr>
                 <th>ID</th>
