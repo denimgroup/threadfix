@@ -67,12 +67,18 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
     @Override
     public void checkStatisticsCounters() {
-        addMissingFindingCounters();
-        addMissingMapCounters();
+        addMissingFindingCounters(null);
+        addMissingMapCounters(null);
     }
 
-    private void addMissingMapCounters() {
-        Long total = scanDao.totalMapsThatNeedCounters();
+    @Override
+    public void checkStatisticsCountersInApps(List<Integer> appIds) {
+        addMissingFindingCounters(appIds);
+        addMissingMapCounters(appIds);
+    }
+
+    private void addMissingMapCounters(List<Integer> appIds) {
+        Long total = scanDao.totalMapsThatNeedCountersInApps(appIds);
 
         long start = System.currentTimeMillis();
 
@@ -84,7 +90,7 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
             LOG.debug("Processing " + current + " out of " + total + ".");
 
-            List<ScanRepeatFindingMap> mapsThatNeedCounters = scanDao.getMapsThatNeedCounters(current);
+            List<ScanRepeatFindingMap> mapsThatNeedCounters = scanDao.getMapsThatNeedCountersInApps(current, appIds);
 
             for (ScanRepeatFindingMap map : mapsThatNeedCounters) {
                 if (!map.getFinding().isFirstFindingForVuln()) {
@@ -102,8 +108,8 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
         LOG.debug("Took " + (System.currentTimeMillis() - start) + " ms to add missing map counters.");
     }
 
-    private void addMissingFindingCounters() {
-        Long total = scanDao.totalFindingsThatNeedCounters();
+    private void addMissingFindingCounters(List<Integer> appIds) {
+        Long total = scanDao.totalFindingsThatNeedCountersInApps(appIds);
 
         long start = System.currentTimeMillis();
 
@@ -115,7 +121,7 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
             LOG.debug("Processing at index " + current + " out of " + total);
 
-            List<Finding> findingsThatNeedCounters = scanDao.getFindingsThatNeedCounters(current);
+            List<Finding> findingsThatNeedCounters = scanDao.getFindingsThatNeedCountersInApps(current, appIds);
 
             for (Finding finding : findingsThatNeedCounters) {
                 if (!finding.isFirstFindingForVuln()) {
