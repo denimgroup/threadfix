@@ -100,11 +100,11 @@
             </c:if>
         </h2>
 
-        <div ng-show="provider.successMessage" class="alert alert-success">
+        <div ng-show="provider.successMessage" class="alert alert-success" id="successMessage{{ provider.name | removeSpace }}">
             <button class="close" ng-click="provider.successMessage = undefined" type="button">&times;</button>
             {{ provider.successMessage }}
         </div>
-        <div ng-show="provider.errorMessage" class="alert alert-danger">
+        <div ng-show="provider.errorMessage" class="alert alert-danger" id="errorMessage{{ provider.name | removeSpace }}">
             <button class="close" ng-click="provider.errorMessage = undefined" type="button">&times;</button>
             {{ provider.errorMessage }}
         </div>
