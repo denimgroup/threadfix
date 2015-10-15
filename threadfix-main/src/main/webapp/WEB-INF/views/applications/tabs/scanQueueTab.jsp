@@ -1,10 +1,10 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <div id="scanQueueDiv${ application.id }">
-	<table class="table">
+	<table class="table" id="scanQueueTable">
         <thead>
             <tr>
-                <th id="scanQueueTable">ID</th>
+                <th>ID</th>
                 <th>Status</th>
                 <th>Scanner</th>
                 <th>Profile</th>
