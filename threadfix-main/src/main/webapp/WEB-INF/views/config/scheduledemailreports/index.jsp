@@ -16,8 +16,8 @@
         <%@ include file="modals/createScheduledReportModal.jsp" %>
         <%@ include file="modals/editScheduledReportModal.jsp" %>
 
-        <button class="btn" id="scheduleNewReportButton" ng-click="openNewModal()">New Schedule Email Report</button>
-        <span class="errors" id="configurationError" ng-hide="isConfiguredEmail">Your email.properties file is not configured, the emails won't be sent.</span>
+        <button class="btn" id="scheduleNewReportButton" ng-click="openNewModal()">New Scheduled Email Report</button>
+        <span class="errors" id="configurationError" ng-hide="isConfiguredEmail">The email.properties file is not configured.  Emails will not be sent.</span>
 
         <div ng-show="loading" style="float:right" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
 
@@ -59,20 +59,20 @@
                             </thead>
                             <tbody>
                                 <tr ng-repeat="emailAddress in scheduledReport.emailAddresses">
-                                    <td>{{ emailAddress }}</td>
+                                    <td id="email{ emailAddress | removeEmailDomain }}">{{ emailAddress }}</td>
                                     <td class="centered">
-                                      <a class="btn btn-danger" ng-click="deleteEmailAddress(scheduledReport,emailAddress)">Delete</a>
+                                      <a class="btn btn-danger" ng-click="deleteEmailAddress(scheduledReport,emailAddress)" id="deleteButton{{ emailAddress | removeEmailDomain }}">Delete</a>
                                     </td>
                                 </tr>
                                 <tr ng-show="scheduledReport.emailAddresses.length==0 && scheduledReport.showEmailAddresses">
-                                    <td>No Email Addresses</td>
+                                    <td id="noEmailsMessage">No Email Addresses</td>
                                 </tr>
                                 <tr>
                                     <td>
-                                         <input type="email" style="margin: auto" ng-model="scheduledReport.newEmailAddress"/>
+                                         <input type="email" style="margin: auto" ng-model="scheduledReport.newEmailAddress" id="emailField"/>
                                     </td>
                                     <td>
-                                         <a class="btn btn-primary" ng-click="addNewEmail(scheduledReport)" ng-disabled="!scheduledReport.newEmailAddress">Add Email</a>
+                                         <a class="btn btn-primary" ng-click="addNewEmail(scheduledReport)" ng-disabled="!scheduledReport.newEmailAddress" id="addEmailButton">Add Email</a>
                                     </td>
                                     <td>
                                          <span ng-show="newEmailLoading" class="spinner dark"></span>
@@ -92,13 +92,13 @@
                             </thead>
                             <tbody>
                                 <tr ng-repeat="emailList in scheduledReport.emailLists">
-                                    <td>{{ emailList.name }}</td>
+                                    <td id="emailList{{ emailList.name }}">{{ emailList.name }}</td>
                                     <td class="centered">
-                                        <a class="btn btn-danger" ng-click="deleteEmailList(scheduledReport,emailList)">Delete</a>
+                                        <a class="btn btn-danger" ng-click="deleteEmailList(scheduledReport,emailList)" id="deleteEmailList{{ emailList.name }}">Delete</a>
                                     </td>
                                 </tr>
                                 <tr ng-show="scheduledReport.emailLists.length==0 && scheduledReport.showEmailAddresses">
-                                    <td>No Email Lists</td>
+                                    <td id="noEmailsListMessage">No Email Lists</td>
                                 </tr>
                                 <tr>
                                     <td>
@@ -106,7 +106,7 @@
                                                 id="emailListSelect" ng-model="scheduledReport.newEmailList"></select>
                                     </td>
                                     <td>
-                                        <a class="btn btn-primary" style="margin-top: -10px" ng-click="addNewEmailList(scheduledReport)" ng-disabled="!scheduledReport.newEmailList">Add List</a>
+                                        <a class="btn btn-primary" style="margin-top: -10px" ng-click="addNewEmailList(scheduledReport)" ng-disabled="!scheduledReport.newEmailList" id="addListButton">Add List</a>
                                     </td>
                                     <td>
                                         <span ng-show="newEmailListLoading" class="spinner dark"></span>
