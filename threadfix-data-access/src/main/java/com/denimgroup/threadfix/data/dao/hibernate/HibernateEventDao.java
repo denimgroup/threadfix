@@ -368,8 +368,13 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
         }
         if ((vulnIds != null) && (!vulnIds.isEmpty())) {
             associationRestrictions = disjoinRestrictions(associationRestrictions, Restrictions.in("vulnerability.id", vulnIds));
-        }
-        if ((defectIds != null) && (!defectIds.isEmpty())) {
+            if ((defectIds != null) && (!defectIds.isEmpty())) {
+                associationRestrictions = disjoinRestrictions(associationRestrictions, Restrictions.and(
+                        Restrictions.in("defect.id", defectIds),
+                        Restrictions.isNull("vulnerability.id")
+                ));
+            }
+        } else if ((defectIds != null) && (!defectIds.isEmpty())) {
             associationRestrictions = disjoinRestrictions(associationRestrictions, Restrictions.in("defect.id", defectIds));
         }
         if (associationRestrictions != null) {
