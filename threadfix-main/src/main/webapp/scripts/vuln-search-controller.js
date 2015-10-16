@@ -72,10 +72,6 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                         $scope.genericVulnerabilities = data.object.vulnTypes;
                         $scope.searchApplications = data.object.applications;
                         $scope.savedFilters = data.object.savedFilters;
-                        $scope.savedFilters = $scope.savedFilters.filter(function(filter){
-                            var parameters = JSON.parse(filter.json);
-                            return (!parameters.filterType || parameters.filterType.isVulnSearchFilter);
-                        });
                         $scope.savedDateRanges = data.object.savedDateRanges;
                         if (!$scope.savedDateRanges)
                             $scope.savedDateRanges = [];

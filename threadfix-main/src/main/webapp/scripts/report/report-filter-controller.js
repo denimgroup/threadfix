@@ -191,13 +191,22 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
     };
 
     $scope.deleteCurrentFilter = function() {
-        filterService.deleteCurrentFilter($scope, filterSavedFilters);
+        filterService.deleteCurrentFilter($scope);
     };
 
     $scope.loadFilter = function(filter) {
+        $scope.$parent.resetFilters();
+        $scope.parameters = $scope.$parent.parameters;
 
         $scope.selectedFilter = filter;
-        $scope.parameters = JSON.parse($scope.selectedFilter.json);
+        var filterParameters = JSON.parse($scope.selectedFilter.json);
+
+        for (var key in $scope.parameters) {
+            if (filterParameters.hasOwnProperty(key)) {
+                $scope.parameters[key] = filterParameters[key];
+            }
+        }
+
         $scope.currentFilterNameInput = filter.name;
 
         if ($scope.parameters.selectedOwasp
@@ -246,37 +255,9 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
     };
 
     $scope.saveCurrentFilters = function() {
-        if ($scope.$parent.trendingActive)
-            $scope.parameters.filterType = {isTrendingFilter : true};
-        else if ($scope.$parent.snapshotActive)
-            $scope.parameters.filterType = {isSnapshotFilter : true};
-        else if ($scope.$parent.remediationActive)
-            $scope.parameters.filterType = {isRemediationFilter : true};
-        else if ($scope.$parent.complianceActive)
-            $scope.parameters.filterType = {isComplianceFilter : true};
-        else
-            $scope.parameters.filterType = {isVulnSearchFilter : true};
 
-        filterService.saveCurrentFilters($scope, filterSavedFilters);
+        filterService.saveCurrentFilters($scope);
 
-    };
-
-    var filterSavedFilters = function(filter){
-        var parameters = JSON.parse(filter.json);
-        if (!parameters.filterType)
-            return false;
-        else {
-            if ($scope.$parent.trendingActive)
-                return (parameters.filterType.isTrendingFilter);
-            else if ($scope.$parent.snapshotActive)
-                return (parameters.filterType.isSnapshotFilter);
-            else if ($scope.$parent.remediationActive)
-                return (parameters.filterType.isRemediationFilter);
-            else if ($scope.$parent.complianceActive)
-                return (parameters.filterType.isComplianceFilter);
-            else
-                return (!parameters.filterType || parameters.filterType.isVulnSearchFilter);
-        }
     };
 
     var resetDateRange = function(){

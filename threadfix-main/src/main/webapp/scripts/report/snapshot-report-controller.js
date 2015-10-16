@@ -332,8 +332,6 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             vulnTags: [],
             teams: [],
             applications: [],
-            scanners: [],
-            genericVulnerabilities: [],
             severities: {
                 info: true,
                 low: true,
@@ -343,16 +341,6 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             },
             numberVulnerabilities: 10,
             showOpen: true,
-            showClosed: false,
-            showFalsePositive: false,
-            showHidden: false,
-            showDefectPresent: false,
-            showDefectNotPresent: false,
-            showDefectOpen: false,
-            showDefectClosed: false,
-            showInconsistentClosedDefectNeedsScan: false,
-            showInconsistentClosedDefectOpenInScan: false,
-            showInconsistentOpenDefect: false,
             endDate: undefined,
             startDate: undefined,
             selectedOwasp: $scope.OWASP_TOP10[0]
@@ -362,11 +350,6 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     $scope.$on('loadSnapshotReport', function() {
 
         $scope.noData = false;
-
-        $scope.savedFilters = $scope.$parent.savedFilters.filter(function(filter){
-            var parameters = JSON.parse(filter.json);
-            return (parameters.filterType && parameters.filterType.isSnapshotFilter);
-        });
 
         if (!$scope.allVulns) {
             $scope.loading = true;
