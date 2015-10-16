@@ -854,20 +854,21 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 
 				// Calculate all the close maps from other channels other than the channel of scan to delete
 				List<ScanCloseVulnerabilityMap> scanCloseVulnerabilityMaps = listFrom(vuln.getScanCloseVulnerabilityMaps());
-				for (int i = 0; i < vuln.getScanCloseVulnerabilityMaps().size(); i++) {
-					ScanCloseVulnerabilityMap map = vuln.getScanCloseVulnerabilityMaps().get(i);
+
+				for (ScanCloseVulnerabilityMap map : vuln.getScanCloseVulnerabilityMaps()){
 					if (scanToDelete.getApplicationChannel().getId() == map.getScan().getApplicationChannel().getId()) {
-						scanCloseVulnerabilityMaps.remove(i);
+						scanCloseVulnerabilityMaps.remove(map);
 					}
 				}
 
+				// If the time when it was (re)opened after the time when it was closed
+				// and it is still found in this scanner (because we are deleting scan) then check the system setting of when to close a vulnerability
 				if (!vuln.isActive() && newCloseTime.before(newOpenTime)
-						|| (!vuln.isActive() && !(scanCloseVulnerabilityMaps.size() > 0 && closeVulnWhenNoScannersReport))) {
+						&& (scanCloseVulnerabilityMaps.size() == 0 || closeVulnWhenNoScannersReport)) {
 					vulnerabilityStatusService.openVulnerability(vuln, scanToDelete, null, newOpenTime, true, false);
 				}
 
-				boolean toClose = scanCloseVulnerabilityMaps.size() == 0 || (scanCloseVulnerabilityMaps.size() > 0 && closeVulnWhenNoScannersReport);
-
+				boolean toClose = scanCloseVulnerabilityMaps.size() == 0 || (!closeVulnWhenNoScannersReport);
 				if (vuln.isActive() && newCloseTime.after(newOpenTime) && toClose) {
 					vulnerabilityStatusService.closeVulnerability(vuln, scanToDelete, newCloseTime, true, false);
 				}
