@@ -410,10 +410,6 @@ threadfixModule.factory('vulnSearchParameterService', function() {
         });
 
         $scope.parameters.genericVulnerabilities = filterParameters.genericVulnerabilities;
-
-        //$scope.endDate = filterParameters.endDate;
-        //$scope.startDate = filterParameters.startDate;
-
     };
 
 
@@ -689,7 +685,7 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
     var filter = {};
 
 
-    filter.saveCurrentFilters = function($scope, filterSavedFilters) {
+    filter.saveCurrentFilters = function($scope) {
         $log.info("Saving filters");
 
         if ($scope.currentFilterNameInput) {
@@ -725,18 +721,13 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
 
                     if (data.success) {
                         $scope.savedFilters = data.object;
+                        $scope.$parent.$parent.savedFilters = data.object;
 
                         $scope.savedFilters.forEach(function(filter) {
                             if (filter.name === $scope.currentFilterNameInput) {
                                 $scope.selectedFilter = filter;
                             }
                         });
-
-                        if (filterSavedFilters) {
-                            var savedFilters = $scope.savedFilters.filter(filterSavedFilters);
-                            $scope.savedFilters = savedFilters;
-                            $scope.$parent.savedFilters = savedFilters;
-                        }
 
                         var defaultFilter = filter.findDefaultFilter($scope);
                         $scope.savedDefaultTrendingFilter = defaultFilter;
@@ -767,7 +758,7 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
         }
     };
 
-    filter.deleteCurrentFilter = function($scope, filterSavedFilters) {
+    filter.deleteCurrentFilter = function($scope) {
         if ($scope.selectedFilter) {
             $http.post(tfEncoder.encode("/reports/filter/delete/" + $scope.selectedFilter.id)).
                 success(function(data, status, headers, config) {
@@ -778,17 +769,13 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
                         $scope.deleteFilterSuccessMessage = "Successfully deleted filter " + $scope.selectedFilter.name;
                         $scope.selectedFilter = undefined;
                         $scope.savedFilters = data.object;
+                        $scope.$parent.$parent.savedFilters = data.object;
 
                         if($scope.acFilterPage)
                             $scope.currentFilterNameInput = '';
 
                         if ($scope.savedFilters){
 
-                            if (filterSavedFilters) {
-                                var savedFilters = $scope.savedFilters.filter(filterSavedFilters);
-                                $scope.savedFilters = savedFilters;
-                                $scope.$parent.savedFilters = savedFilters;
-                            }
                             var defaultFilter = filter.findDefaultFilter($scope);
                             $scope.savedDefaultTrendingFilter = defaultFilter;
                             $scope.$parent.savedDefaultTrendingFilter = defaultFilter;

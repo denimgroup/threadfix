@@ -30,15 +30,6 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
 
     $scope.$on('loadComplianceReport', function() {
         $scope.noData = false;
-        $scope.savedFilters = $scope.$parent.savedFilters.filter(function(filter){
-            var parameters = JSON.parse(filter.json);
-            if ($scope.$parent.complianceActive)
-                return (parameters.filterType && parameters.filterType.isComplianceFilter);
-            else if ($scope.$parent.remediationActive)
-                return (parameters.filterType && parameters.filterType.isRemediationFilter);
-            else
-                return (!parameters.filterType);
-        });
 
         // Data for trending chart and table
         if (!$scope.allScans) {

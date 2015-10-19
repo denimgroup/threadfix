@@ -17,10 +17,6 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
 
     $scope.$on('loadTrendingReport', function() {
         $scope.noData = false;
-        $scope.savedFilters = $scope.$parent.savedFilters.filter(function(filter){
-            var parameters = JSON.parse(filter.json);
-            return (parameters.filterType && parameters.filterType.isTrendingFilter);
-        });
         $scope.savedDefaultTrendingFilter = filterService.findDefaultFilter($scope);
 
         if (!$scope.allScans) {
