@@ -131,7 +131,6 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         $scope.vulnSearch = false;
         $scope.customActive = false;
         $scope.$broadcast('loadComplianceReport');
-
     };
 
     $scope.loadSnapshot = function() {
@@ -150,16 +149,6 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         $scope.snapshotActive = false;
         $scope.remediationActive = true;
         $scope.complianceActive = false;
-        $scope.vulnSearch = false;
-        $scope.customActive = false;
-        $scope.$broadcast('loadComplianceReport');
-    };
-
-    $scope.loadCompliance = function() {
-        $scope.trendingActive = false;
-        $scope.snapshotActive = false;
-        $scope.remediationActive = false;
-        $scope.complianceActive = true;
         $scope.vulnSearch = false;
         $scope.customActive = false;
         $scope.$broadcast('loadComplianceReport');

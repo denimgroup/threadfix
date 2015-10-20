@@ -79,6 +79,12 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
             return;
 
         $scope.parameters = angular.copy(parameters);
+
+        // Compliance report: query by the selected tag from dropdown
+        if ($scope.remediationType == 2) {
+            $scope.parameters.tags = [{name: $scope.currentTag}];
+        }
+
         $scope.filterScans = trendingUtilities.filterByTag($scope.allScans, $scope.parameters.tags);
         $scope.trendingScansData = trendingUtilities.refreshScans($scope);
         renderTable();
