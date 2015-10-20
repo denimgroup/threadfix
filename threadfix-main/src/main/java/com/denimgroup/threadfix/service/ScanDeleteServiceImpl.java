@@ -24,17 +24,12 @@
 
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.data.dao.*;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.denimgroup.threadfix.data.dao.DefectDao;
-import com.denimgroup.threadfix.data.dao.FindingDao;
-import com.denimgroup.threadfix.data.dao.ScanDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityCommentDao;
-import com.denimgroup.threadfix.data.dao.WafRuleDao;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -75,6 +70,8 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
     private PolicyStatusService policyStatusService;
 
 	private DefaultConfiguration defaultConfiguration;
+	@Autowired
+	private StatisticsCounterDao statisticsCounterDao;
 
 	/**
 	 * Deleting a scan requires a lot of code to check and make sure that all mappings
@@ -412,7 +409,6 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					scan.getFindings().add(map.getFinding());
 					map.getFinding().getScan().getFindings().remove(map.getFinding());
 					map.getFinding().setScan(scan);
-
 					mapsToRemove.add(map);
 
 					updateFirstFindingForVuln(map.getFinding(),
@@ -424,6 +420,18 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			for (ScanRepeatFindingMap map : mapsToRemove) {
 				map.getFinding().getScanRepeatFindingMaps().remove(map);
 				map.getScan().getScanRepeatFindingMaps().remove(map);
+
+				// Update scanId of StatisticsCounter of scan to delete
+				List<StatisticsCounter> counters = listFrom(map.getFinding().getStatisticsCounters());
+					for (StatisticsCounter counter: counters) {
+						if (counter.getScanRepeatFindingMap() != null
+								&& counter.getScanRepeatFindingMap().getId().compareTo(map.getId()) == 0) {
+							map.getFinding().getStatisticsCounters().remove(counter);
+						} else if (counter.getScanId().compareTo(scanToDelete.getId()) == 0) {
+							counter.setScanId(scan.getId());
+						}
+					}
+
 				scanDao.saveOrUpdate(map.getScan());
 				findingDao.saveOrUpdate(map.getFinding());
 				scanDao.deleteMap(map);
@@ -727,9 +735,14 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			if (vuln.getScanCloseVulnerabilityMaps() != null) {
 				List<ScanCloseVulnerabilityMap> vulnMapCopy = new ArrayList<>(vuln.getScanCloseVulnerabilityMaps());
 				for (ScanCloseVulnerabilityMap map : vulnMapCopy) {
-					scan.getScanCloseVulnerabilityMaps().remove(map);
-					scan.setNumberClosedVulnerabilities(
-							scan.getNumberClosedVulnerabilities() - 1);
+					if (scan.getScanCloseVulnerabilityMaps().contains(map)) {
+						scan.getScanCloseVulnerabilityMaps().remove(map);
+						scan.setNumberClosedVulnerabilities(
+								scan.getNumberClosedVulnerabilities() - 1);
+					} else {
+						map.getScan().getScanCloseVulnerabilityMaps().remove(map);
+						map.getScan().setNumberClosedVulnerabilities(scan.getNumberClosedVulnerabilities() - 1);
+					}
 
 					vuln.getScanCloseVulnerabilityMaps().remove(map);
 
@@ -862,7 +875,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 				}
 
 				// If the time when it was (re)opened after the time when it was closed
-				// and it is still found in this scanner (because we are deleting scan) then check the system setting of when to close a vulnerability
+				// and it is now found in this scanner (because we are deleting scan) then check the system setting of when to close a vulnerability
 				if (!vuln.isActive() && newCloseTime.before(newOpenTime)
 						&& (scanCloseVulnerabilityMaps.size() == 0 || closeVulnWhenNoScannersReport)) {
 					vulnerabilityStatusService.openVulnerability(vuln, scanToDelete, null, newOpenTime, true, false);

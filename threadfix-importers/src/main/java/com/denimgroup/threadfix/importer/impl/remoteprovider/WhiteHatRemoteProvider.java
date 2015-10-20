@@ -202,8 +202,9 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 				currentScanDate = date;
 			}
 
-			for (Finding finding : findingDateStatusMap.keySet()) {
-				List<DateStatus> findingDateInfo = findingDateStatusMap.get(finding);
+			for (Finding originalFinding : findingDateStatusMap.keySet()) {
+				Finding finding = new Finding(originalFinding);
+				List<DateStatus> findingDateInfo = findingDateStatusMap.get(originalFinding);
 				Collections.sort(findingDateInfo);
 
 				if (date.compareTo(findingDateInfo.get(0).getDate()) < 0) {
