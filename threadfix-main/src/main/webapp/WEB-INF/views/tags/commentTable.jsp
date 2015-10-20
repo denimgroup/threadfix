@@ -84,15 +84,16 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat="comment in vuln.vulnerabilityComments" class="bodyRow left-align">
-                                <td id="commentUser{{ $index }}">{{ comment.username }}</td>
-                                <td id="commentDate{{ $index }}">{{ comment.time | date:'yyyy-MM-dd HH:mm' }}</td>
-                                <td id="commentText{{ $index }}">
+                                <td id="commentUser{{ $parent.$index }}-{{ $index }}">{{ comment.username }}</td>
+                                <td id="commentDate{{ $parent.$index }}-{{ $index }}">{{ comment.time | date:'yyyy-MM-dd HH:mm' }}</td>
+                                <td id="commentText{{ $parent.$index }}-{{ $index }}">
                                     <div class="vuln-comment-word-wrap">
                                         {{ comment.comment }}
                                     </div>
                                 </td>
                                 <td class="left-align" >
-                                    <span style="font-weight: bold;" id="commentTag{{comment.id}}{{ $index }}" ng-repeat="cmtTag in comment.tags" class="pointer badge" ng-class="{'badge-comment-tag': true}" ng-click="goToTag(cmtTag)">{{cmtTag.name}}</span>
+                                    <span style="font-weight: bold;" id="commentTag{{ $parent.$parent.$index }}-{{ $parent.$index }}{{ cmtTag.name }}"
+                                          ng-repeat="cmtTag in comment.tags" class="pointer badge" ng-class="{'badge-comment-tag': true}" ng-click="goToTag(cmtTag)">{{cmtTag.name}}</span>
                                 </td>
                             </tr>
                             </tbody>
