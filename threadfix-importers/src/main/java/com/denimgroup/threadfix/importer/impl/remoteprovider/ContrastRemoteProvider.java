@@ -243,11 +243,10 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
         return finding;
     }
 
-    private List<DataFlowElement> getEventsSummary(StriOrng traceId) {
+    private List<DataFlowElement> getEventsSummary(String traceId) {
 
         LOG.warn("About to get trace story/static information for trace Id " + traceId);
         List<DataFlowElement> dataFlowElementList = list();
-        List<>
 
         HttpResponse response = makeRequest(BASE_URL + TRACES_URL + traceId + EVENTS_SUMMARY_URL);
         if (response.isValid()) {
