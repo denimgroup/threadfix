@@ -341,7 +341,7 @@
 </div>
 
 <!-- Date Range -->
-<div class="accordion-group" ng-hide="snapshotActive && reportId != OWASP_Report_Id">
+<div class="accordion-group" ng-hide="snapshotActive">
     <div class="accordion-heading" ng-click="showDateRange = !showDateRange">
         <span id="showDateRange" class="icon" ng-class="{ 'icon-minus': showDateRange, 'icon-plus': !showDateRange }"></span> Date Range
 

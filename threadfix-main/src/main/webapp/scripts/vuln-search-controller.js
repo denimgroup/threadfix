@@ -22,6 +22,9 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                 high: true,
                 critical: true
             },
+            numberMerged: null,
+            path: null,
+            parameter: null,
             numberVulnerabilities: 10,
             showOpen: true,
             showClosed: false,
@@ -34,7 +37,11 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             showInconsistentClosedDefectNeedsScan: false,
             showInconsistentClosedDefectOpenInScan: false,
             showInconsistentOpenDefect: false,
-            showCommentPresent: false
+            showCommentPresent: false,
+            daysOldModifier: null,
+            daysOld: null,
+            startDate: null,
+            endDate: null
         };
 
         $scope.endDate = undefined;

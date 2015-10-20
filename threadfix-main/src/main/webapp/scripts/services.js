@@ -214,7 +214,7 @@ threadfixModule.factory('vulnSearchParameterService', function() {
         }
 
         if ($scope.treeTeam) {
-            $scope.parameters.teams = [ { id: $scope.treeTeam.id } ];
+            $scope.parameters.teams = [ { id: $scope.treeTeam.id, name: $scope.treeTeam.name } ];
         } else if (parameters.teams && parameters.teams.length > 0) {
             parameters.teams.forEach(function(filteredTeam) {
                 filteredTeam.id = undefined;
@@ -229,7 +229,7 @@ threadfixModule.factory('vulnSearchParameterService', function() {
         }
 
         if ($scope.treeApplication) {
-            $scope.parameters.applications = [ { id: $scope.treeApplication.id } ];
+            $scope.parameters.applications = [ { id: $scope.treeApplication.id, name: $scope.treeApplication.team.name + " / " + $scope.treeApplication.name } ];
         } else if (parameters.applications && parameters.applications.length > 0) {
             // This may be a problem down the road, but it's easier than fighting angular / bootstrap typeahead
             //STran 8/14/2014: oh yes, I'm having problem with this right now

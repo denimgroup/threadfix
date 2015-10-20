@@ -341,8 +341,6 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             },
             numberVulnerabilities: 10,
             showOpen: true,
-            endDate: undefined,
-            startDate: undefined,
             selectedOwasp: $scope.OWASP_TOP10[0]
         };
     };
