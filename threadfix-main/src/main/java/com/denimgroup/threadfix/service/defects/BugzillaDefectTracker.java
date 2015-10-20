@@ -242,6 +242,12 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
             if (statuses.contains("UNCONFIRMED")) {
                 statuses.remove("UNCONFIRMED");
             }
+            if (statuses.contains("RESOLVED")) {
+                statuses.remove("RESOLVED");
+            }
+            if (statuses.contains("VERIFIED")) {
+                statuses.remove("VERIFIED");
+            }
 
             bugMap.put("field", "priority");
             createResult = bugzillaClient.executeMethod("Bug.legal_values", bugMap);
