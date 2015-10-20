@@ -13,9 +13,9 @@
             <td colspan="4" style="text-align:center;">No comments found.</td>
         </tr>
         <tr ng-show="vulnerability.vulnerabilityComments" ng-repeat="comment in vulnerability.vulnerabilityComments" class="bodyRow left-align">
-            <td id="commentUser{{ $index }}">{{ comment.username }}</td>
-            <td id="commentDate{{ $index }}">{{ comment.time | date:'yyyy-MM-dd HH:mm' }}</td>
-            <td id="commentText{{ $index }}">
+            <td id="commentUser{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $parent.$index }}-{{ $index }}">{{ comment.username }}</td>
+            <td id="commentDate{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $parent.$index }}-{{ $index }}">{{ comment.time | date:'yyyy-MM-dd HH:mm' }}</td>
+            <td id="commentText{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $parent.$index }}-{{ $index }}">
                 <div class="vuln-comment-word-wrap">
                     {{ comment.comment }}
                 </div>
@@ -36,10 +36,12 @@
                 </div>
                 <div ng-hide="canUpdateVulnComment">
                     <c:if test="${ canManageTags }">
-                            <span style="font-weight: bold;" id="commentTagLink{{comment.id}}{{ $index }}" ng-repeat="cmtTag in comment.tags" class="pointer badge" ng-class="{'badge-comment-tag': true}" ng-click="goToTag(cmtTag)">{{cmtTag.name}}</span>
+                            <span style="font-weight: bold;" id="commentTagLink{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $parent.$parent.$index }}-{{ $parent.$index }}{{ cmtTag.name }}"
+                                  ng-repeat="cmtTag in comment.tags" class="pointer badge" ng-class="{'badge-comment-tag': true}" ng-click="goToTag(cmtTag)">{{cmtTag.name}}</span>
                     </c:if>
                     <c:if test="${ !canManageTags }">
-                        <span style="font-weight: bold;" id="commentTag{{comment.id}}{{ $index }}" ng-repeat="cmtTag in comment.tags" class="badge" ng-class="{'badge-comment-tag': true}">{{cmtTag.name}}</span>
+                        <span style="font-weight: bold;" id="commentTag{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $parent.$parent.$index }}-{{ $parent.$index }}{{ cmtTag.name }}"
+                              ng-repeat="cmtTag in comment.tags" class="badge" ng-class="{'badge-comment-tag': true}">{{cmtTag.name}}</span>
                     </c:if>
                 </div>
             </td>
