@@ -130,6 +130,8 @@ public class ChannelMerger {
     }
 
     private void closeMissingVulnerabilities() {
+        FindingMatcher matcher = new FindingMatcher(null);
+
         if (scan.getApplicationChannel() == null || scan.getApplicationChannel().getChannelType() == null) {
             throw new IllegalStateException("Got a null application channel or channel type.");
         }
@@ -167,6 +169,14 @@ public class ChannelMerger {
                                 break;
                             }
                         }
+                    }
+                }
+
+                // Check if new scan contains finding with same generic vulnerability and surface location with this old vulnerability
+                for (Finding newScanFinding: scan.getFindings()) {
+                    if (matcher.doesMatch(newScanFinding, vulnerability)) {
+                        shouldClose = false;
+                        break;
                     }
                 }
 
