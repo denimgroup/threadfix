@@ -6,12 +6,17 @@ import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RequestConfigurer;
+import com.denimgroup.threadfix.importer.util.JsonUtils;
 import com.denimgroup.threadfix.importer.util.RegexUtils;
+import com.denimgroup.threadfix.service.OrganizationService;
+import org.apache.commons.beanutils.BeanToPropertyValueTransformer;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.xml.bind.DatatypeConverter;
 import java.util.Calendar;
@@ -34,12 +39,17 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
             API_KEY = "API Key",
             SERVICE_KEY = "Service Key",
             USERNAME = "Username",
-            APPS_URL = "https://app.contrastsecurity.com/Contrast/api/applications",
-            TRACES_URL = "https://app.contrastsecurity.com/Contrast/api/traces/",
-            EVENTS_SUMMARY_URL = "https://app.contrastsecurity.com/Contrast/api/ng/traces/",
+            BASE_URL = "https://app.contrastsecurity.com/Contrast/api/ng/",
+            ORGS_URL = "/profile/organizations/",
+            APPS_URL = "/applications",
+            TRACES_URL = "/traces/",
+            EVENTS_SUMMARY_URL = "/events/summary",
             TRACE_WEB_URL = "https://app.contrastsecurity.com/Contrast/static/ng/index.html#/applications/",
             FILE_PATTERN = "@(.+?):",
             LINE_PATTERN = ":([0-9]*)";
+
+    @Autowired
+    private OrganizationService organizationService;
 
     public ContrastRemoteProvider() {
         super(ScannerType.CONTRAST);
@@ -51,23 +61,31 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
     //                     Get Applications
     ////////////////////////////////////////////////////////////////////////
 
-    @Override
-    public List<RemoteProviderApplication> fetchApplications() {
+    @SuppressWarnings("unchecked")
+    private List<Integer> fetchOrgIds() {
         assert remoteProviderType != null : "Remote Provider Type was null, please set before calling any methods.";
 
-        HttpResponse response = makeRequest(APPS_URL);
+        HttpResponse response = makeRequest(ORGS_URL);
+        List<Integer> organizationIds = list();
+        List<String> organizationNames = (List<String>) CollectionUtils.collect(organizationService.loadAllActiveFilter(),
+                new BeanToPropertyValueTransformer("name"));
 
         try {
             if (response.isValid()) {
 
-                List<RemoteProviderApplication> applicationList = list();
+                JSONObject orgResponse = JsonUtils.getJSONObject(response.getBodyAsString());
 
-                for (JSONObject object : toJSONObjectIterable(response.getBodyAsString())) {
-                    applicationList.add(getApplicationFromJson(object));
+                if (orgResponse != null) {
+                    JSONArray organizations = orgResponse.getJSONArray("organizations");
+
+                    for (JSONObject organization : toJSONObjectIterable(organizations)) {
+                        String orgName = organization.getString("name");
+                        Integer orgId = organization.getInt("organization_id");
+                        if (orgName != null && organizationNames.contains(orgName)) {
+                            organizationIds.add(orgId);
+                        }
+                    }
                 }
-
-                return applicationList;
-
             } else {
                 String body = response.getBodyAsString();
                 log.info("Contents:\n" + body);
@@ -84,6 +102,47 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
         } catch (JSONException e) {
             throw new RestIOException(e, "Invalid response received: not JSON.");
         }
+
+        return organizationIds;
+    }
+
+    @Override
+    public List<RemoteProviderApplication> fetchApplications() {
+        assert remoteProviderType != null : "Remote Provider Type was null, please set before calling any methods.";
+
+        List<RemoteProviderApplication> applicationList = list();
+        List<Integer> organizationIds = fetchOrgIds();
+
+        for (Integer orgId : organizationIds) {
+
+            HttpResponse response = makeRequest(BASE_URL + orgId + APPS_URL);
+
+            try {
+                if (response.isValid()) {
+
+                    for (JSONObject object : toJSONObjectIterable(response.getBodyAsString())) {
+                        applicationList.add(getApplicationFromJson(object));
+                    }
+
+                } else {
+                    String body = response.getBodyAsString();
+                    log.info("Contents:\n" + body);
+                    String errorMessageOrNull = getErrorOrNull(body);
+
+                    if (errorMessageOrNull == null) {
+                        errorMessageOrNull =
+                                "Invalid response received from Contrast servers, check the logs for more details.";
+                    }
+
+                    throw new RestIOException(errorMessageOrNull, response.getStatus());
+                }
+
+            } catch (JSONException e) {
+                throw new RestIOException(e, "Invalid response received: not JSON.");
+            }
+        }
+
+        return applicationList;
     }
 
     private RemoteProviderApplication getApplicationFromJson(JSONObject object) throws JSONException {
@@ -184,12 +243,13 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
         return finding;
     }
 
-    private List<DataFlowElement> getEventsSummary(String traceId) {
+    private List<DataFlowElement> getEventsSummary(StriOrng traceId) {
 
         LOG.warn("About to get trace story/static information for trace Id " + traceId);
         List<DataFlowElement> dataFlowElementList = list();
+        List<>
 
-        HttpResponse response = makeRequest(EVENTS_SUMMARY_URL + traceId + "/events/summary");
+        HttpResponse response = makeRequest(BASE_URL + TRACES_URL + traceId + EVENTS_SUMMARY_URL);
         if (response.isValid()) {
             try {
 
