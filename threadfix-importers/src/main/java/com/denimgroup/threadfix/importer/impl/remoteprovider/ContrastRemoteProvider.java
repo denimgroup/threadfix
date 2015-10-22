@@ -178,11 +178,19 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
 
         List<Scan> scans = list();
         List<String> organizationUuids = fetchOrgUuids();
-
+        String remoteAppOrgUuid = null;
 
         for (String orgUuid : organizationUuids) {
+            List<String> remoteAppIds = (List<String>) CollectionUtils.collect(getApplications(orgUuid),
+                    new BeanToPropertyValueTransformer("nativeId"));
+            if (remoteAppIds.contains(remoteProviderApplication.getNativeId())){
+                remoteAppOrgUuid = orgUuid;
+                continue;
+            }
+        }
 
-            HttpResponse response = makeRequest(BASE_URL_V2 + orgUuid + TRACES_URL + remoteProviderApplication.getNativeId());
+        if (remoteAppOrgUuid != null) {
+            HttpResponse response = makeRequest(BASE_URL_V2 + remoteAppOrgUuid + TRACES_URL + remoteProviderApplication.getNativeId());
 
             try {
                 if (response.isValid()) {
@@ -196,7 +204,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
                     }
 
                     scan.setFindings(findingList);
-                    scans.add(scan);
+                    return list(scan);
 
                 } else {
                     String body = response.getBodyAsString();
@@ -214,7 +222,6 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
             } catch (JSONException e) {
                 throw new RestIOException(e, "Invalid response received: not JSON.");
             }
-
         }
 
         return scans;
