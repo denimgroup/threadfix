@@ -175,8 +175,6 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
     public List<Scan> getScans(RemoteProviderApplication remoteProviderApplication) {
         assert remoteProviderType != null : "Remote Provider Type was null.";
 
-
-        List<Scan> scans = list();
         List<String> organizationUuids = fetchOrgUuids();
         String remoteAppOrgUuid = null;
 
@@ -222,9 +220,9 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
             } catch (JSONException e) {
                 throw new RestIOException(e, "Invalid response received: not JSON.");
             }
+        } else {
+            return list();
         }
-
-        return scans;
     }
 
     private Finding getFindingFromObject(JSONObject object, String remoteAppId, String orgUuid) throws JSONException {
