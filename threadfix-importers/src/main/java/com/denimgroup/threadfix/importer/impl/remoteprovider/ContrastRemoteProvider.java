@@ -185,7 +185,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
                     new BeanToPropertyValueTransformer("nativeId"));
             if (remoteAppIds.contains(remoteProviderApplication.getNativeId())){
                 remoteAppOrgUuid = orgUuid;
-                continue;
+                break;
             }
         }
 
@@ -200,7 +200,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
                     Scan scan = new Scan();
 
                     for (JSONObject object : toJSONObjectIterable(response.getBodyAsString())) {
-                        findingList.add(getFindingFromObject(object, remoteProviderApplication.getNativeId(), orgUuid));
+                        findingList.add(getFindingFromObject(object, remoteProviderApplication.getNativeId(), remoteAppOrgUuid));
                     }
 
                     scan.setFindings(findingList);
