@@ -47,3 +47,8 @@ local.properties
 *.iws
 .idea/
 out/
+
+# Visual Studio #
+obj/
+*.user
+*.suo
