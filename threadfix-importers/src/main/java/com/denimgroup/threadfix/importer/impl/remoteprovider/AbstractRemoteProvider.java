@@ -135,7 +135,7 @@ public abstract class AbstractRemoteProvider extends AbstractChannelImporter {
 	protected List<Scan> filterScans(List<Scan> scans) {
 		List<Scan> resultList = list();
 
-		for (Scan s: scans) {
+		for (Scan s : scans) {
 			resultList.add(s);
 		}
 
@@ -146,7 +146,7 @@ public abstract class AbstractRemoteProvider extends AbstractChannelImporter {
 			Calendar date2 = scan2.getImportTime();
 
 			// Checking if they have consecutive imported dates
-			if ((date2.getTimeInMillis()-date1.getTimeInMillis())/(24*60*60*1000)==1) {
+			if ((date2.getTimeInMillis() - date1.getTimeInMillis()) / (24*60*60*1000) == 1) {
 				if (scan1.getFindings().size() == scan2.getFindings().size()) {
 					boolean isDuplicatedScan = true;
 					List<Finding> findingList1 = scan1.getFindings();
@@ -159,7 +159,12 @@ public abstract class AbstractRemoteProvider extends AbstractChannelImporter {
 						}
 					}
 
-					if (isDuplicatedScan) resultList.remove(scan1);
+					// removing scan 2 instead of scan 1 makes this work better for the WhiteHat importer
+					// because "thin" findings that only have native IDs are used in all scans after the first,
+					// removing the first one can remove finding information
+					if (isDuplicatedScan) {
+						resultList.remove(scan2);
+					}
 				}
 			}
 		}

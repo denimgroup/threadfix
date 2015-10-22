@@ -23,23 +23,26 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
-import com.denimgroup.threadfix.data.entities.RemoteProviderType;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.importer.util.SpringConfiguration;
+import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.WhiteHatMockHttpUtils;
 import com.denimgroup.threadfix.importer.interop.RemoteProviderFactory;
+import com.denimgroup.threadfix.importer.util.SpringConfiguration;
 import com.denimgroup.threadfix.importer.util.ThreadFixBridge;
+import com.denimgroup.threadfix.service.VulnerabilityService;
+import com.denimgroup.threadfix.service.VulnerabilityStatusService;
+import com.denimgroup.threadfix.service.merge.ChannelMerger;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.listOf;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -53,6 +56,12 @@ public class WhiteHatScanParsingTests {
     RemoteProviderFactory factory = null;
     @Autowired
     ThreadFixBridge bridge = null;
+    @Autowired
+    VulnerabilityService vulnerabilityService = null;
+    @Autowired
+    VulnerabilityStatusService vulnerabilityStatusService = null;
+    @Autowired
+    ChannelTypeDao channelTypeDao;
 
     private RemoteProviderApplication getApplication(String key, String nativeName, RemoteProviderType type) {
         RemoteProviderApplication application = new RemoteProviderApplication();
@@ -95,7 +104,31 @@ public class WhiteHatScanParsingTests {
 
         List<Finding> extraFindings = list();
         List<String[]> missingFindings = list();
-        List<Finding> lastScanFindings = scans.get(scans.size() - 1).getFindings();
+
+        // this section is here to merge native IDs and construct the finding maps correctly
+        ApplicationChannel myChannel = new ApplicationChannel();
+        myChannel.setScanList(listOf(Scan.class));
+        myChannel.setChannelType(channelTypeDao.retrieveByName(ScannerType.SENTINEL.getDbName()));
+
+        Collections.sort(scans, new Scan.ScanTimeComparator());
+
+        int count = 3;
+        for (Scan scan : scans) {
+            myChannel.getScanList().add(scan);
+            scan.setApplicationChannel(myChannel);
+            ChannelMerger.channelMerge(vulnerabilityService, vulnerabilityStatusService, scan, myChannel, new DefaultConfiguration());
+            scan.setId(count++);
+        }
+
+        // get a list of the findings from the last scan including those from maps.
+        Scan lastScan = scans.get(scans.size() - 1);
+        List<Finding> lastScanFindings = lastScan.getFindings();
+
+        if (lastScan.getScanRepeatFindingMaps() != null) {
+            for (ScanRepeatFindingMap map : lastScan.getScanRepeatFindingMaps()) {
+                lastScanFindings.add(map.getFinding());
+            }
+        }
 
         // find unexpected findings
         for (Finding finding : lastScanFindings) {
@@ -143,11 +176,6 @@ public class WhiteHatScanParsingTests {
                 (expected[0] != null && expected[0].equals(finding.getSurfaceLocation().getPath()))) // URL
                 && expected[1].equals(finding.getChannelVulnerability().getName())); //type
     }
-
-//    @Test
-//    public void testDemoSiteBE() {
-//        test("Demo Site BE", 15);
-//    }
 
     @Test
     public void testDemoSitePEMatchingNumbers() {

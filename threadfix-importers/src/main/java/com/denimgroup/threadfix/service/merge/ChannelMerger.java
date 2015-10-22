@@ -23,10 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.merge;
 
-import com.denimgroup.threadfix.data.dao.DefaultConfigurationDao;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.VulnerabilityStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,12 +59,12 @@ public class ChannelMerger {
      * This is the first round of scan merge that only considers scans from the same scanner
      * as the incoming scan.
      *
-     * @param vulnerabilityService TODO this is a shim to get around autowiring problems so we can unit test this.
-     * @param vulnerabilityStatusService TODO this is a shim to get around autowiring problems so we can unit test this.
-     * @param scan recent scan to merge
-     * @param applicationChannel context information about the scan
      */
-    public static void channelMerge(VulnerabilityService vulnerabilityService, VulnerabilityStatusService vulnerabilityStatusService, Scan scan, ApplicationChannel applicationChannel, DefaultConfiguration defaultConfiguration) {
+    public static void channelMerge(VulnerabilityService vulnerabilityService,
+                                    VulnerabilityStatusService vulnerabilityStatusService,
+                                    Scan scan,
+                                    ApplicationChannel applicationChannel,
+                                    DefaultConfiguration defaultConfiguration) {
         if (scan == null || applicationChannel == null) {
             LOG.warn("Insufficient data to complete Application Channel-wide merging process.");
             return;
@@ -172,11 +170,13 @@ public class ChannelMerger {
                     }
                 }
 
-                // Check if new scan contains finding with same generic vulnerability and surface location with this old vulnerability
-                for (Finding newScanFinding: scan.getFindings()) {
-                    if (matcher.doesMatch(newScanFinding, vulnerability)) {
-                        shouldClose = false;
-                        break;
+                if (shouldClose) {
+                    // Check if new scan contains finding with same generic vulnerability and surface location with this old vulnerability
+                    for (Finding newScanFinding : scan.getFindings()) {
+                        if (matcher.doesMatch(newScanFinding, vulnerability)) {
+                            shouldClose = false;
+                            break;
+                        }
                     }
                 }
 
@@ -206,23 +206,21 @@ public class ChannelMerger {
         for (String nativeId : scanHash.keySet()) {
 
             // if it's an old finding
-            if (oldNativeIdVulnHash.containsKey(nativeId)) {
+            if (oldNativeIdFindingHash.containsKey(nativeId)) {
                 createRepeatFindingMap(nativeId);
-            }
 
-            // if it's an old finding and we haven't seen the vulnerability before,
-            // update the old vulnerability count
-            if (oldNativeIdVulnHash.containsKey(nativeId)
-                    && oldNativeIdVulnHash.get(nativeId) != null
-                    && !alreadySeenVulnIds.contains(oldNativeIdVulnHash.get(
-                    nativeId).getId())) {
-
-                processOldVulnerability(nativeId);
+                // if it's an old finding and we haven't seen the vulnerability before,
+                // update the old vulnerability count
+                if (oldNativeIdVulnHash.get(nativeId) != null
+                        && !alreadySeenVulnIds.contains(oldNativeIdVulnHash.get(
+                        nativeId).getId())) {
+                    processOldVulnerability(nativeId);
+                }
 
             } else {
 
                 // Otherwise add to the new count and list of new findings
-                if (!oldNativeIdVulnHash.containsKey(nativeId)) {
+                if (!oldNativeIdFindingHash.containsKey(nativeId)) {
                     numberNew += 1;
                     total += 1;
                     newFindings.add(scanHash.get(nativeId));

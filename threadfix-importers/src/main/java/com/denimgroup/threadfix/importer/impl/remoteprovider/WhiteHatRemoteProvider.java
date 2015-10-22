@@ -44,6 +44,7 @@ import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.*;
 import static com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl.getImpl;
+import static com.denimgroup.threadfix.util.DateUtils.getDaysBetween;
 
 @RemoteProvider(name = "WhiteHat Sentinel")
 public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
@@ -59,6 +60,10 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 	private Map<Finding, List<DateStatus>> findingDateStatusMap = null;
 
     RemoteProviderHttpUtils utils = getImpl(this.getClass());
+
+	// using these findings instead of the finding list lets us do faster contains() lookups.
+	// set lookup characteristics are O(1) and list is O(n)
+	Set<Finding> findings = set();
 
     public WhiteHatRemoteProvider() {
 		super(ScannerType.SENTINEL);
@@ -189,46 +194,54 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 		for (Calendar d : scanDateList) {
 			date = d;
 
-			if (currentScanDate == null ||
-					com.denimgroup.threadfix.util.DateUtils.getDaysBetween(date, currentScanDate) != 0) {
-				if (saxFindingList != null && !saxFindingList.isEmpty()) {
+			if (currentScanDate == null || getDaysBetween(date, currentScanDate) < 0) {
+				if (findings != null && !findings.isEmpty()) {
 					date = currentScanDate;
 					scanList.add(makeNewScan());
 					date = d;
+
 				}
-				currentScanDate = date;
 				saxFindingList = list();
-			} else {
-				currentScanDate = date;
 			}
 
-			for (Finding originalFinding : findingDateStatusMap.keySet()) {
-				Finding finding = new Finding(originalFinding);
-				List<DateStatus> findingDateInfo = findingDateStatusMap.get(originalFinding);
+			currentScanDate = date;
+
+			// switching to iterating through entries saves the cost of doing Map lookups
+			for (Map.Entry<Finding, List<DateStatus>> entry : findingDateStatusMap.entrySet()) {
+				Finding finding = entry.getKey();
+				List<DateStatus> findingDateInfo = entry.getValue();
 				Collections.sort(findingDateInfo);
 
-				if (date.compareTo(findingDateInfo.get(0).getDate()) < 0) {
+				DateStatus lastDate = findingDateInfo.get(findingDateInfo.size() - 1);
+				// getting milliseconds in the dates lets us skip the Calendar.clone()
+				// in the Calendar compareTo() implementation
+				long dateInMillis = date.getTimeInMillis(),
+						lastDateMillis = lastDate.getTimeMillis(),
+						firstDateMillis = findingDateInfo.get(0).getDate().getTimeInMillis();
+
+				boolean dateBeforeFirstDate = dateInMillis < firstDateMillis;
+				boolean dateAfterLastDate   = dateInMillis >= lastDateMillis;
+
+				if (dateBeforeFirstDate) {
 					continue;
 				}
 
-				if (date.compareTo(findingDateInfo.get(findingDateInfo.size() - 1).getDate()) >= 0) {
-					if (findingDateInfo.get(findingDateInfo.size() - 1).getStatus().equals("open")) {
-						if (!saxFindingList.contains(finding)) {
-							saxFindingList.add(finding);
+				if (dateAfterLastDate) {
+					if (lastDate.getStatus().equals("open")) {
+						if (!findings.contains(finding)) {
+							findings.add(finding);
 						}
 					} else {
-						if (saxFindingList.contains(finding)) {
-							saxFindingList.remove(finding);
+						if (findings.contains(finding)) {
+							findings.remove(finding);
 						}
 					}
 					continue;
 				}
 
-				if (date.compareTo(findingDateInfo.get(0).getDate()) >= 0 &&
-						date.compareTo(findingDateInfo.get(findingDateInfo.size() - 1).getDate()) < 0) {
-					if (!saxFindingList.contains(finding)) {
-						saxFindingList.add(finding);
-					}
+				// if we get here, the date must be in the right range. There's no need to check
+				if (!findings.contains(finding)) {
+					findings.add(finding);
 				}
 			}
 		}
@@ -237,15 +250,16 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 
 		return scanList;
 	}
-	
+
 	private Scan makeNewScan() {
+
 		Scan scan = new Scan();
-		scan.setFindings(saxFindingList);
+		scan.setImportTime(date);
+		addFindingsOrCopyFindings(scan);
 		scan.setApplicationChannel(applicationChannel);
-		
+
 		if (date != null) {
 			LOG.debug("SAX Parser found the scan date: " + date.getTime().toString());
-			scan.setImportTime(date);
 		} else {
 			LOG.warn("SAX Parser did not find the date.");
 		}
@@ -256,6 +270,31 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 			LOG.warn("SAX Parsing did not find any Findings.");
 		
 		return scan;
+	}
+
+	// the calendar here was for debugging, should refactor to just a map
+	private void addFindingsOrCopyFindings(Scan scan) {
+		scan.setFindings(listOf(Finding.class));
+		for (Finding finding : findings) {
+			if (finding.getScan() != null) {
+				Finding copyFinding = copyNativeId(finding);
+				scan.getFindings().add(copyFinding);
+				copyFinding.setScan(scan);
+
+			} else {
+				finding.setScan(scan);
+				scan.getFindings().add(finding);
+			}
+		}
+	}
+
+	// so as to save memory, we'll use a copy of the findings with just the native ID
+	// this way when we channel merge maps will be created and we can save memory vs
+	// creating and copying all fields in Finding
+	private Finding copyNativeId(Finding finding) {
+		Finding newFinding = new Finding();
+		newFinding.setNativeId(finding.getNativeId());
+		return newFinding;
 	}
 
 	public class WhiteHatSitesParser extends HandlerWithBuilder {
@@ -357,7 +396,7 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 				findingDateStatusMap.get(finding).add(currentDateStatus);
 				findingDateStatusMap.get(finding).add(initialDateStatus);
 			} else {
-				findingDateStatusMap.put(finding, Arrays.asList(currentDateStatus, initialDateStatus));
+				findingDateStatusMap.put(finding, list(currentDateStatus, initialDateStatus));
 			}
 		}
 
@@ -493,7 +532,7 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 			if (findingDateStatusMap.containsKey(finding)){
 				findingDateStatusMap.get(finding).add(dateStatus);
 			} else {
-				findingDateStatusMap.put(finding, Arrays.asList(dateStatus));
+				findingDateStatusMap.put(finding, list(dateStatus));
 			}
 		}
 
