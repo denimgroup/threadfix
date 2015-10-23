@@ -13,29 +13,37 @@ SET lib=
 @REM \. on their path
 set PWD=%cd%
 set CATALINA_HOME=%PWD%\tomcat
-set CATALINA_OPTS=-Xms512m -Xmx1536m 		
+set CATALINA_OPTS=-Xms512m -Xmx1536m
+
 for /f tokens^=2-5^ delims^=.-_^" %%j in ('java -fullversion 2^>^&1') do set "jver=%%j%%k%%l%%m"
 echo jver is %jver%
+
+
 if DEFINED JAVA_HOME (
-	if %jver% LSS 17000 (
-		echo Java version less than 7.  Using folder's Java 8.
+	if %jver:~0,1% NEQ 1 (
+		echo Could not determine Java version.  Java may not be included in PATH.  Using folder's Java 8.
 		set JAVA_HOME="%PWD%\java"
+	) else (
+		echo Determined Java version.
+		if %jver% LSS 17000 (
+			echo Java version less than 7.  Using folder's Java 8.
+			set JAVA_HOME="%PWD%\java"
+			set CATALINA_OPTS=%CATALINA_OPTS% -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=256m
+			goto :javaisset
+		)
+		if %jver% LSS 18000 (
+			echo JAVA_HOME is Java 7.  Using Java 7.
+			set CATALINA_OPTS=%CATALINA_OPTS% -XX:PermSize=256m -XX:MaxPermSize=256m
+			goto :javaisset
+		)
 		set CATALINA_OPTS=%CATALINA_OPTS% -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=256m
+		echo JAVA_HOME is Java 8.  Using Java 8.
 		goto :javaisset
 	)
-	if %jver% LSS 18000 (
-		echo JAVA_HOME is Java 7.  Using Java 7.
-		set CATALINA_OPTS=%CATALINA_OPTS% -XX:PermSize=256m -XX:MaxPermSize=256m
-		goto :javaisset
-	)
-	set CATALINA_OPTS=%CATALINA_OPTS% -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=256m
-	echo JAVA_HOME is Java 8.  Using Java 8.
-	goto :javaisset
 ) else (
 	echo No JAVA_HOME found.  Using folder's Java 8.
 	set JAVA_HOME="%PWD%\java"
 )
-
 
 :javaisset
 if not exist tomcat\keystore echo Generating keystore
