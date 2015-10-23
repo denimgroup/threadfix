@@ -68,8 +68,6 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
 
         HttpResponse response = makeRequest(BASE_URL_V3 + ORGS_URL);
         List<String> organizationUuids = list();
-        List<String> organizationNames = (List<String>) CollectionUtils.collect(organizationService.loadAllActiveFilter(),
-                new BeanToPropertyValueTransformer("name"));
 
         try {
             if (response.isValid()) {
@@ -82,9 +80,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
                     for (JSONObject organization : toJSONObjectIterable(organizations)) {
                         String orgName = organization.getString("name");
                         String orgUuid = organization.getString("organization_uuid");
-                        if (orgName != null && organizationNames.contains(orgName)) {
-                            organizationUuids.add(orgUuid);
-                        }
+                        organizationUuids.add(orgUuid);
                     }
 
                     if (organizationUuids.size() == 0) {
