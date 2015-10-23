@@ -58,6 +58,7 @@ namespace DenimGroup.threadfix_plugin
     // This attribute is needed to let the shell know that this package exposes some menus.
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(GuidList.guidthreadfix_pluginPkgString)]
+    [ProvideToolWindow(typeof(ThreadFixToolWindow))]
     [ProvideOptionPage(typeof(OptionsPage), "ThreadFix", "Settings", 0, 0, true)]
     public sealed class threadfix_pluginPackage : Package
     {
@@ -90,6 +91,7 @@ namespace DenimGroup.threadfix_plugin
             base.Initialize();
 
             // Global plugin state
+            _threadFixPlugin.ToolWindow = (ThreadFixToolWindow)FindToolWindow(typeof(ThreadFixToolWindow), 0, true);
             _threadFixPlugin.Options = (OptionsPage)GetDialogPage(typeof(OptionsPage));
 
             // Add our command handlers for menu (commands must exist in the .vsct file)

@@ -30,6 +30,7 @@ namespace DenimGroup.threadfix_plugin.Utils
 {
     public class ViewModelService
     {
+        private static readonly string CWEBaseUrl = "http://cwe.mitre.org/data/definitions/";
         private readonly ThreadFixPlugin _threadFixPlugin;
 
         public ViewModelService(ThreadFixPlugin threadFixPlugin)
@@ -71,6 +72,24 @@ namespace DenimGroup.threadfix_plugin.Utils
             }
 
             return ids;
+        }
+
+        public List<VulnerabilityMarker> GetVulnerabilityViewModel(List<VulnerabilityMarker> vulnerabilities)
+        {
+            if (vulnerabilities == null)
+            {
+                return new List<VulnerabilityMarker>();
+            }
+
+            foreach (var vulnerability in vulnerabilities)
+            {
+                if (!string.IsNullOrEmpty(vulnerability.GenericVulnId))
+                {
+                    vulnerability.CWEUrl = CWEBaseUrl + vulnerability.GenericVulnId;
+                }
+            }
+
+            return vulnerabilities;
         }
     }
 }

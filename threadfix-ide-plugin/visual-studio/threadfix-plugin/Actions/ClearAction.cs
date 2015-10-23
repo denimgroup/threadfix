@@ -1,4 +1,5 @@
-﻿////////////////////////////////////////////////////////////////////////
+﻿using DenimGroup.threadfix_plugin.Controls;
+////////////////////////////////////////////////////////////////////////
 //
 //     Copyright (c) 2009-2015 Denim Group, Ltd.
 //
@@ -39,6 +40,9 @@ namespace DenimGroup.threadfix_plugin.Actions
         public void OnExecute(object sender, EventArgs args)
         {
             _threadFixPlugin.Markers = null;
+
+            var toolWindow = (ToolWindowControl)_threadFixPlugin.ToolWindow.Content;
+            toolWindow.ClearList();
         }
     }
 }

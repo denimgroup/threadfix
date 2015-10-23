@@ -135,6 +135,10 @@
     <Compile Include="Controls\OptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\ThreadFixToolWindow.cs" />
+    <Compile Include="Controls\ToolWindowControl.xaml.cs">
+      <DependentUpon>ToolWindowControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Data\ApplicationInfo.cs" />
     <Compile Include="Data\VulnerabilityMarker.cs" />
     <Compile Include="Guids.cs" />
@@ -186,6 +190,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Controls\ApplicationsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ToolWindowControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

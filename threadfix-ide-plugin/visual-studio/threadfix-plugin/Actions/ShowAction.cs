@@ -1,4 +1,5 @@
-﻿////////////////////////////////////////////////////////////////////////
+﻿using DenimGroup.threadfix_plugin.Controls;
+////////////////////////////////////////////////////////////////////////
 //
 //     Copyright (c) 2009-2015 Denim Group, Ltd.
 //
@@ -22,6 +23,7 @@
 //
 ////////////////////////////////////////////////////////////////////////
 using DenimGroup.threadfix_plugin.Utils;
+using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Diagnostics;
 
@@ -30,18 +32,24 @@ namespace DenimGroup.threadfix_plugin.Actions
     public class ShowAction : IAction
     {
         private readonly ThreadFixPlugin _threadFixPlugin;
+        private readonly ViewModelService _viewModelService;
 
         public ShowAction(ThreadFixPlugin threadFixPlugin)
         {
             _threadFixPlugin = threadFixPlugin;
+            _viewModelService = new ViewModelService(_threadFixPlugin);
         }
 
         public void OnExecute(object sender, EventArgs e)
         {
-            foreach (var marker in _threadFixPlugin.Markers)
+            if (_threadFixPlugin.Markers != null)
             {
-                Debug.WriteLine(marker.FilePath + "|Line Number: " + marker.LineNumber + "|" + marker.GenericVulnName);
+                var toolWindow = (ToolWindowControl)_threadFixPlugin.ToolWindow.Content;
+                toolWindow.SetViewModel(_viewModelService.GetVulnerabilityViewModel(_threadFixPlugin.Markers));
             }
+
+            var windowFrame = (IVsWindowFrame)_threadFixPlugin.ToolWindow.Frame;
+            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
     }
 }
