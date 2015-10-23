@@ -8,8 +8,6 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
 
     $scope.resetFilters = function() {
         $scope.parameters = {
-            teams: [],
-            applications: [],
             tags: [],
             vulnTags: [],
             commentTags: [],
@@ -43,6 +41,15 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             startDate: null,
             endDate: null
         };
+
+        if ($scope.treeApplication) {
+            // in application detail page, we don't need teams and applications filter attributes
+        } else if ($scope.treeTeam) {
+            $scope.parameters.applications = [];
+        } else {
+            $scope.parameters.teams = [];
+            $scope.parameters.applications = [];
+        }
 
         $scope.endDate = undefined;
         $scope.selectedFilter = undefined;
