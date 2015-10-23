@@ -43,9 +43,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.map;
-import static com.denimgroup.threadfix.CollectionUtils.set;
+import static com.denimgroup.threadfix.CollectionUtils.*;
 
 // TODO figure out this Transactional stuff
 // TODO reorganize methods - not in a very good order right now.
@@ -327,13 +325,18 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			scan.setOriginalFileNames(originalFileNames);
 			scan.setSavedFileNames(getFileNames(fileNames));
 
-			if(i == 0){
+			if (i == 0) {
 				combinedScan = scan;
 				importTime = scan.getImportTime();
 			} else {
 				combinedScan.getFindings().addAll(scan.getFindings());
-				combinedScan.getScanRepeatFindingMaps().addAll(scan.getScanRepeatFindingMaps());
-				if(scan.getImportTime() != null && scan.getImportTime().after(importTime)){
+				if (combinedScan.getScanRepeatFindingMaps() == null) {
+					combinedScan.setScanRepeatFindingMaps(listOf(ScanRepeatFindingMap.class));
+				}
+				if (scan.getScanRepeatFindingMaps() != null) {
+					combinedScan.getScanRepeatFindingMaps().addAll(scan.getScanRepeatFindingMaps());
+				}
+				if (scan.getImportTime() != null && scan.getImportTime().after(importTime)) {
 					importTime = scan.getImportTime();
 				}
 			}
