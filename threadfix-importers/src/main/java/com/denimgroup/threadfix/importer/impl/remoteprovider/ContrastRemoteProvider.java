@@ -8,7 +8,6 @@ import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProvide
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RequestConfigurer;
 import com.denimgroup.threadfix.importer.util.JsonUtils;
 import com.denimgroup.threadfix.importer.util.RegexUtils;
-import com.denimgroup.threadfix.service.OrganizationService;
 import org.apache.commons.beanutils.BeanToPropertyValueTransformer;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.httpclient.HttpMethodBase;
@@ -16,7 +15,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.xml.bind.DatatypeConverter;
 import java.util.Calendar;
@@ -49,9 +47,6 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
             FILE_PATTERN = "@(.+?):",
             LINE_PATTERN = ":([0-9]*)";
 
-    @Autowired
-    private OrganizationService organizationService;
-
     public ContrastRemoteProvider() {
         super(ScannerType.CONTRAST);
     }
@@ -78,7 +73,6 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
                     JSONArray organizations = orgResponse.getJSONArray("organizations");
 
                     for (JSONObject organization : toJSONObjectIterable(organizations)) {
-                        String orgName = organization.getString("name");
                         String orgUuid = organization.getString("organization_uuid");
                         organizationUuids.add(orgUuid);
                     }
