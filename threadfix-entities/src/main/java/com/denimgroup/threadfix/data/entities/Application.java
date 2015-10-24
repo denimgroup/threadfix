@@ -268,7 +268,7 @@ public class Application extends AuditableEntity {
 	}
 
     @Transient
-    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.RestView2_1.class })
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
     public String getObscuredPassword() {
         if(repositoryEncryptedPassword == null || repositoryEncryptedPassword.trim().length() == 0) {
             return "";
@@ -278,7 +278,7 @@ public class Application extends AuditableEntity {
     }
 
     @Transient
-    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.RestView2_1.class })
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
     public String getObscuredUserName() throws IllegalAccessException {
         return repositoryUserName;
     }
@@ -483,7 +483,7 @@ public class Application extends AuditableEntity {
 	}	
 
     @OneToOne(mappedBy = "application")
-    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.RestView2_1.class })
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class })
     public GRCApplication getGrcApplication() {
 		return grcApplication;
 	}
