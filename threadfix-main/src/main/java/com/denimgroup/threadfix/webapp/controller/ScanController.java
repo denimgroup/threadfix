@@ -67,6 +67,8 @@ public class ScanController {
 	private DefaultConfigService defaultConfigService;
 	@Autowired
 	private VulnerabilityFilterService vulnerabilityFilterService;
+	@Autowired
+	private ApplicationService applicationService;
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
@@ -94,10 +96,12 @@ public class ScanController {
 
 		long numFindings = scanService.getFindingCount(scanId);
 
+		Application application = applicationService.loadApplication(appId);
 		ModelAndView mav = new ModelAndView("scans/detail");
 		mav.addObject("totalFindings", numFindings);
 		mav.addObject(scan);
 		mav.addObject("vulnData", scan.getReportList());
+		mav.addObject(application);
 		PermissionUtils.addPermissions(mav, orgId, appId, Permission.CAN_UPLOAD_SCANS);
 
 		return mav;

@@ -229,7 +229,16 @@ threadfixModule.factory('vulnSearchParameterService', function() {
         }
 
         if ($scope.treeApplication) {
-            $scope.parameters.applications = [ { id: $scope.treeApplication.id, name: $scope.treeApplication.team.name + " / " + $scope.treeApplication.name } ];
+            var name = '';
+            if ($scope.treeApplication.team) {
+                name = $scope.treeApplication.team.name + " / " + $scope.treeApplication.name;
+            }
+            $scope.parameters.applications = [
+                {
+                id: $scope.treeApplication.id,
+                name: name
+                }
+            ];
         } else if (parameters.applications && parameters.applications.length > 0) {
             // This may be a problem down the road, but it's easier than fighting angular / bootstrap typeahead
             //STran 8/14/2014: oh yes, I'm having problem with this right now

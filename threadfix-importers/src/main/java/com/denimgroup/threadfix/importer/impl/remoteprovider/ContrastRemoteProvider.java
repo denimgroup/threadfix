@@ -6,7 +6,10 @@ import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RequestConfigurer;
+import com.denimgroup.threadfix.importer.util.JsonUtils;
 import com.denimgroup.threadfix.importer.util.RegexUtils;
+import org.apache.commons.beanutils.BeanToPropertyValueTransformer;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,9 +37,12 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
             API_KEY = "API Key",
             SERVICE_KEY = "Service Key",
             USERNAME = "Username",
-            APPS_URL = "https://app.contrastsecurity.com/Contrast/api/applications",
-            TRACES_URL = "https://app.contrastsecurity.com/Contrast/api/traces/",
-            EVENTS_SUMMARY_URL = "https://app.contrastsecurity.com/Contrast/api/ng/traces/",
+            BASE_URL_V2 = "https://app.contrastsecurity.com/Contrast/api/",
+            BASE_URL_V3 = "https://app.contrastsecurity.com/Contrast/api/ng/",
+            ORGS_URL = "/profile/organizations/",
+            APPS_URL = "/applications",
+            TRACES_URL = "/traces/",
+            EVENTS_SUMMARY_URL = "/events/summary",
             TRACE_WEB_URL = "https://app.contrastsecurity.com/Contrast/static/ng/index.html#/applications/",
             FILE_PATTERN = "@(.+?):",
             LINE_PATTERN = ":([0-9]*)";
@@ -51,22 +57,75 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
     //                     Get Applications
     ////////////////////////////////////////////////////////////////////////
 
-    @Override
-    public List<RemoteProviderApplication> fetchApplications() {
+    @SuppressWarnings("unchecked")
+    private List<String> fetchOrgUuids() {
         assert remoteProviderType != null : "Remote Provider Type was null, please set before calling any methods.";
 
-        HttpResponse response = makeRequest(APPS_URL);
+        HttpResponse response = makeRequest(BASE_URL_V3 + ORGS_URL);
+        List<String> organizationUuids = list();
 
         try {
             if (response.isValid()) {
 
-                List<RemoteProviderApplication> applicationList = list();
+                JSONObject orgResponse = JsonUtils.getJSONObject(response.getBodyAsString());
+
+                if (orgResponse != null) {
+                    JSONArray organizations = orgResponse.getJSONArray("organizations");
+
+                    for (JSONObject organization : toJSONObjectIterable(organizations)) {
+                        String orgUuid = organization.getString("organization_uuid");
+                        organizationUuids.add(orgUuid);
+                    }
+
+                    if (organizationUuids.size() == 0) {
+                        throw new RestIOException("There are no teams in ThreadFix that match any Contrast " +
+                                "organizations. Check your team names before continuing", response.getStatus());
+                    }
+                }
+            } else {
+                String body = response.getBodyAsString();
+                log.info("Contents:\n" + body);
+                String errorMessageOrNull = getErrorOrNull(body);
+
+                if (errorMessageOrNull == null) {
+                    errorMessageOrNull =
+                            "Invalid response received from Contrast servers, check the logs for more details.";
+                }
+
+                throw new RestIOException(errorMessageOrNull, response.getStatus());
+            }
+
+        } catch (JSONException e) {
+            throw new RestIOException(e, "Invalid response received: not JSON.");
+        }
+
+        return organizationUuids;
+    }
+
+    @Override
+    public List<RemoteProviderApplication> fetchApplications() {
+        assert remoteProviderType != null : "Remote Provider Type was null, please set before calling any methods.";
+
+        List<RemoteProviderApplication> applicationList = list();
+        List<String> organizationUuids = fetchOrgUuids();
+
+        for (String orgUuid : organizationUuids) {
+            applicationList.addAll(getApplications(orgUuid));
+        }
+
+        return applicationList;
+    }
+
+    private List<RemoteProviderApplication> getApplications(String orgUuid) {
+        HttpResponse response = makeRequest(BASE_URL_V2 + orgUuid + APPS_URL);
+        List<RemoteProviderApplication> applicationList = list();
+
+        try {
+            if (response.isValid()) {
 
                 for (JSONObject object : toJSONObjectIterable(response.getBodyAsString())) {
                     applicationList.add(getApplicationFromJson(object));
                 }
-
-                return applicationList;
 
             } else {
                 String body = response.getBodyAsString();
@@ -84,6 +143,8 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
         } catch (JSONException e) {
             throw new RestIOException(e, "Invalid response received: not JSON.");
         }
+
+        return applicationList;
     }
 
     private RemoteProviderApplication getApplicationFromJson(JSONObject object) throws JSONException {
@@ -104,44 +165,57 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
     public List<Scan> getScans(RemoteProviderApplication remoteProviderApplication) {
         assert remoteProviderType != null : "Remote Provider Type was null.";
 
-        HttpResponse response = makeRequest(TRACES_URL + remoteProviderApplication.getNativeId());
+        List<String> organizationUuids = fetchOrgUuids();
+        String remoteAppOrgUuid = null;
 
-        try {
-            if (response.isValid()) {
-
-                List<Finding> findingList = list();
-
-                Scan scan = new Scan();
-
-                for (JSONObject object : toJSONObjectIterable(response.getBodyAsString())) {
-                    findingList.add(getFindingFromObject(object, remoteProviderApplication.getNativeId()));
-                }
-
-                scan.setFindings(findingList);
-
-                return list(scan);
-
-            } else {
-                String body = response.getBodyAsString();
-                log.info("Contents:\n" + body);
-                String errorMessageOrNull = getErrorOrNull(body);
-
-                if (errorMessageOrNull == null) {
-                    errorMessageOrNull =
-                            "Invalid response received from Contrast servers, check the logs for more details.";
-                }
-
-                throw new RestIOException(errorMessageOrNull, response.getStatus());
+        for (String orgUuid : organizationUuids) {
+            List<String> remoteAppIds = (List<String>) CollectionUtils.collect(getApplications(orgUuid),
+                    new BeanToPropertyValueTransformer("nativeId"));
+            if (remoteAppIds.contains(remoteProviderApplication.getNativeId())){
+                remoteAppOrgUuid = orgUuid;
+                break;
             }
-
-        } catch (JSONException e) {
-            throw new RestIOException(e, "Invalid response received: not JSON.");
         }
 
+        if (remoteAppOrgUuid != null) {
+            HttpResponse response = makeRequest(BASE_URL_V2 + remoteAppOrgUuid + TRACES_URL + remoteProviderApplication.getNativeId());
 
+            try {
+                if (response.isValid()) {
+
+                    List<Finding> findingList = list();
+
+                    Scan scan = new Scan();
+
+                    for (JSONObject object : toJSONObjectIterable(response.getBodyAsString())) {
+                        findingList.add(getFindingFromObject(object, remoteProviderApplication.getNativeId(), remoteAppOrgUuid));
+                    }
+
+                    scan.setFindings(findingList);
+                    return list(scan);
+
+                } else {
+                    String body = response.getBodyAsString();
+                    log.info("Contents:\n" + body);
+                    String errorMessageOrNull = getErrorOrNull(body);
+
+                    if (errorMessageOrNull == null) {
+                        errorMessageOrNull =
+                                "Invalid response received from Contrast servers, check the logs for more details.";
+                    }
+
+                    throw new RestIOException(errorMessageOrNull, response.getStatus());
+                }
+
+            } catch (JSONException e) {
+                throw new RestIOException(e, "Invalid response received: not JSON.");
+            }
+        } else {
+            return list();
+        }
     }
 
-    private Finding getFindingFromObject(JSONObject object, String remoteAppId) throws JSONException {
+    private Finding getFindingFromObject(JSONObject object, String remoteAppId, String orgUuid) throws JSONException {
 
         Map<FindingKey, String> findingMap = map (
                 FindingKey.SEVERITY_CODE, object.getString("severity"),
@@ -165,7 +239,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
 
         Finding finding = constructFinding(findingMap);
 
-        finding.setDataFlowElements(getEventsSummary(traceId));
+        finding.setDataFlowElements(getEventsSummary(traceId, orgUuid));
 
         assert finding != null : "Null finding received from constructFinding";
 
@@ -184,36 +258,41 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
         return finding;
     }
 
-    private List<DataFlowElement> getEventsSummary(String traceId) {
+    private List<DataFlowElement> getEventsSummary(String traceId, String orgUuid) {
 
         LOG.warn("About to get trace story/static information for trace Id " + traceId);
+
         List<DataFlowElement> dataFlowElementList = list();
 
-        HttpResponse response = makeRequest(EVENTS_SUMMARY_URL + traceId + "/events/summary");
-        if (response.isValid()) {
-            try {
+        if (orgUuid != null) {
 
-                JSONObject traceObj = getJSONObject(response.getBodyAsString());
-                int seqId = 1;
-                String startLocation, lineNoText;
-                for (JSONObject event: toJSONObjectIterable(traceObj.getString("events"))) {
-                    DataFlowElement element = new DataFlowElement();
-                    element.setSequence(seqId++);
-                    startLocation = event.getString("probableStartLocation");
-                    element.setSourceFileName(RegexUtils.getRegexResult(startLocation, FILE_PATTERN).trim());
-                    lineNoText = RegexUtils.getRegexResult(startLocation, LINE_PATTERN);
-                    if (lineNoText != null)
-                        element.setLineNumber(Integer.valueOf(lineNoText));
-                    element.setLineText(Jsoup.parse(event.getString("rawCodeRecreation")).text());
-                    dataFlowElementList.add(element);
+            HttpResponse response = makeRequest(BASE_URL_V3 + orgUuid + TRACES_URL + traceId + EVENTS_SUMMARY_URL);
+
+            if (response.isValid()) {
+                try {
+
+                    JSONObject traceObj = getJSONObject(response.getBodyAsString());
+                    int seqId = 1;
+                    String startLocation, lineNoText;
+                    for (JSONObject event : toJSONObjectIterable(traceObj.getString("events"))) {
+                        DataFlowElement element = new DataFlowElement();
+                        element.setSequence(seqId++);
+                        startLocation = event.getString("probableStartLocation");
+                        element.setSourceFileName(RegexUtils.getRegexResult(startLocation, FILE_PATTERN).trim());
+                        lineNoText = RegexUtils.getRegexResult(startLocation, LINE_PATTERN);
+                        if (lineNoText != null)
+                            element.setLineNumber(Integer.valueOf(lineNoText));
+                        element.setLineText(Jsoup.parse(event.getString("rawCodeRecreation")).text());
+                        dataFlowElementList.add(element);
+                    }
+                } catch (JSONException e) {
+                    LOG.warn("Can't parse trace " + traceId + ". Trace story response isn't valid.");
+                    return dataFlowElementList;
                 }
-            } catch (JSONException e) {
-                LOG.warn("Can't parse trace " + traceId + ". Trace story response isn't valid.");
-                return dataFlowElementList;
-            }
 
-        } else {
-            LOG.warn("Trace story response isn't valid.");
+            } else {
+                LOG.warn("Trace story response isn't valid.");
+            }
         }
 
         return dataFlowElementList;

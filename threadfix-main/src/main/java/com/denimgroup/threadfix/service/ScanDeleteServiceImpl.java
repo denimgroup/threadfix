@@ -33,13 +33,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.listFrom;
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 @Service
 @Transactional(readOnly = false)
@@ -615,7 +613,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 	 */
 	private void deleteOrphanVulnerabilities(Application app, Scan scan) {
 		List<Finding> findingsToRemove = list();
-		List<Vulnerability> vulnsToRemove = list();
+		Set<Vulnerability> vulnsToRemove = set();
 
 		// Cycle through vulns and update
 		if (app.getVulnerabilities() == null || app.getVulnerabilities().size() == 0) {
@@ -757,8 +755,13 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 				permission.getVulnerabilityList().remove(vuln);
 				endpointPermissionService.saveOrUpdate(permission);
 			}
-			
-			vulnerabilityService.deleteVulnerability(vuln);
+
+			try {
+				vulnerabilityService.deleteVulnerability(vuln);
+			} finally {
+				System.out.println("vuln: " + vuln);
+
+			}
 		}
 	}
 

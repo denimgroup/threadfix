@@ -104,6 +104,7 @@
                 regex ^/organizations/[0-9]+$,
                 regex ^/organizations/[0-9]+/filters$,
 				regex ^/organizations/[0-9]+/info$,
+				regex ^/severities/list$,
                 regex ^/organizations/[0-9]+/filters/tab$,
                 regex ^/organizations/[0-9]+/surveys/new$,
                 regex ^/organizations/[0-9]+/surveys/[0-9]+$,

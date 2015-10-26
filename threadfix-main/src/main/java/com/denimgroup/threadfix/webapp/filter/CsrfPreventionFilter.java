@@ -92,7 +92,7 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
         "nonce";
 
     public Set<String> noRedirectPaths = set(
-            "/rest/", "/scripts/", "/images/", "/styles/", "/history/recent", "/login.jsp");
+            "/rest/", "/scripts/", "/images/", "/styles/", "/history/recent/", "/login.jsp");
 
     @Autowired
     private NonceService nonceService;
