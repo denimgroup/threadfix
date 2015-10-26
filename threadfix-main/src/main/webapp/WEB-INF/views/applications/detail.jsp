@@ -25,6 +25,7 @@
 	<cbs:cachebustscript src="/scripts/add-to-existing-defect-controller.js"/>
     <cbs:cachebustscript src="/scripts/report/vuln-summary-modal-controller.js"/>
     <cbs:cachebustscript src="/scripts/update-defect-defaults-modal-controller.js"/>
+    <cbs:cachebustscript src="/scripts/manage-versions-controller.js"/>
     <cbs:cachebustscript src="/scripts/default-value-mapping.js"/>
     <c:forEach items="${ reportJsPaths }" var="reportJs">
         <script type="text/javascript" src="${ reportJs }"></script>
@@ -108,6 +109,8 @@
     <%@ include file="/WEB-INF/views/applications/forms/vulnTaggingForm.jsp"%>
     <%@ include file="/WEB-INF/views/applications/forms/uploadDocForm.jsp"%>
     <%@ include file="/WEB-INF/views/applications/forms/manualFindingForm.jsp"%>
+    <%@ include file="/WEB-INF/views/applications/forms/manageVersionsForm.jsp"%>
+    <%@ include file="/WEB-INF/views/applications/forms/newVersionForm.jsp"%>
     <%@ include file="/WEB-INF/views/applications/forms/addScheduledScanForm.jsp"%>
     <%@ include file="/WEB-INF/views/applications/forms/addScanQueueForm.jsp" %>
     <%@ include file="/WEB-INF/views/applications/forms/viewApplicationForm.jsp" %>

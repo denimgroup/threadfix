@@ -55,6 +55,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                    $scope.$parent.scanAgentSupportedList = $scope.config.scanAgentSupportedList;
                    $scope.$parent.documents = $scope.config.documents;
                    $scope.$parent.application = $scope.config.application;
+                   $scope.versions = $scope.config.versions;
 
                    $rootScope.$broadcast('seeMoreExtension', "/" + $scope.config.application.team.id + "/" + $scope.config.application.id);
 
@@ -64,6 +65,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                    $rootScope.$broadcast('scans', $scope.config.scans);
                    $rootScope.$broadcast('documents', $scope.config.documents);
                    $rootScope.$broadcast('policyStatuses', $scope.config.application.policyStatuses);
+                   $rootScope.$broadcast('versionsChange', $scope.versions);
 
                    $rootScope.$broadcast('loadVulnerabilitySearchTable');
 
@@ -78,6 +80,10 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                // TODO improve error handling and pass something back to the users
                $scope.$parent.errorMessage = "Request to server failed. Got " + status + " response code.";
            });
+    });
+
+    $scope.$watch('versions', function(){
+        $rootScope.$broadcast('versionsChange', $scope.versions);
     });
 
     $scope.updateDefectStatus = function() {
@@ -631,6 +637,40 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
             updatePolicyStatus();
 
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    };
+
+    $scope.manageVersions = function() {
+        var modalInstance = $modal.open({
+            templateUrl: 'manageVersionsForm.html',
+            windowClass: 'wide',
+            controller: 'ManageVersionsController',
+            resolve: {
+                url: function() {
+                    return "";
+                },
+                object: function () {
+                    return {};
+                },
+                config: function() {
+                    return {
+                        versions: $scope.versions,
+                        application: $scope.config.application
+                    };
+                },
+                buttonText: function() {
+                    return "Submit Version";
+                }
+            }
+        });
+
+        $scope.currentModal = modalInstance;
+
+        modalInstance.result.then(function (result) {
+            $scope.$parent.successMessage = result;
+            $rootScope.$broadcast('scanUploaded');
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });

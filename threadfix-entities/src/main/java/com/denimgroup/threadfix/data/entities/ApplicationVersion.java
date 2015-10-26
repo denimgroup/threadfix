@@ -23,61 +23,50 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "FilterDate")
-public class FilterDate extends AuditableEntity {
+@Table(name = "ApplicationVersion")
+public class ApplicationVersion extends AuditableEntity {
+	
+	private static final long serialVersionUID = 5185330378304148079L;
 
-    private String name;
-    private Date startDate, endDate;
+	private String name;
+	private Application application;
+	private Date date;
 
+	@Column(length = 50, nullable = false)
+	@JsonView(Object.class)
+	public String getName() {
+		return name;
+	}
 
-    @JsonProperty
-    @JsonView(Object.class)
-    @Column(length = 60)
-    public String getName() {
-        return name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	@ManyToOne
+	@JoinColumn(name = "applicationId", nullable = false)
+	@JsonIgnore
+	public Application getApplication() {
+		return application;
+	}
 
-    @JsonView(Object.class)
-    @Column
-    public Date getStartDate() {
-        return startDate;
-    }
+	public void setApplication(Application application) {
+		this.application = application;
+	}
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
+	@Column(nullable = false)
+	@JsonView(Object.class)
+	public Date getDate() {
+		return date;
+	}
 
-    @JsonView(Object.class)
-    @Column
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof FilterDate)) return false;
-
-        FilterDate that = (FilterDate) o;
-
-        return name.equals(that.name);
-
-    }
+	public void setDate(Date date) {
+		this.date = date;
+	}
 }

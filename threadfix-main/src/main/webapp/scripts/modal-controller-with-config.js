@@ -123,6 +123,15 @@ myAppModule.controller('ModalControllerWithConfig', function ($log, $scope, $roo
 
     $scope.startsWith = function(vulnerability, viewValue) {
         return vulnerability.substr(0, viewValue.length).toLowerCase() == viewValue.toLowerCase();
+    };
+
+    $scope.convertDateAndSubmit = function(valid) {
+        if (valid) {
+            $scope.object.date = new Date($scope.object.date);
+            $scope.object.date = $scope.object.date.getTime();
+            $scope.ok(valid);
+        }
     }
+
 
 });

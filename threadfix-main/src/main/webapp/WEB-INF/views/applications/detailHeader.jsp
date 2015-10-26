@@ -27,6 +27,9 @@
                     <c:if test="${ canManageApplications }">
                         <li><a class="pointer" id="editApplicationModalButton" ng-click="showEditModal()">Edit / Delete</a></li>
                     </c:if>
+                    <c:if test="${ !canManageApplications }">
+                        <li><a class="pointer" id="viewApplicationModalButton" ng-click="viewApplicationDetail()">Details	</a></li>
+                    </c:if>
 
                     <c:if test="${ canManageVulnFilters }">
                         <spring:url value="/organizations/{orgId}/applications/{appId}/filters" var="vulnFiltersUrl">
@@ -39,12 +42,11 @@
                             </a>
                         </li>
                     </c:if>
-                    <c:if test="${ !canManageApplications }">
-                        <li><a class="pointer" id="viewApplicationModalButton" ng-click="viewApplicationDetail()">Details	</a></li>
-                    </c:if>
+
                     <c:if test="${ (canManageApplications || canManageUsers) && isEnterprise}">
                         <li><a class="pointer" id="userListModelButton" ng-click="showUsers()">View Permissible Users</a></li>
                     </c:if>
+
                     <c:if test="${ canUploadScans }">
                         <li><a class="pointer" id="uploadScanModalLink" ng-click="showUploadForm(false)">Upload Scan</a></li>
                         <li><a class="pointer" id="addManualFindingModalLink" ng-click="submitFindingForm()">Add Manual Finding</a></li>
@@ -59,6 +61,14 @@
                             </a>
                         </li>
                     </c:if>
+
+                    <c:if test="${ canManageApplications }">
+                        <li><a class="pointer" id="editVersionModalButton" ng-click="manageVersions()">Manage Versions</a></li>
+                    </c:if>
+                    <c:if test="${ !canManageApplications }">
+                        <li><a class="pointer" id="viewVersionModalButton" ng-click="manageVersions()">View Versions</a></li>
+                    </c:if>
+
                 </ul>
             </div>
         </c:if>
