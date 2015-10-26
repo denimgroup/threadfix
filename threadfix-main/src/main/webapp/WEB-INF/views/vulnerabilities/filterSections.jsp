@@ -370,7 +370,18 @@
         </div>
 
         <div class="accordion-inner">
-            <h4>Start Date</h4>
+            <h4>Start Date
+                <div id="startDateBtnDiv" class="btn-group">
+                    <%--<button ng-show="versions" id="startDateVersionItems" class="btn dropdown-toggle" data-toggle="dropdown" type="button">Version <span class="caret"></span></button>--%>
+                    <%--<ul class="dropdown-menu">--%>
+                        <%--<li style="min-width: 130px;" ng-repeat="version in versions" ng-click="selectStartDateVersion(version)"><a class="pointer" id="startDateVersion{{version.id}}">{{version.name}}  {{version.date | date}}</a></li>--%>
+                    <%--</ul>--%>
+
+                    <select ng-show="versions" id="startDateVersionItems" style="width: 100px;margin-bottom:0" ng-model="selectedStartVersion" ng-change="selectStartDateVersion(selectedStartVersion)"
+                            ng-options="version.name for version in versions">
+                    </select>
+                </div>
+            </h4>
             <div class="col-md-6">
                 <p class="input-group">
                     <input id="startDateInput" type="text" class="form-control" style="width:135px;margin-bottom:0" datepicker-popup="dd-MMM-yyyy" ng-model="parameters.startDate"
@@ -385,7 +396,17 @@
         </div>
 
         <div class="accordion-inner">
-            <h4>End Date</h4>
+            <h4>End Date
+                <div id="endDateBtnDiv" class="btn-group">
+                    <%--<button ng-show="versions" id="endDateVersionItems" class="btn dropdown-toggle" data-toggle="dropdown" type="button">Version <span class="caret"></span></button>--%>
+                    <%--<ul class="dropdown-menu">--%>
+                        <%--<li style="min-width: 130px;" ng-repeat="version in versions" ng-click="selectEndDateVersion(version)"><a class="pointer" id="endDateVersion{{version.id}}">{{version.name}}  {{version.date | date}}</a></li>--%>
+                    <%--</ul>--%>
+                    <select ng-show="versions" id="endDateVersionItems" style="width: 100px;margin-bottom:0" ng-model="selectedEndVersion" ng-change="selectEndDateVersion(selectedEndVersion)"
+                            ng-options="version.name for version in versions">
+                    </select>
+                </div>
+            </h4>
             <div class="col-md-6">
                 <p class="input-group">
                     <input id="endDateInput" type="text" class="form-control" style="width:135px;margin-bottom:0" datepicker-popup="dd-MMM-yyyy" ng-model="parameters.endDate"

@@ -64,7 +64,8 @@ public class HibernateApplicationVersionDao extends AbstractObjectDao<Applicatio
         criteria.add(Restrictions.eq("active", true));
         criteria.createAlias("versions", "version");
 
-        criteria.add(Restrictions.in("id", appIds));
+        if (appIds != null)
+            criteria.add(Restrictions.in("id", appIds));
 
         List<Application> applications = (List<Application>) criteria.list();
         Map<String, Object> map = CollectionUtils.map();
