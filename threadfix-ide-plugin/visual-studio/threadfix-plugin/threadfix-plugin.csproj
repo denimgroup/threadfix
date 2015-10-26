@@ -40,6 +40,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0" />
@@ -48,6 +50,10 @@
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.11.0">
       <EmbedInteropTypes>true</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.Text.Data, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Text.Logic, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Text.UI, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Text.UI.Wpf, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.11.0" />
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0" />
@@ -59,6 +65,7 @@
       <HintPath>..\packages\RestSharpSigned.105.2.3\lib\net45\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
@@ -126,12 +133,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\ClearAction.cs" />
+    <Compile Include="Actions\GoToMarkerAction.cs" />
     <Compile Include="Actions\IAction.cs" />
     <Compile Include="Actions\ImportAction.cs" />
     <Compile Include="Actions\ShowAction.cs" />
     <Compile Include="Controls\ApplicationsWindow.xaml.cs">
       <DependentUpon>ApplicationsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MarkerGlyphFactory.cs" />
+    <Compile Include="Controls\MarkerTag.cs" />
     <Compile Include="Controls\OptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -141,6 +151,7 @@
     </Compile>
     <Compile Include="Data\ApplicationInfo.cs" />
     <Compile Include="Data\VulnerabilityMarker.cs" />
+    <Compile Include="Extensions\TextDocumentExtensions.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -151,6 +162,7 @@
     <Compile Include="threadfix-pluginPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PkgCmdID.cs" />
+    <Compile Include="Utils\MarkerGlyphService.cs" />
     <Compile Include="Utils\ThreadFixApi.cs" />
     <Compile Include="Utils\ThreadFixPlugin.cs" />
     <Compile Include="Utils\ViewModelService.cs" />
@@ -186,6 +198,7 @@
     <None Include="Resources\Images.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\DG_logo_mark_13x13.png" />
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>

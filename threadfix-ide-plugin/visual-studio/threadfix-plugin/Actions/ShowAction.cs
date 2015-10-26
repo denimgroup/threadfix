@@ -1,5 +1,4 @@
-﻿using DenimGroup.threadfix_plugin.Controls;
-////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////
 //
 //     Copyright (c) 2009-2015 Denim Group, Ltd.
 //
@@ -22,10 +21,10 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+using DenimGroup.threadfix_plugin.Controls;
 using DenimGroup.threadfix_plugin.Utils;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
-using System.Diagnostics;
 
 namespace DenimGroup.threadfix_plugin.Actions
 {

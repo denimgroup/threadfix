@@ -24,6 +24,7 @@
 ////////////////////////////////////////////////////////////////////////
 using DenimGroup.threadfix_plugin.Utils;
 using System;
+using System.ComponentModel.Composition;
 using System.Diagnostics;
 
 namespace DenimGroup.threadfix_plugin.Actions
@@ -40,6 +41,9 @@ namespace DenimGroup.threadfix_plugin.Actions
         public void OnExecute(object sender, EventArgs args)
         {
             _threadFixPlugin.Markers = null;
+            _threadFixPlugin.MarkerLookUp = null;
+
+            _threadFixPlugin.UpdateMarkers();
 
             var toolWindow = (ToolWindowControl)_threadFixPlugin.ToolWindow.Content;
             toolWindow.ClearList();

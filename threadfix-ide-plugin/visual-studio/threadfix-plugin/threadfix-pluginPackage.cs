@@ -26,16 +26,14 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.ComponentModel.Design;
-using Microsoft.Win32;
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using DenimGroup.threadfix_plugin.Actions;
 using DenimGroup.threadfix_plugin.Controls;
 using DenimGroup.threadfix_plugin.Utils;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
+using System.ComponentModel.Composition;
+using Microsoft.VisualStudio.ComponentModelHost;
 
 namespace DenimGroup.threadfix_plugin
 {
@@ -62,7 +60,7 @@ namespace DenimGroup.threadfix_plugin
     [ProvideOptionPage(typeof(OptionsPage), "ThreadFix", "Settings", 0, 0, true)]
     public sealed class threadfix_pluginPackage : Package
     {
-        private readonly ThreadFixPlugin _threadFixPlugin;
+        private GoToMarkerAction _goToMarkerAction;
 
         /// <summary>
         /// Default constructor of the package.
@@ -74,7 +72,6 @@ namespace DenimGroup.threadfix_plugin
         public threadfix_pluginPackage()
         {
             Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
-            _threadFixPlugin = new ThreadFixPlugin();
         }
 
         /////////////////////////////////////////////////////////////////////////////
@@ -90,25 +87,32 @@ namespace DenimGroup.threadfix_plugin
             Debug.WriteLine (string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
             base.Initialize();
 
+            var componentModel = (IComponentModel)GetService(typeof(SComponentModel));
+            var threadFixPlugin = (ThreadFixPlugin)componentModel.GetService<IThreadFixPlugin>();
+
             // Global plugin state
-            _threadFixPlugin.ToolWindow = (ThreadFixToolWindow)FindToolWindow(typeof(ThreadFixToolWindow), 0, true);
-            _threadFixPlugin.Options = (OptionsPage)GetDialogPage(typeof(OptionsPage));
+            threadFixPlugin.ToolWindow = (ThreadFixToolWindow)FindToolWindow(typeof(ThreadFixToolWindow), 0, true);
+            threadFixPlugin.Options = (OptionsPage)GetDialogPage(typeof(OptionsPage));
+
+            _goToMarkerAction = new GoToMarkerAction(threadFixPlugin);
+            var toolWindow = (ToolWindowControl)threadFixPlugin.ToolWindow.Content;
+            toolWindow.MarkerSelected += _goToMarkerAction.OnExecute;
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if ( null != mcs )
             {
                 // Create the command for the menu item.
-                AddMenuItemCallback((int)PkgCmdIDList.cmdidImportMarkersCommand, mcs, new ImportAction(_threadFixPlugin));
-                AddMenuItemCallback((int)PkgCmdIDList.cmdidClearMarkers, mcs, new ClearAction(_threadFixPlugin));
-                AddMenuItemCallback((int)PkgCmdIDList.cmdidShowToolWindow, mcs, new ShowAction(_threadFixPlugin));
+                AddMenuItemCallback((int)PkgCmdIDList.cmdidImportMarkersCommand, mcs, new ImportAction(threadFixPlugin));
+                AddMenuItemCallback((int)PkgCmdIDList.cmdidClearMarkers, mcs, new ClearAction(threadFixPlugin));
+                AddMenuItemCallback((int)PkgCmdIDList.cmdidShowToolWindow, mcs, new ShowAction(threadFixPlugin));
             }
 #if DEBUG
             // Disable ssl certificate validation for debugging purposes
             System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
 
-            Debug.WriteLine("API Key: " + _threadFixPlugin.Options.ApiKey);
-            Debug.WriteLine("API Url: " + _threadFixPlugin.Options.ApiUrl);
+            Debug.WriteLine("API Key: " + threadFixPlugin.Options.ApiKey);
+            Debug.WriteLine("API Url: " + threadFixPlugin.Options.ApiUrl);
 #endif
         }
 

@@ -23,16 +23,30 @@
 ////////////////////////////////////////////////////////////////////////
 using DenimGroup.threadfix_plugin.Controls;
 using DenimGroup.threadfix_plugin.Data;
-using Microsoft.VisualStudio.Shell;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 
 namespace DenimGroup.threadfix_plugin.Utils
 {
-    public class ThreadFixPlugin
+    public interface IThreadFixPlugin { }
+
+    [Export(typeof(IThreadFixPlugin))]
+    public class ThreadFixPlugin : IThreadFixPlugin
     {
         public ThreadFixToolWindow ToolWindow { get; set; }
         public OptionsPage Options { get; set; }
         public HashSet<string> SelectedAppIds { get; set; }
         public List<VulnerabilityMarker> Markers { get; set; }
+        public Dictionary<string, List<VulnerabilityMarker>> MarkerLookUp { get; set; }
+        public event EventHandler<EventArgs> MarkersUpdated;
+
+        public void UpdateMarkers()
+        {
+            if (MarkersUpdated != null)
+            {
+                MarkersUpdated(this, null);
+            }
+        }
     }
 }
