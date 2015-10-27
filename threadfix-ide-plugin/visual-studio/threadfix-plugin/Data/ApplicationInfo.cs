@@ -21,8 +21,6 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-using RestSharp.Deserializers;
-using System;
 
 namespace DenimGroup.threadfix_plugin.Data
 {

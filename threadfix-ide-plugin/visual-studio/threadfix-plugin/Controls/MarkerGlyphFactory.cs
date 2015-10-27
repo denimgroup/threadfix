@@ -1,4 +1,27 @@
-﻿using Microsoft.VisualStudio.Text.Editor;
+﻿////////////////////////////////////////////////////////////////////////
+//
+//     Copyright (c) 2009-2015 Denim Group, Ltd.
+//
+//     The contents of this file are subject to the Mozilla Public License
+//     Version 2.0 (the "License"); you may not use this file except in
+//     compliance with the License. You may obtain a copy of the License at
+//     http://www.mozilla.org/MPL/
+//
+//     Software distributed under the License is distributed on an "AS IS"
+//     basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+//     License for the specific language governing rights and limitations
+//     under the License.
+//
+//     The Original Code is ThreadFix.
+//
+//     The Initial Developer of the Origin Code is Denim Group, Ltd.
+//     Portions created by Denim Group, Ltd. are Copyright (C)
+//     Denim Group, Ltd. All Rights Reserved.
+//
+//     Contributor(s): Denim Group, Ltd.
+//
+////////////////////////////////////////////////////////////////////////
+using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Formatting;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
@@ -6,9 +29,7 @@ using System;
 using System.ComponentModel.Composition;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace DenimGroup.threadfix_plugin.Controls
 {
@@ -27,7 +48,7 @@ namespace DenimGroup.threadfix_plugin.Controls
 
     internal class MarkerGlyphFactory : IGlyphFactory
     {
-        private static readonly string LogoResource = @"pack://application:,,,/Resources/DG_logo_mark_13x13.png";
+        private static readonly string LogoResource = @"pack://application:,,,/threadfix-plugin;component/Resources/DG_logo_mark_13x13.png";
 
         public UIElement GenerateGlyph(IWpfTextViewLine line, IGlyphTag tag)
         {
@@ -35,23 +56,11 @@ namespace DenimGroup.threadfix_plugin.Controls
             {
                 return null;
             }
-
-            /*System.Windows.Shapes.Ellipse ellipse = new Ellipse();
-            ellipse.Fill = Brushes.LightBlue;
-            ellipse.StrokeThickness = 2;
-            ellipse.Stroke = Brushes.DarkBlue;
-            ellipse.Height = 16.0;
-            ellipse.Width = 16.0;
-
-            return ellipse;*/
-
-            var source = new BitmapImage(new Uri(LogoResource));
-            var image = new Image()
+            
+            return new Image()
             {
-                Source = source
+                Source = new BitmapImage(new Uri(LogoResource))
             };
-
-            return image;
         }
     }
 }

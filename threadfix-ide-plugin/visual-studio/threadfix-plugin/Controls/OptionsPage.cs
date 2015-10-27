@@ -21,8 +21,8 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-using System.ComponentModel;
 using Microsoft.VisualStudio.Shell;
+using System.ComponentModel;
 
 namespace DenimGroup.threadfix_plugin.Controls
 {

@@ -59,15 +59,21 @@ namespace DenimGroup.threadfix_plugin.ViewModels
             set { this.SetIsChecked(value, true, true); }
         }
 
-        public static ApplicationsViewModel Create(string parentName, List<ApplicationInfo> applications)
+        public static ApplicationsViewModel Create(string parentName, List<ApplicationInfo> applications, HashSet<string> selectedAppIds)
         {
             var model = new ApplicationsViewModel(parentName)
             {
                 IsInitiallySelected = false
             };
 
-            applications.ForEach(app => model.Children.Add(new ApplicationsViewModel(app.ApplicationName) { AppId = app.ApplicationId }));
+            applications.ForEach(app => model.Children.Add(new ApplicationsViewModel(app.ApplicationName) 
+            { 
+                AppId = app.ApplicationId, 
+            }));
+
             model.Initialize();
+
+            model.Children.ForEach(child => { child.IsChecked = selectedAppIds != null && selectedAppIds.Contains(child.AppId); });
 
             return model;
         }

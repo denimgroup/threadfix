@@ -36,6 +36,8 @@ namespace DenimGroup.threadfix_plugin.Utils
         private static readonly string VulnerabilitiesResource = "code/markers/{AppId}";
         private static readonly string RootElement = "object";
         private static readonly string ApiKeyParameter = "apiKey";
+        private static readonly string InvalidUrlMessage = "Please provide a valid ThreadFix url in the options menu.";
+        private static readonly string InvalidKeyMessgae = "Please provide a valid ThreadFix api key in the options menu.";
 
         public ThreadFixApi(ThreadFixPlugin threadFixPlugin)
         {
@@ -82,6 +84,16 @@ namespace DenimGroup.threadfix_plugin.Utils
 
         public T Execute<T>(RestRequest request) where T : new()
         {
+            if (!ValidUrl(_threadFixPlugin.Options.ApiUrl))
+            {
+                throw new ApplicationException(InvalidUrlMessage);
+            }
+
+            if (string.IsNullOrEmpty(_threadFixPlugin.Options.ApiKey))
+            {
+                throw new ApplicationException(InvalidKeyMessgae);
+            }
+
             var client = new RestClient();
             client.BaseUrl = new Uri(_threadFixPlugin.Options.ApiUrl);
 
@@ -98,6 +110,17 @@ namespace DenimGroup.threadfix_plugin.Utils
             // TODO: Serialize the entire response intead of just "object" and check for errors sent back from threadfix api
 
             return response.Data;
+        }
+
+        private bool ValidUrl(string url)
+        {
+            if (url == null)
+            {
+                return false;
+            }
+
+            Uri result;
+            return Uri.TryCreate(url, UriKind.Absolute, out result) && (result.Scheme == Uri.UriSchemeHttp || result.Scheme == Uri.UriSchemeHttps);
         }
     }
 }

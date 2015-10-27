@@ -24,8 +24,8 @@
 using DenimGroup.threadfix_plugin.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Windows;
 using System.Linq;
+using System.Windows;
 
 namespace DenimGroup.threadfix_plugin.Controls
 {

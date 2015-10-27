@@ -24,7 +24,6 @@
 using DenimGroup.threadfix_plugin.Controls;
 using DenimGroup.threadfix_plugin.Utils;
 using System;
-using System.Diagnostics;
 using System.Linq;
 
 namespace DenimGroup.threadfix_plugin.Actions
@@ -44,14 +43,13 @@ namespace DenimGroup.threadfix_plugin.Actions
 
         public void OnExecute(object sender, EventArgs args)
         {
-            // TODO: validate url and api key before making calls to threadfix
             var applications = _threadFixApi.GetThreadFixApplications();
 
             var applicationsWindow = new ApplicationsWindow();
             applicationsWindow.ApplicationsSelected += OnAppsSelected;
 
             applicationsWindow
-                .SetViewModel(_viewModelService.GetApplicationsViewModel(applications))
+                .SetViewModel(_viewModelService.GetApplicationsViewModel(applications, _threadFixPlugin.SelectedAppIds))
                 .ShowDialog();
         }
 
@@ -66,11 +64,6 @@ namespace DenimGroup.threadfix_plugin.Actions
 
             var showToolWindow = new ShowAction(_threadFixPlugin);
             showToolWindow.OnExecute(this, null);
-        }
-
-        private void _threadFixPlugin_MarkersUpdated(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
         }
     }
 }

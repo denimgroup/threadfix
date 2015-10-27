@@ -38,7 +38,7 @@ namespace DenimGroup.threadfix_plugin.Utils
             _threadFixPlugin = threadFixPlugin;
         }
 
-        public List<ApplicationsViewModel> GetApplicationsViewModel(List<ApplicationInfo> applications)
+        public List<ApplicationsViewModel> GetApplicationsViewModel(List<ApplicationInfo> applications, HashSet<string> selectedAppIds)
         {
             var applicationsViewModel = new List<ApplicationsViewModel>();
 
@@ -51,7 +51,7 @@ namespace DenimGroup.threadfix_plugin.Utils
 
             foreach(var item in appsByTeam.OrderBy(kvp => kvp.Key))
             {
-                applicationsViewModel.Add(ApplicationsViewModel.Create(item.Key, item.Value));
+                applicationsViewModel.Add(ApplicationsViewModel.Create(item.Key, item.Value, selectedAppIds));
             }
 
             return applicationsViewModel;
