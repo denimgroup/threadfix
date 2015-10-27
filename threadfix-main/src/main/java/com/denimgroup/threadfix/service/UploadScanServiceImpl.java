@@ -40,7 +40,13 @@ public class UploadScanServiceImpl implements UploadScanService{
     private PolicyStatusService policyStatusService;
 
     @Override
-    public Object processMultiFileUpload(Collection<MultipartFile> files, Integer orgId, Integer appId, String channelIdString, boolean isBulkScans) {
+    public Object processMultiFileUpload(
+            Collection<MultipartFile> files,
+            Integer orgId,
+            Integer appId,
+            String channelIdString,
+            boolean isBulkScans) {
+
         if (files.isEmpty()) {
             return failure("No files selected.");
         }

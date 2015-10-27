@@ -45,6 +45,8 @@ public interface PolicyStatusService extends GenericObjectService<PolicyStatus> 
 
     void runStatusCheck(int applicationId);
 
+    void runStatusCheck(Application application);
+
     boolean passFilters(Application application);
 
     boolean passFilters(Policy policy);

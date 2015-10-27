@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.data.dao.hibernate;
 
 import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
+import com.denimgroup.threadfix.data.dao.EventDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.entities.*;
 import org.hibernate.Criteria;
@@ -39,9 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.map;
-import static com.denimgroup.threadfix.CollectionUtils.set;
+import static com.denimgroup.threadfix.CollectionUtils.*;
 import static org.hibernate.criterion.Projections.rowCount;
 import static org.hibernate.criterion.Restrictions.*;
 
@@ -61,6 +60,9 @@ public class HibernateScanDao
 	private String vulnIds = " and vulnerability in (select finding.vulnerability.id from Finding finding where finding.scan = scan))";
 	private String mapVulnIds = " and vulnerability in (select map.finding.vulnerability.id from ScanRepeatFindingMap map where map.scan = scan))";
 	private String fromClause = "from Scan scan where scan.id = :scanId";
+
+	@Autowired
+	EventDao eventDao;
 
 	@Autowired
 	public HibernateScanDao(SessionFactory sessionFactory) {
@@ -313,9 +315,34 @@ public class HibernateScanDao
 				sessionFactory.getCurrentSession().save(new DeletedSurfaceLocation(surfaceLocation));
 			}
 		}
-		
+
+		// The following sections were moved from an aspect so that they're now in the same transaction
+
+		for (Finding finding : scan.getFindings()) {
+			for (Event event : eventDao.retrieveAllByFinding(finding)) {
+				event.setFinding(null);
+				eventDao.saveOrUpdate(event);
+			}
+		}
+
+		for (Event event : listFrom(scan.getEvents())) {
+			event.setDeletedScanId(scan.getId());
+			event.setScan(null);
+			scan.getEvents().remove(event);
+			sessionFactory.getCurrentSession().save(event);
+		}
+
+		for (ScanCloseVulnerabilityMap map : listFrom(scan.getScanCloseVulnerabilityMaps())) {
+			map.getVulnerability().getScanCloseVulnerabilityMaps().remove(map);
+			scan.getScanCloseVulnerabilityMaps().remove(map);
+			map.setVulnerability(null);
+			map.setScan(null);
+		}
+
+		// end section from aspect
+
 		List<Finding> findings = sessionFactory.getCurrentSession()
-			  	  .createQuery("from Finding where scan = :scan)")
+			  	  .createQuery("from Finding where scan = :scan")
 				  .setInteger("scan", scan.getId())
 				  .list();
 		
