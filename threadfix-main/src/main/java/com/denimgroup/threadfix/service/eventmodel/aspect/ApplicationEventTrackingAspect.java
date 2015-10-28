@@ -23,7 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.eventmodel.aspect;
 
-import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Event;
+import com.denimgroup.threadfix.data.entities.ExceptionLog;
+import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.EventBuilder;
@@ -34,7 +37,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.List;
 
 @Aspect
 @Component
@@ -120,21 +123,6 @@ public class ApplicationEventTrackingAspect extends EventTrackingAspect {
         Application application = scan.getApplication();
         String eventDescription = eventService.buildDeleteScanString(scan);
         Integer scanId = scan.getId();
-
-        for (Finding finding : scan.getFindings()) {
-            for (Event event: eventService.loadAllByFinding(finding)) {
-                event.setFinding(null);
-                eventService.saveOrUpdate(event);
-            }
-        }
-
-        for (Event event: eventService.loadAllByScan(scan)) {
-            event.setDeletedScanId(scanId);
-            event.setScan(null);
-            scan.getEvents().remove(event);
-            eventService.saveOrUpdate(event);
-        }
-        scanService.storeScan(scan);
 
         joinPoint.proceed();
         try {

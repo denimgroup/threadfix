@@ -19,9 +19,9 @@
 				<th class="first">Severity</th>
 				<th>Vulnerability Type</th>
 				<th>Path</th>
-				<th style="min-width:90px;">Parameter</th>
+				<th class="medium">Parameter</th>
 				<th># Merged Results</th>
-				<th style="width:80px"></th>
+				<th class="short"></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -39,7 +39,11 @@
             <td id="mappedSeverity{{ index }}">{{ finding.channelSeverity.name }}</td>
             <td>{{ finding.channelVulnerability.name }}</td>
             <td ng-hide="finding.dependency" class="long-path-word-wrap" id="mappedPath{{ index }}">{{ finding.surfaceLocation.path }}</td>
-            <td ng-hide="finding.dependency" id="mappedParameter{{ index }}">{{ finding.surfaceLocation.parameter }}</td>
+            <td ng-hide="finding.dependency" id="mappedParameter{{ index }}">
+                <div class="word-wrap medium">
+                    {{ finding.surfaceLocation.parameter }}
+                </div>
+            </td>
             <td ng-show="finding.dependency" colspan="2" class="pointer">
                 {{ finding.dependency.refId }}
                 (<a target="_blank" id="cve{{ index }}" href="{{ finding.dependency.refLink }}">View</a>)

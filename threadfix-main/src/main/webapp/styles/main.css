@@ -815,6 +815,10 @@ div.box-shadow {
 	margin-bottom:0;
 }
 
+.word-wrap {
+	word-wrap: break-word;
+}
+
 .long-path-word-wrap {
     word-wrap: break-word;
     max-width: 300px;

@@ -43,7 +43,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
@@ -67,6 +66,7 @@ public class WafRuleController {
 
 	public WafRuleController(){}
 
+    @JsonView(AllViews.TableRow.class)
 	@PreAuthorize("hasRole('ROLE_CAN_GENERATE_WAF_RULES')")
 	@RequestMapping(value = "/generateRules/{wafApplicationId}/{wafDirective}", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<Map<String, Object>> generateWafRulesForApps(@PathVariable("wafId") int wafId,

@@ -1,3 +1,5 @@
+<%@ include file="/common/taglibs.jsp"%>
+
 <div ng-form="unmappedForm" class="pagination" ng-show="numFindings > numberPerPage">
     <pagination class="no-margin" total-items="numFindings / 10" max-size="5" page="page"></pagination>
 
@@ -18,7 +20,9 @@
             <th>Path</th>
             <th style="min-width:90px;">Parameter</th>
             <th class="last"># Merged Results</th>
-            <th>CWE</th>
+            <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_VULN_FILTERS">
+                <th>CWE</th>
+            </security:authorize>
             <th style="width:80px"></th>
         </tr>
     </thead>
@@ -43,14 +47,16 @@
                 (<a target="_blank" id="cve{{ index }}" href="{{ finding.dependency.refLink }}">View</a>)
             </td>
             <td>{{ finding.numberMergedResults }}</td>
-            <td>
-                <a class="pointer" ng-if="!finding.genericVulnerabilityName" id="createMapping{{ index }}" ng-click="createMapping(finding)">
-                    Create Mapping
-                </a>
-                <a class="pointer" ng-if="finding.genericVulnerabilityName" id="createVulnerabilities{{ index }}" ng-click="createVulnerabilities(finding)">
-                    Create Vulnerabilities
-                </a>
-            </td>
+            <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_VULN_FILTERS">
+                <td>
+                    <a class="pointer" ng-if="!finding.genericVulnerabilityName" id="createMapping{{ index }}" ng-click="createMapping(finding)">
+                        Create Mapping
+                    </a>
+                    <a class="pointer" ng-if="finding.genericVulnerabilityName" id="createVulnerabilities{{ index }}" ng-click="createVulnerabilities(finding)">
+                        Create Vulnerabilities
+                    </a>
+                </td>
+            </security:authorize>
             <td class="pointer">
                 <a id="unmappedVulnType{{ index }}" ng-click="goTo(finding)">
                     View Finding

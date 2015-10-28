@@ -80,6 +80,10 @@ public class ScannerMappingsController {
 	@RequestMapping(value = "/filters/map", method = RequestMethod.GET)
 	@ResponseBody
 	public RestResponse<Map<String, Object>> mapBackend() {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, null, null)) {
+			return RestResponse.failure("You don't have permission to access these filters.");
+		}
+
 		Map<String, Object> map = CollectionUtils.map();
 
 		map.put("genericSeverities", genericSeverityService.loadAll());
@@ -101,7 +105,11 @@ public class ScannerMappingsController {
 
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(Model model) {
-		
+
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, null, null)) {
+			return "403";
+		}
+
 		model.addAttribute("pluginCheckBean", scannerMappingsUpdaterService.checkPluginJar());
         model.addAttribute("supportedScanners", scannerMappingsUpdaterService.getSupportedScanners());
 		model.addAttribute("exportText", scannerMappingsExportService.getUserAddedMappingsInCSV());
@@ -128,7 +136,7 @@ public class ScannerMappingsController {
 	@ResponseBody
 	public Object unmappedScanTable(@ModelAttribute TableSortBean bean) throws IOException {
 
-		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS, null, null)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, null, null)) {
 			return "403";
 		}
 

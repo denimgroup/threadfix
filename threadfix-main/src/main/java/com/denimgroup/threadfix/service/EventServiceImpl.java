@@ -37,7 +37,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static java.util.Collections.sort;
 
 @Service
 @Transactional
@@ -95,7 +94,7 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
     @Override
     public String buildDeleteScanString(Scan scan) {
         Event scanUploadEvent = null;
-        for (Event scanEvent: loadAllByScan(scan)) {
+        for (Event scanEvent : scan.getEvents()) {
             if (scanEvent.getEventActionEnum().equals(EventAction.APPLICATION_SCAN_UPLOADED)) {
                 scanUploadEvent = scanEvent;
                 break;
