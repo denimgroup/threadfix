@@ -68,6 +68,23 @@ public final class DefectTrackerFactory {
 		return configureTracker(tracker, application);
 	}
 
+	public static AbstractDefectTracker getTracker(DefectTracker defectTracker) {
+		if (defectTracker == null
+				|| defectTracker.getDefectTrackerType() == null
+				|| defectTracker.getDefectTrackerType().getName() == null) {
+			STATIC_LOG.warn("Defect Tracker was not configured correctly.");
+			return null;
+		}
+
+		AbstractDefectTracker tracker = getTracker(defectTracker.getDefectTrackerType());
+
+		if (tracker == null) {
+			return null;
+		}
+
+		return configureTracker(tracker, defectTracker);
+	}
+
 	public static AbstractDefectTracker getTrackerByType(DefectTracker defectTracker, String userName,
 			String password) {
 		if (defectTracker == null) {
@@ -164,6 +181,18 @@ public final class DefectTrackerFactory {
             tracker.setPassword(application.getPassword());
         }
         tracker.setUrl(application.getDefectTracker().getUrl());
+
+		return tracker;
+	}
+
+	private static AbstractDefectTracker configureTracker(
+			AbstractDefectTracker tracker, DefectTracker defectTracker) {
+
+		tracker.setProjectName(defectTracker.getDefaultProductName());
+
+		tracker.setUsername(defectTracker.getDefaultUsername());
+		tracker.setPassword(defectTracker.getDefaultPassword());
+		tracker.setUrl(defectTracker.getUrl());
 
 		return tracker;
 	}

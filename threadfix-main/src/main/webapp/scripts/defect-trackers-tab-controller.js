@@ -4,8 +4,6 @@ module.controller('DefectTrackersTabController', function($window, $scope, $http
 
     $scope.trackers = [];
 
-    $scope.isMissingApplication = {};
-
     $scope.heading = 'Defect Trackers';
 
     $scope.loading = true;
@@ -14,6 +12,29 @@ module.controller('DefectTrackersTabController', function($window, $scope, $http
 
     var nameCompare = function(a,b) {
         return a.name.localeCompare(b.name);
+    };
+
+    var applicationCompare = function(a,b) {
+        if (a.referenceApplication == b.referenceApplication) {
+            return 0;
+        } else if (!a.referenceApplication) {
+            return -1;
+        } else if (!b.referenceApplication) {
+            return 1;
+        } else {
+            var aName = a.referenceApplication.team.name + ' / ' + a.referenceApplication.name;
+            var bName = b.referenceApplication.team.name + ' / ' + b.referenceApplication.name;
+            return aName.localeCompare(bName);
+        }
+    };
+
+    var applicationNameCompare = function(a,b) {
+        var compare = applicationCompare(a,b);
+        if (compare == 0) {
+            return nameCompare(a,b);
+        } else {
+            return compare;
+        }
     };
 
     $scope.$on('rootScopeInitialized', function() {
@@ -168,10 +189,6 @@ module.controller('DefectTrackersTabController', function($window, $scope, $http
     };
 
     $scope.openCreateProfileModal = function(tracker) {
-        if (!tracker.applications || tracker.applications == 0){
-            $scope.isMissingApplication[tracker.id] = true;
-            return;
-        }
         var modalInstance = $modal.open({
             templateUrl: 'createDefaultProfileModal.html',
             controller: 'ModalControllerWithConfig',
@@ -180,10 +197,8 @@ module.controller('DefectTrackersTabController', function($window, $scope, $http
                     return tfEncoder.encode("/default/addProfile");
                 },
                 object: function() {
-                    var referenceApplication = {id : tracker.applications[0].id};
                     var defectTracker = {id : tracker.id}
                     return {
-                        referenceApplication : referenceApplication,
                         defectTracker : defectTracker
                     };
                 },
@@ -213,10 +228,6 @@ module.controller('DefectTrackersTabController', function($window, $scope, $http
     };
 
     $scope.openUpdateProfileModal = function(tracker,originalDefaultProfile) {
-        if (tracker.applications == 0){
-            $scope.isMissingApplication[tracker.id] = true;
-            return;
-        }
         var defaultProfile = angular.copy(originalDefaultProfile);
         var modalInstance = $modal.open({
             templateUrl: 'updateDefaultProfileModal.html',
@@ -278,7 +289,7 @@ module.controller('DefectTrackersTabController', function($window, $scope, $http
         }
 
         if (tracker.defaultDefectProfiles)
-            tracker.defaultDefectProfiles.sort(nameCompare);
+            tracker.defaultDefectProfiles.sort(applicationNameCompare);
     };
 
     $scope.goToApp = function(app) {

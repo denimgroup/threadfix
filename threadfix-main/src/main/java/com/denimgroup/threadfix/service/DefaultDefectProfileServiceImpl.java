@@ -80,14 +80,25 @@ public class DefaultDefectProfileServiceImpl implements DefaultDefectProfileServ
 	}
 
 	@Override
-	public DefaultDefectProfile loadAppDefectProfileByName(String name, Integer appId) {
-		return defaultDefectProfileDao.retrieveDefectProfileByName(name, appId);
+	public DefaultDefectProfile loadAppDefectProfileByName(String name, Integer defectTrackerId, Integer appId) {
+		return defaultDefectProfileDao.retrieveDefectProfileByName(name, defectTrackerId, appId);
 	}
 
 	@Override
 	public void validateName(DefaultDefectProfile defaultDefectProfile, BindingResult result) {
-		DefaultDefectProfile dbProfile = loadAppDefectProfileByName(defaultDefectProfile.getName(), defaultDefectProfile.getReferenceApplication().getId());
-		String msg = "The name is already taken for this application.";
+		Integer defectTrackerId = null;
+		if (defaultDefectProfile.getDefectTracker() != null) {
+			defectTrackerId = defaultDefectProfile.getDefectTracker().getId();
+		}
+		Integer appId = null;
+		if (defaultDefectProfile.getReferenceApplication() != null) {
+			appId = defaultDefectProfile.getReferenceApplication().getId();
+		}
+		DefaultDefectProfile dbProfile = loadAppDefectProfileByName(defaultDefectProfile.getName(), defectTrackerId, appId);
+		String msg = "The name is already taken for this defect tracker and application.";
+		if (appId == null) {
+			msg = "The name is already taken for this defect tracker with no reference application.";
+		}
 		// If found that name of same application
 		if (dbProfile != null) {
 			// If default defect profile is new

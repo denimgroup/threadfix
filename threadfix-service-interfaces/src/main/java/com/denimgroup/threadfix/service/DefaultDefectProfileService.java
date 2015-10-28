@@ -34,7 +34,7 @@ public interface DefaultDefectProfileService {
 
 	public void deleteProfileById(Integer defaultProfileId);
 
-	public DefaultDefectProfile loadAppDefectProfileByName(String name, Integer appId);
+	public DefaultDefectProfile loadAppDefectProfileByName(String name, Integer defectTrackerId, Integer appId);
 
 	/**
 	 * This function checks if name of default defect profile is duplicate.
