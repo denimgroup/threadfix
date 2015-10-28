@@ -26,6 +26,7 @@ using DenimGroup.threadfix_plugin.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
 
 namespace DenimGroup.threadfix_plugin.Utils
 {
@@ -40,6 +41,22 @@ namespace DenimGroup.threadfix_plugin.Utils
         public List<VulnerabilityMarker> Markers { get; set; }
         public Dictionary<string, List<VulnerabilityMarker>> MarkerLookUp { get; set; }
         public event EventHandler<EventArgs> MarkersUpdated;
+        public Dictionary<string, string> FileLookUp { get; set; }
+
+        public void ImportMarkers(HashSet<string> selectedAppIds, ThreadFixApi threadFixApi)
+        {
+            SelectedAppIds = selectedAppIds;
+            Markers = threadFixApi.GetVulnerabilityMarkers(SelectedAppIds);
+            FileLookUp = FileUtil.GetFileLookUp(new HashSet<string>(Markers.Select(m => m.FilePath)));
+            MarkerLookUp = CreateMarkerLookUp();
+        }
+
+        public void ClearMarkers()
+        {
+            Markers = null;
+            FileLookUp = null;
+            MarkerLookUp = null;
+        }
 
         public void UpdateMarkers()
         {
@@ -47,6 +64,27 @@ namespace DenimGroup.threadfix_plugin.Utils
             {
                 MarkersUpdated(this, null);
             }
+        }
+
+        private Dictionary<string, List<VulnerabilityMarker>> CreateMarkerLookUp()
+        {
+            var lookUp = new Dictionary<string, List<VulnerabilityMarker>>();
+            foreach (var marker in Markers)
+            {
+                var fullPath = FileLookUp[marker.FilePath];
+                if (!string.IsNullOrEmpty(fullPath))
+                {
+                    fullPath = fullPath.ToLower();
+                    if (!lookUp.ContainsKey(fullPath))
+                    {
+                        lookUp.Add(fullPath.ToLower(), new List<VulnerabilityMarker>());
+                    }
+
+                    lookUp[fullPath].Add(marker);
+                }
+            }
+
+            return lookUp;
         }
     }
 }

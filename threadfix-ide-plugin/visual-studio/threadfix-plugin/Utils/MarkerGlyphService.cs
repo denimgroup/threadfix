@@ -53,7 +53,7 @@ namespace DenimGroup.threadfix_plugin.Utils
             {
                 foreach (var marker in markers)
                 {
-                    if (marker.LineNumber.HasValue)
+                    if (marker.LineNumber.HasValue && marker.LineNumber.Value > 0 && marker.LineNumber.Value < textSnapshot.LineCount)
                     {
                         lines.Add(textSnapshot.GetLineFromLineNumber(marker.LineNumber.Value - 1));
                     }

@@ -162,6 +162,7 @@
     <Compile Include="threadfix-pluginPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PkgCmdID.cs" />
+    <Compile Include="Utils\FileUtil.cs" />
     <Compile Include="Utils\MarkerGlyphService.cs" />
     <Compile Include="Utils\ThreadFixApi.cs" />
     <Compile Include="Utils\ThreadFixPlugin.cs" />

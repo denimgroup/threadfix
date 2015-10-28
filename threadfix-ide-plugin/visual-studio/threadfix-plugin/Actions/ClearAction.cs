@@ -38,9 +38,7 @@ namespace DenimGroup.threadfix_plugin.Actions
 
         public void OnExecute(object sender, EventArgs args)
         {
-            _threadFixPlugin.Markers = null;
-            _threadFixPlugin.MarkerLookUp = null;
-
+            _threadFixPlugin.ClearMarkers();
             _threadFixPlugin.UpdateMarkers();
 
             var toolWindow = (ToolWindowControl)_threadFixPlugin.ToolWindow.Content;

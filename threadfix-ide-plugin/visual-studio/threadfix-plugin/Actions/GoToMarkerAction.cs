@@ -23,47 +23,28 @@
 ////////////////////////////////////////////////////////////////////////
 using DenimGroup.threadfix_plugin.Data;
 using DenimGroup.threadfix_plugin.Utils;
-using EnvDTE;
-using EnvDTE80;
-using Microsoft.VisualStudio.Shell;
 using System;
-using System.Diagnostics;
 
 namespace DenimGroup.threadfix_plugin.Actions
 {
     public class GoToMarkerAction : IAction
     {
         private readonly ThreadFixPlugin _threadFixPlugin;
-        private readonly DTE2 _dte2;
 
         public GoToMarkerAction(ThreadFixPlugin threadFixPlugin)
         {
             _threadFixPlugin = threadFixPlugin;
-            _dte2 = ServiceProvider.GlobalProvider.GetService(typeof(DTE)) as DTE2;
         }
 
         public void OnExecute(object sender, EventArgs args)
         {
+            string filepath;
             var selectedMarker = (args as GoToMarkerEventArgs).Marker;
-            OpenFileAtLineNumber(selectedMarker.FilePath, selectedMarker.LineNumber.GetValueOrDefault());
-        }
-
-        private void OpenFileAtLineNumber(string filename, int lineNumber)
-        {
-            if (_dte2 != null)
+            if (_threadFixPlugin.FileLookUp != null && _threadFixPlugin.FileLookUp.TryGetValue(selectedMarker.FilePath, out filepath))
             {
-                try
-                {
-                    _dte2.ItemOperations.OpenFile(filename, Constants.vsViewKindTextView);
-                    ((TextSelection)_dte2.ActiveDocument.Selection).GotoLine(lineNumber, false);
-                }
-
-                catch (Exception e)
-                {
-                    Debug.WriteLine("Unable to open file");
-                }
+                FileUtil.OpenFileAtLineNumber(filepath, selectedMarker.LineNumber.GetValueOrDefault());
             }
-        }
+        }        
     }
 
     public class GoToMarkerEventArgs : EventArgs

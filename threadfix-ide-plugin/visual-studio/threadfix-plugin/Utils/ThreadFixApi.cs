@@ -114,7 +114,7 @@ namespace DenimGroup.threadfix_plugin.Utils
 
         private bool ValidUrl(string url)
         {
-            if (url == null)
+            if (string.IsNullOrEmpty(url))
             {
                 return false;
             }

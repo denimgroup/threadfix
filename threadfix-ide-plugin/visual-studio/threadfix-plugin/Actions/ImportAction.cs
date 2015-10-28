@@ -24,7 +24,6 @@
 using DenimGroup.threadfix_plugin.Controls;
 using DenimGroup.threadfix_plugin.Utils;
 using System;
-using System.Linq;
 
 namespace DenimGroup.threadfix_plugin.Actions
 {
@@ -56,10 +55,7 @@ namespace DenimGroup.threadfix_plugin.Actions
         private void OnAppsSelected(object sender, ApplicationsSelectedEventArgs args)
         {
             // TODO: show some kind of loading spinner here. if time permits set up async http calls
-            _threadFixPlugin.SelectedAppIds = _viewModelService.GetSelectedAppIds(args.Model);
-            _threadFixPlugin.Markers = _threadFixApi.GetVulnerabilityMarkers(_threadFixPlugin.SelectedAppIds);
-            _threadFixPlugin.MarkerLookUp = _threadFixPlugin.Markers.GroupBy(marker => marker.FilePath.ToLower()).ToDictionary(m => m.Key, m => m.ToList());
-
+            _threadFixPlugin.ImportMarkers(_viewModelService.GetSelectedAppIds(args.Model), _threadFixApi);
             _threadFixPlugin.UpdateMarkers();
 
             var showToolWindow = new ShowAction(_threadFixPlugin);
