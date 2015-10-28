@@ -1363,6 +1363,10 @@ div.remote-provider-config-modal a {
 	background-color:#c43c35;
 }
 
+.badge-vulnerability-version {
+	background-color:deepskyblue;
+}
+
 .badge-comment-tag {
 	background-color:#c67605;
 }

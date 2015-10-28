@@ -31,7 +31,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "ApplicationVersion")
-public class ApplicationVersion extends AuditableEntity {
+public class ApplicationVersion extends AuditableEntity implements Comparable<ApplicationVersion> {
 	
 	private static final long serialVersionUID = 5185330378304148079L;
 
@@ -68,5 +68,10 @@ public class ApplicationVersion extends AuditableEntity {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	@Override
+	public int compareTo(ApplicationVersion o) {
+		return this.getDate().compareTo(o.getDate());
 	}
 }

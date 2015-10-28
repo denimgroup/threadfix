@@ -8,8 +8,8 @@ myAppModule.controller('ManageVersionsController', function ($modal, $log, $scop
 
     $scope.focusInput = true;
 
-    var nameCompare = function(a,b) {
-        return a.name.localeCompare(b.name);
+    var dateCompare = function(a,b) {
+        return a.date- b.date;
     };
 
     $scope.switchTo = function(name) {
@@ -55,11 +55,12 @@ myAppModule.controller('ManageVersionsController', function ($modal, $log, $scop
                 threadFixModalService.addElement($scope.config.versions, newVersion);
 
                 $scope.successMessage = "Version " + newVersion.name + " has been edited.";
-                $scope.config.versions.sort(nameCompare);
+                $scope.config.versions.sort(dateCompare);
             } else {
                 threadFixModalService.deleteElement($scope.config.versions, oldVersion);
                 $scope.successMessage = "Version " + oldVersion.name + " has been deleted.";
             }
+            $rootScope.$broadcast('versionsChange', $scope.config.versions);
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
@@ -93,7 +94,8 @@ myAppModule.controller('ManageVersionsController', function ($modal, $log, $scop
             $scope.successMessage = "Version " + newVersion.name + " has been added.";
 
             threadFixModalService.addElement($scope.config.versions, newVersion);
-            $scope.config.versions.sort(nameCompare);
+            $scope.config.versions.sort(dateCompare);
+            $rootScope.$broadcast('versionsChange', $scope.config.versions);
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
