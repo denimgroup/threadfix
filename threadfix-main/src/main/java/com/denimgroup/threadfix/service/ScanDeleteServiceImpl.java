@@ -687,12 +687,19 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 				GenericSeverity highestRemainFindingSeverity = getHighestGenericSeverity(vuln.getFindings());
 				GenericSeverity currentVulnSeverity = vuln.getGenericSeverity();
 
-				if (currentVulnSeverity.getIntValue() != null &&
+				if (currentVulnSeverity == null) {
+					ChannelSeverity original = vuln.getOriginalFinding() == null ? null :
+							vuln.getOriginalFinding().getChannelSeverity();
+
+					log.error("Got a null vuln severity--this is bad. " +
+							"The finding's channel severity was " + original);
+				}
+
+				if (currentVulnSeverity != null && currentVulnSeverity.getIntValue() != null &&
 						highestRemovedFindingSeverity != null &&
 						currentVulnSeverity.getIntValue() == highestRemovedFindingSeverity.getIntValue()) {
 					vuln.setGenericSeverity(highestRemainFindingSeverity);
 				}
-
 
 				updateVulnDates(vuln, scan, defaultConfiguration.getCloseVulnWhenNoScannersReport() == null ?
 						false : defaultConfiguration.getCloseVulnWhenNoScannersReport());
