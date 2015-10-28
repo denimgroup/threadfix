@@ -118,7 +118,7 @@
                                         </li>
                                     </security:authorize>
 
-                                    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_CUSTOM_CWE_TEXT">
+                                    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_VULN_FILTERS">
                                         <li class="normalLinks">
                                             <a id="customizeScannerVulnerabilityTypesLink" href="<spring:url value="/mappings/index" htmlEscape="true"/>">Scanner Vulnerability Types</a>
                                         </li>
