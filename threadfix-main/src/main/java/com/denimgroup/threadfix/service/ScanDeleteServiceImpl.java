@@ -93,7 +93,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 				|| scan.getApplicationChannel().getChannelType() == null) {
 			return;
 		}
-		
+
 		log.info("Deleting scan with ID " + scan.getId());
 		
 		ChannelType type = scan.getApplicationChannel().getChannelType();
@@ -173,6 +173,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 		
 		log.info("About to update vulnerabilities and delete any that " +
 					"will be orphaned after this scan deletion.");
+
 		// update the vulnerabilities
 		deleteOrphanVulnerabilities(app, scan);
 		
@@ -198,7 +199,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 
         // Run status check on delete
         if (policyStatusService != null) {
-            policyStatusService.runStatusCheck(app.getId());
+            policyStatusService.runStatusCheck(app);
         }
 
 		log.info("The scan deletion has finished.");
@@ -626,28 +627,28 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			if (vuln.getFindings() == null || vuln.getFindings().size() == 0) {
 				vulnsToRemove.add(vuln);
 			}
-			
+
 			findingsToRemove.clear();
-	
+
 			// Remove any findings from the scan being deleted and 
 			// update the first finding for reporting purposes
 			boolean changeFirstFinding = false;
 			Finding newFirstFinding = null;
 			Calendar earliestTime = null;
 			for (Finding finding : vuln.getFindings()) {
-				if (finding == null || finding.getScan() == null 
+				if (finding == null || finding.getScan() == null
 						|| finding.getScan().getId() == null) {
 					continue;
 				}
-				
+
 				if ((newFirstFinding == null || earliestTime == null ||
-						(finding.getScan().getImportTime() != null 
-						 && finding.getScan().getImportTime().before(earliestTime)))
+						(finding.getScan().getImportTime() != null
+								&& finding.getScan().getImportTime().before(earliestTime)))
 						&& !finding.getScan().getId().equals(scan.getId())) {
 					newFirstFinding = finding;
 					earliestTime = finding.getScan().getImportTime();
 				}
-				
+
 				if (finding.getScan().getId().equals(scan.getId())) {
 					finding.setVulnerability(null);
 					findingsToRemove.add(finding);
@@ -656,30 +657,30 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					}
 				}
 			}
-			
+
 			// Should avoid any problems related to removing items from a collection
 			// while iterating through it.
 			vuln.getFindings().removeAll(findingsToRemove);
-			
+
 			if (changeFirstFinding && newFirstFinding != null) {
 				if (newFirstFinding.getVulnerability() != null) {
 					newFirstFinding.getVulnerability().setSurfaceLocation(
-						newFirstFinding.getSurfaceLocation());
+							newFirstFinding.getSurfaceLocation());
 				}
-		
+
 				newFirstFinding.setFirstFindingForVuln(true);
-				log.debug("Updating number new vulnerabilities for Scan with ID " + 
+				log.debug("Updating number new vulnerabilities for Scan with ID " +
 						newFirstFinding.getScan().getId());
 				newFirstFinding.getScan().setNumberNewVulnerabilities(
 						newFirstFinding.getScan().getNumberNewVulnerabilities() + 1);
-				
+
 				vuln.setOpenTime(newFirstFinding.getScan().getImportTime());
 			}
-	
+
 			// now if the vuln has no findings, delete it
 			if (vuln.getFindings().size() == 0) {
 				vulnsToRemove.add(vuln);
-				
+
 			} else {
 				// Update severity to vuln if the higher severity findings are removed
 				GenericSeverity highestRemovedFindingSeverity = getHighestGenericSeverity(findingsToRemove);
@@ -692,18 +693,18 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					vuln.setGenericSeverity(highestRemainFindingSeverity);
 				}
 
-				
+
 				updateVulnDates(vuln, scan, defaultConfiguration.getCloseVulnWhenNoScannersReport() == null ?
 						false : defaultConfiguration.getCloseVulnWhenNoScannersReport());
-				if (vuln.getOriginalFinding() == null || 
+				if (vuln.getOriginalFinding() == null ||
 						vuln.getOriginalFinding().getScan().getId().equals(scan.getId())) {
-					updateFirstFindingForVuln(null,vuln);
+					updateFirstFindingForVuln(null, vuln);
 				}
 				// be sure to save in case there's any updated state
 				vulnerabilityService.storeVulnerability(vuln);
 			}
 		}
-		
+
 		for (Vulnerability vuln : vulnsToRemove) {
 			log.debug("Deleting vulnerability with ID " + vuln.getId());
 			app.getVulnerabilities().remove(vuln);
@@ -731,7 +732,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			// Vulns should not have any reopen maps if they are here
 			// but they can have close maps.
 			if (vuln.getScanCloseVulnerabilityMaps() != null) {
-				List<ScanCloseVulnerabilityMap> vulnMapCopy = new ArrayList<>(vuln.getScanCloseVulnerabilityMaps());
+				List<ScanCloseVulnerabilityMap> vulnMapCopy = listFrom(vuln.getScanCloseVulnerabilityMaps());
 				for (ScanCloseVulnerabilityMap map : vulnMapCopy) {
 					if (scan.getScanCloseVulnerabilityMaps().contains(map)) {
 						scan.getScanCloseVulnerabilityMaps().remove(map);
@@ -756,12 +757,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 				endpointPermissionService.saveOrUpdate(permission);
 			}
 
-			try {
-				vulnerabilityService.deleteVulnerability(vuln);
-			} finally {
-				System.out.println("vuln: " + vuln);
-
-			}
+			vulnerabilityService.deleteVulnerability(vuln);
 		}
 	}
 
@@ -855,7 +851,7 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 				}
 			}
 		}
-		
+
 		for (ScanCloseVulnerabilityMap map : closeMapsToRemove) {
 			vuln.getScanCloseVulnerabilityMaps().remove(map);
 		}

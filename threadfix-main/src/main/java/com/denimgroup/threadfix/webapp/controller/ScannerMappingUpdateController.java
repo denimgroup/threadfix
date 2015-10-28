@@ -23,9 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ChannelVulnerabilityService;
 import com.denimgroup.threadfix.service.VulnerabilityFilterService;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,6 +55,10 @@ public class ScannerMappingUpdateController {
                                               @RequestParam String genericVulnerabilityId,
                                               @RequestParam int findingId) {
 
+        if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, null, null)) {
+            return failure("You don't have permission to create new mappings.");
+        }
+
         ChannelVulnerabilityService.MappingCreateResult result =
                 channelVulnerabilityService.createMapping(channelName, channelVulnerabilityId, genericVulnerabilityId, findingId);
 
@@ -68,6 +74,10 @@ public class ScannerMappingUpdateController {
     @ResponseBody
     public RestResponse<String> createVulnerabilities(@RequestParam String channelName,
                                                           @RequestParam String channelVulnerabilityCode) {
+
+        if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, null, null)) {
+            return failure("You don't have permission to create new Vulnerabilities.");
+        }
 
         ChannelVulnerabilityService.MappingCreateResult result =
                 channelVulnerabilityService.createVulnerabilities(channelName, channelVulnerabilityCode);
