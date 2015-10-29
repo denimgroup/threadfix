@@ -41,6 +41,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
@@ -51,6 +52,7 @@ import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans")
+@SessionAttributes("application")
 public class ScanController {
 
 	private final SanitizedLogger log = new SanitizedLogger(ScanController.class);
@@ -110,7 +112,8 @@ public class ScanController {
 	@RequestMapping(value = "/{scanId}/delete", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<String> deleteScan(@PathVariable("orgId") Integer orgId,
 														 @PathVariable("appId") Integer appId,
-														 @PathVariable("scanId") Integer scanId) {
+														 @PathVariable("scanId") Integer scanId,
+                                                         HttpServletRequest request) {
 
 		if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return RestResponse.failure("You do not have permission to delete scans.");
@@ -126,6 +129,8 @@ public class ScanController {
 
 				scans.remove(scan);
 				scan.getApplicationChannel().getScanList().remove(scan);
+                request.getSession().setAttribute("application", application);
+
 				vulnerabilityFilterService.updateStatistics(application.getOrganization().getId(), application.getId());
 			}
 		}
