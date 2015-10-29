@@ -33,6 +33,8 @@ public interface LdapService extends AuthenticationProvider {
 	boolean innerAuthenticate(String username, String password);
 
 	boolean innerAuthenticate(DefaultConfiguration defaultConfiguration);
-	
+
+	boolean checkForUser(String username);
+
 	void setLogger(SanitizedLogger log);
 }

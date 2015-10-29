@@ -27,9 +27,7 @@ import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.RoleService;
-import com.denimgroup.threadfix.service.SessionService;
-import com.denimgroup.threadfix.service.UserService;
+import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
@@ -60,6 +58,10 @@ public class EditUserController {
 	private RoleService roleService = null;
 	@Autowired(required = false)
 	private SessionService sessionService;
+	@Autowired
+	private DefaultConfigService defaultConfigService;
+	@Autowired(required = false)
+	private LdapService ldapService;
 	private boolean ldapPluginInstalled = false;
 
 	private final SanitizedLogger log = new SanitizedLogger(EditUserController.class);
@@ -103,9 +105,28 @@ public class EditUserController {
 
 		new UserValidator(roleService).validate(user, result);
 
-		if (userService.hasRemovedAdminPermissions(user) && !userService.canRemoveAdminPermissions(user)) {
-			model.addAttribute("user", new User());
-			return RestResponse.failure("This would leave users unable to access the user management portion of ThreadFix.");
+		if (!userService.canRemoveAdminPermissions(user)) {
+			boolean removingAdminAccess = false;
+
+			if (userService.hasRemovedAdminPermissions(user)) {
+				removingAdminAccess = true;
+			}
+			if (!removingAdminAccess && user.getIsLdapUser()) {
+				if (!ldapPluginInstalled || (ldapService == null)) {
+					removingAdminAccess = true;
+				} else if (!ldapService.innerAuthenticate(defaultConfigService.loadCurrentConfiguration())) {
+					// LDAP is not configured
+					removingAdminAccess = true;
+				} else if (!ldapService.checkForUser(user.getName())) {
+					// User is not available from LDAP
+					removingAdminAccess = true;
+				}
+			}
+
+			if (removingAdminAccess) {
+				model.addAttribute("user", new User());
+				return RestResponse.failure("This would leave users unable to access the user management portion of ThreadFix.");
+			}
 		}
 
 		if (result.hasErrors()) {
