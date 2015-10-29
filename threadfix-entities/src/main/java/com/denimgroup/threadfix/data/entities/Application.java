@@ -960,7 +960,9 @@ public class Application extends AuditableEntity {
 	@OneToMany(mappedBy = "application", cascade = CascadeType.ALL)
 	@JsonIgnore
 	public List<ApplicationVersion> getVersions() {
-		Collections.sort(versions);
+		if (versions != null) {
+			Collections.sort(versions);
+		}
 		return versions;
 	}
 
