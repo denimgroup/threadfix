@@ -47,8 +47,7 @@ namespace DenimGroup.threadfix_plugin.Utils
         {
             SelectedAppIds = selectedAppIds;
             Markers = threadFixApi.GetVulnerabilityMarkers(SelectedAppIds);
-            FileLookUp = FileUtil.GetFileLookUp(new HashSet<string>(Markers.Select(m => m.FilePath)));
-            MarkerLookUp = CreateMarkerLookUp();
+            UpdateFileAndMarkerLookUp();
         }
 
         public void ClearMarkers()
@@ -63,6 +62,15 @@ namespace DenimGroup.threadfix_plugin.Utils
             if (MarkersUpdated != null)
             {
                 MarkersUpdated(this, null);
+            }
+        }
+
+        public void UpdateFileAndMarkerLookUp()
+        {
+            if (Markers != null)
+            {
+                FileLookUp = FileUtil.GetFileLookUp(new HashSet<string>(Markers.Select(m => m.FilePath)));
+                MarkerLookUp = CreateMarkerLookUp();
             }
         }
 

@@ -62,7 +62,7 @@ namespace DenimGroup.threadfix_plugin.Utils
                 }
             }
 
-            catch (Exception e)
+            catch (Exception)
             {
                 Debug.WriteLine("Unable to open file: " + fullPath);
             }

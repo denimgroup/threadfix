@@ -21,19 +21,20 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.Runtime.InteropServices;
-using System.ComponentModel.Design;
-using Microsoft.VisualStudio.Shell;
 using DenimGroup.threadfix_plugin.Actions;
 using DenimGroup.threadfix_plugin.Controls;
 using DenimGroup.threadfix_plugin.Utils;
-using System.Security.Cryptography.X509Certificates;
-using System.Net.Security;
-using System.ComponentModel.Composition;
+using EnvDTE;
+using EnvDTE80;
 using Microsoft.VisualStudio.ComponentModelHost;
+using Microsoft.VisualStudio.Shell;
+using System;
+using System.ComponentModel.Design;
+using System.Diagnostics;
+using System.Globalization;
+using System.Net.Security;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 
 namespace DenimGroup.threadfix_plugin
 {
@@ -61,6 +62,8 @@ namespace DenimGroup.threadfix_plugin
     public sealed class threadfix_pluginPackage : Package
     {
         private GoToMarkerAction _goToMarkerAction;
+        private ThreadFixPlugin _threadFixPlugin;
+        private SolutionEvents _solutionEvents;
 
         /// <summary>
         /// Default constructor of the package.
@@ -88,32 +91,42 @@ namespace DenimGroup.threadfix_plugin
             base.Initialize();
 
             var componentModel = (IComponentModel)GetService(typeof(SComponentModel));
-            var threadFixPlugin = (ThreadFixPlugin)componentModel.GetService<IThreadFixPlugin>();
+            _threadFixPlugin = (ThreadFixPlugin)componentModel.GetService<IThreadFixPlugin>();
 
             // Global plugin state
-            threadFixPlugin.ToolWindow = (ThreadFixToolWindow)FindToolWindow(typeof(ThreadFixToolWindow), 0, true);
-            threadFixPlugin.Options = (OptionsPage)GetDialogPage(typeof(OptionsPage));
+            _threadFixPlugin.ToolWindow = (ThreadFixToolWindow)FindToolWindow(typeof(ThreadFixToolWindow), 0, true);
+            _threadFixPlugin.Options = (OptionsPage)GetDialogPage(typeof(OptionsPage));
 
-            _goToMarkerAction = new GoToMarkerAction(threadFixPlugin);
-            var toolWindow = (ToolWindowControl)threadFixPlugin.ToolWindow.Content;
+            _goToMarkerAction = new GoToMarkerAction(_threadFixPlugin);
+            var toolWindow = (ToolWindowControl)_threadFixPlugin.ToolWindow.Content;
             toolWindow.MarkerSelected += _goToMarkerAction.OnExecute;
+
+            // reload file paths when solution is loaded
+            _solutionEvents = (GetService(typeof(DTE)) as DTE2).Events.SolutionEvents;
+            _solutionEvents.Opened += SolutionEvents_Opened;
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if ( null != mcs )
             {
                 // Create the command for the menu item.
-                AddMenuItemCallback((int)PkgCmdIDList.cmdidImportMarkersCommand, mcs, new ImportAction(threadFixPlugin));
-                AddMenuItemCallback((int)PkgCmdIDList.cmdidClearMarkers, mcs, new ClearAction(threadFixPlugin));
-                AddMenuItemCallback((int)PkgCmdIDList.cmdidShowToolWindow, mcs, new ShowAction(threadFixPlugin));
+                AddMenuItemCallback((int)PkgCmdIDList.cmdidImportMarkersCommand, mcs, new ImportAction(_threadFixPlugin));
+                AddMenuItemCallback((int)PkgCmdIDList.cmdidClearMarkers, mcs, new ClearAction(_threadFixPlugin));
+                AddMenuItemCallback((int)PkgCmdIDList.cmdidShowToolWindow, mcs, new ShowAction(_threadFixPlugin));
             }
 #if DEBUG
             // Disable ssl certificate validation for debugging purposes
             System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
 
-            Debug.WriteLine("API Key: " + threadFixPlugin.Options.ApiKey);
-            Debug.WriteLine("API Url: " + threadFixPlugin.Options.ApiUrl);
+            Debug.WriteLine("API Key: " + _threadFixPlugin.Options.ApiKey);
+            Debug.WriteLine("API Url: " + _threadFixPlugin.Options.ApiUrl);
 #endif
+        }
+
+        private void SolutionEvents_Opened()
+        {
+            _threadFixPlugin.UpdateFileAndMarkerLookUp();
+            _threadFixPlugin.UpdateMarkers();
         }
 
         private void AddMenuItemCallback(int commandId, OleMenuCommandService commandService, IAction callback)
