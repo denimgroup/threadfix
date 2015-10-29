@@ -326,6 +326,11 @@ public class ApplicationRestController extends TFRestController {
             return resultError(keyCheck);
         }
 
+        Application application = applicationService.loadApplication(appId);
+        if (application == null) {
+            return failure("Invalid application ID.");
+        }
+
         MultiValueMap<String, MultipartFile> fileMap = multiPartRequest.getMultiFileMap();
 
         List<MultipartFile> fileList = list();
