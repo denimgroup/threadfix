@@ -61,7 +61,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Additional Scanner Info</td>
+                        <td>Include Scanner Detail</td>
                         <td class="inputValue">
                             <input ng-model="object.additionalScannerInfo" name="additionalScannerInfo" type="checkbox"/>
                         </td>

@@ -177,7 +177,7 @@ public class DefectTrackerServiceImpl implements DefectTrackerService {
     private void addAdditionalScannerInfoField(@Nonnull List<DynamicFormField> formFields){
         DynamicFormField additionalScannerInfoField = new DynamicFormField();
         additionalScannerInfoField.setName("AdditionalScannerInfo");
-        additionalScannerInfoField.setLabel("Additional Scanner Info");
+        additionalScannerInfoField.setLabel("Include Scanner Detail");
         additionalScannerInfoField.setRequired(false);
         additionalScannerInfoField.setType("checkbox");
         additionalScannerInfoField.setActive(true);

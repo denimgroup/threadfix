@@ -91,9 +91,9 @@ public class DefectServiceImpl implements DefectService {
     private String getAdditionalScannerInfo(List<Vulnerability> allVulns) {
 
         for (Vulnerability vuln : allVulns) {
-            for (Finding finding: vuln.getFindings()){
+            for (Finding finding: vuln.getFindings()) {
                 String scannerDetail = finding.getScannerDetail();
-                if(scannerDetail != null && !scannerDetail.equals("")){
+                if (scannerDetail != null && !scannerDetail.equals("")) {
                     return scannerDetail;
                 }
             }
