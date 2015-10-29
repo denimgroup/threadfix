@@ -50,8 +50,6 @@ public class ChannelSeverityServiceImpl implements ChannelSeverityService {
 	private ChannelTypeDao channelTypeDao;
 	@Autowired
 	private GenericSeverityDao genericSeverityDao;
-	@Autowired
-	private QueueSender queueSender;
 
 	@Override
 	public List<ChannelSeverity> loadByChannel(String channelTypeName) {
@@ -79,6 +77,7 @@ public class ChannelSeverityServiceImpl implements ChannelSeverityService {
 	}
 
 	@Override
+	@Transactional(readOnly=false)
 	public String updateChannelSeverityMappings(List<ChannelSeverity> channelSeverities) {
 
 		String ids = "";
@@ -99,12 +98,7 @@ public class ChannelSeverityServiceImpl implements ChannelSeverityService {
 				ids = ids + dbChannelSeverity.getId() + ",";
 			}
 		}
-
-		if (!ids.isEmpty()) {
-			queueSender.updateChannelSeverityMappings(ids);
-		}
-
-		return null;
+		return ids;
 	}
 
 	@Override
