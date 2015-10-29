@@ -21,6 +21,7 @@ myAppModule.controller('LeftReportController', function ($scope, $window, thread
             success(function(data, status, headers, config) {
                 $log.info("left request server took " + ((new Date()).getTime() - start.getTime()) + " ms");
                 $scope.allScans = data.object.scanList;
+
                 $scope.savedFilters = data.object.savedFilters;
                 customSeverityService.setSeverities(data.object.genericSeverities);
 
@@ -105,5 +106,9 @@ myAppModule.controller('LeftReportController', function ($scope, $window, thread
 
             $scope.empty = true;
         }
+    });
+
+    $scope.$on("versionsChange", function(event, versions){
+        $scope.versionsDisplayData = versions;
     });
 });

@@ -240,6 +240,9 @@ public class ApplicationsController {
         // scheduled scan tab
         map.put("scheduledScans", application.getScheduledScans());
 
+        // versions
+        map.put("versions", application.getVersions());
+
         // edit form
         map.put("applicationTypes", FrameworkType.values());
         map.put("applicationCriticalityList", applicationCriticalityService.loadAll());

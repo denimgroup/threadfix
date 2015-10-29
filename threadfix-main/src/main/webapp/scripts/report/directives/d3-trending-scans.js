@@ -16,7 +16,8 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 endDate: '=',
                 exportInfo: '=',
                 svgId:'=',
-                sumTableDivId:'='
+                sumTableDivId:'=',
+                versionData:'='
             },
             link: function(scope, ele, attrs) {
                 var svgWidth = scope.width,
@@ -123,12 +124,19 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     .attr('id', 'areaChartTip')
                     .offset([-10, 0]);
 
+                var versions;
+
                 scope.$watch('data', function(newVals) {
                     scope.render(newVals);
                 }, true);
 
                 scope.$watch('label', function() {
                     scope.render(scope.data);
+                }, true);
+
+                scope.$watch('versionData', function() {
+                    //scope.render(scope.data);
+                    drawVersionLines();
                 }, true);
 
                 scope.render = function (reportData) {
@@ -168,6 +176,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     svg.selectAll('*').remove();
                     drawReport();
                     drawTable();
+                    //drawVersionLines();
                 };
 
                 function drawReport(){
@@ -356,16 +365,37 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                             });
                     });
 
-                    g.on("mouseover", function() { focus.style("display", null); })
-                        .on("mouseout", function() { focus.style("display", "none"); tip.hide()})
+                    svg.on("mouseover", function() { focus.style("display", null); })
+                        .on("mouseout", function() { focus.style("display", "none"); tip.hide();})
                         .on("mousemove", mousemove);
 
-                }
+                };
 
                 function drawTable(){
                     if (scope.tableInfo && scope.sumTableDivId)
                         reportUtilities.drawTable(d3, scope.tableInfo, scope.sumTableDivId);
-                }
+                };
+
+                function drawVersionLines() {
+                        svg.selectAll('.versionLine').remove();
+                    if (scope.versionData) {
+                        //Sorting
+                        scope.versionData.sort(function(a, b) {
+                            return a.date - b.date;
+                        });
+
+                        scope.versionData.forEach(function(version) {
+                            svg.append("line")
+                                .attr({
+                                    x1: x(version.date),
+                                    x2: x(version.date),
+                                    y1: 0,
+                                    y2: h	})
+                                .attr("class", "versionLine")
+                                .attr("id", version.id)
+                        });
+                    }
+                };
 
                 function prepareStackedData(data) {
                     return color.domain().map(function(name){
@@ -375,83 +405,130 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         });
                         return {key: name, values: values};
                     })
-                }
+                };
 
                 function mousemove() {
+                    svg.selectAll(".versionLineFocus").remove();
                     var x0 = x.invert(d3.mouse(this)[0]),
                         month = Math.round(x0);
                     var time, coordObj, tips = [];
 
-                    focusCircles.attr('transform', function (d) {
-
+                    var i = undefined;
+                    var dateList;
+                    if (stackedData && stackedData.length > 0) {
                         // Find mouse's nearest scan
-                        var i;
-                        if (month <= d.values[0].date)
-                            i = 0;
-                        else if (month >= d.values[d.values.length-1].date) {
-                            i = d.values.length - 1;
-                        } else {
-                            for (i = 1; i< d.values.length; i++) {
-                                if (d.values[i-1].date <= month && d.values[i].date >= month) {
-                                    i = (d.values[i].date - month > month - d.values[i-1].date) ? i-1 : i;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (d.values.length > 1) {
+                        dateList = stackedData[0].values;
+                        i = findIndex(month, dateList);
+                        if (dateList.length > 1) {
                             if (i === 0 && firstScanNotReal)
                                 i= 1;
-                            else if (i === d.values.length - 1 && lastScanNotReal)
+                            else if (i === dateList.length - 1 && lastScanNotReal)
                                 i= i-1;
                         }
+                    }
 
-                        time = d.values[i].date;
-                        tips.push("<tr><td>" + d.key + "&nbsp;</td> <td style='color:"+ getTextColor(d.key) +"'>" + d.values[i].noOfVulns + "</td></tr>");
+                    var j = undefined;
+                    if (scope.versionData && scope.versionData.length > 0) {
+                        j = findIndex(month, scope.versionData);
+                    }
 
-                        focus.selectAll('path').remove();
-                        focus.append("path")
-                            .attr("class", "line")
-                            .style("stroke-width", '0.5px')
-                            .attr("d", mouserOverLine([d.values[i]]));
+                    // Decide to show version line or scan line
+                    var showVersion = false, showScan = false;
+                    if (j === undefined && i !== undefined) {
+                        showScan = true;
+                    } else if (j !== undefined && i === undefined) {
+                        showVersion = true;
+                    } else if (i !== undefined && j !==  undefined) {
+                        showScan = (Math.abs(dateList[i].date - month) < Math.abs(month - scope.versionData[j].date)) ? true : false;
+                        showVersion = !showScan;
+                    }
 
-                        return 'translate(' + x(d.values[i].date) + ',' + y(d.values[i].noOfVulns + d.values[i].noOfVulns0) + ')';
-                    });
+                    if (showScan) {
+                        focusCircles.attr('transform', function (d) {
+                            time = d.values[i].date;
+                            tips.push("<tr><td>" + d.key + "&nbsp;</td> <td style='color:"+ getTextColor(d.key) +"'>" + d.values[i].noOfVulns + "</td></tr>");
 
-                    tip.html(function(){
-                        var date = new Date(time);
-                        var tipContent = "<tr><td colspan='2' style='color:dodgerblue;text-align:center;'>" +
-                            (monthList[date.getMonth()]) + " " + date.getDate() + " " + date.getFullYear() + "</td></tr>";
+                            focus.selectAll('path').remove();
+                            focus.append("path")
+                                .attr("class", "line")
+                                .style("stroke-width", '0.5px')
+                                .attr("d", mouserOverLine([d.values[i]]));
 
-                        var table = '<table style="text-align:left;font-weight: bold;">' + tipContent;
-                        tips.forEach(function(tip) {
-                            table += tip;
+                            return 'translate(' + x(d.values[i].date) + ',' + y(d.values[i].noOfVulns + d.values[i].noOfVulns0) + ')';
                         });
-                        table += "</table>";
 
-                        return table;
-                    });
-                    coordObj = (focusCircles && focusCircles.length>0 && focusCircles[0] && focusCircles[0].length > 0) ?  focusCircles[0][0] : undefined;
-                    tip.show(coordObj);
+                        tip.html(function(){
+                            var date = new Date(time);
+                            var tipContent = "<tr><td colspan='2' style='color:dodgerblue;text-align:center;'>" +
+                                (monthList[date.getMonth()]) + " " + date.getDate() + " " + date.getFullYear() + "</td></tr>";
+
+                            var table = '<table style="text-align:left;font-weight: bold;">' + tipContent;
+                            tips.forEach(function(tip) {
+                                table += tip;
+                            });
+                            table += "</table>";
+
+                            return table;
+                        });
+                        coordObj = (focusCircles && focusCircles.length>0 && focusCircles[0] && focusCircles[0].length > 0) ?  focusCircles[0][0] : undefined;
+                        tip.show(coordObj);
+
+                    } else if (showVersion) {
+                        var verDate = new Date(scope.versionData[j].date);
+
+                        tip.html(scope.versionData[j].name + "<br/>" +
+                        (monthList[verDate.getMonth()]) + " " + verDate.getDate() + " " + verDate.getFullYear());
+                        focus.style("display", "none");
+
+                        svg.append("line")
+                            .attr({
+                                x1: x(scope.versionData[j].date),
+                                x2: x(scope.versionData[j].date),
+                                y1: 0,
+                                y2: h	})
+                            .attr("class", "versionLineFocus")
+                            .attr("id", scope.versionData[j].id + "focus");
+
+                        tip.show(svg.selectAll(".versionLineFocus")[0][0]);
+                    }
+                };
+
+                //TODO change to binary search
+                function findIndex(month, dateList) {
+                    var i = 0;
+                    if (month <= dateList[0].date)
+                        i = 0;
+                    else if (month >= dateList[dateList.length-1].date) {
+                        i = dateList.length - 1;
+                    } else {
+                        for (i = 1; i< dateList.length; i++) {
+                            if (dateList[i-1].date <= month && dateList[i].date >= month) {
+                                i = (dateList[i].date - month > month - dateList[i-1].date) ? i-1 : i;
+                                break;
+                            }
+                        }
+                    }
+
+                    return i;
+
                 }
-
                 function monthDiff(d1, d2) {
                     var months;
                     months = (d2.getFullYear() - d1.getFullYear()) * 12 + d2.getMonth() - d1.getMonth();
                     return months <= 0 ? 0 : months;
-                }
+                };
 
                 function getColor(key) {
                     return (reportConstants.vulnTypeColorMap[key] && reportConstants.vulnTypeColorMap[key].graphColor ?
                         reportConstants.vulnTypeColorMap[key].graphColor :
                         color(key));
-                }
+                };
 
                 function getTextColor(key) {
                     return (reportConstants.vulnTypeColorMap[key] && reportConstants.vulnTypeColorMap[key].textColor ?
                         reportConstants.vulnTypeColorMap[key].textColor :
                         color(key));
-                }
+                };
 
                 scope.export = function(){
 

@@ -437,6 +437,55 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
         $scope.refresh();
     };
 
+    $scope.selectStartDateVersion = function(version) {
+        resetAging();
+        $scope.parameters.startDate = version.date;
+        $scope.refresh();
+    }
+
+    $scope.selectEndDateVersion = function(version) {
+        resetAging();
+        $scope.parameters.endDate = version.date;
+        $scope.refresh();
+    }
+
+    /*
+    For application detail page
+     */
+    $scope.$on("versionsChange", function(event, versions){
+        $scope.versions = angular.copy(versions);
+        if ($scope.versions) {
+            $scope.versions.unshift({date: undefined, name: 'Version'});
+            $scope.selectedStartVersion = $scope.versions[0];
+            $scope.selectedEndVersion = $scope.versions[0];
+        }
+    });
+
+    $scope.$watch('parameters', function(){
+        if ($scope.parameters && !$scope.appId) { // In team detail page and analytics vuln search
+            if ($scope.parameters.tags && $scope.parameters.tags.length > 0)
+                $scope.versions = undefined;
+
+            else if ($scope.parameters.teams && $scope.parameters.teams.length > 0)
+                $scope.versions = undefined;
+
+            else if (!$scope.parameters.applications || $scope.parameters.applications.length !== 1) {
+                $scope.versions = undefined;
+            } else {
+                if ($scope.versionsMap) {
+                    $scope.versions = angular.copy($scope.versionsMap[$scope.parameters.applications[0].name]);
+                    if ($scope.versions) {
+                        $scope.versions.unshift({date:undefined, name: 'Version'});
+                        $scope.selectedStartVersion = $scope.versions[0];
+                        $scope.selectedEndVersion = $scope.versions[0];
+                    }
+                } else {
+                    $scope.versions = undefined;
+                }
+            }
+        }
+    });
+
     var nameCompare = function(a,b) {
         return a.name.localeCompare(b.name);
     };

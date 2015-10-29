@@ -1152,5 +1152,24 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities, customSev
             };
     };
 
+    trendingUtilities.filterVersions = function(parameters, versionMap) {
+        if (parameters.tags && parameters.tags.length > 0)
+            return undefined;
+
+        if (parameters.teams && parameters.teams.length > 0)
+            return undefined;
+
+        if (!parameters.applications || parameters.applications.length !== 1) {
+            return undefined;
+        } else {
+            if (versionMap) {
+                return versionMap[parameters.applications[0].name];
+            }
+        }
+
+        return undefined;
+
+    }
+
     return trendingUtilities;
 });
