@@ -33,7 +33,7 @@
 		<thead>
 			<tr>
 				<td>Name / ID</td>
-				<td>Organization</td>
+				<td>Team</td>
 				<td>Application</td>
 			</tr>
 		</thead>
