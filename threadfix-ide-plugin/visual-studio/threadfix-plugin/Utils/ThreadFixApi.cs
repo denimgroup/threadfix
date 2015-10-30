@@ -34,8 +34,8 @@ namespace DenimGroup.threadfix_plugin.Utils
         private readonly ThreadFixPlugin _threadFixPlugin;
         private static readonly string ApplicationsResource = "code/applications";
         private static readonly string VulnerabilitiesResource = "code/markers/{AppId}";
-        private static readonly string RootElement = "object";
         private static readonly string ApiKeyParameter = "apiKey";
+        private static readonly string ApiIdParameter = "AppId";
         private static readonly string InvalidUrlMessage = "Please provide a valid ThreadFix url in the options menu.";
         private static readonly string InvalidKeyMessgae = "Please provide a valid ThreadFix api key in the options menu.";
 
@@ -77,7 +77,7 @@ namespace DenimGroup.threadfix_plugin.Utils
                 Resource = VulnerabilitiesResource
             };
 
-            request.AddParameter("AppId", appId, ParameterType.UrlSegment);
+            request.AddParameter(ApiIdParameter, appId, ParameterType.UrlSegment);
 
             return Execute<List<VulnerabilityMarker>>(request);
         }
@@ -99,17 +99,17 @@ namespace DenimGroup.threadfix_plugin.Utils
 
             request.AddParameter(ApiKeyParameter, _threadFixPlugin.Options.ApiKey);
             request.RequestFormat = DataFormat.Json;
-            request.RootElement = RootElement;
 
-            var response = client.Execute<T>(request);
-            if (response.ErrorException != null)
+            var response = client.Execute<ThreadFixApiResponse<T>>(request);
+            if (response.ErrorException != null || !response.Data.Success)
             {
-                throw new ApplicationException(response.ErrorException.InnerException.Message, response.ErrorException);
+                // response.ErrorMessage is any error from the http request (invalid ssl certificate)
+                // response.Data.Message is any error return from ThreadFixApi (invalid ThreadFix api key)
+                var message = response.ErrorException != null ? response.ErrorMessage : response.Data.Message;
+                throw new ApplicationException(message);
             }
 
-            // TODO: Serialize the entire response intead of just "object" and check for errors sent back from threadfix api
-
-            return response.Data;
+            return response.Data.Object;
         }
 
         private bool ValidUrl(string url)

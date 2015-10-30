@@ -30,8 +30,6 @@ using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using System;
 using System.ComponentModel.Design;
-using System.Diagnostics;
-using System.Globalization;
 using System.Net.Security;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
@@ -72,10 +70,7 @@ namespace DenimGroup.threadfix_plugin
         /// not sited yet inside Visual Studio environment. The place to do all the other 
         /// initialization is the Initialize method.
         /// </summary>
-        public threadfix_pluginPackage()
-        {
-            Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
-        }
+        public threadfix_pluginPackage() { }
 
         /////////////////////////////////////////////////////////////////////////////
         // Overridden Package Implementation
@@ -87,7 +82,6 @@ namespace DenimGroup.threadfix_plugin
         /// </summary>
         protected override void Initialize()
         {
-            Debug.WriteLine (string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
             base.Initialize();
 
             var componentModel = (IComponentModel)GetService(typeof(SComponentModel));
@@ -117,9 +111,6 @@ namespace DenimGroup.threadfix_plugin
 #if DEBUG
             // Disable ssl certificate validation for debugging purposes
             System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
-
-            Debug.WriteLine("API Key: " + _threadFixPlugin.Options.ApiKey);
-            Debug.WriteLine("API Url: " + _threadFixPlugin.Options.ApiUrl);
 #endif
         }
 

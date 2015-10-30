@@ -150,6 +150,7 @@
       <DependentUpon>ToolWindowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Data\ApplicationInfo.cs" />
+    <Compile Include="Data\ThreadFixApiResponse.cs" />
     <Compile Include="Data\VulnerabilityMarker.cs" />
     <Compile Include="Extensions\TextDocumentExtensions.cs" />
     <Compile Include="Guids.cs" />
