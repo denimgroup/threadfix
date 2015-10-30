@@ -269,6 +269,9 @@ public class Event extends AuditableEntity {
     }
 
     public void setDetail(String detail) {
+        if ((detail != null) && detail.length() > STATUS_LENGTH) {
+            detail = detail.substring(0, STATUS_LENGTH);
+        }
         this.detail = detail;
     }
 
@@ -279,6 +282,9 @@ public class Event extends AuditableEntity {
     }
 
     public void setStatus(String status) {
+        if ((status != null) && status.length() > STATUS_LENGTH) {
+            status = status.substring(0, STATUS_LENGTH);
+        }
         this.status = status;
     }
 
