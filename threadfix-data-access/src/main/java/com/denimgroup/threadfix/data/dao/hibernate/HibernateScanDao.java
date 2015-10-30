@@ -287,7 +287,7 @@ public class HibernateScanDao
 		}
 
 		List<Long> surfaceLocationIds = sessionFactory.getCurrentSession()
-				  	  .createQuery("select surfaceLocation.id from Finding where scan = :scan)")
+				  	  .createQuery("select surfaceLocation.id from Finding where scan = :scan")
 					  .setInteger("scan", scan.getId())
 					  .list();
 		

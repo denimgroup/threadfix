@@ -179,9 +179,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         application.setWaf(null);
 
-        // Delete Scans & Findings attached to application
-        deleteScans(application);
-
         // Delete WafRules attached with application
         deleteWafRules(application);
 
@@ -218,18 +215,15 @@ public class ApplicationServiceImpl implements ApplicationService {
 		application.setPolicyStatuses(null);
 
 		applicationDao.saveOrUpdate(application);
+
+		// Delete Scans & Findings attached to application
+		deleteScans(application);
 	}
 
 	private void deleteScans(Application application) {
 		if (application.getScans() != null &&
                 application.getScans().size() > 0) {
-			for (Scan scan : application.getScans()) {
-				if (scan != null) {
-                    LOG.debug("Deleting Scan with ID " + scan.getId() +
-                            " of application with ID " + application.getId());
-                    scanDeleteService.deleteScan(scan);
-				}
-			}
+			scanDeleteService.deleteAllScanData(application);
 		}
 	}
 
