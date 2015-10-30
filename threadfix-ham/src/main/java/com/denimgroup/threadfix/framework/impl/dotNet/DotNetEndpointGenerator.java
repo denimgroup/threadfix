@@ -70,6 +70,11 @@ public class DotNetEndpointGenerator implements EndpointGenerator {
     }
 
     private void assembleEndpoints() {
+        if (dotNetRouteMappings == null || dotNetRouteMappings.routes == null) {
+            LOG.error("No mappings found for project. Exiting.");
+            return; // can't do anything without routes
+        }
+
         DotNetRouteMappings.MapRoute mapRoute = dotNetRouteMappings.routes.get(0);
 
         for (DotNetControllerMappings mappings : dotNetControllerMappings) {
