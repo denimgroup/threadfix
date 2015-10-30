@@ -35,6 +35,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.set;
 
 @Aspect
@@ -124,34 +125,47 @@ public class DefectEventTrackingAspect extends EventTrackingAspect {
 
     @Around("execution(* com.denimgroup.threadfix.service.ScanMergeService.saveRemoteScanAndRun(..)) && args(channelId, fileNames, originalFileNames)")
     public Object processSaveRemoteScanAndRunEvent(ProceedingJoinPoint joinPoint, Integer channelId, List<String> fileNames, List<String> originalFileNames) throws Throwable {
-        return emitUploadApplicationScanEvent(joinPoint);
+        return emitUploadApplicationScanEvent(joinPoint, false);
+    }
+
+    @Around("execution(* com.denimgroup.threadfix.service.ScanMergeService.saveRemoteScansAndRun(..)) && args(channelIds, fileNames, originalNames)")
+    public Object processSaveRemoteScansAndRunEvent(ProceedingJoinPoint joinPoint, List<Integer> channelIds, List<String> fileNames, List<String> originalNames) throws Throwable {
+        return emitUploadApplicationScanEvent(joinPoint, true);
     }
 
     @Around("execution(* com.denimgroup.threadfix.service.ScanMergeService.processScan(..)) && args(channelId, fileNames, originalFileNames, statusId, userName)")
     public Object processProcessScanEvent(ProceedingJoinPoint joinPoint, Integer channelId, List<String> fileNames, List<String> originalFileNames, Integer statusId, String userName) throws Throwable {
-        return emitUploadApplicationScanEvent(joinPoint);
+        return emitUploadApplicationScanEvent(joinPoint, false);
     }
 
-    public Object emitUploadApplicationScanEvent(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object emitUploadApplicationScanEvent(ProceedingJoinPoint joinPoint, boolean multipleScans) throws Throwable {
         Object proceed = joinPoint.proceed();
         try {
-            Scan scan = (Scan) proceed;
-            Set<Finding> findings = new HashSet<Finding>();
-            findings.addAll(scan.getFindings());
-            List<ScanRepeatFindingMap> scanRepeatFindingMaps = scan.getScanRepeatFindingMaps();
-            if (scanRepeatFindingMaps != null) {
-                for (ScanRepeatFindingMap scanRepeatFindingMap : scanRepeatFindingMaps) {
-                    findings.add(scanRepeatFindingMap.getFinding());
-                }
+            List<Scan> scans;
+            if (multipleScans) {
+                scans = (List<Scan>) proceed;
+            } else {
+                scans = list();
+                scans.add((Scan) proceed);
             }
+            for (Scan scan : scans) {
+                Set<Finding> findings = new HashSet<Finding>();
+                findings.addAll(scan.getFindings());
+                List<ScanRepeatFindingMap> scanRepeatFindingMaps = scan.getScanRepeatFindingMaps();
+                if (scanRepeatFindingMaps != null) {
+                    for (ScanRepeatFindingMap scanRepeatFindingMap : scanRepeatFindingMaps) {
+                        findings.add(scanRepeatFindingMap.getFinding());
+                    }
+                }
 
-            for (Finding finding : findings) {
-                Vulnerability vulnerability = finding.getVulnerability();
-                if (vulnerability != null) {
-                    Defect defect = vulnerability.getDefect();
-                    if ((defect != null) && (defect.isClosed())) {
-                        Event event = generateDefectAppearedAfterClosedEvent(defect, scan, vulnerability);
-                        publishEventTrackingEvent(event);
+                for (Finding finding : findings) {
+                    Vulnerability vulnerability = finding.getVulnerability();
+                    if (vulnerability != null) {
+                        Defect defect = vulnerability.getDefect();
+                        if ((defect != null) && (defect.isClosed())) {
+                            Event event = generateDefectAppearedAfterClosedEvent(defect, scan, vulnerability);
+                            publishEventTrackingEvent(event);
+                        }
                     }
                 }
             }

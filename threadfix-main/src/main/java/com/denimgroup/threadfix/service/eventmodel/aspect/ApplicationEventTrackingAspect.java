@@ -76,8 +76,15 @@ public class ApplicationEventTrackingAspect extends EventTrackingAspect {
     @Around("execution(* com.denimgroup.threadfix.service.ScanMergeService.saveRemoteScanAndRun(..)) && args(channelId, fileNames, originalFileNames)")
     public Object processSaveRemoteScanAndRunEvent(ProceedingJoinPoint joinPoint, Integer channelId, List<String> fileNames, List<String> originalFileNames) throws Throwable {
         Object proceed = joinPoint.proceed();
-        for (String fileName : fileNames) {
-            emitUploadApplicationScanEvent((Scan)proceed);
+        emitUploadApplicationScanEvent((Scan)proceed);
+        return proceed;
+    }
+
+    @Around("execution(* com.denimgroup.threadfix.service.ScanMergeService.saveRemoteScansAndRun(..)) && args(channelIds, fileNames, originalNames)")
+    public Object processSaveRemoteScansAndRunEvent(ProceedingJoinPoint joinPoint, List<Integer> channelIds, List<String> fileNames, List<String> originalNames) throws Throwable {
+        Object proceed = joinPoint.proceed();
+        for (Scan scan : (List<Scan>) proceed) {
+            emitUploadApplicationScanEvent(scan);
         }
         return proceed;
     }
