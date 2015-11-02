@@ -108,6 +108,7 @@ public class ApplicationVersionServiceImpl implements ApplicationVersionService 
 
 	@Override
 	public void delete(ApplicationVersion version) {
+		version.setApplication(null);
 		applicationVersionDao.delete(version);
 	}
 }
