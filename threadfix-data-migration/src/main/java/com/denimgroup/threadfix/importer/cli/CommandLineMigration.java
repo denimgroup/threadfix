@@ -117,7 +117,7 @@ public class CommandLineMigration {
                     sameFixedSet = 0;
                 }
 
-                LOGGER.info("Found error statement. Sending fixed sql script to MySQL server " + times + " times ...");
+                LOGGER.info("Found " + errorCount + " error statements. Sending fixed sql script to MySQL server " + times + " times ...");
                 scriptRunner.run(fixedSqlFile, outputMySqlConfigTemp);
                 lastCount = errorCount;
                 errorCount = scriptRunner.checkRunningAndFixStatements(errorLogAttemp1, fixedSqlFile);
@@ -129,7 +129,17 @@ public class CommandLineMigration {
             if (errorCount > 0) {
                 LOGGER.error("Unable to migrate data. After " + times + " of trying, still found error in sql script. " +
                         "Please check error_sql.sql and error1.log for more details.");
-                rollbackData(scriptRunner, outputMySqlConfigTemp, rollbackScript);
+                LOGGER.info("Do you want to keep data in MySQL (y/n)? ");
+                try (java.util.Scanner in = new java.util.Scanner(System.in)) {
+                    String answer = in.nextLine();
+                    if (!answer.equalsIgnoreCase("y")) {
+                        rollbackData(scriptRunner, outputMySqlConfigTemp, rollbackScript);
+                    } else {
+                        LOGGER.info("Data imported to MySQL, but still have some errors. Please check error1.log and import manually.");
+                    }
+
+                }
+
             } else {
                 printTimeConsumed(startTime);
                 LOGGER.info("Migration successfully finished");
