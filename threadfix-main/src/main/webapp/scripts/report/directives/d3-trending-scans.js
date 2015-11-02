@@ -33,7 +33,8 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     focusCircles,
                     duration = 500,
                     firstScanNotReal,
-                    lastScanNotReal;
+                    lastScanNotReal,
+                    filterVersions;
 
                 var x = d3.time.scale().range([0, w]),
                     y = d3.scale.linear().range([h, 0]);
@@ -384,7 +385,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                             return a.date - b.date;
                         });
 
-                        var filterVersions = [];
+                        filterVersions = [];
                         scope.versionData.forEach(function(version){
                             if (scope.startDate <= version.date && version.date <= scope.endDate) {
                                 filterVersions.push(version);
@@ -435,8 +436,8 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     }
 
                     var j = undefined;
-                    if (scope.versionData && scope.versionData.length > 0) {
-                        j = findIndex(month, scope.versionData);
+                    if (filterVersions && filterVersions.length > 0) {
+                        j = findIndex(month, filterVersions);
                     }
 
                     // Decide to show version line or scan line
@@ -446,7 +447,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     } else if (j !== undefined && i === undefined) {
                         showVersion = true;
                     } else if (i !== undefined && j !==  undefined) {
-                        showScan = (Math.abs(dateList[i].date - month) < Math.abs(month - scope.versionData[j].date)) ? true : false;
+                        showScan = (Math.abs(dateList[i].date - month) < Math.abs(month - filterVersions[j].date)) ? true : false;
                         showVersion = !showScan;
                     }
 
@@ -481,20 +482,20 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         tip.show(coordObj);
 
                     } else if (showVersion) {
-                        var verDate = new Date(scope.versionData[j].date);
+                        var verDate = new Date(filterVersions[j].date);
 
-                        tip.html(scope.versionData[j].name + "<br/>" +
+                        tip.html(filterVersions[j].name + "<br/>" +
                         (monthList[verDate.getMonth()]) + " " + verDate.getDate() + " " + verDate.getFullYear());
                         focus.style("display", "none");
 
                         svg.append("line")
                             .attr({
-                                x1: x(scope.versionData[j].date),
-                                x2: x(scope.versionData[j].date),
+                                x1: x(filterVersions[j].date),
+                                x2: x(filterVersions[j].date),
                                 y1: 0,
                                 y2: h	})
                             .attr("class", "versionLineFocus")
-                            .attr("id", scope.versionData[j].id + "focus");
+                            .attr("id", filterVersions[j].id + "focus");
 
                         tip.show(svg.selectAll(".versionLineFocus")[0][0]);
                     }
