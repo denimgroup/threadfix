@@ -24,6 +24,9 @@
 using DenimGroup.threadfix_plugin.Controls;
 using DenimGroup.threadfix_plugin.Utils;
 using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DenimGroup.threadfix_plugin.Actions
 {
@@ -55,11 +58,33 @@ namespace DenimGroup.threadfix_plugin.Actions
         private void OnAppsSelected(object sender, ApplicationsSelectedEventArgs args)
         {
             // TODO: show some kind of loading spinner here. if time permits set up async http calls
-            _threadFixPlugin.ImportMarkers(_viewModelService.GetSelectedAppIds(args.Model), _threadFixApi);
-            _threadFixPlugin.UpdateMarkers();
+            _threadFixPlugin.ToggleMenuCommands(false);
+            var loading = new LoadingWindow();
+            loading.Show();
+            var context = SynchronizationContext.Current;
+            var importMarkers = ImportMarkersAysnc(_viewModelService.GetSelectedAppIds(args.Model));
 
-            var showToolWindow = new ShowAction(_threadFixPlugin);
-            showToolWindow.OnExecute(this, null);
+            importMarkers.ContinueWith((result) =>
+            {
+                context.Post(o => 
+                {
+                    _threadFixPlugin.UpdateMarkers();
+
+                    var showToolWindow = new ShowAction(_threadFixPlugin);
+                    showToolWindow.OnExecute(this, null);
+
+                    loading.Close();
+                    _threadFixPlugin.ToggleMenuCommands(true);
+                }, null);
+            });
+        }
+
+        private Task ImportMarkersAysnc(HashSet<string> selectedAppIds)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                _threadFixPlugin.ImportMarkers(selectedAppIds, _threadFixApi);
+            });
         }
     }
 }

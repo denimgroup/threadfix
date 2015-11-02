@@ -140,6 +140,9 @@
     <Compile Include="Controls\ApplicationsWindow.xaml.cs">
       <DependentUpon>ApplicationsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\LoadingWindow.xaml.cs">
+      <DependentUpon>LoadingWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MarkerGlyphFactory.cs" />
     <Compile Include="Controls\MarkerTag.cs" />
     <Compile Include="Controls\OptionsPage.cs">
@@ -205,6 +208,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Controls\ApplicationsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\LoadingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

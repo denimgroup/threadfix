@@ -1,0 +1,10 @@
+﻿<Window x:Class="DenimGroup.threadfix_plugin.Controls.LoadingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ThreadFix" Height="100" Width="300"
+        WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow">
+    <Grid Margin="20">
+        <ProgressBar Minimum="0" Maximum="100"  IsIndeterminate="True" Name="Loading"/>
+        <TextBlock Text="Loading Vulnerability Markers..." HorizontalAlignment="Center" VerticalAlignment="Center" />
+    </Grid>
+</Window>

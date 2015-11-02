@@ -100,8 +100,8 @@ namespace DenimGroup.threadfix_plugin
             _solutionEvents.Opened += SolutionEvents_Opened;
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
-            OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-            if ( null != mcs )
+            var mcs = _threadFixPlugin.MenuCommandService = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+            if (mcs != null)
             {
                 // Create the command for the menu item.
                 AddMenuItemCallback((int)PkgCmdIDList.cmdidImportMarkersCommand, mcs, new ImportAction(_threadFixPlugin));
@@ -122,8 +122,8 @@ namespace DenimGroup.threadfix_plugin
 
         private void AddMenuItemCallback(int commandId, OleMenuCommandService commandService, IAction callback)
         {
-            CommandID menuCommandID = new CommandID(GuidList.guidthreadfix_pluginCmdSet, commandId);
-            MenuCommand menuItem = new MenuCommand(callback.OnExecute, menuCommandID);
+            var menuCommandID = new CommandID(GuidList.guidthreadfix_pluginCmdSet, commandId);
+            var menuItem = new MenuCommand(callback.OnExecute, menuCommandID);
             commandService.AddCommand(menuItem);
         }
 

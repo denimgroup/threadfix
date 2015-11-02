@@ -23,9 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 using DenimGroup.threadfix_plugin.Controls;
 using DenimGroup.threadfix_plugin.Data;
+using Microsoft.VisualStudio.Shell;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.ComponentModel.Design;
 using System.Linq;
 
 namespace DenimGroup.threadfix_plugin.Utils
@@ -35,6 +37,7 @@ namespace DenimGroup.threadfix_plugin.Utils
     [Export(typeof(IThreadFixPlugin))]
     public class ThreadFixPlugin : IThreadFixPlugin
     {
+        public OleMenuCommandService MenuCommandService { get; set; }
         public ThreadFixToolWindow ToolWindow { get; set; }
         public OptionsPage Options { get; set; }
         public HashSet<string> SelectedAppIds { get; set; }
@@ -71,6 +74,25 @@ namespace DenimGroup.threadfix_plugin.Utils
             {
                 FileLookUp = FileUtil.GetFileLookUp(new HashSet<string>(Markers.Select(m => m.FilePath)));
                 MarkerLookUp = CreateMarkerLookUp();
+            }
+        }
+
+        public void ToggleMenuCommands(bool enabled)
+        {
+            if (MenuCommandService != null)
+            {
+                ChangeCommand((int)PkgCmdIDList.cmdidImportMarkersCommand, enabled);
+                ChangeCommand((int)PkgCmdIDList.cmdidClearMarkers, enabled);
+            }
+        }
+
+        private void ChangeCommand(int commandId, bool enabled)
+        {
+            var command = new CommandID(GuidList.guidthreadfix_pluginCmdSet, commandId);
+            var menuItem = MenuCommandService.FindCommand(command);
+            if (menuItem != null)
+            {
+                menuItem.Enabled = enabled;
             }
         }
 
