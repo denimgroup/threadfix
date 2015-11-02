@@ -97,16 +97,18 @@
                                 ng-click="getProductNames()">Get Product Names</button>
                     </td>
                 </tr>
-                <tr ng-show="productNames || object.defaultProductName" class="left-align" id="productNamesSection">
+                <tr ng-show="productNames || oldDefaultProduct" class="left-align" id="productNamesSection">
                     <td id="projectname">Product Name</td>
                     <td class="inputValue">
-                        <select ng-model="object.defaultProductName" id="productNameSelect" name="productName">
-                            <option ng-repeat="name in productNames"
-                                    ng-selected="object.defaultProductName === name"
-                                    value="{{ name }}">
-                                {{ name }}
-                            </option>
-                        </select>
+                        <input id="productNameSelect"
+                               type="text"
+                               name = "productName"
+                               ng-model="object.defaultProductName"
+                               typeahead="name for name in productNames | filter:$viewValue | limitTo:10"
+                               typeahead-editable="true"
+                               placeholder="Enter Product"
+                               class="form-control"/>
+
                     </td>
                     <td colspan="2" >
                         <errors name="productName" cssClass="errors" />
@@ -115,6 +117,7 @@
                 </tr>
             </tbody>
         </table>
+        <div style="height:100px"></div>
     </div>
     <%@ include file="/WEB-INF/views/modal/footer.jspf" %>
 

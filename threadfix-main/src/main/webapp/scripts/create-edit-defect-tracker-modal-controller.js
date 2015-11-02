@@ -8,6 +8,8 @@ myAppModule.controller('CreateEditDefectTrackerModalController', function ($log,
 
     $scope.buttonText = buttonText;
 
+    $scope.oldDefaultProduct = angular.copy($scope.object.defaultProductName);
+
     $scope.loading = false;
 
     var currentErrors = [];
@@ -33,7 +35,6 @@ myAppModule.controller('CreateEditDefectTrackerModalController', function ($log,
 
                 if (data.success) {
                     $scope.productNames = data.object;
-                    $scope.object.projectName = $scope.productNames[0];
                     $scope.error = null;
                 } else {
                     if (data.errorMap) {

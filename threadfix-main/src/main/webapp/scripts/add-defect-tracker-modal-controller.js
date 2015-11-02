@@ -23,7 +23,6 @@ myAppModule.controller('AddDefectTrackerModalController', function ($scope, $htt
 
                 if (data.success) {
                     $scope.productNames = data.object;
-                    $scope.object.projectName = $scope.productNames[0];
                     $scope.error = null;
                 } else {
                     $scope.error = "Failure. Message was : " + data.message;

@@ -63,13 +63,15 @@
             <tr ng-show="productNames" class="left-align" id="productNamesSection">
                 <td id="projectname">Product Name</td>
                 <td class="inputValue">
-                    <select ng-model="object.projectName" id="productNameSelect" name="productName" ng-disabled="object.useDefaultProduct">
-                        <option ng-repeat="name in productNames"
-                                ng-selected="object.projectName === name"
-                                value="{{ name }}">
-                            {{ name }}
-                        </option>
-                    </select>
+                    <input id="productNameSelect"
+                           type="text"
+                           name = "productName"
+                           ng-model="object.projectName"
+                           typeahead="name for name in productNames | filter:$viewValue | limitTo:10"
+                           typeahead-editable="true"
+                           placeholder="Enter Product"
+                           class="form-control"
+                           ng-disabled="object.useDefaultProduct"/>
                 </td>
                 <td colspan="2" >
                     <errors name="productName" cssClass="errors" />
@@ -77,6 +79,7 @@
                 </td>
             </tr>
         </table>
+        <div style="height:100px"></div>
     </div>
     <div class="modal-footer">
         <span class="errors" style="float:left">{{ error }}</span>
