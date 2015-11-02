@@ -31,12 +31,15 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.data.interfaces.Endpoint.PrintFormat.JSON;
 
 public class EndpointMain {
 
@@ -74,6 +77,8 @@ public class EndpointMain {
                     logging = Logging.ON;
                 } else if (string.equals("-lint")) {
                     printFormat = Endpoint.PrintFormat.LINT;
+                } else if (string.equals("-json")) {
+                    printFormat = JSON;
                 } else {
                     System.out.println("Received unsupported option " + string + ", valid arguments are -lint and -debug");
                     return false;
@@ -106,14 +111,37 @@ public class EndpointMain {
 		Collections.sort(endpoints);
 		
 		if (endpoints.isEmpty()) {
-			System.out.println("No endpoints were found.");
-		} else {
+            System.out.println("No endpoints were found.");
+
+        } else if (printFormat == JSON) {
+
+            Endpoint.Info[] infos = getEndpointInfo(endpoints);
+
+            try {
+                String s = new ObjectMapper().writeValueAsString(infos);
+                System.out.println(s);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
 			for (Endpoint endpoint : endpoints) {
 				System.out.println(endpoint.getCSVLine(printFormat));
 			}
 		}
 
-        System.out.println("To enable logging include the -debug argument");
+        if (printFormat != JSON) {
+            System.out.println("To enable logging include the -debug argument");
+        }
+    }
+
+    private static Endpoint.Info[] getEndpointInfo(List<Endpoint> endpoints) {
+        Endpoint.Info[] endpointsInfos = new Endpoint.Info[endpoints.size()];
+
+        for (int i = 0; i < endpoints.size(); i++) {
+            endpointsInfos[i] = Endpoint.Info.fromEndpoint(endpoints.get(i));
+        }
+
+        return endpointsInfos;
     }
 
     private static void resetLoggingConfiguration() {
