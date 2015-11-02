@@ -177,7 +177,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     svg.selectAll('*').remove();
                     drawReport();
                     drawTable();
-                    //drawVersionLines();
+                    drawVersionLines();
                 };
 
                 function drawReport(){
