@@ -35,7 +35,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     $scope.htmlElementIdMap[$scope.PIT_Report_Id] = "pointInTimeTablePdf";
     $scope.htmlElementIdMap[$scope.OWASP_Report_Id] = "pointInTimeTablePdf";
     $scope.htmlElementIdMap[$scope.PBV_Report_Id] = "progressVulnsDiv";
-    $scope.htmlElementIdMap[$scope.Portfolio_Report_Id] = "portfolioDiv";
+    $scope.htmlElementIdMap[$scope.Portfolio_Report_Id] = ["portfolioDiv", "portfolioScanStat"];
     $scope.htmlElementIdMap[$scope.DISA_STIG_Report_Id] = "pointInTimeTablePdf";
     $scope.htmlElementIdMap[$scope.Scan_Comparison_Summary_Id] = "scanComparisonDiv";
 
