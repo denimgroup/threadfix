@@ -377,14 +377,21 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 };
 
                 function drawVersionLines() {
-                        svg.selectAll('.versionLine').remove();
+                    svg.selectAll('.versionLine').remove();
                     if (scope.versionData) {
                         //Sorting
                         scope.versionData.sort(function(a, b) {
                             return a.date - b.date;
                         });
 
-                        scope.versionData.forEach(function(version) {
+                        var filterVersions = [];
+                        scope.versionData.forEach(function(version){
+                            if (scope.startDate <= version.date && version.date <= scope.endDate) {
+                                filterVersions.push(version);
+                            }
+                        });
+
+                        filterVersions.forEach(function(version) {
                             svg.append("line")
                                 .attr({
                                     x1: x(version.date),
