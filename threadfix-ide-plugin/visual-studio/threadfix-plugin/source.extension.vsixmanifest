@@ -6,7 +6,6 @@
     <Description xml:space="preserve">Import and display vulnerability markers directly from ThreadFix.</Description>
     <MoreInfo>https://github.com/denimgroup/threadfix/wiki/Visual-Studio-IDE-Plugin</MoreInfo>
     <License>Resources\license.txt</License>
-    <Icon>Resources\DG_logo_mark_13x13.png</Icon>
   </Metadata>
   <Installation InstalledByMsi="false">
     <InstallationTarget Version="[11.0,12.0)" Id="Microsoft.VisualStudio.Pro" />
