@@ -153,41 +153,62 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
             scanDescription.append(" The scan was uploaded");
         }
 
+        String scanUploadDate = "";
+        if (scanUploadEvent != null) {
+            Date scanUploadEventDate = scanUploadEvent.getDate();
+            if (scanUploadEventDate != null) {
+                scanUploadDate = " on " + dateFormatter.format(scanUploadEventDate);
+            }
+        }
+
         String fileNamesString = null;
         List<String> originalFileNames = scan.getOriginalFileNames();
         if ((originalFileNames != null) && (originalFileNames.size() > 0)) {
-            fileNamesString = buildFileNamesString(scan.getOriginalFileNames());
+            int fileNamesStringLength = Event.STATUS_LENGTH - scanDescription.length() - 6 - scanUploadDate.length() - 1;
+            // -6 for " from " and -1 for the period at the end
+            fileNamesString = buildFileNamesString(scan.getOriginalFileNames(), fileNamesStringLength);
             if (fileNamesString != null) {
                 scanDescription.append(" from ").append(fileNamesString);
             }
         }
 
-        if (scanUploadEvent != null) {
-            Date scanUploadEventDate = scanUploadEvent.getDate();
-            if (scanUploadEventDate != null) {
-                scanDescription.append(" on ").append(dateFormatter.format(scanUploadEventDate));
-            }
-        }
+        scanDescription.append(scanUploadDate);
 
         scanDescription.append(".");
         return scanDescription.toString();
     }
 
-    private String buildFileNamesString(List<String> fileNameList) {
+    private String buildFileNamesString(List<String> fileNameList, int fileNamesStringLength) {
         StringBuilder fileNames = new StringBuilder();
         int i = 0;
-        int numberOfFileNames = fileNameList.size();
+
+        int numberOfFileNamesRemaining = fileNameList.size();
+        String shortString = numberOfFileNamesRemaining + " files";
+        boolean firstFileName = true;
         for (String fileName : fileNameList) {
-            fileNames.append(fileName);
-            i++;
-            if (i < numberOfFileNames) {
+            if (firstFileName) {
+                firstFileName = false;
+            } else if (numberOfFileNamesRemaining == 1) {
+                fileNames.append(" and ");
+            } else {
                 fileNames.append(", ");
-                if (i == numberOfFileNames - 1) {
-                    fileNames.append("and ");
-                }
             }
+            fileNames.append(fileName);
+            numberOfFileNamesRemaining--;
+            String longString;
+            if (numberOfFileNamesRemaining == 0) {
+                longString = fileNames.toString();
+            } else if (numberOfFileNamesRemaining == 1) {
+                longString = fileNames.toString() + " and " + numberOfFileNamesRemaining + " other file";
+            } else {
+                longString = fileNames.toString() + " and " + numberOfFileNamesRemaining + " other files";
+            }
+            if (longString.length() > fileNamesStringLength) {
+                return shortString;
+            }
+            shortString = longString;
         }
-        return fileNames.toString();
+        return shortString;
     }
 
     @Override

@@ -21,20 +21,20 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+package com.denimgroup.threadfix.data.dao;
 
-package com.denimgroup.threadfix.service;
+import com.denimgroup.threadfix.data.entities.ApplicationVersion;
 
-import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.springframework.security.authentication.AuthenticationProvider;
+import java.util.List;
+import java.util.Map;
 
-public interface LdapService extends AuthenticationProvider {
-	
-	boolean innerAuthenticate(String username, String password);
+/**
+ * @author stran
+ * 
+ */
+public interface ApplicationVersionDao extends GenericObjectDao<ApplicationVersion> {
 
-	boolean innerAuthenticate(DefaultConfiguration defaultConfiguration);
-
-	boolean checkForUser(String username);
-
-	void setLogger(SanitizedLogger log);
+    Map<String, Object> getAllVersionsByAppId(List<Integer> appIds);
+    ApplicationVersion loadAppVersionByName(String name, int appId);
+    void delete(ApplicationVersion version);
 }

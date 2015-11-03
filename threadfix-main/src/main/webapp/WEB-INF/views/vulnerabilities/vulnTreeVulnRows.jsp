@@ -57,6 +57,11 @@
     <!-- Tag Badges -->
     <span id="tag{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $parent.$index }}{{ tag.name | removeSpace }}" ng-repeat="tag in vulnerability.tags" class="badge pointer" ng-class="{'badge-vulnerability-tag': true}" ng-click="goToTag(tag)">{{ tag.name }}</span>
     <br ng-show="vulnerability.tags">
+    <!-- Version Badges -->
+    <span id="version{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $parent.$index }}{{ version.name | removeSpace }}" ng-repeat="version in vulnerability.versions" class="badge" ng-class="{'badge-vulnerability-version': true}">{{ version.name }}</span>
+    <br ng-show="vulnerability.versions">
+
+    <!-- Defect Information -->
     <a id="defectBadge{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}"
        ng-href="{{ vulnerability.defect.defectURL }}"
        target="_blank"

@@ -166,6 +166,8 @@ public class Application extends AuditableEntity {
     private Boolean useDefaultCredentials = false;
     private Boolean useDefaultProject = false;
 
+	private List<ApplicationVersion> versions;
+
 	@Column(length = NAME_LENGTH, nullable = false)
     @JsonView(Object.class) // This means it will be included in all ObjectWriters with Views.
 	public String getName() {
@@ -955,7 +957,20 @@ public class Application extends AuditableEntity {
         this.useDefaultCredentials = useDefaultCredentials;
     }
 
-    @Override
+	@OneToMany(mappedBy = "application", cascade = CascadeType.ALL)
+	@JsonIgnore
+	public List<ApplicationVersion> getVersions() {
+		if (versions != null) {
+			Collections.sort(versions);
+		}
+		return versions;
+	}
+
+	public void setVersions(List<ApplicationVersion> versions) {
+		this.versions = versions;
+	}
+
+	@Override
 	public String toString() {
 		return name;
 	}

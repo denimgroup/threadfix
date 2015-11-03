@@ -68,6 +68,7 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 
         Map<FindingKey, String> findingMap = map();
 
+		private String currentChannelCode = null;
         private ChannelVulnerability currentChannelVuln = null;
 		private ChannelSeverity currentChannelSeverity  = null;
 		
@@ -80,14 +81,17 @@ public class AppScanWebImporter extends AbstractChannelImporter {
         private String currentAttackDetail = null;
         private String currentRequestResponse         = null;
         private StringBuffer currentRawFinding	  = new StringBuffer();
+		private StringBuffer currentIssueType	  = new StringBuffer();
 		
 		private final Map<String, ChannelSeverity> severityMap = map();
 		private final Map<String, String> genericVulnMap = map();
 		private final Map<String, String> channelVulnNameMap = map();
+		private final Map<String, String> scanRecommendationMap = map();
 						
 		private boolean grabUrlText       = false;
 		private boolean grabSeverity      = false;
 		private boolean grabCWE           = false;
+		private boolean grabCWELink           = false;
 		private boolean grabIssueTypeName = false;
 		private boolean inIssueTypes = true;
 		private boolean grabDate          = false;
@@ -95,6 +99,7 @@ public class AppScanWebImporter extends AbstractChannelImporter {
         private boolean grabAttackDetail       = false;
         private boolean grabScannerDetail      = false;
         private boolean inFinding		  = false;
+		private boolean inIssueType = false;
 
 	    public AppScanSAXParser () {
 	    	super();
@@ -113,7 +118,7 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 	    			channelVuln.setChannelType(channelType);
 	    		} else if (channelVuln.getVulnerabilityMaps() != null
 						&& channelVuln.getVulnerabilityMaps().size() != 0) {
-	    			return;
+	    			continue;
 				}
 	    		
 	    		GenericVulnerability genericVuln = null;
@@ -161,20 +166,25 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 
 				if (qName.equals("IssueType")) {
 					currentIssueTypeId = atts.getValue(0);
+					inIssueType = true;
 				} else if (qName.equals("Issue")) {
 					inIssueTypes = false;
 				} else if (qName.equals("Severity")) {
 					grabSeverity = true;
-				} else if (qName.equals("link")) {
+				} else if (qName.equals("cwe")) {
 					grabCWE = true;
 				} else if (qName.equals("name")) {
 					grabIssueTypeName = true;
+				} else if (grabCWE && qName.equals("link")) {
+					grabCWELink = true;
+					grabCWE = false;
 				}
 	    			    	
 	    	} else {
 		    	if ("Issue".equals(qName)) {
-		    		currentChannelVuln = getChannelVulnerability(atts.getValue(0));
-		    		currentChannelSeverity = severityMap.get(atts.getValue(0));
+					currentChannelCode = atts.getValue(0);
+		    		currentChannelVuln = getChannelVulnerability(currentChannelCode);
+		    		currentChannelSeverity = severityMap.get(currentChannelCode);
                     inFinding = true;
 		    	}
 		    	else if ("Entity".equals(qName))
@@ -195,6 +205,10 @@ public class AppScanWebImporter extends AbstractChannelImporter {
             if (inFinding){
                 currentRawFinding.append(makeTag(name, qName , atts));
             }
+
+			if (inIssueType){
+				currentIssueType.append(makeTag(name, qName , atts));
+			}
 	    }
 
 	    public void endElement (String uri, String name, String qName) throws SAXException {
@@ -210,16 +224,19 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 	    			severityMap.put(currentIssueTypeId, severity);
 	    		
 	    		grabSeverity = false;
-	    	} else if (grabCWE) {
+	    	} else if (grabCWELink) {
 	    		String maybeId = getBuilderText();
 	    		
 	    		if (maybeId.startsWith("CWE-") && maybeId.contains(":")) {
 	    			maybeId = maybeId.substring(4, maybeId.indexOf(':'));
 		    		genericVulnMap.put(currentIssueTypeId, maybeId);
-	    		}
-	    		
-	    		grabCWE = false;
-	    	} else if (grabIssueTypeName) {
+	    		} else {
+					genericVulnMap.put(currentIssueTypeId, maybeId);
+				}
+				grabCWELink = false;
+	    	} else if (grabCWE) {
+				grabCWE = false;
+			} else if (grabIssueTypeName) {
 	    		String charString = getBuilderText();
 	    		channelVulnNameMap.put(currentIssueTypeId, charString);
 	    		
@@ -240,8 +257,16 @@ public class AppScanWebImporter extends AbstractChannelImporter {
             if (inFinding){
                 currentRawFinding.append("</").append(qName).append(">");
             }
-	    	
-	    	if ("Issues".equals(qName)) {
+			if (inIssueType){
+				currentIssueType.append("</").append(qName).append(">");
+			}
+
+			if ("IssueType".equals(qName)) {
+				scanRecommendationMap.put(currentIssueTypeId, currentIssueType.toString());
+				inIssueType = false;
+				currentIssueTypeId = null;
+				currentIssueType.setLength(0);
+			} else if ("Issues".equals(qName)) {
 				throw new SAXException("Done Parsing.");
 	    	} else if ("IssueTypes".equals(qName)) {
 	    		addChannelVulnsAndMappingsToDatabase();
@@ -279,11 +304,13 @@ public class AppScanWebImporter extends AbstractChannelImporter {
                 findingMap.put(FindingKey.REQUEST, currentRequestResponse);
                 findingMap.put(FindingKey.VALUE, currentAttackDetail);
                 findingMap.put(FindingKey.DETAIL, currentScannerDetail);
+				findingMap.put(FindingKey.RECOMMENDATION, scanRecommendationMap.get(currentChannelCode));
                 findingMap.put(FindingKey.RAWFINDING, currentRawFinding.toString());
                 addFindingDetail(finding, findingMap);
 	    		
 	    		saxFindingList.add(finding);
-	    	
+
+				currentChannelCode = null;
 	    		currentChannelVuln = null;
 	    		currentUrl = null;
 	    		currentParam = null;
@@ -319,12 +346,15 @@ public class AppScanWebImporter extends AbstractChannelImporter {
 		}
 
 		public void characters (char ch[], int start, int length) {
-	    	if (grabUrlText || grabSeverity || grabCWE || grabIssueTypeName || grabDate
+	    	if (grabUrlText || grabSeverity || grabCWELink || grabIssueTypeName || grabDate
                     || grabRequestResponseText || grabAttackDetail || grabScannerDetail) {
 	    		addTextToBuilder(ch, start, length);
 	    	}
             if (inFinding)
                 currentRawFinding.append(ch,start,length);
+
+			if (inIssueType)
+				currentIssueType.append(ch,start,length);
 	    }
 	}
 

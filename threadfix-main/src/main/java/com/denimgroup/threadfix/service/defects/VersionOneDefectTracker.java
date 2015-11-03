@@ -154,7 +154,15 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
 
     @Override
     public String getBugURL(String endpointURL, String bugID) {
+        // BugID here is the Number, the visible ID in UI, retrieve main defect OID token by this Number
+        String url = getUrlWithRest() +
+                "Defect?where=Scope.Name='" + getUrlEncodedProjectName() + "';Number='" + bugID + "'&sel=Number";
+        List<Assets.Asset> assets = getAssets(url);
+        if (assets == null || assets.isEmpty())
         return getUrlWithRest().replace("/rest-1.v1/Data/","");
+        else {
+            return getUrlWithRest().replace("/rest-1.v1/Data/","/defect.mvc/Summary?oidToken=") + assets.get(0).getId() ;
+        }
     }
 
     @Override
@@ -687,6 +695,8 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         String number = null;
 
         Assets.Asset asset = MarshallingUtils.marshal(Assets.Asset.class, defectXml);
+        // id here is internal OID token of this created history record of defect, not the main defect OID token.
+        // Main defect and history record of defect share the same Number (the one visible in UI)
         String id = asset.getId();
         if (id != null)
             id = id.replace(":","/");

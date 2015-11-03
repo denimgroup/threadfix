@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.dao.*;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.ApplicationVersionService;
 import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.VulnerabilitySearchService;
@@ -73,6 +74,8 @@ public class ReportsServiceImpl implements ReportsService {
     private VulnerabilitySearchService vulnerabilitySearchService;
     @Autowired
     private DefaultConfigService defaultConfigService;
+    @Autowired
+    private ApplicationVersionService applicationVersionService;
 
     @Override
     public ReportCheckResultBean generateDashboardReport(ReportParameters parameters, HttpServletRequest request) {
@@ -124,7 +127,7 @@ public class ReportsServiceImpl implements ReportsService {
             return map;
         }
         map.put("scanList", scanList);
-
+        map.put("versionsMap", applicationVersionService.getAllVersionsByAppId(applicationIdList));
         log.info("generateTrendingReport took " + (System.currentTimeMillis() - start) + " ms");
 
         return map;

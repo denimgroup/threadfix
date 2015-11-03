@@ -21,20 +21,46 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.springframework.security.authentication.AuthenticationProvider;
+import com.denimgroup.threadfix.data.entities.APIKey;
+import com.denimgroup.threadfix.data.entities.ApplicationVersion;
+import org.springframework.validation.BindingResult;
 
-public interface LdapService extends AuthenticationProvider {
-	
-	boolean innerAuthenticate(String username, String password);
+import java.util.List;
+import java.util.Map;
 
-	boolean innerAuthenticate(DefaultConfiguration defaultConfiguration);
+/**
+ * @author stran
+ * 
+ */
+public interface ApplicationVersionService {
 
-	boolean checkForUser(String username);
+	/**
+	 * @return
+	 */
+	Map<String, Object> getAllVersionsByAppId(List<Integer> appIds);
 
-	void setLogger(SanitizedLogger log);
+	/**
+	 * @param versionId
+	 * @return
+	 */
+	ApplicationVersion loadVersion(int versionId);
+
+	/**
+	 *
+	 * @param name
+	 * @param appId
+	 * @return
+	 */
+	ApplicationVersion loadAppVersionByName(String name, int appId);
+
+	/**
+	 * @param version
+	 */
+	void storeVersion(ApplicationVersion version);
+
+	void validate(ApplicationVersion applicationVersion, BindingResult result, int appId);
+
+	void delete(ApplicationVersion version);
 }

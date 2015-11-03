@@ -22,7 +22,7 @@
                     Drag and drop scan files here.
                 </div>
                 <div ng-show="isIE">
-                    Select scans file.
+                    Select scan files.
                 </div>
             </div>
             <progressbar ng-show="uploading" animate="false" value="dynamic" type="success"><b>{{uploadedPercent}}%</b></progressbar>
@@ -33,9 +33,9 @@
         </div>
     </div>
 
-    <div ng-show="confirmingScanUploadStyle">
+    <div ng-show="confirmingScanUploadStyle" class="multi-upload-div">
 
-        <div class="modal-loading"><div><span class="spinner dark"></span></div>Confirming...</div><br>
+        <div class="modal-loading"></div><div>Please choose an upload method.</div><br>
 
         <button id="singleScan"
                 class="btn btn-primary"

@@ -26,6 +26,7 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
                     $scope.loading = false;
                     $scope.resetFilters();
                     $scope.allScans = data.object.scanList;
+                    $scope.versionsMap = data.object.versionsMap;
                     if ($scope.$parent.teamId !== -1 && $scope.$parent.applicationId === -1) {
                         $scope.parameters.teams = [$scope.$parent.team];
                         $scope.parameters.applications = [];
@@ -47,6 +48,7 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
                     });
                     $scope.filterScans = trendingUtilities.filterByTeamAndApp($scope.allScans, $scope.parameters.teams, $scope.parameters.applications);
                     $scope.trendingScansData = trendingUtilities.refreshScans($scope);
+                    $scope.versionsDisplayData = trendingUtilities.filterVersions($scope.parameters, $scope.versionsMap);
 
                     $rootScope.$broadcast('allTrendingScans', $scope.allScans);
                 }).
@@ -64,6 +66,7 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
         $scope.filterScans = trendingUtilities.filterByTeamAndApp($scope.allScans, $scope.parameters.teams, $scope.parameters.applications);
         $scope.filterScans = trendingUtilities.filterByTag($scope.filterScans, $scope.parameters.tags);
         $scope.trendingScansData = trendingUtilities.refreshScans($scope);
+        $scope.versionsDisplayData = trendingUtilities.filterVersions($scope.parameters, $scope.versionsMap);
     });
 
     $scope.$on('updateDisplayData', function(event, parameters) {
@@ -71,6 +74,7 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
             return;
         $scope.parameters = angular.copy(parameters);
         $scope.trendingScansData = trendingUtilities.refreshScans($scope);
+        $scope.versionsDisplayData = trendingUtilities.filterVersions($scope.parameters, $scope.versionsMap);
     });
 
     $scope.exportPNG = function(isPDF){

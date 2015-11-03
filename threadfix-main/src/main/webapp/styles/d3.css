@@ -127,3 +127,13 @@ svg text.title{
     stroke: steelblue;
     stroke-width: 1.5px;
 }
+
+.versionLine {
+    stroke: #CC0000;
+    stroke-width: 2px;
+}
+
+.versionLineFocus {
+    stroke: black;
+    stroke-width: 2px;
+}

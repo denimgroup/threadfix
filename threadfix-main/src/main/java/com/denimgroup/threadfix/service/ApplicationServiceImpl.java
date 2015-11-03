@@ -77,6 +77,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Autowired private ApplicationCriticalityDao applicationCriticalityDao;
 	@Autowired private DefectDao defectDao;
 	@Autowired private ScanMergeService scanMergeService;
+	@Autowired private ScanDeleteService scanDeleteService;
     @Autowired private GenericVulnerabilityDao genericVulnerabilityDao;
     @Autowired private ScheduledScanDao scheduledScanDao;
     @Autowired private ApplicationCriticalityService applicationCriticalityService;
@@ -214,6 +215,16 @@ public class ApplicationServiceImpl implements ApplicationService {
 		application.setPolicyStatuses(null);
 
 		applicationDao.saveOrUpdate(application);
+
+		// Delete Scans & Findings attached to application
+		deleteScans(application);
+	}
+
+	private void deleteScans(Application application) {
+		if (application.getScans() != null &&
+                application.getScans().size() > 0) {
+			scanDeleteService.deleteAllScanData(application);
+		}
 	}
 
     private void deleteWafRules(Application application) {

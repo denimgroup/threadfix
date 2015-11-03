@@ -33,7 +33,9 @@ import javax.annotation.Nonnull;
 import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 @Component
@@ -100,11 +102,11 @@ public class ScriptRunner {
                 OutputStreamWriter osw = new OutputStreamWriter(fos);
 
                 String preLine = null;
+                Map<String, Object> map = new HashMap<>();
                 osw.write("SET FOREIGN_KEY_CHECKS=0;\n");
                 for (String currentLine: lines) {
 
                     if (!currentLine.contains("Error executing: INSERT INTO")) {
-
                         // Remove all weird characters if they cause 'incorrect string value' SQLExeption
                         if (currentLine.toLowerCase().contains("incorrect string value")) {
                             if (preLine != null) {
@@ -115,6 +117,21 @@ public class ScriptRunner {
                         // If there is unknown column, then delete that column and its value
                         else if (currentLine.contains("MySQLSyntaxErrorException: Unknown column")) {
                             osw.write(getFixedUnknownColStatement(currentLine, preLine.replace("Error executing: ", "")));
+                        }
+                        // too long string for column, cut it off
+                        else if (currentLine.contains("Data too long for column")) {
+                            map = exactTableFromString(preLine);
+                            if (map == null || map.isEmpty()) {
+                                LOGGER.error("Unable to fix statement: " + preLine);
+                                LOGGER.error("Error was: " + currentLine);
+                                osw.write(preLine.replace("Error executing: ", "") + ";\n");
+                                continue;
+                            }
+                            osw.write(fixLongColumnStatement(preLine, currentLine, map));
+                        }
+                        // Older version of MySQL doesn't take time with fraction like '2015-10-28 13:01:59.289000000'
+                        else if (currentLine.contains("Data truncation: Incorrect datetime value")) {
+                            osw.write(fixDateWrongStatement(preLine, currentLine));
                         }
                         // Unresolved-yet SQLException, then write whole statement to fixed Sql script
                         else {
@@ -137,6 +154,112 @@ public class ScriptRunner {
         return errorCount;
     }
 
+    private static String fixDateWrongStatement(String preLine, String currentLine) {
+        String errorValue = getColName(currentLine, "Incorrect datetime value: '(.*)' for column");
+        String newValue = errorValue;
+        String[] timeParts = newValue.split("\\.");
+        if (timeParts.length == 2) {
+            newValue = timeParts[0];
+        }
+        String fixedStatement = preLine.replace("Error executing: ", "").replace(errorValue, newValue);
+        return fixedStatement + ";\n";
+    }
+
+    private static String fixLongColumnStatement(String preLine, String currentLine, Map map) {
+        String colName = getColName(currentLine, "Data too long for column '(.*)' at");
+        String colDef = getColDef(colName, (String)map.get("tableName"));
+        if (colDef != null) {
+            String noOfChar = RegexUtils.getRegexResult(colDef, colName.toUpperCase() + " VARCHAR\\((.*)\\)");
+            if (noOfChar != null && !noOfChar.isEmpty()) {
+                try {
+                    int noOfCharInt = Integer.parseInt(noOfChar);
+                    Map<String, String> fieldMap = (Map) map.get("tableFields");
+                    String oldValue = fieldMap.get(colName.toUpperCase());
+                    boolean isString = false;
+                    if (oldValue.startsWith("'") && oldValue.endsWith("'")) {
+                        isString = true;
+                        oldValue = oldValue.substring(1);
+                        oldValue = oldValue.substring(0, oldValue.length() - 1);
+                    }
+                    oldValue = oldValue.substring(0, noOfCharInt);
+                    if (isString)
+                        oldValue = "'" + oldValue + "'";
+
+                    String colList = "";
+                    String colValues = "";
+                    for (String key : fieldMap.keySet()) {
+                        if (!key.equalsIgnoreCase(colName)) {
+                            colList = colList + key + ",";
+                            colValues = colValues + fieldMap.get(key) + ",";
+                        }
+                    }
+                    colList = colList + colName.toUpperCase();
+                    colValues = colValues + oldValue;
+                    String fixedStatement = "INSERT INTO " + map.get("tableName") + "(" + colList + ") VALUES" + "(" + colValues + ")" + ";\n";
+                    return fixedStatement;
+
+                } catch (NumberFormatException exp) {
+                    exp.printStackTrace();
+                }
+            } else {
+                LOGGER.error("Couldn't find column definition");
+            }
+        }
+        LOGGER.error("Unable to fix " + preLine);
+        String fixedStatement = preLine.replace("Error executing: ", "");
+        return fixedStatement + ";\n";
+    }
+
+    private static String getColDef(String colName, String tableName) {
+        try {
+            String startStatement = ("Create new table:" + tableName + "(").toUpperCase();
+            colName = colName.toUpperCase();
+            String FIELD_PATTERN = "," + colName + " " + "(.*)";
+
+            List<String> logLines = FileUtils.readLines(new File("info.log"));
+            for (String logLine : logLines) {
+                logLine = logLine.toUpperCase();
+                if (logLine.startsWith(startStatement)) {
+
+                    String def = RegexUtils.getRegexResult(logLine, FIELD_PATTERN);
+                    def = def.split(",")[0];
+                    return colName + " " + def;
+                }
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static Map<String, Object> exactTableFromString(String currentLine) {
+        String COL_LIST_PATTERN = "\\((.*)\\) VALUES\\(";
+        String VALUE_LIST_PATTERN = "\\) VALUES\\((.*)\\)";
+        String TABLE_PATTERN = "INSERT INTO (.*)\\(ID";
+        String colListStr = RegexUtils.getRegexResult(currentLine, COL_LIST_PATTERN);
+        String valueListStr = RegexUtils.getRegexResult(currentLine, VALUE_LIST_PATTERN).trim();
+        String table = RegexUtils.getRegexResult(currentLine, TABLE_PATTERN);
+        String[] colList = colListStr.split(",");
+        String[] valList = valueListStr.split(",");
+        if (colList.length != valList.length || colList.length == 0) {
+            LOGGER.error("Error in: " + currentLine);
+            LOGGER.error("Number of values and columns don't match.");
+            return null;
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("tableName", table);
+
+        Map<String, String> fieldMap = new HashMap<>();
+        for (int i=0; i < colList.length; i++) {
+            fieldMap.put(colList[i].toUpperCase(), valList[i]);
+        }
+        map.put("tableFields", fieldMap);
+
+        return map;
+    }
+
     private String getFixedUnknownColStatement(String errorStr, String originalStatement) {
         String ERROR_COL_PATTERN = "Unknown column '(.*)' in 'field list'";
         String COL_LIST_PATTERN = "\\((.*)\\) VALUES\\(";
@@ -156,6 +279,10 @@ public class ScriptRunner {
         String returnStr = "INSERT INTO " + table + "(" + updatedColList + ") VALUES" + "(" + updatedValList + ")";
 
         return returnStr + ";\n";
+    }
+
+    private static String getColName(String errorStr, String colPattern) {
+        return RegexUtils.getRegexResult(errorStr, colPattern);
     }
 
     private String removeCol(String valueListStr, Integer colIndex) {

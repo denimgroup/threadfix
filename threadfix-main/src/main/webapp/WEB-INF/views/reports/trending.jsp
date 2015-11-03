@@ -7,7 +7,8 @@
 
         <div ng-show="trendingActive">
             <d3-trending data="trendingScansData" label="title" width="670" height="612" margin="margin"
-                         start-date="trendingStartDate" end-date="trendingEndDate" export-info="exportInfo" svg-id="title.svgId"></d3-trending>
+                         start-date="trendingStartDate" end-date="trendingEndDate" export-info="exportInfo"
+                         svg-id="title.svgId" version-data="versionsDisplayData"></d3-trending>
         </div>
 
     </div>

@@ -20,6 +20,18 @@
             <dynamic-form ng-if="stdFormTemplate" template="stdFormTemplate"
                           ng-model="fieldsMap">
             </dynamic-form>
+            <div class="defect-form-row">
+                <a type="button" class="btn" href="#" ng-click="showMoreInformation = !showMoreInformation">
+                    More Information
+                </a>
+            </div>
+            <div class="defect-form-row" ng-show="showMoreInformation">
+                This option will add the scanner description field to the defect description body.
+                For more information about configuration the defect description body, please visit
+                <a href="https://github.com/denimgroup/threadfix/wiki/CustomizeDefectDescriptions" target="_blank">
+                    the wiki page
+                </a>.
+            </div>
         </div>
 
         <div ng-if="!isDynamicForm">
@@ -64,7 +76,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Additional Scanner Info</td>
+                        <td>Include Scanner Detail</td>
                         <td class="inputValue">
                             <input ng-model="object.additionalScannerInfo" name="additionalScannerInfo" type="checkbox"/>
                         </td>

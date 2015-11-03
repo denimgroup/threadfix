@@ -1367,6 +1367,10 @@ div.remote-provider-config-modal a {
 	background-color:#c43c35;
 }
 
+.badge-vulnerability-version {
+	background-color:deepskyblue;
+}
+
 .badge-comment-tag {
 	background-color:#c67605;
 }
@@ -1582,3 +1586,9 @@ td.doc-name {
 .dropdown-submenu.left { position: relative; }
 .dropdown-submenu.left > a:after { position: absolute; left: 7px; top: 3px; float: none; border-right-color: #cccccc; border-width: 5px 5px 5px 0; }
 .dropdown-submenu.left:hover > a:after { border-right-color: #ffffff; }
+
+
+.multi-upload-div {
+	margin-top: 11px;
+	margin-bottom: 11px;
+}

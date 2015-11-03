@@ -79,9 +79,9 @@ public class ScannerMappingUpdater implements ApplicationContextAware {
             bootstrapService.bootstrap();
         }
 
+        updateRoles();
         updateTags();
         updateChannelTypeNames();
-        updateRoles();
 
         if (canUpdate) {
             LOG.info("Updating mappings.");

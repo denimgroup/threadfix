@@ -76,7 +76,6 @@ public class ContrastScanParsingTests {
     }
 
     @Test
-    @Ignore // we have to update this to handle the current V2 API. Task filed as DGTF-2270
     public void testAllScans() {
         for (String application : appNames) {
             test(application);
