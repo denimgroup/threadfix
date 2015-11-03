@@ -2742,7 +2742,7 @@ var jsPDF = (function(global) {
         pages = 1;
     };
 
-    jsPDFAPI.cell = function (x, y, w, h, txt, ln, align) {
+    jsPDFAPI.cell = function (x, y, w, h, txt, ln, align, paddingConfig) {
         var curCell = getLastCellPosition();
 
         // If this is not the first cell, we must change its position
@@ -2772,16 +2772,20 @@ var jsPDF = (function(global) {
             } else {
                 this.rect(x, y, w, h);
             }
+
+			if (!paddingConfig) {
+				paddingConfig = padding;
+			}
             if (align === 'right') {
                 if (txt instanceof Array) {
                     for(var i = 0; i<txt.length; i++) {
                         var currentLine = txt[i];
                         var textSize = this.getStringUnitWidth(currentLine) * this.internal.getFontSize();
-                        this.text(currentLine, x + w - textSize - padding, y + this.internal.getLineHeight()*(i+1));
+                        this.text(currentLine, x + w - textSize - paddingConfig, y + this.internal.getLineHeight()*(i+1));
                     }
                 }
             } else {
-                this.text(txt, x + padding, y + this.internal.getLineHeight());
+				this.text(txt, x + paddingConfig, y + this.internal.getLineHeight());
             }
         }
         setLastCellPosition(x, y, w, h, ln);
@@ -3030,7 +3034,10 @@ var jsPDF = (function(global) {
                 tempHeaderConf.push(tableHeaderCell);
             }
             tmpArray = [].concat(tableHeaderCell);
-            this.cell.apply(this, tmpArray.concat(lineNumber));
+			if (tmpArray.length>4) {
+					tmpArray[4] = this.splitTextToSize(tmpArray[4], tmpArray[2] - 1);
+			}
+            this.cell.apply(this, tmpArray.concat(lineNumber).concat([null, 1]));
         }
         if (tempHeaderConf.length > 0){
             this.setTableHeaderRow(tempHeaderConf);
