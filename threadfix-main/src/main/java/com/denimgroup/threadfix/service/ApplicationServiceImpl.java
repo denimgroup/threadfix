@@ -82,6 +82,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Autowired private ScheduledScanDao scheduledScanDao;
     @Autowired private ApplicationCriticalityService applicationCriticalityService;
     @Autowired private DefaultDefectProfileServiceImpl defectProfileService;
+	@Autowired private ApplicationVersionService applicationVersionService;
 
     @Nullable
     @Autowired(required = false)
@@ -202,6 +203,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 			scheduledScan.setApplication(null);
 		}
 		application.setScheduledScans(null);
+
+		// Delete all versions
+		for (ApplicationVersion version : application.getVersions()) {
+			applicationVersionService.delete(version);
+		}
+		application.setVersions(null);
+
 
 		application.getOrganization().updateVulnerabilityReport();
 
