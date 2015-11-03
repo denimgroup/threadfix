@@ -4,6 +4,9 @@
     <Identity Id="b0aac42e-c9d3-45f8-bdf7-24d44347f3f9" Version="1.0" Language="en-US" Publisher="Denim Group" />
     <DisplayName>ThreadFix for Visual Studio</DisplayName>
     <Description xml:space="preserve">Import and display vulnerability markers directly from ThreadFix.</Description>
+    <MoreInfo>https://github.com/denimgroup/threadfix/wiki/Visual-Studio-IDE-Plugin</MoreInfo>
+    <License>Resources\license.txt</License>
+    <Icon>Resources\DG_logo_mark_13x13.png</Icon>
   </Metadata>
   <Installation InstalledByMsi="false">
     <InstallationTarget Version="[11.0,12.0)" Id="Microsoft.VisualStudio.Pro" />
