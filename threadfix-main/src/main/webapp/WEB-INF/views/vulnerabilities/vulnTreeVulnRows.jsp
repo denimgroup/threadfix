@@ -108,7 +108,7 @@
         <div id="commentDiv{{ $index }}" >
             <%@ include file="/WEB-INF/views/applications/vulnComments.jsp" %>
         </div>
-        <c:if test="${ canSubmitComments || canModifyVulnerabilities }">
+        <c:if test="${ canSubmitComments }">
             <a id="addCommentButton{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}"
                class="btn margin-bottom"
                ng-click="showCommentForm(vulnerability, commentTags)">
