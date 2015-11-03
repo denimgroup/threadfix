@@ -1,0 +1,13 @@
+{
+  "organizations": [
+    {
+      "name": "Denim Group",
+      "shortname": "Denim Group",
+      "timezone": "America/New_York",
+      "links": [],
+      "organization_uuid": "2942df92-eeb7-4691-baae-52a8cf6327ec"
+    }
+  ],
+  "count": 1,
+  "org_disabled": []
+}
