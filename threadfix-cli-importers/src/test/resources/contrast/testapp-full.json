@@ -1,2131 +1,2774 @@
-[ {
-  "uuid" : "SIDW-WSQ1-MFMY-RCC4",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "Insecure JSP Placement",
-  "evidence" : "/403.jsp\n/404.jsp\n/common/delete.jsp\n/common/footer.jsp\n/common/header.jsp\n/common/meta.jsp\n/common/taglibs.jsp\n/decorators/default.jsp\n/error.jsp\n/index.jsp\n/login.jsp\n",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "protocol" : "http",
-    "version" : "1.0",
-    "uri" : "/testapp/login.jsp",
-    "queryString" : "",
-    "method" : "GET",
-    "port" : 0,
-    "headers" : [ {
-      "name" : "Connection",
-      "value" : "keep-alive"
-    }, {
-      "name" : "Host",
-      "value" : "localhost:8080"
-    }, {
-      "name" : "Accept",
-      "value" : "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2"
-    }, {
-      "name" : "User-agent",
-      "value" : "Java/1.6.0_65"
-    } ],
-    "parameters" : [ ],
-    "links" : [ ]
+[
+  {
+    "uuid": "SIDW-WSQ1-MFMY-RCC4",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "Insecure JSP Placement",
+    "evidence": "\/403.jsp\n\/404.jsp\n\/common\/delete.jsp\n\/common\/footer.jsp\n\/common\/header.jsp\n\/common\/meta.jsp\n\/common\/taglibs.jsp\n\/decorators\/default.jsp\n\/error.jsp\n\/index.jsp\n\/login.jsp\n",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "protocol": "http",
+      "version": "1.0",
+      "uri": "\/testapp\/login.jsp",
+      "queryString": "",
+      "method": "GET",
+      "port": 0,
+      "headers": [
+        {
+          "name": "Connection",
+          "value": "keep-alive"
+        },
+        {
+          "name": "Host",
+          "value": "localhost:8080"
+        },
+        {
+          "name": "Accept",
+          "value": "text\/html, image\/gif, image\/jpeg, *; q=.2, *\/*; q=.2"
+        },
+        {
+          "name": "User-agent",
+          "value": "Java\/1.6.0_65"
+        }
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/SIDW-WSQ1-MFMY-RCC4"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 198628,
+    "total-traces-received": 2,
+    "last-time-seen": 1416023546838,
+    "first-time-seen": 1415822826461,
+    "sub-status": "",
+    "sub-title": "web root",
+    "reported-to-bug-tracker": false,
+    "rule-name": "insecure-jsp-access",
+    "severity": "Medium"
   },
-  "events" : [ ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/SIDW-WSQ1-MFMY-RCC4"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 198628,
-  "total-traces-received" : 2,
-  "last-time-seen" : 1416023546838,
-  "first-time-seen" : 1415822826461,
-  "sub-status" : "",
-  "sub-title" : "web root",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "insecure-jsp-access",
-  "severity" : "Medium"
-}, {
-  "uuid" : "LP05-9C9C-DS7G-X9I9",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "Anti-Caching Controls Missing on 74 pages",
-  "likelihood" : "Low",
-  "impact" : "Low",
-  "confidence" : "Low",
-  "request" : {
-    "protocol" : "http",
-    "version" : "1.0",
-    "uri" : "/testapp/login.jsp",
-    "queryString" : "",
-    "method" : "GET",
-    "port" : 0,
-    "headers" : [ {
-      "name" : "Connection",
-      "value" : "keep-alive"
-    }, {
-      "name" : "Host",
-      "value" : "localhost:8080"
-    }, {
-      "name" : "Accept",
-      "value" : "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2"
-    }, {
-      "name" : "User-agent",
-      "value" : "Java/1.6.0_65"
-    } ],
-    "parameters" : [ ],
-    "links" : [ ]
+  {
+    "uuid": "LP05-9C9C-DS7G-X9I9",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "Anti-Caching Controls Missing on 74 pages",
+    "likelihood": "Low",
+    "impact": "Low",
+    "confidence": "Low",
+    "request": {
+      "protocol": "http",
+      "version": "1.0",
+      "uri": "\/testapp\/login.jsp",
+      "queryString": "",
+      "method": "GET",
+      "port": 0,
+      "headers": [
+        {
+          "name": "Connection",
+          "value": "keep-alive"
+        },
+        {
+          "name": "Host",
+          "value": "localhost:8080"
+        },
+        {
+          "name": "Accept",
+          "value": "text\/html, image\/gif, image\/jpeg, *; q=.2, *\/*; q=.2"
+        },
+        {
+          "name": "User-agent",
+          "value": "Java\/1.6.0_65"
+        }
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/LP05-9C9C-DS7G-X9I9"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 198629,
+    "total-traces-received": 74,
+    "last-time-seen": 1415822826489,
+    "first-time-seen": 1415822826489,
+    "sub-status": "",
+    "sub-title": "on 74 pages",
+    "reported-to-bug-tracker": false,
+    "rule-name": "cache-controls-missing",
+    "severity": "Note"
   },
-  "events" : [ ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/LP05-9C9C-DS7G-X9I9"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 198629,
-  "total-traces-received" : 74,
-  "last-time-seen" : 1415822826489,
-  "first-time-seen" : 1415822826489,
-  "sub-status" : "",
-  "sub-title" : "on 74 pages",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "cache-controls-missing",
-  "severity" : "Note"
-}, {
-  "uuid" : "GBVV-79AA-WK2N-VR8Y",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "Parameter Pollution vulnerability in form on 2 pages",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "protocol" : "http",
-    "version" : "1.0",
-    "uri" : "/testapp/teams",
-    "queryString" : "",
-    "method" : "GET",
-    "port" : 0,
-    "headers" : [ {
-      "name" : "Cookie",
-      "value" : "JSESSIONID=EEAFC5B2C7A9D458997A7497E72C1596; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
-    }, {
-      "name" : "Connection",
-      "value" : "keep-alive"
-    }, {
-      "name" : "Accept-language",
-      "value" : "en-US,en;q=0.8"
-    }, {
-      "name" : "Host",
-      "value" : "localhost:8080"
-    }, {
-      "name" : "Accept",
-      "value" : "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
-    }, {
-      "name" : "User-agent",
-      "value" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36"
-    }, {
-      "name" : "Accept-encoding",
-      "value" : "gzip,deflate,sdch"
-    }, {
-      "name" : "Referer",
-      "value" : "http://localhost:8080/testapp/dashboard?nonce=8863EBDC4D054D145EFC18D403B6A2EE"
-    } ],
-    "parameters" : [ ],
-    "links" : [ ]
+  {
+    "uuid": "GBVV-79AA-WK2N-VR8Y",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "Parameter Pollution vulnerability in form on 2 pages",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "protocol": "http",
+      "version": "1.0",
+      "uri": "\/testapp\/teams",
+      "queryString": "",
+      "method": "GET",
+      "port": 0,
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "JSESSIONID=EEAFC5B2C7A9D458997A7497E72C1596; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
+        },
+        {
+          "name": "Connection",
+          "value": "keep-alive"
+        },
+        {
+          "name": "Accept-language",
+          "value": "en-US,en;q=0.8"
+        },
+        {
+          "name": "Host",
+          "value": "localhost:8080"
+        },
+        {
+          "name": "Accept",
+          "value": "text\/html,application\/xhtml+xml,application\/xml;q=0.9,image\/webp,*\/*;q=0.8"
+        },
+        {
+          "name": "User-agent",
+          "value": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/38.0.2125.111 Safari\/537.36"
+        },
+        {
+          "name": "Accept-encoding",
+          "value": "gzip,deflate,sdch"
+        },
+        {
+          "name": "Referer",
+          "value": "http:\/\/localhost:8080\/testapp\/dashboard?nonce=8863EBDC4D054D145EFC18D403B6A2EE"
+        }
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/GBVV-79AA-WK2N-VR8Y"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 198631,
+    "total-traces-received": 2,
+    "last-time-seen": 1417469470871,
+    "first-time-seen": 1415822857808,
+    "sub-status": "",
+    "sub-title": "on 2 pages",
+    "reported-to-bug-tracker": false,
+    "rule-name": "parameter-pollution",
+    "severity": "Medium"
   },
-  "events" : [ ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/GBVV-79AA-WK2N-VR8Y"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 198631,
-  "total-traces-received" : 2,
-  "last-time-seen" : 1417469470871,
-  "first-time-seen" : 1415822857808,
-  "sub-status" : "",
-  "sub-title" : "on 2 pages",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "parameter-pollution",
-  "severity" : "Medium"
-}, {
-  "uuid" : "X09U-IZEP-ST6F-MWAU",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "Form Without Autocomplete on 7 pages",
-  "likelihood" : "Low",
-  "impact" : "Low",
-  "confidence" : "Low",
-  "request" : {
-    "protocol" : "http",
-    "version" : "1.0",
-    "uri" : "/testapp/teams",
-    "queryString" : "",
-    "method" : "GET",
-    "port" : 0,
-    "headers" : [ {
-      "name" : "Cookie",
-      "value" : "JSESSIONID=EEAFC5B2C7A9D458997A7497E72C1596; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
-    }, {
-      "name" : "Connection",
-      "value" : "keep-alive"
-    }, {
-      "name" : "Accept-language",
-      "value" : "en-US,en;q=0.8"
-    }, {
-      "name" : "Host",
-      "value" : "localhost:8080"
-    }, {
-      "name" : "Accept",
-      "value" : "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
-    }, {
-      "name" : "User-agent",
-      "value" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36"
-    }, {
-      "name" : "Accept-encoding",
-      "value" : "gzip,deflate,sdch"
-    }, {
-      "name" : "Referer",
-      "value" : "http://localhost:8080/testapp/dashboard"
-    } ],
-    "parameters" : [ ],
-    "links" : [ ]
+  {
+    "uuid": "X09U-IZEP-ST6F-MWAU",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "Form Without Autocomplete on 7 pages",
+    "likelihood": "Low",
+    "impact": "Low",
+    "confidence": "Low",
+    "request": {
+      "protocol": "http",
+      "version": "1.0",
+      "uri": "\/testapp\/teams",
+      "queryString": "",
+      "method": "GET",
+      "port": 0,
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "JSESSIONID=EEAFC5B2C7A9D458997A7497E72C1596; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
+        },
+        {
+          "name": "Connection",
+          "value": "keep-alive"
+        },
+        {
+          "name": "Accept-language",
+          "value": "en-US,en;q=0.8"
+        },
+        {
+          "name": "Host",
+          "value": "localhost:8080"
+        },
+        {
+          "name": "Accept",
+          "value": "text\/html,application\/xhtml+xml,application\/xml;q=0.9,image\/webp,*\/*;q=0.8"
+        },
+        {
+          "name": "User-agent",
+          "value": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/38.0.2125.111 Safari\/537.36"
+        },
+        {
+          "name": "Accept-encoding",
+          "value": "gzip,deflate,sdch"
+        },
+        {
+          "name": "Referer",
+          "value": "http:\/\/localhost:8080\/testapp\/dashboard"
+        }
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/X09U-IZEP-ST6F-MWAU"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 198632,
+    "total-traces-received": 3,
+    "last-time-seen": 1417469471549,
+    "first-time-seen": 1415822857842,
+    "sub-status": "",
+    "sub-title": "on 7 pages",
+    "reported-to-bug-tracker": false,
+    "rule-name": "autocomplete-missing",
+    "severity": "Note"
   },
-  "events" : [ ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/X09U-IZEP-ST6F-MWAU"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 198632,
-  "total-traces-received" : 3,
-  "last-time-seen" : 1417469471549,
-  "first-time-seen" : 1415822857842,
-  "sub-status" : "",
-  "sub-title" : "on 7 pages",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "autocomplete-missing",
-  "severity" : "Note"
-}, {
-  "uuid" : "UH34-BS5R-3CH5-HQNK",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'MD5' hash algorithm used at HttpConnection.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "port" : 0,
-    "headers" : [ ],
-    "parameters" : [ ],
-    "links" : [ ]
+  {
+    "uuid": "UH34-BS5R-3CH5-HQNK",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'MD5' hash algorithm used at HttpConnection.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "port": 0,
+      "headers": [
+
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 930418,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/UH34-BS5R-3CH5-HQNK"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199249,
+    "total-traces-received": 2,
+    "last-time-seen": 1416052807144,
+    "first-time-seen": 1415934004042,
+    "sub-status": "",
+    "sub-title": "'MD5' used at HttpConnection.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 930418,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/UH34-BS5R-3CH5-HQNK"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199249,
-  "total-traces-received" : 2,
-  "last-time-seen" : 1416052807144,
-  "first-time-seen" : 1415934004042,
-  "sub-status" : "",
-  "sub-title" : "'MD5' used at HttpConnection.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "GMVP-NTFW-2SHP-QLC9",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'MD5' hash algorithm used at HttpConnection.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "port" : 0,
-    "headers" : [ ],
-    "parameters" : [ ],
-    "links" : [ ]
+  {
+    "uuid": "GMVP-NTFW-2SHP-QLC9",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'MD5' hash algorithm used at HttpConnection.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "port": 0,
+      "headers": [
+
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 930419,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/GMVP-NTFW-2SHP-QLC9"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199250,
+    "total-traces-received": 2,
+    "last-time-seen": 1416052807178,
+    "first-time-seen": 1415934004080,
+    "sub-status": "",
+    "sub-title": "'MD5' used at HttpConnection.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 930419,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/GMVP-NTFW-2SHP-QLC9"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199250,
-  "total-traces-received" : 2,
-  "last-time-seen" : 1416052807178,
-  "first-time-seen" : 1415934004080,
-  "sub-status" : "",
-  "sub-title" : "'MD5' used at HttpConnection.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "52U7-4J8D-O8YG-POMQ",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'MD5' hash algorithm used at HttpConnection.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "port" : 0,
-    "headers" : [ ],
-    "parameters" : [ ],
-    "links" : [ ]
+  {
+    "uuid": "52U7-4J8D-O8YG-POMQ",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'MD5' hash algorithm used at HttpConnection.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "port": 0,
+      "headers": [
+
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 930420,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/52U7-4J8D-O8YG-POMQ"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199251,
+    "total-traces-received": 2,
+    "last-time-seen": 1416052807215,
+    "first-time-seen": 1415934004116,
+    "sub-status": "",
+    "sub-title": "'MD5' used at HttpConnection.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 930420,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/52U7-4J8D-O8YG-POMQ"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199251,
-  "total-traces-received" : 2,
-  "last-time-seen" : 1416052807215,
-  "first-time-seen" : 1415934004116,
-  "sub-status" : "",
-  "sub-title" : "'MD5' used at HttpConnection.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "5WFA-Z0VW-MI3B-MN3E",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'RC4' encryption algorithm used at HttpConnection.java",
-  "likelihood" : "Low",
-  "impact" : "Low",
-  "confidence" : "Low",
-  "request" : {
-    "port" : 0,
-    "headers" : [ ],
-    "parameters" : [ ],
-    "links" : [ ]
+  {
+    "uuid": "5WFA-Z0VW-MI3B-MN3E",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'RC4' encryption algorithm used at HttpConnection.java",
+    "likelihood": "Low",
+    "impact": "Low",
+    "confidence": "Low",
+    "request": {
+      "port": 0,
+      "headers": [
+
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 930421,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/5WFA-Z0VW-MI3B-MN3E"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199252,
+    "total-traces-received": 2,
+    "last-time-seen": 1416052807245,
+    "first-time-seen": 1415934004145,
+    "sub-status": "",
+    "sub-title": "'RC4' used at HttpConnection.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-ciphers",
+    "severity": "Note"
   },
-  "events" : [ {
-    "eventId" : 930421,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/5WFA-Z0VW-MI3B-MN3E"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199252,
-  "total-traces-received" : 2,
-  "last-time-seen" : 1416052807245,
-  "first-time-seen" : 1415934004145,
-  "sub-status" : "",
-  "sub-title" : "'RC4' used at HttpConnection.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-ciphers",
-  "severity" : "Note"
-}, {
-  "uuid" : "IGBZ-3DAO-WWM5-HE0L",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'RC4' encryption algorithm used at HttpConnection.java",
-  "likelihood" : "Low",
-  "impact" : "Low",
-  "confidence" : "Low",
-  "request" : {
-    "port" : 0,
-    "headers" : [ ],
-    "parameters" : [ ],
-    "links" : [ ]
+  {
+    "uuid": "IGBZ-3DAO-WWM5-HE0L",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'RC4' encryption algorithm used at HttpConnection.java",
+    "likelihood": "Low",
+    "impact": "Low",
+    "confidence": "Low",
+    "request": {
+      "port": 0,
+      "headers": [
+
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 930422,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/IGBZ-3DAO-WWM5-HE0L"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199253,
+    "total-traces-received": 6,
+    "last-time-seen": 1416052807712,
+    "first-time-seen": 1415934004180,
+    "sub-status": "",
+    "sub-title": "'RC4' used at HttpConnection.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-ciphers",
+    "severity": "Note"
   },
-  "events" : [ {
-    "eventId" : 930422,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/IGBZ-3DAO-WWM5-HE0L"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199253,
-  "total-traces-received" : 6,
-  "last-time-seen" : 1416052807712,
-  "first-time-seen" : 1415934004180,
-  "sub-status" : "",
-  "sub-title" : "'RC4' used at HttpConnection.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-ciphers",
-  "severity" : "Note"
-}, {
-  "uuid" : "MEYX-CJBB-MURU-OGH0",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'MD5' hash algorithm used at HttpConnection.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "port" : 0,
-    "headers" : [ ],
-    "parameters" : [ ],
-    "links" : [ ]
+  {
+    "uuid": "MEYX-CJBB-MURU-OGH0",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'MD5' hash algorithm used at HttpConnection.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "port": 0,
+      "headers": [
+
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 930423,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/MEYX-CJBB-MURU-OGH0"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199254,
+    "total-traces-received": 6,
+    "last-time-seen": 1416052807747,
+    "first-time-seen": 1415934004215,
+    "sub-status": "",
+    "sub-title": "'MD5' used at HttpConnection.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 930423,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/MEYX-CJBB-MURU-OGH0"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199254,
-  "total-traces-received" : 6,
-  "last-time-seen" : 1416052807747,
-  "first-time-seen" : 1415934004215,
-  "sub-status" : "",
-  "sub-title" : "'MD5' used at HttpConnection.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "W7TV-7AK2-PTOE-GHKR",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'MD5' hash algorithm used at HttpConnection.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "port" : 0,
-    "headers" : [ ],
-    "parameters" : [ ],
-    "links" : [ ]
+  {
+    "uuid": "W7TV-7AK2-PTOE-GHKR",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'MD5' hash algorithm used at HttpConnection.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "port": 0,
+      "headers": [
+
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 930424,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/W7TV-7AK2-PTOE-GHKR"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199255,
+    "total-traces-received": 4,
+    "last-time-seen": 1416052807677,
+    "first-time-seen": 1415934004257,
+    "sub-status": "",
+    "sub-title": "'MD5' used at HttpConnection.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 930424,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/W7TV-7AK2-PTOE-GHKR"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199255,
-  "total-traces-received" : 4,
-  "last-time-seen" : 1416052807677,
-  "first-time-seen" : 1415934004257,
-  "sub-status" : "",
-  "sub-title" : "'MD5' used at HttpConnection.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "G4NE-6250-BDIP-1BWE",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'MD5' hash algorithm used at HttpConnection.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "port" : 0,
-    "headers" : [ ],
-    "parameters" : [ ],
-    "links" : [ ]
+  {
+    "uuid": "G4NE-6250-BDIP-1BWE",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'MD5' hash algorithm used at HttpConnection.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "port": 0,
+      "headers": [
+
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 930425,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/G4NE-6250-BDIP-1BWE"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199256,
+    "total-traces-received": 4,
+    "last-time-seen": 1416052807776,
+    "first-time-seen": 1415934004361,
+    "sub-status": "",
+    "sub-title": "'MD5' used at HttpConnection.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 930425,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/G4NE-6250-BDIP-1BWE"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199256,
-  "total-traces-received" : 4,
-  "last-time-seen" : 1416052807776,
-  "first-time-seen" : 1415934004361,
-  "sub-status" : "",
-  "sub-title" : "'MD5' used at HttpConnection.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "67EB-RPGU-MBWZ-R7PH",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'RC4' encryption algorithm used at HttpConnection.java",
-  "likelihood" : "Low",
-  "impact" : "Low",
-  "confidence" : "Low",
-  "request" : {
-    "port" : 0,
-    "headers" : [ ],
-    "parameters" : [ ],
-    "links" : [ ]
+  {
+    "uuid": "67EB-RPGU-MBWZ-R7PH",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'RC4' encryption algorithm used at HttpConnection.java",
+    "likelihood": "Low",
+    "impact": "Low",
+    "confidence": "Low",
+    "request": {
+      "port": 0,
+      "headers": [
+
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 930426,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/67EB-RPGU-MBWZ-R7PH"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199257,
+    "total-traces-received": 4,
+    "last-time-seen": 1416052807805,
+    "first-time-seen": 1415934004392,
+    "sub-status": "",
+    "sub-title": "'RC4' used at HttpConnection.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-ciphers",
+    "severity": "Note"
   },
-  "events" : [ {
-    "eventId" : 930426,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/67EB-RPGU-MBWZ-R7PH"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199257,
-  "total-traces-received" : 4,
-  "last-time-seen" : 1416052807805,
-  "first-time-seen" : 1415934004392,
-  "sub-status" : "",
-  "sub-title" : "'RC4' used at HttpConnection.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-ciphers",
-  "severity" : "Note"
-}, {
-  "uuid" : "98LP-XCLS-7DYU-JPRS",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'MD5' hash algorithm used at HttpConnection.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "port" : 0,
-    "headers" : [ ],
-    "parameters" : [ ],
-    "links" : [ ]
+  {
+    "uuid": "98LP-XCLS-7DYU-JPRS",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'MD5' hash algorithm used at HttpConnection.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "port": 0,
+      "headers": [
+
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 930427,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/98LP-XCLS-7DYU-JPRS"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199258,
+    "total-traces-received": 3,
+    "last-time-seen": 1416052813244,
+    "first-time-seen": 1415934009949,
+    "sub-status": "",
+    "sub-title": "'MD5' used at HttpConnection.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 930427,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/98LP-XCLS-7DYU-JPRS"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199258,
-  "total-traces-received" : 3,
-  "last-time-seen" : 1416052813244,
-  "first-time-seen" : 1415934009949,
-  "sub-status" : "",
-  "sub-title" : "'MD5' used at HttpConnection.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "IXPV-ETE7-D6N3-ECWQ",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'MD5' hash algorithm used at HttpConnection.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "port" : 0,
-    "headers" : [ ],
-    "parameters" : [ ],
-    "links" : [ ]
+  {
+    "uuid": "IXPV-ETE7-D6N3-ECWQ",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'MD5' hash algorithm used at HttpConnection.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "port": 0,
+      "headers": [
+
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 930428,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/IXPV-ETE7-D6N3-ECWQ"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199259,
+    "total-traces-received": 3,
+    "last-time-seen": 1416052813210,
+    "first-time-seen": 1415934009987,
+    "sub-status": "",
+    "sub-title": "'MD5' used at HttpConnection.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 930428,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/IXPV-ETE7-D6N3-ECWQ"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199259,
-  "total-traces-received" : 3,
-  "last-time-seen" : 1416052813210,
-  "first-time-seen" : 1415934009987,
-  "sub-status" : "",
-  "sub-title" : "'MD5' used at HttpConnection.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "Y6F9-5RI7-4CQV-UUU5",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'MD5' hash algorithm used at HttpConnection.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "port" : 0,
-    "headers" : [ ],
-    "parameters" : [ ],
-    "links" : [ ]
+  {
+    "uuid": "Y6F9-5RI7-4CQV-UUU5",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'MD5' hash algorithm used at HttpConnection.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "port": 0,
+      "headers": [
+
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 930429,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/Y6F9-5RI7-4CQV-UUU5"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199260,
+    "total-traces-received": 3,
+    "last-time-seen": 1416052813315,
+    "first-time-seen": 1415934010022,
+    "sub-status": "",
+    "sub-title": "'MD5' used at HttpConnection.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 930429,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/Y6F9-5RI7-4CQV-UUU5"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199260,
-  "total-traces-received" : 3,
-  "last-time-seen" : 1416052813315,
-  "first-time-seen" : 1415934010022,
-  "sub-status" : "",
-  "sub-title" : "'MD5' used at HttpConnection.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "DFRG-SS19-O6XR-L2FZ",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'MD5' hash algorithm used at HttpConnection.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "port" : 0,
-    "headers" : [ ],
-    "parameters" : [ ],
-    "links" : [ ]
+  {
+    "uuid": "DFRG-SS19-O6XR-L2FZ",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'MD5' hash algorithm used at HttpConnection.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "port": 0,
+      "headers": [
+
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 930430,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/DFRG-SS19-O6XR-L2FZ"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199261,
+    "total-traces-received": 3,
+    "last-time-seen": 1416052813286,
+    "first-time-seen": 1415934010055,
+    "sub-status": "",
+    "sub-title": "'MD5' used at HttpConnection.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 930430,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/DFRG-SS19-O6XR-L2FZ"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199261,
-  "total-traces-received" : 3,
-  "last-time-seen" : 1416052813286,
-  "first-time-seen" : 1415934010055,
-  "sub-status" : "",
-  "sub-title" : "'MD5' used at HttpConnection.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "UHQB-JSYW-XCMA-OM4T",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'MD5' hash algorithm used at HttpConnection.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "port" : 0,
-    "headers" : [ ],
-    "parameters" : [ ],
-    "links" : [ ]
+  {
+    "uuid": "UHQB-JSYW-XCMA-OM4T",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'MD5' hash algorithm used at HttpConnection.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "port": 0,
+      "headers": [
+
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 930431,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/UHQB-JSYW-XCMA-OM4T"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199262,
+    "total-traces-received": 2,
+    "last-time-seen": 1416052813142,
+    "first-time-seen": 1415934010091,
+    "sub-status": "",
+    "sub-title": "'MD5' used at HttpConnection.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 930431,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/UHQB-JSYW-XCMA-OM4T"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199262,
-  "total-traces-received" : 2,
-  "last-time-seen" : 1416052813142,
-  "first-time-seen" : 1415934010091,
-  "sub-status" : "",
-  "sub-title" : "'MD5' used at HttpConnection.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "57RM-GOJR-GGE7-R7V8",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'MD5' hash algorithm used at HttpConnection.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "port" : 0,
-    "headers" : [ ],
-    "parameters" : [ ],
-    "links" : [ ]
+  {
+    "uuid": "57RM-GOJR-GGE7-R7V8",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'MD5' hash algorithm used at HttpConnection.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "port": 0,
+      "headers": [
+
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 930432,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/57RM-GOJR-GGE7-R7V8"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199263,
+    "total-traces-received": 2,
+    "last-time-seen": 1416052813177,
+    "first-time-seen": 1415934010124,
+    "sub-status": "",
+    "sub-title": "'MD5' used at HttpConnection.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 930432,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/57RM-GOJR-GGE7-R7V8"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199263,
-  "total-traces-received" : 2,
-  "last-time-seen" : 1416052813177,
-  "first-time-seen" : 1415934010124,
-  "sub-status" : "",
-  "sub-title" : "'MD5' used at HttpConnection.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "XND6-LVX5-B83M-AEF1",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'MD5' hash algorithm used at AbstractChannelImporter.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "port" : 0,
-    "headers" : [ ],
-    "parameters" : [ ],
-    "links" : [ ]
+  {
+    "uuid": "XND6-LVX5-B83M-AEF1",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'MD5' hash algorithm used at AbstractChannelImporter.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "port": 0,
+      "headers": [
+
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 930433,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/XND6-LVX5-B83M-AEF1"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199264,
+    "total-traces-received": 5,
+    "last-time-seen": 1416052818594,
+    "first-time-seen": 1415934015243,
+    "sub-status": "",
+    "sub-title": "'MD5' used at AbstractChannelImporter.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 930433,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/XND6-LVX5-B83M-AEF1"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199264,
-  "total-traces-received" : 5,
-  "last-time-seen" : 1416052818594,
-  "first-time-seen" : 1415934015243,
-  "sub-status" : "",
-  "sub-title" : "'MD5' used at AbstractChannelImporter.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "T9TS-8L9M-1B1R-FLJJ",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'MD5' hash algorithm used at RestUtilsImpl.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "port" : 0,
-    "headers" : [ ],
-    "parameters" : [ ],
-    "links" : [ ]
+  {
+    "uuid": "T9TS-8L9M-1B1R-FLJJ",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'MD5' hash algorithm used at RestUtilsImpl.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "port": 0,
+      "headers": [
+
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 930484,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/T9TS-8L9M-1B1R-FLJJ"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199299,
+    "total-traces-received": 2,
+    "last-time-seen": 1416052801766,
+    "first-time-seen": 1415966405194,
+    "sub-status": "",
+    "sub-title": "'MD5' used at RestUtilsImpl.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 930484,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/T9TS-8L9M-1B1R-FLJJ"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199299,
-  "total-traces-received" : 2,
-  "last-time-seen" : 1416052801766,
-  "first-time-seen" : 1415966405194,
-  "sub-status" : "",
-  "sub-title" : "'MD5' used at RestUtilsImpl.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "DNOL-500O-PF3X-ZHI5",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'MD5' hash algorithm used at RestUtilsImpl.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "port" : 0,
-    "headers" : [ ],
-    "parameters" : [ ],
-    "links" : [ ]
+  {
+    "uuid": "DNOL-500O-PF3X-ZHI5",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'MD5' hash algorithm used at RestUtilsImpl.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "port": 0,
+      "headers": [
+
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 930485,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/DNOL-500O-PF3X-ZHI5"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199300,
+    "total-traces-received": 2,
+    "last-time-seen": 1416052801797,
+    "first-time-seen": 1415966405229,
+    "sub-status": "",
+    "sub-title": "'MD5' used at RestUtilsImpl.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 930485,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/DNOL-500O-PF3X-ZHI5"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199300,
-  "total-traces-received" : 2,
-  "last-time-seen" : 1416052801797,
-  "first-time-seen" : 1415966405229,
-  "sub-status" : "",
-  "sub-title" : "'MD5' used at RestUtilsImpl.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "7RF5-TL70-XUSL-GYZT",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'MD5' hash algorithm used at RestUtilsImpl.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "port" : 0,
-    "headers" : [ ],
-    "parameters" : [ ],
-    "links" : [ ]
+  {
+    "uuid": "7RF5-TL70-XUSL-GYZT",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'MD5' hash algorithm used at RestUtilsImpl.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "port": 0,
+      "headers": [
+
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 930486,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/7RF5-TL70-XUSL-GYZT"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199301,
+    "total-traces-received": 2,
+    "last-time-seen": 1416052801831,
+    "first-time-seen": 1415966405264,
+    "sub-status": "",
+    "sub-title": "'MD5' used at RestUtilsImpl.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 930486,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/7RF5-TL70-XUSL-GYZT"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199301,
-  "total-traces-received" : 2,
-  "last-time-seen" : 1416052801831,
-  "first-time-seen" : 1415966405264,
-  "sub-status" : "",
-  "sub-title" : "'MD5' used at RestUtilsImpl.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "G059-GO17-FY3L-DIND",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'MD5' hash algorithm used at RestUtilsImpl.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "port" : 0,
-    "headers" : [ ],
-    "parameters" : [ ],
-    "links" : [ ]
+  {
+    "uuid": "G059-GO17-FY3L-DIND",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'MD5' hash algorithm used at RestUtilsImpl.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "port": 0,
+      "headers": [
+
+      ],
+      "parameters": [
+
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 930487,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/G059-GO17-FY3L-DIND"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199302,
+    "total-traces-received": 2,
+    "last-time-seen": 1416052801865,
+    "first-time-seen": 1415966405303,
+    "sub-status": "",
+    "sub-title": "'MD5' used at RestUtilsImpl.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 930487,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/G059-GO17-FY3L-DIND"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199302,
-  "total-traces-received" : 2,
-  "last-time-seen" : 1416052801865,
-  "first-time-seen" : 1415966405303,
-  "sub-status" : "",
-  "sub-title" : "'MD5' used at RestUtilsImpl.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "JVW3-RBED-D1NY-YG24",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'MD5' hash algorithm used at VulnerabilityParser.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "protocol" : "http",
-    "version" : "1.0",
-    "uri" : "/testapp/tests/2/test/22/upload/remote",
-    "queryString" : "nonce=616295B4C82D41126936D41D5A96C5D7",
-    "method" : "POST",
-    "port" : 0,
-    "headers" : [ {
-      "name" : "Cookie",
-      "value" : "JSESSIONID=2A39A57DD33ADF8236E953FD5BC44CD6; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
-    }, {
-      "name" : "Content-type",
-      "value" : "multipart/form-data; boundary=----WebKitFormBoundarydviid0yGzzMNi8ik"
-    }, {
-      "name" : "Connection",
-      "value" : "keep-alive"
-    }, {
-      "name" : "Accept-language",
-      "value" : "en-US,en;q=0.8"
-    }, {
-      "name" : "Host",
-      "value" : "localhost:8080"
-    }, {
-      "name" : "Accept",
-      "value" : "application/json, text/plain, */*"
-    }, {
-      "name" : "Content-length",
-      "value" : "87097"
-    }, {
-      "name" : "Origin",
-      "value" : "http://localhost:8080"
-    }, {
-      "name" : "User-agent",
-      "value" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safari/537.36"
-    }, {
-      "name" : "Accept-encoding",
-      "value" : "gzip,deflate"
-    }, {
-      "name" : "Referer",
-      "value" : "http://localhost:8080/testapp/tests/2/test/22"
-    } ],
-    "parameters" : [ {
-      "name" : "nonce",
-      "value" : "616295B4C82D41126936D41D5A96C5D7"
-    } ],
-    "links" : [ ]
+  {
+    "uuid": "JVW3-RBED-D1NY-YG24",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'MD5' hash algorithm used at VulnerabilityParser.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "protocol": "http",
+      "version": "1.0",
+      "uri": "\/testapp\/tests\/2\/test\/22\/upload\/remote",
+      "queryString": "nonce=616295B4C82D41126936D41D5A96C5D7",
+      "method": "POST",
+      "port": 0,
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "JSESSIONID=2A39A57DD33ADF8236E953FD5BC44CD6; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
+        },
+        {
+          "name": "Content-type",
+          "value": "multipart\/form-data; boundary=----WebKitFormBoundarydviid0yGzzMNi8ik"
+        },
+        {
+          "name": "Connection",
+          "value": "keep-alive"
+        },
+        {
+          "name": "Accept-language",
+          "value": "en-US,en;q=0.8"
+        },
+        {
+          "name": "Host",
+          "value": "localhost:8080"
+        },
+        {
+          "name": "Accept",
+          "value": "application\/json, text\/plain, *\/*"
+        },
+        {
+          "name": "Content-length",
+          "value": "87097"
+        },
+        {
+          "name": "Origin",
+          "value": "http:\/\/localhost:8080"
+        },
+        {
+          "name": "User-agent",
+          "value": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/38.0.2125.122 Safari\/537.36"
+        },
+        {
+          "name": "Accept-encoding",
+          "value": "gzip,deflate"
+        },
+        {
+          "name": "Referer",
+          "value": "http:\/\/localhost:8080\/testapp\/tests\/2\/test\/22"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "nonce",
+          "value": "616295B4C82D41126936D41D5A96C5D7"
+        }
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 930851,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/JVW3-RBED-D1NY-YG24"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199326,
+    "total-traces-received": 1,
+    "last-time-seen": 1415996169913,
+    "first-time-seen": 1415996169913,
+    "sub-status": "",
+    "sub-title": "'MD5' used at VulnerabilityParser.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 930851,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/JVW3-RBED-D1NY-YG24"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199326,
-  "total-traces-received" : 1,
-  "last-time-seen" : 1415996169913,
-  "first-time-seen" : 1415996169913,
-  "sub-status" : "",
-  "sub-title" : "'MD5' used at VulnerabilityParser.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "UVWC-OFT2-IQIY-YLG9",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'SHA-1' hash algorithm used at Constants.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "protocol" : "http",
-    "version" : "1.0",
-    "uri" : "/testapp/rest/code//tests/1/endpoints",
-    "queryString" : "apiKey=hsNDRb90MdAXt2QV5K9QBsnd7SwOR9IngbDicsSFc&",
-    "method" : "GET",
-    "port" : 0,
-    "headers" : [ {
-      "name" : "Host",
-      "value" : "localhost:8080"
-    }, {
-      "name" : "Accept",
-      "value" : "application/json"
-    }, {
-      "name" : "User-agent",
-      "value" : "Jakarta Commons-HttpClient/3.1"
-    } ],
-    "parameters" : [ {
-      "name" : "apiKey",
-      "value" : "hsNDRb90MdAXt2QV5K9QBsnd7SwOR9IngbDicsSFc"
-    } ],
-    "links" : [ ]
+  {
+    "uuid": "UVWC-OFT2-IQIY-YLG9",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'SHA-1' hash algorithm used at Constants.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "protocol": "http",
+      "version": "1.0",
+      "uri": "\/testapp\/rest\/code\/\/tests\/1\/endpoints",
+      "queryString": "apiKey=hsNDRb90MdAXt2QV5K9QBsnd7SwOR9IngbDicsSFc&",
+      "method": "GET",
+      "port": 0,
+      "headers": [
+        {
+          "name": "Host",
+          "value": "localhost:8080"
+        },
+        {
+          "name": "Accept",
+          "value": "application\/json"
+        },
+        {
+          "name": "User-agent",
+          "value": "Jakarta Commons-HttpClient\/3.1"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "apiKey",
+          "value": "hsNDRb90MdAXt2QV5K9QBsnd7SwOR9IngbDicsSFc"
+        }
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 934016,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/UVWC-OFT2-IQIY-YLG9"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199894,
+    "total-traces-received": 1,
+    "last-time-seen": 1416340116042,
+    "first-time-seen": 1416340116042,
+    "sub-status": "",
+    "sub-title": "'SHA-1' used at Constants.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 934016,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/UVWC-OFT2-IQIY-YLG9"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199894,
-  "total-traces-received" : 1,
-  "last-time-seen" : 1416340116042,
-  "first-time-seen" : 1416340116042,
-  "sub-status" : "",
-  "sub-title" : "'SHA-1' used at Constants.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "ARI3-6VQR-5C2V-F7CT",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'SHA-1' hash algorithm used at Constants.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "protocol" : "http",
-    "version" : "1.0",
-    "uri" : "/testapp/rest/code//tests/1/endpoints",
-    "queryString" : "apiKey=hsNDRb90MdAXt2QV5K9QBsnd7SwOR9IngbDicsSFc&",
-    "method" : "GET",
-    "port" : 0,
-    "headers" : [ {
-      "name" : "Host",
-      "value" : "localhost:8080"
-    }, {
-      "name" : "Accept",
-      "value" : "application/json"
-    }, {
-      "name" : "User-agent",
-      "value" : "Jakarta Commons-HttpClient/3.1"
-    } ],
-    "parameters" : [ {
-      "name" : "apiKey",
-      "value" : "hsNDRb90MdAXt2QV5K9QBsnd7SwOR9IngbDicsSFc"
-    } ],
-    "links" : [ ]
+  {
+    "uuid": "ARI3-6VQR-5C2V-F7CT",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'SHA-1' hash algorithm used at Constants.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "protocol": "http",
+      "version": "1.0",
+      "uri": "\/testapp\/rest\/code\/\/tests\/1\/endpoints",
+      "queryString": "apiKey=hsNDRb90MdAXt2QV5K9QBsnd7SwOR9IngbDicsSFc&",
+      "method": "GET",
+      "port": 0,
+      "headers": [
+        {
+          "name": "Host",
+          "value": "localhost:8080"
+        },
+        {
+          "name": "Accept",
+          "value": "application\/json"
+        },
+        {
+          "name": "User-agent",
+          "value": "Jakarta Commons-HttpClient\/3.1"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "apiKey",
+          "value": "hsNDRb90MdAXt2QV5K9QBsnd7SwOR9IngbDicsSFc"
+        }
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 934017,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/ARI3-6VQR-5C2V-F7CT"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199895,
+    "total-traces-received": 1,
+    "last-time-seen": 1416340116073,
+    "first-time-seen": 1416340116073,
+    "sub-status": "",
+    "sub-title": "'SHA-1' used at Constants.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 934017,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/ARI3-6VQR-5C2V-F7CT"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199895,
-  "total-traces-received" : 1,
-  "last-time-seen" : 1416340116073,
-  "first-time-seen" : 1416340116073,
-  "sub-status" : "",
-  "sub-title" : "'SHA-1' used at Constants.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "OJSA-4OTG-TSN2-2RHI",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'SHA-1' hash algorithm used at Constants.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "protocol" : "http",
-    "version" : "1.0",
-    "uri" : "/testapp/rest/code//tests/1/endpoints",
-    "queryString" : "apiKey=hsNDRb90MdAXt2QV5K9QBsnd7SwOR9IngbDicsSFc&",
-    "method" : "GET",
-    "port" : 0,
-    "headers" : [ {
-      "name" : "Host",
-      "value" : "localhost:8080"
-    }, {
-      "name" : "Accept",
-      "value" : "application/json"
-    }, {
-      "name" : "User-agent",
-      "value" : "Jakarta Commons-HttpClient/3.1"
-    } ],
-    "parameters" : [ {
-      "name" : "apiKey",
-      "value" : "hsNDRb90MdAXt2QV5K9QBsnd7SwOR9IngbDicsSFc"
-    } ],
-    "links" : [ ]
+  {
+    "uuid": "OJSA-4OTG-TSN2-2RHI",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'SHA-1' hash algorithm used at Constants.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "protocol": "http",
+      "version": "1.0",
+      "uri": "\/testapp\/rest\/code\/\/tests\/1\/endpoints",
+      "queryString": "apiKey=hsNDRb90MdAXt2QV5K9QBsnd7SwOR9IngbDicsSFc&",
+      "method": "GET",
+      "port": 0,
+      "headers": [
+        {
+          "name": "Host",
+          "value": "localhost:8080"
+        },
+        {
+          "name": "Accept",
+          "value": "application\/json"
+        },
+        {
+          "name": "User-agent",
+          "value": "Jakarta Commons-HttpClient\/3.1"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "apiKey",
+          "value": "hsNDRb90MdAXt2QV5K9QBsnd7SwOR9IngbDicsSFc"
+        }
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 934018,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/OJSA-4OTG-TSN2-2RHI"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199896,
+    "total-traces-received": 1,
+    "last-time-seen": 1416340116107,
+    "first-time-seen": 1416340116107,
+    "sub-status": "",
+    "sub-title": "'SHA-1' used at Constants.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 934018,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/OJSA-4OTG-TSN2-2RHI"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199896,
-  "total-traces-received" : 1,
-  "last-time-seen" : 1416340116107,
-  "first-time-seen" : 1416340116107,
-  "sub-status" : "",
-  "sub-title" : "'SHA-1' used at Constants.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "CX8G-51C3-L8MM-6CJP",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'SHA-1' hash algorithm used at Constants.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "protocol" : "http",
-    "version" : "1.0",
-    "uri" : "/testapp/rest/code//tests/1/endpoints",
-    "queryString" : "apiKey=hsNDRb90MdAXt2QV5K9QBsnd7SwOR9IngbDicsSFc&",
-    "method" : "GET",
-    "port" : 0,
-    "headers" : [ {
-      "name" : "Host",
-      "value" : "localhost:8080"
-    }, {
-      "name" : "Accept",
-      "value" : "application/json"
-    }, {
-      "name" : "User-agent",
-      "value" : "Jakarta Commons-HttpClient/3.1"
-    } ],
-    "parameters" : [ {
-      "name" : "apiKey",
-      "value" : "hsNDRb90MdAXt2QV5K9QBsnd7SwOR9IngbDicsSFc"
-    } ],
-    "links" : [ ]
+  {
+    "uuid": "CX8G-51C3-L8MM-6CJP",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'SHA-1' hash algorithm used at Constants.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "protocol": "http",
+      "version": "1.0",
+      "uri": "\/testapp\/rest\/code\/\/tests\/1\/endpoints",
+      "queryString": "apiKey=hsNDRb90MdAXt2QV5K9QBsnd7SwOR9IngbDicsSFc&",
+      "method": "GET",
+      "port": 0,
+      "headers": [
+        {
+          "name": "Host",
+          "value": "localhost:8080"
+        },
+        {
+          "name": "Accept",
+          "value": "application\/json"
+        },
+        {
+          "name": "User-agent",
+          "value": "Jakarta Commons-HttpClient\/3.1"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "apiKey",
+          "value": "hsNDRb90MdAXt2QV5K9QBsnd7SwOR9IngbDicsSFc"
+        }
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 934019,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/CX8G-51C3-L8MM-6CJP"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199897,
+    "total-traces-received": 1,
+    "last-time-seen": 1416340116152,
+    "first-time-seen": 1416340116152,
+    "sub-status": "",
+    "sub-title": "'SHA-1' used at Constants.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 934019,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/CX8G-51C3-L8MM-6CJP"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199897,
-  "total-traces-received" : 1,
-  "last-time-seen" : 1416340116152,
-  "first-time-seen" : 1416340116152,
-  "sub-status" : "",
-  "sub-title" : "'SHA-1' used at Constants.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "MWTW-EV6M-4OXC-1UG7",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'SHA-1' hash algorithm used at Constants.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "protocol" : "http",
-    "version" : "1.0",
-    "uri" : "/testapp/rest/code//tests/1/endpoints",
-    "queryString" : "apiKey=hsNDRb90MdAXt2QV5K9QBsnd7SwOR9IngbDicsSFc&",
-    "method" : "GET",
-    "port" : 0,
-    "headers" : [ {
-      "name" : "Host",
-      "value" : "localhost:8080"
-    }, {
-      "name" : "Accept",
-      "value" : "application/json"
-    }, {
-      "name" : "User-agent",
-      "value" : "Jakarta Commons-HttpClient/3.1"
-    } ],
-    "parameters" : [ {
-      "name" : "apiKey",
-      "value" : "hsNDRb90MdAXt2QV5K9QBsnd7SwOR9IngbDicsSFc"
-    } ],
-    "links" : [ ]
+  {
+    "uuid": "MWTW-EV6M-4OXC-1UG7",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'SHA-1' hash algorithm used at Constants.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "protocol": "http",
+      "version": "1.0",
+      "uri": "\/testapp\/rest\/code\/\/tests\/1\/endpoints",
+      "queryString": "apiKey=hsNDRb90MdAXt2QV5K9QBsnd7SwOR9IngbDicsSFc&",
+      "method": "GET",
+      "port": 0,
+      "headers": [
+        {
+          "name": "Host",
+          "value": "localhost:8080"
+        },
+        {
+          "name": "Accept",
+          "value": "application\/json"
+        },
+        {
+          "name": "User-agent",
+          "value": "Jakarta Commons-HttpClient\/3.1"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "apiKey",
+          "value": "hsNDRb90MdAXt2QV5K9QBsnd7SwOR9IngbDicsSFc"
+        }
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 934020,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/MWTW-EV6M-4OXC-1UG7"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 199898,
+    "total-traces-received": 1,
+    "last-time-seen": 1416340116197,
+    "first-time-seen": 1416340116197,
+    "sub-status": "",
+    "sub-title": "'SHA-1' used at Constants.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 934020,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/MWTW-EV6M-4OXC-1UG7"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 199898,
-  "total-traces-received" : 1,
-  "last-time-seen" : 1416340116197,
-  "first-time-seen" : 1416340116197,
-  "sub-status" : "",
-  "sub-title" : "'SHA-1' used at Constants.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "0PSG-VRFM-CFAF-C99H",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'SHA-1' hash algorithm used at Constants.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "protocol" : "http",
-    "version" : "1.0",
-    "uri" : "/testapp/tests/1/test/12/upload/remote",
-    "queryString" : "nonce=B1775F8252A0998806AB6DB8A3D45949",
-    "method" : "POST",
-    "port" : 0,
-    "headers" : [ {
-      "name" : "Cookie",
-      "value" : "JSESSIONID=D7AE37E5E93AB94FE4CD90ED4F999B42; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
-    }, {
-      "name" : "Content-type",
-      "value" : "multipart/form-data; boundary=----WebKitFormBoundaryaadHtlkp1H1FvkBE"
-    }, {
-      "name" : "Connection",
-      "value" : "keep-alive"
-    }, {
-      "name" : "Accept-language",
-      "value" : "en-US,en;q=0.8"
-    }, {
-      "name" : "Host",
-      "value" : "localhost:8080"
-    }, {
-      "name" : "Accept",
-      "value" : "application/json, text/plain, */*"
-    }, {
-      "name" : "Content-length",
-      "value" : "760946"
-    }, {
-      "name" : "Origin",
-      "value" : "http://localhost:8080"
-    }, {
-      "name" : "User-agent",
-      "value" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36"
-    }, {
-      "name" : "Accept-encoding",
-      "value" : "gzip, deflate"
-    }, {
-      "name" : "Referer",
-      "value" : "http://localhost:8080/testapp/tests/1/test/12"
-    } ],
-    "parameters" : [ {
-      "name" : "nonce",
-      "value" : "B1775F8252A0998806AB6DB8A3D45949"
-    } ],
-    "links" : [ ]
+  {
+    "uuid": "0PSG-VRFM-CFAF-C99H",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'SHA-1' hash algorithm used at Constants.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "protocol": "http",
+      "version": "1.0",
+      "uri": "\/testapp\/tests\/1\/test\/12\/upload\/remote",
+      "queryString": "nonce=B1775F8252A0998806AB6DB8A3D45949",
+      "method": "POST",
+      "port": 0,
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "JSESSIONID=D7AE37E5E93AB94FE4CD90ED4F999B42; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
+        },
+        {
+          "name": "Content-type",
+          "value": "multipart\/form-data; boundary=----WebKitFormBoundaryaadHtlkp1H1FvkBE"
+        },
+        {
+          "name": "Connection",
+          "value": "keep-alive"
+        },
+        {
+          "name": "Accept-language",
+          "value": "en-US,en;q=0.8"
+        },
+        {
+          "name": "Host",
+          "value": "localhost:8080"
+        },
+        {
+          "name": "Accept",
+          "value": "application\/json, text\/plain, *\/*"
+        },
+        {
+          "name": "Content-length",
+          "value": "760946"
+        },
+        {
+          "name": "Origin",
+          "value": "http:\/\/localhost:8080"
+        },
+        {
+          "name": "User-agent",
+          "value": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/39.0.2171.71 Safari\/537.36"
+        },
+        {
+          "name": "Accept-encoding",
+          "value": "gzip, deflate"
+        },
+        {
+          "name": "Referer",
+          "value": "http:\/\/localhost:8080\/testapp\/tests\/1\/test\/12"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "nonce",
+          "value": "B1775F8252A0998806AB6DB8A3D45949"
+        }
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 1015922,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/0PSG-VRFM-CFAF-C99H"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 205432,
+    "total-traces-received": 1,
+    "last-time-seen": 1417556684638,
+    "first-time-seen": 1417556684638,
+    "sub-status": "",
+    "sub-title": "'SHA-1' used at Constants.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 1015922,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/0PSG-VRFM-CFAF-C99H"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 205432,
-  "total-traces-received" : 1,
-  "last-time-seen" : 1417556684638,
-  "first-time-seen" : 1417556684638,
-  "sub-status" : "",
-  "sub-title" : "'SHA-1' used at Constants.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "JMIZ-RHAH-XLF0-0KNL",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'SHA-1' hash algorithm used at Constants.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "protocol" : "http",
-    "version" : "1.0",
-    "uri" : "/testapp/tests/1/test/12/upload/remote",
-    "queryString" : "nonce=B1775F8252A0998806AB6DB8A3D45949",
-    "method" : "POST",
-    "port" : 0,
-    "headers" : [ {
-      "name" : "Cookie",
-      "value" : "JSESSIONID=D7AE37E5E93AB94FE4CD90ED4F999B42; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
-    }, {
-      "name" : "Content-type",
-      "value" : "multipart/form-data; boundary=----WebKitFormBoundaryaadHtlkp1H1FvkBE"
-    }, {
-      "name" : "Connection",
-      "value" : "keep-alive"
-    }, {
-      "name" : "Accept-language",
-      "value" : "en-US,en;q=0.8"
-    }, {
-      "name" : "Host",
-      "value" : "localhost:8080"
-    }, {
-      "name" : "Accept",
-      "value" : "application/json, text/plain, */*"
-    }, {
-      "name" : "Content-length",
-      "value" : "760946"
-    }, {
-      "name" : "Origin",
-      "value" : "http://localhost:8080"
-    }, {
-      "name" : "User-agent",
-      "value" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36"
-    }, {
-      "name" : "Accept-encoding",
-      "value" : "gzip, deflate"
-    }, {
-      "name" : "Referer",
-      "value" : "http://localhost:8080/testapp/tests/1/test/12"
-    } ],
-    "parameters" : [ {
-      "name" : "nonce",
-      "value" : "B1775F8252A0998806AB6DB8A3D45949"
-    } ],
-    "links" : [ ]
+  {
+    "uuid": "JMIZ-RHAH-XLF0-0KNL",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'SHA-1' hash algorithm used at Constants.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "protocol": "http",
+      "version": "1.0",
+      "uri": "\/testapp\/tests\/1\/test\/12\/upload\/remote",
+      "queryString": "nonce=B1775F8252A0998806AB6DB8A3D45949",
+      "method": "POST",
+      "port": 0,
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "JSESSIONID=D7AE37E5E93AB94FE4CD90ED4F999B42; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
+        },
+        {
+          "name": "Content-type",
+          "value": "multipart\/form-data; boundary=----WebKitFormBoundaryaadHtlkp1H1FvkBE"
+        },
+        {
+          "name": "Connection",
+          "value": "keep-alive"
+        },
+        {
+          "name": "Accept-language",
+          "value": "en-US,en;q=0.8"
+        },
+        {
+          "name": "Host",
+          "value": "localhost:8080"
+        },
+        {
+          "name": "Accept",
+          "value": "application\/json, text\/plain, *\/*"
+        },
+        {
+          "name": "Content-length",
+          "value": "760946"
+        },
+        {
+          "name": "Origin",
+          "value": "http:\/\/localhost:8080"
+        },
+        {
+          "name": "User-agent",
+          "value": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/39.0.2171.71 Safari\/537.36"
+        },
+        {
+          "name": "Accept-encoding",
+          "value": "gzip, deflate"
+        },
+        {
+          "name": "Referer",
+          "value": "http:\/\/localhost:8080\/testapp\/tests\/1\/test\/12"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "nonce",
+          "value": "B1775F8252A0998806AB6DB8A3D45949"
+        }
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 1015923,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/JMIZ-RHAH-XLF0-0KNL"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 205433,
+    "total-traces-received": 1,
+    "last-time-seen": 1417556684672,
+    "first-time-seen": 1417556684672,
+    "sub-status": "",
+    "sub-title": "'SHA-1' used at Constants.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 1015923,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/JMIZ-RHAH-XLF0-0KNL"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 205433,
-  "total-traces-received" : 1,
-  "last-time-seen" : 1417556684672,
-  "first-time-seen" : 1417556684672,
-  "sub-status" : "",
-  "sub-title" : "'SHA-1' used at Constants.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "XQK6-1AIF-L74R-WYFO",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'SHA-1' hash algorithm used at Constants.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "protocol" : "http",
-    "version" : "1.0",
-    "uri" : "/testapp/tests/1/test/12/upload/remote",
-    "queryString" : "nonce=B1775F8252A0998806AB6DB8A3D45949",
-    "method" : "POST",
-    "port" : 0,
-    "headers" : [ {
-      "name" : "Cookie",
-      "value" : "JSESSIONID=D7AE37E5E93AB94FE4CD90ED4F999B42; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
-    }, {
-      "name" : "Content-type",
-      "value" : "multipart/form-data; boundary=----WebKitFormBoundaryaadHtlkp1H1FvkBE"
-    }, {
-      "name" : "Connection",
-      "value" : "keep-alive"
-    }, {
-      "name" : "Accept-language",
-      "value" : "en-US,en;q=0.8"
-    }, {
-      "name" : "Host",
-      "value" : "localhost:8080"
-    }, {
-      "name" : "Accept",
-      "value" : "application/json, text/plain, */*"
-    }, {
-      "name" : "Content-length",
-      "value" : "760946"
-    }, {
-      "name" : "Origin",
-      "value" : "http://localhost:8080"
-    }, {
-      "name" : "User-agent",
-      "value" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36"
-    }, {
-      "name" : "Accept-encoding",
-      "value" : "gzip, deflate"
-    }, {
-      "name" : "Referer",
-      "value" : "http://localhost:8080/testapp/tests/1/test/12"
-    } ],
-    "parameters" : [ {
-      "name" : "nonce",
-      "value" : "B1775F8252A0998806AB6DB8A3D45949"
-    } ],
-    "links" : [ ]
+  {
+    "uuid": "XQK6-1AIF-L74R-WYFO",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'SHA-1' hash algorithm used at Constants.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "protocol": "http",
+      "version": "1.0",
+      "uri": "\/testapp\/tests\/1\/test\/12\/upload\/remote",
+      "queryString": "nonce=B1775F8252A0998806AB6DB8A3D45949",
+      "method": "POST",
+      "port": 0,
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "JSESSIONID=D7AE37E5E93AB94FE4CD90ED4F999B42; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
+        },
+        {
+          "name": "Content-type",
+          "value": "multipart\/form-data; boundary=----WebKitFormBoundaryaadHtlkp1H1FvkBE"
+        },
+        {
+          "name": "Connection",
+          "value": "keep-alive"
+        },
+        {
+          "name": "Accept-language",
+          "value": "en-US,en;q=0.8"
+        },
+        {
+          "name": "Host",
+          "value": "localhost:8080"
+        },
+        {
+          "name": "Accept",
+          "value": "application\/json, text\/plain, *\/*"
+        },
+        {
+          "name": "Content-length",
+          "value": "760946"
+        },
+        {
+          "name": "Origin",
+          "value": "http:\/\/localhost:8080"
+        },
+        {
+          "name": "User-agent",
+          "value": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/39.0.2171.71 Safari\/537.36"
+        },
+        {
+          "name": "Accept-encoding",
+          "value": "gzip, deflate"
+        },
+        {
+          "name": "Referer",
+          "value": "http:\/\/localhost:8080\/testapp\/tests\/1\/test\/12"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "nonce",
+          "value": "B1775F8252A0998806AB6DB8A3D45949"
+        }
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 1015924,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/XQK6-1AIF-L74R-WYFO"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 205434,
+    "total-traces-received": 1,
+    "last-time-seen": 1417556684706,
+    "first-time-seen": 1417556684706,
+    "sub-status": "",
+    "sub-title": "'SHA-1' used at Constants.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 1015924,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/XQK6-1AIF-L74R-WYFO"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 205434,
-  "total-traces-received" : 1,
-  "last-time-seen" : 1417556684706,
-  "first-time-seen" : 1417556684706,
-  "sub-status" : "",
-  "sub-title" : "'SHA-1' used at Constants.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "USMT-QTSS-FIEZ-95T1",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'SHA-1' hash algorithm used at Constants.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "protocol" : "http",
-    "version" : "1.0",
-    "uri" : "/testapp/tests/1/test/12/upload/remote",
-    "queryString" : "nonce=B1775F8252A0998806AB6DB8A3D45949",
-    "method" : "POST",
-    "port" : 0,
-    "headers" : [ {
-      "name" : "Cookie",
-      "value" : "JSESSIONID=D7AE37E5E93AB94FE4CD90ED4F999B42; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
-    }, {
-      "name" : "Content-type",
-      "value" : "multipart/form-data; boundary=----WebKitFormBoundaryaadHtlkp1H1FvkBE"
-    }, {
-      "name" : "Connection",
-      "value" : "keep-alive"
-    }, {
-      "name" : "Accept-language",
-      "value" : "en-US,en;q=0.8"
-    }, {
-      "name" : "Host",
-      "value" : "localhost:8080"
-    }, {
-      "name" : "Accept",
-      "value" : "application/json, text/plain, */*"
-    }, {
-      "name" : "Content-length",
-      "value" : "760946"
-    }, {
-      "name" : "Origin",
-      "value" : "http://localhost:8080"
-    }, {
-      "name" : "User-agent",
-      "value" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36"
-    }, {
-      "name" : "Accept-encoding",
-      "value" : "gzip, deflate"
-    }, {
-      "name" : "Referer",
-      "value" : "http://localhost:8080/testapp/tests/1/test/12"
-    } ],
-    "parameters" : [ {
-      "name" : "nonce",
-      "value" : "B1775F8252A0998806AB6DB8A3D45949"
-    } ],
-    "links" : [ ]
+  {
+    "uuid": "USMT-QTSS-FIEZ-95T1",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'SHA-1' hash algorithm used at Constants.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "protocol": "http",
+      "version": "1.0",
+      "uri": "\/testapp\/tests\/1\/test\/12\/upload\/remote",
+      "queryString": "nonce=B1775F8252A0998806AB6DB8A3D45949",
+      "method": "POST",
+      "port": 0,
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "JSESSIONID=D7AE37E5E93AB94FE4CD90ED4F999B42; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
+        },
+        {
+          "name": "Content-type",
+          "value": "multipart\/form-data; boundary=----WebKitFormBoundaryaadHtlkp1H1FvkBE"
+        },
+        {
+          "name": "Connection",
+          "value": "keep-alive"
+        },
+        {
+          "name": "Accept-language",
+          "value": "en-US,en;q=0.8"
+        },
+        {
+          "name": "Host",
+          "value": "localhost:8080"
+        },
+        {
+          "name": "Accept",
+          "value": "application\/json, text\/plain, *\/*"
+        },
+        {
+          "name": "Content-length",
+          "value": "760946"
+        },
+        {
+          "name": "Origin",
+          "value": "http:\/\/localhost:8080"
+        },
+        {
+          "name": "User-agent",
+          "value": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/39.0.2171.71 Safari\/537.36"
+        },
+        {
+          "name": "Accept-encoding",
+          "value": "gzip, deflate"
+        },
+        {
+          "name": "Referer",
+          "value": "http:\/\/localhost:8080\/testapp\/tests\/1\/test\/12"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "nonce",
+          "value": "B1775F8252A0998806AB6DB8A3D45949"
+        }
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 1015925,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/USMT-QTSS-FIEZ-95T1"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 205435,
+    "total-traces-received": 1,
+    "last-time-seen": 1417556684739,
+    "first-time-seen": 1417556684739,
+    "sub-status": "",
+    "sub-title": "'SHA-1' used at Constants.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 1015925,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/USMT-QTSS-FIEZ-95T1"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 205435,
-  "total-traces-received" : 1,
-  "last-time-seen" : 1417556684739,
-  "first-time-seen" : 1417556684739,
-  "sub-status" : "",
-  "sub-title" : "'SHA-1' used at Constants.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "NLGA-I9KH-D0R2-6G5Y",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'SHA-1' hash algorithm used at Constants.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "protocol" : "http",
-    "version" : "1.0",
-    "uri" : "/testapp/tests/1/test/12/upload/remote",
-    "queryString" : "nonce=B1775F8252A0998806AB6DB8A3D45949",
-    "method" : "POST",
-    "port" : 0,
-    "headers" : [ {
-      "name" : "Cookie",
-      "value" : "JSESSIONID=D7AE37E5E93AB94FE4CD90ED4F999B42; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
-    }, {
-      "name" : "Content-type",
-      "value" : "multipart/form-data; boundary=----WebKitFormBoundaryaadHtlkp1H1FvkBE"
-    }, {
-      "name" : "Connection",
-      "value" : "keep-alive"
-    }, {
-      "name" : "Accept-language",
-      "value" : "en-US,en;q=0.8"
-    }, {
-      "name" : "Host",
-      "value" : "localhost:8080"
-    }, {
-      "name" : "Accept",
-      "value" : "application/json, text/plain, */*"
-    }, {
-      "name" : "Content-length",
-      "value" : "760946"
-    }, {
-      "name" : "Origin",
-      "value" : "http://localhost:8080"
-    }, {
-      "name" : "User-agent",
-      "value" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36"
-    }, {
-      "name" : "Accept-encoding",
-      "value" : "gzip, deflate"
-    }, {
-      "name" : "Referer",
-      "value" : "http://localhost:8080/testapp/tests/1/test/12"
-    } ],
-    "parameters" : [ {
-      "name" : "nonce",
-      "value" : "B1775F8252A0998806AB6DB8A3D45949"
-    } ],
-    "links" : [ ]
+  {
+    "uuid": "NLGA-I9KH-D0R2-6G5Y",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'SHA-1' hash algorithm used at Constants.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "protocol": "http",
+      "version": "1.0",
+      "uri": "\/testapp\/tests\/1\/test\/12\/upload\/remote",
+      "queryString": "nonce=B1775F8252A0998806AB6DB8A3D45949",
+      "method": "POST",
+      "port": 0,
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "JSESSIONID=D7AE37E5E93AB94FE4CD90ED4F999B42; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
+        },
+        {
+          "name": "Content-type",
+          "value": "multipart\/form-data; boundary=----WebKitFormBoundaryaadHtlkp1H1FvkBE"
+        },
+        {
+          "name": "Connection",
+          "value": "keep-alive"
+        },
+        {
+          "name": "Accept-language",
+          "value": "en-US,en;q=0.8"
+        },
+        {
+          "name": "Host",
+          "value": "localhost:8080"
+        },
+        {
+          "name": "Accept",
+          "value": "application\/json, text\/plain, *\/*"
+        },
+        {
+          "name": "Content-length",
+          "value": "760946"
+        },
+        {
+          "name": "Origin",
+          "value": "http:\/\/localhost:8080"
+        },
+        {
+          "name": "User-agent",
+          "value": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/39.0.2171.71 Safari\/537.36"
+        },
+        {
+          "name": "Accept-encoding",
+          "value": "gzip, deflate"
+        },
+        {
+          "name": "Referer",
+          "value": "http:\/\/localhost:8080\/testapp\/tests\/1\/test\/12"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "nonce",
+          "value": "B1775F8252A0998806AB6DB8A3D45949"
+        }
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 1015926,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/NLGA-I9KH-D0R2-6G5Y"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 205436,
+    "total-traces-received": 1,
+    "last-time-seen": 1417556684774,
+    "first-time-seen": 1417556684774,
+    "sub-status": "",
+    "sub-title": "'SHA-1' used at Constants.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 1015926,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/NLGA-I9KH-D0R2-6G5Y"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 205436,
-  "total-traces-received" : 1,
-  "last-time-seen" : 1417556684774,
-  "first-time-seen" : 1417556684774,
-  "sub-status" : "",
-  "sub-title" : "'SHA-1' used at Constants.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "LESY-15QC-1PSI-3M8R",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'SHA-1' hash algorithm used at Constants.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "protocol" : "http",
-    "version" : "1.0",
-    "uri" : "/testapp/tests/1/test/12/upload/remote",
-    "queryString" : "nonce=B1775F8252A0998806AB6DB8A3D45949",
-    "method" : "POST",
-    "port" : 0,
-    "headers" : [ {
-      "name" : "Cookie",
-      "value" : "JSESSIONID=D7AE37E5E93AB94FE4CD90ED4F999B42; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
-    }, {
-      "name" : "Content-type",
-      "value" : "multipart/form-data; boundary=----WebKitFormBoundaryaadHtlkp1H1FvkBE"
-    }, {
-      "name" : "Connection",
-      "value" : "keep-alive"
-    }, {
-      "name" : "Accept-language",
-      "value" : "en-US,en;q=0.8"
-    }, {
-      "name" : "Host",
-      "value" : "localhost:8080"
-    }, {
-      "name" : "Accept",
-      "value" : "application/json, text/plain, */*"
-    }, {
-      "name" : "Content-length",
-      "value" : "760946"
-    }, {
-      "name" : "Origin",
-      "value" : "http://localhost:8080"
-    }, {
-      "name" : "User-agent",
-      "value" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36"
-    }, {
-      "name" : "Accept-encoding",
-      "value" : "gzip, deflate"
-    }, {
-      "name" : "Referer",
-      "value" : "http://localhost:8080/testapp/tests/1/test/12"
-    } ],
-    "parameters" : [ {
-      "name" : "nonce",
-      "value" : "B1775F8252A0998806AB6DB8A3D45949"
-    } ],
-    "links" : [ ]
+  {
+    "uuid": "LESY-15QC-1PSI-3M8R",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'SHA-1' hash algorithm used at Constants.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "protocol": "http",
+      "version": "1.0",
+      "uri": "\/testapp\/tests\/1\/test\/12\/upload\/remote",
+      "queryString": "nonce=B1775F8252A0998806AB6DB8A3D45949",
+      "method": "POST",
+      "port": 0,
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "JSESSIONID=D7AE37E5E93AB94FE4CD90ED4F999B42; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
+        },
+        {
+          "name": "Content-type",
+          "value": "multipart\/form-data; boundary=----WebKitFormBoundaryaadHtlkp1H1FvkBE"
+        },
+        {
+          "name": "Connection",
+          "value": "keep-alive"
+        },
+        {
+          "name": "Accept-language",
+          "value": "en-US,en;q=0.8"
+        },
+        {
+          "name": "Host",
+          "value": "localhost:8080"
+        },
+        {
+          "name": "Accept",
+          "value": "application\/json, text\/plain, *\/*"
+        },
+        {
+          "name": "Content-length",
+          "value": "760946"
+        },
+        {
+          "name": "Origin",
+          "value": "http:\/\/localhost:8080"
+        },
+        {
+          "name": "User-agent",
+          "value": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/39.0.2171.71 Safari\/537.36"
+        },
+        {
+          "name": "Accept-encoding",
+          "value": "gzip, deflate"
+        },
+        {
+          "name": "Referer",
+          "value": "http:\/\/localhost:8080\/testapp\/tests\/1\/test\/12"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "nonce",
+          "value": "B1775F8252A0998806AB6DB8A3D45949"
+        }
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 1015927,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/LESY-15QC-1PSI-3M8R"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 205437,
+    "total-traces-received": 1,
+    "last-time-seen": 1417556684806,
+    "first-time-seen": 1417556684806,
+    "sub-status": "",
+    "sub-title": "'SHA-1' used at Constants.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 1015927,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/LESY-15QC-1PSI-3M8R"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 205437,
-  "total-traces-received" : 1,
-  "last-time-seen" : 1417556684806,
-  "first-time-seen" : 1417556684806,
-  "sub-status" : "",
-  "sub-title" : "'SHA-1' used at Constants.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "1CC2-RRMJ-VU3A-44MT",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'SHA-1' hash algorithm used at Constants.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "protocol" : "http",
-    "version" : "1.0",
-    "uri" : "/testapp/tests/1/test/12/upload/remote",
-    "queryString" : "nonce=B1775F8252A0998806AB6DB8A3D45949",
-    "method" : "POST",
-    "port" : 0,
-    "headers" : [ {
-      "name" : "Cookie",
-      "value" : "JSESSIONID=D7AE37E5E93AB94FE4CD90ED4F999B42; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
-    }, {
-      "name" : "Content-type",
-      "value" : "multipart/form-data; boundary=----WebKitFormBoundaryaadHtlkp1H1FvkBE"
-    }, {
-      "name" : "Connection",
-      "value" : "keep-alive"
-    }, {
-      "name" : "Accept-language",
-      "value" : "en-US,en;q=0.8"
-    }, {
-      "name" : "Host",
-      "value" : "localhost:8080"
-    }, {
-      "name" : "Accept",
-      "value" : "application/json, text/plain, */*"
-    }, {
-      "name" : "Content-length",
-      "value" : "760946"
-    }, {
-      "name" : "Origin",
-      "value" : "http://localhost:8080"
-    }, {
-      "name" : "User-agent",
-      "value" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36"
-    }, {
-      "name" : "Accept-encoding",
-      "value" : "gzip, deflate"
-    }, {
-      "name" : "Referer",
-      "value" : "http://localhost:8080/testapp/tests/1/test/12"
-    } ],
-    "parameters" : [ {
-      "name" : "nonce",
-      "value" : "B1775F8252A0998806AB6DB8A3D45949"
-    } ],
-    "links" : [ ]
+  {
+    "uuid": "1CC2-RRMJ-VU3A-44MT",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'SHA-1' hash algorithm used at Constants.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "protocol": "http",
+      "version": "1.0",
+      "uri": "\/testapp\/tests\/1\/test\/12\/upload\/remote",
+      "queryString": "nonce=B1775F8252A0998806AB6DB8A3D45949",
+      "method": "POST",
+      "port": 0,
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "JSESSIONID=D7AE37E5E93AB94FE4CD90ED4F999B42; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
+        },
+        {
+          "name": "Content-type",
+          "value": "multipart\/form-data; boundary=----WebKitFormBoundaryaadHtlkp1H1FvkBE"
+        },
+        {
+          "name": "Connection",
+          "value": "keep-alive"
+        },
+        {
+          "name": "Accept-language",
+          "value": "en-US,en;q=0.8"
+        },
+        {
+          "name": "Host",
+          "value": "localhost:8080"
+        },
+        {
+          "name": "Accept",
+          "value": "application\/json, text\/plain, *\/*"
+        },
+        {
+          "name": "Content-length",
+          "value": "760946"
+        },
+        {
+          "name": "Origin",
+          "value": "http:\/\/localhost:8080"
+        },
+        {
+          "name": "User-agent",
+          "value": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/39.0.2171.71 Safari\/537.36"
+        },
+        {
+          "name": "Accept-encoding",
+          "value": "gzip, deflate"
+        },
+        {
+          "name": "Referer",
+          "value": "http:\/\/localhost:8080\/testapp\/tests\/1\/test\/12"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "nonce",
+          "value": "B1775F8252A0998806AB6DB8A3D45949"
+        }
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 1015928,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/1CC2-RRMJ-VU3A-44MT"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 205438,
+    "total-traces-received": 1,
+    "last-time-seen": 1417556684838,
+    "first-time-seen": 1417556684838,
+    "sub-status": "",
+    "sub-title": "'SHA-1' used at Constants.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 1015928,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/1CC2-RRMJ-VU3A-44MT"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 205438,
-  "total-traces-received" : 1,
-  "last-time-seen" : 1417556684838,
-  "first-time-seen" : 1417556684838,
-  "sub-status" : "",
-  "sub-title" : "'SHA-1' used at Constants.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "Z2SW-MYA9-8XY4-0IRS",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'SHA-1' hash algorithm used at Constants.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "protocol" : "http",
-    "version" : "1.0",
-    "uri" : "/testapp/tests/1/test/12/upload/remote",
-    "queryString" : "nonce=B1775F8252A0998806AB6DB8A3D45949",
-    "method" : "POST",
-    "port" : 0,
-    "headers" : [ {
-      "name" : "Cookie",
-      "value" : "JSESSIONID=D7AE37E5E93AB94FE4CD90ED4F999B42; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
-    }, {
-      "name" : "Content-type",
-      "value" : "multipart/form-data; boundary=----WebKitFormBoundaryaadHtlkp1H1FvkBE"
-    }, {
-      "name" : "Connection",
-      "value" : "keep-alive"
-    }, {
-      "name" : "Accept-language",
-      "value" : "en-US,en;q=0.8"
-    }, {
-      "name" : "Host",
-      "value" : "localhost:8080"
-    }, {
-      "name" : "Accept",
-      "value" : "application/json, text/plain, */*"
-    }, {
-      "name" : "Content-length",
-      "value" : "760946"
-    }, {
-      "name" : "Origin",
-      "value" : "http://localhost:8080"
-    }, {
-      "name" : "User-agent",
-      "value" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36"
-    }, {
-      "name" : "Accept-encoding",
-      "value" : "gzip, deflate"
-    }, {
-      "name" : "Referer",
-      "value" : "http://localhost:8080/testapp/tests/1/test/12"
-    } ],
-    "parameters" : [ {
-      "name" : "nonce",
-      "value" : "B1775F8252A0998806AB6DB8A3D45949"
-    } ],
-    "links" : [ ]
+  {
+    "uuid": "Z2SW-MYA9-8XY4-0IRS",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'SHA-1' hash algorithm used at Constants.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "protocol": "http",
+      "version": "1.0",
+      "uri": "\/testapp\/tests\/1\/test\/12\/upload\/remote",
+      "queryString": "nonce=B1775F8252A0998806AB6DB8A3D45949",
+      "method": "POST",
+      "port": 0,
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "JSESSIONID=D7AE37E5E93AB94FE4CD90ED4F999B42; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
+        },
+        {
+          "name": "Content-type",
+          "value": "multipart\/form-data; boundary=----WebKitFormBoundaryaadHtlkp1H1FvkBE"
+        },
+        {
+          "name": "Connection",
+          "value": "keep-alive"
+        },
+        {
+          "name": "Accept-language",
+          "value": "en-US,en;q=0.8"
+        },
+        {
+          "name": "Host",
+          "value": "localhost:8080"
+        },
+        {
+          "name": "Accept",
+          "value": "application\/json, text\/plain, *\/*"
+        },
+        {
+          "name": "Content-length",
+          "value": "760946"
+        },
+        {
+          "name": "Origin",
+          "value": "http:\/\/localhost:8080"
+        },
+        {
+          "name": "User-agent",
+          "value": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/39.0.2171.71 Safari\/537.36"
+        },
+        {
+          "name": "Accept-encoding",
+          "value": "gzip, deflate"
+        },
+        {
+          "name": "Referer",
+          "value": "http:\/\/localhost:8080\/testapp\/tests\/1\/test\/12"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "nonce",
+          "value": "B1775F8252A0998806AB6DB8A3D45949"
+        }
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 1015929,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/Z2SW-MYA9-8XY4-0IRS"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 205439,
+    "total-traces-received": 1,
+    "last-time-seen": 1417556684872,
+    "first-time-seen": 1417556684872,
+    "sub-status": "",
+    "sub-title": "'SHA-1' used at Constants.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 1015929,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/Z2SW-MYA9-8XY4-0IRS"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 205439,
-  "total-traces-received" : 1,
-  "last-time-seen" : 1417556684872,
-  "first-time-seen" : 1417556684872,
-  "sub-status" : "",
-  "sub-title" : "'SHA-1' used at Constants.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "V5DO-MNPR-C2DG-HIDX",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'SHA-1' hash algorithm used at Constants.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "protocol" : "http",
-    "version" : "1.0",
-    "uri" : "/testapp/tests/1/test/12/upload/remote",
-    "queryString" : "nonce=B1775F8252A0998806AB6DB8A3D45949",
-    "method" : "POST",
-    "port" : 0,
-    "headers" : [ {
-      "name" : "Cookie",
-      "value" : "JSESSIONID=D7AE37E5E93AB94FE4CD90ED4F999B42; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
-    }, {
-      "name" : "Content-type",
-      "value" : "multipart/form-data; boundary=----WebKitFormBoundaryaadHtlkp1H1FvkBE"
-    }, {
-      "name" : "Connection",
-      "value" : "keep-alive"
-    }, {
-      "name" : "Accept-language",
-      "value" : "en-US,en;q=0.8"
-    }, {
-      "name" : "Host",
-      "value" : "localhost:8080"
-    }, {
-      "name" : "Accept",
-      "value" : "application/json, text/plain, */*"
-    }, {
-      "name" : "Content-length",
-      "value" : "760946"
-    }, {
-      "name" : "Origin",
-      "value" : "http://localhost:8080"
-    }, {
-      "name" : "User-agent",
-      "value" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36"
-    }, {
-      "name" : "Accept-encoding",
-      "value" : "gzip, deflate"
-    }, {
-      "name" : "Referer",
-      "value" : "http://localhost:8080/testapp/tests/1/test/12"
-    } ],
-    "parameters" : [ {
-      "name" : "nonce",
-      "value" : "B1775F8252A0998806AB6DB8A3D45949"
-    } ],
-    "links" : [ ]
+  {
+    "uuid": "V5DO-MNPR-C2DG-HIDX",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'SHA-1' hash algorithm used at Constants.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "protocol": "http",
+      "version": "1.0",
+      "uri": "\/testapp\/tests\/1\/test\/12\/upload\/remote",
+      "queryString": "nonce=B1775F8252A0998806AB6DB8A3D45949",
+      "method": "POST",
+      "port": 0,
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "JSESSIONID=D7AE37E5E93AB94FE4CD90ED4F999B42; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
+        },
+        {
+          "name": "Content-type",
+          "value": "multipart\/form-data; boundary=----WebKitFormBoundaryaadHtlkp1H1FvkBE"
+        },
+        {
+          "name": "Connection",
+          "value": "keep-alive"
+        },
+        {
+          "name": "Accept-language",
+          "value": "en-US,en;q=0.8"
+        },
+        {
+          "name": "Host",
+          "value": "localhost:8080"
+        },
+        {
+          "name": "Accept",
+          "value": "application\/json, text\/plain, *\/*"
+        },
+        {
+          "name": "Content-length",
+          "value": "760946"
+        },
+        {
+          "name": "Origin",
+          "value": "http:\/\/localhost:8080"
+        },
+        {
+          "name": "User-agent",
+          "value": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/39.0.2171.71 Safari\/537.36"
+        },
+        {
+          "name": "Accept-encoding",
+          "value": "gzip, deflate"
+        },
+        {
+          "name": "Referer",
+          "value": "http:\/\/localhost:8080\/testapp\/tests\/1\/test\/12"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "nonce",
+          "value": "B1775F8252A0998806AB6DB8A3D45949"
+        }
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 1015930,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/V5DO-MNPR-C2DG-HIDX"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 205440,
+    "total-traces-received": 1,
+    "last-time-seen": 1417556684898,
+    "first-time-seen": 1417556684898,
+    "sub-status": "",
+    "sub-title": "'SHA-1' used at Constants.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 1015930,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/V5DO-MNPR-C2DG-HIDX"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 205440,
-  "total-traces-received" : 1,
-  "last-time-seen" : 1417556684898,
-  "first-time-seen" : 1417556684898,
-  "sub-status" : "",
-  "sub-title" : "'SHA-1' used at Constants.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "OB1O-O76I-U9BA-QZTT",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'SHA-1' hash algorithm used at Constants.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "protocol" : "http",
-    "version" : "1.0",
-    "uri" : "/testapp/tests/1/test/12/upload/remote",
-    "queryString" : "nonce=B1775F8252A0998806AB6DB8A3D45949",
-    "method" : "POST",
-    "port" : 0,
-    "headers" : [ {
-      "name" : "Cookie",
-      "value" : "JSESSIONID=D7AE37E5E93AB94FE4CD90ED4F999B42; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
-    }, {
-      "name" : "Content-type",
-      "value" : "multipart/form-data; boundary=----WebKitFormBoundaryaadHtlkp1H1FvkBE"
-    }, {
-      "name" : "Connection",
-      "value" : "keep-alive"
-    }, {
-      "name" : "Accept-language",
-      "value" : "en-US,en;q=0.8"
-    }, {
-      "name" : "Host",
-      "value" : "localhost:8080"
-    }, {
-      "name" : "Accept",
-      "value" : "application/json, text/plain, */*"
-    }, {
-      "name" : "Content-length",
-      "value" : "760946"
-    }, {
-      "name" : "Origin",
-      "value" : "http://localhost:8080"
-    }, {
-      "name" : "User-agent",
-      "value" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36"
-    }, {
-      "name" : "Accept-encoding",
-      "value" : "gzip, deflate"
-    }, {
-      "name" : "Referer",
-      "value" : "http://localhost:8080/testapp/tests/1/test/12"
-    } ],
-    "parameters" : [ {
-      "name" : "nonce",
-      "value" : "B1775F8252A0998806AB6DB8A3D45949"
-    } ],
-    "links" : [ ]
+  {
+    "uuid": "OB1O-O76I-U9BA-QZTT",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'SHA-1' hash algorithm used at Constants.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "protocol": "http",
+      "version": "1.0",
+      "uri": "\/testapp\/tests\/1\/test\/12\/upload\/remote",
+      "queryString": "nonce=B1775F8252A0998806AB6DB8A3D45949",
+      "method": "POST",
+      "port": 0,
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "JSESSIONID=D7AE37E5E93AB94FE4CD90ED4F999B42; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
+        },
+        {
+          "name": "Content-type",
+          "value": "multipart\/form-data; boundary=----WebKitFormBoundaryaadHtlkp1H1FvkBE"
+        },
+        {
+          "name": "Connection",
+          "value": "keep-alive"
+        },
+        {
+          "name": "Accept-language",
+          "value": "en-US,en;q=0.8"
+        },
+        {
+          "name": "Host",
+          "value": "localhost:8080"
+        },
+        {
+          "name": "Accept",
+          "value": "application\/json, text\/plain, *\/*"
+        },
+        {
+          "name": "Content-length",
+          "value": "760946"
+        },
+        {
+          "name": "Origin",
+          "value": "http:\/\/localhost:8080"
+        },
+        {
+          "name": "User-agent",
+          "value": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/39.0.2171.71 Safari\/537.36"
+        },
+        {
+          "name": "Accept-encoding",
+          "value": "gzip, deflate"
+        },
+        {
+          "name": "Referer",
+          "value": "http:\/\/localhost:8080\/testapp\/tests\/1\/test\/12"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "nonce",
+          "value": "B1775F8252A0998806AB6DB8A3D45949"
+        }
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 1015931,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/OB1O-O76I-U9BA-QZTT"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 205441,
+    "total-traces-received": 1,
+    "last-time-seen": 1417556684924,
+    "first-time-seen": 1417556684924,
+    "sub-status": "",
+    "sub-title": "'SHA-1' used at Constants.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
   },
-  "events" : [ {
-    "eventId" : 1015931,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/OB1O-O76I-U9BA-QZTT"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 205441,
-  "total-traces-received" : 1,
-  "last-time-seen" : 1417556684924,
-  "first-time-seen" : 1417556684924,
-  "sub-status" : "",
-  "sub-title" : "'SHA-1' used at Constants.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-}, {
-  "uuid" : "5W10-MAKO-6FPB-6GDX",
-  "status" : "Reported",
-  "platform" : "Oracle Corporation",
-  "language" : "Java",
-  "title" : "'SHA-1' hash algorithm used at Constants.java",
-  "likelihood" : "Medium",
-  "impact" : "Medium",
-  "confidence" : "Low",
-  "request" : {
-    "protocol" : "http",
-    "version" : "1.0",
-    "uri" : "/testapp/tests/1/test/12/upload/remote",
-    "queryString" : "nonce=B1775F8252A0998806AB6DB8A3D45949",
-    "method" : "POST",
-    "port" : 0,
-    "headers" : [ {
-      "name" : "Cookie",
-      "value" : "JSESSIONID=D7AE37E5E93AB94FE4CD90ED4F999B42; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
-    }, {
-      "name" : "Content-type",
-      "value" : "multipart/form-data; boundary=----WebKitFormBoundaryaadHtlkp1H1FvkBE"
-    }, {
-      "name" : "Connection",
-      "value" : "keep-alive"
-    }, {
-      "name" : "Accept-language",
-      "value" : "en-US,en;q=0.8"
-    }, {
-      "name" : "Host",
-      "value" : "localhost:8080"
-    }, {
-      "name" : "Accept",
-      "value" : "application/json, text/plain, */*"
-    }, {
-      "name" : "Content-length",
-      "value" : "760946"
-    }, {
-      "name" : "Origin",
-      "value" : "http://localhost:8080"
-    }, {
-      "name" : "User-agent",
-      "value" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36"
-    }, {
-      "name" : "Accept-encoding",
-      "value" : "gzip, deflate"
-    }, {
-      "name" : "Referer",
-      "value" : "http://localhost:8080/testapp/tests/1/test/12"
-    } ],
-    "parameters" : [ {
-      "name" : "test",
-      "value" : "B1775F8252A0998806AB6DB8A3D45949"
-    } ],
-    "links" : [ ]
-  },
-  "events" : [ {
-    "eventId" : 1015932,
-    "type" : "Trigger",
-    "codeContext" : null
-  } ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/traces/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43/5W10-MAKO-6FPB-6GDX"
-  }, {
-    "rel" : "application",
-    "href" : "https://app.contrastsecurity.com/Contrast/api/applications/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
-  } ],
-  "trace-id" : 205442,
-  "total-traces-received" : 1,
-  "last-time-seen" : 1417556684950,
-  "first-time-seen" : 1417556684950,
-  "sub-status" : "",
-  "sub-title" : "'SHA-1' used at Constants.java",
-  "reported-to-bug-tracker" : false,
-  "rule-name" : "crypto-bad-mac",
-  "severity" : "Medium"
-} ]
+  {
+    "uuid": "5W10-MAKO-6FPB-6GDX",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "'SHA-1' hash algorithm used at Constants.java",
+    "likelihood": "Medium",
+    "impact": "Medium",
+    "confidence": "Low",
+    "request": {
+      "protocol": "http",
+      "version": "1.0",
+      "uri": "\/testapp\/tests\/1\/test\/12\/upload\/remote",
+      "queryString": "nonce=B1775F8252A0998806AB6DB8A3D45949",
+      "method": "POST",
+      "port": 0,
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "JSESSIONID=D7AE37E5E93AB94FE4CD90ED4F999B42; JSESSIONID=91B36174E69E47004DB053912AC7A2C9"
+        },
+        {
+          "name": "Content-type",
+          "value": "multipart\/form-data; boundary=----WebKitFormBoundaryaadHtlkp1H1FvkBE"
+        },
+        {
+          "name": "Connection",
+          "value": "keep-alive"
+        },
+        {
+          "name": "Accept-language",
+          "value": "en-US,en;q=0.8"
+        },
+        {
+          "name": "Host",
+          "value": "localhost:8080"
+        },
+        {
+          "name": "Accept",
+          "value": "application\/json, text\/plain, *\/*"
+        },
+        {
+          "name": "Content-length",
+          "value": "760946"
+        },
+        {
+          "name": "Origin",
+          "value": "http:\/\/localhost:8080"
+        },
+        {
+          "name": "User-agent",
+          "value": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/39.0.2171.71 Safari\/537.36"
+        },
+        {
+          "name": "Accept-encoding",
+          "value": "gzip, deflate"
+        },
+        {
+          "name": "Referer",
+          "value": "http:\/\/localhost:8080\/testapp\/tests\/1\/test\/12"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "test",
+          "value": "B1775F8252A0998806AB6DB8A3D45949"
+        }
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 1015932,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/traces\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43\/5W10-MAKO-6FPB-6GDX"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/dfgn3ah5-d198-3ag4-8474-sdtb34a34g43"
+      }
+    ],
+    "trace-id": 205442,
+    "total-traces-received": 1,
+    "last-time-seen": 1417556684950,
+    "first-time-seen": 1417556684950,
+    "sub-status": "",
+    "sub-title": "'SHA-1' used at Constants.java",
+    "reported-to-bug-tracker": false,
+    "rule-name": "crypto-bad-mac",
+    "severity": "Medium"
+  }
+]
