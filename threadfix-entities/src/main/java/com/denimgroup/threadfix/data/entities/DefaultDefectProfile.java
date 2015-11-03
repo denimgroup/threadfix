@@ -2,13 +2,7 @@ package com.denimgroup.threadfix.data.entities;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -34,6 +28,15 @@ public class DefaultDefectProfile extends AuditableEntity {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Transient
+	@JsonView(Object.class) // This means it will be included in all ObjectWriters with Views.
+	public String getFullName() {
+		if (referenceApplication != null) {
+			return referenceApplication.getName() + " / " + name;
+		}
+		return name;
 	}
 
 	@ManyToOne
