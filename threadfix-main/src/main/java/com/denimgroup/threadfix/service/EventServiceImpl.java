@@ -77,6 +77,11 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
     }
 
     @Override
+    public List<Event> loadAllByDefectTrackerId(Integer defectTrackerId) {
+        return eventDao.retrieveAllByDefectTrackerId(defectTrackerId);
+    }
+
+    @Override
     public List<Event> loadAllByPolicy(Policy policy) {
         return eventDao.retrieveAllByPolicy(policy);
     }

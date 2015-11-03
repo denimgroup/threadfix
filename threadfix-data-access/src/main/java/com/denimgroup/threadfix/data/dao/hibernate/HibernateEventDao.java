@@ -139,6 +139,23 @@ public class HibernateEventDao extends AbstractObjectDao<Event> implements Event
     }
 
     @Override
+    public List<Event> retrieveAllByDefectTrackerId(Integer defectTrackerId) {
+
+        Criteria criteria = getSession()
+                .createCriteria(getClassReference())
+                .createAlias("defect.application.defectTracker", "defectTracker", Criteria.LEFT_JOIN)
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.eq("defectTracker.id", defectTrackerId));
+
+        Order order = getOrder();
+        if (order != null) {
+            criteria.addOrder(order);
+        }
+
+        return criteria.list();
+    }
+
+    @Override
     public List<Event> retrieveAllByPolicy(Policy policy) {
 
         Criteria criteria = getSession()

@@ -952,14 +952,17 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 
 	@Override
 	public void deleteAllScanData(Application application) {
+		Set<Defect> deletedDefects = set();
 		for (Vulnerability vuln : application.getVulnerabilities()) {
 			if (vuln.getVulnerabilityComments() != null && !vuln.getVulnerabilityComments().isEmpty()) {
 				for (VulnerabilityComment comment : vuln.getVulnerabilityComments()) {
 					vulnerabilityCommentDao.delete(comment);
 				}
 			}
-			if (vuln.getDefect() != null) {
-				defectDao.delete(vuln.getDefect());
+			Defect defect = vuln.getDefect();
+			if ((defect != null) && (!deletedDefects.contains(defect))) {
+				defectDao.delete(defect);
+				deletedDefects.add(defect);
 			}
 			for (ScanCloseVulnerabilityMap map : vuln.getScanCloseVulnerabilityMaps()) {
 				map.setVulnerability(null);

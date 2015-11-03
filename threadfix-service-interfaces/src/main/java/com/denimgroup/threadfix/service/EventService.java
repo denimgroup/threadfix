@@ -41,6 +41,8 @@ public interface EventService extends GenericObjectService<Event> {
 
     List<Event> loadAllByDefect(Defect defect);
 
+    List<Event> loadAllByDefectTrackerId(Integer defectTrackerId);
+
     List<Event> loadAllByPolicy(Policy policy);
 
     List<Event> loadAllByPolicyStatus(PolicyStatus policyStatus);
