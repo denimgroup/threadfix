@@ -32,6 +32,25 @@ using System.ComponentModel.Composition;
 
 namespace DenimGroup.threadfix_plugin.Controls
 {
+    [Export(typeof(ITaggerProvider))]
+    [ContentType("code")]
+    [TagType(typeof(MarkerTag))]
+    internal sealed class MarkerTaggerProvider : ITaggerProvider
+    {
+        [Import(typeof(IThreadFixPlugin))]
+        internal ThreadFixPlugin ThreadFixPlugin;
+
+        public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
+        {
+            if (buffer == null)
+            {
+                throw new ArgumentNullException("buffer");
+            }
+
+            return new MarkerTagger(ThreadFixPlugin, buffer) as ITagger<T>;
+        }
+    }
+
     public class MarkerTag : IGlyphTag { }
 
     public class MarkerTagger : ITagger<MarkerTag>, IDisposable
@@ -39,6 +58,8 @@ namespace DenimGroup.threadfix_plugin.Controls
         private readonly ThreadFixPlugin _threadFixPlugin;
         private readonly MarkerGlyphService _markerGlyphService;
         private readonly ITextBuffer _textBuffer;
+
+        public event EventHandler<SnapshotSpanEventArgs> TagsChanged;
 
         public MarkerTagger(ThreadFixPlugin threadFixPlugin, ITextBuffer textBuffer)
         {
@@ -72,31 +93,6 @@ namespace DenimGroup.threadfix_plugin.Controls
         public void Dispose()
         {
             _threadFixPlugin.MarkersUpdated -= ThreadFixPlugin_MarkersUpdated;
-        }
-
-#pragma warning disable 67
-        // the Classifier tagger is translating buffer change events into TagsChanged events, so we don't have to
-        public event EventHandler<SnapshotSpanEventArgs> TagsChanged;
-#pragma warning restore
-
-    }
-
-    [Export(typeof(ITaggerProvider))]
-    [ContentType("code")]
-    [TagType(typeof(MarkerTag))]
-    internal sealed class MarkerTaggerProvider : ITaggerProvider
-    {
-        [Import(typeof(IThreadFixPlugin))]
-        internal ThreadFixPlugin ThreadFixPlugin;
-
-        public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
-        {
-            if (buffer == null)
-            {
-                throw new ArgumentNullException("buffer");
-            }
-
-            return new MarkerTagger(ThreadFixPlugin, buffer) as ITagger<T>;
         }
     }
 }

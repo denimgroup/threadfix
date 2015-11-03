@@ -57,7 +57,6 @@ namespace DenimGroup.threadfix_plugin.Actions
 
         private void OnAppsSelected(object sender, ApplicationsSelectedEventArgs args)
         {
-            // TODO: show some kind of loading spinner here. if time permits set up async http calls
             _threadFixPlugin.ToggleMenuCommands(false);
             var loading = new LoadingWindow();
             loading.Show();
