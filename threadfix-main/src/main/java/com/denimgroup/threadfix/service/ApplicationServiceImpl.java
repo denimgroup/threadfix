@@ -260,6 +260,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         if (defectTracker == null)
             return;
 
+		app.setMainDefaultDefectProfile(null);
         List<Application> dtApps = defectTracker.getApplications();
         dtApps.remove(app);
         defectTracker.setApplications(dtApps);
@@ -267,7 +268,8 @@ public class ApplicationServiceImpl implements ApplicationService {
         List<DefaultDefectProfile> deletedProfiles = list();
         List<DefaultDefectProfile> dtProfiles = defectTracker.getDefaultDefectProfiles();
         for (DefaultDefectProfile dtProfile : dtProfiles) {
-            if (dtProfile.getReferenceApplication().getId().equals(app.getId())) {
+            if (dtProfile.getReferenceApplication() != null &&
+					dtProfile.getReferenceApplication().getId().equals(app.getId())) {
                 deletedProfiles.add(dtProfile);
             }
         }
