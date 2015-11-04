@@ -43,7 +43,7 @@ public final class ScannerDatabaseNames {
             FINDBUGS_DB_NAME = "FindBugs",
             FORTIFY_DB_NAME = "Fortify SCA",
             NESSUS_DB_NAME = "Nessus",
-            NTO_SPIDER_DB_NAME = "AppSpider",
+            APP_SPIDER_DB_NAME = "AppSpider",
             NETSPARKER_DB_NAME = "Mavituna Security Netsparker",
             SKIPFISH_DB_NAME = "Skipfish",
             W3AF_DB_NAME = "w3af",

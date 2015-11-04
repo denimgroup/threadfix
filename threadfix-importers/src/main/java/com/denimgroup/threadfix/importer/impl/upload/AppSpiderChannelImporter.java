@@ -48,13 +48,14 @@ import static com.denimgroup.threadfix.CollectionUtils.map;
  * @author mcollins
  */
 @ScanImporter(
-        scannerName = ScannerDatabaseNames.NTO_SPIDER_DB_NAME,
+        scannerName = ScannerDatabaseNames.APP_SPIDER_DB_NAME,
         startingXMLTagSets = {
                 @StartingTagSet({ "VULNS", "VULNLIST" }),
-                @StartingTagSet({ "VulnSummary" })
+                @StartingTagSet({ "VulnSummary" }),
+				@StartingTagSet({ "WebAppScan" })
         }
 )
-public class NTOSpiderChannelImporter extends AbstractChannelImporter {
+public class AppSpiderChannelImporter extends AbstractChannelImporter {
 
 	private static Map<String, FindingKey> tagMap = map();
 	static { 
@@ -75,18 +76,18 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	
 	private static final String VULN_TAG = "vuln", SCAN_DATE = "scandate",
 			DATE_PATTERN = "yyyy-MM-dd kk:mm:ss", N_A = "n/a", VULN_LIST = "vulnlist",
-			VULN_SUMMARY = "VulnSummary";
+			VULN_SUMMARY = "VulnSummary", WEB_APP_SCAN = "WebAppScan";
 
-	public NTOSpiderChannelImporter() {
+	public AppSpiderChannelImporter() {
 		super(ScannerType.APP_SPIDER);
 	}
 
 	@Override
 	public Scan parseInput() {
-		return parseSAXInput(new NTOSaxParser());
+		return parseSAXInput(new AppSpiderSaxParser());
 	}
 
-	public class NTOSaxParser extends HandlerWithBuilder {
+	public class AppSpiderSaxParser extends HandlerWithBuilder {
 		
 		private boolean getDate   = false;
 		private boolean inFinding = false;
@@ -182,19 +183,22 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	@Nonnull
     @Override
 	public ScanCheckResultBean checkFile() {
-		return testSAXInput(new NTOSaxValidator());
+		return testSAXInput(new AppSpiderSaxValidator());
 	}
 	
-	public class NTOSaxValidator extends HandlerWithBuilder {
+	public class AppSpiderSaxValidator extends HandlerWithBuilder {
 		private boolean hasFindings = false;
 		private boolean hasDate = false;
 		private boolean correctFormat = false;
 		private boolean getDate = false;
+		private boolean pickWrongXMLFile = false;
 		
 	    private void setTestStatus() {
-	    	if (!correctFormat)
+			if (pickWrongXMLFile) {
+				testStatus = ScanImportStatus.APPSCAN_WRONG_FILE;
+			} else if (!correctFormat)
 	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
-	    	else if (hasDate)
+			else if (hasDate)
 	    		testStatus = checkTestDate();
 	    	if (testStatus == null)
 	    		testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
@@ -212,7 +216,9 @@ public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
 	    	if (VULN_LIST.equalsIgnoreCase(qName) || VULN_SUMMARY.equalsIgnoreCase(qName)) {
 	    		correctFormat = true;
-	    	}
+	    	} else if (WEB_APP_SCAN.equalsIgnoreCase(qName)) {
+				pickWrongXMLFile = true;
+			}
 	    	
 	    	if (testDate == null && SCAN_DATE.equalsIgnoreCase(qName)) {
 	    		getDate = true;
