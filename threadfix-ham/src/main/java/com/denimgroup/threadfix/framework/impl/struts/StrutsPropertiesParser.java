@@ -39,7 +39,9 @@ public class StrutsPropertiesParser {
 	public static Properties getStrutsProperties(File f) {
 		Properties p = new Properties();
 		try {
-			p.load(new FileReader(f));
+			if (f != null && f.exists()) {
+				p.load(new FileReader(f));
+			}
 		} catch (IOException ioe) {
 			log.error("IOException reading struts.properties", ioe);
 		}
