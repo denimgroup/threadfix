@@ -25,9 +25,11 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 
 import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.DefectDao;
+import com.denimgroup.threadfix.data.dao.EventDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.DeletedDefect;
+import com.denimgroup.threadfix.data.entities.Event;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +53,9 @@ public class HibernateDefectDao
 	public HibernateDefectDao(SessionFactory sessionFactory) {
 		super(sessionFactory);
 	}
+
+	@Autowired
+	private EventDao eventDao;
 
 	// TODO keep track of the vulns that were associated with each Defect
 	@SuppressWarnings("unchecked")
@@ -113,6 +118,12 @@ public class HibernateDefectDao
 
     @Override
 	public void delete(Defect defect) {
+
+		for (Event event: defect.getEvents()) {
+			event.setDefect(null);
+			eventDao.saveOrUpdate(event);
+		}
+
 		sessionFactory.getCurrentSession().save(new DeletedDefect(defect));
 		sessionFactory.getCurrentSession().delete(defect);
 	}

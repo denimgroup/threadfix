@@ -205,15 +205,4 @@ public class DefectEventTrackingAspect extends EventTrackingAspect {
         eventService.saveOrUpdate(event);
         return event;
     }
-
-    @Around("execution(* com.denimgroup.threadfix.data.dao.hibernate.HibernateDefectDao.delete(..)) && args(defect)")
-    public void updateEventForDefectDeletion(ProceedingJoinPoint joinPoint, Defect defect) throws Throwable {
-        List<Event> eventList = eventService.loadAllByDefect(defect);
-
-        for (Event event: eventList) {
-            event.setDefect(null);
-            eventService.saveOrUpdate(event);
-        }
-        joinPoint.proceed();
-    }
 }
