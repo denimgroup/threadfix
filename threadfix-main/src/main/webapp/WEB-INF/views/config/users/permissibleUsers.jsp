@@ -55,7 +55,6 @@
 				<c:if test="${ canManageUsers }">
 					<security:authorize ifAllGranted="ROLE_CAN_MANAGE_USERS">
 						<td id="name${ status.count }">
-							<c:out value="${ canManageUsers }"/>
 							<spring:url value="/configuration/users" var="editPermissionsUrl"/>
 							<a id="editPermissions${ status.count }" style="font-size:12px;float:right;" href="${ fn:escapeXml(editPermissionsUrl) }">Manage Users</a>
 						</td>
