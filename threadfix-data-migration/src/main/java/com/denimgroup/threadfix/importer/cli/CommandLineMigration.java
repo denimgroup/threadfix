@@ -127,15 +127,15 @@ public class CommandLineMigration {
             }
 
             if (errorCount > 0) {
-                LOGGER.error("Unable to migrate data. After " + times + " of trying, still found error in sql script. " +
+                LOGGER.error("After " + times + " of trying, still found errors in sql script. " +
                         "Please check error_sql.sql and error1.log for more details.");
-                LOGGER.info("Do you want to keep data in MySQL (y/n)? ");
+                LOGGER.info("Do you want to keep data in MySQL, and then import manually error statements (y/n)? ");
                 try (java.util.Scanner in = new java.util.Scanner(System.in)) {
                     String answer = in.nextLine();
                     if (!answer.equalsIgnoreCase("y")) {
                         rollbackData(scriptRunner, outputMySqlConfigTemp, rollbackScript);
                     } else {
-                        LOGGER.info("Data imported to MySQL, but still have some errors. Please check error1.log and import manually.");
+                        LOGGER.info("Data imported to MySQL, but still have some errors. Please check error_sql.sql and error1.log to import manually.");
                     }
 
                 }
