@@ -48,7 +48,8 @@ myAppModule.controller('AddDefectTrackerModalController', function ($scope, $htt
                 id: $scope.object.defectTrackerId
             };
 
-            $scope.object.application = { name: app.name };
+            $scope.object.name = app.name;
+            $scope.object.organization = { id: app.team.id };
 
             threadFixModalService.post(url, $scope.object).
                 success(function(data, status, headers, config) {
