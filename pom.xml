@@ -185,23 +185,20 @@
                             <groupId>org.jacoco</groupId>
                             <artifactId>jacoco-maven-plugin</artifactId>
                             <version>${jacoco.version}</version>
+                            <configuration>
+                                <destFile>${sonar.jacoco.reportPath}</destFile>
+                                <append>true</append>
+                            </configuration>
                             <executions>
                                 <execution>
-                                    <configuration>
-                                        <destFile>${sonar.jacoco.reportPath}</destFile>
-                                        <append>true</append>
-                                    </configuration>
                                     <id>default-prepare-agent</id>
                                     <goals>
                                         <goal>prepare-agent</goal>
                                     </goals>
-                                    <phase>initialize</phase>
                                 </execution>
                                 <execution>
-                                    <configuration>
-                                        <dataFile>${sonar.jacoco.reportPath}</dataFile>
-                                    </configuration>
-                                    <id>report</id>
+                                    <id>default-report</id>
+                                    <phase>prepare-package</phase>
                                     <goals>
                                         <goal>report</goal>
                                     </goals>
