@@ -13,7 +13,6 @@ import static com.denimgroup.threadfix.importer.impl.remoteprovider.ContrastUtil
  */
 public class ContrastApplicationParsingTests {
 
-    @Ignore // we have to update this to handle the current V2 API. Task filed as DGTF-2270
     @Test
     public void testAppsGoodAuthentication() {
         ContrastRemoteProvider provider = getMockedRemoteProvider();
