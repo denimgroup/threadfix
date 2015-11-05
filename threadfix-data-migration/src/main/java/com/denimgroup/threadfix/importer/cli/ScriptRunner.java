@@ -264,7 +264,7 @@ public class ScriptRunner {
         String ERROR_COL_PATTERN = "Unknown column '(.*)' in 'field list'";
         String COL_LIST_PATTERN = "\\((.*)\\) VALUES\\(";
         String VALUE_LIST_PATTERN = "\\) VALUES\\((.*)";
-        String TABLE_PATTERN = "INSERT INTO (.*)\\(ID";
+        String TABLE_PATTERN = "INSERT INTO (.*)\\(ID,";
         String colName = RegexUtils.getRegexResult(errorStr, ERROR_COL_PATTERN);
         String colListStr = RegexUtils.getRegexResult(originalStatement, COL_LIST_PATTERN);
         String valueListStr = RegexUtils.getRegexResult(originalStatement, VALUE_LIST_PATTERN).trim();
