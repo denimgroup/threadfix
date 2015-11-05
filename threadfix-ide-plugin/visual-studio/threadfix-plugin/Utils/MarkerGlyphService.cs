@@ -37,9 +37,9 @@ namespace DenimGroup.threadfix_plugin.Utils
             _threadFixPlugin = threadFixPlugin;
         }
 
-        public List<ITextSnapshotLine> GetMarkerLinesForFile(ITextSnapshot textSnapshot)
+        public List<MarkerLine> GetMarkerLinesForFile(ITextSnapshot textSnapshot)
         {
-            var lines = new List<ITextSnapshotLine>();
+            var lines = new List<MarkerLine>();
 
             if (_threadFixPlugin == null || _threadFixPlugin.MarkerLookUp == null)
             {
@@ -55,7 +55,7 @@ namespace DenimGroup.threadfix_plugin.Utils
                 {
                     if (marker.LineNumber.HasValue && marker.LineNumber.Value > 0 && marker.LineNumber.Value < textSnapshot.LineCount)
                     {
-                        lines.Add(textSnapshot.GetLineFromLineNumber(marker.LineNumber.Value - 1));
+                        lines.Add(new MarkerLine(textSnapshot.GetLineFromLineNumber(marker.LineNumber.Value - 1), marker.GenericVulnName));
                     }
                 }
             }

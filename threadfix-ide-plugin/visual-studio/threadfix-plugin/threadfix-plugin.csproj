@@ -143,8 +143,9 @@
     <Compile Include="Controls\LoadingWindow.xaml.cs">
       <DependentUpon>LoadingWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MarkerGlyphFactory.cs" />
-    <Compile Include="Controls\MarkerTag.cs" />
+    <Compile Include="Data\MarkerLine.cs" />
+    <Compile Include="MarginGlyphs\MarkerGlyphFactory.cs" />
+    <Compile Include="MarginGlyphs\MarkerTag.cs" />
     <Compile Include="Controls\OptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -157,6 +158,7 @@
     <Compile Include="Data\VulnerabilityMarker.cs" />
     <Compile Include="Extensions\TextDocumentExtensions.cs" />
     <Compile Include="Guids.cs" />
+    <Compile Include="MarginGlyphs\MarkerToolTip.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

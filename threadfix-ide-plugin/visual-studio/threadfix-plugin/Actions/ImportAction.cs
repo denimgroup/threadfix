@@ -24,9 +24,7 @@
 using DenimGroup.threadfix_plugin.Controls;
 using DenimGroup.threadfix_plugin.Utils;
 using System;
-using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace DenimGroup.threadfix_plugin.Actions
 {
@@ -34,55 +32,38 @@ namespace DenimGroup.threadfix_plugin.Actions
     {
         private readonly ThreadFixPlugin _threadFixPlugin;
         private readonly ViewModelService _viewModelService;
-        private readonly ThreadFixApi _threadFixApi;
 
         public ImportAction(ThreadFixPlugin threadFixPlugin)
         {
             _threadFixPlugin = threadFixPlugin;
             _viewModelService = new ViewModelService(_threadFixPlugin);
-            _threadFixApi = new ThreadFixApi(_threadFixPlugin);
         }
 
         public void OnExecute(object sender, EventArgs args)
         {
-            var applications = _threadFixApi.GetThreadFixApplications();
+            _threadFixPlugin.ToggleMenuCommands(false);
+            _threadFixPlugin.LoadApplications(() =>
+            {
+                var applicationsWindow = new ApplicationsWindow();
+                applicationsWindow.ApplicationsSelected += OnAppsSelected;
 
-            var applicationsWindow = new ApplicationsWindow();
-            applicationsWindow.ApplicationsSelected += OnAppsSelected;
+                applicationsWindow
+                    .SetViewModel(_viewModelService.GetApplicationsViewModel(_threadFixPlugin.Applications, _threadFixPlugin.SelectedAppIds))
+                    .ShowDialog();
 
-            applicationsWindow
-                .SetViewModel(_viewModelService.GetApplicationsViewModel(applications, _threadFixPlugin.SelectedAppIds))
-                .ShowDialog();
+                _threadFixPlugin.ToggleMenuCommands(true);
+            });
         }
 
         private void OnAppsSelected(object sender, ApplicationsSelectedEventArgs args)
         {
             _threadFixPlugin.ToggleMenuCommands(false);
-            var loading = new LoadingWindow();
-            loading.Show();
-            var context = SynchronizationContext.Current;
-            var importMarkers = ImportMarkersAysnc(_viewModelService.GetSelectedAppIds(args.Model));
-
-            importMarkers.ContinueWith((result) =>
+            _threadFixPlugin.ImportMarkers(_viewModelService.GetSelectedAppIds(args.Model), () => 
             {
-                context.Post(o => 
-                {
-                    _threadFixPlugin.UpdateMarkers();
+                _threadFixPlugin.UpdateMarkers();
+                _threadFixPlugin.ToggleMenuCommands(true);
 
-                    var showToolWindow = new ShowAction(_threadFixPlugin);
-                    showToolWindow.OnExecute(this, null);
-
-                    loading.Close();
-                    _threadFixPlugin.ToggleMenuCommands(true);
-                }, null);
-            });
-        }
-
-        private Task ImportMarkersAysnc(HashSet<string> selectedAppIds)
-        {
-            return Task.Factory.StartNew(() =>
-            {
-                _threadFixPlugin.ImportMarkers(selectedAppIds, _threadFixApi);
+                new ShowAction(_threadFixPlugin).OnExecute(this, null);
             });
         }
     }

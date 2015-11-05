@@ -30,7 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 
-namespace DenimGroup.threadfix_plugin.Controls
+namespace DenimGroup.threadfix_plugin.MarginGlyph
 {
     [Export(typeof(ITaggerProvider))]
     [ContentType("code")]
@@ -38,20 +38,28 @@ namespace DenimGroup.threadfix_plugin.Controls
     internal sealed class MarkerTaggerProvider : ITaggerProvider
     {
         [Import(typeof(IThreadFixPlugin))]
-        internal ThreadFixPlugin ThreadFixPlugin;
+        internal ThreadFixPlugin ThreadFixPlugin = null;
 
         public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
         {
-            if (buffer == null)
+            if (buffer != null)
             {
-                throw new ArgumentNullException("buffer");
+                return new MarkerTagger(ThreadFixPlugin, buffer) as ITagger<T>;
             }
 
-            return new MarkerTagger(ThreadFixPlugin, buffer) as ITagger<T>;
+            return null;
         }
     }
 
-    public class MarkerTag : IGlyphTag { }
+    public class MarkerTag : IGlyphTag
+    {
+        public string ToolTip { get; set; }
+
+        public MarkerTag(string description)
+        {
+            ToolTip = description;
+        }
+    }
 
     public class MarkerTagger : ITagger<MarkerTag>, IDisposable
     {
@@ -74,11 +82,11 @@ namespace DenimGroup.threadfix_plugin.Controls
             foreach (var span in spans)
             {
                 var lines = _markerGlyphService.GetMarkerLinesForFile(span.Snapshot);
-                foreach (var line in lines)
+                foreach (var marker in lines)
                 {
-                    if (line != null)
+                    if (marker.Line != null)
                     {
-                        yield return new TagSpan<MarkerTag>(new SnapshotSpan(line.Start, 1), new MarkerTag());   
+                        yield return new TagSpan<MarkerTag>(new SnapshotSpan(marker.Line.Start, 1), new MarkerTag(marker.Description));   
                     }
                 }
             }

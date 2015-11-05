@@ -40,9 +40,14 @@ namespace DenimGroup.threadfix_plugin.Actions
         {
             string filepath;
             var selectedMarker = (args as GoToMarkerEventArgs).Marker;
-            if (_threadFixPlugin.FileLookUp != null && _threadFixPlugin.FileLookUp.TryGetValue(selectedMarker.FilePath, out filepath))
+            if (_threadFixPlugin.FileLookUp != null && _threadFixPlugin.FileLookUp.TryGetValue(selectedMarker.FilePath, out filepath) && filepath != null)
             {
                 FileUtil.OpenFileAtLineNumber(filepath, selectedMarker.LineNumber.GetValueOrDefault());
+            }
+
+            else
+            {
+                _threadFixPlugin.ShowErrorMessage("Unable to open file. Please make sure the correct project is loaded and the file exists.");
             }
         }        
     }

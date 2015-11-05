@@ -31,7 +31,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
-namespace DenimGroup.threadfix_plugin.Controls
+namespace DenimGroup.threadfix_plugin.MarginGlyph
 {
     [Export(typeof(IGlyphFactoryProvider))]
     [Name("MarkerGlyph")]

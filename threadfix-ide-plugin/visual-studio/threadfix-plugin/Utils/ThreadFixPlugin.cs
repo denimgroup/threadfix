@@ -24,11 +24,16 @@
 using DenimGroup.threadfix_plugin.Controls;
 using DenimGroup.threadfix_plugin.Data;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Design;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Task = System.Threading.Tasks.Task;
 
 namespace DenimGroup.threadfix_plugin.Utils
 {
@@ -37,20 +42,49 @@ namespace DenimGroup.threadfix_plugin.Utils
     [Export(typeof(IThreadFixPlugin))]
     public class ThreadFixPlugin : IThreadFixPlugin
     {
+        private static readonly string InvalidUrlMessage = "Please provide a valid ThreadFix url in the options menu.";
+        private static readonly string InvalidKeyMessage = "Please provide a valid ThreadFix api key in the options menu.";
+        private readonly ThreadFixApi _threadFixApi;
+
         public OleMenuCommandService MenuCommandService { get; set; }
         public ThreadFixToolWindow ToolWindow { get; set; }
         public OptionsPage Options { get; set; }
+        public List<ApplicationInfo> Applications { get; set; }
         public HashSet<string> SelectedAppIds { get; set; }
         public List<VulnerabilityMarker> Markers { get; set; }
         public Dictionary<string, List<VulnerabilityMarker>> MarkerLookUp { get; set; }
         public event EventHandler<EventArgs> MarkersUpdated;
         public Dictionary<string, string> FileLookUp { get; set; }
 
-        public void ImportMarkers(HashSet<string> selectedAppIds, ThreadFixApi threadFixApi)
+        public ThreadFixPlugin()
         {
-            SelectedAppIds = selectedAppIds;
-            Markers = threadFixApi.GetVulnerabilityMarkers(SelectedAppIds);
-            UpdateFileAndMarkerLookUp();
+            _threadFixApi = new ThreadFixApi(this);
+        }
+
+        public void LoadApplications(Action successCallback)
+        {
+            ValidateApiSettings();
+
+            var task = Task.Factory.StartNew(() =>
+            {
+                Applications = _threadFixApi.GetThreadFixApplications();
+            });
+
+            RunThreadFixApiAsync(task, successCallback);
+        }
+
+        public void ImportMarkers(HashSet<string> selectedAppIds, Action successCallback)
+        {
+            ValidateApiSettings();
+
+            var task = Task.Factory.StartNew(() =>
+            {
+                SelectedAppIds = selectedAppIds;
+                Markers = _threadFixApi.GetVulnerabilityMarkers(SelectedAppIds);
+                UpdateFileAndMarkerLookUp();
+            });
+
+            RunThreadFixApiAsync(task, successCallback);
         }
 
         public void ClearMarkers()
@@ -84,6 +118,69 @@ namespace DenimGroup.threadfix_plugin.Utils
                 ChangeCommand((int)PkgCmdIDList.cmdidImportMarkersCommand, enabled);
                 ChangeCommand((int)PkgCmdIDList.cmdidClearMarkers, enabled);
             }
+        }
+
+        public void ShowErrorMessage(string message)
+        {
+            var uiShell = (IVsUIShell)ServiceProvider.GlobalProvider.GetService(typeof(SVsUIShell));
+            var clsid = Guid.Empty;
+            int result;
+            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(
+                       0,
+                       ref clsid,
+                       "ThreadFix",
+                       string.Format(CultureInfo.CurrentCulture, message, this.ToString()),
+                       string.Empty,
+                       0,
+                       OLEMSGBUTTON.OLEMSGBUTTON_OK,
+                       OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST,
+                       OLEMSGICON.OLEMSGICON_CRITICAL,
+                       0,        // false
+                       out result));
+        }
+
+        private void RunThreadFixApiAsync(Task apiTask, Action success)
+        {
+            var context = SynchronizationContext.Current;
+            apiTask.ContinueWith(result => 
+            {
+                context.Post(o => { success.Invoke(); }, null);
+            }, TaskContinuationOptions.NotOnFaulted);
+            apiTask.ContinueWith(error =>
+            {
+                ToggleMenuCommands(true);
+                if (error.Exception.InnerException is ApplicationException)
+                {
+                    ShowErrorMessage(error.Exception.InnerException.Message);
+                }
+
+            }, TaskContinuationOptions.OnlyOnFaulted);
+        }
+
+        private void ValidateApiSettings()
+        {
+            if (!ValidUrl(Options.ApiUrl))
+            {
+                ToggleMenuCommands(true);
+                throw new ApplicationException(InvalidUrlMessage);
+            }
+
+            if (string.IsNullOrEmpty(Options.ApiKey))
+            {
+                ToggleMenuCommands(true);
+                throw new ApplicationException(InvalidKeyMessage);
+            }
+        }
+
+        private bool ValidUrl(string url)
+        {
+            if (string.IsNullOrEmpty(url))
+            {
+                return false;
+            }
+
+            Uri result;
+            return Uri.TryCreate(url, UriKind.Absolute, out result) && (result.Scheme == Uri.UriSchemeHttp || result.Scheme == Uri.UriSchemeHttps);
         }
 
         private void ChangeCommand(int commandId, bool enabled)

@@ -26,7 +26,6 @@ using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 
 namespace DenimGroup.threadfix_plugin.Utils
@@ -64,7 +63,7 @@ namespace DenimGroup.threadfix_plugin.Utils
 
             catch (Exception)
             {
-                Debug.WriteLine("Unable to open file: " + fullPath);
+
             }
         }
 
