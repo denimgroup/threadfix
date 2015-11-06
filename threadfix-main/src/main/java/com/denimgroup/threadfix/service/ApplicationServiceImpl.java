@@ -178,10 +178,10 @@ public class ApplicationServiceImpl implements ApplicationService {
             application.setGrcApplication(null);
         }
 
-        application.setWaf(null);
+		// Delete WafRules attached with application
+		deleteWafRules(application);
 
-        // Delete WafRules attached with application
-        deleteWafRules(application);
+        application.setWaf(null);
 
         // delete DefectTrackerProfiles attached with application
         deleteDefectTrackerProfilesByApplication(application);
