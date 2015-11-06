@@ -195,7 +195,7 @@ public class AppSpiderChannelImporter extends AbstractChannelImporter {
 		
 	    private void setTestStatus() {
 			if (pickWrongXMLFile) {
-				testStatus = ScanImportStatus.APPSCAN_WRONG_FILE;
+				testStatus = ScanImportStatus.APPSPIDER_WRONG_FILE;
 			} else if (!correctFormat)
 	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
 			else if (hasDate)
