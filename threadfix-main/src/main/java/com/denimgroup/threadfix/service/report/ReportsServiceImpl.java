@@ -367,6 +367,17 @@ public class ReportsServiceImpl implements ReportsService {
             } else {
                 applicationIdList.add(reportParameters.getApplicationId());
             }
+        } else {
+            Set<Integer> appIds = PermissionUtils.getAuthenticatedAppIds();
+            if (appIds != null) {
+                List<Application> appList = applicationDao.retrieveAllActiveFilter(new HashSet(list(reportParameters.getOrganizationId())));
+                for (Application app : appList) {
+                    if (appIds.contains(app.getId())) {
+                        applicationIdList.add(app.getId());
+                    }
+                }
+            }
+
         }
 
         return applicationIdList;
