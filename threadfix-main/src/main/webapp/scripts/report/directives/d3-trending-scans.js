@@ -484,8 +484,9 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     } else if (showVersion) {
                         var verDate = new Date(filterVersions[j].date);
 
-                        tip.html(filterVersions[j].name + "<br/>" +
-                        (monthList[verDate.getMonth()]) + " " + verDate.getDate() + " " + verDate.getFullYear());
+                        tip.html(filterVersions[j].name.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') +
+                            "<br/>" + (monthList[verDate.getMonth()]) + " " + verDate.getDate() + " " + verDate.getFullYear() + "</div");
+
                         focus.style("display", "none");
 
                         svg.append("line")
