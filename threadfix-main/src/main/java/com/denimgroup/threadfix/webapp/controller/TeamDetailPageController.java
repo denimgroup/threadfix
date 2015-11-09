@@ -104,7 +104,8 @@ public class TeamDetailPageController {
                     Permission.CAN_GENERATE_REPORTS,
                     Permission.CAN_MANAGE_USERS,
                     Permission.CAN_SUBMIT_COMMENTS,
-                    Permission.CAN_MANAGE_TAGS);
+                    Permission.CAN_MANAGE_TAGS,
+                    Permission.READ_ACCESS);
             mav.addObject("apps", apps);
             mav.addObject(organization);
 

@@ -82,6 +82,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Autowired private ScheduledScanDao scheduledScanDao;
     @Autowired private ApplicationCriticalityService applicationCriticalityService;
     @Autowired private DefaultDefectProfileServiceImpl defectProfileService;
+	@Autowired private ApplicationVersionService applicationVersionService;
 
     @Nullable
     @Autowired(required = false)
@@ -177,10 +178,10 @@ public class ApplicationServiceImpl implements ApplicationService {
             application.setGrcApplication(null);
         }
 
-        application.setWaf(null);
+		// Delete WafRules attached with application
+		deleteWafRules(application);
 
-        // Delete WafRules attached with application
-        deleteWafRules(application);
+        application.setWaf(null);
 
         // delete DefectTrackerProfiles attached with application
         deleteDefectTrackerProfilesByApplication(application);
@@ -202,6 +203,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 			scheduledScan.setApplication(null);
 		}
 		application.setScheduledScans(null);
+
+		// Delete all versions
+		for (ApplicationVersion version : application.getVersions()) {
+			applicationVersionService.delete(version);
+		}
+		application.setVersions(null);
+
 
 		application.getOrganization().updateVulnerabilityReport();
 
@@ -252,6 +260,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         if (defectTracker == null)
             return;
 
+		app.setMainDefaultDefectProfile(null);
         List<Application> dtApps = defectTracker.getApplications();
         dtApps.remove(app);
         defectTracker.setApplications(dtApps);
@@ -259,7 +268,8 @@ public class ApplicationServiceImpl implements ApplicationService {
         List<DefaultDefectProfile> deletedProfiles = list();
         List<DefaultDefectProfile> dtProfiles = defectTracker.getDefaultDefectProfiles();
         for (DefaultDefectProfile dtProfile : dtProfiles) {
-            if (dtProfile.getReferenceApplication().getId().equals(app.getId())) {
+            if (dtProfile.getReferenceApplication() != null &&
+					dtProfile.getReferenceApplication().getId().equals(app.getId())) {
                 deletedProfiles.add(dtProfile);
             }
         }

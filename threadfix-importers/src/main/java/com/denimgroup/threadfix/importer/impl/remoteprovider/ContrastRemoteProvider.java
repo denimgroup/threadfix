@@ -342,6 +342,10 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
     }
 
     private String getErrorOrNull(String body) throws JSONException {
+        if (body == null || !body.contains("{")) {
+            log.error("Got invalid body from Contrast: " + body);
+            return null;
+        }
 
         JSONObject object = new JSONObject(body);
 

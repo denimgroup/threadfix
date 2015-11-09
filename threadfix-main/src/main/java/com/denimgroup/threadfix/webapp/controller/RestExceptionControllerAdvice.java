@@ -39,7 +39,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.ws.client.WebServiceTransportException;
@@ -58,7 +57,7 @@ public class RestExceptionControllerAdvice {
     @Autowired
     private ExceptionLogService exceptionLogService;
 
-    private static final SanitizedLogger log = new SanitizedLogger(HandlerExceptionResolver.class);
+    private static final SanitizedLogger log = new SanitizedLogger(RestExceptionControllerAdvice.class);
 
     private static final SimpleDateFormat format = new SimpleDateFormat("MMM d, y h:mm:ss a");
 

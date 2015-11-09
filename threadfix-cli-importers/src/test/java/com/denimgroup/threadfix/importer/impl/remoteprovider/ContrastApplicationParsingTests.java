@@ -13,7 +13,6 @@ import static com.denimgroup.threadfix.importer.impl.remoteprovider.ContrastUtil
  */
 public class ContrastApplicationParsingTests {
 
-    @Ignore // we have to update this to handle the current V2 API. Task filed as DGTF-2270
     @Test
     public void testAppsGoodAuthentication() {
         ContrastRemoteProvider provider = getMockedRemoteProvider();
@@ -21,7 +20,7 @@ public class ContrastApplicationParsingTests {
         List<RemoteProviderApplication> remoteProviderApplications = provider.fetchApplications();
 
         assert remoteProviderApplications != null : "List of returned applications was null.";
-        assert remoteProviderApplications.size() == 1 : "Size was " + remoteProviderApplications.size() + " instead of 1.";
+        assert remoteProviderApplications.size() == 3 : "Size was " + remoteProviderApplications.size() + " instead of 3.";
 
         String expectedId = "c0a1a284-2c81-4b4b-b44a-52d7b8f71aae";
         String actualId = remoteProviderApplications.get(0).getNativeId();

@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.*;
+import org.springframework.ws.client.WebServiceIOException;
 
 import java.util.List;
 
@@ -33,9 +34,10 @@ import java.util.List;
  */
 public interface GRCClientService {
 
-    Integer getGRCApplications(GRCTool grcTool);
+    Integer getGRCApplications(GRCTool grcTool) throws WebServiceIOException;
 
-    GRCApplication createGRCApplication(GRCTool grcTool, Application application);
+    GRCApplication createGRCApplication(GRCTool grcTool, Application application) throws WebServiceIOException;
 
-    GRCControl submitControl(GRCTool grcTool, Vulnerability vulnerability, GRCApplication grcApplication);
+    GRCControl submitControl(GRCTool grcTool, Vulnerability vulnerability,
+                             GRCApplication grcApplication) throws WebServiceIOException;
 }

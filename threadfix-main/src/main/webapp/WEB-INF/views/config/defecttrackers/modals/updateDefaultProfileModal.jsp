@@ -28,6 +28,7 @@
                                 id="referenceApplicationSelect"
                                 disabled="disabled"
                                 name="defectTrackerTypeid">
+                            <option value="">Use defaults from tracker</option>
                         </select>
                     </td>
                     <td>

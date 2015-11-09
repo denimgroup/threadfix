@@ -76,7 +76,7 @@
         <tab heading="{{ vulnerabilityCount }} Vulnerabilities" active="showVulnTab" ng-click="clickVulnTab()" id="vulnerabilitiesTab">
             <%@ include file="../vulnerabilities/vulnSearchControls.jsp" %>
         </tab>
-        <c:if test="${isEnterprise}">
+        <c:if test="${isEnterprise && readAccess}">
             <jsp:include page="/app/organizations/${ organization.id }/history"/>
         </c:if>
 

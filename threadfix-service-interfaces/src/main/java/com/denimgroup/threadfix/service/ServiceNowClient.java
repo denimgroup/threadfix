@@ -28,6 +28,7 @@ import com.servicenow.grccontrol.GetRecordsControlsResponse;
 import com.servicenow.grcpolicy.GetRecordsPoliciesResponse;
 import com.servicenow.grccontrolservice.SubmitControlResponse;
 import com.servicenow.grcpolicyservice.SubmitPolicyResponse;
+import org.springframework.ws.client.WebServiceIOException;
 
 /**
  * @author zabdisubhan
@@ -35,15 +36,17 @@ import com.servicenow.grcpolicyservice.SubmitPolicyResponse;
  */
 public interface ServiceNowClient {
 
-    public void configure(String uri, String username, String password);
+    void configure(String uri, String username, String password);
 
-    public SubmitPolicyResponse getSubmitPolicyResponse(String policyName);
+    SubmitPolicyResponse getSubmitPolicyResponse(String policyName) throws WebServiceIOException;
 
-    public GetRecordsPoliciesResponse getGetRecordsPoliciesResponse(String encodedQuery,
-                                                                    String excludeColumns, Integer limit);
+    GetRecordsPoliciesResponse getGetRecordsPoliciesResponse(String encodedQuery,
+                                                                    String excludeColumns, Integer limit)
+                                                                    throws WebServiceIOException;
 
-    public SubmitControlResponse getSubmitControlResponse(String name, Integer cweId, Integer vulnId, String vulnUrl,
-                                                          Integer correlationId, String policySysId);
+    SubmitControlResponse getSubmitControlResponse(String name, Integer cweId, Integer vulnId, String vulnUrl,
+                                                   Integer correlationId, String policySysId) throws WebServiceIOException;
 
-    public GetRecordsControlsResponse getRecordsControlsResponse(String assessmentNumber, String excludeColumns);
+    GetRecordsControlsResponse getRecordsControlsResponse(String assessmentNumber,
+                                                          String excludeColumns) throws WebServiceIOException;
 }

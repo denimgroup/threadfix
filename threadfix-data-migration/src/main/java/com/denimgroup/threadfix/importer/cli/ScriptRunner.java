@@ -155,22 +155,13 @@ public class ScriptRunner {
     }
 
     private static String fixDateWrongStatement(String preLine, String currentLine) {
-        String errorValue = getColName(currentLine, "Incorrect datetime value: (.*) for column");
+        String errorValue = getColName(currentLine, "Incorrect datetime value: '(.*)' for column");
         String newValue = errorValue;
-        boolean isString = false;
-        if (errorValue.startsWith("'") && errorValue.endsWith("'")) {
-            isString = true;
-            newValue = newValue.substring(1);
-            newValue = newValue.substring(0, errorValue.length() - 1);
-        }
-        String[] timeParts = newValue.split(".");
+        String[] timeParts = newValue.split("\\.");
         if (timeParts.length == 2) {
             newValue = timeParts[0];
         }
-        if (isString) {
-            newValue = "'" + newValue + "'";
-        }
-        String fixedStatement = preLine.replace("Error executing: ", "").replaceAll(errorValue, newValue);
+        String fixedStatement = preLine.replace("Error executing: ", "").replace(errorValue, newValue);
         return fixedStatement + ";\n";
     }
 
@@ -273,7 +264,7 @@ public class ScriptRunner {
         String ERROR_COL_PATTERN = "Unknown column '(.*)' in 'field list'";
         String COL_LIST_PATTERN = "\\((.*)\\) VALUES\\(";
         String VALUE_LIST_PATTERN = "\\) VALUES\\((.*)";
-        String TABLE_PATTERN = "INSERT INTO (.*)\\(ID";
+        String TABLE_PATTERN = "INSERT INTO (.*)\\(ID,";
         String colName = RegexUtils.getRegexResult(errorStr, ERROR_COL_PATTERN);
         String colListStr = RegexUtils.getRegexResult(originalStatement, COL_LIST_PATTERN);
         String valueListStr = RegexUtils.getRegexResult(originalStatement, VALUE_LIST_PATTERN).trim();

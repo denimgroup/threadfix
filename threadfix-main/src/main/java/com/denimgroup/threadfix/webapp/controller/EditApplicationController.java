@@ -263,12 +263,24 @@ public class EditApplicationController {
 			return RestResponse.failure("You are not authorized to manage this application.");
 		}
 		
+		Application databaseApplication = applicationService.loadApplication(appId);
+		if (databaseApplication == null || !databaseApplication.isActive()) {
+			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
+			throw new ResourceNotFoundException();
+		}
+		databaseApplication.setDefectTracker(application.getDefectTracker());
+		databaseApplication.setUserName(application.getUserName());
+		databaseApplication.setPassword(application.getPassword());
+		databaseApplication.setProjectName(application.getProjectName());
+		databaseApplication.setUseDefaultCredentials(application.isUseDefaultCredentials());
+		databaseApplication.setUseDefaultProject(application.isUseDefaultProject());
+
 		if(!result.hasErrors()) {
-			applicationService.validateAfterEdit(application, result);
-			applicationService.validateDefectTracker(application, result);
+			applicationService.validateAfterEdit(databaseApplication, result);
+			applicationService.validateDefectTracker(databaseApplication, result);
 		}
 		
-		if (application.getName() != null && application.getName().trim().equals("")
+		if (databaseApplication.getName() != null && databaseApplication.getName().trim().equals("")
 				&& !result.hasFieldErrors("name")) {
 			result.rejectValue("name", null, null, "This field cannot be blank");
 		}
@@ -279,15 +291,15 @@ public class EditApplicationController {
 		} else {
             PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS);
 
-			applicationService.storeApplication(application, EventAction.APPLICATION_EDIT);
+			applicationService.storeApplication(databaseApplication, EventAction.APPLICATION_EDIT);
 
 			defectService.updateScannerSuppliedStatuses(appId);
 
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			
-			log.debug("The Application " + application.getName() + " (id=" + application.getId() + ") has been edited by user " + user);
+			log.debug("The Application " + databaseApplication.getName() + " (id=" + databaseApplication.getId() + ") has been edited by user " + user);
 
-			return RestResponse.success(application.getDefectTracker());
+			return RestResponse.success(databaseApplication.getDefectTracker());
 		}
 	}
 

@@ -23,6 +23,7 @@
                                 ng-model="object.referenceApplication.id"
                                 id="referenceApplicationSelect"
                                 name="defectTrackerTypeid">
+                            <option value="">Use defaults from tracker</option>
                         </select>
                     </td>
                     <td>

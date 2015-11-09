@@ -1,5 +1,6 @@
 package com.denimgroup.threadfix.data.dao.hibernate;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +33,21 @@ public class HibernateDefaultDefectProfileDao extends
 	}
 
 	@Override
-	public DefaultDefectProfile retrieveDefectProfileByName(String name, Integer appId) {
-		return (DefaultDefectProfile) getSession()
-				.createCriteria(getClassReference())
-				.add(Restrictions.eq("active", true))
-				.add(Restrictions.eq("name", name))
-				.add(Restrictions.eq("referenceApplication.id", appId))
-				.setMaxResults(1)
-				.uniqueResult();
+	public DefaultDefectProfile retrieveDefectProfileByName(String name, Integer defectTrackerId, Integer appId) {
+		Criteria criteria = getSession().createCriteria(getClassReference());
+		criteria.add(Restrictions.eq("active", true))
+				.add(Restrictions.eq("name", name));
+		if (defectTrackerId != null) {
+			criteria.add(Restrictions.eq("defectTracker.id", defectTrackerId));
+		} else {
+			criteria.add(Restrictions.isNull("defectTracker"));
+		}
+		if (appId != null) {
+			criteria.add(Restrictions.eq("referenceApplication.id", appId));
+		} else {
+			criteria.add(Restrictions.isNull("referenceApplication"));
+		}
+		criteria.setMaxResults(1);
+		return (DefaultDefectProfile) criteria.uniqueResult();
 	}
 }

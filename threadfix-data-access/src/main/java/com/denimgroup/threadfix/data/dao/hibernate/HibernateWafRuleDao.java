@@ -78,11 +78,13 @@ public class HibernateWafRuleDao
 	public WafRule retrieveByVulnerabilityAndWafAndDirective(
 			Vulnerability vuln, Waf waf, WafRuleDirective directive) {
 		return (WafRule) sessionFactory
-			.getCurrentSession()
-			.createQuery( "from WafRule wafRule where wafRule.vulnerability = :vulnId " +
-					"and wafRule.waf = :wafId and wafRule.wafRuleDirective = :directiveId")
-			.setInteger("vulnId", vuln.getId()).setInteger("wafId", waf.getId())
-			.setInteger("directiveId", directive.getId()).uniqueResult();
+				.getCurrentSession()
+				.createQuery( "from WafRule wafRule where wafRule.vulnerability = :vulnId " +
+						"and wafRule.waf = :wafId and wafRule.wafRuleDirective = :directiveId")
+				.setInteger("vulnId", vuln.getId())
+				.setInteger("wafId", waf.getId())
+				.setInteger("directiveId", directive.getId())
+				.setMaxResults(1).uniqueResult();
 	}
 
 	@SuppressWarnings("unchecked")
