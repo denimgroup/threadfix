@@ -91,7 +91,7 @@ public class HibernateScanDao
             .executeUpdate();
 
         return getSession()
-                .createQuery("update Scan s set s.originalFileName = null where s.originalFileName is not null")
+                .createQuery("delete from ScanFileNames")
                 .executeUpdate();
     }
 
