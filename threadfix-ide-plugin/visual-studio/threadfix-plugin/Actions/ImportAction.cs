@@ -24,7 +24,6 @@
 using DenimGroup.threadfix_plugin.Controls;
 using DenimGroup.threadfix_plugin.Utils;
 using System;
-using System.Threading;
 
 namespace DenimGroup.threadfix_plugin.Actions
 {
@@ -60,6 +59,8 @@ namespace DenimGroup.threadfix_plugin.Actions
             _threadFixPlugin.ToggleMenuCommands(false);
             _threadFixPlugin.ImportMarkers(_viewModelService.GetSelectedAppIds(args.Model), () => 
             {
+                _threadFixPlugin.StorePluginData();
+
                 _threadFixPlugin.UpdateMarkers();
                 _threadFixPlugin.ToggleMenuCommands(true);
 

@@ -139,6 +139,16 @@ namespace DenimGroup.threadfix_plugin.Utils
                        out result));
         }
 
+        public void StorePluginData()
+        {
+            FileUtil.SerializeMarkerData(this);
+        }
+
+        public void RetrievePluginData()
+        {
+            FileUtil.DeserializeMarkerData(this);
+        }
+
         private void RunThreadFixApiAsync(Task apiTask, Action success)
         {
             var context = SynchronizationContext.Current;

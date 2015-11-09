@@ -21,9 +21,11 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+using DenimGroup.threadfix_plugin.Data;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,9 +34,50 @@ namespace DenimGroup.threadfix_plugin.Utils
 {
     public static class FileUtil
     {
+        public static readonly string ThreadFixDirectory = "ThreadFix/";
+
         public static DTE2 GetActiveIDE()
         {
             return Package.GetGlobalService(typeof(DTE)) as DTE2;
+        }
+
+        public static void SerializeMarkerData(ThreadFixPlugin threadFixPlugin)
+        {
+            var solutionName = GetSolutionName();
+            if (string.IsNullOrEmpty(solutionName))
+            {
+                return;
+            }
+
+            var path = GetStoredPluginFilePath(solutionName);
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
+
+            using (var fs = File.Open(path, FileMode.Create))
+            using (var sw = new StreamWriter(fs))
+            using (var jw = new JsonTextWriter(sw))
+            {
+                new JsonSerializer().Serialize(jw, new StoredPluginData { Markers = threadFixPlugin.Markers, SelectedAppIds = threadFixPlugin.SelectedAppIds });
+            }
+        }
+
+        public static void DeserializeMarkerData(ThreadFixPlugin threadFixPlugin)
+        {
+            var solutionName = GetSolutionName();
+            if (string.IsNullOrEmpty(solutionName))
+            {
+                return;
+            }
+
+            var path = GetStoredPluginFilePath(solutionName);
+            if (File.Exists(path))
+            {
+                using (var file = File.OpenText(path))
+                {
+                    var storedData = (StoredPluginData) new JsonSerializer().Deserialize(file, typeof(StoredPluginData));
+                    threadFixPlugin.Markers = storedData.Markers;
+                    threadFixPlugin.SelectedAppIds = storedData.SelectedAppIds;
+                }
+            }
         }
 
         public static Dictionary<string, string> GetFileLookUp(IEnumerable<string> filenames)
@@ -65,6 +108,16 @@ namespace DenimGroup.threadfix_plugin.Utils
             {
 
             }
+        }
+
+        private static string GetSolutionName()
+        {
+            return Path.GetFileNameWithoutExtension(GetActiveIDE().Solution.FullName);
+        }
+
+        private static string GetStoredPluginFilePath(string solutionName)
+        {
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ThreadFixDirectory + solutionName);
         }
 
         private static string GetFullPath(string filename)

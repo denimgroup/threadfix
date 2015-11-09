@@ -21,29 +21,13 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-using DenimGroup.threadfix_plugin.Controls;
-using DenimGroup.threadfix_plugin.Utils;
-using System;
+using System.Collections.Generic;
 
-namespace DenimGroup.threadfix_plugin.Actions
+namespace DenimGroup.threadfix_plugin.Data
 {
-    public class ClearAction : IAction
+    public class StoredPluginData
     {
-        private readonly ThreadFixPlugin _threadFixPlugin;
-
-        public ClearAction(ThreadFixPlugin threadFixPlugin)
-        {
-            _threadFixPlugin = threadFixPlugin;
-        }
-
-        public void OnExecute(object sender, EventArgs args)
-        {
-            _threadFixPlugin.ClearMarkers();
-            _threadFixPlugin.UpdateMarkers();
-            _threadFixPlugin.StorePluginData();
-
-            var toolWindow = (ToolWindowControl)_threadFixPlugin.ToolWindow.Content;
-            toolWindow.ClearList();
-        }
+        public List<VulnerabilityMarker> Markers { get; set; }
+        public HashSet<string> SelectedAppIds { get; set; }
     }
 }

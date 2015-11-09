@@ -26,6 +26,7 @@ using DenimGroup.threadfix_plugin.Controls;
 using DenimGroup.threadfix_plugin.Utils;
 using EnvDTE;
 using EnvDTE80;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using System;
@@ -55,6 +56,7 @@ namespace DenimGroup.threadfix_plugin
     // This attribute is needed to let the shell know that this package exposes some menus.
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(GuidList.guidthreadfix_pluginPkgString)]
+    [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string)]
     [ProvideToolWindow(typeof(ThreadFixToolWindow))]
     [ProvideOptionPage(typeof(OptionsPage), "ThreadFix", "Settings", 0, 0, true)]
     public sealed class threadfix_pluginPackage : Package
@@ -116,8 +118,14 @@ namespace DenimGroup.threadfix_plugin
 
         private void SolutionEvents_Opened()
         {
+            _threadFixPlugin.RetrievePluginData();
             _threadFixPlugin.UpdateFileAndMarkerLookUp();
             _threadFixPlugin.UpdateMarkers();
+
+            if (_threadFixPlugin.Markers != null)
+            {
+                new ShowAction(_threadFixPlugin).OnExecute(this, null);
+            }
         }
 
         private void AddMenuItemCallback(int commandId, OleMenuCommandService commandService, IAction callback)

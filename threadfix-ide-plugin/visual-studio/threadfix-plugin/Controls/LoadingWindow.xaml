@@ -5,6 +5,6 @@
         WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow">
     <Grid Margin="20">
         <ProgressBar Minimum="0" Maximum="100"  IsIndeterminate="True" Name="Loading"/>
-        <TextBlock Text="Loading Vulnerability Markers..." HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <TextBlock Text="Loading..." HorizontalAlignment="Center" VerticalAlignment="Center" />
     </Grid>
 </Window>
