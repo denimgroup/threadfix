@@ -33,6 +33,24 @@ myAppModule.controller('UploadScanController', function ($scope, $modalInstance,
         uploadScans(newUrl, $scope.files);
     };
 
+    var handler = function(data, status, headers, config) {
+
+        if (data.success) {
+            $modalInstance.close(data.object); // pass the team back up to update stats
+            $rootScope.$broadcast('scansUploaded');
+        } else {
+            if (!data.message) {
+                // If there's no message, this is often an uncaught RuntimeException. It should be stored in Error Messages.
+                $scope.alerts = [{ type: 'danger', msg: "An error has occurred. Please go to the 'Error Messages' page (under the cog) for more details." }];
+            } else {
+                $scope.alerts = [{ type: 'danger', msg: data.message }];
+            }
+            $scope.showError = true;
+            $scope.waiting = false;
+            $scope.uploading = false;
+        }
+    };
+
     var uploadScans = function(requestUrl, $files) {
         //$files: an array of files selected, each file has name, size, and type.
         $scope.upload = $upload.upload({
@@ -51,23 +69,7 @@ myAppModule.controller('UploadScanController', function ($scope, $modalInstance,
                 $scope.uploading = false;
                 $scope.waiting = true;
             }
-        }).success(function(data, status, headers, config) {
-
-            if (data.success) {
-                $modalInstance.close(data.object); // pass the team back up to update stats
-                $rootScope.$broadcast('scansUploaded');
-            } else {
-                if (!data.message) {
-                    // If there's no message, this is often an uncaught RuntimeException. It should be stored in Error Messages.
-                    $scope.alerts = [{ type: 'danger', msg: "An error has occurred. Please go to the 'Error Messages' page (under the cog) for more details." }];
-                } else {
-                    $scope.alerts = [{ type: 'danger', msg: data.message }];
-                }
-                $scope.showError = true;
-                $scope.waiting = false;
-                $scope.uploading = false;
-            }
-        });
+        }).success(handler).error(handler);
     };
 
     $scope.alerts = [];
