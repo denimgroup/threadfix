@@ -412,12 +412,13 @@
                                                type="number"
                                                class="focus"
                                                size="60"
-                                               maxlength="255"
+                                               min="0"
+                                               max="65535"
                                                ng-model="object.proxyPort"/>
                                     </td>
                                     <td class="no-color" style="padding-left: 5px">
                                         <span id="proxyPortServerError" class="errors" ng-show="object.proxyPort_error"> {{ object.proxyPort_error }}</span>
-                                        <span id="proxyPortCharacterLimitError" class="errors" ng-show="otherForm.proxyPort.$dirty && otherForm.proxyPort.$error.maxlength">Over 255 characters limit!</span>
+                                        <span id="proxyPortCharacterLimitError" class="errors" ng-show="otherForm.proxyPort.$dirty && (otherForm.proxyPort.$error.max || otherForm.proxyPort.$error.min)">Input from 0 to 65535!</span>
                                     </td>
                                 </tr>
                                 <tr>
