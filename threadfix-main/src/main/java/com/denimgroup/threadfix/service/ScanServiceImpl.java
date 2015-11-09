@@ -240,7 +240,7 @@ public class ScanServiceImpl implements ScanService {
     }
 
     @Override
-    public int deleteScanFileLocations() {
+    public void deleteScanFileLocations() {
 
         List<String> scanFilenames = scanDao.loadScanFilenames();
         DefaultConfiguration defaultConfig = defaultConfigService.loadCurrentConfiguration();
@@ -260,7 +260,7 @@ public class ScanServiceImpl implements ScanService {
             }
         }
 
-        return scanDao.deleteScanFileLocations();
+        scanDao.deleteScanFileLocations();
     }
 
     private void deleteFile(String fileName) {

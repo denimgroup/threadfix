@@ -104,6 +104,7 @@ public interface ScanService {
     /**
      *
      */
-    int deleteScanFileLocations();
+    void
+	deleteScanFileLocations();
 
 }

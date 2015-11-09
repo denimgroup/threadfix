@@ -173,7 +173,7 @@ public interface ScanDao extends GenericObjectDao<Scan> {
     /**
      *
      */
-    int deleteScanFileLocations();
+    void deleteScanFileLocations();
 
 
     /**

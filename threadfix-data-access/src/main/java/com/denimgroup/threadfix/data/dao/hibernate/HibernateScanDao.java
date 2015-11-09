@@ -85,14 +85,14 @@ public class HibernateScanDao
 	}
 
     @Override
-    public int deleteScanFileLocations() {
-        getSession()
-            .createQuery("update Scan s set s.fileName = null where s.fileName is not null")
-            .executeUpdate();
-
-        return getSession()
-                .createQuery("delete from ScanFileNames")
-                .executeUpdate();
+    public void deleteScanFileLocations() {
+		List<Scan> list = retrieveAll();
+		for (Scan scan : list) {
+			scan.setOriginalFileNames(null);
+			scan.setSavedFileNames(null);
+			scan.setFileName(null);
+			saveOrUpdate(scan);
+		}
     }
 
 	@SuppressWarnings("unchecked")
