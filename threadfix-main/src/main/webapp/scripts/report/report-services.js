@@ -287,7 +287,17 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
 
             if (graghId && tableId)
                 pdf.addPage();
-            addElementToPdf(pdf, tableId);
+
+            if (getTypeOfValue(tableId) === "Array") {
+                tableId.forEach(function(element, index){
+                    addElementToPdf(pdf, element);
+                    if (index !== tableId.length - 1)
+                        pdf.addPage();
+                });
+            } else {
+                addElementToPdf(pdf, tableId);
+            }
+
             pdf.save(fileName + '.pdf');
             if (cleanup) {
                 cleanup();

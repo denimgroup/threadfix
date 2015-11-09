@@ -32,6 +32,7 @@ import com.servicenow.grccontrol.GetRecordsControlsResponse;
 import com.servicenow.grcpolicy.GetRecordsPoliciesResponse;
 import com.servicenow.grccontrolservice.SubmitControlResponse;
 import com.servicenow.grcpolicyservice.SubmitPolicyResponse;
+import org.springframework.ws.client.WebServiceIOException;
 
 /**
  * @author zabdisubhan
@@ -46,12 +47,12 @@ public interface GRC {
 
     boolean hasValidUrl();
 
-    public SubmitPolicyResponse createPolicy(Application application);
+    SubmitPolicyResponse createPolicy(Application application) throws WebServiceIOException;
 
-    public GetRecordsPoliciesResponse getPolicies();
+    GetRecordsPoliciesResponse getPolicies() throws WebServiceIOException;
 
-    public SubmitControlResponse createControl(GRCControl control);
+    SubmitControlResponse createControl(GRCControl control) throws WebServiceIOException;
 
-    public GetRecordsControlsResponse getControls(GRCApplication grcApplication);
+    GetRecordsControlsResponse getControls(GRCApplication grcApplication) throws WebServiceIOException;
 
 }

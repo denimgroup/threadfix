@@ -48,7 +48,7 @@ public enum ScannerType {
     FINDBUGS("findbugs", "FindBugs", "FindBugs", FINDBUGS_DB_NAME),
     FORTIFY("fortify", FORTIFY_DB_NAME, "Fortify 360", FORTIFY_DB_NAME),
     NESSUS("nessus", "Nessus", "Nessus", NESSUS_DB_NAME),
-    APP_SPIDER("spider", NTO_SPIDER_DB_NAME, "NTO Spider", NTO_SPIDER_DB_NAME, true),
+    APP_SPIDER("spider", APP_SPIDER_DB_NAME, "NTO Spider", APP_SPIDER_DB_NAME, true),
     NETSPARKER("netsparker", "Mavituna Security Netsparker", "Mavituna Security Netsparker", NETSPARKER_DB_NAME),
     SKIPFISH("skipfish", "Skipfish", "Skipfish", SKIPFISH_DB_NAME),
     W3AF("w3af", "w3af", "w3af", W3AF_DB_NAME),

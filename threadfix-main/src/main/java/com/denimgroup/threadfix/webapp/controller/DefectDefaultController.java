@@ -1,9 +1,6 @@
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.DefaultDefectField;
-import com.denimgroup.threadfix.data.entities.DefaultDefectProfile;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
@@ -109,9 +106,8 @@ public class DefectDefaultController {
 			@PathVariable("defaultProfileId") int defaultProfileId) {
 
 		DefaultDefectProfile defaultProfile = defaultDefectProfileService.loadDefaultProfile(defaultProfileId);
-		Application referenceApplication = defaultProfile.getReferenceApplication();
 
-		Map<String, Object> returnMap = addMetadataForm(referenceApplication);
+		Map<String, Object> returnMap = addMetadataForm(defaultProfile);
 
 		if (returnMap.get(ERROR_MSG) != null) {
 			return RestResponse.failure(returnMap.get(ERROR_MSG).toString());
@@ -121,21 +117,41 @@ public class DefectDefaultController {
 	}
 
 	//This function is essentially a copy of addDefectModelAttributes currently in ApplicationController
-	private Map<String, Object> addMetadataForm(Application application) {
+	private Map<String, Object> addMetadataForm(DefaultDefectProfile defaultProfile) {
+		Application application = defaultProfile.getReferenceApplication();
+		DefectTracker defectTracker = defaultProfile.getDefectTracker();
 
-		if (application == null || !application.isActive()) {
-			LOG.warn(ResourceNotFoundException.getLogMessage("Application", application.getId()));
-			throw new ResourceNotFoundException();
+		AbstractDefectTracker dt = null;
+		if (application != null) {
+			if (!application.isActive()) {
+				LOG.warn(ResourceNotFoundException.getLogMessage("Application", application.getId()));
+				throw new ResourceNotFoundException();
+			}
+
+			if (application.getDefectTracker() == null ||
+					application.getDefectTracker().getDefectTrackerType() == null) {
+				return null;
+			}
+
+			defectTracker = application.getDefectTracker();
+			applicationService.decryptCredentials(application);
+
+			dt = DefectTrackerFactory.getTracker(application);
+		} else {
+			if (defectTracker == null || !defectTracker.isActive()) {
+				LOG.warn(ResourceNotFoundException.getLogMessage("DefectTracker", defectTracker.getId()));
+				throw new ResourceNotFoundException();
+			}
+
+			if (defectTracker.getDefectTrackerType() == null) {
+				return null;
+			}
+
+			defectTrackerService.decryptCredentials(defectTracker);
+
+			dt = DefectTrackerFactory.getTracker(defectTracker);
 		}
 
-		if (application.getDefectTracker() == null ||
-				application.getDefectTracker().getDefectTrackerType() == null) {
-			return null;
-		}
-
-		applicationService.decryptCredentials(application);
-
-		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
 		ProjectMetadata data = null;
 
 		Map<String, Object> map = new HashMap<>();
@@ -146,7 +162,7 @@ public class DefectDefaultController {
 				return map;
 			}
 		}
-		map.put("defectTrackerName", application.getDefectTracker().getDefectTrackerType().getName());
+		map.put("defectTrackerName", defectTracker.getDefectTrackerType().getName());
 		map.put("projectMetadata", data);
 		return map;
 	}

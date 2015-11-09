@@ -2,6 +2,8 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import javax.validation.Valid;
 
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -56,9 +58,19 @@ public class AddDefaultDefectProfileController {
 				defectTrackerService.loadDefectTracker(defaultDefectProfile.getDefectTracker().getId()) == null) {
 			return FormRestResponse.failure("Defect Tracker is invalid.",result);
 		}
-		if (defaultDefectProfile.getReferenceApplication() == null ||
-				applicationService.loadApplication(defaultDefectProfile.getReferenceApplication().getId()) == null) {
-			result.rejectValue("referenceApplication.id", null, null, "Reference Application is invalid.");
+
+		Application referenceApplication = null;
+		if (defaultDefectProfile.getReferenceApplication() != null) {
+			referenceApplication = applicationService.loadApplication(defaultDefectProfile.getReferenceApplication().getId());
+		}
+		DefectTracker defectTracker = null;
+		if (defaultDefectProfile.getDefectTracker() != null) {
+			defectTracker = defectTrackerService.loadDefectTracker(defaultDefectProfile.getDefectTracker().getId());
+		}
+		if ((referenceApplication == null) &&
+				((defectTracker.getEncryptedDefaultPassword() == null) ||
+						(defectTracker.getEncryptedDefaultUsername() == null))){
+			result.rejectValue("referenceApplication.id", null, null, "Reference Application is invalid or Defect Tracker does not have default credentials.");
 		}
 
 		defaultDefectProfileService.validateName(defaultDefectProfile, result);
@@ -69,8 +81,8 @@ public class AddDefaultDefectProfileController {
 
 		log.info("Creating new Defect Profile with name " + defaultDefectProfile.getName());
 
-		defaultDefectProfile.setReferenceApplication(applicationService.loadApplication(defaultDefectProfile.getReferenceApplication().getId()));
-		defaultDefectProfile.setDefectTracker(defectTrackerService.loadDefectTracker(defaultDefectProfile.getDefectTracker().getId()));
+		defaultDefectProfile.setReferenceApplication(referenceApplication);
+		defaultDefectProfile.setDefectTracker(defectTracker);
 		defaultDefectProfileService.storeDefaultDefectProfile(defaultDefectProfile);
 
 		return RestResponse.success(defaultDefectProfile);

@@ -52,6 +52,7 @@ public class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
 	static {
 		tagMap.put("issue_type_name", FindingKey.VULN_CODE);
 		tagMap.put("issue_severity", FindingKey.SEVERITY_CODE);
+		tagMap.put("issue_max_severity", FindingKey.SEVERITY_CODE);
 		tagMap.put("security_entity_element", FindingKey.PARAMETER);
 		tagMap.put("test_url", FindingKey.PATH);
 		tagMap.put("issue_id", FindingKey.NATIVE_ID);

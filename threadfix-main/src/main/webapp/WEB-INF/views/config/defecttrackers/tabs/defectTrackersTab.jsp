@@ -67,7 +67,7 @@
 					<tbody>
 						<tr ng-repeat="defaultProfile in tracker.defaultDefectProfiles">
 							<td>{{ defaultProfile.name }}</td>
-							<td><a class="pointer" ng-click="goToApp(defaultProfile.referenceApplication)">{{ defaultProfile.referenceApplication.team.name + ' / ' + defaultProfile.referenceApplication.name }}</a></td>
+							<td><a class="pointer" ng-show="defaultProfile.referenceApplication" ng-click="goToApp(defaultProfile.referenceApplication)">{{ defaultProfile.referenceApplication.team.name + ' / ' + defaultProfile.referenceApplication.name }}</a></td>
 							<td><a class="centered btn"	ng-click="openUpdateDefectDefaultsModal(defaultProfile)">Set Defaults</a>
 							</td>
                             <td><a class="btn" ng-click="openUpdateProfileModal(tracker,defaultProfile)">Edit/Delete</a></td>
@@ -79,7 +79,6 @@
 						<tr>
 							<td>
 							     <a class="btn"	ng-click="openCreateProfileModal(tracker)">Create Profile</a>
-							     <span ng-show="isMissingApplication[tracker.id]" class="errors">Cannot	create profile. No application attached to this tracker</span>
 						    </td>
 						</tr>
 					</tbody>

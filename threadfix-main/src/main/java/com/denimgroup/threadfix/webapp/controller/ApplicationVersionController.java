@@ -101,6 +101,7 @@ public class ApplicationVersionController {
 			if (version.getApplication().getId() != appId) {
 				RestResponse.failure("Application is invalid.");
 			}
+			version.getApplication().getVersions().remove(version);
 			applicationVersionService.delete(version);
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("Application Version", versionId));

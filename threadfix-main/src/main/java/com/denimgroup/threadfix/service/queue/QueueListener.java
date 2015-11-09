@@ -32,6 +32,7 @@ import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ws.client.WebServiceIOException;
 
 import javax.annotation.Nullable;
 import javax.jms.*;
@@ -431,7 +432,13 @@ public class QueueListener implements MessageListener {
 		}
 
 		jobStatusService.updateJobStatus(jobStatusId, "Processing GRC Controls update request.");
-		boolean result = grcToolService.updateControlsFromGrcTool(appId);
+		boolean result = false;
+
+		try {
+			result = grcToolService.updateControlsFromGrcTool(appId);
+		} catch (WebServiceIOException e) {
+			log.error("GRC Control update failed", e);
+		}
 
 		if (result) {
 			closeJobStatus(jobStatusId, "GRC Controls successfully updated.");
