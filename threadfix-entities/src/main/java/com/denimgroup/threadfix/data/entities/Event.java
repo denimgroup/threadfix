@@ -786,7 +786,7 @@ public class Event extends AuditableEntity {
         if ((policy == null) || (!policy.isActive())) {
             return linkText;
         }
-        String urlString = "/configuration/acceptcriterias";
+        String urlString = "/configuration/policies";
         return buildLink(urlString, linkText, urlMap);
     }
 
