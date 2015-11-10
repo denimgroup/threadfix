@@ -548,6 +548,10 @@ public class HibernateScanDao
 		if (appIds == null)
 			return getFindingsThatNeedCounters(page);
 
+		if (appIds.size() == 0) {
+			return list();
+		}
+
 		return getBaseCounterCriteria()
 				.add(in("appAlias.id", appIds))
 				.setMaxResults(100)
@@ -564,6 +568,10 @@ public class HibernateScanDao
 	public Long totalFindingsThatNeedCountersInApps(List<Integer> appIds) {
 		if (appIds == null)
 			return totalFindingsThatNeedCounters();
+
+		if (appIds.size() == 0) {
+			return 0L;
+		}
 
 		return (Long) getBaseCounterCriteria()
 				.add(in("appAlias.id", appIds))
@@ -597,6 +605,10 @@ public class HibernateScanDao
 		if (appIds == null)
 			return getMapsThatNeedCounters(current);
 
+		if (appIds.size() == 0) {
+			return list();
+		}
+
 		return getBasicMapCriteria()
 				.add(in("appAlias.id", appIds))
 				.setMaxResults(100)
@@ -608,6 +620,10 @@ public class HibernateScanDao
 	public Long totalMapsThatNeedCountersInApps(List<Integer> appIds) {
 		if (appIds == null)
 			return totalMapsThatNeedCounters();
+
+		if (appIds.size() == 0) {
+			return 0L;
+		}
 
 		return (Long) getBasicMapCriteria()
 				.add(in("appAlias.id", appIds))
