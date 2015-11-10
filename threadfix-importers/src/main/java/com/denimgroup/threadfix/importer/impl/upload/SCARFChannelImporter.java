@@ -52,7 +52,7 @@ import static com.denimgroup.threadfix.data.entities.ScannerDatabaseNames.SCARF_
  */
 @ScanImporter(
         scannerName = SCARF_DB_NAME,
-        startingXMLTags = {"AnalyzerReport", "BugInstance", "BugLocations"}
+        startingXMLTags = {"AnalyzerReport"}
 )
 public class SCARFChannelImporter extends AbstractChannelImporter {
 
