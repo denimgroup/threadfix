@@ -20,10 +20,10 @@
             <tbody id="userTableBody">
 		<c:forEach var="user" items="${ users }" varStatus="status">
 			<tr class="bodyRow">
-                <td id="name${ status.count }">
+                <td ng-non-bindable id="name${ status.count }">
 					<c:out value="${ user.bestName }"/>
 				</td>
-                <td id="role${ status.count }">
+                <td ng-non-bindable id="role${ status.count }">
 					<c:if test="${ user.hasGlobalGroupAccess }">
 						<c:out value="${ user.globalRole.displayName }"/>
 					</c:if>
