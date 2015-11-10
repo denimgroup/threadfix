@@ -28,11 +28,15 @@
             #if($addFindingsDetails)
                 #addFindingsDetails( $vulnerability )
             #end
+            #set( $vulnIndex = $vulnIndex + 1 )
         #end
     #end
 
-    #foreach ($customText in $customTexts)
-        $customText
+    #if( $customTexts )
+        #header("ThreadFix Custom Text:")$br
+        #foreach ($customText in $customTexts)
+            $customText
+        #end
     #end
 #end
 
@@ -51,7 +55,7 @@
 #end
 
 #macro( header $headerContent )
-    #if($defectTrackerName=="Jira")
+    #if($defectTrackerName=="JIRA")
         h4.$headerContent
     #else
         $headerContent
@@ -59,7 +63,7 @@
 #end
 
 #macro( code $codeContent )
-    #if($defectTrackerName=="Jira")
+    #if($defectTrackerName=="JIRA")
         {code}${codeContent}{code}
     #else
         ---$br
@@ -69,7 +73,7 @@
 #end
 
 #macro( addThreadfixLink $link )
-    #if($defectTrackerName=="Jira")
+    #if($defectTrackerName=="JIRA")
         [Threadfix|$link]
     #else
         $br
