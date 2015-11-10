@@ -43,6 +43,8 @@ public interface EventDao extends GenericObjectDao<Event> {
 
     List<Event> retrieveAllByDefect(Defect defect);
 
+    List<Event> retrieveAllByDefectTrackerId(Integer defectTrackerId);
+
     List<Event> retrieveAllByPolicy(Policy policy);
 
     List<Event> retrieveAllByPolicyStatus(PolicyStatus policyStatus);

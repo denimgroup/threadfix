@@ -99,6 +99,10 @@ public class HibernateDefectDao
 			
 		if (defects != null && defects.size() > 0) {
 			for (Defect defect : defects) {
+				for (Event event: defect.getEvents()) {
+					event.setDefect(null);
+					eventDao.saveOrUpdate(event);
+				}
 				delete(defect);
 			}
 		}
