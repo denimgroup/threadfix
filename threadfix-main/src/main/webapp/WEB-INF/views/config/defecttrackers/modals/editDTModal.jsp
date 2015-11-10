@@ -100,14 +100,17 @@
                 <tr ng-show="productNames || oldDefaultProduct" class="left-align" id="productNamesSection">
                     <td id="projectname">Product Name</td>
                     <td class="inputValue">
-                        <input id="productNameSelect"
-                               type="text"
-                               name = "productName"
-                               ng-model="object.defaultProductName"
-                               typeahead="name for name in productNames | filter:$viewValue | limitTo:10"
-                               typeahead-editable="true"
-                               placeholder="Enter Product"
-                               class="form-control"/>
+
+                        <input-dropdown
+                                id="productNameSelect"
+                                input-placeholder="Enter Product"
+                                input-name="productName"
+                                selected-item="object.defaultProductName"
+                                input-value-init="object.defaultProductName"
+                                default-dropdown-items="productNames"
+                                filter-list-method="filterStringList(userInput)"
+                        >
+                        </input-dropdown>
 
                     </td>
                     <td colspan="2" >
@@ -117,6 +120,7 @@
                 </tr>
             </tbody>
         </table>
+
         <div style="height:100px"></div>
     </div>
     <%@ include file="/WEB-INF/views/modal/footer.jspf" %>
