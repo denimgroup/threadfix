@@ -29,7 +29,9 @@ import com.denimgroup.threadfix.exception.RestException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ExceptionLogService;
+import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
 import com.mysql.jdbc.PacketTooBigException;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.orm.hibernate3.HibernateJdbcException;
@@ -123,6 +125,20 @@ public class RestExceptionControllerAdvice {
         }
 
         return new ModelAndView("404");
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(value = ResourceNotFoundException.class)
+    @ResponseBody
+    public ModelAndView handleResourceNotFound(HttpServletRequest request, ResourceNotFoundException e) {
+        return handleError404(request, e);
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(TypeMismatchException.class)
+    public ModelAndView handleTypeMismatch(HttpServletRequest request, TypeMismatchException e) {
+        log.warn("TypeMismatchException at " + request.getRequestURI() + ": " + e.getMessage());
+        return handleError404(request, e);
     }
 
     @ResponseStatus(HttpStatus.OK)
