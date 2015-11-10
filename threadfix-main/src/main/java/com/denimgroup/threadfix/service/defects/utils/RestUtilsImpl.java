@@ -289,6 +289,9 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
         } catch (IOException e) {
             LOG.warn("IOException encountered while trying to find the response code: " + e.getMessage(), e);
             retVal = ConnectionStatus.INVALID;
+        } catch (IllegalArgumentException e) {
+            LOG.warn("IllegalArgumentException encountered while trying to find the response code: " + e.getMessage(), e);
+            retVal = ConnectionStatus.INVALID;
         }
 
         LOG.info("Return value will be " + retVal);
