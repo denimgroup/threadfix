@@ -86,11 +86,13 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
 
                     if (data.success) {
                         $scope.successMessage = "Configuration was saved successfully.";
-                        $scope.object = data.object;
+                        $scope.errorMessage = null;
+                            $scope.object = data.object;
                         prevFileUploadLocation = $scope.object.fileUploadLocation;
                         window.scrollTo(0, 0);
                     } else {
                         $scope.errorMessage = "Failure: " + data.message;
+                        $scope.successMessage = null;
 
                         if (data.errorMap) {
                             for (var index in data.errorMap) {

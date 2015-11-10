@@ -26,13 +26,18 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.beans.PropertyEditorSupport;
 import java.io.File;
-import java.util.*;
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static com.denimgroup.threadfix.CollectionUtils.*;
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 
@@ -139,10 +144,7 @@ public class SystemSettingsController {
         }
 
         if (defaultConfiguration.fileUploadLocationExists()) {
-            File directory = new File(defaultConfiguration.getFileUploadLocation());
-            if (!directory.exists()){
-                bindingResult.rejectValue("fileUploadLocation", null, null, "Directory does not exist.");
-            }
+            checkingFolder(defaultConfiguration, bindingResult);
         }
 
         // This was added because Spring autobinding was not saving the export fields properly
@@ -227,6 +229,30 @@ public class SystemSettingsController {
         }
 
         return configuration;
+    }
+
+    private void checkingFolder(DefaultConfiguration defaultConfiguration,
+                                BindingResult bindingResult){
+        File directory = new File(defaultConfiguration.getFileUploadLocation());
+        if (!directory.exists()){
+            bindingResult.rejectValue("fileUploadLocation", null, null, "Directory does not exist.");
+        } else if (!directory.isDirectory()){
+            bindingResult.rejectValue("fileUploadLocation", null, null, "Is not a directory.");
+        } else {
+            try {
+                // Check permission: try to create a temp file. In Windows, file.canWrite() doesn't work for example c:\ folder
+                File tempFile = new File(defaultConfiguration.getFileUploadLocation() + File.separator + "temp");
+                if (!(tempFile.createNewFile())) {
+                    bindingResult.rejectValue("fileUploadLocation", null, null, "Unable to create files in this directory.");
+                } else {
+                    // Delete temp file
+                    tempFile.delete();
+                }
+            } catch (IOException e) {
+                bindingResult.rejectValue("fileUploadLocation", null, null, "Unable to create files in this directory. Message was: " + e.getMessage());
+            }
+
+        }
     }
 
     class CSVExportFieldEnumConverter<T extends Enum<T>> extends PropertyEditorSupport {
