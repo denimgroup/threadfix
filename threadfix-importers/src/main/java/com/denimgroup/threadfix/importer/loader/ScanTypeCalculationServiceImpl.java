@@ -489,10 +489,14 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
                 returnValue = inputFileName;
 
             } catch (IOException e) {
-                log.warn("Writing the file stream to disk encountered an IOException.", e);
+                log.warn("Writing the file stream to disk encountered an IOException.");
+				throw new RestIOException(e, "Writing the file stream to disk encountered an IOException. "
+						+ e.getMessage() + ". Check your File Upload Location setting.");
             }
 		} catch (IOException e) {
-            log.warn("Failed to retrieve an InputStream from the file upload.", e);
+            log.warn("Failed to retrieve an InputStream from the file upload.");
+			throw new RestIOException(e, "Failed to retrieve an InputStream from the file upload. "
+					+ e.getMessage() + ". Check your File Upload Location setting.");
 		} finally {
 			closeQuietly(stream);
 			closeQuietly(out);
