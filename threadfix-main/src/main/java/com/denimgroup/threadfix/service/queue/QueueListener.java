@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.service.queue;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityFilterDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityFilterDao;
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
@@ -432,12 +433,12 @@ public class QueueListener implements MessageListener {
 		}
 
 		jobStatusService.updateJobStatus(jobStatusId, "Processing GRC Controls update request.");
-		boolean result = false;
+		boolean result;
 
 		try {
 			result = grcToolService.updateControlsFromGrcTool(appId);
 		} catch (WebServiceIOException e) {
-			log.error("GRC Control update failed", e);
+			throw new RestIOException(e, "GRC Control update failed");
 		}
 
 		if (result) {
