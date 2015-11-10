@@ -78,6 +78,11 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
     }
 
     private void addMissingMapCounters(List<Integer> appIds) {
+        if (appIds.size() == 0) {
+            LOG.debug("There were no missing map counters to add.");
+            return;
+        }
+
         Long total = scanDao.totalMapsThatNeedCountersInApps(appIds);
 
         long start = System.currentTimeMillis();
@@ -109,6 +114,11 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
     }
 
     private void addMissingFindingCounters(List<Integer> appIds) {
+        if (appIds.size() == 0) {
+            LOG.debug("There were no missing finding counters to add.");
+            return;
+        }
+
         Long total = scanDao.totalFindingsThatNeedCountersInApps(appIds);
 
         long start = System.currentTimeMillis();
