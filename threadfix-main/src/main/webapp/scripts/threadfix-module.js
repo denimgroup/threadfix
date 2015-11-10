@@ -3,7 +3,7 @@
 
 
 // the httpProvider stuff configures things to work like x-www-form-urlencoded
-var threadfixModule = angular.module('threadfix', ['ui.bootstrap', 'angularFileUpload', 'threadfixFilters', 'd3', 'dynform', 'ngSanitize', 'ui.sortable']);
+var threadfixModule = angular.module('threadfix', ['ui.bootstrap', 'angularFileUpload', 'threadfixFilters', 'd3', 'dynform', 'ngSanitize', 'ui.sortable', 'inputDropdown']);
 
 threadfixModule.run(function($http, tfEncoder) {
     // Use x-www-form-urlencoded Content-Type

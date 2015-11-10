@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix');
 
-myAppModule.controller('CreateEditDefectTrackerModalController', function ($log, $scope, $rootScope, $modalInstance, $http, threadFixModalService, object, config, url, buttonText, deleteUrl, timeoutService, tfEncoder) {
+myAppModule.controller('CreateEditDefectTrackerModalController', function ($q, $log, $scope, $rootScope, $modalInstance, $http, threadFixModalService, object, config, url, buttonText, deleteUrl, timeoutService, tfEncoder) {
 
     $scope.object = object;
 
@@ -132,23 +132,20 @@ myAppModule.controller('CreateEditDefectTrackerModalController', function ($log,
         }
     };
 
-    $scope.loadTagsList = function() {
-        $http.get(tfEncoder.encode('/configuration/tags/map')).
-            success(function(data) {
-                if (data.success) {
-                    if (data.object.tags.length > 0) {
-                        $scope.tags = data.object.tags;
-                        $scope.tags.sort(function(a,b) {
-                            return a.name.localeCompare(b.name);
-                        });
-                    } else $scope.tags = [];
-                } else {
-                    $log.warn("Failure. Message was : " + data.message);
-                }
-            }).
-            error(function(data, status, headers, config) {
-                $scope.tags = [];
-                $log.warn("Failed to retrieve waf list. HTTP status was " + status);
+    // Filter method is passed with attribute 'filter-list-method="method(userInput)"'.
+    // Called on the onchange event from the input field. Should return a promise resolving with an array of items to show in the dropdown.
+    // If no filter method is passed to the the directive, the default dropdown will show constantly.
+    $scope.filterStringList = function(userInput) {
+        var filter = $q.defer();
+        var normalisedInput = userInput.toLowerCase();
+        var filteredArray = [];
+
+        if ($scope.productNames)
+            filteredArray = $scope.productNames.filter(function(country) {
+                return country.toLowerCase().indexOf(normalisedInput) >= 0;
             });
-    }
+
+        filter.resolve(filteredArray);
+        return filter.promise;
+    };
 });
