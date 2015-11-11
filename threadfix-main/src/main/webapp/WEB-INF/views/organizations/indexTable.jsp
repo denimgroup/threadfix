@@ -37,14 +37,14 @@
             <span ng-class="{ expanded: team.expanded }" class="caret-right"></span>
         </td>
         <td ng-click="toggle(team)" id="teamName{{ team.name }}">
-            <div style="word-wrap: break-word;width:300px;text-align:left;">{{ team.name }}</div>
+            <div style="word-wrap: break-word;width:200px;text-align:left;">{{ team.name }}</div>
         </td>
         <td class="centered" ng-click="toggle(team)" id="numTotalVulns{{ team.name }}">{{ team.totalVulnCount }}</td>
-        <td class="centered" ng-click="toggle(team)" id="numCriticalVulns{{ team.name }}">{{ team.criticalVulnCount }}</td>
-        <td class="centered" ng-click="toggle(team)" id="numHighVulns{{ team.name }}">{{ team.highVulnCount }}</td>
-        <td class="centered" ng-click="toggle(team)" id="numMediumVulns{{ team.name }}">{{ team.mediumVulnCount }}</td>
-        <td class="centered" ng-click="toggle(team)" id="numLowVulns{{ team.name }}">{{ team.lowVulnCount }}</td>
-        <td class="centered" ng-click="toggle(team)" id="numInfoVulns{{ team.name }}">{{ team.infoVulnCount }}</td>
+        <td class="centered fixed-team-header" ng-click="toggle(team)" id="numCriticalVulns{{ team.name }}">{{ team.criticalVulnCount }}</td>
+        <td class="centered fixed-team-header" ng-click="toggle(team)" id="numHighVulns{{ team.name }}">{{ team.highVulnCount }}</td>
+        <td class="centered fixed-team-header" ng-click="toggle(team)" id="numMediumVulns{{ team.name }}">{{ team.mediumVulnCount }}</td>
+        <td class="centered fixed-team-header" ng-click="toggle(team)" id="numLowVulns{{ team.name }}">{{ team.lowVulnCount }}</td>
+        <td class="centered fixed-team-header" ng-click="toggle(team)" id="numInfoVulns{{ team.name }}">{{ team.infoVulnCount }}</td>
         <td ng-click="toggle(team)"></td>
         <td>
             <c:if test="${ underEnterpriseLimit }">
@@ -118,12 +118,12 @@
                         <thead>
                         <tr>
                             <th style="width:70px;"></th>
-                            <th class="centered fixed-team-header">Total</th>
-                            <th class="centered fixed-team-header" generic-severity="Critical"></th>
-                            <th class="centered fixed-team-header" generic-severity="High"></th>
-                            <th class="centered fixed-team-header" generic-severity="Medium"></th>
-                            <th class="centered fixed-team-header" generic-severity="Low"></th>
-                            <th class="centered fixed-team-header" generic-severity="Info"></th>
+                            <th class="centered">Total</th>
+                            <th class="centered auto-team-header" generic-severity="Critical"></th>
+                            <th class="centered auto-team-header" generic-severity="High"></th>
+                            <th class="centered auto-team-header" generic-severity="Medium"></th>
+                            <th class="centered auto-team-header" generic-severity="Low"></th>
+                            <th class="centered auto-team-header" generic-severity="Info"></th>
                             <th style="width:110px;"></th>
                         </tr>
                         </thead>
