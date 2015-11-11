@@ -21,6 +21,12 @@ myAppModule.controller('ScanHistoryController', function($scope, $log, $rootScop
 
                     if (data.success) {
                         $scope.scans = data.object.scanList;
+
+                        if ($scope.scans && $scope.scans.length) {
+                            $scope.scans.forEach(function(scan) {
+                                scan.pageUrl = getScanUrl(scan);
+                            });
+                        }
                         $scope.numScans = data.object.numScans;
                         $scope.numberOfPages = Math.ceil(data.object.numScans/100);
 
@@ -45,8 +51,11 @@ myAppModule.controller('ScanHistoryController', function($scope, $log, $rootScop
         }
     };
 
-    $scope.goTo = function(scan) {
-        $window.location.href = tfEncoder.encode("/organizations/" + scan.team.id + "/applications/" + scan.app.id + "/scans/" + scan.id);
+    var getScanUrl = function(scan) {
+        return tfEncoder.encode(
+            "/organizations/" + scan.team.id +
+            "/applications/" + scan.app.id +
+            "/scans/" + scan.id);
     };
 
 });

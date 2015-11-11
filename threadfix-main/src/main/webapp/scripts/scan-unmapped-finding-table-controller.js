@@ -48,6 +48,11 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
                         $scope.heading = $scope.numFindings + " Unmapped Findings";
                         $scope.numberOfUnmappedPages = Math.ceil(data.object.numFindings/$scope.numberPerPage);
                         $scope.findingList = data.object.findingList;
+                        if ($scope.findingList && $scope.findingList.length) {
+                            $scope.findingList.forEach(function(finding) {
+                                finding.pageUrl = getFindingUrl(finding);
+                            });
+                        }
                         $scope.scan = data.object.scan;
                     } else {
                         $scope.output = "Failure. Message was : " + data.message;
@@ -139,15 +144,15 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
         }
     };
 
-    $scope.goTo = function(finding) {
+    var getFindingUrl = function(finding) {
         if ($scope.$parent.currentUrl.indexOf("applications") == -1) {
-            $window.location.href = tfEncoder.encode("/findings/" + finding.id);
+            return tfEncoder.encode("/findings/" + finding.id);
 
         } else {
             var url = $scope.$parent.currentUrl.indexOf('scans') == -1 ?
             $scope.$parent.currentUrl + "/scans/1/findings/" + finding.id :
             $scope.$parent.currentUrl + "/findings/" + finding.id;
-            $window.location.href = tfEncoder.encode(url);
+            return tfEncoder.encode(url);
         }
     };
 

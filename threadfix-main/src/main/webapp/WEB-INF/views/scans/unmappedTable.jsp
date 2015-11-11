@@ -58,7 +58,7 @@
                 </td>
             </security:authorize>
             <td class="pointer">
-                <a id="unmappedVulnType{{ index }}" ng-click="goTo(finding)">
+                <a id="unmappedVulnType{{ index }}"  ng-href="{{ finding.pageUrl }}">
                     View Finding
                 </a>
             </td>

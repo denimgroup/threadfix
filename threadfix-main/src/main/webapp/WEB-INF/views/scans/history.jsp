@@ -60,7 +60,7 @@
                     <td>{{ scan.numberMediumVulnerabilities }}</td>
                     <td>{{ scan.numberLowVulnerabilities }}</td>
                     <td class="pointer">
-                        <a id="importTime{{ $index }}" ng-click="goTo(scan)">
+                        <a id="importTime{{ $index }}" ng-href="{{ scan.pageUrl }}">
                             View Scan
                         </a>
                     </td>

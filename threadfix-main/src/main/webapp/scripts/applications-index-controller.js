@@ -24,6 +24,9 @@ myAppModule.controller('ApplicationsIndexController',
 
                     if (data.success) {
                         $scope.teams = data.object.teams;
+                        $scope.teams.forEach(function(team) {
+                            team.url = tfEncoder.encode("/organizations/" + team.id);
+                        });
 
                         $scope.canEditIds = data.object.canEditIds;
                         $scope.canUploadIds = data.object.canUploadIds;
@@ -281,10 +284,6 @@ myAppModule.controller('ApplicationsIndexController',
             }
         };
 
-        $scope.goTo = function(team) {
-            $window.location.href = tfEncoder.encode("/organizations/" + team.id);
-        };
-
         $scope.searchApps = function(searchText, team) {
 
             if (team.lastSearchString && team.lastSearchString === searchText &&
@@ -308,6 +307,8 @@ myAppModule.controller('ApplicationsIndexController',
 
                         team.applications.forEach(function(application) {
                             application.showUploadScanButton = $scope.canUploadIds.indexOf(application.id) !== -1;
+                            application.pageUrl = tfEncoder.encode(
+                                "/organizations/" + team.id + "/applications/" + application.id);
                         });
 
                         team.lastSearchString = searchText;
@@ -324,10 +325,6 @@ myAppModule.controller('ApplicationsIndexController',
         $scope.updatePage = function(page, searchString, team) {
             team.page = page;
             $scope.searchApps(searchString, team);
-        };
-
-        $scope.goToPage = function(team, app) {
-            $window.location.href = tfEncoder.encode("/organizations/" + team.id + "/applications/" + app.id);
         };
 
         var updateTeam = function(oldTeam, newTeam) {

@@ -50,7 +50,7 @@
             </td>
             <td>{{ finding.numberMergedResults }}</td>
             <td class="pointer">
-                <a id="mappedVulnType{{ index }}" ng-click="goTo(finding)">
+                <a id="mappedVulnType{{ index }}" ng-href="{{ finding.pageUrl }}">
                     View Finding
                 </a>
             </td>

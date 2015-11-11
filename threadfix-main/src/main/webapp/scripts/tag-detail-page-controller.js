@@ -87,7 +87,7 @@ myAppModule.controller('TagDetailPageController', function ($scope, $window, $ht
                     })
                 }
             }
-        })
+        });
 
         $scope.allVulnList = [];
         var keys = Object.keys(vulnMap);

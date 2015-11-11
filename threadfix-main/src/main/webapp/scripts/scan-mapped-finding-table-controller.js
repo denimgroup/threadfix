@@ -22,6 +22,11 @@ myAppModule.controller('ScanMappedFindingTableController', function ($scope, $wi
                         $scope.numFindings = data.object.numFindings;
                         $scope.numberOfMappedPages = Math.ceil(data.object.numFindings/100);
                         $scope.findingList = data.object.findingList;
+                        if ($scope.findingList && $scope.findingList.length) {
+                            $scope.findingList.forEach(function(finding) {
+                                finding.pageUrl = getFindingUrl(finding);
+                            });
+                        }
                         $scope.scan = data.object.scan;
                     } else {
                         $scope.output = "Failure. Message was : " + data.message;
@@ -39,11 +44,10 @@ myAppModule.controller('ScanMappedFindingTableController', function ($scope, $wi
     $scope.$watch('page', $scope.refresh);
 
     var getTableSortBean = function() {
-        var object = {
+        return {
             page: $scope.page
-        }
-        return object;
-    }
+        };
+    };
 
     $scope.goToPage = function(valid) {
         if (valid) {
@@ -51,8 +55,8 @@ myAppModule.controller('ScanMappedFindingTableController', function ($scope, $wi
         }
     };
 
-    $scope.goTo = function(finding) {
-        $window.location.href = tfEncoder.encode($scope.$parent.currentUrl + "/findings/" + finding.id);
+    var getFindingUrl = function(finding) {
+        return tfEncoder.encode($scope.$parent.currentUrl + "/findings/" + finding.id);
     };
 
 });

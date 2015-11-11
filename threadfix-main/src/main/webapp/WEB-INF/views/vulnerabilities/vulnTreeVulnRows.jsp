@@ -99,7 +99,7 @@
         {{ vulnerability.staticFindings.length || vulnerability.dynamicFindings.length ? vulnerability.staticFindings.length + vulnerability.dynamicFindings.length : 0 }} <span class="icon icon-list"></span>
     </span>
 
-    <span class="pointer"><a id="viewMoreLink{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" ng-click="goTo(vulnerability)">View More</a></span>
+    <span class="pointer"><a id="viewMoreLink{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" ng-href="{{ vulnerability.pageUrl }}">View More</a></span>
     <br>
 
     <!-- Comments body -->

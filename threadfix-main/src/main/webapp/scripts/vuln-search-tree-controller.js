@@ -101,6 +101,7 @@ module.controller('VulnSearchTreeController', function($log, $scope, $rootScope,
                     element.vulns.forEach(updateChannelNames);
                     element.vulns.forEach(function(vuln){
                         vulnSearchParameterService.updateVulnCommentTags($scope.commentTags, vuln);
+                        vuln.pageUrl = tfEncoder.encode($scope.getUrlBase(vuln));
                     });
                     element.totalVulns = data.object.vulnCount;
                     element.max = Math.ceil(data.object.vulnCount/100);
@@ -162,10 +163,6 @@ module.controller('VulnSearchTreeController', function($log, $scope, $rootScope,
                 $scope.loadingTree = false;
             });
     });
-
-    $scope.goTo = function(vuln) {
-        $window.location.href = tfEncoder.encode($scope.getUrlBase(vuln));
-    };
 
     $scope.getUrlBase = function(vuln) {
         return "/organizations/" + vuln.team.id + "/applications/" + vuln.app.id + "/vulnerabilities/" + vuln.id;
