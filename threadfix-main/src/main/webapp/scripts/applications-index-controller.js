@@ -33,6 +33,8 @@ myAppModule.controller('ApplicationsIndexController',
 
                         customSeverityService.setSeverities(data.object.genericSeverities);
 
+                        $scope.genericSeverities = data.object.genericSeverities;
+
                         $scope.teams.forEach(function(team) {
 
                             team.page = 1;
@@ -95,8 +97,12 @@ myAppModule.controller('ApplicationsIndexController',
                             && data.object[0].Low == 0
                             && data.object[0].Info ==0)
                             team.report = undefined;
-                        else
+                        else {
                             team.report = data.object;
+                            team.report.forEach(function(teamInfo, i){
+                                team.report[i].genericSeverities = $scope.genericSeverities;
+                            })
+                        }
 
                     }).
                     error(function(data, status, headers, config) {

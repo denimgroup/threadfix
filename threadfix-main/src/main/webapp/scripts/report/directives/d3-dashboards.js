@@ -287,7 +287,14 @@ d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut', 
                     function getData(){
                         var d = data[0];
                         return color.domain().map(function(vulnType) {
-                            return {tip:vulnType, value:d[vulnType], fillColor:color(vulnType), severity: vulnType, teamId: d.teamId, teamName: d.teamName};});
+                            return {tip:vulnType,
+                                value:d[vulnType],
+                                fillColor:color(vulnType),
+                                severity: vulnType,
+                                teamId: d.teamId,
+                                teamName: d.teamName,
+                                genericSeverities: d.genericSeverities
+                            };});
                     }
 
                 };
