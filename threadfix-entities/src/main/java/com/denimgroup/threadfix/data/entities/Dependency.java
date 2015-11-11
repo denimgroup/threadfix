@@ -34,8 +34,6 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
@@ -46,7 +44,8 @@ public class Dependency extends AuditableEntity {
 
     private static Map<String, String> refLinkMap = map(
             "cve", "http://cve.mitre.org/cgi-bin/cvename.cgi?name=",
-            "osvdb", "http://osvdb.org/");
+            "osvdb", "http://osvdb.org/",
+            "nessus", "http://www.tenable.com/plugins/index.php?view=single&id=");
 
     private static final long serialVersionUID = 3647499545381978852L;
 

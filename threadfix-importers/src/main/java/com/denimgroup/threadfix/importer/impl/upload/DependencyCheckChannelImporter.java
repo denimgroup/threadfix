@@ -38,13 +38,11 @@ import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
 import java.util.Calendar;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.enumMap;
 import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.ScannerUtils.md5;
 
 @ScanImporter(
         scannerName = ScannerDatabaseNames.DEPENDENCY_CHECK_DB_NAME,
@@ -91,27 +89,6 @@ public class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	    		saxFindingList.add(finding);
     		}
 	    }
-
-		// this md5 algorithm is the same as mysql's, so people can update their databases
-		//
-		public String md5(String input) {
-			String result = input;
-			if (input != null) {
-				MessageDigest md;
-				try {
-					md = MessageDigest.getInstance("MD5");
-				} catch (NoSuchAlgorithmException e) {
-					throw new IllegalStateException("Can't find MD5 algorithm.", e);
-				}
-				md.update(input.getBytes());
-				BigInteger hash = new BigInteger(1, md.digest());
-				result = hash.toString(16);
-				while (result.length() < 32) {
-					result = "0" + result;
-				}
-			}
-			return result;
-		}
 
 	    ////////////////////////////////////////////////////////////////////
 	    // Event handlers.
