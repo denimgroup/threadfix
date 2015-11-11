@@ -78,7 +78,7 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
     }
 
     private void addMissingMapCounters(List<Integer> appIds) {
-        if (appIds.size() == 0) {
+        if (appIds == null || appIds.size() == 0) {
             LOG.debug("There were no missing map counters to add.");
             return;
         }
@@ -114,7 +114,7 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
     }
 
     private void addMissingFindingCounters(List<Integer> appIds) {
-        if (appIds.size() == 0) {
+        if (appIds == null || appIds.size() == 0) {
             LOG.debug("There were no missing finding counters to add.");
             return;
         }
