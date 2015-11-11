@@ -426,13 +426,12 @@ threadfixModule.factory('vulnSearchParameterService', function() {
         var criteria = {};
         criteria.endDate = d.time;
         criteria.parameters = {};
-        criteria.parameters.severities = {
-            info: d.severity === "Info",
-            low: d.severity === "Low",
-            medium: d.severity === "Medium",
-            high: d.severity === "High",
-            critical: d.severity === "Critical"
-        };
+        criteria.parameters.severities = {};
+
+        d.genericSeverities.forEach(function(severity) {
+            criteria.parameters.severities[severity.name.toLowerCase()] = (d.severity === severity.name || d.severity === severity.customName);
+        });
+
 
         if (d.teamId && label.teamId) {
             criteria.treeTeam = {id: d.teamId};

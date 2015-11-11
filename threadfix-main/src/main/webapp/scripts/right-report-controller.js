@@ -40,6 +40,7 @@ myAppModule.controller('RightReportController', function ($scope, $window, threa
                             innerData[customSeverityService.getCustomSeverity("Medium")] = application["Medium"];
                             innerData[customSeverityService.getCustomSeverity("High")] = application["High"];
                             innerData[customSeverityService.getCustomSeverity("Critical")] = application["Critical"];
+                            innerData.genericSeverities = data.object.genericSeverities;
                             innerData.appId = application.appId;
                             innerData.appName = application.appName;
                             innerData.teamId = application.teamId;
