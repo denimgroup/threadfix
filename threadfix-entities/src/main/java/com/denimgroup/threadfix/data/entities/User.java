@@ -144,6 +144,14 @@ public class User extends AuditableEntity {
         return lastLoginDate;
     }
 
+    @Transient
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
+    public Date getRealLastLoginDate() {
+        if (Math.abs(getCreatedDate().getTime() - lastLoginDate.getTime()) < 1000)
+            return null;
+        return lastLoginDate;
+    }
+
     public void setLastLoginDate(Date lastLoginDate) {
         this.lastLoginDate = lastLoginDate;
     }
