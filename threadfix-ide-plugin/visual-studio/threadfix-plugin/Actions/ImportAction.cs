@@ -60,7 +60,6 @@ namespace DenimGroup.threadfix_plugin.Actions
             _threadFixPlugin.ImportMarkers(_viewModelService.GetSelectedAppIds(args.Model), () => 
             {
                 _threadFixPlugin.StorePluginData();
-
                 _threadFixPlugin.UpdateMarkers();
                 _threadFixPlugin.ToggleMenuCommands(true);
 
