@@ -33,11 +33,11 @@ import com.denimgroup.threadfix.service.ChannelVulnerabilityService;
 import com.denimgroup.threadfix.service.SeverityFilterService;
 import com.denimgroup.threadfix.service.StatisticsCounterService;
 import com.denimgroup.threadfix.service.merge.Merger;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import sun.jvm.hotspot.utilities.Assert;
 
 import java.util.List;
 
@@ -96,11 +96,11 @@ public class StatisticsCounterTests {
 
         List<Scan> scans = application.getScans();
 
-        Assert.that(scans.size() == 2, "Had " + scans.size() + " scans instead of " + 2);
+        Assert.assertTrue("Had " + scans.size() + " scans instead of " + 2, scans.size() == 2);
 
         for (Scan scan : scans) {
             Integer total = scan.getNumberTotalVulnerabilities();
-            Assert.that(total == 32 || total == 69, "Had " + total + " vulnerabilities, not 32 or 69.");
+            Assert.assertTrue("Had " + total + " vulnerabilities, not 32 or 69.", total == 32 || total == 69);
         }
     }
 
@@ -110,11 +110,11 @@ public class StatisticsCounterTests {
 
         List<Scan> scans = application.getScans();
 
-        Assert.that(scans.size() == 1, "Had " + scans.size() + " scans instead of " + 1);
+        Assert.assertTrue("Had " + scans.size() + " scans instead of " + 1, scans.size() == 1);
 
         for (Scan scan : scans) {
             Integer total = scan.getNumberTotalVulnerabilities();
-            Assert.that(total == 32, "Had " + total + " vulnerabilities, not 32.");
+            Assert.assertTrue("Had " + total + " vulnerabilities, not 32.", total == 32);
         }
     }
 }
