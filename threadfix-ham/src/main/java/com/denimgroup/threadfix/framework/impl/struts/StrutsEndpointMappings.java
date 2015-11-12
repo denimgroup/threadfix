@@ -84,7 +84,7 @@ public class StrutsEndpointMappings implements EndpointGenerator {
         strutsActionExtension = StrutsPropertiesParser.getStrutsProperties(strutsPropertiesFile)
                 .getProperty("struts.action.extension","action");
         if (strutsActionExtension == null)
-            strutsActionExtension = "";
+            strutsActionExtension = "action";
         strutsActionExtension = strutsActionExtension.trim();
         if (strutsActionExtension.length() > 0
                 && !strutsActionExtension.startsWith(".")) {
