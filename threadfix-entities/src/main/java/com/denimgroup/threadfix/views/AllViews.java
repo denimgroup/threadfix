@@ -48,6 +48,8 @@ public class AllViews {
 
     public static interface RestViewTeam2_1 extends RestView2_1 {}
 
+    public static interface RestViewTeams2_1 extends RestView2_1 {}
+
     public static interface RestViewWaf2_1 extends RestView2_1 {}
 
     public static interface RestViewApplication2_1 extends RestView2_1 {}

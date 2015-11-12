@@ -196,7 +196,7 @@ public class SurfaceLocation extends BaseEntity {
 	}
 
 	@Transient
-	@JsonView(Object.class)
+	@JsonView(AllViews.VulnerabilityDetail.class)
 	public String getHumanLocation() {
 		if (humanLocation==null && path!=null){
 			//probably an url, contruct it fully

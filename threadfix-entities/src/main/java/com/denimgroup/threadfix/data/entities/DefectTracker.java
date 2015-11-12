@@ -100,7 +100,7 @@ public class DefectTracker extends AuditableEntity {
 	}
 
     @Transient
-    @JsonView(Object.class)
+    @JsonView({ AllViews.DefectTrackerInfos.class, AllViews.FormInfo.class })
     public String getDefaultUsername() {
         return defaultUsername;
     }
@@ -110,7 +110,7 @@ public class DefectTracker extends AuditableEntity {
     }
 
     @Transient
-    @JsonView(Object.class)
+    @JsonView({ AllViews.DefectTrackerInfos.class, AllViews.FormInfo.class })
     public String getDefaultPassword() {
         return defaultPassword;
     }
@@ -140,7 +140,7 @@ public class DefectTracker extends AuditableEntity {
     }
 
     @Column(length = DEFAULT_PRODUCT_NAME_LENGTH)
-    @JsonView(Object.class)
+    @JsonView({ AllViews.DefectTrackerInfos.class, AllViews.FormInfo.class })
     public String getDefaultProductName() {
         return defaultProductName;
     }
@@ -171,7 +171,7 @@ public class DefectTracker extends AuditableEntity {
 		this.applications = applications;
 	}
 
-	@JsonView(Object.class)
+	@JsonView({ AllViews.DefectTrackerInfos.class, AllViews.FormInfo.class })
 	@OneToMany(mappedBy = "defectTracker", cascade = CascadeType.ALL)
 	public List<DefaultDefectProfile> getDefaultDefectProfiles() {
 		return defaultDefectProfiles;
