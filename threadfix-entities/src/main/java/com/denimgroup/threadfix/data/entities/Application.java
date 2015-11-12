@@ -481,7 +481,7 @@ public class Application extends AuditableEntity {
 	}	
 
     @OneToOne(mappedBy = "application")
-    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class })
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.RestViewTeam2_1.class })
     public GRCApplication getGrcApplication() {
 		return grcApplication;
 	}
