@@ -65,16 +65,7 @@ public class RemappingTestHarness {
 
     @Transactional(readOnly = true)
     public Application getApplicationWithInternal(String unmappedType, String cweId, String... paths) {
-        List<String> finalPaths = list();
-
-        for (String path : paths) {
-            URL resource = RemappingTests.class.getClassLoader().getResource("merging/" + path);
-
-            assert resource != null : "Failed to find resource for " + path;
-            String file = resource.getFile();
-
-            finalPaths.add(file);
-        }
+        List<String> finalPaths = getFilePathsInMerging(paths);
 
         Application application = merger.mergeSeriesInternal(null, finalPaths);
 
@@ -90,5 +81,26 @@ public class RemappingTestHarness {
         applicationDao.saveOrUpdate(application);
 
         return application;
+    }
+
+    private static List<String> getFilePathsInMerging(String[] paths) {
+
+        String folderName = "merging/";
+
+        return getFilePaths(folderName, paths);
+    }
+
+    public static List<String> getFilePaths(String folderName, String[] paths) {
+        List<String> finalPaths = list();
+
+        for (String path : paths) {
+            URL resource = RemappingTests.class.getClassLoader().getResource(folderName + path);
+
+            assert resource != null : "Failed to find resource for " + path;
+            String file = resource.getFile();
+
+            finalPaths.add(file);
+        }
+        return finalPaths;
     }
 }

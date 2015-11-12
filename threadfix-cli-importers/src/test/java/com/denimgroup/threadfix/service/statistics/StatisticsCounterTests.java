@@ -27,24 +27,22 @@ import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.SeverityFilter;
+import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.importer.util.SpringConfiguration;
 import com.denimgroup.threadfix.service.ChannelVulnerabilityService;
 import com.denimgroup.threadfix.service.SeverityFilterService;
 import com.denimgroup.threadfix.service.StatisticsCounterService;
 import com.denimgroup.threadfix.service.merge.Merger;
-import com.denimgroup.threadfix.service.merge.RemappingTests;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import sun.jvm.hotspot.utilities.Assert;
 
-import java.net.URL;
 import java.util.List;
-import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.setFrom;
+import static com.denimgroup.threadfix.service.merge.RemappingTestHarness.getFilePaths;
 
 /**
  * Created by mcollins on 6/11/15.
@@ -67,23 +65,14 @@ public class StatisticsCounterTests {
     @Autowired
     SeverityFilterService severityFilterService;
 
-    public static Application getApplicationWith(List<Integer> severities, String... paths) {
+    public static Application getApplicationWith(String... paths) {
         return SpringConfiguration.getSpringBean(StatisticsCounterTests.class)
-                .getApplicationWithInternal(RemappingTests.FROM_ID, RemappingTests.TO_ID, severities,  paths);
+                .getApplicationWithInternal(paths);
     }
 
     @Transactional(readOnly = true)
-    public Application getApplicationWithInternal(String unmappedType, String cweId, List<Integer> severities, String... paths) {
-        List<String> finalPaths = list();
-
-        for (String path : paths) {
-            URL resource = RemappingTests.class.getClassLoader().getResource("merging/" + path);
-
-            assert resource != null : "Failed to find resource for " + path;
-            String file = resource.getFile();
-
-            finalPaths.add(file);
-        }
+    public Application getApplicationWithInternal(String... paths) {
+        List<String> finalPaths = getFilePaths("statistics/", paths);
 
         Application application = merger.mergeSeriesInternal(null, finalPaths);
 
@@ -92,32 +81,40 @@ public class StatisticsCounterTests {
 
         applicationDao.saveOrUpdate(application);
 
-        setSeverityFilters(severities);
-
+        statisticsCounterService.checkStatisticsCountersInApps(list(application.getId()));
         statisticsCounterService.updateStatistics(application.getScans());
 
         return application;
     }
 
-    private void setSeverityFilters(List<Integer> severities) {
+    /**
+     * This is to test that merged vulnerabilities are counted properly in scans
+     */
+    @Test
+    public void testMergeStatistics() {
+        Application application = getApplicationWith("testfire-arachni.xml", "testfire-zap.xml");
 
-        SeverityFilter filter = new SeverityFilter();
+        List<Scan> scans = application.getScans();
 
-        Set<Integer> severitySet = setFrom(severities);
+        Assert.that(scans.size() == 2, "Had " + scans.size() + " scans instead of " + 2);
 
-        filter.setShowCritical(severitySet.contains(5));
-        filter.setShowHigh(severitySet.contains(4));
-        filter.setShowMedium(severitySet.contains(3));
-        filter.setShowLow(severitySet.contains(2));
-        filter.setShowInfo(severitySet.contains(1));
-
-        severityFilterService.save(filter, -1, -1);
+        for (Scan scan : scans) {
+            Integer total = scan.getNumberTotalVulnerabilities();
+            Assert.that(total == 32 || total == 69, "Had " + total + " vulnerabilities, not 32 or 69.");
+        }
     }
 
     @Test
-    public void testAllOn() {
+    public void testBaseStatistics() {
+        Application application = getApplicationWith("testfire-arachni.xml");
 
+        List<Scan> scans = application.getScans();
+
+        Assert.that(scans.size() == 1, "Had " + scans.size() + " scans instead of " + 1);
+
+        for (Scan scan : scans) {
+            Integer total = scan.getNumberTotalVulnerabilities();
+            Assert.that(total == 32, "Had " + total + " vulnerabilities, not 32.");
+        }
     }
-
-
 }

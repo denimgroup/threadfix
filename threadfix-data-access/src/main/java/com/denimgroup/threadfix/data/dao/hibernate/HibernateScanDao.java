@@ -36,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -448,7 +449,6 @@ public class HibernateScanDao
 			.addOrder(Order.desc("importTime"));
 		
 		Criteria filteredCriteria = addFiltering(criteria, authenticatedTeamIds, authenticatedAppIds);
-		
         return filteredCriteria.list();
 	}
 
@@ -462,7 +462,6 @@ public class HibernateScanDao
 
 	@Override
 	public int getScanCount() {
-
 		Long result = (Long) getBaseScanCriteria().setProjection(rowCount()).uniqueResult();
 		
 		return safeLongToInt(result);
@@ -536,23 +535,23 @@ public class HibernateScanDao
     }
 
 	@Override
-	public List<Finding> getFindingsThatNeedCounters(int page) {
-		return getBaseCounterCriteria()
+	public List<Finding> getFindingsThatNeedCounters(int page, Collection<Integer> findingIdRestrictions) {
+		return getBaseCounterCriteria(null, findingIdRestrictions)
 				.setMaxResults(100)
 				.setFirstResult(page * 100)
 				.list();
 	}
 
 	@Override
-	public List<Finding> getFindingsThatNeedCountersInApps(int page, List<Integer> appIds) {
+	public List<Finding> getFindingsThatNeedCountersInApps(int page, List<Integer> appIds, Collection<Integer> findingIdRestrictions) {
 		if (appIds == null)
-			return getFindingsThatNeedCounters(page);
+			return getFindingsThatNeedCounters(page, findingIdRestrictions);
 
 		if (appIds.size() == 0) {
 			return list();
 		}
 
-		return getBaseCounterCriteria()
+		return getBaseCounterCriteria(appIds, findingIdRestrictions)
 				.add(in("appAlias.id", appIds))
 				.setMaxResults(100)
 				.setFirstResult(page * 100)
@@ -560,32 +559,38 @@ public class HibernateScanDao
 	}
 
 	@Override
-	public Long totalFindingsThatNeedCounters() {
-		return (Long) getBaseCounterCriteria().setProjection(rowCount()).uniqueResult();
+	public Long totalFindingsThatNeedCounters(Collection<Integer> findingIdRestrictions) {
+		return (Long) getBaseCounterCriteria(null, findingIdRestrictions)
+                .setProjection(rowCount())
+                .uniqueResult();
 	}
 
 	@Override
-	public Long totalFindingsThatNeedCountersInApps(List<Integer> appIds) {
+	public Long totalFindingsThatNeedCountersInApps(List<Integer> appIds, Collection<Integer> findingIdRestrictions) {
 		if (appIds == null)
-			return totalFindingsThatNeedCounters();
+			return totalFindingsThatNeedCounters(findingIdRestrictions);
 
 		if (appIds.size() == 0) {
 			return 0L;
 		}
 
-		return (Long) getBaseCounterCriteria()
-				.add(in("appAlias.id", appIds))
-				.setProjection(rowCount()).uniqueResult();
+		return (Long) getBaseCounterCriteria(appIds, findingIdRestrictions)
+				.setProjection(rowCount())
+                .uniqueResult();
 	}
 
-	private Criteria getBaseCounterCriteria() {
-		return sessionFactory.getCurrentSession().createCriteria(Finding.class)
+	private Criteria getBaseCounterCriteria(List<Integer> appIds, Collection<Integer> findingIdRestrictions) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Finding.class)
 				.createAlias("vulnerability", "vulnAlias")
 				.createAlias("vulnAlias.application", "appAlias")
-				.add(eq("firstFindingForVuln", true))
+                .add(in("id", findingIdRestrictions))
 				.add(eq("appAlias.active", true))
-				.add(isEmpty("statisticsCounters"))
-				;
+				.add(isEmpty("statisticsCounters"));
+
+        if (appIds != null && !appIds.isEmpty()) {
+            criteria.add(in("appAlias.id", appIds));
+        }
+        return criteria;
 	}
 
 	@Override
@@ -593,7 +598,8 @@ public class HibernateScanDao
 		return getBasicMapCriteria()
 				.setMaxResults(100)
 				.setFirstResult(page * 100)
-				.list();	}
+				.list();
+    }
 
 	@Override
 	public Long totalMapsThatNeedCounters() {
@@ -630,12 +636,88 @@ public class HibernateScanDao
 				.setProjection(rowCount()).uniqueResult();
 	}
 
-	private Criteria getBasicMapCriteria() {
+    private Integer hashIt(Object date, Object second, Object third) {
+
+        int result = date != null ? date.hashCode() : 0;
+        result = 31 * result + (second instanceof Integer ? (Integer) second : 0);
+        result = 31 * result + (third instanceof Integer ? (Integer) third : 0);
+        return result;
+    }
+
+    /**
+     * I want to get the earliest finding for each channeltype for each vulnerability
+     * This solves the problem we had before where vulnerabilities with findings merged
+     * over different scanners had incorrect statistics because firstFindingForVuln was used in stats
+     * calculation
+     *
+     * This involves testing uniqueness over the following fields:
+     *  - vuln ID
+     *  - scan ID (time, so we can sort)
+     *  - channel ID
+     *
+     * Then sort by date and take the earliest one. It will then go through another SQL statement
+     * to make sure it's appropriate. We also need to cache this for multiple runs.
+     *
+     * Strategy-wise, we get all of these fields and hash them to create a key
+     * This is a much smaller structure than hibernate objects. We want that to reduce the
+     * memory footprint of this algorithm.
+     *
+     * With a caveat: some findings have a higher priority than others. If the finding already has a
+     * counter, we want to include it in the list so that another finding merged to that finding doesn't
+     * also get a counter, leading to that vulnerability getting double counted. Also, if one is marked
+     * "firstFindingForVuln" we probably want that one.
+     */
+    @Override
+    public Collection<Integer> getEarliestFindingIdsForVulnPerChannel(List<Integer> appIds) {
+
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Finding.class)
+                .createAlias("vulnerability", "vulnAlias")
+                .createAlias("vulnAlias.application", "appAlias")
+                .createAlias("scan", "scanAlias")
+                .createAlias("scanAlias.applicationChannel", "appChannelAlias")
+                .addOrder(Order.asc("scanAlias.importTime"))
+                .add(eq("appAlias.active", true))
+                .setProjection(Projections.projectionList()
+                        .add(Projections.property("scanAlias.importTime")) // 0
+                        .add(Projections.property("appChannelAlias.id"))   // 1
+                        .add(Projections.property("vulnAlias.id"))         // 2
+                        .add(Projections.property("id"))                   // 3
+                        .add(Projections.property("firstFindingForVuln"))  // 4
+                        .add(Projections.property("hasStatisticsCounter")) // 5
+                );
+
+        if (appIds != null && !appIds.isEmpty()) {
+            criteria.add(in("appAlias.id", appIds));
+        }
+
+        List<Object[]> results = criteria.list();
+
+        // map makes more sense than array because the ints aren't small
+        // this is the hashed (time + app channel + vuln ID) -> finding ID
+        Map<Integer, Integer> resultMap = map();
+
+        for (Object[] singleResult : results) {
+            // this boolean means that the vulnerability should be counted instead of
+            // other vulnerabilities with the same hash. The singleResult[5] section
+            // indicates that the finding has already been counted and helps us to not double-count
+            // vulnerabilities.
+            boolean highPriority = (Boolean) singleResult[4] || (Boolean) singleResult[5];
+            int hash = hashIt(singleResult[0], singleResult[1], singleResult[2]);
+
+            if (highPriority || !resultMap.containsKey(hash)) {
+                // add the entry for the finding ID
+                resultMap.put(hash, (Integer) singleResult[3]);
+            }
+        }
+
+        return resultMap.values();
+    }
+
+    private Criteria getBasicMapCriteria() {
 		return sessionFactory.getCurrentSession().createCriteria(ScanRepeatFindingMap.class)
 				.createAlias("scan", "scanAlias")
 				.createAlias("scanAlias.application", "appAlias")
 				.add(eq("appAlias.active", true))
-				.add(isEmpty("statisticsCounters"))
-				;
+				.add(isEmpty("statisticsCounters"));
 	}
 }

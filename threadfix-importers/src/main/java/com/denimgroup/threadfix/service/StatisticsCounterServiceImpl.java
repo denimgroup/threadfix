@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -119,7 +120,10 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
             return;
         }
 
-        Long total = scanDao.totalFindingsThatNeedCountersInApps(appIds);
+        Collection<Integer> findingIdRestrictions =
+                scanDao.getEarliestFindingIdsForVulnPerChannel(appIds);
+
+        Long total = scanDao.totalFindingsThatNeedCountersInApps(appIds, findingIdRestrictions);
 
         long start = System.currentTimeMillis();
 
@@ -131,12 +135,10 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
             LOG.debug("Processing at index " + current + " out of " + total);
 
-            List<Finding> findingsThatNeedCounters = scanDao.getFindingsThatNeedCountersInApps(current, appIds);
+            List<Finding> findingsThatNeedCounters =
+                    scanDao.getFindingsThatNeedCountersInApps(current, appIds, findingIdRestrictions);
 
             for (Finding finding : findingsThatNeedCounters) {
-                if (!finding.isFirstFindingForVuln()) {
-                    continue;
-                }
 
                 StatisticsCounter statisticsCounter = getStatisticsCounter(finding);
                 if (statisticsCounter != null) {
@@ -222,7 +224,8 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
         applyStatistics(scans, scanStatsMap, closedMap, reopenedMap);
     }
 
-    private void applyStatistics(List<Scan> scans, Map<Integer, Long[]> scanStatsMap, Map<Integer, Long> closedMap, Map<Integer, Long> reopenedMap) {
+    private void applyStatistics(List<Scan> scans, Map<Integer, Long[]> scanStatsMap,
+                                 Map<Integer, Long> closedMap, Map<Integer, Long> reopenedMap) {
 
         Map<Integer, Long> totalsMap = getTotalsMap();
 
@@ -296,13 +299,15 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
     }
 
     private Map<Integer, Long> getClosedMap(List<Integer> ignoredVulnerabilityIds) {
-        List<Map<String, Object>> rawMap = vulnerabilityFilterDao.getScanClosedVulnerabilitiesMap(ignoredVulnerabilityIds);
+        List<Map<String, Object>> rawMap =
+                vulnerabilityFilterDao.getScanClosedVulnerabilitiesMap(ignoredVulnerabilityIds);
 
         return condenseMap(rawMap);
     }
 
     private Map<Integer, Long> getReopenedMap(List<Integer> ignoredVulnerabilityIds) {
-        List<Map<String, Object>> rawMap = vulnerabilityFilterDao.getScanReopenedVulnerabilitiesMap(ignoredVulnerabilityIds);
+        List<Map<String, Object>> rawMap =
+                vulnerabilityFilterDao.getScanReopenedVulnerabilitiesMap(ignoredVulnerabilityIds);
 
         return condenseMap(rawMap);
     }
@@ -343,7 +348,9 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
         List<Map<String, Object>> totalMap = list();
         for (Scan scan: scans) {
-            filteredChannelSeverities = scanResultFilterDao.retrieveAllChannelSeveritiesByChannelType(scan.getApplicationChannel().getChannelType());
+            filteredChannelSeverities =
+                    scanResultFilterDao.retrieveAllChannelSeveritiesByChannelType(
+                            scan.getApplicationChannel().getChannelType());
             totalMap.addAll(statisticsCounterDao.getFindingSeverityMap(
                             filteredSeverities,
                             filteredVulnerabilities,

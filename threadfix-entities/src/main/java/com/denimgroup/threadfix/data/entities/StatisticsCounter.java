@@ -144,7 +144,6 @@ public class StatisticsCounter extends BaseEntity {
     public static StatisticsCounter getStatisticsCounter(Finding finding) {
         if (finding != null &&
                 finding.getVulnerability() != null &&
-                finding.isFirstFindingForVuln() &&
                 finding.getChannelSeverity() != null &&
                 finding.getChannelVulnerability() != null &&
                 finding.getScan() != null &&

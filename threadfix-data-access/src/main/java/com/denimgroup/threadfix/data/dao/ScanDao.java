@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.data.dao;
 
 import com.denimgroup.threadfix.data.entities.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -182,13 +183,13 @@ public interface ScanDao extends GenericObjectDao<Scan> {
      */
     List<String> loadScanFilenames();
 
-	Long totalFindingsThatNeedCounters();
+	Long totalFindingsThatNeedCounters(Collection<Integer> findingIdRestrictions);
 
-	List<Finding> getFindingsThatNeedCounters(int page);
+	List<Finding> getFindingsThatNeedCounters(int page, Collection<Integer> findingIdRestrictions);
 
-	Long totalFindingsThatNeedCountersInApps(List<Integer> appIds);
+	Long totalFindingsThatNeedCountersInApps(List<Integer> appIds, Collection<Integer> findingIdRestrictions);
 
-	List<Finding> getFindingsThatNeedCountersInApps(int page, List<Integer> appIds);
+	List<Finding> getFindingsThatNeedCountersInApps(int page, List<Integer> appIds, Collection<Integer> findingIdRestrictions);
 
 	List<ScanRepeatFindingMap> getMapsThatNeedCounters(int current);
 
@@ -198,5 +199,6 @@ public interface ScanDao extends GenericObjectDao<Scan> {
 
 	Long totalMapsThatNeedCountersInApps(List<Integer> appIds);
 
+	Collection<Integer> getEarliestFindingIdsForVulnPerChannel(List<Integer> appIds);
 }
 
