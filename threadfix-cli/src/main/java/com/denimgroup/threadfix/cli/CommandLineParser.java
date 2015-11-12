@@ -172,7 +172,7 @@ public class CommandLineParser {
 					}
 
 					LOGGER.info("Setting parameters for application " + appId + " to " +
-							"Framework Type: " + frameworkType);
+							"Framework Type: " + frameworkType + (repositoryUrl != null ? ", Sourcecode Repository: " + repositoryUrl : ""));
 
 					// TODO return a success message instead of the (mostly irrelevant) application information.
 					printOutput(client.setParameters(appId, frameworkType, repositoryUrl));
