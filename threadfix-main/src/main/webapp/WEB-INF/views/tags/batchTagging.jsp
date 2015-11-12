@@ -18,7 +18,7 @@
 
 <div ng-hide="initialized" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
 
-<div ng-show="initialized" class="vuln-tree">
+<div ng-show="initialized">
     <table ng-show="initialized">
         <tbody id="tagTableBody">
         <tr class="bodyRow">
@@ -49,8 +49,9 @@
     </table>
 
 </div>
-<div class="filter-controls">
-    <div class="accordion-inner">
+<br/>
+<div>
+    <div>
         <h5>Selected Applications</h5>
         <div ng-show="selectedApplications.length === 0">No Applications Selected</div>
         <div ng-repeat="app in selectedApplications">
@@ -58,7 +59,7 @@
             {{ app.team.name + ' / ' + app.name }}
         </div>
     </div>
-    <div class="accordion-inner">
+    <div>
         <h5>Selected Tags</h5>
         <div ng-show="selectedTags.length === 0">No Tags Selected</div>
         <div ng-repeat="tag in selectedTags">
@@ -66,12 +67,12 @@
             {{ tag.name }}
         </div>
     </div>
-    <div class="accordion-inner">
+    <div>
         <button id="submitBtn"
-           ng-hide="submitting"
-           class="btn btn-primary"
-           ng-disabled="selectedApplications.length === 0 || selectedTags.length === 0"
-           ng-click="submitBatchTag()">
+                ng-hide="submitting"
+                class="btn btn-primary"
+                ng-disabled="selectedApplications.length === 0 || selectedTags.length === 0"
+                ng-click="submitBatchTag()">
             Submit
         </button>
         <button id="submittingBtn"
