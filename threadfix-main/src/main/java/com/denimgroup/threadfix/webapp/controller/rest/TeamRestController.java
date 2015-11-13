@@ -116,6 +116,15 @@ public class TeamRestController extends TFRestController {
             return failure("The current license does not allow the creation of any more applications.");
         }
 
+        Organization organization = organizationService.loadById(teamId);
+        if (organization == null) {
+            LOG.warn("Invalid Team ID.");
+            return failure("Invalid Team ID.");
+        } else if (!organization.isActive()) {
+            LOG.warn("Team has been deleted.");
+            return failure("Team has been deleted.");
+        }
+
         // By not using @RequestParam notations, we can catch the error in the code
         // and provide better error messages.
         String name = request.getParameter("name");
@@ -140,13 +149,6 @@ public class TeamRestController extends TFRestController {
 				LOG.warn("The supplied URL was not formatted correctly.");
 				return failure(CREATION_FAILED);
 			}
-		}
-		
-		Organization organization = organizationService.loadById(teamId);
-		
-		if (organization == null) {
-			LOG.warn("Invalid Team ID.");
-			return failure(CREATION_FAILED);
 		}
 		
 		Application application = new Application();
