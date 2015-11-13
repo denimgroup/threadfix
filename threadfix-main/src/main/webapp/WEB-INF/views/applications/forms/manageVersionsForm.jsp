@@ -19,13 +19,13 @@
             </thead>
             <tbody id="userTableBody">
             <tr>
-                <td colspan="3" ng-hide="config.versions.length > 0" style="text-align:center;"> No Versions found.</td>
+                <td colspan="3" ng-hide="config.versions.length > 0" style="text-align:center;" id="noVersionsMessage"> No Versions found.</td>
             </tr>
             <tr ng-repeat="version in config.versions">
-                <td>{{version.name}}</td>
-                <td>{{version.date | date}}</td>
+                <td id="name{{ version.name | removeSpace }}">{{version.name}}</td>
+                <td id="date{{ version.name | removeSpace }}">{{version.date | date}}</td>
                 <c:if test="${ canManageApplications }">
-                    <td> <a id="editModalButton{{$index}}" class="btn" ng-click="editVersion(version)">Edit/Delete</a> </td>
+                    <td> <a id="editModalButton{{ version.name | removeSpace }}" class="btn" ng-click="editVersion(version)">Edit/Delete</a> </td>
                 </c:if>
             </tr>
 
