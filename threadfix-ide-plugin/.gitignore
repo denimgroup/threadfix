@@ -52,3 +52,7 @@ out/
 obj/
 *.user
 *.suo
+
+# Nuget #
+**/packages/*
+!**/packages/repositories.config
