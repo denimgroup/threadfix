@@ -583,9 +583,12 @@ public class HibernateScanDao
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Finding.class)
 				.createAlias("vulnerability", "vulnAlias")
 				.createAlias("vulnAlias.application", "appAlias")
-                .add(in("id", findingIdRestrictions))
 				.add(eq("appAlias.active", true))
 				.add(isEmpty("statisticsCounters"));
+
+        if (findingIdRestrictions != null && !findingIdRestrictions.isEmpty()) {
+            criteria.add(in("id", findingIdRestrictions));
+        }
 
         if (appIds != null && !appIds.isEmpty()) {
             criteria.add(in("appAlias.id", appIds));

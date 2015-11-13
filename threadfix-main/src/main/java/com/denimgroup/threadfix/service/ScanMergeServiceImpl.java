@@ -94,8 +94,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			return null;
 		}
 
-		Integer id = scan.getApplication().getId();
-		defectService.updateScannerSuppliedStatuses(id);
+		Integer appId = scan.getApplication().getId();
+		defectService.updateScannerSuppliedStatuses(appId);
 		vulnerabilityFilterService.updateVulnerabilities(scan);
 
 		return scan;
@@ -252,6 +252,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			if (scan == null) {
 				return null;
 			}
+			vulnerabilityFilterService.updateVulnerabilities(scan);
 		}
 
 		for (Integer channelId: channelIds) {

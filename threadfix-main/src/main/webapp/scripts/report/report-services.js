@@ -720,6 +720,7 @@ threadfixModule.factory('reportUtilities', function() {
         var td = tr.selectAll("td")
             .data(function(d){return d3.values(d)})
             .enter().append("td")
+            .attr("class", "break-word-header")
             .attr("id", function(d, index){return index})
             .text(function(d) {return d});
     };
