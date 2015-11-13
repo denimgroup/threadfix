@@ -172,9 +172,10 @@ public class ApplicationRestController extends TFRestController {
             bean.setSourceCodeUrl(request.getParameter("repositoryUrl"));
         }
 
-        scanParametersService.saveConfiguration(application, bean);
-
-        return RestResponse.success(application);
+        String result = scanParametersService.saveConfiguration(application, bean);
+        if (result == null)
+            return RestResponse.success(application);
+        else return RestResponse.failure(result);
     }
 
     /**

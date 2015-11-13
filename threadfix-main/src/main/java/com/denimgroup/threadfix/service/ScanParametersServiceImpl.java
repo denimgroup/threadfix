@@ -23,42 +23,38 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.data.dao.ApplicationDao;
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.ExceptionLog;
+import com.denimgroup.threadfix.data.enums.FrameworkType;
+import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.beans.ScanParametersBean;
+import com.denimgroup.threadfix.service.repository.RepositoryServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.denimgroup.threadfix.data.dao.ApplicationDao;
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.enums.FrameworkType;
-import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
-import com.denimgroup.threadfix.service.beans.ScanParametersBean;
 
 @Service
 @Transactional(readOnly=false)
 public class ScanParametersServiceImpl implements ScanParametersService {
 
+	private final SanitizedLogger log = new SanitizedLogger(ScanParametersServiceImpl.class);
+
 	private ApplicationDao applicationDao;
-	
+	@Autowired
+	private RepositoryServiceFactory repositoryServiceFactory;
+	@Autowired
+	private ExceptionLogService exceptionLogService;
+
 	@Autowired 
 	ScanParametersServiceImpl(ApplicationDao applicationDao) {
 		this.applicationDao = applicationDao;
 	}
 	
 	@Override
-	public boolean saveConfiguration(Integer appId,
+	public String saveConfiguration(Application application,
 			ScanParametersBean scanParametersBean) {
-		if (scanParametersBean != null && appId != null) {
-			return saveConfiguration(applicationDao.retrieveById(appId), scanParametersBean);
-		} else {
-			return false;
-		}
-	}
-	
-	@Override
-	public boolean saveConfiguration(Application application,
-			ScanParametersBean scanParametersBean) {
-		
-		boolean result = false;
 		
 		if (scanParametersBean != null && application != null) {
 			
@@ -69,20 +65,36 @@ public class ScanParametersServiceImpl implements ScanParametersService {
 			
 			application.setFrameworkType(frameworkType.toString());
 			application.setSourceCodeAccessLevel(accessLevel.toString());
-			
-			if (scanParametersBean.getSourceCodeUrl() != null && 
-					scanParametersBean.getSourceCodeUrl().length() < Application.URL_LENGTH) {
-				application.setRepositoryUrl(scanParametersBean.getSourceCodeUrl());
 
-				if (application.getRepositoryType() == null || "".equals(application.getRepositoryType())) {
-					application.setRepositoryType("GIT");
+			if (scanParametersBean.getSourceCodeUrl() != null &&
+					scanParametersBean.getSourceCodeUrl().length() < Application.URL_LENGTH) {
+				if (checkRepository(application, scanParametersBean.getSourceCodeUrl())) {
+					application.setRepositoryUrl(scanParametersBean.getSourceCodeUrl());
+
+					if (application.getRepositoryType() == null || "".equals(application.getRepositoryType())) {
+						application.setRepositoryType("GIT");
+					}
+				} else {
+					return "Unable to clone repository";
 				}
 			}
-			
+
 			applicationDao.saveOrUpdate(application);
-			result = true;
 		}
-		
-		return result;
+
+		return null;
+	}
+
+	private boolean checkRepository(Application application, String repository) {
+		RepositoryService repositoryService = repositoryServiceFactory.getRepositoryService("GIT");
+		try {
+			if (!repositoryService.testConfiguration(application, repository, application.getRepositoryBranch()))
+                return false;
+		} catch (Exception e) {
+			log.info("Got an error, logging to database (visible under Error Messages)");
+			exceptionLogService.storeExceptionLog(new ExceptionLog(e));
+			return false;
+		}
+		return true;
 	}
 }
