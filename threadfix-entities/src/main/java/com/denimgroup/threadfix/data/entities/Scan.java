@@ -205,7 +205,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
         this.urlPathRoot = urlPathRoot;
     }
 
-    @JsonView({AllViews.FormInfo.class, AllViews.RestView2_1.class, AllViews.RestViewScanStatistic.class})
+    @JsonView({AllViews.FormInfo.class, AllViews.RestViewScanStatistic.class})
     public String getFileName() {
         return fileName;
     }
@@ -217,7 +217,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	@CollectionTable(name="ScanFileNames", joinColumns=@JoinColumn(name="scanId"))
 	@CollectionOfElements // for sonar
 	@ElementCollection
-	@JsonView({AllViews.FormInfo.class, AllViews.RestView2_1.class, AllViews.RestViewScanStatistic.class})
+	@JsonView({AllViews.FormInfo.class, AllViews.TableRow.class, AllViews.RestViewScanStatistic.class})
     public List<String> getOriginalFileNames() {
         return originalFileNames;
     }
@@ -229,7 +229,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	@CollectionTable(name="ScanSavedFileNames", joinColumns=@JoinColumn(name="scanId"))
 	@CollectionOfElements
 	@ElementCollection
-	@JsonView({AllViews.FormInfo.class, AllViews.RestView2_1.class, AllViews.RestViewScanStatistic.class})
+	@JsonView({AllViews.FormInfo.class, AllViews.RestViewScanStatistic.class})
 	public List<String> getSavedFileNames() {
 		if ((savedFileNames == null || savedFileNames.size() == 0) && fileName != null)
 			savedFileNames = list(fileName);
@@ -666,7 +666,6 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
     @Transient
-    @JsonView(AllViews.RestViewScan2_1.class)
     public List<Finding> getUnmappedFindings(){
         List<Finding> unMappedFindings = list();
 
