@@ -653,7 +653,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 $scope.currentUser.apiKeys.push(key);
             }
 
-            $scope.userSuccessMessage = "Successfully created key.";
+            $scope.usersSuccessMessage = "Successfully created key.";
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
@@ -687,10 +687,10 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 threadFixModalService.deleteElement($scope.currentUser.apiKeys, key);
                 threadFixModalService.addElement($scope.currentUser.apiKeys, editedKey);
 
-                $scope.successMessage = "Successfully edited key " + editedKey.apiKey;
+                $scope.usersSuccessMessage = "Successfully edited key " + editedKey.apiKey;
             } else {
                 threadFixModalService.deleteElement($scope.currentUser.apiKeys, key);
-                $scope.successMessage = "API key was successfully deleted.";
+                $scope.usersSuccessMessage = "API key was successfully deleted.";
             }
 
         }, function () {
