@@ -10,6 +10,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.annotations.ReportLocation;
 import com.denimgroup.threadfix.data.entities.CSVExportField;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
+import com.denimgroup.threadfix.exception.RestException;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
@@ -116,11 +117,15 @@ public class SystemSettingsController {
     @RequestMapping(value = "/checkLDAP", method = RequestMethod.POST)
     public @ResponseBody RestResponse<String> checkLDAP(@ModelAttribute DefaultConfiguration config) {
         long startTime = System.currentTimeMillis();
-        if (ldapService.innerAuthenticate(config)) {
-            long endTime = System.currentTimeMillis();
-            return success("LDAP settings are valid. LDAP validation took: " + (endTime - startTime) + "ms.");
-        } else {
-            return failure("Unable to verify LDAP settings.");
+        try {
+            if (ldapService.innerAuthenticate(config)) {
+                long endTime = System.currentTimeMillis();
+                return success("LDAP settings are valid. LDAP validation took: " + (endTime - startTime) + "ms.");
+            } else {
+                return failure("Unable to verify LDAP settings.");
+            }
+        } catch (RestException e) {
+            return failure(e.getMessage());
         }
     }
 
