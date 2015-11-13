@@ -47,3 +47,12 @@ local.properties
 *.iws
 .idea/
 out/
+
+# Visual Studio #
+obj/
+*.user
+*.suo
+
+# Nuget #
+**/packages/*
+!**/packages/repositories.config
