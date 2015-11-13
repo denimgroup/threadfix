@@ -164,7 +164,6 @@ public class OptionsHolder {
         options.addOption(getRulesForApp);
 
         Option createTag = OptionBuilder.withArgName("name> <[tagType]")
-                .withValueSeparator(' ')
                 .hasArgs(2)
                 .withLongOpt("create-tag")
                 .withDescription("Creates a ThreadFix Tag and returns its JSON. tagType is optional, default is Application Tag.")
