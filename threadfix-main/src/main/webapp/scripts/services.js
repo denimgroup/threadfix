@@ -43,10 +43,14 @@ threadfixModule.factory('customSeverityService', function() {
 
     service.map = {};
 
+    service.genericSeverities = [];
+
     service.setSeverities = function(genericSeverities) {
         genericSeverities.forEach(function(severity) {
             service.map[severity.name] = severity.displayName;
         });
+
+        service.genericSeverities = genericSeverities;
 
         service.callbacks.forEach(function(callback) {
             callback();
@@ -64,6 +68,10 @@ threadfixModule.factory('customSeverityService', function() {
     service.getCustomSeverity = function(input) {
         return service.map[input] || input;
     };
+
+    service.getGenericSeverities = function() {
+        return service.genericSeverities;
+    }
 
     return service;
 });

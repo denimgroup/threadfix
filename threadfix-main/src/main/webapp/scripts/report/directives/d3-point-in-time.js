@@ -116,7 +116,12 @@ d3ThreadfixModule.directive('d3Pointintime', ['$window', '$timeout', 'd3', 'd3do
                         var _data = [];
                         color.domain().map(function(vulnType) {
                             if (data[vulnType])
-                                _data.push({tip:vulnType, value:data[vulnType]['Count'], fillColor:color(vulnType), severity: vulnType});
+                                _data.push({tip:vulnType,
+                                    value:data[vulnType]['Count'],
+                                    fillColor:color(vulnType),
+                                    severity: vulnType,
+                                    genericSeverities: data.genericSeverities
+                                });
                         });
                         return _data;
                     };
