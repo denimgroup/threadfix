@@ -174,7 +174,13 @@ public class SurfaceLocation extends BaseEntity {
 					tempPort = port;
 
 				if ((protocol != null) && (host != null) && (tempPort != -1) && (path != null)) {
-					url = new URL(protocol, host, tempPort, path + '?' + query);
+					String pathPlusQuery;
+					if (query == null) {
+						pathPlusQuery = path;
+					} else {
+						pathPlusQuery = path + '?' + query;
+					}
+					url = new URL(protocol, host, tempPort, pathPlusQuery);
 				} else if (path != null && host != null) {
 
                     String HOST_PATTERN = "(http|https)://([a-zA-Z0-9_.]*)";
