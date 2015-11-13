@@ -103,7 +103,13 @@ public class EditUserController {
 
 		new UserValidator(roleService).validate(user, result);
 
+		boolean removingAdminAccess = false;
 		if (userService.hasRemovedAdminPermissions(user) && !userService.canRemoveAdminPermissions(user)) {
+			removingAdminAccess = true;
+		} else if (user.getIsLdapUser() && !userService.canDelete(user)) {
+			removingAdminAccess = true;
+		}
+		if (removingAdminAccess) {
 			model.addAttribute("user", new User());
 			return RestResponse.failure("This would leave users unable to access the user management portion of ThreadFix.");
 		}
