@@ -287,7 +287,7 @@
         <findbugs.jsr305.version>2.0.3</findbugs.jsr305.version>
         <commons.beanutils.version>1.9.2</commons.beanutils.version>
         <commons.codec.version>1.10</commons.codec.version>
-        <commons.collections.version>3.2.1</commons.collections.version>
+        <commons.collections.version>3.2.2</commons.collections.version>
         <commons.configuration.version>1.10</commons.configuration.version>
         <commons.csv.version>1.0</commons.csv.version>
         <commons.digester.version>2.1</commons.digester.version>
