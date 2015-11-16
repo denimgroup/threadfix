@@ -40,7 +40,7 @@ public class AllViews {
 
     public static interface UIVulnSearch extends VulnSearch {}
 
-    public static interface RestVulnSearch extends UIVulnSearch, RestView2_1 {}
+    public static interface RestVulnSearch extends RestView2_1 {}
 
     public static interface RestView {}
 
