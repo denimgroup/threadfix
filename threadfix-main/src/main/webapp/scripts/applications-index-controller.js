@@ -144,6 +144,7 @@ myAppModule.controller('ApplicationsIndexController',
 
                 var newTeam = object.team;
                 newTeam.showEditButton = object.canEdit;
+                newTeam.url = tfEncoder.encode("/organizations/" + newTeam.id);
 
                 $scope.teams.push(newTeam);
 
