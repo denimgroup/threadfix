@@ -117,15 +117,11 @@ public class SystemSettingsController {
     @RequestMapping(value = "/checkLDAP", method = RequestMethod.POST)
     public @ResponseBody RestResponse<String> checkLDAP(@ModelAttribute DefaultConfiguration config) {
         long startTime = System.currentTimeMillis();
-        try {
-            if (ldapService.innerAuthenticate(config)) {
-                long endTime = System.currentTimeMillis();
-                return success("LDAP settings are valid. LDAP validation took: " + (endTime - startTime) + "ms.");
-            } else {
-                return failure("Unable to verify LDAP settings.");
-            }
-        } catch (RestException e) {
-            return failure(e.getMessage());
+        if (ldapService.innerAuthenticate(config)) {
+            long endTime = System.currentTimeMillis();
+            return success("LDAP settings are valid. LDAP validation took: " + (endTime - startTime) + "ms.");
+        } else {
+            return failure("Unable to verify LDAP settings. They are invalid or not configured.");
         }
     }
 

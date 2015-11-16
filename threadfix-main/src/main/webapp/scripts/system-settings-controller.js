@@ -129,8 +129,13 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
                 }).
                 error(function(data, status) {
                     $scope.loading = false;
-                    $scope.error = "Failure. HTTP status was " + status;
-                    $scope.LDAPError = "Failure. HTTP status was " + status;
+                    if (data && data.message) {
+                        $scope.error = "Failure: " + data.message;
+                        $scope.LDAPError = "Failure: " + data.message;
+                    } else {
+                        $scope.error = "Failure. HTTP status was " + status;
+                        $scope.LDAPError = "Failure. HTTP status was " + status;
+                    }
                 });
         }
     };
