@@ -210,7 +210,7 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                 app.importingScans = false;
             }).
             error(function(data, status, headers, config) {
-                provider.errorMessage = "Failed to delete team. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
+                provider.errorMessage = "Failed to import scans. " + (data && data.message ? "Message was " + data.message : "") + ". HTTP status was " + status;
                 app.importingScans = false;
             });
     };
