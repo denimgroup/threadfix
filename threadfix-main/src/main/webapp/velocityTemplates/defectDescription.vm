@@ -18,18 +18,44 @@
             Vulnerability\[${vulnIndex}]: #addThreadfixLink( "${baseUrl}$vulnerability.getUri()" )$br
             $vulnerability.genericVulnerability.name$br
             CWE entry: http://cwe.mitre.org/data/definitions/${vulnerability.genericVulnerability.id}.html$br
-            #set( $url = $vulnerability.surfaceLocation.getUrl() )
-            #set( $parameter = $vulnerability.surfaceLocation.parameter )
-            #if( $url || $parameter )
-                Vulnerability attack surface location:$br
-                #if( $url )URL: ${url}#end$br
-                #if( $parameter )Parameter: ${parameter}#end$br
+            #set( $dependencyFinding = $dependencyFindings.get($vulnerability) )
+            #set( $staticFinding = $staticFindings.get($vulnerability) )
+            #set( $dynamicFinding = $dynamicFindings.get($vulnerability) )
+
+            #if( $dependencyFinding && $dependencyFinding.getDependency() )
+                #set( $refId = $dependencyFinding.getDependency().getRefId() )
+                #set( $refLink = $dependencyFinding.getDependency().getRefLink() )
+                #set( $componentName = $dependencyFinding.getDependency().getComponentName() )
+                #if( $refId || $componentName )
+                    Vulnerability dependency:$br
+                    #if( $refId )Reference: $refId #if($refLink)($refLink)#end$br#end
+                    #if( $componentName )Component: $componentName$br#end
+                #end
             #end
+            #if( $staticFinding )
+                #set( $sourceFileLocation = $staticFinding.getSourceFileLocation() )
+                #set( $entryPointLineNumber = $staticFinding.getEntryPointLineNumber() )
+                #if( $sourceFileLocation )
+                    Vulnerability source file location:$br
+                    File: $sourceFileLocation#if($entryPointLineNumber):$entryPointLineNumber#end$br
+                #end
+            #end
+            #if( $dynamicFinding )
+                #set( $url = $dynamicFinding.surfaceLocation.getUrl() )
+                #set( $parameter = $dynamicFinding.surfaceLocation.parameter )
+                #if( $url || $parameter )
+                    Vulnerability attack surface location:$br
+                    #if( $url )URL: ${url}#end$br
+                    #if( $parameter )Parameter: ${parameter}#end$br
+                #end
+            #end
+
             #if($addFindingsDetails)
                 #addFindingsDetails( $vulnerability )
             #end
             #set( $vulnIndex = $vulnIndex + 1 )
         #end
+        $br
     #end
 
     #if( $customTexts.size() > 0 )

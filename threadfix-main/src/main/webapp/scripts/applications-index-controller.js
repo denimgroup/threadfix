@@ -212,6 +212,8 @@ myAppModule.controller('ApplicationsIndexController',
                 newApplication.infoVulnCount = 0;
 
                 newApplication.showUploadScanButton = object.uploadScan;
+                newApplication.pageUrl = tfEncoder.encode(
+                    "/organizations/" + team.id + "/applications/" + newApplication.id);
                 
                 if (newApplication.showUploadScanButton) {
                     if (!$scope.canUploadIds || $scope.canUploadIds.length === 0) {

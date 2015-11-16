@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.ExceptionLog;
 import com.denimgroup.threadfix.exception.AuthenticationRestException;
 import com.denimgroup.threadfix.exception.RestException;
+import com.denimgroup.threadfix.exception.RestValidationException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ExceptionLogService;
@@ -74,6 +75,13 @@ public class RestExceptionControllerAdvice {
 
         log.error("Uncaught exception - logging at " + format.format(exceptionLog.getTime().getTime()) + ".");
 
+        return failure(ex.getResponseString());
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(value = RestValidationException.class)
+    @ResponseBody
+    public RestResponse<String> resolveRestValidationException(RestValidationException ex) {
         return failure(ex.getResponseString());
     }
 
