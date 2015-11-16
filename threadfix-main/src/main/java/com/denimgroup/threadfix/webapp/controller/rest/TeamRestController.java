@@ -255,7 +255,7 @@ public class TeamRestController extends TFRestController {
      * @return
      */
 	@RequestMapping(method = RequestMethod.GET, value = "/")
-	@JsonView(AllViews.RestViewTeam2_1.class)
+	@JsonView(AllViews.RestViewTeams2_1.class)
 	public Object teamList(HttpServletRequest request) {
 		LOG.info("Received REST request for Team list.");
 		
@@ -274,7 +274,7 @@ public class TeamRestController extends TFRestController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "")
-    @JsonView(AllViews.RestViewTeam2_1.class)
+    @JsonView(AllViews.RestViewTeams2_1.class)
 	public Object alsoTeamList(HttpServletRequest request) {
 		return teamList(request);
 	}
