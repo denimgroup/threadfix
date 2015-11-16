@@ -188,12 +188,50 @@ public class DefectServiceImpl implements DefectService {
         DefectMetadata metadata = new DefectMetadata(editedSummary, editedPreamble,
                 component, version, severity, priority, status, fieldsMap);
 
+		Map<Vulnerability, Finding> dependencyFindings = map();
+		Map<Vulnerability, Finding> staticFindings = map();
+		Map<Vulnerability, Finding> dynamicFindings = map();
+		for (Vulnerability vulnerability : vulnsWithoutDefects) {
+			Finding dependencyFinding = null;
+			Finding staticFinding = null;
+			Finding dynamicFinding = null;
+			for (Finding finding : vulnerability.getFindings()) {
+				if (finding.getDependency() != null) { // finding is a dependency
+					dependencyFinding = finding;
+					break; // if we have a dependency finding we're done
+				} else if (finding.getIsStatic()) { // finding is static
+					staticFinding = finding;
+					if (dynamicFinding != null) {
+						break; // if we have both a static and a dynamic finding we're done
+					}
+				} else { // finding is dynamic
+					dynamicFinding = finding;
+					if (staticFinding != null) {
+						break; // if we have both a static and a dynamic finding we're done
+					}
+				}
+			}
+			if (dependencyFinding != null) {
+				dependencyFindings.put(vulnerability, dependencyFinding);
+			} else {
+				if (staticFinding != null) {
+					staticFindings.put(vulnerability, staticFinding);
+				}
+				if (dynamicFinding != null) {
+					dynamicFindings.put(vulnerability, dynamicFinding);
+				}
+			}
+		}
+
         Map<String,Object> templateModel = map(
 				"vulnerabilities", vulnsWithoutDefects,
 				"metadata", metadata,
 				"defectTrackerName", defectTrackerName,
 				"baseUrl", defaultConfigService.loadCurrentConfiguration().getBaseUrl(),
-				"customTexts", getCustomText(vulnsWithoutDefects)
+				"customTexts", getCustomText(vulnsWithoutDefects),
+				"dependencyFindings", dependencyFindings,
+				"staticFindings", staticFindings,
+				"dynamicFindings", dynamicFindings
 				);
         String description = templateBuilderService.prepareMessageFromTemplate(templateModel, "defectDescription.vm");
         metadata.setFullDescription(description);

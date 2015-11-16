@@ -884,7 +884,17 @@ div.box-shadow {
 }
 
 .fixed-team-header {
-	width:10px;	
+	width:50px;
+	word-break: break-all;
+}
+
+.auto-team-header {
+	width:auto;
+	word-break: break-all;
+}
+
+.break-word-header {
+	word-break: break-all;
 }
 
 .modal .modal-header h4 {

@@ -31,7 +31,6 @@ import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.IntegerUtils;
-import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -41,15 +40,14 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.ScannerUtils.md5;
 
 /**
- * TODO import more scans and make sure parameters and paths 
- * are parsed correctly for all vuln types.
- * 
+ * The Nessus importer behaves much like the DependencyCheck and Sonatype importers
+ * These support their own types (CVE, Nessus, osvdb) instead of CWEs
+ *
  * @author mcollins
  */
 @ScanImporter(scannerName = ScannerDatabaseNames.NESSUS_DB_NAME, startingXMLTags = {"NessusClientData_v2"})
@@ -58,9 +56,6 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	private static final String SIMPLE_HTTP_REGEX = "(http[^\n]*)";
 	private static final String URL_COLON_REGEX   = "URL  : ([^\n]*)\n";
 	private static final String PAGE_COLON_REGEX  = "Page : ([^\n]*)\n";
-
-	private static final String CSRF_PATH_START = "The following CGIs are not protected by a random token :";
-	private static final String CSRF_VULN_CODE = "56818";
 
 	private static final String INPUT_NAME_COLON_PARAM_REGEX = "Input name : ([^\n]*)\n";
 
@@ -98,9 +93,8 @@ public class NessusChannelImporter extends AbstractChannelImporter {
         private Boolean inFinding = false;
         private Boolean getCwe = false;
 
-		private String currentChannelVulnCode = null;
-		private String currentSeverityCode    = null;
-		private String host                   = null;
+		private String currentSeverityCode, host, currentChannelVulnCode;
+		private String pluginName, currentHost, currentPort;
         private String currentDetail = null;
         private String currentRecommendation = null;
         private StringBuffer currentRawFinding	  = new StringBuffer();
@@ -108,14 +102,8 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 
         Map<FindingKey, String> findingMap = map();
 
-		private String pluginOutputString = null;
-
-		private String infoLineParamRegex = "\\+ The '([^&]+)' parameter of the [^ ]+ CGI :";
-		private String infoLinePathRegex = "\\+ The '[^&]+' parameter of the ([^ ]+) CGI :";
-
 	    public void add(Finding finding) {
 			if (finding != null) {
-    			finding.setNativeId(getNativeId(finding));
 	    		finding.setIsStatic(false);
                 if ( finding.getChannelSeverity() != null) {
                     saxFindingList.add(finding);
@@ -125,86 +113,16 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 
 	    //Once the entire string has been taken out of characters(), parse it
 	    public void parseFindingString() {
-	    	if (pluginOutputString == null)
-	    		return;
-
-	    	String stringResult = pluginOutputString;
-	    	if (stringResult.trim().isEmpty())
-	    		return;
-
-	    	if (PATH_PARSE_MAP.containsKey(currentChannelVulnCode)) {
-	    		parseRegexMatchesAndAdd(stringResult);
-	    	} else if (SSL_VULNS.contains(currentChannelVulnCode)){
-	    		add(createFinding("Application Server", null));
-	    	} else if (CSRF_VULN_CODE.equals(currentChannelVulnCode)){
-	    		parseCSRFAndAdd(stringResult);
-	    	} else {
-	    		parseGenericPattern(stringResult);
-	    	}
+			parseGenericPattern();
 
     		currentChannelVulnCode = null;
     		currentSeverityCode = null;
             cwe = null;
 	    }
 
-	    private void parseCSRFAndAdd(String stringResult) {
-	    	if (stringResult != null && stringResult.contains(CSRF_PATH_START)) {
-	    		String smallerPart = stringResult.substring(stringResult.indexOf(CSRF_PATH_START) + CSRF_PATH_START.length());
-	    		if (smallerPart.contains("\n")) {
-	    			for (String line : smallerPart.split("\n")) {
-	    				if (line != null && !line.trim().equals("")) {
-	    		    		add(createFinding(line.trim(), null));
-	    				}
-	    			}
-	    		}
-	    	}
-	    }
+	    private void parseGenericPattern() {
+	    	String param = "", path = "Network";
 
-	    private void parseRegexMatchesAndAdd(String stringResult) {
-	    	String paramRegex = null,    pathRegex  = PATH_PARSE_MAP.get(currentChannelVulnCode);
-    		Matcher paramMatcher = null, pathMatcher = Pattern.compile(pathRegex).matcher(stringResult);
-
-    		if (PARAM_PARSE_MAP.containsKey(currentChannelVulnCode)) {
-    			paramRegex = PARAM_PARSE_MAP.get(currentChannelVulnCode);
-    			paramMatcher = Pattern.compile(paramRegex).matcher(stringResult);
-    		}
-
-    		//int count = 1;
-    		while (pathMatcher.find()) {
-    			String param = null;
-    			if (paramMatcher != null && paramMatcher.find(pathMatcher.start())) {
-    				param = paramMatcher.group(1);
-    			}
-
-    			String path = pathMatcher.group(1);
-
-    			if (path != null && host != null && !path.startsWith("http"))
-    				path = host + path;
-
-	    		add(createFinding(path, param));
-    		}
-	    }
-
-	    private void parseGenericPattern(String stringResult) {
-	    	String param = "", path = "/";
-
-            if (stringResult.contains("\n")) {
-	    		String [] lines = stringResult.split("\n");
-
-	    		for (String line : lines) {
-
-	    			if (line == null || !line.contains("+ The '")) {
-	    				continue;
-	    			}
-
-	    			param = RegexUtils.getRegexResult(line, infoLineParamRegex);
-	    			path  = RegexUtils.getRegexResult(line, infoLinePathRegex);
-
-	    			if (path != null && host != null && !path.startsWith("http"))
-	    				path = host + path;
-
-	    		}
-	    	}
             add(createFinding(path, param));
     		currentChannelVulnCode = null;
     		currentSeverityCode = null;
@@ -216,12 +134,28 @@ public class NessusChannelImporter extends AbstractChannelImporter {
             findingMap.put(FindingKey.PARAMETER, param);
             findingMap.put(FindingKey.VULN_CODE, currentChannelVulnCode);
             findingMap.put(FindingKey.SEVERITY_CODE, currentSeverityCode);
-            findingMap.put(FindingKey.DETAIL, currentDetail);
             findingMap.put(FindingKey.RECOMMENDATION, currentRecommendation);
             findingMap.put(FindingKey.RAWFINDING, currentRawFinding.toString());
-            findingMap.put(FindingKey.CWE, cwe);
+            findingMap.put(FindingKey.CWE, (cwe == null ? "16" : cwe));
 
-            return constructFinding(findingMap);
+			Finding finding = constructFinding(findingMap);
+			Dependency dependency = new Dependency();
+
+			if (finding != null) {
+				String component = currentHost + ":" + currentPort;
+				dependency.setComponentName(component);
+				dependency.setSource("nessus");
+				dependency.setCve(currentChannelVulnCode);
+				dependency.setComponentFilePath(component);
+				dependency.setDescription(currentDetail);
+				finding.setDependency(dependency);
+				String info = dependency.getComponentFilePath() + " " + dependency.getCve();
+				finding.setNativeId(md5(info));
+
+				System.out.println(info);
+			}
+
+			return finding;
         }
 
 	    ////////////////////////////////////////////////////////////////////
@@ -234,6 +168,8 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    	if ("ReportItem".equals(qName)) {
 	    		currentChannelVulnCode = atts.getValue("pluginID");
 	    		currentSeverityCode = atts.getValue("severity");
+				currentPort = atts.getValue("port");
+				pluginName = atts.getValue("pluginName");
                 inFinding = true;
 	    	} else if ("plugin_output".equals(qName)) {
 	    		getFindings = true;
@@ -247,7 +183,9 @@ public class NessusChannelImporter extends AbstractChannelImporter {
                 getScannerRecommendation = true;
             } else if ("cwe".equalsIgnoreCase(qName)) {
                 getCwe = true;
-            }
+            } else if ("ReportHost".equalsIgnoreCase(qName)) {
+				currentHost = atts.getValue("name");
+			}
 
             if (inFinding){
                 currentRawFinding.append(makeTag(name, qName , atts));
@@ -267,7 +205,6 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    		}
 	    		getDate = false;
 	    	} else if (getFindings) {
-	    		pluginOutputString = getBuilderText();
 	    		getFindings = false;
 	    	} else if (getNameText) {
 	    		String text = getBuilderText();
@@ -292,7 +229,7 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 						log.warn("Nessus parser tried to parse " + host + " as a URL.", e);
 					}
 	    		}
-                    getHost = false;
+				getHost = false;
 	    	} else if (getScannerDetail) {
                 currentDetail = getBuilderText();
                 getScannerDetail = false;
@@ -307,7 +244,6 @@ public class NessusChannelImporter extends AbstractChannelImporter {
                 getCwe = false;
             } else if ("ReportItem".equals(qName)) {
                 parseFindingString();
-                pluginOutputString = null;
                 inFinding = false;
                 currentRawFinding.setLength(0);
             }

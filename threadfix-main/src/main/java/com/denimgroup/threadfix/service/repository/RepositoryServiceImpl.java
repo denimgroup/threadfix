@@ -44,6 +44,11 @@ public abstract class RepositoryServiceImpl implements RepositoryService {
     protected static final String baseDirectory = "scratch/";
 
     @Override
+    public boolean testConfiguration(Application application, String repo, String branch) throws Exception {
+        return false;
+    }
+
+    @Override
     public File getWorkTree(Application application) {
         File applicationDirectory = DiskUtils.getScratchFile(baseDirectory + application.getId());
 

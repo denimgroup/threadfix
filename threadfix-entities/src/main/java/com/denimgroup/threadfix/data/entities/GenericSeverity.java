@@ -74,6 +74,7 @@ public class GenericSeverity extends BaseEntity implements Comparable<GenericSev
 
 	private List<SeverityMap> severityMapping;
 	private List<Vulnerability> vulnerabilities;
+	@Size(max = 50, message = "{errors.maxlength}")
 	private String customName;
 
 	@Column(length = 50, nullable = false)
@@ -121,7 +122,7 @@ public class GenericSeverity extends BaseEntity implements Comparable<GenericSev
 		return getName();
 	}
 
-	@Column(nullable = true)
+	@Column(length = 50, nullable = true)
 	@JsonView({AllViews.TableRow.class, AllViews.ApplicationIndexView.class})
 	public void setCustomName(String customName) {
 		this.customName = customName;
@@ -131,7 +132,10 @@ public class GenericSeverity extends BaseEntity implements Comparable<GenericSev
 		return customName;
 	}
 
-	@JsonView(Object.class)
+	@JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class,
+			AllViews.PolicyPageView.class, AllViews.ApplicationIndexView.class,
+			AllViews.RestViewScanStatistic.class, AllViews.ScheduledEmailReportView.class,
+			AllViews.UIVulnSearch.class, AllViews.VulnSearchApplications.class })
 	@Transient
 	public String getDisplayName() {
 		return customName == null || customName.trim().length() == 0 ? name : customName;

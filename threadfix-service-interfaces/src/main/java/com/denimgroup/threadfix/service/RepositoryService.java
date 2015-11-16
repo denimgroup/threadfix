@@ -36,6 +36,8 @@ public interface RepositoryService {
 
     boolean testConfiguration(Application application) throws Exception;
 
+    boolean testConfiguration(Application application, String repo, String branch) throws Exception;
+
     File cloneRepoToDirectory(Application application, File dirLocation);
 
     File getWorkTree(Application application);

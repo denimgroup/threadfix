@@ -46,7 +46,7 @@
             <td ng-click="toggle(vuln)" id="vulnName{{ $index }}" style="word-wrap: break-word;text-align:left;">
                 <span tooltip="CWE-{{vuln.genericVulnerability.displayId}}">{{ vuln.genericVulnerability.name }}</span>
             </td>
-            <td ng-click="toggle(vuln)" class="centered" id="severity{{ $index }}"
+            <td ng-click="toggle(vuln)" class="centered break-word-header" id="severity{{ $index }}"
                 ng-class="{
                         'badge-critical': vuln.genericSeverity.intValue === 5,
                         'badge-high': vuln.genericSeverity.intValue === 4,

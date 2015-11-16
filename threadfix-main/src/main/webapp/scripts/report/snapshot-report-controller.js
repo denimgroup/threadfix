@@ -772,6 +772,8 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             $scope.pointInTimeData[customInfo] = $scope.data[customInfo];
         }
 
+        $scope.pointInTimeData.genericSeverities = customSeverityService.getGenericSeverities();
+
     };
 
     var getDates = function(firstTime, secondTime) {
@@ -1089,6 +1091,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
                     app[customSeverityService.getCustomSeverity("Low")] = 0;
                 if (!$scope.parameters.severities.info)
                     app[customSeverityService.getCustomSeverity("Info")] = 0;
+                app.genericSeverities = customSeverityService.getGenericSeverities();
             }
         });
 
