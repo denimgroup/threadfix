@@ -139,6 +139,7 @@ public class EditApplicationController {
         application.setPassword(databaseApplication.getPassword());
 		application.setEndpointPermissions(databaseApplication.getEndpointPermissions());
 		application.setScans(databaseApplication.getScans());
+		application.setTags(databaseApplication.getTags());
 
 		//Edit application after uploading scans: refresh count numbers
 		application.setCriticalVulnCount(databaseApplication.getCriticalVulnCount());
