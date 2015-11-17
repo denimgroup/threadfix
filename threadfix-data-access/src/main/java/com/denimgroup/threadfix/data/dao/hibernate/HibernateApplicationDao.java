@@ -108,7 +108,9 @@ public class HibernateApplicationDao implements ApplicationDao {
     private Criteria getActiveAppCriteria() {
         return sessionFactory.getCurrentSession()
                 .createCriteria(Application.class)
-                .add(Restrictions.eq("active", true));
+                .createAlias("organization", "team")
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.eq("team.active", true));
     }
 
     @Override
