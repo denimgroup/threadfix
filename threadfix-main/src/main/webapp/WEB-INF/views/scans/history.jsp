@@ -32,12 +32,12 @@
 					<th style="text-align: left">Application</th>
 					<th style="text-align: left" class="first">Team</th>
 					<th>Scanner</th>
-					<th>Total Vulns</th>
+					<th>Total</th>
 					<th>Hidden</th>
-					<th class="break-word-header" generic-severity="Critical"></th>
-					<th class="break-word-header" generic-severity="High"></th>
-					<th class="break-word-header" generic-severity="Medium"></th>
-					<th class="break-word-header" generic-severity="Low"></th>
+					<th class="fixed-word-header" generic-severity="Critical"></th>
+					<th class="fixed-word-header" generic-severity="High"></th>
+					<th class="fixed-word-header" generic-severity="Medium"></th>
+					<th class="fixed-word-header" generic-severity="Low"></th>
 					<th></th>
 				</tr>
 			</thead>
@@ -53,12 +53,12 @@
                     <td>{{ scan.app.name }}</td>
                     <td>{{ scan.team.name }}</td>
                     <td>{{ scan.scannerName }}</td>
-                    <td>{{ scan.numberTotalVulnerabilities }}</td>
-                    <td>{{ scan.numberHiddenVulnerabilities }}</td>
-                    <td>{{ scan.numberCriticalVulnerabilities }}</td>
-                    <td>{{ scan.numberHighVulnerabilities }}</td>
-                    <td>{{ scan.numberMediumVulnerabilities }}</td>
-                    <td>{{ scan.numberLowVulnerabilities }}</td>
+                    <td class="centered">{{ scan.numberTotalVulnerabilities }}</td>
+                    <td class="centered">{{ scan.numberHiddenVulnerabilities }}</td>
+                    <td class="centered">{{ scan.numberCriticalVulnerabilities }}</td>
+                    <td class="centered">{{ scan.numberHighVulnerabilities }}</td>
+                    <td class="centered">{{ scan.numberMediumVulnerabilities }}</td>
+                    <td class="centered">{{ scan.numberLowVulnerabilities }}</td>
                     <td class="pointer">
                         <a id="importTime{{ $index }}" ng-href="{{ scan.pageUrl }}">
                             View Scan
