@@ -38,8 +38,10 @@
                 </tr>
                 <tr ng-repeat-start="scheduledReport in scheduledEmailReports">
                     <td id="scheduledTime{{ $index }}">{{ scheduledReport.scheduledDate }} {{ scheduledReport.period }}</td>
-                    <td class="pointer" id="teams{{ $index }}" style="max-width:500px; word-wrap: break-word;"><span ng-repeat="organization in scheduledReport.organizations"><a ng-click="goToTeam(organization)" id="teamLink{{ $parent.$index }}Name{{ organization.name | removeSpace }}">{{ organization.name }}</a> </span></td>
-                    <td id="severity{{ $index }}">{{ scheduledReport.severityLevel.displayName }}</td>
+                    <td class="pointer" id="teams{{ $index }}" style="max-width:500px; word-wrap: break-word;"><span ng-repeat="organization in scheduledReport.organizations">
+                        <a ng-click="goToTeam(organization)" id="teamLink{{ $parent.$index }}Name{{ organization.name | removeSpace }}">{{ organization.name }}</a> </span>
+                    </td>
+                    <td id="severity{{ $index }}" class="break-word-header">{{ scheduledReport.severityLevel.displayName }}</td>
                     <td class="centered">
                         <button class="btn" id="showHideEmails{{ $index }}" ng-click="showEmailAddresses(scheduledReport)">Show/Hide</button>
                     </td>
