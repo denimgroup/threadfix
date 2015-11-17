@@ -133,7 +133,13 @@
                 <tr>
                     <td class="bold" valign=top>Description</td>
                     <td class="inputValue" style="word-wrap: break-word;"><PRE id="dependencyDesc" ng-non-bindable><c:out value="${ finding.dependency.description }"/></PRE></td>
-                </tr>
+				</tr>
+				<c:if test="${ not empty finding.scannerRecommendation }">
+					<tr>
+						<td class="bold" valign=top>Scanner Recommendation</td>
+						<td class="inputValue" style="word-wrap: break-word;list-style: square"><PRE id="scannerRecommendationInDependency" ng-non-bindable><c:out value="${ finding.scannerRecommendation }"/></PRE></td>
+					</tr>
+				</c:if>
 			</c:if>
             <tr>
                 <td class="bold" valign=top>Raw Finding</td>
