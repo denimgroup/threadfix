@@ -313,7 +313,7 @@ public class QueueListener implements MessageListener {
 				defectService.updateVulnsFromDefectTracker(application.getId(), null);
 			}
 		}
-		
+
 		log.info("Finished updating Defect status for all Applications.");
 	}
 
