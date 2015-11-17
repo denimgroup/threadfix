@@ -71,7 +71,7 @@ public class DefectTrackerType extends BaseEntity {
 	}
 
 	@Column(length = 255)
-	@JsonView({ AllViews.RestViewTeams2_1.class, AllViews.RestViewWaf2_1.class })
+	@JsonView({ AllViews.RestViewTeams2_1.class, AllViews.RestViewWafs2_1.class })
 	public String getVersion() {
 		return version;
 	}
@@ -91,7 +91,7 @@ public class DefectTrackerType extends BaseEntity {
 	}
 
 	@Column(length=512)
-	@JsonView({ AllViews.RestViewTeams2_1.class, AllViews.RestViewWaf2_1.class })
+	@JsonView({ AllViews.RestViewTeams2_1.class, AllViews.RestViewWafs2_1.class })
 	public String getFullClassName() {
 		return fullClassName;
 	}
