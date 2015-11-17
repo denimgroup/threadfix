@@ -54,7 +54,7 @@ public class AllViews {
 
     public static interface RestViewApplication2_1 extends RestView2_1 {}
 
-    public static interface RestViewCreateApplication2_1 extends RestView2_1 {}
+    public static interface RestCreateApplication2_1 extends RestView2_1 {}
 
     public static interface RestViewScan2_1 extends RestView2_1 {}
 
