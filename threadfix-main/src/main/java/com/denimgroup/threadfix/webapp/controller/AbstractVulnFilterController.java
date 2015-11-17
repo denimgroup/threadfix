@@ -213,6 +213,7 @@ public abstract class AbstractVulnFilterController {
 		}
 
 		vulnerabilityFilter.setApplication(applicationService.loadApplication(appId));
+		vulnerabilityFilter.setOrganization(organizationService.loadById(orgId));
 
 		if (!bindingResult.hasErrors()) {
 			vulnerabilityFilterService.validate(vulnerabilityFilter, bindingResult);
