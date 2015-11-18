@@ -34,6 +34,7 @@ import com.denimgroup.threadfix.service.SeverityFilterService;
 import com.denimgroup.threadfix.service.StatisticsCounterService;
 import com.denimgroup.threadfix.service.merge.Merger;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -121,6 +122,7 @@ public class StatisticsCounterTests {
         }
     }
 
+    @Ignore("Ignoring until DGTF-2413 is fixed")
     @Test
     public void testOldVulnerabilitiesCountCorrect() {
         Application application = getApplicationWith("testfire-arachni.xml", "testfire-zap.xml");
