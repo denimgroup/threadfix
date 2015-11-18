@@ -49,7 +49,7 @@ namespace DenimGroup.threadfix_plugin.Utils
             var filename = textSnapshot.TextBuffer.GetTextDocument().FilePath.ToLower();
             var markers = new List<VulnerabilityMarker>();
             
-            if(_threadFixPlugin.MarkerLookUp.TryGetValue(filename, out markers))
+            if(_threadFixPlugin.MarkerLookUp.TryGetValue(filename, out markers) && !string.IsNullOrEmpty(filename))
             {
                 foreach (var marker in markers)
                 {
