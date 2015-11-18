@@ -90,8 +90,9 @@ public class HibernateApplicationDao implements ApplicationDao {
 
     @Override
     public Application retrieveByName(String name, int teamId) {
-        return (Application) getActiveAppCriteria().add(Restrictions.eq("name",name))
-                .add(Restrictions.eq("organization.id", teamId))
+        return (Application) getActiveAppCriteria()
+                .add(Restrictions.eq("name",name))
+                .add(Restrictions.eq("team.id", teamId))
                 .uniqueResult();
     }
 
@@ -100,7 +101,7 @@ public class HibernateApplicationDao implements ApplicationDao {
 
         Criteria criteria = getActiveAppCriteria().add(Restrictions.eq("uniqueId",uniqueId));
         if (teamId != -1) {
-            criteria.add(Restrictions.eq("organization.id", teamId));
+            criteria.add(Restrictions.eq("team.id", teamId));
         }
         return (List<Application>)criteria.list();
     }
@@ -370,7 +371,6 @@ public class HibernateApplicationDao implements ApplicationDao {
     private Criteria getSearchAppCriteria(Integer orgId, String searchString) {
         Criteria criteria = getActiveAppCriteria();
 
-        criteria.createAlias("organization", "team");
         criteria.add(Restrictions.eq("team.id", orgId));
         if (searchString != null && !searchString.isEmpty()){
             criteria.add(Restrictions.like("name", "%" + searchString + "%"));
