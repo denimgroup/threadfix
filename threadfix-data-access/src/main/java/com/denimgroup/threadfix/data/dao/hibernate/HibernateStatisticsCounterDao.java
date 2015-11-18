@@ -165,4 +165,5 @@ public class HibernateStatisticsCounterDao
 
         return (List<Map<String, Object>>) idsMap;
     }
+
 }
