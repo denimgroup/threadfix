@@ -159,10 +159,7 @@ namespace DenimGroup.threadfix_plugin.Utils
             apiTask.ContinueWith(error =>
             {
                 ToggleMenuCommands(true);
-                if (error.Exception.InnerException is ApplicationException)
-                {
-                    ShowErrorMessage(error.Exception.InnerException.Message);
-                }
+                ShowErrorMessage(error.Exception.InnerException.Message);
 
             }, TaskContinuationOptions.OnlyOnFaulted);
         }
@@ -208,8 +205,8 @@ namespace DenimGroup.threadfix_plugin.Utils
             var lookUp = new Dictionary<string, List<VulnerabilityMarker>>();
             foreach (var marker in Markers)
             {
-                var fullPath = FileLookUp[marker.FilePath];
-                if (!string.IsNullOrEmpty(fullPath))
+                string fullPath;
+                if (FileLookUp != null && FileLookUp.TryGetValue(marker.FilePath, out fullPath) && !string.IsNullOrEmpty(fullPath))
                 {
                     fullPath = fullPath.ToLower();
                     if (!lookUp.ContainsKey(fullPath))
