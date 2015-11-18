@@ -40,9 +40,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.service.merge.RemappingTestHarness.getFilePaths;
+import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 /**
  * Created by mcollins on 6/11/15.
@@ -96,7 +99,7 @@ public class StatisticsCounterTests {
 
         List<Scan> scans = application.getScans();
 
-        Assert.assertTrue("Had " + scans.size() + " scans instead of " + 2, scans.size() == 2);
+        Assert.assertTrue("Had " + scans.size() + " scans instead of 2", scans.size() == 2);
 
         for (Scan scan : scans) {
             Integer total = scan.getNumberTotalVulnerabilities();
@@ -110,11 +113,26 @@ public class StatisticsCounterTests {
 
         List<Scan> scans = application.getScans();
 
-        Assert.assertTrue("Had " + scans.size() + " scans instead of " + 1, scans.size() == 1);
+        assertTrue("Had " + scans.size() + " scans instead of 1", scans.size() == 1);
 
         for (Scan scan : scans) {
             Integer total = scan.getNumberTotalVulnerabilities();
-            Assert.assertTrue("Had " + total + " vulnerabilities, not 32.", total == 32);
+            assertTrue("Had " + total + " vulnerabilities, not 32.", total == 32);
         }
+    }
+
+    @Test
+    public void testOldVulnerabilitiesCountCorrect() {
+        Application application = getApplicationWith("testfire-arachni.xml", "testfire-zap.xml");
+
+        List<Scan> scans = application.getScans();
+
+        assertTrue("Had " + scans.size() + " scans instead of 2", scans.size() == 2);
+
+        Map<Integer, Integer> numbersOld = map(
+                0, scans.get(0).getNumberOldVulnerabilities(),
+                1, scans.get(1).getNumberOldVulnerabilities());
+
+        assertTrue("No scan had 8 vulnerabilities. Got " + numbersOld, numbersOld.values().contains(8));
     }
 }
