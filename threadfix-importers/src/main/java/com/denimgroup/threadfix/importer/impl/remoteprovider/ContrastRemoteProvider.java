@@ -98,7 +98,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
         applicationList.addAll(getApplications(orgUuid));
 
         for (RemoteProviderApplication application : applicationList) {
-            if (application.getModuleStatus()) {
+            if (application.getMasterApp()) {
                 moduleList.addAll(getModules(orgUuid, application.getNativeId()));
             }
         }
@@ -154,7 +154,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
 
         application.setNativeName(isMaster ? object.getString("name") + " (Master Application)" : object.getString("name"));
         application.setNativeId(object.getString("app_id"));
-        application.setModuleStatus(isMaster);
+        application.setMasterApp(isMaster);
 
         return application;
     }
