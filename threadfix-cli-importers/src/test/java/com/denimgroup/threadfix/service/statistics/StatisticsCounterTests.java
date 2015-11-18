@@ -34,7 +34,6 @@ import com.denimgroup.threadfix.service.SeverityFilterService;
 import com.denimgroup.threadfix.service.StatisticsCounterService;
 import com.denimgroup.threadfix.service.merge.Merger;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -122,19 +121,37 @@ public class StatisticsCounterTests {
         }
     }
 
-    @Ignore("Ignoring until DGTF-2413 is fixed")
     @Test
     public void testOldVulnerabilitiesCountCorrect() {
-        Application application = getApplicationWith("testfire-arachni.xml", "testfire-zap.xml");
+        List<Scan> scans = getScans("testfire-zap.xml", "testfire-arachni.xml");
+        testTotalAndOld(69, 8, scans);
+        testTotalAndOld(32, 0, scans);
+    }
+
+    @Test
+    public void testOldVulnerabilitiesCountCorrectReverse() {
+        List<Scan> scans = getScans("testfire-arachni.xml", "testfire-zap.xml");
+        testTotalAndOld(69, 8, scans);
+        testTotalAndOld(32, 0, scans);
+    }
+
+    private void testTotalAndOld(int total, int old, List<Scan> scans) {
+        Map<Integer, Integer> numbersOld = map();
+
+        for (Scan scan : scans) {
+            numbersOld.put(scan.getNumberTotalVulnerabilities(), scan.getNumberOldVulnerabilities());
+        }
+
+        assertTrue("Scan with " + total + " vulns didn't have " + old +
+                " old vulnerabilities. Got " + numbersOld, numbersOld.get(total) == old);
+    }
+
+    private List<Scan> getScans(String... scanFiles) {
+        Application application = getApplicationWith(scanFiles);
 
         List<Scan> scans = application.getScans();
 
-        assertTrue("Had " + scans.size() + " scans instead of 2", scans.size() == 2);
-
-        Map<Integer, Integer> numbersOld = map(
-                0, scans.get(0).getNumberOldVulnerabilities(),
-                1, scans.get(1).getNumberOldVulnerabilities());
-
-        assertTrue("No scan had 8 vulnerabilities. Got " + numbersOld, numbersOld.values().contains(8));
+        assertTrue("Had " + scans.size() + " scans instead of " + scanFiles.length, scans.size() == scanFiles.length);
+        return scans;
     }
 }

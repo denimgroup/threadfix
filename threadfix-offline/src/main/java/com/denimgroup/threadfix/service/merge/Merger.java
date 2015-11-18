@@ -32,13 +32,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
-import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.listOf;
+import static com.denimgroup.threadfix.CollectionUtils.*;
 
 /**
  * This class's primary use is for non-web-context ThreadFix merging.
@@ -139,6 +135,11 @@ public class Merger extends SpringBeanAutowiringSupport {
         for (String file : filePaths) {
             Scan resultScan = scanParser.getScan(file);
             resultScan.getApplicationChannel().setApplication(application);
+
+            String channelName = resultScan.getApplicationChannel().getChannelType().getName();
+            ChannelType hibernateChannelType = channelTypeDao.retrieveByName(channelName);
+            resultScan.getApplicationChannel().setChannelType(hibernateChannelType);
+
             application.getChannelList().add(resultScan.getApplicationChannel());
             scanMerger.merge(resultScan, resultScan.getApplicationChannel(), false);
             application.getScans().add(resultScan);
@@ -169,18 +170,24 @@ public class Merger extends SpringBeanAutowiringSupport {
         organizationDao.saveOrUpdate(application.getOrganization());
         applicationDao.saveOrUpdate(application);
 
-        ApplicationChannel channel = null;
+        Map<String, ApplicationChannel> channelMap = map();
 
         for (String file : filePaths) {
             Scan resultScan = scanParser.getScan(file);
+            String channelName = resultScan.getApplicationChannel().getChannelType().getName();
+
+            ApplicationChannel channel = channelMap.get(channelName);
+
             if (channel == null) {
                 channel = resultScan.getApplicationChannel();
-                channel.setChannelType(channelTypeDao.retrieveByName(channel.getChannelType().getName()));
+                channel.setChannelType(channelTypeDao.retrieveByName(channelName));
                 channel.setApplication(application);
                 channel.setScanList(listOf(Scan.class));
-                application.getChannelList().add(channel);
-                applicationChannelDao.saveOrUpdate(channel);
+                channelMap.put(channelName, channel);
             }
+
+            application.getChannelList().add(channel);
+            applicationChannelDao.saveOrUpdate(channel);
 
             scanMerger.merge(resultScan, channel);
             application.getScans().add(resultScan);

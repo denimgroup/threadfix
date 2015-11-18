@@ -118,7 +118,11 @@ namespace DenimGroup.threadfix_plugin
 
         private void SolutionEvents_Opened()
         {
-            _threadFixPlugin.RetrievePluginData();
+            if (_threadFixPlugin.Markers == null)
+            {
+                _threadFixPlugin.RetrievePluginData();
+            }
+
             _threadFixPlugin.UpdateFileAndMarkerLookUp();
             _threadFixPlugin.UpdateMarkers();
 

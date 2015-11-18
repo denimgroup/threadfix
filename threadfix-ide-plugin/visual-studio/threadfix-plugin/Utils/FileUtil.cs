@@ -85,7 +85,10 @@ namespace DenimGroup.threadfix_plugin.Utils
             var lookUp = new Dictionary<string, string>();
             foreach (var filename in filenames)
             {
-                lookUp.Add(filename, GetFullPath(filename));
+                if(!string.IsNullOrEmpty(filename))
+                {
+                    lookUp.Add(filename, GetFullPath(filename));
+                }
             }
 
             return lookUp;

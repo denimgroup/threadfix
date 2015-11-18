@@ -24,13 +24,11 @@
 package com.denimgroup.threadfix.service.merge;
 
 import com.denimgroup.threadfix.data.dao.ScanDao;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.JobStatusService;
 
+import java.util.Calendar;
 import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.set;
@@ -141,59 +139,67 @@ public class ScanStatisticsUpdater {
 		finding.setFirstFindingForVuln(false);
 
 		// Again, we don't want to count old vulns that we match
-		// against more than once
-		// so we keep track of those using a hash.
+		// against more than once so we keep track of those using a hash.
 		if (alreadySeenVulns.contains(vuln)) {
-			
-			alreadySeenVulns.add(vuln);
-			
-			scan.setNumberNewVulnerabilities(scan
-					.getNumberNewVulnerabilities() - 1);
-			scan.setNumberOldVulnerabilities(scan
-					.getNumberOldVulnerabilities() + 1);
-			Finding previousFinding = vuln.getOriginalFinding();
+			scan.setNumberNewVulnerabilities(scan.getNumberNewVulnerabilities() - 1);
+			scan.setNumberTotalVulnerabilities(scan.getNumberTotalVulnerabilities() - 1);
 
-			// Update records for the vuln origin
-			if (previousFinding != null
-					&& previousFinding.getScan() != null
-					&& previousFinding.getScan()
-							.getApplicationChannel() != null
-					&& scan.getApplicationChannel()
-							.getId()
-							.equals(previousFinding.getScan()
-									.getApplicationChannel()
-									.getId())) {
-				// must be older
-				scan.setNumberOldVulnerabilitiesInitiallyFromThisChannel(scan
-						.getNumberOldVulnerabilitiesInitiallyFromThisChannel() + 1);
-			} else if (previousFinding != null
-					&& previousFinding.getScan()
-							.getImportTime()
-							.after(scan.getImportTime())) {
-				// replace as oldest finding for vuln
-				// first, switch the flags. Then update new /
-				// old counts on both scans.
-				finding.setFirstFindingForVuln(true);
-				scan.setNumberNewVulnerabilities(scan
-						.getNumberNewVulnerabilities() + 1);
-				scan.setNumberOldVulnerabilities(scan
-						.getNumberOldVulnerabilities() - 1);
+			return;
+		}
 
-				correctExistingScans(previousFinding);
-			}
+		// if we get here we're adding the finding to a vulnerability not already associated with this scan
+		alreadySeenVulns.add(vuln);
+
+		// we correct this later if it's actually a new vulnerability already in the database with a later timestamp
+		scan.setNumberNewVulnerabilities(scan.getNumberNewVulnerabilities() - 1);
+		scan.setNumberOldVulnerabilities(scan.getNumberOldVulnerabilities() + 1);
+
+		// pulling these into variables makes the code easier to follow
+		Finding previousOriginalFinding = vuln.getOriginalFinding();
+
+		Scan previousOriginalScan = previousOriginalFinding.getScan();
+		Calendar previousOriginalScanDate = previousOriginalScan.getImportTime();
+
+		ApplicationChannel
+				thisChannel = scan.getApplicationChannel(),
+				previousOriginalChannel = previousOriginalScan.getApplicationChannel();
+
+		boolean isSameScanner = false;
+
+		if (thisChannel != null && previousOriginalChannel != null && thisChannel.getId() != null) {
+			isSameScanner = thisChannel.getId().equals(previousOriginalChannel.getId());
+		}
+
+		if (isSameScanner) {
+
+			// must be an older scan from the same channel
+			scan.setNumberOldVulnerabilitiesInitiallyFromThisChannel(this.scan
+					.getNumberOldVulnerabilitiesInitiallyFromThisChannel() + 1);
+
+			scan.setNumberOldVulnerabilities(scan.getNumberOldVulnerabilities() + 1);
+
 		} else {
-			scan.setNumberNewVulnerabilities(scan
-					.getNumberNewVulnerabilities() - 1);
-			scan.setNumberTotalVulnerabilities(scan
-					.getNumberTotalVulnerabilities() - 1);
+			if (previousOriginalScanDate.after(scan.getImportTime())) {
+
+				// if we got here, that means the original finding for the vuln was from a later scan
+				// from a different scanner, which means we need to increase our number of new stuff and
+				// remove from that scan.
+				finding.setFirstFindingForVuln(true);
+
+				// this corrects the lines above
+				scan.setNumberNewVulnerabilities(scan.getNumberNewVulnerabilities() + 1);
+				scan.setNumberOldVulnerabilities(scan.getNumberOldVulnerabilities() - 1);
+
+				correctExistingScans(previousOriginalFinding);
+			}
 		}
 	}
 
 	/**
 	 * This method corrects newer scans that were uploaded first in a different
-	 * channel. They need to have their counts updated slightly.
+	 * channel. The finding parameter is the finding that used to be the original finding
+	 * so we need to decrement its scan's new count and increase its old count
 	 * 
-	 * @param finding
 	 */
 	private void correctExistingScans(Finding finding) {
 		finding.getVulnerability().setSurfaceLocation(
