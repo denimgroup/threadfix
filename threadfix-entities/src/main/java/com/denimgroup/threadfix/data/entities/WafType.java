@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -68,6 +69,7 @@ public class WafType extends BaseEntity {
 	}
 	
 	@Column
+	@JsonView(AllViews.RestViewWafs2_1.class)
 	public Integer getInitialId() {
 		if (initialId == null)
 			setInitialId(100000);

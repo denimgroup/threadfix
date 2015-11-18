@@ -91,6 +91,6 @@ public class ScanHistoryController {
 		map.put("genericSeverities", genericSeverityService.loadAll());
         return RestResponse.success(map);
 	}
-	
+
 
 }

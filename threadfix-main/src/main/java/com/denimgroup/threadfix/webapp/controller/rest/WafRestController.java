@@ -58,6 +58,7 @@ public class WafRestController extends TFRestController {
     private ApplicationService applicationService;
 
 	// TODO figure out if there is an easier way to make Spring respond to both
+	@JsonView(AllViews.RestViewWafs2_1.class)
 	@RequestMapping(headers="Accept=application/json", value="", method=RequestMethod.GET)
 	public Object wafIndexNoSlash(HttpServletRequest request) {
 		return wafIndex(request);
@@ -67,7 +68,7 @@ public class WafRestController extends TFRestController {
      * @param request
      * @return
      */
-	@JsonView(AllViews.RestViewWaf2_1.class)
+	@JsonView(AllViews.RestViewWafs2_1.class)
 	@RequestMapping(headers="Accept=application/json", value="/", method=RequestMethod.GET)
 	public Object wafIndex(HttpServletRequest request) {
 		LOG.info("Received REST request for WAFs");

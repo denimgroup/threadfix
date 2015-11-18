@@ -49,10 +49,15 @@ public class RepositoryServiceFactoryImpl implements RepositoryServiceFactory {
     public RepositoryService getRepositoryService(@Nonnull Application application) {
 
         LOG.info("Determining proper RepositoryService implementation for application " + application.getName() + " and new scan.");
+        return getRepositoryService(application.getRepositoryType());
+    }
+
+    @Override
+    public RepositoryService getRepositoryService(@Nonnull String repoName) {
 
         RepositoryService repositoryService = null;
-        SourceCodeRepoType repoType = SourceCodeRepoType.getType(application.getRepositoryType());
 
+        SourceCodeRepoType repoType = SourceCodeRepoType.getType(repoName);
         if (repoType == SourceCodeRepoType.GIT) {
             LOG.info("Source code is being stored in Git. Returning GitServiceImpl.");
             repositoryService = gitServiceImpl;

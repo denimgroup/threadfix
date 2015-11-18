@@ -435,8 +435,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	@Column(length = RAW_FINDING_LENGTH)
 	public String getRawFinding() {
-		return  rawFinding;
-
+		return rawFinding;
 	}
 
 	public void setRawFinding(String rawFinding) {
@@ -548,7 +547,8 @@ public class Finding extends AuditableEntity implements FindingLike {
     }
 
     @Transient
-	@JsonView({ AllViews.TableRow.class, AllViews.VulnerabilityDetail.class, AllViews.UIVulnSearch.class })
+	@JsonView({ AllViews.TableRow.class, AllViews.VulnerabilityDetail.class,
+			AllViews.UIVulnSearch.class, AllViews.RestVulnSearch.class })
 	private String getScannerName() {
 		return getScan().getApplicationChannel().getChannelType().getName();
 	}

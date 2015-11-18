@@ -33,5 +33,6 @@ import javax.annotation.Nonnull;
  * @author mcollins
  */
 public interface RepositoryServiceFactory {
-    public RepositoryService getRepositoryService(@Nonnull Application application);
+    RepositoryService getRepositoryService(@Nonnull Application application);
+    RepositoryService getRepositoryService(@Nonnull String repoName);
 }

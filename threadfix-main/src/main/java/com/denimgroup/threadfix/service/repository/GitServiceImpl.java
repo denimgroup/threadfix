@@ -58,18 +58,23 @@ public class GitServiceImpl extends RepositoryServiceImpl implements RepositoryS
 
     @Override
     public boolean testConfiguration(Application application) throws GitAPIException {
+        return testConfiguration(application, application.getRepositoryUrl(), application.getRepositoryBranch());
+    }
+
+    @Override
+    public boolean testConfiguration(Application application, String repo, String branch) throws GitAPIException {
         InitCommand initCommand = new InitCommand();
         File applicationDirectory = DiskUtils.getScratchFile(baseDirectory + application.getId() + "-test");
         initCommand.setDirectory(applicationDirectory);
 
         Git otherGit = initCommand.call();
 
-        otherGit.getRepository().getConfig().setString("remote", "origin", "url", application.getRepositoryUrl());
+        otherGit.getRepository().getConfig().setString("remote", "origin", "url", repo);
 
         String targetRefSpec =
-                application.getRepositoryBranch() == null || application.getRepositoryBranch().isEmpty()  ?
-                        Constants.R_HEADS + "master" :
-                        Constants.R_HEADS + application.getRepositoryBranch();
+                branch == null || branch.isEmpty()  ?
+                        Constants.R_HEADS + "*:refs/remotes/origin/*" :
+                        Constants.R_HEADS + branch;
 
         FetchCommand fetchCommand = otherGit.fetch()
                 .setCredentialsProvider(getUnencryptedApplicationCredentials(application))

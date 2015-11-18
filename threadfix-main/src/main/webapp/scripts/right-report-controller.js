@@ -32,6 +32,7 @@ myAppModule.controller('RightReportController', function ($scope, $window, threa
                     data.object.map.forEach(function (application) {
 
                         if (application.cweId) { // top 10 vulns
+                            application.genericSeverities = data.object.genericSeverities;
                             $scope.topAppsData.push(application);
                         } else { // top 10 apps
                             var innerData = {};
@@ -49,6 +50,8 @@ myAppModule.controller('RightReportController', function ($scope, $window, threa
                             $scope.topAppsData.push(innerData);
                         }
                     });
+                } else {
+                    $scope.topAppsData = undefined;
                 }
 
                 $scope.loadingRight = false;

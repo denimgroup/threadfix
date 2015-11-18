@@ -210,7 +210,7 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
                 data.push({
                     "name" : user.displayName ? user.displayName : "-",
                     "username" : user.name,
-                    "lastLogIn" : $filter('date')(user.lastLoginDate, 'medium'),
+                    "lastLogIn" : $filter('date')(user.realLastLoginDate ? user.realLastLoginDate : "", 'medium'),
                     "groups" : groups,
                     "roles" : roles
                 });

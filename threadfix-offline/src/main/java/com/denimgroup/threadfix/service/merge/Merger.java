@@ -23,10 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.merge;
 
-import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
-import com.denimgroup.threadfix.data.dao.ApplicationDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.dao.ScanDao;
+import com.denimgroup.threadfix.data.dao.*;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.util.ScanParser;
 import com.denimgroup.threadfix.importer.util.SpringConfiguration;
@@ -57,6 +54,8 @@ public class Merger extends SpringBeanAutowiringSupport {
     private ScanMerger     scanMerger;
     @Autowired
     private ApplicationDao applicationDao;
+    @Autowired
+    private OrganizationDao organizationDao;
     @Autowired
     private ChannelTypeDao channelTypeDao;
     @Autowired
@@ -163,7 +162,11 @@ public class Merger extends SpringBeanAutowiringSupport {
         application.setRepositoryFolder(sourceRoot);
         application.setName("MergeApplication");
         application.setScans(new ArrayList<Scan>());
+        application.setOrganization(new Organization());
+        application.getOrganization().setName("TEST NAME");
+        application.getOrganization().setActive(true);
 
+        organizationDao.saveOrUpdate(application.getOrganization());
         applicationDao.saveOrUpdate(application);
 
         ApplicationChannel channel = null;

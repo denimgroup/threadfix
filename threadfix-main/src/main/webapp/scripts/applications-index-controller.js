@@ -33,6 +33,8 @@ myAppModule.controller('ApplicationsIndexController',
 
                         customSeverityService.setSeverities(data.object.genericSeverities);
 
+                        $scope.genericSeverities = data.object.genericSeverities;
+
                         $scope.teams.forEach(function(team) {
 
                             team.page = 1;
@@ -95,8 +97,12 @@ myAppModule.controller('ApplicationsIndexController',
                             && data.object[0].Low == 0
                             && data.object[0].Info ==0)
                             team.report = undefined;
-                        else
+                        else {
                             team.report = data.object;
+                            team.report.forEach(function(teamInfo, i){
+                                team.report[i].genericSeverities = $scope.genericSeverities;
+                            })
+                        }
 
                     }).
                     error(function(data, status, headers, config) {
@@ -138,6 +144,7 @@ myAppModule.controller('ApplicationsIndexController',
 
                 var newTeam = object.team;
                 newTeam.showEditButton = object.canEdit;
+                newTeam.url = tfEncoder.encode("/organizations/" + newTeam.id);
 
                 $scope.teams.push(newTeam);
 
@@ -206,6 +213,8 @@ myAppModule.controller('ApplicationsIndexController',
                 newApplication.infoVulnCount = 0;
 
                 newApplication.showUploadScanButton = object.uploadScan;
+                newApplication.pageUrl = tfEncoder.encode(
+                    "/organizations/" + team.id + "/applications/" + newApplication.id);
                 
                 if (newApplication.showUploadScanButton) {
                     if (!$scope.canUploadIds || $scope.canUploadIds.length === 0) {

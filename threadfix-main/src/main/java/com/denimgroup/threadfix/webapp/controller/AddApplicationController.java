@@ -102,7 +102,7 @@ public class AddApplicationController {
 		dataBinder.setValidator(new BeanValidator());
 	}
 
-    @JsonView(AllViews.TableRow.class)
+    @JsonView(AllViews.RestCreateApplication2_1.class)
     @RequestMapping(method = RequestMethod.POST)
     public Object submit(@PathVariable("orgId") int orgId,
                          @Valid @ModelAttribute Application application, BindingResult result,

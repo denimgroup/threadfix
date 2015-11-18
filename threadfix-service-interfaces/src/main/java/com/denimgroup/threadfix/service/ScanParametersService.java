@@ -27,6 +27,5 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.service.beans.ScanParametersBean;
 
 public interface ScanParametersService {
-	boolean saveConfiguration(Integer appId, ScanParametersBean scanParametersBean);
-	boolean saveConfiguration(Application application, ScanParametersBean scanParametersBean);
+	String saveConfiguration(Application application, ScanParametersBean scanParametersBean);
 }

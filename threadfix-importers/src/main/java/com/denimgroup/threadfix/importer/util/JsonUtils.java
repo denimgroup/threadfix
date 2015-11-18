@@ -172,6 +172,24 @@ public class JsonUtils {
         return result;
     }
 
+    public static Map<String, String> jsonToMap(String jsonStr) {
+        Map<String, String> map = CollectionUtils.map();
+        JSONObject jObject;
+        if (jsonStr != null)
+            try {
+                jObject = new JSONObject(jsonStr);
+                Iterator<?> keys = jObject.keys();
+                while( keys.hasNext() ){
+                    String key = (String)keys.next();
+                    String value = jObject.getString(key);
+                    map.put(key, value);
+                }
+            } catch (JSONException e) {
+                LOG.warn("JSON Parsing failed.", e);
+            }
+        return map;
+    }
+
     static class DateSerializer implements JsonSerializer<Date>, JsonDeserializer<Date> {
 
         @Override

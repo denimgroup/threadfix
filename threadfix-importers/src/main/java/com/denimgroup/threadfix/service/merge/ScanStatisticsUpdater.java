@@ -188,22 +188,7 @@ public class ScanStatisticsUpdater {
 					.getNumberTotalVulnerabilities() - 1);
 		}
 	}
-	
-	/**
-	 * This should be called after merging is finished.
-	 */
-	public void printEndMessage() {
-		log.info("Number of findings merged to other findings from this scan: "
-				+ numMergedInsideScan);// TODO add number merged inside scan
-		log.info("Number of findings that couldn't be parsed into vulnerabilities: "
-				+ numUnableToParseVuln);
-		log.info("Number of findings merged to old vulnerabilities in application merge: "
-				+ (scan.getNumberOldVulnerabilities() - initialOld));
-		log.info("Finished application merge. The scan now has "
-				+ scan.getNumberNewVulnerabilities()
-				+ " new vulnerabilities.");
-	}
-	
+
 	/**
 	 * This method corrects newer scans that were uploaded first in a different
 	 * channel. They need to have their counts updated slightly.

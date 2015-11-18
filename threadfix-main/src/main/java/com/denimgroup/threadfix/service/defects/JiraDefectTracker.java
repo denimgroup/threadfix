@@ -27,7 +27,9 @@ import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.exception.DefectTrackerFormatException;
 import com.denimgroup.threadfix.exception.RestIOException;
+import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.importer.util.JsonUtils;
+import com.denimgroup.threadfix.importer.util.RegexUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtilsImpl;
 import com.denimgroup.threadfix.service.defects.utils.jira.DefectPayload;
@@ -54,6 +56,7 @@ import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.listFrom;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * This class has been rewritten to use the JIRA REST interface and may not work on older
@@ -71,6 +74,8 @@ public class JiraDefectTracker extends AbstractDefectTracker {
     private static final String NEW_LINE_REGEX = "\\\\n",
             DOUBLE_SLASH_NEW_LINE = " \\\\\\\\\\\\\\\\ ",
             METADATA_EXTENSION = "issue/createmeta?expand=projects.issuetypes.fields&projectKeys=";
+
+    private static String DATA_LONG_PATTERN = "It exceeds the allowed limit of (.*) characters.";
 
     private static final String CONTENT_TYPE = "application/json";
 
@@ -354,7 +359,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
     }
 
     private String attemptSubmission(Map<String, Object> map, List<String> errorFieldList, String lastError) {
-        String payload = getPayload(map, errorFieldList);
+        String payload = getPayload(map, errorFieldList, lastError);
         log.info("Payload: " + payload);
 
         String returnResult = null;
@@ -383,10 +388,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
             }
 
             List<String> newErrorFields = getErrorFieldList(errorResponseMsg);
-            log.info("Trying to send request one more time to Jira without fields: " + errorFieldList.toString());
-
             errorFieldList.addAll(newErrorFields);
-
             returnResult = attemptSubmission(map, errorFieldList, errorResponseMsg);
 
             // if we got a result then it was a success, otherwise let's rethrow the exception
@@ -398,8 +400,10 @@ public class JiraDefectTracker extends AbstractDefectTracker {
         return returnResult;
     }
 
-    private String getPayload(Map<String, Object> objectMap, List<String> errorFieldList) {
+    private String getPayload(Map<String, Object> objectMap, List<String> errorFieldList, String lastError) {
         Object issueType = objectMap.get("issuetype");
+
+        Map<String, String> errorMap = JsonUtils.jsonToMap(JsonUtils.getStringProperty(lastError, "errors"));
 
         DefectPayload payload;
         if (issueType != null) {
@@ -411,7 +415,22 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 
         for (String field : errorFieldList) {
             if (payload.getFields().containsKey(field)) {
-                payload.getFields().remove(field);
+                if (errorMap.containsKey(field) && errorMap.get(field).startsWith("The entered text is too long.")) {
+                    // truncate string submitted
+                    String limitStr = RegexUtils.getRegexResult(errorMap.get(field), DATA_LONG_PATTERN).replace(",", "");
+                    if (limitStr == null)
+                        limitStr = limitStr.replace(",", "");
+                    Integer limitNo = IntegerUtils.getIntegerOrNull(limitStr);
+
+                    if (limitNo == null) // default is 32767
+                        limitNo = 32767;
+                    log.info(field + " is too long. Truncated to only " + limitNo + " characters");
+                    payload.getFields().put(field, ((String) payload.getFields().get(field)).substring(0, limitNo));
+
+                } else {
+                    payload.getFields().remove(field);
+                    log.info("Trying to send request one more time to Jira without fields: " + field);
+                }
             }
         }
 
@@ -440,10 +459,6 @@ public class JiraDefectTracker extends AbstractDefectTracker {
             }
         }
         return errorFieldList;
-    }
-
-    private String getPayload(Map<String, Object> objectMap) {
-        return getPayload(objectMap, new ArrayList<String>());
     }
 
 	@Override

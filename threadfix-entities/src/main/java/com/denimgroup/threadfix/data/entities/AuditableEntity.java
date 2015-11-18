@@ -72,7 +72,8 @@ public class AuditableEntity extends BaseEntity {
 	}
 
 	@Column(nullable = false)
-    @JsonView({ AllViews.TableRow.class, AllViews.GRCToolsPage.class })
+    @JsonView({ AllViews.TableRow.class, AllViews.GRCToolsPage.class,
+			AllViews.RestViewTeams2_1.class, AllViews.RestViewWafs2_1.class })
 	public boolean isActive() {
 		return active;
 	}

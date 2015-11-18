@@ -67,6 +67,7 @@ public class Waf extends AuditableEntity {
 	}
 	
 	@Column
+	@JsonView(AllViews.RestViewWafs2_1.class)
 	public Integer getCurrentId() {
 		return currentId;
 	}
@@ -77,7 +78,7 @@ public class Waf extends AuditableEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "wafTypeId")
-	@JsonView(AllViews.TableRow.class)
+	@JsonView({ AllViews.TableRow.class, AllViews.RestViewWafs2_1.class })
 	public WafType getWafType() {
 		return wafType;
 	}
@@ -87,13 +88,14 @@ public class Waf extends AuditableEntity {
 	}
 
     @Transient
-    @JsonView(AllViews.RestView2_1.class)
+	@JsonView({ AllViews.RestViewWaf2_1.class, AllViews.RestViewWafs2_1.class })
     private String getWafTypeName() {
         return getWafType() == null ? null : getWafType().getName();
     }
 
 	@ManyToOne
 	@JoinColumn(name = "wafRuleDirectiveId")
+	@JsonView(AllViews.RestViewWafs2_1.class)
 	public WafRuleDirective getLastWafRuleDirective() {
 		return lastWafRuleDirective;
 	}
@@ -108,7 +110,7 @@ public class Waf extends AuditableEntity {
         return applicationList;
 	}
 
-    @JsonView(AllViews.RestViewWaf2_1.class)
+    @JsonView({ AllViews.RestViewWaf2_1.class, AllViews.RestViewWafs2_1.class })
     @Transient
     @JsonProperty("applications")
     public List<Application> getActiveApplications() {
@@ -130,7 +132,7 @@ public class Waf extends AuditableEntity {
 	}
 
 	@OneToMany(mappedBy = "waf")
-	@JsonView(AllViews.TableRow.class)
+	@JsonView({ AllViews.TableRow.class, AllViews.RestViewWafs2_1.class })
 	public List<WafRule> getWafRules() {
 		return wafRuleList;
 	}
@@ -140,7 +142,7 @@ public class Waf extends AuditableEntity {
 	}
 	
 	@Transient
-	@JsonView(AllViews.TableRow.class)
+	@JsonView({ AllViews.TableRow.class, AllViews.RestViewWafs2_1.class })
 	public boolean getCanDelete() {
 		boolean hasActiveApplication = false;
 		if (getApplications() != null) {
