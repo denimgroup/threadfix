@@ -8,8 +8,6 @@ import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProvide
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RequestConfigurer;
 import com.denimgroup.threadfix.importer.util.JsonUtils;
 import com.denimgroup.threadfix.importer.util.RegexUtils;
-import org.apache.commons.beanutils.BeanToPropertyValueTransformer;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,12 +37,12 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
             USERNAME = "Username",
             BASE_URL_V2 = "https://app.contrastsecurity.com/Contrast/api/",
             BASE_URL_V3 = "https://app.contrastsecurity.com/Contrast/api/ng/",
-            ORGS_URL = "/profile/organizations/",
+            ORGS_URL = "/profile/organizations/default",
             APPS_URL = "/applications",
             MODULE_URL="/modules/",
             TRACES_URL = "/traces/",
             EVENTS_SUMMARY_URL = "/events/summary",
-            TRACE_WEB_URL = "https://app.contrastsecurity.com/Contrast/static/ng/index.html#/applications/",
+            TRACE_WEB_URL = "https://app.contrastsecurity.com/Contrast/static/ng/index.html#/",
             FILE_PATTERN = "@(.+?):",
             LINE_PATTERN = ":([0-9]*)";
 
@@ -59,48 +57,34 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
     ////////////////////////////////////////////////////////////////////////
 
     @SuppressWarnings("unchecked")
-    private List<String> fetchOrgUuids() {
+    private String fetchDefaultOrgUuid() {
         assert remoteProviderType != null : "Remote Provider Type was null, please set before calling any methods.";
 
         HttpResponse response = makeRequest(BASE_URL_V3 + ORGS_URL);
-        List<String> organizationUuids = list();
+        String orgUuid = null;
 
         try {
             if (response.isValid()) {
-
                 JSONObject orgResponse = JsonUtils.getJSONObject(response.getBodyAsString());
 
                 if (orgResponse != null) {
-                    JSONArray organizations = orgResponse.getJSONArray("organizations");
+                    JSONObject organization = orgResponse.getJSONObject("organization");
+                    orgUuid = organization.getString("organization_uuid");
 
-                    for (JSONObject organization : toJSONObjectIterable(organizations)) {
-                        String orgUuid = organization.getString("organization_uuid");
-                        organizationUuids.add(orgUuid);
-                    }
-
-                    if (organizationUuids.size() == 0) {
+                    if (orgUuid == null) {
                         throw new RestIOException("There are no teams in ThreadFix that match any Contrast " +
                                 "organizations. Check your team names before continuing", response.getStatus());
                     }
                 }
             } else {
-                String body = response.getBodyAsString();
-                log.info("Contents:\n" + body);
-                String errorMessageOrNull = getErrorOrNull(body);
-
-                if (errorMessageOrNull == null) {
-                    errorMessageOrNull =
-                            "Invalid response received from Contrast servers, check the logs for more details.";
-                }
-
-                throw new RestIOException(errorMessageOrNull, response.getStatus());
+                throwException(response);
             }
 
         } catch (JSONException e) {
             throw new RestIOException(e, "Invalid response received: not JSON.");
         }
 
-        return organizationUuids;
+        return orgUuid;
     }
 
     @Override
@@ -109,30 +93,28 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
 
         List<RemoteProviderApplication> applicationList = list();
         List<RemoteProviderApplication> moduleList = list();
-        List<String> organizationUuids = fetchOrgUuids();
+        String orgUuid = fetchDefaultOrgUuid();
 
-        for (String orgUuid : organizationUuids) {
-            applicationList.addAll(getApplications(orgUuid));
+        applicationList.addAll(getApplications(orgUuid));
 
-            for (RemoteProviderApplication application : applicationList) {
-                if (application.getModuleStatus()) {
-                    moduleList.addAll(getModules(orgUuid, application.getNativeId()));
-                }
+        for (RemoteProviderApplication application : applicationList) {
+            if (application.getModuleStatus()) {
+                moduleList.addAll(getModules(orgUuid, application.getNativeId()));
             }
         }
 
         if (!moduleList.isEmpty()) {
-           applicationList.addAll(moduleList);
+            applicationList.addAll(moduleList);
         }
 
         return applicationList;
     }
 
     private List<RemoteProviderApplication> getApplications(String orgUuid) {
-        return getApplications(makeRequest(BASE_URL_V3 + orgUuid + APPS_URL), false);
+        return getApplications(makeRequest(BASE_URL_V3 + orgUuid + APPS_URL));
     }
 
-    private List<RemoteProviderApplication> getApplications(HttpResponse response, boolean getModule) {
+    private List<RemoteProviderApplication> getApplications(HttpResponse response) {
         List<RemoteProviderApplication> applicationList = list();
 
         try {
@@ -145,16 +127,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
                 }
 
             } else {
-                String body = response.getBodyAsString();
-                log.info("Contents:\n" + body);
-                String errorMessageOrNull = getErrorOrNull(body);
-
-                if (errorMessageOrNull == null) {
-                    errorMessageOrNull =
-                            "Invalid response received from Contrast servers, check the logs for more details.";
-                }
-
-                throw new RestIOException(errorMessageOrNull, response.getStatus());
+                throwException(response);
             }
 
         } catch (JSONException e) {
@@ -165,7 +138,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
     }
 
     private List<RemoteProviderApplication> getModules(String orgUuid, String masterAppId) {
-        List<RemoteProviderApplication> modules = getApplications(makeRequest(BASE_URL_V3 + orgUuid + MODULE_URL + masterAppId), true);
+        List<RemoteProviderApplication> modules = getApplications(makeRequest(BASE_URL_V3 + orgUuid + MODULE_URL + masterAppId));
 
         for(RemoteProviderApplication module : modules) {
             module.setMasterAppId(masterAppId);
@@ -177,9 +150,11 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
     private RemoteProviderApplication getApplicationFromJson(JSONObject object) throws JSONException {
         RemoteProviderApplication application = new RemoteProviderApplication();
 
-        application.setNativeName(object.getString("name"));
+        boolean isMaster = object.getBoolean("master");
+
+        application.setNativeName(isMaster ? object.getString("name") + " (Master Application)" : object.getString("name"));
         application.setNativeId(object.getString("app_id"));
-        application.setModuleStatus(object.getBoolean("master"));
+        application.setModuleStatus(isMaster);
 
         return application;
     }
@@ -192,54 +167,29 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
     public List<Scan> getScans(RemoteProviderApplication remoteProviderApplication) {
         assert remoteProviderType != null : "Remote Provider Type was null.";
 
-        List<String> organizationUuids = fetchOrgUuids();
-        String remoteAppOrgUuid = null;
+        String orgUuid = fetchDefaultOrgUuid();
 
-        for (String orgUuid : organizationUuids) {
-            List<String> remoteAppIds = (List<String>) CollectionUtils.collect(getApplications(orgUuid),
-                    new BeanToPropertyValueTransformer("nativeId"));
-            if (remoteAppIds.contains(remoteProviderApplication.getNativeId())){
-                remoteAppOrgUuid = orgUuid;
-                break;
-            }
-        }
-
-        if (remoteAppOrgUuid != null) {
-            HttpResponse response = makeRequest(BASE_URL_V2 + remoteAppOrgUuid + TRACES_URL + remoteProviderApplication.getNativeId());
+        if (orgUuid != null) {
+            HttpResponse response = makeRequest(BASE_URL_V2 + orgUuid + TRACES_URL + remoteProviderApplication.getNativeId());
 
             try {
                 if (response.isValid()) {
 
                     List<Finding> findingList = list();
-
                     Scan scan = new Scan();
-
                     for (JSONObject object : toJSONObjectIterable(response.getBodyAsString())) {
-                        findingList.add(getFindingFromObject(object, remoteProviderApplication.getNativeId(), remoteAppOrgUuid));
+                        findingList.add(getFindingFromObject(object, remoteProviderApplication.getNativeId(), orgUuid));
                     }
-
                     scan.setFindings(findingList);
                     return list(scan);
-
                 } else {
-                    String body = response.getBodyAsString();
-                    log.info("Contents:\n" + body);
-                    String errorMessageOrNull = getErrorOrNull(body);
-
-                    if (errorMessageOrNull == null) {
-                        errorMessageOrNull =
-                                "Invalid response received from Contrast servers, check the logs for more details.";
-                    }
-
-                    throw new RestIOException(errorMessageOrNull, response.getStatus());
+                    throwException(response);
                 }
-
             } catch (JSONException e) {
                 throw new RestIOException(e, "Invalid response received: not JSON.");
             }
-        } else {
-            return list();
         }
+        return list();
     }
 
     private Finding getFindingFromObject(JSONObject object, String remoteAppId, String orgUuid) throws JSONException {
@@ -280,7 +230,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
 
         finding.setAttackRequest(object.getJSONObject("request").toString(2));
 
-        finding.setUrlReference(TRACE_WEB_URL + remoteAppId + "/traces/default/00001/" + traceId + "/details");
+        finding.setUrlReference(TRACE_WEB_URL + orgUuid + "/applications/" + remoteAppId + "/traces/workflow/00001/" + traceId + "/details");
 
         return finding;
     }
@@ -393,5 +343,18 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
         }
 
         return null;
+    }
+
+    private void throwException(HttpResponse response) throws RestIOException, JSONException {
+        String body = response.getBodyAsString();
+        log.info("Contents:\n" + body);
+        String errorMessageOrNull = getErrorOrNull(body);
+
+        if (errorMessageOrNull == null) {
+            errorMessageOrNull =
+                    "Invalid response received from Contrast servers, check the logs for more details.";
+        }
+
+        throw new RestIOException(errorMessageOrNull, response.getStatus());
     }
 }

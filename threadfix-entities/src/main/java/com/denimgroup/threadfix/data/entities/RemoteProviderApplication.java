@@ -58,7 +58,7 @@ public class RemoteProviderApplication extends AuditableEntity  {
 	private RemoteProviderType remoteProviderType;
 
 	// Contrast module support
-	private boolean containsModules;
+	private Boolean containsModules;
 
 	@Size(max = NATIVE_ID_LENGTH, message = "{errors.maxlength} " + NATIVE_ID_LENGTH + ".")
 	private String masterAppId;
@@ -154,9 +154,9 @@ public class RemoteProviderApplication extends AuditableEntity  {
 
 	@Column
 	@JsonView(AllViews.TableRow.class)
-	public boolean getModuleStatus() {return containsModules; }
+	public Boolean getModuleStatus() {return containsModules; }
 
-	public void setModuleStatus(boolean moduleStatus) { this.containsModules = moduleStatus; }
+	public void setModuleStatus(Boolean moduleStatus) { this.containsModules = moduleStatus; }
 
 	@Column(length = NATIVE_ID_LENGTH, name = "masterAppId")
 	@JsonView(AllViews.TableRow.class)
