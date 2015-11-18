@@ -140,7 +140,7 @@
 
             <tr ng-repeat="app in provider.displayApps">
                 <td id="provider{{ provider.name | removeSpace }}appid{{ $index }}" style="word-wrap: break-word">
-                    {{ app.customName || app.nativeName }}
+                    {{ app.customName || app.nativeName }} {{ app.moduleStatus }}
                 </td>
                 <c:if test="${ canManageRemoteProviders }">
                     <td>
@@ -181,5 +181,6 @@
             </tr>
             </tbody>
         </table>
+
     </div>
 </tab>

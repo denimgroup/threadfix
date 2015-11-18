@@ -41,6 +41,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
             BASE_URL_V3 = "https://app.contrastsecurity.com/Contrast/api/ng/",
             ORGS_URL = "/profile/organizations/",
             APPS_URL = "/applications",
+            MODULE_URL="/modules/",
             TRACES_URL = "/traces/",
             EVENTS_SUMMARY_URL = "/events/summary",
             TRACE_WEB_URL = "https://app.contrastsecurity.com/Contrast/static/ng/index.html#/applications/",
@@ -107,24 +108,40 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
         assert remoteProviderType != null : "Remote Provider Type was null, please set before calling any methods.";
 
         List<RemoteProviderApplication> applicationList = list();
+        List<RemoteProviderApplication> moduleList = list();
         List<String> organizationUuids = fetchOrgUuids();
 
         for (String orgUuid : organizationUuids) {
             applicationList.addAll(getApplications(orgUuid));
+
+            for (RemoteProviderApplication application : applicationList) {
+                if (application.getModuleStatus()) {
+                    moduleList.addAll(getModules(orgUuid, application.getNativeId()));
+                }
+            }
+        }
+
+        if (!moduleList.isEmpty()) {
+           applicationList.addAll(moduleList);
         }
 
         return applicationList;
     }
 
     private List<RemoteProviderApplication> getApplications(String orgUuid) {
-        HttpResponse response = makeRequest(BASE_URL_V2 + orgUuid + APPS_URL);
+        return getApplications(makeRequest(BASE_URL_V3 + orgUuid + APPS_URL), false);
+    }
+
+    private List<RemoteProviderApplication> getApplications(HttpResponse response, boolean getModule) {
         List<RemoteProviderApplication> applicationList = list();
 
         try {
             if (response.isValid()) {
 
-                for (JSONObject object : toJSONObjectIterable(response.getBodyAsString())) {
-                    applicationList.add(getApplicationFromJson(object));
+                JSONObject object = new JSONObject(response.getBodyAsString().trim());
+
+                for (JSONObject application : toJSONObjectIterable(object.getJSONArray("applications"))) {
+                    applicationList.add(getApplicationFromJson(application));
                 }
 
             } else {
@@ -147,15 +164,25 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
         return applicationList;
     }
 
+    private List<RemoteProviderApplication> getModules(String orgUuid, String masterAppId) {
+        List<RemoteProviderApplication> modules = getApplications(makeRequest(BASE_URL_V3 + orgUuid + MODULE_URL + masterAppId), true);
+
+        for(RemoteProviderApplication module : modules) {
+            module.setMasterAppId(masterAppId);
+        }
+
+        return modules;
+    }
+
     private RemoteProviderApplication getApplicationFromJson(JSONObject object) throws JSONException {
         RemoteProviderApplication application = new RemoteProviderApplication();
 
         application.setNativeName(object.getString("name"));
-        application.setNativeId(object.getString("app-id"));
+        application.setNativeId(object.getString("app_id"));
+        application.setModuleStatus(object.getBoolean("master"));
 
         return application;
     }
-
 
     ////////////////////////////////////////////////////////////////////////
     //                         Get Findings
