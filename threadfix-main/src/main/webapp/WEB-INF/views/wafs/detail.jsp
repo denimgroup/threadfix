@@ -1,12 +1,12 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title><c:out value="${ waf.name }"/></title>
+	<title ng-non-bindable><c:out value="${ waf.name }"/></title>
     <cbs:cachebustscript src="/scripts/waf-detail-page-controller.js"/>
 </head>
 
 <body id="waf" ng-controller="WafDetailPageController" ng-init="loading = true; showRuleInfo = false;">
-	<h2 id="nameText" ><c:out value="${ waf.name }"/></h2>
+	<h2 id="nameText" ng-non-bindable><c:out value="${ waf.name }"/></h2>
 
 	<div id="helpText">
 		This page is used to generate rules and upload WAF logs to correlate their results with your existing Vulnerabilities.
@@ -17,7 +17,7 @@
 		<tbody>
 			<tr>
 				<td>Type:</td>
-				<td id="wafTypeText" class="inputValue"><c:out value="${ waf.wafType.name }"/></td>
+				<td id="wafTypeText" class="inputValue" ng-non-bindable><c:out value="${ waf.wafType.name }"/></td>
 			</tr>
 		</tbody>
 	</table>
@@ -74,9 +74,9 @@
 								<spring:param name="orgId" value="${ app.organization.id }"/>
 								<spring:param name="appId" value="${ app.id }"/>
 							</spring:url>
-							<a href="${ fn:escapeXml(appUrl) }"><c:out value="${ app.name }"/></a>
+							<a href="${ fn:escapeXml(appUrl) }" ng-non-bindable><c:out value="${ app.name }"/></a>
 						</td>
-						<td><c:out value="${ app.url }"/></td>
+						<td ng-non-bindable><c:out value="${ app.url }"/></td>
 					</tr>
 					</c:if>
 				</c:forEach>
@@ -109,7 +109,7 @@
                     <option value="-1">All Applications</option>
                     <c:forEach var="app" items="${ apps }">
                         <c:if test="${ app.active }">
-                            <option value="${ app.id }"><c:out value="${ app.organization.name }"/>/<c:out value="${ app.name }"/></option>
+                            <option value="${ app.id }" ng-non-bindable><c:out value="${ app.organization.name }"/>/<c:out value="${ app.name }"/></option>
                         </c:if>
                     </c:forEach>
                 </select>
@@ -119,9 +119,9 @@
 				</c:when>
 				<c:otherwise>
 					<select id="wafDirectiveSelect" name="wafDirective" ng-model="wafDirective">
-						<option value="<c:out value='${ lastDirective.directive }'/>"><c:out value="${ lastDirective.directive }"/></option>
+						<option ng-non-bindable value="<c:out value='${ lastDirective.directive }'/>"><c:out value="${ lastDirective.directive }"/></option>
 						<c:forEach var="directive" items="${ directives }">
-							<option value="<c:out value='${ directive.directive }'/>"><c:out value="${ directive.directive }"/></option>
+							<option ng-non-bindable value="<c:out value='${ directive.directive }'/>"><c:out value="${ directive.directive }"/></option>
 						</c:forEach>
 					</select>
 				</c:otherwise>

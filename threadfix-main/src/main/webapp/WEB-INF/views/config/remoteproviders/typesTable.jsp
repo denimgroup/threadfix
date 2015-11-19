@@ -22,15 +22,15 @@
 	</c:if>
 	<c:forEach var="remoteProviderType" items="${ remoteProviders }" varStatus="status">
 		<tr class="bodyRow">
-			<td id="name${status.count }">
+			<td ng-non-bindable id="name${status.count }">
 				<c:out value="${ remoteProviderType.name }" />
 			</td>
-			<td id="username${status.count }">
+			<td ng-non-bindable id="username${status.count }">
 				<c:if test="${ not empty remoteProviderType.username }">
 					<c:out value="${ remoteProviderType.username }" />
 				</c:if>
 			</td>
-			<td id="apiKey${status.count }">
+			<td ng-non-bindable id="apiKey${status.count }">
 				<c:if test="${ not empty remoteProviderType.apiKey }">
 					<c:out value="${ remoteProviderType.apiKey }" />
 				</c:if>

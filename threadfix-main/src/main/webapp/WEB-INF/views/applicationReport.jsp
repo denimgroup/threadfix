@@ -36,7 +36,7 @@ table, th, td, th {padding: 5px}
 
 <c:forEach var="vulnDataList" items="${scanVulnerabilityDataList}">
 	<c:forEach var="data" items="${vulnDataList}" varStatus="status">
-		<c:if test="${status.first}"><tr><td><c:out value="${ data }"/></td><td>Total</td></c:if>
+		<c:if test="${status.first}"><tr><td ng-non-bindable><c:out value="${ data }"/></td><td>Total</td></c:if>
 		<c:if test="${not status.first}">
 		<tr>
 			<c:forEach var="i" begin="1" end="${data}" varStatus="i">

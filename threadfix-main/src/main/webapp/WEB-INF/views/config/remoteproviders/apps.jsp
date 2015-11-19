@@ -14,7 +14,7 @@
 			<c:forEach var="organization" items="${organizationList}">
 			    if("${organization.id}" == $("#orgSelect").val()) {
 					<c:forEach var="application" items="${ organization.activeApplications}">
-						options += '<option value="${ application.id}"><c:out value="${ application.name }"/></option>';
+						options += '<option ng-non-bindable value="${ application.id}"><c:out value="${ application.name }"/></option>';
 					</c:forEach>
 			    }
 			</c:forEach>
@@ -40,7 +40,7 @@
 		<tbody>
 			<c:forEach var="application" varStatus="vs" items="${ remoteProviderType.remoteProviderApplications }">
 				<tr class="bodyRow">
-					<td><c:out value="${ application.nativeName }"/></td>
+					<td ng-non-bindable><c:out value="${ application.nativeName }"/></td>
 					<td>
 						<script type="text/javascript">
 							$(document).ready(function(){ 
@@ -53,7 +53,7 @@
 									<c:forEach var="organization" items="${organizationList}">
 									    if("${organization.id}" == $("#orgSelect${vs.index}").val()) {
 											<c:forEach var="application" items="${ organization.activeApplications}">
-												options += '<option value="${ application.id}"><c:out value="${ application.name }"/></option>';
+												options += '<option ng-non-bindable value="${ application.id}"><c:out value="${ application.name }"/></option>';
 											</c:forEach>
 									    }
 									</c:forEach>
@@ -66,7 +66,7 @@
 							<option value="-1"></option>
 							<c:forEach var="organization" items="${ organizationList }">
 								<c:if test="${ organization.active }">
-								<option value="${ organization.id }">
+								<option ng-non-bindable value="${ organization.id }">
 									<c:out value="${ organization.name }"/>
 								</option>
 								</c:if>

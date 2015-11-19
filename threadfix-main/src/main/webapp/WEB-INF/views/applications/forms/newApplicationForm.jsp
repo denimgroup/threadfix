@@ -54,7 +54,7 @@
                                 id="criticalityIdSelect">
 
                             <c:forEach items="${applicationCriticalityList}" var="applicationCriticality">
-                                <option value="<c:out value='${applicationCriticality.id}'/>">
+                                <option ng-non-bindable value="<c:out value='${applicationCriticality.id}'/>">
                                     <c:out value='${applicationCriticality.name}'/>
                                 </option>
                             </c:forEach>
@@ -69,7 +69,7 @@
                     <td class="left-align" >
                         <select name="frameworkType" ng-model="object.frameworkType" id="frameworkTypeSelect{{ object.team.id }}">
                             <c:forEach items="${applicationTypes}" var="type">
-                                <option value="<c:out value='${type}'/>">
+                                <option ng-non-bindable value="<c:out value='${type}'/>">
                                     <c:out value='${type}'/>
                                 </option>
                             </c:forEach>

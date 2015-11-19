@@ -1,9 +1,9 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <c:if test="${ not empty errorMessage }">
-	<div class="alert alert-error">
+	<div class="alert alert-error" ng-non-bindable>
 		<c:if test="${ empty notCloseable }">
-			<button class="close" data-dismiss="alert" type="button">×</button>
+			<button class="close" data-dismiss="alert" type="button">ï¿½</button>
 		</c:if>
 		<c:out value="${ errorMessage }"/>
 	</div>

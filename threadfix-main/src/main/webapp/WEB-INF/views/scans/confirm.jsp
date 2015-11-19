@@ -1,11 +1,11 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title><c:out value="${ application.name }"/> Scan Upload Confirmation</title>
+	<title ng-non-bindable><c:out value="${ application.name }"/> Scan Upload Confirmation</title>
 </head>
 
 <body id="apps">
-	<h2><c:out value="${ application.name }"/> Empty Scan Upload Confirmation</h2>
+	<h2 ng-non-bindable><c:out value="${ application.name }"/> Empty Scan Upload Confirmation</h2>
 
 	You have uploaded an empty scan. Click yes to continue, and no to go back to the scan page.
 	<br/><br/>

@@ -24,7 +24,7 @@
 			</tr>
 		</c:if>
 		<c:forEach var="event" items="${ eventList }">
-			<tr class="bodyRow">
+			<tr class="bodyRow" ng-non-bindable>
 				<td class="details">
 					<c:out value="${ waf.wafRule.nativeId }"/> 
 				</td>

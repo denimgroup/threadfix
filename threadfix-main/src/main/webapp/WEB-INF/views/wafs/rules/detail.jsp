@@ -20,7 +20,7 @@
 			<spring:param name="wafRuleId" value="${ wafRule.id }"/>
 			<spring:param name="eventId" value="${ event.id }"/>
 		</spring:url>
-		<a href="${ fn:escapeXml(eventUrl) }" >
+		<a href="${ fn:escapeXml(eventUrl) }" ng-non-bindable>
 		<fmt:formatDate value="${event.importTime.time}" type="both" dateStyle="short" timeStyle="medium" /> -- <c:out value="${ event.attackType }"/>
 		</a>
 		<br/>

@@ -12,7 +12,7 @@
 	<c:if test="${ not empty exportText }">
 		<div>
 			<h4 style="padding-top:8px">Mappings Export</h4>
-			<a class="btn" href="mailto:support@threadfix.org?subject=Mappings-Update&body=<c:out value="${ fn:escapeXml(exportText) }"/>" target="_top">
+			<a ng-non-bindable class="btn" href="mailto:support@threadfix.org?subject=Mappings-Update&body=<c:out value="${ fn:escapeXml(exportText) }"/>" target="_top">
 				Export New Mappings to Denim Group (Through Email)
 			</a>
 		</div>
@@ -26,7 +26,7 @@
             <c:if test="${ not empty exportUnmappedText }">
                 <div>
                     <h4 style="padding-top:10px">Unmapped Types Export</h4>
-                    <a class="btn" href="mailto:support@threadfix.org?subject=Unmapped%20Types%20Update&body=<c:out value="${ fn:escapeXml(exportUnmappedText) }"/>" target="_top">
+                    <a ng-non-bindable class="btn" href="mailto:support@threadfix.org?subject=Unmapped%20Types%20Update&body=<c:out value="${ fn:escapeXml(exportUnmappedText) }"/>" target="_top">
                         Export Unmapped Types to Denim Group (Through Email)
                     </a>
                 </div>

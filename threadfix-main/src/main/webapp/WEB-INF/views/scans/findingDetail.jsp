@@ -88,7 +88,7 @@
 				</tr>
 				<tr>
 					<td class="bold">Native ID</td>
-					<td class="inputValue" id="nativeId">
+					<td class="inputValue" id="nativeId" ng-non-bindable>
 						<c:if test="${ not empty finding.displayId }"><c:out value="${ finding.displayId }" /></c:if>
 						<c:if test="${ empty finding.displayId }"><c:out value="${ finding.nativeId }" /></c:if>						
 					</td>
@@ -117,7 +117,7 @@
 			<c:if test="${ not empty finding.dependency }">			
 				<tr>
 					<td class="bold">Reference</td>
-					<td class="inputValue" id="dependency">
+					<td class="inputValue" id="dependency" ng-non-bindable>
 						<c:out value="${ finding.dependency.refId } "/>
 						(<a target="_blank" href="<c:out value="${ finding.dependency.refLink }"/>">View</a>)
 					</td>	
