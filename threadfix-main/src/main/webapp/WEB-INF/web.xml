@@ -308,6 +308,7 @@
 				protected-regex ^/reports/search/export/tag/pdf$,
                 protected-regex ^/reports/getTopApps$,
         		protected-regex ^/reports/parameters$,
+				protected-regex ^/reports/saveParameters,
                 protected-regex ^/reports/ajax/export/[0-9]+/[0-9]+/[0-9]+/[0-9]+$,
         		protected-regex ^/scans/table$,
         		protected-regex ^/scannerMappings/update$,
