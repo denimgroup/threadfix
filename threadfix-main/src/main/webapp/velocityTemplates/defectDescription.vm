@@ -18,35 +18,59 @@
             Vulnerability\[${vulnIndex}]: #addThreadfixLink( "${baseUrl}$vulnerability.getUri()" )$br
             $vulnerability.genericVulnerability.name$br
             CWE entry: http://cwe.mitre.org/data/definitions/${vulnerability.genericVulnerability.id}.html$br
+            #set( $dependencyFinding = "" )
+            #set( $staticFinding = "" )
+            #set( $dynamicFinding = "" )
+
             #set( $dependencyFinding = $dependencyFindings.get($vulnerability) )
             #set( $staticFinding = $staticFindings.get($vulnerability) )
             #set( $dynamicFinding = $dynamicFindings.get($vulnerability) )
 
             #if( $dependencyFinding && $dependencyFinding.getDependency() )
+                #set( $refId = "" )
+                #set( $refLink = "" )
+                #set( $componentName = "" )
+
                 #set( $refId = $dependencyFinding.getDependency().getRefId() )
                 #set( $refLink = $dependencyFinding.getDependency().getRefLink() )
                 #set( $componentName = $dependencyFinding.getDependency().getComponentName() )
-                #if( $refId || $componentName )
+
+                #if( $refId != "" || $componentName != "" )
                     Vulnerability dependency:$br
-                    #if( $refId )Reference: $refId #if($refLink)($refLink)#end$br#end
-                    #if( $componentName )Component: $componentName$br#end
+                    #if( $refId != "" )Reference: $refId #if($refLink != "")($refLink)#end$br#end
+                    #if( $componentName != "" )Component: $componentName$br#end
                 #end
             #end
-            #if( $staticFinding )
-                #set( $sourceFileLocation = $staticFinding.getSourceFileLocation() )
-                #set( $entryPointLineNumber = $staticFinding.getEntryPointLineNumber() )
-                #if( $sourceFileLocation )
+            #if( $staticFinding && $staticFinding.getDataFlowElements() )
+                #set( $dataFlows = "" )
+                #set( $dataFlows = $staticFinding.getDataFlowElements() )
+
+                #if( $dataFlows != "")
                     Vulnerability source file location:$br
-                    File: $sourceFileLocation#if($entryPointLineNumber):$entryPointLineNumber#end$br
+                    #foreach( $dataFlow in $dataFlows )
+                        #set( $sourceFileLocation = "" )
+                        #set( $lineNumber = "" )
+
+                        #set( $sourceFileLocation = $dataFlow.getSourceFileName() )
+                        #set( $lineNumber = $dataFlow.getLineNumber() )
+
+                        #if( $sourceFileLocation != "" )
+                        File: $sourceFileLocation#if($lineNumber != "") line $lineNumber#end$br
+                        #end
+                    #end
                 #end
             #end
-            #if( $dynamicFinding )
+            #if( $dynamicFinding && $dynamicFinding.surfaceLocation )
+                #set( $url = "" )
+                #set( $parameter = "" )
+
                 #set( $url = $dynamicFinding.surfaceLocation.getUrl() )
                 #set( $parameter = $dynamicFinding.surfaceLocation.parameter )
-                #if( $url || $parameter )
+
+                #if( $url != "" || $parameter != "" )
                     Vulnerability attack surface location:$br
-                    #if( $url )URL: ${url}#end$br
-                    #if( $parameter )Parameter: ${parameter}#end$br
+                    #if( $url != "" )URL: ${url}#end$br
+                    #if( $parameter != "" )Parameter: ${parameter}#end$br
                 #end
             #end
 

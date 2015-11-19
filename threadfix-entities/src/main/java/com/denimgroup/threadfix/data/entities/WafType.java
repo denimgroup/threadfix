@@ -69,7 +69,7 @@ public class WafType extends BaseEntity {
 	}
 	
 	@Column
-	@JsonView(AllViews.RestViewWaf2_1.class)
+	@JsonView(AllViews.RestViewWafs2_1.class)
 	public Integer getInitialId() {
 		if (initialId == null)
 			setInitialId(100000);

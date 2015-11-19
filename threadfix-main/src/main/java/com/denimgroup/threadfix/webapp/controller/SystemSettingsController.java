@@ -10,6 +10,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.annotations.ReportLocation;
 import com.denimgroup.threadfix.data.entities.CSVExportField;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
+import com.denimgroup.threadfix.exception.RestException;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
@@ -120,7 +121,7 @@ public class SystemSettingsController {
             long endTime = System.currentTimeMillis();
             return success("LDAP settings are valid. LDAP validation took: " + (endTime - startTime) + "ms.");
         } else {
-            return failure("Unable to verify LDAP settings.");
+            return failure("Unable to verify LDAP settings. They are invalid or not configured.");
         }
     }
 

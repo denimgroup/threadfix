@@ -56,6 +56,12 @@ public class RemoteProviderApplication extends AuditableEntity  {
 	private String reportUrl;
 
 	private RemoteProviderType remoteProviderType;
+
+	// Contrast module support
+	private Boolean isMasterApp;
+
+	@Size(max = NATIVE_ID_LENGTH, message = "{errors.maxlength} " + NATIVE_ID_LENGTH + ".")
+	private String masterAppId;
 	
 	private Application application;
 	private ApplicationChannel applicationChannel;
@@ -144,5 +150,25 @@ public class RemoteProviderApplication extends AuditableEntity  {
 
 	public void setReportUrl(String reportUrl) {
 		this.reportUrl = reportUrl;
+	}
+
+	@Column
+	@JsonView(AllViews.TableRow.class)
+	public Boolean getMasterApp() {
+		return isMasterApp == null ? false : isMasterApp;
+	}
+
+	public void setMasterApp(Boolean masterApp) {
+		isMasterApp = masterApp;
+	}
+
+	@Column(length = NATIVE_ID_LENGTH, name = "masterAppId")
+	@JsonView(AllViews.TableRow.class)
+	public String getMasterAppId() {
+		return masterAppId;
+	}
+
+	public void setMasterAppId(String masterAppId) {
+		this.masterAppId = masterAppId;
 	}
 }

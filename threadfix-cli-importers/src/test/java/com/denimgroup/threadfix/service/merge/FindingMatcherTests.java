@@ -50,24 +50,14 @@ public class FindingMatcherTests {
             if (vulnerability.getGenericVulnerability().getDisplayId() == 79 &&
                     vulnerability.getSurfaceLocation().getParameter().equals("txtCardNumber") &&
                     vulnerability.getSurfaceLocation().getPath().endsWith("MakePayment.aspx")) {
-                boolean hasFortify = false, hasCatNet = false;
-
-                for (Finding finding : vulnerability.getFindings()) {
-                    if (FORTIFY_DB_NAME.equals(finding.getChannelNameOrNull())) {
-                        hasFortify = true;
-                    } else if (CAT_NET_DB_NAME.equals(finding.getChannelNameOrNull())) {
-                        hasCatNet = true;
-                    }
-                }
-
-                assert hasFortify : "Didn't have Fortify.";
-                assert hasCatNet : "Didn't have cat.net.";
+                hasBothScanners(vulnerability, CAT_NET_DB_NAME, FORTIFY_DB_NAME);
                 hadOneMatch = true;
             }
         }
 
         assert hadOneMatch : "Didn't find any matches.";
     }
+
     @Test
     public void testCWE584StaticMerging() {
         Application application = Merger.mergeFromDifferentScanners(null, // no source available
@@ -79,23 +69,27 @@ public class FindingMatcherTests {
         for (Vulnerability vulnerability : application.getVulnerabilities()) {
             if (vulnerability.getGenericVulnerability().getDisplayId() == 584 &&
                     vulnerability.getSurfaceLocation().getPath().contains("CWE584_Return_in_Finally_Block")) {
-                boolean hasFortify = false, hasCheckMarx = false;
-
-                for (Finding finding : vulnerability.getFindings()) {
-                    if (FORTIFY_DB_NAME.equals(finding.getChannelNameOrNull())) {
-                        hasFortify = true;
-                    } else if (CHECKMARX_DB_NAME.equals(finding.getChannelNameOrNull())) {
-                        hasCheckMarx = true;
-                    }
-                }
-
-                assert hasFortify : "Didn't have Fortify.";
-                assert hasCheckMarx : "Didn't have CheckMarx.";
+                hasBothScanners(vulnerability, CHECKMARX_DB_NAME, FORTIFY_DB_NAME);
                 hadOneMatch = true;
             }
         }
 
         assert hadOneMatch : "Didn't find any matches.";
+    }
+
+    private void hasBothScanners(Vulnerability vulnerability, String scanner1, String scanner2) {
+        boolean hasScanner1 = false, hasScanner2 = false;
+
+        for (Finding finding : vulnerability.getFindings()) {
+            if (scanner1.equals(finding.getChannelNameOrNull())) {
+                hasScanner1 = true;
+            } else if (scanner2.equals(finding.getChannelNameOrNull())) {
+                hasScanner2 = true;
+            }
+        }
+
+        assert hasScanner1 : "Didn't have " + scanner1 + ".";
+        assert hasScanner2 : "Didn't have " + scanner2 + ".";
     }
 
 

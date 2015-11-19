@@ -85,7 +85,6 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 
 	public class NessusSAXParser extends HandlerWithBuilder {
 		private Boolean getDate               = false;
-		private Boolean getFindings           = false;
 		private Boolean getNameText           = false;
 		private Boolean getHost               = false;
         private Boolean getScannerDetail = false;
@@ -117,15 +116,16 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 
     		currentChannelVulnCode = null;
     		currentSeverityCode = null;
-            cwe = null;
+			cwe = null;
+
+			currentRecommendation = null;
+			currentRawFinding.setLength(0);
 	    }
 
 	    private void parseGenericPattern() {
 	    	String param = "", path = "Network";
 
             add(createFinding(path, param));
-    		currentChannelVulnCode = null;
-    		currentSeverityCode = null;
 	    }
 
         private Finding createFinding(String url, String param) {
@@ -151,8 +151,6 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 				finding.setDependency(dependency);
 				String info = dependency.getComponentFilePath() + " " + dependency.getCve();
 				finding.setNativeId(md5(info));
-
-				System.out.println(info);
 			}
 
 			return finding;
@@ -171,8 +169,6 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 				currentPort = atts.getValue("port");
 				pluginName = atts.getValue("pluginName");
                 inFinding = true;
-	    	} else if ("plugin_output".equals(qName)) {
-	    		getFindings = true;
 	    	} else if (date == null && "tag".equals(qName) && "HOST_END".equals(atts.getValue("name"))) {
 	    		getDate = true;
 	    	} else if (host == null && "name".equals(qName)) {
@@ -204,8 +200,6 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    			date = DateUtils.getCalendarFromString("EEE MMM dd kk:mm:ss yyyy", tempDateString.trim());
 	    		}
 	    		getDate = false;
-	    	} else if (getFindings) {
-	    		getFindings = false;
 	    	} else if (getNameText) {
 	    		String text = getBuilderText();
 
@@ -245,12 +239,11 @@ public class NessusChannelImporter extends AbstractChannelImporter {
             } else if ("ReportItem".equals(qName)) {
                 parseFindingString();
                 inFinding = false;
-                currentRawFinding.setLength(0);
             }
 	    }
 
 	    public void characters (char ch[], int start, int length) {
-	    	if (getDate || getFindings || getNameText || getHost || getScannerDetail || getScannerRecommendation || getCwe) {
+	    	if (getDate || getNameText || getHost || getScannerDetail || getScannerRecommendation || getCwe) {
 	    		addTextToBuilder(ch, start, length);
 	    	}
             if (inFinding)

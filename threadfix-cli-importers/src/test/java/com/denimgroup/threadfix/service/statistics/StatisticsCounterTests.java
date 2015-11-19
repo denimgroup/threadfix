@@ -40,9 +40,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.service.merge.RemappingTestHarness.getFilePaths;
+import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 /**
  * Created by mcollins on 6/11/15.
@@ -96,7 +99,7 @@ public class StatisticsCounterTests {
 
         List<Scan> scans = application.getScans();
 
-        Assert.assertTrue("Had " + scans.size() + " scans instead of " + 2, scans.size() == 2);
+        Assert.assertTrue("Had " + scans.size() + " scans instead of 2", scans.size() == 2);
 
         for (Scan scan : scans) {
             Integer total = scan.getNumberTotalVulnerabilities();
@@ -110,11 +113,45 @@ public class StatisticsCounterTests {
 
         List<Scan> scans = application.getScans();
 
-        Assert.assertTrue("Had " + scans.size() + " scans instead of " + 1, scans.size() == 1);
+        assertTrue("Had " + scans.size() + " scans instead of 1", scans.size() == 1);
 
         for (Scan scan : scans) {
             Integer total = scan.getNumberTotalVulnerabilities();
-            Assert.assertTrue("Had " + total + " vulnerabilities, not 32.", total == 32);
+            assertTrue("Had " + total + " vulnerabilities, not 32.", total == 32);
         }
+    }
+
+    @Test
+    public void testOldVulnerabilitiesCountCorrect() {
+        List<Scan> scans = getScans("testfire-zap.xml", "testfire-arachni.xml");
+        testTotalAndOld(69, 8, scans);
+        testTotalAndOld(32, 0, scans);
+    }
+
+    @Test
+    public void testOldVulnerabilitiesCountCorrectReverse() {
+        List<Scan> scans = getScans("testfire-arachni.xml", "testfire-zap.xml");
+        testTotalAndOld(69, 8, scans);
+        testTotalAndOld(32, 0, scans);
+    }
+
+    private void testTotalAndOld(int total, int old, List<Scan> scans) {
+        Map<Integer, Integer> numbersOld = map();
+
+        for (Scan scan : scans) {
+            numbersOld.put(scan.getNumberTotalVulnerabilities(), scan.getNumberOldVulnerabilities());
+        }
+
+        assertTrue("Scan with " + total + " vulns didn't have " + old +
+                " old vulnerabilities. Got " + numbersOld, numbersOld.get(total) == old);
+    }
+
+    private List<Scan> getScans(String... scanFiles) {
+        Application application = getApplicationWith(scanFiles);
+
+        List<Scan> scans = application.getScans();
+
+        assertTrue("Had " + scans.size() + " scans instead of " + scanFiles.length, scans.size() == scanFiles.length);
+        return scans;
     }
 }

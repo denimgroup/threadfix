@@ -64,6 +64,8 @@ public class DefectServiceImpl implements DefectService {
 	private DefaultConfigService defaultConfigService;
 	@Autowired
 	private DefectTrackerService defectTrackerService;
+	@Autowired(required = false)
+	private PolicyStatusService policyStatusService;
 
 	private static final SanitizedLogger LOG = new SanitizedLogger(DefectService.class);
 
@@ -443,6 +445,10 @@ public class DefectServiceImpl implements DefectService {
 					"This could just mean that no issues were closed.");
 		} else {
 			LOG.info("Updated information for " + numUpdated + " vulnerabilities.");
+		}
+
+		if (policyStatusService != null) {
+			policyStatusService.runStatusCheck(applicationId);
 		}
 		
 		return true;

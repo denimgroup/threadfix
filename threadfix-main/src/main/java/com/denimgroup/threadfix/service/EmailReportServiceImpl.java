@@ -227,8 +227,12 @@ public class EmailReportServiceImpl implements EmailReportService {
             Map<String, List<PolicyStatus>> emailMap = map();
 
             for (PolicyStatus policyStatus : policyStatuses) {
-                Set<String> filteredEmailAddresses = emailFilterService.getFilteredEmailAddresses(
-                        policyStatusService.getNotificationEmailAddresses(policyStatus));
+                Set<String> filteredEmailAddresses = set();
+
+				if (policyStatus.hasStatusChanged()) {
+					filteredEmailAddresses = emailFilterService.getFilteredEmailAddresses(
+							policyStatusService.getNotificationEmailAddresses(policyStatus));
+				}
 
                 LOG.info("Filtered email addresses: " + filteredEmailAddresses.toString());
 

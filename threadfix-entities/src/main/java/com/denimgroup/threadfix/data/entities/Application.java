@@ -191,8 +191,8 @@ public class Application extends AuditableEntity {
 	@Column(length = 255)
     @JsonView({ AllViews.FormInfo.class, AllViews.TableRow.class,
             AllViews.RestViewTag.class, AllViews.RestViewTeams2_1.class,
-            AllViews.RestViewCreateApplication2_1.class, AllViews.RestViewApplication2_1.class,
-            AllViews.RestViewWaf2_1.class })
+            AllViews.RestCreateApplication2_1.class, AllViews.RestViewApplication2_1.class,
+            AllViews.RestViewWafs2_1.class })
 	public String getUniqueId() {
 		return uniqueId;
 	}
@@ -202,7 +202,7 @@ public class Application extends AuditableEntity {
 	}
 
 	@Column(length = 50)
-    @JsonView({ AllViews.RestViewTeams2_1.class, AllViews.RestViewWaf2_1.class })
+    @JsonView({ AllViews.RestViewTeams2_1.class, AllViews.RestViewWafs2_1.class })
 	public String getProjectName() {
 		return projectName;
 	}
@@ -212,7 +212,7 @@ public class Application extends AuditableEntity {
 	}
 
 	@Column(length = 25)
-    @JsonView({ AllViews.RestViewTeams2_1.class, AllViews.RestViewWaf2_1.class })
+    @JsonView({ AllViews.RestViewTeams2_1.class, AllViews.RestViewWafs2_1.class })
 	public String getProjectId() {
 		return projectId;
 	}
@@ -222,7 +222,7 @@ public class Application extends AuditableEntity {
 	}
 
 	@Column(length = 50, nullable = true)
-    @JsonView({ AllViews.RestViewTeams2_1.class, AllViews.RestViewWaf2_1.class })
+    @JsonView({ AllViews.RestViewTeams2_1.class, AllViews.RestViewWafs2_1.class })
 	public String getComponent() {
 		return component;
 	}
@@ -273,7 +273,7 @@ public class Application extends AuditableEntity {
 
     @Transient
     @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class,
-            AllViews.RestViewTeams2_1.class, AllViews.RestViewWaf2_1.class })
+            AllViews.RestViewTeams2_1.class, AllViews.RestViewWafs2_1.class })
     public String getObscuredPassword() {
         if(repositoryEncryptedPassword == null || repositoryEncryptedPassword.trim().length() == 0) {
             return "";
@@ -284,7 +284,7 @@ public class Application extends AuditableEntity {
 
     @Transient
     @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class,
-            AllViews.RestViewTeams2_1.class, AllViews.RestViewWaf2_1.class })
+            AllViews.RestViewTeams2_1.class, AllViews.RestViewWafs2_1.class })
     public String getObscuredUserName() throws IllegalAccessException {
         return repositoryUserName;
     }
@@ -292,7 +292,7 @@ public class Application extends AuditableEntity {
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "defectTrackerId")
     @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class,
-            AllViews.RestViewTeams2_1.class, AllViews.RestViewWaf2_1.class })
+            AllViews.RestViewTeams2_1.class, AllViews.RestViewWafs2_1.class })
     public DefectTracker getDefectTracker() {
 		return defectTracker;
 	}
@@ -358,8 +358,8 @@ public class Application extends AuditableEntity {
     @Transient
     @JsonProperty("waf")
     @JsonView({ AllViews.FormInfo.class, AllViews.RestViewApplication2_1.class,
-            AllViews.RestViewTeams2_1.class, AllViews.RestViewCreateApplication2_1.class,
-            AllViews.RestViewWaf2_1.class })
+            AllViews.RestViewTeams2_1.class, AllViews.RestCreateApplication2_1.class,
+            AllViews.RestViewWafs2_1.class })
     private Map<String, Object> getWafRest() {
 
         if (waf == null) {
@@ -407,8 +407,7 @@ public class Application extends AuditableEntity {
 
     @OneToMany(mappedBy = "application")
 	@OrderBy("importTime DESC")
-    @JsonView({ AllViews.RestViewApplication2_1.class, AllViews.RestViewCreateApplication2_1.class,
-                AllViews.RestViewWaf2_1.class })
+    @JsonView({ AllViews.RestViewApplication2_1.class, AllViews.RestCreateApplication2_1.class })
     public List<Scan> getScans() {
 		if (scans == null)
 			scans = list();
@@ -494,9 +493,9 @@ public class Application extends AuditableEntity {
 
     @OneToOne(mappedBy = "application")
     @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class,
-            AllViews.RestViewCreateApplication2_1.class, AllViews.RestViewApplication2_1.class,
-            AllViews.RestViewTeam2_1.class, AllViews.RestViewTeams2_1.class,  AllViews.RestViewWaf2_1.class,
-			AllViews.RestVulnSearch.class })
+            AllViews.RestCreateApplication2_1.class, AllViews.RestViewApplication2_1.class,
+            AllViews.RestViewTeam2_1.class, AllViews.RestViewTeams2_1.class, AllViews.RestViewWaf2_1.class,
+			AllViews.RestVulnSearch.class, AllViews.RestViewWafs2_1.class })
     public GRCApplication getGrcApplication() {
 		return grcApplication;
 	}
@@ -549,8 +548,8 @@ public class Application extends AuditableEntity {
 
     @Column
     @JsonView({ AllViews.TableRow.class, AllViews.RestViewApplication2_1.class,
-            AllViews.RestViewTeams2_1.class, AllViews.RestViewCreateApplication2_1.class,
-            AllViews.RestViewWaf2_1.class })
+            AllViews.RestViewTeams2_1.class, AllViews.RestCreateApplication2_1.class,
+            AllViews.RestViewWafs2_1.class })
     public Integer getTotalVulnCount() {
         return totalVulnCount == null ? 0 : totalVulnCount;
     }
@@ -561,8 +560,8 @@ public class Application extends AuditableEntity {
 
     @Column
     @JsonView({ AllViews.TableRow.class, AllViews.RestViewApplication2_1.class,
-            AllViews.RestViewTeams2_1.class, AllViews.RestViewCreateApplication2_1.class,
-            AllViews.RestViewWaf2_1.class })
+            AllViews.RestViewTeams2_1.class, AllViews.RestCreateApplication2_1.class,
+            AllViews.RestViewWafs2_1.class })
     public Integer getInfoVulnCount() {
         return infoVulnCount == null ? 0 : infoVulnCount;
     }
@@ -573,8 +572,8 @@ public class Application extends AuditableEntity {
 
     @Column
     @JsonView({ AllViews.TableRow.class, AllViews.RestViewApplication2_1.class,
-            AllViews.RestViewTeams2_1.class, AllViews.RestViewCreateApplication2_1.class,
-            AllViews.RestViewWaf2_1.class })
+            AllViews.RestViewTeams2_1.class, AllViews.RestCreateApplication2_1.class,
+            AllViews.RestViewWafs2_1.class })
     public Integer getLowVulnCount() {
         return lowVulnCount == null ? 0 : lowVulnCount;
     }
@@ -585,8 +584,8 @@ public class Application extends AuditableEntity {
 
     @Column
     @JsonView({ AllViews.TableRow.class, AllViews.RestViewApplication2_1.class,
-            AllViews.RestViewTeams2_1.class, AllViews.RestViewCreateApplication2_1.class,
-            AllViews.RestViewWaf2_1.class })
+            AllViews.RestViewTeams2_1.class, AllViews.RestCreateApplication2_1.class,
+            AllViews.RestViewWafs2_1.class })
     public Integer getMediumVulnCount() {
         return mediumVulnCount == null ? 0 : mediumVulnCount;
     }
@@ -597,8 +596,8 @@ public class Application extends AuditableEntity {
 
     @Column
     @JsonView({ AllViews.TableRow.class, AllViews.RestViewApplication2_1.class,
-            AllViews.RestViewTeams2_1.class, AllViews.RestViewCreateApplication2_1.class,
-            AllViews.RestViewWaf2_1.class })
+            AllViews.RestViewTeams2_1.class, AllViews.RestCreateApplication2_1.class,
+            AllViews.RestViewWafs2_1.class })
     public Integer getHighVulnCount() {
         return highVulnCount == null ? 0 : highVulnCount;
     }
@@ -609,8 +608,8 @@ public class Application extends AuditableEntity {
 
     @Column
     @JsonView({ AllViews.TableRow.class, AllViews.RestViewApplication2_1.class,
-            AllViews.RestViewTeams2_1.class, AllViews.RestViewCreateApplication2_1.class,
-            AllViews.RestViewWaf2_1.class })
+            AllViews.RestViewTeams2_1.class, AllViews.RestCreateApplication2_1.class,
+            AllViews.RestViewWafs2_1.class })
     public Integer getCriticalVulnCount() {
         return criticalVulnCount == null ? 0 : criticalVulnCount;
     }
@@ -692,7 +691,7 @@ public class Application extends AuditableEntity {
 	
 	@Column(length = ENUM_LENGTH)
     @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class,
-            AllViews.RestViewTeams2_1.class, AllViews.RestViewWaf2_1.class })
+            AllViews.RestViewTeams2_1.class, AllViews.RestViewWafs2_1.class })
 	public String getFrameworkType() {
 		return frameworkType;
 	}
@@ -723,7 +722,7 @@ public class Application extends AuditableEntity {
 
 	@Column(length = URL_LENGTH)
     @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class,
-            AllViews.RestViewTeams2_1.class, AllViews.RestViewWaf2_1.class })
+            AllViews.RestViewTeams2_1.class, AllViews.RestViewWafs2_1.class })
 	public String getRepositoryUrl() {
 		return repositoryUrl;
 	}
@@ -733,7 +732,7 @@ public class Application extends AuditableEntity {
 	}
 
     @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class,
-            AllViews.RestViewTeams2_1.class, AllViews.RestViewWaf2_1.class })
+            AllViews.RestViewTeams2_1.class, AllViews.RestViewWafs2_1.class })
     public String getRepositoryBranch() {
         return repositoryBranch;
     }
@@ -762,7 +761,7 @@ public class Application extends AuditableEntity {
 
     @Transient
     @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class,
-            AllViews.RestViewTeams2_1.class, AllViews.RestViewWaf2_1.class })
+            AllViews.RestViewTeams2_1.class, AllViews.RestViewWafs2_1.class })
     public String getRepositoryUserName() {
         return repositoryUserName;
     }
@@ -773,7 +772,7 @@ public class Application extends AuditableEntity {
 
     @Transient
     @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class,
-            AllViews.RestViewTeams2_1.class, AllViews.RestViewWaf2_1.class })
+            AllViews.RestViewTeams2_1.class, AllViews.RestViewWafs2_1.class })
     public String getRepositoryPassword() {
         return repositoryPassword;
     }
@@ -804,7 +803,7 @@ public class Application extends AuditableEntity {
 
     @Column(length = URL_LENGTH)
     @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class,
-            AllViews.RestViewTeams2_1.class, AllViews.RestViewWaf2_1.class })
+            AllViews.RestViewTeams2_1.class, AllViews.RestViewWafs2_1.class })
 	public String getRepositoryFolder() {
 		return repositoryFolder;
 	}
@@ -897,7 +896,7 @@ public class Application extends AuditableEntity {
     @Transient
     @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.VulnSearchApplications.class,
             AllViews.RestViewTag.class, AllViews.DefectTrackerInfos.class,
-            AllViews.PolicyPageView.class, AllViews.RestViewTeams2_1.class, AllViews.RestViewWaf2_1.class })
+            AllViews.PolicyPageView.class, AllViews.RestViewTeams2_1.class, AllViews.RestViewWafs2_1.class })
     public Map<String, Object> getTeam() {
         Organization team = getOrganization();
 
@@ -915,7 +914,7 @@ public class Application extends AuditableEntity {
 
     @Transient
     @JsonView({ AllViews.RestViewApplication2_1.class, AllViews.RestViewTeams2_1.class,
-            AllViews.RestViewCreateApplication2_1.class, AllViews.RestViewWaf2_1.class })
+            AllViews.RestCreateApplication2_1.class, AllViews.RestViewWafs2_1.class })
     @JsonProperty("organization")
     public Map<String, Object> getOrganizationRest() {
         Organization team = getOrganization();
@@ -939,7 +938,7 @@ public class Application extends AuditableEntity {
 
 	@Column(nullable = true)
 	@JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class,
-            AllViews.RestViewTeams2_1.class, AllViews.RestViewWaf2_1.class })
+            AllViews.RestViewTeams2_1.class, AllViews.RestViewWafs2_1.class })
 	public Boolean getSkipApplicationMerge() {
 		return skipApplicationMerge != null && skipApplicationMerge;
 	}

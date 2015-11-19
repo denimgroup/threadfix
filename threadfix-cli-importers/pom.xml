@@ -326,7 +326,6 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
             <version>${springsecurity.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.el</groupId>

@@ -50,6 +50,8 @@ myAppModule.controller('RightReportController', function ($scope, $window, threa
                             $scope.topAppsData.push(innerData);
                         }
                     });
+                } else {
+                    $scope.topAppsData = undefined;
                 }
 
                 $scope.loadingRight = false;
