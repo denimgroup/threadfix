@@ -44,6 +44,6 @@ public class RestUtils {
         tempManager.setUrl(url);
 
         HttpRestUtils utils = new HttpRestUtils(tempManager);
-        return utils.httpGet(Constants.MARKERS_URL_SEGMENT + "0");
+        return utils.httpGet(Constants.MARKERS_URL_SEGMENT + "0", Object.class);
     }
 }
