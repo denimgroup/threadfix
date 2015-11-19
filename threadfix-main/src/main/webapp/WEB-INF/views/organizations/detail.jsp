@@ -30,7 +30,7 @@
         <li><a href="<spring:url value="/teams"/>">Applications Index</a> <span class="divider">/</span></li>
         <li class="active">Team: {{ team.name }}</li>
     </ul>
-    <h2 id="name" style="padding-top:5px;">
+    <h2 id="name" style="padding-top:5px;" class="break-word-header">
         {{ team.name }}
         <c:if test="${ canManageTeams || canManageUsers || canManageVulnFilters }">
             <div id="btnDiv1" class="btn-group">

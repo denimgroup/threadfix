@@ -12,15 +12,15 @@
 			<tbody>
 			<tr>
 				<td>Team</td>
-				<td class="inputValue">{{title.teams}}</td>
+				<td class="inputValue break-word-header">{{title.teams}}</td>
 			</tr>
 			<tr>
 				<td>Application</td>
-				<td class="inputValue">{{title.apps}}</td>
+				<td class="inputValue break-word-header">{{title.apps}}</td>
 			</tr>
 			<tr>
 				<td>Application Tag</td>
-				<td class="inputValue">{{title.tags}}</td>
+				<td class="inputValue break-word-header">{{title.tags}}</td>
 			</tr>
 			<tr>
 				<td>Number of Applications</td>
@@ -80,7 +80,7 @@
 			</thead>
 			<tbody>
 			<tr ng-repeat = "row in scanStatistics">
-				<td id="{{row.name}}" colspan="6">{{row.name}}</td>
+				<td id="{{row.name}}" colspan="6" class="break-word-header">{{row.name}}</td>
 				<td id="{{row.name}}{{row.criticality}}">{{row.criticality}}</td>
 				<td id="{{row.name}}{{row.noOfScans}}">{{row.noOfScans}}</td>
 				<td ng-if="(row.daysScanedOld !== undefined) && (row.daysScanedOld > 365)" id="{{row.name}}{{row.daysScanedOld}}" style="background:orange;font-weight:bold;">{{row.daysScanedOld}}  days ago</td>
