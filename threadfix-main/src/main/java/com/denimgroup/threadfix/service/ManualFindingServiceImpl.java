@@ -184,7 +184,9 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		applicationMerger.applicationMerge(tempScan, applicationId, null);
 
 		scan.getFindings().add(finding);
-		scan.setNumberTotalVulnerabilities(scan.getNumberTotalVulnerabilities() + 1);
+		if (finding.getId() == null) {
+			scan.setNumberTotalVulnerabilities(scan.getNumberTotalVulnerabilities() + 1);
+		}
 
         switch (finding.getChannelSeverity().getCode()) {
             case GenericSeverity.CRITICAL:
