@@ -50,8 +50,8 @@
                 </tr>
                 <tr ng-show="!loading && scans" ng-repeat="scan in scans">
                     <td>{{ scan.importTime | date:'medium' }}</td>
-                    <td>{{ scan.app.name }}</td>
-                    <td>{{ scan.team.name }}</td>
+                    <td class="break-word-header">{{ scan.app.name }}</td>
+                    <td class="break-word-header">{{ scan.team.name }}</td>
                     <td>{{ scan.scannerName }}</td>
                     <td class="centered">{{ scan.numberTotalVulnerabilities }}</td>
                     <td class="centered">{{ scan.numberHiddenVulnerabilities }}</td>
