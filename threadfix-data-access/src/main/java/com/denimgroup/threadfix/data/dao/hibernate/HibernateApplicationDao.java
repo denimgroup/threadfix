@@ -227,8 +227,12 @@ public class HibernateApplicationDao implements ApplicationDao {
         criteria.addOrder(Order.desc("vulnCount"));
 
         List<Integer> list = list();
-        List results = criteria.setMaxResults(numApps).list();
+        List results = criteria.list();
+        int i = 0;
         for (Object result : results) {
+            if (i++ >= numApps) {
+                break;
+            }
             Object[] resultArray = (Object[]) result;
             list.add((Integer) resultArray[0]);
         }
