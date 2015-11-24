@@ -1,4 +1,4 @@
-3/27/2015 11:45:00
+11/22/2015 18:14:00
 type.info,,,
 FindBugs
 type.vulnerabilities,,
@@ -15,3 +15,9 @@ HRS: HTTP cookie formed from untrusted input,HRS_REQUEST_PARAMETER_TO_COOKIE,113
 HRS: HTTP Response splitting vulnerability,HRS_REQUEST_PARAMETER_TO_HTTP_HEADER,113
 XSS: JSP reflected cross site scripting vulnerability,XSS_REQUEST_PARAMETER_TO_JSP_WRITER,79
 XSS: Servlet reflected cross site scripting vulnerability in error page,XSS_REQUEST_PARAMETER_TO_SEND_ERROR,79
+type.severities,,,
+5,5,1,1
+4,4,2,2
+3,3,3,3
+2,2,4,4
+1,1,5,5

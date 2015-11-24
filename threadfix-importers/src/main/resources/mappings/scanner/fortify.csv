@@ -1,4 +1,4 @@
-9/17/2015 11:45:00
+11/22/2015 20:14:00
 type.info,,
 Fortify SCA
 type.vulnerabilities,,
@@ -129,3 +129,13 @@ Code Correctness: clone() Invokes Overridable Function,Code Correctness: clone()
 Code Correctness: Invalid Call to Object.equals(),Code Correctness: Invalid Call to Object.equals(),398
 type.severities,,
 Code Quality,Code Quality,1,1
+Low,Low,4,2
+Medium,Medium,7,3
+High,High,10,4
+Critical,Critical,11,5
+2.0,2.0,2,1
+3.0,3.0,5,3
+4.0,4.0,8,4
+Info,Info,3,1
+Warning,Warning,6,3
+Hot,Hot,9,4

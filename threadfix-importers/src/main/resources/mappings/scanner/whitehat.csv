@@ -1,4 +1,4 @@
-5/8/2015 11:45:00
+11/23/2015 00:00:00
 type.info,,
 WhiteHat Sentinel
 type.vulnerabilities,,
@@ -188,7 +188,12 @@ Application Misconfiguration: Global Error Handling Disabled,Application Misconf
 Application Misconfiguration: Exposed Axis Administration Servlet,Application Misconfiguration: Exposed Axis Administration Servlet,16
 type.severities,,,
 note,note,1,1
-critical,critical,5,5
-high,high,4,4
-medium,medium,3,3
-low,low,2,2
+critical,critical,10,5
+high,high,8,4
+medium,medium,6,3
+low,low,3,2
+1,1,1,2
+2,2,4,3
+3,3,5,3
+4,4,7,4
+5,5,9,5
