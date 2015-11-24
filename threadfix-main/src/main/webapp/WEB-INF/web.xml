@@ -350,6 +350,8 @@
 				protected-regex ^/configuration/remoteproviders/getMap$,
 				protected-regex ^/configuration/roles/list$,
 				protected-regex ^/reports/snapshot$,
+				protected-regex ^/reports/snapshot/averageAge$,
+				protected-regex ^/reports/snapshot/progressByType$,
 				protected-regex ^/reports/trendingScans$,
 				protected-regex ^/scans/table/[0-9]+$,
 

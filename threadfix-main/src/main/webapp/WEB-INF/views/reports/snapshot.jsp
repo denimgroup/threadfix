@@ -12,8 +12,10 @@
         <div ng-show="snapshotActive" id="pointInTimeDiv">
 
             <!-- Point In Time report -->
-            <d3-pointintime ng-show="pointInTimeData && reportId == PIT_Report_Id" data="pointInTimeData"
-                            label="title" export-report-id="exportInfo"></d3-pointintime>
+            <d3-point-in-time ng-if="reportId == PIT_Report_Id"
+                              data="vulnTree"
+                              <%--data="pointInTimeData"--%>
+                            label="title" average-ages = "averageAges" generic-severities = "genericSeverities"></d3-point-in-time>
 
             <!-- Vulnerability Progress By Type report -->
             <%@ include file="progressByVulnerability.jsp"%>

@@ -67,6 +67,8 @@ public class ReportsController {
 	private ReportService reportService;
 	@Autowired
 	private CacheBustService cacheBustService;
+	@Autowired
+	private VulnerabilitySearchService vulnerabilitySearchService;
 
 	@ModelAttribute("organizationList")
 	public List<Organization> getOrganizations() {
@@ -158,5 +160,21 @@ public class ReportsController {
                 request);
         return RestResponse.success(map);
     }
+
+	@RequestMapping(value="/snapshot/averageAge", method = RequestMethod.POST)
+	public @ResponseBody RestResponse<Map<String, Object>> getPointInTimeAge(@ModelAttribute VulnerabilitySearchParameters reportParameters) throws IOException {
+		log.info("Generating point in time average age report");
+		Map<String, Object> map = vulnerabilitySearchService.generatePointInTimeAgeReport(reportParameters);
+		return RestResponse.success(map);
+	}
+
+	@RequestMapping(value="/snapshot/progressByType", method = RequestMethod.POST)
+	public @ResponseBody Object getProgressByType(@ModelAttribute VulnerabilitySearchParameters reportParameters) throws IOException {
+		log.info("Generating Vulnerability Progress By Type report");
+		List<Object> map = vulnerabilitySearchService.generateProgressByTypeReport(reportParameters);
+		return RestResponse.success(map);
+	}
+
+
 
 }
