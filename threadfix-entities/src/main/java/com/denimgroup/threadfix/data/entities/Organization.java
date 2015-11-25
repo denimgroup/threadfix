@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -32,6 +33,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -221,6 +223,18 @@ public class Organization extends AuditableEntity {
     public Integer getNumApps(){
         List<Application> activeApps = getActiveApplications();
         return (activeApps == null) ? 0 : activeApps.size();
+    }
+
+    @Transient
+    @JsonIgnore
+    public List<Integer> getActiveAppIds(){
+        List<Integer> applicationIdList = CollectionUtils.list();
+        for (Application application : getActiveApplications()) {
+            if (application != null) {
+                applicationIdList.add(application.getId());
+            }
+        }
+        return applicationIdList;
     }
 
     @ManyToMany(mappedBy = "organizations")
