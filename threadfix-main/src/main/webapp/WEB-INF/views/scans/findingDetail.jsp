@@ -73,11 +73,11 @@
 				<td class="bold">Severity</td>
 				<td class="inputValue" id="genericSeverityName" ng-non-bindable><c:out value="${ finding.channelSeverity.severityMap.genericSeverity.displayName }"/></td>
 			</tr>
-            <tr>
-                <td class="bold">Description</td>
-                <td class="inputValue" id="longDescription" style="max-width:500px;word-wrap: break-word;" ng-non-bindable><c:out value="${ finding.longDescription }"/></td>
-            </tr>
-			<c:if test="${ empty finding.dependency }">			
+			<c:if test="${ empty finding.dependency }">
+				<tr>
+					<td class="bold">Description</td>
+					<td class="inputValue" id="longDescription" style="max-width:500px;word-wrap: break-word;" ng-non-bindable><c:out value="${ finding.longDescription }"/></td>
+				</tr>
 				<tr>
 					<td class="bold">Path</td>
 					<td class="inputValue" id="path" ng-non-bindable><c:out value="${ finding.surfaceLocation.path }"/></td>
@@ -130,9 +130,9 @@
                     <td class="bold" valign=top>File Path</td>
                     <td class="inputValue" style="word-wrap: break-word;"><PRE id="dependencyFilePath" ng-non-bindable><c:out value="${ finding.dependency.componentFilePath }"/></PRE></td>
                 </tr>
-                <tr>
-                    <td class="bold" valign=top>Description</td>
-                    <td class="inputValue" style="word-wrap: break-word;"><PRE id="dependencyDesc" ng-non-bindable><c:out value="${ finding.dependency.description }"/></PRE></td>
+				<tr>
+					<td class="bold" valign=top>Description</td>
+					<td class="inputValue" style="word-wrap: break-word;"><PRE id="dependencyDesc" ng-non-bindable><c:out value="${ finding.dependency.description }"/></PRE></td>
 				</tr>
 				<c:if test="${ not empty finding.scannerRecommendation }">
 					<tr>
