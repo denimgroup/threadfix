@@ -22,9 +22,6 @@ public class ScanResultFilterServiceImpl implements ScanResultFilterService{
     private ScanResultFilterDao scanResultFilterDao;
 
     @Autowired
-    private VulnerabilityService vulnerabilityService;
-
-    @Autowired
     private FindingService findingService;
 
     @Autowired
@@ -42,24 +39,7 @@ public class ScanResultFilterServiceImpl implements ScanResultFilterService{
 
     @Override
     public void storeAndApplyFilter(ScanResultFilter scanResultFilter, GenericSeverity previousGenericSeverity, ChannelType previousChannelType) {
-
-        if(previousGenericSeverity != null && previousChannelType != null
-                && (!scanResultFilter.getGenericSeverity().equals(previousGenericSeverity) || !scanResultFilter.getChannelType().equals(previousChannelType))){
-
-            unFilterFindings(previousGenericSeverity, previousChannelType);
-        }
-
         scanResultFilterDao.saveOrUpdate(scanResultFilter);
-
-        List<Finding> findingsToFilter = findingService.loadByGenericSeverityAndChannelType(scanResultFilter.getGenericSeverity(), scanResultFilter.getChannelType());
-
-        if(findingsToFilter != null && !findingsToFilter.isEmpty()){
-            for(Finding finding : findingsToFilter){
-                finding.setHidden(true);
-                findingService.storeFinding(finding);
-            }
-        }
-
         vulnerabilityFilterService.updateAllVulnerabilities();
     }
 
