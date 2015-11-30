@@ -23,7 +23,7 @@ public class ContrastMockHttpUtils implements RemoteProviderHttpUtils {
             API_V2 = "/Contrast/api/",
             API_V3 = "/Contrast/api/ng/",
             GOOD_ENCODING = "dXNlcjpzZXJ2aWNlIGtleQ==", // base64'd GOOD_USERNAME:GOOD_SERVICE_KEY
-            ORGS_URL = "/profile/organizations/",
+            ORGS_URL = "/profile/organizations/default",
             APPS_URL = "/applications",
             TRACES_URL = "/traces/",
             EVENTS_SUMMARY_URL = "/events/summary";
