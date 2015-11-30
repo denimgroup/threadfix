@@ -42,4 +42,12 @@ public abstract class AbstractNamedObjectDao<T extends BaseEntity> extends Abstr
                 .uniqueResult();
     }
 
+    @Override
+    public T retrieveByNameIgnoreCase(String name) {
+        return (T) getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("name", name).ignoreCase())
+                .uniqueResult();
+    }
+
 }

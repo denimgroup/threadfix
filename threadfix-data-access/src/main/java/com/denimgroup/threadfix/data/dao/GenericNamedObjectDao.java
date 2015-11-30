@@ -30,4 +30,6 @@ public interface GenericNamedObjectDao<T> extends GenericObjectDao<T> {
 
     T retrieveByName(String name);
 
+    T retrieveByNameIgnoreCase(String name);
+
 }
