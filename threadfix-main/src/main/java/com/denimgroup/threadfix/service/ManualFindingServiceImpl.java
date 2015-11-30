@@ -26,14 +26,18 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.dao.*;
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.merge.ApplicationMerger;
 import com.denimgroup.threadfix.service.merge.ScanCleanerUtils;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -156,10 +160,24 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 			finding.setSurfaceLocation(new SurfaceLocation());
 		}
 
+		String path = finding.getSurfaceLocation().getPath();
+
 		if (!finding.getIsStatic()) {
 			finding.setDataFlowElements(null);
+
+			if (path != null && UrlValidator.getInstance().isValid(path)) {
+				try {
+					finding.getSurfaceLocation().setUrl(new URL(path));
+				} catch (MalformedURLException e) {
+					throw new RestIOException(e, "Encountered URL Formatting error.");
+				}
+			}
 		} else {
-			String path = finding.getSurfaceLocation().getPath();
+
+			// this code is intended to set the path properly when the user imports static scans
+			// from different source folders
+			// this has been largely replaced by HAM.
+			// TODO consider removing this code
 			if (path != null
 					&& scan.getApplication().getProjectRoot() != null
 					&& path.toLowerCase().contains(
@@ -167,8 +185,8 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 									.toLowerCase())) {
 				path = path.substring(path.toLowerCase().indexOf(
 						scan.getApplication().getProjectRoot().toLowerCase()));
+				finding.getSurfaceLocation().setPath(path);
 			}
-			finding.getSurfaceLocation().setPath(path);
 		}
 
         if (finding.getIsStatic()) {
