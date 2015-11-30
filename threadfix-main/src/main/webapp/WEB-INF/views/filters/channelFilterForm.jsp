@@ -38,7 +38,7 @@
                            type="text"
                            name = "sourceChannelVulnerabilityName"
                            ng-model="object.sourceChannelVulnerability"
-                           typeahead="vulnerability as vulnerability.name for vulnerability in config.channelVulnerabilitiesMap[object.sourceChannelType.name] | filter: {name: $viewValue} : startsWith | limitTo:10"
+                           typeahead="vulnerability as vulnerability.name for vulnerability in config.channelVulnerabilitiesMap[object.sourceChannelType.name] | filter: {name: $viewValue} | orderBy : [orderByStartsWithFirst('name', $viewValue),'name'] | limitTo:10"
                            class="form-control"/>
                     <span id="sourceChannelVulnerabilityRequiredError" class="errors" ng-show="form.sourceChannelVulnerabilityName.$dirty && form.sourceChannelVulnerabilityName.$error.required">Scanner Vulnerability is required.</span>
                     <span id="sourceChannelVulnerabilityNameError" class="errors" ng-show="object.sourceChannelVulnerability_name_error"> {{ object.sourceChannelVulnerability_name_error }}</span>
