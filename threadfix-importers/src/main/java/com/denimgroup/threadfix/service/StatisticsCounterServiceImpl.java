@@ -342,19 +342,26 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
     private Map<Integer, Long[]> getIntegerMap(int orgID, int appID, List<Scan> scans) {
         List<Integer> filteredSeverities = getFilteredSeverities(orgID, appID),
                 filteredVulnerabilities = getFilteredVulnerabilities(orgID, appID);
-        List<Integer> filteredChannelSeverities;
+        List<Integer> ignoreVulnIdsByChannelSeverities;
 
         Map<Integer, Integer> genericSeverityIdToSeverityMap = generateGenericSeverityMap();
 
         List<Map<String, Object>> totalMap = list();
         for (Scan scan: scans) {
-            filteredChannelSeverities =
-                    scanResultFilterDao.retrieveAllChannelSeveritiesByChannelType(
-                            scan.getApplicationChannel().getChannelType());
+            ignoreVulnIdsByChannelSeverities = list();
+
+            List<ScanResultFilter> scanResultFilters = scanResultFilterDao.loadAllForChannelType(scan.getApplicationChannel().getChannelType());
+            for (ScanResultFilter scanResultFilter: scanResultFilters) {
+                List<Integer> vulnIds = vulnerabilityFilterDao.getVulnIdsToHide(scanResultFilter, scan, scan.getApplication());
+                if (vulnIds != null) {
+                    ignoreVulnIdsByChannelSeverities.addAll(vulnIds);
+                }
+            }
+
             totalMap.addAll(statisticsCounterDao.getFindingSeverityMap(
                             filteredSeverities,
                             filteredVulnerabilities,
-                            filteredChannelSeverities, scan));
+                    ignoreVulnIdsByChannelSeverities, scan));
         }
         Map<Integer, Long[]> scanStatsMap = map();
 

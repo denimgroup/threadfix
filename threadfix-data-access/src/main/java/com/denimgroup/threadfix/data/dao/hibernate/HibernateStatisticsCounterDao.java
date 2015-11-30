@@ -75,25 +75,15 @@ public class HibernateStatisticsCounterDao
     private String vulnIds = ")";
     private String fromClause = "from Scan scan where scan.id = :scanId";
 
-    @SuppressWarnings("unchecked")
     @Override
-    public List<Map<String, Object>> getFindingSeverityMap(
-            List<Integer> filteredSeverities,
-            List<Integer> filteredVulnerabilities,
-            List<Integer> filteredChannelSeverities) {
-
-        return getFindingSeverityMap(filteredSeverities, filteredVulnerabilities, filteredChannelSeverities, null);
-    }
-
-    @Override
-    public List<Map<String, Object>> getFindingSeverityMap(List<Integer> filteredSeverities, List<Integer> filteredVulnerabilities, List<Integer> filteredChannelSeverities, Scan scan) {
+    public List<Map<String, Object>> getFindingSeverityMap(List<Integer> filteredSeverities, List<Integer> filteredVulnerabilities, List<Integer> ignoreVulnIdsByChannelSeverities, Scan scan) {
         String hql = "select new map (" +
                 "count(*) as total, " +
                 "counter.scanId as scanId, " +
                 "counter.currentGenericSeverityId as genericSeverityId) " +
                 "from StatisticsCounter counter ";
 
-        List<String> whereStatements = getWhereStatements(filteredSeverities, filteredVulnerabilities, filteredChannelSeverities, scan);
+        List<String> whereStatements = getWhereStatements(filteredSeverities, filteredVulnerabilities, ignoreVulnIdsByChannelSeverities, scan);
 
         if (!whereStatements.isEmpty()) {
             hql += "where ";
@@ -105,7 +95,7 @@ public class HibernateStatisticsCounterDao
 
         Query query = getSession().createQuery(hql);
 
-        addParameterLists(filteredSeverities, filteredVulnerabilities, filteredChannelSeverities, scan, query);
+        addParameterLists(filteredSeverities, filteredVulnerabilities, ignoreVulnIdsByChannelSeverities, scan, query);
 
         Object idsMap = query.list();
         return (List<Map<String, Object>>) idsMap;
@@ -113,7 +103,7 @@ public class HibernateStatisticsCounterDao
 
     private void addParameterLists(List<Integer> filteredSeverities,
                                    List<Integer> filteredVulnerabilities,
-                                   List<Integer> filteredChannelSeverities,
+                                   List<Integer> ignoreVulnIdsByChannelSeverities,
                                    Scan scan,
                                    Query query) {
         if (!filteredSeverities.isEmpty()) {
@@ -122,15 +112,15 @@ public class HibernateStatisticsCounterDao
         if (!filteredVulnerabilities.isEmpty()) {
             query.setParameterList("filteredVulnerabilities", filteredVulnerabilities);
         }
-        if (!filteredChannelSeverities.isEmpty()) {
-            query.setParameterList("filteredChannelSeverities", filteredChannelSeverities);
+        if (!ignoreVulnIdsByChannelSeverities.isEmpty()) {
+            query.setParameterList("ignoreVulnIdsByChannelSeverities", ignoreVulnIdsByChannelSeverities);
         }
         if (scan != null) {
             query.setParameter("scanId", scan.getId());
         }
     }
 
-    private List<String> getWhereStatements(List<Integer> filteredSeverities, List<Integer> filteredVulnerabilities, List<Integer> filteredChannelSeverities, Scan scan) {
+    private List<String> getWhereStatements(List<Integer> filteredSeverities, List<Integer> filteredVulnerabilities, List<Integer> ignoreVulnIdsByChannelSeverities, Scan scan) {
         List<String> whereStatements = list();
 
         if (!filteredSeverities.isEmpty()) {
@@ -139,8 +129,8 @@ public class HibernateStatisticsCounterDao
         if (!filteredVulnerabilities.isEmpty()) {
             whereStatements.add("counter.genericVulnerabilityId not in (:filteredVulnerabilities)");
         }
-        if (!filteredChannelSeverities.isEmpty()) {
-            whereStatements.add("counter.channelSeverityId not in (:filteredChannelSeverities)");
+        if (!ignoreVulnIdsByChannelSeverities.isEmpty()) {
+            whereStatements.add("counter.vulnerabilityId not in (:ignoreVulnIdsByChannelSeverities)");
         }
         if (scan != null) {
             whereStatements.add("counter.scanId = (:scanId)");
