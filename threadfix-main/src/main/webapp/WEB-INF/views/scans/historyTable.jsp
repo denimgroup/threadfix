@@ -5,7 +5,7 @@
 	<span id="ajaxVulnTable"></span>
 	<spring:url value="/scans/table" var="tableUrl" />
 	<c:if test="${ numScans > 100 }">
-		<div style="padding-bottom: 8px">
+		<div style="padding-bottom: 8px" ng-non-bindable>
 			<c:if test="${ page > 4 }">
 				<a id="firstPage"
 					href="javascript:refillElement('#toReplace', '${tableUrl}', 1, '<c:out value="${ loginUrl }"/>')">First</a>
@@ -78,7 +78,7 @@
 				</tr>
 			</c:if>
 			<c:forEach var="scan" items="${ scanList }" varStatus="status">
-				<tr class="bodyRow">
+				<tr class="bodyRow" ng-non-bindable>
 					<td>
 						<fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short"
 								timeStyle="short" />
@@ -89,7 +89,7 @@
 								value="${ scan.application.organization.id }" />
 							<spring:param name="appId" value="${ scan.application.id }" />
 							</spring:url> 
-							<div style="word-wrap: break-word;max-width:130px;text-align:left;"> <a href="<c:out value="${ appUrl }"/>"> 
+							<div style="word-wrap: break-word;max-width:130px;text-align:left;"> <a href="<c:out value="${ appUrl }"/>">
 								<c:out	value="${ scan.application.name }" />
 							</a></div></td>
 					<td id="team${ status.count }"><spring:url
@@ -97,7 +97,7 @@
 							<spring:param name="teamId"
 								value="${ scan.application.organization.id }" />
 							</spring:url> 
-							<div style="word-wrap: break-word;max-width:130px;text-align:left;"> <a href="<c:out value="${ teamUrl }"/>"> 
+							<div style="word-wrap: break-word;max-width:130px;text-align:left;"> <a href="<c:out value="${ teamUrl }"/>">
 								<c:out value="${ scan.application.organization.name }" />
 							</a></div></td>
 					<td id="channelType${ status.count }"><c:out

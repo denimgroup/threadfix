@@ -13,15 +13,15 @@
 	<table class="dataTable">
 		<tr>
 			<td>Severity / Generic Severity:</td>
-			<td class="inputValue"><c:out value="${ finding.channelSeverity.name }"/> / <c:out value="${ finding.channelSeverity.severityMap.genericSeverity.displayName }"/></td>
+			<td class="inputValue" ng-non-bindable><c:out value="${ finding.channelSeverity.name }"/> / <c:out value="${ finding.channelSeverity.severityMap.genericSeverity.displayName }"/></td>
 		</tr>
 		<tr>
 			<td>Vulnerability Type:</td>
-			<td class="inputValue"><c:out value="${ finding.channelVulnerability.name }"/></td>
+			<td class="inputValue" ng-non-bindable><c:out value="${ finding.channelVulnerability.name }"/></td>
 		</tr>
 		<tr>
 			<td>Generic Vulnerability Type:</td>
-			<td class="inputValue">
+			<td class="inputValue" ng-non-bindable>
                 <span tooltip="CWE-${finding.channelVulnerability.genericVulnerability.displayId}">
                     <c:out value="${ finding.channelVulnerability.genericVulnerability.name }"/>
                 </span>
@@ -34,15 +34,15 @@
 				<spring:param name="appId" value="${ finding.vulnerability.application.id }"/>
 				<spring:param name="vulnId" value="${ finding.vulnerability.id }"/>
 			</spring:url>
-			<td class="inputValue"><a href="${ fn:escapeXml(vulnUrl) }"><c:out value="${ finding.vulnerability.id }"/></a></td>
+			<td class="inputValue" ng-non-bindable><a href="${ fn:escapeXml(vulnUrl) }"><c:out value="${ finding.vulnerability.id }"/></a></td>
 		</tr>
 		<tr>
 			<td>Parameter:</td>
-			<td class="inputValue"><c:out value="${ finding.surfaceLocation.parameter }"/></td>
+			<td class="inputValue" ng-non-bindable><c:out value="${ finding.surfaceLocation.parameter }"/></td>
 		</tr>
 		<tr>
 			<td>Path:</td>
-			<td class="inputValue"><c:out value="${ finding.surfaceLocation.path }"/></td>
+			<td class="inputValue" ng-non-bindable><c:out value="${ finding.surfaceLocation.path }"/></td>
 		</tr>
 	</table>
 	<spring:url value="setVulnerability" var="formUrl"/>
@@ -80,17 +80,17 @@
 							Closed
 						</c:if>
 					</td>
-					<td style="text-align:center">
+					<td style="text-align:center" ng-non-bindable>
 						<c:out value="${ vulnerability.id }"/>
 					</td>
-					<td>
+					<td ng-non-bindable>
                         <span tooltip="CWE-${vulnerability.genericVulnerability.displayId}">
                             <c:out value="${ vulnerability.genericVulnerability.name }"/>
                         </span>
                     </td>
 				<c:forEach var="finding" items="${ vulnerability.findings }">
-					<td><c:out value="${ finding.surfaceLocation.path }"/></td>
-					<td><c:out value="${ finding.surfaceLocation.parameter }"/></td>
+					<td ng-non-bindable><c:out value="${ finding.surfaceLocation.path }"/></td>
+					<td ng-non-bindable><c:out value="${ finding.surfaceLocation.parameter }"/></td>
 				</c:forEach>
 				</tr>
 			</c:forEach>
@@ -126,17 +126,17 @@
 					<td style="text-align:center">
 						<input type="radio" name="vulnerabilityId" value="${ vulnerability.id }" />
 					</td>
-					<td style="text-align:center">
+					<td style="text-align:center" ng-non-bindable>
 						<c:out value="${ vulnerability.id }"/>
 					</td>
-					<td>
+					<td ng-non-bindable>
                         <span tooltip="CWE-${vulnerability.genericVulnerability.displayId}">
                             <c:out value="${ vulnerability.genericVulnerability.name }"/>
                         </span>
                     </td>
 					<c:forEach var="finding" items="${ vulnerability.findings }">
-						<td><c:out value="${ finding.surfaceLocation.path }"/></td>
-						<td><c:out value="${ finding.surfaceLocation.parameter }"/></td>
+						<td ng-non-bindable><c:out value="${ finding.surfaceLocation.path }"/></td>
+						<td ng-non-bindable><c:out value="${ finding.surfaceLocation.parameter }"/></td>
 					</c:forEach>
 				</tr>
 			</c:forEach>

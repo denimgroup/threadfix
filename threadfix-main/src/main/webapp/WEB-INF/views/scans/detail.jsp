@@ -24,7 +24,7 @@
 		<spring:param name="appId" value="${ scan.application.id }" />
 	</spring:url>
 
-	<ul class="breadcrumb">
+	<ul ng-non-bindable class="breadcrumb">
 	    <li><a href="<spring:url value="/teams"/>">Applications Index</a> <span class="divider">/</span></li>
 	    <li><a href="${ fn:escapeXml(orgUrl) }">Team: <c:out value="${ scan.application.organization.name }"/></a> <span class="divider">/</span></li>
 	    <li><a href="${ fn:escapeXml(appUrl) }">Application: <c:out value="${ scan.application.name }"/></a><span class="divider">/</span></li>
@@ -32,7 +32,7 @@
     </ul>
 
 	<h2><fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short" timeStyle="short"/> 
-	<c:out value="${ fn:escapeXml(scan.applicationChannel.channelType.name) }"/> Scan Findings
+	<span ng-non-bindable><c:out value="${ fn:escapeXml(scan.applicationChannel.channelType.name) }"/> Scan Findings</span>
 		<span>
 			<a ng-click="showStatistic = !showStatistic" id="statisticButton" class="btn header-button" >{{ showStatistic ? "Hide Statistics" : "Show Statistics" }}</a>
 			<c:if test="${ canUploadScans }">
@@ -62,7 +62,7 @@
 			<div class="span4">
 				<h4>Import Statistics</h4>
 				<table class="dataTable">
-					<tbody>
+					<tbody ng-non-bindable>
 						<tr>
 							<td>Imported Results</td>
 							<td class="inputValue" id="importedResults">
@@ -87,7 +87,7 @@
 			<div class="span4">
 				<h4>Finding Statistics</h4>
 				<table class="dataTable">
-					<tbody>
+					<tbody ng-non-bindable>
 						<tr>
 							<td>Findings without Vulnerabilities</td>
 							<td class="inputValue" id="findingsWithoutVulnerabilities"><c:out value="${ scan.numWithoutChannelVulns + scan.numWithoutGenericMappings }"/></td>
@@ -114,7 +114,7 @@
 			<div class="span4">
 				<h4>Vulnerability Statistics</h4>
 				<table class="dataTable">
-					<tbody>
+					<tbody ng-non-bindable>
 						<tr>
 							<td>New Vulnerabilities</td>
 							<td class="inputValue" id="newVulnerabilities"><c:out value="${ vulnData[2] }"/></td>

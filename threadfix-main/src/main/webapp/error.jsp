@@ -8,10 +8,10 @@
 
 A system error occurred.
 
-<c:out value="${ exception }"/>
+<span ng-non-bindable><c:out value="${ exception }"/></span>
 
 <br/><br/><!-- error.jsp -->
 
 <spring:url value="/" var="homeUrl"/>
-<a href="<c:out value="${homeUrl}"/>">Home</a>
+<a ng-non-bindable href="<c:out value="${homeUrl}"/>">Home</a>
 

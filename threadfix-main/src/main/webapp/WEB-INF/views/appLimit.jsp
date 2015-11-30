@@ -6,7 +6,7 @@
 </head>
 <h2>Application Limit Reached</h2>
 <br/>
-<p>
+<p ng-non-bindable>
     Your application has reached its maximum of <c:out value="${ numApplications }"/> applications.
     To create more, please contact Denim Group to upgrade your license.
 </p>

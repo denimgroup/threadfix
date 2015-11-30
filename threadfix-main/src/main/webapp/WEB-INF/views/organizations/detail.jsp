@@ -1,7 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title><c:out value="${ organization.name }"/></title>
+	<title ng-non-bindable><c:out value="${ organization.name }"/></title>
 	<cbs:cachebustscript src="/scripts/team-detail-page-controller.js"/>
     <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
     <cbs:cachebustscript src="/scripts/vuln-search-controller.js"/>
@@ -46,7 +46,7 @@
                             <spring:url value="{orgId}/filters" var="filterUrl">
                                 <spring:param name="orgId" value="${ organization.id }"/>
                             </spring:url>
-                            <a id="editfiltersButton1" href="<c:out value='${ filterUrl }'/>" data-toggle="modal">
+                            <a ng-non-bindable id="editfiltersButton1" href="<c:out value='${ filterUrl }'/>" data-toggle="modal">
                                 Customize ThreadFix Vulnerability Types and Severities
                             </a>
                         </li>

@@ -4,7 +4,7 @@
     </div>
     <div ng-form="form" class="modal-body input-group">
         <c:if test="${ not empty commentError }">
-            <div id="commentError${ vulnerability.id }" class="alert alert-error hide-after-submit">
+            <div ng-non-bindable id="commentError${ vulnerability.id }" class="alert alert-error hide-after-submit">
                 <c:out value="${ commentError }"/>
             </div>
         </c:if>

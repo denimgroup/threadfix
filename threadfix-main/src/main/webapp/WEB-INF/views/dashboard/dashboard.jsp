@@ -22,7 +22,7 @@
 		    <div class="alert" ng-show="!dismissNoTeamsFound">
 			    <button type="button" class="close" ng-click="dismissNoTeamsFound = true">&times;</button>
 			    <strong>No teams found!</strong> To upload scans, first you need to create teams and applications.  
-			    <a href="<c:out value="${ teamsUrl }"/>#myTeamModal">
+			    <a ng-non-bindable href="<c:out value="${ teamsUrl }"/>#myTeamModal">
 			    	Get started
 			    </a>
 	  	 	</div>

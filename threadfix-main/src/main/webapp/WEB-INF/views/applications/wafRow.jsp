@@ -19,9 +19,9 @@
 						data-added-waf="true"
 					</c:if>
 					href="${ fn:escapeXml(wafUrl) }">
-				<c:out value="${ application.waf.name }"/>
+				<span ng-non-bindable><c:out value="${ application.waf.name }"/></span>
 			</a>
-			<em>(<c:out value="${ application.waf.wafType.name }"/>)</em>
+			<em ng-non-bindable>(<c:out value="${ application.waf.wafType.name }"/>)</em>
 		</td>
 		<td style="padding:5px;">
 			<a id="editWafButton" href="#addWaf" role="button" class="btn" data-toggle="modal">Edit</a>

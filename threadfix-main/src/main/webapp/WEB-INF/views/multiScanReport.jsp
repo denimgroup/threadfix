@@ -12,7 +12,7 @@
 	<br/><br/>
 	These URLs were found and successfully matched to applications:
 	<c:forEach var="url" items="${ urlsUsed }">
-		<br/><c:out value="${ url }"/>
+		<br/><span ng-non-bindable><c:out value="${ url }"/></span>
 	</c:forEach>
 </c:if>
 
@@ -20,7 +20,7 @@
 	<br/><br/>
 	These URLs were found but could not be matched to an application:
 	<c:forEach var="url" items="${ urlsNotUsed }">
-		<br/><c:out value="${ url }"/>
+		<br/><span ng-non-bindable><c:out value="${ url }"/></span>
 	</c:forEach>
 </c:if>
 

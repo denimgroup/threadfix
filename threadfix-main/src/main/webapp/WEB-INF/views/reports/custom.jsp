@@ -6,7 +6,7 @@
 		<ul class="dropdown-menu">
 			<c:forEach items="${customReports}" var="report">
 				<li ng-init="customReportId = ${report.id}" ng-click="reportId = ${report.id}; selectCustomReport(customReportId)">
-					<a class="pointer"><c:out value="${report.displayName}"/></a>
+					<a ng-non-bindable class="pointer"><c:out value="${report.displayName}"/></a>
 				</li>
 			</c:forEach>
 		</ul>

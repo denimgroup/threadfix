@@ -10,8 +10,8 @@
             <p>
                 The saved base URL is not the same as the one you use to connect to ThreadFix:
                 <table>
-                    <tr><td style="padding-right:20px; font-weight: bold;">Saved</td><td><c:out value="${savedBaseUrl}"/></td></tr>
-                    <tr><td style="padding-right:20px; font-weight: bold;">Currently using</td><td><c:out value="${currentBaseUrl}"/></td></tr>
+                    <tr><td style="padding-right:20px; font-weight: bold;">Saved</td><td ng-non-bindable><c:out value="${savedBaseUrl}"/></td></tr>
+                    <tr><td style="padding-right:20px; font-weight: bold;">Currently using</td><td ng-non-bindable><c:out value="${currentBaseUrl}"/></td></tr>
                 </table>
             </p>
             <p>
