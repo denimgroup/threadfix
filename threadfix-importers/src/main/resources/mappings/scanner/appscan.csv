@@ -1,4 +1,4 @@
-09/02/2015 11:47:00
+11/22/2015 21:45:00
 type.info,,
 IBM Security AppScan Standard,,
 type.vulnerabilities,,
@@ -116,3 +116,5 @@ Oracle Log File Information Disclosure,Oracle Log File Information Disclosure,20
 IBM BladeCenter Advanced Management Module Information Leakage,IBM BladeCenter Advanced Management Module Information Leakage,200
 Encryption Not Enforced,Encryption Not Enforced,311
 Dblog CMS Open Source Database Retrieval,Dblog CMS Open Source Database Retrieval,264
+type.severities,,,16
+High,High,4,5
