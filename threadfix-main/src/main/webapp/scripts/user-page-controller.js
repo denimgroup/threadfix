@@ -41,6 +41,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                         $scope.eventNotificationTypes = data.object.eventNotificationTypes;
                         $scope.eventNotificationTypeDisplayNames = data.object.eventNotificationTypeDisplayNames;
                         $scope.userEventNotificationSettings = data.object.userEventNotificationSettings;
+                        $scope.oldUserEventNotificationSettings = angular.copy($scope.userEventNotificationSettings);
 
                         $scope.teams = data.object.teams;
                         $scope.teams.sort(nameCompare);
@@ -210,6 +211,9 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     };
 
     $scope.compare = function(form, user) {
+        if (form.$name == "notificationSettingsForm")
+            return angular.equals($scope.oldUserEventNotificationSettings[$scope.currentUser.id], user);
+        
         return !form.$dirty || form.$invalid || angular.equals($scope.currentUser, user.baseUser)
     };
 
@@ -333,8 +337,9 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 if (data.success) {
                     $scope.usersSuccessMessage = "Notification settings saved.";
 
-                    //$scope.userEventNotificationSettings[$scope.currentUser.id] = data.object[$scope.currentUser.id];
                     $scope.userEventNotificationSettings = data.object;
+                    $scope.oldUserEventNotificationSettings = angular.copy($scope.userEventNotificationSettings);
+
 
                     selectUserWithId($scope.currentUser.id);
                 } else {
