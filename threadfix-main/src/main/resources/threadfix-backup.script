@@ -11053,7 +11053,7 @@ INSERT INTO CHANNELVULNERABILITY VALUES(10723,'Invalid HTTP Method Usage','Inval
 INSERT INTO CHANNELVULNERABILITY VALUES(10724,'Personally Identifiable Information','Personally Identifiable Information',FALSE,18)
 INSERT INTO DEFAULTCONFIGURATION VALUES(1,30,'','','','',1,TRUE,TRUE,TRUE,FALSE,'2014-08-06 11:45:00.000000000',NULL,NULL,NULL,NULL,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,NULL)
 INSERT INTO DEFECTTRACKERTYPE VALUES(1,'com.denimgroup.threadfix.service.defects.BugzillaDefectTracker','Bugzilla',NULL)
-INSERT INTO DEFECTTRACKERTYPE VALUES(2,'com.denimgroup.threadfix.service.defects.JiraDefectTracker','Jira',NULL)
+INSERT INTO DEFECTTRACKERTYPE VALUES(2,'com.denimgroup.threadfix.service.defects.JiraDefectTracker','JIRA',NULL)
 INSERT INTO DEFECTTRACKERTYPE VALUES(3,'com.denimgroup.threadfix.service.defects.TFSDefectTracker','Microsoft TFS',NULL)
 INSERT INTO DEFECTTRACKERTYPE VALUES(4,'com.denimgroup.threadfix.service.defects.HPQualityCenterDefectTracker','HP Quality Center',NULL)
 INSERT INTO DEFECTTRACKERTYPE VALUES(5,'com.denimgroup.threadfix.service.defects.VersionOneDefectTracker','Version One',NULL)
