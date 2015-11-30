@@ -121,6 +121,7 @@ public class SCARFChannelImporter extends AbstractChannelImporter {
 				finding.setSourceFileLocation(currentFileName);
 
 				finding.setEntryPointLineNumber(IntegerUtils.getPrimitive(findingLineNumber));
+				finding.setLongDescription(bugMessage);
 				finding.setNativeId(getNativeId(finding));
 				finding.setIsStatic(true);
 				finding.setDataFlowElements(currentDataFlowElements);
