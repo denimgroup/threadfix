@@ -30,7 +30,7 @@
                    type="text"
                    ng-model="newFilteredTeam.name"
                    typeahead-on-select="addNew(parameters.teams, newFilteredTeam.name); newFilteredTeam = {}; showTeamInput = false"/>
-            <div ng-repeat="filteredTeam in parameters.teams">
+            <div ng-repeat="filteredTeam in parameters.teams" class="break-word-header">
                 <span id="removeTeam{{ filteredTeam.name }}" class="pointer icon icon-minus-sign" ng-click="remove(parameters.teams, $index)"></span>
                 {{ filteredTeam.name }}
             </div>
@@ -49,7 +49,7 @@
                    type="text"
                    ng-model="newFilteredApplication.name"
                    typeahead-on-select="addNew(parameters.applications, newFilteredApplication.name); newFilteredApplication = {}; showApplicationInput = false"/>
-            <div ng-repeat="filteredApplication in parameters.applications">
+            <div ng-repeat="filteredApplication in parameters.applications" class="break-word-header">
                 <span id="removeApplication{{ filteredApplication.name }}" class="pointer icon icon-minus-sign" ng-click="remove(parameters.applications, $index)"></span>
                 {{ filteredApplication.name }}
             </div>
@@ -77,7 +77,7 @@
                    type="text"
                    ng-model="newFilteredApplication.name"
                    typeahead-on-select="addNew(parameters.applications, newFilteredApplication.name); newFilteredApplication = {}; showApplicationInput = false"/>
-            <div ng-repeat="filteredApplication in parameters.applications">
+            <div ng-repeat="filteredApplication in parameters.applications" class="break-word-header">
                 <span class="pointer icon icon-minus-sign" ng-click="remove(parameters.applications, $index)"></span>
                 {{ filteredApplication.name }}
             </div>
@@ -105,7 +105,7 @@
                    type="text"
                    ng-model="newFilteredTag"
                    typeahead-on-select="addNew(parameters.tags, newFilteredTag.name); newFilteredTag = ''; showTagInput = false"/>
-            <div ng-repeat="filteredTag in parameters.tags">
+            <div ng-repeat="filteredTag in parameters.tags" class="break-word-header">
                 <span class="pointer icon icon-minus-sign" ng-click="remove(parameters.tags, $index)"></span>
                 {{ filteredTag.name }}
             </div>
@@ -124,7 +124,7 @@
                    type="text"
                    ng-model="newFilteredVulnTag.name"
                    typeahead-on-select="addNew(parameters.vulnTags, newFilteredVulnTag.name); newFilteredVulnTag = {}; showVulnTagInput = false"/>
-            <div ng-repeat="filteredTag in parameters.vulnTags">
+            <div ng-repeat="filteredTag in parameters.vulnTags" class="break-word-header">
                 <span class="pointer icon icon-minus-sign" ng-click="remove(parameters.vulnTags, $index)"></span>
                 {{ filteredTag.name }}
             </div>
@@ -298,7 +298,7 @@
                        type="text"
                        ng-model="newFilteredCommentTag"
                        typeahead-on-select="addNewObject(parameters.commentTags, newFilteredCommentTag); newFilteredCommentTag = undefined; showCommentTagInput = false"/>
-                <div ng-repeat="filteredTag in parameters.commentTags">
+                <div ng-repeat="filteredTag in parameters.commentTags" class="break-word-header">
                     <span class="pointer icon icon-minus-sign" ng-click="remove(parameters.commentTags, $index)"></span>
                     {{ filteredTag.name }}
                 </div>

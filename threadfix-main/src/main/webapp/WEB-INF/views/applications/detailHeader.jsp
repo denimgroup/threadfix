@@ -13,7 +13,7 @@
 </ul>
 
 <div ng-controller="ApplicationPageModalController">
-    <h2 style="padding-bottom:5px;line-height:1">
+    <h2 style="padding-bottom:5px;line-height:1" class="break-word-header">
 
         <span ng-if="!config" id="nameText" style="padding-top:5px;"><span ng-non-bindable><c:out value="${ application.name }"/></span></span>
         <span ng-if="config" id="nameText" style="padding-top:5px;">{{ config.application.name }}</span>

@@ -12,19 +12,19 @@
         <tbody>
         <tr>
             <td>Team</td>
-            <td class="inputValue">{{title.teams}}</td>
+            <td class="inputValue break-word-header">{{title.teams}}</td>
         </tr>
         <tr>
             <td>Application</td>
-            <td class="inputValue">{{title.apps}}</td>
+            <td class="inputValue break-word-header">{{title.apps}}</td>
         </tr>
         <tr>
             <td>Application Tag</td>
-            <td class="inputValue">{{title.tags}}</td>
+            <td class="inputValue break-word-header">{{title.tags}}</td>
         </tr>
         <tr>
             <td>Vulnerability Tag</td>
-            <td class="inputValue">{{title.vulnTags}}</td>
+            <td class="inputValue break-word-header">{{title.vulnTags}}</td>
         </tr>
         <tr>
             <td>Total Vulnerabilities</td>
