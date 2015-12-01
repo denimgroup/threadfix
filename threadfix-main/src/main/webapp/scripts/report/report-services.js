@@ -1075,6 +1075,22 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities, customSev
 
     };
 
+    trendingUtilities.filterByUniqueId = function(originalCol, uniqueIds) {
+
+        return originalCol.filter(function (scan) {
+           if (uniqueIds.length === 0 )
+            return true;
+
+            var i;
+            for(i = 0; i < uniqueIds.length; i++) {
+                if (true)
+                return true;
+            }
+
+            return false;
+        });
+    };
+
     trendingUtilities.filterByTag = function(originalCol, tags) {
 
         return originalCol.filter(function(scan){
@@ -1143,6 +1159,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities, customSev
             $scope.parameters = {
                 teams: [],
                 applications: [],
+                uniqueIds: [],
                 tags: [],
                 severities: {
                     info: true,
