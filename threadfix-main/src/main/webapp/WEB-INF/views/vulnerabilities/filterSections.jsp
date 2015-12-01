@@ -55,7 +55,7 @@
             </div>
         </div>
 
-        <div class="accordion-inner">
+        <div class="accordion-inner" ng-show="trendingActive">
             Unique IDs
             <a ng-hide="showUniqueIdInput" ng-click="showUniqueIdInput = !showUniqueIdInput">
                 <span id="showUniqueIdInput" class="icon" ng-class="{ 'icon-minus': showUniqueIdInput, 'icon-plus': !showUniqueIdInput }"></span>
