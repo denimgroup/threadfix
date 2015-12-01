@@ -7,7 +7,7 @@
         >
     <head>
         <%@ include file="/common/meta.jsp" %>
-        <title ng-non-bindable><decorator:title/> | <spring:message code="webapp.name"/></title>
+        <title><decorator:title/> | <spring:message code="webapp.name"/></title>
 
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/reset-fonts-grids.css"/>
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/bootstrap.min.css"/>
