@@ -51,6 +51,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                     $scope.applicationId = -1;
                     $scope.team = $scope.teams[0];
                     $scope.applications = undefined;
+                    $scope.uniqueIds = undefined;
 
                     if ($scope.firstTeamId) {
                         $scope.teamId = parseInt($scope.firstTeamId);

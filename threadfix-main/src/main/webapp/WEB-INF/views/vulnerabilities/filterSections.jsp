@@ -54,6 +54,25 @@
                 {{ filteredApplication.name }}
             </div>
         </div>
+
+        <div class="accordion-inner">
+            Unique IDs
+            <a ng-hide="showUniqueIdInput" ng-click="showUniqueIdInput = !showUniqueIdInput">
+                <span id="showUniqueIdInput" class="icon" ng-class="{ 'icon-minus': showUniqueIdInput, 'icon-plus': !showUniqueIdInput }"></span>
+            </a>
+            <br>
+            <input id="uniqueIdTypeahead"
+                   focus-on="showUniqueIdInput"
+                   ng-show="showUniqueIdInput"
+                   typeahead="application.uniqueId for application in searchApplications | filter:$viewValue | limitTo:8"
+                   type="text"
+                   ng-model="newFilteredUniqueId.uniqueId"
+                   typeahead-on-select="addNew(parameters.uniqueIds, newFilteredUniqueId.uniqueId); newFilteredApplication = {}; showApplicationInput = false"/>
+            <div ng-repeat="uniqueId in parameters.uniqueIds" class="break-word-header">
+                <span id="removeUniqueId{{ uniqueId }}" class="pointer icon icon-minus-sign" ng-click="remove(parameters.uniqueIds, $index)"></span>
+                {{ uniqueId.name }}
+            </div>
+        </div>
     </div>
 </div>
 
