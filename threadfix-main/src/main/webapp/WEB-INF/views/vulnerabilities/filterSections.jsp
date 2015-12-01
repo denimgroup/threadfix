@@ -64,12 +64,12 @@
             <input id="uniqueIdTypeahead"
                    focus-on="showUniqueIdInput"
                    ng-show="showUniqueIdInput"
-                   typeahead="application.uniqueId for application in searchApplications | filter:$viewValue | limitTo:8"
+                   typeahead="uniqueApp.uniqueId for uniqueApp in searchUniqueIds | filter:$viewValue | limitTo:8"
                    type="text"
                    ng-model="newFilteredUniqueId.uniqueId"
-                   typeahead-on-select="addNew(parameters.uniqueIds, newFilteredUniqueId.uniqueId); newFilteredApplication = {}; showApplicationInput = false"/>
+                   typeahead-on-select="addNew(parameters.uniqueIds, newFilteredUniqueId.uniqueId); newFilteredUniqueId = {}; showUniqueIdInput = false"/>
             <div ng-repeat="uniqueId in parameters.uniqueIds" class="break-word-header">
-                <span id="removeUniqueId{{ uniqueId }}" class="pointer icon icon-minus-sign" ng-click="remove(parameters.uniqueIds, $index)"></span>
+                <span id="removeUniqueId{{ uniqueId.name }}" class="pointer icon icon-minus-sign" ng-click="remove(parameters.uniqueIds, $index)"></span>
                 {{ uniqueId.name }}
             </div>
         </div>

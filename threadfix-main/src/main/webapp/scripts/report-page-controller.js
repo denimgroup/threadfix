@@ -43,6 +43,15 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                     $scope.vulnTags = data.object.vulnTags;
                     $scope.enterpriseTags = data.object.enterpriseTags;
 
+                    $scope.searchUniqueIds = [];
+
+                    $scope.searchApplications.forEach(function(application) {
+                        $scope.searchUniqueIds.push({
+                            "uniqueId" : application.uniqueId,
+                            "appId" : application.id
+                        });
+                    });
+
                     customSeverityService.setSeverities(data.object.genericSeverities);
 
                     $scope.teams.sort(nameCompare)

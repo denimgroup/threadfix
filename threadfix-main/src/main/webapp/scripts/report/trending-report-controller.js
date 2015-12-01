@@ -64,7 +64,7 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
             return;
         $scope.parameters = angular.copy(parameters);
         $scope.filterScans = trendingUtilities.filterByTeamAndApp($scope.allScans, $scope.parameters.teams, $scope.parameters.applications);
-        $scope.filterScans = trendingUtilities.filterByUniqueId($scope.filterScans, $scope.parameters.uniqueIds);
+        $scope.filterScans = trendingUtilities.filterByUniqueId($scope.filterScans, trendingUtilities.getFilteredAppsByUniqueId($scope.parameters.uniqueIds, $scope.$parent.searchUniqueIds));
         $scope.filterScans = trendingUtilities.filterByTag($scope.filterScans, $scope.parameters.tags);
         $scope.trendingScansData = trendingUtilities.refreshScans($scope);
         $scope.versionsDisplayData = trendingUtilities.filterVersions($scope.parameters, $scope.versionsMap);
