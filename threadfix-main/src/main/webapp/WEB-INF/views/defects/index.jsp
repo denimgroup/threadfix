@@ -18,14 +18,14 @@
 		<spring:param name="orgId" value="${ application.organization.id }"/>
 		<spring:param name="appId" value="${ application.id }"/>
 	</spring:url>
-	<a href="${ fn:escapeXml(appUrl) }"><c:out value="${ application.name }"/></a> - New Defect</h2>
+	<a ng-non-bindable href="${ fn:escapeXml(appUrl) }"><c:out value="${ application.name }"/></a> - New Defect</h2>
 	
 	<c:if test="${ not empty message }">
-		<center class="errors" ><c:out value="${ message }"/></center>
+		<center ng-non-bindable class="errors" ><c:out value="${ message }"/></center>
 	</c:if>
 	
 	<table class="dataTable">
-		<tbody>
+		<tbody ng-non-bindable>
 			<tr>
 				<td>Team:</td>
 				<td class="inputValue"><c:out value="${ application.organization.name }"/></td>

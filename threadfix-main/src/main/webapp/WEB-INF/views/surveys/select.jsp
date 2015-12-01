@@ -12,7 +12,7 @@
 		<table class="dataTable">
 			<tr>
 				<td>Team:</td>
-				<td class="inputValue">
+				<td class="inputValue" ng-non-bindable>
 					<c:out value="${ surveyResult.organization.name }" />
 				</td>
 			</tr>

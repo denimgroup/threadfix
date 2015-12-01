@@ -62,7 +62,7 @@ public class DefectTrackerUpdater extends SpringBeanAutowiringSupport implements
             String[] splitLine = StringUtils.split(line, ',');
 
             if (splitLine.length == 2) {
-                DefectTrackerType type = defectTrackerTypeDao.retrieveByName(splitLine[0]);
+                DefectTrackerType type = defectTrackerTypeDao.retrieveByNameIgnoreCase(splitLine[0]);
 
                 if (type == null) {
                     // let's create one
@@ -77,6 +77,10 @@ public class DefectTrackerUpdater extends SpringBeanAutowiringSupport implements
 
                 } else {
                     LOG.info("Already had an entry for " + splitLine[0]);
+
+                    if(type.getFullClassName().contains("JiraDefectTracker")) {
+                        type.setName("JIRA");
+                    }
 
                     type.setFullClassName(splitLine[1]);
 

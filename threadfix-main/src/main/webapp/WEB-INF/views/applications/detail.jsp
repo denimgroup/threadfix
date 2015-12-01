@@ -1,7 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title><c:out value="${ application.name }"/></title>
+	<title ng-non-bindable><c:out value="${ application.name }"/></title>
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/dyn-form.css"/>
 	<cbs:cachebustscript src="/scripts/add-defect-tracker-modal-controller.js"/>
 	<cbs:cachebustscript src="/scripts/manage-policy-modal-controller.js"/>

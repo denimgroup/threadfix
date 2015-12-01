@@ -1,12 +1,12 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-    <title><c:out value="${surveyResult.survey.name}" /></title>
+    <title ng-non-bindable><c:out value="${surveyResult.survey.name}" /></title>
     <cbs:cachebustscript src="/scripts/survey-sections.js"/>
 </head>
 
 <body id="apps">
-	<h2><c:out value="${surveyResult.survey.name}" /></h2>
+	<h2 ng-non-bindable><c:out value="${surveyResult.survey.name}" /></h2>
 	
 	<table class="dataTable">
 		<tr>
@@ -15,16 +15,16 @@
 				<spring:url value="/organizations/{orgId}" var="orgUrl">
 					<spring:param name="orgId" value="${ surveyResult.organization.id }"/>
 				</spring:url>
-				<a href="${ fn:escapeXml(orgUrl) }"><c:out value="${ surveyResult.organization.name }"/></a>
+				<a href="${ fn:escapeXml(orgUrl) }" ng-non-bindable><c:out value="${ surveyResult.organization.name }"/></a>
 			</td>
 		</tr>
 		<tr>
 			<td>User:</td>
-			<td class="inputValue"><c:out value="${ surveyResult.user }" /></td>
+			<td class="inputValue" ng-non-bindable><c:out value="${ surveyResult.user }" /></td>
 		</tr>
 		<tr>
 			<td>Date:</td>
-			<td class="inputValue"><c:out value="${ surveyResult.createdDate }" /></td>
+			<td class="inputValue" ng-non-bindable><c:out value="${ surveyResult.createdDate }" /></td>
 		</tr>
 	</table>
 	<br/>
@@ -38,7 +38,7 @@
 				<th style="width:20px;text-align:center"><em>0</em></th>
 				<th style="width:20px;text-align:center"><em>+</em></th>
 				<c:forEach var="level" items="${surveyResult.survey.surveyLevels}">
-					<th style="width:20px;text-align:center"><em><c:out value="${level.number}" /></em></th>
+					<th style="width:20px;text-align:center"><em ng-non-bindable><c:out value="${level.number}" /></em></th>
 					<c:if test="${level.number < fn:length(surveyResult.survey.surveyLevels)}">
 						<th style="width:20px;text-align:center"><em>+</em></th>
 					</c:if>
@@ -47,10 +47,10 @@
 		</thead>
 		<c:forEach var="section" items="${surveyResult.survey.surveySections}">
 			<tr>
-				<td colspan="${fn:length(surveyResult.survey.surveyLevels) * 2 + 3}"><h3 style="color: <c:out value='${section.color}' />"><c:out value="${section.sectionName}" /></h3></td>
+				<td colspan="${fn:length(surveyResult.survey.surveyLevels) * 2 + 3}"><h3 ng-non-bindable style="color: <c:out value='${section.color}' />"><c:out value="${section.sectionName}" /></h3></td>
 			</tr>
 			<c:forEach var="practice" items="${section.surveyPractices}">
-				<tr style="background: <c:out value='${section.lightColor}'/>" >
+				<tr ng-non-bindable style="background: <c:out value='${section.lightColor}'/>" >
 					<td><c:out value="${practice.name}" /></td>
 					<td style="text-align:center">
 						<c:set var="ranking" value="${surveyResult.practiceRankings[practice.id]}" />
@@ -102,7 +102,7 @@
 				<th class="toFix" style="text-align:center"><em>Comments</em></th>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody ng-non-bindable>
 		<c:forEach var="section" items="${surveyResult.survey.surveySections}">
 			<tr style="background: <c:out value='${section.color}' />" >
 				<td colspan="4">

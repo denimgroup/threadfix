@@ -26,7 +26,7 @@
         </spring:url>
         <td class="no-left-border" id="application${ status.count }">
           <div style="width:240px;" class="ellipsis">
-            <a style="text-decoration:underline;" id="scanApplicationLink${ status.count }" href="${ fn:escapeXml(appUrl) }">
+            <a ng-non-bindable style="text-decoration:underline;" id="scanApplicationLink${ status.count }" href="${ fn:escapeXml(appUrl) }">
               <c:out value="${ scan.applicationChannel.application.name }"/>
             </a>
           </div>
@@ -45,7 +45,7 @@
         </td>
       </tr>
       <tr class="no-top-border">
-        <td class="thick-left" colspan="3">
+        <td ng-non-bindable class="thick-left" colspan="3">
           <span style="font-weight:bold;color:red;"><c:out value="${ scan.numberTotalVulnerabilities }"/></span> Vulnerabilities from
           <c:out value="${ scan.applicationChannel.channelType.name }"/> <c:if test="${ not empty scan.scannerType }">(<c:out value="${ scan.scannerType }"/>)</c:if>
         </td>

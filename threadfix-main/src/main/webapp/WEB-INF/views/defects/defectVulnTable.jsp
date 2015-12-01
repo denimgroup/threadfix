@@ -5,7 +5,7 @@
 	<spring:url value="defectTable" var="tableUrl">
 	</spring:url>
 	<c:if test="${ numVulns > 100 }">
-	<div style="padding-bottom:8px">	
+	<div ng-non-bindable style="padding-bottom:8px">
 		<c:if test="${ page > 4 }">
 			<a href="javascript:refillElement('#toReplace', '${tableUrl}', 1, '<c:out value="${ loginUrl }"/>')">First</a>
 		</c:if>
@@ -45,7 +45,7 @@
 	</div>
 	</c:if>
 	
-	<table class="table table-striped sortable" id="anyid">
+	<table ng-non-bindable class="table table-striped sortable" id="anyid">
 		<thead>
 			<tr>
 			    <th class="first"onclick="javascript:refillElementSort('#toReplace', '${tableUrl}', 1, 1, '<c:out value="${ loginUrl }"/>')">Vulnerability Name</th>

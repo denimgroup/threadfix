@@ -10,63 +10,63 @@
 		<table class="left-align">
 			<tr class="left-align">
 				<td style="padding:5px;">Name</td> 
-				<td style="padding:5px;">
+				<td ng-non-bindable style="padding:5px;">
 					<c:out value="${ application.name }"/>
 				</td>
 			</tr>
 			<tr class="left-align">
 				<td style="padding:5px;">URL</td>
-				<td style="padding:5px;">
+				<td ng-non-bindable style="padding:5px;">
 					<c:out value="${ application.url }"/>
 			  	</td>
 			</tr>
 			<tr class="left-align">
 				<td style="padding:5px;">Unique ID</td>
-				<td style="padding:5px;">
+				<td ng-non-bindable style="padding:5px;">
 					<c:out value="${ application.uniqueId }"/>
 			  	</td>
 			</tr>
 			<tr class="left-align">
 				<td style="padding:5px;">Team</td>
-				<td style="padding:5px;">
+				<td ng-non-bindable style="padding:5px;">
 					<c:out value="${ application.organization.name }"/>
 				</td>																
 			</tr>
 			<tr class="left-align">
 				<td style="padding:5px;">Criticality</td>
-				<td style="padding:5px;">
+				<td ng-non-bindable style="padding:5px;">
 					<c:out value="${ application.applicationCriticality.name }"/>
 				</td>
 			</tr>
 
             <tr>
                 <td style="padding:5px;">Application Type</td>
-                <td style="padding:5px;">
+                <td ng-non-bindable style="padding:5px;">
                     <c:out value="${ application.frameworkType }"/>
                 </td>
             </tr>
             <tr>
-                <td  style="padding:5px;">Source Code URL</td>
-                <td  style="padding:5px;">
+                <td style="padding:5px;">Source Code URL</td>
+                <td ng-non-bindable style="padding:5px;">
                     <c:out value="${ application.repositoryUrl }"/>
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">Source Code Revision</td>
-                <td style="padding:5px;">
+                <td ng-non-bindable style="padding:5px;">
                     <c:out value="${ application.repositoryBranch }"/>
                 </td>
             </tr>
             <tr>
-                <td  style="padding:5px;">Source Code Folder</td>
-                <td  style="padding:5px;">
+                <td style="padding:5px;">Source Code Folder</td>
+                <td ng-non-bindable style="padding:5px;">
                     <c:out value="${ application.repositoryFolder }"/>
                 </td>
             </tr>
 
 			<tr class="left-align">
 				<td style="padding:5px;">Defect Tracker</td>
-				<td style="padding:5px;">
+				<td ng-non-bindable style="padding:5px;">
 					<c:out value="${ application.defectTracker.name }"/>  
 					<em><a href="<spring:url value="${ fn:escapeXml(application.defectTracker.url) }" />">
 						<c:out value="${ fn:escapeXml(application.defectTracker.url) }"/></a></em> 
@@ -74,7 +74,7 @@
 			</tr>
 			<tr class="left-align" id="appWafDiv">
 				<td style="padding:5px;">WAF</td>
-				<td style="padding:5px;">
+				<td ng-non-bindable style="padding:5px;">
 					<spring:url value="/wafs/{wafId}" var="wafUrl">
 						<spring:param name="wafId" value="${ application.waf.id }"/>
 					</spring:url>
@@ -96,7 +96,7 @@
                 <td style="padding:5px;">
                     Disable Vulnerability Merging
                 </td>
-                <td style="padding:5px;">
+                <td ng-non-bindable style="padding:5px;">
                     <c:out value="${ application.skipApplicationMerge }"/>
                 </td>
             </tr>

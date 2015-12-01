@@ -60,6 +60,14 @@ public class HibernateReportDao
     }
 
     @Override
+    public Report retrieveByNameIgnoreCase(String name) {
+        return (Report) sessionFactory.getCurrentSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("displayName", name).ignoreCase())
+                .uniqueResult();
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public List<Report> retrieveAllAvailable() {
         return (List<Report>) getAvailableCriteria().list();

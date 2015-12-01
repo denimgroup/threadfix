@@ -86,8 +86,6 @@ public class ScanMergerImpl implements ScanMerger {
             return;
         }
 
-        filterScanResults(scan, applicationChannel);
-
         // TODO probably make all of these autowired
         Application application = applicationChannel.getApplication();
         scan.setApplicationChannel(applicationChannel);
@@ -117,28 +115,5 @@ public class ScanMergerImpl implements ScanMerger {
             permissionsHandler.setPermissions(scan, application.getId());
         }
 	}
-
-    private void filterScanResults(Scan scan, ApplicationChannel applicationChannel) {
-
-        if (scan != null && applicationChannel != null && applicationChannel.getChannelType() != null) {
-
-            List<GenericSeverity> filteredSeverities = list();
-            if (scanResultFilterService != null) {
-                filteredSeverities = scanResultFilterService.loadFilteredSeveritiesForChannelType(applicationChannel.getChannelType());
-            }
-
-            if (filteredSeverities != null && !filteredSeverities.isEmpty()) {
-                List<Finding> toFilter = list();
-
-                for (Finding finding : scan.getFindings()) {
-                    if (filteredSeverities.contains(finding.getChannelSeverity().getSeverityMap().getGenericSeverity())) {
-                        toFilter.add(finding);
-                    }
-                }
-
-                scan.getFindings().removeAll(toFilter);
-            }
-        }
-    }
 
 }

@@ -8,14 +8,14 @@
     <li><a id="applicationsIndexLink" href="<spring:url value="/teams"/>">Applications Index</a> <span class="divider">/</span></li>
     <li ng-show="application"><a id="teamLink" class="pointer" ng-click="goToTeam(application)">Team: {{ application.team.name }}</a> <span class="divider">/</span></li>
     <li ng-show="application" class="active">Application: {{ application.name }}</li>
-    <li ng-hide="application"><a href="${ fn:escapeXml(orgUrl) }">Team: <c:out value="${ application.organization.name }"/></a> <span class="divider">/</span></li>
-    <li ng-hide="application" class="active">Application: <c:out value="${ application.name }"/></li>
+    <li ng-hide="application"><a ng-non-bindable href="${ fn:escapeXml(orgUrl) }">Team: <c:out value="${ application.organization.name }"/></a> <span class="divider">/</span></li>
+    <li ng-hide="application" class="active"><span ng-non-bindable>Application: <c:out value="${ application.name }"/></span></li>
 </ul>
 
 <div ng-controller="ApplicationPageModalController">
-    <h2 style="padding-bottom:5px;line-height:1">
+    <h2 style="padding-bottom:5px;line-height:1" class="break-word-header">
 
-        <span ng-if="!config" id="nameText" style="padding-top:5px;"><c:out value="${ application.name }"/></span>
+        <span ng-if="!config" id="nameText" style="padding-top:5px;"><span ng-non-bindable><c:out value="${ application.name }"/></span></span>
         <span ng-if="config" id="nameText" style="padding-top:5px;">{{ config.application.name }}</span>
         <c:if test="${ not empty canManageApplications }">
             <div id="btnDiv1" class="btn-group">

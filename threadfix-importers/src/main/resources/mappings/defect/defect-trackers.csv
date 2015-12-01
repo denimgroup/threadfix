@@ -1,3 +1,4 @@
-8/6/2014 11:45:00
+11/24/2015 12:10:00
 HP Quality Center,com.denimgroup.threadfix.service.defects.HPQualityCenterDefectTracker
 Version One,com.denimgroup.threadfix.service.defects.VersionOneDefectTracker
+JIRA,com.denimgroup.threadfix.service.defects.JiraDefectTracker

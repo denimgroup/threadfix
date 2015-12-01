@@ -25,13 +25,13 @@
 	</c:if>
 	<c:forEach var="defectTracker" items="${ defectTrackerList }" varStatus="status">
 		<tr class="bodyRow">
-		    <td id="defectTrackerName${ status.count }">
+		    <td ng-non-bindable id="defectTrackerName${ status.count }">
 		    	<c:out value="${ defectTracker.name }"/>
 		    </td>
-			<td id="defectTrackerUrl${ status.count }">
+			<td ng-non-bindable id="defectTrackerUrl${ status.count }">
 				<c:out value="${ defectTracker.url }"/>
 			</td>
-			<td id="defectTrackerType${ status.count }">
+			<td ng-non-bindable id="defectTrackerType${ status.count }">
 				<c:out value="${ defectTracker.defectTrackerType.name }"/>
 			</td>
 			<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_DEFECT_TRACKERS">

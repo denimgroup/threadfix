@@ -9,7 +9,7 @@
 		</tr>
 	</thead>
 	<tbody>
-        <tr ng-hide="currentVulnFilters" class="bodyRow">
+        <tr ng-show="!currentVulnFilters || currentVulnFilters.length === 0" class="bodyRow">
             <td colspan="4" class="centered">No mappings found.</td>
         </tr>
         <tr ng-show="currentVulnFilters" ng-repeat="vulnFilter in currentVulnFilters" class="bodyRow">

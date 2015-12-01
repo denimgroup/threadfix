@@ -36,14 +36,9 @@ public interface StatisticsCounterDao extends GenericObjectDao<StatisticsCounter
 
     Long getCountForSeverity(int scanId, int severity);
 
-    @SuppressWarnings("unchecked")
     List<Map<String, Object>> getFindingSeverityMap(List<Integer> filteredSeverities,
                                                     List<Integer> filteredVulnerabilities,
-                                                    List<Integer> filteredChannelSeverities);
-
-    List<Map<String, Object>> getFindingSeverityMap(List<Integer> filteredSeverities,
-                                                    List<Integer> filteredVulnerabilities,
-                                                    List<Integer> filteredChannelSeverities,
+                                                    List<Integer> ignoreVulnIdsByChannelSeverities,
                                                     Scan scan);
 
     List<Map<String,Object>> getRawFindingTotalMap();

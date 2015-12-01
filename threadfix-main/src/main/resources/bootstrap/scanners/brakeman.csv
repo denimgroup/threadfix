@@ -23,8 +23,8 @@ Dangerous Send,Dangerous Send,77
 Default Routes,Default Routes,425
 Authentication,Authentication,287
 type.severities,,,
-5,Critical,5,5
-2,Low,2,2
-1,Info,1,1
-4,High,4,4
-3,Medium,3,3
+Critical,5,5,5
+Low,2,2,2
+Info,1,1,1
+High,4,4,4
+Medium,3,3,3

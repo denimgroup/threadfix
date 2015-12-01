@@ -6,19 +6,19 @@
 </head>
 
 <body id="apps">
-	<h2><c:out value="${ defect.application.defectTracker.name }"/> Defect <c:out value="${ defect.nativeId }"/> Details</h2>
-	<c:out value="${ message }"/>
-	Bug Status: <c:out value="${ defect.status }"/>
+	<h2 ng-non-bindable><c:out value="${ defect.application.defectTracker.name }"/> Defect <c:out value="${ defect.nativeId }"/> Details</h2>
+	<span ng-non-bindable><c:out value="${ message }"/></span>
+	Bug Status: <span ng-non-bindable><c:out value="${ defect.status }"/></span>
 	<br/>
 	<br/>
 	<c:if test="${ not empty defect.defectURL }">
-		Bug Tracker URL: <a href="${ fn:escapeXml(defect.defectURL) }"><c:out value="${fn:escapeXml(defect.defectURL)}"/></a>
+		Bug Tracker URL: <a ng-non-bindable href="${ fn:escapeXml(defect.defectURL) }"><c:out value="${fn:escapeXml(defect.defectURL)}"/></a>
 		<br/><br/>
 	</c:if>
 	<spring:url value="../../../{appId}" var="appUrl">
 		<spring:param name="appId" value="${ fn:escapeXml(defect.application.id) }" />
 	</spring:url>
-	<a href="${ fn:escapeXml(appUrl) }">Back to Application <c:out value="${ defect.application.name }"/></a>
+	<a ng-non-bindable href="${ fn:escapeXml(appUrl) }">Back to Application <c:out value="${ defect.application.name }"/></a>
 	<br/>
 	<br/>
 	
@@ -57,13 +57,13 @@
 					<spring:url value="../{vulnId}" var="vulnerabilityUrl">
 						<spring:param name="vulnId" value="${ vuln.id }" />
 			    	</spring:url>
-				    <a href="${ fn:escapeXml(vulnerabilityUrl) }">
+				    <a ng-non-bindable href="${ fn:escapeXml(vulnerabilityUrl) }">
 				        <c:out value="${ vuln.genericVulnerability.name }"/>
 				    </a>
 				</td>
-				<td><c:out value="${ vuln.genericSeverity.displayName }"/></td>
-				<td><c:out value="${ vuln.surfaceLocation.path }"/></td>
-				<td><c:out value="${ vuln.surfaceLocation.parameter }"/></td>
+				<td ng-non-bindable><c:out value="${ vuln.genericSeverity.displayName }"/></td>
+				<td ng-non-bindable><c:out value="${ vuln.surfaceLocation.path }"/></td>
+				<td ng-non-bindable><c:out value="${ vuln.surfaceLocation.parameter }"/></td>
 
 				<td>
 				<c:choose>
@@ -75,7 +75,7 @@
 					</c:otherwise>
 				</c:choose>
 				</td>
-				<td>
+				<td ng-non-bindable>
 					<c:out value="${ vuln.noOfSecurityEvents }" />
 				</td>
 			</tr>

@@ -463,7 +463,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	@Column
 	public Boolean getFoundHAMEndpoint() {
-		return foundHAMEndpoint;
+		return foundHAMEndpoint == null ? false : foundHAMEndpoint;
 	}
 
 	public void setFoundHAMEndpoint(Boolean foundHAMEndpoint) {

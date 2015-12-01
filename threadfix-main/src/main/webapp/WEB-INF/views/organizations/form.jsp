@@ -34,7 +34,7 @@
 	<spring:url value="/organizations/{orgId}" var="orgUrl">
 		<spring:param name="orgId" value="${ organization.id }" />
 	</spring:url>
-	<span style="padding-left: 10px"><a href="${ fn:escapeXml(orgUrl) }">Back to Team <c:out value="${ organization.name }"/></a></span>
+	<span ng-non-bindable style="padding-left: 10px"><a href="${ fn:escapeXml(orgUrl) }">Back to Team <c:out value="${ organization.name }"/></a></span>
 </c:otherwise>
 </c:choose>
 	

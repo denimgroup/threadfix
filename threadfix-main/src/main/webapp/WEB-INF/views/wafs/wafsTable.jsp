@@ -23,10 +23,10 @@
 	</c:if>
 	<c:forEach var="waf" items="${ wafList }" varStatus="status">
 		<tr class="bodyRow">
-			<td class="details" id="wafName${ status.count }">
+			<td class="details" id="wafName${ status.count }" ng-non-bindable>
 				<c:out value="${ waf.name }"/>
 			</td>
-			<td id="wafType${ status.count }"><c:out value="${ waf.wafType.name }"/></td>
+			<td id="wafType${ status.count }" ng-non-bindable><c:out value="${ waf.wafType.name }"/></td>
 			<td class="centered">	
 				<a id="editWafModalButton${ status.count }" href="#editWaf${ waf.id }" role="button" class="btn" data-toggle="modal">Edit / Delete</a>
 				<div id="editWaf${ waf.id }" class="modal hide fade" tabindex="-1"

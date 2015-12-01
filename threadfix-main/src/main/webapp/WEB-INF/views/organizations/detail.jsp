@@ -1,7 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title><c:out value="${ organization.name }"/></title>
+	<title ng-non-bindable><c:out value="${ organization.name }"/></title>
 	<cbs:cachebustscript src="/scripts/team-detail-page-controller.js"/>
     <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
     <cbs:cachebustscript src="/scripts/vuln-search-controller.js"/>
@@ -30,7 +30,7 @@
         <li><a href="<spring:url value="/teams"/>">Applications Index</a> <span class="divider">/</span></li>
         <li class="active">Team: {{ team.name }}</li>
     </ul>
-    <h2 id="name" style="padding-top:5px;">
+    <h2 id="name" style="padding-top:5px;" class="break-word-header">
         {{ team.name }}
         <c:if test="${ canManageTeams || canManageUsers || canManageVulnFilters }">
             <div id="btnDiv1" class="btn-group">
@@ -46,7 +46,7 @@
                             <spring:url value="{orgId}/filters" var="filterUrl">
                                 <spring:param name="orgId" value="${ organization.id }"/>
                             </spring:url>
-                            <a id="editfiltersButton1" href="<c:out value='${ filterUrl }'/>" data-toggle="modal">
+                            <a ng-non-bindable id="editfiltersButton1" href="<c:out value='${ filterUrl }'/>" data-toggle="modal">
                                 Customize ThreadFix Vulnerability Types and Severities
                             </a>
                         </li>

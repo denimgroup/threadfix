@@ -1,12 +1,12 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-    <title><c:out value="${ surveyResult.survey.name }" /></title>
+    <title ng-non-bindable><c:out value="${ surveyResult.survey.name }" /></title>
     <cbs:cachebustscript src="/scripts/survey-sections.js"/>
 </head>
 
 <body id="apps">
-	<h2><c:out value="${ surveyResult.survey.name }" /></h2>
+	<h2 ng-non-bindable><c:out value="${ surveyResult.survey.name }" /></h2>
 	
 	<div id="helpText">The Software Assurance Maturity Model Interview Template was authored by Nick Coblentz. 
 						<br> It is included here under the Creative Commons Attribution-ShareAlike 3.0 License.
@@ -22,7 +22,7 @@
 					<spring:url value="/organizations/{orgId}" var="orgUrl">
 						<spring:param name="orgId" value="${ surveyResult.organization.id }"/>
 					</spring:url>
-					<a href="${ fn:escapeXml(orgUrl) }" onclick="return confirmExit();"><c:out value="${ surveyResult.organization.name }"/></a>
+					<a href="${ fn:escapeXml(orgUrl) }" onclick="return confirmExit();" ng-non-bindable><c:out value="${ surveyResult.organization.name }"/></a>
 				</td>
 			</tr>
 		</tbody>
@@ -59,7 +59,7 @@
 					<th class="toFix" style="text-align:center"><b>Comments</b></th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody ng-non-bindable>
 			<c:forEach var="section" items="${surveyResult.survey.surveySections}">
 				<tr style="background: <c:out value='${section.color}' />" >
 					<td colspan="4">

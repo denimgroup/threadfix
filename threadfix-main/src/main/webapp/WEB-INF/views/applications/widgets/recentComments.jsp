@@ -26,13 +26,13 @@
               <spring:param name="appId" value="${ comment.vulnerability.application.id }"/>
             </spring:url>
             <div style="width:142px;" class="ellipsis">
-              <a style="text-decoration:underline;" href="<c:out value="${ appUrl }"/>">
+              <a ng-non-bindable style="text-decoration:underline;" href="<c:out value="${ appUrl }"/>">
                 <c:out value="${ comment.vulnerability.application.name }" />
               </a>
             </div>
           </td>
           <td class="no-left-border" id="commentVulnId${ status.count }">
-            <div style="width:197px;" class="ellipsis">
+            <div ng-non-bindable style="width:197px;" class="ellipsis">
               <c:out value="${ comment.vulnerability.genericVulnerability.name }" />
             </div>
           </td>
@@ -51,7 +51,7 @@
         </tr>
         <tr class="no-top-border">
           <td class="thick-left" colspan="3" id="commentText${ status.count }">
-            <div class="vuln-comment-word-wrap ellipsis">
+            <div ng-non-bindable class="vuln-comment-word-wrap ellipsis">
               <c:out value="${ comment.comment }" />
             </div>
           </td>

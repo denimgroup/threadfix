@@ -1,4 +1,4 @@
-3/27/2015 11:45:00
+11/22/2015 17:14:00
 type.info,,,
 Acunetix WVS
 type.vulnerabilities,,,
@@ -192,3 +192,6 @@ Zabbix 1.8.x-2.2.x Local File Inclusion via XXE Attack,Zabbix 1.8.x-2.2.x Local 
 Zabbix SQL injection,Zabbix SQL injection,89
 Zend framework configuration file information disclosure,Zend framework configuration file information disclosure,538
 Zend Framework local file disclosure via XXE injection,Zend Framework local file disclosure via XXE injection,611
+type.severities,,,
+high,high,4,5
+

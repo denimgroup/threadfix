@@ -1,11 +1,11 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title><c:out value="${ application.name }"/></title>
+	<title ng-non-bindable><c:out value="${ application.name }"/></title>
 </head>
 
 <body id="apps">
-	<h2><c:out value="${ application.name }"/></h2>
+	<h2 ng-non-bindable><c:out value="${ application.name }"/></h2>
 	
 	<div id="helpText">
 		This page lists all of the scans that have been uploaded to this Application.
@@ -34,7 +34,7 @@
 		</c:if>
 		<c:forEach var="scan" items="${ application.scans }" varStatus="status">
 			<tr class="bodyRow">
-				<td id="channelType${ status.count }"><c:out value="${ scan.applicationChannel.channelType.name }"/></td>
+				<td id="channelType${ status.count }" ng-non-bindable><c:out value="${ scan.applicationChannel.channelType.name }"/></td>
 				<td>
 			        <spring:url value="scans/{scanId}" var="detailUrl">
                         <spring:param name="scanId" value="${ scan.id }"/>
@@ -43,7 +43,7 @@
 				        <fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short" timeStyle="short"/>
 				    </a>
 				</td>
-				<td id="numTotalVulnerabilities${ status.count }"><c:out value="${ scan.numberTotalVulnerabilities }"/></td>
+				<td id="numTotalVulnerabilities${ status.count }" ng-non-bindable><c:out value="${ scan.numberTotalVulnerabilities }"/></td>
 				<c:if test="${ canUploadScans }">
 				<td>
 					<spring:url value="scans/{scanId}/delete" var="deleteUrl">
@@ -66,5 +66,5 @@
 		<spring:param name="orgId" value="${ application.organization.id }" />
 		<spring:param name="appId" value="${ application.id }" />
 	</spring:url>
-    <a id="backToApplicationLink" href="${ fn:escapeXml(appUrl) }">Back to Application <c:out value="${ application.name }"/></a>
+    <a id="backToApplicationLink" href="${ fn:escapeXml(appUrl) }" ng-non-bindable>Back to Application <c:out value="${ application.name }"/></a>
 </body>

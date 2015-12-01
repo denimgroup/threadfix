@@ -11,5 +11,5 @@
     We were unable to find the resource that you requested. 
     This could be because the requested item never existed or because it was deleted.<br><br>
     You may want to <a href="#" onclick="history.back();return false">go back a page</a> or 
-    <a href="<c:out value="${homeUrl}"/>">go to the Home page.</a>
+    <a ng-non-bindable href="<c:out value="${homeUrl}"/>">go to the Home page.</a>
 </p>

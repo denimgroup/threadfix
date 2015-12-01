@@ -1,4 +1,4 @@
-3/27/2015 11:45:00
+11/22/2015 15:45:00
 type.info,,,
 Arachni,,,
 type.vulnerabilities,,,
@@ -58,3 +58,5 @@ Informational,Informational,1,1
 High,High,4,4
 Medium,Medium,3,3
 Low,Low,2,2
+HIGH,HIGH,4,5
+MEDIUM,MEDIUM,3,4
