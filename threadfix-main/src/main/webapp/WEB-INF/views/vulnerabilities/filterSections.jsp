@@ -236,7 +236,7 @@
             <div class="accordion-inner">
                 Native Id
                 <br>
-                <input id="nativeIdInput" style="width: 180px;" type="text" placeholder="Example: WAT"
+                <input id="nativeIdInput" style="width: 180px;" type="text" placeholder="Example: 93ebd4..."
                        ng-model="parameters.nativeId" ng-blur="refresh()" ng-enter="refresh()"/>
             </div>
         </div>
