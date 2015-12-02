@@ -82,7 +82,13 @@ public class ScheduledScanController {
             return RestResponse.failure("Application was not found for ID " + appId);
         }
 
-        scheduledScanService.validateDate(scheduledScan, result);
+        if (scheduledScan.getScheduleType().equals("CRON")) {
+            scheduledScan.clearDate();
+            scheduledScanService.validateCronExpression(scheduledScan, result);
+        } else if (scheduledScan.getScheduleType().equals("SELECT")) {
+            scheduledScan.clearCronExpression();
+            scheduledScanService.validateDate(scheduledScan, result);
+        }
 
         if (result.hasErrors()) {
             if (result.hasFieldErrors("scanConfig")) {

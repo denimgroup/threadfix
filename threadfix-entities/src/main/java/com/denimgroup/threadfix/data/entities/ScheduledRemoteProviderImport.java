@@ -46,6 +46,7 @@ public class ScheduledRemoteProviderImport extends ScheduledJob {
         defaultScheduledImport.setMinute(0);
         defaultScheduledImport.setPeriod("AM");
         defaultScheduledImport.setDay(null);
+        defaultScheduledImport.setScheduleType("SELECT");
 
         return defaultScheduledImport;
     }

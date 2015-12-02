@@ -46,6 +46,7 @@ public class ScheduledGRCToolUpdate extends ScheduledJob {
         defaultScheduledUpdate.setMinute(0);
         defaultScheduledUpdate.setPeriod("AM");
         defaultScheduledUpdate.setDay(null);
+        defaultScheduledUpdate.setScheduleType("SELECT");
 
         return defaultScheduledUpdate;
     }

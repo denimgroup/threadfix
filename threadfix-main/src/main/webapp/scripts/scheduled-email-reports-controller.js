@@ -53,7 +53,8 @@ module.controller('ScheduledEmailReportsController', function($window, $scope, $
                         hour: '6',
                         minute: '0',
                         period: 'AM',
-                        day: 'Sunday'
+                        day: 'Sunday',
+                        scheduleType: 'SELECT'
                     };
                 },
                 config: function(){

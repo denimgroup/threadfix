@@ -69,8 +69,15 @@ public class EditScheduledEmailReportController {
 			return FormRestResponse.failure("Invalid update url");
 		}
 
-		scheduledEmailReportService.validateDate(scheduledEmailReport, result);
-		scheduledEmailReportService.validateScheduleEmailReport(scheduledEmailReport, result);
+		if (scheduledEmailReport.getScheduleType().equals("CRON")) {
+            scheduledEmailReport.clearDate();
+			scheduledEmailReportService.validateCronExpression(scheduledEmailReport, result);
+		} else if (scheduledEmailReport.getScheduleType().equals("SELECT")) {
+            scheduledEmailReport.clearCronExpression();
+			scheduledEmailReportService.validateDate(scheduledEmailReport, result);
+			scheduledEmailReportService.validateScheduleEmailReport(scheduledEmailReport, result);
+		}
+
 		scheduledEmailReport.setEmailAddresses(dbScheduledEmailReport.getEmailAddresses());//don't know how to make it stick only with allowed fields
 		scheduledEmailReport.setEmailLists(dbScheduledEmailReport.getEmailLists());
 

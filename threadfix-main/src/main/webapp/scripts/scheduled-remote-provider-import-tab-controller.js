@@ -25,13 +25,13 @@ myAppModule.controller('ScheduledRemoteProviderImportTabController', function ($
                         minute: '0',
                         period: 'AM',
                         day: 'Sunday',
-                        modalHeading: 'Import'
+                        scheduleType: 'SELECT'
                     };
                 },
                 config: function () {
-//                    return {
-//                        remoteProviders: []
-//                    }
+                    return {
+                        heading: 'Remote Provider Import'
+                    }
                 }
             }
         });

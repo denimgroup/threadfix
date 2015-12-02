@@ -107,7 +107,7 @@ public abstract class AbstractScheduledJobScheduler<T extends ScheduledJob> {
             //Add default scheduled job
             T defaultScheduledJob = scheduledJobService.getDefaultScheduledJob(); //not static method anymore, returns null if not overridden in service
             if (defaultScheduledJob == null){
-                log.info("No default sechduled Job for " + jobNaturalName + ". Skipping default setup");
+                log.info("No default scheduled Job for " + jobNaturalName + ". Skipping default setup");
                 return;
             }
 
@@ -142,6 +142,9 @@ public abstract class AbstractScheduledJobScheduler<T extends ScheduledJob> {
     }
 
     private String getCronExpression(T scheduledJob) {
+
+        if (scheduledJob.getScheduleType().equals("CRON"))
+            return scheduledJob.getCronExpression();
 
         DayInWeek dayInWeek = DayInWeek.getDay(scheduledJob.getDay());
         ScheduledFrequencyType frequencyType = ScheduledFrequencyType.getFrequency(scheduledJob.getFrequency());

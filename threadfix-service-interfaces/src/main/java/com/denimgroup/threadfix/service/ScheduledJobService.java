@@ -35,15 +35,17 @@ import java.util.List;
 
 public interface ScheduledJobService<S extends ScheduledJob> {
 
-    public List<S> loadAll();
+    List<S> loadAll();
 
-    public int save(S scheduledJob);
+    int save(S scheduledJob);
 
-    public String delete(S scheduledJob);
+    String delete(S scheduledJob);
 
-    public S loadById(int scheduledJobId);
+    S loadById(int scheduledJobId);
 
-    public void validateDate(S scheduledJob, BindingResult result);
+    void validateCronExpression(S scheduledJob, BindingResult result);
 
-    public abstract S getDefaultScheduledJob();
+    void validateDate(S scheduledJob, BindingResult result);
+
+    S getDefaultScheduledJob();
 }

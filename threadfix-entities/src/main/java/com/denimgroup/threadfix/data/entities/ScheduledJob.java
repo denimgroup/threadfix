@@ -24,9 +24,15 @@
 
 package com.denimgroup.threadfix.data.entities;
 
+import com.cronutils.descriptor.CronDescriptor;
+import com.cronutils.model.CronType;
+import com.cronutils.model.definition.CronDefinition;
+import com.cronutils.model.definition.CronDefinitionBuilder;
+import com.cronutils.parser.CronParser;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
+import java.util.Locale;
 
 @MappedSuperclass
 public abstract class ScheduledJob extends AuditableEntity {
@@ -37,8 +43,10 @@ public abstract class ScheduledJob extends AuditableEntity {
     protected String period, day;
     protected String frequency;
     protected String dateError;
+    protected String scheduleType;
+    protected String cronExpression;
 
-    @Column(nullable=false)
+    @Column(nullable = true)
     @JsonView(Object.class)
     public int getHour() {
         return hour;
@@ -48,7 +56,7 @@ public abstract class ScheduledJob extends AuditableEntity {
         this.hour = hour;
     }
 
-    @Column(nullable=false)
+    @Column(nullable = true)
     @JsonView(Object.class)
     public int getMinute() {
         return minute;
@@ -58,7 +66,7 @@ public abstract class ScheduledJob extends AuditableEntity {
         this.minute = minute;
     }
 
-    @Column(nullable=false)
+    @Column(nullable = true)
     @JsonView(Object.class)
     public String getPeriod() {
         return period;
@@ -68,7 +76,7 @@ public abstract class ScheduledJob extends AuditableEntity {
         this.period = period;
     }
 
-    @Column(nullable=true)
+    @Column(nullable = true)
     @JsonView(Object.class)
     public String getDay() {
         return day;
@@ -78,7 +86,7 @@ public abstract class ScheduledJob extends AuditableEntity {
         this.day = day;
     }
 
-    @Column(nullable=false)
+    @Column(nullable = true)
     @JsonView(Object.class)
     public String getFrequency() {
         return frequency;
@@ -86,6 +94,26 @@ public abstract class ScheduledJob extends AuditableEntity {
 
     public void setFrequency(String frequency) {
         this.frequency = frequency;
+    }
+
+    @Column(nullable = true, unique = true)
+    @JsonView(Object.class)
+    public String getCronExpression() {
+        return cronExpression;
+    }
+
+    public void setCronExpression(String cronExpression) {
+        this.cronExpression = cronExpression;
+    }
+
+    @Column(nullable = false)
+    @JsonView(Object.class)
+    public String getScheduleType() {
+        return scheduleType;
+    }
+
+    public void setScheduleType(String scheduleType) {
+        this.scheduleType = scheduleType;
     }
 
     @Transient
@@ -100,16 +128,36 @@ public abstract class ScheduledJob extends AuditableEntity {
     @Transient
     @JsonView(Object.class)
     public String getScheduledDate(){
-        String scheduledDate;
+        String scheduledDate = "";
 
-        if (this.day==null){
-            scheduledDate = this.frequency + " at " + (this.hour == 0 ? 12 : this.hour)
-                    + ":" + (this.minute == 0 ? "00" : this.minute);
+        if (this.scheduleType.equals("CRON")) {
+            if (this.cronExpression != null) {
+                CronDefinition cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ);
+                CronParser parser = new CronParser(cronDefinition);
+                CronDescriptor descriptor = CronDescriptor.instance(Locale.US);
+                scheduledDate = descriptor.describe(parser.parse(this.cronExpression));
+            }
         } else {
-            scheduledDate = this.day + "s at " + (this.hour == 0 ? 12 : this.hour)
-                    + ":" + (this.minute == 0 ? "00" : this.minute);
+            if (this.day == null) {
+                scheduledDate = this.frequency + " at " + (this.hour == 0 ? 12 : this.hour)
+                        + ":" + (this.minute == 0 ? "00" : this.minute);
+            } else if (!this.day.isEmpty() && !this.day.equals("")) {
+                scheduledDate = this.day + "s at " + (this.hour == 0 ? 12 : this.hour)
+                        + ":" + (this.minute == 0 ? "00" : this.minute);
+            }
         }
-
         return scheduledDate;
+    }
+
+    public void clearDate() {
+        setDay("");
+        setFrequency("");
+        setPeriod("");
+        setHour(0);
+        setMinute(0);
+    }
+
+    public void clearCronExpression() {
+        setCronExpression(null);
     }
 }

@@ -92,6 +92,12 @@
             <artifactId>joda-time</artifactId>
             <version>${joda.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.cronutils</groupId>
+            <artifactId>cron-utils</artifactId>
+            <version>${cron-utils.version}</version>
+        </dependency>
+
 
         <!-- the core, which includes Streaming API, shared low-level abstractions (but NOT data-binding) -->
         <dependency>

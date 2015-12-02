@@ -46,7 +46,8 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * Created by zabdisubhan on 8/14/14.
+ * @author zabdisubhan
+ *
  */
 
 @Controller
@@ -73,8 +74,14 @@ public class ScheduledDefectTrackerUpdateController {
             return RestResponse.failure("You are not allowed to modify scheduled defect tracker updates.");
         }
 
-        scheduledDefectTrackerUpdateService.validateDate(scheduledDefectTrackerUpdate, result);
-        scheduledDefectTrackerUpdateService.validateSameDate(scheduledDefectTrackerUpdate, result);
+        if (scheduledDefectTrackerUpdate.getScheduleType().equals("CRON")) {
+            scheduledDefectTrackerUpdate.clearDate();
+            scheduledDefectTrackerUpdateService.validateCronExpression(scheduledDefectTrackerUpdate, result);
+        } else if (scheduledDefectTrackerUpdate.getScheduleType().equals("SELECT")) {
+            scheduledDefectTrackerUpdate.clearCronExpression();
+            scheduledDefectTrackerUpdateService.validateDate(scheduledDefectTrackerUpdate, result);
+            scheduledDefectTrackerUpdateService.validateSameDate(scheduledDefectTrackerUpdate, result);
+        }
 
         if (result.hasErrors()) {
             return FormRestResponse.failure("Encountered errors.", result);
@@ -85,7 +92,7 @@ public class ScheduledDefectTrackerUpdateController {
         }
 
         //Add new job to scheduler
-        if (scheduledDefectTrackerUpdater.addScheduledDefectTrackerUpdate(scheduledDefectTrackerUpdate)) {
+        if (scheduledDefectTrackerUpdater.addScheduledJob(scheduledDefectTrackerUpdate)) {
             log.info("Successfully added new scheduled defect tracker update to scheduler");
             return RestResponse.success(scheduledDefectTrackerUpdateService.loadAll());
 
@@ -113,7 +120,7 @@ public class ScheduledDefectTrackerUpdateController {
         }
 
         //Remove job from scheduler
-        if (scheduledDefectTrackerUpdater.removeScheduledDefectTrackerUpdate(scheduledDefectTrackerUpdate)) {
+        if (scheduledDefectTrackerUpdater.removeScheduledJob(scheduledDefectTrackerUpdate)) {
             String ret = scheduledDefectTrackerUpdateService.delete(scheduledDefectTrackerUpdate);
             if (ret != null) {
                 log.warn(ret);
