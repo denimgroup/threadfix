@@ -198,6 +198,7 @@
     <div class="filter-group-body" ng-show="showDetailsControls">
 
         <div ng-show="treeTeam || vulnSearch || treeApplication">
+
             <div class="accordion-inner">
                 Vulnerability Type
                 <a ng-hide="showTypeInput" ng-click="showTypeInput = !showTypeInput">
@@ -230,6 +231,13 @@
                 <br>
                 <input id="parameterFilterInput" style="width: 180px;" type="text" placeholder="Example: username"
                        ng-model="parameters.parameter" ng-blur="refresh()" ng-enter="refresh()"/>
+            </div>
+
+            <div class="accordion-inner">
+                Native Id
+                <br>
+                <input id="nativeIdInput" style="width: 180px;" type="text" placeholder="Example: WAT"
+                       ng-model="parameters.nativeId" ng-blur="refresh()" ng-enter="refresh()"/>
             </div>
         </div>
 
