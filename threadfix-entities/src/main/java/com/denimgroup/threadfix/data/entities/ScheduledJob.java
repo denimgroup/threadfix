@@ -29,6 +29,7 @@ import com.cronutils.model.CronType;
 import com.cronutils.model.definition.CronDefinition;
 import com.cronutils.model.definition.CronDefinitionBuilder;
 import com.cronutils.parser.CronParser;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
@@ -127,16 +128,25 @@ public abstract class ScheduledJob extends AuditableEntity {
 
     @Transient
     @JsonView(Object.class)
+    @JsonProperty("cronTranslation")
+    public String getCronTranslation() {
+        if (this.cronExpression != null) {
+            CronDefinition cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ);
+            CronParser parser = new CronParser(cronDefinition);
+            CronDescriptor descriptor = CronDescriptor.instance(Locale.US);
+            return descriptor.describe(parser.parse(this.cronExpression));
+        }
+
+        return null;
+    }
+
+    @Transient
+    @JsonView(Object.class)
     public String getScheduledDate(){
         String scheduledDate = "";
 
         if (this.scheduleType.equals("CRON")) {
-            if (this.cronExpression != null) {
-                CronDefinition cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ);
-                CronParser parser = new CronParser(cronDefinition);
-                CronDescriptor descriptor = CronDescriptor.instance(Locale.US);
-                scheduledDate = descriptor.describe(parser.parse(this.cronExpression));
-            }
+            scheduledDate = getCronTranslation();
         } else {
             if (this.day == null) {
                 scheduledDate = this.frequency + " at " + (this.hour == 0 ? 12 : this.hour)

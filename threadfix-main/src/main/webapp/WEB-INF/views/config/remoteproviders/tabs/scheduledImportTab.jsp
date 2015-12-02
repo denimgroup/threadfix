@@ -47,7 +47,7 @@
                     </span>
                 </td>
                 <td id="scheduledImportCronExpressionId">
-                    <span ng-show="scheduledImport.scheduleType == 'CRON'">
+                    <span ng-show="scheduledImport.scheduleType == 'CRON'" tooltip="{{ scheduledUpdate.cronTranslation }}">
                         {{ scheduledImport.cronExpression }}
                     </span>
                 </td>
@@ -59,5 +59,8 @@
             </tr>
             </tbody>
         </table>
+        <div>
+            Use <a href="https://crontranslator.appspot.com/">Cron Translator</a> to decode cron expressions
+        </div>
     </div>
 </tab>
