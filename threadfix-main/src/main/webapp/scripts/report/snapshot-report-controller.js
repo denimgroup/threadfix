@@ -596,7 +596,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         reportUtilities.createTeamAppNames($scope);
 
         if ($scope.reportId === $scope.PIT_Report_Id) {
-            $scope.filterVulns = filterByTag(filterByTeamAndApp($scope.allPointInTimeVulns));
+            $scope.filterVulns = filterByTag(filtewrByTeamAndApp($scope.allPointInTimeVulns));
             updateTree();
             processPITData();
             filterPITBySeverity();
