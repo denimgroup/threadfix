@@ -143,7 +143,7 @@ public abstract class AbstractScheduledJobScheduler<T extends ScheduledJob> {
 
     private String getCronExpression(T scheduledJob) {
 
-        if (scheduledJob.getScheduleType().equals("CRON"))
+        if (scheduledJob.getScheduleType().equals("CRON") && scheduledJob.getCronExpression() != null)
             return scheduledJob.getCronExpression();
 
         DayInWeek dayInWeek = DayInWeek.getDay(scheduledJob.getDay());
