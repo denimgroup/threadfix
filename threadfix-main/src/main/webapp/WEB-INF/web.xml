@@ -304,7 +304,6 @@
         		protected-regex ^/reports/filter$,
 				protected-regex ^/reports/filter/save$,
         		protected-regex ^/reports/search$,
-				protected-regex ^/reports/search/export/tag/pdf$,
                 protected-regex ^/reports/getTopApps$,
         		protected-regex ^/reports/parameters$,
 				protected-regex ^/reports/saveParameters,
