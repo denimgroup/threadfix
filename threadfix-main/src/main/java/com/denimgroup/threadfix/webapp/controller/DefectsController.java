@@ -156,7 +156,8 @@ public class DefectsController {
 		if (defectService.mergeDefect(vulnerabilities, defectViewModel.getId())) {
             return RestResponse.success("Successfully merged " + pluralized + " to Defect ID " + defectViewModel.getId());
 		} else {
-            return RestResponse.failure("Failed to merge " + pluralized + " to Defect ID " + defectViewModel.getId());
+            return RestResponse.failure("Failed to merge " + pluralized + " to Defect ID " + defectViewModel.getId() + ". " +
+					"Double check the Defect ID.");
 		}
 	}
 }
