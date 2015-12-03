@@ -3,7 +3,7 @@
 <c:if test="${ not empty errorMessage }">
 	<div class="alert alert-error" ng-non-bindable>
 		<c:if test="${ empty notCloseable }">
-			<button class="close" data-dismiss="alert" type="button">�</button>
+			<button class="close" data-dismiss="alert" type="button">&times;</button>
 		</c:if>
 		<c:out value="${ errorMessage }"/>
 	</div>
