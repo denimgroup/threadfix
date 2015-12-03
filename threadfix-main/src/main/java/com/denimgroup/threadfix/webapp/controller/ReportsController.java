@@ -163,16 +163,43 @@ public class ReportsController {
 
 	@RequestMapping(value="/snapshot/averageAge", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<Map<String, Object>> getPointInTimeAge(@ModelAttribute VulnerabilitySearchParameters reportParameters) throws IOException {
-		log.info("Generating point in time average age report");
+		long start = System.currentTimeMillis();
+
+		log.info("Generating Average Age in Point In Time report");
+		reportParameters.setShowHidden(false);
+		reportParameters.setShowFalsePositive(false);
+		reportParameters.setShowClosed(false);
+		reportParameters.setShowOpen(true);
 		Map<String, Object> map = vulnerabilitySearchService.generatePointInTimeAgeReport(reportParameters);
+
+		log.info("Get Average Age in Point In Time took " + (System.currentTimeMillis() - start) + " ms");
 		return RestResponse.success(map);
 	}
 
 	@RequestMapping(value="/snapshot/progressByType", method = RequestMethod.POST)
 	public @ResponseBody Object getProgressByType(@ModelAttribute VulnerabilitySearchParameters reportParameters) throws IOException {
+		long start = System.currentTimeMillis();
+
 		log.info("Generating Vulnerability Progress By Type report");
+		reportParameters.setShowHidden(false);
+		reportParameters.setShowFalsePositive(false);
+		reportParameters.setShowClosed(true);
+		reportParameters.setShowOpen(true);
+
 		List<Object> map = vulnerabilitySearchService.generateProgressByTypeReport(reportParameters);
+		log.info("Vulnerability Progress By Type report took " + (System.currentTimeMillis() - start) + " ms");
 		return RestResponse.success(map);
+	}
+
+	@RequestMapping(value="/snapshot/scanComparison", method = RequestMethod.POST)
+	public @ResponseBody Object getScanComparison(@ModelAttribute VulnerabilitySearchParameters reportParameters) throws IOException {
+		long start = System.currentTimeMillis();
+
+		log.info("Generating Scan Comparison report");
+		Map<String, Object> result = vulnerabilitySearchService.generateScanComparisonReport(reportParameters);
+
+		log.info("Scan Comparison report took " + (System.currentTimeMillis() - start) + " ms");
+		return RestResponse.success(result);
 	}
 
 

@@ -2,6 +2,10 @@
 
     <h2 id="scanComparisonTitle">Scan Comparison Summary</h2>
 
+    <span class="spinner-div">
+            <span id="loadingScanComparisonSpinner" ng-if="loadingScanComparison" class="spinner dark"></span>
+    </span>
+
     <table class="dataTable">
         <thead>
         <tr>
