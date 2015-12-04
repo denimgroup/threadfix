@@ -276,8 +276,7 @@ public class EditApplicationController {
 		databaseApplication.setUseDefaultCredentials(application.isUseDefaultCredentials());
 		databaseApplication.setUseDefaultProject(application.isUseDefaultProject());
 
-		if(!result.hasErrors()) {
-			applicationService.validateAfterEdit(databaseApplication, result);
+		if (!result.hasErrors()) {
 			applicationService.validateDefectTracker(databaseApplication, result);
 		}
 		
