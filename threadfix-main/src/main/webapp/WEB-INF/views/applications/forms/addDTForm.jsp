@@ -63,15 +63,18 @@
             <tr ng-show="productNames" class="left-align" id="productNamesSection">
                 <td id="projectname">Product Name</td>
                 <td class="inputValue">
-                    <input id="productNameSelect"
-                           type="text"
-                           name = "productName"
-                           ng-model="object.projectName"
-                           typeahead="name for name in productNames | filter:$viewValue | limitTo:10"
-                           typeahead-editable="true"
-                           placeholder="Enter Product"
-                           class="form-control"
-                           ng-disabled="object.useDefaultProduct"/>
+
+                    <input-dropdown
+                            id="productNameSelect"
+                            input-placeholder="Enter Product"
+                            input-name="productName"
+                            selected-item="object.projectName"
+                            input-value-init="object.projectName"
+                            default-dropdown-items="productNames"
+                            filter-list-method="filterStringList(userInput)"
+                    >
+                    </input-dropdown>
+
                 </td>
                 <td colspan="2" >
                     <errors name="productName" cssClass="errors" />
