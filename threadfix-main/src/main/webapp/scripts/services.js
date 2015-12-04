@@ -697,11 +697,103 @@ threadfixModule.factory('vulnTreeTransformer', function() {
     return transformer;
 });
 
-threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameterService, $http, $log) {
+threadfixModule.factory('storageService', function() {
+    var storageService = {};
+    storageService.storageAvailable = undefined;
+    storageService.storage = undefined;
+
+    var isTypedStorageAvailable = function(type) {
+        try {
+            var storage = window[type],
+                x = '__storage_test__';
+            storage.setItem(x, x);
+            storage.removeItem(x);
+            return true;
+        }
+        catch(e) {
+            return false;
+        }
+    };
+
+    storageService.isStorageAvailable = function() {
+        if (isTypedStorageAvailable('localStorage')) {
+            storageService.storageAvailable = true;
+        } else {
+            storageService.storageAvailable = isTypedStorageAvailable('sessionStorage');
+        }
+        return storageService.storageAvailable;
+    };
+
+    storageService.getStorage = function() {
+        if (!storageService.storage) {
+            if (isTypedStorageAvailable('localStorage')) {
+                storageService.storage = window['localStorage'];
+            } else if (isTypedStorageAvailable('sessionStorage')) {
+                storageService.storage = window['sessionStorage'];
+            } else {
+                storageService.storage = undefined;
+            }
+        }
+        return storageService.storage;
+    };
+
+    return storageService;
+});
+
+threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameterService, storageService, $http, $log) {
     var filter = {};
 
+    filter.serializeFilter = function($scope) {
+        $scope.startDate = $scope.parameters.startDate;
+        $scope.endDate = $scope.parameters.endDate;
+        var serializedFilter = vulnSearchParameterService.serialize($scope, $scope.parameters);
+        var editing = $scope.selectedFilter && $scope.selectedFilter.id;
 
-    filter.saveCurrentFilters = function($scope) {
+        serializedFilter.name = $scope.currentFilterNameInput;
+        if ($scope.parameters.defaultTrending)
+            serializedFilter.defaultTrending = true;
+
+        if (editing)
+            serializedFilter.id = $scope.selectedFilter.id;
+
+        return serializedFilter;
+    }
+
+    filter.loadCurrentFilter = function($scope) {
+        $log.info("Loading filters from local storage");
+
+        if (storageService.isStorageAvailable()) {
+
+            var storage = storageService.getStorage();
+
+            if (storage && storage.getItem) {
+                var filterAsJsonString = storage.getItem('currentFilter -- ' + window.location.pathname);
+
+                var filter = JSON.parse(filterAsJsonString);
+
+                return filter
+            }
+        }
+
+        return null;
+    };
+
+    filter.storeCurrentFilter = function($scope) {
+        $log.info("Storing filters in local storage");
+
+        if (storageService.isStorageAvailable()) {
+
+            var filterAsJsonString = JSON.stringify(filter.serializeFilter($scope));
+
+            var storage = storageService.getStorage();
+
+            if (storage && storage.setItem) {
+                storage.setItem('currentFilter -- ' + window.location.pathname, filterAsJsonString);
+            }
+        }
+    };
+
+    filter.saveCurrentFilters = function($scope, successCallback) {
         $log.info("Saving filters");
 
         if ($scope.currentFilterNameInput) {
@@ -718,17 +810,7 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
 
             $scope.savingFilter = true;
 
-            $scope.startDate = $scope.parameters.startDate;
-            $scope.endDate = $scope.parameters.endDate;
-            var submissionObject = vulnSearchParameterService.serialize($scope, $scope.parameters);
-            var editing = $scope.selectedFilter && $scope.selectedFilter.id;
-
-            submissionObject.name = $scope.currentFilterNameInput;
-            if ($scope.parameters.defaultTrending)
-                submissionObject.defaultTrending = true;
-
-            if (editing)
-                submissionObject.id = $scope.selectedFilter.id;
+            var submissionObject = filter.serializeFilter($scope);
 
             $http.post(tfEncoder.encode("/reports/filter/save"), submissionObject).
                 success(function(data, status, headers, config) {
@@ -749,16 +831,16 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
                         $scope.savedDefaultTrendingFilter = defaultFilter;
                         $scope.$parent.savedDefaultTrendingFilter = defaultFilter;
 
-                        if(!$scope.acFilterPage)
-                            $scope.currentFilterNameInput = '';
-
-                        if (editing) {
+                        if ($scope.selectedFilter && $scope.selectedFilter.id) {
                             $scope.saveFilterSuccessMessage = 'Successfully edited filter ' + submissionObject.name;
                         } else {
                             $scope.saveFilterSuccessMessage = 'Successfully saved filter ' + submissionObject.name;
                         }
                         $scope.saveFilterErrorMessage = undefined;
 
+                        if (successCallback) {
+                            successCallback();
+                        }
                     } else {
                         $scope.saveFilterErrorMessage = "Failure. Message was : " + data.message;
                         $scope.saveFilterSuccessMessage = undefined;
@@ -774,7 +856,7 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
         }
     };
 
-    filter.deleteCurrentFilter = function($scope) {
+    filter.deleteCurrentFilter = function($scope, successCallback) {
         if ($scope.selectedFilter) {
             $http.post(tfEncoder.encode("/reports/filter/delete/" + $scope.selectedFilter.id)).
                 success(function(data, status, headers, config) {
@@ -795,6 +877,10 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
                             var defaultFilter = filter.findDefaultFilter($scope);
                             $scope.savedDefaultTrendingFilter = defaultFilter;
                             $scope.$parent.savedDefaultTrendingFilter = defaultFilter;
+                        }
+
+                        if (successCallback) {
+                            successCallback();
                         }
                     } else {
                         $scope.errorMessage = "Failure. Message was : " + data.message;

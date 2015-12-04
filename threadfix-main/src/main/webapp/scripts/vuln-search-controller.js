@@ -101,18 +101,21 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                         $scope.$parent.showVulnTab = true;
                         $scope.$parent.showAppsTab = false;
                         $scope.resetFilters();
+                        $scope.$broadcast("loadCurrentFilter");
 
                         vulnSearchParameterService.convertFromSpringToAngular($scope, $scope.filterParameters);
                         $scope.refresh();
 
                     } else {
                         $scope.resetFilters();
+                        $scope.$broadcast("loadCurrentFilter");
                         $scope.refresh();
                     }
                 }).
                 error(function(data, status, headers, config) {
                     $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
                     $scope.loadingTree = false;
+                    $scope.$broadcast("loadCurrentFilter");
                 });
         } else {
 
@@ -139,6 +142,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
 
             $scope.filterParameters = $scope.$parent.filterParameters;
             $scope.resetFilters();
+            $scope.$broadcast("loadCurrentFilter");
             vulnSearchParameterService.convertFromSpringToAngular($scope, $scope.filterParameters);
             $scope.refresh();
         }

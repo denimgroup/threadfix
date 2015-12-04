@@ -451,6 +451,7 @@
                        ng-maxlength="25"
                        placeholder="Enter a name for the filter"
                        ng-model="currentFilterNameInput"
+                       ng-blur="refresh()"
                        type="text"/>
 
                 <div ng-show="trendingActive">
