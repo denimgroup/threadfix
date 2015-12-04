@@ -72,6 +72,7 @@
                             input-value-init="object.projectName"
                             default-dropdown-items="productNames"
                             filter-list-method="filterStringList(userInput)"
+                            input-required = "true"
                     >
                     </input-dropdown>
 
