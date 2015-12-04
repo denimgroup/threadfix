@@ -45,6 +45,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -258,7 +259,8 @@ public class EditApplicationController {
 	public Object processSubmitAjaxDefectTracker(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@ModelAttribute Application application,
-			BindingResult result, SessionStatus status, Model model) {
+			BindingResult result, SessionStatus status, Model model,
+			HttpServletRequest request) {
 		
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
 			return RestResponse.failure("You are not authorized to manage this application.");
@@ -275,6 +277,17 @@ public class EditApplicationController {
 		databaseApplication.setProjectName(application.getProjectName());
 		databaseApplication.setUseDefaultCredentials(application.isUseDefaultCredentials());
 		databaseApplication.setUseDefaultProject(application.isUseDefaultProject());
+
+		// This part handles the weird checkbox-unchecked-means-no-angular-property front-end behavior
+		boolean hasUseDefaultCredentials = request.getParameterMap().containsKey("useDefaultCredentials");
+		boolean hasUseDefaultProduct = request.getParameterMap().containsKey("useDefaultProduct");
+
+		if (!hasUseDefaultCredentials) {
+			databaseApplication.setUseDefaultCredentials(false);
+		}
+		if (!hasUseDefaultProduct) {
+			databaseApplication.setUseDefaultProject(false);
+		}
 
 		if (!result.hasErrors()) {
 			applicationService.validateDefectTracker(databaseApplication, result);
