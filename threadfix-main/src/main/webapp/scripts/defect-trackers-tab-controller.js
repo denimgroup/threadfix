@@ -215,6 +215,9 @@ module.controller('DefectTrackersTabController', function($window, $scope, $http
 
         modalInstance.result.then(function (newDefaultProfile) {
 
+            if (!tracker.defaultDefectProfiles) {
+                tracker.defaultDefectProfiles = [];
+            }
             tracker.defaultDefectProfiles.push(newDefaultProfile);
             tracker.defaultDefectProfiles.sort(nameCompare);
 
