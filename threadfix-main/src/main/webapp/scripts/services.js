@@ -25,6 +25,49 @@ threadfixModule.factory('tfEncoder', function($rootScope, $location) {
     return tfEncoder;
 });
 
+threadfixModule.factory('storageService', function() {
+    var storageService = {};
+    storageService.storageAvailable = undefined;
+    storageService.storage = undefined;
+
+    var isTypedStorageAvailable = function(type) {
+        try {
+            var storage = window[type],
+                x = '__storage_test__';
+            storage.setItem(x, x);
+            storage.removeItem(x);
+            return true;
+        }
+        catch(e) {
+            return false;
+        }
+    };
+
+    storageService.isStorageAvailable = function() {
+        if (isTypedStorageAvailable('localStorage')) {
+            storageService.storageAvailable = true;
+        } else {
+            storageService.storageAvailable = isTypedStorageAvailable('sessionStorage');
+        }
+        return storageService.storageAvailable;
+    };
+
+    storageService.getStorage = function() {
+        if (!storageService.storage) {
+            if (isTypedStorageAvailable('localStorage')) {
+                storageService.storage = window['localStorage'];
+            } else if (isTypedStorageAvailable('sessionStorage')) {
+                storageService.storage = window['sessionStorage'];
+            } else {
+                storageService.storage = undefined;
+            }
+        }
+        return storageService.storage;
+    };
+
+    return storageService;
+});
+
 /**
  * This service is a little funky. Basically, every generic-severity directive on the page
  * adds a callback to the callbacks array. Then when the controller sets the severities in
@@ -695,49 +738,6 @@ threadfixModule.factory('vulnTreeTransformer', function() {
     };
 
     return transformer;
-});
-
-threadfixModule.factory('storageService', function() {
-    var storageService = {};
-    storageService.storageAvailable = undefined;
-    storageService.storage = undefined;
-
-    var isTypedStorageAvailable = function(type) {
-        try {
-            var storage = window[type],
-                x = '__storage_test__';
-            storage.setItem(x, x);
-            storage.removeItem(x);
-            return true;
-        }
-        catch(e) {
-            return false;
-        }
-    };
-
-    storageService.isStorageAvailable = function() {
-        if (isTypedStorageAvailable('localStorage')) {
-            storageService.storageAvailable = true;
-        } else {
-            storageService.storageAvailable = isTypedStorageAvailable('sessionStorage');
-        }
-        return storageService.storageAvailable;
-    };
-
-    storageService.getStorage = function() {
-        if (!storageService.storage) {
-            if (isTypedStorageAvailable('localStorage')) {
-                storageService.storage = window['localStorage'];
-            } else if (isTypedStorageAvailable('sessionStorage')) {
-                storageService.storage = window['sessionStorage'];
-            } else {
-                storageService.storage = undefined;
-            }
-        }
-        return storageService.storage;
-    };
-
-    return storageService;
 });
 
 threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameterService, storageService, $http, $log) {
