@@ -138,6 +138,8 @@ public class EditApplicationController {
 
 		application.setUserName(databaseApplication.getUserName());
         application.setPassword(databaseApplication.getPassword());
+		application.setEncryptedPassword(databaseApplication.getEncryptedPassword());
+		application.setEncryptedUserName(databaseApplication.getEncryptedUserName());
 		application.setEndpointPermissions(databaseApplication.getEndpointPermissions());
 		application.setScans(databaseApplication.getScans());
 		application.setTags(databaseApplication.getTags());
@@ -150,7 +152,7 @@ public class EditApplicationController {
 		application.setInfoVulnCount(databaseApplication.getInfoVulnCount());
 		application.setTotalVulnCount(databaseApplication.getTotalVulnCount());
 
-		if(!result.hasErrors()) {
+		if (!result.hasErrors()) {
 			applicationService.validateAfterEdit(application, result);
 		}
 		
@@ -180,9 +182,15 @@ public class EditApplicationController {
 			return FormRestResponse.failure("Errors", result);
 
 		} else {
-			if (application.getMainDefaultDefectProfile() == null || application.getMainDefaultDefectProfile().getId() == null) {
+			if (application.getMainDefaultDefectProfile() == null ||
+					application.getMainDefaultDefectProfile().getId() == null) {
 				application.setMainDefaultDefectProfile(null);
-			} else application.setMainDefaultDefectProfile(defaultDefectProfileService.loadDefaultProfile(application.getMainDefaultDefectProfile().getId()));
+			} else {
+				Integer id = application.getMainDefaultDefectProfile().getId();
+				DefaultDefectProfile mainDefaultDefectProfile = defaultDefectProfileService.loadDefaultProfile(id);
+				application.setMainDefaultDefectProfile(mainDefaultDefectProfile);
+			}
+
 			application.setOrganization(organizationService.loadById(application.getOrganization().getId()));
 			applicationService.storeApplication(application, EventAction.APPLICATION_EDIT);
             vulnerabilityService.updateOrgsVulnerabilityReport();
