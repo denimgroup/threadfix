@@ -500,6 +500,12 @@ public class DefectServiceImpl implements DefectService {
         Map<Defect, Boolean> map = dt.getMultipleDefectStatus(defectList);
         if (map.isEmpty())
             return false;
+
+		if (defect.getStatus() == null) {
+			LOG.error("Defect " + defect.getNativeId() + " does not have a status.");
+			return false;
+		}
+
 		defectDao.saveOrUpdate(defect);
 
 		for (Vulnerability vulnerability : vulnerabilities) {
