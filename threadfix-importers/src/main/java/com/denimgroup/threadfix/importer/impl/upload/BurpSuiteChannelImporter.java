@@ -118,6 +118,7 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 		
 		private boolean getChannelVulnText    = false;
 		private boolean getUrlText            = false;
+		private boolean getConfidenceText	  = false;
 		private boolean getParamText          = false;
 		private boolean getSeverityText       = false;
 		private boolean getHostText           = false;
@@ -140,6 +141,7 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 		private String currentResponse        = null;
 		private String currentChannelVulnCode = null;
 		private String currentUrlText         = null;
+		private String currentConfidenceText  = null;
 		private String currentParameter       = null;
 		private String currentSeverityCode    = null;
 		private String currentHostText        = null;
@@ -171,7 +173,10 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    	if ("type".equals(qName)) {
 	    		getChannelVulnText = true;
 	    		getBuilderText(); //resets the stringbuffer
-	    	} else if ("location".equals(qName)) {
+	    	} else if ("confidence".equals(qName)) {
+				getChannelVulnText = true;
+				getBuilderText(); //resets the strinbuffer
+			} else if ("location".equals(qName)) {
 	    		getUrlText = true;
 	    		getBuilderText(); //resets the stringbuffer
 	    	} else if ("serialNumber".equals(qName)) {
@@ -219,7 +224,10 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    	if (getChannelVulnText) {
 	    		currentChannelVulnCode = getBuilderText();
 	    		getChannelVulnText = false;
-	    	} else if (getHostText) {
+	    	} else if (getConfidenceText) {
+				currentConfidenceText = getBuilderText();
+				getConfidenceText = false;
+			} else if (getHostText) {
 	    		currentHostText = getBuilderText();
 	    		getHostText = false;
 	    	} else if (getUrlText) {
@@ -322,6 +330,7 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    		}
 
                 Map<FindingKey, String> findingMap = map();
+				findingMap.put(FindingKey.CONFIDENCE_RATING, currentConfidenceText);
                 findingMap.put(FindingKey.PATH, currentHostText + currentUrlText);
                 findingMap.put(FindingKey.PARAMETER, currentParameter);
                 findingMap.put(FindingKey.VULN_CODE, currentChannelVulnCode);
