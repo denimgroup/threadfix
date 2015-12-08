@@ -32,12 +32,31 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
+import static com.denimgroup.threadfix.util.RawPropertiesHolder.getProperty;
+
 // TODO This needs to be updated, but more research is needed to determine impact on existing systems
 // we can't make updates that make it impossible to use existing credentials
 @Service
 public class ThreadFixPasswordEncoder implements PasswordEncoder {
 
-	BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+	BCryptPasswordEncoder bCryptPasswordEncoder = null;
+
+	public ThreadFixPasswordEncoder() {
+		String bCryptStrengthString = getProperty("bcrypt.strength");
+		if ((bCryptStrengthString != null) && !bCryptStrengthString.trim().equals("")) {
+			try {
+				Integer bCryptStrength = Integer.valueOf(bCryptStrengthString);
+				if (bCryptStrength != null) {
+					bCryptPasswordEncoder = new BCryptPasswordEncoder(bCryptStrength);
+				}
+			} catch (NumberFormatException e) {
+				bCryptPasswordEncoder = null;
+			}
+		}
+		if (bCryptPasswordEncoder == null) {
+			bCryptPasswordEncoder = new BCryptPasswordEncoder();
+		}
+	}
 
 	@Override
 	public String encodePassword(String rawPass, Object salt) throws DataAccessException {
