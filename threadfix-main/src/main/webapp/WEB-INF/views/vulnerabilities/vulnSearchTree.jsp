@@ -38,8 +38,8 @@
             <tr ng-repeat-start="element in category.entries" ng-show="category.expanded">
                 <td></td>
                 <td colspan="3">
-                    <span id="expandVuln{{ category.name }}{{ element.genericVulnerability.displayId }}" ng-hide="element.expanded" ng-click="expandAndRetrieveTable(element)" class="icon icon-plus-sign"></span>
-                    <span id="collapseVuln{{ category.name }}{{ element.genericVulnerability.displayId }}" ng-show="element.expanded" ng-click="element.expanded = false" class="icon icon-minus-sign"></span>
+                    <span id="expandVuln{{ category.name }}{{ element.genericVulnerability.displayId }}" ng-hide="element.expanded" ng-click="toggleVulnElement(element, true)" class="icon icon-plus-sign"></span>
+                    <span id="collapseVuln{{ category.name }}{{ element.genericVulnerability.displayId }}" ng-show="element.expanded" ng-click="toggleVulnElement(element, false)" class="icon icon-minus-sign"></span>
                     <span id="totalBadge{{ category.name }}{{ element.genericVulnerability.displayId }}" ng-style="badgeWidth" class="badge" ng-class="{
                                         'badge-critical': category.intValue === 5,
                                         'badge-high': category.intValue === 4,

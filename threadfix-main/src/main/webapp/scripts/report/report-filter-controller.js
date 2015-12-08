@@ -18,7 +18,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
             $scope.currentFilterNameInput = $scope.selectedFilter;
         else
             $scope.currentFilterNameInput = null;
-        filterService.storeCurrentFilter($scope);
+        storeCurrentFilter();
         $rootScope.$broadcast("resetParameters", $scope.parameters)
     };
 
@@ -105,12 +105,12 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
 
 
     $scope.refreshScans = function(){
-        filterService.storeCurrentFilter($scope);
+        storeCurrentFilter();
         $rootScope.$broadcast("resetParameters", $scope.parameters);
     };
 
     $scope.refresh = function() {
-        filterService.storeCurrentFilter($scope);
+        storeCurrentFilter();
         $rootScope.$broadcast("updateDisplayData", $scope.parameters);
     };
 
@@ -130,7 +130,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
         if (!found) {
             collection.push({name: name});
 
-            filterService.storeCurrentFilter($scope);
+            storeCurrentFilter();
             $rootScope.$broadcast("resetParameters", $scope.parameters);
 
         }
@@ -147,7 +147,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
 
         if (!found) {
             collection.push(obj);
-            filterService.storeCurrentFilter($scope);
+            storeCurrentFilter();
             $rootScope.$broadcast("resetParameters", $scope.parameters);
         }
     };
@@ -155,7 +155,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
     $scope.remove = function(collection, index) {
         collection.splice(index, 1);
 
-        filterService.storeCurrentFilter($scope);
+        storeCurrentFilter();
         $rootScope.$broadcast("resetParameters", $scope.parameters);
 
     };
@@ -164,12 +164,12 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
         resetDateRange();
         if ($scope.parameters.daysOldModifier === modifier) {
             $scope.parameters.daysOldModifier = undefined;
-            filterService.storeCurrentFilter($scope);
+            storeCurrentFilter();
             $rootScope.$broadcast("resetParameters", $scope.parameters);
         } else {
             $scope.parameters.daysOldModifier = modifier;
             if ($scope.parameters.daysOld || modifier === 'LastYear' || modifier === 'LastQuarter' || modifier === 'Forever') {
-                filterService.storeCurrentFilter($scope);
+                storeCurrentFilter();
                 $rootScope.$broadcast("resetParameters", $scope.parameters);
             }
         }
@@ -179,12 +179,12 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
         resetDateRange();
         if ($scope.parameters.daysOld === days) {
             $scope.parameters.daysOld = undefined;
-            filterService.storeCurrentFilter($scope);
+            storeCurrentFilter();
             $rootScope.$broadcast("resetParameters", $scope.parameters);
         } else {
             $scope.parameters.daysOld = days;
             if ($scope.parameters.daysOldModifier) {
-                filterService.storeCurrentFilter($scope);
+                storeCurrentFilter();
                 $rootScope.$broadcast("resetParameters", $scope.parameters);
             }
         }
@@ -193,39 +193,51 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
     $scope.setNumberMerged = function(numberMerged) {
         if ($scope.parameters.numberMerged === numberMerged) {
             $scope.parameters.numberMerged = undefined;
-            filterService.storeCurrentFilter($scope);
+            storeCurrentFilter();
             $rootScope.$broadcast("resetParameters", $scope.parameters);
         } else {
             $scope.parameters.numberMerged = numberMerged;
-            filterService.storeCurrentFilter($scope);
+            storeCurrentFilter();
             $rootScope.$broadcast("resetParameters", $scope.parameters);
         }
     };
 
     $scope.deleteCurrentFilter = function() {
         filterService.deleteCurrentFilter($scope, function() {
-            filterService.storeCurrentFilter($scope);
+            storeCurrentFilter();
         });
     };
 
-    $scope.$on('loadCurrentFilter', function() {
-        var currentFilter = filterService.loadCurrentFilter($scope);
-        if (currentFilter) {
-            var foundFilterId = false;
-            if (currentFilter.id && $scope.savedFilters) {
-                for (var savedFilterIndex in $scope.savedFilters) {
-                    var savedFilter = $scope.savedFilters[savedFilterIndex];
-                    if (currentFilter.id == savedFilter.id) {
-                        foundFilterId = true;
-                        break;
+    var storeCurrentFilter = function() {
+        if ($scope.storeFiltersInLocalStorage) {
+            filterService.storeCurrentFilter($scope);
+        }
+    };
+
+    var loadCurrentFilter = function() {
+        if ($scope.storeFiltersInLocalStorage) {
+            var currentFilter = filterService.loadCurrentFilter($scope);
+            if (currentFilter) {
+                var foundFilterId = false;
+                if (currentFilter.id && $scope.savedFilters) {
+                    for (var savedFilterIndex in $scope.savedFilters) {
+                        var savedFilter = $scope.savedFilters[savedFilterIndex];
+                        if (currentFilter.id == savedFilter.id) {
+                            foundFilterId = true;
+                            break;
+                        }
                     }
                 }
+                if (!foundFilterId) {
+                    currentFilter.id = undefined;
+                }
+                $scope.loadFilter(currentFilter);
             }
-            if (!foundFilterId) {
-                currentFilter.id = undefined;
-            }
-            $scope.loadFilter(currentFilter);
         }
+    };
+
+    $scope.$on('loadCurrentFilter', function() {
+        loadCurrentFilter();
     });
 
     $scope.loadFilter = function(filter) {
@@ -259,7 +271,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
         if ($scope.parameters.endDate)
             $scope.parameters.endDate = new Date($scope.parameters.endDate);
 
-        filterService.storeCurrentFilter($scope);
+        storeCurrentFilter();
         $rootScope.$broadcast("resetParameters", $scope.parameters);
 
     };
@@ -268,7 +280,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
 
         $scope.currentFilterNameInput = $scope.selectedFilter.name + '~copy';
         $scope.selectedFilter = undefined;
-        filterService.storeCurrentFilter($scope);
+        storeCurrentFilter();
 
     };
 
@@ -292,7 +304,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
 
     $scope.saveCurrentFilters = function() {
         filterService.saveCurrentFilters($scope, function() {
-            filterService.storeCurrentFilter($scope);
+            storeCurrentFilter();
         });
     };
 

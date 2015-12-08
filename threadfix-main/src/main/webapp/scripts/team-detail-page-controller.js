@@ -6,6 +6,9 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
     $scope.empty = false;
     $scope.numberToShow = 100;
 
+    $scope.storeFiltersInLocalStorage = true;
+    $scope.storeVulnTreeStateInLocalStorage = true;
+
     $scope.onFileSelect = function($files) {
         $scope.$broadcast('fileDragged', $files);
     };

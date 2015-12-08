@@ -740,6 +740,99 @@ threadfixModule.factory('vulnTreeTransformer', function() {
     return transformer;
 });
 
+threadfixModule.factory('vulnTreeStateService', function(storageService, $log) {
+    var vulnTreeStateService = {};
+
+    vulnTreeStateService.loadVulnTreeState = function(vulnTree) {
+        $log.info("Loading vuln tree state from local storage");
+
+        if (storageService.isStorageAvailable()) {
+
+            var storage = storageService.getStorage();
+
+            if (storage && storage.getItem) {
+                try {
+                    var vulnTreeStateAsJsonString = storage.getItem('vulnTreeState -- ' + window.location.pathname);
+
+                    var vulnTreeState = JSON.parse(vulnTreeStateAsJsonString);
+
+                    if (vulnTreeState) {
+                        vulnTree.expanded = vulnTreeState.expanded !== false;
+                        vulnTree.forEach(function (treeElement) {
+                            var treeElementState = vulnTreeState[treeElement.intValue];
+                            if (treeElementState) {
+                                treeElement.expanded = treeElementState.expanded !== false;
+                                treeElement.entries.forEach(function (entry) {
+                                    var entryState = treeElementState.entries[entry.genericVulnerability.id];
+                                    if (entryState) {
+                                        entry.expanded = entryState.expanded === true;
+                                        if (entry.expanded) {
+                                            entry.numberToShow = entryState.numberToShow === 25 ? 25 : entryState.numberToShow === 50 ? 50 : 10;
+                                            var page = entryState.page;
+                                            if ((Number(page) === page) && (page > 0) && (page % 1 === 0)) {
+                                                var numResults = entry.numResults;
+                                                var numberToShow = entry.numberToShow;
+                                                var numPages;
+                                                if (numResults % numberToShow !== 0) {
+                                                    numPages = ((numResults - (numResults % numberToShow)) / numberToShow)  + 1;
+                                                } else {
+                                                    numPages = numResults / numberToShow;
+                                                }
+                                                if (page <= numPages) {
+                                                    entry.page = Number(page);
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+                } catch(e) {
+                    $log.info("Error loading vuln tree state from local storage");
+                    storage.removeItem('vulnTreeState -- ' + window.location.pathname);
+                }
+
+            }
+        }
+    };
+
+    vulnTreeStateService.storeVulnTreeState = function(vulnTree) {
+        $log.info("Storing vuln tree state in local storage");
+
+        if (storageService.isStorageAvailable()) {
+            var vulnTreeState = {};
+
+            vulnTreeState.expanded = vulnTree.expanded;
+            vulnTree.forEach(function(treeElement) {
+                var treeElementState = {};
+                vulnTreeState[treeElement.intValue] = treeElementState;
+                treeElementState.expanded = treeElement.expanded;
+                treeElementState.entries = {};
+                treeElement.entries.forEach(function(entry) {
+                    var entryState = {};
+                    treeElementState.entries[entry.genericVulnerability.id] = entryState;
+                    entryState.expanded = entry.expanded ? true : false;
+                    entryState.numberToShow = entry.numberToShow === 10 ? 10 : entry.numberToShow === 25 ? 25 : entry.numberToShow === 50 ? 50 : undefined;
+                    var page = entry.page;
+                    if ((Number(page) === page) && (page % 1 === 0) && (page > 0)) {
+                        entryState.page = Number(page);
+                    }
+                });
+            });
+            var vulnTreeStateAsJsonString = JSON.stringify(vulnTreeState);
+
+            var storage = storageService.getStorage();
+
+            if (storage && storage.setItem) {
+                storage.setItem('vulnTreeState -- ' + window.location.pathname, vulnTreeStateAsJsonString);
+            }
+        }
+    };
+
+    return vulnTreeStateService;
+});
+
 threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameterService, storageService, $http, $log) {
     var filter = {};
 
