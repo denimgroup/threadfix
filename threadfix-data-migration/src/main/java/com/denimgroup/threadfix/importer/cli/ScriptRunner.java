@@ -133,6 +133,27 @@ public class ScriptRunner {
                         else if (currentLine.contains("Data truncation: Incorrect datetime value")) {
                             osw.write(fixDateWrongStatement(preLine, currentLine));
                         }
+                        else if (currentLine.contains("Packet for query is too large")) {
+                            LOGGER.error(currentLine);
+                            if (preLine.contains("INSERT INTO DOCUMENT")) {
+                                LOGGER.warn("You have failed to import a big document. Please upload that document by ThreadFix UI.");
+                                map = exactTableFromString(preLine);
+                                if (map != null && !map.isEmpty()) {
+                                    Map<String, String> fieldMap = (Map) map.get("tableFields");
+                                    for (String key : fieldMap.keySet()) {
+                                        if (!key.equalsIgnoreCase("file")) {
+                                            LOGGER.warn(key + ": " + fieldMap.get(key));
+                                        }
+                                    }
+                                }
+                            } else {
+                                osw.write(preLine.replace("Error executing: ", "") + ";\n");
+                            }
+                        }
+                        else if (currentLine.contains("MySQLSyntaxErrorException: You have an error in your SQL syntax; " +
+                                "check the manual that corresponds to your MySQL server version")) {
+                            osw.write(fixSyntaxStatement(preLine.replace("Error executing: ", ""), currentLine));
+                        }
                         // Unresolved-yet SQLException, then write whole statement to fixed Sql script
                         else {
                             if (preLine != null && preLine.contains("Error executing: INSERT INTO")) {
@@ -152,6 +173,11 @@ public class ScriptRunner {
             LOGGER.error("Error", e);
         }
         return errorCount;
+    }
+
+    private static String fixSyntaxStatement(String preLine, String currentLine) {
+        String errorNearStr = getColName(currentLine, "MySQL server version for the right syntax to use near '(.*)' at");
+        return preLine.replace("''"+errorNearStr, "'\\'" + errorNearStr) + ";\n";
     }
 
     private static String fixDateWrongStatement(String preLine, String currentLine) {
