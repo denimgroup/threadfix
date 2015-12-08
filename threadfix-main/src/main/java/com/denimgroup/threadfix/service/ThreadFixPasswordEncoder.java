@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.service;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
@@ -36,8 +37,14 @@ import java.util.UUID;
 @Service
 public class ThreadFixPasswordEncoder implements PasswordEncoder {
 
+	BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
 	@Override
 	public String encodePassword(String rawPass, Object salt) throws DataAccessException {
+		return bCryptPasswordEncoder.encode(rawPass);
+	}
+
+	private String legacyEncodePassword(String rawPass, Object salt) throws DataAccessException {
 		String encodedPass = null;
 
 		try {
@@ -56,15 +63,17 @@ public class ThreadFixPasswordEncoder implements PasswordEncoder {
 	@Override
 	public boolean isPasswordValid(String encPass, String rawPass, Object salt)
 			throws DataAccessException {
-
-		return encPass.equals(encodePassword(rawPass, salt));
+		if (bCryptPasswordEncoder.matches(rawPass, encPass)) {
+			return true;
+		}
+		return encPass.equals(legacyEncodePassword(rawPass, salt));
 	}
 
 	/**
 	 * @param bytes
 	 * @return
 	 */
-	public String convertBytesToHexString(byte[] bytes) {
+	private String convertBytesToHexString(byte[] bytes) {
 		StringBuffer hexString = new StringBuffer();
 
 		for (int i = 0; i < bytes.length; i++) {
@@ -92,7 +101,7 @@ public class ThreadFixPasswordEncoder implements PasswordEncoder {
 	 * @return
 	 * @throws NoSuchAlgorithmException
 	 */
-	public String generatePasswordHash(String password, String salt)
+	private String generatePasswordHash(String password, String salt)
 			throws NoSuchAlgorithmException {
 		String newPassword = password + salt;
 		MessageDigest msgDigest = MessageDigest.getInstance("SHA-256");

@@ -168,13 +168,9 @@ public class UserServiceImpl implements UserService {
 	}
 
     private void encryptPassword(User user) {
-        try {
-            user.setSalt(encoder.generateSalt());
-            user.setPassword(encoder.generatePasswordHash(user.getUnencryptedPassword(),
-                    user.getSalt()));
-        } catch (NoSuchAlgorithmException e) {
-			throw new IllegalStateException("Unable to generate password.", e);
-		}
+        user.setSalt(encoder.generateSalt());
+        user.setPassword(encoder.encodePassword(user.getUnencryptedPassword(),
+                user.getSalt()));
 	}
 
 	@Override
@@ -182,14 +178,8 @@ public class UserServiceImpl implements UserService {
 	public boolean isCorrectPassword(User user, String password) {
 		if (user.getPassword() != null && user.getSalt() != null 
 				&& password != null) {
-			try {
-				String encodedPassword = encoder.generatePasswordHash(password, user.getSalt());
-				return encodedPassword != null && encodedPassword.equals(user.getPassword());
-			} catch (NoSuchAlgorithmException e) {
-				// This should never happen but let's log it
-				throw new IllegalStateException("Failed to encrypt a password - something is broken.", e);
-			}
-		} 
+			return encoder.isPasswordValid(user.getPassword(), password, user.getSalt());
+		}
 
 		return false;
 	}
