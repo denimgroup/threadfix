@@ -80,16 +80,18 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
     @Override
     public void updateFindingCounter(Finding finding, Integer oldVulnId) {
-        //Delete old counter
-        statisticsCounterDao.deleteByVulnId(oldVulnId);
-        statisticsCounterDao.deleteByFindingId(finding.getId());
+        if (finding.getHasStatisticsCounter()) {
+            //Delete old counter
+            statisticsCounterDao.deleteByVulnId(oldVulnId);
+            statisticsCounterDao.deleteByFindingId(finding.getId());
 
-        StatisticsCounter statisticsCounter = getStatisticsCounter(finding);
-        if (statisticsCounter != null) {
-            statisticsCounterDao.saveOrUpdate(statisticsCounter);
+            StatisticsCounter statisticsCounter = getStatisticsCounter(finding);
+            if (statisticsCounter != null) {
+                statisticsCounterDao.saveOrUpdate(statisticsCounter);
+            }
+            finding.setHasStatisticsCounter(true);
+            findingDao.saveOrUpdate(finding);
         }
-        finding.setHasStatisticsCounter(true);
-        findingDao.saveOrUpdate(finding);
 
     }
 
