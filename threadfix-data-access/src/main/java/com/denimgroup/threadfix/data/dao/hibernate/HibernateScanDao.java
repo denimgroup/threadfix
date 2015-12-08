@@ -704,7 +704,10 @@ public class HibernateScanDao
             // other vulnerabilities with the same hash. The singleResult[5] section
             // indicates that the finding has already been counted and helps us to not double-count
             // vulnerabilities.
-            boolean highPriority = (Boolean) singleResult[4] || (Boolean) singleResult[5];
+            boolean highPriority = true;
+            if (singleResult[4] != null && singleResult[5] != null) {
+                highPriority = (Boolean) singleResult[4] || (Boolean) singleResult[5];
+            }
             int hash = hashIt(singleResult[0], singleResult[1], singleResult[2]);
 
             if (highPriority || !resultMap.containsKey(hash)) {
