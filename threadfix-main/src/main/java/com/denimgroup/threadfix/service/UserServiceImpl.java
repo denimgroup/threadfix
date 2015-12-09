@@ -168,7 +168,7 @@ public class UserServiceImpl implements UserService {
 	}
 
     private void encryptPassword(User user) {
-        user.setSalt(null);
+        user.setSalt("");
         user.setPassword(encoder.encodePassword(user.getUnencryptedPassword(),
                 user.getSalt()));
 	}
