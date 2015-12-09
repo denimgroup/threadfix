@@ -445,7 +445,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
         ChannelSeverity channelSeverity = null;
         if (channelSeverityCode != null) {
-            channelSeverity = getChannelSeverity(channelSeverityCode);s
+            channelSeverity = getChannelSeverity(channelSeverityCode);
         }
         finding.setChannelSeverity(channelSeverity);
 
