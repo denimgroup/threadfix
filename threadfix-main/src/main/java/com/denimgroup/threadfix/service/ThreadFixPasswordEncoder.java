@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -39,23 +40,34 @@ import static com.denimgroup.threadfix.util.RawPropertiesHolder.getProperty;
 @Service
 public class ThreadFixPasswordEncoder implements PasswordEncoder {
 
+	protected final SanitizedLogger log = new SanitizedLogger(ThreadFixPasswordEncoder.class);
+
 	BCryptPasswordEncoder bCryptPasswordEncoder = null;
 
 	public ThreadFixPasswordEncoder() {
+		Integer bCryptStrength = getBCryptStrength();
+		if (bCryptStrength != null) {
+			bCryptPasswordEncoder = new BCryptPasswordEncoder(bCryptStrength);
+		} else {
+			bCryptPasswordEncoder = new BCryptPasswordEncoder();
+		}
+	}
+
+	private Integer getBCryptStrength() {
 		String bCryptStrengthString = getProperty("bcrypt.strength");
 		if ((bCryptStrengthString != null) && !bCryptStrengthString.trim().equals("")) {
 			try {
 				Integer bCryptStrength = Integer.valueOf(bCryptStrengthString);
-				if (bCryptStrength != null) {
-					bCryptPasswordEncoder = new BCryptPasswordEncoder(bCryptStrength);
+				if ((bCryptStrength >= 4) && (bCryptStrength <= 31)) {
+					return bCryptStrength;
+				} else {
+					log.warn("bcrypt.strength property is not a valid integer from 4 to 31 and will be ignored");
 				}
 			} catch (NumberFormatException e) {
-				bCryptPasswordEncoder = null;
+				log.warn("bcrypt.strength property is not a valid integer from 4 to 31 and will be ignored");
 			}
 		}
-		if (bCryptPasswordEncoder == null) {
-			bCryptPasswordEncoder = new BCryptPasswordEncoder();
-		}
+		return null;
 	}
 
 	@Override
