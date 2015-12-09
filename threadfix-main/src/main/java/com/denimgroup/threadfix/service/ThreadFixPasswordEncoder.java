@@ -63,10 +63,11 @@ public class ThreadFixPasswordEncoder implements PasswordEncoder {
 	@Override
 	public boolean isPasswordValid(String encPass, String rawPass, Object salt)
 			throws DataAccessException {
-		if (bCryptPasswordEncoder.matches(rawPass, encPass)) {
-			return true;
+		if ((salt != null) && !salt.toString().trim().equals("")) {
+			return encPass.equals(legacyEncodePassword(rawPass, salt));
+		} else {
+			return bCryptPasswordEncoder.matches(rawPass, encPass);
 		}
-		return encPass.equals(legacyEncodePassword(rawPass, salt));
 	}
 
 	/**
@@ -90,7 +91,7 @@ public class ThreadFixPasswordEncoder implements PasswordEncoder {
 	/**
 	 * @return
 	 */
-	public String generateSalt() {
+	private String generateSalt() {
 		java.util.UUID uuid = UUID.randomUUID();
 		return uuid.toString();
 	}
