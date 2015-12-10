@@ -32,7 +32,7 @@ import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 
 @Controller
 @RequestMapping("/customize/scannerSeverities")
-@PreAuthorize("hasRole('ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS')")
+@PreAuthorize("hasRole('ROLE_ENTERPRISE') OR hasRole('ROLE_CAN_MANAGE_SYSTEM_SETTINGS')")
 public class ScanResultFilterController {
 
     private static final String INDEX_VIEW = "customize/scannerSeverities";
