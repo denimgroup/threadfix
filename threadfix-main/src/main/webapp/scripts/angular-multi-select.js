@@ -67,7 +67,8 @@ threadfixModule.directive( 'multiSelect' , [ '$sce', '$timeout', function ( $sce
             // callbacks
             onClose         : '&',
             onItemClick     : '&',
-            onOpen          : '&'
+            onOpen          : '&',
+            onReset         : '&'
         },
 
         template:
@@ -678,6 +679,7 @@ threadfixModule.directive( 'multiSelect' , [ '$sce', '$timeout', function ( $sce
                                 }
                             }
                         });
+                        $scope.onItemClick( { data: $scope.filteredModel } );
                         break;
                     case 'NONE':
                         angular.forEach( $scope.filteredModel, function( value, key ) {
@@ -687,6 +689,7 @@ threadfixModule.directive( 'multiSelect' , [ '$sce', '$timeout', function ( $sce
                                 }
                             }
                         });
+                        $scope.onItemClick( { data: $scope.filteredModel } );
                         break;
                     case 'RESET':
                         angular.forEach( $scope.filteredModel, function( value, key ) {
@@ -695,6 +698,7 @@ threadfixModule.directive( 'multiSelect' , [ '$sce', '$timeout', function ( $sce
                                 value[ $scope.tickProperty ] = $scope.backUp[ temp ][ $scope.tickProperty ];
                             }
                         });
+                        $scope.onReset( { data: $scope.filteredModel } );
                         break;
                     case 'CLEAR':
                         $scope.tabIndex = $scope.tabIndex + 1;

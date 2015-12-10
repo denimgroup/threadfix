@@ -32,7 +32,7 @@
                         </select>
                     </td>
                     <td>
-                        <span id="referenceApplicationSelectError" class="errors" ng-show="object.referenceApplication.id_error">{{object.referenceApplication.id_error}}</span>
+                        <span id="referenceApplicationSelectError" class="errors" ng-show="object.referenceApplication_id_error">{{object.referenceApplication_id_error}}</span>
                     </td>
                 </tr>
             </tbody>

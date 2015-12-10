@@ -213,7 +213,7 @@
                 </td>
                 <td><button id="addDefectTrackerButton" class="btn" ng-click="switchTo('addDefectTracker')">Set Defect Tracker</button></td>
 			</tr>
-            <tr ng-show="object.defectTracker">
+            <tr ng-show="object.defectTracker && object.defectTracker.defectTrackerType.name !== 'Bugzilla'">
                 <td>Default Defect Profile</td>
                 <td ng-show="object.defectTracker.defaultDefectProfiles">
                     <select ng-model="object.mainDefaultDefectProfile.id" name="mainDefaultDefectProfile.id">

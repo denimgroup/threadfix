@@ -63,6 +63,7 @@ public class TeamRestController extends TFRestController {
     private LicenseService                licenseService;
 
     public static final String CREATION_FAILED = "New Team creation failed.";
+    public static final String APP_CREATION_FAILED = "New Application creation failed.";
     public static final String LOOKUP_FAILED   = "Team Lookup failed.";
     public static final String INVALID_PARAMS  = "Invalid parameters entered";
     public static final String PUT_SUCCESS     = "Fields updated successfully";
@@ -130,9 +131,9 @@ public class TeamRestController extends TFRestController {
         String name = request.getParameter("name");
         String url = request.getParameter("url");
 
-        if (name == null) {
+        if (name == null || name.trim().isEmpty()) {
             LOG.warn("Call to New Application was missing the name parameter.");
-			return failure(CREATION_FAILED);
+			return failure(APP_CREATION_FAILED);
 		}
 
         if (containsHTML(name)) {
@@ -147,7 +148,7 @@ public class TeamRestController extends TFRestController {
 				new URL(url);
 			} catch (MalformedURLException e) {
 				LOG.warn("The supplied URL was not formatted correctly.");
-				return failure(CREATION_FAILED);
+				return failure(APP_CREATION_FAILED);
 			}
 		}
 		

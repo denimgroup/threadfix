@@ -107,6 +107,14 @@ public class DefectDefaultController {
 
 		DefaultDefectProfile defaultProfile = defaultDefectProfileService.loadDefaultProfile(defaultProfileId);
 
+		// Check product
+		if (defaultProfile.getReferenceApplication() != null && defaultProfile.getReferenceApplication().getProjectName() == null){
+			return RestResponse.failure("The Reference Application does not link to any Defect Tracker product.");
+		} else if (defaultProfile.getReferenceApplication() == null  &&
+				(defaultProfile.getDefectTracker().getDefaultProductName() == null || defaultProfile.getDefectTracker().getDefaultProductName().isEmpty())){
+			return RestResponse.failure("This Defect Tracker does not have default product.");
+		}
+
 		Map<String, Object> returnMap = addMetadataForm(defaultProfile);
 
 		if (returnMap.get(ERROR_MSG) != null) {

@@ -71,6 +71,10 @@ public class AddDefaultDefectProfileController {
 				((defectTracker.getEncryptedDefaultPassword() == null) ||
 						(defectTracker.getEncryptedDefaultUsername() == null))){
 			result.rejectValue("referenceApplication.id", null, null, "Reference Application is invalid or Defect Tracker does not have default credentials.");
+		} else if (referenceApplication == null && (defectTracker.getDefaultProductName() == null || defectTracker.getDefaultProductName().isEmpty())) {
+			result.rejectValue("referenceApplication.id", null, null, "Defect Tracker does not have default product.");
+		} else if (referenceApplication != null && (referenceApplication.getProjectName() == null)) {
+			result.rejectValue("referenceApplication.id", null, null, "Application does not link to any Defect Tracker product.");
 		}
 
 		defaultDefectProfileService.validateName(defaultDefectProfile, result);
