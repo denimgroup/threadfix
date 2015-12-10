@@ -56,7 +56,7 @@
                 <td colspan="7">No Data Found</td>
             </tr>
             <tr id="scan{{ $index }}" ng-repeat = "scan in scannerComparisonData" class="bodyRow">
-                <td id="scanName{{ $index }}" style="text-align: left;word-wrap: break-word;" >{{ scan.channnelName }}</td>
+                <td id="scanName{{ $index }}" style="text-align: left;word-wrap: break-word;" >{{ scan.channelName }}</td>
                 <td id="foundCount{{ $index }}">{{ scan.foundCount }}</td>
                 <td id="foundPercent{{ $index }}">{{ scan.foundPercent }}</td>
                 <td id="fpCount{{ $index }}">{{ scan.fpCount }}</td>
