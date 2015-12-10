@@ -304,8 +304,6 @@
         		protected-regex ^/reports/filter$,
 				protected-regex ^/reports/filter/save$,
         		protected-regex ^/reports/search$,
-				protected-regex ^/reports/search/export/pdf$,
-				protected-regex ^/reports/search/export/tag/pdf$,
                 protected-regex ^/reports/getTopApps$,
         		protected-regex ^/reports/parameters$,
 				protected-regex ^/reports/saveParameters,
@@ -351,6 +349,9 @@
 				protected-regex ^/configuration/remoteproviders/getMap$,
 				protected-regex ^/configuration/roles/list$,
 				protected-regex ^/reports/snapshot$,
+				protected-regex ^/reports/snapshot/averageAge$,
+				protected-regex ^/reports/snapshot/progressByType$,
+				protected-regex ^/reports/snapshot/scanComparison$,
 				protected-regex ^/reports/trendingScans$,
 				protected-regex ^/scans/table/[0-9]+$,
 

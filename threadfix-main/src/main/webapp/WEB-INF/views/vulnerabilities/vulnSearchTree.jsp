@@ -69,7 +69,7 @@
     <!-- For PDF export -->
     <br>
     <table ng-if="exportingPDF" id="pointInTimeTablePdf" class="pdf-data">
-        <tbody ng-repeat="category in exportVulnTree" >
+        <tbody ng-repeat="category in vulnTree" >
         <tr>
             <td colspan="2" ng-class="{
                                             'text-critical': category.intValue === 5 && category.total !== 0,
@@ -89,11 +89,7 @@
             </td>
         </tr>
         <tr ng-repeat-end>
-            <td colspan="4" class="vuln-tree-vuln-list">
-                <div class="accordion-group">
-                    <%@ include file="vulnTreeVulnRowsPdf.jsp" %>
-                </div>
-            </td>
+            <td colspan="4" class="vuln-tree-vuln-list"/>
         </tr>
         </tbody>
     </table>
