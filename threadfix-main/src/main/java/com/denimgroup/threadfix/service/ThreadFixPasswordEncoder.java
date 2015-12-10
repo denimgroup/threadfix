@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
@@ -56,19 +57,11 @@ public class ThreadFixPasswordEncoder implements PasswordEncoder {
 
 	private Integer getBCryptStrength() {
 		String bCryptStrengthString = getProperty("bcrypt.strength");
-		if ((bCryptStrengthString != null) && !bCryptStrengthString.trim().equals("")) {
-			try {
-				Integer bCryptStrength = Integer.valueOf(bCryptStrengthString);
-				if ((bCryptStrength >= 4) && (bCryptStrength <= 31)) {
-					return bCryptStrength;
-				} else {
-					log.warn("bcrypt.strength property is not a valid integer from 4 to 31 and will be ignored");
-				}
-			} catch (NumberFormatException e) {
-				log.warn("bcrypt.strength property is not a valid integer from 4 to 31 and will be ignored");
-			}
+		Integer bCryptStrength = IntegerUtils.getIntegerOrNull(bCryptStrengthString);
+		if (bCryptStrength == null) {
+			log.warn("bcrypt.strength property is not a valid integer from 4 to 31 and will be ignored");
 		}
-		return null;
+		return bCryptStrength;
 	}
 
 	@Override
@@ -155,16 +148,12 @@ public class ThreadFixPasswordEncoder implements PasswordEncoder {
 		String encodedPassword = user.getPassword();
 		if ((encodedPassword.length() > 7) && (encodedPassword.startsWith("$2a$"))) {
 			String encodedBCryptStrengthString = encodedPassword.substring(4, 6);
-			try {
-				Integer encodedBCryptStrength = Integer.valueOf(encodedBCryptStrengthString);
-				Integer configurationBCryptStrength = getBCryptStrength();
-				if ((encodedBCryptStrength != null)
-						&& (configurationBCryptStrength != null)
-						&& encodedBCryptStrength >= configurationBCryptStrength) {
-					return false;
-				}
-			} catch (NumberFormatException e) {
-				return true;
+			Integer encodedBCryptStrength = IntegerUtils.getIntegerOrNull(encodedBCryptStrengthString);
+			Integer configurationBCryptStrength = getBCryptStrength();
+			if ((encodedBCryptStrength != null)
+					&& (configurationBCryptStrength != null)
+					&& encodedBCryptStrength >= configurationBCryptStrength) {
+				return false;
 			}
 		}
 		return true;

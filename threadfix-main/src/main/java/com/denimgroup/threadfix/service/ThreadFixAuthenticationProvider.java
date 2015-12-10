@@ -16,7 +16,7 @@ public class ThreadFixAuthenticationProvider extends DaoAuthenticationProvider {
         Authentication successAuthentication = super.authenticate(authentication);
 
         if (successAuthentication != null) {
-            if ((successAuthentication.getPrincipal() != null) && (successAuthentication.getPrincipal() instanceof ThreadFixUserDetails)) {
+            if (successAuthentication.getPrincipal() instanceof ThreadFixUserDetails) {
                 Integer userId = ((ThreadFixUserDetails) successAuthentication.getPrincipal()).getUserId();
                 User user = userService.loadUser(userId);
                 String presentedPassword = String.valueOf(successAuthentication.getCredentials());
