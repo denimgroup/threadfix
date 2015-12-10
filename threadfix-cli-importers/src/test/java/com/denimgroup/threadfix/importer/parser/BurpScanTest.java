@@ -78,15 +78,11 @@ public class BurpScanTest extends TransactionalTest {
             {DIRECTORY_LISTING,"Info","/demo/DirectoryIndexing/",""},
     };
 
-    public final static Map<String, Integer> confidenceRatings;
-
-    static {
-        confidenceRatings = CollectionUtils.map();
-        confidenceRatings.put("", 1);
-        confidenceRatings.put(BURP_CONFIDENCE_FIRM, 4);
-        confidenceRatings.put(BURP_CONFIDENCE_CERTAIN, 24);
-        confidenceRatings.put(BURP_CONFIDENCE_TENATIVE, 0);
-    }
+    public final static Map<String, Integer> confidenceRatings = CollectionUtils.map(
+            "", 1,
+            BURP_CONFIDENCE_FIRM, 4,
+            BURP_CONFIDENCE_CERTAIN, 24,
+            BURP_CONFIDENCE_TENATIVE, 0);
 
     @Test
     public void burpScanTest() {
