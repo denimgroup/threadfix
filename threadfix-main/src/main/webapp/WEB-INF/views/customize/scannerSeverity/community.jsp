@@ -7,7 +7,6 @@
 </head>
 
 <body>
-    <%@ include file="/WEB-INF/views/angular-init.jspf"%>
 
     <%@ include file="/WEB-INF/views/successMessage.jspf" %>
     <%@ include file="/WEB-INF/views/errorMessage.jsp" %>
