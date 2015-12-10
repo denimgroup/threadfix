@@ -21,7 +21,7 @@
             <%@ include file="progressByVulnerability.jsp"%>
 
             <!-- Most Vulnerable Application -->
-            <d3-hbars ng-show="topAppsData && reportId == MVA_Report_Id" data="topAppsData" label = "title"
+            <d3-hbars ng-show="reportId == MVA_Report_Id" data="topAppsData" label = "title"
                       width="670" height="612" margin="margin" export-report-id="exportInfo"></d3-hbars>
 
             <!-- Portfolio report -->

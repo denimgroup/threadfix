@@ -169,7 +169,15 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                         .append("g")
                         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-                    if (!data || data.length < 1) return;
+                    if (!data || data.length < 1) {
+                        svg.append("g")
+                            .append("text")
+                            .attr("x", scope.width/2)
+                            .attr("y", 130)
+                            .attr("class", "warning")
+                            .text("No Data Found")
+                        return;
+                    }
 
                     if (scope.label && (scope.label.teams || scope.label.apps || scope.label.tags))
                         reportUtilities.drawTitle(svg1, (scope.width - 170), scope.label, "Most Vulnerable Applications", 20 - margin.top);
