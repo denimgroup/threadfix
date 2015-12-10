@@ -19,10 +19,12 @@ public class ThreadFixAuthenticationProvider extends DaoAuthenticationProvider {
             if ((successAuthentication.getPrincipal() != null) && (successAuthentication.getPrincipal() instanceof ThreadFixUserDetails)) {
                 Integer userId = ((ThreadFixUserDetails) successAuthentication.getPrincipal()).getUserId();
                 User user = userService.loadUser(userId);
+                String presentedPassword = String.valueOf(successAuthentication.getCredentials());
 
-                if ((user != null) && (user.getSalt() != null) && !user.getSalt().trim().equals("")) {
-                    String presentedPassword = String.valueOf(successAuthentication.getCredentials());
-                    if ((presentedPassword != null) && !presentedPassword.trim().equals("")) {
+                if ((user != null) && (presentedPassword != null) && !presentedPassword.trim().equals("")) {
+                    ThreadFixPasswordEncoder threadFixPasswordEncoder = (ThreadFixPasswordEncoder)getPasswordEncoder();
+                    if (threadFixPasswordEncoder.isPasswordLegacyEncoded(user)
+                            || (threadFixPasswordEncoder.isPasswordEncodingStrengthBelowConfiguration(user)) ) {
                         user.setUnencryptedPassword(presentedPassword);
                         userService.storeUser(user);
                     }

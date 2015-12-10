@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
@@ -141,6 +142,32 @@ public class ThreadFixPasswordEncoder implements PasswordEncoder {
 		String pwHash = convertBytesToHexString(msgDigest.digest());
 
 		return pwHash;
+	}
+
+	public boolean isPasswordLegacyEncoded(User user) {
+		if ((user.getSalt() != null) && !user.getSalt().trim().equals("")) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isPasswordEncodingStrengthBelowConfiguration(User user) {
+		String encodedPassword = user.getPassword();
+		if ((encodedPassword.length() > 7) && (encodedPassword.startsWith("$2a$"))) {
+			String encodedBCryptStrengthString = encodedPassword.substring(4, 6);
+			try {
+				Integer encodedBCryptStrength = Integer.valueOf(encodedBCryptStrengthString);
+				Integer configurationBCryptStrength = getBCryptStrength();
+				if ((encodedBCryptStrength != null)
+						&& (configurationBCryptStrength != null)
+						&& encodedBCryptStrength >= configurationBCryptStrength) {
+					return false;
+				}
+			} catch (NumberFormatException e) {
+				return true;
+			}
+		}
+		return true;
 	}
 
 }
