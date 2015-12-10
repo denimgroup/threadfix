@@ -139,6 +139,8 @@ public class UsersController {
 	public Object map(@PathVariable int page, @PathVariable int numberToShow) {
         List<User> users = userService.retrievePage(page, numberToShow);
 
+		List<User> allUsers = userService.loadAllUsers();
+
         String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 
         for (User user : users) {
@@ -149,6 +151,7 @@ public class UsersController {
         Map<String, Object> returnMap = new HashMap<>();
 
         returnMap.put("users", users);
+		returnMap.put("allUsers", allUsers);
 
 		if (EnterpriseTest.isEnterprise()) {
 			returnMap.put("roles", roleService.loadAll());

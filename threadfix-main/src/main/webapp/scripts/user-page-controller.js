@@ -37,6 +37,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                     if (data.object.users.length > 0) {
                         $scope.roles = data.object.roles;
                         $scope.users = data.object.users;
+                        $scope.allUsers = data.object.allUsers;
 
                         $scope.eventNotificationTypes = data.object.eventNotificationTypes;
                         $scope.eventNotificationTypeDisplayNames = data.object.eventNotificationTypeDisplayNames;
