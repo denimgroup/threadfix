@@ -173,7 +173,7 @@ public class SurfaceLocation extends BaseEntity {
 				if (port != 0)
 					tempPort = port;
 
-				String slashPath = path.startsWith("/") ? path : "/" + path;
+				String slashPath = path == null? path : (path.startsWith("/") ? path : "/" + path);
 
 				if ((protocol != null) && (host != null) && (tempPort != -1) && (slashPath != null)) {
 					String pathPlusQuery;
