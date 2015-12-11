@@ -31,10 +31,10 @@
     <table id="logListTable">
         <tbody>
         <tr ng-repeat-start="log in logs" >
-            <td id="{{ $index }}LogId">
+            <td id="logId{{ $index }}">
                 <a class="pointer" ng-click="log.expanded = !log.expanded">{{ log.time | date:'MMM d, y h:mm:ss a' }} -- {{ log.type }}</a>
             </td>
-            <td id="{{ $index }}ReportLink" style="padding-left: 5em">
+            <td id="reportLink{{ $index }}" style="padding-left: 5em">
                 <a class="pointer" ng-click="log.expanded = true"
                    href="mailto:support@threadfix.org?subject={{ log.time | date : 'medium' }} -- {{ log.type }}
                    &body=***** Please copy log trace here *****">
@@ -43,7 +43,7 @@
 
         </tr>
         <tr ng-repeat-end>
-            <td colspan="2" id="{{ $index }}LogContent">
+            <td colspan="2" id="logContent{{ $index }}">
                 <pre ng-show="log.expanded">Commit: {{ log.commit }}
 Diagnostics: {{ log.freeMemory }} memory available out of {{ log.totalMemory }}. {{ log.freeDiskSpace }} disk space available.
 
