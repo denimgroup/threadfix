@@ -40,6 +40,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.listOf;
@@ -226,6 +227,10 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 
         scanCleanerUtils.clean(scan);
 
+		// Randomly generate NativeId
+		if (finding.getNativeId() == null || finding.getNativeId().isEmpty())
+			finding.setNativeId(getRandomNativeId());
+
 		vulnerabilityService.storeVulnerability(finding.getVulnerability());
 
 		scanDao.saveOrUpdate(scan);
@@ -318,5 +323,13 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		applicationChannelDao.saveOrUpdate(applicationChannel);
 		applicationDao.saveOrUpdate(application);
 		return applicationChannel;
+	}
+
+	private String getRandomNativeId() {
+		Random random = new Random();
+		// get next long value
+		long value = random.nextLong();
+
+		return String.valueOf(value);
 	}
 }

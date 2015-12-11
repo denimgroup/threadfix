@@ -70,6 +70,15 @@
                         <span class="errors" ng-show="object.dataFlowElements_error">{{ object.dataFlowElements_error }}</span>
                     </td>
                 </tr>
+                <tr ng-show="object.group === 'static'">
+                    <td>Line Text</td>
+                    <td class="inputValue">
+                        <input type="text" style="width:350px;" id="lineTextInput" name="lineText"
+                               ng-model="object.dataFlowElements[0].lineText" size="50" maxlength="255"/>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
                 <tr>
                     <td>Parameter</td>
                     <td class="inputValue">
