@@ -173,22 +173,24 @@ public class SurfaceLocation extends BaseEntity {
 				if (port != 0)
 					tempPort = port;
 
-				if ((protocol != null) && (host != null) && (tempPort != -1) && (path != null)) {
+				String slashPath = path == null? path : (path.startsWith("/") ? path : "/" + path);
+
+				if ((protocol != null) && (host != null) && (tempPort != -1) && (slashPath != null)) {
 					String pathPlusQuery;
 					if (query == null) {
-						pathPlusQuery = path;
+						pathPlusQuery = slashPath;
 					} else {
-						pathPlusQuery = path + '?' + query;
+						pathPlusQuery = slashPath + '?' + query;
 					}
 					url = new URL(protocol, host, tempPort, pathPlusQuery);
-				} else if (path != null && host != null) {
+				} else if (slashPath != null && host != null) {
 
                     String HOST_PATTERN = "(http|https)://([a-zA-Z0-9_.]*)";
                     String tempHost = getRegexResult(host, HOST_PATTERN);
                     tempHost = (tempHost != null && !tempHost.isEmpty()) ? tempHost : host;
-					url = new URL(host.contains("https") ? "https" : "http", tempHost, tempPort, path);
-				} else if (path != null) {
-					url = new URL("http", "localhost", tempPort, path);
+					url = new URL(host.contains("https") ? "https" : "http", tempHost, tempPort, slashPath);
+				} else if (slashPath != null) {
+					url = new URL("http", "localhost", tempPort, slashPath);
 				} else {
 					return null;
 				}
