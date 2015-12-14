@@ -181,4 +181,11 @@ public class HibernateStatisticsCounterDao
 
     }
 
+    @Override
+    public List<StatisticsCounter> retrieveByVulnId(Integer vulnId) {
+        return (List<StatisticsCounter>)getSession().createCriteria(StatisticsCounter.class)
+                .add(eq("vulnerabilityId", vulnId))
+                .list();
+    }
+
 }

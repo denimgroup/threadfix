@@ -80,7 +80,10 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
     @Override
     public void updateFindingCounter(Finding finding, Integer oldVulnId) {
-        if (finding.getHasStatisticsCounter()) {
+        if (finding.getHasStatisticsCounter()
+                || finding.getVulnerability() == null
+                || finding.getVulnerability().getId() == null
+                || statisticsCounterDao.retrieveByVulnId(finding.getVulnerability().getId()).size() == 0) {
             //Delete old counter
             statisticsCounterDao.deleteByVulnId(oldVulnId);
             statisticsCounterDao.deleteByFindingId(finding.getId());
