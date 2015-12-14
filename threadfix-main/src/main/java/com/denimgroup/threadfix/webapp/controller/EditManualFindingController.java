@@ -28,10 +28,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.FindingService;
-import com.denimgroup.threadfix.service.ManualFindingService;
-import com.denimgroup.threadfix.service.ScanService;
-import com.denimgroup.threadfix.service.VulnerabilityService;
+import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.queue.QueueSender;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
@@ -53,6 +50,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/vulnerabilities/{vulnerabilityId}/manual/{findingId}/edit")
 @SessionAttributes("vulnerability")
@@ -70,6 +69,12 @@ public class EditManualFindingController {
     private QueueSender queueSender;
     @Autowired
     private ScanService scanService;
+	@Autowired
+	private VulnerabilityFilterService vulnerabilityFilterService;
+	@Autowired
+	private ApplicationService applicationService;
+	@Autowired
+	private StatisticsCounterService statisticsCounterService;
 
 	public boolean isManual(Finding finding) {
         return finding != null && ScannerType.MANUAL.getDisplayName().equals(finding.getChannelNameOrNull());
@@ -165,9 +170,6 @@ public class EditManualFindingController {
 				status.setComplete();
                 updateVulnAfterEdit(vulnerabilityId, dbFinding, appId);
                 int newVulnId = dbFinding.getVulnerability().getId();
-//                String msg = "Static finding has been modified" +
-//                        ((vulnerabilityId==newVulnId) ? "" :
-//                                " and moved from Vulnerability " + vulnerabilityId + " to Vulnerability " + newVulnId);
                 return RestResponse.success(vulnerabilityService.loadVulnerability(newVulnId));
 			}
 		}
@@ -225,9 +227,6 @@ public class EditManualFindingController {
 				status.setComplete();
                 updateVulnAfterEdit(vulnerabilityId, dbFinding, appId);
                 int newVulnId = dbFinding.getVulnerability().getId();
-//                String msg = "Dynamic finding has been modified" +
-//                        ((vulnerabilityId==newVulnId) ? "" :
-//                                " and moved from Vulnerability " + vulnerabilityId + " to Vulnerability " + newVulnId);
                 model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + newVulnId);
                 return RestResponse.success(vulnerabilityService.loadVulnerability(newVulnId));
 			}
@@ -236,6 +235,9 @@ public class EditManualFindingController {
 
     private void updateVulnAfterEdit(int vulnerabilityId, Finding dbFinding, int appId) {
         int newVulnId = dbFinding.getVulnerability().getId();
+		Scan manualScan = manualFindingService.getManualScan(appId);
+		Application application = applicationService.loadApplication(appId);
+		boolean allManual = true;
 
         if (newVulnId != vulnerabilityId) {
             Vulnerability oldVuln = vulnerabilityService.loadVulnerability(vulnerabilityId);
@@ -244,16 +246,14 @@ public class EditManualFindingController {
                 oldVuln.getApplication().getVulnerabilities().remove(oldVuln);
                 oldVuln.setApplication(null);
                 vulnerabilityService.deleteVulnerability(oldVuln);
-                Scan scan = manualFindingService.getManualScan(appId);
-                scan.setNumberTotalVulnerabilities(scan.getNumberTotalVulnerabilities()-1);
-                scanService.storeScan(scan);
-            }
 
+                manualScan.setNumberTotalVulnerabilities(manualScan.getNumberTotalVulnerabilities()-1);
+                scanService.storeScan(manualScan);
+
+				statisticsCounterService.updateFindingCounter(dbFinding, vulnerabilityId);
+            }
         } else {
 			// this would be better with filter
-
-			boolean allManual = true;
-
 			for (Finding finding : dbFinding.getVulnerability().getFindings()) {
 				if (!ScannerType.MANUAL.getDbName().equals(finding.getChannelNameOrNull())) {
 					allManual = false;
@@ -264,11 +264,18 @@ public class EditManualFindingController {
 				dbFinding.getVulnerability().setGenericSeverity(
 						dbFinding.getChannelSeverity().getSeverityMap().getGenericSeverity());
 			}
+
+			statisticsCounterService.updateFindingCounter(dbFinding, null);
 		}
 
         dbFinding.getVulnerability().setCalculatedUrlPath(dbFinding.getCalculatedUrlPath());
         dbFinding.getVulnerability().setCalculatedFilePath(dbFinding.getCalculatedFilePath());
 
+		if (allManual) {
+			vulnerabilityFilterService.updateScanCounts(list(manualScan));
+		} else {
+			vulnerabilityFilterService.updateScanCounts(application.getScans());
+		}
         queueSender.updateCachedStatistics(appId);
     }
 
