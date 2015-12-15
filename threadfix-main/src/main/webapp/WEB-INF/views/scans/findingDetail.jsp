@@ -3,9 +3,11 @@
 <head>
 	<title>Finding Details</title>
 	<meta name="heading" content="<fmt:message key='mainMenu.heading'/>" />
+    <cbs:cachebustscript src="/scripts/finding-detail-page-controller.js"/>
 </head>
 
-<body id="apps">
+<body id="apps" ng-controller="FindingDetailPageController">
+<%@ include file="/WEB-INF/views/angular-init.jspf"%>
 
 	<spring:url value="/organizations/{orgId}" var="orgUrl">
 		<spring:param name="orgId" value="${ finding.scan.application.organization.id }" />
@@ -46,7 +48,10 @@
 			</c:if>
 		</c:if>
 	</div>
-	
+
+<br/>
+<%@ include file="/WEB-INF/views/applications/sharedComponentTable.jsp" %>
+	<br/>
 	<table class="dataTable">
 		<tbody>
 			<c:if test="${ not empty finding.urlReference }">
@@ -184,4 +189,5 @@
 			</tbody>
 		</table>
 	</c:if>
+
 </body>

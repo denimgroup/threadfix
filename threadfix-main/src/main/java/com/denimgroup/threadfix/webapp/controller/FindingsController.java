@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.FindingService;
+import com.denimgroup.threadfix.service.SharedComponentService;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.VulnerabilityStatusService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
@@ -45,6 +46,8 @@ import javax.validation.Valid;
 import java.util.Calendar;
 import java.util.List;
 
+import static com.denimgroup.threadfix.CollectionUtils.map;
+
 @Controller
 public class FindingsController {
 	
@@ -56,6 +59,8 @@ public class FindingsController {
     private VulnerabilityService vulnerabilityService;
 	@Autowired
 	private VulnerabilityStatusService vulnerabilityStatusService;
+	@Autowired(required = false)
+	private SharedComponentService sharedComponentService;
 
 	@RequestMapping(value = "/organizations/{orgId}/applications/{appId}/scans/{scanId}/findings/{findingId}", method = RequestMethod.GET)
 	public ModelAndView finding(@PathVariable("findingId") int findingId,
@@ -199,6 +204,26 @@ public class FindingsController {
 		}
 
 		return "redirect:/organizations/" + orgId + "/applications/" + appId + "/scans/" + finding.getScan().getId() + "/findings/" + findingId;
+	}
+
+	@JsonView(AllViews.VulnerabilityDetail.class)
+	@RequestMapping(value = "/organizations/{orgId}/applications/{appId}/scans/{scanId}/findings/{findingId}/table", method = RequestMethod.GET)
+	@ResponseBody
+	public Object table(@PathVariable("appId") int appId,
+						@PathVariable("orgId") int orgId,
+						@PathVariable("findingId") int findingId) {
+
+		Finding finding = findingService.loadFinding(findingId);
+		if (finding == null) {
+			RestResponse.failure("Requested finding is invalid.");
+		}
+
+		// shared components
+		if (sharedComponentService != null) {
+			return RestResponse.success(map("sharedVulns", sharedComponentService.retrieveSharedVulns(finding)));
+		}
+
+		return RestResponse.success(map());
 	}
 
 }
