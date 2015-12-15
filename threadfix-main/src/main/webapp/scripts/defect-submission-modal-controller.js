@@ -1,6 +1,7 @@
 var myAppModule = angular.module('threadfix');
 
 myAppModule.controller('DefectSubmissionModalController', function ($scope, $rootScope, $modalInstance, $http, threadFixModalService, object, config, configUrl, url, defectDefaultsConfig, timeoutService, tfEncoder) {
+    $scope.typeAheadUrls = {};
 
     $scope.focusInput = true;
 
@@ -169,6 +170,22 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
         $scope.requiredErrorMap[pathSegment1] = Object.keys($scope.fieldsMap[pathSegment1]).length === 0;
     };
 
+    $scope.getTypeAheadData = function(query, fieldName) {
+        console.log("Fetching typeahead data.");
+        if (fieldName in $scope.typeAheadUrls) {
+            return $http.get('', {
+                params: {
+                    query: query,
+                    url: $scope.typeAheadUrls[fieldName]
+                }
+            }).then(function (response) {
+                return response.data;
+            });
+        } else {
+            return err;
+        }
+    };
+
     var loadMainProfileDefaults = function() {
         if ($scope.defectDefaultsConfig.mainDefaultProfile){
             $scope.defectDefaultsConfig.selectedDefaultProfileId = $scope.defectDefaultsConfig.mainDefaultProfile.id;
@@ -244,6 +261,7 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 "labelClass" : field.required ? "errors" : null,
                 "options" : calculateOptions(field),
                 "multiple" : field.supportsMultivalue,
+                "typeAheadUrl" : field.typeAheadUrl,
                 "val" : field.value
             };
 
@@ -271,8 +289,15 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 $scope.stdFormTemplateOptions[field.name]=fieldForm.options;
             }
 
-            if (type === "text")
+            if (type === "text") {
                 fieldForm.maxLength = field.maxLength;
+            }
+
+            if (type === "typeahead") {
+                if (!(field.name in $scope.typeAheadUrls)) {
+                    $scope.typeAheadUrls[field.name] = field.typeAheadUrl;
+                }
+            }
 
             if (type === "number") {
                 if  (field.step)

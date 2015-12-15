@@ -380,6 +380,13 @@ public class ApplicationsController {
         }
 	}
 
+    @RequestMapping("/{apiId}/typeAheadData")
+    public @ResponseBody RestResponse<String> getTypeAheadData(
+            @PathVariable("orgId") int orgId,
+            @PathVariable("appId") int appId) {
+        return success("");
+    }
+
 	@RequestMapping("/{appId}/defectSubmissionWithIssues")
 	public @ResponseBody RestResponse<Map<String, Object>> getDefectSubmissionWithIssues(
             @PathVariable("orgId") int orgId,
