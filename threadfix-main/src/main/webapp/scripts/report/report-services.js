@@ -1042,6 +1042,35 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities, customSev
 
     };
 
+    trendingUtilities.filterByUniqueId = function(originalCol, filteredAppIds) {
+        return originalCol.filter(function (scan) {
+            if (filteredAppIds.length === 0)
+                return true
+
+            for (var k = 0; k < filteredAppIds.length; k++) {
+                if (scan.app.id === filteredAppIds[k]) {
+                    return true;
+                }
+            }
+
+            return false;
+        });
+    };
+
+    trendingUtilities.getFilteredAppsByUniqueId = function(filteredUniqueIds, uniqueIdMap) {
+        var filteredAppIds = [];
+
+        for(var i = 0; i < filteredUniqueIds.length; i++) {
+            for (var j = 0; j < uniqueIdMap.length; j++) {
+                if (filteredUniqueIds[i].name === uniqueIdMap[j].uniqueId) {
+                    filteredAppIds.push(uniqueIdMap[j].appId);
+                }
+            }
+        }
+
+        return filteredAppIds;
+    };
+
     trendingUtilities.filterByTag = function(originalCol, tags) {
 
         return originalCol.filter(function(scan){
@@ -1110,6 +1139,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities, customSev
             $scope.parameters = {
                 teams: [],
                 applications: [],
+                uniqueIds: [],
                 tags: [],
                 severities: {
                     info: true,
