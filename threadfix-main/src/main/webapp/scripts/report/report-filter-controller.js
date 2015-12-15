@@ -469,6 +469,9 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
             else if ($scope.parameters.teams && $scope.parameters.teams.length > 0)
                 $scope.versions = undefined;
 
+            else if ($scope.parameters.uniqueIds && $scope.parameters.uniqueIds.length > 0)
+                $scope.versions = undefined;
+
             else if (!$scope.parameters.applications || $scope.parameters.applications.length !== 1) {
                 $scope.versions = undefined;
             } else {

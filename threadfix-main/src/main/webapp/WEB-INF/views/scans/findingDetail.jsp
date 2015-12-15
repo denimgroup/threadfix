@@ -63,6 +63,10 @@
 				<td class="bold">Scanner Severity</td>
 				<td class="inputValue" id="scannerSeverity" ng-non-bindable><c:out value="${ finding.channelSeverity.name }"/></td>
 			</tr>
+			<tr>
+				<td class="bold">Scanner Confidence Rating</td>
+				<td class="inputValue" id=scannerConfidencRating" ng-non-bindable><c:out value="${ finding.confidenceRating }"/></td>
+			</tr>
             <tr>
                 <td class="bold">CWE Vulnerability</td>
                 <td class="inputValue" id="genericVulnerabilityName">

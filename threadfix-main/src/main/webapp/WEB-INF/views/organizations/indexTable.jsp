@@ -5,6 +5,14 @@
     </security:authorize>
     <a ng-show="teams" class="btn" id="expandAllButton" ng-click="expand()">Expand All</a>
     <a ng-show="teams" class="btn" id="collapseAllButton" ng-click="contract()">Collapse All</a>
+    <a style="float: right">
+            <input id="appSelectTypeahead"
+                   type="text"
+                   class="form-control"
+                   ng-model="searchText"
+                   placeholder="Search Application (press Enter)"
+                   ng-enter="searchApps(searchText)"/>
+    </a>
 </div>
 
 <table ng-show="teams" class="table table-hover white-inner-table"
@@ -82,12 +90,6 @@
 
         </td>
         <td colspan="3">
-            <input id="appSelectTypeahead{{team.name}}"
-                   type="text"
-                   class="form-control"
-                   ng-model="team.goToApp"
-                   placeholder="Application Search (press Enter)"
-                   ng-enter="searchApps(team.goToApp, team)"/>
         </td>
     </tr>
     <tr ng-file-drop-available="dropSupported=true"

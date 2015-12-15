@@ -118,6 +118,7 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 		
 		private boolean getChannelVulnText    = false;
 		private boolean getUrlText            = false;
+		private boolean getConfidenceText	  = false;
 		private boolean getParamText          = false;
 		private boolean getSeverityText       = false;
 		private boolean getHostText           = false;
@@ -140,6 +141,7 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 		private String currentResponse        = null;
 		private String currentChannelVulnCode = null;
 		private String currentUrlText         = null;
+		private String currentConfidenceText  = null;
 		private String currentParameter       = null;
 		private String currentSeverityCode    = null;
 		private String currentHostText        = null;
@@ -183,7 +185,10 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    	} else if ("severity".equals(qName)) {
 	    		getSeverityText = true;
 	    		getBuilderText(); //resets the stringbuffer
-	    	} else if ("issues".equals(qName)) {
+	    	} else if ("confidence".equals(qName)) {
+				getConfidenceText = true;
+				getBuilderText(); //resets the strinbuffer
+			} else if ("issues".equals(qName)) {
 	    		date = DateUtils.getCalendarFromString("EEE MMM dd kk:mm:ss zzz yyyy", atts.getValue("exportTime"));
 	    		getBuilderText(); //resets the stringbuffer
 	    	} else if ("request".equals(qName)) {
@@ -270,7 +275,10 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    	} else if (getSeverityText) {
 	    		currentSeverityCode = getBuilderText();
 	    		getSeverityText = false;
-	    	} else if (getBackupParameter) {
+	    	} else if (getConfidenceText) {
+				currentConfidenceText = getBuilderText();
+				getConfidenceText = false;
+			} else if (getBackupParameter) {
 	    		String tempURL = getBuilderText();
 	    		if (tempURL != null && tempURL.contains("HTTP")) {
 	    			tempURL = tempURL.substring(0, tempURL.indexOf("HTTP"));
@@ -322,6 +330,7 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    		}
 
                 Map<FindingKey, String> findingMap = map();
+				findingMap.put(FindingKey.CONFIDENCE_RATING, currentConfidenceText);
                 findingMap.put(FindingKey.PATH, currentHostText + currentUrlText);
                 findingMap.put(FindingKey.PARAMETER, currentParameter);
                 findingMap.put(FindingKey.VULN_CODE, currentChannelVulnCode);

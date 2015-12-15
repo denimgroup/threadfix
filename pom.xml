@@ -5,7 +5,7 @@
 
     <groupId>com.denimgroup.threadfix</groupId>
     <artifactId>master-pom</artifactId>
-    <version>2.2-SNAPSHOT</version>
+    <version>2.4-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>ThreadFix</name>
