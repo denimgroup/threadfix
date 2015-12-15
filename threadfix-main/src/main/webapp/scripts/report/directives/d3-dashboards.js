@@ -346,7 +346,7 @@ function barGraphData(d3, data, color, isLeftReport, label, reportConstants, tex
                 appId: (label && label.appId) ? label.appId : d.appId,
                 appName: d.appName,
                 severity: (topVulnsReport) ? undefined : key,
-                graphId: d.teamName + d.appName + ((topVulnsReport)? "CWE" + d.displayId : tip) + "Bar",
+                graphId: "bar" + d.teamName + d.appName + ((topVulnsReport)? "CWE" + d.displayId : tip),
                 genericSeverities: d.genericSeverities
             };
         });
