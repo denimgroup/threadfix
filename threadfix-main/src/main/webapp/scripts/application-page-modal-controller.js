@@ -384,6 +384,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             $scope.$parent.successMessage = "Set defect tracker to " + defectTracker.name;
             $scope.showEditModal();
         }, function () {
+            $scope.showEditModal();
             $log.info('Modal dismissed at: ' + new Date());
         });
     };
@@ -423,6 +424,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             $scope.$parent.successMessage = "Successfully created Defect Tracker " + dt.name;
             $scope.showAddDefectTrackerModal(dt);
         }, function () {
+            $scope.showEditModal();
             $log.info('Modal dismissed at: ' + new Date());
         });
     };
