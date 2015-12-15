@@ -35,8 +35,9 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
             API_KEY = "API Key",
             SERVICE_KEY = "Service Key",
             USERNAME = "Username",
-            BASE_URL_V2 = "https://app.contrastsecurity.com/Contrast/api/",
-            BASE_URL_V3 = "https://app.contrastsecurity.com/Contrast/api/ng/",
+            BASE_URL = "https://app.contrastsecurity.com",
+            API_V2 = "/Contrast/api/",
+            API_V3 = "/Contrast/api/ng/",
             ORGS_URL = "/profile/organizations/default",
             APPS_URL = "/applications",
             MODULE_URL="/modules/",
@@ -60,7 +61,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
     private String fetchDefaultOrgUuid() {
         assert remoteProviderType != null : "Remote Provider Type was null, please set before calling any methods.";
 
-        HttpResponse response = makeRequest(BASE_URL_V3 + ORGS_URL);
+        HttpResponse response = makeRequest(getContrastBaseUrl() + API_V3 + ORGS_URL);
         String orgUuid = null;
 
         try {
@@ -111,7 +112,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
     }
 
     private List<RemoteProviderApplication> getApplications(String orgUuid) {
-        return getApplications(makeRequest(BASE_URL_V3 + orgUuid + APPS_URL));
+        return getApplications(makeRequest(getContrastBaseUrl() + API_V3 + orgUuid + APPS_URL));
     }
 
     private List<RemoteProviderApplication> getApplications(HttpResponse response) {
@@ -138,7 +139,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
     }
 
     private List<RemoteProviderApplication> getModules(String orgUuid, String masterAppId) {
-        List<RemoteProviderApplication> modules = getApplications(makeRequest(BASE_URL_V3 + orgUuid + MODULE_URL + masterAppId));
+        List<RemoteProviderApplication> modules = getApplications(makeRequest(getContrastBaseUrl() + API_V3 + orgUuid + MODULE_URL + masterAppId));
 
         for(RemoteProviderApplication module : modules) {
             module.setMasterAppId(masterAppId);
@@ -170,7 +171,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
         String orgUuid = fetchDefaultOrgUuid();
 
         if (orgUuid != null) {
-            HttpResponse response = makeRequest(BASE_URL_V2 + orgUuid + TRACES_URL + remoteProviderApplication.getNativeId());
+            HttpResponse response = makeRequest(getContrastBaseUrl() + API_V2 + orgUuid + TRACES_URL + remoteProviderApplication.getNativeId());
 
             try {
                 if (response.isValid()) {
@@ -243,7 +244,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
 
         if (orgUuid != null) {
 
-            HttpResponse response = makeRequest(BASE_URL_V3 + orgUuid + TRACES_URL + traceId + EVENTS_SUMMARY_URL);
+            HttpResponse response = makeRequest(getContrastBaseUrl() + API_V3 + orgUuid + TRACES_URL + traceId + EVENTS_SUMMARY_URL);
 
             if (response.isValid()) {
                 try {
@@ -356,5 +357,15 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
         }
 
         throw new RestIOException(errorMessageOrNull, response.getStatus());
+    }
+
+    private String getContrastBaseUrl() {
+        for (RemoteProviderAuthenticationField authField : remoteProviderType.getAuthenticationFields()) {
+            if (authField.getName().equals("URL")){
+                return authField.getValue();
+            }
+        }
+
+        return BASE_URL;
     }
 }
