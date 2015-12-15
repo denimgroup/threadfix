@@ -125,6 +125,22 @@ myAppModule.controller('ModalControllerWithConfig', function ($log, $scope, $roo
         return vulnerability.substr(0, viewValue.length).toLowerCase() == viewValue.toLowerCase();
     };
 
+    $scope.orderByStartsWithFirst = function(propertyName, $viewValue) {
+        return function(object) {
+            var weight = 2147483647;
+            if (object[propertyName]) {
+                var lowerName = (object[propertyName] + "").toLowerCase();
+                var indexOf = lowerName.indexOf(($viewValue + "").toLowerCase());
+                if (indexOf >= 0) {
+                    weight = indexOf;
+                } else {
+                    weight = 2147483646;
+                }
+            }
+            return weight;
+        }
+    };
+
     $scope.convertDateAndSubmit = function(valid) {
         if (valid) {
             $scope.object.date = new Date($scope.object.date);
