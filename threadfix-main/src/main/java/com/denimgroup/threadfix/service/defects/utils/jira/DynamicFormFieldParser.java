@@ -216,10 +216,15 @@ public class DynamicFormFieldParser {
                             } else field.setOptionsMap(map);
 
                         } else if (type.equals("array")) {
-                            LOG.error("Unable to determine dynamic type for " + entry.getKey() + ":" + type + " of " +
-                                    jsonField.getSchema().getItems());
+                            if (jsonField.getSchema().getItems().equals("user")) {
+                                field.setType("typeAhead");
+                                field.setTypeAheadUrl(jsonField.getAutoCompleteUrl());
+                            } else {
+                                LOG.error("Unable to determine dynamic type for " + entry.getKey() + ":" + type + " of " +
+                                        jsonField.getSchema().getItems());
 
-                            field.setType("select");
+                                field.setType("select");
+                            }
                         }
 
                         LOG.debug("Adding new field with label " + field.getLabel() + " and type " + field.getType());

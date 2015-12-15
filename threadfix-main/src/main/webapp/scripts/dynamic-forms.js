@@ -20,6 +20,7 @@ angular.module('dynform', [])
     var supported = {
         //  Text-based elements
         'text': {element: 'input', type: 'text', editable: true, textBased: true},
+        'typeahead': {element: 'input', type: 'text', editable: true, textBased: true},
         'date': {element: 'input', type: 'date', editable: true, textBased: true},
         'datetime': {element: 'input', type: 'datetime', editable: true, textBased: true},
         'datetime-local': {element: 'input', type: 'datetime-local', editable: true, textBased: true},
@@ -115,9 +116,12 @@ angular.module('dynform', [])
                   if (angular.isDefined(field.maxLength) && field.maxLength !== 0) {newElement.attr('ng-maxlength', field.maxLength);}
                   if (angular.isDefined(field.validate)) {newElement.attr('ng-pattern', "/" + field.validate + "/");}
                   if (angular.isDefined(field.placeholder)) {newElement.attr('placeholder', field.placeholder);}
-
+                  if (angular.isDefined(field.typeAheadUrl)) {
+                    newElement.attr('typeahead', "item for item in getTypeAheadData($viewValue,'" + field.model + "')");
+                    newElement.attr('typeahead-wait-ms', "500");
+                    newElement.attr('typeahead-loading', "loadingTypeAheadData");}
                 }
-                
+
                 //  Special cases
                 if (field.type === 'number' || field.type === 'range') {
                   if (angular.isDefined(field.minValue)) {newElement.attr('min', field.minValue);}

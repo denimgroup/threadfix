@@ -39,6 +39,7 @@ public class DynamicFormField {
     String label;
     String placeholder;
     String validate;
+    String typeAheadUrl;
     Object value;
 
     int maxLength;
@@ -94,6 +95,15 @@ public class DynamicFormField {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @JsonView(AllViews.RestView2_1.class)
+    public String getTypeAheadUrl() {
+        return typeAheadUrl;
+    }
+
+    public void setTypeAheadUrl(String typeAheadUrl) {
+        this.typeAheadUrl = typeAheadUrl;
     }
 
     @JsonView(AllViews.RestViewScan2_1.class)
