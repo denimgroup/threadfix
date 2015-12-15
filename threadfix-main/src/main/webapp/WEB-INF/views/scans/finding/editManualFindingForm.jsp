@@ -3,7 +3,7 @@
 	<div class="modal-header">
 		<h4>Edit Finding</h4>
 	</div>
-    <div ng-form="form" class="modal-body" ng-init="object.group =  object.isStatic ? 'static' : 'dynamic'">
+    <div ng-form="form" class="modal-body" ng-init="object.group = object.isStatic ? 'static' : 'dynamic'">
 	<table class="modal-form-table">
 		<tbody>
         <tr>
