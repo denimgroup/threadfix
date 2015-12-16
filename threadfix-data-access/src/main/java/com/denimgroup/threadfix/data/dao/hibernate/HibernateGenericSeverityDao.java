@@ -60,10 +60,11 @@ public class HibernateGenericSeverityDao
     }
 
 	@Override
-	public List<GenericSeverity> retrieveAllWithCustomName(String customName) {
-		return sessionFactory.getCurrentSession()
+	public boolean doesCustomNameExist(String customName, int severityId){
+		return !sessionFactory.getCurrentSession()
 				.createCriteria(GenericSeverity.class)
-				.add(Restrictions.eq("customName", customName))
-				.list();
+				.add(Restrictions.ne("id",severityId))
+				.add(Restrictions.or(Restrictions.eq("customName", customName),Restrictions.eq("name",customName)))
+				.list().isEmpty();
 	}
 }
