@@ -203,7 +203,7 @@ public class Application extends AuditableEntity {
 	}
 
 	@Column(length = 50)
-    @JsonView({ AllViews.RestViewTeams2_1.class, AllViews.RestViewWafs2_1.class })
+    @JsonView({ AllViews.RestViewTeams2_1.class, AllViews.RestViewWafs2_1.class, AllViews.FormInfo.class, AllViews.TableRow.class, })
 	public String getProjectName() {
 		return projectName;
 	}
