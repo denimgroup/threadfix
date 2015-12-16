@@ -349,9 +349,11 @@ public class HibernateApplicationDao implements ApplicationDao {
         Criteria criteria = getSearchAppCriteria(teamId, searchString);
         criteria.addOrder(Order.asc("name"));
         addFiltering(criteria, teamIds, appIds);
-        return (List<Application>) criteria.setMaxResults(number)
-                .setFirstResult((page - 1) * number)
-                .list();
+        if (number > 0) {
+            criteria.setMaxResults(number);
+            criteria.setFirstResult((page - 1) * number);
+        }
+        return (List<Application>)criteria.list();
     }
 
     @Override

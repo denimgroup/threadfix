@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.service.report;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.data.entities.VulnerabilitySearchParameters;
 import org.springframework.ui.Model;
@@ -64,5 +65,7 @@ public interface ReportsService {
     Map<String, Object> generateMostAppsReport(VulnerabilitySearchParameters parameters, HttpServletRequest request);
 
     ReportCheckResultBean generateSearchReport(List<Vulnerability> vulnerabilityList);
+
+	ReportCheckResultBean getPointInTimeD3(List<Application> applications, int teamId);
 
 }

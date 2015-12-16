@@ -414,6 +414,9 @@ threadfixModule.factory('vulnSearchParameterService', function() {
             });
         } else {
             filterParameters.applications.forEach(function (application) {
+                if (application.name.indexOf(" / ") === -1) {
+                    application.name = application.team.name + " / " + application.name;
+                }
                 $scope.parameters.applications.push(application);
             });
         }
@@ -495,6 +498,8 @@ threadfixModule.factory('vulnSearchParameterService', function() {
 
         criteria.headers = getHeaders(d);
         criteria.fillColor = d.fillColor;
+
+        criteria.parameters.searchAppText = d.searchAppText;
 
         return criteria;
     };
