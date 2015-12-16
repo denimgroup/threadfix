@@ -118,7 +118,7 @@ public class HPQCUtils {
         throw new DefectTrackerCommunicationException("Unable to retrieve projects.");
     }
 
-    public static boolean checkCredential(String serverUrl, String username, String password, String domainProject) {
+    public static boolean checkCredentialAndProject(String serverUrl, String username, String password, String domainProject) {
         if (!checkProjectName(serverUrl, domainProject)) {
             return false;
         }
@@ -152,6 +152,10 @@ public class HPQCUtils {
         }
 
         return false;
+    }
+
+    public static boolean checkCredential(String serverUrl, String username, String password) {
+        return login(username, password);
     }
 
     @Nullable
@@ -444,7 +448,7 @@ public class HPQCUtils {
     private static boolean checkProjectName(String serverUrl, String domain_project) {
         String[] pDetails = getProjectNameSplit(domain_project);
         if (pDetails.length != 2) {
-            log.warn("domain/project is invalid");
+            log.warn("domain/project is invalid: " + domain_project);
             return false;
         }
         con = getRestConnector().init(
@@ -561,7 +565,7 @@ public class HPQCUtils {
     }
 
     private static String[] getProjectNameSplit(String domainProject) {
-        return domainProject.split("/");
+        return domainProject == null ? new String[]{} : domainProject.split("/");
     }
 
     /**
