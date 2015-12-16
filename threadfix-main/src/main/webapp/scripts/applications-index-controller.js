@@ -69,9 +69,9 @@ myAppModule.controller('ApplicationsIndexController',
             loadGraph(team);
         };
 
-        $scope.expand = function() {
+        $scope.expand = function(isExpand) {
             $scope.teams.forEach(function(team) {
-                team.expanded = true;
+                team.expanded = isExpand;
                 loadGraph(team);
             });
         };
@@ -107,10 +107,12 @@ myAppModule.controller('ApplicationsIndexController',
                         team.report = undefined;
                     else {
                         team.report = data.object;
-                        team.report[0].searchAppText = $scope.searchText;
-                        team.report.forEach(function(teamInfo, i){
-                            team.report[i].genericSeverities = $scope.genericSeverities;
-                        })
+                        if (team.report) {
+                            team.report[0].searchAppText = $scope.searchText;
+                            team.report.forEach(function(teamInfo, i){
+                                team.report[i].genericSeverities = $scope.genericSeverities;
+                            }
+                        )}
                     }
                 } else {
                     // TODO improve error handling and pass something back to the users
@@ -318,6 +320,9 @@ myAppModule.controller('ApplicationsIndexController',
                     var data = response.data;
                     if (data.success) {
                         team.countApps = data.object.countApps;
+                        if (team.countApps > 0 && !team.expanded) {
+                            team.expanded = true;
+                        }
                         team.applications = data.object.applications;
 
                         team.applications.forEach(function(application) {

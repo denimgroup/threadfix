@@ -237,10 +237,6 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
 
                 };
 
-                //scope.$watch('exportReportId', function() {
-                //    scope.export();
-                //}, true);
-
                 scope.export = function(){
                     if (scope.exportReportId && scope.exportReportId.id==10) {
                         var teamsName = (scope.label.teams) ? "_" + scope.label.teams : "";
@@ -286,7 +282,9 @@ d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut', 
 
                     var pieDim ={w:260, h: 200};
 
-                    var svg = d3Service.getSvg(d3, ele[0], pieDim.w, pieDim.h);
+                    var svg = d3Service.getExistingSvg(d3, ele[0], pieDim.w, pieDim.h);
+
+                    svg.selectAll('*').remove();
 
                     svg.append("g").attr("id",scope.label);
 
