@@ -177,8 +177,8 @@ angular.module('threadfix')
                 .append("g")
                 .attr("class", "arc pointer")
                 .attr("id", function(d){
-                    var str = (d.data.teamName)? d.data.teamName : "pointInTime";
-                    return str + d.data.severity + "Arc";
+                    var str = (d.data.teamName)? "arc" + d.data.teamName : "pointInTime";
+                    return str + d.data.severity;
                 })
                 .append("path")
                 .style("fill", function(d) { return d.data.fillColor; })
