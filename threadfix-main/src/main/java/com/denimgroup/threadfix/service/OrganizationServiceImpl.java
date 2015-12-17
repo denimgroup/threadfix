@@ -167,27 +167,32 @@ public class OrganizationServiceImpl extends AbstractNamedObjectService<Organiza
 
     @Override
     public List<Application> search(Integer orgId, HttpServletRequest request) {
+
         String searchString = request.getParameter("searchString");
+        Integer page = getIntegerOrNull(request.getParameter("page")),
+                number = getIntegerOrNull(request.getParameter("number"));
+        return search(orgId, searchString, page, number);
+
+    }
+
+    @Override
+    public List<Application> search(Integer orgId, String searchString, Integer page, Integer number) {
         if (searchString == null) {
             searchString = "";
         }
         Long count = applicationDao.countApps(orgId, searchString);
-
-        Integer page = getIntegerOrNull(request.getParameter("page")),
-                number = getIntegerOrNull(request.getParameter("number"));
 
         if (page == null || page < 1) {
             page = 1;
         }
 
         if (number == null || number < 1) {
-            number = 1;
+            number = -1;
         }
 
         if ((page - 1) * number > count) {
             page = 1;
         }
-
 
         if (permissionService != null) {
             if (permissionService.isAuthorized(Permission.READ_ACCESS, null, null)) {
@@ -201,6 +206,7 @@ public class OrganizationServiceImpl extends AbstractNamedObjectService<Organiza
         } else {
             return applicationDao.getSearchResults(orgId, searchString, number, page, null, null);
         }
+
     }
 
     @Override

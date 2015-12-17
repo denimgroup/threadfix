@@ -301,7 +301,8 @@ d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut', 
                                 severity: vulnType,
                                 teamId: d.teamId,
                                 teamName: d.teamName,
-                                genericSeverities: d.genericSeverities
+                                genericSeverities: d.genericSeverities,
+                                searchAppText : d.searchAppText
                             };});
                     }
 

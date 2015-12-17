@@ -69,7 +69,7 @@
             <a style="text-decoration:none" id="organizationLink{{ team.name }}" ng-href="{{ team.url }}">View Team</a>
         </td>
     </tr>
-    <tr ng-show="team.expanded"
+    <tr ng-show="team.expanded && team.countApps > numAppsPerTeam"
         id="teamPaginationDiv{{ team.id }}"
         class="collapse "
         ng-class="{ expanded: team.expanded }">
@@ -163,7 +163,7 @@
 
                 <d3-donut ng-if="team.report" data="team.report" label="reportDiv{{ team.id }}"></d3-donut>
 
-                <div ng-hide="team.report || team.reportFailed || !loading" class="team-report-wrapper">
+                <div ng-hide="team.report || team.reportFailed || !team.loading" class="team-report-wrapper">
                     <div style="float:right" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
                 </div>
                 <div ng-show="team.reportFailed" class="team-report-wrapper">

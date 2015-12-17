@@ -54,6 +54,8 @@ public interface OrganizationService extends GenericNamedObjectService<Organizat
 
 	List<Application> search(Integer orgId, HttpServletRequest request);
 
+	List<Application> search(Integer orgId, String searchString, Integer page, Integer number);
+
 	Long countApps(Integer orgId, String searchString);
 
 	Long countVulns(Integer orgId);

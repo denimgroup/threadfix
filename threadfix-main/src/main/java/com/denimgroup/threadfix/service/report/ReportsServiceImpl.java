@@ -91,9 +91,6 @@ public class ReportsServiceImpl implements ReportsService {
             applicationIdList = applicationDao.getTopXVulnerableAppsFromList(10, new ArrayList<Integer>(), applicationIdList);
             report = getTopAppsReportD3(applicationIdList);
         }
-        if (parameters.getReportFormat() == ReportFormat.POINT_IN_TIME_GRAPH) {
-            report = getPointInTimeD3(applicationIdList, parameters.getOrganizationId());
-        }
 
         if (parameters.getReportFormat() == ReportFormat.TOP_TEN_VULNS) {
             List<Integer> vulnIds = vulnerabilityDao.getTopTenVulnTypes(applicationIdList);
@@ -286,9 +283,15 @@ public class ReportsServiceImpl implements ReportsService {
         return resultList;
     }
 
-    private ReportCheckResultBean getPointInTimeD3(List<Integer> applicationIdList, int teamId) {
+    @Override
+    public ReportCheckResultBean getPointInTimeD3(List<Application> applications, int teamId) {
 
-        List<Object[]> objects = applicationDao.getPointInTime(applicationIdList);
+        List<Integer> applicationIdList = list();
+        for (Application application: applications)
+            applicationIdList.add(application.getId());
+        List<Object[]> objects = list();
+        if (applicationIdList.size() > 0)
+            objects = applicationDao.getPointInTime(applicationIdList);
         Organization team = organizationDao.retrieveById(teamId);
         List<Map<String, Object>> resultList = list();
         for (Object[] infoArr: objects) {
@@ -309,7 +312,7 @@ public class ReportsServiceImpl implements ReportsService {
 
         if (resultList.size() == 0 ) {
             log.info("Unable to fill Report - no vulns were found.");
-            return null;
+            return new ReportCheckResultBean(ReportCheckResult.VALID, null, null, null);
         } else {
             return new ReportCheckResultBean(ReportCheckResult.VALID, null, null, resultList);
         }
