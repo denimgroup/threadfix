@@ -235,9 +235,9 @@ public class DefectTrackerServiceImpl implements DefectTrackerService {
                 tracker.setUsername(defectTracker.getDefaultUsername());
                 tracker.setPassword(defectTracker.getDefaultPassword());
 
-                if(tracker.hasValidCredentials()){
+                if (tracker.hasValidCredentials()) {
                     return true;
-                }else if(tracker.getLastError() != null){
+                } else if(tracker.getLastError() != null) {
                     result.rejectValue("defaultUsername", null, null, tracker.getLastError());
                 }
             }
