@@ -207,6 +207,8 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
         } else if (name === 'managePolicy') {
             $scope.currentModal.dismiss('modalChanged');
             $scope.showPolicyModal();
+        } else if (name === 'appEdit'){
+            $scope.showEditModal();
         }
     });
 
@@ -496,7 +498,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     // Handle fileDragged event and upload scan button clicks
     $scope.$on('fileDragged', function(event, $files) {
