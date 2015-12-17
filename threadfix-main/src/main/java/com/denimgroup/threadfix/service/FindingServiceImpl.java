@@ -29,6 +29,10 @@ import com.denimgroup.threadfix.importer.update.impl.ChannelVulnerabilityUpdater
 import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
+import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
+import com.denimgroup.threadfix.service.translator.FindingProcessorFactory;
+import com.denimgroup.threadfix.util.FileTree;
+import com.denimgroup.threadfix.util.SimilarityCalculator;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,7 +44,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -48,6 +52,7 @@ import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.CollectionUtils.set;
 import static com.denimgroup.threadfix.data.entities.GenericSeverity.REVERSE_MAP;
 import static com.denimgroup.threadfix.webapp.controller.rest.AddFindingRestController.*;
 
@@ -536,5 +541,87 @@ public class FindingServiceImpl implements FindingService {
 	@Override
 	public List<Finding> loadByGenericSeverityAndChannelType(GenericSeverity genericSeverity, ChannelType channelType) {
 		return findingDao.retrieveByGenericSeverityAndChannelType(genericSeverity, channelType);
+	}
+
+	@Override
+	public Map<String, String> getFilesWithVulnerabilities(Finding finding) {
+
+		Map<String, String> fileMap = map();
+
+        if (EnterpriseTest.isEnterprise()) {
+            File rootDir = FindingProcessorFactory.getRootFile(finding.getVulnerability().getApplication());
+
+            if (rootDir == null || !rootDir.isDirectory())
+                return fileMap;
+
+            List<DataFlowElement> dataFlowElements = finding.getDataFlowElements();
+            Set<String> relFilePaths = set();
+
+            if (dataFlowElements != null && !dataFlowElements.isEmpty()) {
+                for (DataFlowElement dataFlowElement : dataFlowElements) {
+                    relFilePaths.add(dataFlowElement.getSourceFileName());
+                }
+            } else if (finding.getSourceFileLocation() != null && !finding.getSourceFileLocation().isEmpty()) {
+                relFilePaths.add(finding.getSourceFileLocation());
+
+            } else if (finding.getCalculatedFilePath() != null && !finding.getCalculatedFilePath().isEmpty()) {
+                relFilePaths.add(finding.getCalculatedFilePath());
+            } else {
+                return fileMap;
+            }
+
+            FileTree fileTree = new FileTree();
+            fileTree.walk(rootDir);
+            List<String> allAbsoluteFilePaths = fileTree.getResultFilePaths();
+
+            for (String relFilePath : relFilePaths) {
+                String absoluteFilePath = SimilarityCalculator.findMostSimilarFilePath(relFilePath, allAbsoluteFilePaths);
+                if (absoluteFilePath != null) {
+
+                    StringBuilder fileOutput = new StringBuilder();
+
+                    try (BufferedReader br = new BufferedReader(new FileReader(absoluteFilePath))) {
+                        String line;
+                        while ((line = br.readLine()) != null) {
+                            fileOutput.append(line + System.lineSeparator());
+                        }
+                    } catch (IOException e) {
+                        log.error(e.getMessage());
+                    }
+
+                    fileMap.put(relFilePath, fileOutput.toString());
+                }
+            }
+        }
+
+		return fileMap;
+	}
+
+	@Override
+	public Map<String, Set<Integer>> getFilesWithLineNumbers(Finding finding) {
+
+		Map<String, Set<Integer>> fileLineNumMap = map();
+
+        if (EnterpriseTest.isEnterprise()) {
+            List<DataFlowElement> dataFlowElements = finding.getDataFlowElements();
+
+            if (dataFlowElements != null && !dataFlowElements.isEmpty()) {
+                for (DataFlowElement dataFlowElement : dataFlowElements) {
+
+                    String sourceFileName = dataFlowElement.getSourceFileName();
+                    Set<Integer> lineNumberList = fileLineNumMap.get(dataFlowElement.getSourceFileName());
+
+                    if (lineNumberList == null) {
+                        lineNumberList = set(dataFlowElement.getLineNumber());
+                    } else {
+                        lineNumberList.add(dataFlowElement.getLineNumber());
+                    }
+
+                    fileLineNumMap.put(sourceFileName, lineNumberList);
+                }
+            }
+        }
+
+		return fileLineNumMap;
 	}
 }
