@@ -681,14 +681,14 @@ threadfixModule.factory('reportUtilities', function() {
         // First create the table rows
         var tr = tbody.selectAll("tr")
             .data(tableData).enter().append("tr")
-            .attr("id", function(d, index){return index});
+            .attr("id", function(d, index){return "row" + index});
 
         // Now create the table cells
         var td = tr.selectAll("td")
             .data(function(d){return d3.values(d)})
             .enter().append("td")
             .attr("class", "break-word-header")
-            .attr("id", function(d, index){return index})
+            .attr("id", function(d, index){return "cell" + index})
             .text(function(d) {return d});
     };
 
