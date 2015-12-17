@@ -28,7 +28,7 @@
         </thead>
         <tbody>
             <tr>
-                <td generic-severity="Critical"></td>
+                <td generic-severity="Critical" id="showCriticalText"></td>
                 <td>
                     <div class="btn-group">
                         <label id="showCritical1" class="btn" ng-model="severityFilter.showCritical" ng-class="{ disabled : !severityFilter.enabled }" ng-click="setSeverity('showCritical', true)" btn-radio="true">Show</label>
@@ -37,7 +37,7 @@
                 </td>
             </tr>
             <tr>
-                <td generic-severity="High"></td>
+                <td generic-severity="High" id="showHighText"></td>
                 <td>
                     <div class="btn-group">
                         <label id="showHigh1" class="btn" ng-model="severityFilter.showHigh" ng-class="{ disabled : !severityFilter.enabled }" ng-click="setSeverity('showHigh', true)" btn-radio="true">Show</label>
@@ -46,7 +46,7 @@
                 </td>
             </tr>
             <tr>
-                <td generic-severity="Medium"></td>
+                <td generic-severity="Medium" id="showMediumText"></td>
                 <td>
                     <div class="btn-group">
                         <label id="showMedium1" class="btn" ng-model="severityFilter.showMedium" ng-class="{ disabled : !severityFilter.enabled }" ng-click="setSeverity('showMedium', true)" btn-radio="true">Show</label>
@@ -55,7 +55,7 @@
                 </td>
             </tr>
             <tr>
-                <td generic-severity="Low"></td>
+                <td generic-severity="Low" id="showLowText"></td>
                 <td>
                     <div class="btn-group">
                         <label id="showLow1" class="btn" ng-model="severityFilter.showLow" ng-class="{ disabled : !severityFilter.enabled }" ng-click="setSeverity('showLow', true)" btn-radio="true">Show</label>
@@ -64,7 +64,7 @@
                 </td>
             </tr>
             <tr>
-                <td generic-severity="Info"></td>
+                <td generic-severity="Info" id="showInfoText"></td>
                 <td>
                     <div class="btn-group">
                         <label id="showInfo1" class="btn" ng-model="severityFilter.showInfo" ng-class="{ disabled : !severityFilter.enabled }" ng-click="setSeverity('showInfo', true)" btn-radio="true">Show</label>

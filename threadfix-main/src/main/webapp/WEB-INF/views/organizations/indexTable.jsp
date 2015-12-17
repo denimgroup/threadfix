@@ -28,11 +28,11 @@
         <th style="width:8px"></th>
         <th style="width:98px;">Name</th>
         <th class="centered fixed-team-header">Total</th>
-        <th class="centered fixed-team-header" generic-severity="Critical"></th>
-        <th class="centered fixed-team-header" generic-severity="High"></th>
-        <th class="centered fixed-team-header" generic-severity="Medium"></th>
-        <th class="centered fixed-team-header" generic-severity="Low"></th>
-        <th class="centered fixed-team-header" generic-severity="Info"></th>
+        <th class="centered fixed-team-header" id="allCritical" generic-severity="Critical"></th>
+        <th class="centered fixed-team-header" id="allHigh" generic-severity="High"></th>
+        <th class="centered fixed-team-header" id="allMedium" generic-severity="Medium"></th>
+        <th class="centered fixed-team-header" id="allLow" generic-severity="Low"></th>
+        <th class="centered fixed-team-header" id="allInfo" generic-severity="Info"></th>
         <th></th>
         <th style="width:130px;"></th>
         <th style="width:70px;"></th>
@@ -121,11 +121,11 @@
                         <tr>
                             <th style="width:70px;"></th>
                             <th class="centered">Total</th>
-                            <th class="centered auto-team-header" generic-severity="Critical"></th>
-                            <th class="centered auto-team-header" generic-severity="High"></th>
-                            <th class="centered auto-team-header" generic-severity="Medium"></th>
-                            <th class="centered auto-team-header" generic-severity="Low"></th>
-                            <th class="centered auto-team-header" generic-severity="Info"></th>
+                            <th class="centered auto-team-header" id="team{{ team.name | removeSpace }}Critical" generic-severity="Critical"></th>
+                            <th class="centered auto-team-header" id="team{{ team.name | removeSpace }}High" generic-severity="High"></th>
+                            <th class="centered auto-team-header" id="team{{ team.name | removeSpace }}Medium" generic-severity="Medium"></th>
+                            <th class="centered auto-team-header" id="team{{ team.name | removeSpace }}Low" generic-severity="Low"></th>
+                            <th class="centered auto-team-header" id="team{{ team.name | removeSpace }}Info" generic-severity="Info"></th>
                             <th style="width:110px;"></th>
                         </tr>
                         </thead>

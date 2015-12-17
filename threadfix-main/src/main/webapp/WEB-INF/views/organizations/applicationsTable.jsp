@@ -49,11 +49,11 @@
         <th class="long">URL</th>
         <th class="short">Criticality</th>
         <th class="short">Open Vulns</th>
-        <th class="short break-word-header" generic-severity="Critical"></th>
-        <th class="short break-word-header" generic-severity="High"></th>
-        <th class="short break-word-header" generic-severity="Medium"></th>
-        <th class="short break-word-header" generic-severity="Low"></th>
-        <th class="short break-word-header" generic-severity="Info"></th>
+        <th class="short break-word-header" id="appHeaderCritical" generic-severity="Critical"></th>
+        <th class="short break-word-header" id="appHeaderHigh" generic-severity="High"></th>
+        <th class="short break-word-header" id="appHeaderMedium" generic-severity="Medium"></th>
+        <th class="short break-word-header" id="appHeaderLow" generic-severity="Low"></th>
+        <th class="short break-word-header" id="appHeaderInfo" generic-severity="Info"></th>
     </tr>
     </thead>
     <tbody id="applicationsTableBody">
