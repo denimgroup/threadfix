@@ -209,7 +209,7 @@
 			<tr id="appWafDiv">
                 <td>Defect Tracker</td>
                 <td id="defectTrackerName" ng-show="object.defectTracker">
-                    <a id="linkDT" ng-href="{{object.defectTracker.url}}" class="pointer" target='_blank'>{{ object.defectTracker.name }}</a>
+                    <a id="linkDT" ng-href="{{object.defectTracker.url}}" class="pointer" target='_blank'>{{ object.defectTracker.name }} - {{ object.projectName }}</a>
                 </td>
                 <td><button id="addDefectTrackerButton" class="btn" ng-click="switchTo('addDefectTracker')">Set Defect Tracker</button></td>
 			</tr>
