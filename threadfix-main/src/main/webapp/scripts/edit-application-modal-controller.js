@@ -102,6 +102,22 @@ myAppModule.controller('EditApplicationModalController', function ($log, $scope,
 
     $scope.goToPolicyPage = function() {
         $window.location.href = tfEncoder.encode("/configuration/policies");
-    }
+    };
+
+    $scope.removeDefectTracker = function(){
+        if(confirm("Are you sure you want to remove the defect tracker?")){
+            var app = $scope.config.application;
+            var url = tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/edit/removeDTAjax");
+            $http.post(url).
+            success(function(data, status, headers, config) {
+                $scope.config.application.defectTracker = data.defectTracker;
+                $modalInstance.dismiss('cancel');
+                $scope.switchTo('appEdit');
+            }).
+            error(function(data, status, headers, config) {
+                $scope.error = "Failure. HTTP status was " + status;
+            });
+        }
+    };
 
 });
