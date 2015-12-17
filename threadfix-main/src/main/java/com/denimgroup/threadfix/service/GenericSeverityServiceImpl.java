@@ -50,10 +50,9 @@ public class GenericSeverityServiceImpl
 	@Override
 	public boolean canSetCustomNameTo(int genericSeverityId, String text) {
 		if ("".equals(text)) {
-			return true; // it's ok to clear the custom text
+			text = loadById(genericSeverityId).getName();
 		}
-
-		return !genericSeverityDao.doesCustomNameExist(text,genericSeverityId);
+		return !genericSeverityDao.doesSeverityNameExist(text,genericSeverityId);
 	}
 
 	@Override
