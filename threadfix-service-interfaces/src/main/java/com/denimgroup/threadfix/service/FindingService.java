@@ -31,8 +31,7 @@ import org.springframework.validation.BindingResult;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author bbeverly
@@ -170,4 +169,18 @@ public interface FindingService {
     String getUnmappedTypesAsString();
 
     List<Finding> loadByGenericSeverityAndChannelType(GenericSeverity genericSeverity, ChannelType channelType);
+
+	/**
+	 *
+	 * @param finding
+	 * @return
+	 */
+	Map<String, String> getFilesWithVulnerabilities(Finding finding);
+
+	/**
+	 *
+	 * @param finding
+	 * @return
+	 */
+	Map<String, Set<Integer>> getFilesWithLineNumbers(Finding finding);
 }
