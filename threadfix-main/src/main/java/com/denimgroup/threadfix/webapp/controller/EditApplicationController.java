@@ -351,8 +351,6 @@ public class EditApplicationController {
 		databaseApplication.setUseDefaultProject(false);
 		databaseApplication.setProjectId(null);
 
-		PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS);
-
 		applicationService.storeApplication(databaseApplication, EventAction.APPLICATION_EDIT);
 
 		defectService.deleteByApplicationId(databaseApplication.getId());
