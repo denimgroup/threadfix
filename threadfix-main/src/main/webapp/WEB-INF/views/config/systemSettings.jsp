@@ -142,8 +142,10 @@
                                     </td>
                                 </tr>
                             </table>
-
-                            <button id="checkLDAPSettings" ng-disabled="shouldDisable()" class="btn" ng-click="ok(loginForm.$valid)">
+                            <a id="loadingBtnLdapSettings" disabled="disabled" class="btn ng-hide" ng-show="loading">
+                                <span class="spinner dark"></span>Checking Connection
+                            </a>
+                            <button id="checkLDAPSettings" ng-disabled="shouldDisable()" ng-hide="loading" class="btn" ng-click="ok(loginForm.$valid)">
                                 Check Connection
                             </button>
                         </div>
