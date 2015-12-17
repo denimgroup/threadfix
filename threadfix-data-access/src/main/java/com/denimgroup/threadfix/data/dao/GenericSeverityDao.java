@@ -31,5 +31,5 @@ public interface GenericSeverityDao extends GenericNamedObjectDao<GenericSeverit
 
     GenericSeverity retrieveByIntValue(int iValue);
 
-    boolean doesCustomNameExist(String customName, int severityId);
+    boolean doesSeverityNameExist(String customName, int severityId);
 }
