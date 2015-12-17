@@ -42,5 +42,9 @@ public interface StatisticsCounterDao extends GenericObjectDao<StatisticsCounter
                                                     Scan scan);
 
     List<Map<String,Object>> getRawFindingTotalMap();
+    void deleteByFindingId(Integer findingId);
+    void deleteByVulnId(Integer vulnId);
+    List<StatisticsCounter> retrieveByVulnId(Integer vulnId);
+
 
 }

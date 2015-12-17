@@ -24,18 +24,19 @@
                 <div ng-show="canUpdateVulnComment">
                     <multi-select id-prefix="comment{{ $index }}Tags"
                                   id="commentTags"
-                            input-model="comment.tagsList"
-                            output-model="comment.tags"
-                            button-label="name"
-                            item-label="name"
-                            tick-property="selected"
-                            on-item-click="changeComment(vulnerability, comment)"
-                            max-labels="1"
-                            >
+                                  input-model="comment.tagsList"
+                                  output-model="comment.tags"
+                                  button-label="name"
+                                  item-label="name"
+                                  tick-property="selected"
+                                  on-item-click="changeComment(comment)"
+                                  on-reset="resetComment(comment)"
+                                  max-labels="1"
+                    >
                     </multi-select>
                 </div>
                 <div ng-hide="canUpdateVulnComment">
-                    <c:if test="${ canManageTags }">
+                <c:if test="${ canManageTags }">
                             <span style="font-weight: bold;" id="commentTagLink{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $parent.$parent.$index }}-{{ $parent.$index }}{{ cmtTag.name }}"
                                   ng-repeat="cmtTag in comment.tags" class="pointer badge" ng-class="{'badge-comment-tag': true}" ng-click="goToTag(cmtTag)">{{cmtTag.name}}</span>
                     </c:if>

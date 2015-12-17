@@ -104,9 +104,9 @@ public class PolicyEventTrackingAspect extends EventTrackingAspect {
     protected void emitPolicyStatusUpdateEvent(PolicyStatus policyStatus) throws Throwable {
         EventAction eventAction;
         if (policyStatus.isPassing()) {
-            eventAction = EventAction.ACCEPTANCE_CRITERIA_PASSING;
+            eventAction = EventAction.POLICY_PASSING;
         } else {
-            eventAction = EventAction.ACCEPTANCE_CRITERIA_FAILING;
+            eventAction = EventAction.POLICY_FAILING;
         }
         try {
             Event event = generatePolicyStatusUpdateEvent(policyStatus, eventAction);

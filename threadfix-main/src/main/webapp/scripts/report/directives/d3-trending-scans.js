@@ -299,7 +299,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                             .enter().insert("path", ".line")
                             .attr("class", "area")
                             .attr("id", function(){
-                                return d.key + "Area";
+                                return "area" + d.key;
                             })
                             .style("fill", "white")
                             .transition()
@@ -337,7 +337,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                             .duration(duration)
                             .attr('fill', getColor(d.key))
                             .attr("id", function(){
-                                return d.key + "Text";
+                                return "text" + d.key;
                             })
                             .text(d.key)
                             .attr("transform", function() {
@@ -400,7 +400,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                                     y1: 0,
                                     y2: h	})
                                 .attr("class", "versionLine")
-                                .attr("id", version.id)
+                                .attr("id", "version" + version.name)
                         });
                     }
                 };
@@ -454,7 +454,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     if (showScan) {
                         focusCircles.attr('transform', function (d) {
                             time = d.values[i].date;
-                            tips.push("<tr><td>" + d.key + "&nbsp;</td> <td style='color:"+ getTextColor(d.key) +"'>" + d.values[i].noOfVulns + "</td></tr>");
+                            tips.push("<tr><td id='areaTip" + d.key + "'>" + d.key + "&nbsp;</td> <td style='color:"+ getTextColor(d.key) +"'>" + d.values[i].noOfVulns + "</td></tr>");
 
                             focus.selectAll('path').remove();
                             focus.append("path")
@@ -496,7 +496,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                                 y1: 0,
                                 y2: h	})
                             .attr("class", "versionLineFocus")
-                            .attr("id", filterVersions[j].id + "focus");
+                            .attr("id", "version" + filterVersions[j].name + "focus");
 
                         tip.show(svg.selectAll(".versionLineFocus")[0][0]);
                     }

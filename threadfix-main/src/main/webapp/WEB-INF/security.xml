@@ -15,6 +15,12 @@
 		<property name="userPropertyToUse" value="salt"/>
 	</bean>
 
+	<bean id="ThreadFixAuthenticationProvider" class="com.denimgroup.threadfix.service.ThreadFixAuthenticationProvider">
+		<property name="userDetailsService" ref="customUserDetailService"/>
+		<property name="passwordEncoder" ref="ThreadFixPasswordEncoder"/>
+		<property name="saltSource" ref="saltSource"/>
+	</bean>
+
 	<security:global-method-security pre-post-annotations="enabled"/>
 
 	<bean class="com.denimgroup.threadfix.webapp.config.CustomLogoutSuccessHandler" id="customLogoutSuccessHandler"/>
@@ -50,11 +56,7 @@
 
 		<security:authentication-provider ref="customAuthenticationProvider"/>
 
-		<security:authentication-provider user-service-ref="customUserDetailService">
-			<security:password-encoder ref="ThreadFixPasswordEncoder">
-				<security:salt-source ref="saltSource" />
-			</security:password-encoder>
-		</security:authentication-provider>
+		<security:authentication-provider ref="ThreadFixAuthenticationProvider"/>
 
 	</security:authentication-manager>
 

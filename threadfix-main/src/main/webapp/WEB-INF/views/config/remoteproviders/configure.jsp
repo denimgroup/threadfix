@@ -69,6 +69,10 @@
                         <span class="errors" ng-show="form.username.$dirty && form.username.$error.required">{{ field.name }} is required.</span>
                         <span class="errors" ng-show="form.username.$dirty && form.username.$error.maxlength">Over 60 characters limit!</span>
                     </td>
+                    <td>
+                        <span id="urlInputLengthError" class="errors" ng-show="form.url.$dirty && form.url.$error.maxlength">Maximum length is 255.</span>
+                        <span id="urlInputInvalidUrlError" class="errors" ng-show="form.url.$dirty && form.url.$error.url">URL is invalid.</span>
+                    </td>
                 </tr>
             </tbody>
         </table>

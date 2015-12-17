@@ -29,6 +29,8 @@ import com.denimgroup.threadfix.data.dao.GenericObjectDao;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.enums.EventAction;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -221,6 +223,7 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
         List<Event> applicationEvents = list();
         applicationEvents.addAll(eventDao.retrieveUngroupedByApplication(application));
         Collections.sort(applicationEvents, eventComparator);
+        updatePolicyLink(applicationEvents);
         return applicationEvents;
     }
 
@@ -229,6 +232,7 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
         List<Event> organizationEvents = list();
         organizationEvents.addAll(eventDao.retrieveUngroupedByOrganization(organization));
         Collections.sort(organizationEvents, eventComparator);
+        updatePolicyLink(organizationEvents);
         return organizationEvents;
     }
 
@@ -237,6 +241,7 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
         List<Event> vulnerabilityEvents = list();
         vulnerabilityEvents.addAll(eventDao.retrieveUngroupedByVulnerability(vulnerability));
         Collections.sort(vulnerabilityEvents, eventComparator);
+        updatePolicyLink(vulnerabilityEvents);
         return vulnerabilityEvents;
     }
 
@@ -246,6 +251,7 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
         userEvents.addAll(eventDao.retrieveUngroupedByUser(user));
         userEvents.addAll(eventDao.retrieveGroupedByUser(user));
         Collections.sort(userEvents, eventComparator);
+        updatePolicyLink(userEvents);
         return userEvents;
     }
 
@@ -255,6 +261,7 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
         globalEvents.addAll(eventDao.retrieveGlobalUngrouped(appIds, teamIds));
         globalEvents.addAll(eventDao.retrieveGlobalGrouped(appIds, teamIds));
         Collections.sort(globalEvents, eventComparator);
+        updatePolicyLink(globalEvents);
         return globalEvents;
     }
 
@@ -269,7 +276,15 @@ public class EventServiceImpl extends AbstractGenericObjectService<Event> implem
             recentEvents.addAll(eventDao.retrieveRecentGrouped(userGroupedEventActions, startTime, stopTime, appIds, teamIds));
         }
         Collections.sort(recentEvents, eventComparator);
+        updatePolicyLink(recentEvents);
         return recentEvents;
+    }
+
+    private void updatePolicyLink(List<Event> events) {
+        boolean canManagePolicy = EnterpriseTest.isEnterprise() && PermissionUtils.hasGlobalPermission(Permission.CAN_MANAGE_POLICIES);
+        for (Event event: events) {
+            event.setCanManagePolicy(canManagePolicy);
+        }
     }
 
 }

@@ -84,7 +84,7 @@ myAppModule.controller('ApplicationsIndexController',
 
         var loadGraph = function(team) {
 
-            $scope.searchApps(team.lastSearchString, team);
+            $scope.searchAppsInTeam(team);
 
             if (team.report == null) {
                 team.loading = true;
@@ -293,16 +293,16 @@ myAppModule.controller('ApplicationsIndexController',
             }
         };
 
-        $scope.searchApps = function(searchText, team) {
+        $scope.searchAppsInTeam = function(team) {
 
-            if (team.lastSearchString && team.lastSearchString === searchText &&
+            if ($scope.lastSearchString && $scope.lastSearchString === $scope.searchText &&
                 team.lastNumber === $scope.numAppsPerTeam &&
                 team.lastPage === team.page) {
                 return;
             }
 
             var searchObject = {
-                "searchString" : searchText,
+                "searchString" : $scope.searchText,
                 "page" : team.page,
                 "number" : $scope.numAppsPerTeam
             };
@@ -320,7 +320,6 @@ myAppModule.controller('ApplicationsIndexController',
                                 "/organizations/" + team.id + "/applications/" + application.id);
                         });
 
-                        team.lastSearchString = searchText;
                         team.lastNumber = $scope.numAppsPerTeam;
                         team.lastPage = team.page;
                     } else {
@@ -330,10 +329,23 @@ myAppModule.controller('ApplicationsIndexController',
 
         };
 
+        $scope.searchApps = function(searchText) {
+            if ($scope.lastSearchString && $scope.lastSearchString === searchText) {
+                return;
+            }
+
+            $scope.teams.forEach(function(team) {
+                team.page = 1;
+            });
+
+            $scope.expand();
+            $scope.lastSearchString = searchText;
+        };
+
 
         $scope.updatePage = function(page, searchString, team) {
             team.page = page;
-            $scope.searchApps(searchString, team);
+            $scope.searchAppsInTeam(team);
         };
 
         var updateTeam = function(oldTeam, newTeam) {

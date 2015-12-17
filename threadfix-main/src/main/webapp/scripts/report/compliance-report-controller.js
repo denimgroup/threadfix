@@ -162,32 +162,16 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
         $scope.numberVulnType = 0;
         $scope.exportInfo = {};
         $scope.exportInfo.svgId = reportType.name;
-        $scope.exportInfo.tableId = $scope.sumTableDivId + "Cmt";
         $scope.exportInfo.tags = $scope.title.tags;
         $scope.exportInfo.teams = undefined;
         $scope.exportInfo.apps = undefined;
         $scope.exportInfo.title = "Compliance_Report";
 
+        reportExporter.exportPDFTableFromId($scope, $scope.exportInfo, $scope.tableInfo, function() {
+            $scope.exportingPDF = false;
+        });
+
     };
-
-    $scope.$on("finishedRetrievingPdfExportAllTagsVuln", function(){
-        $scope.numberVulnType +=1;
-
-        // Done with loading both closed and open vulnerabilities
-        if ($scope.numberVulnType === 2) {
-            var reportType = getReportType();
-            $scope.exportInfo = {};
-            $scope.exportInfo.svgId = reportType.name;
-            $scope.exportInfo.tableId = $scope.sumTableDivId + "Cmt";
-            $scope.exportInfo.tags = $scope.title.tags;
-            $scope.exportInfo.teams = undefined;
-            $scope.exportInfo.apps = undefined;
-            $scope.exportInfo.title = "Compliance_Report";
-            reportExporter.exportPDFTableFromId($scope, $scope.exportInfo, $scope.tableInfo, function() {
-                $scope.exportingPDF = false;
-            });
-        }
-    });
 
     var getReportType = function() {
         if ($scope.$parent.complianceActive)

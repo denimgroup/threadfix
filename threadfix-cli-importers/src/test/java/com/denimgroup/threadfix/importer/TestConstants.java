@@ -80,5 +80,8 @@ public interface TestConstants {
             UNCHECKED_ERROR = "Unchecked Error Condition",
             XML_INJECTION = "XML Injection (aka Blind XPath Injection)",
             XPATH_INJECTION = GenericVulnerability.CWE_XPATH_INJECTION,
-            XSS = GenericVulnerability.CWE_CROSS_SITE_SCRIPTING;
+            XSS = GenericVulnerability.CWE_CROSS_SITE_SCRIPTING,
+            BURP_CONFIDENCE_FIRM = "Firm",
+            BURP_CONFIDENCE_CERTAIN = "Certain",
+            BURP_CONFIDENCE_TENATIVE = "Tentative";
 }

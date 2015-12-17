@@ -43,6 +43,7 @@ public class RemoteProviderType extends BaseEntity  {
     public static final String SENTINEL        = ScannerType.SENTINEL.getDisplayName();
     public static final String VERACODE        = ScannerType.VERACODE.getDisplayName();
     public static final String QUALYSGUARD_WAS = ScannerType.QUALYSGUARD_WAS.getDisplayName();
+    public static final String CONTRAST        = ScannerType.CONTRAST.getDisplayName();
 
     public static final int NAME_LENGTH    = 60;
     public static final int API_KEY_LENGTH = 1024;
@@ -271,6 +272,12 @@ public class RemoteProviderType extends BaseEntity  {
     @JsonView(AllViews.TableRow.class)
 	public boolean getIsQualys() {
 		return name != null && name.equals(QUALYSGUARD_WAS);
+	}
+
+	@Transient
+    @JsonView(AllViews.TableRow.class)
+	public boolean getIsContrast() {
+		return name != null && name.equals(CONTRAST);
 	}
 
 	@Transient

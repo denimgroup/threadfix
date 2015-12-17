@@ -144,7 +144,6 @@ public class ReportsServiceImpl implements ReportsService {
             log.info("No applications found.");
             return map;
         }
-        map.put("vulnList", vulnerabilityDao.retrieveByApplicationIdList(applicationIdList));
 
         // Portfolio report
         List<Map<String, Object>> appList = list();
@@ -176,6 +175,7 @@ public class ReportsServiceImpl implements ReportsService {
 
         return map;
     }
+
 
     @Override
     public Map<String, Object> generateMostAppsReport(VulnerabilitySearchParameters parameters, HttpServletRequest request) {

@@ -19,10 +19,11 @@ public class ContrastMockHttpUtils implements RemoteProviderHttpUtils {
             BAD_API_KEY = "bad api key",
             GOOD_SERVICE_KEY = "service key",
             BAD_SERVICE_KEY = "bad service key",
-            BASE_URL_V2 = "https://app.contrastsecurity.com/Contrast/api/",
-            BASE_URL_V3 = "https://app.contrastsecurity.com/Contrast/api/ng/",
+            BASE_URL = "https://app.contrastsecurity.com",
+            API_V2 = "/Contrast/api/",
+            API_V3 = "/Contrast/api/ng/",
             GOOD_ENCODING = "dXNlcjpzZXJ2aWNlIGtleQ==", // base64'd GOOD_USERNAME:GOOD_SERVICE_KEY
-            ORGS_URL = "/profile/organizations/",
+            ORGS_URL = "/profile/organizations/default",
             APPS_URL = "/applications",
             TRACES_URL = "/traces/",
             EVENTS_SUMMARY_URL = "/events/summary";
@@ -55,18 +56,18 @@ public class ContrastMockHttpUtils implements RemoteProviderHttpUtils {
         testHeader(get, "Authorization", GOOD_ENCODING);
         testHeader(get, "API-Key", GOOD_API_KEY);
 
-        if (url.equals(BASE_URL_V3 + ORGS_URL)) {
+        if (url.equals(BASE_URL + API_V3 + ORGS_URL)) {
             return HttpResponse.success(200, getStream("contrast/orgs.json"));
-        } else if (url.startsWith(BASE_URL_V2) && url.endsWith(APPS_URL)) {
+        } else if (url.startsWith(BASE_URL + API_V2) && url.endsWith(APPS_URL)) {
             return HttpResponse.success(200, getStream("contrast/apps.json"));
-        } else if (!url.startsWith(BASE_URL_V3) && url.startsWith(BASE_URL_V2) && url.contains(TRACES_URL)) {
+        } else if (!url.startsWith(BASE_URL + API_V3) && url.startsWith(BASE_URL + API_V2) && url.contains(TRACES_URL)) {
             String endSection = url.substring(url.indexOf(TRACES_URL) + TRACES_URL.length());
             return HttpResponse.success(200, getStream("contrast/" + endSection + ".json"));
-        } else if (url.startsWith(BASE_URL_V3) && url.endsWith(EVENTS_SUMMARY_URL)) {
+        } else if (url.startsWith(BASE_URL + API_V3) && url.endsWith(EVENTS_SUMMARY_URL)) {
             return HttpResponse.success(200, getStream("contrast/traces.json"));
         }
 
-        throw new IllegalStateException("A URL other than " + BASE_URL_V2 + " and " + BASE_URL_V3 + " was entered: " + url);
+        throw new IllegalStateException("A URL other than " + BASE_URL + API_V2 + " and " + BASE_URL + API_V3 + " was entered: " + url);
     }
 
     private void testHeader(GetMethod get, String header1, String value1) {

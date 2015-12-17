@@ -12,14 +12,16 @@
         <div ng-show="snapshotActive" id="pointInTimeDiv">
 
             <!-- Point In Time report -->
-            <d3-pointintime ng-show="pointInTimeData && reportId == PIT_Report_Id" data="pointInTimeData"
-                            label="title" export-report-id="exportInfo"></d3-pointintime>
+            <d3-point-in-time ng-if="reportId == PIT_Report_Id"
+                              data="vulnTree"
+                              <%--data="pointInTimeData"--%>
+                            label="title" average-ages = "averageAges" generic-severities = "genericSeverities"></d3-point-in-time>
 
             <!-- Vulnerability Progress By Type report -->
             <%@ include file="progressByVulnerability.jsp"%>
 
             <!-- Most Vulnerable Application -->
-            <d3-hbars ng-show="topAppsData && reportId == MVA_Report_Id" data="topAppsData" label = "title"
+            <d3-hbars ng-show="reportId == MVA_Report_Id" data="topAppsData" label = "title"
                       width="670" height="612" margin="margin" export-report-id="exportInfo"></d3-hbars>
 
             <!-- Portfolio report -->

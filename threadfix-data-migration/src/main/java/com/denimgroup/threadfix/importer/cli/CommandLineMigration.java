@@ -35,6 +35,7 @@ import java.io.*;
 import java.util.List;
 import java.util.Map;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
 
 @Component
@@ -177,14 +178,17 @@ public class CommandLineMigration {
                     System.out.println("Create new table:" + table);
                     String[] tableName = table.split("\\(", 2);
                     if (tableName.length == 2) {
-                        StringBuffer fieldsStr = new StringBuffer();
-                        String[] fields = tableName[1].trim().split(",");
-                        fieldsStr.append(fields[0].split(" ")[0]);
-                        for (int i = 1; i< fields.length; i++) {
-                            if (!"CONSTRAINT".equalsIgnoreCase(fields[i].trim().split(" ")[0]))
-                                fieldsStr.append("," + fields[i].trim().split(" ")[0]);
+                        List<String> fieldList = list();
+                        String[] fields = tableName[1].trim().replace("(", "").replace(")", "").split(",");
+                        for (int i = 0; i< fields.length; i++) {
+                            if (!"CONSTRAINT".equalsIgnoreCase(fields[i].trim().split(" ")[0])) {
+                                String field = fields[i].trim().split(" ")[0].replace("\"", "");
+                                if (!fieldList.contains(field))
+                                    fieldList.add(field);
+                            }
                         }
-                        tableMap.put(tableName[0].toUpperCase(), "(" + fieldsStr.toString() + ")");
+                        String fieldsStr = org.apache.commons.lang3.StringUtils.join(fieldList, ",");
+                        tableMap.put(tableName[0].toUpperCase(), "(" + fieldsStr + ")");
                     }
                 } else if (line != null && line.toUpperCase().startsWith("INSERT INTO ")) {
                     table = RegexUtils.getRegexResult(line, INSERT_PATTERN).toUpperCase();

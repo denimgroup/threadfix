@@ -64,6 +64,8 @@ public class Event extends AuditableEntity {
 
     private Long groupCount;
 
+    private boolean canManagePolicy = true;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     @JsonView({ AllViews.HistoryView.class})
@@ -610,14 +612,14 @@ public class Event extends AuditableEntity {
                 appendDefectLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
-            case ACCEPTANCE_CRITERIA_PASSING:
+            case POLICY_PASSING:
                 description.append(getUserName()).append(" caused Application");
                 appendApplicationLink(description, descriptionUrlMap, historyView);
                 description.append(" to pass Policy");
                 appendPolicyLink(description, descriptionUrlMap, historyView);
                 description.append(".");
                 break;
-            case ACCEPTANCE_CRITERIA_FAILING:
+            case POLICY_FAILING:
                 description.append(getUserName()).append(" caused Application");
                 appendApplicationLink(description, descriptionUrlMap, historyView);
                 description.append(" to fail Policy");
@@ -783,9 +785,10 @@ public class Event extends AuditableEntity {
     }
 
     private String buildPolicyLink(Policy policy, String linkText, Map<String, Object> urlMap) {
-        if ((policy == null) || (!policy.isActive())) {
+        if ((policy == null) || (!policy.isActive()) || !isCanManagePolicy()) {
             return linkText;
         }
+
         String urlString = "/configuration/policies";
         return buildLink(urlString, linkText, urlMap);
     }
@@ -806,5 +809,15 @@ public class Event extends AuditableEntity {
 
     private enum HistoryView {
         ORGANIZATION_HISTORY, APPLICATION_HISTORY, VULNERABILITY_HISTORY, USER_HISTORY;
+    }
+
+    @Transient
+    @JsonIgnore
+    public boolean isCanManagePolicy() {
+        return canManagePolicy;
+    }
+
+    public void setCanManagePolicy(boolean canManagePolicy) {
+        this.canManagePolicy = canManagePolicy;
     }
 }

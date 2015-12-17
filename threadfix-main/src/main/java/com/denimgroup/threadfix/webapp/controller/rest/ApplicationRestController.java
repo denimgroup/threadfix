@@ -315,12 +315,12 @@ public class ApplicationRestController extends TFRestController {
      *
      * @return Status response. We may change this to make it more useful.
      */
-    @RequestMapping(headers="Accept=application/json", value="/{appId}/upload", method=RequestMethod.POST)
+    @RequestMapping(headers="Accept=application/json", value="/{appId}/upload/multi", method=RequestMethod.POST)
     @JsonView(AllViews.RestViewScan2_1.class)
-    public Object uploadScan(@PathVariable("appId") int appId,
+    public Object uploadScans(@PathVariable("appId") int appId,
                              HttpServletRequest request,
                              MultipartRequest multiPartRequest) throws IOException {
-        LOG.info("Received REST request to upload a scan to application " + appId + ".");
+        LOG.info("Received REST request to upload multiple scans to application " + appId + ".");
 
         Result<String> keyCheck = checkKey(request, APPLICATION_UPLOAD, -1, appId);
         if (!keyCheck.success()) {
@@ -344,6 +344,34 @@ public class ApplicationRestController extends TFRestController {
 
         return uploadScanService.processMultiFileUpload(fileList, null, appId, request.getParameter("channelId"), false);
     }
+
+    /**
+     * Allows the user to upload a scan to an existing application channel.
+     *
+     * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#uploadScan(String, String)
+     *
+     * @return Status response. We may change this to make it more useful.
+     */
+    @RequestMapping(headers="Accept=application/json", value="/{appId}/upload", method=RequestMethod.POST)
+    @JsonView(AllViews.RestViewScan2_1.class)
+    public Object uploadScan(@PathVariable("appId") int appId,
+                             HttpServletRequest request,
+                             @RequestParam("file") MultipartFile file) throws IOException {
+        LOG.info("Received REST request to upload a scan to application " + appId + ".");
+
+        Result<String> keyCheck = checkKey(request, APPLICATION_UPLOAD, -1, appId);
+        if (!keyCheck.success()) {
+            return resultError(keyCheck);
+        }
+
+        Application application = applicationService.loadApplication(appId);
+        if (application == null) {
+            return failure("Invalid application ID.");
+        }
+
+        return uploadScanService.processMultiFileUpload(list(file), null, appId, request.getParameter("channelId"), false);
+    }
+
 
     /**
      * Overwrites the WAF for the application.

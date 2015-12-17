@@ -3,6 +3,7 @@
 <head>
   <title>Manage Filters</title>
   <cbs:cachebustscript src="/scripts/vulnerability-filters-controller.js"/>
+  <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
   <cbs:cachebustscript src="/scripts/mappings-page-controller.js"/>
   <cbs:cachebustscript src="/scripts/scan-unmapped-finding-table-controller.js"/>
 </head>

@@ -156,4 +156,36 @@ public class HibernateStatisticsCounterDao
         return (List<Map<String, Object>>) idsMap;
     }
 
+    @Override
+    public void deleteByFindingId(Integer findingId) {
+        List<StatisticsCounter> counters = (List<StatisticsCounter>)getSession().createCriteria(StatisticsCounter.class)
+                .add(eq("finding.id", findingId))
+                .list();
+
+        for (StatisticsCounter counter: counters) {
+            getSession().delete(counter);
+        }
+    }
+
+    @Override
+    public void deleteByVulnId(Integer vulnId) {
+        if (vulnId == null)
+            return;
+        List<StatisticsCounter> counters = (List<StatisticsCounter>)getSession().createCriteria(StatisticsCounter.class)
+                .add(eq("vulnerabilityId", vulnId))
+                .list();
+
+        for (StatisticsCounter counter: counters) {
+            getSession().delete(counter);
+        }
+
+    }
+
+    @Override
+    public List<StatisticsCounter> retrieveByVulnId(Integer vulnId) {
+        return (List<StatisticsCounter>)getSession().createCriteria(StatisticsCounter.class)
+                .add(eq("vulnerabilityId", vulnId))
+                .list();
+    }
+
 }

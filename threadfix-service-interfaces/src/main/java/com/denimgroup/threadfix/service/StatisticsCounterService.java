@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 
 import java.util.List;
@@ -37,4 +38,6 @@ public interface StatisticsCounterService {
     void checkStatisticsCounters();
 
     void checkStatisticsCountersInApps(List<Integer> appIds);
+
+    void updateFindingCounter(Finding finding, Integer oldVulnId);
 }

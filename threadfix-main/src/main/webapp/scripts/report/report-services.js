@@ -220,45 +220,13 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
 
         $scope.exportingPDF = true;
 
-        //Retrieving table data
-        vulnSearchParameterService.updateParameters($scope, parameters);
-        var isDISASTIG = parameters.isDISASTIG;
-
-        $http.post(tfEncoder.encode("/reports/search/export/pdf"), parameters).
-            success(function(data, status, headers, config) {
-                if (data.success) {
-                    var exportList = [];
-                    data.object.elementList.forEach(function(elementObj){
-                        var element = elementObj.element;
-                        var info = elementObj.info;
-                        element.vulns = info.vulns;
-                        element.vulnCount = info.vulnCount;
-                        exportList.push(element);
-                    });
-                    $scope.exportVulnTree = vulnTreeTransformer.transform({tree: exportList, severities: data.object.severities}, parameters.owasp, isDISASTIG ? $scope.DISA_STIG : undefined);
-                    //$scope.$apply();
-
-                    reportExporter.exportPDFTableFromId($scope, exportInfo, null, function() {
-                        $scope.exportingPDF = false;
-                        $scope.exportVulnTree = null;
-                    });
-
-                } else if (data.message) {
-                    $scope.errorMessage = "Failure. Message was : " + data.message;
-                    $scope.exportingPDF = false;
-                }
-
-            }).
-            error(function(data, status, headers, config) {
-                $log.info("Got " + status + " back.");
-                $scope.errorMessage = "Failed to retrieve vulnerability tree. HTTP status was " + status;
-                $scope.exportingPDF = false;
-            });
+        reportExporter.exportPDFTableFromId($scope, exportInfo, null, function () {
+            $scope.exportingPDF = false;
+        });
 
     };
 
     reportExporter.exportPDFTableFromId = function($scope, exportIds, tableData, cleanup) {
-
         if (checkOldIE()) {
             alert(browerErrMsg);
             return;
@@ -307,7 +275,6 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
     };
 
     var addSvgToPdf = function($scope, pdf, graphId, continueBuildingPdf) {
-
         if (graphId) {
             var svg = selectSvg(graphId);
             var node = svg
@@ -1075,6 +1042,35 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities, customSev
 
     };
 
+    trendingUtilities.filterByUniqueId = function(originalCol, filteredAppIds) {
+        return originalCol.filter(function (scan) {
+            if (filteredAppIds.length === 0)
+                return true
+
+            for (var k = 0; k < filteredAppIds.length; k++) {
+                if (scan.app.id === filteredAppIds[k]) {
+                    return true;
+                }
+            }
+
+            return false;
+        });
+    };
+
+    trendingUtilities.getFilteredAppsByUniqueId = function(filteredUniqueIds, uniqueIdMap) {
+        var filteredAppIds = [];
+
+        for(var i = 0; i < filteredUniqueIds.length; i++) {
+            for (var j = 0; j < uniqueIdMap.length; j++) {
+                if (filteredUniqueIds[i].name === uniqueIdMap[j].uniqueId) {
+                    filteredAppIds.push(uniqueIdMap[j].appId);
+                }
+            }
+        }
+
+        return filteredAppIds;
+    };
+
     trendingUtilities.filterByTag = function(originalCol, tags) {
 
         return originalCol.filter(function(scan){
@@ -1143,6 +1139,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities, customSev
             $scope.parameters = {
                 teams: [],
                 applications: [],
+                uniqueIds: [],
                 tags: [],
                 severities: {
                     info: true,

@@ -130,7 +130,7 @@
                                         </li>
                                     </security:authorize>
 
-                                    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS">
+                                    <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_CAN_MANAGE_SCAN_RESULT_FILTERS">
                                         <li class="normalLinks">
                                             <a id="customizeScannerSeveritiesLink" href="<spring:url value="/customize/scannerSeverities" htmlEscape="true"/>">Scanner Severities</a>
                                         </li>

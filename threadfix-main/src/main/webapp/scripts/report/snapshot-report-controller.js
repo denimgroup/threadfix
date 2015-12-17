@@ -1,7 +1,7 @@
 var module = angular.module('threadfix');
 
 module.controller('SnapshotReportController', function($scope, $rootScope, $window, $http, tfEncoder, vulnSearchParameterService,
-                                                       reportUtilities, reportExporter, customSeverityService) {
+                                                       reportUtilities, reportExporter, customSeverityService, $log) {
 
     $scope.parameters = {};
     $scope.noData = false;
@@ -349,58 +349,48 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
         $scope.noData = false;
 
-        if (!$scope.allVulns) {
-            $scope.loading = true;
-            $scope.reportId = ($scope.$parent.reportId && $scope.$parent.reportId !== 9) ? $scope.$parent.reportId : $scope.PIT_Report_Id;
-            $http.post(tfEncoder.encode("/reports/snapshot"), $scope.getReportParameters()).
-                success(function(data) {
-                    $scope.loading = false;
-                    $scope.resetFilters();
-                    $scope.allVulns = data.object.vulnList;
-                    $scope.allPortfolioApps = data.object.appList;
+        $scope.loading = true;
+        $scope.reportId = ($scope.$parent.reportId && $scope.$parent.reportId !== 9) ? $scope.$parent.reportId : $scope.PIT_Report_Id;
+        $http.post(tfEncoder.encode("/reports/snapshot"), $scope.getReportParameters()).
+            success(function(data) {
+                $scope.loading = false;
+                $scope.resetFilters();
+                $scope.allPortfolioApps = data.object.appList;
 
-                    $scope.tags = data.object.tags;
-                    $scope.vulnTags = data.object.vulnTags;
+                $scope.tags = data.object.tags;
+                $scope.vulnTags = data.object.vulnTags;
 
-                    $scope.appTagMatrix = [];
-                    $scope.allPortfolioApps.forEach(function(app) {
-                        var tagMatrix = $scope.appTagMatrix[app.appId];
-                        if (typeof tagMatrix == "undefined") {
-                            tagMatrix = [];
-                            $scope.appTagMatrix[app.appId] = tagMatrix;
-                        }
-                        app.tags.forEach(function(tag) {
-                            tagMatrix[tag.name] = true;
-                        });
+                $scope.appTagMatrix = [];
+                $scope.allPortfolioApps.forEach(function(app) {
+                    var tagMatrix = $scope.appTagMatrix[app.appId];
+                    if (typeof tagMatrix == "undefined") {
+                        tagMatrix = [];
+                        $scope.appTagMatrix[app.appId] = tagMatrix;
+                    }
+                    app.tags.forEach(function(tag) {
+                        tagMatrix[tag.name] = true;
                     });
-
-                    if ($scope.$parent.teamId !== -1 && $scope.$parent.applicationId === -1) {
-                        $scope.parameters.teams = [$scope.$parent.team];
-                        $scope.parameters.applications = [];
-                        $scope.$broadcast("updateBackParameters", $scope.parameters);
-                    }
-                    if ($scope.$parent.applicationId !== -1) {
-                        var app = angular.copy($scope.$parent.application);
-                        app.name = $scope.$parent.team.name + " / " + app.name;
-                        $scope.parameters.applications = [app];
-                        $scope.parameters.teams = [];
-                        $scope.$broadcast("updateBackParameters", $scope.parameters);
-                    }
-
-                    if ($scope.allVulns) {
-                        // Point In Time is default report for Snapshot
-                        $scope.allPointInTimeVulns = $scope.allVulns.filter(function(vuln){
-                            return vuln.active;
-                        });
-                        refresh();
-                    } else {
-                        $scope.noData = true;
-                    };
-                })
-                .error(function() {
-                    $scope.loading = false;
                 });
-        }
+
+                $scope.genericSeverities = customSeverityService.getGenericSeverities();
+
+                if ($scope.$parent.teamId !== -1 && $scope.$parent.applicationId === -1) {
+                    $scope.parameters.teams = [$scope.$parent.team];
+                    $scope.parameters.applications = [];
+                    $scope.$broadcast("updateBackParameters", $scope.parameters);
+                }
+                if ($scope.$parent.applicationId !== -1) {
+                    var app = angular.copy($scope.$parent.application);
+                    app.name = $scope.$parent.team.name + " / " + app.name;
+                    $scope.parameters.applications = [app];
+                    $scope.parameters.teams = [];
+                    $scope.$broadcast("updateBackParameters", $scope.parameters);
+                }
+                refresh();
+            })
+            .error(function() {
+                $scope.loading = false;
+            });
 
         $scope.$parent.snapshotActive = true;
         $scope.$parent.complianceActive = false;
@@ -419,12 +409,9 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             return;
         $scope.parameters = angular.copy(parameters);
         if ($scope.reportId === $scope.PIT_Report_Id) {
-            filterPITBySeverity();
             updateTree();
         } else if ($scope.reportId === $scope.PBV_Report_Id) {
-            $scope.filterVulns = filterByTag(filterByTeamAndApp($scope.allCWEvulns));
-            filterPBVBySeverity($scope.filterVulns);
-            processPBVData($scope.filterVulns);
+            processPBVData();
         } else if ($scope.reportId === $scope.MVA_Report_Id) {
             filterMVABySeverity();
         } else if ($scope.reportId === $scope.OWASP_Report_Id) {
@@ -432,8 +419,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         } else if ($scope.reportId === $scope.DISA_STIG_Report_Id) {
             processDisaStigData();
         } else if ($scope.reportId === $scope.Scan_Comparison_Summary_Id) {
-            $scope.filterVulns = filterByTag(filterByTeamAndApp($scope.allComparisonVulns));
-            processScanComparisonData($scope.filterVulns);
+            processScanComparisonData();
         }
     });
 
@@ -450,7 +436,28 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         $scope.title.appsList = $scope.parameters.applications;
 
         $scope.$broadcast("refreshVulnSearchTree", $scope.parameters);
+        updateAverageAge($scope.parameters);
         $scope.parameters = _parameters;
+    };
+
+    var updateAverageAge = function(parameters) {
+        $scope.loading = true;
+        $scope.averageAges = undefined;
+        $http.post(tfEncoder.encode("/reports/snapshot/averageAge"), parameters).
+        success(function(data, status, headers, config) {
+            if (data.success) {
+                $scope.averageAges = data.object.averageAges;
+            } else if (data.message) {
+                $scope.errorMessage = "Failure. Message was : " + data.message;
+            }
+
+            $scope.loading = false;
+        }).
+        error(function(data, status, headers, config) {
+            $log.info("Got " + status + " back.");
+            $scope.errorMessage = "Failed to retrieve vulnerability tree. HTTP status was " + status;
+            $scope.loading = false;
+        });
     };
 
     $scope.loadReport = function() {
@@ -463,38 +470,11 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
         // Progress By Vulnerability report
         if ($scope.reportId === $scope.PBV_Report_Id) {
-            if (!$scope.allCWEvulns) {
-                $scope.allCWEvulns = $scope.allVulns.filter(function (vuln) {
-                    if (!vuln.genericVulnName || vuln.isFalsePositive || vuln.hidden)
-                        return false;
-                    else
-                        return true;
-                });
-
-                if (!$scope.allCWEvulns) {
-                    $scope.noData = true;
-                } else {
-                    $scope.filterVulns = filterByTag(filterByTeamAndApp($scope.allCWEvulns));
-                    filterPBVBySeverity($scope.filterVulns);
-                    processPBVData($scope.filterVulns);
-                }
-            } else {
-                $scope.filterVulns = filterByTag(filterByTeamAndApp($scope.allCWEvulns));
-                filterPBVBySeverity($scope.filterVulns);
-                processPBVData($scope.filterVulns);
-            }
+            processPBVData();
         }
         // Point In Time report
         else if ($scope.reportId === $scope.PIT_Report_Id) {
-
-            if (!$scope.allPointInTimeVulns) {
-                $scope.noData = true;
-            } else {
-                $scope.filterVulns = filterByTag(filterByTeamAndApp($scope.allPointInTimeVulns));
-                updateTree();
-                processPITData();
-                filterPITBySeverity();
-            }
+            updateTree();
         }
         // Most Vulnerable Applications report
         else if ($scope.reportId === $scope.MVA_Report_Id) {
@@ -515,95 +495,52 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         }
         // Scan Comparison (including HAM Effectiveness) report
         else if ($scope.reportId === $scope.Scan_Comparison_Summary_Id) {
-            loadScannerComparison();
+            processScanComparisonData();
         }
     };
 
-    var processPBVData = function(allCWEvulns) {
+    var processPBVData = function() {
         $scope.progressByTypeData = [];
-        var statsMap = {};
-        var now = (new Date()).getTime();
+        var parameters = angular.copy($scope.parameters);
+        $scope.hideTitle = false;
+        vulnSearchParameterService.updateParameters($scope, parameters);
 
-        allCWEvulns.forEach(function(vuln){
-            var key = vuln.genericVulnName;
-            var cweNum = vuln.genericVulnDisplayId;
-            if (!statsMap[key]) {
-                statsMap[key] = {
-                    numOpen : 0,
-                    numClosed : 0,
-                    totalAgeOpen : 0,
-                    totalTimeToClose : 0
-                }
-            }
-            statsMap[key]["displayId"] = cweNum;
-            if (vuln.active) {
-                statsMap[key]["numOpen"] = statsMap[key]["numOpen"] + 1;
-                statsMap[key]["totalAgeOpen"] = statsMap[key]["totalAgeOpen"] + getDates(now, vuln.importTime);
-            } else {
-                statsMap[key]["numClosed"] = statsMap[key]["numClosed"] + 1;
+        if (!$scope.title)
+            $scope.title = {};
+        $scope.title.tagsList = parameters.tags;
+        $scope.title.vulnTagsList = parameters.vulnTags;
+        $scope.title.teamsList = parameters.teams;
+        $scope.title.appsList = parameters.applications;
 
-                //If there is no information about Close Time, then will default Close Time is Today
-                statsMap[key]["totalTimeToClose"] = statsMap[key]["totalTimeToClose"] + getDates((vuln.closeTime) ? vuln.closeTime : now, vuln.importTime);
+        $scope.loadingPBV = true;
+        $http.post(tfEncoder.encode("/reports/snapshot/progressByType"), parameters).
+        success(function(data, status, headers, config) {
+            if (data.success) {
+                $scope.progressByTypeData = data.object;
+
+                // Sorting by Total is default
+                $scope.$parent.setSortNumber($scope.progressByTypeData, "total");
+            } else if (data.message) {
+                $scope.errorMessage = "Failure. Message was : " + data.message;
             }
+
+            $scope.loadingPBV = false;
+        }).
+        error(function(data, status, headers, config) {
+            $log.info("Got " + status + " back.");
+            $scope.errorMessage = "Failed to retrieve vulnerability tree. HTTP status was " + status;
+            $scope.loadingPBV = false;
         });
 
-        var keys = Object.keys(statsMap);
-        keys.forEach(function(key){
-            var mapEntry = statsMap[key];
-            var genericVulnEntry = {
-                total : mapEntry["numOpen"] + mapEntry["numClosed"],
-                description : key,
-                displayId: mapEntry["displayId"]
-            };
-
-            genericVulnEntry.percentClosed = (genericVulnEntry.total === 0) ? 100 : getPercentNumber(mapEntry["numClosed"]/genericVulnEntry.total);
-            genericVulnEntry.averageAgeOpen = (mapEntry["numOpen"] === 0) ? 0 : Math.round(mapEntry["totalAgeOpen"]/mapEntry["numOpen"]);
-            genericVulnEntry.averageTimeToClose = (mapEntry["numClosed"] === 0) ? 0 : Math.round(mapEntry["totalTimeToClose"]/mapEntry["numClosed"]);
-
-            $scope.progressByTypeData.push(genericVulnEntry);
-        });
-
-        // Sorting by Total is default
-        $scope.$parent.setSortNumber($scope.progressByTypeData, "total");
     };
-
-    var filterPBVBySeverity = function(allVulns) {
-        $scope.filterVulns = allVulns.filter(function(vuln){
-            if ( $scope.parameters.severities.critical
-              || $scope.parameters.severities.high
-              || $scope.parameters.severities.medium
-              || $scope.parameters.severities.low
-              || $scope.parameters.severities.info) {
-                if ("Critical" === vuln.severity) {
-                    return $scope.parameters.severities.critical;
-                } else if ("High" === vuln.severity) {
-                    return $scope.parameters.severities.high;
-                } else if ("Medium" === vuln.severity) {
-                    return $scope.parameters.severities.medium;
-                } else if ("Low" === vuln.severity) {
-                    return $scope.parameters.severities.low;
-                } else if ("Info" === vuln.severity) {
-                    return $scope.parameters.severities.info;
-                }
-                return false;
-            } else {
-                return true;
-            }
-        });
-    }
 
     var refresh = function(){
         reportUtilities.createTeamAppNames($scope);
 
         if ($scope.reportId === $scope.PIT_Report_Id) {
-            $scope.filterVulns = filterByTag(filterByTeamAndApp($scope.allPointInTimeVulns));
             updateTree();
-            processPITData();
-            filterPITBySeverity();
         } else if ($scope.reportId === $scope.PBV_Report_Id) {
-            $scope.filterVulns = filterByTag(filterByTeamAndApp($scope.allCWEvulns));
-            filterPBVBySeverity($scope.filterVulns);
-            processPBVData($scope.filterVulns);
+            processPBVData();
         } else if ($scope.reportId === $scope.MVA_Report_Id) {
             processMVAData();
         } else if ($scope.reportId === $scope.OWASP_Report_Id) {
@@ -614,170 +551,9 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         } else if ($scope.reportId === $scope.DISA_STIG_Report_Id) {
             processDisaStigData();
         } else if ($scope.reportId === $scope.Scan_Comparison_Summary_Id) {
-            $scope.filterVulns = filterByTag(filterByTeamAndApp($scope.allComparisonVulns));
-            processScanComparisonData($scope.filterVulns);
+            processScanComparisonData();
         }
 
-        $scope.noData = $scope.filterVulns.length === 0;
-
-    };
-
-    var processPITData = function() {
-
-        var customCritical = customSeverityService.getCustomSeverity('Critical');
-        var customHigh = customSeverityService.getCustomSeverity('High');
-        var customMedium = customSeverityService.getCustomSeverity('Medium');
-        var customLow = customSeverityService.getCustomSeverity('Low');
-        var customInfo = customSeverityService.getCustomSeverity('Info');
-
-        $scope.data = {};
-        $scope.data[customCritical] = {
-            Severity: customCritical,
-            Count: 0,
-            Avg_Age: 0,
-            Percentage: '0%'
-        };
-        $scope.data[customHigh] = {
-            Severity: customHigh,
-            Count: 0,
-            Avg_Age: 0,
-            Percentage: '0%'
-        };
-        $scope.data[customMedium] = {
-            Severity: customMedium,
-            Count: 0,
-            Avg_Age: 0,
-            Percentage: '0%'
-        };
-        $scope.data[customLow] = {
-            Severity: customLow,
-            Count: 0,
-            Avg_Age: 0,
-            Percentage: '0%'
-        };
-        $scope.data[customInfo] = {
-            Severity: customInfo,
-            Count: 0,
-            Avg_Age: 0,
-            Percentage: '0%'
-        };
-
-        var highAgeSum = 0,
-            mediumAgeSum = 0,
-            criticalAgeSum = 0,
-            lowAgeSum = 0,
-            infoAgeSum = 0,
-            totalCount = 0;
-
-        var now = (new Date()).getTime();
-
-        $scope.filterVulns.forEach(function(vuln){
-            if ("High" === vuln.severity) {
-                $scope.data[customHigh].Count += 1;
-                highAgeSum += getDates(now, vuln.importTime);
-            } else if ("Medium" === vuln.severity) {
-                $scope.data[customMedium].Count += 1;
-                mediumAgeSum += getDates(now, vuln.importTime);
-            } else if ("Critical" === vuln.severity) {
-                $scope.data[customCritical].Count += 1;
-                criticalAgeSum += getDates(now, vuln.importTime);
-            } else if ("Low" === vuln.severity) {
-                $scope.data[customLow].Count += 1;
-                lowAgeSum += getDates(now, vuln.importTime);
-            } else if ("Info" === vuln.severity) {
-                $scope.data[customInfo].Count += 1;
-                infoAgeSum += getDates(now, vuln.importTime);
-            }
-        });
-
-        totalCount =
-            $scope.data[customHigh].Count +
-            $scope.data[customMedium].Count +
-            $scope.data[customCritical].Count +
-            $scope.data[customLow].Count +
-            $scope.data[customInfo].Count;
-
-        if (totalCount !== 0) {
-            $scope.data[customCritical].Percentage = getPercent($scope.data[customCritical].Count/totalCount);
-            $scope.data[customHigh].Percentage = getPercent($scope.data[customHigh].Count/totalCount);
-            $scope.data[customMedium].Percentage = getPercent($scope.data[customMedium].Count/totalCount);
-            $scope.data[customLow].Percentage = getPercent($scope.data[customLow].Count/totalCount);
-            $scope.data[customInfo].Percentage = getPercent($scope.data[customInfo].Count/totalCount);
-        }
-
-        $scope.data[customHigh].Avg_Age = ($scope.data[customHigh].Count !== 0) ? Math.round(highAgeSum/$scope.data[customHigh].Count) : 0;
-        $scope.data[customCritical].Avg_Age = ($scope.data[customCritical].Count !== 0) ? Math.round(criticalAgeSum/$scope.data[customCritical].Count) : 0;
-        $scope.data[customMedium].Avg_Age = ($scope.data[customMedium].Count !== 0) ? Math.round(mediumAgeSum/$scope.data[customMedium].Count) : 0;
-        $scope.data[customLow].Avg_Age = ($scope.data[customLow].Count !== 0) ? Math.round(lowAgeSum/$scope.data[customLow].Count) : 0;
-        $scope.data[customInfo].Avg_Age = ($scope.data[customInfo].Count !== 0) ? Math.round(infoAgeSum/$scope.data[customInfo].Count) : 0;
-
-    };
-
-    var filterPITBySeverity = function() {
-
-        var customCritical = customSeverityService.getCustomSeverity('Critical');
-        var customHigh = customSeverityService.getCustomSeverity('High');
-        var customMedium = customSeverityService.getCustomSeverity('Medium');
-        var customLow = customSeverityService.getCustomSeverity('Low');
-        var customInfo = customSeverityService.getCustomSeverity('Info');
-
-        if ( $scope.parameters.severities.critical
-          || $scope.parameters.severities.high
-          || $scope.parameters.severities.medium
-          || $scope.parameters.severities.low
-          || $scope.parameters.severities.info) {
-            var criticalCount = $scope.parameters.severities.critical ? $scope.data[customCritical].Count : 0;
-            var highCount = $scope.parameters.severities.high ? $scope.data[customHigh].Count : 0;
-            var mediumCount = $scope.parameters.severities.medium ? $scope.data[customMedium].Count : 0;
-            var lowCount = $scope.parameters.severities.low ? $scope.data[customLow].Count : 0;
-            var infoCount = $scope.parameters.severities.info ? $scope.data[customInfo].Count : 0;
-        } else {
-            var criticalCount = $scope.data[customCritical].Count;
-            var highCount = $scope.data[customHigh].Count;
-            var mediumCount = $scope.data[customMedium].Count;
-            var lowCount = $scope.data[customLow].Count;
-            var infoCount = $scope.data[customInfo].Count;
-        }
-        var totalCount = criticalCount + highCount + mediumCount + lowCount + infoCount;
-
-        if (totalCount !== 0) {
-            $scope.data[customCritical].Percentage = getPercent($scope.data[customCritical].Count/totalCount);
-            $scope.data[customHigh].Percentage = getPercent($scope.data[customHigh].Count/totalCount);
-            $scope.data[customMedium].Percentage = getPercent($scope.data[customMedium].Count/totalCount);
-            $scope.data[customLow].Percentage = getPercent($scope.data[customLow].Count/totalCount);
-            $scope.data[customInfo].Percentage = getPercent($scope.data[customInfo].Count/totalCount);
-        }
-
-        $scope.pointInTimeData = {};
-        if ( $scope.parameters.severities.critical
-            || $scope.parameters.severities.high
-            || $scope.parameters.severities.medium
-            || $scope.parameters.severities.low
-            || $scope.parameters.severities.info) {
-            if ($scope.parameters.severities.critical)
-                $scope.pointInTimeData[customCritical] = $scope.data[customCritical];
-            if ($scope.parameters.severities.high)
-                $scope.pointInTimeData[customHigh] = $scope.data[customHigh];
-            if ($scope.parameters.severities.medium)
-                $scope.pointInTimeData[customMedium] = $scope.data[customMedium];
-            if ($scope.parameters.severities.low)
-                $scope.pointInTimeData[customLow] = $scope.data[customLow];
-            if ($scope.parameters.severities.info)
-                $scope.pointInTimeData[customInfo] = $scope.data[customInfo];
-        } else {
-            $scope.pointInTimeData[customCritical] = $scope.data[customCritical];
-            $scope.pointInTimeData[customHigh] = $scope.data[customHigh];
-            $scope.pointInTimeData[customMedium] = $scope.data[customMedium];
-            $scope.pointInTimeData[customLow] = $scope.data[customLow];
-            $scope.pointInTimeData[customInfo] = $scope.data[customInfo];
-        }
-
-        $scope.pointInTimeData.genericSeverities = customSeverityService.getGenericSeverities();
-
-    };
-
-    var getDates = function(firstTime, secondTime) {
-        return Math.round((firstTime - secondTime) / (1000 * 3600 * 24));
     };
 
     var getPercent = function(rate) {
@@ -1077,10 +853,10 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
         $scope.topAppsData.forEach(function(app) {
             if ($scope.parameters.severities.critical
-              || $scope.parameters.severities.high
-              || $scope.parameters.severities.medium
-              || $scope.parameters.severities.low
-              || $scope.parameters.severities.info) {
+                || $scope.parameters.severities.high
+                || $scope.parameters.severities.medium
+                || $scope.parameters.severities.low
+                || $scope.parameters.severities.info) {
                 if (!$scope.parameters.severities.critical)
                     app[customSeverityService.getCustomSeverity("Critical")] = 0;
                 if (!$scope.parameters.severities.high)
@@ -1100,70 +876,39 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         })
     };
 
-    var loadScannerComparison = function(){
-        if (!$scope.allComparisonVulns) {
-            $scope.allComparisonVulns = $scope.allVulns.filter(function (vuln) {
-                if (!vuln || (!vuln.isFalsePositive && !vuln.hidden && !vuln.active))
-                    return false;
-                else
-                    return true;
-            });
+    var processScanComparisonData = function() {
 
-            if (!$scope.allComparisonVulns) {
-                $scope.noData = true;
-            } else {
-                $scope.filterVulns = filterByTag(filterByTeamAndApp($scope.allComparisonVulns));
-                filterPBVBySeverity($scope.filterVulns);
-                processScanComparisonData($scope.filterVulns);
-            }
-        } else {
-            $scope.filterVulns = filterByTag(filterByTeamAndApp($scope.allComparisonVulns));
-            processScanComparisonData($scope.filterVulns);
-        }
-    };
-
-    var processScanComparisonData = function(allScanComparisonvulns) {
         $scope.scannerComparisonData = [];
-        $scope.totalVuln = 0;
-        var scannerFPCountMap = {}, scannerVulnCountMap = {}, scannerHAMCountMap = {};
+        var parameters = angular.copy($scope.parameters);
+        $scope.hideTitle = false;
+        vulnSearchParameterService.updateParameters($scope, parameters);
 
-        filterPBVBySeverity(allScanComparisonvulns);
+        if (!$scope.title)
+            $scope.title = {};
+        $scope.title.tagsList = parameters.tags;
+        $scope.title.vulnTagsList = parameters.vulnTags;
+        $scope.title.teamsList = parameters.teams;
+        $scope.title.appsList = parameters.applications;
 
-        $scope.filterVulns.forEach(function(vuln) {
-            if (!vuln.isFalsePositive)
-                $scope.totalVuln++;
-            vuln.channelNames.unique().forEach(function(channel) {
-                if (!scannerVulnCountMap[channel]) {
-                    scannerFPCountMap[channel] = 0;
-                    scannerVulnCountMap[channel] = 0;
-                    scannerHAMCountMap[channel] = 0;
-                }
-                if (vuln.isFalsePositive)
-                    scannerFPCountMap[channel] = scannerFPCountMap[channel] + 1;
-                else {
-                    scannerVulnCountMap[channel] = scannerVulnCountMap[channel] + 1;
-                    if (vuln.foundHAMEndpoint)
-                        scannerHAMCountMap[channel] = scannerHAMCountMap[channel] + 1;
-                }
-            });
-        });
+        $scope.loadingScanComparison = true;
+        $http.post(tfEncoder.encode("/reports/snapshot/scanComparison"), parameters).
+        success(function(data, status, headers, config) {
+            if (data.success) {
+                $scope.scannerComparisonData = data.object.channelsInfo;
+                $scope.totalVuln = data.object.totalVuln;
+                $scope.scannerComparisonData.sort(function(c1, c2){
+                    return c2.foundCount - c1.foundCount;
+                });
+            } else if (data.message) {
+                $scope.errorMessage = "Failure. Message was : " + data.message;
+            }
 
-        var allChannels = Object.keys(scannerVulnCountMap);
-        allChannels.sort(function(c1, c2){
-            return scannerVulnCountMap[c2] - scannerVulnCountMap[c1];
-        });
-
-        allChannels.forEach(function(channel){
-            var channelEntry = {
-                channnelName: channel,
-                foundCount: scannerVulnCountMap[channel],
-                foundPercent: getPercent(scannerVulnCountMap[channel]/$scope.totalVuln),
-                fpCount: scannerFPCountMap[channel],
-                fpPercent: getPercent(scannerFPCountMap[channel]/scannerVulnCountMap[channel]),
-                HAMCount: scannerHAMCountMap[channel],
-                HAMPercent: getPercent(scannerHAMCountMap[channel]/$scope.totalVuln)
-            };
-            $scope.scannerComparisonData.push(channelEntry);
+            $scope.loadingScanComparison = false;
+        }).
+        error(function(data, status, headers, config) {
+            $log.info("Got " + status + " back.");
+            $scope.errorMessage = "Failed to retrieve vulnerability tree. HTTP status was " + status;
+            $scope.loadingScanComparison = false;
         });
 
     };
@@ -1189,21 +934,6 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             }
         }
         return arr;
-    };
-
-    $scope.exportPNG = function(isPDF){
-
-        if (!$scope.exportInfo) {
-            $scope.exportInfo = {
-                id: $scope.reportId
-            }
-        } else {
-            if ($scope.exportInfo.id  === $scope.reportId)
-                $scope.exportInfo.id  = "" +  $scope.reportId;
-            else
-                $scope.exportInfo.id  = $scope.reportId;
-        }
-        $scope.exportInfo.isPDF = isPDF;
     };
 
     $scope.exportPDF = function() {

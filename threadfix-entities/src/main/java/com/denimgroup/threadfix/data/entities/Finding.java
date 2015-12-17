@@ -54,6 +54,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	public static final int SCANNER_RECOMMENDATION_LENGTH = 1048575;
 	public static final int RAW_FINDING_LENGTH = 1048575;
 	public static final int NATIVE_ID_LENGTH = 50;
+	public static final int CONFIDENCE_RATING_LENGTH = 50;
 	public static final int URL_REFERENCE_LENGTH = 256;
 	public static final int SOURCE_FILE_LOCATION_LENGTH = 128;
 	public static final int ISSUE_ID_LENGTH = 128;
@@ -110,6 +111,10 @@ public class Finding extends AuditableEntity implements FindingLike {
 	@Size(max = NATIVE_ID_LENGTH, message = "{errors.maxlength} "
 			+ NATIVE_ID_LENGTH + ".")
 	private String displayId;
+
+	@Size(max=CONFIDENCE_RATING_LENGTH, message = "{errors.maxlength} "
+			+ CONFIDENCE_RATING_LENGTH + ".")
+	private String confidenceRating;
 
 	private ChannelSeverity channelSeverity;
 	private SurfaceLocation surfaceLocation;
@@ -361,6 +366,16 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	@Column(length = CONFIDENCE_RATING_LENGTH)
+	@JsonView({AllViews.VulnerabilityDetail.class})
+	public void setConfidenceRating(String confidenceRating) {
+		this.confidenceRating = confidenceRating;
+	}
+
+	public String getConfidenceRating() {
+		return confidenceRating;
 	}
 
 	@Column(length = LONG_DESCRIPTION_LENGTH)

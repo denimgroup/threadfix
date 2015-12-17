@@ -78,6 +78,26 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
         addMissingMapCounters(appIds);
     }
 
+    @Override
+    public void updateFindingCounter(Finding finding, Integer oldVulnId) {
+        if (finding.getHasStatisticsCounter()
+                || finding.getVulnerability() == null
+                || finding.getVulnerability().getId() == null
+                || statisticsCounterDao.retrieveByVulnId(finding.getVulnerability().getId()).size() == 0) {
+            //Delete old counter
+            statisticsCounterDao.deleteByVulnId(oldVulnId);
+            statisticsCounterDao.deleteByFindingId(finding.getId());
+
+            StatisticsCounter statisticsCounter = getStatisticsCounter(finding);
+            if (statisticsCounter != null) {
+                statisticsCounterDao.saveOrUpdate(statisticsCounter);
+            }
+            finding.setHasStatisticsCounter(true);
+            findingDao.saveOrUpdate(finding);
+        }
+
+    }
+
     private void addMissingMapCounters(List<Integer> appIds) {
         if (appIds != null && appIds.size() == 0) {
             LOG.debug("There were no missing map counters to add.");
