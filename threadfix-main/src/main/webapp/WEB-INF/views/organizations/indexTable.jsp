@@ -3,7 +3,7 @@
     <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_TEAMS">
         <a id="addTeamModalButton" ng-click="openTeamModal()" class="btn">Add Team</a>
     </security:authorize>
-    <a ng-show="teams" class="btn" id="expandAllButton" ng-click="expand()">Expand All</a>
+    <a ng-show="teams" class="btn" id="expandAllButton" ng-click="expand(true)">Expand All</a>
     <a ng-show="teams" class="btn" id="collapseAllButton" ng-click="contract()">Collapse All</a>
     <a style="float: right">
             <input id="appSelectTypeahead"

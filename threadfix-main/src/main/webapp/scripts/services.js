@@ -414,9 +414,6 @@ threadfixModule.factory('vulnSearchParameterService', function() {
             });
         } else {
             filterParameters.applications.forEach(function (application) {
-                if (application.name.indexOf(" / ") === -1) {
-                    application.name = application.team.name + " / " + application.name;
-                }
                 $scope.parameters.applications.push(application);
             });
         }
