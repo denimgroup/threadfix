@@ -220,6 +220,13 @@
             </div>
 
             <div class="accordion-inner">
+                Defect ID
+                <br>
+                <input id="defectIdInput" style="width: 180px;" type="text" placeholder="Example: PROJECT-808"
+                       ng-model="parameters.defectId" ng-blur="refresh()" ng-enter="refresh()"/>
+            </div>
+
+            <div class="accordion-inner">
                 Path
                 <br>
                 <input id="pathInput" style="width: 180px;" type="text" placeholder="Example: /login.jsp"
