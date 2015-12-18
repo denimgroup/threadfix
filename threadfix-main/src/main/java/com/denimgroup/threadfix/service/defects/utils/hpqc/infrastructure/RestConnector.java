@@ -305,7 +305,10 @@ public class RestConnector extends SpringBeanAutowiringSupport {
         InputStream inputStream;
         //select the source of the input bytes, first try 'regular' input
         try {
-            inputStream = con.getInputStream();
+            if (responseCode == 401) // Un-authorized
+                inputStream = con.getErrorStream();
+            else
+                inputStream = con.getInputStream();
         } catch (IOException e) {
             log.error("Received IOException trying to get the InputStream from the connection object." +
                     " Attempting to get the error text.");
@@ -335,7 +338,7 @@ public class RestConnector extends SpringBeanAutowiringSupport {
         return ret;
     }
 
-    private void updateCookies(Response response) {
+    public void updateCookies(Response response) {
 
         Iterable<String> newCookies =
                 response.getResponseHeaders().get("Set-Cookie");
