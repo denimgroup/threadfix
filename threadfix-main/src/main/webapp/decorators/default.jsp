@@ -28,6 +28,7 @@
 
         <cbs:cachebustscript src="/scripts/angular-file-upload.min.js"/>
         <cbs:cachebustscript src="/scripts/dynamic-forms.js"/>
+        <cbs:cachebustscript src="/scripts/ngScrollSpy.min.js"/>
 
         <cbs:cachebustscript src="/scripts/filters.js"/>
         <cbs:cachebustscript src="/scripts/threadfix-module.js"/>

@@ -220,6 +220,13 @@
             </div>
 
             <div class="accordion-inner">
+                Defect ID
+                <br>
+                <input id="defectIdInput" style="width: 180px;" type="text" placeholder="Example: PROJECT-808"
+                       ng-model="parameters.defectId" ng-blur="refresh()" ng-enter="refresh()"/>
+            </div>
+
+            <div class="accordion-inner">
                 Path
                 <br>
                 <input id="pathInput" style="width: 180px;" type="text" placeholder="Example: /login.jsp"
@@ -245,11 +252,11 @@
             Severity
             <br>
             <div>
-                <input type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.critical" id="showCritical"/><span generic-severity="Critical" class="break-word-header"></span><br>
-                <input type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.high" id="showHigh"/><span generic-severity="High" class="break-word-header"></span><br>
-                <input type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.medium" id="showMedium"/><span generic-severity="Medium" class="break-word-header"></span><br>
-                <input type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.low" id="showLow"/><span generic-severity="Low" class="break-word-header"></span><br>
-                <input type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.info" id="showInfo"/><span generic-severity="Info" class="break-word-header"></span>
+                <input type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.critical" id="showCritical"/><span generic-severity="Critical" id="showCriticalText" class="break-word-header"></span><br>
+                <input type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.high" id="showHigh"/><span generic-severity="High" id="showHighText" class="break-word-header"></span><br>
+                <input type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.medium" id="showMedium"/><span generic-severity="Medium" id="showMediumText" class="break-word-header"></span><br>
+                <input type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.low" id="showLow"/><span generic-severity="Low" id="showLowText" class="break-word-header"></span><br>
+                <input type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.info" id="showInfo"/><span generic-severity="Info" id="showInfoText" class="break-word-header"></span>
             </div>
         </div>
 

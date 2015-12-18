@@ -117,20 +117,17 @@ public class ApplicationsIndexController {
         }
 	}
 
-	@RequestMapping("/organizations/{orgId}/getReport")
+	@RequestMapping(value = "/organizations/{orgId}/getReport", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<List<Map<String, Object>>> getReport(@PathVariable("orgId") int orgId,
-			HttpServletRequest request, Model model) {
+			HttpServletRequest request) {
 		Organization organization = organizationService.loadById(orgId);
 		if (organization == null || !organization.isActive()) {
 			log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
 			throw new ResourceNotFoundException();
 		} else {
-			ReportParameters parameters = new ReportParameters();
-			parameters.setApplicationId(-1);
-			parameters.setOrganizationId(orgId);
-			parameters.setFormatId(1);
-			parameters.setReportFormat(ReportFormat.POINT_IN_TIME_GRAPH);
-			ReportCheckResultBean resultBean = reportsService.generateDashboardReport(parameters, request);
+
+			List<Application> apps = organizationService.search(orgId, request);
+			ReportCheckResultBean resultBean = reportsService.getPointInTimeD3(apps, orgId);
 			return RestResponse.success(resultBean.getReportList());
 		}
 	}

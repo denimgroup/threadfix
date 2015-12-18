@@ -3,7 +3,7 @@
     <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_TEAMS">
         <a id="addTeamModalButton" ng-click="openTeamModal()" class="btn">Add Team</a>
     </security:authorize>
-    <a ng-show="teams" class="btn" id="expandAllButton" ng-click="expand()">Expand All</a>
+    <a ng-show="teams" class="btn" id="expandAllButton" ng-click="expand(true)">Expand All</a>
     <a ng-show="teams" class="btn" id="collapseAllButton" ng-click="contract()">Collapse All</a>
     <a style="float: right">
             <input id="appSelectTypeahead"
@@ -28,11 +28,11 @@
         <th style="width:8px"></th>
         <th style="width:98px;">Name</th>
         <th class="centered fixed-team-header">Total</th>
-        <th class="centered fixed-team-header" generic-severity="Critical"></th>
-        <th class="centered fixed-team-header" generic-severity="High"></th>
-        <th class="centered fixed-team-header" generic-severity="Medium"></th>
-        <th class="centered fixed-team-header" generic-severity="Low"></th>
-        <th class="centered fixed-team-header" generic-severity="Info"></th>
+        <th class="centered fixed-team-header" id="allCritical" generic-severity="Critical"></th>
+        <th class="centered fixed-team-header" id="allHigh" generic-severity="High"></th>
+        <th class="centered fixed-team-header" id="allMedium" generic-severity="Medium"></th>
+        <th class="centered fixed-team-header" id="allLow" generic-severity="Low"></th>
+        <th class="centered fixed-team-header" id="allInfo" generic-severity="Info"></th>
         <th></th>
         <th style="width:130px;"></th>
         <th style="width:70px;"></th>
@@ -69,7 +69,7 @@
             <a style="text-decoration:none" id="organizationLink{{ team.name }}" ng-href="{{ team.url }}">View Team</a>
         </td>
     </tr>
-    <tr ng-show="team.expanded"
+    <tr ng-show="team.expanded && team.countApps > numAppsPerTeam"
         id="teamPaginationDiv{{ team.id }}"
         class="collapse "
         ng-class="{ expanded: team.expanded }">
@@ -121,11 +121,11 @@
                         <tr>
                             <th style="width:70px;"></th>
                             <th class="centered">Total</th>
-                            <th class="centered auto-team-header" generic-severity="Critical"></th>
-                            <th class="centered auto-team-header" generic-severity="High"></th>
-                            <th class="centered auto-team-header" generic-severity="Medium"></th>
-                            <th class="centered auto-team-header" generic-severity="Low"></th>
-                            <th class="centered auto-team-header" generic-severity="Info"></th>
+                            <th class="centered auto-team-header" id="team{{ team.name | removeSpace }}Critical" generic-severity="Critical"></th>
+                            <th class="centered auto-team-header" id="team{{ team.name | removeSpace }}High" generic-severity="High"></th>
+                            <th class="centered auto-team-header" id="team{{ team.name | removeSpace }}Medium" generic-severity="Medium"></th>
+                            <th class="centered auto-team-header" id="team{{ team.name | removeSpace }}Low" generic-severity="Low"></th>
+                            <th class="centered auto-team-header" id="team{{ team.name | removeSpace }}Info" generic-severity="Info"></th>
                             <th style="width:110px;"></th>
                         </tr>
                         </thead>
@@ -163,7 +163,7 @@
 
                 <d3-donut ng-if="team.report" data="team.report" label="reportDiv{{ team.id }}"></d3-donut>
 
-                <div ng-hide="team.report || team.reportFailed || !loading" class="team-report-wrapper">
+                <div ng-hide="team.report || team.reportFailed || !team.loading" class="team-report-wrapper">
                     <div style="float:right" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
                 </div>
                 <div ng-show="team.reportFailed" class="team-report-wrapper">

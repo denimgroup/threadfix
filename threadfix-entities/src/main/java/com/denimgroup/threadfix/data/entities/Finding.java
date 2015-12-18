@@ -369,7 +369,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Column(length = CONFIDENCE_RATING_LENGTH)
-	@JsonView({AllViews.RestView2_1.class, AllViews.VulnerabilityDetail.class})
+	@JsonView({AllViews.VulnerabilityDetail.class})
 	public void setConfidenceRating(String confidenceRating) {
 		this.confidenceRating = confidenceRating;
 	}

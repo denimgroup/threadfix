@@ -77,6 +77,8 @@ public class EditApplicationController {
     private TagService tagService;
 	@Autowired
 	private DefectService defectService;
+	@Autowired(required = false)
+	private PolicyStatusService policyStatusService;
 
 	@ModelAttribute("defectTrackerList")
 	public List<DefectTracker> populateDefectTrackers() {
@@ -322,6 +324,46 @@ public class EditApplicationController {
 
 			return RestResponse.success(databaseApplication.getDefectTracker());
 		}
+	}
+
+	@JsonView(AllViews.TableRow.class)
+	@RequestMapping(value="/removeDTAjax", method = RequestMethod.POST)
+	public Object removeDefectTracker(@PathVariable("appId") int appId,
+									  @PathVariable("orgId") int orgId,
+									  @ModelAttribute Application application,
+									  BindingResult result, SessionStatus status, Model model,
+									  HttpServletRequest request){
+
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+			return RestResponse.failure("You are not authorized to manage this application.");
+		}
+		Application databaseApplication = applicationService.loadApplication(appId);
+		if (databaseApplication == null || !databaseApplication.isActive()) {
+			log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
+			throw new ResourceNotFoundException();
+		}
+
+		databaseApplication.setDefectTracker(null);
+		databaseApplication.setUserName(null);
+		databaseApplication.setPassword(null);
+		databaseApplication.setProjectName(null);
+		databaseApplication.setUseDefaultCredentials(false);
+		databaseApplication.setUseDefaultProject(false);
+		databaseApplication.setProjectId(null);
+
+		applicationService.storeApplication(databaseApplication, EventAction.APPLICATION_EDIT);
+
+		defectService.deleteByApplicationId(databaseApplication.getId());
+
+		if(policyStatusService != null) {
+			policyStatusService.runStatusCheck(databaseApplication);
+		}
+
+		String user = SecurityContextHolder.getContext().getAuthentication().getName();
+
+		log.debug("The Application " + databaseApplication.getName() + " (id=" + databaseApplication.getId() + ") has been edited by user " + user);
+
+		return RestResponse.success(databaseApplication);
 	}
 
 	@RequestMapping(value="/setTagsEndpoint", method = RequestMethod.POST)

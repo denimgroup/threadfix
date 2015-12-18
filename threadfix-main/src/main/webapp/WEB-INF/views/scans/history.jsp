@@ -34,10 +34,10 @@
 					<th>Scanner</th>
 					<th>Total</th>
 					<th>Hidden</th>
-					<th class="fixed-word-header" generic-severity="Critical"></th>
-					<th class="fixed-word-header" generic-severity="High"></th>
-					<th class="fixed-word-header" generic-severity="Medium"></th>
-					<th class="fixed-word-header" generic-severity="Low"></th>
+					<th class="fixed-word-header" id="scansHeaderCritical" generic-severity="Critical"></th>
+					<th class="fixed-word-header" id="scansHeaderHigh" generic-severity="High"></th>
+					<th class="fixed-word-header" id="scansHeaderMedium" generic-severity="Medium"></th>
+					<th class="fixed-word-header" id="scansHeaderLow" generic-severity="Low"></th>
 					<th></th>
 				</tr>
 			</thead>

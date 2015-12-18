@@ -32,6 +32,7 @@ import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.SharedComponentService;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.VulnerabilityStatusService;
+import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
@@ -64,7 +65,6 @@ public class FindingsController {
 
 	@RequestMapping(value = "/organizations/{orgId}/applications/{appId}/scans/{scanId}/findings/{findingId}", method = RequestMethod.GET)
 	public ModelAndView finding(@PathVariable("findingId") int findingId,
-			@PathVariable("scanId") int scanId, 
 			@PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId) {
 		
@@ -78,7 +78,8 @@ public class FindingsController {
 			throw new ResourceNotFoundException();
         }
 
-        ModelAndView mav = new ModelAndView("scans/findingDetail");
+        String view = (EnterpriseTest.isEnterprise()) ? "scans/finding/index" : "scans/findingDetail";
+        ModelAndView mav = new ModelAndView(view);
         mav.addObject(finding);
         PermissionUtils.addPermissions(mav, orgId, appId, Permission.CAN_MODIFY_VULNERABILITIES);
         return mav;
@@ -224,6 +225,22 @@ public class FindingsController {
 		}
 
 		return RestResponse.success(map());
+	}
+	
+	@RequestMapping(value = "/organizations/{orgId}/applications/{appId}/scans/{scanId}/findings/{findingId}/code",
+			method = RequestMethod.GET)
+	public @ResponseBody Object getSourceCode(@PathVariable("findingId") int findingId) {
+
+		Finding finding = findingService.loadFinding(findingId);
+		if (finding == null) {
+			log.warn(ResourceNotFoundException.getLogMessage("Finding", findingId));
+			throw new ResourceNotFoundException();
+		}
+
+		return RestResponse.success(map(
+				"files", findingService.getFilesWithVulnerabilities(finding),
+				"lineNumbers", findingService.getFilesWithLineNumbers(finding)
+		));
 	}
 
 }

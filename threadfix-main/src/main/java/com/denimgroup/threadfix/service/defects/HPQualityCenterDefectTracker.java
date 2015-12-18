@@ -266,12 +266,12 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
 
     @Override
     public boolean hasValidCredentials() {
-        return HPQCUtils.checkCredential(getHPQCUrl(),username,password,projectName);
+        return HPQCUtils.checkCredential(getHPQCUrl(),username,password);
     }
 
     @Override
     public boolean hasValidProjectName() {
-        return true;
+        return HPQCUtils.checkCredentialAndProject(getHPQCUrl(),username,password,projectName);
     }
 
     @Override

@@ -209,9 +209,14 @@
 			<tr id="appWafDiv">
                 <td>Defect Tracker</td>
                 <td id="defectTrackerName" ng-show="object.defectTracker">
-                    <a id="linkDT" ng-href="{{object.defectTracker.url}}" class="pointer" target='_blank'>{{ object.defectTracker.name }}</a>
+                    <a id="linkDT" ng-href="{{object.defectTracker.url}}" class="pointer" target='_blank'>{{ object.defectTracker.name }} - {{ object.projectName }}</a>
+                    <button class="btn btn-danger" ng-click="removeDefectTracker()" ng-show="object.defectTracker">
+                        Remove
+                    </button>
                 </td>
-                <td><button id="addDefectTrackerButton" class="btn" ng-click="switchTo('addDefectTracker')">Set Defect Tracker</button></td>
+                <td>
+                    <button id="addDefectTrackerButton" class="btn" ng-click="switchTo('addDefectTracker')">Set Defect Tracker</button>
+                </td>
 			</tr>
             <tr ng-show="object.defectTracker && object.defectTracker.defectTrackerType.name !== 'Bugzilla'">
                 <td>Default Defect Profile</td>

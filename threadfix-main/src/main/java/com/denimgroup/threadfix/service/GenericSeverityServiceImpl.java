@@ -50,18 +50,9 @@ public class GenericSeverityServiceImpl
 	@Override
 	public boolean canSetCustomNameTo(int genericSeverityId, String text) {
 		if ("".equals(text)) {
-			return true; // it's ok to clear the custom text
+			text = loadById(genericSeverityId).getName();
 		}
-
-		List<GenericSeverity> genericSeverities = genericSeverityDao.retrieveAllWithCustomName(text);
-
-		for (GenericSeverity genericSeverity : genericSeverities) {
-			if (text.equals(genericSeverity.getCustomName()) && genericSeverity.getId() != genericSeverityId) {
-				return false; // a different severity has this name
-			}
-		}
-
-		return true;
+		return !genericSeverityDao.doesSeverityNameExist(text,genericSeverityId);
 	}
 
 	@Override

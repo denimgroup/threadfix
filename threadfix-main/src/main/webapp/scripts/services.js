@@ -496,6 +496,8 @@ threadfixModule.factory('vulnSearchParameterService', function() {
         criteria.headers = getHeaders(d);
         criteria.fillColor = d.fillColor;
 
+        criteria.parameters.searchAppText = d.searchAppText;
+
         return criteria;
     };
 

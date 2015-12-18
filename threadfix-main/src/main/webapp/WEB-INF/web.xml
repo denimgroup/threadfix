@@ -253,6 +253,7 @@
                 protected-regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/documents/upload$,
                 protected-regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/history/objects$,
                 protected-regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/documents/[0-9]+/delete$,
+                protected-regex ^/organizations/[0-9]+/applications/[0-9]+/scans/[0-9]+/findings/[0-9]+/code$,
 		    	protected-regex ^/organizations/[0-9]+/applications/[0-9]+/edit$,
 		    	protected-regex ^/organizations/[0-9]+/applications/[0-9]+/edit/wafAjax$,
 		    	protected-regex ^/organizations/[0-9]+/applications/[0-9]+/edit/addDTAjax$,

@@ -69,9 +69,9 @@ myAppModule.controller('ApplicationsIndexController',
             loadGraph(team);
         };
 
-        $scope.expand = function() {
+        $scope.expand = function(isExpand) {
             $scope.teams.forEach(function(team) {
-                team.expanded = true;
+                team.expanded = isExpand;
                 loadGraph(team);
             });
         };
@@ -86,33 +86,41 @@ myAppModule.controller('ApplicationsIndexController',
 
             $scope.searchAppsInTeam(team);
 
-            if (team.report == null) {
-                team.loading = true;
-                threadfixAPIService.loadAppTableReport(team.id).
-                    success(function(data, status, headers, config) {
-                        team.loading = false;
-                        if (data.object && data.object.length>0 && data.object[0].Critical==0
-                            && data.object[0].High ==0
-                            && data.object[0].Medium == 0
-                            && data.object[0].Low == 0
-                            && data.object[0].Info ==0)
-                            team.report = undefined;
-                        else {
-                            team.report = data.object;
+            var searchObject = {
+                "searchString" : $scope.searchText,
+                "page" : 1,
+                "number" : 0
+            };
+
+            team.loading = true;
+
+            $http.post(tfEncoder.encode("/organizations/" + team.id + "/getReport"), searchObject).
+            then(function(response) {
+                var data = response.data;
+                if (data.success) {
+                    team.loading = false;
+                    if (data.object && data.object.length>0 && data.object[0].Critical==0
+                        && data.object[0].High ==0
+                        && data.object[0].Medium == 0
+                        && data.object[0].Low == 0
+                        && data.object[0].Info ==0)
+                        team.report = undefined;
+                    else {
+                        team.report = data.object;
+                        if (team.report) {
+                            team.report[0].searchAppText = $scope.searchText;
                             team.report.forEach(function(teamInfo, i){
                                 team.report[i].genericSeverities = $scope.genericSeverities;
-                            })
-                        }
-
-                    }).
-                    error(function(data, status, headers, config) {
-
-                        // TODO improve error handling and pass something back to the users
-                        team.report = true;
-                        team.reportFailed = true;
-                        team.loading = false;
-                    });
-            }
+                            }
+                        )}
+                    }
+                } else {
+                    // TODO improve error handling and pass something back to the users
+                    team.report = true;
+                    team.reportFailed = true;
+                    team.loading = false;
+                }
+            });
         };
 
         // Modal functions
@@ -312,6 +320,9 @@ myAppModule.controller('ApplicationsIndexController',
                     var data = response.data;
                     if (data.success) {
                         team.countApps = data.object.countApps;
+                        if (team.countApps > 0 && !team.expanded) {
+                            team.expanded = true;
+                        }
                         team.applications = data.object.applications;
 
                         team.applications.forEach(function(application) {

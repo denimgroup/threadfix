@@ -202,8 +202,8 @@ public class ObjectToSSVLParser {
             return null;
 
         Vulnerabilities.Vulnerability.Finding.SurfaceLocation ssvlSurfaceLocation = factory.createVulnerabilitiesVulnerabilityFindingSurfaceLocation();
-        ssvlSurfaceLocation.setParameter(tfSurfaceLocation.getParameter());
-        ssvlSurfaceLocation.setUrl(tfSurfaceLocation.getUrl().toString());
+        ssvlSurfaceLocation.setParameter(tfSurfaceLocation == null ? null : tfSurfaceLocation.getParameter());
+        ssvlSurfaceLocation.setUrl(tfSurfaceLocation == null || tfSurfaceLocation.getUrl() == null ? null : tfSurfaceLocation.getUrl().toString());
 
         return ssvlSurfaceLocation;
     }
