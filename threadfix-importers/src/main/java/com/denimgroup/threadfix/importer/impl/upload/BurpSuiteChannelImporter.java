@@ -369,7 +369,7 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    	if (getChannelVulnText || getHostText || getUrlText || getParamText || 
 	    			getSeverityText || getBackupParameter || getSerialNumber ||
 	    			getParamValueText || getRequestText || getResponseText || 
-	    			getScannerDetail || getScannerRecommendation || getIssueBackground) {
+	    			getScannerDetail || getScannerRecommendation || getIssueBackground || getConfidenceText) {
 	    		addTextToBuilder(ch,start,length);
 	    	}
 	    	if (getRawFinding){
