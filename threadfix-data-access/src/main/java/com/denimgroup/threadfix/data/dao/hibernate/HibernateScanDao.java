@@ -36,10 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.*;
 import static org.hibernate.criterion.Projections.rowCount;
@@ -535,51 +532,22 @@ public class HibernateScanDao
     }
 
 	@Override
-	public List<Finding> getFindingsThatNeedCounters(int page, Collection<Integer> findingIdRestrictions) {
-		return getBaseCounterCriteria(null, findingIdRestrictions)
-				.setMaxResults(100)
-				.setFirstResult(page * 100)
-				.list();
-	}
+	public List<Finding> getFindingsThatNeedCountersInApps(List<Integer> appIds, Collection<Integer> findingIdRestrictions) {
 
-	@Override
-	public List<Finding> getFindingsThatNeedCountersInApps(int page, List<Integer> appIds, Collection<Integer> findingIdRestrictions) {
-		if (appIds == null)
-			return getFindingsThatNeedCounters(page, findingIdRestrictions);
+		List<Finding> findingList = getFindingList(appIds, Arrays.asList(findingIdRestrictions.toArray()));
+		return findingList;
 
-		if (appIds.size() == 0) {
-			return list();
-		}
-
-		return getBaseCounterCriteria(appIds, findingIdRestrictions)
-				.add(in("appAlias.id", appIds))
-				.setMaxResults(100)
-				.setFirstResult(page * 100)
-				.list();
 	}
 
 	@Override
 	public Long totalFindingsThatNeedCounters(Collection<Integer> findingIdRestrictions) {
-		return (Long) getBaseCounterCriteria(null, findingIdRestrictions)
-                .setProjection(rowCount())
-                .uniqueResult();
+
+		List<Finding> findingList = getFindingList(null, Arrays.asList(findingIdRestrictions.toArray()));
+		return Long.valueOf(findingList.size());
+
 	}
 
-	@Override
-	public Long totalFindingsThatNeedCountersInApps(List<Integer> appIds, Collection<Integer> findingIdRestrictions) {
-		if (appIds == null)
-			return totalFindingsThatNeedCounters(findingIdRestrictions);
-
-		if (appIds.size() == 0) {
-			return 0L;
-		}
-
-		return (Long) getBaseCounterCriteria(appIds, findingIdRestrictions)
-				.setProjection(rowCount())
-                .uniqueResult();
-	}
-
-	private Criteria getBaseCounterCriteria(List<Integer> appIds, Collection<Integer> findingIdRestrictions) {
+	private Criteria getBaseCounterCriteria(List<Integer> appIds, Collection<?> findingIdRestrictions) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Finding.class)
 				.createAlias("vulnerability", "vulnAlias")
 				.createAlias("vulnAlias.application", "appAlias")
@@ -594,6 +562,17 @@ public class HibernateScanDao
             criteria.add(in("appAlias.id", appIds));
         }
         return criteria;
+	}
+
+	private List<Finding> getFindingList(List<Integer> appIds, List<?> findingIdRestrictions) {
+		List<Finding> findings = list();
+		if (findingIdRestrictions.size() <= MAX_IN_LIST_NUMBER) {
+			findings.addAll(getBaseCounterCriteria(appIds, findingIdRestrictions).list());
+		} else {
+			findings.addAll(getBaseCounterCriteria(appIds, findingIdRestrictions.subList(0, MAX_IN_LIST_NUMBER)).list());
+			findings.addAll(getFindingList(appIds, findingIdRestrictions.subList(MAX_IN_LIST_NUMBER, findingIdRestrictions.size())));
+		}
+		return findings;
 	}
 
 	@Override

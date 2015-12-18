@@ -143,31 +143,20 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
         Collection<Integer> findingIdRestrictions =
                 scanDao.getEarliestFindingIdsForVulnPerChannel(appIds);
 
-        Long total = scanDao.totalFindingsThatNeedCountersInApps(appIds, findingIdRestrictions);
-
         long start = System.currentTimeMillis();
 
-        LOG.debug("Total: " + total);
+        List<Finding> findingsThatNeedCounters =
+                scanDao.getFindingsThatNeedCountersInApps(appIds, findingIdRestrictions);
 
-        int current = total.intValue() / 100;
+        LOG.debug("Total findings missing counters: " + findingsThatNeedCounters.size());
 
-        while (current >= 0) {
-
-            LOG.debug("Processing at index " + current + " out of " + total);
-
-            List<Finding> findingsThatNeedCounters =
-                    scanDao.getFindingsThatNeedCountersInApps(current, appIds, findingIdRestrictions);
-
-            for (Finding finding : findingsThatNeedCounters) {
-
-                StatisticsCounter statisticsCounter = getStatisticsCounter(finding);
-                if (statisticsCounter != null) {
-                    statisticsCounterDao.saveOrUpdate(statisticsCounter);
-                }
-                finding.setHasStatisticsCounter(true);
-                findingDao.saveOrUpdate(finding);
+        for (Finding finding : findingsThatNeedCounters) {
+            StatisticsCounter statisticsCounter = getStatisticsCounter(finding);
+            if (statisticsCounter != null) {
+                statisticsCounterDao.saveOrUpdate(statisticsCounter);
             }
-            current --;
+            finding.setHasStatisticsCounter(true);
+            findingDao.saveOrUpdate(finding);
         }
 
         LOG.debug("Took " + (System.currentTimeMillis() - start) + " ms to add missing finding counters.");

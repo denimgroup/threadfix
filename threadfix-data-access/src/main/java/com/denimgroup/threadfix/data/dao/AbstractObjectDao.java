@@ -37,6 +37,8 @@ public abstract class AbstractObjectDao<T extends BaseEntity> implements Generic
 
     protected SessionFactory sessionFactory;
 
+    public static Integer MAX_IN_LIST_NUMBER = 1000;
+
     public AbstractObjectDao(SessionFactory sessionFactory) {
         assert sessionFactory != null : "SessionFactory was null, check your Spring configuration.";
         this.sessionFactory = sessionFactory;
