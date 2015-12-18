@@ -65,8 +65,8 @@ myAppModule.controller('ApplicationsIndexController',
             }
 
             team.expanded = !team.expanded;
-
-            loadGraph(team);
+            if (team.expanded)
+                loadGraph(team);
         };
 
         $scope.expand = function(isExpand) {
@@ -314,29 +314,30 @@ myAppModule.controller('ApplicationsIndexController',
                 "page" : team.page,
                 "number" : $scope.numAppsPerTeam
             };
-
+            team.loadingApps = true;
             $http.post(tfEncoder.encode("/organizations/" + team.id + "/search"), searchObject).
-                then(function(response) {
-                    var data = response.data;
-                    if (data.success) {
-                        team.countApps = data.object.countApps;
-                        if (team.countApps > 0 && !team.expanded) {
-                            team.expanded = true;
-                        }
-                        team.applications = data.object.applications;
-
-                        team.applications.forEach(function(application) {
-                            application.showUploadScanButton = $scope.canUploadIds.indexOf(application.id) !== -1;
-                            application.pageUrl = tfEncoder.encode(
-                                "/organizations/" + team.id + "/applications/" + application.id);
-                        });
-
-                        team.lastNumber = $scope.numAppsPerTeam;
-                        team.lastPage = team.page;
-                    } else {
-                        $scope.errorMessage = "Failed to receive search results. Message was : " + data.message;
+            then(function(response) {
+                var data = response.data;
+                if (data.success) {
+                    team.countApps = data.object.countApps;
+                    if (team.countApps > 0 && !team.expanded) {
+                        team.expanded = true;
                     }
-                });
+                    team.applications = data.object.applications;
+
+                    team.applications.forEach(function(application) {
+                        application.showUploadScanButton = $scope.canUploadIds.indexOf(application.id) !== -1;
+                        application.pageUrl = tfEncoder.encode(
+                            "/organizations/" + team.id + "/applications/" + application.id);
+                    });
+
+                    team.lastNumber = $scope.numAppsPerTeam;
+                    team.lastPage = team.page;
+                } else {
+                    $scope.errorMessage = "Failed to receive search results. Message was : " + data.message;
+                }
+                team.loadingApps = false;
+            });
 
         };
 
