@@ -35,4 +35,6 @@ public interface SharedComponentService {
 
 	List<Vulnerability> retrieveSharedVulns(Vulnerability vulnerability);
 
+	void updateAllSharedVulns();
+
 }
