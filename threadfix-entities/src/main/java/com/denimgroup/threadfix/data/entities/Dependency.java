@@ -69,7 +69,7 @@ public class Dependency extends AuditableEntity {
 
     @Nullable
     @Column(nullable = true)
-    @JsonView(AllViews.UIVulnSearch.class)
+    @JsonView({ AllViews.UIVulnSearch.class, AllViews.VulnerabilityDetail.class })
     public String getComponentName() {
         return componentName;
     }
@@ -80,6 +80,7 @@ public class Dependency extends AuditableEntity {
 
     @Nullable
     @Column(nullable = true)
+    @JsonView(AllViews.VulnerabilityDetail.class)
     public String getComponentFilePath() {
         return componentFilePath;
     }
@@ -90,7 +91,7 @@ public class Dependency extends AuditableEntity {
 
     @Nullable
     @Column(nullable = true)
-    @JsonView(AllViews.UIVulnSearch.class)
+    @JsonView({ AllViews.UIVulnSearch.class, AllViews.VulnerabilityDetail.class })
     public String getDescription() {
         return description;
     }
