@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.views.AllViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Index;
@@ -34,8 +35,10 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.data.entities.AuthenticationRequired.UNKNOWN;
 
 @Entity
@@ -179,7 +182,6 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	@Override
 	@ManyToOne
-	@JsonIgnore
 	@JoinColumn(name = "vulnerabilityId")
 	public Vulnerability getVulnerability() {
 		return vulnerability;
@@ -374,6 +376,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 		this.confidenceRating = confidenceRating;
 	}
 
+	@JsonView(AllViews.VulnerabilityDetail.class)
 	public String getConfidenceRating() {
 		return confidenceRating;
 	}
@@ -384,6 +387,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 		this.longDescription = longDescription;
 	}
 
+	@JsonView(AllViews.VulnerabilityDetail.class)
 	public String getLongDescription() {
 		return longDescription;
 	}
@@ -449,6 +453,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Column(length = RAW_FINDING_LENGTH)
+	@JsonView(AllViews.VulnerabilityDetail.class)
 	public String getRawFinding() {
 		return rawFinding;
 	}
@@ -597,7 +602,49 @@ public class Finding extends AuditableEntity implements FindingLike {
                 getChannelVulnerability().getName();
     }
 
-    @Transient
+	@Transient
+	@JsonView(AllViews.VulnerabilityDetail.class)
+	@JsonProperty("team")
+	private Map<String, ?> getTeam() {
+		Organization team = getScan().getApplication().getOrganization();
+		return map(
+				"id", team.getId(),
+				"name", team.getName()
+		);
+	}
+
+	@Transient
+	@JsonView(AllViews.VulnerabilityDetail.class)
+	@JsonProperty("application")
+	private Map<String, ?> getApplication() {
+		Application application = getScan().getApplication();
+		return map(
+				"id", application.getId(),
+				"name", application.getName()
+		);
+	}
+
+	@Transient
+	@JsonView(AllViews.VulnerabilityDetail.class)
+	@JsonProperty("vulnerability")
+	private Map<String, ?> getVuln() {
+		return map(
+				"id", vulnerability.getId()
+		);
+	}
+
+	@Transient
+	@JsonView(AllViews.VulnerabilityDetail.class)
+	@JsonProperty("scan")
+	private Map<String, ?> getScanProperties() {
+		Scan scan = getScan();
+		return map(
+				"importTime", scan.getImportTime().getTime(),
+				"name", scan.getApplicationChannel().getChannelType().getName()
+		);
+	}
+
+	@Transient
     @JsonView(AllViews.TableRow.class)
     private String getGenericVulnerabilityName() {
         return getChannelVulnerability() == null ? null :
