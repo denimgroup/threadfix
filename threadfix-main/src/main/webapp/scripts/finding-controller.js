@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix');
 
-myAppModule.controller('FindingController', function ($scope, $window, $modal, $http, $log, $rootScope, tfEncoder) {
+myAppModule.controller('FindingController', function ($scope, $window, $modal, $http, $log, $rootScope, tfEncoder, syntaxHighlighterService) {
 
     $scope.initialized = false;
 
@@ -28,6 +28,13 @@ myAppModule.controller('FindingController', function ($scope, $window, $modal, $
                     $scope.vulnUrl = tfEncoder.encode("/organizations/" + teamId + "/applications/" + appId +
                         "/vulnerabilities/" + $scope.finding.vulnerability.id);
                     $scope.mergeUrl = tfEncoder.encode(currentUrl + "/merge");
+
+                    if ($scope.showDataFlowElements) {
+                        $scope.finding.dataFlowElements.forEach(function (dataFlowElement) {
+                            dataFlowElement.highlightedContent = dataFlowElement.lineText;
+                            dataFlowElement.classes = syntaxHighlighterService.getSyntaxHighlightClasses(dataFlowElement.sourceFileName);
+                        });
+                    }
 
                 } else {
                     $log.info("HTTP request for form objects failed. Error was " + data.message);

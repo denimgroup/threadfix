@@ -881,3 +881,164 @@ threadfixModule.factory('appUsageService', function() {
 
     return appUsageService;
 });
+
+threadfixModule.factory ('syntaxHighlighterService', function () {
+
+    function getHighlighters() {
+        return SyntaxHighlighter.vars.highlighters;
+    }
+
+    function getNewlyAddedHighlighterId(highlighterKeys) {
+        var updatedHighlighterKeys = Object.keys(SyntaxHighlighter.vars.highlighters);
+
+        if (updatedHighlighterKeys.length == 0) {
+            return null;
+        } else if (updatedHighlighterKeys.length == 1) {
+            return updatedHighlighterKeys[0];
+        } else {
+            for (var i = 0; i < highlighterKeys.length; i++) {
+
+                var highlighterKey = highlighterKeys[i];
+                var index = updatedHighlighterKeys.indexOf(highlighterKey);
+
+                if (index > -1) {
+                    updatedHighlighterKeys.splice(index, 1);
+                }
+
+                if (updatedHighlighterKeys.length === 0) {
+                    updatedHighlighterKeys = undefined;
+                }
+            }
+
+            if (updatedHighlighterKeys && updatedHighlighterKeys.length > 0) {
+                return updatedHighlighterKeys[0];
+            } else {
+                return null;
+            }
+        }
+    }
+
+    var addAnchorElement = function(highlightedLine, lineNumberId) {
+        var anchorId = "\"anchor" + lineNumberId +"\"";
+        highlightedLine.append("<div id=" + anchorId + " class=\"anchor\"></div>");
+    };
+
+    var getFileExtension =  function(fileName) {
+        if (fileName.indexOf(".") > -1) {
+            var fileNameArr = fileName.split(".");
+            return fileNameArr[fileNameArr.length - 1];
+        } else {
+            return '';
+        }
+    };
+
+    var getBrush = function(fileExtension) {
+        switch(fileExtension) {
+            case 'scpt':
+                return 'brush: brush: applescript;';
+            case 'sh':
+                return 'brush: bash;';
+            case 'c':
+                return 'brush: c;';
+            case 'cc':
+                return 'brush: cc;';
+            case 'cpp':
+                return 'brush: cpp;';
+            case 'c++':
+                return 'brush: c++;';
+            case 'h':
+                return 'brush: h;';
+            case 'hpp':
+                return 'brush: hpp;';
+            case 'h++':
+                return 'brush: h++;';
+            case 'cs':
+                return 'brush: c#;';
+            case 'css':
+                return 'brush: css;';
+            case 'groovy':
+                return 'brush: groovy;';
+            case 'java':
+                return 'brush: java;';
+            case 'js':
+                return 'brush: js;';
+            case 'pl':
+                return 'brush: perl;';
+            case 'rb':
+                return 'brush: ruby;';
+            case 'php':
+                return 'brush: php;';
+            case 'py':
+                return 'brush: py;';
+            case 'scss':
+                return 'brush: sass;';
+            case 'sql':
+                return 'brush: sql;';
+            case 'vb':
+                return 'brush: vb;';
+            case 'xml':
+                return 'brush: xml;';
+            case 'xslt':
+                return 'brush: xslt;';
+            case 'html':
+                return 'brush: html;';
+            case 'xhtml':
+                return 'brush: xhtml;';
+            case 'plist':
+                return 'brush: plist;';
+            case 'htm':
+                return 'brush: htm;';
+            case 'jsp':
+                return 'brush: html;';
+            default:
+                return 'brush: text;';
+        }
+    };
+
+    return {
+        highlight: function ($element, $scope, data) {
+
+            var highlightedContent = data.highlightedContent;
+            var lineNumber = data.lineNumber;
+            var lineNumberId = data.lineNumberId;
+            var classes = data.classes;
+
+            if (highlightedContent) {
+
+                if (!lineNumberId) {
+                    classes += ' gutter: false;';
+                }
+
+                $element.addClass(classes);
+                $element.html(highlightedContent);
+
+                var highlighterKeys = Object.keys(getHighlighters());
+                SyntaxHighlighter.highlight ({}, $element[0]);
+
+                if (lineNumberId) {
+                    var highlighterId = getNewlyAddedHighlighterId(highlighterKeys);
+
+                    if (highlighterId) {
+                        var codeContainer = document.getElementById(highlighterId);
+                        var highlightedLines = codeContainer.getElementsByClassName('highlighted number' + lineNumber);
+                        var highlightedLine = angular.element(highlightedLines[0]);
+                        highlightedLine.attr('id', lineNumberId);
+                        addAnchorElement(highlightedLine, lineNumberId);
+                    }
+                }
+            }
+        },
+        getFileExtension: getFileExtension,
+        getBrush: getBrush,
+        getSyntaxHighlightClasses: function(fileName, lineNumber) {
+            var fileExtension = getFileExtension(fileName);
+            var classes = getBrush(fileExtension);
+
+            if (lineNumber) {
+                classes += ' highlight: [' + lineNumber + '];'
+            }
+
+            return classes;
+        }
+    }
+});

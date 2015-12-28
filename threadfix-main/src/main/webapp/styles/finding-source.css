@@ -1,0 +1,27 @@
+#main-content h3 {
+    margin: 0;
+    padding: 0;
+}
+
+a.fileNav {
+    display: inline-block;
+    width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.affix {
+    position: fixed;
+    margin-top: -100px;
+}
+
+div.tab-pane div.syntaxhighlighter div.anchor {
+    display: block;
+    position: relative !important;
+    top: -400px !important;
+    visibility: hidden;
+}
+
+tr.border {
+    border: 1px solid black;
+}
