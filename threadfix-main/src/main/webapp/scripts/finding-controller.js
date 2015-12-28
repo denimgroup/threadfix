@@ -9,11 +9,14 @@ myAppModule.controller('FindingController', function ($scope, $window, $modal, $
     $scope.currentUrl = "/organizations/" + $scope.teamId + "/applications/" + $scope.appId + "/scans/"
         + $scope.scanId + "/findings/" + $scope.findingId;
 
+    $scope.initialized = false;
+
     $scope.$on('rootScopeInitialized', function() {
         $http.get(tfEncoder.encode($scope.currentUrl + "/objects")).
             success(function(data, status, headers, config) {
                 if (data.success) {
                     $scope.finding = data.object.finding;
+                    $scope.initialized = true;
 
                     if (data.object.isEnterprise) {
                         $rootScope.$broadcast('sourceCodeData', data.object.sourceCodeData);

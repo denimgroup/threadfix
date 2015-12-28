@@ -1,13 +1,15 @@
 <h2>Finding Details</h2>
 
-<div style="padding-bottom:10px">
+<div ng-hide="initialized" class="spinner-div"><span class="spinner dark"></span>Loading</div>
+
+<div style="padding-bottom:10px" ng-show="initialized">
     <a class="btn" ng-show="finding.vulnerability" ng-click="goToVulnerability()">View Vulnerability</a>
     <c:if test="${ canModifyVulnerabilities }">
         <a class="btn" ng-click="goToFindingMerge()">Merge with Other Findings</a>
     </c:if>
 </div>
 
-<table class="dataTable">
+<table class="dataTable" ng-show="initialized">
     <tbody>
         <tr ng-show="finding.urlReference">
             <td class="bold">Link</td>
@@ -105,8 +107,8 @@
     </tbody>
 </table>
 
-<h3 ng-show="finding.dataFlowElements">Data Flow</h3>
-<table ng-show="finding.dataFlowElements" class="dataTable">
+<h3 ng-show="finding.dataFlowElements && initialized">Data Flow</h3>
+<table ng-show="finding.dataFlowElements && initialized" class="dataTable">
     <tbody ng-repeat="flowElement in finding.dataFlowElements">
         <tr>
             <td class="bold">File Name</td>
