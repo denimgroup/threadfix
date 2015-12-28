@@ -2,25 +2,31 @@ var myAppModule = angular.module('threadfix');
 
 myAppModule.controller('FindingController', function ($scope, $window, $modal, $http, $log, $rootScope, tfEncoder) {
 
-    $scope.appId  = $window.location.pathname.match(/applications\/([0-9]+)/)[1];
-    $scope.teamId = $window.location.pathname.match(/organizations\/([0-9]+)/)[1];
-    $scope.scanId = $window.location.pathname.match(/scans\/([0-9]+)/)[1];
-    $scope.findingId = $window.location.pathname.match(/findings\/([0-9]+)$/)[1];
-    $scope.currentUrl = "/organizations/" + $scope.teamId + "/applications/" + $scope.appId + "/scans/"
-        + $scope.scanId + "/findings/" + $scope.findingId;
-
     $scope.initialized = false;
 
+    var appId = $window.location.pathname.match(/applications\/([0-9]+)/)[1];
+    var teamId = $window.location.pathname.match(/organizations\/([0-9]+)/)[1];
+    var scanId = $window.location.pathname.match(/scans\/([0-9]+)/)[1];
+    var findingId = $window.location.pathname.match(/findings\/([0-9]+)$/)[1];
+    var currentUrl = "/organizations/" + teamId + "/applications/" + appId + "/scans/" + scanId +
+        "/findings/" + findingId;
+
+
     $scope.$on('rootScopeInitialized', function() {
-        $http.get(tfEncoder.encode($scope.currentUrl + "/objects")).
+
+        $scope.teamUrl = tfEncoder.encode("/organizations/" + teamId);
+        $scope.appUrl = tfEncoder.encode("/organizations/" + teamId + "/applications/" + appId);
+        $scope.scanUrl = tfEncoder.encode("/organizations/" + teamId + "/applications/" + appId + "/scans/" + scanId);
+
+        $http.get(tfEncoder.encode(currentUrl + "/objects")).
             success(function(data, status, headers, config) {
                 if (data.success) {
-                    $scope.finding = data.object.finding;
                     $scope.initialized = true;
+                    $scope.finding = data.object.finding;
 
-                    if (data.object.isEnterprise) {
-                        $rootScope.$broadcast('sourceCodeData', data.object.sourceCodeData);
-                    }
+                    $scope.vulnUrl = tfEncoder.encode("/organizations/" + teamId + "/applications/" + appId +
+                        "/vulnerabilities/" + $scope.finding.vulnerability.id);
+                    $scope.mergeUrl = tfEncoder.encode(currentUrl + "/merge");
 
                 } else {
                     $log.info("HTTP request for form objects failed. Error was " + data.message);
@@ -32,27 +38,4 @@ myAppModule.controller('FindingController', function ($scope, $window, $modal, $
                 $scope.errorMessage = "Request to server failed. Got " + status + " response code.";
             });
     });
-
-    $scope.goToTeam = function() {
-        window.location.href = tfEncoder.encode("/organizations/" + $scope.teamId);
-    };
-
-    $scope.goToApplication = function() {
-        window.location.href = tfEncoder.encode("/organizations/" + $scope.teamId + "/applications/" + $scope.appId);
-    };
-
-    $scope.goToScan = function() {
-        window.location.href = tfEncoder.encode("/organizations/" + $scope.teamId + "/applications/" + $scope.appId +
-            "/scans/" + $scope.scanId);
-    };
-
-    $scope.goToVulnerability = function() {
-        window.location.href = tfEncoder.encode("/organizations/" + $scope.teamId + "/applications/" + $scope.appId +
-            "/vulnerabilities/" + $scope.finding.vulnerability.id);
-    };
-
-    $scope.goToFindingMerge = function() {
-        window.location.href = tfEncoder.encode($scope.currentUrl + "/merge");
-    };
-
 });

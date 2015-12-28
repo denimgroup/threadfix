@@ -3,9 +3,9 @@
 <div ng-hide="initialized" class="spinner-div"><span class="spinner dark"></span>Loading</div>
 
 <div style="padding-bottom:10px" ng-show="initialized">
-    <a class="btn" ng-show="finding.vulnerability" ng-click="goToVulnerability()">View Vulnerability</a>
+    <a class="btn" ng-show="finding.vulnerability" ng-href="{{ vulnUrl }}">View Vulnerability</a>
     <c:if test="${ canModifyVulnerabilities }">
-        <a class="btn" ng-click="goToFindingMerge()">Merge with Other Findings</a>
+        <a class="btn" ng-href="{{ mergeUrl }}">Merge with Other Findings</a>
     </c:if>
 </div>
 
@@ -107,8 +107,8 @@
     </tbody>
 </table>
 
-<h3 ng-show="finding.dataFlowElements && initialized">Data Flow</h3>
-<table ng-show="finding.dataFlowElements && initialized" class="dataTable">
+<h3 ng-show="finding.dataFlowElements && initialized && showDataFlowElements">Data Flow</h3>
+<table ng-show="finding.dataFlowElements && initialized && showDataFlowElements" class="dataTable">
     <tbody ng-repeat="flowElement in finding.dataFlowElements">
         <tr>
             <td class="bold">File Name</td>
@@ -120,7 +120,7 @@
         </tr>
         <tr>
             <td class="bold">Line Text</td>
-            <td class="inputValue"><code>{{ flowElement.lineText }}</code></td>
+            <td class="inputValue"><pre syntax-highlighter="{{ flowElement }}"></pre></td>
         </tr>
         <tr>
             <td class="bold">Column Number</td>
@@ -130,8 +130,6 @@
             <td class="bold">Sequence</td>
             <td class="inputValue">{{ flowElement.sequence }}</td>
         </tr>
-        <tr>
-            <td colspan="2">============================================================</td>
-        </tr>
+        <tr class="border"></tr>
     </tbody>
 </table>

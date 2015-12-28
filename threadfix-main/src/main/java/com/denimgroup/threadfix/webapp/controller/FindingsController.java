@@ -69,8 +69,14 @@ public class FindingsController {
 			return "403";
 		}
 
+		Finding finding = findingService.loadFinding(findingId);
+		if (finding == null) {
+			log.warn(ResourceNotFoundException.getLogMessage("Finding", findingId));
+			throw new ResourceNotFoundException();
+		}
+
 		PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MODIFY_VULNERABILITIES);
-		return (EnterpriseTest.isEnterprise()) ? "scans/finding/index" : "scans/findingDetail";
+		return (EnterpriseTest.isEnterprise() && finding.getDataFlowElements().size() > 0) ? "scans/finding/index" : "scans/findingDetail";
 	}
 
     @JsonView(AllViews.VulnerabilityDetail.class)
