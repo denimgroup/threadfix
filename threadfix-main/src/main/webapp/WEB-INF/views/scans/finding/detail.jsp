@@ -107,8 +107,8 @@
     </tbody>
 </table>
 
-<h3 ng-show="finding.dataFlowElements && initialized && showDataFlowElements">Data Flow</h3>
-<table ng-show="finding.dataFlowElements && initialized && showDataFlowElements" class="dataTable">
+<h3 ng-show="initialized && showDataFlowElements">Data Flow</h3>
+<table ng-show="initialized && showDataFlowElements" class="dataTable">
     <tbody ng-repeat="flowElement in finding.dataFlowElements">
         <tr>
             <td class="bold">File Name</td>

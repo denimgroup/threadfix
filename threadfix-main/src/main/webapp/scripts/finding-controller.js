@@ -23,6 +23,7 @@ myAppModule.controller('FindingController', function ($scope, $window, $modal, $
                 if (data.success) {
                     $scope.initialized = true;
                     $scope.finding = data.object.finding;
+                    $scope.showDataFlowElements = $scope.finding.dataFlowElements && $scope.finding.dataFlowElements.length > 0;
 
                     $scope.vulnUrl = tfEncoder.encode("/organizations/" + teamId + "/applications/" + appId +
                         "/vulnerabilities/" + $scope.finding.vulnerability.id);
