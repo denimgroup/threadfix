@@ -995,6 +995,10 @@ threadfixModule.factory ('syntaxHighlighterService', function () {
         }
     };
 
+    var htmlEscapeRightAngleBrackets = function(highlightedContent) {
+        return highlightedContent.replace(new RegExp("<", 'g'), "&lt;");
+    };
+
     return {
         highlight: function ($element, $scope, data) {
 
@@ -1004,6 +1008,8 @@ threadfixModule.factory ('syntaxHighlighterService', function () {
             var classes = data.classes;
 
             if (highlightedContent) {
+
+                highlightedContent = htmlEscapeRightAngleBrackets(highlightedContent);
 
                 if (!lineNumberId) {
                     classes += ' gutter: false;';
