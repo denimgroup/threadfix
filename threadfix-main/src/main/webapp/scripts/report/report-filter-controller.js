@@ -57,6 +57,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
             || $scope.showDateControls
             || $scope.showDateRange
             || $scope.showTypeAndMergedControls
+            || $scope.showPivotControls
             || $scope.showTagControls
             || $scope.showOWasp
             || $scope.showPermissions) {
@@ -74,6 +75,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
         $scope.showSaveFilter = bool;
         $scope.showTypeAndMergedControls = bool;
         $scope.showTagControls = bool;
+        $scope.showPivotControls = bool;
         $scope.showOWasp = bool;
         $scope.showPermissions = bool;
     };

@@ -20,6 +20,8 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                 high: true,
                 critical: true
             },
+            primaryPivot: "SEVERITY",
+            secondaryPivot: "CWE",
             numberMerged: null,
             path: null,
             parameter: null,
@@ -79,6 +81,8 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                         $scope.tags = data.object.tags;
                         $scope.commentTags = data.object.commentTags;
                         $scope.vulnTags = data.object.vulnTags;
+                        $scope.vulnSearchPivots = data.object.vulnSearchPivots;
+                        $scope.vulnSearchPivotDisplayNames = data.object.vulnSearchPivotDisplayNames;
                         $scope.tags.sort(nameCompare);
                         $scope.commentTags.sort(nameCompare);
                         $scope.vulnTags.sort(nameCompare);

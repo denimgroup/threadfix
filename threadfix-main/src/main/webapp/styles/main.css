@@ -1226,6 +1226,10 @@ body.dragover.drag-enabled .uploadable {
     cursor: pointer;
 }
 
+.filter-controls .accordion-inner .pivot {
+	width: 200px;
+}
+
 .vuln-tree a, .filter-controls a {
     text-decoration: none;
 }
