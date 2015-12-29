@@ -214,26 +214,26 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
     };
 
     $scope.validatePrimaryPivot = function(primaryPivot){
-        $scope.prevPrimaryPivot = $scope.parameters.primaryPivot;
+        $scope.parameters.primaryPivot = primaryPivot;
 
         if (primaryPivot === $scope.parameters.secondaryPivot) {
-            $scope.parameters.primaryPivot = primaryPivot;
             $scope.primaryPivot_error = "Primary pivot cannot be equal to secondary pivot."
         } else {
             $scope.primaryPivot_error = "";
             $scope.secondaryPivot_error = "";
+            $scope.refresh();
         }
     };
 
     $scope.validateSecondaryPivot = function(secondaryPivot){
-        $scope.prevSecondaryPivot = $scope.parameters.secondaryPivot;
+        $scope.parameters.secondaryPivot = secondaryPivot;
 
         if (secondaryPivot === $scope.parameters.primaryPivot) {
-            $scope.parameters.secondaryPivot = secondaryPivot;
             $scope.secondaryPivot_error = "Secondary pivot cannot be equal to primary pivot."
         } else {
             $scope.secondaryPivot_error = "";
             $scope.primaryPivot_error = "";
+            $scope.refresh();
         }
     };
 });
