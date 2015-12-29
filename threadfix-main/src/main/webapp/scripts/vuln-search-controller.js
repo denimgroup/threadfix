@@ -213,4 +213,29 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         return a.name.localeCompare(b.name);
     };
 
+    $scope.$watch('parameters.primaryPivot', function(){
+        if ($scope.parameters.primaryPivot === $scope.parameters.secondaryPivot) {
+            //$scope.parameters.primaryPivot = $scope.prevPrimaryPivot;
+            $scope.primaryPivot_error = "Primary pivot cannot be equal to secondary pivot."
+        } else {
+            $scope.primaryPivot_error = "";
+        }
+    });
+
+    $scope.$watch('parameters.secondaryPivot', function(){
+        if ($scope.parameters.secondaryPivot === $scope.parameters.primaryPivot) {
+            //$scope.parameters.secondaryPivot = $scope.prevSecondaryPivot;
+            $scope.secondaryPivot_error = "Secondary pivot cannot be equal to primary pivot."
+        } else {
+            $scope.secondaryPivot_error = "";
+        }
+    });
+
+    $scope.validatePrimaryPivot = function(primaryPivot){
+        $scope.prevPrimaryPivot = $scope.parameters.primaryPivot;
+    };
+
+    $scope.validateSecondaryPivot = function(secondaryPivot){
+        $scope.prevSecondaryPivot = $scope.parameters.secondaryPivot;
+    };
 });

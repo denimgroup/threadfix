@@ -113,12 +113,16 @@
         <div class="accordion-inner">
             Primary Pivot<br/>
             <select class="pivot" ng-options="vulnSearchPivotDisplayNames[pivot] for pivot in vulnSearchPivots"
-                    ng-model="parameters.primaryPivot" name="primaryPivot" id="primaryPivot"></select>
+                    ng-model="parameters.primaryPivot" name="primaryPivot" id="primaryPivot"
+                    ng-change="validatePrimaryPivot(parameters.primaryPivot)"></select>
+            <span class="errors" ng-show="primaryPivot_error">{{ primaryPivot_error }}</span>
         </div>
-        <div class="accordion-inner" class="pivot">
+        <div class="accordion-inner">
             Secondary Pivot<br/>
             <select class="pivot" ng-options="vulnSearchPivotDisplayNames[pivot] for pivot in vulnSearchPivots"
-                    ng-model="parameters.secondaryPivot" name="secondaryPivot" id="secondaryPivot"></select>
+                    ng-model="parameters.secondaryPivot" name="secondaryPivot" id="secondaryPivot"
+                    ng-change="validateSecondaryPivot(parameters.secondaryPivot)"></select>
+            <span class="errors" ng-show="secondaryPivot_error">{{ secondaryPivot_error }}</span>
         </div>
     </div>
 </div>
