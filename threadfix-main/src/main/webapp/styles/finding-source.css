@@ -12,7 +12,7 @@ a.fileNav {
 
 .affix {
     position: fixed;
-    margin-top: -100px;
+    margin-top: -443px;
 }
 
 div.tab-pane div.syntaxhighlighter div.anchor {
@@ -24,4 +24,8 @@ div.tab-pane div.syntaxhighlighter div.anchor {
 
 tr.border {
     border: 1px solid black;
+}
+
+tr.spacer {
+    height: 10px;
 }

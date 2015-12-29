@@ -107,29 +107,19 @@
     </tbody>
 </table>
 
+<br>
+
 <h3 ng-show="initialized && showDataFlowElements">Data Flow</h3>
-<table ng-show="initialized && showDataFlowElements" class="dataTable">
+<table ng-show="initialized && showDataFlowElements">
     <tbody ng-repeat="flowElement in finding.dataFlowElements">
         <tr>
-            <td class="bold">File Name</td>
-            <td class="inputValue">{{ flowElement.sourceFileName }}</td>
+            <td class="bold medium">File</td>
+            <td class="inputValue">{{ flowElement.sourceFileName }} Line {{ flowElement.lineNumber }}</td>
         </tr>
         <tr>
-            <td class="bold">Line Number</td>
-            <td class="inputValue">{{ flowElement.lineNumber }}</td>
-        </tr>
-        <tr>
-            <td class="bold">Line Text</td>
+            <td class="bold medium">Line Text</td>
             <td class="inputValue"><pre syntax-highlighter="{{ flowElement }}"></pre></td>
         </tr>
-        <tr>
-            <td class="bold">Column Number</td>
-            <td class="inputValue">{{ flowElement.columnNumber }}</td>
-        </tr>
-        <tr>
-            <td class="bold">Sequence</td>
-            <td class="inputValue">{{ flowElement.sequence }}</td>
-        </tr>
-        <tr class="border"></tr>
+        <tr class="spacer"></tr>
     </tbody>
 </table>
