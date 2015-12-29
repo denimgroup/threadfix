@@ -300,27 +300,35 @@ threadfixModule.factory('vulnSearchParameterService', function() {
 
         parameters.channelTypes = parameters.scanners;
 
-        if (!parameters.channelTypes)
+        if (!parameters.channelTypes) {
             parameters.channelTypes = [];
+        }
+
         parameters.channelTypes.forEach(function(filteredScanner) {
             filteredScanner.id = undefined;
         });
-        if (!$scope.scanners)
+
+        if (!$scope.scanners){
             $scope.scanners = [];
+        }
+
         $scope.scanners.forEach(function(scanner) {
-            if (parameters.channelTypes)
+            if (parameters.channelTypes) {
                 parameters.channelTypes.forEach(function(filteredScanner) {
                     if (scanner.name === filteredScanner.name) {
                         filteredScanner.id = scanner.id;
                     }
                 });
+            }
         });
 
         var numberRegex = /^([0-9]+)$/;
         var autocompleteRegex = /.* ([0-9]+)\)$/;
 
-        if (!parameters.genericVulnerabilities)
+        if (!parameters.genericVulnerabilities) {
             parameters.genericVulnerabilities = [];
+        }
+
         parameters.genericVulnerabilities.forEach(function(genericVulnerability) {
             if (numberRegex.test(genericVulnerability.name)) {
                 genericVulnerability.id = numberRegex;
@@ -339,7 +347,6 @@ threadfixModule.factory('vulnSearchParameterService', function() {
             parameters.owasp.top10.forEach(function(owaspVuln){
                 owaspVuln.members.forEach(function(cweId){
                     parameters.genericVulnerabilities.push({id: cweId});
-
                     // Query all vulnerabilities of Sonatype and Dependency Check for
                     // OWASP Top Ten 2013 Category A9 - Using Components with Known Vulnerabilities
                     if (cweId === 937)
@@ -368,6 +375,7 @@ threadfixModule.factory('vulnSearchParameterService', function() {
                 parameters.endDate = date.getTime();
             }
         }
+
         if (parameters.startDate) {
             date = new Date(parameters.startDate);
             if (date) {
