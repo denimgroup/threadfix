@@ -42,6 +42,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.*;
+import static java.lang.System.currentTimeMillis;
 import static org.hibernate.criterion.Projections.rowCount;
 import static org.hibernate.criterion.Restrictions.*;
 
@@ -619,7 +620,6 @@ public class HibernateScanDao
 		}
 
 		return getBasicMapCriteria()
-				.add(in("appAlias.id", appIds))
 				.setMaxResults(100)
 				.setFirstResult(current * 100)
 				.list();
@@ -635,7 +635,6 @@ public class HibernateScanDao
 		}
 
 		return (Long) getBasicMapCriteria()
-				.add(in("appAlias.id", appIds))
 				.setProjection(rowCount()).uniqueResult();
 	}
 
@@ -720,10 +719,25 @@ public class HibernateScanDao
     }
 
     private Criteria getBasicMapCriteria() {
-		return sessionFactory.getCurrentSession().createCriteria(ScanRepeatFindingMap.class)
-				.createAlias("scan", "scanAlias")
-				.createAlias("scanAlias.application", "appAlias")
-				.add(eq("appAlias.active", true))
-				.add(isEmpty("statisticsCounters"));
+
+		long start = currentTimeMillis();
+
+		List<Integer> scanRepeatFindingMapIds = sessionFactory.getCurrentSession()
+				.createCriteria(StatisticsCounter.class)
+				.createAlias("scanRepeatFindingMap", "mapAlias")
+				.add(Restrictions.isNotNull("scanRepeatFindingMap"))
+				.setProjection(Projections.property("mapAlias.id"))
+				.list();
+
+		System.out.println("Initial IDs: " + (currentTimeMillis() - start));
+
+		Criteria criteria = sessionFactory.getCurrentSession()
+				.createCriteria(ScanRepeatFindingMap.class)
+		;
+		if (!scanRepeatFindingMapIds.isEmpty()) {
+			criteria.add(Restrictions.not(Restrictions.in("id", scanRepeatFindingMapIds)));
+		}
+
+		return criteria;
 	}
 }
