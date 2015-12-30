@@ -40,10 +40,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.service.merge.RemappingTestHarness.getFilePaths;
 import static org.springframework.test.util.AssertionErrors.assertTrue;
 
@@ -135,15 +133,25 @@ public class StatisticsCounterTests {
         testTotalAndOld(32, 0, scans);
     }
 
-    private void testTotalAndOld(int total, int old, List<Scan> scans) {
-        Map<Integer, Integer> numbersOld = map();
+    @Test
+    public void testRepeatStats() {
+        List<Scan> scans = getScans("testfire-arachni.xml", "testfire-zap.xml", "testfire-zap2.xml");
+        testTotalAndOld(69, 8, scans);
+        testTotalAndOld(32, 0, scans);
+        testTotalAndOld(69, 69, scans);
+    }
 
+    private void testTotalAndOld(int total, int old, List<Scan> scans) {
         for (Scan scan : scans) {
-            numbersOld.put(scan.getNumberTotalVulnerabilities(), scan.getNumberOldVulnerabilities());
+            System.out.println("Checking " + scan.getNumberTotalVulnerabilities() + ", " + scan.getNumberOldVulnerabilities());
+            if (scan.getNumberTotalVulnerabilities() == total &&
+                    scan.getNumberOldVulnerabilities() == old) {
+                return; // we did it!
+            }
         }
 
         assertTrue("Scan with " + total + " vulns didn't have " + old +
-                " old vulnerabilities. Got " + numbersOld, numbersOld.get(total) == old);
+                " old vulnerabilities.", false);
     }
 
     private List<Scan> getScans(String... scanFiles) {

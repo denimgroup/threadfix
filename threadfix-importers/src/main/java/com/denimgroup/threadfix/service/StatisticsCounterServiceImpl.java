@@ -37,6 +37,7 @@ import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.*;
 import static com.denimgroup.threadfix.data.entities.StatisticsCounter.getStatisticsCounter;
+import static java.lang.System.currentTimeMillis;
 
 /**
  * Created by mcollins on 5/13/15.
@@ -104,22 +105,22 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
             return;
         }
 
+        long start = currentTimeMillis();
+
         Long total = scanDao.totalMapsThatNeedCountersInApps(appIds);
 
-        long start = System.currentTimeMillis();
-
-        LOG.debug("Total maps missing counters: " + total);
+        LOG.info("Total maps missing counters: " + total);
 
         int current = total.intValue() / 100;
 
-        while (current >= 0) {
+        while (current >= 0 && total != 0) {
 
             LOG.debug("Processing " + current + " out of " + total + ".");
 
             List<ScanRepeatFindingMap> mapsThatNeedCounters = scanDao.getMapsThatNeedCountersInApps(current, appIds);
 
             for (ScanRepeatFindingMap map : mapsThatNeedCounters) {
-                if (!map.getFinding().isFirstFindingForVuln()) {
+                if (!map.getFinding().getHasStatisticsCounter()) {
                     continue;
                 }
 
@@ -131,7 +132,7 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
             current --;
         }
 
-        LOG.debug("Took " + (System.currentTimeMillis() - start) + " ms to add missing map counters.");
+        LOG.info("Took " + (currentTimeMillis() - start) + " ms to add missing map counters.");
     }
 
     private void addMissingFindingCounters(List<Integer> appIds) {
@@ -145,9 +146,9 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
         Long total = scanDao.totalFindingsThatNeedCountersInApps(appIds, findingIdRestrictions);
 
-        long start = System.currentTimeMillis();
+        long start = currentTimeMillis();
 
-        LOG.debug("Total: " + total);
+        LOG.debug("Total findings that need counters: " + total);
 
         int current = total.intValue() / 100;
 
@@ -170,12 +171,12 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
             current --;
         }
 
-        LOG.debug("Took " + (System.currentTimeMillis() - start) + " ms to add missing finding counters.");
+        LOG.info("Took " + (currentTimeMillis() - start) + " ms to add missing finding counters.");
     }
 
     private void runQueries(List<Scan> scans) {
 
-        long start = System.currentTimeMillis();
+        long start = currentTimeMillis();
 
         // TODO use existing filters when calculating these statistics
 
@@ -206,7 +207,7 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
             processScans(entry.getKey().getOrganization().getId(), entry.getKey().getId(), entry.getValue());
         }
 
-        LOG.debug("Critical/High/Medium/Low/Info calculated in " + (System.currentTimeMillis() - start) + " ms.");
+        LOG.debug("Critical/High/Medium/Low/Info calculated in " + (currentTimeMillis() - start) + " ms.");
 
     }
 
