@@ -33,6 +33,6 @@ import java.util.List;
  */
 public interface DefectSubmitter {
 
-    public String createDefect(List<Vulnerability> vulnerabilities, DefectMetadata metadata);
+    String createDefect(List<Vulnerability> vulnerabilities, DefectMetadata metadata);
 
 }
