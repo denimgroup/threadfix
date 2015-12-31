@@ -720,16 +720,12 @@ public class HibernateScanDao
 
     private Criteria getBasicMapCriteria() {
 
-		long start = currentTimeMillis();
-
 		List<Integer> scanRepeatFindingMapIds = sessionFactory.getCurrentSession()
 				.createCriteria(StatisticsCounter.class)
 				.createAlias("scanRepeatFindingMap", "mapAlias")
 				.add(Restrictions.isNotNull("scanRepeatFindingMap"))
 				.setProjection(Projections.property("mapAlias.id"))
 				.list();
-
-		System.out.println("Initial IDs: " + (currentTimeMillis() - start));
 
 		Criteria criteria = sessionFactory.getCurrentSession()
 				.createCriteria(ScanRepeatFindingMap.class)
