@@ -34,7 +34,7 @@ public class ScheduledEmailReportServiceImpl
 	private GenericSeverityDao genericSeverityDao;
 	@Autowired
 	ScheduledEmailReportScheduler scheduledEmailReportScheduler;
-	
+
 	@Override
 	protected ScheduledJobDao<ScheduledEmailReport> getScheduledJobDao() {
 		return scheduledEmailReportDao;
