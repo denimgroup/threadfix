@@ -18,7 +18,7 @@ import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
-@Service
+@Service("scheduledEmailReportService")
 @Transactional(readOnly = false)
 public class ScheduledEmailReportServiceImpl
 		extends ScheduledJobServiceImpl<ScheduledEmailReport>
@@ -34,8 +34,7 @@ public class ScheduledEmailReportServiceImpl
 	private GenericSeverityDao genericSeverityDao;
 	@Autowired
 	ScheduledEmailReportScheduler scheduledEmailReportScheduler;
-
-
+	
 	@Override
 	protected ScheduledJobDao<ScheduledEmailReport> getScheduledJobDao() {
 		return scheduledEmailReportDao;
