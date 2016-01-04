@@ -135,7 +135,7 @@ public class GenericSeverity extends BaseEntity implements Comparable<GenericSev
 	@JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class,
 			AllViews.PolicyPageView.class, AllViews.ApplicationIndexView.class,
 			AllViews.RestViewScanStatistic.class, AllViews.ScheduledEmailReportView.class,
-			AllViews.UIVulnSearch.class, AllViews.VulnSearchApplications.class })
+			AllViews.UIVulnSearch.class, AllViews.VulnSearchApplications.class, AllViews.VulnerabilityDetail.class })
 	@Transient
 	public String getDisplayName() {
 		return customName == null || customName.trim().length() == 0 ? name : customName;

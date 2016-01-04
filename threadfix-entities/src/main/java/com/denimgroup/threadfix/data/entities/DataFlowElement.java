@@ -116,6 +116,7 @@ public class DataFlowElement extends BaseEntity implements Comparable<DataFlowEl
 	}
 
 	@Basic
+	@JsonView(AllViews.VulnerabilityDetail.class)
 	public int getSequence() {
 		return sequence;
 	}

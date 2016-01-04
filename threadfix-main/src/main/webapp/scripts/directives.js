@@ -248,3 +248,23 @@ threadfixModule.directive('genericSeverity', function(customSeverityService) {
         link: link
     };
 });
+
+threadfixModule.directive('syntaxHighlighter', function (syntaxHighlighterService) {
+
+    var link = function ($scope, $element, $attrs) {
+
+        var attrs = JSON.parse($attrs.syntaxHighlighter);
+
+        syntaxHighlighterService.highlight($element, $scope, {
+            highlightedContent: attrs.highlightedContent,
+            lineNumber: attrs.lineNumber,
+            lineNumberId: attrs.lineNumberId,
+            classes: attrs.classes
+        });
+    };
+
+    return {
+        restrict: 'A',
+        link: link
+    }
+});
