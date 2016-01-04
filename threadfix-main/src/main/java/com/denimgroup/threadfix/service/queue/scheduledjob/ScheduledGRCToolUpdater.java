@@ -29,7 +29,6 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.ScheduledGRCToolUpdateService;
 import com.denimgroup.threadfix.service.queue.QueueSender;
-import org.bouncycastle.util.Strings;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,7 +148,6 @@ public class ScheduledGRCToolUpdater {
                 log.warn("Unable to schedule ScheduledGRCToolUpdateId " + scheduledGRCToolUpdate.getId() + " " + scheduledGRCToolUpdate.getFrequency() + " " + scheduledGRCToolUpdate.getDay());
                 return cronExpression;
             }
-            day = Strings.toUpperCase(dayInWeek.getDay());
         }
 
         // Set DayOfMonth is ? if schedule weekly, and * otherwise

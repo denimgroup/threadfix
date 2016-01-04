@@ -26,11 +26,9 @@ package com.denimgroup.threadfix.service.queue.scheduledjob;
 
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-
 import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.ScheduledDefectTrackerUpdateService;
 import com.denimgroup.threadfix.service.queue.QueueSender;
-import org.bouncycastle.util.Strings;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,7 +144,7 @@ public class ScheduledDefectTrackerUpdater {
                 log.warn("Unable to schedule ScheduledDefectTrackerUpdateId " + scheduledDefectTrackerUpdate.getId() + " " + scheduledDefectTrackerUpdate.getFrequency() + " " + scheduledDefectTrackerUpdate.getDay());
                 return cronExpression;
             }
-            day = Strings.toUpperCase(dayInWeek.getDay());
+            day = dayInWeek.getDay().toUpperCase();
         }
 
         // Set DayOfMonth is ? if schedule weekly, and * otherwise

@@ -24,15 +24,10 @@
 
 package com.denimgroup.threadfix.service.queue.scheduledjob;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ScheduledScan;
-import com.denimgroup.threadfix.data.entities.ScheduledFrequencyType;
-import com.denimgroup.threadfix.data.entities.ScheduledPeriodType;
-import com.denimgroup.threadfix.data.entities.DayInWeek;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScheduledScanService;
 import com.denimgroup.threadfix.service.queue.QueueSender;
-import org.bouncycastle.util.Strings;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,7 +106,6 @@ public class ScheduledScanScheduler {
                 log.warn("Unable to schedule ScheduledScanId " + scheduledScan.getId() + " " + scheduledScan.getFrequency() + " " + scheduledScan.getDay());
                 return cronExpression;
             }
-            day = Strings.toUpperCase(dayInWeek.getDay());
         }
 
         // Set DayOfMonth is ? if schedule weekly, and * otherwise

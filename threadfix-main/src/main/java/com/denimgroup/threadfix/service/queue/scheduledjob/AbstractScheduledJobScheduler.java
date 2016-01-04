@@ -1,37 +1,21 @@
 package com.denimgroup.threadfix.service.queue.scheduledjob;
 
-import static org.quartz.CronScheduleBuilder.cronSchedule;
-
-import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
-import org.bouncycastle.util.Strings;
-import org.quartz.CronTrigger;
-import org.quartz.Job;
-import org.quartz.JobBuilder;
-import org.quartz.JobDetail;
-import org.quartz.JobKey;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.SchedulerFactory;
-import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
-import org.quartz.impl.StdSchedulerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.denimgroup.threadfix.data.entities.DayInWeek;
-import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
-import com.denimgroup.threadfix.data.entities.ScheduledFrequencyType;
-import com.denimgroup.threadfix.data.entities.ScheduledJob;
-import com.denimgroup.threadfix.data.entities.ScheduledPeriodType;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.ScheduledJobService;
 import com.denimgroup.threadfix.service.queue.QueueSender;
+import org.quartz.*;
+import org.quartz.impl.StdSchedulerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
+
+import static org.quartz.CronScheduleBuilder.cronSchedule;
 
 //This class is the abstracted version of the classes like ScheduledGRCToolUpdater (everything is always the same in these)
 public abstract class AbstractScheduledJobScheduler<T extends ScheduledJob> {
@@ -155,7 +139,7 @@ public abstract class AbstractScheduledJobScheduler<T extends ScheduledJob> {
                 log.warn("Unable to schedule ScheduledGRCToolUpdateId " + scheduledJob.getId() + " " + scheduledJob.getFrequency() + " " + scheduledJob.getDay());
                 return cronExpression;
             }
-            day = Strings.toUpperCase(dayInWeek.getDay());
+            day = dayInWeek.getDay().toUpperCase();
         }
 
         // Set DayOfMonth is ? if schedule weekly, and * otherwise

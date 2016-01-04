@@ -33,7 +33,6 @@ import com.denimgroup.threadfix.service.queue.QueueSender;
 import org.apache.commons.beanutils.BeanToPropertyValueTransformer;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.bouncycastle.util.Strings;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,7 +134,7 @@ public class ScheduledRemoteProviderImporter {
                 log.warn("Unable to schedule ScheduledRemoteProviderImportId " + scheduledRemoteProviderImport.getId() + " " + scheduledRemoteProviderImport.getFrequency() + " " + scheduledRemoteProviderImport.getDay());
                 return cronExpression;
             }
-            day = Strings.toUpperCase(dayInWeek.getDay());
+            day = dayInWeek.getDay().toUpperCase();
         }
 
         // Set DayOfMonth is ? if schedule weekly, and * otherwise
