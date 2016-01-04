@@ -24,7 +24,8 @@
 
 package com.denimgroup.threadfix.service.queue.scheduledjob;
 
-import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
+import com.denimgroup.threadfix.data.entities.ScheduledRemoteProviderImport;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScheduledRemoteProviderImportService;
 import org.quartz.JobDetail;

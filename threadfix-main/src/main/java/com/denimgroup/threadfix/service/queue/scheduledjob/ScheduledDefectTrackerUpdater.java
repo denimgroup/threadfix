@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.service.queue.scheduledjob;
 
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-
 import com.denimgroup.threadfix.service.ScheduledDefectTrackerUpdateService;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
