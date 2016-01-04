@@ -203,7 +203,9 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
 
         for (var key in $scope.parameters) {
             if (filterParameters.hasOwnProperty(key)) {
-                $scope.parameters[key] = filterParameters[key];
+                if (!($scope.parameters.filterType.isComplianceFilter && key === "tags")) {
+                    $scope.parameters[key] = filterParameters[key];
+                }
             }
         }
 
