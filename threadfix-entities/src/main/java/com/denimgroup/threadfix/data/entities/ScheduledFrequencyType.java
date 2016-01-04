@@ -38,7 +38,7 @@ public enum ScheduledFrequencyType {
         return this.description;
     }
 
-    private ScheduledFrequencyType(String description) {
+    ScheduledFrequencyType(String description) {
         this.description = description;
     }
 

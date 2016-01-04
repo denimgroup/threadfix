@@ -24,6 +24,7 @@
                 <th>ID</th>
                 <th>Time</th>
                 <th>Frequency</th>
+                <th>Cron Expression</th>
                 <c:if test="${ canManageRemoteProviders }">
                     <th class="centered last"></th>
                 </c:if>
@@ -35,8 +36,21 @@
             </tr>
             <tr class="bodyRow" ng-repeat="scheduledImport in scheduledImports">
                 <td id="scheduledImportId{{ scheduledImport.timeStringId }}"> {{ scheduledImport.id }} </td>
-                <td id="scheduledImportDay{{ scheduledImport.timeStringId }}"> {{ scheduledImport.timeString }} </td>
-                <td id="scheduledImportFrequency{{ scheduledImport.timeStringId }}"> {{ scheduledImport.frequency }} </td>
+                <td id="scheduledImportDay{{ scheduledImport.timeStringId }}">
+                    <span ng-hide="scheduledImport.scheduleType == 'CRON'">
+                        {{ scheduledImport.timeString }}
+                    </span>
+                </td>
+                <td id="scheduledImportFrequency{{ scheduledImport.timeStringId }}">
+                    <span ng-hide="scheduledImport.scheduleType == 'CRON'">
+                        {{ scheduledImport.frequency }}
+                    </span>
+                </td>
+                <td id="scheduledImportCronExpressionId">
+                    <span ng-show="scheduledImport.scheduleType == 'CRON'" tooltip="{{ scheduledUpdate.cronTranslation }}">
+                        {{ scheduledImport.cronExpression }}
+                    </span>
+                </td>
                 <c:if test="${ canManageRemoteProviders }">
                     <td class="centered">
                         <a  id="scheduledImportDeleteButton{{ scheduledImport.timeStringId }}" class="btn btn-danger" ng-click="deleteScheduledImport(scheduledImport)">Delete</a>
@@ -45,5 +59,8 @@
             </tr>
             </tbody>
         </table>
+        <div>
+            Use <a href="https://crontranslator.appspot.com/">Cron Translator</a> to decode cron expressions
+        </div>
     </div>
 </tab>

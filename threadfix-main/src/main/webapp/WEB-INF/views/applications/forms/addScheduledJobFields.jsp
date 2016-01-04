@@ -1,4 +1,23 @@
 <tr align="left">
+    <td style="padding:5px;">Scheduling Method</td>
+    <td style="padding:5px;">
+        <input type="radio" name="scheduleType" ng-model="object.scheduleType" value="SELECT"> Select
+        <input type="radio" name="scheduleType" ng-model="object.scheduleType" value="CRON"> Cron Expression
+    </td>
+</tr>
+<tr align="left" ng-show="object.scheduleType == 'CRON'">
+    <td style="padding:5px;">Cron Expression</td>
+    <td style="padding:5px;">
+        <input type="text" name="cronExpression" ng-model="object.cronExpression">
+    </td>
+    <td>
+        <span class="errors" id="cronExpressionError" ng-show="object.cronExpression_error">
+            {{ object.cronExpression_error }}
+        </span>
+    </td>
+</tr>
+
+<tr align="left" ng-show="object.scheduleType == 'SELECT'">
     <td style="padding:5px;">Frequency</td>
     <td style="padding:5px;">
         <select style="width:243px;" name="frequency" ng-model="object.frequency" id="frequency">
@@ -8,7 +27,7 @@
     </td>
 </tr>
 
-<tr align="left">
+<tr align="left" ng-show="object.scheduleType == 'SELECT'">
     <td style="padding:5px;">Time</td>
     <td style="padding:5px;">
         <select name="hour" ng-model="object.hour" style="margin-bottom:0; width:60px;" id="hour">

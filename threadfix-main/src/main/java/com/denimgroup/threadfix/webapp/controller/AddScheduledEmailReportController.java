@@ -59,8 +59,14 @@ public class AddScheduledEmailReportController {
 			return RestResponse.failure("You are not allowed to modify scheduled email reports.");
 		}
 
-		scheduledEmailReportService.validateDate(scheduledEmailReport, result);
-		scheduledEmailReportService.validateScheduleEmailReport(scheduledEmailReport, result);
+		if (scheduledEmailReport.getScheduleType().equals("CRON")) {
+            scheduledEmailReport.clearDate();
+			scheduledEmailReportService.validateCronExpression(scheduledEmailReport, result);
+		} else if (scheduledEmailReport.getScheduleType().equals("SELECT")) {
+            scheduledEmailReport.clearCronExpression();
+			scheduledEmailReportService.validateDate(scheduledEmailReport, result);
+			scheduledEmailReportService.validateScheduleEmailReport(scheduledEmailReport, result);
+		}
 
 		List<EmailList> emptyEmailLists = list();
 		scheduledEmailReport.setEmailLists(emptyEmailLists);

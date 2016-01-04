@@ -20,30 +20,47 @@
     <div id="updateQueueDiv${ application.id }">
         <table class="table">
             <thead>
-            <tr>
-                <th>ID</th>
-                <th>Time</th>
-                <th>Frequency</th>
-                <c:if test="${ canManageDefectTrackers }">
-                    <th class="centered last"></th>
-                </c:if>
-            </tr>
+                <tr>
+                    <th>ID</th>
+                    <th>Time</th>
+                    <th>Frequency</th>
+                    <th>Cron Expression</th>
+                    <c:if test="${ canManageDefectTrackers }">
+                        <th class="centered last"></th>
+                    </c:if>
+                </tr>
             </thead>
             <tbody>
-            <tr ng-hide="scheduledUpdates" class="bodyRow">
-                <td id="noScheduledUpdatesFoundMessage" colspan="5" style="text-align:center;">No Scheduled Updates found.</td>
-            </tr>
-            <tr class="bodyRow" ng-repeat="scheduledUpdate in scheduledUpdates">
-                <td id="scheduledUpdateId{{ scheduledUpdate.timeStringId }}"> {{ scheduledUpdate.id }} </td>
-                <td id="scheduledUpdateDay{{ scheduledUpdate.timeStringId }}"> {{ scheduledUpdate.timeString }} </td>
-                <td id="scheduledUpdateFrequency{{ scheduledUpdate.timeStringId }}"> {{ scheduledUpdate.frequency }} </td>
-                <c:if test="${ canManageDefectTrackers }">
-                    <td class="centered">
-                        <a  id="scheduledUpdateDeleteButton{{ scheduledUpdate.timeStringId }}" class="btn btn-danger" ng-click="deleteScheduledUpdate(scheduledUpdate)">Delete</a>
+                <tr ng-hide="scheduledUpdates" class="bodyRow">
+                    <td id="noScheduledUpdatesFoundMessage" colspan="5" style="text-align:center;">No Scheduled Updates found.</td>
+                </tr>
+                <tr class="bodyRow" ng-repeat="scheduledUpdate in scheduledUpdates">
+                    <td id="scheduledUpdateId{{ scheduledUpdate.timeStringId }}"> {{ scheduledUpdate.id }} </td>
+                    <td id="scheduledUpdateDay{{ scheduledUpdate.timeStringId }}">
+                        <span ng-hide="scheduledUpdate.scheduleType == 'CRON'">
+                            {{ scheduledUpdate.timeString }}
+                        </span>
                     </td>
-                </c:if>
-            </tr>
+                    <td id="scheduledUpdateFrequency{{ scheduledUpdate.timeStringId }}">
+                        <span ng-hide="scheduledUpdate.scheduleType == 'CRON'">
+                            {{ scheduledUpdate.frequency }}
+                        </span>
+                    </td>
+                    <td id="scheduledUpdateCronExpression">
+                        <span ng-show="scheduledUpdate.scheduleType == 'CRON'" tooltip="{{ scheduledUpdate.cronTranslation }}">
+                            {{ scheduledUpdate.cronExpression }}
+                        </span>
+                    </td>
+                    <c:if test="${ canManageDefectTrackers }">
+                        <td class="centered">
+                            <a  id="scheduledUpdateDeleteButton{{ scheduledUpdate.timeStringId }}" class="btn btn-danger" ng-click="deleteScheduledUpdate(scheduledUpdate)">Delete</a>
+                        </td>
+                    </c:if>
+                </tr>
             </tbody>
         </table>
+        <div>
+            Use <a href="https://crontranslator.appspot.com/">Cron Translator</a> to decode cron expressions
+        </div>
     </div>
 </tab>

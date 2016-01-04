@@ -78,8 +78,14 @@ public class ScheduledGRCToolUpdateController {
             return RestResponse.failure("You are not allowed to modify scheduled GRC tool updates.");
         }
 
-        scheduledGRCToolUpdateService.validateDate(scheduledGRCToolUpdate, result);
-        scheduledGRCToolUpdateService.validateSameDate(scheduledGRCToolUpdate, result);
+        if (scheduledGRCToolUpdate.getScheduleType().equals("CRON")) {
+            scheduledGRCToolUpdate.clearDate();
+            scheduledGRCToolUpdateService.validateCronExpression(scheduledGRCToolUpdate, result);
+        } else if (scheduledGRCToolUpdate.getScheduleType().equals("SELECT")) {
+            scheduledGRCToolUpdate.clearCronExpression();
+            scheduledGRCToolUpdateService.validateDate(scheduledGRCToolUpdate, result);
+            scheduledGRCToolUpdateService.validateSameDate(scheduledGRCToolUpdate, result);
+        }
 
         if (result.hasErrors()) {
             return FormRestResponse.failure("Encountered errors.", result);
@@ -90,7 +96,7 @@ public class ScheduledGRCToolUpdateController {
         }
 
         //Add new job to scheduler
-        if (scheduledGRCToolUpdater.addScheduledGRCToolUpdate(scheduledGRCToolUpdate)) {
+        if (scheduledGRCToolUpdater.addScheduledJob(scheduledGRCToolUpdate)) {
             log.info("Successfully added new scheduled GRC tool update to scheduler");
             return RestResponse.success(scheduledGRCToolUpdateService.loadAll());
 
@@ -124,7 +130,7 @@ public class ScheduledGRCToolUpdateController {
         }
 
         //Remove job from scheduler
-        if (scheduledGRCToolUpdater.removeScheduledGRCToolUpdate(scheduledGRCToolUpdate)) {
+        if (scheduledGRCToolUpdater.removeScheduledJob(scheduledGRCToolUpdate)) {
             String ret = scheduledGRCToolUpdateService.delete(scheduledGRCToolUpdate);
             if (ret != null) {
                 log.warn(ret);
