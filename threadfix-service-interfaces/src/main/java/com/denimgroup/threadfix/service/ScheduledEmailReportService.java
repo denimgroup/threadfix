@@ -13,13 +13,13 @@ public interface ScheduledEmailReportService extends ScheduledJobService<Schedul
 	 * @param scheduledEmailReport
 	 * @param result
 	 */
-	public void validateScheduleEmailReport(ScheduledEmailReport scheduledEmailReport, BindingResult result);
+	void validateScheduleEmailReport(ScheduledEmailReport scheduledEmailReport, BindingResult result);
 
-	public String addJobToScheduler(ScheduledEmailReport newScheduledEmailReport);
+	String addJobToScheduler(ScheduledEmailReport newScheduledEmailReport);
 
-	public String removeJobFromScheduler(ScheduledEmailReport oldScheduledEmailReport);
+	String removeJobFromScheduler(ScheduledEmailReport oldScheduledEmailReport);
 
-	public String replaceJobFromScheduler(ScheduledEmailReport oldScheduledEmailReport, ScheduledEmailReport newScheduledEmailReport);
+	String replaceJobFromScheduler(ScheduledEmailReport oldScheduledEmailReport, ScheduledEmailReport newScheduledEmailReport);
 
 	void removeTeam(ScheduledEmailReport scheduledEmailReport, Organization organization);
 }

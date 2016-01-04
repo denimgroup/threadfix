@@ -1,14 +1,5 @@
 package com.denimgroup.threadfix.service;
 
-import java.util.List;
-
-import static com.denimgroup.threadfix.CollectionUtils.list;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-
 import com.denimgroup.threadfix.data.dao.GenericSeverityDao;
 import com.denimgroup.threadfix.data.dao.OrganizationDao;
 import com.denimgroup.threadfix.data.dao.ScheduledEmailReportDao;
@@ -18,10 +9,20 @@ import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.ScheduledEmailReport;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.queue.scheduledjob.ScheduledEmailReportScheduler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 
-@Service
+import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
+@Service("scheduledEmailReportService")
 @Transactional(readOnly = false)
-public class ScheduledEmailReportServiceImpl extends ScheduledJobServiceImpl<ScheduledEmailReport> implements ScheduledEmailReportService {
+public class ScheduledEmailReportServiceImpl
+		extends ScheduledJobServiceImpl<ScheduledEmailReport>
+		implements ScheduledEmailReportService {
 
 	private final SanitizedLogger log = new SanitizedLogger(ScheduledEmailReportServiceImpl.class);
 
@@ -33,7 +34,6 @@ public class ScheduledEmailReportServiceImpl extends ScheduledJobServiceImpl<Sch
 	private GenericSeverityDao genericSeverityDao;
 	@Autowired
 	ScheduledEmailReportScheduler scheduledEmailReportScheduler;
-
 
 	@Override
 	protected ScheduledJobDao<ScheduledEmailReport> getScheduledJobDao() {

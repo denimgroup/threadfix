@@ -1,14 +1,15 @@
 package com.denimgroup.threadfix.service.queue.scheduledjob;
 
-import org.quartz.JobDetail;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.ScheduledEmailReport;
 import com.denimgroup.threadfix.service.ScheduledEmailReportService;
+import org.quartz.JobDetail;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Component;
 
 @Component
+@DependsOn("scheduledEmailReportService")
 public class ScheduledEmailReportScheduler extends AbstractScheduledJobScheduler<ScheduledEmailReport> {
 
 	@Autowired
