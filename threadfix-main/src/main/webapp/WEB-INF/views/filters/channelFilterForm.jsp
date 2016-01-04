@@ -12,7 +12,7 @@
 
         </h4>
     </div>
-    <div ng-form="form" ng-enter="ok(form.$valid)" class="modal-body">
+    <div ng-form="form" class="modal-body">
 
         <table class="modal-form-table">
             <tr>
