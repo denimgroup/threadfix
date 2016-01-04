@@ -193,7 +193,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                 return;
             }
 
-            $scope.currentModal.dismiss('modalChanged');
+            $scope.currentModal.dismiss('createDefectTracker');
             $scope.showCreateDefectTrackerModal();
         } else if (name === 'goToWaf') {
             $scope.goToWaf();
@@ -387,8 +387,10 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             $scope.config.application.defectTracker = defectTracker;
             $scope.$parent.successMessage = "Set defect tracker to " + defectTracker.name;
             $scope.showEditModal();
-        }, function () {
-            $scope.showEditModal();
+        }, function (reason) {
+            if(reason !== 'createDefectTracker'){
+                $scope.showEditModal(); 
+            }
             $log.info('Modal dismissed at: ' + new Date());
         });
     };
