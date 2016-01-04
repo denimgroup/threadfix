@@ -37,7 +37,7 @@ public class ScheduledDefectTrackerUpdate extends ScheduledJob {
 
     private static final long serialVersionUID = 1223869621339558275L;
 
-    public static ScheduledDefectTrackerUpdate getDefaultScheduledUpdate(){
+    public static ScheduledDefectTrackerUpdate getDefaultScheduledUpdate() {
 
         ScheduledDefectTrackerUpdate defaultScheduledUpdate = new ScheduledDefectTrackerUpdate();
 
@@ -46,7 +46,7 @@ public class ScheduledDefectTrackerUpdate extends ScheduledJob {
         defaultScheduledUpdate.setMinute(0);
         defaultScheduledUpdate.setPeriod("AM");
         defaultScheduledUpdate.setDay(null);
-        defaultScheduledUpdate.setScheduleType("SELECT");
+        defaultScheduledUpdate.setScheduleType(SELECT);
 
         return defaultScheduledUpdate;
     }

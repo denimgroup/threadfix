@@ -46,9 +46,9 @@ public class ScheduledDefectTrackerUpdater extends AbstractScheduledJobScheduler
     public ScheduledDefectTrackerUpdater(ScheduledDefectTrackerUpdateService scheduledDefectTrackerUpdateService){
         super(	scheduledDefectTrackerUpdateService,
                 ScheduledDefectTrackerUpdateJob.class,
-                "ScheduledRemoteProviderImportId_",
-                "Scheduled Remote Provider Import",
-                "RemoteProviders");
+                "ScheduledDefectTrackerUpdateId_",
+                "Scheduled Defect Tracker Update",
+                "DefectTrackers");
     }
 
     @Override

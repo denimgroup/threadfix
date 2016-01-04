@@ -24,10 +24,7 @@
 
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ChannelType;
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.ScheduledScan;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
@@ -82,10 +79,10 @@ public class ScheduledScanController {
             return RestResponse.failure("Application was not found for ID " + appId);
         }
 
-        if (scheduledScan.getScheduleType().equals("CRON")) {
+        if (scheduledScan.getScheduleType().equals(ScheduledJob.CRON)) {
             scheduledScan.clearDate();
             scheduledScanService.validateCronExpression(scheduledScan, result);
-        } else if (scheduledScan.getScheduleType().equals("SELECT")) {
+        } else if (scheduledScan.getScheduleType().equals(ScheduledJob.SELECT)) {
             scheduledScan.clearCronExpression();
             scheduledScanService.validateDate(scheduledScan, result);
         }

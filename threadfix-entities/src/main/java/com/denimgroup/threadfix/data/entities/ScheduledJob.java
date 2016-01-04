@@ -47,6 +47,8 @@ public abstract class ScheduledJob extends AuditableEntity {
     protected String scheduleType;
     protected String cronExpression;
 
+    public static final String SELECT = "SELECT", CRON = "CRON";
+
     @Column(nullable = true)
     @JsonView(Object.class)
     public int getHour() {
@@ -107,10 +109,10 @@ public abstract class ScheduledJob extends AuditableEntity {
         this.cronExpression = cronExpression;
     }
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @JsonView(Object.class)
     public String getScheduleType() {
-        return scheduleType;
+        return scheduleType == null ? SELECT : scheduleType;
     }
 
     public void setScheduleType(String scheduleType) {
