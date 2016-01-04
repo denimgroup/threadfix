@@ -79,8 +79,8 @@ public class BurpScanTest extends TransactionalTest {
     };
 
     public final static Map<String, Integer> confidenceRatings = CollectionUtils.map(
-            "", 1,
-            BURP_CONFIDENCE_FIRM, 4,
+            "", 0,
+            BURP_CONFIDENCE_FIRM, 5,
             BURP_CONFIDENCE_CERTAIN, 24,
             BURP_CONFIDENCE_TENATIVE, 0);
 
@@ -120,7 +120,10 @@ public class BurpScanTest extends TransactionalTest {
             }
         }
 
-        assertTrue("Confidence Rating was not imported correctly.",
+        assertTrue("Confidence Rating was not imported correctly.\n" +
+                "Firm Findings: " + firmFindings + "\n" +
+                "Certain Findings: " + certainFindings + "\n" +
+                "Tentative Findings: " + tentativeFindings + "\n",
                 noRatingFindings == 0 &&
                 firmFindings == 0 &&
                 certainFindings == 0 &&
