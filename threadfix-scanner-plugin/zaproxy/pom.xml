@@ -185,12 +185,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>${commons.httpclient.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>2.6</version>
@@ -379,7 +373,6 @@
         <commons.codec.version>1.4</commons.codec.version>
         <commons.collections.version>3.2.1</commons.collections.version>
         <commons.configuration.version>1.9</commons.configuration.version>
-        <commons.httpclient.version>3.1</commons.httpclient.version>
         <commons.lang.version>3.1</commons.lang.version>
         <commons.logging.version>1.1.1</commons.logging.version>
         <diffutils.version>1.2.1</diffutils.version>
