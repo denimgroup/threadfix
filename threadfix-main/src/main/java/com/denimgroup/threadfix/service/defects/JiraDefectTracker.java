@@ -73,10 +73,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
     // The double slash is the Jira newline wiki syntax.
     private static final String NEW_LINE_REGEX = "\\\\n",
             DOUBLE_SLASH_NEW_LINE = " \\\\\\\\\\\\\\\\ ",
-            METADATA_EXTENSION = "issue/createmeta?expand=projects.issuetypes.fields&projectKeys=",
-            USER_TYPEAHEAD_EXTENSION = "users/picker?fieldName=",
-            QUERY_EXTENSION = "&query=",
-            AVATAR_EXTENSION = "&showAvatar=";
+            METADATA_EXTENSION = "issue/createmeta?expand=projects.issuetypes.fields&projectKeys=";
 
     private static String DATA_LONG_PATTERN = "It exceeds the allowed limit of (.*) characters.";
 
@@ -297,6 +294,14 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	public String getLastError() {
 		return lastError;
 	}
+
+    public String getTypeaheadData(String typeaheadUrl, String typeaheadQuery) {
+        String response = restUtils.getUrlAsString(typeaheadUrl + typeaheadQuery, getUsername(), getPassword());
+
+        log.debug(response);
+
+        return response;
+    }
 
 	@Override
 	public ProjectMetadata getProjectMetadata() {

@@ -117,7 +117,7 @@ angular.module('dynform', [])
                   if (angular.isDefined(field.validate)) {newElement.attr('ng-pattern', "/" + field.validate + "/");}
                   if (angular.isDefined(field.placeholder)) {newElement.attr('placeholder', field.placeholder);}
                   if (angular.isDefined(field.typeAheadUrl)) {
-                    newElement.attr('typeahead', "item for item in getTypeAheadData($viewValue,'" + field.model + "')");
+                    newElement.attr('typeahead', "users.name for users in getTypeAheadData($viewValue,'" + field.typeAheadUrl + "')");
                     newElement.attr('typeahead-wait-ms', "500");
                     newElement.attr('typeahead-loading', "loadingTypeAheadData");}
                 }
