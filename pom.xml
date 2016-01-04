@@ -321,7 +321,7 @@
         <spring-ldap.version>2.0.2.RELEASE</spring-ldap.version>
         <springsecurity.version>3.2.9.RELEASE</springsecurity.version>
         <javax-el.version>2.2.4</javax-el.version>
-        <spring-ws.version>2.2.0.RELEASE</spring-ws.version>
+        <spring-ws.version>2.2.4.RELEASE</spring-ws.version>
         <tfs-library.version>11.0.0</tfs-library.version>
         <tuckey.version>4.0.4</tuckey.version>
         <validation-api.version>1.1.0.Final</validation-api.version>
