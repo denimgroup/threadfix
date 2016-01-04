@@ -361,7 +361,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
 
     private String getContrastBaseUrl() {
         for (RemoteProviderAuthenticationField authField : remoteProviderType.getAuthenticationFields()) {
-            if (authField.getName().equals("URL")){
+            if (authField.getName().equals("URL") && authField.getValue() != null && !authField.getValue().isEmpty()){
                 return authField.getValue();
             }
         }
