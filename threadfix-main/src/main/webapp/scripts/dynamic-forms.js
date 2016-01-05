@@ -116,8 +116,8 @@ angular.module('dynform', [])
                   if (angular.isDefined(field.maxLength) && field.maxLength !== 0) {newElement.attr('ng-maxlength', field.maxLength);}
                   if (angular.isDefined(field.validate)) {newElement.attr('ng-pattern', "/" + field.validate + "/");}
                   if (angular.isDefined(field.placeholder)) {newElement.attr('placeholder', field.placeholder);}
-                  if (angular.isDefined(field.typeAheadUrl)) {
-                    newElement.attr('typeahead', "users.name for users in getTypeAheadData($viewValue,'" + field.typeAheadUrl + "')");
+                  if (field.type === "typeahead" && field.typeaheadAcceptedType === "user" && angular.isDefined(field.typeaheadField)) {
+                    newElement.attr('typeahead', "users.name for users in getTypeAheadData($viewValue,'" + field.typeaheadField + "')");
                     newElement.attr('typeahead-wait-ms', "500");
                     newElement.attr('typeahead-loading', "loadingTypeAheadData");}
                 }

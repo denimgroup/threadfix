@@ -305,7 +305,7 @@ public class ApplicationsController {
         model.addAttribute("scheduledDays", DayInWeek.values());
     }
 
-    private String fetchTypeaheadData(int appId, int orgId, String typeaheadUrl, String typeaheadQuery) {
+    private String fetchTypeaheadData(int appId, int orgId, String typeaheadField, String typeaheadQuery) {
         if (!PermissionUtils.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
             return null;
         }
@@ -325,12 +325,7 @@ public class ApplicationsController {
 
         AbstractDefectTracker defectTracker = DefectTrackerFactory.getTracker(application);
 
-        if (JiraDefectTracker.class.isInstance(defectTracker)) {
-            JiraDefectTracker jiraDefectTracker = (JiraDefectTracker) defectTracker;
-            return jiraDefectTracker.getTypeaheadData(typeaheadUrl, typeaheadQuery);
-        }
-
-        return null;
+        return defectTracker.getTypeaheadData(typeaheadField, typeaheadQuery);
     }
 
 
@@ -414,10 +409,11 @@ public class ApplicationsController {
     public @ResponseBody RestResponse<String> getTypeAheadData(
             @PathVariable("orgId") int orgId,
             @PathVariable("appId") int appId,
-            @RequestParam("typeaheadUrl") String typeaheadUrl,
-            @RequestParam("typeAheadQuery") String typeAheadQuery) {
+            @RequestParam("typeaheadField") String typeaheadField,
+            @RequestParam("typeaheadQuery") String typeaheadQuery) {
         log.info("Fetching typeahead data.");
-        String response = fetchTypeaheadData(appId, orgId, typeaheadUrl, typeAheadQuery);
+
+        String response = fetchTypeaheadData(appId, orgId, typeaheadField, typeaheadQuery);
         return success(response);
     }
 

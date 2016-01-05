@@ -217,8 +217,9 @@ public class DynamicFormFieldParser {
 
                         } else if (type.equals("array")) {
                             if (jsonField.getSchema().getItems().equals("user")) {
-                                field.setType("typeAhead");
-                                field.setTypeAheadUrl(jsonField.getAutoCompleteUrl());
+                                field.setType("typeahead");
+                                field.setTypeaheadAcceptedType("user");
+                                field.setTypeaheadField(field.getName());
                             } else {
                                 LOG.error("Unable to determine dynamic type for " + entry.getKey() + ":" + type + " of " +
                                         jsonField.getSchema().getItems());

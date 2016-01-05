@@ -169,12 +169,12 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
         $scope.requiredErrorMap[pathSegment1] = Object.keys($scope.fieldsMap[pathSegment1]).length === 0;
     };
 
-    $scope.getTypeAheadData = function(query, typeaheadUrl) {
+    $scope.getTypeAheadData = function(query, typeaheadField) {
         console.log("Fetching typeahead data.");
         return $http.get(typeAheadUrl, {
             params : {
-                typeaheadUrl : typeaheadUrl,
-                typeAheadQuery : query
+                typeaheadField : typeaheadField,
+                typeaheadQuery : query
             }
         }).
             then(function(response) {
@@ -259,7 +259,8 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 "labelClass" : field.required ? "errors" : null,
                 "options" : calculateOptions(field),
                 "multiple" : field.supportsMultivalue,
-                "typeAheadUrl" : field.typeAheadUrl,
+                "typeaheadField" : field.typeaheadField,
+                "typeaheadAcceptedType" : field.typeaheadAcceptedType,
                 "val" : field.value
             };
 
