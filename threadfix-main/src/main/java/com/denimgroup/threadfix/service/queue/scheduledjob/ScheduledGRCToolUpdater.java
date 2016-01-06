@@ -24,7 +24,8 @@
 
 package com.denimgroup.threadfix.service.queue.scheduledjob;
 
-import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
+import com.denimgroup.threadfix.data.entities.ScheduledGRCToolUpdate;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScheduledGRCToolUpdateService;
 import org.quartz.JobDetail;
@@ -44,6 +45,15 @@ public class ScheduledGRCToolUpdater extends AbstractScheduledJobScheduler<Sched
     @Autowired(required = false)
     public ScheduledGRCToolUpdater(ScheduledGRCToolUpdateService scheduledGRCToolUpdateService){
         super(	scheduledGRCToolUpdateService,
+                ScheduledGRCToolUpdateJob.class,
+                "ScheduledGRCToolUpdateId_",
+                "Scheduled GRC Tool Update",
+                "GRCTools");
+    }
+
+    // community won't have ScheduledGRCToolUpdateService
+    public ScheduledGRCToolUpdater(){
+        super(	null,
                 ScheduledGRCToolUpdateJob.class,
                 "ScheduledGRCToolUpdateId_",
                 "Scheduled GRC Tool Update",
