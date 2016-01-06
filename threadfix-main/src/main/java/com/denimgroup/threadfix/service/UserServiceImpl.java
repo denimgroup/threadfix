@@ -39,7 +39,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
@@ -168,9 +170,15 @@ public class UserServiceImpl implements UserService {
 	}
 
     private void encryptPassword(User user) {
-        user.setSalt("");
-        user.setPassword(encoder.encodePassword(user.getUnencryptedPassword(),
-                user.getSalt()));
+		if(!user.getIsLdapUser()){
+			user.setSalt("");
+			user.setPassword(encoder.encodePassword(user.getUnencryptedPassword(),
+					user.getSalt()));
+			return;
+		}
+		user.setSalt("");
+		SecureRandom random = new SecureRandom();
+		user.setPassword("invalid"+new BigInteger(130, random).toString(32));
 	}
 
 	@Override
