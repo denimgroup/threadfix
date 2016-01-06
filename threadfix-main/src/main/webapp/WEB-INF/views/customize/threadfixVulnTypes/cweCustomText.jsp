@@ -20,8 +20,8 @@
                 <td colspan="3" style="text-align:center;">No Custom CWE Text found.</td>
             </tr>
             <tr ng-repeat="genericVulnerability in genericVulnerabilitiesWithCustomText">
-                <td id="cwe{{genericVulnerability.id}}">CWE {{genericVulnerability.displayId}}: {{genericVulnerability.name}}</td>
-                <td id="customText{{genericVulnerability.id}}">{{genericVulnerability.customText}}</td>
+                <td id="cwe{{genericVulnerability.id}}" class="break-word-header">CWE {{genericVulnerability.displayId}}: {{genericVulnerability.name}}</td>
+                <td id="customText{{genericVulnerability.id}}" class="break-word-header">{{genericVulnerability.customText}}</td>
                 <td class="centered">
                     <button class="btn" id="editKeyModal{{genericVulnerability.id}}" ng-click="openEditModal(genericVulnerability)">Edit / Delete</button>
                 </td>
