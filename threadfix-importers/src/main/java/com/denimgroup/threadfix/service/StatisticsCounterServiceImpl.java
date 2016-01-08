@@ -384,8 +384,10 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
                         vulnerabilityFilterDao.getVulnsToHideSubquery(
                                 scanResultFilter,
                                 scan,
-                                scan.getApplication()));
+                                scan.getApplication(),
+                                index));
                 paramsMap.put("applicationId" + index, scan.getApplication().getId());
+                paramsMap.put("scanId" + index, scan.getId());
                 paramsMap.put("genericSeverityIntValue" + index, scanResultFilter.getGenericSeverity().getIntValue());
                 paramsMap.put("channelTypeId" + index, scanResultFilter.getChannelType().getId());
                 index++;
