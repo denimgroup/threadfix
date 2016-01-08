@@ -218,7 +218,9 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	}
 
 	@Override
-	public List<Scan> saveRemoteScansAndRun(List<Integer> channelIds, List<String> fileNames, List<String> originalNames) {
+	public List<Scan> saveRemoteScansAndRun(List<Integer> channelIds,
+											List<String> fileNames,
+											List<String> originalNames) {
 
 		List<Scan> scans = list();
 
@@ -246,17 +248,24 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			return null;
 		}
 
+		Scan anyScan = null;
+
 		for (int i = 0; i < channelIds.size(); i++) {
 			Scan theScan = scans.get(i);
 			Scan scan = mergeScan(channelIdMap.get(theScan), theScan, null);
 			if (scan == null) {
 				return null;
+			} else if (anyScan == null) {
+				anyScan = scan;
 			}
-			vulnerabilityFilterService.updateVulnerabilities(scan);
 		}
 
 		for (Integer channelId: channelIds) {
 			updateReportInfo(channelId);
+		}
+
+		if (anyScan != null) {
+			vulnerabilityFilterService.updateVulnerabilities(anyScan);
 		}
 
 		return scans;

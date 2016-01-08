@@ -29,9 +29,7 @@ import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.entities.*;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -42,7 +40,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.*;
-import static java.lang.System.currentTimeMillis;
+import static org.hibernate.criterion.Projections.property;
 import static org.hibernate.criterion.Projections.rowCount;
 import static org.hibernate.criterion.Restrictions.*;
 
@@ -287,11 +285,6 @@ public class HibernateScanDao
 		if (scan == null) {
 			return;
 		}
-
-		List<Long> surfaceLocationIds = sessionFactory.getCurrentSession()
-				  	  .createQuery("select surfaceLocation.id from Finding where scan = :scan")
-					  .setInteger("scan", scan.getId())
-					  .list();
 		
 		List<DataFlowElement> dataFlowElements = sessionFactory.getCurrentSession()
 					  .createQuery("from DataFlowElement element " +
@@ -306,16 +299,14 @@ public class HibernateScanDao
 		
 		List<SurfaceLocation> surfaceLocations = null;
 		
-		if (surfaceLocationIds != null && surfaceLocationIds.size() > 0) {
-			surfaceLocations = sessionFactory.getCurrentSession()
-						  .createQuery("from SurfaceLocation " +
-						  		"where id in (:ids)")
-						  .setParameterList("ids", surfaceLocationIds)
-						  .list();
-			
-			for (SurfaceLocation surfaceLocation : surfaceLocations) {
-				sessionFactory.getCurrentSession().save(new DeletedSurfaceLocation(surfaceLocation));
-			}
+		surfaceLocations = sessionFactory.getCurrentSession()
+					  .createQuery("from SurfaceLocation " +
+							"where id in (select surfaceLocation.id from Finding where scan = :scan)")
+					  .setInteger("scan", scan.getId())
+					  .list();
+
+		for (SurfaceLocation surfaceLocation : surfaceLocations) {
+			sessionFactory.getCurrentSession().save(new DeletedSurfaceLocation(surfaceLocation));
 		}
 
 		// The following sections were moved from an aspect so that they're now in the same transaction
@@ -544,40 +535,66 @@ public class HibernateScanDao
 	}
 
 	@Override
-	public List<Finding> getFindingsThatNeedCountersInApps(int page, List<Integer> appIds, Collection<Integer> findingIdRestrictions) {
+	public List<Finding> getFindingsWithIds(List<Integer> findingIds) {
+
+		if (findingIds == null || findingIds.isEmpty()) {
+			return list();
+		}
+
+		return sessionFactory.getCurrentSession()
+				.createCriteria(Finding.class)
+				.add(isEmpty("statisticsCounters"))
+				.add(in("id", findingIds))
+				.list();
+	}
+
+	@Override
+	public List<Integer> findingIdsThatNeedCounters(Collection<Integer> findingIdRestrictions) {
+
+		List<Integer> findingIds = sessionFactory.getCurrentSession().createCriteria(Finding.class)
+				.createAlias("vulnerability", "vulnAlias")
+				.createAlias("vulnAlias.application", "appAlias")
+				.add(eq("appAlias.active", true))
+				.add(isEmpty("statisticsCounters"))
+				.setProjection(property("id"))
+				.list();
+
+		Set<Integer> restrictionSet = setFrom(findingIdRestrictions);
+		Set<Integer> emptyStatsCountersTests = setFrom(findingIds);
+
+		emptyStatsCountersTests.retainAll(restrictionSet);
+
+		return listFrom(emptyStatsCountersTests);
+	}
+
+	@Override
+	public List<Integer> findingIdsThatNeedCountersInApps(List<Integer> appIds, Collection<Integer> findingIdRestrictions) {
 		if (appIds == null)
-			return getFindingsThatNeedCounters(page, findingIdRestrictions);
+			return findingIdsThatNeedCounters(findingIdRestrictions);
 
 		if (appIds.size() == 0) {
 			return list();
 		}
 
-		return getBaseCounterCriteria(appIds, findingIdRestrictions)
+		List<Integer> findingIds = sessionFactory.getCurrentSession().createCriteria(Finding.class)
+				.createAlias("vulnerability", "vulnAlias")
+				.createAlias("vulnAlias.application", "appAlias")
+				.add(eq("appAlias.active", true))
 				.add(in("appAlias.id", appIds))
-				.setMaxResults(100)
-				.setFirstResult(page * 100)
-				.list();
-	}
+				.add(isEmpty("statisticsCounters"))
+				.setProjection(property("id"))
+                .list();
 
-	@Override
-	public Long totalFindingsThatNeedCounters(Collection<Integer> findingIdRestrictions) {
-		return (Long) getBaseCounterCriteria(null, findingIdRestrictions)
-                .setProjection(rowCount())
-                .uniqueResult();
-	}
+		// these are IDs for findings that should have stats counters
+		Set<Integer> findingIdRestrictionSet = setFrom(findingIdRestrictions);
 
-	@Override
-	public Long totalFindingsThatNeedCountersInApps(List<Integer> appIds, Collection<Integer> findingIdRestrictions) {
-		if (appIds == null)
-			return totalFindingsThatNeedCounters(findingIdRestrictions);
+		// these are IDs for findings that don't have stats counters
+		Set<Integer> findingsWithEmptyStatsCounters = setFrom(findingIds);
 
-		if (appIds.size() == 0) {
-			return 0L;
-		}
+		// this set should then be IDs for findings that don't have stats counters but should
+		findingsWithEmptyStatsCounters.retainAll(findingIdRestrictionSet);
 
-		return (Long) getBaseCounterCriteria(appIds, findingIdRestrictions)
-				.setProjection(rowCount())
-                .uniqueResult();
+		return listFrom(findingsWithEmptyStatsCounters);
 	}
 
 	private Criteria getBaseCounterCriteria(List<Integer> appIds, Collection<Integer> findingIdRestrictions) {
@@ -680,12 +697,12 @@ public class HibernateScanDao
                 .addOrder(Order.asc("scanAlias.importTime"))
                 .add(eq("appAlias.active", true))
                 .setProjection(Projections.projectionList()
-                        .add(Projections.property("scanAlias.importTime")) // 0
-                        .add(Projections.property("appChannelAlias.id"))   // 1
-                        .add(Projections.property("vulnAlias.id"))         // 2
-                        .add(Projections.property("id"))                   // 3
-                        .add(Projections.property("firstFindingForVuln"))  // 4
-                        .add(Projections.property("hasStatisticsCounter")) // 5
+                        .add(property("scanAlias.importTime")) // 0
+                        .add(property("appChannelAlias.id"))   // 1
+                        .add(property("vulnAlias.id"))         // 2
+                        .add(property("id"))                   // 3
+                        .add(property("firstFindingForVuln"))  // 4
+                        .add(property("hasStatisticsCounter")) // 5
                 );
 
         if (appIds != null && !appIds.isEmpty()) {
@@ -724,7 +741,7 @@ public class HibernateScanDao
 				.createCriteria(StatisticsCounter.class)
 				.createAlias("scanRepeatFindingMap", "mapAlias")
 				.add(Restrictions.isNotNull("scanRepeatFindingMap"))
-				.setProjection(Projections.property("mapAlias.id"))
+				.setProjection(property("mapAlias.id"))
 				.list();
 
 		Criteria criteria = sessionFactory.getCurrentSession()

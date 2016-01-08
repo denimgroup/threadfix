@@ -114,24 +114,26 @@ public class HibernateChannelSeverityDao implements ChannelSeverityDao {
 			if (channelSeverity == null)
 				continue;
 
-			List list = sessionFactory.getCurrentSession().createQuery(
-					"select finding.vulnerability.id from Finding finding where finding.channelSeverity.id = :channelSeverityId and finding.firstFindingForVuln = true")
+			String subquery = "(select finding.vulnerability.id " +
+					"from Finding finding " +
+					"where finding.channelSeverity.id = :channelSeverityId " +
+					"and finding.firstFindingForVuln = true)";
+
+			sessionFactory.getCurrentSession().createQuery(
+					"update Vulnerability vulnerability " +
+							"set genericSeverity = :genericSeverity " +
+							"where id in " + subquery)
 					.setParameter("channelSeverityId", channelSeverityId)
-					.list();
+					.setParameter("genericSeverity", channelSeverity.getSeverityMap().getGenericSeverity())
+					.executeUpdate();
 
-			if (!list.isEmpty()) {
-				sessionFactory.getCurrentSession().createQuery(
-						"update Vulnerability vulnerability set genericSeverity = :genericSeverity where id in (:vulnIds)")
-						.setParameterList("vulnIds", list)
-						.setParameter("genericSeverity", channelSeverity.getSeverityMap().getGenericSeverity())
-						.executeUpdate();
-
-				sessionFactory.getCurrentSession().createQuery(
-						"update StatisticsCounter counter set currentGenericSeverityId = :genericSeverityId where vulnerabilityId in (:vulnIds)")
-						.setParameterList("vulnIds", list)
-						.setParameter("genericSeverityId", channelSeverity.getSeverityMap().getGenericSeverity().getId())
-						.executeUpdate();
-			}
+			sessionFactory.getCurrentSession().createQuery(
+					"update StatisticsCounter counter " +
+							"set currentGenericSeverityId = :genericSeverityId " +
+							"where vulnerabilityId in " + subquery)
+					.setParameter("channelSeverityId", channelSeverityId)
+					.setParameter("genericSeverityId", channelSeverity.getSeverityMap().getGenericSeverity().getId())
+					.executeUpdate();
 		}
 	}
 }

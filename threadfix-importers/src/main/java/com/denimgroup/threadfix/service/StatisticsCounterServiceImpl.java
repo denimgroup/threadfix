@@ -141,23 +141,34 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
             return;
         }
 
+        // these are the candidate finding IDs based on whether or not they should count for the vuln
         Collection<Integer> findingIdRestrictions =
                 scanDao.getEarliestFindingIdsForVulnPerChannel(appIds);
 
-        Long total = scanDao.totalFindingsThatNeedCountersInApps(appIds, findingIdRestrictions);
+        List<Integer> findingIds = scanDao.findingIdsThatNeedCountersInApps(appIds, findingIdRestrictions);
 
+        int total = findingIds.size();
         long start = currentTimeMillis();
 
         LOG.debug("Total findings that need counters: " + total);
 
-        int current = total.intValue() / 100;
+        int current = total / 100;
 
         while (current >= 0) {
 
             LOG.debug("Processing at index " + current + " out of " + total);
 
+            int pageStart = current * 100, pageEnd = pageStart + 100;
+
+            if (pageStart < 0) pageStart = 0;
+
+            if (pageEnd > total) {
+                pageEnd = total;
+            }
+            List<Integer> targetFindingIds = findingIds.subList(pageStart, pageEnd);
+
             List<Finding> findingsThatNeedCounters =
-                    scanDao.getFindingsThatNeedCountersInApps(current, appIds, findingIdRestrictions);
+                    scanDao.getFindingsWithIds(targetFindingIds);
 
             for (Finding finding : findingsThatNeedCounters) {
 
@@ -238,10 +249,11 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
         Map<Integer, Long[]> scanStatsMap = getIntegerMap(orgID, appID, scans);
 
-        List<Integer> ignoredVulnerabilityIds = getVulnerabilityIdsToIgnore(orgID, appID);
+        List<Integer> filteredSeverities = getFilteredSeverities(orgID, appID),
+                filteredVulnerabilities = getFilteredVulnerabilities(orgID, appID);
 
-        Map<Integer, Long> closedMap   = getClosedMap(ignoredVulnerabilityIds);
-        Map<Integer, Long> reopenedMap = getReopenedMap(ignoredVulnerabilityIds);
+        Map<Integer, Long> closedMap   = getClosedMap(filteredSeverities, filteredVulnerabilities);
+        Map<Integer, Long> reopenedMap = getReopenedMap(filteredSeverities, filteredVulnerabilities);
         applyStatistics(scans, scanStatsMap, closedMap, reopenedMap);
     }
 
@@ -319,16 +331,16 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
         }
     }
 
-    private Map<Integer, Long> getClosedMap(List<Integer> ignoredVulnerabilityIds) {
+    private Map<Integer, Long> getClosedMap(List<Integer> filteredSeverities, List<Integer> filteredVulnerabilities) {
         List<Map<String, Object>> rawMap =
-                vulnerabilityFilterDao.getScanClosedVulnerabilitiesMap(ignoredVulnerabilityIds);
+                vulnerabilityFilterDao.getScanClosedVulnerabilitiesMap(filteredSeverities, filteredVulnerabilities);
 
         return condenseMap(rawMap);
     }
 
-    private Map<Integer, Long> getReopenedMap(List<Integer> ignoredVulnerabilityIds) {
+    private Map<Integer, Long> getReopenedMap(List<Integer> filteredSeverities, List<Integer> filteredVulnerabilities) {
         List<Map<String, Object>> rawMap =
-                vulnerabilityFilterDao.getScanReopenedVulnerabilitiesMap(ignoredVulnerabilityIds);
+                vulnerabilityFilterDao.getScanReopenedVulnerabilitiesMap(filteredSeverities, filteredVulnerabilities);
 
         return condenseMap(rawMap);
     }
@@ -346,13 +358,6 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
         return returnMap;
     }
 
-    private List<Integer> getVulnerabilityIdsToIgnore(int orgID, int appID) {
-        List<Integer> filteredSeverities = getFilteredSeverities(orgID, appID),
-                filteredVulnerabilities = getFilteredVulnerabilities(orgID, appID);
-
-        return vulnerabilityFilterDao.getIgnoredIds(filteredSeverities, filteredVulnerabilities);
-    }
-
     private Map<Integer, Long> getTotalsMap() {
         List<Map<String, Object>> rawTotals =
                 statisticsCounterDao.getRawFindingTotalMap();
@@ -363,26 +368,35 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
     private Map<Integer, Long[]> getIntegerMap(int orgID, int appID, List<Scan> scans) {
         List<Integer> filteredSeverities = getFilteredSeverities(orgID, appID),
                 filteredVulnerabilities = getFilteredVulnerabilities(orgID, appID);
-        List<Integer> ignoreVulnIdsByChannelSeverities;
 
         Map<Integer, Integer> genericSeverityIdToSeverityMap = generateGenericSeverityMap();
 
         List<Map<String, Object>> totalMap = list();
         for (Scan scan: scans) {
-            ignoreVulnIdsByChannelSeverities = list();
 
             List<ScanResultFilter> scanResultFilters = scanResultFilterDao.loadAllForChannelType(scan.getApplicationChannel().getChannelType());
+            List<String> vulnsToHideSubqueries = list();
+            int index = 0;
+            Map<String, Object> paramsMap = map();
+
             for (ScanResultFilter scanResultFilter: scanResultFilters) {
-                List<Integer> vulnIds = vulnerabilityFilterDao.getVulnIdsToHide(scanResultFilter, scan, scan.getApplication());
-                if (vulnIds != null) {
-                    ignoreVulnIdsByChannelSeverities.addAll(vulnIds);
-                }
+                vulnsToHideSubqueries.add(
+                        vulnerabilityFilterDao.getVulnsToHideSubquery(
+                                scanResultFilter,
+                                scan,
+                                scan.getApplication()));
+                paramsMap.put("applicationId" + index, scan.getApplication().getId());
+                paramsMap.put("genericSeverityIntValue" + index, scanResultFilter.getGenericSeverity().getIntValue());
+                paramsMap.put("channelTypeId" + index, scanResultFilter.getChannelType().getId());
+                index++;
             }
 
             totalMap.addAll(statisticsCounterDao.getFindingSeverityMap(
-                            filteredSeverities,
-                            filteredVulnerabilities,
-                    ignoreVulnIdsByChannelSeverities, scan));
+                    filteredSeverities,
+                    filteredVulnerabilities,
+                    paramsMap,
+                    vulnsToHideSubqueries,
+                    scan));
         }
         Map<Integer, Long[]> scanStatsMap = map();
 
