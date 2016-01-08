@@ -106,17 +106,18 @@ public class ScheduledScanScheduler {
                 log.warn("Unable to schedule ScheduledScanId " + scheduledScan.getId() + " " + scheduledScan.getFrequency() + " " + scheduledScan.getDay());
                 return cronExpression;
             }
+            day = dayInWeek.getDay();
         }
 
         // Set DayOfMonth is ? if schedule weekly, and * otherwise
         String dayOfMonth = (ScheduledFrequencyType.WEEKLY ==
-                frequencyType?"?":"*");
+                frequencyType ? "?" : "*");
 
         int hour = scheduledScan.getHour();
         if (ScheduledPeriodType.PM == scheduledPeriodType && hour < 12)
             hour += 12;
 
-        cronExpression = "0 " + scheduledScan.getMinute() + " " + hour + " " + dayOfMonth+ " * " + day;
+        cronExpression = "0 " + scheduledScan.getMinute() + " " + hour + " " + dayOfMonth + " * " + day;
 
         return cronExpression;
     }
