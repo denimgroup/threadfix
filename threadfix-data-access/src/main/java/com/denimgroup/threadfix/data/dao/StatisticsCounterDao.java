@@ -38,7 +38,8 @@ public interface StatisticsCounterDao extends GenericObjectDao<StatisticsCounter
 
     List<Map<String, Object>> getFindingSeverityMap(List<Integer> filteredSeverities,
                                                     List<Integer> filteredVulnerabilities,
-                                                    List<Integer> ignoreVulnIdsByChannelSeverities,
+                                                    Map<String, Object> scanResultFilter,
+                                                    List<String> ignoreVulnsSubquery,
                                                     Scan scan);
 
     List<Map<String,Object>> getRawFindingTotalMap();

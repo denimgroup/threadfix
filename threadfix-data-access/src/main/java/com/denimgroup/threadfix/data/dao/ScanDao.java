@@ -183,13 +183,13 @@ public interface ScanDao extends GenericObjectDao<Scan> {
      */
     List<String> loadScanFilenames();
 
-	Long totalFindingsThatNeedCounters(Collection<Integer> findingIdRestrictions);
+	List<Integer> findingIdsThatNeedCounters(Collection<Integer>  findingIdRestrictions);
 
-	List<Finding> getFindingsThatNeedCounters(int page, Collection<Integer> findingIdRestrictions);
+	List<Finding> getFindingsThatNeedCounters(int page, Collection<Integer>  findingIdRestrictions);
 
-	Long totalFindingsThatNeedCountersInApps(List<Integer> appIds, Collection<Integer> findingIdRestrictions);
+	List<Integer> findingIdsThatNeedCountersInApps(List<Integer> appIds, Collection<Integer>  findingIdRestrictions);
 
-	List<Finding> getFindingsThatNeedCountersInApps(int page, List<Integer> appIds, Collection<Integer> findingIdRestrictions);
+	List<Finding> getFindingsWithIds(List<Integer> appIds);
 
 	List<ScanRepeatFindingMap> getMapsThatNeedCounters(int current);
 
