@@ -32,6 +32,6 @@ import org.springframework.validation.BindingResult;
  */
 public interface ScheduledRemoteProviderImportService extends ScheduledJobService<ScheduledRemoteProviderImport> {
 
-    public void validateSameDate(ScheduledRemoteProviderImport scheduledJob, BindingResult result);
+    void validateSameDate(ScheduledRemoteProviderImport scheduledJob, BindingResult result);
 
 }

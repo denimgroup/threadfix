@@ -33,6 +33,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
+import org.quartz.CronExpression;
 
 import java.util.List;
 
@@ -74,6 +75,18 @@ public abstract class ScheduledJobServiceImpl<S extends ScheduledJob> implements
     @Override
     public S loadById(int scheduledJobId) {
         return getScheduledJobDao().retrieveById(scheduledJobId);
+    }
+
+    @Override
+    public void validateCronExpression(S scheduledJob, BindingResult result) {
+
+        String cronExpression = scheduledJob.getCronExpression();
+
+        if (cronExpression == null) {
+            result.rejectValue("cronExpression", null, null, "Cron Expression cannot be null");
+        } else if (!CronExpression.isValidExpression(cronExpression)) {
+            result.rejectValue("cronExpression", null, null, "Cron expression is invalid.");
+        }
     }
 
     @Override

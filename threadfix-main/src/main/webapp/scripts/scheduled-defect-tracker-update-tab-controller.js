@@ -24,13 +24,14 @@ myAppModule.controller('ScheduledDefectTrackerUpdateTabController', function ($s
                         hour: '6',
                         minute: '0',
                         period: 'AM',
-                        day: 'Sunday'
+                        day: 'Sunday',
+                        scheduleType: 'SELECT'
                     };
                 },
                 config: function () {
-//                    return {
-//                        defectTrackers: []
-//                    }
+                    return {
+                        heading: 'Defect Tracker Update'
+                    }
                 }
             }
         });
@@ -107,5 +108,4 @@ myAppModule.controller('ScheduledDefectTrackerUpdateTabController', function ($s
             }
         }
     };
-
 });

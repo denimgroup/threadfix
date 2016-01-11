@@ -46,7 +46,8 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * Created by zabdisubhan on 8/14/14.
+ * @author zabdisubhan
+ *
  */
 
 @Controller
@@ -73,8 +74,14 @@ public class ScheduledRemoteProviderImportController {
             return RestResponse.failure("You are not allowed to modify scheduled remote provider imports.");
         }
 
-        scheduledRemoteProviderImportService.validateDate(scheduledRemoteProviderImport, result);
-        scheduledRemoteProviderImportService.validateSameDate(scheduledRemoteProviderImport, result);
+        if (scheduledRemoteProviderImport.getScheduleType().equals("CRON")) {
+            scheduledRemoteProviderImport.clearDate();
+            scheduledRemoteProviderImportService.validateCronExpression(scheduledRemoteProviderImport, result);
+        } else if (scheduledRemoteProviderImport.getScheduleType().equals("SELECT")) {
+            scheduledRemoteProviderImport.clearCronExpression();
+            scheduledRemoteProviderImportService.validateDate(scheduledRemoteProviderImport, result);
+            scheduledRemoteProviderImportService.validateSameDate(scheduledRemoteProviderImport, result);
+        }
 
         if (result.hasErrors()) {
             return FormRestResponse.failure("Encountered errors.", result);
@@ -85,7 +92,7 @@ public class ScheduledRemoteProviderImportController {
         }
 
         //Add new job to scheduler
-        if (scheduledRemoteProviderImporter.addScheduledRemoteProviderImport(scheduledRemoteProviderImport)) {
+        if (scheduledRemoteProviderImporter.addScheduledJob(scheduledRemoteProviderImport)) {
             log.info("Successfully added new scheduled remote provider import to scheduler");
             return RestResponse.success(scheduledRemoteProviderImportService.loadAll());
 
@@ -113,7 +120,7 @@ public class ScheduledRemoteProviderImportController {
         }
 
         //Remove job from scheduler
-        if (scheduledRemoteProviderImporter.removeScheduledRemoteProviderImport(scheduledRemoteProviderImport)) {
+        if (scheduledRemoteProviderImporter.removeScheduledJob(scheduledRemoteProviderImport)) {
             String ret = scheduledRemoteProviderImportService.delete(scheduledRemoteProviderImport);
             if (ret != null) {
                 log.warn(ret);

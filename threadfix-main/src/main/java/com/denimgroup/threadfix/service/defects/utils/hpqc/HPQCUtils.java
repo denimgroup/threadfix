@@ -615,7 +615,19 @@ public class HPQCUtils {
             log.error("Received response code of " + response.getStatusCode() + " instead of 200.");
         }
 
-        return response.getStatusCode() == HttpURLConnection.HTTP_OK;
+        return response.getStatusCode() == HttpURLConnection.HTTP_OK && getQCSession();
+    }
+
+    private static boolean getQCSession() {
+        String qcsessionurl = con.buildUrl("rest/site-session");
+        try {
+            Response resp = con.httpPost(qcsessionurl, null, null);
+            con.updateCookies(resp);
+
+        } catch (Exception e) {
+            throw new DefectTrackerCommunicationException(e, "Unable to get session from server.");
+        }
+        return true;
     }
 
     /**

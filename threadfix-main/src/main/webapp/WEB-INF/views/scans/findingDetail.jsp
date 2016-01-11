@@ -3,32 +3,41 @@
 <head>
 	<title>Finding Details</title>
 	<meta name="heading" content="<fmt:message key='mainMenu.heading'/>" />
-    <cbs:cachebustscript src="/scripts/finding-detail-page-controller.js"/>
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/finding-source.css"/>
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/syntaxHighlighter/shCore.css"/>
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/syntaxHighlighter/shCoreDefault.css"/>
+	<cbs:cachebustscript src="/scripts/finding-controller.js"/>
+	<cbs:cachebustscript src="/scripts/xregexp-min.js"/>
+	<cbs:cachebustscript src="/scripts/syntaxHighlighter/shCore.js"/>
+	<cbs:cachebustscript src="/scripts/syntaxHighlighter/shBrushAppleScript.js"/>
+	<cbs:cachebustscript src="/scripts/syntaxHighlighter/shBrushBash.js"/>
+	<cbs:cachebustscript src="/scripts/syntaxHighlighter/shBrushCpp.js"/>
+	<cbs:cachebustscript src="/scripts/syntaxHighlighter/shBrushCSharp.js"/>
+	<cbs:cachebustscript src="/scripts/syntaxHighlighter/shBrushCss.js"/>
+	<cbs:cachebustscript src="/scripts/syntaxHighlighter/shBrushDelphi.js"/>
+	<cbs:cachebustscript src="/scripts/syntaxHighlighter/shBrushGroovy.js"/>
+	<cbs:cachebustscript src="/scripts/syntaxHighlighter/shBrushHaxe.js"/>
+	<cbs:cachebustscript src="/scripts/syntaxHighlighter/shBrushJava.js"/>
+	<cbs:cachebustscript src="/scripts/syntaxHighlighter/shBrushJScript.js"/>
+	<cbs:cachebustscript src="/scripts/syntaxHighlighter/shBrushPerl.js"/>
+	<cbs:cachebustscript src="/scripts/syntaxHighlighter/shBrushPhp.js"/>
+	<cbs:cachebustscript src="/scripts/syntaxHighlighter/shBrushPlain.js"/>
+	<cbs:cachebustscript src="/scripts/syntaxHighlighter/shBrushPython.js"/>
+	<cbs:cachebustscript src="/scripts/syntaxHighlighter/shBrushRuby.js"/>
+	<cbs:cachebustscript src="/scripts/syntaxHighlighter/shBrushSass.js"/>
+	<cbs:cachebustscript src="/scripts/syntaxHighlighter/shBrushSql.js"/>
+	<cbs:cachebustscript src="/scripts/syntaxHighlighter/shBrushTAP.js"/>
+	<cbs:cachebustscript src="/scripts/syntaxHighlighter/shBrushTypeScript.js"/>
+	<cbs:cachebustscript src="/scripts/syntaxHighlighter/shBrushVb.js"/>
+	<cbs:cachebustscript src="/scripts/syntaxHighlighter/shBrushXml.js"/>
+	<script type="text/javascript">
+		SyntaxHighlighter.defaults['toolbar'] = false;
+		SyntaxHighlighter.defaults['useScriptTags'] = false;
+	</script>
 </head>
 
-<body id="apps" ng-controller="FindingDetailPageController">
-<%@ include file="/WEB-INF/views/angular-init.jspf"%>
-
-	<spring:url value="/organizations/{orgId}" var="orgUrl">
-		<spring:param name="orgId" value="${ finding.scan.application.organization.id }" />
-	</spring:url>
-	<spring:url value="/organizations/{orgId}/applications/{appId}" var="appUrl">
-		<spring:param name="orgId" value="${ finding.scan.application.organization.id }" />
-		<spring:param name="appId" value="${ finding.scan.application.id }" />
-	</spring:url>
-	<spring:url value="/organizations/{orgId}/applications/{appId}/scans/{scanId}" var="scanUrl">
-		<spring:param name="orgId" value="${ finding.scan.application.organization.id }" />
-		<spring:param name="appId" value="${ finding.scan.application.id }" />
-		<spring:param name="scanId" value="${ finding.scan.id }" />
-	</spring:url>
-
-	<ul class="breadcrumb">
-	    <li><a href="<spring:url value="/teams"/>">Applications Index</a><span class="divider">/</span></li>
-	    <li><a href="${ fn:escapeXml(orgUrl) }" ng-non-bindable>Team <c:out value="${ finding.scan.application.organization.name }"/></a> <span class="divider">/</span></li>
-	    <li><a href="${ fn:escapeXml(appUrl) }" ng-non-bindable>Application <c:out value="${ finding.scan.application.name }"/></a><span class="divider">/</span></li>
-	    <li><a href="${ fn:escapeXml(scanUrl) }" ng-non-bindable><fmt:formatDate value="${ finding.scan.importTime.time }" type="both" dateStyle="short" timeStyle="short"/> <c:out value="${ fn:escapeXml(finding.scan.applicationChannel.channelType.name) }"/> Scan</a><span class="divider">/</span></li>
-	    <li class="active">Finding ${ fn:escapeXml(finding.id) }</li>
-    </ul>
-
+<body id="apps" ng-controller="FindingController">
+	<%@ include file="/WEB-INF/views/scans/finding/findingHeader.jsp" %>
+	<%@ include file="/WEB-INF/views/angular-init.jspf"%>
 	<%@ include file="/WEB-INF/views/scans/finding/detail.jsp" %>
 </body>

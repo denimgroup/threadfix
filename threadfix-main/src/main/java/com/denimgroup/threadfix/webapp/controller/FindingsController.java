@@ -41,11 +41,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
 
@@ -64,25 +64,51 @@ public class FindingsController {
 	private SharedComponentService sharedComponentService;
 
 	@RequestMapping(value = "/organizations/{orgId}/applications/{appId}/scans/{scanId}/findings/{findingId}", method = RequestMethod.GET)
-	public ModelAndView finding(@PathVariable("findingId") int findingId,
-			@PathVariable("orgId") int orgId,
-			@PathVariable("appId") int appId) {
-		
+	public  String finding(@PathVariable("findingId") int findingId,
+						   @PathVariable("orgId") int orgId,
+						   @PathVariable("appId") int appId,
+						   Model model) {
 		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
-			return new ModelAndView("403");
+			return "403";
 		}
-		
+
 		Finding finding = findingService.loadFinding(findingId);
-		if (finding == null){
+		if (finding == null) {
 			log.warn(ResourceNotFoundException.getLogMessage("Finding", findingId));
 			throw new ResourceNotFoundException();
+		}
+
+		PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MODIFY_VULNERABILITIES);
+		return (EnterpriseTest.isEnterprise() && finding.getDataFlowElements().size() > 0) ? "scans/finding/index" : "scans/findingDetail";
+	}
+
+    @JsonView(AllViews.VulnerabilityDetail.class)
+    @RequestMapping(value = "/organizations/{orgId}/applications/{appId}/scans/{scanId}/findings/{findingId}/objects",
+            method = RequestMethod.GET)
+    public @ResponseBody Object getObjects(@PathVariable("findingId") int findingId) {
+
+        Finding finding = findingService.loadFinding(findingId);
+        if (finding == null) {
+            log.warn(ResourceNotFoundException.getLogMessage("Finding", findingId));
+            throw new ResourceNotFoundException();
         }
 
-        String view = (EnterpriseTest.isEnterprise()) ? "scans/finding/index" : "scans/findingDetail";
-        ModelAndView mav = new ModelAndView(view);
-        mav.addObject(finding);
-        PermissionUtils.addPermissions(mav, orgId, appId, Permission.CAN_MODIFY_VULNERABILITIES);
-        return mav;
+        Map<String, Map<String, ?>> sourceCodeData = map(
+                "files", findingService.getFilesWithVulnerabilities(finding),
+                "lineNumbers", findingService.getFilesWithLineNumbers(finding)
+        );
+
+		Map result = map(
+				"finding", finding,
+				"sourceCodeData", sourceCodeData,
+				"isEnterprise", EnterpriseTest.isEnterprise()
+		);
+		// shared components
+		if (sharedComponentService != null) {
+			result.put("sharedVulns", sharedComponentService.retrieveSharedVulns(finding));
+		}
+
+        return RestResponse.success(result);
     }
 
     @RequestMapping(value = "/organizations/{orgId}/applications/{appId}/scans/{scanId}/findings/{findingId}/merge", method = RequestMethod.GET)
@@ -206,41 +232,4 @@ public class FindingsController {
 
 		return "redirect:/organizations/" + orgId + "/applications/" + appId + "/scans/" + finding.getScan().getId() + "/findings/" + findingId;
 	}
-
-	@JsonView(AllViews.VulnerabilityDetail.class)
-	@RequestMapping(value = "/organizations/{orgId}/applications/{appId}/scans/{scanId}/findings/{findingId}/table", method = RequestMethod.GET)
-	@ResponseBody
-	public Object table(@PathVariable("appId") int appId,
-						@PathVariable("orgId") int orgId,
-						@PathVariable("findingId") int findingId) {
-
-		Finding finding = findingService.loadFinding(findingId);
-		if (finding == null) {
-			RestResponse.failure("Requested finding is invalid.");
-		}
-
-		// shared components
-		if (sharedComponentService != null) {
-			return RestResponse.success(map("sharedVulns", sharedComponentService.retrieveSharedVulns(finding)));
-		}
-
-		return RestResponse.success(map());
-	}
-	
-	@RequestMapping(value = "/organizations/{orgId}/applications/{appId}/scans/{scanId}/findings/{findingId}/code",
-			method = RequestMethod.GET)
-	public @ResponseBody Object getSourceCode(@PathVariable("findingId") int findingId) {
-
-		Finding finding = findingService.loadFinding(findingId);
-		if (finding == null) {
-			log.warn(ResourceNotFoundException.getLogMessage("Finding", findingId));
-			throw new ResourceNotFoundException();
-		}
-
-		return RestResponse.success(map(
-				"files", findingService.getFilesWithVulnerabilities(finding),
-				"lineNumbers", findingService.getFilesWithLineNumbers(finding)
-		));
-	}
-
 }
