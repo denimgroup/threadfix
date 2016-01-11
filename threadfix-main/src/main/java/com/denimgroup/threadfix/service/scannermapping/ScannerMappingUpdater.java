@@ -108,6 +108,8 @@ public class ScannerMappingUpdater implements ApplicationContextAware {
         } else {
             LOG.info("Sending message to queue.");
             queueSender.findSharedVulns();
+            defaultConfiguration.setSharedVulnScanned(true);
+            defaultConfigService.saveConfiguration(defaultConfiguration);
         }
     }
 
