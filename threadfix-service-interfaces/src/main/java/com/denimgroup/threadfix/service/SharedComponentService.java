@@ -25,16 +25,23 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.SharedVulnerability;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SharedComponentService {
 
-	List<Vulnerability> retrieveSharedVulns(Finding finding);
+	List<Map> retrieveSharedVulns(Finding finding);
 
-	List<Vulnerability> retrieveSharedVulns(Vulnerability vulnerability);
+	List<Map> retrieveSharedVulns(Vulnerability vulnerability);
+
+	List<Map> retrieveAll();
 
 	void updateAllSharedVulns();
 
+	SharedVulnerability retrieveById(int id);
+
+	Map retrieveMapById(int id);
 }

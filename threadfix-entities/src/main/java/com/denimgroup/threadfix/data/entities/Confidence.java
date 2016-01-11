@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.views.AllViews;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
@@ -40,10 +41,17 @@ public class Confidence extends AuditableEntity {
 	private Double frontScore;
 	private Double backScore;
 
+	public Confidence(){
+
+	}
+
+	public Confidence(SharedVulnerability sharedVulnerability) {
+		this.sharedVulnerability = sharedVulnerability;
+	}
 
 	@OneToOne
 	@JoinColumn(name = "sharedVulnerability_Id")
-	@JsonView({ AllViews.VulnerabilityDetail.class })
+	@JsonIgnore
 	public SharedVulnerability getSharedVulnerability() {
 		return sharedVulnerability;
 	}
@@ -53,7 +61,7 @@ public class Confidence extends AuditableEntity {
 	}
 
 	@Column
-	@JsonView({ AllViews.VulnerabilityDetail.class })
+	@JsonView({ AllViews.SharedVulnerabilityView.class })
 	public Double getFrontScore() {
 		return frontScore;
 	}
@@ -63,7 +71,7 @@ public class Confidence extends AuditableEntity {
 	}
 
 	@Column
-	@JsonView({ AllViews.VulnerabilityDetail.class })
+	@JsonView({ AllViews.SharedVulnerabilityView.class })
 	public Double getBackScore() {
 		return backScore;
 	}

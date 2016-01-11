@@ -88,4 +88,6 @@ public class AllViews {
     public static interface VulnerabilityHistoryView extends HistoryView {}
 
     public static interface UserHistoryView extends HistoryView {}
+
+    public interface SharedVulnerabilityView extends VulnerabilityDetail {}
 }

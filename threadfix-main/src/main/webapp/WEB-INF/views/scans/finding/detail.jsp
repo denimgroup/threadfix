@@ -17,9 +17,6 @@
     </c:if>
 </div>
 
-<br/>
-<%@ include file="/WEB-INF/views/applications/sharedComponentTable.jsp" %>
-<br/>
 <table class="dataTable">
     <tbody>
     <c:if test="${ not empty finding.urlReference }">
