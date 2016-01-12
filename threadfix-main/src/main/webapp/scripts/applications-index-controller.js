@@ -12,6 +12,10 @@ myAppModule.controller('ApplicationsIndexController',
             return a.name.localeCompare(b.name);
         };
 
+        var setTeamUrl = function(team) {
+            team.url = tfEncoder.encode("/organizations/" + team.id);
+        };
+
         $scope.active = function(app) {
             return app.active;
         };
@@ -24,9 +28,7 @@ myAppModule.controller('ApplicationsIndexController',
 
                     if (data.success) {
                         $scope.teams = data.object.teams;
-                        $scope.teams.forEach(function(team) {
-                            team.url = tfEncoder.encode("/organizations/" + team.id);
-                        });
+                        $scope.teams.forEach(setTeamUrl);
 
                         $scope.canEditIds = data.object.canEditIds;
                         $scope.canUploadIds = data.object.canUploadIds;
@@ -350,6 +352,8 @@ myAppModule.controller('ApplicationsIndexController',
 
             $scope.teams.push(newTeam);
             $scope.teams.sort(nameCompare);
+
+            setTeamUrl(newTeam);
 
             newTeam.expanded = true;
             newTeam.report = null;
