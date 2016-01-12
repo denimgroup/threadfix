@@ -25,6 +25,49 @@ threadfixModule.factory('tfEncoder', function($rootScope, $location) {
     return tfEncoder;
 });
 
+threadfixModule.factory('storageService', function() {
+    var storageService = {};
+    storageService.storageAvailable = undefined;
+    storageService.storage = undefined;
+
+    var isTypedStorageAvailable = function(type) {
+        try {
+            var storage = window[type],
+                x = '__storage_test__';
+            storage.setItem(x, x);
+            storage.removeItem(x);
+            return true;
+        }
+        catch(e) {
+            return false;
+        }
+    };
+
+    storageService.isStorageAvailable = function() {
+        if (isTypedStorageAvailable('localStorage')) {
+            storageService.storageAvailable = true;
+        } else {
+            storageService.storageAvailable = isTypedStorageAvailable('sessionStorage');
+        }
+        return storageService.storageAvailable;
+    };
+
+    storageService.getStorage = function() {
+        if (!storageService.storage) {
+            if (isTypedStorageAvailable('localStorage')) {
+                storageService.storage = window['localStorage'];
+            } else if (isTypedStorageAvailable('sessionStorage')) {
+                storageService.storage = window['sessionStorage'];
+            } else {
+                storageService.storage = undefined;
+            }
+        }
+        return storageService.storage;
+    };
+
+    return storageService;
+});
+
 /**
  * This service is a little funky. Basically, every generic-severity directive on the page
  * adds a callback to the callbacks array. Then when the controller sets the severities in
@@ -699,11 +742,153 @@ threadfixModule.factory('vulnTreeTransformer', function() {
     return transformer;
 });
 
-threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameterService, $http, $log) {
+threadfixModule.factory('vulnTreeStateService', function(storageService, $log) {
+    var vulnTreeStateService = {};
+
+    vulnTreeStateService.loadVulnTreeState = function(vulnTree) {
+        $log.info("Loading vuln tree state from local storage");
+
+        if (storageService.isStorageAvailable()) {
+
+            var storage = storageService.getStorage();
+
+            if (storage && storage.getItem) {
+                try {
+                    var vulnTreeStateAsJsonString = storage.getItem('vulnTreeState -- ' + window.location.pathname);
+
+                    var vulnTreeState = JSON.parse(vulnTreeStateAsJsonString);
+
+                    if (vulnTreeState) {
+                        vulnTree.expanded = vulnTreeState.expanded !== false;
+                        vulnTree.forEach(function (treeElement) {
+                            var treeElementState = vulnTreeState[treeElement.intValue];
+                            if (treeElementState) {
+                                treeElement.expanded = treeElementState.expanded !== false;
+                                treeElement.entries.forEach(function (entry) {
+                                    var entryState = treeElementState.entries[entry.genericVulnerability.id];
+                                    if (entryState) {
+                                        entry.expanded = entryState.expanded === true;
+                                        if (entry.expanded) {
+                                            entry.numberToShow = entryState.numberToShow === 25 ? 25 : entryState.numberToShow === 50 ? 50 : 10;
+                                            var page = entryState.page;
+                                            if ((Number(page) === page) && (page > 0) && (page % 1 === 0)) {
+                                                var numResults = entry.numResults;
+                                                var numberToShow = entry.numberToShow;
+                                                var numPages;
+                                                if (numResults % numberToShow !== 0) {
+                                                    numPages = ((numResults - (numResults % numberToShow)) / numberToShow)  + 1;
+                                                } else {
+                                                    numPages = numResults / numberToShow;
+                                                }
+                                                if (page <= numPages) {
+                                                    entry.page = Number(page);
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+                } catch(e) {
+                    $log.info("Error loading vuln tree state from local storage");
+                    storage.removeItem('vulnTreeState -- ' + window.location.pathname);
+                }
+
+            }
+        }
+    };
+
+    vulnTreeStateService.storeVulnTreeState = function(vulnTree) {
+        $log.info("Storing vuln tree state in local storage");
+
+        if (storageService.isStorageAvailable()) {
+            var vulnTreeState = {};
+
+            vulnTreeState.expanded = vulnTree.expanded;
+            vulnTree.forEach(function(treeElement) {
+                var treeElementState = {};
+                vulnTreeState[treeElement.intValue] = treeElementState;
+                treeElementState.expanded = treeElement.expanded;
+                treeElementState.entries = {};
+                treeElement.entries.forEach(function(entry) {
+                    var entryState = {};
+                    treeElementState.entries[entry.genericVulnerability.id] = entryState;
+                    entryState.expanded = entry.expanded ? true : false;
+                    entryState.numberToShow = entry.numberToShow === 10 ? 10 : entry.numberToShow === 25 ? 25 : entry.numberToShow === 50 ? 50 : undefined;
+                    var page = entry.page;
+                    if ((Number(page) === page) && (page % 1 === 0) && (page > 0)) {
+                        entryState.page = Number(page);
+                    }
+                });
+            });
+            var vulnTreeStateAsJsonString = JSON.stringify(vulnTreeState);
+
+            var storage = storageService.getStorage();
+
+            if (storage && storage.setItem) {
+                storage.setItem('vulnTreeState -- ' + window.location.pathname, vulnTreeStateAsJsonString);
+            }
+        }
+    };
+
+    return vulnTreeStateService;
+});
+
+threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameterService, storageService, $http, $log) {
     var filter = {};
 
+    filter.serializeFilter = function($scope) {
+        $scope.startDate = $scope.parameters.startDate;
+        $scope.endDate = $scope.parameters.endDate;
+        var serializedFilter = vulnSearchParameterService.serialize($scope, $scope.parameters);
+        var editing = $scope.selectedFilter && $scope.selectedFilter.id;
 
-    filter.saveCurrentFilters = function($scope) {
+        serializedFilter.name = $scope.currentFilterNameInput;
+        if ($scope.parameters.defaultTrending)
+            serializedFilter.defaultTrending = true;
+
+        if (editing)
+            serializedFilter.id = $scope.selectedFilter.id;
+
+        return serializedFilter;
+    }
+
+    filter.loadCurrentFilter = function($scope) {
+        $log.info("Loading filters from local storage");
+
+        if (storageService.isStorageAvailable()) {
+
+            var storage = storageService.getStorage();
+
+            if (storage && storage.getItem) {
+                var filterAsJsonString = storage.getItem('currentFilter -- ' + window.location.pathname);
+
+                var filter = JSON.parse(filterAsJsonString);
+
+                return filter
+            }
+        }
+
+        return null;
+    };
+
+    filter.storeCurrentFilter = function($scope) {
+        $log.info("Storing filters in local storage");
+
+        if (storageService.isStorageAvailable()) {
+
+            var filterAsJsonString = JSON.stringify(filter.serializeFilter($scope));
+
+            var storage = storageService.getStorage();
+
+            if (storage && storage.setItem) {
+                storage.setItem('currentFilter -- ' + window.location.pathname, filterAsJsonString);
+            }
+        }
+    };
+
+    filter.saveCurrentFilters = function($scope, successCallback) {
         $log.info("Saving filters");
 
         if ($scope.currentFilterNameInput) {
@@ -720,17 +905,7 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
 
             $scope.savingFilter = true;
 
-            $scope.startDate = $scope.parameters.startDate;
-            $scope.endDate = $scope.parameters.endDate;
-            var submissionObject = vulnSearchParameterService.serialize($scope, $scope.parameters);
-            var editing = $scope.selectedFilter && $scope.selectedFilter.id;
-
-            submissionObject.name = $scope.currentFilterNameInput;
-            if ($scope.parameters.defaultTrending)
-                submissionObject.defaultTrending = true;
-
-            if (editing)
-                submissionObject.id = $scope.selectedFilter.id;
+            var submissionObject = filter.serializeFilter($scope);
 
             $http.post(tfEncoder.encode("/reports/filter/save"), submissionObject).
                 success(function(data, status, headers, config) {
@@ -751,16 +926,16 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
                         $scope.savedDefaultTrendingFilter = defaultFilter;
                         $scope.$parent.savedDefaultTrendingFilter = defaultFilter;
 
-                        if(!$scope.acFilterPage)
-                            $scope.currentFilterNameInput = '';
-
-                        if (editing) {
+                        if ($scope.selectedFilter && $scope.selectedFilter.id) {
                             $scope.saveFilterSuccessMessage = 'Successfully edited filter ' + submissionObject.name;
                         } else {
                             $scope.saveFilterSuccessMessage = 'Successfully saved filter ' + submissionObject.name;
                         }
                         $scope.saveFilterErrorMessage = undefined;
 
+                        if (successCallback) {
+                            successCallback();
+                        }
                     } else {
                         $scope.saveFilterErrorMessage = "Failure. Message was : " + data.message;
                         $scope.saveFilterSuccessMessage = undefined;
@@ -776,7 +951,7 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
         }
     };
 
-    filter.deleteCurrentFilter = function($scope) {
+    filter.deleteCurrentFilter = function($scope, successCallback) {
         if ($scope.selectedFilter) {
             $http.post(tfEncoder.encode("/reports/filter/delete/" + $scope.selectedFilter.id)).
                 success(function(data, status, headers, config) {
@@ -797,6 +972,10 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
                             var defaultFilter = filter.findDefaultFilter($scope);
                             $scope.savedDefaultTrendingFilter = defaultFilter;
                             $scope.$parent.savedDefaultTrendingFilter = defaultFilter;
+                        }
+
+                        if (successCallback) {
+                            successCallback();
                         }
                     } else {
                         $scope.errorMessage = "Failure. Message was : " + data.message;

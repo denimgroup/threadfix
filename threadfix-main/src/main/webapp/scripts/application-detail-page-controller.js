@@ -5,6 +5,9 @@ myAppModule.controller('ApplicationDetailPageController', function ($scope, $win
     $scope.dragEnabled = true;
     $scope.tab = { vulnerabilities: true };
 
+    $scope.storeFiltersInLocalStorage = true;
+    $scope.storeVulnTreeStateInLocalStorage = true;
+
     // too many IE problems
     $scope.disableOverlay = !~navigator.userAgent.indexOf("ie");
 

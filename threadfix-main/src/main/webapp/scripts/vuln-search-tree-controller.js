@@ -1,7 +1,7 @@
 var module = angular.module('threadfix');
 
 module.controller('VulnSearchTreeController', function($log, $scope, $rootScope, $window, $http, tfEncoder, $modal,
-                                                       vulnSearchParameterService, vulnTreeTransformer) {
+                                                       vulnSearchParameterService, vulnTreeTransformer, vulnTreeStateService) {
 
     $scope.loadingTree = true;
     $scope.canUpdateVulnComment = false;
@@ -9,6 +9,7 @@ module.controller('VulnSearchTreeController', function($log, $scope, $rootScope,
     $scope.toggleVulnCategory = function(treeElement, expanded) {
         treeElement.expanded = expanded;
         $scope.checkIfVulnTreeExpanded();
+        storeVulnTreeState();
     };
 
     $scope.checkIfVulnTreeExpanded = function() {
@@ -46,10 +47,16 @@ module.controller('VulnSearchTreeController', function($log, $scope, $rootScope,
         }
 
         $scope.vulnTree.expanded = !expanded;
+        storeVulnTreeState();
     };
 
-    $scope.expandAndRetrieveTable = function(element) {
-        $scope.updateElementTable(element, 10, 1);
+    $scope.toggleVulnElement = function(element, expanded) {
+        if (expanded) {
+            $scope.updateElementTable(element, 10, 1);
+        } else {
+            element.expanded = false;
+            storeVulnTreeState();
+        }
     };
 
     // collapse duplicates: [arachni, arachni, appscan] => [arachni (2), appscan]
@@ -111,6 +118,7 @@ module.controller('VulnSearchTreeController', function($log, $scope, $rootScope,
                     $scope.errorMessage = "Failure. Message was : " + data.message;
                 }
 
+                storeVulnTreeState();
                 $scope.loadingTree = false;
             }).
             error(function(data, status, headers, config) {
@@ -151,6 +159,16 @@ module.controller('VulnSearchTreeController', function($log, $scope, $rootScope,
                     $scope.checkIfVulnTreeExpanded();
 
                     $scope.badgeWidth = { "text-align": "right", width: $scope.badgeWidth + 'px' };
+
+                    loadVulnTreeState();
+                    $scope.vulnTree.forEach(function(treeElement) {
+                        treeElement.entries.forEach(function(entry) {
+                            if (entry.expanded) {
+                                $scope.updateElementTable(entry, entry.numberToShow, entry.page);
+                            }
+                        });
+                    });
+                    storeVulnTreeState();
                 } else if (data.message) {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
                 }
@@ -243,6 +261,18 @@ module.controller('VulnSearchTreeController', function($log, $scope, $rootScope,
 
     $scope.toggleFinding = function(finding) {
         $scope['isShowFlow' + finding.id] = $scope['isShowFlow' + finding.id] ? false : true;
+    };
+
+    var storeVulnTreeState = function() {
+        if ($scope.storeVulnTreeStateInLocalStorage) {
+            vulnTreeStateService.storeVulnTreeState($scope.vulnTree);
+        }
+    };
+
+    var loadVulnTreeState = function() {
+        if ($scope.storeVulnTreeStateInLocalStorage) {
+            vulnTreeStateService.loadVulnTreeState($scope.vulnTree);
+        }
     };
 
 });
