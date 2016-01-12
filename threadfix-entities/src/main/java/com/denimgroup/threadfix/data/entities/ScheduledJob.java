@@ -99,7 +99,7 @@ public abstract class ScheduledJob extends AuditableEntity {
         this.frequency = frequency;
     }
 
-    @Column(nullable = true, unique = true)
+    @Column(nullable = true)
     @JsonView(Object.class)
     public String getCronExpression() {
         return cronExpression;
