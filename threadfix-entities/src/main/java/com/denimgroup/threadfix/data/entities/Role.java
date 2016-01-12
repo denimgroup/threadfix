@@ -467,7 +467,9 @@ public class Role extends AuditableEntity {
     @JsonView(AllViews.TableRow.class)
     public List<Map> getUserMaps() {
         List<Map> returnList = list();
-
+        if(getUsers()==null){
+            return returnList;
+        }
         for (User user : getUsers()) {
             returnList.add(map(
                     "id", user.getId(),
@@ -493,7 +495,9 @@ public class Role extends AuditableEntity {
     @JsonView(AllViews.TableRow.class)
     public List<Map> getGroupMaps() {
         List<Map> returnList = list();
-
+        if(getGroups()==null){
+            return returnList;
+        }
         for (Group group : getGroups()) {
             returnList.add(map(
                     "id", group.getId(),
