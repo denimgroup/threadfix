@@ -138,7 +138,9 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
         } else if (originalName.endsWith(".html")) {
             //probably clang
             returnString = ScannerType.CLANG.getDisplayName();
-        } else {
+        } else if(originalName.endsWith(".scan")){
+			throw new RestIOException("Appscan .scan file is not supported. The AppScan importer accepts the XML output as input. Click File -> Export -> Scan Results as XML.", -1);
+		} else{
             returnString = figureOutXml(fileName);
         }
 
