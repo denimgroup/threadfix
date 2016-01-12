@@ -141,7 +141,7 @@ public class FindingsController {
 								  @PathVariable("appId") int appId,
 								  @PathVariable("vulnId") int vulnId,
 								  @PathVariable("findingId") int findingId,
-								  @Valid @ModelAttribute Finding finding,
+								  @RequestParam String longDescription,
 								  Model model) {
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
 			RestResponse.failure("You do not have permission to modify vulnerabilities.");
@@ -151,7 +151,7 @@ public class FindingsController {
 
 		Finding dbfinding = findingService.loadFinding(findingId);
 		if (dbfinding != null && dbfinding.getVulnerability() != null) {
-			dbfinding.setLongDescription(finding.getLongDescription());
+			dbfinding.setLongDescription(longDescription);
 			findingService.storeFinding(dbfinding);
 			return RestResponse.success(dbfinding);
 		} else{
