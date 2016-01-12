@@ -24,6 +24,10 @@
 
 package com.denimgroup.threadfix.service;
 
+import com.cronutils.model.CronType;
+import com.cronutils.model.definition.CronDefinition;
+import com.cronutils.model.definition.CronDefinitionBuilder;
+import com.cronutils.validator.CronValidator;
 import com.denimgroup.threadfix.data.dao.ScheduledJobDao;
 import com.denimgroup.threadfix.data.entities.DayInWeek;
 import com.denimgroup.threadfix.data.entities.ScheduledFrequencyType;
@@ -84,8 +88,14 @@ public abstract class ScheduledJobServiceImpl<S extends ScheduledJob> implements
 
         if (cronExpression == null) {
             result.rejectValue("cronExpression", null, null, "Cron Expression cannot be null");
-        } else if (!CronExpression.isValidExpression(cronExpression)) {
-            result.rejectValue("cronExpression", null, null, "Cron expression is invalid.");
+        }else{
+            CronDefinition cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ);
+            CronValidator quartzValidator = new CronValidator(cronDefinition);
+            if(!quartzValidator.isValid(cronExpression)) {
+                result.rejectValue("cronExpression", null, null, "Cron expression is invalid.");
+            }else if (!CronExpression.isValidExpression(cronExpression)) {
+                result.rejectValue("cronExpression", null, null, "Cron expression is invalid.");
+            }
         }
     }
 
