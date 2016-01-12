@@ -167,7 +167,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                 alert("You don't have permission to create WAFs. Please contact your administrator.");
                 return;
             }
-            $scope.currentModal.dismiss('modalChanged');
+            $scope.currentModal.dismiss('createWaf');
             $scope.showCreateWafModal();
 
         } else if (name === 'addDefectTracker') {
@@ -293,8 +293,10 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             $scope.config.application.waf = waf;
             $scope.$parent.successMessage = "Set waf to " + waf.name;
             $scope.showEditModal();
-        }, function () {
-            $scope.showEditModal();
+        }, function (reason) {
+            if(reason !== 'createWaf'){
+                $scope.showEditModal();
+            }
             $log.info('Modal dismissed at: ' + new Date());
         });
     };
