@@ -464,7 +464,7 @@ public class Role extends AuditableEntity {
 
     @Transient
     @JsonProperty("users")
-    @JsonView(Object.class)
+    @JsonView(AllViews.TableRow.class)
     public List<Map> getUserMaps() {
         List<Map> returnList = list();
 
@@ -490,7 +490,7 @@ public class Role extends AuditableEntity {
 
     @Transient
     @JsonProperty("groups")
-    @JsonView(Object.class)
+    @JsonView(AllViews.TableRow.class)
     public List<Map> getGroupMaps() {
         List<Map> returnList = list();
 
