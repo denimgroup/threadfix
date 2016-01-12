@@ -29,6 +29,7 @@ import com.cronutils.model.CronType;
 import com.cronutils.model.definition.CronDefinition;
 import com.cronutils.model.definition.CronDefinitionBuilder;
 import com.cronutils.parser.CronParser;
+import com.cronutils.validator.CronValidator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -99,7 +100,7 @@ public abstract class ScheduledJob extends AuditableEntity {
         this.frequency = frequency;
     }
 
-    @Column(nullable = true, unique = true)
+    @Column(nullable = true)
     @JsonView(Object.class)
     public String getCronExpression() {
         return cronExpression;
@@ -132,11 +133,16 @@ public abstract class ScheduledJob extends AuditableEntity {
     @JsonView(Object.class)
     @JsonProperty("cronTranslation")
     public String getCronTranslation() {
-        if (this.cronExpression != null) {
+        if (this.cronExpression != null ) {
             CronDefinition cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ);
-            CronParser parser = new CronParser(cronDefinition);
-            CronDescriptor descriptor = CronDescriptor.instance(Locale.US);
-            return descriptor.describe(parser.parse(this.cronExpression));
+            CronValidator quartzValidator = new CronValidator(cronDefinition);
+            if(quartzValidator.isValid(this.cronExpression)) {
+                CronParser parser = new CronParser(cronDefinition);
+                CronDescriptor descriptor = CronDescriptor.instance(Locale.US);
+                return descriptor.describe(parser.parse(this.cronExpression));
+            }else{
+                return null;
+            }
         }
 
         return null;
