@@ -2,6 +2,8 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import javax.validation.Valid;
 
+import com.denimgroup.threadfix.data.entities.GenericSeverity;
+import com.denimgroup.threadfix.service.GenericSeverityService;
 import com.denimgroup.threadfix.views.AllViews;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,10 +43,13 @@ public class AddScheduledEmailReportController {
 	private ScheduledEmailReportScheduler scheduledEmailReportScheduler;
 	@Autowired
 	private OrganizationService organizationService;
+	@Autowired
+	private GenericSeverityService genericSeverityService;
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields("day", "frequency", "hour", "minute", "period", "severityLevel.id", "organizations*");
+		dataBinder.setAllowedFields("day", "frequency", "hour", "minute", "period", "severityLevel.id", "severityLevel.name",
+				"organizations*", "scheduleType", "cronExpression");
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -62,12 +67,18 @@ public class AddScheduledEmailReportController {
 		if (scheduledEmailReport.getScheduleType().equals("CRON")) {
             scheduledEmailReport.clearDate();
 			scheduledEmailReportService.validateCronExpression(scheduledEmailReport, result);
+			GenericSeverity severityLevel = scheduledEmailReport.getSeverityLevel();
+			if(severityLevel != null){
+				GenericSeverity dbGenericSeverity = genericSeverityService.loadById(severityLevel.getId());
+				if (dbGenericSeverity!=null) {
+					scheduledEmailReport.setSeverityLevel(dbGenericSeverity);
+				}
+			}
 		} else if (scheduledEmailReport.getScheduleType().equals("SELECT")) {
             scheduledEmailReport.clearCronExpression();
 			scheduledEmailReportService.validateDate(scheduledEmailReport, result);
 			scheduledEmailReportService.validateScheduleEmailReport(scheduledEmailReport, result);
 		}
-
 		List<EmailList> emptyEmailLists = list();
 		scheduledEmailReport.setEmailLists(emptyEmailLists);
 		List<String> emptyEmailAddresses = list();
