@@ -82,7 +82,7 @@ public class FindingsController {
 		return (EnterpriseTest.isEnterprise() && finding.getDataFlowElements().size() > 0) ? "scans/finding/index" : "scans/findingDetail";
 	}
 
-    @JsonView(AllViews.VulnerabilityDetail.class)
+    @JsonView(AllViews.SharedVulnerabilityView.class)
     @RequestMapping(value = "/organizations/{orgId}/applications/{appId}/scans/{scanId}/findings/{findingId}/objects",
             method = RequestMethod.GET)
     public @ResponseBody Object getObjects(@PathVariable("findingId") int findingId) {
@@ -104,8 +104,8 @@ public class FindingsController {
 				"isEnterprise", EnterpriseTest.isEnterprise()
 		);
 		// shared components
-		if (sharedComponentService != null) {
-			result.put("sharedVulns", sharedComponentService.retrieveSharedVulns(finding));
+		if (sharedComponentService != null && finding.getVulnerability() != null) {
+			result.put("sharedVulns", finding.getVulnerability().getSharedVulnerabilities());
 		}
 
         return RestResponse.success(result);

@@ -28,11 +28,7 @@ import com.denimgroup.threadfix.data.entities.ExceptionLog;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.ChannelSeverityService;
-import com.denimgroup.threadfix.service.ExceptionLogService;
-import com.denimgroup.threadfix.service.JobStatusService;
-import com.denimgroup.threadfix.service.RemoteProviderTypeService;
-import com.denimgroup.threadfix.service.UserService;
+import com.denimgroup.threadfix.service.*;
 import org.apache.activemq.command.ActiveMQMapMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
@@ -425,6 +421,7 @@ public class QueueSenderImpl implements QueueSender {
 
 		sendMap(findSharedVulnMap);
 	}
+
 
 	private void send(String message) {
 		jmsTemplate.convertAndSend("requestQueue", message);

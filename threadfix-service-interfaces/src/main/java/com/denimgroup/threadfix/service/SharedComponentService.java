@@ -33,15 +33,19 @@ import java.util.Map;
 
 public interface SharedComponentService {
 
-	List<Map> retrieveSharedVulns(Finding finding);
-
-	List<Map> retrieveSharedVulns(Vulnerability vulnerability);
-
 	List<Map> retrieveAll();
 
-	void updateAllSharedVulns();
+	void updateAllSharedVulns(Integer teamId, Integer appId);
 
 	SharedVulnerability retrieveById(int id);
 
 	Map retrieveMapById(int id);
+
+	/**
+	 * Remove vulnerability from shared vulnerability
+	 * @param vulnerability
+     */
+	void removeVuln(Vulnerability vulnerability);
+
+	SharedVulnerability lookAndSaveSharedForVuln(Vulnerability vulnerability);
 }

@@ -167,7 +167,7 @@ public class QueueListener implements MessageListener {
 						deleteVulnsFilter(map.getInt("channelFilterId"));
 						break;
 					case QueueConstants.FIND_SHARED_VULNS:
-						findSharedVulns();
+						findSharedVulns(null, null);
 						break;
                     case QueueConstants.SEND_EMAIL_REPORT:
                         processSendEmailReport(map.getInt("scheduledEmailReportId"));
@@ -180,9 +180,9 @@ public class QueueListener implements MessageListener {
 		}
 	}
 
-	private void findSharedVulns() {
+	private void findSharedVulns(Integer teamId, Integer appId) {
 		if (sharedComponentService != null)
-			sharedComponentService.updateAllSharedVulns();
+			sharedComponentService.updateAllSharedVulns(teamId, appId);
 	}
 
 	private void updateChannelSeverityMappings(String channelSeverityIds) {
