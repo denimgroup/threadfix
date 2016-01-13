@@ -33,7 +33,7 @@ import java.util.Map;
 
 public interface SharedComponentService {
 
-	List<Map> retrieveAll();
+	List<Map> retrieveAll(int numberToShow, int page);
 
 	void updateAllSharedVulns(Integer teamId, Integer appId);
 
@@ -48,4 +48,6 @@ public interface SharedComponentService {
 	void removeVuln(Vulnerability vulnerability);
 
 	SharedVulnerability lookAndSaveSharedForVuln(Vulnerability vulnerability);
+
+	Long getSharedVulnCount();
 }

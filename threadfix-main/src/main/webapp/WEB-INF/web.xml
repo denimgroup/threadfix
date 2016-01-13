@@ -192,7 +192,7 @@
                 protected-regex ^/configuration/policies/policyStatus/[0-9]+/deleteEmailList,
                 protected-regex ^/configuration/policies/[0-9]+/add/[0-9]+$,
                 protected-regex ^/configuration/policies/[0-9]+/remove/[0-9]+$,
-				protected-regex ^/configuration/sharedVulns/list$,
+				protected-regex ^/configuration/sharedVulns/list/numberToShow/[0-9]+/page/[0-9]+$,
 				protected-regex ^/configuration/sharedVulns/[0-9]+/view$,
 				protected-regex ^/configuration/sharedVulns/[0-9]+/getObject$,
         		protected-regex ^/configuration/remoteproviders/[0-9]+/table$,
