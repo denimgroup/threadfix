@@ -30,6 +30,8 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             showHidden: false,
             showDefectPresent: false,
             showDefectNotPresent: false,
+            showSharedVulnFound: false,
+            showSharedVulnNotFound: false,
             showDefectOpen: false,
             showDefectClosed: false,
             showInconsistentClosedDefectNeedsScan: false,
@@ -75,6 +77,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             threadfixAPIService.getVulnSearchParameters()
                 .success(function(data, status, headers, config) {
                     if (data.success) {
+                        $scope.isEnterprise = data.object.isEnterprise;
                         $scope.teams = data.object.teams;
                         $scope.tags = data.object.tags;
                         $scope.commentTags = data.object.commentTags;
