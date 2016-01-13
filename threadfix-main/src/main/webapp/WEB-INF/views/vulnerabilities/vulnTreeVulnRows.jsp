@@ -91,9 +91,9 @@
 
     <!-- Shared Vulnerability Badges -->
     <span id="sharedVuln{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $parent.$index }}{{ name | removeSpace }}"
-          ng-show="vulnerability.sharedVulnerabilitiesCount > 0" class="badge" ng-class="{'badge-shared-vulnerability': true}">
+          ng-show="vulnerability.sharedVulnerabilitiesCount > 0 && isEnterprise" class="badge" ng-class="{'badge-shared-vulnerability': true}">
         {{ vulnerability.sharedVulnerabilitiesCount > 1 ? vulnerability.sharedVulnerabilitiesCount + 'Shared Vulnerabilities' : vulnerability.sharedVulnerabilitiesCount + ' Shared Vulnerability' }}</span>
-    <br ng-show="vulnerability.sharedVulnerabilitiesCount > 0">
+    <br ng-show="vulnerability.sharedVulnerabilitiesCount > 0 && isEnterprise">
 
     <!-- Comments + Documents -->
     <span id="commentsButton{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" class="pointer" ng-click="vulnerability.showComments = !vulnerability.showComments">
