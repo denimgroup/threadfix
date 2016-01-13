@@ -5,7 +5,9 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.denimgroup.threadfix.data.entities.EmailList;
+import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import com.denimgroup.threadfix.service.EmailListService;
+import com.denimgroup.threadfix.service.GenericSeverityService;
 import com.denimgroup.threadfix.views.AllViews;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -46,10 +48,13 @@ public class EditScheduledEmailReportController {
 	private EmailFilterService emailFilterService;
 	@Autowired
 	private EmailListService emailListService;
+	@Autowired
+	private GenericSeverityService genericSeverityService;
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setAllowedFields("id", "day", "frequency", "hour", "minute", "period", "severityLevel.id", "organizations*");
+		dataBinder.setAllowedFields("day", "frequency", "hour", "minute", "period", "severityLevel.id", "severityLevel.name",
+				"organizations*", "scheduleType", "cronExpression", "id");
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
@@ -72,14 +77,18 @@ public class EditScheduledEmailReportController {
 		if (scheduledEmailReport.getScheduleType().equals("CRON")) {
             scheduledEmailReport.clearDate();
 			scheduledEmailReportService.validateCronExpression(scheduledEmailReport, result);
+			GenericSeverity severityLevel = scheduledEmailReport.getSeverityLevel();
+			if(severityLevel != null){
+				GenericSeverity dbGenericSeverity = genericSeverityService.loadById(severityLevel.getId());
+				if (dbGenericSeverity!=null) {
+					scheduledEmailReport.setSeverityLevel(dbGenericSeverity);
+				}
+			}
 		} else if (scheduledEmailReport.getScheduleType().equals("SELECT")) {
             scheduledEmailReport.clearCronExpression();
 			scheduledEmailReportService.validateDate(scheduledEmailReport, result);
 			scheduledEmailReportService.validateScheduleEmailReport(scheduledEmailReport, result);
 		}
-
-		scheduledEmailReport.setEmailAddresses(dbScheduledEmailReport.getEmailAddresses());//don't know how to make it stick only with allowed fields
-		scheduledEmailReport.setEmailLists(dbScheduledEmailReport.getEmailLists());
 
 		if (result.hasErrors()) {
 			return FormRestResponse.failure("Encountered errors.", result);
