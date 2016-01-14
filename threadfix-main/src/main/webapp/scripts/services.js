@@ -573,6 +573,10 @@ threadfixModule.factory('vulnTreeTransformer', function() {
         }
     };
 
+    var severityCompare = function(a,b) {
+        return b.intValue - a.intValue;
+    };
+
     transformer.transform = function(map, owasp, disaStig) {
 
         var treeElements = map.tree;
@@ -705,6 +709,10 @@ threadfixModule.factory('vulnTreeTransformer', function() {
                     });
                 } else {
 
+                    if (severities.indexOf(treeElements[0].secondaryPivotName) != -1) {
+                        treeElements.sort(severityCompare);
+                    }
+
                     var primaryPivotNames = [];
                     treeElements.forEach(function(element){
                         var primaryPivotName = element.primaryPivotName;
@@ -712,7 +720,6 @@ threadfixModule.factory('vulnTreeTransformer', function() {
                             primaryPivotNames.push(primaryPivotName);
                         }
                     });
-
 
                     treeElements.forEach(function(element) {
                         var primaryPivotName = element.primaryPivotName;
