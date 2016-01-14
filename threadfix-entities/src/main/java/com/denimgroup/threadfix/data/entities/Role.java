@@ -24,15 +24,15 @@
 package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.views.AllViews;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.*;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 @Entity
 @Table(name = "Role")
@@ -462,6 +462,24 @@ public class Role extends AuditableEntity {
         this.users = users;
     }
 
+    @Transient
+    @JsonProperty("users")
+    @JsonView(AllViews.TableRow.class)
+    public List<Map> getUserMaps() {
+        List<Map> returnList = list();
+        if(getUsers()==null){
+            return returnList;
+        }
+        for (User user : getUsers()) {
+            returnList.add(map(
+                    "id", user.getId(),
+                    "name", user.getName()
+            ));
+        }
+
+        return returnList;
+    }
+
     @OneToMany(mappedBy = "globalRole")
     @JsonIgnore
     public List<Group> getGroups() {
@@ -470,6 +488,24 @@ public class Role extends AuditableEntity {
 
     public void setGroups(List<Group> groups) {
         this.groups = groups;
+    }
+
+    @Transient
+    @JsonProperty("groups")
+    @JsonView(AllViews.TableRow.class)
+    public List<Map> getGroupMaps() {
+        List<Map> returnList = list();
+        if(getGroups()==null){
+            return returnList;
+        }
+        for (Group group : getGroups()) {
+            returnList.add(map(
+                    "id", group.getId(),
+                    "name", group.getName()
+            ));
+        }
+
+        return returnList;
     }
 
 
