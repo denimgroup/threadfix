@@ -46,6 +46,7 @@ import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.ScannerUtils.md5;
 
 /**
  *
@@ -135,7 +136,7 @@ public class CheckMarxChannelImporter extends AbstractChannelImporter {
                 finding.setMarkedFalsePositive(isFalsePositive);
 
                 finding.setEntryPointLineNumber(IntegerUtils.getPrimitive(findingLineNumber));
-                finding.setNativeId(getNativeId(finding));
+                finding.setNativeId(md5(currentUrlReference));
                 finding.setUrlReference(currentUrlReference);
                 finding.setIsStatic(true);
                 finding.setDataFlowElements(currentDataFlowElements);
