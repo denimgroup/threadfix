@@ -6,7 +6,7 @@ module.controller('VulnSearchTreeController', function($log, $scope, $rootScope,
     $scope.loadingTree = true;
     $scope.canUpdateVulnComment = false;
 
-    $scope.toggleVulnCategory = function(treeElement, expanded) {
+    $scope.toggleVulnPivot = function(treeElement, expanded) {
         treeElement.expanded = expanded;
         $scope.checkIfVulnTreeExpanded();
     };
@@ -81,11 +81,12 @@ module.controller('VulnSearchTreeController', function($log, $scope, $rootScope,
         $log.info('Updating element table');
 
         var parameters = angular.copy($scope.$parent.parameters);
-
         vulnSearchParameterService.updateParameters($scope.$parent, parameters);
+
         parameters.genericSeverities = [];
         parameters.genericSeverities.push({ intValue: element.intValue });
-        parameters.genericVulnerabilities = [ element.genericVulnerability ];
+        parameters.primaryPivotName = element.primaryPivotName;
+        parameters.secondaryPivotName = element.secondaryPivotName;
         parameters.page = page;
         parameters.numberVulnerabilities = numToShow;
         parameters.usingComponentsWithKnownVulnerabilities = element.memberOf ? true : false;
@@ -126,7 +127,6 @@ module.controller('VulnSearchTreeController', function($log, $scope, $rootScope,
             success(function(data, status, headers, config) {
                 if (data.success) {
                     $scope.vulnTree = vulnTreeTransformer.transform(data.object, parameters.owasp, parameters.disaStig);
-
                     $scope.$parent.vulnTree = $scope.vulnTree;
                     $scope.badgeWidth = 0;
                     if ($scope.vulnTree) {

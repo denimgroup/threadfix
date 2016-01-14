@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('VulnSearchController', function($scope, $rootScope, $window, $http, tfEncoder, $modal, $log, vulnSearchParameterService, vulnTreeTransformer, threadfixAPIService, filterService) {
+module.controller('VulnSearchController', function($scope, $rootScope, $window, $http, tfEncoder, $modal, $log, vulnSearchParameterService, vulnTreeTransformer, threadfixAPIService) {
 
     $scope.parameters = {};
 
@@ -99,6 +99,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                         $scope.genericSeverityList = data.object.genericSeverities;
                         $scope.versionsMap = data.object.versionsMap;
                     }
+
                     if ($scope.filterParameters) {
 
                         $scope.$parent.tab = { vulnerabilities: true};
