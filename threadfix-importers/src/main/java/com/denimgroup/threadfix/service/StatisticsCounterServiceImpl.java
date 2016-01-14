@@ -69,14 +69,23 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
     @Override
     public void checkStatisticsCounters() {
-        addMissingFindingCounters(null);
-        addMissingMapCounters(null);
+
+        // these are the candidate finding IDs based on whether or not they should count for the vuln
+        Collection<Integer> findingIdRestrictions =
+                scanDao.getEarliestFindingIdsForVulnPerChannel(null);
+        addMissingFindingCounters(null, findingIdRestrictions);
+        addMissingMapCounters(null, findingIdRestrictions);
     }
 
     @Override
     public void checkStatisticsCountersInApps(List<Integer> appIds) {
-        addMissingFindingCounters(appIds);
-        addMissingMapCounters(appIds);
+
+        // these are the candidate finding IDs based on whether or not they should count for the vuln
+        Collection<Integer> findingIdRestrictions =
+                scanDao.getEarliestFindingIdsForVulnPerChannel(null);
+
+        addMissingFindingCounters(appIds, findingIdRestrictions);
+        addMissingMapCounters(appIds, findingIdRestrictions);
     }
 
     @Override
@@ -99,7 +108,7 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
     }
 
-    private void addMissingMapCounters(List<Integer> appIds) {
+    private void addMissingMapCounters(List<Integer> appIds, Collection<Integer> findingIdRestrictions) {
         if (appIds != null && appIds.size() == 0) {
             LOG.debug("There were no missing map counters to add.");
             return;
@@ -107,17 +116,32 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
         long start = currentTimeMillis();
 
-        Long total = scanDao.totalMapsThatNeedCountersInApps(appIds);
+        List<Integer> idList = scanDao.mapIDsThatNeedCountersInApps(appIds, findingIdRestrictions);
 
-        LOG.info("Total maps missing counters: " + total);
+        LOG.info("Total maps missing counters: " + idList.size());
 
-        int current = total.intValue() / 100;
+        int total = idList.size();
+        int current = total / 100;
 
-        while (current >= 0 && total != 0) {
+        while (current >= 0) {
 
-            LOG.debug("Processing " + current + " out of " + total + ".");
+            LOG.debug("Processing at index " + current + " out of " + total);
 
-            List<ScanRepeatFindingMap> mapsThatNeedCounters = scanDao.getMapsThatNeedCountersInApps(current, appIds);
+            // we'll paginate by 100 for now
+            int pageStart = current * 100, pageEnd = pageStart + 100;
+            if (pageStart < 0) pageStart = 0;
+            if (pageEnd > total) {
+                pageEnd = total;
+            }
+            List<Integer> ids = idList.subList(pageStart, pageEnd);
+
+            if (ids.isEmpty()) {
+                break;
+            }
+
+            LOG.debug("Processing " + current + " out of " + idList.size() + ".");
+
+            List<ScanRepeatFindingMap> mapsThatNeedCounters = scanDao.getMapsForIDs(ids);
 
             for (ScanRepeatFindingMap map : mapsThatNeedCounters) {
                 if (!map.getFinding().getHasStatisticsCounter()) {
@@ -135,15 +159,11 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
         LOG.info("Took " + (currentTimeMillis() - start) + " ms to add missing map counters.");
     }
 
-    private void addMissingFindingCounters(List<Integer> appIds) {
+    private void addMissingFindingCounters(List<Integer> appIds, Collection<Integer> findingIdRestrictions) {
         if (appIds != null && appIds.size() == 0) {
             LOG.debug("There were no missing finding counters to add.");
             return;
         }
-
-        // these are the candidate finding IDs based on whether or not they should count for the vuln
-        Collection<Integer> findingIdRestrictions =
-                scanDao.getEarliestFindingIdsForVulnPerChannel(appIds);
 
         List<Integer> findingIds = scanDao.findingIdsThatNeedCountersInApps(appIds, findingIdRestrictions);
 

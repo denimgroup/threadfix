@@ -37,24 +37,6 @@ import java.util.Set;
  * @author mcollins
  */
 public interface ScanDao extends GenericObjectDao<Scan> {
-	
-	/**
-	 * This method returns a map of severities -> counts for vulnerabilities for
-	 * mapped repeat findings in the scan.
-	 *
-	 * @param scan
-	 * @return
-	 */
-	Map<String, Object> getMapSeverityMap(Scan scan);
-	
-	/**
-	 * This method returns a map of severities -> counts for vulnerabilities
-	 * for findings in the scan.
-	 *
-	 * @param scan
-	 * @return
-	 */
-	Map<String,Object> getFindingSeverityMap(Scan scan);
 
 	/**
 	 * 
@@ -165,11 +147,6 @@ public interface ScanDao extends GenericObjectDao<Scan> {
 	 *
 	 */
 	List<Scan> getTableScans(Integer page, Set<Integer> authenticatedAppIds, Set<Integer> authenticatedTeamIds);
-	
-	/**
-	 * 
-	 */
-	Map<String, Object> getCountsForScans(List<Integer> ids);
 
     /**
      *
@@ -185,20 +162,16 @@ public interface ScanDao extends GenericObjectDao<Scan> {
 
 	List<Integer> findingIdsThatNeedCounters(Collection<Integer>  findingIdRestrictions);
 
-	List<Finding> getFindingsThatNeedCounters(int page, Collection<Integer>  findingIdRestrictions);
-
 	List<Integer> findingIdsThatNeedCountersInApps(List<Integer> appIds, Collection<Integer>  findingIdRestrictions);
 
 	List<Finding> getFindingsWithIds(List<Integer> appIds);
 
 	List<ScanRepeatFindingMap> getMapsThatNeedCounters(int current);
 
-	Long totalMapsThatNeedCounters();
-
-	List<ScanRepeatFindingMap> getMapsThatNeedCountersInApps(int current, List<Integer> appIds);
-
-	Long totalMapsThatNeedCountersInApps(List<Integer> appIds);
+	List<Integer> mapIDsThatNeedCountersInApps(List<Integer> appIds, Collection<Integer> findingIdRestrictions);
 
 	Collection<Integer> getEarliestFindingIdsForVulnPerChannel(List<Integer> appIds);
+
+	List<ScanRepeatFindingMap> getMapsForIDs(List<Integer> integers);
 }
 
