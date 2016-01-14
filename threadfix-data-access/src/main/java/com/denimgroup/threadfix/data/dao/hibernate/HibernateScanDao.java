@@ -54,12 +54,6 @@ import static org.hibernate.criterion.Restrictions.*;
 public class HibernateScanDao
         extends AbstractObjectDao<Scan>
         implements ScanDao {
-	
-	private String selectStart = "(select count(*) from Vulnerability vulnerability where vulnerability.hidden = false and vulnerability.genericSeverity.intValue = ";
-	private String idStart = "scan.id as id, ";
-	private String vulnIds = " and vulnerability in (select finding.vulnerability.id from Finding finding where finding.scan = scan))";
-	private String mapVulnIds = " and vulnerability in (select map.finding.vulnerability.id from ScanRepeatFindingMap map where map.scan = scan))";
-	private String fromClause = "from Scan scan where scan.id = :scanId";
 
 	@Autowired
 	EventDao eventDao;
@@ -67,21 +61,6 @@ public class HibernateScanDao
 	@Autowired
 	public HibernateScanDao(SessionFactory sessionFactory) {
 		super(sessionFactory);
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public Map<String,Object> getFindingSeverityMap(Scan scan) {
-		return (Map<String, Object>) sessionFactory.getCurrentSession().createQuery(
-				"select new map( " +
-						idStart +
-						selectStart + "1" + vulnIds + " as info, " +
-						selectStart + "2" + vulnIds + " as low, " +
-						selectStart + "3" + vulnIds + " as medium, " +
-						selectStart + "4" + vulnIds + " as high, " +
-						selectStart + "5" + vulnIds + " as critical) " +
-						fromClause
-				).setInteger("scanId", scan.getId()).uniqueResult();
 	}
 
     @Override
@@ -94,21 +73,6 @@ public class HibernateScanDao
 			saveOrUpdate(scan);
 		}
     }
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public Map<String,Object> getMapSeverityMap(Scan scan) {
-		return (Map<String, Object>) sessionFactory.getCurrentSession().createQuery(
-				"select new map( " +
-						idStart +
-						selectStart + "1" + mapVulnIds + " as info, " +
-						selectStart + "2" + mapVulnIds + " as low, " +
-						selectStart + "3" + mapVulnIds + " as medium, " +
-						selectStart + "4" + mapVulnIds + " as high, " +
-						selectStart + "5" + mapVulnIds + " as critical) " +
-						fromClause
-				).setInteger("scanId", scan.getId()).uniqueResult();
-	}
 
     @Override
     protected Order getOrder() {
@@ -360,42 +324,6 @@ public class HibernateScanDao
 
 		delete(scan);
 	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public Map<String, Object> getCountsForScans(List<Integer> ids) {
-		if (ids == null || ids.isEmpty()) {
-			return map();
-		}
-		
-		String selectStart = "(select count(*) from Vulnerability vulnerability where vulnerability.isFalsePositive = false and vulnerability.hidden = false and " +
-				"(vulnerability.active = true OR vulnerability.foundByScanner = true) AND " +
-				"(vulnerability.genericSeverity.intValue = ";
-		String vulnIds = " and (vulnerability in (select finding.vulnerability.id from Finding finding where finding.vulnerability.hidden = false and finding.scan.id in ";
-		String orMapIds = " or vulnerability in (select map.finding.vulnerability.id from ScanRepeatFindingMap map where map.finding.vulnerability.hidden = false and map.scan.id in ";
-
-		return (Map<String, Object>) sessionFactory.getCurrentSession().createQuery(
-				"select new map( scan.id as id, " +
-						selectStart + "1" + vulnIds + "(:scanIds1))" + orMapIds + "(:scanIds12))))) as info, " +
-						selectStart + "2" + vulnIds + "(:scanIds2))" + orMapIds + "(:scanIds22))))) as low, " +
-						selectStart + "3" + vulnIds + "(:scanIds3))" + orMapIds + "(:scanIds32))))) as medium, " +
-						selectStart + "4" + vulnIds + "(:scanIds4))" + orMapIds + "(:scanIds42))))) as high, " +
-						selectStart + "5" + vulnIds + "(:scanIds5))" + orMapIds + "(:scanIds52))))) as critical)" +
-						" from Scan scan where scan.id = :scanId"
-				)
-				.setParameterList("scanIds1", ids)
-				.setParameterList("scanIds2", ids)
-				.setParameterList("scanIds3", ids)
-				.setParameterList("scanIds4", ids)
-				.setParameterList("scanIds5", ids)
-				.setParameterList("scanIds12", ids)
-				.setParameterList("scanIds22", ids)
-				.setParameterList("scanIds32", ids)
-				.setParameterList("scanIds42", ids)
-				.setParameterList("scanIds52", ids)
-				.setInteger("scanId", ids.get(0))
-				.uniqueResult();
-	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -527,14 +455,6 @@ public class HibernateScanDao
     }
 
 	@Override
-	public List<Finding> getFindingsThatNeedCounters(int page, Collection<Integer> findingIdRestrictions) {
-		return getBaseCounterCriteria(null, findingIdRestrictions)
-				.setMaxResults(100)
-				.setFirstResult(page * 100)
-				.list();
-	}
-
-	@Override
 	public List<Finding> getFindingsWithIds(List<Integer> findingIds) {
 
 		if (findingIds == null || findingIds.isEmpty()) {
@@ -622,40 +542,6 @@ public class HibernateScanDao
 				.list();
     }
 
-	@Override
-	public Long totalMapsThatNeedCounters() {
-		return (Long) getBasicMapCriteria().setProjection(rowCount()).uniqueResult();
-	}
-
-	@Override
-	public List<ScanRepeatFindingMap> getMapsThatNeedCountersInApps(int current, List<Integer> appIds) {
-		if (appIds == null)
-			return getMapsThatNeedCounters(current);
-
-		if (appIds.size() == 0) {
-			return list();
-		}
-
-		return getBasicMapCriteria()
-				.setMaxResults(100)
-				.setFirstResult(current * 100)
-				.list();
-	}
-
-	@Override
-	public Long totalMapsThatNeedCountersInApps(List<Integer> appIds) {
-		if (appIds == null)
-			return totalMapsThatNeedCounters();
-
-		if (appIds.size() == 0) {
-			return 0L;
-		}
-
-		return (Long) getBasicMapCriteria()
-				.setProjection(rowCount())
-				.uniqueResult();
-	}
-
     private Integer hashIt(Object date, Object second, Object third) {
 
         int result = date != null ? date.hashCode() : 0;
@@ -736,6 +622,40 @@ public class HibernateScanDao
         return resultMap.values();
     }
 
+	@Override
+	public List<Integer> mapIDsThatNeedCountersInApps(List<Integer> appIds, Collection<Integer> findingIdRestrictions) {
+
+		// get list of finding IDs to ScanRepeatFindingMapIDs
+		ProjectionList list = Projections.projectionList()
+				.add(Projections.id()) // 0
+				.add(Projections.property("findingAlias.id")); // 1
+		List<Object[]> idArrayList = getBasicMapCriteria()
+				.createAlias("finding", "findingAlias")
+				.setProjection(list)
+				.list();
+
+		// move results into Java Map
+		Map<Integer, Integer> findingIdToMapIdMap = map();
+		for (Object[] integers : idArrayList) {
+			if (integers[0] instanceof Integer && integers[1] instanceof Integer) {
+				findingIdToMapIdMap.put((Integer) integers[1], (Integer) integers[0]);
+			} else {
+				System.out.println("hi");
+			}
+		}
+
+		// keep only valid finding IDs
+		Set<Integer> keys = findingIdToMapIdMap.keySet();
+		keys.retainAll(findingIdRestrictions);
+
+		// map to the ScanRepeatFindingMap IDs
+		List<Integer> mapIds = list();
+		for (Integer key : keys) {
+			mapIds.add(findingIdToMapIdMap.get(key));
+		}
+		return mapIds;
+	}
+
     private Criteria getBasicMapCriteria() {
 
 		DetachedCriteria detachedCriteria = DetachedCriteria.forClass(StatisticsCounter.class)
@@ -745,8 +665,13 @@ public class HibernateScanDao
 
 		return sessionFactory.getCurrentSession()
 				.createCriteria(ScanRepeatFindingMap.class)
-				.createAlias("finding", "findingAlias")
-				.add(eq("findingAlias.hasStatisticsCounter", true))
 				.add(Property.forName("id").notIn(detachedCriteria));
+	}
+
+	public List<ScanRepeatFindingMap> getMapsForIDs(List<Integer> mapIDs) {
+		return sessionFactory.getCurrentSession()
+				.createCriteria(ScanRepeatFindingMap.class)
+				.add(Restrictions.in("id", mapIDs))
+				.list();
 	}
 }
