@@ -652,7 +652,8 @@ public class HibernateScanDao
 		}
 
 		return (Long) getBasicMapCriteria()
-				.setProjection(rowCount()).uniqueResult();
+				.setProjection(rowCount())
+				.uniqueResult();
 	}
 
     private Integer hashIt(Object date, Object second, Object third) {
@@ -737,20 +738,15 @@ public class HibernateScanDao
 
     private Criteria getBasicMapCriteria() {
 
-		List<Integer> scanRepeatFindingMapIds = sessionFactory.getCurrentSession()
-				.createCriteria(StatisticsCounter.class)
+		DetachedCriteria detachedCriteria = DetachedCriteria.forClass(StatisticsCounter.class)
 				.createAlias("scanRepeatFindingMap", "mapAlias")
 				.add(Restrictions.isNotNull("scanRepeatFindingMap"))
-				.setProjection(property("mapAlias.id"))
-				.list();
+				.setProjection(property("mapAlias.id"));
 
-		Criteria criteria = sessionFactory.getCurrentSession()
+		return sessionFactory.getCurrentSession()
 				.createCriteria(ScanRepeatFindingMap.class)
-		;
-		if (!scanRepeatFindingMapIds.isEmpty()) {
-			criteria.add(Restrictions.not(Restrictions.in("id", scanRepeatFindingMapIds)));
-		}
-
-		return criteria;
+				.createAlias("finding", "findingAlias")
+				.add(eq("findingAlias.hasStatisticsCounter", true))
+				.add(Property.forName("id").notIn(detachedCriteria));
 	}
 }
