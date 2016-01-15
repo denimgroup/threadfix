@@ -52,4 +52,6 @@ public interface QueueConstants {
 
 	static final String DELETE_CHANNEL_VULN_FILTER = "Delete channel vulnerability filter";
 
+	static final String FIND_SHARED_VULNS = "Find Shared Vulns";
+
 }

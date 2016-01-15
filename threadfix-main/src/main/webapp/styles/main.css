@@ -1393,6 +1393,10 @@ div.remote-provider-config-modal a {
     background-color: #c43c35;
 }
 
+.badge-shared-vulnerability{
+	background-color: #990099;
+}
+
 .text-critical{
 	color:#F7280C
 }

@@ -75,6 +75,7 @@
     </a>
     <br ng-show="vulnerability.defect">
 
+    <!-- GRC Information -->
     <a id="grcControlBadge{{ element.genericVulnerability.displayId }}{{ $index }}"
        ng-href="{{ vulnerability.grcControl.referenceUrl }}"
        target="_blank"
@@ -87,6 +88,12 @@
         Control {{ vulnerability.grcControl.controlId }} ({{ vulnerability.grcControl.status }})
     </a>
     <br ng-show="vulnerability.grcControl">
+
+    <!-- Shared Vulnerability Badges -->
+    <span id="sharedVuln{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $parent.$index }}{{ name | removeSpace }}"
+          ng-show="vulnerability.sharedVulnerabilitiesCount > 0 && isEnterprise" class="badge" ng-class="{'badge-shared-vulnerability': true}">
+        {{ vulnerability.sharedVulnerabilitiesCount > 1 ? vulnerability.sharedVulnerabilitiesCount + 'Shared Vulnerabilities' : vulnerability.sharedVulnerabilitiesCount + ' Shared Vulnerability' }}</span>
+    <br ng-show="vulnerability.sharedVulnerabilitiesCount > 0 && isEnterprise">
 
     <!-- Comments + Documents -->
     <span id="commentsButton{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" class="pointer" ng-click="vulnerability.showComments = !vulnerability.showComments">
