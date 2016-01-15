@@ -39,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
@@ -75,6 +76,11 @@ public class EditManualFindingController {
 	private ApplicationService applicationService;
 	@Autowired
 	private StatisticsCounterService statisticsCounterService;
+
+	@InitBinder
+	public void setAllowedFields(WebDataBinder dataBinder) {
+		dataBinder.setDisallowedFields("scan.importTime");
+	}
 
 	public boolean isManual(Finding finding) {
         return finding != null && ScannerType.MANUAL.getDisplayName().equals(finding.getChannelNameOrNull());
