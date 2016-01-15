@@ -521,6 +521,10 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Set<EventAction> getNotificationEventActions(User user) {
+		if (user == null) { // anonymous ldap user
+			return set(EventAction.values());
+		}
+
 		if (!user.getUserEventNotificationMapsInitialized()) {
 			initializeUserEventNotificationMaps(user);
 			storeUser(user);
