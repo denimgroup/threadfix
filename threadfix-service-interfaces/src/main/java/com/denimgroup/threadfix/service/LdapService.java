@@ -29,8 +29,12 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.security.authentication.AuthenticationProvider;
 
 public interface LdapService extends AuthenticationProvider {
-	
+
+	boolean hasValidADConfiguration();
+
 	boolean innerAuthenticate(String username, String password);
+
+	void createLDAPGroups();
 
 	boolean innerAuthenticate(DefaultConfiguration defaultConfiguration);
 

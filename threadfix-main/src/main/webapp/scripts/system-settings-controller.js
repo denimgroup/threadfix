@@ -21,6 +21,8 @@ myAppModule.controller('SystemSettingsController', function ($scope, $window, $m
                     $scope.exportFieldDisplayNames = data.object.exportFieldDisplayNames;
                     $scope.exportFields = data.object.exportFields;
 
+                    $scope.canImportLDAPGroups = data.object.canImportLDAPGroups;
+
                     prevFileUploadLocation = $scope.object.fileUploadLocation;
 
                     $scope.roleList.unshift({id: 0, displayName: "Read Access"});

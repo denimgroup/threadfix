@@ -50,8 +50,11 @@ import org.springframework.web.bind.support.SessionStatus;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
+import static com.denimgroup.threadfix.data.entities.Permission.CAN_MANAGE_GROUPS;
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
+import static com.denimgroup.threadfix.service.util.PermissionUtils.hasGlobalPermission;
+import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 
 /**
  * @author dshannon
@@ -71,6 +74,8 @@ public class UsersController {
 	private SessionService sessionService;
 	@Autowired(required = false)
 	private GroupService groupService;
+	@Autowired(required = false)
+	LdapService ldapService;
 
 	private final SanitizedLogger log = new SanitizedLogger(UsersController.class);
 
@@ -176,6 +181,22 @@ public class UsersController {
 
 		Map<Integer, Map<String, Boolean>> userEventNotificationSettings = userService.getUserEventNotificationSettings(users);
 		returnMap.put("userEventNotificationSettings", userEventNotificationSettings);
+
+		if (ldapService != null) {
+			User dbUser = userService.getCurrentUser();
+
+			String currentName = getContext().getAuthentication().getName();
+
+			boolean canManageGroups = hasGlobalPermission(CAN_MANAGE_GROUPS);
+
+			// if the database user is null or is an ldap user, the user logged in with LDAP
+			boolean isLdapUser =
+					dbUser == null ||
+							!currentName.equals(dbUser.getName()) ||
+							dbUser.getIsLdapUser();
+
+			returnMap.put("canImportLDAPGroups", canManageGroups && isLdapUser && ldapService.hasValidADConfiguration());
+		}
 
 		return success(returnMap);
     }
