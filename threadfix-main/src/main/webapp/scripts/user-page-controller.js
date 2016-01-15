@@ -51,6 +51,9 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                             team.applications.sort(nameCompare);
                         });
 
+                        if (data.object.canImportLDAPGroups) {
+                            $rootScope.$broadcast("canImportLDAPGroups");
+                        }
                         $rootScope.$broadcast("teams", $scope.teams);
                         $rootScope.$broadcast("roles", $scope.roles);
 

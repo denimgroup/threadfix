@@ -32,6 +32,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by mcollins on 4/23/15.
@@ -53,6 +54,9 @@ public interface SessionService {
 
     UserDetails mapUserFromContext(DirContextOperations arg0,
                                    String userName, Collection<? extends GrantedAuthority> arg2);
+
+    @SuppressWarnings("unchecked")
+    List<String> getPersonGroupsByAccountName(String accountName, LdapTemplate ldapTemplate);
 
     Authentication createSuccessfulAuthentication(Authentication authentication,
                                                   UserDetails user);

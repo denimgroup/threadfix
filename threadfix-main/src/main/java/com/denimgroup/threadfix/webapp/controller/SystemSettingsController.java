@@ -10,7 +10,6 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.annotations.ReportLocation;
 import com.denimgroup.threadfix.data.entities.CSVExportField;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
-import com.denimgroup.threadfix.exception.RestException;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
@@ -67,6 +66,8 @@ public class SystemSettingsController {
     private ScanService scanService;
     @Autowired
     private RequestUrlService requestUrlService;
+    @Autowired
+    private UserService userService;
 
     @InitBinder
     public void initBinder(WebDataBinder dataBinder) {
