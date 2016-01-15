@@ -387,7 +387,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 		this.longDescription = longDescription;
 	}
 
-	@JsonView(AllViews.VulnerabilityDetail.class)
+	@JsonView({AllViews.RestView2_1.class, AllViews.VulnerabilityDetail.class})
 	public String getLongDescription() {
 		return longDescription;
 	}
