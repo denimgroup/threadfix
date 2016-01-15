@@ -105,7 +105,7 @@
 </div>
 
 <!-- Pivots -->
-<div class="accordion-group" ng-show="treeTeam || treeApplication || vulnSearch || complianceActive || snapshotActive">
+<div class="accordion-group" ng-show="isEnterprise && (treeTeam || treeApplication || vulnSearch || complianceActive || snapshotActive)">
     <div class="accordion-heading" ng-click="showPivotControls = !showPivotControls">
         <span id="expandPivotFilters" class="icon" ng-class="{ 'icon-minus': showPivotControls, 'icon-plus': !showPivotControls }"></span> Pivots
     </div>
