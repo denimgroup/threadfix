@@ -117,9 +117,11 @@ angular.module('dynform', [])
                   if (angular.isDefined(field.validate)) {newElement.attr('ng-pattern', "/" + field.validate + "/");}
                   if (angular.isDefined(field.placeholder)) {newElement.attr('placeholder', field.placeholder);}
                   if (field.type === "typeahead" && field.typeaheadAcceptedType === "user" && angular.isDefined(field.typeaheadField)) {
-                    newElement.attr('typeahead', "users.name for users in getTypeAheadData($viewValue,'" + field.typeaheadField + "')");
+                    newElement.attr('typeahead', "user.name for user in getTypeAheadData($viewValue,'" + field.typeaheadField + "')");
                     newElement.attr('typeahead-wait-ms', "500");
-                    newElement.attr('typeahead-loading', "loadingTypeAheadData");}
+                    newElement.attr('typeahead-loading', "loadingTypeAheadData");
+                    newElement.attr('typeahead-on-select', "onSelect($item, $model, $label,'" + field.typeaheadField + "')");
+                    newElement.attr('placeholder', 'Search users by name.');}
                 }
 
                 //  Special cases

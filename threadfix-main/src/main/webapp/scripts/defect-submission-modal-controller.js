@@ -169,17 +169,30 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
         $scope.requiredErrorMap[pathSegment1] = Object.keys($scope.fieldsMap[pathSegment1]).length === 0;
     };
 
-    $scope.getTypeAheadData = function(query, typeaheadField) {
-        console.log("Fetching typeahead data.");
+    $scope.onSelect = function($item, $model, $label, typeaheadField) {
+        if (typeof $scope[typeaheadField] !== 'undefined') {
+            $scope[typeaheadField].push($model);
+        }
+        $scope.fieldsMap[typeaheadField] = $scope[typeaheadField].toString();
+    }
+
+    $scope.getTypeAheadData = function(viewValue, typeaheadField) {
+        var searchString;
+        if (viewValue.indexOf(',') >= 0) {
+            var test = viewValue.split(',');
+            searchString = test.pop().trim();
+        } else {
+            searchString = viewValue;
+        }
+
         return $http.get(typeAheadUrl, {
             params : {
                 typeaheadField : typeaheadField,
-                typeaheadQuery : query
+                typeaheadQuery : searchString
             }
         }).
             then(function(response) {
                 var users = JSON.parse(response.data.object);
-                console.log(users)
                 return users.users;
         });
     };
@@ -278,6 +291,10 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
 
             if (field.errorsMap) {
                 fieldForm.errorsMap = field.errorsMap;
+            }
+
+            if (field.typeaheadField) {
+                $scope[field.typeaheadField] = [];
             }
 
             if (field.show) {
