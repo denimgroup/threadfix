@@ -635,12 +635,17 @@ public class HibernateScanDao
 				.list();
 
 		// move results into Java Map
-		Map<Integer, Integer> findingIdToMapIdMap = map();
+		// needs to be int -> list<int> because you can have multiple maps to a single finding ID
+		// and they all need counters
+		Map<Integer, List<Integer>> findingIdToMapIdMap = map();
 		for (Object[] integers : idArrayList) {
 			if (integers[0] instanceof Integer && integers[1] instanceof Integer) {
-				findingIdToMapIdMap.put((Integer) integers[1], (Integer) integers[0]);
-			} else {
-				System.out.println("hi");
+				Integer findingId = (Integer) integers[1], mapId = (Integer) integers[0];
+				if (!findingIdToMapIdMap.containsKey(findingId)) {
+					findingIdToMapIdMap.put(findingId, listOf(Integer.class));
+				}
+
+				findingIdToMapIdMap.get(findingId).add(mapId);
 			}
 		}
 
@@ -651,7 +656,7 @@ public class HibernateScanDao
 		// map to the ScanRepeatFindingMap IDs
 		List<Integer> mapIds = list();
 		for (Integer key : keys) {
-			mapIds.add(findingIdToMapIdMap.get(key));
+			mapIds.addAll(findingIdToMapIdMap.get(key));
 		}
 		return mapIds;
 	}
