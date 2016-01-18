@@ -110,6 +110,13 @@
 <br>
 
 <h3 ng-show="initialized && showDataFlowElements">Data Flow</h3>
+<div ng-show="isEnterprise">
+    No source code attached to this finding. Please visit the following link to discover
+    how to attach your source code to this finding:
+    <a href="https://github.com/denimgroup/threadfix/wiki/Hybrid-Analysis-Mapping-Configuration">
+        Hybrid Analysis Mapping Configuration
+    </a>
+</div>
 <table ng-show="initialized && showDataFlowElements">
     <tbody ng-repeat="flowElement in finding.dataFlowElements">
         <tr>
