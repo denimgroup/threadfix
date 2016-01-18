@@ -200,11 +200,6 @@
                                     <a tabindex="-1" href="#" id="adminLink">Administration</a>
                                 </li>
 						    </security:authorize>
-                        <security:authorize ifAnyGranted="ROLE_ENTERPRISE">
-                            <li class="normalLinks">
-                                <a id="sharedVulnLink" href="<spring:url value="/configuration/sharedVulns" htmlEscape="true"/>">Shared Vulnerabilities</a>
-                            </li>
-                        </security:authorize>
                             <security:authorize ifAnyGranted="ROLE_ENTERPRISE">
                                 <li class="normalLinks">
                                     <a id="historyLink" href="<spring:url value="/history" htmlEscape="true"/>">History</a>
