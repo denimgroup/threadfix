@@ -149,6 +149,7 @@ public class ReportsController {
                 request);
         map.put("tags", tagService.loadAllApplicationTags());
 		map.put("vulnTags", tagService.loadAllVulnTags());
+		map.put("isEnterprise", EnterpriseTest.isEnterprise());
         return RestResponse.success(map);
     }
 

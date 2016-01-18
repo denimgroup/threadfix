@@ -36,8 +36,4 @@ myAppModule.controller('FindingDetailPageController', function ($scope, $window,
             });
     };
 
-    $scope.getSharedVulnUrl = function(sharedVuln) {
-        return tfEncoder.encode("/configuration/sharedVulns/" + sharedVuln.id + "/view");
-    };
-
 });
