@@ -110,7 +110,7 @@
 <br>
 
 <h3 ng-show="initialized && showDataFlowElements">Data Flow</h3>
-<div ng-show="isEnterprise">
+<div ng-show="isEnterprise" class="well">
     No source code attached to this finding. Please visit the following link to discover
     how to attach your source code to this finding:
     <a href="https://github.com/denimgroup/threadfix/wiki/Hybrid-Analysis-Mapping-Configuration">
