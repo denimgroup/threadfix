@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.FindingService;
+import com.denimgroup.threadfix.service.SharedComponentService;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.VulnerabilityStatusService;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
@@ -59,6 +60,8 @@ public class FindingsController {
     private VulnerabilityService vulnerabilityService;
 	@Autowired
 	private VulnerabilityStatusService vulnerabilityStatusService;
+	@Autowired(required = false)
+	private SharedComponentService sharedComponentService;
 
 	@RequestMapping(value = "/organizations/{orgId}/applications/{appId}/scans/{scanId}/findings/{findingId}", method = RequestMethod.GET)
 	public  String finding(@PathVariable("findingId") int findingId,
@@ -79,7 +82,7 @@ public class FindingsController {
 		return (EnterpriseTest.isEnterprise() && finding.getDataFlowElements().size() > 0) ? "scans/finding/index" : "scans/findingDetail";
 	}
 
-    @JsonView(AllViews.VulnerabilityDetail.class)
+    @JsonView(AllViews.SharedVulnerabilityView.class)
     @RequestMapping(value = "/organizations/{orgId}/applications/{appId}/scans/{scanId}/findings/{findingId}/objects",
             method = RequestMethod.GET)
     public @ResponseBody Object getObjects(@PathVariable("findingId") int findingId) {
@@ -95,11 +98,17 @@ public class FindingsController {
                 "lineNumbers", findingService.getFilesWithLineNumbers(finding)
         );
 
-        return RestResponse.success(map(
-                "finding", finding,
-                "sourceCodeData", sourceCodeData,
-                "isEnterprise", EnterpriseTest.isEnterprise()
-        ));
+		Map result = map(
+				"finding", finding,
+				"sourceCodeData", sourceCodeData,
+				"isEnterprise", EnterpriseTest.isEnterprise()
+		);
+		// shared components
+		if (sharedComponentService != null && finding.getVulnerability() != null) {
+			result.put("sharedVulns", finding.getVulnerability().getSharedVulnerabilities());
+		}
+
+        return RestResponse.success(result);
     }
 
     @RequestMapping(value = "/organizations/{orgId}/applications/{appId}/scans/{scanId}/findings/{findingId}/merge", method = RequestMethod.GET)

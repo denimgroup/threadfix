@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.interop.ScannerMappingsUpdaterService;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.*;
+import com.denimgroup.threadfix.service.queue.QueueSender;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -65,6 +66,11 @@ public class ScannerMappingUpdater implements ApplicationContextAware {
     private BootstrapService bootstrapService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private QueueSender queueSender;
+    @Autowired(required = false)
+    private SharedComponentService sharedComponentService;
+
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -82,12 +88,28 @@ public class ScannerMappingUpdater implements ApplicationContextAware {
         updateRoles();
         updateTags();
         updateChannelTypeNames();
+        scanSharedVulns();
 
         if (canUpdate) {
             LOG.info("Updating mappings.");
             scannerMappingsUpdaterService.updateMappings(applicationContext);
         } else {
             LOG.info("Scanner mappings are up-to-date, continuing");
+        }
+    }
+
+    private void scanSharedVulns() {
+        if (sharedComponentService == null)
+            return;
+        LOG.info("Checking if we need to look for all shared vulnerabilities.");
+        DefaultConfiguration defaultConfiguration = defaultConfigService.loadCurrentConfiguration();
+        if (defaultConfiguration.getSharedVulnScanned()) {
+            LOG.info("We've already looked for shared vulnerabilities in whole system.");
+        } else {
+            LOG.info("Sending message to queue.");
+            queueSender.findSharedVulns();
+            defaultConfiguration.setSharedVulnScanned(true);
+            defaultConfigService.saveConfiguration(defaultConfiguration);
         }
     }
 

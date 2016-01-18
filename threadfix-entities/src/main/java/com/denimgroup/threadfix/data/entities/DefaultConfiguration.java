@@ -71,6 +71,7 @@ public class DefaultConfiguration extends BaseEntity {
     private String fileUploadLocation = null;
     private Boolean deleteUploadedFiles = false;
     private Boolean closeVulnWhenNoScannersReport = null;
+    private Boolean sharedVulnScanned = false;
     private List<CSVExportField> csvExportFields;
 
     public static DefaultConfiguration getInitialConfig() {
@@ -531,6 +532,16 @@ public class DefaultConfiguration extends BaseEntity {
 
     public void setCloseVulnWhenNoScannersReport(Boolean closeVulnWhenNoScannersReport) {
         this.closeVulnWhenNoScannersReport = closeVulnWhenNoScannersReport;
+    }
+
+    @Column
+    @JsonView(AllViews.FormInfo.class)
+    public Boolean getSharedVulnScanned() {
+        return sharedVulnScanned == null ? false : sharedVulnScanned;
+    }
+
+    public void setSharedVulnScanned(Boolean sharedVulnScanned) {
+        this.sharedVulnScanned = sharedVulnScanned;
     }
 
     Boolean shouldProxyVeracode = false;

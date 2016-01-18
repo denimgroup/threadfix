@@ -337,8 +337,17 @@
                     {{ filteredTag.name }}
                 </div>
             </div>
-
         </div>
+
+        <div class="accordion-inner" ng-show="(treeTeam || vulnSearch || treeApplication) && isEnterprise">
+            Shared Vulnerabilities
+            <br>
+            <div>
+                <input id="showSharedVulnFound" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showSharedVulnFound"/>Found<br>
+                <input id="showSharedVulnNotFound" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showSharedVulnNotFound"/>Not Found<br>
+            </div>
+        </div>
+
     </div>
 </div>
 

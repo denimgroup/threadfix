@@ -111,4 +111,6 @@ public interface QueueSender {
 	void updateChannelSeverityMappings(String channelSeverityIds);
 
 	void deleteVulnFilter(int channelFilterId);
+
+	void findSharedVulns();
 }

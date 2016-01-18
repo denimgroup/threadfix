@@ -23,6 +23,10 @@
             <script type="text/javascript" src="${reportJs}"></script>
         </c:forEach>
     </c:if>
+    <c:if test="${isEnterprise}">
+        <cbs:cachebustscript src="/scripts/shared-vulnerability-controller.js"/>
+        <cbs:cachebustscript src="/scripts/shared-vulnerability-details-controller.js"/>
+    </c:if>
 
 </head>
 
@@ -65,6 +69,13 @@
                 <tab heading="Vulnerability Search" ng-click="loadVulnSearch()" active="showVulnTab">
                     <%@ include file="../vulnerabilities/vulnSearchControls.jsp" %>
                 </tab>
+                <c:if test="${isEnterprise}">
+                    <tab id="sharedVulnsTab" active="sharedVulnsActive" heading="Shared Vulnerability">
+                        <div ng-controller="SharedVulnerabilityController">
+                            <%@ include file="/WEB-INF/views/config/sharedVulnerability/analyticsSharedVulnsTab.jsp" %>
+                        </div>
+                    </tab>
+                </c:if>
                 <c:if test="${not empty customReports}">
                     <tab id="customReportTab" heading="Custom Reports" ng-click="loadCustom()" active="customActive">
                         <%@ include file="custom.jsp" %>

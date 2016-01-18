@@ -359,6 +359,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
                 $scope.tags = data.object.tags;
                 $scope.vulnTags = data.object.vulnTags;
+                $scope.isEnterprise = data.object.isEnterprise;
 
                 $scope.appTagMatrix = [];
                 $scope.allPortfolioApps.forEach(function(app) {
