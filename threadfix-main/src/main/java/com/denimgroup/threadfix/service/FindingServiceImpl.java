@@ -549,6 +549,9 @@ public class FindingServiceImpl implements FindingService {
 		Map<String, String> fileMap = map();
 
         if (EnterpriseTest.isEnterprise()) {
+			if(finding.getVulnerability() == null){
+				return fileMap;
+			}
             File rootDir = FindingProcessorFactory.getRootFile(finding.getVulnerability().getApplication());
 
             if (rootDir == null || !rootDir.isDirectory())

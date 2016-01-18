@@ -628,6 +628,9 @@ public class Finding extends AuditableEntity implements FindingLike {
 	@JsonView(AllViews.VulnerabilityDetail.class)
 	@JsonProperty("vulnerability")
 	private Map<String, ?> getVuln() {
+		if(vulnerability == null){
+			return null;
+		}
 		return map(
 				"id", vulnerability.getId()
 		);
