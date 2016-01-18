@@ -43,7 +43,7 @@ public class WafRule extends AuditableEntity {
 	public static final int RULE_LENGTH = 10000;
 
 	@NotEmpty(message = "{errors.required}")
-	@Size(max = PATH_LENGTH, message = "{errors.maxlength} " + PATH_LENGTH + ".")
+	@Size(max = RULE_LENGTH, message = "{errors.maxlength} " + RULE_LENGTH + ".")
 	private String rule;
 	
 	@Size(max = PARAMETER_LENGTH, message = "{errors.maxlength} " + PARAMETER_LENGTH + ".")
