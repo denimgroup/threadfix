@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.listFrom;
 
 @Component
 public class PermissionUtils extends SpringBeanAutowiringSupport {
@@ -63,6 +64,8 @@ public class PermissionUtils extends SpringBeanAutowiringSupport {
 
         return INSTANCE;
     }
+
+    public static final List<String> ENTERPRISE_PROVIDERS = list(ScannerType.CHECKMARX.getDisplayName());
 
 	public static boolean hasGlobalPermission(Permission permission) {
 		if (permission == null || permission.getText() == null) {
@@ -146,12 +149,25 @@ public class PermissionUtils extends SpringBeanAutowiringSupport {
 
     public static void filterApps(List<RemoteProviderType> providers) {
         if (getInstance().isCommunity()) {
+            // TODO remove CheckMarx provider
             for (RemoteProviderType type : providers) {
                 type.setFilteredApplications(type.getRemoteProviderApplications());
             }
         } else {
             getInstance().permissionService.filterApps(providers);
         }
+    }
+
+    public static void filterAvailableProviders(List<RemoteProviderType> providers) {
+        List<RemoteProviderType> providersToRemove = list();
+        if (getInstance().isCommunity()) {
+            for (RemoteProviderType remoteProviderType : providers) {
+                if (ENTERPRISE_PROVIDERS.contains(remoteProviderType.getChannelType().getName())) {
+                    providersToRemove.add(remoteProviderType);
+                }
+            }
+        }
+        providers.removeAll(providersToRemove);
     }
 
     public static boolean canSeeRules(Waf waf) {

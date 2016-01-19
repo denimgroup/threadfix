@@ -32,6 +32,7 @@ import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.exception.RestException;
 import com.denimgroup.threadfix.importer.interop.RemoteProviderFactory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -208,6 +209,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 	@Override
 	public List<RemoteProviderType> loadAll() {
 		List<RemoteProviderType> remoteProviderList = remoteProviderTypeDao.retrieveAll();
+		PermissionUtils.filterAvailableProviders(remoteProviderList);
 		
 		if (remoteProviderList != null && remoteProviderList.size() > 0) {
 			for (RemoteProviderType type : remoteProviderList) {
