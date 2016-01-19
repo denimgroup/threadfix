@@ -188,6 +188,10 @@ public abstract class AbstractDefectTracker implements ProjectMetadataSource, De
 		return username;
 	}
 
+	public String getTypeaheadData(String typeaheadField, String typeaheadQuery) {
+		return null;
+	}
+
     @Nonnull
     public String getUrlEncodedUsername() {
         assert username != null;

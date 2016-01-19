@@ -311,7 +311,7 @@ public class JiraJsonMetadataResponse {
     }
 
     public static class Schema {
-        String type, system, custom;
+        String type, system, custom, items;
 
         Number customId;
 
@@ -355,7 +355,6 @@ public class JiraJsonMetadataResponse {
             this.items = items;
         }
 
-        String items;
     }
 
     public static class AllowedValue {

@@ -111,6 +111,9 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
                 configUrl: function() {
                     return tfEncoder.encode(getAppUrlBase() + "/defectSubmission");
                 },
+                typeAheadUrl: function() {
+                    return tfEncoder.encode(getAppUrlBase() + "/typeAheadData")
+                },
                 object: function () {
                     return {};
                 },

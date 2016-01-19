@@ -115,6 +115,7 @@
         		regex ^/organizations/[0-9]+/applications/[0-9]+/scans/new/ajax_url$,
         		regex ^/organizations/[0-9]+/applications/[0-9]+/table$,
         		regex ^/organizations/[0-9]+/applications/[0-9]+/defectTable$,
+				regex ^/organizations/[0-9]+/applications/[0-9]+/typeAheadData$,
         		regex ^/organizations/[0-9]+/applications/jsontest$,
         		regex ^/organizations/[0-9]+/applications/[0-9]+/scans/[0-9]+$,
         		regex ^/organizations/[0-9]+/applications/[0-9]+/scans/[0-9]+/table$,
