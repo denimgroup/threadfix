@@ -104,7 +104,30 @@
     </div>
 </div>
 
-<!-- Tags. -->
+<!-- Pivots -->
+<div class="accordion-group" ng-show="isEnterprise && (treeTeam || treeApplication || vulnSearch || complianceActive || snapshotActive)">
+    <div class="accordion-heading" ng-click="showPivotControls = !showPivotControls">
+        <span id="expandPivotFilters" class="icon" ng-class="{ 'icon-minus': showPivotControls, 'icon-plus': !showPivotControls }"></span> Pivots
+    </div>
+    <div ng-show="showPivotControls" class="filter-group-body">
+        <div class="accordion-inner">
+            Primary Pivot<br/>
+            <select class="pivot" ng-options="vulnSearchPivotDisplayNames[pivot] for pivot in vulnSearchPivots"
+                    ng-model="parameters.primaryPivot" name="primaryPivot" id="primaryPivot"
+                    ng-change="validatePrimaryPivot(parameters.primaryPivot)"></select>
+            <span class="errors" ng-show="primaryPivot_error">{{ primaryPivot_error }}</span>
+        </div>
+        <div class="accordion-inner">
+            Secondary Pivot<br/>
+            <select class="pivot" ng-options="vulnSearchPivotDisplayNames[pivot] for pivot in vulnSearchPivots"
+                    ng-model="parameters.secondaryPivot" name="secondaryPivot" id="secondaryPivot"
+                    ng-change="validateSecondaryPivot(parameters.secondaryPivot)"></select>
+            <span class="errors" ng-show="secondaryPivot_error">{{ secondaryPivot_error }}</span>
+        </div>
+    </div>
+</div>
+
+<!-- Tags -->
 <div class="accordion-group" ng-show="treeTeam || vulnSearch || complianceActive || trendingActive || snapshotActive || treeApplication">
     <div class="accordion-heading" ng-click="showTagControls = !showTagControls">
         <span id="expandTagFilters" class="icon" ng-class="{ 'icon-minus': showTagControls, 'icon-plus': !showTagControls }"></span> Tags
