@@ -183,4 +183,11 @@ public interface FindingService {
 	 * @return
 	 */
 	Map<String, Set<Integer>> getFilesWithLineNumbers(Finding finding);
+
+	/**
+	 *
+	 * @param finding
+	 * @return
+	 */
+	boolean hasSourceCode(Finding finding);
 }
