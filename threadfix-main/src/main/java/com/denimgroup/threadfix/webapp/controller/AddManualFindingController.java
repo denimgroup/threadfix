@@ -132,7 +132,7 @@ public class AddManualFindingController {
         } else {
             finding.setIsStatic(isStatic);
             boolean mergeResult = manualFindingService.processManualFinding(finding, appId);
-            vulnerabilityFilterService.updateAllVulnerabilities();
+            vulnerabilityFilterService.updateVulnerabilities(orgId,appId);
 
             if (!mergeResult) {
                 log.warn("The merge failed. Returning the form again.");

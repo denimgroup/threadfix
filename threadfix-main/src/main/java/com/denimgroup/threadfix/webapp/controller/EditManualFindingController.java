@@ -166,7 +166,7 @@ public class EditManualFindingController {
             copyFinding(finding, dbFinding);
 
 			boolean mergeResult = manualFindingService.processManualFindingEdit(dbFinding, appId);
-			vulnerabilityFilterService.updateAllVulnerabilities();
+			vulnerabilityFilterService.updateVulnerabilities(orgId,appId);
 			
 			if (!mergeResult) {
 				log.warn("Merging failed for the dynamic manual finding submission.");
@@ -225,7 +225,7 @@ public class EditManualFindingController {
 			}
 			copyFinding(finding, dbFinding);
 			boolean mergeResult = manualFindingService.processManualFindingEdit(dbFinding, appId);
-			vulnerabilityFilterService.updateAllVulnerabilities();
+			vulnerabilityFilterService.updateVulnerabilities(orgId,appId);
 			if (!mergeResult) {
 				log.warn("Merging failed for the dynamic manual finding submission.");
 				result.rejectValue("channelVulnerability.code", null, null, "Merging failed.");
