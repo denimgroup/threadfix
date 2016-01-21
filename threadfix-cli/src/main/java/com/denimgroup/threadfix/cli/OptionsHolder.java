@@ -142,12 +142,19 @@ public class OptionsHolder {
                 .create("sa");
         options.addOption(searchApp);
 
-        Option upload = OptionBuilder.withArgName("appId> <file")
-                .hasArgs(2)
+        Option upload = OptionBuilder.withArgName("appId> <file[s]")
+                .hasArgs(-2)
                 .withLongOpt("upload")
-                .withDescription("Uploads a scan to the specified application.")
+                .withDescription("Uploads scans to the specified application as a single scan.")
                 .create("u");
         options.addOption(upload);
+
+        Option uploadMulti = OptionBuilder.withArgName("appId> <file[s]")
+                .hasArgs(-2)
+                .withLongOpt("upload-multi")
+                .withDescription("Uploads scans to the specified application.")
+                .create("um");
+        options.addOption(uploadMulti);
 
         Option getRules = OptionBuilder.withArgName("wafId")
                 .hasArg()

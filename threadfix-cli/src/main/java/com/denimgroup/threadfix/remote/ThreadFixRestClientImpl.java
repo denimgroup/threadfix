@@ -31,10 +31,7 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.viewmodels.DynamicFormField;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.denimgroup.threadfix.remote.HttpRestUtils.encode;
 import static com.denimgroup.threadfix.remote.HttpRestUtils.encodeDoublePercent;
@@ -218,10 +215,15 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
         propertiesManager.setMemoryUrl(url);
 	}
 	
-	public RestResponse<Scan> uploadScan(String applicationId, String filePath) {
-		return httpRestUtils.httpPostFile("/applications/" + applicationId + "/upload",
-                new File(filePath), new String[]{}, new String[]{}, Scan.class);
+	public RestResponse<Scan> uploadScan(String applicationId, List<String> filePaths) {
+        return httpRestUtils.httpPostMultFile("/applications/" + applicationId + "/upload/multi",
+                filePaths, new String[]{"bulkUpload"}, new String[]{"false"}, Scan.class);
 	}
+
+    public RestResponse<Scan[]> uploadMultiScan(String applicationId, List<String> filePaths){
+        return httpRestUtils.httpPostMultFile("/applications/" + applicationId + "/upload/multi",
+                filePaths, new String[]{"bulkUpload"}, new String[]{"true"}, Scan[].class);
+    }
 	
 	public RestResponse<ScanQueueTask> queueScan(String applicationId, String scannerType) {
         return queueScan(applicationId, scannerType, null);

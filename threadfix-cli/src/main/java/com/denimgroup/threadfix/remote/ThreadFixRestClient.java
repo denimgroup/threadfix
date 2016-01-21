@@ -77,7 +77,8 @@ public interface ThreadFixRestClient {
     public void setMemoryKey(String key);
     public void setMemoryUrl(String url);
 
-    public RestResponse<Scan> uploadScan(String applicationId, String filePath);
+    public RestResponse<Scan> uploadScan(String applicationId, List<String> filePaths);
+    public RestResponse<Scan[]> uploadMultiScan(String applicationId, List<String> filePaths);
     public RestResponse<Application> addAppUrl(String appId, String url);
 
     public RestResponse<ScanQueueTask> queueScan(String applicationId, String scannerType);

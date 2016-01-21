@@ -46,6 +46,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 public class HttpRestUtils {
 
@@ -65,6 +68,86 @@ public class HttpRestUtils {
     public HttpRestUtils(@Nonnull PropertiesManager manager) {
         this.propertiesManager = manager;
         System.setProperty("javax.net.ssl.trustStore", JAVA_KEY_STORE_FILE);
+    }
+
+    public <T> RestResponse<T> httpPostMultFile(@Nonnull String path,
+                                                @Nonnull List<String> filePaths,
+                                                @Nonnull String[] paramNames,
+                                                @Nonnull String[] paramVals,
+                                                @Nonnull Class<T> targetClass){
+
+        if (isUnsafeFlag())
+            Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
+
+        String completeUrl = makePostUrl(path);
+        if (completeUrl == null) {
+            LOGGER.debug("The POST url could not be generated. Aborting request.");
+            return ResponseParser.getErrorResponse(
+                    "The POST url could not be generated and the request was not attempted.",
+                    0);
+        }
+
+        PostMethod filePost = new PostMethod(completeUrl);
+
+        filePost.setRequestHeader("Accept", "application/json");
+
+        RestResponse<T> response = null;
+        int status = -1;
+
+        try{
+            List<File> files = list();
+            for (String filePath:filePaths) {
+                File file = new File(filePath);
+                if(!file.isDirectory()) {
+                    files.add(file);
+                }else{
+                    for(File f : file.listFiles()){
+                        if(!f.isDirectory()) {
+                            files.add(f);
+                        }
+                    }
+                }
+            }
+
+            List<Part> parts = list();
+            for(int j = 0; j<paramNames.length; j++){
+                parts.add(new StringPart(paramNames[j], paramVals[j]));
+            }
+            for(File f : files){
+                parts.add(new FilePart("file", f));
+            }
+            parts.add(new StringPart("apiKey", propertiesManager.getKey()));
+            parts.toArray(new Part[parts.size()]);
+            filePost.setRequestEntity(new MultipartRequestEntity(parts.toArray(new Part[parts.size()]),
+                    filePost.getParams()));
+
+            filePost.setContentChunked(true);
+            HttpClient client = new HttpClient();
+            status = client.executeMethod(filePost);
+
+            if (status != 200) {
+                LOGGER.warn("Request for '" + completeUrl + "' status was " + status + ", not 200 as expected.");
+            }
+
+            if (status == 302) {
+                Header location = filePost.getResponseHeader("Location");
+                printRedirectInformation(location);
+            }
+
+            response = ResponseParser.getRestResponse(filePost.getResponseBodyAsStream(), status, targetClass);
+
+
+        } catch (SSLHandshakeException sslHandshakeException) {
+            importCert(sslHandshakeException);
+        }catch (IOException e) {
+            LOGGER.error("There was an error and the POST request was not finished.", e);
+            response = ResponseParser.getErrorResponse(
+                    "There was an error and the POST request was not finished.",
+                    status);
+        }
+
+        return response;
+
     }
 
     @Nonnull

@@ -73,7 +73,7 @@ public class ResponseParser {
                     // No need to do any more work
                     response.object = (T) innerJson;
                     LOGGER.debug("Parsed inner object as JSON String correctly.");
-                } else {
+                }  else {
                     // turn the inner object into the correctly typed object
                     response.object = gson.fromJson(innerJson, internalClass);
                     LOGGER.debug("Parsed result into " + internalClass.getName() + " correctly.");

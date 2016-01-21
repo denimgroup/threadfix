@@ -319,7 +319,8 @@ public class ApplicationRestController extends TFRestController {
     @JsonView(AllViews.RestViewScan2_1.class)
     public Object uploadScans(@PathVariable("appId") int appId,
                              HttpServletRequest request,
-                             MultipartRequest multiPartRequest) throws IOException {
+                              @RequestParam("bulkUpload") boolean bulkUpload,
+                              MultipartRequest multiPartRequest) throws IOException {
         LOG.info("Received REST request to upload multiple scans to application " + appId + ".");
 
         Result<String> keyCheck = checkKey(request, APPLICATION_UPLOAD, -1, appId);
@@ -342,7 +343,7 @@ public class ApplicationRestController extends TFRestController {
             }
         }
 
-        return uploadScanService.processMultiFileUpload(fileList, null, appId, request.getParameter("channelId"), false);
+        return uploadScanService.processMultiFileUpload(fileList, null, appId, request.getParameter("channelId"), bulkUpload);
     }
 
     /**

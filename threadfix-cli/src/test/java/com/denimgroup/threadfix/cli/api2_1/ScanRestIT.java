@@ -33,6 +33,10 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  * Created by mcollins on 6/5/14.
  */
@@ -81,8 +85,10 @@ public class ScanRestIT {
         RestResponse<Application> applicationRestResponse = TestUtils.createApplication();
 
         String id = JsonTestUtils.getId(applicationRestResponse);
+        List<String> paths = list();
+        paths.add(TestUtils.getScanPath());
 
-        RestResponse<Scan> scanRestResponse = TestUtils.getConfiguredClient().uploadScan(id, TestUtils.getScanPath());
+        RestResponse<Scan> scanRestResponse = TestUtils.getConfiguredClient().uploadScan(id, paths);
 
         JsonTestUtils.assertHasFields(scanRestResponse, scanFields);
         JsonTestUtils.assertHasArrayOfObjectsWithFields(scanRestResponse, "findings", scanFindingFields);
