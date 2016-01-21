@@ -17,11 +17,11 @@
         <tbody ng-repeat="primaryPivot in vulnTree" >
             <tr>
                 <td>
-                    <span id="expand{{ primaryPivot.name }}" ng-hide="primaryPivot.expanded" ng-click="toggleVulnPivot(primaryPivot, true)" class="icon icon-plus-sign"></span>
-                    <span id="collapse{{ primaryPivot.name }}" ng-show="primaryPivot.expanded" ng-click="toggleVulnPivot(primaryPivot, false)" class="icon icon-minus-sign"></span>
+                    <span id="expand-{{ primaryPivot.name | pivotForID }}" ng-hide="primaryPivot.expanded" ng-click="toggleVulnPivot(primaryPivot, true)" class="icon icon-plus-sign"></span>
+                    <span id="collapse-{{ primaryPivot.name | pivotForID }}" ng-show="primaryPivot.expanded" ng-click="toggleVulnPivot(primaryPivot, false)" class="icon icon-minus-sign"></span>
                 </td>
                 <td colspan="2">
-                    <span id="totalBadge{{ primaryPivot.name }}" ng-style="badgeWidth" class="badge" ng-class="{
+                    <span id="totalBadge-{{ primaryPivot.name | pivotForID }}" ng-style="badgeWidth" class="badge" ng-class="{
                                             'badge-critical': primaryPivot.intValue === 5 && primaryPivot.total !== 0,
                                             'badge-high': primaryPivot.intValue === 4 && primaryPivot.total !== 0,
                                             'badge-medium': primaryPivot.intValue === 3 && primaryPivot.total !== 0,
@@ -39,9 +39,12 @@
             <tr ng-repeat-start="element in primaryPivot.entries" ng-show="primaryPivot.expanded && element.numResults > 0">
                 <td></td>
                 <td colspan="3">
-                    <span id="expandVuln{{ primaryPivot.name }}" ng-hide="element.expanded" ng-click="expandAndRetrieveTable(element)" class="icon icon-plus-sign"></span>
-                    <span id="collapseVuln{{ primaryPivot.name }}" ng-show="element.expanded" ng-click="element.expanded = false" class="icon icon-minus-sign"></span>
-                    <span id="totalBadgeVuln{{ primaryPivot.name }}" ng-style="badgeWidth" class="badge" ng-class="{
+                    <span id="expandVuln-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}"
+                          ng-hide="element.expanded" ng-click="expandAndRetrieveTable(element)" class="icon icon-plus-sign"></span>
+                    <span id="collapseVuln-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}"
+                          ng-show="element.expanded" ng-click="element.expanded = false" class="icon icon-minus-sign"></span>
+                    <span id="totalBadgeVuln-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}"
+                          ng-style="badgeWidth" class="badge" ng-class="{
                                         'badge-critical': element.intValue === 5,
                                         'badge-high': element.intValue === 4,
                                         'badge-medium': element.intValue === 3,
@@ -51,7 +54,7 @@
                                     }">
                         {{ element.numResults }}
                     </span>
-                    <span id="secondaryPivotName{{ primaryPivot.name}}">
+                    <span id="secondaryPivotName-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}">
                         <span ng-if="element.preText"> {{ element.preText }}:  </span>
                         <span ng-show="element.secondaryPivotName">{{ element.secondaryPivotName | shortCweNames }}</span>
                         <span ng-hide="element.secondaryPivotName">None</span>

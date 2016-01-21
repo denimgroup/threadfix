@@ -1,32 +1,34 @@
 <div class="accordion-inner" ng-repeat="vulnerability in element.vulns">
     <span ng-hide="treeApplication">
         <div class="vuln-tree-label">Application</div>
-        <span id="teamAndAppText{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" class="break-word-header">{{ treeTeam ? "" : vulnerability.team.name }} / {{ vulnerability.app.name }}</span>
+        <span id="teamAndAppText-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $index }}"
+              class="break-word-header">{{ treeTeam ? "" : vulnerability.team.name }} / {{ vulnerability.app.name }}</span>
         <br>
     </span>
 
     <span ng-show="treeApplication || treeTeam" class="vuln-tree-checkbox">
-        <input id="checkbox{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" type="checkbox" ng-model="vulnerability.checked" ng-change="applyVulnerabilityChecked(element, vulnerability)"/>
+        <input id="checkbox-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $index }}"
+               type="checkbox" ng-model="vulnerability.checked" ng-change="applyVulnerabilityChecked(element, vulnerability)"/>
     </span>
 
     <!-- Path + Parameter -->
     <div ng-if="!vulnerability.dependency" style="word-wrap:break-word;">
         <div ng-if="vulnerability.path || vulnerability.parameter">
             <div class="vuln-tree-label">Path</div>
-            <span id="path{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.path }}</span>
+            <span id="path-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $index }}">{{ vulnerability.path }}</span>
             <br>
             <div class="vuln-tree-label">Parameter</div>
-            <span id="parameter{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.parameter }}</span>
+            <span id="parameter-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $index }}">{{ vulnerability.parameter }}</span>
             <br>
         </div>
         <div ng-if="vulnerability.calculatedFilePath">
             <div class="vuln-tree-label">File</div>
-            <span id="file{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.calculatedFilePath }}</span>
+            <span id="file-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $index }}">{{ vulnerability.calculatedFilePath }}</span>
             <br>
         </div>
         <div ng-if="(vulnerability.path || vulnerability.parameter) && vulnerability.fullUrl">
             <div class="vuln-tree-label">Full Url</div>
-            <span id="fullUrl{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.fullUrl }}</span>
+            <span id="fullUrl-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $index }}">{{ vulnerability.fullUrl }}</span>
             <br>
         </div>
     </div>
@@ -34,35 +36,38 @@
     <!-- Dependency -->
     <div ng-if="vulnerability.dependency">
         <div class="vuln-tree-label">Reference</div>
-        <span id="cve{{ $index }}">
+        <span id="cve-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $index }}">
             {{ vulnerability.dependency.refId }}
             (<a target="_blank" id="linkCve{{ $index }}" href="{{ vulnerability.dependency.refLink }}">View</a>)
         </span>
         <br>
         <div class="vuln-tree-label">Component</div>
-        <span id="cveComponent{{ $index }}">
+        <span id="cveComponent-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $index }}">
             {{ vulnerability.dependency.componentName }}
         </span>
         <br>
         <div class="vuln-tree-label">Description</div>
-        <span id="cveDescription{{ $index }}">
+        <span id="cveDescription-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $index }}">
             {{ vulnerability.dependency.description }}
         </span>
         <br>
     </div>
 
     <!-- Scanner Badges -->
-    <span id="channel{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $parent.$index }}{{ name | removeSpace }}" ng-repeat="name in vulnerability.channelNames" class="badge">{{ name }}</span>
+    <span id="channel-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $parent.$index }}{{ name | removeSpace }}"
+          ng-repeat="name in vulnerability.channelNames" class="badge">{{ name }}</span>
     <br>
     <!-- Tag Badges -->
-    <span id="tag{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $parent.$index }}{{ tag.name | removeSpace }}" ng-repeat="tag in vulnerability.tags" class="badge pointer" ng-class="{'badge-vulnerability-tag': true}" ng-click="goToTag(tag)">{{ tag.name }}</span>
+    <span id="tag-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $parent.$index }}{{ tag.name | removeSpace }}"
+          ng-repeat="tag in vulnerability.tags" class="badge pointer" ng-class="{'badge-vulnerability-tag': true}" ng-click="goToTag(tag)">{{ tag.name }}</span>
     <br ng-show="vulnerability.tags">
     <!-- Version Badges -->
-    <span id="version{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $parent.$index }}{{ version.name | removeSpace }}" ng-repeat="version in vulnerability.versions" class="badge" ng-class="{'badge-vulnerability-version': true}">{{ version.name }}</span>
+    <span id="version-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $parent.$index }}{{ version.name | removeSpace }}"
+          ng-repeat="version in vulnerability.versions" class="badge" ng-class="{'badge-vulnerability-version': true}">{{ version.name }}</span>
     <br ng-show="vulnerability.versions">
 
     <!-- Defect Information -->
-    <a id="defectBadge{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}"
+    <a id="defectBadge-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $index }}"
        ng-href="{{ vulnerability.defect.defectURL }}"
        target="_blank"
        ng-show="vulnerability.defect"
@@ -75,7 +80,7 @@
     </a>
     <br ng-show="vulnerability.defect">
 
-    <a id="grcControlBadge{{ element.genericVulnerability.displayId }}{{ $index }}"
+    <a id="grcControlBadge-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $index }}"
        ng-href="{{ vulnerability.grcControl.referenceUrl }}"
        target="_blank"
        ng-show="vulnerability.grcControl"
@@ -89,17 +94,21 @@
     <br ng-show="vulnerability.grcControl">
 
     <!-- Comments + Documents -->
-    <span id="commentsButton{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" class="pointer" ng-click="vulnerability.showComments = !vulnerability.showComments">
+    <span id="commentsButton-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $index }}"
+          class="pointer" ng-click="vulnerability.showComments = !vulnerability.showComments">
         {{ vulnerability.vulnerabilityComments.length ? vulnerability.vulnerabilityComments.length : 0 }} <span class="icon icon-comment"></span>
     </span>
-    <span id="documentsButton{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" class="pointer" ng-click="vulnerability.showDocuments = !vulnerability.showDocuments">
+    <span id="documentsButton-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $index }}"
+          class="pointer" ng-click="vulnerability.showDocuments = !vulnerability.showDocuments">
         {{ vulnerability.documents.length ? vulnerability.documents.length : 0 }} <span class="icon icon-file"></span>
     </span>
-    <span id="attacksButton{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" class="pointer" ng-click="vulnerability.showAttacks = !vulnerability.showAttacks">
+    <span id="attacksButton-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $index }}"
+          class="pointer" ng-click="vulnerability.showAttacks = !vulnerability.showAttacks">
         {{ vulnerability.staticFindings.length || vulnerability.dynamicFindings.length ? vulnerability.staticFindings.length + vulnerability.dynamicFindings.length : 0 }} <span class="icon icon-list"></span>
     </span>
 
-    <span class="pointer"><a id="viewMoreLink{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" ng-href="{{ vulnerability.pageUrl }}">View More</a></span>
+    <span class="pointer"><a id="viewMoreLink-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $index }}"
+                             ng-href="{{ vulnerability.pageUrl }}">View More</a></span>
     <br>
 
     <!-- Comments body -->
@@ -109,7 +118,7 @@
             <%@ include file="/WEB-INF/views/applications/vulnComments.jsp" %>
         </div>
         <c:if test="${ canSubmitComments }">
-            <a id="addCommentButton{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}"
+            <a id="addCommentButton-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $index }}"
                class="btn margin-bottom"
                ng-click="showCommentForm(vulnerability, commentTags)">
                 Add Comment
@@ -136,16 +145,18 @@
                 <td style="text-align:center" colspan="5">No Documents Found</td>
             </tr>
             <tr ng-repeat="document in vulnerability.documents" class="bodyRow">
-                <td id="docName{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" class="doc-name">{{ document.name }}</td>
-                <td id="type{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" >{{ document.type }}</td>
-                <td id="uploadDate{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" >
+                <td id="docName-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $index }}" class="doc-name">{{ document.name }}</td>
+                <td id="type-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $index }}" >{{ document.type }}</td>
+                <td id="uploadDate-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $index }}" >
                     {{ document.uploadedDate | date:'medium' }}
                 </td>
                 <td class="centered">
-                    <a target="_blank" id="downloadLink{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" class="btn" type="submit" ng-href="{{ getDocumentUrl(vulnerability, document) }}">Download</a>
+                    <a target="_blank" id="downloadLink-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $index }}"
+                       class="btn" type="submit" ng-href="{{ getDocumentUrl(vulnerability, document) }}">Download</a>
                 </td>
                 <td>
-                    <a id="viewFile{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}"  ng-href="{{ getDocumentUrl(vulnerability, document) }}" target="_blank">View File</a>
+                    <a id="viewFile-{{ primaryPivot.name | pivotForID }}-{{ element.secondaryPivotName | pivotForID }}-{{ $index }}"
+                       ng-href="{{ getDocumentUrl(vulnerability, document) }}" target="_blank">View File</a>
                 </td>
             </tr>
             </tbody>
