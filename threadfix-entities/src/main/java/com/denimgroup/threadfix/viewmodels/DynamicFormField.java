@@ -39,6 +39,8 @@ public class DynamicFormField {
     String label;
     String placeholder;
     String validate;
+    String typeaheadField;
+    String typeaheadAcceptedType;
     Object value;
 
     int maxLength;
@@ -96,6 +98,15 @@ public class DynamicFormField {
         this.name = name;
     }
 
+    @JsonView(AllViews.RestView2_1.class)
+    public String getTypeaheadField() {
+        return typeaheadField;
+    }
+
+    public void setTypeaheadField(String typeaheadField) {
+        this.typeaheadField = typeaheadField;
+    }
+
     @JsonView(AllViews.RestViewScan2_1.class)
     public String getLabel() {
         return label;
@@ -145,6 +156,15 @@ public class DynamicFormField {
         if ("number".equals(type)) {
             this.setError("number", "Not valid number.");
         }
+    }
+
+    @JsonView(AllViews.RestViewScan2_1.class)
+    public String getTypeaheadAcceptedType() {
+        return typeaheadAcceptedType;
+    }
+
+    public void setTypeaheadAcceptedType(String typeaheadAcceptedType) {
+        this.typeaheadAcceptedType = typeaheadAcceptedType;
     }
 
     @JsonView(AllViews.RestViewScan2_1.class)

@@ -31,6 +31,8 @@ public class EmailReportServiceImpl implements EmailReportService {
 	@Autowired
 	private GenericSeverityService genericSeverityService;
 	@Autowired
+	private GenericVulnerabilityService genericVulnerabilityService;
+	@Autowired
 	private JavaMailSender javaMailSender;
 	@Autowired
 	private TemplateBuilderService templateBuilderService;
@@ -195,12 +197,13 @@ public class EmailReportServiceImpl implements EmailReportService {
 		List<Object> treesWithVulns = list();
 		for (VulnerabilityTreeElement tree : trees){
 			Map<String, Object> treeWithVulns = map();
-			parameters.setGenericVulnerabilities(list(tree.getGenericVulnerability()));
+			//using CWE name to look up generic vuln, uses second pivot because it is defaulted to be the CWE
+			GenericVulnerability genericVulnerability = genericVulnerabilityService.loadByName(tree.getSecondaryPivotName());
+			parameters.setGenericVulnerabilities(list(genericVulnerability));
 			List<Vulnerability> vulnerabilities = vulnerabilitySearchService.performLookup(parameters);//returns 10 vulns max
 			treeWithVulns.put("vulnerabilities", vulnerabilities);
 			treeWithVulns.put("numResults", tree.getNumResults());
-			treeWithVulns.put("genericVulnerability", tree.getGenericVulnerability());
-
+			treeWithVulns.put("genericVulnerability", genericVulnerability);
 			treesWithVulns.add(treeWithVulns);
 		}
 		//cleaning parameters that can be reused by calling function without messing

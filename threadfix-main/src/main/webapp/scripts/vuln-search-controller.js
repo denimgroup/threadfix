@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('VulnSearchController', function($scope, $rootScope, $window, $http, tfEncoder, $modal, $log, vulnSearchParameterService, vulnTreeTransformer, threadfixAPIService, filterService) {
+module.controller('VulnSearchController', function($scope, $rootScope, $window, $http, tfEncoder, $modal, $log, vulnSearchParameterService, vulnTreeTransformer, threadfixAPIService) {
 
     $scope.parameters = {};
 
@@ -20,6 +20,8 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                 high: true,
                 critical: true
             },
+            primaryPivot: "SEVERITY",
+            secondaryPivot: "CWE",
             numberMerged: null,
             path: null,
             parameter: null,
@@ -79,6 +81,8 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                         $scope.tags = data.object.tags;
                         $scope.commentTags = data.object.commentTags;
                         $scope.vulnTags = data.object.vulnTags;
+                        $scope.vulnSearchPivots = data.object.vulnSearchPivots;
+                        $scope.vulnSearchPivotDisplayNames = data.object.vulnSearchPivotDisplayNames;
                         $scope.tags.sort(nameCompare);
                         $scope.commentTags.sort(nameCompare);
                         $scope.vulnTags.sort(nameCompare);
@@ -95,6 +99,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                         $scope.genericSeverityList = data.object.genericSeverities;
                         $scope.versionsMap = data.object.versionsMap;
                     }
+
                     if ($scope.filterParameters) {
 
                         $scope.$parent.tab = { vulnerabilities: true};
@@ -209,4 +214,27 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         return a.name.localeCompare(b.name);
     };
 
+    $scope.validatePrimaryPivot = function(primaryPivot){
+        $scope.parameters.primaryPivot = primaryPivot;
+
+        if (primaryPivot === $scope.parameters.secondaryPivot) {
+            $scope.primaryPivot_error = "Primary pivot cannot be equal to secondary pivot."
+        } else {
+            $scope.primaryPivot_error = "";
+            $scope.secondaryPivot_error = "";
+            $scope.refresh();
+        }
+    };
+
+    $scope.validateSecondaryPivot = function(secondaryPivot){
+        $scope.parameters.secondaryPivot = secondaryPivot;
+
+        if (secondaryPivot === $scope.parameters.primaryPivot) {
+            $scope.secondaryPivot_error = "Secondary pivot cannot be equal to primary pivot."
+        } else {
+            $scope.secondaryPivot_error = "";
+            $scope.primaryPivot_error = "";
+            $scope.refresh();
+        }
+    };
 });

@@ -552,11 +552,11 @@ public class FindingServiceImpl implements FindingService {
 			if(finding.getVulnerability() == null){
 				return fileMap;
 			}
-            File rootDir = FindingProcessorFactory.getRootFile(finding.getVulnerability().getApplication());
 
-            if (rootDir == null || !rootDir.isDirectory())
+            if (!hasSourceCode(finding))
                 return fileMap;
 
+			File rootDir = FindingProcessorFactory.getRootFile(finding.getVulnerability().getApplication());
             List<DataFlowElement> dataFlowElements = finding.getDataFlowElements();
             Set<String> relFilePaths = set();
 
@@ -626,5 +626,20 @@ public class FindingServiceImpl implements FindingService {
         }
 
 		return fileLineNumMap;
+	}
+
+	@Override
+	public boolean hasSourceCode(Finding finding) {
+		File rootDir = FindingProcessorFactory.getRootFile(finding.getVulnerability().getApplication());
+
+		boolean hasSourceCode = false;
+
+		if (rootDir != null) {
+			if (rootDir.isDirectory()){
+				hasSourceCode = true;
+			}
+		}
+
+		return hasSourceCode;
 	}
 }

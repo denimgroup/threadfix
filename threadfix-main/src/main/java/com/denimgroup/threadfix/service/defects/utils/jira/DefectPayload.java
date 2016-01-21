@@ -125,6 +125,13 @@ public class DefectPayload {
                     returnValue = new CascadingSelect(value);
                 } else if ("string".equals(items) || "date".equals(items)) {
                     returnValue = list(value);
+                } else if (MULTI_USER_PICKER.equals(custom)) {
+                    List<NamedObjectDescriptor> users = list();
+                    for (String user :StringUtils.split(String.valueOf(value), ',')) {
+                        users.add(new NamedObjectDescriptor(user));
+                    }
+                    returnValue = users;
+                    //returnValue = list(new NamedObjectDescriptor(value));
                 } else {
                     returnValue = list(new ObjectDescriptor(value));
                 }
