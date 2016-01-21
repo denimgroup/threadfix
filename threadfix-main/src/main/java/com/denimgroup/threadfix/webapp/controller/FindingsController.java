@@ -76,7 +76,10 @@ public class FindingsController {
 		}
 
 		PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MODIFY_VULNERABILITIES);
-		return (EnterpriseTest.isEnterprise() && finding.getDataFlowElements().size() > 0) ? "scans/finding/index" : "scans/findingDetail";
+
+		return (EnterpriseTest.isEnterprise() &&
+                findingService.hasSourceCode(finding) &&
+                finding.getDataFlowElements().size() > 0) ? "scans/finding/index" : "scans/findingDetail";
 	}
 
     @JsonView(AllViews.VulnerabilityDetail.class)

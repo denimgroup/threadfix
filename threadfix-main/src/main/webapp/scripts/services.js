@@ -300,27 +300,35 @@ threadfixModule.factory('vulnSearchParameterService', function() {
 
         parameters.channelTypes = parameters.scanners;
 
-        if (!parameters.channelTypes)
+        if (!parameters.channelTypes) {
             parameters.channelTypes = [];
+        }
+
         parameters.channelTypes.forEach(function(filteredScanner) {
             filteredScanner.id = undefined;
         });
-        if (!$scope.scanners)
+
+        if (!$scope.scanners){
             $scope.scanners = [];
+        }
+
         $scope.scanners.forEach(function(scanner) {
-            if (parameters.channelTypes)
+            if (parameters.channelTypes) {
                 parameters.channelTypes.forEach(function(filteredScanner) {
                     if (scanner.name === filteredScanner.name) {
                         filteredScanner.id = scanner.id;
                     }
                 });
+            }
         });
 
         var numberRegex = /^([0-9]+)$/;
         var autocompleteRegex = /.* ([0-9]+)\)$/;
 
-        if (!parameters.genericVulnerabilities)
+        if (!parameters.genericVulnerabilities) {
             parameters.genericVulnerabilities = [];
+        }
+
         parameters.genericVulnerabilities.forEach(function(genericVulnerability) {
             if (numberRegex.test(genericVulnerability.name)) {
                 genericVulnerability.id = numberRegex;
@@ -339,7 +347,6 @@ threadfixModule.factory('vulnSearchParameterService', function() {
             parameters.owasp.top10.forEach(function(owaspVuln){
                 owaspVuln.members.forEach(function(cweId){
                     parameters.genericVulnerabilities.push({id: cweId});
-
                     // Query all vulnerabilities of Sonatype and Dependency Check for
                     // OWASP Top Ten 2013 Category A9 - Using Components with Known Vulnerabilities
                     if (cweId === 937)
@@ -368,6 +375,7 @@ threadfixModule.factory('vulnSearchParameterService', function() {
                 parameters.endDate = date.getTime();
             }
         }
+
         if (parameters.startDate) {
             date = new Date(parameters.startDate);
             if (date) {
@@ -556,7 +564,7 @@ threadfixModule.factory('vulnSearchParameterService', function() {
 threadfixModule.factory('vulnTreeTransformer', function() {
     var transformer = {};
 
-    var getCategory = function(name, intValue) {
+    var getPrimaryPivot = function(name, intValue) {
         return {
             total: 0,
             entries: [],
@@ -565,22 +573,31 @@ threadfixModule.factory('vulnTreeTransformer', function() {
         }
     };
 
+    var severityCompare = function(a,b) {
+        return b.intValue - a.intValue;
+    };
+
     transformer.transform = function(map, owasp, disaStig) {
+
+        var treeElements = map.tree;
+        var severities = map.severities.map(function(severity){
+            return severity.name;
+        });
 
         var customNameHash = {};
         map.severities.forEach(function(severity) {
             customNameHash[severity.name] = severity.displayName;
         });
-        var serverResponse = map.tree;
-
+        
         var initialCategories = [];
         var newTree = [];
+        var primaryPivots = [];
 
         // OWASP TOP 10 report
         if (owasp) {
 
             var vulnSum = {}, vulnList = [];
-            serverResponse.forEach(function(element) {
+            treeElements.forEach(function(element) {
                 var oldNum = 0, oldVulns = [], key = element.genericVulnerability.displayId + "_" +element.memberOf;
                 if (vulnSum[key]) {
                     oldNum = vulnSum[key].numResults;
@@ -599,7 +616,7 @@ threadfixModule.factory('vulnTreeTransformer', function() {
 
             owasp.top10.forEach(function(owaspVuln){
 
-                var newTreeCategory = getCategory(owaspVuln.name, 5);
+                var newTreeCategory = getPrimaryPivot(owaspVuln.name, 5);
                 vulnList.forEach(function(element) {
                     if ((owaspVuln.members.indexOf(element.genericVulnerability.displayId) > -1 && !element.memberOf)
                         || (element.memberOf && owaspVuln.members.indexOf(element.memberOf) > -1)) {
@@ -615,10 +632,11 @@ threadfixModule.factory('vulnTreeTransformer', function() {
 
             newTree = initialCategories;
 
-        } else if (disaStig) {
+        }
+        else if (disaStig) {
 
             var vulnSum = {}, vulnList = [];
-            serverResponse.forEach(function(element) {
+            treeElements.forEach(function(element) {
                 var oldNum = 0, oldVulns = [], key = element.genericVulnerability.displayId + "_" +element.memberOf;
                 if (vulnSum[key]) {
                     oldNum = vulnSum[key].numResults;
@@ -632,11 +650,11 @@ threadfixModule.factory('vulnTreeTransformer', function() {
                 }
             });
 
-            for (var k in vulnSum)
+            for (var k in vulnSum) {
                 vulnList.push(vulnSum[k]);
+            }
 
             disaStig.forEach(function(disaStigCat){
-
                 var categorylvl = 5;
 
                 if (disaStigCat.id === "CATI") {
@@ -647,7 +665,7 @@ threadfixModule.factory('vulnTreeTransformer', function() {
                     categorylvl = 1;
                 }
 
-                var newTreeCategory = getCategory(disaStigCat.name, categorylvl);
+                var newTreeCategory = getPrimaryPivot(disaStigCat.name, categorylvl);
                 vulnList.forEach(function(element) {
 
                     disaStigCat.members.forEach(function(disaStig) {
@@ -667,30 +685,76 @@ threadfixModule.factory('vulnTreeTransformer', function() {
 
             newTree = initialCategories;
 
-        } else {
-            initialCategories = [
-                getCategory(customNameHash['Critical'], 5),
-                getCategory(customNameHash['High'], 4),
-                getCategory(customNameHash['Medium'], 3),
-                getCategory(customNameHash['Low'], 2),
-                getCategory(customNameHash['Info'], 1)
-            ];
+        }
+        else {
+            if (treeElements.length > 0) {
+            
+                if (severities.indexOf(treeElements[0].primaryPivotName) != -1) {
 
-            serverResponse.forEach(function(element) {
-                var newTreeCategory = initialCategories[5 - element.intValue]; // use the int value backwards to get the index
-                newTreeCategory.total = newTreeCategory.total + element.numResults;
-                newTreeCategory.entries.push(element);
-            });
+                    primaryPivots = [
+                        getPrimaryPivot(customNameHash['Critical'], 5),
+                        getPrimaryPivot(customNameHash['High'], 4),
+                        getPrimaryPivot(customNameHash['Medium'], 3),
+                        getPrimaryPivot(customNameHash['Low'], 2),
+                        getPrimaryPivot(customNameHash['Info'], 1)
+                    ];
 
-            initialCategories.forEach(function(category) {
-                if (category.total > 0) {
-                    newTree.push(category);
+                    treeElements.forEach(function(element) {
+                        var newTreePivot = primaryPivots[5 - element.intValue]; // use the int value backwards to get the index
+
+                        if (element.primaryPivotName != null && element.secondaryPivotName != null) {
+                            newTreePivot.total = newTreePivot.total + element.numResults;
+                            newTreePivot.entries.push(element);
+                        }
+                    });
+                } else {
+
+                    if (severities.indexOf(treeElements[0].secondaryPivotName) != -1) {
+                        treeElements.sort(severityCompare);
+                    }
+
+                    var primaryPivotNames = [];
+                    treeElements.forEach(function(element){
+                        var primaryPivotName = element.primaryPivotName;
+                        if (primaryPivotNames.indexOf(primaryPivotName) === -1) {
+                            primaryPivotNames.push(primaryPivotName);
+                        }
+                    });
+
+                    treeElements.forEach(function(element) {
+                        var primaryPivotName = element.primaryPivotName;
+                        var secondaryPivotName = element.secondaryPivotName;
+                        var pivotIndex = primaryPivotNames.indexOf(primaryPivotName);
+                        var newTreePivot = primaryPivots[pivotIndex];
+                        var addIntValue = (severities.indexOf(element.secondaryPivotName) != -1);
+                        var intValue = addIntValue ? element.intValue : null;
+
+                        if (newTreePivot == null && primaryPivotName != null && secondaryPivotName != null) {
+                            newTreePivot = getPrimaryPivot(primaryPivotName, intValue);
+                            primaryPivots.push(newTreePivot);
+                        }
+
+                        if (newTreePivot != null) {
+                            if (addIntValue && newTreePivot.intValue < intValue) {
+                                newTreePivot.intValue = intValue;
+                            }
+
+                            newTreePivot.total = newTreePivot.total + element.numResults;
+                            newTreePivot.entries.push(element);
+                        }
+                    });
+                }
+            }
+
+            primaryPivots.forEach(function(primaryPivot) {
+                if (primaryPivot.total > 0) {
+                    newTree.push(primaryPivot);
                 }
             });
-        }
 
-        if (newTree.length === 1) {
-            newTree[0].expanded = true;
+            if (newTree.length === 1) {
+                newTree[0].expanded = true;
+            }
         }
 
         return newTree;

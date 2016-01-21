@@ -20,6 +20,7 @@ angular.module('dynform', [])
     var supported = {
         //  Text-based elements
         'text': {element: 'input', type: 'text', editable: true, textBased: true},
+        'typeahead': {element: 'input', type: 'text', editable: true, textBased: true},
         'date': {element: 'input', type: 'date', editable: true, textBased: true},
         'datetime': {element: 'input', type: 'datetime', editable: true, textBased: true},
         'datetime-local': {element: 'input', type: 'datetime-local', editable: true, textBased: true},
@@ -115,9 +116,14 @@ angular.module('dynform', [])
                   if (angular.isDefined(field.maxLength) && field.maxLength !== 0) {newElement.attr('ng-maxlength', field.maxLength);}
                   if (angular.isDefined(field.validate)) {newElement.attr('ng-pattern', "/" + field.validate + "/");}
                   if (angular.isDefined(field.placeholder)) {newElement.attr('placeholder', field.placeholder);}
-
+                  if (field.type === "typeahead" && field.typeaheadAcceptedType === "user" && angular.isDefined(field.typeaheadField)) {
+                    newElement.attr('typeahead', "user.name for user in getTypeAheadData($viewValue,'" + field.typeaheadField + "')");
+                    newElement.attr('typeahead-wait-ms', "500");
+                    newElement.attr('typeahead-loading', "loadingTypeAheadData");
+                    newElement.attr('typeahead-on-select', "onSelect($item, $model, $label,'" + field.typeaheadField + "')");
+                    newElement.attr('placeholder', 'Search users by name.');}
                 }
-                
+
                 //  Special cases
                 if (field.type === 'number' || field.type === 'range') {
                   if (angular.isDefined(field.minValue)) {newElement.attr('min', field.minValue);}

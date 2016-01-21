@@ -33,6 +33,7 @@ import com.denimgroup.threadfix.service.beans.DefectTrackerBean;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
+import com.denimgroup.threadfix.service.defects.JiraDefectTracker;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
@@ -304,6 +305,30 @@ public class ApplicationsController {
         model.addAttribute("scheduledDays", DayInWeek.values());
     }
 
+    private String fetchTypeaheadData(int appId, int orgId, String typeaheadField, String typeaheadQuery) {
+        if (!PermissionUtils.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
+            return null;
+        }
+
+        Application application = applicationService.loadApplication(appId);
+        if (application == null || !application.isActive()) {
+            log.warn(ResourceNotFoundException.getLogMessage("Application", appId));
+            throw new ResourceNotFoundException();
+        }
+
+        if (application.getDefectTracker() == null ||
+                application.getDefectTracker().getDefectTrackerType() == null) {
+            return null;
+        }
+
+        applicationService.decryptCredentials(application);
+
+        AbstractDefectTracker defectTracker = DefectTrackerFactory.getTracker(application);
+
+        return defectTracker.getTypeaheadData(typeaheadField, typeaheadQuery);
+    }
+
+
 	// TODO move this to a different spot so as to be less annoying
 	private Map<String, Object> addDefectModelAttributes(int appId, int orgId, boolean addDefectIds) {
 		if (!PermissionUtils.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
@@ -379,6 +404,18 @@ public class ApplicationsController {
             return success(returnMap);
         }
 	}
+
+    @RequestMapping("/{appId}/typeAheadData")
+    public @ResponseBody RestResponse<String> getTypeAheadData(
+            @PathVariable("orgId") int orgId,
+            @PathVariable("appId") int appId,
+            @RequestParam("typeaheadField") String typeaheadField,
+            @RequestParam("typeaheadQuery") String typeaheadQuery) {
+        log.info("Fetching typeahead data.");
+
+        String response = fetchTypeaheadData(appId, orgId, typeaheadField, typeaheadQuery);
+        return success(response);
+    }
 
 	@RequestMapping("/{appId}/defectSubmissionWithIssues")
 	public @ResponseBody RestResponse<Map<String, Object>> getDefectSubmissionWithIssues(

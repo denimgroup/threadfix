@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix');
 
-myAppModule.controller('DefectSubmissionModalController', function ($scope, $rootScope, $modalInstance, $http, threadFixModalService, object, config, configUrl, url, defectDefaultsConfig, timeoutService, tfEncoder) {
+myAppModule.controller('DefectSubmissionModalController', function ($scope, $rootScope, $modalInstance, $http, threadFixModalService, object, config, configUrl, url, typeAheadUrl, defectDefaultsConfig, timeoutService, tfEncoder) {
 
     $scope.focusInput = true;
 
@@ -169,6 +169,34 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
         $scope.requiredErrorMap[pathSegment1] = Object.keys($scope.fieldsMap[pathSegment1]).length === 0;
     };
 
+    $scope.onSelect = function($item, $model, $label, typeaheadField) {
+        if (typeof $scope[typeaheadField] !== 'undefined') {
+            $scope[typeaheadField].push($model);
+        }
+        $scope.fieldsMap[typeaheadField] = $scope[typeaheadField].toString();
+    }
+
+    $scope.getTypeAheadData = function(viewValue, typeaheadField) {
+        var searchString;
+        if (viewValue.indexOf(',') >= 0) {
+            var test = viewValue.split(',');
+            searchString = test.pop().trim();
+        } else {
+            searchString = viewValue;
+        }
+
+        return $http.get(typeAheadUrl, {
+            params : {
+                typeaheadField : typeaheadField,
+                typeaheadQuery : searchString
+            }
+        }).
+            then(function(response) {
+                var users = JSON.parse(response.data.object);
+                return users.users;
+        });
+    };
+
     var loadMainProfileDefaults = function() {
         if ($scope.defectDefaultsConfig.mainDefaultProfile){
             $scope.defectDefaultsConfig.selectedDefaultProfileId = $scope.defectDefaultsConfig.mainDefaultProfile.id;
@@ -244,6 +272,8 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 "labelClass" : field.required ? "errors" : null,
                 "options" : calculateOptions(field),
                 "multiple" : field.supportsMultivalue,
+                "typeaheadField" : field.typeaheadField,
+                "typeaheadAcceptedType" : field.typeaheadAcceptedType,
                 "val" : field.value
             };
 
@@ -263,6 +293,10 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 fieldForm.errorsMap = field.errorsMap;
             }
 
+            if (field.typeaheadField) {
+                $scope[field.typeaheadField] = [];
+            }
+
             if (field.show) {
                 fieldForm.show = field.show;
             }
@@ -271,8 +305,9 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 $scope.stdFormTemplateOptions[field.name]=fieldForm.options;
             }
 
-            if (type === "text")
+            if (type === "text") {
                 fieldForm.maxLength = field.maxLength;
+            }
 
             if (type === "number") {
                 if  (field.step)

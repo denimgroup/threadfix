@@ -1,0 +1,11 @@
+1/6/2016 15:31:00
+type.name
+CheckMarx,https://www.checkmarx.com/,1,Use as a Remote Provider
+type.credentials
+usernamepassword
+type.channelname
+CheckMarx
+type.authenticationfields
+URL,false,true, http://localhost/Cxwebinterface
+Username,false,true
+Password,true,true

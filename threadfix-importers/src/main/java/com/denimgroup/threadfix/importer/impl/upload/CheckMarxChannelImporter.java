@@ -285,7 +285,7 @@ public class CheckMarxChannelImporter extends AbstractChannelImporter {
     }
 
     private Calendar parseDate(String dateString) {
-        Calendar date = DateUtils.getCalendarFromString(format, dateString);
-        return date != null? date : DateUtils.getCalendarFromString(format_EEEE, dateString);
+        Calendar date = DateUtils.getCalendarFromString(format_EEEE, dateString);
+        return date != null? date : DateUtils.getCalendarFromString(format, dateString);
     }
 }
