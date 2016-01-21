@@ -31,6 +31,7 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.ManualFindingService;
+import com.denimgroup.threadfix.service.VulnerabilityFilterService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,8 @@ public class AddManualFindingController {
     private ManualFindingService        manualFindingService;
     @Autowired
     private FindingService              findingService;
+    @Autowired
+    private VulnerabilityFilterService vulnerabilityFilterService;
 
     @ModelAttribute
     public List<Map<String, Object>> populateChannelSeverity() {
@@ -129,6 +132,7 @@ public class AddManualFindingController {
         } else {
             finding.setIsStatic(isStatic);
             boolean mergeResult = manualFindingService.processManualFinding(finding, appId);
+            vulnerabilityFilterService.updateVulnerabilities(orgId,appId);
 
             if (!mergeResult) {
                 log.warn("The merge failed. Returning the form again.");
