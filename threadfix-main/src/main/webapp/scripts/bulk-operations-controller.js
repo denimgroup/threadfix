@@ -24,8 +24,8 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
             category.entries.forEach(function(entry) {
                 if (entry.vulns) {
                     tempResults = entry.vulns.filter(function(vuln) {
-                        vuln.severityId = entry.intValue;
-                        vuln.vulnerabilityName = entry.genericVulnerability.name;
+                        vuln.severityId = vuln.genericSeverity.intValue;
+                        vuln.vulnerabilityName = vuln.genericVulnerability.name;
                         return vuln.checked;
                     });
                     filteredVulns = filteredVulns.concat(tempResults);
