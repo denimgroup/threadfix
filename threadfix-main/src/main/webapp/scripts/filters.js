@@ -60,7 +60,11 @@ filtersModule.filter('pivotForID', function() {
             return test2[1].replace(/\W/g, '');
         }
 
-        return input.replace(/\W/g, '');
+        if (input) {
+            return input.replace(/\W/g, '');
+        }
+
+        return input;
     }
 });
 
