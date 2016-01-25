@@ -630,6 +630,10 @@ public class FindingServiceImpl implements FindingService {
 
 	@Override
 	public boolean hasSourceCode(Finding finding) {
+		if(finding.getVulnerability() == null || finding.getVulnerability().getApplication() == null) {
+			return false;
+		}
+
 		File rootDir = FindingProcessorFactory.getRootFile(finding.getVulnerability().getApplication());
 
 		boolean hasSourceCode = false;
