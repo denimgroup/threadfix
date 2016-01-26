@@ -27,8 +27,8 @@
             </thead>
             <tbody id="vulnTableBody">
             <tr ng-repeat="category in categories">
-                <td id="cweId{{ category.genericVulnerability.id }}">{{ category.genericVulnerability.displayId }}</td>
-                <td id="cweName{{ category.genericVulnerability.id }}" style="word-wrap: break-word;">{{ category.genericVulnerability.name }}</td>
+                <td id="cweId{{ category.genericVulnerability.id }}">{{ category.cweId }}</td>
+                <td id="cweName{{ category.genericVulnerability.id }}" style="word-wrap: break-word;">{{ category.secondaryPivotName }}</td>
                 <td id="severity{{ category.genericVulnerability.id }}" generic-severity="{{ category.severityStr }}" class="break-word-header"></td>
                 <td id="quantity{{ category.genericVulnerability.id }}" >{{ category.numResults }}</td>
             </tr>
