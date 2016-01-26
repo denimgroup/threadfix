@@ -36,6 +36,8 @@ public interface LdapService extends AuthenticationProvider {
 
 	void createLDAPGroups();
 
+	void createLDAPUsers(boolean matchGroups);
+
 	boolean innerAuthenticate(DefaultConfiguration defaultConfiguration);
 
 	boolean checkForUser(String username);

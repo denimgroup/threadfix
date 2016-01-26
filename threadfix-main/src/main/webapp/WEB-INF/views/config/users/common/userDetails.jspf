@@ -4,7 +4,21 @@
     User Details
 </h4>
 
-<div ng-hide="currentUser">No User Selected</div>
+<div ng-hide="currentUser">
+    No User Selected
+    <br/>
+    <c:if test="${ ldap_plugin }">
+        <button id="importLDAPUsers" tooltip="{{ canImportLDAPUsers ?
+                                            'This button allows you to import users from LDAP' :
+                                            'To enable this button, log in using LDAP.' }}"
+                ng-hide="creatingUsers"
+                ng-class="{ disabled : !canImportLDAPUsers }"
+                class="btn"
+                ng-click="importLDAPUsers()">
+            Import LDAP Users
+        </button>
+    </c:if>
+</div>
 
 <div ng-repeat="user in users"
      ng-if="user.wasSelected"
