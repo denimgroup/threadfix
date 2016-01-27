@@ -44,11 +44,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             endDate: null
         };
 
-        if ($scope.treeApplication) {
-            // in application detail page, we don't need teams and applications filter attributes
-        } else if ($scope.treeTeam) {
-            $scope.parameters.applications = [];
-        } else {
+        if (!$scope.treeApplication && !$scope.treeTeam) {
             $scope.parameters.teams = [];
             $scope.parameters.applications = [];
         }
@@ -70,6 +66,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
     $scope.$on('team', function($event, team) {
         $scope.treeTeam = team;
         $scope.parameters.teams = [ team ];
+        $scope.parameters.applications = team.applications;
     });
 
     $scope.$on('loadVulnerabilitySearchTable', function(event) {
