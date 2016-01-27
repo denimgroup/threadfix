@@ -473,7 +473,8 @@ public class Role extends AuditableEntity {
         for (User user : getUsers()) {
             returnList.add(map(
                     "id", user.getId(),
-                    "name", user.getName()
+                    "name", user.getName(),
+                    "active", user.isActive()
             ));
         }
 
