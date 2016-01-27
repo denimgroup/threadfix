@@ -130,17 +130,17 @@
             </div>
         </security:authorize>
 
-        <div id="groups">
+        <div id="groupsForUser">
 
             <h4>Groups</h4>
 
             <div ng-if="groups.length">
-                <input id="groupTypeahead"
+                <input id="groupTypeaheadForUser"
                    type="text"
                    class="form-control no-bottom-margin"
                    ng-model="groupToAdd"
                    typeahead="group as group.name for group in groups | filter:$viewValue | limitTo:10"/>
-                <a class="btn" ng-click="addGroup(groupToAdd)" ng-class="{ disabled : !groupToAdd || !groupToAdd.name }">Add Group</a>
+                <a class="btn" id="addGroupForUser" ng-click="addGroup(groupToAdd)" ng-class="{ disabled : !groupToAdd || !groupToAdd.name }">Add Group</a>
             </div>
             <table class="table">
                 <thead>
@@ -151,13 +151,13 @@
                 </thead>
                 <tbody ng-if="!currentUser.groups.length">
                     <tr>
-                        <td colspan="2" class="center">No Entries</td>
+                        <td id="noEntriesGroupsForUser" colspan="2" class="center">No Entries</td>
                     </tr>
                 </tbody>
                 <tbody ng-if="currentUser.groups">
                     <tr ng-repeat="group in currentUser.groups">
-                        <td>{{ group.name }}</td>
-                        <td><a class="btn btn-danger" ng-click="removeGroup(group)">Remove</a></td>
+                        <td id="groupForUser{{ group.name }}">{{ group.name }}</td>
+                        <td><a class="btn btn-danger" id="groupRemoveButtonForUser{{ group.name }}" ng-click="removeGroup(group)">Remove</a></td>
                     </tr>
                 </tbody>
             </table>
