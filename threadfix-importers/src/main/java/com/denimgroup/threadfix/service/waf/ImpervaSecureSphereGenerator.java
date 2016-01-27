@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2015 Denim Group, Ltd.
+//     Copyright (c) 2009-2016 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -28,10 +28,12 @@ import com.denimgroup.threadfix.annotations.WebApplicationFirewall;
 import com.denimgroup.threadfix.data.entities.*;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
-import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**

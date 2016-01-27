@@ -1,8 +1,30 @@
+////////////////////////////////////////////////////////////////////////
+//
+//     Copyright (c) 2009-2016 Denim Group, Ltd.
+//
+//     The contents of this file are subject to the Mozilla Public License
+//     Version 2.0 (the "License"); you may not use this file except in
+//     compliance with the License. You may obtain a copy of the License at
+//     http://www.mozilla.org/MPL/
+//
+//     Software distributed under the License is distributed on an "AS IS"
+//     basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+//     License for the specific language governing rights and limitations
+//     under the License.
+//
+//     The Original Code is ThreadFix.
+//
+//     The Initial Developer of the Original Code is Denim Group, Ltd.
+//     Portions created by Denim Group, Ltd. are Copyright (C)
+//     Denim Group, Ltd. All Rights Reserved.
+//
+//     Contributor(s): Denim Group, Ltd.
+//
+////////////////////////////////////////////////////////////////////////
+
 package com.denimgroup.threadfix.service.email;
 
-import java.io.StringWriter;
-import java.util.Map;
-
+import com.denimgroup.threadfix.service.TemplateBuilderService;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -12,7 +34,8 @@ import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.denimgroup.threadfix.service.TemplateBuilderService;
+import java.io.StringWriter;
+import java.util.Map;
 
 @Service
 public class TemplateBuilderServiceImpl implements TemplateBuilderService {

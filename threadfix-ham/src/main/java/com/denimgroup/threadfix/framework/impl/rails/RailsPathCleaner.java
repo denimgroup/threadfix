@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//     Copyright (c) 2009-2016 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -24,14 +24,9 @@
 package com.denimgroup.threadfix.framework.impl.rails;
 
 import com.denimgroup.threadfix.framework.engine.cleaner.DefaultPathCleaner;
-import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
-import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
-import com.denimgroup.threadfix.framework.util.CommonPathFinder;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.net.SocketPermission;
 import java.util.List;
 
 public class RailsPathCleaner extends DefaultPathCleaner {

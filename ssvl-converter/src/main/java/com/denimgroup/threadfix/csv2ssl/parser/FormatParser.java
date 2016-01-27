@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2015 Denim Group, Ltd.
+//     Copyright (c) 2009-2016 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -8,7 +8,7 @@
 //     http://www.mozilla.org/MPL/
 //
 //     Software distributed under the License is distributed on an "AS IS"
-//     basis, WITHOUT WARRANTY OF ANY KIND, Option express or implied. See the
+//     basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
 //     License for the specific language governing rights and limitations
 //     under the License.
 //
@@ -21,6 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+
 package com.denimgroup.threadfix.csv2ssl.parser;
 
 import com.denimgroup.threadfix.csv2ssl.checker.Configuration;

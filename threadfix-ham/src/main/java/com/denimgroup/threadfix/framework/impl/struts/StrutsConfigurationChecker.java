@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//     Copyright (c) 2009-2016 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -24,12 +24,7 @@
 
 package com.denimgroup.threadfix.framework.impl.struts;
 
-import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
-import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
-
-import javax.annotation.Nonnull;
 import java.io.File;
-import java.io.StreamTokenizer;
 import java.util.Collection;
 import java.util.Iterator;
 

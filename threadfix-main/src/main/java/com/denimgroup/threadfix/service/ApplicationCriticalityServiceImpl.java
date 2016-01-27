@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2015 Denim Group, Ltd.
+//     Copyright (c) 2009-2016 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -24,14 +24,13 @@
 
 package com.denimgroup.threadfix.service;
 
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.ApplicationCriticalityDao;
+import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.denimgroup.threadfix.data.dao.ApplicationCriticalityDao;
-import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = false) // used to be true
