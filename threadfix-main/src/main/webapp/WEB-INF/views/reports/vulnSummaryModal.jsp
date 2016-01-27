@@ -27,10 +27,10 @@
             </thead>
             <tbody id="vulnTableBody">
             <tr ng-repeat="category in categories">
-                <td id="cweId{{ category.genericVulnerability.id }}">{{ category.cweId }}</td>
-                <td id="cweName{{ category.genericVulnerability.id }}" style="word-wrap: break-word;">{{ category.secondaryPivotName }}</td>
-                <td id="severity{{ category.genericVulnerability.id }}" generic-severity="{{ category.severityStr }}" class="break-word-header"></td>
-                <td id="quantity{{ category.genericVulnerability.id }}" >{{ category.numResults }}</td>
+                <td id="cweId{{ category.cweId }}">{{ category.cweId }}</td>
+                <td id="cweName{{ category.cweId }}" style="word-wrap: break-word;">{{ category.secondaryPivotName }}</td>
+                <td id="severity{{ category.cweId }}" generic-severity="{{ category.severityStr }}" class="break-word-header"></td>
+                <td id="quantity{{ category.cweId }}" >{{ category.numResults }}</td>
             </tr>
             <tr ng-hide="categories || loading">
                 <td colspan="4" style="text-align:center;">No Data Found.</td>
