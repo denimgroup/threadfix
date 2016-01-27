@@ -159,7 +159,7 @@ public class UsersController {
 		returnMap.put("allUsers", allUsers);
 
 		if (EnterpriseTest.isEnterprise()) {
-			returnMap.put("roles", roleService.loadAll());
+			returnMap.put("roles", roleService.loadAllWithCanDeleteSet());
 
 			List<Group> groups = groupService == null ?
 					null :

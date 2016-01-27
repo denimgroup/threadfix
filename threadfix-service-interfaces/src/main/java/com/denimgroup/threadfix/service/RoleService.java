@@ -47,6 +47,12 @@ public interface RoleService {
 	 * @return
 	 */
 	List<Role> loadAll();
+
+	/**
+	 *
+	 * @return
+	 */
+	List<Role> loadAllWithCanDeleteSet();
 	
 	/**
 	 * 

@@ -55,6 +55,18 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	@Transactional
+	public List<Role> loadAllWithCanDeleteSet() {
+		List<Role> roles = roleDao.retrieveAll();
+
+		for (Role role : roles) {
+			role.setCanDelete(canDelete(role));
+		}
+
+		return roles;
+	}
+
+	@Override
+	@Transactional
 	public Role loadRole(int id) {
 		return roleDao.retrieveById(id);
 	}
