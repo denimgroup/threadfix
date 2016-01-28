@@ -1,4 +1,4 @@
-1/6/2016 15:31:00
+1/28/2016 15:31:00
 type.name
 CheckMarx,https://www.checkmarx.com/,1,Use as a Remote Provider
 type.credentials
@@ -9,3 +9,5 @@ type.authenticationfields
 URL,false,true, http://localhost/Cxwebinterface
 Username,false,true
 Password,true,true
+type.otherfields
+Import,radiobutton,true,All scans (Tip:Import all scans and it can take a while if you have many scans),Most recent scan

@@ -53,7 +53,7 @@
             <tbody ng-if="object.authenticationFields.length !== 0">
                 <tr ng-repeat="field in object.authenticationFields">
                     <td class="no-color">{{ field.name }}</td>
-                    <td class="no-color inputValue">
+                    <td class="no-color inputValue" ng-if="!field.type">
                         <input ng-if="field.secret" type="password"
                                focus-on="$index === 0"
                                ng-model="field.value"
@@ -64,6 +64,16 @@
                                ng-model="field.value" id="{{ field.name | removeSpace }}"
                                placeholder="{{field.placeholder}}"
                                name="username" size="50" maxlength="60" ng-required="field.required" style="width:280px"/>
+                    </td>
+                    <td class="no-color" ng-if="field.type=='radiobutton'" >
+                        <ul>
+                            <li ng-repeat="option in field.selectOptions">
+                                <label style="text-align: left">{{option.value}}
+                                    <input type="radio" ng-model="field.value" name="{{option.value}}" value="{{option.value}}" id="{{ option.value }}" ng-required="field.required"
+                                           tooltip="{{option.tip}}" />
+                                </label>
+                            </li>
+                        </ul>
                     </td>
                     <td>
                         <span class="errors" ng-show="form.username.$dirty && form.username.$error.required">{{ field.name }} is required.</span>

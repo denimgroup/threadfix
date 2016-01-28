@@ -27,6 +27,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
+import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * Created by mac on 11/20/14.
@@ -35,11 +38,13 @@ import javax.persistence.*;
 @Table(name = "RemoteProviderAuthenticationField")
 public class RemoteProviderAuthenticationField extends BaseEntity {
 
-    String name, value, encryptedValue, placeholder;
+    String name, value, encryptedValue, placeholder, type;
 
     Boolean secret = false, required = false;
 
     RemoteProviderType remoteProviderType;
+
+    List<SelectOption> selectOptions = list();
 
     @Column
     @JsonView(Object.class)
@@ -69,6 +74,16 @@ public class RemoteProviderAuthenticationField extends BaseEntity {
 
     public void setPlaceholder(String placeholder) {
         this.placeholder = placeholder;
+    }
+
+    @Column(length = 255)
+    @JsonView(Object.class)
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Column
@@ -110,5 +125,19 @@ public class RemoteProviderAuthenticationField extends BaseEntity {
 
     public void setRequired(Boolean required) {
         this.required = required;
+    }
+
+    public Boolean getSecret() {
+        return secret;
+    }
+
+    @JsonView(Object.class)
+    @OneToMany(cascade = CascadeType.ALL)
+    public List<SelectOption> getSelectOptions() {
+        return selectOptions;
+    }
+
+    public void setSelectOptions(List<SelectOption> selectOptions) {
+        this.selectOptions = selectOptions;
     }
 }
