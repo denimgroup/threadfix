@@ -54,6 +54,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                         if (data.object.canImportLDAPGroups) {
                             $rootScope.$broadcast("canImportLDAPGroups");
                         }
+                        $scope.canImportLDAPUsers = data.object.canImportLDAPUsers;
                         $rootScope.$broadcast("teams", $scope.teams);
                         $rootScope.$broadcast("roles", $scope.roles);
 
@@ -705,6 +706,33 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
+
+    $scope.importLDAPUsers = function() {
+        if ($scope.canImportLDAPUsers) {
+            var modalInstance = $modal.open({
+                templateUrl: 'userImportModal.html',
+                controller: 'GenericModalController',
+                resolve: {
+                    url: function() {
+                        return tfEncoder.encode('/configuration/users/createLDAPUsers');
+                    },
+                    object: function() {
+                        return {importGroups: false, matchUsers: false};
+                    },
+                    buttonText: function() {
+                        return "Import Users";
+                    }
+                }
+            });
+            modalInstance.result.then(function () {
+                $scope.usersSuccessMessage = "Successfully imported LDAP users.";
+                reloadList();
+
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+        }
+    };
 
 });

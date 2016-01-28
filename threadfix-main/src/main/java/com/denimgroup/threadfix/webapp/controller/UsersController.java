@@ -51,6 +51,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 import static com.denimgroup.threadfix.data.entities.Permission.CAN_MANAGE_GROUPS;
+import static com.denimgroup.threadfix.data.entities.Permission.CAN_MANAGE_USERS;
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 import static com.denimgroup.threadfix.service.util.PermissionUtils.hasGlobalPermission;
@@ -188,6 +189,7 @@ public class UsersController {
 			String currentName = getContext().getAuthentication().getName();
 
 			boolean canManageGroups = hasGlobalPermission(CAN_MANAGE_GROUPS);
+			boolean canManageUsers = hasGlobalPermission(CAN_MANAGE_USERS);
 
 			// if the database user is null or is an ldap user, the user logged in with LDAP
 			boolean isLdapUser =
@@ -196,6 +198,7 @@ public class UsersController {
 							dbUser.getIsLdapUser();
 
 			returnMap.put("canImportLDAPGroups", canManageGroups && isLdapUser && ldapService.hasValidADConfiguration());
+			returnMap.put("canImportLDAPUsers", canManageUsers && isLdapUser && ldapService.hasValidADConfiguration());
 		}
 
 		return success(returnMap);
@@ -258,5 +261,17 @@ public class UsersController {
 			log.warn(ResourceNotFoundException.getLogMessage("User", userId));
 			throw new ResourceNotFoundException();
 		}
+	}
+
+	@JsonView(AllViews.FormInfo.class)
+	@RequestMapping(value = "/configuration/users/createLDAPUsers", method = RequestMethod.POST)
+	public @ResponseBody RestResponse<String> createLDAPUsers(@RequestParam(defaultValue = "false") Boolean importGroups,
+															  @RequestParam(defaultValue = "false") Boolean matchUsers){
+		if(importGroups){
+			ldapService.createLDAPGroups();
+		}
+		ldapService.createLDAPUsers(matchUsers);
+
+		return success("Created LDAP Users");
 	}
 }

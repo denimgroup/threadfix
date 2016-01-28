@@ -58,6 +58,8 @@ public interface SessionService {
     @SuppressWarnings("unchecked")
     List<String> getPersonGroupsByAccountName(String accountName, LdapTemplate ldapTemplate);
 
+    public List<User> getLdapUsers(LdapTemplate ldapTemplate, boolean matchGroups);
+
     Authentication createSuccessfulAuthentication(Authentication authentication,
                                                   UserDetails user);
 }
