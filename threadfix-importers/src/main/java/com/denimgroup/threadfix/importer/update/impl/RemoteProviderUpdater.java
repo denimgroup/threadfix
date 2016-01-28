@@ -29,7 +29,9 @@ import com.denimgroup.threadfix.data.dao.RemoteProviderTypeDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.RemoteProviderAuthenticationField;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
+import com.denimgroup.threadfix.data.entities.SelectOption;
 import com.denimgroup.threadfix.importer.update.Updater;
+import com.denimgroup.threadfix.importer.util.RegexUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
@@ -66,10 +68,13 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
     }
 
     enum State {
-        START, NAME, CREDENTIALS, CHANNEL_TYPE, AUTHENTICATION_FIELDS
+        START, NAME, CREDENTIALS, CHANNEL_TYPE, AUTHENTICATION_FIELDS, OTHER_FIELDS
     }
 
     State currentState = State.START;
+
+    private static final String TEXT_PATTERN = "(.*)\\(Tip:",
+            TIP_PATTERN = "Tip:(.*)\\)";
 
     @Override
     public void doUpdate(String fileName, BufferedReader bufferedReader) throws IOException {
@@ -92,6 +97,8 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
                 currentState = State.CHANNEL_TYPE;
             } else if (line.equals("type.authenticationfields")) {
                 currentState = State.AUTHENTICATION_FIELDS;
+            } else if (line.equals("type.otherfields")) {
+                currentState = State.OTHER_FIELDS;
             } else if (currentState == State.NAME) {
                 name = line.split(",")[0];
                 channelVulnerabilityUpdater.updateChannelTypeInfo(line);
@@ -100,7 +107,9 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
             } else if (currentState == State.CHANNEL_TYPE) {
                 channelName = line;
             } else if (currentState == State.AUTHENTICATION_FIELDS) {
-                fields.add(parseField(line));
+                fields.add(parseAuthenticateField(line));
+            } else if (currentState == State.OTHER_FIELDS) {
+                fields.add(parseOtherField(line));
             }
         }
 
@@ -156,6 +165,8 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
                     oldField.setRequired(field.getRequired());
                     oldField.setSecret(field.isSecret());
                     oldField.setPlaceholder(field.getPlaceholder());
+                    oldField.setSelectOptions(field.getSelectOptions());
+                    oldField.setType(field.getType());
                     found = true;
                 }
             }
@@ -167,7 +178,7 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
         }
     }
 
-    private RemoteProviderAuthenticationField parseField(String line) {
+    private RemoteProviderAuthenticationField parseAuthenticateField(String line) {
         String[] split = line.split(",");
         if (split.length < 2) {
             throw new IllegalArgumentException("Line " + line + " didn't have at least two parts separated by a comma.");
@@ -196,6 +207,30 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
             field.setPlaceholder(split[3]);
 
         field.setName(split[0]);
+
+        return field;
+    }
+
+    private RemoteProviderAuthenticationField parseOtherField(String line) {
+        String[] split = line.split(",");
+        if (split.length < 4) {
+            throw new IllegalArgumentException("Line " + line + " didn't have at least 4 parts separated by a comma.");
+        }
+
+        RemoteProviderAuthenticationField field = new RemoteProviderAuthenticationField();
+        field.setName(split[0]);
+        field.setType(split[1]);
+        field.setRequired(split[2].equals("true") ? true : false);
+
+        for (int i=3; i<split.length; i++) {
+            SelectOption option = new SelectOption();
+            if (split[i] == null || split[1].isEmpty())
+                continue;
+            String text = RegexUtils.getRegexResult(split[i], TEXT_PATTERN);
+            option.setValue(text == null ? split[i].trim() : text.trim());
+            option.setTip(RegexUtils.getRegexResult(split[i], TIP_PATTERN));
+            field.getSelectOptions().add(option);
+        }
 
         return field;
     }
