@@ -804,7 +804,6 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
                     if (data.success) {
                         $scope.savedFilters = data.object;
                         $scope.$parent.$parent.savedFilters = data.object;
-
                         $scope.savedFilters.forEach(function(filter) {
                             if (filter.name === $scope.currentFilterNameInput) {
                                 $scope.selectedFilter = filter;
@@ -815,7 +814,7 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
                         $scope.savedDefaultTrendingFilter = defaultFilter;
                         $scope.$parent.savedDefaultTrendingFilter = defaultFilter;
 
-                        if(!$scope.acFilterPage)
+                        if(!$scope.acFilterPage && !$scope.selectedFilter)
                             $scope.currentFilterNameInput = '';
 
                         if (editing) {
