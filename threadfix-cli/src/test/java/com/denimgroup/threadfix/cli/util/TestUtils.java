@@ -31,6 +31,9 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.net.URL;
+import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * Created by mcollins on 6/4/14.
@@ -85,8 +88,10 @@ public class TestUtils {
         assert appNoScanResponse.object != null;
 
         String appId = JsonTestUtils.getId(appNoScanResponse);
+        List<String> paths = list();
+        paths.add(TestUtils.getScanPath());
 
-        getConfiguredClient().uploadScan(appId, getScanPath());
+        getConfiguredClient().uploadScan(appId, paths);
 
         RestResponse<Application> applicationRestResponse =
                 getConfiguredClient().searchForApplicationById(appId);

@@ -31,9 +31,11 @@ import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import org.apache.commons.cli.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
 
 public class CommandLineParser {
@@ -222,20 +224,37 @@ public class CommandLineParser {
 					System.out.println(client.setTaskConfig(setTaskConfigArgs[0], setTaskConfigArgs[1], setTaskConfigArgs[2]));
 				} else
 					LOGGER.warn("ApplicationId is not number, not doing anything.");
-			} else if (cmd.hasOption("u")) {
-				String[] uploadArgs = cmd.getOptionValues("u");
-				// Upload a scan
-				if (uploadArgs.length != 2) {
+			}else if (cmd.hasOption("um")){
+				String[] uploadArgs = cmd.getOptionValues("um");
+				if(uploadArgs.length < 2){
 					throw new ParseException("Wrong number of arguments.");
 				}
-				if (isInteger(uploadArgs[0])){
-					LOGGER.info("Uploading " + uploadArgs[1] +
-							" to Application " + uploadArgs[0] + ".");
-					printOutput(client.uploadScan(uploadArgs[0], uploadArgs[1]));
+				if (isInteger(uploadArgs[0])) {
+					LOGGER.info("Uploading scan(s) to Application " + uploadArgs[0] + ".");
+					List<String> files = list();
+					for(int i =1; i<uploadArgs.length; i++){
+						files.add(uploadArgs[i]);
+					}
+					printOutput(client.uploadMultiScan(uploadArgs[0], files));
+				} else {
+					LOGGER.warn("ApplicationId is not number, not doing anything.");
+				}
+			}else if (cmd.hasOption("u")) {
+				String[] uploadArgs = cmd.getOptionValues("u");
+				// Upload a scan
+				if (uploadArgs.length < 2) {
+					throw new ParseException("Wrong number of arguments.");
+				}
+				if (isInteger(uploadArgs[0])) {
+					LOGGER.info("Uploading scan(s) to Application " + uploadArgs[0] + ".");
+					List<String> files = list();
+					for(int i =1; i<uploadArgs.length; i++){
+						files.add(uploadArgs[i]);
+					}
+					printOutput(client.uploadScan(uploadArgs[0], files));
 				} else
 					LOGGER.warn("ApplicationId is not number, not doing anything.");
-
-			} else if (cmd.hasOption("st")) {
+			}  else if (cmd.hasOption("st")) {
 				String[] searchArgs = cmd.getOptionValues("st");
 				if (searchArgs.length != 2) {
 					throw new ParseException("Wrong number of arguments.");
