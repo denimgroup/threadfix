@@ -71,6 +71,8 @@ public class ManualFindingServiceImpl implements ManualFindingService {
     private VulnerabilityService vulnerabilityService;
     @Autowired
     private ScanCleanerUtils scanCleanerUtils;
+	@Autowired(required = false)
+	private SharedComponentService sharedComponentService;
 	
 	/**
 	 * Handle the Manual Finding edit submission. 
@@ -102,7 +104,7 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 					if (vuln.getFindings().size() == 0) {
 						vuln.getApplication().getVulnerabilities().remove(vuln);
 						vuln.setApplication(null);
-						vulnerabilityDao.delete(vuln);
+						vulnerabilityService.deleteVulnerability(vuln);
 					}
 				}
 				vulnerabilityDao.evict(oldFinding);
@@ -240,6 +242,12 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 
         vulnerabilityService.updateVulnerabilityReport(
                 applicationDao.retrieveById(applicationId));
+
+		// check sharedVuln
+		if (sharedComponentService != null) {
+			log.info("Lookinging shared vulnerability");
+			sharedComponentService.lookAndSaveSharedForVuln(finding.getVulnerability());
+		}
 
 		return true;
 	}
