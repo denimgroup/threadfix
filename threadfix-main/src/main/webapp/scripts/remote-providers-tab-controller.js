@@ -103,7 +103,9 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
 
     $scope.paginate = function(provider) {
 
-        if (!provider.backUpRemoteProviderApplications || provider.backUpRemoteProviderApplications.length == 0) {
+        if (!provider.backUpRemoteProviderApplications ||
+            provider.backUpRemoteProviderApplications.length == 0 ||
+            provider.backUpRemoteProviderApplications.length != provider.remoteProviderApplications.length) {
             provider.backUpRemoteProviderApplications = provider.remoteProviderApplications;
         }
 

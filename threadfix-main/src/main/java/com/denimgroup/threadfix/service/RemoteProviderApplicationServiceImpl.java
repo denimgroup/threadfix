@@ -37,6 +37,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Nonnull;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 @Service
 @Transactional(readOnly = false)
 public class RemoteProviderApplicationServiceImpl implements
@@ -79,6 +81,8 @@ public class RemoteProviderApplicationServiceImpl implements
 		// because the old session is closed
 		List<RemoteProviderApplication> appsForType = loadAllWithTypeId(
 														remoteProviderType.getId());
+
+		List<RemoteProviderApplication> appsToRemove = list();
 		
 		if (newApps != null && newApps.size() != 0) {
 			Set<String> appIds = new TreeSet<>();
@@ -105,7 +109,24 @@ public class RemoteProviderApplicationServiceImpl implements
 					appsForType.add(app);
 					remoteProviderType.setRemoteProviderApplications(appsForType);
 					store(app);
+				} else {
+					appIds.remove(app.getNativeName());
 				}
+			}
+
+			if (!appIds.isEmpty()) {
+				for (RemoteProviderApplication app : appsForType) {
+					if (appIds.contains(app.getNativeName())) {
+						log.warn(app.getNativeName() + " is no longer present in the Remote Provider.");
+						if (app.getApplication() != null) {
+							log.info("Deleting map from " + app.getNativeName() + " to " + app.getApplication().getName());
+							deleteMapping(app, app.getApplication().getId());
+						}
+						deleteApp(app);
+						appsToRemove.add(app);
+					}
+				}
+				appsForType.removeAll(appsToRemove);
 			}
 		}
 
@@ -170,6 +191,13 @@ public class RemoteProviderApplicationServiceImpl implements
 						" (id = " + app.getId() + ", type id=" + remoteProviderType.getId() + ")");
 				remoteProviderApplicationDao.delete(app);
 			}
+		}
+	}
+
+	public void deleteApp(RemoteProviderApplication remoteProviderApplication) {
+		if (remoteProviderApplication != null) {
+			log.info("Deleting Remote Application " + remoteProviderApplication.getNativeName());
+			remoteProviderApplicationDao.delete(remoteProviderApplication);
 		}
 	}
 
