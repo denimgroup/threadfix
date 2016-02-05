@@ -412,6 +412,20 @@ public class QueueSenderImpl implements QueueSender {
 		sendMap(channelVulnFilterMap);
 	}
 
+	@Override
+	public void findSharedVulns() {
+		MapMessage findSharedVulnMap = new ActiveMQMapMessage();
+
+		try {
+			findSharedVulnMap.setString("type", QueueConstants.FIND_SHARED_VULNS);
+		} catch (JMSException e) {
+			log.error(jmsErrorString);
+			addExceptionLog(e);
+		}
+
+		sendMap(findSharedVulnMap);
+	}
+
 	private void send(String message) {
 		jmsTemplate.convertAndSend("requestQueue", message);
 	}

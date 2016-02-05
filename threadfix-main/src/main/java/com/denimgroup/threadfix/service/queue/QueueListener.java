@@ -89,6 +89,8 @@ public class QueueListener implements MessageListener {
 	private GenericVulnerabilityService genericVulnerabilityService;
     @Autowired(required = false)
     private PolicyStatusService policyStatusService;
+	@Autowired(required = false)
+	private SharedComponentService sharedComponentService;
 
 	/*
 	 * (non-Javadoc)
@@ -164,6 +166,9 @@ public class QueueListener implements MessageListener {
 					case QueueConstants.DELETE_CHANNEL_VULN_FILTER:
 						deleteVulnsFilter(map.getInt("channelFilterId"));
 						break;
+					case QueueConstants.FIND_SHARED_VULNS:
+						findSharedVulns();
+						break;
                     case QueueConstants.SEND_EMAIL_REPORT:
                         processSendEmailReport(map.getInt("scheduledEmailReportId"));
 				}
@@ -173,6 +178,11 @@ public class QueueListener implements MessageListener {
 			log.warn("The JMS message threw an error.");
 			e.printStackTrace();
 		}
+	}
+
+	private void findSharedVulns() {
+		if (sharedComponentService != null)
+			sharedComponentService.updateAllSharedVulns();
 	}
 
 	private void updateChannelSeverityMappings(String channelSeverityIds) {
