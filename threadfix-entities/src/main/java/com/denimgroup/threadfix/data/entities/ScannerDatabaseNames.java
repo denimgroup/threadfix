@@ -61,5 +61,6 @@ public final class ScannerDatabaseNames {
             CPPCHECK_DB_NAME = "Cppcheck",
             CONTRAST_DB_NAME = "Contrast",
             SONATYPE_DB_NAME = "Manual",
-            SCARF_DB_NAME = "SWAMP SCARF";
+            SCARF_DB_NAME = "SWAMP SCARF",
+            BARRACUDA_BVM_DB_NAME = "Barracuda Vulnerability Manager";
 }

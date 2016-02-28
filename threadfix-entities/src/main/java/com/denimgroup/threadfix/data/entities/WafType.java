@@ -47,6 +47,7 @@ public class WafType extends BaseEntity {
 	public static final String IMPERVA_SECURE_SPHERE = "Imperva SecureSphere";
 	public static final String DENY_ALL_RWEB = "DenyAll rWeb";
 	public static final String RIVERBED_WEB_APP_FIREWALL = "SteelApp Web App Firewall";
+        public static final String BARRACUDA_WAF = "Barracuda Web Application Firewall";
 	
 	@NotEmpty(message = "{errors.required}")
 	@Size(max = 50, message = "{errors.maxlength}")
