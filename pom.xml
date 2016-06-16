@@ -327,7 +327,7 @@
         <validation-api.version>1.1.0.Final</validation-api.version>
         <zap.version>2.2.2</zap.version>
         <zaphelp.version>2.2.2</zaphelp.version>
-        <dependencycheck.version>1.2.3</dependencycheck.version>
+        <dependencycheck.version>1.3.6</dependencycheck.version>
         <svnkit.version>1.8.11</svnkit.version>
         <joda.version>2.8.2</joda.version>
 
