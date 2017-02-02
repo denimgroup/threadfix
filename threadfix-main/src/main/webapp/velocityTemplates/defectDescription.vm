@@ -15,7 +15,7 @@
 #if( $vulnerabilities )
     #foreach( $vulnerability in $vulnerabilities )
         #if( $vulnerability.genericVulnerability && $vulnerability.surfaceLocation )
-            Vulnerability\[${vulnIndex}]: #addThreadfixLink( "${baseUrl}$vulnerability.getUri()" )$br
+            Vulnerability [${vulnIndex}]: #addThreadfixLink( "${baseUrl}$vulnerability.getUri()" )$br
             $vulnerability.genericVulnerability.name$br
             CWE entry: http://cwe.mitre.org/data/definitions/${vulnerability.genericVulnerability.id}.html$br
             #set( $dependencyFinding = "" )
