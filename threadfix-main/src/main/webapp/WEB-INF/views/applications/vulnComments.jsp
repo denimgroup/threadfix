@@ -17,7 +17,7 @@
             <td id="commentDate{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $parent.$index }}-{{ $index }}">{{ comment.time | date:'yyyy-MM-dd HH:mm' }}</td>
             <td id="commentText{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $parent.$index }}-{{ $index }}">
                 <div class="vuln-comment-word-wrap">
-                    {{ comment.comment }}
+                    <pre>{{ comment.comment }}</pre>
                 </div>
             </td>
             <td class="left-align" >
