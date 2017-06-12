@@ -26,11 +26,12 @@ package com.denimgroup.threadfix.viewmodels;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DefectViewModel {
+public class DefectViewModel implements Serializable {
 
 	private String id; //Used for merging defect
 	private String summary;
