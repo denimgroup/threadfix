@@ -398,7 +398,8 @@ public abstract class RealTimeProtectionGenerator extends SpringBeanAutowiringSu
 	public static boolean hasStartAndEnd(String type) {
 		return type.equals(WafType.BIG_IP_ASM) || 
 			   type.equals(WafType.IMPERVA_SECURE_SPHERE) ||
-			   type.equals(WafType.RIVERBED_WEB_APP_FIREWALL);
+			   type.equals(WafType.RIVERBED_WEB_APP_FIREWALL) ||
+			   type.equals(WafType.BARRACUDA_WAF);
 	}
 	
 	public static String getStart(String type, List<WafRule> rules) {
@@ -408,6 +409,8 @@ public abstract class RealTimeProtectionGenerator extends SpringBeanAutowiringSu
 			return ImpervaSecureSphereGenerator.getStart(rules);
 		} else if (type.equals(WafType.RIVERBED_WEB_APP_FIREWALL)) {
 			return RiverbedStartAndEndHolder.getStart(rules);
+		} else if (type.equals(WafType.BARRACUDA_WAF)) {
+			return BarracudaWebAppFirewallGenerator.getStart(rules);
 		} else {
 			return null;
 		}
@@ -420,6 +423,8 @@ public abstract class RealTimeProtectionGenerator extends SpringBeanAutowiringSu
 			return ImpervaSecureSphereGenerator.getEnd(rules);
 		} else if (type.equals(WafType.RIVERBED_WEB_APP_FIREWALL)) {
 			return RiverbedStartAndEndHolder.getEnd(rules);
+		} else if (type.equals(WafType.BARRACUDA_WAF)) {
+			return BarracudaWebAppFirewallGenerator.getEnd(rules);
 		} else {
 			return null;
 		}

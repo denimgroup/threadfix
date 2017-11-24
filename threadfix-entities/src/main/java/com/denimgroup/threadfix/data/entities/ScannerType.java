@@ -64,7 +64,8 @@ public enum ScannerType {
     MANUAL("manual", "Manual", "Manual", MANUAL_DB_NAME),
     CONTRAST("contrast", "Contrast", "Contrast", CONTRAST_DB_NAME),
     SONATYPE("sonatype", "Sonatype", "Sonatype", SONATYPE_DB_NAME),
-    SCARF("scarf", SCARF_DB_NAME, SCARF_DB_NAME, SCARF_DB_NAME);
+    SCARF("scarf", SCARF_DB_NAME, SCARF_DB_NAME, SCARF_DB_NAME),
+    BARRACUDA_BVM("bvm", "Barracuda Vulnerability Manager", "Barracuda Vulnerability Manager", BARRACUDA_BVM_DB_NAME);
 
 	public String displayName;
 	private String shortName;
