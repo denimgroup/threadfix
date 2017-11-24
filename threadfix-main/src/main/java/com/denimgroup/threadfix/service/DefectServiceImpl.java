@@ -187,6 +187,16 @@ public class DefectServiceImpl implements DefectService {
 			LOG.info("About to submit a defect to the defect tracker.");
 		}
 
+        editedPreamble = editedPreamble.replaceAll("<p>","");
+        editedPreamble = editedPreamble.replaceAll("<ul>","");
+        editedPreamble = editedPreamble.replaceAll("</ul>","");
+        editedPreamble = editedPreamble.replaceAll("<li>","");
+        editedPreamble = editedPreamble.replaceAll("</li>","");
+        editedPreamble = editedPreamble.replaceAll("<b>","");
+        editedPreamble = editedPreamble.replaceAll("</b>","");
+        editedPreamble = editedPreamble.replaceAll("</p>","\r\n");
+        editedPreamble = editedPreamble.replaceAll("<br>","\r\n");
+
         DefectMetadata metadata = new DefectMetadata(editedSummary, editedPreamble,
                 component, version, severity, priority, status, fieldsMap);
 
