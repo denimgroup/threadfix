@@ -1,4 +1,0 @@
-<div ng-show="successMessage" class="alert alert-success">
-    <button class="close" ng-click="successMessage = undefined" type="button">&times;</button>
-    {{ successMessage }}
-</div>

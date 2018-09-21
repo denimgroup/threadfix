@@ -1,7 +1,0 @@
-# This properties file is used to configure jms settings in 
-# /src/main/resources/applicationContext-scheduling.xml.
-
-jms.url=vm://localhost?broker.dataDirectory=/etc/threadfix/activemq-data
-# jms.url=tcp://localhost:61616
-jms.username=
-jms.password=

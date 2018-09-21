@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ServiceResponse xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost:50200/qps/xsd/3.0/was/webapp.xsd">
-  <responseCode>AUTH_CREDENTIALS_NEEDED</responseCode>
-  <responseErrorDetails>
-    <errorMessage>Login and password are required</errorMessage>
-    <errorResolution>Make sure to pass &apos;user&apos; and &apos;password&apos; as request headers.</errorResolution>
-  </responseErrorDetails>
-</ServiceResponse>

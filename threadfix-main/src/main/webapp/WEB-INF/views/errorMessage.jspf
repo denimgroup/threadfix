@@ -1,4 +1,0 @@
-<div ng-show="errorMessage" class="alert alert-error">
-    <button class="close" ng-click="errorMessage = undefined" type="button">&times;</button>
-    {{ errorMessage }}
-</div>

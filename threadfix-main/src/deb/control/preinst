@@ -1,5 +1,0 @@
-#!/bin/sh
-
-service tomcat7 stop
-
-exit 0

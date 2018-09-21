@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Audit xmlns="xmlns://www.fortify.com/schema/audit" xmlns:ns2="xmlns://www.fortifysoftware.com/schema/activitytemplate" xmlns:ns3="xmlns://www.fortify.com/schema/issuemanagement" xmlns:ns4="xmlns://www.fortifysoftware.com/schema/wsTypes" xmlns:ns5="xmlns://www.fortifysoftware.com/schema/runtime" xmlns:ns6="http://www.fortify.com/schema/fws" xmlns:ns7="xmlns://www.fortifysoftware.com/schema/seed" xmlns:ns8="xmlns://www.fortify.com/schema/attachments" version="4.3">
-    <ProjectInfo>
-        <Name>petclinic</Name>
-        <ProjectVersionId>-1</ProjectVersionId>
-        <WriteDate>2015-02-16T12:43:47.259-06:00</WriteDate>
-    </ProjectInfo>
-    <IssueList/>
-</Audit>

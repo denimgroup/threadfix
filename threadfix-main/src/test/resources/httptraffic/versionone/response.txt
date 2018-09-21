@@ -1,1 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><Assets total="1" pageSize="2147483647" pageStart="0"><Asset href="/Test/rest-1.v1/Data/Member/2" id="Member:2"><Relation name="Scopes"></Relation><Attribute name="Scopes.Name"><Value>TEST – 3.6.0 – N4.3</Value></Attribute></Asset></Assets>

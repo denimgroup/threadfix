@@ -1,5 +1,0 @@
-<%@ include file="/common/taglibs.jsp"%>
-
-<spring:url value="" var="emptyUrl"/>
-<div ng-controller="InitController" ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>'; urlRoot = '<%=request.getContextPath()%>'"></div>
-
