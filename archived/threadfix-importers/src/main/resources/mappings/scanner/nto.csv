@@ -1,0 +1,16 @@
+11/22/2015 16:14:00
+type.info,,
+AppSpider
+type.vulnerabilities,,
+Web Beacon,Web Beacon,16
+Apache Struts Framework Detection,Apache Struts Framework Detection,16
+X-XSS-Protection,X-XSS-Protection,16
+X-Frame-Options,X-Frame-Options,16
+type.severities,,,
+0-Safe,0-Safe,1,1
+1-Info,1-Info,2,1
+1-Informational,1-Informational,3,1
+2-Low,2-Low,4,2
+3-Med,3-Med,5,3
+3-Medium,3-Medium,6,3
+4-High,4-High,7,4

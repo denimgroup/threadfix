@@ -1,0 +1,2122 @@
+type.info,,,16
+IBM Rational AppScan,http://www-01.ibm.com/software/awdtools/appscan/,-,The AppScan importer accepts the XML output as input. Click File -> Export -> Scan Results as XML.,16
+type.vulnerabilities,,,16
+HiveMail index.php Cross-Site Scripting,HiveMailXSS,79
+ArGoSoft Mail Server Pro Path Traversal,ArGoSoftMailServerProPathTraversal,22
+Apache Tomcat Java Servlets Source Code Disclosure,attTomcatCatalinaJSPFileDisc,20
+IBM WebSphere Unknown Host Header Source Code Disclosure,attIBMHostHeaderSourceDisclosure,20
+gCards index.php Cross-Site Scripting,gCardsXSS,79
+OneOrZero Helpdesk index.php SQL Injection,OneOrZeroHelpdeskSQLInjection,89
+Oracle Error Log Found,OracleErrorLogFound,20
+BusinessObjects XI Logon Cross-Site Scripting,BusinessObjectsXILogonXSS,79
+Helm Multiple Cross-Site Scripting,HelmMultipleXSS,79
+Parameter Value Overflow ,attParamOverflow,120
+phpMyDesktop|arcade index.php Path Traversal,phpMyDesktoparcadePathTraversal,22
+PostNuke PNphpBB2 Module index.php SQL Injection,PostNukePNphpBB2ModuleSQLInjection,89
+WordPress Twitter Feed Plugin magpie_debug.php Cross-Site Scripting,WordPressTwitterFeedmagpiedebugphpXSS,79
+GlassFish Administration Console Cross-Site Scripting,GlassFishAdministrationConsoleXSS,79
+PHPizabi index.php Cross-Site Scripting,PHPizabiindexphpXSS,22
+Shell Interpreter Scripts Arbitrary Commands Execution,attShellinScriptsDir,77
+DRZES HMS Multiple SQL Injection,DRZESHMSSQLInjection,89
+Post Revolution Multiple Remote File Inclusion,PostRevolutionMultipleRFI,94
+SAP Internet Transaction Server wgate.dll Cross-Site Scripting,SAPInternetTransactionServerwgatedllXSS,79
+Microsoft IIS idc File Extension Cross-Site Scripting,IISidcXSS,79
+Snitz Forums 2000 forum.asp Cross-Site Scripting,SnitzForums2000XSS,79
+Apache Tomcat Cookie Handling Session ID Disclosure,ApacheTomcatCookieHandlingSessionIDDisc,200
+Automatic Login Rules,loginAutomaticRule,548
+Daffodil CRM userlogin.jsp SQL Injection,DaffodilCRMSQLInjection,89
+Mambo Output.php Remote File Inclusion,MamboOutputphpRFI,94
+iPlanet Search Buffer Overflow,cwvNetScapeSearchOverflow,189
+Oracle Application Server PL/SQL Packages Source Code Disclosure,attOwaUtilShowsource,20
+Etomite index.php SQL Injection (version 0.6.1.2),EtomiteindexphpSQLInjection,89
+Lotus Domino Image Tag Cross-Site Scripting,attLotusCSSimgSrc,79
+ABAP Injection OS,TPHidden_OWB_ABAP_Injection_OS,77
+ABAP AppDOS NoMaximumLimit,TPHidden_OWB_ABAP_AppDOS_NoMaximumLimit,119
+Yoel''s test attack rule,YoelsTestAttack,119
+ABAP Info Usage SYUNAME,TPHidden_OWB_ABAP_Info_Usage_SYUNAME,565
+Authentication Login,TPHidden_OWB_Authentication_Login,89
+Quick.Cart Cookie Path Traversal,QuickCartCookiePathTraversal,22
+Oracle Single Sign-On Login Page Credential Disclosure,OracleSSOLoginPageCredentialDisclosure,489
+ZeroBoard Multiple Remote File Inclusion,ZeroBoardprintcategoryphpRFI,94
+ABAP Generic Transformation,TPHidden_OWB_ABAP_Generic_Transformation,16
+Cross-Site Scripting in Path,attCSSinURL,307
+LineWeb index.php Path Traversal,LineWebindexphpFileInclusion,22
+ProfitCode PayProCart 3.0 Cross-Site Scripting,cwvProfitCodePayProCart30XSS,79
+Wordpress Cross-Site Scripting,cwvWordpressXSS,79
+YaBB Any File Download,attYaBBSecurityProblemAllowsDownloadingOfAnyFile,22
+Malicious Trigger,TPHidden_OWB_Malicious_Trigger,16
+Novell Open Enterprise Server QuickFinder Multiple Cross-Site Scripting,NovellOpenEnterpriseServerQuickFinderMultipleXSS,79
+Google Urchin Cross-Site Scripting,GoogleUrchinXSS,79
+phpCMS Information Disclosure,phpCMSInfoDisc,307
+CuteNews "result" Parameter Cross-Site Scripting,CuteNewsresultParameterXSS,79
+Malicious Dynamic Code,TPHidden_OWB_Malicious_DynamicCode,16
+Floating-Point Value Denial of Service,PHPFunctionFloatingPointValueDoS,119
+phpPgAdmin Cross-Site Scripting in Path,phpPgAdminXSSinPath,79
+cPanel select.html Cross-Site Scripting,cPanelselecthtmlXSS,79
+Credit Card Number Pattern Found,GD_CreditCards,200
+PHP Ticket search.php SQL Injection,PHPTicketSQLInjection,89
+Cisco Building Broadband Service Manager AccessCodeStart.asp Cross-Site Scripting,CiscoBuildingBroadbandSvsMgrXSS,79
+Application Input Restrictions Bypass,attParamOutOfRange,472
+AChecker index.php Cross-Site Scripting,ACheckerindexphpXSS,79
+osCommerce update.php Path Traversal,osCommercePathTraversal,22
+aeDating Multiple Cross-Site Scripting,aeDatingMultipleXSS,79
+sNews Cross-Site Scripting,sNewsXSS,79
+Malicious Dynamic Code Loading,TPHidden_OWB_Malicious_DynamicCode_Loading,16
+WordPress feed.php PHP Function Execution,WordPressfeedphpPHPFunctionExecution,20
+WordPress WP Comment Remix Plugin Cross-Site Scripting,WordPressWPCommentRemixPluginXSS,79
+Email Attribute Spoofing,jsDOMEmailHijacking,74
+AuraCMS index.php SQL Injection,AuraCMSindexphpSQLInjection,89
+OpenSSL Remote Command Execution and Denial of Service,cwvOpenSSLmultipleVulns,119
+Macromedia Dreamweaver Remote Database Unauthorized Access,cwvDreamWeaverDbScript,89
+Microsoft IIS .Printer Buffer Overflow - Invasive Check,attIISdotPrinterUnsafe,189
+WordPress WP-UserOnline Plugin Cross-Site Scripting,WordPressWPUserOnlinePluginXSS,79
+SOAP Web Services Format String - invasive check,SoapFormatStringInvasive,134
+phpMyQuote index.php SQL Injection,phpMyQuoteindexphpSQLInjection,89
+Apache Host Header Denial of Service,ApacheHostDoS,119
+Application Path Overflow,cwvAppPathOverflow,189
+WebSPELL picture.php Path Traversal,WebSPELLpicturephpPathTraversal,22
+Multiple Vendor XML Parser Denial of Service,attMultipleVendorXMLentityExplosion,16
+WordPress MU wpmu-blogs.php Cross-Site Scripting,WordPressMUwpmublogsphpXSS,79
+Long Cookie Value Buffer Overflow,attCookieValOverflow,120
+Cryptography Non Standard,TPHidden_OWB_Cryptography_NonStandard,307
+PHP-Nuke Your_Account Module SQL Injection,PHPNukeYourAccountSQLInjection,89
+Microsoft SharePoint Server / SharePoint Services help.aspx Cross-Site Scripting,MicrosoftSharePointhelpaspxXSS,79
+vtiger CRM Multiple Path Traversal,vtigerCRMMultiplePathTraversal,22
+MoinMoin Despam Cross-Site Scripting,MoinMoinDespamXSS,79
+ATutor Cross-Site Scripting,cwvATutorXSS,79
+Microsoft ASP.NET Cross-Site Scripting (Cookie),MicrosoftASPNETXSSCookie,79
+Microsoft FrontPage Directory Listing,attVtiCnf,548
+AccessControl,TPHidden_OWB_AccessControl,525
+Caching,TPHidden_OWB_Caching,20
+SimpleBlog edit.asp SQL Injection,SimpleBlogeditaspSQLInjection,89
+Loudblog index.php SQL Injection,LoudblogindexphpSQLInjection,89
+Application Logic Subversion ,attParamToggle,472
+Invision Power Board SQL Injection,InvisionPowerBoardSQLInjection,89
+PowerEasy SiteWeaver User_ChkLogin.asp Cross-Site Scripting,PowerEasySiteWeaverUserChkLoginaspXSS,79
+Xoops Modules spaw_control.class.php Remote File Inclusion,XoopsTinyContentModulespawcontrolclassphpRFI,94
+Oracle Reports Server Example Script Cross-Site Scripting,OracleReportServerCSS,79
+aspProductCatalog default.asp SQL Injection,aspProductCatalogdefaultaspSQLInjection,89
+Juniper Networks Secure Access 2000 rdremediate.cgi Path Disclosure,JuniperSecureAccess2000rdremediatecgiPathDisc,200
+Snitz Forums 2000 pop_send_to_friend.asp Cross-Site Scripting,SnitzForums2000popsendtofriendaspXSS,79
+ECShop search.php SQL Injection,ECShopsearchphpSQLInjection,89
+Mambo index.php Multiple Cross-Site Scripting,MamboindexphpMultipleXSS,79
+Validation Required URL Redirect,TPHidden_OWB_Validation_Required_URL_Redirect,601
+Sugar Sales Multiple Cross-Site Scripting,SugarSalesXSS,79
+ABAP Generic ModuleCall,TPHidden_OWB_ABAP_Generic_ModuleCall,16
+e107 ZoGo-Shop Plugin product_details.php SQL Injection,e107ZoGoShopPluginproductdetailsphpSQLInjection,89
+IIS IDQ.DLL Directory Traversal,attAccessToFilesOutsideTheVirtualRootDirectory,22
+IBM OpenAdmin Tool for Informix index.php Cross-Site Scripting,IBMOpenAdminToolforInformixindexphpXSS,79
+phpMyAdmin Console Remote Database Administration,attPhpMyAdminPage,89
+IBM Tivoli Continuous Data Protection for Files FilepathLogin.html Cross-Site Scripting,IBMTivoliCntnsDtaPrtctn4FlsXSS,79
+Ariadne CMS view.php Remote File Inclusion,AriadneCMSviewphpRFI,94
+ABAP DB Generic Query Write,TPHidden_OWB_ABAP_DB_Generic_Query_Write,89
+Claroline Multiple Cross-Site Scripting,ClarolineMultipleXSS,79
+Namazu namazu.cgi Cross-Site Scripting,NamazuXSS,79
+eShoplifting ,attPriceMutate1,472
+Insecure HTTP Methods Enabled,attDirOptions,74
+JSON Cross-Site Scripting,attJSONJavaScript,79
+Google Sitemap File Detected,GoogleSitemapFileDetected,20
+Q-Shop users.asp SQL Injection,QShopusersaspSQLInjection,89
+WampServer index.php Cross-Site Scripting,WampServerindexphpXSS,79
+MyBB "CLIENT-IP" HTTP Header SQL Injection,MyBBCLIENTIPHTTPHeaderSQLInjection,89
+MODx tvs.php Path Traversal,MODxtvsphpPathTraversal,22
+SOAP Web Services HTTP Response Splitting,SoapResponseSplitting,113
+IBM WebSphere Configuration Information Disclosure,IBMWebSphereConfigInfDisc,20
+JavaBB pm.externalSend.jbb Cross-Site Scripting,JavaBBpmexternalSendjbbXSS,79
+Injection LDAP,TPHidden_OWB_Injection_LDAP,90
+Integrity,TPHidden_OWB_Integrity,489
+PHP Fusion Viewforum.php SQL Injection,PHPFusionViewforumSQLInjection,89
+Eskolar CMS index.php SQL Injection,EskolarCMSSQLInjection,89
+Microsoft IIS Sample Application Physical Path Disclosure,cwvIISEnvVars,20
+IBM ENOVIA SmarTeam V5 LoginPage.aspx Cross-Site Scripting,IBMENOVIASmarTeamV5LoginPageaspxXSS,79
+Windows File Parameter Alteration ,attFileWin32,22
+ABAP DB UnmanagedSQL,TPHidden_OWB_ABAP_DB_UnmanagedSQL,89
+Include Injection,TPHidden_WB_IncludeInjection,99
+Apache Geronimo Cross-Site Scripting in Path,ApacheGeronimoXSSinPath,79
+MercuryBoard ''User-Agent'' Header SQL Injection,MercuryBoardUserAgentSQLInjection,89
+Probe SQL,probeSQL,89
+UtilMind Maillist.cgi Remote Command Execution,attUtilMindMaillistcgi,77
+My Little Forum user.php SQL Injection,MyLittleForumuserphpSQLInjection,89
+Adobe ColdFusion MX Internal IP Disclosure,AdobeColdFusionMXInternalIPDisclosure,20
+Dokeos user_portal.php Path Traversal,DokeosuserportalphpPathTraversal,22
+phpLDAPadmin Multiple Cross-Site Scripting,phpLDAPadminXSS,79
+IBM Rational ClearQuest Web SQL Injection,IBMRationalClearQuestWebSQLInjection,89
+TANDBERG Video Communication Server Path Traversal,TANDBERGVideoCommServerPathTraversal,22
+Helm ForgotPassword.asp Cross-Site Scripting,HelmPasswordXSS,79
+Sphider search.php Cross-Site Scripting,SphidersearchphpXSS,79
+Movable Type MT-Cumulus Plugin tagcloud.swf Cross-Site Scripting,MovableTypeMTCumulusPlugintagcloudswfXSS,79
+Coppermine Photo Gallery mode.php Cross-Site Scripting,CopperminePhotoGallerymodephpXSS,79
+SMBCMS Site Search Cross-Site Scripting,SMBCMSSearchXSS,79
+Oracle iSQL*Plus Buffer Overflow,cwvOracleiSqlPlusOverflowInUserIdField,189
+cpCommerce Multiple SQL Injection,cpCommercecategoryphpSQLInjection,89
+Oracle Java Process Manager Unauthorized Access,cwvOwaProcessMgr,287
+eSyndiCat Directory Software search.php Cross-Site Scripting,eSyndiCatXSS,79
+HTTP PUT Method Site Defacement,attPUTFile,89
+TYPO3 Cumulus Tagcloud Extension Path Disclosure,TYPO3CumulusTagcloudExtPathDisc,20
+Lotus Domino Web Administration Template Access,LotusDominoWebadminntfAccess,565
+Lotus Domino Database Information Gathering,attLotusOpenServer,20
+OmniPCX Enterprise Unified Maintenance Tool Command Execution,OmniPCXEnterpriseUnifiedMaintenanceToolCommandExecution,20
+Joomla Canteen Component index.php Path Traversal,JoomlaCanteenComponentindexphpPathTraversal,22
+Sun Java System Calendar Server Multiple Cross-Site Scripting,SunJavaSystemCalendarServerXSS,79
+Microsoft IIS Malformed .HTR Request Denial of Service,attCWVIISHtr,119
+Sun iPlanet Directory Server Directory Traversal,cwvSuniPlanetDirectoryServerDirectoryTraversal,22
+vtiger CRM index.php Cross-Site Scripting (version 5.2.1),vtigerCRMindexphpXSSII,79
+Whois_raw.cgi Remote Command Execution,attWhoisrawcgiRemoteCommandExecutionVulnerability,77
+KAPhotoservice Multiple Cross-Site Scripting,KAPhotoserviceXSS,79
+Drupal "keys" Path Disclosure,DrupalkeysPathDisclosure,200
+Social Security Number Pattern Found,GD_SSN,359
+Plesk Control Panel filemanager.php Cross-Site Scripting,PleskControlPanelXSS,79
+Multiple Vendor %20 Script Source Code Disclosure,attNetscapePercentage20,20
+RunCms brokenfile.php SQL Injection,RunCmsbrokenfilephpSQLInjection,89
+DCForumLite dcboard.cgi SQL Injection,DCForumLiteSQLInjection,89
+File Upload,TPHidden_OWB_FileUpload,16
+Oracle Configurator Cross-Site Scripting,OracleConfiguratorXSS,79
+Credit Card Number Pattern Found (Diners Club) in Parameter Value Over Unencrypted Connection,GD_CreditCardDinersClubParameterNotSSL,311
+Sun ONE Web Server Search Cross-Site Scripting,cwvSunONEsearchXSS,79
+PHP Remote File Inclusion on Cookie,PHPRemoteFileInclusionOnCookie,94
+ABAP Injection Form,TPHidden_OWB_ABAP_Injection_Form,16
+AppDOS,TPHidden_OWB_AppDOS,119
+MyBB managegroup.php SQL Injection,MyBBmanagegroupSQLInjection,89
+IBM WebSphere Password Stored as Plaintext,IBMWebSpherePasswordStoredasPlaintext,20
+xt:Commerce advanced_search_result.php Cross-Site Scripting,xtCommerceadvancedsearchresultphpXSS,79
+Sugar Suite Multiple Path Traversal,SugarSuiteMultiplePathTraversal,22
+phpBB Knowledge Base Mod kb_constants.php Path Traversal,phpBBKnowledgeBaseModPathTraversal,22
+vBulletin member.php Cross-Site Scripting,vBulletinmemberphpXSS,79
+Server Side Directives File Retrieval,attParamSSI,97
+JEUS url.jsp Cross-Site Scripting,JEUSurljspXSS,79
+Cobalt RaQ Denial of Service,CobaltRaQDenialofService,119
+phpBB foing Module Multiple Path Traversal,phpBBfoingModuleMultiplePathTraversal,22
+Netscape Administration Server Password Retrieval,attNetscapeAdminPasswd,89
+Cart32 Information Disclosure,attCart32MultipleVulnerabilities,20
+XML External Entity File Disclosure,attDtdXXE,611
+DataProtection Storage,TPHidden_OWB_DataProtection_Storage,307
+ABAP Quality Filter Replace,TPHidden_OWB_ABAP_Quality_Filter_Replace,565
+Client-Side (JavaScript) Cookie References,attJSCookie,129
+Web Wiz Forums pop_up_member_search.asp SQL Injection,WebWizForumspopupmembersearchaspSQLInjection,89
+Invision Gallery index.php SQL Injection,InvisionGallerySQLInjection,89
+Pixelpost index.php SQL Injection - OBSOLETE,PixelindexphpSQLInjection,307
+LinPHA db_handler.php Path Traversal,LinPHAdbhandlerphpPathTraversal,22
+WordPress Organizer Plugin admin.php Cross-Site Scripting,WordPressOrganizerPluginadminphpXSS,79
+Moodle phpcoverage.remote.top.inc.php Cross-Site Scripting,MoodlephpcoverageremotetopincphpXSS,79
+Apache Tomcat Directory Listing Through Any JSP File,ApacheTomcatDirectoryListing,548
+Joomla! file_upload.php Remote File Inclusion,JoomlafileuploadphpRemoteFileInclusion,94
+ADOdb PHP Function Execution,ADOdbPHPFuncExec,77
+MyBB calendar.php SQL Injection (Versions below and including MyBB PR2 Rev.686),MyBBSQLInjection,89
+WordPress "PHP_SELF" Cross-Site Scripting,WordPressPHPSELFXSS,79
+Session Fixation,SessionFixation,384
+vBulletin Cross-Site Scripting,vBulletinXSS,79
+phpMyAdmin Cross-Site Scripting,cwvphpMyAdminXSS,79
+Lotus Domino ?ReadEntries Information Disclosure,LotusDominoReadEntriesInformationDisclosure,20
+Remote Code Execution,TPHidden_WB_RemoteCodeExecution,77
+Client-Side Denial Of Service,jsClientSideDOS,119
+Calendar Express 2 month.php SQL injection,CalendarExpress2SQLinjection,89
+SweetRice index.php SQL Injection,SweetRiceindexphpSQLInjection,89
+Microsoft IIS .DLL URL Remote Denial of Service,IISDLLDoS,20
+NPDS SQL Injection,cwvNPDSSQLInjection,89
+Cobalt RaQ Cross-Site Scripting,CobaltRaQXSS,79
+PHP-Nuke Search Module SQL Injection,PHPNukeSearchSQLInjection,89
+FireStats bridge.php Denial of Service,FireStatsbridgephpDoS,119
+Pligg user.php Cross-Site Scripting,PligguserphpXSS,79
+Microsoft IIS Phone Book Service Buffer Overflow,MicrosoftIISPhoneBookServiceCommandExecution,189
+Oracle Log File Information Disclosure,OracleLogFileInformationDisclosure,20
+Directory Traversal Arbitrary File Download,attDirectoryTraversal,22
+SAP Internet Graphics Server Path Traversal,SAPInternetGraphicsServerPathTraversal,22
+BEA WebLogic JSP Plug-In Multiple Buffer Overflows,cwvWeblogicBufferOverflow,189
+WS_FTP.log File Analysis Source Code Disclosure,attSourceDiscWsFtp,20
+Inadequate Account Lockout,attAccountLockout,307
+Unencrypted Password Parameter,attPasswordNotOverSSL,307
+Connect Manipulation,TPHidden_WB_ConnectManipulation,441
+MyBB search.php Cross-Site Scripting,MyBBXSS,79
+Archive File Download,attARCDownload,531
+Microsoft FrontPage Server Extensions Buffer Overflow,attCWVFpBufferOverflow,189
+Joomla! index.php Remote File Inclusion,JoomlaindexphpRFI,94
+Saurus CMS edit.php Cross-Site Scripting,SaurusCMSeditphpXSS,79
+phpMyAdmin Local File Exposure,cwvPhpMyadminFileRetrieval,22
+e107 User Journals Plugin userjournals.php SQL Injection,e107UserJournalsPluginuserjournalsphpSQLInjection,89
+BEA WebLogic Server Version Exposure,cwvWeblogicVersionExposure,20
+Webevent Admin Rights by Application Flow Subversion,attWebEventAdminRightsByApplicationFlowSubversion,565
+PhotoPost PHP Pro SQL Injection,cwvPhotoPostPHPProSQLInjection,89
+Nuked-Klan index.php Cross-Site Scripting,NukedKlanXSS,79
+Apache Struts Cross-Site Scripting in Filename,ApacheStrutsXSSinFilename,79
+SourceBans index.php SQL Injection,SourceBansindexphpSQLInjection,89
+Snitz Forums 2000 Multiple Cross-Site Scripting,SnitzForums2000MultipleXSS,59
+Cobalt RaQ Privilege Escalation,CobaltRaQPrivilegeEscalation,565
+SimpNews Multiple Cross-Site Scripting,SimpNewsMultipleXSS,79
+Web+Shop webplus.exe Path Disclosure,WebShopPathDisclosure,307
+Never feed (external) input to kernel function ThWpInfo,TPHidden_OWB_ABAP_Injection_OS_ThWpInfo,77
+BufferOverflow FormatString,TPHidden_OWB_BufferOverflow_FormatString,550
+ABAP Quality TestCode,TPHidden_OWB_ABAP_Quality_TestCode,550
+8.3 Naming System Source Code Disclosure,attFilename8dot3,20
+Microsoft Personal Web Server Any File Download,attMicrosoftPersonalWebServerAllowsDownloadingOfAnyFile,22
+Gelato CMS index.php SQL Injection,GelatoCMSindexphpSQLInjection,89
+Oracle Reports Server Information Disclosure,cwvOracleReportsInformationDisc,20
+zenphoto Directory Listing,zenphotoDirectoryListing,548
+IBM WebSphere plugin-cfg.xml Information Leakage,IBMWebSphereplugincfgxmlInformationLeakage,538
+zenphoto Multiple Cross-Site Scripting,zenphotoMultipleXSS,79
+Tektronix PhaserLink Webserver Remote Administration Authentication Bypass,attRemoteAdministrationAuthenticationBypassInTektronixPhaserLinkWebserver,89
+User-Defined Tests,attManualTest,77
+ABAP Quality Condition SYDATUM,TPHidden_OWB_ABAP_Quality_Condition_SYDATUM,20
+phpMyAdmin pmd_pdf.php Cross-Site Scripting,phpMyAdminpmdpdfphpXSS,79
+Global.asa and Global.asax Backup Copy Retrieval,cwvGlobalAsaBackup,20
+couponZONE local.cfm Cross-Site Scripting,couponZONEXSS,79
+WordPress invites.php Cross-Site Scripting,WordPressinvitesphpXSS,79
+Credit Card Number Pattern Found Over Unencrypted Connection,GD_CreditCardsNotSSL,311
+Microsoft IIS WebDAV Denial of Service,MicrosoftIISWebDAVDoS,119
+IBM Tivoli Access Manager for e-business Path Traversal,IBMTivoliAccessManagerforebusinessPathTrav,22
+MODx index.php Path Traversal,MODxPathTraversal,22
+TAC Vista Template Directory Traversal,TACVistaInfoDisc,22
+BlueCoat WinProxy Host Header Remote Command Execution,WinProxyDoS,77
+ABAP Quality Filter RegEx,TPHidden_OWB_ABAP_Quality_Filter_RegEx,16
+DCP-Portal index.php Cross-Site Scripting,DCPPortalXSS,79
+Tomcat Sample Site Cross-Site Scripting,TomcatSampleSiteXSS,79
+Parameter System Call Code Injection,attCodeInjectionInSystemCall,77
+Multiple Vendor XML Parser Attribute Blowup Denial of Service,attNamespaceBlowupDoS,16
+Zeus Web Server Administration Interface Cross-Site Scripting,cwvZeusXSSAdmin,79
+MoinMoin Cross-Site Scripting,MoinMoinXSS,79
+Web.config File Configuration Settings Leakage,cwvWebConfig,20
+Apache Mod_Rewrite Off-By-One Buffer Overflow,ApacheModRewriteOffByOneBufferOverflow,189
+MODx index.php Cross-Site Scripting (Version 2.0.2-pl),MODxindexphpXSS202,79
+Microsoft Exchange Server 5.5 Outlook Web Access Cross-Site Scripting,cwvOWAXSSsanctum,79
+Moodle index.php Cross-Site Scripting,MoodleindexphpXSS,79
+Netscape Enterprise Server Web Publishing Directory Listing,attNetscapePublisher,548
+CMS Easyway index.php SQL Injection,CMSEasywayindexphpSQLInjection,89
+WebSphere "WASReqURL" Cookie Redirection,WebSphereWASReqURLCookieRedirection,601
+Cartwiz SQL Injection,cwvCartwizSQLInjection,89
+phpPhotoAlbum File Download,attPhpPhotoAlbumVulnerableToFileDownloadVulnerability,22
+Freeway eCommerce create_order_new.php Remote File Inclusion,FreewayeCommercecreateordernewphpRFI,94
+Sun ONE / iPlanet Web Server Remote Buffer Overflow,cwviPlanetSunOneBufferOverflow,189
+PHP-Fusion submit.php SQL Injection,PHPFusionsubmitphpSQLInjection,89
+Possible Vertical Privilege Escalation through Cookie Manipulation,attPosPrivEscCookieManip,565
+Joomla! PicSell Component index.php Path Traversal,JoomlaPicSellComponentindexphpPathTraversal,22
+Seditio polls.php SQL Injection,SeditiopollsphpSQLInjection,89
+Open Redirect,jsOpenRedirect,601
+aliTalk Multiple SQL Injection,aliTalkMultipleSQLInjection,89
+PHP iCalendar Local File Inclusion,PHPiCalendarFileInc,22
+Session Identifier Not Updated,constTransient,613
+IBM WebSphere Commerce Suite (WCS) Source Code Disclosure,attWebSphereSourceDisclosureAppendSlash,20
+OWB Validation Required URL Port,TPHidden_OWB_Validation_Required_URL_Port,489
+George Buryan Counter CGI Remote Command Execution,attGeorgeBuryansCounterCGIRemoteCommandExecution,77
+Adobe RoboHelp DOM Based Cross-Site Scripting,AdobeRoboHelpDOMBasedXSS,79
+MyBB moderation.php SQL Injection (Versions below and including 1.03),MyBBmoderationSQLInjection,89
+WebStudio Multiple Cross-Site Scripting,WebStudioMultipleXSS,79
+ABAP Assertion Config,TPHidden_OWB_ABAP_Assertion_Config,550
+Nuked-Klan index.php Cross-Site Scripting - OBSOLETE,NukedKlanindexphpXSS,307
+phpMyAdmin sql.php Cross-Site Scripting,phpMyAdminsqlphpXSS,79
+cPanel dnslook.html Cross-Site Scripting,cPaneldnslookhtmlXSS,79
+Injection OS,TPHidden_OWB_Injection_OS,77
+Barracuda Spam Firewall ldap_test.cgi Cross-Site Scripting,BarracudaSpamFirewallldaptestcgiXSS,79
+Quality NeverCall GC,TPHidden_OWB_Quality_NeverCall_GC,550
+Geeklog Multiple Path Disclosure,GeeklogMultPathDisc,307
+WordPress WP-StarsRateBox Plugin wp-starsratebox.php Cross-Site Scripting,WordPressWPStarsRateBoxXSS,79
+Comersus Shopping Cart SQL Injection,cwvComersusCartSQLInjection,89
+Namazu Path Traversal,NamazuPathTraversal,22
+Apache Struts Error Message Cross-Site Scripting,ApacheStrutsXSS,79
+Adobe Flex DOM Based Cross-Site Scripting,AdobeFlexDOMBasedXSS,79
+JSON Hijacking,TPHidden_OWB_JSON_Hijacking,16
+Scry index.php Cross-Site Scripting,ScryXSS,79
+CPS popup_image Cross-Site Scripting,CPSXSS,79
+ABAP AccessControl AuthCheck RFC All,TPHidden_OWB_ABAP_AccessControl_AuthCheck_RFC_All,565
+Malicious Dynamic Code Compiler,TPHidden_OWB_Malicious_DynamicCode_Compiler,16
+MetaCart e-Shop SQL Injection,MetaCartEShopSQLInjection,89
+Microsoft Content Management Server Cross-Site Scripting,cwvMicrosoftContentManagementXssVuln,79
+Liferay Portal Enterprise Cross-Site Scripting,LiferayPortalEnterpriseXSS,79
+ABAP Command Illegal,TPHidden_OWB_ABAP_Command_Illegal,189
+Zen Cart curltest.php Local File Inclusion,ZenCartcurltestphpLFI,20
+WebDAV MKCOL Method Site Defacement,attWebDAVMKCOL,74
+Mono Source Code Disclosure,MonoSourceCodeDisclosure,20
+Namo DeepSearch mclient.cgi Cross-Site Scripting,NamoDeepSearchXSS,79
+ZeroBoard Multiple Cross-Site Scripting,ZeroBoardMultipleXSS,79
+aspWebLinks links.asp SQL Injection,aspWebLinksSQLInjection,89
+Nortel Contivity VPN Switch Cgiproc File Download,attNortelContivityVPNSwitchCgiprocFileDownloadVulnerability,22
+IBM WebSphere Documentation Found,IBMWebSphereDocumentationFound,20
+Pluck blog_include_react.php Path Traversal,PluckblogincludereactphpPathTraversal,22
+Allaire ColdFusion Exprcalc.cfm Remote File Display,attCFexprCalc,489
+Microsoft IIS Source Disclosure,attIISSourceDisc,20
+Oracle Application Server Administration Interface,OracleAppServAdministrationInterface,565
+GWExtranet Multiple Cross-Site Scripting,GWExtranetMultipleXSS,79
+iHTML Merchant Pro SQL Injection,iHtmlMerchantSQLInjection,89
+ABAP Connection FTP,TPHidden_OWB_ABAP_Connection_FTP,525
+PHP-Fusion vArcade Module SQL Injection,PHPFusionvArcadeModuleSQLInjection,89
+Citrix Metaframe XP Cross-site Scripting,CitrixMetaframeXPXSS,79
+Horde IMP fetchmailprefs.php Cross-Site Scripting,HordeIMPfetchmailprefsphpXSS,79
+SPwiz Plus index.cfm Cross-Site Scripting,SPwizPlusXSS,79
+WordPress templates.php Cross-Site Scripting,WordPresstemplatesphpXSS,79
+webSPELL printview.php SQL Injection,webSPELLprintviewphpSQLInjection,89
+Improper Access To Lotus Domino Administration Databases ,attImproperPermsOnLotus,20
+Joomla! Barter Component SQL Injection,JoomlaBarterComponentSQLInjection,89
+EWS (Excite for Web Servers) Privilege Escalation,attEWSForWeb11AdminRights,89
+MemHT Portal admin.php Cross-Site Scripting,MemHTPortaladminphpXSS,79
+ABAP Quality Condition SYOPSYS,TPHidden_OWB_ABAP_Quality_Condition_SYOPSYS,20
+Miscellaneous,TPHidden_OWB_Miscellaneous,550
+Path disclosure in various PHP-based applications,PHPBasedPathDisc,20
+Netscape Enterprise Server Web Publisher Access,NetscapeEnterpriseServerWebPublisherAccess,565
+WeBid active_auctions.php Path Traversal,WeBidactiveauctionsphpPathTraversal,22
+Contenido front_content.php Cross-Site Scripting,ContenidofrontcontentphpXSS,79
+Unsafe Reflection,TPHidden_WB_UnsafeReflection,470
+TemaTres Multiple Cross-Site Scripting,TemaTresMultipleXSS,79
+Novell Teaming Cross-Site Scripting,NovellTeamingXSS,79
+vBulletin global.php SQL Injection,VbulletinglobalphpSQLInjection,89
+BLOG:CMS list.php Cross-Site Scripting,BLOGCMSlistphpXSS,79
+Apache Tomcat Example Servlets Path Disclosure ,cwvTomcatPathDiscServlets,20
+MolyX Board Path Traversal,MolyXBoardPathTraversal,22
+CPG Dragonfly CMS Cross-Site Scripting,CPGDragonflyCMSXSS,79
+Mantis Cross-Site Scripting,MantisXSS,79
+ORM Injection,TPHidden_WB_ORMInjection,89
+Ipswitch IMail File Download,IPswitchIMailFileDownload,22
+Singapore index.php Cross-Site Scripting,SingaporeXSS,79
+Exposed SSL Certificate Issued by DigiNotar,DigiNotarSSLCertificate,311
+Content analyzed and deemed not malicious (Not Malware),TPHidden_MW_NonMaliciousContent,16
+vBulletin index.php Cross-Site Scripting,vBulletinindexphpXSS,79
+Microsoft IIS fpcount.exe Buffer Overflow,IISfpcountexeBufferOverflow,189
+Netscape ''?PageServices'' Directory Listing,attNetscapePageServices,531
+WordPress Daily Maui Photo Widget Plugin wp-dailymaui-widget-control.php Cross-Site Scripting,WordPressDailyMauiPhotoWidgetXSS,79
+WeBid confirm.php Cross-Site Scripting,WeBidconfirmphpXSS,79
+NaviCopa HTTP Server Buffer Overflow,NaviCopaHTTPServerBufferOverflow,189
+Validation UDDI,TPHidden_OWB_Validation_UDDI,16
+OpenBB Cross-Site Scripting,OpenBBCSS,79
+Phishing Through Frames,phishingInFrames,301
+MyBB PHP Code Execution,MyBBPHPCodeExecution,94
+CNCTek BizDB Search Script Remote Shell Command Execution,attCNCTekBizDBSearchScriptAllowsARemoteAttackerToRunShellCommands,77
+Web Worker Script URL Manipulation,jsWorkerXSS,79
+CuteNews Multiple Cross-Site Scripting,CuteNewsMultipleXSS,79
+osCommerce "page" parameter Cross-Site Scripting,osCommerceMultXSS,79
+PHP-Fusion Recepies Module recept.php SQL Injection,PHPFusionRecepiesModulereceptphpSQLInjection,89
+Login Error Messages Credential Enumeration,LoginErrMsgPossibleBruteForce,204
+Singapore index.php Path Disclosure,SingaporePathDisclosure,307
+ABAP Injection HttpResponseTampering,TPHidden_OWB_ABAP_Injection_HttpResponseTampering,16
+SGI IRIX Online Documentation Browsing Remote Command Execution,attSGIIRIXOnlineDocumentationBrowsingIsVulnerableToRemoteCommandExecution,77
+Turuncu Portal SQL Injection,TuruncuPortalSQLInjection,89
+Unclassified NewsBoard abbc.css.php Path Traversal,UnclassifiedNewsBoardPathTraversal,22
+Claroline rqmkhtml.php Path Traversal,ClarolinePathTraversal,22
+WordPress "p" SQL Injection,WordPresspSQLInjection,89
+Coppermine Photo Gallery showdoc.php Cross-Site Scripting (Version 1.4.22),CopperminePhotoGalleryshowdocphpcssXSS,79
+DCForum Cross-Site Scripting,DCForumXSS,79
+Nucleus action.php Cross-Site Scripting,NucleusactionphpXSS,79
+phpBB Rlink Module rlink.php Cross-Site Scripting,phpBBRlinkmodXSS,79
+CMS Made Simple content_css.php SQL Injection,CMSMadeSimplecontentcssphpSQLInjection,89
+PHP iCalendar Multiple Cross-Site Scripting,PHPiCalendargetdateXSS,79
+Alibaba Web Server File Download and Remote Command Execution,attAlibabaWebServerMultipleVulnerabilities,77
+Quality TestCode,TPHidden_OWB_Quality_TestCode,489
+Coppermine Photo Gallery Remote File Inclusion,CopperminePhotoGalleryRemoteFileInclusion,94
+Siteframe search.php Cross-Site Scripting,SiteframeXSS,79
+HTML Comments Sensitive Information Disclosure,attSensitiveInHtmlComments,615
+Authentication Credentials Unprotected Transport,TPHidden_OWB_Authentication_Credentials_Unprotected_Transport,89
+Tmax Soft JEUS url.jsp Cross-Site Scripting,TmaxSoftJEUSurljspXSS,79
+Joomla! ionFiles Component download.php Path Traversal,JoomlaionFilesComponentdownloadphpPathTraversal,22
+PHP-Nuke autohtml.php Path Traversal,PHPNukeautohtmlphpPathTraversal,22
+H-Sphere login.php Cross-Site Scripting,HSphereloginphpXSS,79
+EasyMoblog img.php Cross-Site Scripting,EasyMoblogXSS,79
+ABAP DB Generic Connection,TPHidden_OWB_ABAP_DB_Generic_Connection,16
+Apache mod_perl "Apache::Status" / "Apache2::Status" Cross-Site Scripting,ApachemodperlApacheStatusApache2StatusXSS,79
+WordPress Permalinks Migration Plugin Cross-Site Scripting,WordPressPermalinksMigrationPluginXSS,352
+Novell eDirectory Buffer Overflow,NovelleDirectoryBufferOverflow,189
+IBM BladeCenter Advanced Management Module Multiple Cross-Site Scripting,IBMBladeCenterAdvancedManagementModuleMultXSS,79
+ABAP Injection File Read,TPHidden_OWB_ABAP_Injection_File_Read,525
+Bytes Interactive Shopper.cgi Shopping Cart Directory Traversal,attBytesInteractiveshoppercgiShoppingCartDirectoryTraversalVulnerability,22
+PHP-Fusion Forum Rank System Multiple Path Traversal,PHPFusionForumRankSystemMultiplePathTraversal,22
+PostNuke Directory Traversal,PostNukeDirTraversal,22
+Session Management Timeout Absolute,TPHidden_OWB_SessionManagement_Timeout_Absolute,539
+Flash parameter AllowScriptAccess was set to always,GD_flashAllowScriptAccessSetToAlways,456
+IBM WebSphere Denial of Service,cwvIBMNetDataDoS,189
+Bugzilla Remote Command Execution ,attBugzillaRemoteCommandExecutionVulnerability,77
+IBM WebSphere Edge Server Cross-Site Scripting,IBMWebsphereEdgeServerXSS,79
+Autocomplete HTML Attribute Not Disabled for Password Field,GD_autocompleteInForm,311
+Moreover CachedFeed.cgi File Download,attMoreoversCachedFeedcgiFileDownloadVulnerability,22
+phpBB Parameter Remote Command Execution,phpBBCommandExec2,307
+IBM WebSphere Application Server Directory Listing,IBMTivoliWorkloadSchedulerWASDirListing,200
+Subscribe Me Mailing List Manager Privilege Escalation,attSubscribeMeMailingListManagerPasswordVulnerability,565
+HTTP Referer Header SQL Injection,attRefererSqlInjection,89
+DCForum File Download,attDCFuromIsVulnerableToFileDownloading,22
+Accessible Protected Resource,attInsufficientResourceProtection,16
+ESMI PayPal Storefront Cross-Site Scripting,cwvESMIPayPalStorefrontXSS,79
+Joomla! Media Mall Factory Component index.php SQL Injection,JoomlaMediaMallFactoryComponentSQLInjection,89
+eXV2 index.php SQL Injection,eXV2SQLInjection,89
+SQL Injection,attSqlInjectionChecks,89
+Limbo admin.php Cross-Site Scripting,LimboadminphpXSS,79
+XPath Injection,attXPathInjection,91
+phpMyAdmin Export.php Directory Traversal,cwvPhpMyAdminExportDirTrav,22
+SSL Certificate Not Yet Valid,SSL_CertNotYetValid,77
+Cacti Multiple Cross-Site Scripting,CactiMultipleXSS,79
+Apache Tomcat Servlet Exception Cross-Site Scripting,cwvTomcatXSS,79
+phpWebsite SQL Injection,phpWebsiteSQLInjection,89
+Credit Card Number Pattern Found (Diners Club) in Parameter,GD_CreditCardDinersClubParameterIsSSL,311
+TWiki Multiple Cross-Site Scripting,TWikiMultipleCrossSiteScripting,79
+Apache JServ Weak Token Algorithm,attJSERVcookie,16
+Powerscripts PlusMail Password Change,attPowerscriptsPlusMailPasswordChangeVulnerability,565
+MegaBBS ASP Forum Cross-Site Scripting,MegaBBSASPForumXSS,79
+Predictable Login Credentials,attDumbBruteForce,340
+Coppermine Photo Gallery viewlog.php Path Traversal,CopperminePhotoGalleryviewlogphpPathTraversal,22
+Credit Card Number Pattern Found (Diners Club) Over Unencrypted Connection,GD_CreditCardDinersClubNotSSL,311
+Validation Cryptographic,TPHidden_OWB_Validation_Cryptographic,307
+phpMyAdmin index.php Cross-Site Scripting,attphpMyAdminXSS,307
+w-agora Multiple Cross-Site Scripting,wagoraMultipleXSS,79
+.NET output-build.txt File Detected,DotNETOutputBuildtxtFileDetected,20
+phpShop SQL Injection,phpShopSQLInjection,89
+WordPress WP Survey And Quiz Tool Plugin create.php Cross-Site Scripting,WordPressWPSurveyAndQuizToolPlugincreatephpXSS,79
+i-Web Suite default.asp Cross-Site Scripting,iWebSuitedefaultaspXSS,79
+Nucleus CMS Multiple Remote File Inclusion,NucleusCMSMultipleRFI,94
+Validation Encoding,TPHidden_OWB_Validation_Encoding,16
+phpMyAdmin server_status.php Cross-Site Scripting,phpMyAdminserverstatusphpXSS,79
+IBM WebSphere Debug Mode Enforcement,IBMWebSphereDebugModeEnforcement,20
+JavaScript Document.write() Usage,attJSDocumentWrite,20
+Xoops formdhtmltextarea_preview.php Cross-Site Scripting,XoopsformdhtmltextareapreviewphpXSS,79
+SAXON menu.php Cross-Site Scripting,SAXONmenuphXSS,79
+Application Denial of Service XML,TPHidden_OWB_AppDOS_XML,119
+Snitz Forums 2000 active.asp SQL Injection,SnitzForums2000activeaspSQLInjection,89
+OSSIM index.php URL Redirection,OSSIMindexphpURLRedirection,601
+PHP XML-RPC Library Remote Code Execution,attPHPXMLRPCCodeExecution,77
+Adobe RoboHelp Cross-Site Scripting,AdobeRoboHelpXSS,79
+DeluxeBB Multiple Path Traversal,DeluxeBBMultiplePathTraversal,22
+YaBB index.php Cross-Site Scripting,YaBBXSS,79
+Apache Tomcat Manager "sessions" Cross-Site Scripting,ApacheTomcatManagersessionsXSS,79
+Correctly encode all external input that is being written to the request,TPHidden_OWB_CrossApplicationScripting,20
+RunCms magpie_debug.php Cross-Site Scripting,RunCmsmagpiedebugphpXSS,79
+IBM Lotus Domino Server Web Service Denial of Service,cwvLotusDominoServerWSDoS,119
+Mambo connector.php Cross-Site Scripting,MamboconnectorphpXSS,79
+MKPortal pmpopup.php Cross-Site Scripting (Versions below and including 1.1 RC1),MKPortalXSS,79
+Easy File Sharing Web Server Denial of Service,EasyFileSharingWebServerDoS,119
+Adobe ColdFusion User-Agent Header Cross-Site Scripting,AdobeColdFusionUserAgentHeaderXSS,79
+Mambo Multiple Cross-Site Scripting (Version 4.6 RC1),MamboMultipleXSS,79
+ABAP Generic RFC Dest,TPHidden_OWB_ABAP_Generic_RFC_Dest,525
+SOAP Web Services Blind SQL Injection,SoapBlindSQLInjection,307
+PHP-Fusion news.php SQL Injection,PHPFusionnewsphpSQLInjection,89
+Calendarix calendar.php SQL Injection,CalendarixcalendarphpSQLInjection,89
+chcounter Cross-Site Scripting,chcounterXSS,79
+Helm Web Hosting Control Panel Cross-Site Scripting,HelmWebHostingControlPanelXSS,79
+IBM Websphere Header Denial of Service,IBMWebsphereHeaderDoS,119
+Coppermine Photo Gallery picmgr.php SQL Injection,CopperminePhotoGallerypicmgrphpSQLInjection,89
+WordPress upload.php Cross-Site Scripting,WordPressuploadphpXSS,79
+Quality HardCoding,TPHidden_OWB_Quality_HardCoding,20
+Rialto Multiple SQL Injection,RialtoMultipleSQLInjection,89
+sabros.us index.php Cross-Site Scripting,sabrosusindexphpXSS,79
+Validation Required Hidden Fields,TPHidden_OWB_Validation_Required_HiddenFields,20
+bitweaver edit.php Path Traversal,bitweavereditphpPathTraversal,22
+Microsoft Index Server 2.0 Server File Information Disclosure ,attMicrosoftIndexServer20SQLQHitaspSampleFileRevealsServerFileInformation,20
+Credit Card Number Pattern Found (MasterCard) Over Unencrypted Connection,GD_CreditCardMasterCardNotSSL,311
+PHP Live! status_image.php Cross-Site Scripting,PHPLiveXSS,79
+Oracle Portal PORTAL.wwv_main.render_warning_screen Cross-Site Scripting,OraclePortalPORTALwwvmainrenderXSS,79
+Claroline Multiple Path Traversal,ClarolinePathTraversal2,22
+Credit Card Number Pattern Found (Visa),GD_CreditCardVisa,200
+Unencrypted Sensitive Data,attSensitiveParamNotOverSSL,311
+Microsoft IIS Help File Search Cross-Site Scripting,MicrosoftIISHelpFileSearchXSS,79
+VBS Files Source Disclosure,VBSFilesDownload,20
+WordPress Community Events Plugin tracker.php SQL Injection,WPCommunityEventsPlugintrackerphpSQLInjection,89
+PHPShop Path Disclosure,PHPShopPathDisclosure,20
+e107 Forum Plugin forum_admin.php SQL Injection,e107ForumPluginforumadminphpSQLInjection,89
+Mambo Query Cross-Site Scripting,MamboQueryXSS,79
+HP Insight Management Agents Path Disclosure,HPInsightManagementAgentsPathDisclosure,20
+bitweaver Multiple Cross-Site Scripting,bitweaverMultipleXSS,79
+BannerFarm banners.cgi Cross-Site Scripting,BannerFarmXSS,79
+CrossSiteScripting,TPHidden_OWB_CrossSiteScripting,79
+Code Injection,TPHidden_WB_CodeInjection,94
+HTTP Response Splitting,attHttpResponseSplitting,113
+Albinator Multiple Cross-Site Scripting,AlbinatorMultipleXSS,79
+Unauthorized Access To Java Servlets Source Code,attUnAuthorizedAccessToWebInfJavaClass,20
+ColdFusion Sourcewindow.cfm Sample Files Code Disclosure,attColdFusionSourceWindow,20
+Unify eWave ServletExec Remote Command Execution,attUnifyEWaveServletExecAllowsScriptUploadingResultingInRemoteCommandExecution,77
+Stored HTTP Response Splitting,GV_StoredRespSplit,113
+Google Mini Search Path Disclosure,GoogleMiniSearchAppliancePathDisclosure,20
+Interspire Trackpoint NX index.php Cross-Site Scripting,InterspireTrackpointXSS,79
+Validation Encoding Required,TPHidden_OWB_Validation_EncodingRequired,16
+Include File Download,attINCDownload,531
+Calendarix yearcal.php Cross-Site Scripting,CalendarixXSS,79
+Macromedia JRun Source Code Disclosure,attJrunAppendSourceCode,20
+ht://Dig Htsearch Cross-Site Scripting,cwvHtsearchCss,79
+Apache Axis2/Java Cross-Site Scripting,ApacheAxis2JavaXSS,79
+Scratcher projects.php SQL Injection,ScratcherprojectsphpSQLInjection,89
+Usage of Vulnerable ActiveX control,VulnerableActiveX,489
+phpBannerExchange resetpw.php SQL Injection,phpBannerExchangeresetpwphpSQLInjection,89
+Phorum PHP Forum Administration Package Any File Download and Defacement,attPhorumPHPForumAdministrationPackageMultipleVulnerabilities,119
+LifeType index.php Cross-Site Scripting,LifeTypeXSS,79
+WordPress Cover WP Theme Cross-Site Scripting,WordPressCoverWPThemeXSS,79
+Windmail.exe Shell Command Execution,attShellCommandExecution,77
+Pluck theme.php Remote File Inclusion,PluckthemesphpRFI,94
+RegistryManipulation,TPHidden_OWB_RegistryManipulation,489
+phpWebSite topics.php SQL Injection,phpWebSitetopicsSQLInjection,89
+SQL-Ledger Path Traversal,SQLLedgerPathTraversal,22
+.NET Solution File Download,attSolutionFile,20
+Quick.Cart and Fastilo index.php Cross-Site Scripting,QuickCartandFastiloXSS,79
+Path Traversal,TPHidden_WB_PathTraversal,22
+Apache Web Server HTTP Request Denial of Service,attCWVApacheOverflow,189
+phpGroupWare Path Traversal,phpGroupWarePathTraversal,22
+ABAP Phishing HTML,TPHidden_OWB_ABAP_Phishing_HTML,16
+Seditio users.php SQL Injection,SeditiousersphpSQLInjection,89
+Comersus Shopping Cart Cross-Site Scripting,cwvComersusCartXSS,79
+MyBB Multiple SQL Injection,MyBBMultSQLInjection,89
+Comm100 Forum Redirect.aspx URL Redirection,Comm100ForumRedirectaspxURLRedirection,601
+AdMan editCampaign.php SQL Injection,AdManeditCampaignphpSQLInjection,89
+Nucleus plugadmin.php Path Traversal,NucleusPathTraversal,22
+dotProject index.php SQL Injection,dotProjectindexphpSQLInjection,89
+Apache Tomcat Context Administration Tool Unprivileged Access,ApacheTomcatContextAdministrationToolUnprivilegedAccess,565
+Iatek PortalApp Cross-Site Scripting,cwvIatekPortalAppXSS,79
+MyBB generic_error.php Cross-Site Scripting,MyBBgenericerrorphpXSS,79
+Microsoft SharePoint Cross-Site Scripting,MicrosoftSharePointXSS,79
+ABAP AccessControl AuthCheck RFC,TPHidden_OWB_ABAP_AccessControl_AuthCheck_RFC,565
+MusicBox Multiple Cross-Site Scripting,MusicBoxMultXSS,79
+phpBannerExchange resetpw.php Path Traversal,phpBannerExchangePathTraversal,22
+ModernBill admin.php SQL Injection,ModernBilladminSQLInjection,89
+Application Error - Invasive Check,attUndefinedStateInvasive,550
+Geeklog profiles.php Cross-Site Scripting,GeeklogprofilesphpXSS,79
+VBZoom Cross-Site Scripting,cwvVBZoomXSS,79
+bitweaver Multiple Cross-Site Scripting in Path - OBSOLETE DUE TO BEING A DUPLICATE,bitweaverMultipleXSSII,79
+Sphider configset.php Path Traversal,SphiderPathTraversal,22
+IIS 4.0 ExAir Denial of Service,IIS40DenialofService,119
+Web Server Access Control Files Improper Permissions Setting,cwvHtAccessFiles,20
+Openfire login.jsp Cross-Site Scripting,OpenfireloginjspXSS,79
+ABAP Command Dangerous,TPHidden_OWB_ABAP_Command_Dangerous,189
+JSPWiki Edit.jsp Path Traversal,JSPWikiEditjspPathTraversal,22
+JBoss Web Management Console Authentication Bypass,JBossConsoleAuthenticationBypass,264
+Fusetalk Multiple Cross-Site Scripting,FusetalkMultipleXSS,79
+ModernBill user.php SQL Injection,ModernBillSQLInjection,89
+WordPress SQL Injection,WordPressSQLInjection,89
+artmedic CMS index.php Path Traversal,artmedicCMSindexphpPathTraversal,22
+Kmita FAQ search.php Cross-Site Scripting,KmitaFAQXSS,79
+SOAP Web Services Directory Traversal,SoapDirTraversal,22
+PHP Album main.php Cross-Site Scripting,PHPAlbummainhpXSS,79
+Caucho Resin Server Example Servlet Path Disclosure ,cwvResinPath,20
+MyBB managegroup.php Cross-Site Scripting,MyBBmanagegroupXSS,79
+JBoss Malformed HTTP Request Information Disclosure,JBossMalformedHTTPRequestInformationDisclosure,20
+FreeNAS index.php Cross-Site Scripting,FreeNASindexphpXSS,79
+Serendipity serendipity_admin.php SQL Injection,SerendipityserendipityadminphpSQLInjection,89
+@Mail WebMail Multiple Cross-Site Scripting,AtMailWebMailMultipleXSS,79
+Java Applet Possible De-compilation,GD_AppletDecompilation,20
+JSPWiki Multiple Cross-Site Scripting,JSPWikiMultipleXSS,79
+Musicbox index.php Cross-Site Scripting,MusicboxXSS,79
+Dragonfly Shopping Cart SQL Injection,attDragonflyShopCartSQLInjection,89
+Seditio plug.php SQL Injection,SeditiopagsubSQLInjection,89
+phpList index.php Path Traversal,phpListindexphpPathTraversal,22
+MyCalendar index.php Cross-Site Scripting,MyCalendarindexphpXSS,79
+Authentication Credentials Cookies,TPHidden_OWB_Authentication_Credentials_Cookies,89
+Malicious Dynamic Code Construction,TPHidden_OWB_Malicious_DynamicCode_Construction,16
+Snitz Forums 2000 Database Retrieval,SnitzForums2000DatabaseRetrieval,264
+WordPress Multiple base64 Redirection Cross-Site Scripting,WordPressMultiplebase64RedirectionXSS,79
+Unix File Parameter Alteration ,attFileUnix,22
+Adobe ColdFusion Multiple Path Traversal,AdobeColdFusionMultiplePathTraversal,22
+Credit Card Number Pattern Found (American Express) in Parameter Value Over Unencrypted Connection,GD_CreditCardAmericanExpressParameterNotSSL,311
+SunShop Shopping Cart index.php Cross-Site Scripting,SunShopShoppingCartXSS,79
+Verisign''s haydn.exe CGI script Cross-Site Scripting,VerisignhaydnexeXSS,79
+Internal IP Disclosure Pattern Found in Parameter Value,paramValueCheckInternalIP,200
+DirectAdmin CMD_DOMAIN Cross-Site Scripting,DirectAdminCMDDOMAINXSS,79
+Authentication,TPHidden_OWB_Authentication,89
+Denial-of-Service,TPHidden_WB_DoS,730
+MODx "a" parameter (index.php) SQL Injection,MODxaparamSQLInjection,89
+Web Application Source Code Disclosure Pattern Found,GD_SourceCodeDisclosure,540
+PhpWebGallery category.php SQL injection,PhpwebgallerySQLInjection,89
+Apache Web Server Chunked Encoding ,attApacheChunked,189
+HTTP Request Forwarding (Web Proxy) Detected,attWebProxy,489
+Missing HttpOnly Attribute in Session Cookie,attRespCookieNotHttpOnlySessionCookie,312
+ASP.NET Project Conversion Report Detected,ASPNETProjectConversionReportDetected,20
+OneCMS staff.php SQL Injection,OneCMSstaffphpSQLInjection,89
+ABAP Native SystemCall,TPHidden_OWB_ABAP_Native_SystemCall,189
+paFileDB articles.php SQL Injection,paFileDBarticlesphpSQLInjection,89
+Conservatives Scripts Remote Shell Execution,attConservativesScriptsVulnerableToRemoteShellExecution,77
+FogBugz default.asp Cross-Site Scripting,FogbugzXSS,79
+ezContents headeruserdata.php SQL Injection,ezContentsSQLInjection,89
+couponZONE local.cfm Path Disclosure,couponZONEPathDisclosure,307
+AdMan viewStatement.php SQL Injection,AdManSQLInjection,89
+Netscape Enterprise Server ''..'' Denial of Service,cwvNetscapeDotDotDoS,400
+Phishing Through Flash (ActionScript 3),AS3_PhishingThroughFlash,74
+Apache on Win32 php.exe Arbitrary File Retrieval,cwvPHPWin32FileRetrieval,22
+XMB Cookie Data SQL Injection,XMBSQLInjection,89
+Censura censura.php SQL Injection,CensuracensuraphpSQLInjection,89
+OpenCms search.html Cross-Site Scripting,OpenCmsXSS,79
+Database Access,TPHidden_WB_DBAccess,20
+AnalogX SimpleServer:WWW Remote Command Execution,cwvSimpleServerCommandExec,77
+SiteMinder Cross-Site Scripting,attSiteMinderXSS,79
+MyBB private.php SQL Injection,MyBBprivateSQLInjection,89
+Habari Multiple Cross-Site Scripting,HabariMultipleXSS,79
+Microsoft FrontPage Server Extensions To Do List Found,MicrosoftFrontPageToDoList,20
+Invision Power Board index.php SQL Injection - OBSOLETE BECAUSE IT WAS CONSOLIDATED TO ANOTHER ATTACK,IPBSQLInjection2,307
+Validation Encoding Required Struts,TPHidden_OWB_Validation_EncodingRequired_Struts,16
+Moodle view_entry.php SQL Injection,MoodleviewentryphpSQLInjection,89
+JobSite Professional file.php SQL Injection,JobSiteProfessionalfilephpSQLInjection,94
+Matt Kruse Calendar Script Remote Shell Command Execution,attMattKruseCalendarScriptVulnerableToRemoteShellCommandExecution,77
+Charts MOD for phpBB charts.php Cross-Site Scripting,phpBBchartsphpXSS,79
+Web Socket Manipulation,jsSocketManipulation,79
+Validation Regex,TPHidden_OWB_Validation_Regex,16
+VideoSearchScript index.php Cross-Site Scripting,VideoSearchScriptindexphpXSS,79
+PunBB misc.php Cross-Site Scripting,PunBBmiscphpXSS,79
+BEA WebLogic DOS Device Denial of Service,cwvWeblogicDOSDeviceDoS,119
+phpCOIN auxpage.php Path Traversal,phpCOINPathTraversal,22
+Dual Session Fixation,jsDualSessionFixation,384
+Robots.txt File Web Site Structure Exposure,attRobotsTxt,20
+Orion Network Performance Monitor Multiple Cross-Site Scripting,OrionNetworkPerformanceMonitorMultipleXSS,79
+SMBCMS Site Search SQL Injection,SMBCMSSearchSQLInjection,89
+Coppermine Photo Gallery index.php Path Traversal,CopperminePhotoGalleryPathTraversal2,22
+Absolute Image Gallery gallery.asp SQL Injection,AbsoluteImageGallerygalleryaspSQLInjection,89
+TWiki Multiple Cross-Site Scripting (version 5.0.2),TWikiMultipleXSSversion502,79
+IBM Tivoli Access Manager for e-business pkmslogout Path Traversal,IBMTivoliAMDirectoryTraversal,22
+Clever Copy results.php SQL Injection,CleverCopyresultsphpSQLInjection,89
+Bit 5 Blog processlogin.php SQL Injection,Bit5BlogSQLInjection,89
+Multiple Vendor XML Parser DTD Parameter Entities Denial of Service,attMultipleVendorXMLParamentityExplosion,119
+Mambo index2.php SQL Injection,MamboSQLInjection,89
+ColdFusion MX Probe.cfm Path Disclosure,cwvProbeCfmPathDisc,200
+PHP Live! message_box.php Cross-Site Scripting,PHPLivemessageboxphpXSS,79
+ampleShop Multiple SQL Injection,ampleShopMultipleSQLInjection,89
+.NET VB File Download,DotNETVBFileDownload,20
+Concurrency Singleton,TPHidden_OWB_Concurrency_Singleton,489
+MkPortal pmpopup.php Cross-Site Scripting (Versions below and including 1.0),MkPortalpmpopupXSS,79
+Cookie Cart Password File Exposure,cwvCookieCartPasswdFile,20
+Finger Server CGI  Shell Command Execution,attTheFingerServerCGIIsVulnerableToShellCommandExecution,77
+PCCS MySQL Database Admin Tool Administrator Password Disclosure,attDisclosureOfAdministratorPasswordInPCCSMySQLDatabaseAdminTool,565
+TYPO3 Cumulus Tagcloud Extension tagcloud.swf Cross-Site Scripting,TYPO3CumulusTagcloudExttagcloudswfXSS,79
+Oracle Reports Server File Download,OracleReportsServerFileDownload,22
+SAXON example.php SQL Injection,SAXONexamplephpSQLInjection,89
+bitweaver Path Disclosure,bitweaverPathDisclosure,307
+Joomla! index.php Path Disclosure,JoomlaPathDisclosure,307
+VirtueMart Multiple Cross-Site Scripting,VirtueMartMultipleXSS,79
+WordPress NextGEN Gallery Plugin media-rss.php Cross-Site Scripting,WordPressNextGENGalleryPluginmediarssphpXSS,79
+DUportal cat.asp SQL Injection,DUportalSQLInjection,89
+Cacheable SSL Page Found,attCachedSSL,525
+CakePHP vendors.php Path Traversal,CakePHPPathTraversal,22
+Geeklog moderation.php SQL Injection,GeeklogSQLInjection,89
+TeamSpeak Denial of Service,TeamSpeakDoS,119
+Page Mark as a Login Page,loginPageMarkRule,548
+Microsoft IIS WebDav Directory Listing,attWebDavListing,548
+SQL Injection File Write (requires user verification),attMSSQLInjectionProbe2,89
+FuseTalk Multiple Cross-Site Scripting (Version 3.2),FuseTalkMultipleXSSVersion32,79
+DVGuestbook Cross-Site Scripting,DVGuestbookXSS,79
+Joomla Nice Talk Component index.php SQL Injection,JoomlaNiceTalkComponentindexphpSQLInjection,89
+eSyndiCat Directory Software cron.php Path Traversal,eSyndiCatDirectorySoftwarePathTraversal,22
+Microsoft Outlook Web Access for Exchange URL Redirection,MicrosoftOutlookWebAccessforExchangeURLRedirection,601
+Oracle Portal 10g Cross-Site Scripting,OraclePortalpageXSS,79
+PHP Links vote.php SQL Injection,PHPLinksvotephpSQLInjection,89
+Probe XSS,probeXSS,79
+VisNetic Mail Server include.php File Download,VisNeticMailServerFileDownload,489
+MD News admin.php SQL Injection,MDNewsSQLInjection,89
+Oracle Reports Server Cross-Site Scripting,cwvOracleReportsServerXSS,79
+Cross-Site Scripting using Malicious RSS Feed Inclusion,RSSMaliciousFileInclusion,79
+Dokeos Multiple Cross-Site Scripting,DokeosMultipleXSS2,79
+Lotus Domino CGI Script Source Disclosure,attLotusRevealSourceSpaceDot,200
+Joomla! TimeTrack Component index.php SQL Injection,JoomlaTimeTrackComponentindexphpSQLInjection,89
+Google Mini Search "ie" Cross-Site Scripting,GoogleMiniSearchieXSS,79
+ImpressCMS CSSTidy css_optimiser.php Cross-Site Scripting,ImpressCMSCSSTidycssoptimiserphpXSS,79
+Original Page Request,mutOriginal,77
+Etomite index.php Cross-Site Scripting,EtomitindexphpXSS,79
+JSP File Inclusion,JSPFileInclusion,99
+phpCOIN mod.php SQL Injection,phpCOINmodphpSQLInjection,89
+Sparta Systems TrackWise TeamAccess Multiple Cross-Site Scripting in Path,SprtSstmsTrckWsTeamAcesMultXSSinPath,79
+BEA WebLogic and IBM WebSphere Extension Source Disclosure,WebLogicWebSphereExtSourceDisc,20
+Blind SQL Injection,attBlindSqlInjectionStrings,89
+phpwcms spaw_control.class.php Path Traversal,phpwcmsPathTraversal,22
+Bloo index.php SQL Injection,BlooindexphpSQLInjection,89
+Horde Webmail addevent.php Cross-Site Scripting,HordeWebmailaddeventphpXSS,79
+Web Content Management Cross-Site Scripting,cwvWebContentManagementXSS,79
+PHP Live! Multiple Cross-Site Scripting,PHPLiveMultipleXSS,79
+Rezervi Generic Multiple Remote File Inclusion,RezerviGenericMultipleRemoteFileInclusion,94
+User input must not be part of a file resource locator,TPHidden_OWB_ABAP_Injection_File_RFC_REMOTE_FILE,489
+Sojourn.cgi Directory Traversal ,attSojourncgiDirectoryTraversalVulnerability,22
+webSPELL getlang.php SQL Injection,webSPELLgetlangphpSQLInjection,22
+Xoops Multiple Path Traversal (Versions 2.3.x),XoopsMultiplePathTraversal2,22
+RunCms index.php Cross-Site Scripting in Path,RunCmsindexphpXSSinPath,79
+TikiWiki tiki-listmovies.php Path Traversal,TikiWikitikilistmoviesphpPathTraversal,22
+Oracle 10g HTTP Response Splitting,OraclePortalHTTPResponseSplitting,113
+DEV Web Management System Cross-Site Scripting,DevWebManagementXSS,79
+PHP iCalendar index.php Cross-Site Scripting,PHPiCalendarindexphpXSS,79
+VirtueMart Multiple Remote File Inclusion,VirtueMartMultipleRFI,94
+Malicious Debugger,TPHidden_OWB_Malicious_Debugger,16
+eFiction toplists.php SQL Injection,eFictiontoplistsphpSQLInjection,89
+When an AUTHORITY-CHECK is performed&comma; all fields that are important in the current context must be checked,TPHidden_OWB_ABAP_AccessControl_AuthCheck_Dummy,565
+Insecure Indexing ,attInsecureIndexing,612
+Arctic index.php SQL Injection,ArcticindexphpSQLInjection,89
+Oracle Siebel Loyalty Management start.swe Cross-Site Scripting,OracleSiebelLoyaltyManagementstartsweXSS,79
+xFlow index.cgi Cross-Site Scripting,xFlowXSS,79
+miniBB Multiple Cross-Site Scripting,miniBBMultipleXSS,89
+ColdFusion MX 6.1 on IIS Source Code Disclosure,cwvColdFusionMXSourceDisc,20
+Exponent Directory Listing,ExponentDirectoryListing,548
+Apache mod_ntlm Overflow Remote Command Execution,attModNTLMOverflow,189
+ASPBB Multiple Cross-Site Scripting,ASPBBMultipleXSS,79
+Xoops iContent Module Remote File Inclusion,XoopsiContentModuleRFI,94
+WordPress Count Per Day Plugin notes.php SQL Injection,WordPressCountPerDayPluginnotesphpSQLInjection,89
+BLOG:CMS Multiple SQL Injection,BLOGCMSMultipleSQLInjection,89
+LifeType admin.php Cross-Site Scripting (Version 1.2.7),LifetypeadminphpXSS,79
+Adobe Products XML External Entity Injection,AdobeProductsMultipleXMLExternalEntityInjection,91
+PunBB search.php SQL Injection,PunBBsearchphpSQLInjection,89
+nph-maillist.pl Remote Command Execution Vulnerability,attNphmaillistplRemoteCommandExecutionVulnerability,77
+WebTester directions.php SQL Injection,WebTesterSQLInjection,89
+OneOrZero Helpdesk index.php Cross-Site Scripting,OneOrZeroHelpdeskXSS,79
+UBB.threads ubbthreads.php SQL Injection,UBBthreadsubbthreadsphpSQLInjection,89
+WordPress theme.php Command Execution,WordPressthemephpCommandExecution,20
+PHP-Nuke NukeC30 Module SQL Injection,PHPNukeNukeC30ModuleSQLInjection,89
+Unauthorized Access To PL/SQL Administration Page,attDADadmin,565
+XOOPS Makale Module makale.php SQL Injection,XOOPSMakaleModulemakalephpSQLInjection,89
+ABAP DB CrossClient,TPHidden_OWB_ABAP_DB_CrossClient,565
+Validation Required DB Connection String Manipulation,TPHidden_OWB_Validation_Required_DBConnectionStringManipulation,16
+Unsigned __VIEWSTATE Parameter,attViewStateNotSigned,16
+Apache Tomcat Weak Default Administrative Account Credentials,ApacheTomcatWeakAdministrativeAccountCredentials,16
+Pinnacle Cart index.php Cross-Site Scripting,PinnacleCartXSS,79
+Simple Forum forum.php Cross-Site Scripting,SimpleForumforumphpXSS,79
+WordPress SEO Tools Plugin get_download.php Path Traversal,WordPressSEOToolsPlugingetdownloadphpPathTraversal,22
+Apache Jakarta Tomcat URL Parsing Directory Listing,cwvTomcatDirListingNull,548
+Apache access_log Information Disclosure,ApacheaccesslogInfDisc,20
+phpArcadeScript Cross-Site Scripting,phpArcadeScriptXSS,79
+Joomla JGrid Component index.php Path Traversal,JoomlaJGridComponentindexphpPathTraversal,22
+HTTP User-Agent Header SQL Injection,attUserAgentSqlInjection,89
+Swiki Cross-Site Scripting in Path,SwikiXSSinPath,79
+Link Injection (facilitates Cross-Site Request Forgery),attLinkInjection,74
+Sun ONE / iPlanet Administration Server Directory Traversal,cwvSunONEdirTraversal,22
+iPlanet / Netscape Enterprise Server Web Publisher Buffer Overflow,cwvNetscapePublisherBufferOverflow,189
+Encryption Not Enforced,attHttpsToHttp,525
+Netscape Enterprise Server Directory Listing,attNetscapeIndexing,548
+SOAP Web Services Cross-Site Scripting,SoapXSS,79
+Contrexx CMS index.php Cross-Site Scripting,ContrexxCMSXSS,79
+Ultimate PHP Board (UPB) Cross-Site Scripting,UPBCSS,79
+Microsoft IIS UNC Mapped Virtual Host Source Code Disclosure,attIISUnc,20
+Iatek PortalApp SQL Injection,cwvIatekPortalAppSQLInjection,89
+PHP-Nuke Nuke Mobile Entertainment Module Path Traversal,PHPNukeNukeMobileEntertainmentModulePathTraversal,22
+PHP-Nuke Download Module SQL Injection,PHPNukemodulesphpSQLInjection,89
+Buffer Overflow Internal,TPHidden_OWB_BufferOverflow_Internal,189
+Only use Open SQL in order to access the SAP database,TPHidden_OWB_ABAP_Injection_SQL_C_DB_FUNCTION,89
+Remote RSS Feed Inclusion,RSSRemoteFileInclusion,489
+Allaire JRun 2.3.X Sample Source Disclosure,attAllaireJRunShowSource,22
+Sugar Sales index.php SQL Injection,SugarSalesSQLInjection,89
+PHP-Fusion ratings_include.php SQL Injection,PHPFusionRatingSQLInjection,89
+DRZES HMS login.php Cross-Site Scripting,DRZESHMSXSS,79
+IIS 5.1 Dangling Pointer,IIS51DP,20
+Do not change the value of sy(st)-mandt,TPHidden_OWB_ABAP_SY_MANDT,16
+PHP-Fusion members.php Cross-Site Scripting,PHPFusionMembersXSS,79
+Plogger Multiple SQL Injection,PloggerMultipleSQLInjection,89
+Oracle Application Server PL/SQL Unauthorized SQL Query Execution,attOwaUtilSQLexecution,89
+Mail Machine mailmachine.cgi Path Traversal,MailMachinemailmachinecgiPathTraversal,22
+PHP-Fusion Book Panel Infusion books.php SQL Injection,PHPFusionBookPanelInfusionbooksphpSQLInjection,89
+Sun Java Application Server Path Disclosure,SunJavaAppServerPathDisclosure,20
+Cross-Site Scripting in Parameter Name,attXSSinParamName,307
+Request Cross-Site Scripting,attReqCrossSiteScripting,79
+Microsoft Site Server adSamples Information Disclosure,attCWVAdSamples,20
+MyBB search.php SQL Injection,MyBBsearchphpSQLInjection,89
+AWStats awstats.pl Cross-Site Scripting,AWStatsXSS,79
+DEV Web Management System SQL Injection,DevWebManagementSQLInjection,89
+ABAP File Upload,TPHidden_OWB_ABAP_File_Upload,16
+phpBB memberlist.php SQL Injection,phpBBmemberlistphpSQLInjection,89
+Direct Access to Administration Pages,DirectAccesstoAdministrationPages,425
+Oracle 10g Dynamic Monitoring Services Cross-Site Scripting,Oracle10gDynamicMonitoringServicesXSS,79
+zenphoto rss.php SQL Injection,zenphotorssphpSQLInjection,89
+Calendarix Multiple SQL Injection,CalendarixMultipleSQLInjection,89
+Microsoft IIS ViewCode.asp and Winmsdp.exe Source Code Disclosure,attCWVShowCode2,22
+Insecure Cryptographic Storage,TPHidden_WB_InsecureCryptoStorage,311
+Credit Card Number Pattern Found (Discovery) in Parameter Value,GD_CreditCardDiscoverParameterIsSSL,311
+Microsoft IIS and Site Server File Upload and Command Execution,MicrosoftIISwSiteServerFileUpload,489
+Microsoft Active Server Pages Information Disclosure,MicrosoftActiveServerPagesInformationDisc,20
+Article Friendly Multiple SQL Injection,ArticleFriendlyMultipleSQLInjection,89
+pTools index.asp SQL Injection,pToolsSQLInjection,89
+Validation Required File Path Write,TPHidden_OWB_Validation_Required_FilePath_Write,22
+DOM Based Cross-Site Scripting and Open Redirect,jsDOMXSSandOpenRedirect,79
+JBoss Java Management Extension Console Authentication Bypass,JBossJMXConsoleAuthenticationBypass,264
+Etomite index.php Path Traversal,EtomiteindexphpPathTraversal,22
+Directory Listing Pattern Found,GD_DirListing,548
+Apache error_log Information Disclosure,ApacheerrorlogInfDisc,20
+Credit Card Number Pattern Found (American Express),GD_CreditCardAmericanExpress,200
+Simplog Multiple SQL Injection - OBSOLETE,SimplogMultipleSQLInjections,307
+Geeklog Media Gallery Module Remote File Inclusion,GeeklogMediaGalleryModuleRFI,94
+bitweaver Multiple SQL Injection,bitweaverMultipleSQLInjection,89
+OracleJSP Translator Source Code Disclosure,attOwaJSPtrans,20
+PHP phpinfo() Cross-Site Scripting (Versions 4.4.2 and 5.1.2),PHPphpinfoXSS,79
+JavaBB member_list.jbb Cross-Site Scripting,JavaBBmemberlistjbbXSS,79
+SZUserMgnt login.verify.php SQL Injection,SZUserMgntSQLInjection,89
+Authentication Credentials Unprotected,TPHidden_OWB_Authentication_Credentials_Unprotected,89
+Webteacher Webdata File Contents Retrieval,attWebteachersWebdataFileContentsRetrievalVulnerability,22
+Helpdesk Issue Manager SQL Injection,HelpdeskIssueManagerSQLInjection,89
+SOAP Manipulation,TPHidden_WB_SOAPManipulation,707
+DirectAdmin CMD_DB_VIEW Cross-Site Scripting,DirectAdminCMDDBVIEWXSS,79
+CubeCart index.php Cross-Site Scripting,CubeCartindexphpXSS,79
+XMB u2u.php SQL Injection,XMBu2uphpSQLInjection,89
+Cobalt RaQ Path Traversal,CobaltRaQPathTraversal,22
+PhpWebGallery Multiple Path Traversal,PhpWebGalleryinitincphpPathTraversal,22
+Kayako SupportSuite Cross-Site Scripting,KayakoSupportSuiteXSS,89
+i-Gallery Cross-Site Scripting,iGalleryXSS,79
+Microsoft FrontPage Server Extensions Administration Interface,FrontPageServerExtensionsAdministrationInterface,565
+Never feed (external) input to Function Module RFC_REMOTE_PIPE,TPHidden_OWB_ABAP_Injection_OS_RFC_REMOTE_PIPE,77
+ASPBB perform_search.asp Cross-Site Scripting,ASPBBperformsearchaspXSS,79
+Firepass 4100 SSL VPN my.support.php3 Cross-Site Scripting,FirepassVPNXSS,79
+Compressed Directory Found,CompressedDirectoryFound,20
+Microsoft IIS Unicode Directory Traversal,attCwvUnicode,77
+MAXSITE index.php SQL Injection,MAXSITEindexphpSQLInjection,89
+Quality Comments Suspicious,TPHidden_OWB_Quality_Comments_Suspicious,20
+Phorum pm.php Path Traversal,PhorumpmphpPathTraversal,22
+IBM Net.Data Server Non-Existing File Request Virtual Root Disclosure,attNetCommerceD2WPathDisc,20
+e107 Multiple SQL Injection,e107MultipleSQLInjection,89
+ABAP DB Query Read,TPHidden_OWB_ABAP_DB_Query_Read,89
+MX Injection,GB_MXInjection,77
+Probe Apache Range Header Denial of Service,TPHidden_probeApacheRangeDoS,119
+InstantForum.NET Multiple Cross-Site Scripting,InstantForumNETMultipleXSS,79
+Invision Power Board Multiple SQL Injection,InvisionPowerBoardMultipleSQLInjection,89
+Credit Card Number Pattern Found (Visa) Over Unencrypted Connection,GD_CreditCardVisaNotSSL,311
+easyLink detail.php SQL Injection,easyLinkdetailphpSQLInjection,89
+PerlDiver "module" Cross-Site Scripting,PerlDiverXSS,79
+SOAP Web Services Server-Side Includes,SoapSSI,97
+Microsoft SharePoint 2007 Default.aspx Cross-Site Scripting,MicrosoftSharePointDefaultaspxXSS,79
+MAXdev MD-Pro index.php SQL Injection,MAXdevMDProSQLInjection,89
+MxBB Knowledge Base Module kb_constants.php Path Traversal,MxBBKnowledgeBaseModulePathTraversal,22
+IBM Lotus QuickPlace Main.nsf Cross-Site Scripting,IBMLotusQuickPlaceMainnsfXSS,79
+Quick.Cart Cross-Site Scripting in Parameter,QuickCartXSSinParameter,79
+Error Handling Missing,TPHidden_OWB_ErrorHandling_Missing,489
+Vanilla sortcategories.php SQL Injection,VanillasortcategoriesphpSQLInjection,89
+webSPELL index.php SQL Injectiom,webSPELLshowonlySQLInjectionVulnerability,89
+OpenSSL Malformed Client Key Buffer Overflow,attOpenSSL,189
+Centreon index.php Path Traversal,CentreonindexphpPathTraversal,22
+Etomite index.php SQL Injection (version 1.1),EtomiteindexphpSQLInjectionII,89
+Client-Side (JavaScript) Authentication Weakness,attJSPassword,89
+Caching Browser,TPHidden_OWB_Caching_Browser,20
+Cross Site Request Forgery,TPHidden_OWB_CrossSiteRequestForgery,79
+IBM WebSphere Installation Directory Absolute Path Disclosure,attIBMWebSphereRevealsTheAbsolutePathToItsInstallationDirectory,20
+Unexplored Params Detected,GB_UnexploredParamDetected,77
+Oracle Application Server "rwcgi60" Cross-Site Scripting,OracleApplicationServerXSS,79
+Fusebox fusebox5.php Remote File Include,Fuseboxfusebox5phpRFI,94
+HP OpenView NNM OvJavaLocale Buffer Overflow,HPOpenViewNNMBuf,119
+activeWeb contentserver Cross-Site Scripting,activeWebcontentserverXSS,79
+SOAP Web Services Insecure Indexing,SoapInsecureIndexing,612
+Microsoft Msadcs.dll Web Access,cwvMSADCSDLL,77
+e107 Lyrics Plugin lyrics_song.php SQL Injection,e107LyricsPluginlyricssongphpSQLInjection,89
+PHP Multipart/Form-Data Remote Command Execution,attPHPinstalled,189
+Joomla! Comlantis Visitors Google Map Component map_data.php SQL Injection,JoomlaCmlntsVstrsGglMpComponentmapdataphpSQLi,89
+MyBB Multiple Path Disclosure,MyBBMultiplePathDisclosure,20
+Adobe ColdFusion MX Path Disclosure,AdobeColdFusionMXPathDisclosure,20
+Cryptography Seed,TPHidden_OWB_Cryptography_Seed,307
+PhpGedView login.php Cross-Site Scripting,PhpGedViewloginphpXSS,79
+RunCMS debug_show.php SQL Injection,RunCMSdebugshowphpSQLInjection,89
+IIS Default Installation Page Pattern Found,GD_IISDefaultPage,20
+ZyWALL Referer Header Cross-Site Scripting,ZYWALLRefererHeaderXSS,79
+WordPress Multiple Cross-Site Scripting,WordPressMultipleXSS,79
+Dragonfly Shopping Cart eShoplifting,attDragonflyShopCartShoplifting,489
+Cisco Unified Communications Manager Cross-Site Scripting,CiscoCallManagerXSS,79
+SAP Internet Communication Manager Denial of Service,SAPInternetCommunicationManagerDoS,119
+phpBB Multiple Path Disclosure,phpBBMultiplePathDisclosure,307
+Mephisto Cross-Site Scripting,MephistoXSS,79
+System Accounts Enumeration and Domain Name Retrieval,attEnumarationOfSystemAccountsAndDomainNameRetrieval,20
+BEA WebLogic Server Double Dot Buffer Overflow,attWebLogicDoubleDotOverflow,189
+WordPress WP Comment Remix Plugin SQL Injection,WordPressWPCommentRemixPluginSQLInjection,89
+Validation Client,TPHidden_OWB_Validation_Client,16
+Never feed (external) input to kernel function SYSTEM,TPHidden_OWB_ABAP_Injection_OS_SYSTEM,77
+Credit Card Number Pattern Found (Visa) in Parameter Value Over Unencrypted Connection,GD_CreditCardVisaParameterNotSSL,311
+IBM BladeCenter Advanced Management Module Information Leakage,IBMBladeCenterAdvancedManagementModuleInfLeak,20
+WebSphere Application Server Administration Console Link Injection (facilitates Cross-Site Request Forgery),WebSphereAppSvrAdministrationConsoleXSRF,74
+phpBB viewtopic.php Path Disclosure,phpBBviewtopicphpPathDisclosure,307
+FireStats Multiple Cross-Site Scripting,FireStatsMultipleXSS,79
+PHPKIT include.php SQL Injection,PHPKITincludephpSQLInjection,89
+ABAP Quality Condition SYMANDT,TPHidden_OWB_ABAP_Quality_Condition_SYMANDT,20
+ABAP Assertion Active,TPHidden_OWB_ABAP_Assertion_Active,550
+Port Manipulation,jsPortManipulation,89
+RedCMS profile.php SQL Injection,RedCMSSQLInjection,89
+StoreBot 2002 Standard Edition manage.asp Cross-Site Scripting,StoreBotXSS,79
+AMFPHP Service Browser Pubic Access,AMFPHPServiceBrowserPubicAccess,20
+VirtueMart Multiple SQL Injection,VirtueMartMultipleSQLInjection,89
+Validation Required WriteToStream,TPHidden_OWB_Validation_Required_WriteToStream,489
+Oracle Application Server SQL Injection,OracleApplicationServerSQLInjection,89
+b1gMail hilfe.php Cross-Site Scripting,b1gMailhilfephpXSS,79
+Setter Manipulation,TPHidden_WB_SetterManipulation,75
+CoMoblog img.php Cross-Site Scripting,CoMoblogXSS,79
+Stored Cross-Site Scripting,GV_StoredXSS,79
+phpCOIN Multiple Cross-Site Scripting,phpCOINMultXSS,79
+PHP-Fusion show_event.php SQL Injection,PHPFusionshoweventphpSQLInjection,89
+H-Sphere "Mass Mail" menu Cross-Site Scripting,HSphereMassMailXSS,79
+Xoops Horoscope Module footer.php Remote File Inclusion,XoopsHoroscopeModulefooterphpRFI,94
+Microsoft IIS With .NET Path Disclosure,cwvIISdotNetPath,20
+ClipShare channel_detail.php SQL Injection,ClipSharechanneldetailphpSQLInjection,89
+SOAP Web Services SQL Injection ,attSoapSQLInjection,89
+Credit Card Number Pattern Found (Discovery) in Parameter Value Over Unencrypted Connection,GD_CreditCardDiscoverParameterNotSSL,311
+Vice Stats vs_resource.php SQL Injection,ViceStatsSQLInjection,89
+Apache server-status Information Disclosure,ApacheserverstatusInfDisc,20
+Runcms "lid" Cross-Site Scripting,RuncmsXSS,79
+WordPress WP Featured Post with Thumbnail Plugin timthumb.php Cross-Site Scripting,WPFeaturedPostwThumbnailPlgintimthumbphpXSS,79
+MoinMoin Path Disclosure,MoinMoinPathDisclosure,20
+Novell iManager Long TREE Field Off-By-One Denial of Service,NovelliManagerLongTREEFieldOffByOneDoS,119
+Musicbox index.php SQL Injection,MusicboxSQLInjectionII,89
+Credit Card Number Pattern Found (Mastercard) in Parameter Value,GD_CreditCardMasterCardParameterIsSSL,311
+eFront Multiple Cross-Site Scripting,eFrontMultipleXSS,79
+RadBids Gold v2 Directory Traversal,cwvRadBidsGoldV2DirectoryTraversal,22
+Elastix Multiple Cross-Site Scripting,ElastixMultipleXSS,79
+webSPELL index.php Cross-Site Scripting,webSPELLindexphpXSS,79
+WordPress Multiple Remote File Inclusion,WordPressMultipleRFI,94
+Validation Required FilePath,TPHidden_OWB_Validation_Required_FilePath,22
+MyBB admin/index.php Cross-Site Scripting,MyBBadminindexphpXSS,79
+Moodle index.php SQL Injection,MoodleSQLInjection,89
+Omnistar Live kb.php Cross-Site Scripting,OmnistarLivekbphpXSS,79
+GPS CMS print.asp SQL Injection,GPSCMSprintaspSQLInjection,89
+WordPress WP-Forum Plugin user parameter SQL Injection,WordPressWPForumPluginuserSQLInjection,89
+Drupal Brilliant Gallery Module SQL Injection,DrupalBrilliantGalleryModuleSQLInjection,89
+XMB u2u.php Cross-Site Scripting,XMBu2uphpXSS,79
+IBM BladeCenter Advanced Management Module cindefn.php Path Traversal,IBMBladeCenterAdvancedManagementModulecindefnphpPathTrav,22
+Allaire ColdFusion Source Code Disclosure and Denial of Service,attMultipleAllaireColdFusionVulnerabilities,119
+WWWboard.pl Password Retrieval,attWWWboardplPasswordRetrievalVulnerability,565
+MyBB private.php Cross-Site Scripting,MyBBprivatephpXSS,79
+Apache Web Server on Non-Unix Platforms Directory Traversal,cwvApacheWin32FileDisclosure,22
+Miniweb index.php SQL Injection,MiniwebindexphpSQLInjection,89
+ABAP Injection SQL Read,TPHidden_OWB_ABAP_Injection_SQL_Read,89
+ABAP AccessControl Proprietary,TPHidden_OWB_ABAP_AccessControl_Proprietary,565
+CuteNews search.php Cross-Site Scripting,CuteNewsXSS,79
+SilverStripe form.php Cross-Site Scripting,SilverStripeformphpXSS,79
+Injection,TPHidden_OWB_Injection,489
+CosmicShoppingCart Multiple Cross-Site Scripting,CosmicShoppingCartXSS,79
+ABAP BackDoor HiddenCode,TPHidden_OWB_ABAP_BackDoor_HiddenCode,16
+X509 Certificate Non Portable,TPHidden_OWB_X509Certificate_NonPortable,16
+Email Address Pattern Found,GD_EmailAddress,359
+SSL Certificate About to Expire,SSL_CertAlmostExpired,298
+Open Text ECM Multiple Cross-Site Scripting,OpenTextECMMultipleXSS,79
+Juniper IVE URL Redirection,JuniperIVEURLRedirection,601
+SKForum Multiple Cross-Site Scripting,SKForumMultipleXSS,79
+EnvolutionFR modules.php SQL Injection,EnvolutionFRSQLInjection,89
+SAP Internet Transaction Server Path Disclosure,cwvSAPpathDisc,20
+Privilege Escalation using a Non-Authenticated User,PE_Test_nonAuth,699
+Sun Java System Identity Manager Cross-Site Scripting,SunJavaSystemIdentityManagerXSS,79
+Joomla! SmartSite Component index.php Path Traversal,JoomlaSmartSiteComponentindexphpPathTraversal,22
+CVS Directory Browsing,attCVS,548
+Starting-Point Rules,startingPointRule,548
+BEA Aqualogic Information Disclosure within HTML Comments,BEAPlumtreeInfDisclosureinHTMLComments,200
+PHP-Fusion Multiple Path Traversal,PHPFusionMultiplePathTraversal,22
+MKPortal index.php Cross-Site Scripting,MKPortalindexphpXSS,79
+Noah''s Classifieds index.php Cross-Site Scripting,NoahsClassifiedsXSS,79
+IBM Lotus Domino Cross-Site Scripting,attIBMLotusDominoXSS,79
+zenphoto full-image.php SQL Injection,zenphotofullimagephpSQLInjection,89
+Web Wiz Products Directory Listing,WebWizNewsPadDirectoryListing,22
+Allaire ColdFusion Start/Stop Script Denial of Service,attColdFusionStartStop,119
+MDPro My_eGallery Module index.php SQL Injection,MDProMyeGalleryModuleindexphpSQLInjection,89
+AContent Multiple Cross-Site Scripting,AContentMultipleXSS,79
+Zeus vs_diag.cgi Cross-Site Scripting,ZeusvsdiagcgiXSS,79
+Multiple Vendor Java Servlet Container Cross-Site Scripting,attJavaServletCss,79
+GWScripts News Publisher Access Control Bypass,attGWScriptsNewsPublisherAccessControlBypass,565
+Annuaire 1Two Cross-Site Scripting,cwvAnnuaire1TwoXSS,79
+Extropia WebBanner Remote Command Execution,attExtropiasWebBannerRemoteCommandExecution,77
+phpXplorer workspaces.php Path Traversal,phpXplorerPathTraversal,22
+Buffer Overflow Integer Overflow,TPHidden_OWB_BufferOverflow_IntegerOverflow,16
+Splunk segmentation_performance Cross-Site Scripting,SplunksegmentationperformanceXSS,79
+Microsoft Index Server %20 ASP Source Code Disclosure,attIIS20attack,20
+vBulletin Admin Control Panel index.php Cross-Site Scripting,vBulletinAdminControlPanelindexphpXSS,79
+Do not use a generic READ REPORT statement in custom code,TPHidden_OWB_ABAP_Report_Read,20
+phpPgAdmin index.php Path Traversal,phpPgAdminindexphpPathTraversal,22
+Apache Tomcat JSP Examples Cross-Site Scripting,ApacheTomcatJSPExamplesXSS,79
+Gbook.cgi Remote Command Execution,attGBookcgiRemoteCommandExecution,77
+IBM WebSphere Caching Proxy Denial of Service,IBMWebSphereCachingProxyDoS,119
+SSL Certificate Expired,SSL_CertExpired,298
+cPanel Cross-Site Scripting in Path,cPanelXSSinPath,79
+CMS Made Simple stylesheet.php SQL Injection,CMSMadeSimplestylesheetphpSQLInjection,89
+Perl-Evaluated Parameter Shell Commands Injection ,attParamEvalCommand,77
+PHP-Nuke MyHeadlines Module modules.php Cross-Site Scripting,PHPNukeMyHeadlinesModXSS,79
+Validation Required URL,TPHidden_OWB_Validation_Required_URL,74
+SimpleBlog default.asp SQL Injection,SimpleBlogdefaultaspSQLInjection,89
+Hidden Directory Detected,attDirectoryFound,20
+MoniWiki wiki.php Cross-Site Scripting,MoniWikiXSS,79
+WordPress Adserve Plugin SQL Injection,WordPressAdservePluginSQLInjection,89
+ThWboard showtopic.php SQL Injection,ThWboardSQLInjection,89
+BigBrother Remote File Download,attBigBrotherRemoteFileDownloadVulnerability,22
+MODx index.php Cross-Site Scripting (Versions below and including 0.9.1),MODxXSS,79
+Allaire ColdFusion Path Disclosure ,attColdFusionPathDisc,20
+Clever Copy Multiple SQL Injection,CleverCopyMultipleSQLInjection,89
+Simplog imagelist.php Cross-Site Scripting,SimplogimagelistXSS,79
+Add a Transient Token to the Site Model,attTransientAdd,615
+CS-Cart index.php SQL Injection,CSCartindexphpSQL,89
+DotNetNuke Default.aspx Cross-Site Scripting,DotNetNukeXSS,79
+Savant Web Server URI Buffer Overflow,attSavantBoF,189
+Authentication Entity,TPHidden_OWB_Authentication_Entity,89
+TWiki Multiple Cross-Site Scripting,TWikiMultipleXSS,79
+Log Forging,GB_LogForging,117
+Dokeos authldap.php Path Traversal,DokeosauthldapphpPathTraversal,22
+Credit Card Number Pattern Found (Mastercard) in Parameter Value Over Unencrypted Connection,GD_CreditCardMasterCardParameterNotSSL,311
+Clever Copy mailarticle.php SQL Injection,CleverCopySQLInjection,89
+Resin File Download,ResinFileDownload,20
+vBulletin Multiple Cross-Site Scripting (Version 4.0.2),vBulletinMultipleXSS402,79
+ABAP Injection SQL,TPHidden_OWB_ABAP_Injection_SQL,89
+Jetty Cross-Site Scripting in Path,JettyXSSinPath,79
+SessionManagement Cookies,TPHidden_OWB_SessionManagement_Cookies,16
+Global.asa File Sensitive Information Retrieval,attCWVGlobalAsa,20
+Credit Card Number Pattern Found (Diners Club),GD_CreditCardDinersClub,200
+TikiWiki tiki-graph_formula.php Remote PHP Code Execution,TikiWikiRemotePHPCodeExecution,94
+Host allows flash access from any domain,flashAllowsAccessFromAnyDomain,456
+IBM WebSphere Application Server Administrative Console Cross-Site Scripting,IBMWebSphereAppSrvAdminCXSS,79
+Joomla Joomla!12Pictures Component Remote File Inclusion,JoomlaJoomla12PicturesComponentRFI,94
+PostNuke admin.php and user.php Cross-Site Scripting,PostNuke_0_761_XSS,79
+OpenCMS File Download,OpenCMSFileDownload,22
+Cross Site Scripting Stored,TPHidden_OWB_CrossSiteScripting_Stored,79
+Email-Parameter Spoofing,attEmailSpoofing,472
+Multiple Joomla! Components SQL Injection,MultipleJoomlaComponentsSQLInjection,89
+Insecure Direct Object Reference in Flash (ActionScript 2),InsecureDirectObjectReferenceInFlash,74
+Apache AXIS Sample Servlet Information Leak,cwvApacheAxisInfoLeak,20
+OnePlug CMS SQL Injection,OnePlugCMSSQLInjection,89
+Tomcat Snoop Servlet Information Leakage ,attTomcatSnoopServletLeaksInformation,20
+RCS Directory Browsing,attRCS,548
+Plesk filemanager.php Path Traversal,PleskPathTraversal,22
+MxBB Portal index.php SQL Injection,MxBBPortalindexphpSQLInjection,89
+DNewsWeb Buffer Overflow and Remote Command Execution,attDNewsWebBufferOverflowEnablesRunningExecutablesOnTheServer,77
+Coldfusion Fusebox Cross-Site Scripting,cwvColdfusionFuseboxXSS,79
+Apache Web Server on Non-Unix Platforms Path Disclosure,cwvApacheWin32PathDisc,20
+Maian Weblog Mutiple SQL Injection,MaianWeblogSQLInjection,89
+cPanel autoinstall4imagesgalleryupgrade.php Cross-Site Scripting,cPanelautoinstall4imagesgalleryupgradephpXSS,79
+Apache Server on Redhat Linux Directory Listing,cwvRedHatDirIndex,548
+Infonautic Getdoc.cgi Unauthorized Access To Documents,attInfonauticsGetdoccgiMayAllowUnauthorizedAccessToDocuments,489
+Concrete5 Path Disclosure,Concrete5PathDisclosure,538
+Visual Studio .NET File Download,attDOTNETDownload,531
+WordPress Upload File Plugin wp-uploadfile.php SQL Injection,WordPressUploadFilePluginSQLInjection,89
+ASP.NET Custom Error Path Disclosure,ASPNETCustomErrorPathDisc,20
+Improper cgi-bin Directory Mapping Source Code Disclosure,attCgiBinSdb,20
+Open Virtual Desktop Session Manager Cross-Site Scripting,OpenVirtualDesktopSessionManagerXSS,79
+OpenBSD bgplg Cross-Site Scripting,OpenBSDbgplgXSS,79
+GTP iCommerce index.php Cross-Site Scripting,GTPXSS,79
+BlogSite Professional index.php SQL Injection,BlogSiteProfessionalSQLInjection,89
+Limbo CMS index.php SQL Injection - OBSOLETE BECAUSE IT WAS CONSOLIDATED TO ANOTHER ATTACK,LimboCMSSQLInjection2,307
+PostNuke modules.php SQL Injection,attPostNukeSQLInjection,89
+Apache Struts Internal Server Error Message Cross-Site Scripting,ApacheStrutsXSS2,79
+Apache Angle Bracket Hidden File Disclosure,ApacheAngleBracketHiddenFileDisc,20
+SAP Web Application Server Cross-Site Scripting,SAPWebApplicationServerXSS,79
+ATutor index.php SQL Injection,ATutorindexphpSQLInjection,89
+Oracle Application Server welcomeuser.jsp Cross-Site Scripting,OracleAppSrvwelcomeuserjspXSS,79
+Injection XPath,TPHidden_OWB_Injection_XPath,91
+Validation Client Only,TPHidden_OWB_Validation_ClientOnly,16
+JavaScript Hijacking,attJavaScriptHijacking,352
+OracleAS Discussion Forum Portlet Cross-Site Scripting,OracleASXSS,79
+Clever Copy gallery.php Cross-Site Scripting,CleverCopygalleryphpXXSS,79
+W2B Online Banking Cross-Site Scripting,W2BOnlineBankingXSS,79
+Apache Tomcat Host Manager "name" Cross-Site Scripting,ApacheTomcatHostManagerXSS,79
+Virtual Hosting Control System server_day_stats.php Cross-Site Scripting,VirtualHostingControlSystemXSS,79
+Apache Tomcat UTF-8 Path Traversal,ApacheTomcatUTF8PathTraversal,22
+JBoss Null Byte JSP Source Disclosure,JBossNullByteJSPSourceDisclosure,20
+WebSphere Application Server Administration Console Cross-Site Scripting,WebSphereAppServerAdministrationConsoleXSS,79
+PhpMyChat Multiple Cross-Site Scripting,PhpMyChatMultipleXSS,79
+SAP Internet Transaction Server Cross-Site Scripting,SAPInternetTransactionServerXSS,79
+Caucho Resin Path Disclosure,CauchoResinPathDisclosure,20
+AquiferCMS "keyword" Cross-Site Scripting,AquiferCMSKeywordXSS,79
+Siteframe Page Comment Cross-Site Scripting,SiteframeCommentXSS,79
+VP-ASP Shopping Cart shopcurrency.asp SQL Injection,VPASPShoppingCartSQLInjection,89
+phpMyAdmin setup.php Cross-Site Scripting,phpMyAdminsetupphpXSS,79
+PHP Album language.php Path Traversal,PHPAlbumPathTraversal,22
+Oracle Application Server Cross-Site Scripting,OracleAppSrvXSS,79
+Temporary File Download,attScriptDownload,531
+Apache Dos Device Denial of Service,ApacheDosDeviceDoS,119
+PathTraversal,TPHidden_OWB_PathTraversal,22
+Gregarius ajax.php SQL Injection,GregariusajaxphpSQLInjection,89
+Joomla MyBlog Component index.php Path Traversal,JoomlaMyBlogComponentindexphpPathTraversal,22
+Validation Required Exposed Web Service,TPHidden_OWB_Validation_Required_ExposedWebService,20
+Postaci Webmail SQL Query Modification,attPostaciWebmailIsVulnerableToSQLQueryModification,89
+Potential Order Information Found,PotentialOrderInformationFound,20
+activeWeb contentserver SQL Injection,activeWebcontentserverSQLInjection,89
+paFileDB index.php SQL Injection,paFileDBindexphpSQLInjection,89
+IBM Tivoli Access Manager for e-business Cross-Site Scripting,IBMTivoliAccessManagerforebusinessXSS,79
+RunCMS pmlite.php SQL Injection,RunCMSSQLInjection,89
+Logging Forge,TPHidden_OWB_Logging_Forge,489
+lucidCMS index.php Cross-Site Scripting,lucidCMSXSS,79
+Mailfile.cgi Arbitrary File Download,attMailfilecgiVulnerability,22
+RSA Authentication Agent Cross-Site Scripting,RSAAuthenticationAgentXSS,79
+osTicket ajax.php Cross-Site Scripting,osTicketajaxphpXSS,79
+ezContents loginreq2.php Cross-Site Scripting,ezContentsXSS,79
+Scout Portal Toolkit SPT--ForumTopics.php SQL Injection,ScoutPortalToolkitSQLInjection,89
+Joomla Dione Form Wizard Component index.php Path Traversal,JoomlaDioneFormWizardCpntntindexphpPathTraversal,22
+Notification Phishing,jsNotificationPhishing,16
+Maian Events menu.php SQL Injection,MaianEventsSQLInjection,89
+WordPress Whois Search Plugin wp-whois-ajax.php Cross-Site Scripting,WordPressWhoisSearchPluginwpwhoisajaxphpXSS,79
+Logging RevealsDetails SensitiveData,TPHidden_OWB_Logging_RevealsDetails_SensitiveData,525
+ABAP Injection File Write,TPHidden_OWB_ABAP_Injection_File_Write,16
+SMTP MX Injection,MxInjectionSMTP,77
+Oracle Fusion Middleware Products Cross-Site Scripting,OracleFusionMiddlewareProductsXSS,79
+Cacheable Login Page Found,attCachedLogin,525
+Crafty Syntax Image Gallery slides.php SQL Injection,CraftySyntaxImageGallerySQLInjection,89
+Apache Geronimo cal2.jsp Cross-Site Scripting,ApacheGeronimoXSS,79
+WordPress WP Photo Album Plugin wppa.php Cross-Site Scripting,WordPressWPPhotoAlbumwppaphpXSS,79
+PostNuke readpmsg.php SQL Injection,cwvPostNukeSQLInjection,89
+Apache Tomcat Send Mail Example Cross-Site Scripting,ApacheTomcatSendMailExampleXSS,79
+e107 Image Gallery Plugin image_gallery.php SQL Injection,e107ImageGalleryPluginimagegalleryphpSQLInjection,89
+Webmin and Usermin webmin_search.cgi Cross-Site Scripting,WebminandUserminwebminsearchcgiXSS,79
+Joomla! index.php Remote Command Execution,JoomlaindexphpRemoteCommandExecution,94
+Ray content.inc.php Remote File Inclusion,RaycontentincphpRFI,94
+Unencrypted Login Request,attLoginNotOverSSL,523
+BMForum Multiple Cross-Site Scripting -  - OBSOLETE DUE TO BEING A DUPLICATE,BMForumMultipleXSSII,79
+ESMI PayPal Storefront SQL Injection,cwvESMIPayPalStorefrontSQLInjection,89
+F5 Big-IP Load Balancer File Download,attF5BigIPLoadBalancerIsVulnerableToFileDownloading,22
+Lotus Domino Web Server File Retrieval ,attLotusDownloadNsfFilesWithQuestionMark,89
+Instant Photo Gallery portfolio_photo_popup.php SQL Injection,InstantPhotoGallerySQLInjection,89
+Dolphin Multiple Remote File Inclusion,DolphinMultipleRFI,94
+NextAge Shopping Cart Software index.php Cross-Site Scripting,NextAgeShoppingCartSoftwareXSS,79
+Link to unclassified site,TPHidden_MW_LinkToUnclassifiedSite,16
+Lotus Domino File Disclosure ,attLotusFileDisc,22
+MKPortal handler_image.php Cross-Site Scripting,MKPortalhandlerimagephpXSS,79
+FotoWeb Multiple Cross-Site Scripting,FotoWebMultipleXSS,79
+Sun i-Runbook Path Traversal,SuniRunbookPathTraversal,22
+Lotus Domino Banner Path Disclosure ,cwvLotusPathDiscCom5,20
+Pluck Multiple Cross-Site Scripting,PluckMultipleXSS,79
+FileInclusion,TPHidden_OWB_FileInclusion,489
+PHP-Fusion messages.php SQL Injection,PHPFusionmessagesphpSQLInjection,89
+Noah''s Classifieds index.php Path Disclosure,NoahsClassifiedsPathDisclosure,204
+Zen-Cart index.php Path Disclosure,ZenCartPathDisclosure,307
+Datalife Engine Cross-Site Scripting in Path,DatalifeEngineXSSinPath,79
+Communications Unencrypted,TPHidden_OWB_Communications_Unencrypted,20
+Contrexx SQL Injection,cwvContrexxSQLInjection,89
+McAfee Network Security Manager Cross-Site Scripting,McAfeeNetworkSecurityManagerXSS,79
+IPB D2-Shoutbox Module index.php SQL Injection,IPBD2ShoutboxModSQLInjection,89
+H-Sphere actions.php Cross-Site Scripting,HSphereactionsphpXSS,79
+Phorum Multiple SQL Injection,PhorumSQLInjection,89
+PostNuke pnFlashGames Module index.php SQL Injection,PostNukepnFlashGamesModuleindexphpSQLInjection,89
+ASPNuke register.asp SQL Injection,ASPNukeregisteraspSQLInjection,89
+LinPHA index.php Path Traversal,LinPHAPathTraversal,22
+Bash Shell History File Retrieval,BashShellHistoryFileRetrieval,20
+Woltlab Burning Board search.php SQL Injection,WoltlabBurningBoardsearchphpSQLInjection,89
+ABAP Quality Condition SYSYSID,TPHidden_OWB_ABAP_Quality_Condition_SYSYSID,20
+Session Not Invalidated After Logout,attSessionValidAfterLogout,613
+ASPPortal reply.asp SQL Injection,ASPPortalreplyaspSQLInjection,89
+TikiWiki CMS/Groupware Multiple Cross-Site Scripting in Path,TikiWikiCMSGroupwareMultipleXSSinPath,79
+IBM WebSphere Sample Site Found,IBMWebSphereSampleSiteFound,489
+ABAP Native KernelCall,TPHidden_OWB_ABAP_Native_KernelCall,189
+ABAP DB Generic Query Read,TPHidden_OWB_ABAP_DB_Generic_Query_Read,89
+TikiWiki Multiple Cross-Site Scripting (Versions below and including 1.9.8.1),TikiWikiMultipleXSS,79
+PHP-Nuke index.php SQL Injection,PHPNukeindexphpSQLInjection,89
+Xoops Multiple Path Traversal (Versions below and including 2.0.13.2),XoopsMultiplePathTraversal,22
+Database Error Pattern Found,GV_SQLErr,209
+iPlanet "NS-max-records" Cross-Site Scripting,iPlanetNSmaxrecordsXSS,79
+LiveAlbum common.php Remote File Inclusion,LiveAlbumcommonphpRFI,94
+cPanel Multiple Cross-Site Scripting,cPanelXSS,79
+Checkpoint VPN-1 UTM Edge Cross-Site Scripting,CheckpointVPN1UTMEdgeXSS,79
+Simplog Multiple SQL Injection,SimplogMultipleSQLInjection,89
+Sawmill Multiple Cross-Site Scripting,SawmillMultipleXSS,79
+Game-Panel login.php Cross-Site Scripting,GamePanelXSS,79
+Webspell index.php Cross-Site Scripting,WebspellindexphpCrossSiteScripting,79
+Microsoft Terminal Services Advanced Client (TSAC) ActiveX Control Cross-Site Scripting,MSTTSACXSS,79
+Novell Groupwise Arbitrary File Download,attNovellFileRetrieval,22
+Netscape Products Password Disclosure,NetscapeProductsPasswordDisclosure,20
+Account Manager CGI Remote Password Change ,attAccountManagerCGIRemotePasswordChangeVulnerability,565
+Poison Null Byte Unix Files Retrieval,attNullByteUnix,626
+Hosting Controller IPManager.asp and AddGatewaySettings.asp SQL Injection,HostingControllerSQLInjection,89
+Lars Ellingsen Guestbook System Remote Command Execution,attLarsEllingsensGuestbookSystemIsVulnerableToRemoteCommandExecution,77
+CMME Information Disclosure,CMMEInformationDislosure,94
+AWBS news.php SQL Injection,AWBSnewsphpSQLInjection,89
+Oracle Dynamic Monitoring Services Unauthorized Access,cwvOwaDMS,287
+Statistics Server LiveStats ss.cfg Denial of Service,attStatisticsServerLiveStatsSscfgDenialOfService,77
+Netscape Enterprise Server GET Request Buffer Overflow,attCWVNetscapeGETOverflow,189
+Indexu Multiple Cross-Site Scripting,IndexuMultipleXSS,79
+Microsoft Index Server .htw Cross-Site Scripting,attHtwCSS,79
+Joomla ccNewsletter Component index.php Path Traversal,JoomlaccNewsletterComponentindexphpPathTraversal,22
+WordPress Search Function SQL Injection,WordPressSearchFunctionSQLInjection,89
+Microsoft IIS Chunked Encoding Transfer Heap Overflow,MicrosoftIISChunkedEncodingTransferHeapOverflow,189
+Netscape Enterprise Server / Sun ONE Unauthorized Administrative Privileges and Denial of Service,cwvNetscapeDefaultAdminPassword,89
+CMME Backup File Download,CMMEBackupFileDownload,20
+WordPress index.php Information Leakage,WordPressInformationLeakage,89
+Perl Interpreter Scripts Arbitrary Commands Execution,attPerlinScriptsDir,77
+AlstraSoft EPay Pro 2.0 Cross-Site Scripting,cwvAlstraSoftEPayPro20XSS,79
+IBM WebSphere Application Server File Disclosure,IBMTivoliWorkloadSchedulerWASFileDisclosure,200
+Twiki Multiple Cross-Site Scripting (versions below 5.0.2),TWikiMultipleXSSII,79
+BrowserCRM results.php Cross-Site Scripting,BrowserCRMXSS,79
+AWStats PHP Command Execution,AWStatsPHPCommandExecution,94
+Native Unsafe,TPHidden_OWB_Native_Unsafe,189
+Input Validation Unlimited Size,TPHidden_OWB_InputValidation_UnlimitedSize,16
+Calendarix Basic cal_day.php and cal_login.php SQL Injection,CalendarixSQLInjection,89
+phpODP odp.php Cross-Site Scripting,phpODPXSS,79
+News Update Access Control Bypass,attNewsUpdateAccessControlBypass,565
+Quality Suppress Warnings,TPHidden_OWB_Quality_SuppressWarnings,550
+Apache Tomcat Host Manager "aliases" Cross-Site Scripting,ApacheTomcatHostManagerApplicationXSS,79
+WebSphere Portal URL Redirection,WebSpherePortalRedirection,307
+PHP phpinfo.php Information Disclosure,attZendPHPPhpinfophpInformationDisclosureVulnerability,20
+CMSimple index.php Path Traversal,CMSimpleindexphpPathTraversal,22
+Privilege Escalation doPrivileged,TPHidden_OWB_PrivilegeEscalation_doPrivileged,565
+Atlant Pro Cross-Site Scripting,AtlantProXSS,79
+Apache Tomcat Accept-Language Header Cross-Site Scripting,ApacheTomcatAcceptLanguageHeaderXSS,79
+Microsoft IIS Hit Highlighting Authentication Bypass,IISHitHighlightingAuthBypass,264
+Connect Daily Multiple Cross-Site Scripting,ConnectDailyXSS,79
+Alstrasoft Article Manager Pro SQL Injection,AlstrasoftArticleManagerProSQLInjection,89
+Login Sequence HTTP Response Splitting,attLoginHttpResponseSplitting,307
+Apache Tomcat Manager Cross-Site Scripting,ApacheTomcatManagerXSS,79
+Php Blue Dragon CMS activecontent.php Remote File Inclusion,PhpBlueDragonCMSactivecontentphpRFI,94
+bbsmax post.aspx Cross-Site Scripting,bbsmaxpostaspxXSS,79
+cPanel Multiple Cross-Site Scripting,cPanelMultXSS2,307
+Dojo Toolkit Multiple Cross-Site Scripting,DojoToolkitXSS,79
+Cobalt RaQ Information Leakage,CobaltRaQInformationLeakage,20
+HostAdmin index.php Path Traversal,HostAdminPathTraversal,22
+eTicket index.php Cross-Site Scripting,eTicketindexphpXSS,79
+Predictable Session Token,attPredictableToken,16
+Authentication Credentials Weak,TPHidden_OWB_Authentication_Credentials_Weak,89
+ImpressCMS CSSTidy css-optimiser.php cross-site scripting,testtesttestxforcetesttest,79
+EzASPSite Default.asp SQL Injection,EzASPSiteSQLInjection,89
+Pixelpost index.php Cross-Site Scripting,PixelpostindexphpXSS,79
+gCards index.html Path Traversal,gCardsPathTraversal,22
+phpBB Blog index.php SQL Injection,phpBBBlogSQLInjection,89
+cPanel dofileop.html Cross-Site Scripting,cPaneldofileophtmlXSS,79
+mvnForum "activatemember" Cross-Site Scripting,mvnForumXSS,79
+Webspell index.php File Download,WebspellindexphpFileDownload,20
+ColdFusion Debug Mode Information Gathering,attColdFusionDebugMode,20
+PerlBlog weblog.pl Cross-Site Scripting,PerlBlogWeblogXSS,79
+Phishing Email,TPHidden_OWB_Phishing_Email,16
+BlueDragon Server Cross-Site Scripting,BlueDragonServerXSS,79
+Sun Java Web Server Expect Header Cross-Site Scripting,SunJavaWebServerExpectHeaderXSS,79
+Eclipse Multiple Cross-Site Scripting,EclipseHelpServerMultipleXSS,79
+phpBB Script Remote Command Execution,phpBBCommandExec1,77
+SugarCRM index.php SQL Injection,SugarCRMindexphpSQLInjection,89
+WordPress edit-post-rows.php Cros-Site Scripting,WordPresseditpostrowsphpXSS,79
+PHPShop register.html Cross-Site Scripting,PHPShopregisterhtmlXSS,79
+sendcard Path Traversal,sendcardPathTraversal,22
+bitweaver list_pages.php SQL Injection,bitweaverlistpagesphpSQLInjection,89
+Error Handling,TPHidden_OWB_ErrorHandling,489
+Apache Tomcat DOS Device Path Disclosure,ApacheTomcatDOSDevicePathDisclosure,20
+Zen Cart initsystem.php Path Traversal,ZenCartinitsystemphpPathTraversal,22
+Malicious Dynamic Code Execution,TPHidden_OWB_Malicious_DynamicCode_Execution,16
+Validation XML,TPHidden_OWB_Validation_XML,16
+Sugar Suite acceptDecline.php Path Traversal,SugarSuitPathTraversal,22
+Macromedia JRun Administration Server Authentication Bypass,cwvJrunAdminServerBypass,89
+Privacy,TPHidden_OWB_Privacy,20
+PHP-Nuke modules.php Cross-Site Scripting,PHPNukeAntiCrossSiteRequestForgeryBypass,79
+Apache Tomcat Directory Listing Using URL Encode,ApacheTomcatDirectoyListing,548
+Mantis return_dynamic_filters.php Cross-Site Scripting,MantisreturndynamicfiltersphpXSS,79
+IMAP MX Injection,MxInjectionIMAP,77
+Use of MD5 as SSL Certificate Signature Algorithm,SSL_MD5SignatureAlgorithm,74
+Aardvark Topsites PHP Remote File Inclusion,AardvarkTopsitesRemoteFileInclusion,94
+Privilege Escalation Method Name,TPHidden_OWB_PrivilegeEscalation_MethodName,565
+Pligg search Cross-Site Scripting,PliggsearchXSS,79
+ABAP AccessControl AuthCheck Transaction All,TPHidden_OWB_ABAP_AccessControl_AuthCheck_Transaction_All,565
+iScouter PHP Web Portal MySQL Password Retrieval,attIScouterPHPWebPortalMySQLPasswordRetrieval,20
+Netscape Enterprise Server HTTP INDEX Method Directory Browsing,attHttpMethodIndex,548
+PHP-Nuke BookCatalog Module modules.php SQL Injection,PHPNukeBookCatalogModulemodulesphpSQLInjection,89
+Adobe ColdFusion MX Cross-Site Scripting,AdobeColdFusionMXXSS,79
+Htgrep File Contents Retrieval ,attHtgrepFileContentsRetrievalVulnerability,22
+Mambo/Joomla Multiple Remote File Inclusion,MamboJoomlaMultipleRFI,94
+Injection XML,TPHidden_OWB_Injection_XML,16
+ABAP Injection Report,TPHidden_OWB_ABAP_Injection_Report,16
+Microsoft IIS 5.0 on Win2k WebDAV Buffer Overflow,cwvWin2KWebDavBufferOverflow,189
+Malicious content (malware),TPHidden_MW_MaliciousContent,16
+cPanel Multiple Cross-Site Scripting - OBSOLETE DUE TO BEING A DUPLICATE,cPanelMultipleXSS,307
+Possible Server Path Disclosure Pattern Found,GD_PathDisclosure,200
+Project Woodstock UTF-7 "404 Page Not Found" Cross-Site Scripting,ProjectWoodstockUTF7XSS,79
+Sun Java System Calendar Server Denial of Service,SunJavaSystemCalendarServerDoS,20
+Invision Power Board index.php SQL Injection,IPBSQLInjection,89
+HP System Management Homepage Cross-Site Scripting,HPSystemManagementHomepageXSS,79
+Tiki Wiki CMS Groupware tiki-edit_wiki_section.php Cross-Site Scripting,TikiWikiCMSGroupwaretikieditwikisectionphpXSS,79
+phpWebSite index.php Cross-Site Scripting,phpWebSiteindexphpXSS,79
+Apache Tomcat Invalid Character Path Disclosure,ApacheTomcatGTPathDisclosure,20
+Shadowed Portal Pages Module load.php Cross-Site Scripting,ShadowedPortalPagesModuleXSS,79
+LinPHA stats_view.php Cross-Site Scripting,LinPHAXSS,79
+Non-SOAP Web Service Access,SoapToHttp,288
+WebSVN Cross-Site Scripting in Path,WebSVNXSSinPath,79
+LifeType admin.php Cross-Site Scripting (Version 1.2.8),LifeTypeadminphpXSSII,79
+Apache Tomcat "Tomcat Manager" Cross-Site Scripting,ApacheTomcatTomcatManagerXSS,79
+Kayako SupportSuite index.php Cross-Site Scripting,KayakoSupportSuiteindexphpXSS,79
+Juniper IVE Cross-Site Scripting,JuniperIVEXSS,79
+Xoops Articles Module Multiple SQL Injection,XoopsArticlesModuleMultipleSQLInjection,89
+Plesk Multiple Cross-Site Scripting,PleskMultipleXSS,79
+WWWthreads Multiple Cross-Site Scripting,WWWthreadsMultipleXSS,79
+Joomla! joomlaradio Component Remote File Inclusion,JoomlajoomlaradioComponentRFI,94
+Freeway eCommerce search_links.php Cross-Site Scripting,FreewayeCommercesearchlinksphpXSS,79
+Glossword custom_vars.php Remote File Inclusion,GlosswordcustomvarsphpRFI,94
+SelectaPix Multiple SQL Injection,SelectaPixSQLInjection,89
+phpBB Advanced GuestBook addentry.php Path Traversal,phpBBAdvancedGuestBookPathTraversal,22
+WordPress WP e-Commerce Plugin SQL Injection,WordPressWPeCommercePluginSQLInjection,89
+Buffer Overflow Array Index Out Of Bounds,TPHidden_OWB_BufferOverflow_ArrayIndexOutOfBounds,189
+Resin "viewfile" servlet Path Disclosure,ResinviewfileservletPathDisclosure,20
+Logging,TPHidden_OWB_Logging,89
+Cookie Manipulation,jsCookieManipulation,384
+MediaWiki AJAX UTF-7 Cross-Site Scripting,MediaWikiAJAXUTF7XSS,79
+Validation Required,TPHidden_OWB_Validation_Required,16
+Injection Second Order,TPHidden_OWB_Injection_SecondOrder,16
+Serendipity serendipity_admin.php Cross-Site Scripting,SerendipityserendipityadminphpXSS,79
+Shop.cgi Shopping Cart Directory Traversal ,attShopcgiShoppingCartDirectoryTraversalVulnerability,22
+Microsoft ASP.NET Cross-Site Scripting,MicrosoftASPNETXSS,307
+Visnetic Website fpcount.exe Path Disclosure,cwvVisneticPathDiscFpCount,200
+Orca forum SQL Injection,OrcaForumSQLInjection,89
+ABAP AccessControl AuthCheck Transaction,TPHidden_OWB_ABAP_AccessControl_AuthCheck_Transaction,565
+Probe Rules,probeRule,548
+Elxis Multiple Cross-Site Scripting,ElxismodlanguagephpXSS,79
+boastMachine mail.php SQL Injection,boastMachinemailphpSQLInjection,89
+Probe for Phishing Through Frames,TPHidden_probePhishingThroughFrames,20
+WoltLab Burning Board dereferrer.php URL Redirection,WoltLabBurningBoarddereferrerphpURLRedirection,601
+F5 BIG-IP Web Management List Search Cross-Site Scripting,F5BIGIPWebManagementListSearchXSS,79
+aspWebCalendar FREE calendar.asp SQL Injection,aspWebCalendarFREEcalendaraspSQLInjection,89
+Microsoft IIS Double Decode Remote Command Execution,attMicrosoftIISDoubleDecodeBugLeadsToRemoteCommandExecution,77
+vBulletin attachmentpermission.php SQL Injection,vBulletinattachmentpermissionphpSQLInjection,89
+iPlanet Web Server Remote File Viewing,cwviPlanetFileRetrievalCheck,22
+AdMan Path Disclosure,AdManPathDisclosure,307
+myPHPNuke Cross-Site Scripting,MyPHPNukeXSS,79
+Xerox DocuShare Multiple Cross-Site Scripting in Path,XeroxDocuShareMultipleXSSinPath,79
+Pimcore Cross-Site Scripting,PimcoreXSS,79
+zenphoto admin.php Cross-Site Scripting,zenphotoadminphpXSS,79
+Instant Photo Gallery Multiple Cross-Site Scripting,InstantPhotoGalleryXSS,79
+Serendipity Freetag Plugin Cross-Site Scripting,SerendipityFreetagPluginXSS,79
+Microsoft SharePoint URL Redirection,MicrosoftSharePointInsecureRedirection,601
+Limbo CMS index2.php Path Traversal,LimboCMSPathTraversal,22
+Joomla VirtueMart Google Base Component admin.googlebase.php Remote File Inclusion,JoomlaVirtueMartGoogleBaseComponentRFI,94
+ColdFusion MX 6.1 Updater Source Code Disclosure,ColdFusionUpdaterSourceDisc,20
+Cherokee Web Server Cross-Site Scripting,CherokeeWebServerXSS,79
+Never feed (external) input to Function Module RFC_REMOTE_EXEC,TPHidden_OWB_ABAP_Injection_OS_RFC_REMOTE_EXEC,77
+Authentication Bypass Using SQL Injection,authBypassSQLInjection,89
+IBM Metrica Cross-Site Scripting,IBMMetricaXSS,79
+DNews dnewsweb.exe Cross-Site Scripting,DNewsdnewswebexeXSS,79
+Five Star Review Script Multiple Cross-Site Scripting,FiveStarReviewScriptXSS,79
+Apache Tomcat Cross-Site Scripting in Path,ApacheTomcatXSS,79
+WebObjects Buffer Overflow,WebObjectsBufferOverflow,189
+Phorum Multiple Cross-Site Scripting,PhorumMultipleXSS,79
+Microsoft IIS ism.dll Multiple Vulnerablities,MicrosoftIISismdllMultVuln,489
+Php-Stats Multiple SQL Injection,PhpStatsMultipleSQLInjection,89
+PhpWebGallery isadmin.inc.php Cross-Site Scripting,PhpWebGalleryisadminincphpXSS,79
+iNet Orkut Clone profile_social.php Cross-Site Scripting,iNetOrkutCloneprofilesocialphpXSS,79
+MyBB archive/index.php SQL Injection,MyBBarchiveindexphpSQLInjection,89
+Privilege Escalation using an Under-Privileged User,PE_Test_Privileged,699
+Blue Coat ICAP Patience Page Cross-Site Scripting,BlueCoatICAPPatiencePageXSS,79
+MyBB moderation.php Cross-Site Scripting,MyBBmoderationphpXSS,79
+Ultimate PHP Board (UPB) Path Disclosure,UPBPathDisc,307
+RunCms class.forumposts.php and forumpollrenderer.php Path Traversal,RuncmsPathTraversal,22
+Mambo/Joomla New Article Component com_articles.php Remote File Inclusion,MamboJoomlacomarticlesphpRFI,94
+PostNuke error.php Path Traversal,PostNukeerrorphpPathTraversal,22
+MyBB member.php Cross-Site Scripting,MyBBmemberphpXSS,79
+vBulletin SQL Injection,vBulletinSQLInjection,89
+ABAP DB DirectMod,TPHidden_OWB_ABAP_DB_DirectMod,565
+SimpGB Multiple Cross-Site Scripting,SimpGBXSS,79
+Query Parameter in SSL Request,GETParamOverSSL,598
+CubeCart Multiple Cross-Site Scripting (Versions below and including 2.0.7),CubeCartMultXSS,79
+Validation OS,TPHidden_OWB_Validation_OS,16
+IBM WebSphere Application Server Administrative Console Multiple Cross-Site Scripting,IBMWASAdministrativeConsoleXSSinPath,20
+Cyboards PHP Lite post.php SQL Injection,CyboardsPHPLiteSQLInjection,89
+Microsoft PhoneBook Server Buffer Overflow,attCWVPhoneBookBufferOverflow,189
+Validation Required File Path Read,TPHidden_OWB_Validation_Required_FilePath_Read,22
+Mambo Multiple Cross-Site Scripting (Version 4.6.2),MamboMultipleXSSII,79
+IBM Proventia Network Mail Security System Cross-Site Scripting,IBMProventiaNetworkMailSecuritySystemXSS,79
+Cryptography Poor Entropy,TPHidden_OWB_Cryptography_PoorEntropy,307
+Geeklog getimage.php Cross-Site Scripting,GeeklogXSS,79
+Error Page Path Disclosure,attPathRetrievalFromNonExistentFiles,20
+MusicBox Multiple Cross-Site Scripting,MusicBoxMultipleXSS,79
+NewsPHP index.php SQL Injection,NewsPHPSQLInjection,89
+MetaCart e-Shop Cross-Site Scripting,MetaCartEShopCSS,79
+Web+Shop webplus.exe Cross-Site Scripting,WebShopXSS,79
+Oracle Application Server Globals.jsa Session Information Leakage,attOwaGlobalsJsa,20
+Application Denial of Service No Maximum Limit,TPHidden_OWB_AppDOS_NoMaximumLimit,119
+TomatoCart json.php Path Traversal,TomatoCartjsonphpPathTraversal,22
+ErrorHandling RevealDetails StackTrace,TPHidden_OWB_ErrorHandling_RevealDetails_StackTrace,20
+Extropia Webstore File Download ,attEXtropiaWebStoreFileDownloadVulnerability,22
+w-agora search.php SQL Injection,wagorasearchphpSQLInjection,89
+FlatNuke index.php Cross-Site Scripting,FlatNukeXSS,79
+dotNetBB iforget.aspx Cross-Site Scripting,dotNetBBXSS,79
+Open Blog Multiple Cross-Site Scripting,OpenBlogMultipleXSS,79
+Serendipity serendipity_admin_image_selector.php Cross-Site Scripting,SerendipityserendipityadminimageselectorphpXSS,79
+Cartweaver Multiple SQL Injection,CartweaverMultipleSQLInjection,89
+Wolf CMS Multiple Cross-Site Scripting,WolfCMSMultipleXSS,79
+Concrete5 SQL Injection,Concrete5SQLInjection,89
+FAQ-O-Matic fom.cgi Cross-Site Scripting,FaqOMaticXSS,79
+PHP Live Helper initiate.php Path Traversal,PHPLiveHelperPathTraversal,22
+PostNuke admin.php SQL Injection,PostNukeAdmin_PHP_SQLInjection,89
+Macromedia Dreamweaver Remote Database Scripts Information Leakage,MacromediaDreamweaverRemoteDatabaseScriptsInformationLeakage,20
+phpPgAdmin redirect.php Remote File Inclusion,phpPgAdminredirectphpRFI,94
+Directory Listing,attDirectoryGuessing,548
+DotNetNuke InstallWizard.aspx Cross-Site Scripting,DotNetNukeInstallWizardaspxXSS,79
+CGIForum File Download,attCGIForumFileDownloadVulnerability,22
+PostNuke readpmsg.php Cross-Site Scripting,PostNukeCSS,79
+BLOG:CMS Multiple Cross-Site Scripting,BLOGCMSMultipleXSS,79
+Dotclear Multiple Cross-Site Scripting,DotclearMultipleXSS,79
+IBM Rational ClearQuest Multiple Cross-Site Scripting,IBMRationalClearQuestMultipleXSS,79
+Malicious Easter Egg,TPHidden_OWB_Malicious_EasterEgg,16
+AnalogX SimpleServer:WWW Denial of Service,cwvSimpleServerDoSstring,119
+Cross Site Scripting Reflected,TPHidden_OWB_CrossSiteScripting_Reflected,79
+Microsoft FrontPage Server Extensions Machine Name Disclosure,cwvFPSErevealMachineName,20
+Claroline rqmkhtml.php Cross-Site Scripting (Version 1.8.9),ClarolinerqmkhtmlphpXSS,79
+Log Forging,TPHidden_WB_LogForging,117
+Parameter DOM Based Cross-Site Scripting,DOMXSS2,307
+Client-Side Stored Cross-Site Scripting,jsClientSideStoredXSS,79
+Buffer Overflow,TPHidden_OWB_BufferOverflow,189
+Microsoft IIS Bdir.htr Directory Listing,attIISBdirHtr,548
+PHP-Nuke modules.php SQL Injection,PHPNukemodulesphpSQLInjection2,89
+ExtCalendar calendar.php Cross-Site Scripting,ExtCalendarXSS,79
+Trac query SQL Injection,TracSQLInjection,89
+MusicBox index.php SQL Injection,MusicBoxSQLInjection,89
+Injection PDF Form,TPHidden_OWB_Injection_PDFForm,16
+Alternate Version of File Detected,attAltVerDetected,20
+Hummingbird Collaboration Information Disclosure,HummingbirdInfoDisc,20
+Mantis view_all_set.php Cross-Site Scripting,MantisviewallsetphpXSS,79
+SoftMaker Shop resultat.asp Cross-Site Scripting,SoftMakerShopXSS,79
+POP3 MX Injection,MxInjectionPOP3,77
+Caucho Resin Path Traversal,CauchoResinPathTraversal,22
+Quality Unsupported,TPHidden_OWB_Quality_Unsupported,550
+Lotus Notes Domino Web Server Path Disclosure,attDominoNonExitentCGI,20
+vBulletin Multiple Cross-Site Scripting (Versions 3.x),vBulletinMultipleXSS,79
+ABAP Execution OS,TPHidden_OWB_ABAP_Execution_OS,489
+WoltLab Burning Board index.php SQL Injection,WoltLabBurningBoardindexphpSQLInjection,89
+Oracle Webcache 9i Cross-Site Scripting,OracleWebcacheCSS,79
+Apache MyFaces "javax.faces.resource" Path Traversal,ApacheMyFacesPathTraversal,22
+Lotus Domino Internal IP Disclosure,LotusDominoInternalIPDisclosure,20
+e107 search.php Cross-Site Scripting,e107XSS,79
+Horde Multiple Cross-Site Scripting,HordeMultipleXSS,79
+Maximus SchoolMAX icue_login.asp Cross-Site Scripting,MaximusSchoolMAXXSS,79
+Injection XSLT,TPHidden_OWB_Injection_XSLT,16
+phpMyAdmin index.php Cross-Site Scripting,phpMyAdminindexphpXSS,79
+SAP Crystal Reports Server Path Traversal,SAPCrystalReportsServerPathTraversal,22
+Quality Over Complex,TPHidden_OWB_Quality_OverComplex,550
+Lotus Domino Main Directory Database Download,cwvLotusDominoNamesNSF,20
+FlatNuke index.php Path Traversal,FlatNukePathTraversal,22
+Dblog CMS Open Source Database Retrieval,DblogCMSOpenSourceDatabaseRetrieval,264
+Phorum posting.php Cross-Site Scripting,PhorumpostingphpXSS,79
+Web Wiz Forum admin_category_details.asp Cross-Site Scripting,WebWizForumadmincatdetsaspXSS,352
+Code-Red Worm Remote Command Execution and Denial of Service,attCWVCodeRed,77
+CosmicShoppingCart search.php SQL Injection,CosmicShoppingCartSQLInjection,89
+File Parameter Shell Command Injection ,attFileParamPipe,77
+SOAP Web Services Parameter Overflow,SoapParamOverflow,120
+phplist index.php Cross-Site Scripting,phplistindexphpXSS,79
+ClanSphere install.php Path Traversal,ClanSphereinstallphpPathTraversal,22
+UseBB Multiple Cross-Site Scripting,UseBBMultipleXSS,79
+Cisco IOS HTTP Server Cross-Site Scripting,CiscoIOSHTTPServerXSS,79
+AHG EZshopper File Download,attAHGEZshopperFileDownloadVulnerability,22
+Simplog SQL Injection,SimplogSQLInjection,89
+F5 Data Manager Multiple Path Traversal,F5DataManagerMultiplePathTraversal,22
+Credit Card Number Pattern Found (Visa) in Parameter Value,GD_CreditCardVisaParameterIsSSL,311
+Missing Secure Attribute in Encrypted Session (SSL) Cookie,attRespCookieNotSecureSSL,614
+Tiki Wiki CMS Groupware tiki-jsplugin.php Path Traversal,TikiWikiCMSGroupwaretikijspluginphpPathTraversal,22
+SQL Injection using DECLARE&comma; CAST and EXEC,SqlInjectionDeclareCast,89
+boastMachine index.php Cross-Site Scripting,BoastMachineindexphpXSS,79
+Do not use a generic DELETE REPORT statement in custom code,TPHidden_OWB_ABAP_Report_Delete,489
+Invision Gallery index.php Path Traversal,InvisionGalleryPathTraversal,22
+Oracle Application Server Script /perl Directory Mapping Source Code Disclosure,attOwaPerlMapping,20
+Resource Injection,TPHidden_WB_ResourceInjection,99
+Joomla Joomla!FlashFun Component Remote File Inclusion,JoomlaJoomlaFlashFunComponentRFI,94
+MyBB calendar.php SQL Injection (Versions below and including 1.2.5),MyBBcalendarphpSQLInjection,89
+IBM HTTP Server Expect Header Cross-Site Scripting,IBMHTTPServerExpectHeaderXSS,79
+Computer Associates Multiple Products Remote Buffer Overflow,CAMultipleProductsBufferOverflow,189
+phpwcms cnt6.inc.php Cross-Site Scripting,phpwcmsXSS,79
+Lotus Domino Web Applications Access Control Bypass,attLotusOpen,20
+Joomla! Highslide JS Component index.php Path Traversal,JoomlaHighslideJSComponentindexphpPathTraversal,22
+@mail Webmail Client index.php Cross-Site Scripting,mailWebmailClientindexphpXSS,79
+Manila Multiple Cross-Site Scripting,ManilaMultipleXSS,79
+Oracle Web Listener Batch File Shell Command Execution,attOWSbatch,77
+TUTOS cmd.php Command Execution,TUTOScmdphpCommandExecution,264
+ePublisher WebWorks Help Cross-Site Scripting,ePublisherWebWorksHelpXSS,79
+Apache Host Header Cross-Site Scripting,ApacheHostHeaderXSS,79
+Sugar Sales Path Traversal,SugarSalesPathTraversal,22
+Horde Language Selection Cross-Site Scripting,HordeLanguageSelectionXSS,79
+Microsoft IIS .printer Buffer Overflow,attIISdotPrinter,189
+BEA WebLogic Servlet Source Code Disclosure,attWebLogicServletShowCode,20
+pfSense Multiple Cross-Site Scripting,pfSenseMultipleXSS,79
+MX Injection,TPHidden_WB_MxInjection,77
+CuteNews index.php Cross-Site Scripting,CuteNewsindexphpXSS,79
+Apache stronghold-info Information Disclosure,ApachestrongholdinfoInfDisc,20
+Joomla! pollwindow.php SQL Injection,JoomlapollwindowphpSQLInjection,89
+File Upload,attFileUpload,489
+Indexu application.php Path Traversal,IndexuPathTraversal,22
+ABAP DB CriticalTable Read,TPHidden_OWB_ABAP_DB_CriticalTable_Read,525
+Proventia GX5108 and GX5008 Cross-Site Scripting,ProventiaXSS,79
+IPSwitch Imail Imonitor Denial of Service,attIPSwitchImailImonitorDenialOfServiceVulnerability,119
+Help Center Live Cross-Site Scripting,cwvHelpCenterLiveXSS,79
+Juniper Networks Secure Access 2000 rdremediate.cgi Cross-Site Scripting,JuniperSecureAccess2000rdremediatecgiXSS,79
+MyBB usercp.php Cross-Site Scripting,MyBBusercpphpXSS,79
+RadBids Gold v2 Cross-Site Scripting,cwvRadBidsGoldV2XSS,79
+Dokeos testheaderpage.php Path Traversal,DokeosPathTraversal,22
+Apache server-info Information Disclosure,ApacheserverinfoInfDisc,20
+MyBB moderation.php SQL Injection (Versions 1.2.x),MyBBmoderationphpSQLInjection,89
+Ultimate Auction itemlist.pl and item.pl Cross-Site Scripting,UltimateAuctionXSS,79
+Path Traversal,GB_PathTraversal,22
+Nuke-Evolution modules.php SQL Injection,NukeEvolutionMultipleSQLInjection,89
+Social Security Number Pattern Found in Parameter Value,paramValueCheckSSN,311
+JetPhoto Server Multiple Cross-Site Scripting,JetPhotoServerMultXSS,79
+phpFreeChat Multiple Cross-Site Scripting,phpFreeChatMultipleXSS,79
+SQL Query in Parameter Value,attSuspiciousSqlParam,89
+IBM Net.Data Internal Variables Display,attNetDataParamSubs,20
+Client-Side SQL Injection,jsClientSideSQLInjection,89
+WordPress FeedList Plugin handler_image.php Cross-Site Scripting,WordPressFeedListPluginhandlerimagephpXSS,79
+BLOG:CMS Multiple Remote File Inclusion,BLOGCMSMultipleRFI,94
+Microsoft Site Server Sample Script SQL Injection ,attMicrosoftSiteServerSampleScriptSQLVulnerability,89
+PHP phpinfo() Cross-Site Scripting (Versions 4.4.3 - 4.4.6),PHPphpinfoXSS2,79
+Cross-Site Scripting through Flash (ActionScript 2),CrossSiteScriptingThroughFlash,456
+ABAP Info Usage SYSYSID,TPHidden_OWB_ABAP_Info_Usage_SYSYSID,565
+Wordpress Page Flip Image Gallery Plugin getConfig.php Path Traversal,WordpressPageFlipImageGalleryPlugingetConfigphpPathTraversal,22
+Advanced Guestbook picture.php Cross-Site Scripting,AdvancedGuestbookpicturephpXSS,79
+External Session Identifiers Enforcement,attPermissiveTokens,384
+MultiHTML Poison Null Byte Any File Download,attMultiHTMLPoisonNullByteVulnerability,22
+Injection HTTP Response Splitting,TPHidden_OWB_Injection_HttpResponseSplitting,74
+Privilege Escalation Class Loader,TPHidden_OWB_PrivilegeEscalation_ClassLoader,565
+MAXdev MD-Pro user.php Cross-Site Scripting,MAXdevMDProXSS,79
+Limbo CMS Path Disclosure,LimboCMSPathDisclosure,307
+SQL Injection Command Execution,attMSSQLInjection,89
+Novell NDS Tree Browsing,attNovellNDSTreeBrowsing,20
+Microsoft Site Server Cross-Site Scripting,attMicrosoftSiteServer3XSS,79
+Apache on Win32 Batch File Remote Command Execution,attApacheBatchScripts,77
+Application Error,attUndefinedState,550
+Apache Tomcat Installation Path Disclosure,ApacheTomcatInstallationPathDisclosure,20
+CS-Cart index.php Cross-Site Scripting,CSCartindexphpXSS,79
+yblog Multiple SQL Injection,yblogMultipleSQLInjection,79
+Permanent Cookie Contains Sensitive Session Information,attRespCookieSessionNotRam,539
+IIS Global.asa and Global.asax Retrieval,cwvGlobalAsaDirectAccess,20
+PHP Classifieds detail.php SQL Injection,PHPClassifiedsdetailphpSQLInjection,89
+Application Denial of Service Connection Close,TPHidden_OWB_AppDOS_ConnectionClose,119
+Multiple Vendor Java Servlet Source Code Disclosure,attServletSourceDisc,20
+Basilix Webmail Access Control Bypass,attBasiliXWebmailAccessControlBypass,20
+CubeCart index.php SQL Injection,CubeCartindexphpSQLInjection,89
+Sun Cobalt RaQ Control Panel Cross-Site Scripting,cwvSunCobaltXss,79
+Magic List Pro ListID SQL Injection,MagicListProSQLInjection,89
+TOPo 2.2 Cross-Site Scripting,cwvTOPo22XSS,79
+Quality Comments Revealing,TPHidden_OWB_Quality_Comments_Revealing,20
+Drupal Ajax Checklist Module SQL Injection,DrupalAjaxChecklistModuleSQLInjection,89
+''Behold'' Counter.exe Denial of Service,attBeholdCounterDoS,400
+TWiki "filename" Parameter Path Traversal,TWikifilenameParameterPathTraversal,22
+WordPress Redoable Theme index.php Cross-Site Scripting,WordPressRedoableThemeXSS,79
+Fusetalk Multiple SQL Injection,FusetalkMultipleSQLInjection,89
+Zope Additems Script Environment Information Leakage,cwvZopeEnvDisclosure,20
+Verify that the application handles private data correctly and securely,TPHidden_OWB_Privacy_DataLeakage,20
+DocMGR history.php Cross-Site Scripting,DocMGRhistoryphpXSS,79
+SOAP Web Services System Call Code Injection,SoapSysCallCodeInj,77
+eFront language.php Path Traversal,eFrontlanguagephpPathTraversal,22
+Movable Type Comment Cross-Site Scripting,MovableTypeCommentXSS,79
+Zope Server Empty Upload Information Disclosure,cwvZopePathDisclosure,20
+SSL Certificate Domain Name Mismatch,SSL_CertWithBadCN,297
+Oracle HTTP Server iSQL*Plus Cross-Site Scripting,cwvOracleIsqlplusXSS,79
+ABAP File Download,TPHidden_OWB_ABAP_File_Download,16
+TUTOS phpinfo.php Disclosure,TUTOSphpinfophpDisclosure,94
+Format String Remote Command Execution,attFormatStrings,134
+AssoCIateD index.php Cross-Site Scripting,AssoCIateDXSS,79
+DynamicCode ClassLoader,TPHidden_OWB_DynamicCode_ClassLoader,16
+Cross-Site Flashing (ActionScript 3),AS3_CrossSiteFlashing,79
+vBulletin vBug Tracker Module vbugs.php Cross-Site Scripting,vBulletinvBugTrackerModuleXSS,79
+BMForum Multiple Cross-Site Scripting,BMForumMultipleXSS,79
+ShopSite Shopping Cart Multiple registration.cgi Cross-Site Scripting,ShopSiteShoppingCartMultipleregistrationcgiXSS,79
+My Amazon Store Manager search.php Cross-Site Scripting,MyAmazonXSS,79
+Kayako eSupport index.php Cross-Site Scripting,KayakoeSupportindexphpXSS,79
+Dojo Multiple Cross-Site Scripting,DojoMultipleXSS,79
+Flash Source Code Disclosure,FlashSourceCodeDisclosure,540
+vBulletin ImpEx Module ImpExData.php Path Traversal,vBulletinImpExModulePathTraversal,22
+ViArt Shopping Cart Path Discolsure,ViArtShoppingCartPathDiscolsure,20
+Potential Registration Information Found,PotentialRegistrationInformationFound,20
+Microsoft FrontPage Server Extensions Authoring Log Information Disclosure,FrontpageServerExtensionsAuthoringLogInformationDisclosure,20
+Microsoft IIS Showcode.asp and Codebrws.asp Source Code Disclosure,attCWVShowCode,22
+phpWebSite index.php Path Traversal,phpWebSitePathTraversal,22
+NT and IIS Data Streams Alternation,attDollarData,20
+phpOracleView include_all.inc.php Remote File Inclusion,phpOracleViewincludeallincphpRFI,94
+Confixx Multiple Cross-Site Scripting,ConfixxMultipleXSS,79
+V-webmail preferences.personal.php Cross-Site Scripting,VwebmailXSS,79
+User-Agent Header Cross-Site Scripting,attUserAgentXSS,79
+ht://Dig Local File Retrieval,cwvHtDigEtcPasswdRetrieval,22
+Phishing Through URL Redirection,attRedirectInURL,601
+WordPress Pretty Link Lite Plugin pretty-bar.php Cross-Site Scripting,WPPrettyLinkLitePluginprettybarphpXSS,79
+Probe Is Session Dependent,TPHidden_probeIsSessionDependent,352
+Microsoft ASP.NET RPC/Encoded Denial Of Service,attAspDotNetRpcDoS,119
+IBM WebSphere 500 Internal Server Error Page Cross-Site Scripting,IBMWebsphere500XSS,79
+Onyx Multiple Cross-Site Scripting,OnyxMultipleXSS,79
+osCommerce Multiple Cross-Site Scripting,osCommerceMultipleXSS,79
+WordPress Pool Theme Cross-Site Scripting in Path,WordPressPoolThemeXSSinPath,79
+Credit Card Number Pattern Found (American Express) Over Unencrypted Connection,GD_CreditCardAmericanExpressNotSSL,311
+CMS Made Simple Multiple Cross-Site Scripting,CMSMadeSimpleMultipleXSS,79
+Cookie Poisoning SQL Injection,attCookieSQLInjection,307
+phpPgAdmin redirect.php URL Redirection,phpPgAdminredirectphpURLRedirection,74
+Scry index.php Path Disclosure,ScryPathDisclosure,307
+WebSphere Multiple Link Injection through Administrator Console,WebSphereMultLinkInjAdminConsole,74
+Macromedia JRun Sample Files Source Code Disclosure,cwvJrunSamples,20
+vbPortal Path Traversal,vbPortalPathTraversal,22
+IBM Rational Build Forge Cross-Site Scripting,IBMRationalBuildForgeXSS,79
+SAP Web Application Server Cross-Site Scripting in Path,SAPWebApplicationServerXSSinPath,79
+SAP NetWeaver administration_setup.jsp Cross-Site Scripting,SAPNetWeaveradministrationsetupjspXSS,79
+MKPortal Path Disclosure,MKPortalPathDisclosure,307
+Communications SSL,TPHidden_OWB_Communications_SSL,20
+MailForm.pl File Download,attMailFormplFileDownloadVulnerability,22
+Freeway eCommerce Multiple Path Traversal,FreewayeCommerceMultiplePathTraversal,22
+DoceboCMS Accept-Language Header SQL Injection,DoceboCMSAcceptLanguageHeaderSQLInjection,89
+Proventia GX5108 and GX5008 Remote File Inclusion,ProventiaRFI,94
+ubb.threads index.php Cross-Site Scripting,ubbthreadsXSS,79
+ViArt Shop Multiple Cross-Site Scripting,ViArtShopMultipleXSS,79
+JSPWiki Edit.jsp Cross-Site Scripting,JSPWikiEditjspXSS,79
+Sophos Email Appliance Multiple Cross-Site Scripting,SophosEmailApplianceMultipleXSS,79
+PHPList index.php Path Traversal,PHPListPathTraversal,22
+Macromedia ColdFusion Error Page Cross-Site Scripting,ColdFusionErrorPageCSS,79
+PHPX Multiple SQL Injection,PHPXMultipleSQLInjection,89
+GForge Multiple SQL Injection,GForgeMultipleSQLInjection,89
+ABAP AccessControl AuthCheck Report,TPHidden_OWB_ABAP_AccessControl_AuthCheck_Report,565
+CyberBuild Multiple SQL Injection,CyberBuildMultipleSQLInjection,89
+Link to malicious site,TPHidden_MW_LinkToMaliciousSite,16
+ABAP AccessControl AuthCheck Broken,TPHidden_OWB_ABAP_AccessControl_AuthCheck_Broken,565
+Helm Web Hosting Control Panel Multiple Cross-Site Scripting,HelmWebHostingCPXSS,79
+Microsoft Frontpage Server Extensions shtml.dll Denial of Service,MSFrontpageServerExtensionsshtmldllDOS,119
+WordPress Trackback Denial of Service,WordPressTrackbackDoS,310
+VirtueMart index.php Command Execution,VirtueMartindexphpCommandExecution,77
+Microsoft IIS .shtml and .stm Files Cross-Site Scripting,attShtmlStmCSS,79
+Php-Stats tracking.php Cross-Site Scripting,PhpStatstrackingphpXSS,79
+Link to harmless site,TPHidden_MW_LinkToBenignSite,16
+Jcow index.php Path Traversal,JcowindexphpPathTraversal,22
+Comptel Provisioning and Activation index.jsp Cross-Site Scripting,CmptlPrvsnngActvtnindexjspXSS,79
+Cross-Site Scripting,attCrossSiteScripting,79
+WordPress All-in-One Event Calendar Plugin Multiple Cross-Site Scripting,WordPressAllinOneEventCalendarPluginMultipleXSS,79
+Caucho Resin DOS Device Path Disclosure,cwvCuachoResinPathDiscDosDeviceName,20
+KnowledgebasePublisher PageController.php Path Traversal,KnowledgebasePublisherPathTraversal,22
+ABAP CrossSiteScripting,TPHidden_OWB_ABAP_CrossSiteScripting,79
+Resin view_source.jsp Path Traversal,ResinviewsourcejspPathTraversal,22
+Simple Machines Forum Mod Seo4SMF SQL Injection,SimpleMachinesForumModSeo4SMFSQLInjection,89
+AuctionWeaver CGI Remote Shell Execution,attAuctionWeaverCGIRemoteShellExecutionVulnerability,77
+Joomla! NeoRecruit Component index.php SQL Injection,JoomlaNeoRecruitComponentindexphpSQLInjection,89
+Confixx Pro allgemein_transfer.php Cross-Site Scripting,ConfixxProXSS,79
+PHP Toolkit for PayPal Exposure of Transactions,PHPToolkitSecBypass,20
+Link to suspected malicious content,TPHidden_MW_LinkToMaliciousSuspectedContent,16
+Softbiz Image Gallery Script Multiple SQL Injection,SoftbizImageGallerySQLInjection,89
+JoomlaFlash Component Multiple Remote File Inclusion,JoomlaFlashComponentMultipleRFI,94
+CubeCart index.php and cart.php Cross-Site Scripting,CubeCartXSS,79
+Apache Tomcat Path Disclosure,ApacheTomcatPathDisclosure,20
+TWiki "configure" Path Traversal,TWikiconfigurePathTraversal,22
+HP Insight Management Agents Cross-Site Scripting,HPInsightManagementAgentsXSS,79
+XOOPS Tutorials Module Multiple SQL Injection,XOOPSTutorialsModuleMultipleSQLInjection,89
+Help Center Live SQL Injection,cwvHelpCenterLiveSQLInjection,89
+PeerCast URL Handling Buffer Overflow,PeerCastBufferOverflow,189
+Validation Required Business Logic,TPHidden_OWB_Validation_Required_BusinessLogic,16
+Apache Expect Header Cross-Site Scripting,ApacheExpectHeaderXSS,79
+Cacti Multiple SQL Injection,CactiMultipleSQLInjection,89
+Apache Multiviews Attack,ApacheMultiview,20
+Oracle Application Server XSQL Arbitrary SQL Query Execution,cwvOwaXSQLquery,89
+Apache JServ Environment Status Information Disclosure,ApacheJServEnvironmentStatusInformationDisclosure,20
+Confixx Pro index.php SQL Injection,ConfixxProSQLInjection,89
+nph-test-cgi Script System Information Retrieval,attNphTestCgi,20
+Oracle Application Server SOAP Administration,OracleApplicationServerSOAPAdministration,489
+JNDI Injection,TPHidden_WB_JNDIInjection,88
+Microsoft FrontPage Form Results Disclosure,attMicrosoftFrontPageFormResultsDisclosure,20
+Cryptography InsecureAlgorithm,TPHidden_OWB_Cryptography_InsecureAlgorithm,525
+IBM BladeCenter Advanced Management Module Cross-Site Scripting,IBMBladeCenterAdvancedManagementModuleXSS,79
+WebSphere Multiple Cross-Site Scripting in Administrator Console,WebSphereMultXSSAdminConsole,79
+Flash Tag Cloud control for ASP.NET Cross-Site Scripting,FlashTagCloudcontrol4ASPNETXSS,79
+Remove all hardcoded passwords,TPHidden_OWB_ABAP_Password_Hardcoded,259
+iPlanet Server Directory Traversal,attiPlanetTraversal,22
+eTicket view.php Cross-Site Scripting,eTicketviewphpXSS,79
+Quality,TPHidden_OWB_Quality,550
+Pivot Multiple Cross-Site Scripting,PivotXSS,79
+Pixelpost index.php SQL Injection,PixelpostSQLInjection,89
+Talentsoft WebPlus Server Source Code Disclosure and Information Leakage,attMultipleSecurityBreachesInTalentsoftWebPlusApplicationServer,20
+PHPWebGallery Multiple Cross-Site Scripting,PHPWebGalleryMultipleXSS,79
+Microsoft .NET Server Cross-Site Scripting,cwvIISdotNetCSS,79
+ABAP AccessControl AuthCheck Report All,TPHidden_OWB_ABAP_AccessControl_AuthCheck_Report_All,565
+Vanilla people.php Cross-Site Scripting,VanillapeoplephpXSS,79
+CMS Made Simple adodb-perf-module.inc.php Remote PHP Code Execution,CMSMadeSimpleRemotePHPCodeExecution,94
+Apache OFBiz Multiple Cross-Site Scripting,ApacheOFBizMultipleXSS,79
+Connect Manipulation,GB_ConnectManipulation,441
+IBM WebSphere Portal Server and Lotus Web Content Management Cross-Site Scripting,IBMWPSandLotusWCMXSS,79
+Format String Remote Command Execution - invasive check,attFormatStringsInvasive,134
+IIS localstart.asp Possible Brute Force,IISlocalstartaspPossibleBruteForce,307
+QuikStore Shopping Cart File Retrieval,attQuikStoreShoppingCartFileRetrievalVulnerability,22
+Oracle Application Server PL/SQL Cross-Site Scripting,attOwaCSS,79
+PHPList Mailing List Manager Cross-Site Scripting,PHPListXSS,79
+MKPortal index.php SQL Injection,MKPortalSQLInjection,89
+Joomla AjaxChat Component Remote File Inclusion,JoomlaAjaxChatComponentRemoteFileInclusion,94
+Microsoft FrontPage Configuration Information Leakage,attFrontPageConfigurationInformationLeakage,20
+SOAP Web Services Application Error,SoapAppError,209
+Credit Card Number Pattern Found (MasterCard),GD_CreditCardMasterCard,200
+Oracle PL/SQL Information Retrieval,attDirAppendPLSQL,20
+Oracle Application Server XSQLConfig.xml File Information Leakage,cwvOwaXSQLConfig,20
+IBM WebSphere ''..'' Cross-Site Scripting,cwvWebSphereXSS,79
+Apache Tomcat Path Traversal,ApacheTomcatPathTraversal,22
+Joomla! AllVideos Plugin download.php Path Traversal,JoomlaAllVideosPlugindownloadphpPathTraversal,22
+MemHT Portal index.php SQL Injection,MemHTPortalindexphpSQLInjection,89
+phpCOIN Cross-Site Scripting,phpCOINXSS,79
+AppDOS Lockout,TPHidden_OWB_AppDOS_Lockout,307
+Macromedia ColdFusion Weak Session Cookie,attCFTOKEN,16
+LiveZilla server.php Cross-Site Scripting,LiveZillaserverphpXSS,79
+Microsoft IIS 4.0 Unauthorized Database Access,attMicrosoftIIS40UnauthorizedDatabaseAccess,20
+Claroline rqmkhtml.php Cross-Site Scripting (Versions below and including 1.7.4),ClarolineXSS,79
+Joomla Dada Mail Manager Component config.dadamail.php Remote File Inclusion,JoomlaDadaMailManagerComponentconfigdadamailphpRFI,94
+Aardvark Topsites PHP Directory Listing,AardvarkTopsitesPHPDirectoryListing,20
+WordPress WP-StarsRateBox Plugin wp-starsratebox.php SQL Injection,WordPressWPStarsRateBoxSQLInjection,89
+Application Denial of Service Shutdown,TPHidden_OWB_AppDOS_Shutdown,119
+phpWebSite links.php SQL Injection,phpWebSitelinksphpSQLInjection,89
+FirePass 4100 SSL VPN Multiple Cross-Site Scripting,FirePass4100SSLVPNMultipleXSS,79
+H-Sphere psoft.hsphere.CP Cross-Site Scripting,HSphereXSS,79
+eSyndiCat Link Exchange Script suggest-link.php SQL Injection,eSyndiCatLinkExchangeScriptsuggestlinkphpSQLInjection,89
+WordPress WP Forum Server Plugin feed.php SQL Injection,WordPressWPForumServerPluginfeedphpSQLInjection,89
+Oracle Rapid Install Cross-Site Scripting in Path,OracleRapidInstallXSSinPath,79
+PHP Real Estate Classifieds header.php Remote File Inclusion,PHPRealEstateClassifiedsheaderphpRFI,94
+Web Calendar Pro dropbase.php SQL Injection,WebCalendarProSQLInjection,89
+iNet Orkut Clone profile_social.php SQL Injection,iNetOrkutCloneprofilesocialphpSQLInjection,89
+Spinworks Application Server Web Server Denial of Service,cwvSpinworksASWSDoS,119
+Meganoide news PHP Remote File Inclusion,MeganoidesnewsPHPRemoteFileInclusion,94
+Apache::ASP Module Source.asp File Creation,attApacheASPModuleSourceaspFileCreationVulnerability,77
+boastMachine admin.php Cross-Site Scripting,boastMachineadminphpXSS,79
+SAP NetWeaver container.jsp Cross-Site Scripting,SAPNetWeavercontainerjspXSS,79
+phpBB "AllowHTML" Cross-Site Scripting,phpBBAllowHTMLXSS,79
+Microsoft FrontPage Server Extensions Path Disclosure,attCWVFrontPagePathDisc,20
+Microsoft ASP.NET Debugging Enabled,MicrosoftASPNETDebuggingEnabled,20
+ABAP Injection SQL Write,TPHidden_OWB_ABAP_Injection_SQL_Write,89
+Netscape Server Configuration Information Disclosure,NetscapeServerConfigurationInformationDisclosure,20
+Oracle Web Listener Remote Command Execution ,attOracleWebListenerRemoteCommandExecutionVulnerability,77
+TikiWiki Multiple Cross-Site Scripting (Versions below and including 1.9.3.1),TikiWikiXSS,79
+webMethods Glue Management Console Path Traversal,webMethodsGlueManagementConsolePathTraversal,22
+BEA WebLogic URL Trickery Directory Listing,attWebLogicDirTrickery,548
+Zen Cart Multiple Path Traversal,ZenCartMultiplePathTraversal,22
+Joomla Pro Desk Component index.php Path Traversal,JoomlaProDeskComponentindexphpPathTraversal,22
+Native,TPHidden_OWB_Native,189
+Pixelpost index.php SQL Injection (Version 1.7),PixelpostindexphpSQLInjection,89
+Suspected malicious content (malware),TPHidden_MW_MaliciousSuspectedContent,16
+FileLister Cross-Site Scripting,FileListerXSS,79
+Resin "viewfile" servlet File Download,ResinviewfileservletFileDownload,20
+ModernBill Cross-Site Scripting,ModernBillCSS,79
+Calendarix Multiple Cross-Site Scripting,CalendarixMultipleXSS,79
+Apache Tomcat cal2.jsp Cross-Site Scripting,ApacheTomcatcal2jspXSS,79
+FormNow CGI Shell Command Execution,attFormNowCGIIsVulnerableToShellCommandExecution,77
+Buffer Overflow Buffer Size Out Of Bounds,TPHidden_OWB_BufferOverflow_BufferSizeOutOfBounds,189
+vBTube (module for vBulletin) vBTube.php Cross-Site Scripting,vBTubemoduleforvBulletinvBTubephpXSS,79
+RadBids Gold v2 SQL Injection,cwvRadBidsGoldV2SQLInjection,89
+DeskPRO login.php Cross-Site Scripting,DeskPROloginphpXSS,79
+AMFPHP details.php Cross-Site Scripting,AMFPHPdetailsphpXSS,79
+Oracle Application Server mod_plsql Directory Traversal,cwvOwaPathTraversal,22
+MyBB Multiple Cross-Site Scripting (versions below 1.6.1),MyBBMultipleXSS,79
+Gossamer Threads DBMan CGI Sensitive Information Disclosure,attGossamerThreadsDBManCGIRevealsSensitiveInformation,20
+Banner Rotating 01 Privilege Escalation,attBannerRotating01ExposedPasswordFile,565
+Simple PHP Blog install05.php Path Traversal,SimplePHPBlogPathTraversal,22
+Apache Tomcat Directory Listing ,cwvTomcatDirectoryListingCheck,548
+BBpress bb-login.php Cross-Site Scripting,BBpressbbloginphpXSS,79
+Generic Mutation Title,genericMutTitle,307
+Potential File Upload,PotentialFileUpload,434
+SAP Web Application Server HTTP Response Injection,SAPWebApplicationServerHTTPResponseInjection,74
+phpCMS Cross-Site Scripting,phpCMSXSSVuln,79
+Unsafe Reflection,GB_UnsafeReflection,470
+yblog Multiple Cross-Site Scripting,yblogMultipleXSS,89
+phpFaber TopSites index.php SQL Injection,phpFaberTopSitesindexphpSQLInjection,89
+BEA WebLogic Administration Console Cross-Site Scripting,BEAWebLogicAdminCSS,79
+WoltLab Burning Board dereferrer.php Cross-Site Scripting,WoltLabBurningBoarddereferrerphpXSS,79
+glFusion Cookie SQL Injection,glFusionCookieSQLInjection,89
+SurgeMail Webmail Denial of Service,SurgeMailWebmailDoS,119
+PHP Advanced Transfer Manager Cross-Site Scripting,PHPAdvTransMgrXSS,79
+Email Address Pattern Found in Parameter Value,paramValueCheckEmail,359
+Joomla! index.php Cross-Site Scripting,JoomlaindexphpXSS,79
+YaBB SE index.php SQL Injection,YaBBSESQLInjection,89
+AShop Shopping Cart Multiple Cross-Site Scripting,AShopShoppingCartMultipleXSS,79
+BEA WebLogic weblogic.xml Information Disclosure,BEAWebLogicweblogicxmlInfDisc,20
+Invision Power Board "CLIENT-IP" HTTP Header SQL Injection,InvisionPowerBoardCLIENTIPHTTPHeaderSQLInjection,89
+2532|Gigs activateuser.php Path Traversal,2532GigsactivateuserphpPathTraversal,22
+Edit-X CMS index.php Cross-Site Scripting,EditXCMSindexphpXSS,79
+MyBB SQL private.php Injection,MyBBSQLprivatephpSQLInjection,89
+TikiWiki Multiple Path Traversal,TikiWikiMultiplePathTraversal,22
+Aardvark Topsites PHP lostpw.php Path Traversal,AardvarkTopsitesPHPPathTraversal,22
+Injection Mail,TPHidden_OWB_Injection_Mail,16
+Quality Deprecated,TPHidden_OWB_Quality_Deprecated,550
+opentaps keywordsearch Cross-Site Scripting,opentapskeywordsearchXSS,79
+Vivvo CMS files.php File Retrieval,VivvoCMSfilesphpFileRetrieval,22
+KnowledgeTree Multiple Cross-Site Scripting,KnowledgeTreeMultipleXSS,79
+Credit Card Number Pattern Found (Discover) Over Unencrypted Connection,GD_CreditCardDiscoverNotSSL,311
+.NET CS File Download,DotNETCSFileDownload,20
+Probe JSON response,ProbeJSONJavaScript,79
+AutoIndex index.php Cross-Site Scripting,AutoIndexindexphpXSS,79
+GForge editprofile.php SQL Injection,GForgeeditprofilephpSQLInjection,20
+Malicious Trojan,TPHidden_OWB_Malicious_Trojan,16
+ClipBucket Multiple Cross-Site Scripting,ClipBucketMultipleXSS,79
+Horde go.php Arbitrary File Download,HordeArbitraryFileDownload,489
+Microsoft IIS Non-Existent idq File Path Disclosure,attIISIdqPath,20
+NeoMail neomail.pl Cross-Site Scripting,NeoMailXSS,79
+Multiple Vendor test-cgi Sensitive Information Disclosure,attMultipleVendorTestcgiVulnerability,20
+ID Board SQL Injection,cwvIDBoardSQLInjection,89
+Extropia BBS Forum File Download,attExtropiasBBSForumIsVulnerableToFileDownloadingAttack,22
+DOM Based Cross-Site Scripting,DOMXSS1,79
+PHP-Nuke vWar Module SQL Injection,PHPNukevWarModuleSQLInjection,89
+Cross-Site Flashing (ActionScript 2),CrossSiteFlashing,456
+Comdev eCommerce Remote File Inclusion,ComdeveCommerceRFI,94
+ABAP Execution ClientOS,TPHidden_OWB_ABAP_Execution_ClientOS,489
+Microsoft FrontPage Server Extensions Vital Information Leakage,attFrontpageServerExtensionsVitalInformationLeakage,20
+SimpNews Source Code Disclosure,SimpNewsSourceCodeDisclosure,264
+BEA Plumtree Foundation and AquaLogic Interaction Cross-Site Scripting,BEAPlumtreeFoundationAquaLogicXSS,79
+Pluck predefined_variables.php Path Traversal,PluckpredefinedvariablesphpPathTraversal,22
+Probe Traversal,probeTraversal,22
+bitweaver Multiple Cross-Site Scripting in Path,bitweaverMultipleXSSinPath,79
+Oracle Application Server 9i PORTAL_DEMO.ORG_CHART SQL Injection,cwvOracleOrgChart,20
+Microsoft ASP.NET ''Application Trace'' Information Leakage,cwvIISdotNetTrace,200
+Jupiter Content Manager index.php Cross-Site Scripting,JupiterContentManagerXSS,79
+Oracle Reports Server Buffer Overflow,OracleReportsServerBufferOverflow,189
+PHP Pro Bid categories.php SQL Injection,PHPProBidcategoriesphpSQLInjection,89
+GameSiteScript index.php SQL Injection,GameSiteScriptindexphpSQLInjection,89
+Microsoft IIS servervariables_vbscript.asp Information Disclosure,MicrosoftIISservervariablesvbscriptaspInfDisc,20
+Access Control Impersonation,TPHidden_OWB_AccessControl_Impersonation,489
+PHP Advanced Transfer Manager File Download,PHPAdvTransMgrFileDl,22
+Toast Forums toast.asp Cross-Site Scripting,ToastForumsXSS,79
+Oracle Reports Server XML File Download,OracleReportsServerXMLFileDownload,22
+eTicket Multiple SQL Injection,eTicketMultipleSQLInjection,89
+Microsoft SQLXML Cross-Site Scripting,cwvIISXmlSqlCss,79
+ht://Dig Search Engine Installation Path Disclosure,attHtDigSearchEngineRevealsInstallationPath,20
+Microsoft Jet Database VBA Vulnerability Shell Command Execution ,attMSJetDB,77
+Possible Session Cookie Prediction,attWeakSessionCookie,16
+DynamicCode Reflection,TPHidden_OWB_DynamicCode_Reflection,16
+Moodle install.php Cross-Site Scripting,MoodleinstallphpXSS,79
+Client-Side (JavaScript) SQL Query Construction,attJSSQL,89
+Simplog index.php Path Traversal,SimplogPathTraversal,22
+Oracle Application Server SOAP Information Disclosure,OracleApplicationServerSOAPInfDisc,20
+Xampp Linux Cross-Site Scripting,XamppLinuxXSS,79
+Validation String,TPHidden_OWB_Validation_String,16
+CNStats who_r.php Remote File Inclusion,CNStatswhorphpRFI,94
+Netauth Directory Traversal ,attNetauthDirectoryTraversalVulnerability,22
+Validation Numeric,TPHidden_OWB_Validation_Numeric,16
+Charts MOD for phpBB charts.php SQL Injection,phpBBchartsphpSQLInjection,89
+Apache Web Server Directory Listing ,attApacheDirListing,548
+ClipBucket Multiple SQL Injection,ClipBucketMultipleSQLInjection,89
+OpenBB SQL Injection,OpenBBSQLInjection,89
+WoltLab Burning Board index.php Path Disclosure,WoltLabBurningBoardindexphpPathDisclosure,22
+mBlog index.php Path Traversal,mBlogindexphpPathTraversal,22
+phpWordPress SQL Injection,phpWordPress30SQLInjection,89
+CAPTCHA,TPHidden_OWB_CAPTCHA,307
+TikiWiki tiki-featured_link.php Cross-Site Scripting,TikiWikitikifeaturedlinkphpXSS,79
+PHP iCalendar Multiple Cross-Site Scripting - RULES IS DISABLED,PHPiCalendarMultipleXSS,79
+Application Denial of Service Flood,TPHidden_OWB_AppDOS_Flood,119
+Limbo CMS index.php SQL Injection,LimboCMSSQLInjection,89
+Woltlab Burning Board Lite pms.php SQL Injection,WoltlabBurningBoardLitepmsphpSQLInjection,89
+Article Publisher Pro category.php SQL Injection,ArticlePublisherProSQLInjection,89
+WordPress GBK/Big5 Character Set SQL Injection,WordPressGBKBig5CharacterSetSQLInjection,89
+Injection File,TPHidden_OWB_Injection_File,16
+HTTP Referer Header Cross-Site Scripting,attRefererCSS,79
+Apache PHP Source Code Disclosure,ApachePHPSourceDisclosure,20
+MyBB Multiple Cross-Site Scripting (versions below and including 1.03),MyBBMultXSS,79
+Information Leakage and Improper Error Handling,TPHidden_WB_InformationLeakage,200
+Dokeos Multiple Cross-Site Scripting - OBSOLETE BECAUSE IT WAS CONSOLIDATED WITH ANOTHER ATTACK,DokeosMultipleXSS,79
+CubeCart Multiple SQL Injection,CubeCartMultipleSQLInjection,89
+Pligg Multiple SQL Injection,PliggtrackbackphpSQLInjection,89
+Link to unwanted site,TPHidden_MW_LinkToUnwantedSite,16
+Native Method,TPHidden_OWB_Native_Method,189
+PostNuke RSS module Cross-Site Scripting,cwvPostNukeXSS,79
+Include Files Source Disclosure,cwvConfigFilesDownload,20
+Cross-Site Request Forgery,jsCrossSiteRequestForgery,565
+cPanel Multiple Cross-Site Scripting - OBSOLETE DUE TO BEING A DUPLICATE,cPanelMultXSS,307
+SOAP Array Overflow,attSoapArrayDoS,120
+CA iGateway Debug Mode HTTP GET Request Buffer Overflow,CAiGatewayGETBufferOverflow,189
+FortiMail admin.fe Cross-Site Scripting,FortiMailadminfeXSS,79
+OSSIM Cross-Site Scripting in Path,OSSIMXSSinPath,79
+Simple PHP Blog comment_add_cgi.php Cross-Site Scripting,SimplePHPBlogcommentaddcgiphpXSS,79
+Injection SQL,TPHidden_OWB_Injection_SQL,89
+Scry index.php Path Traversal,ScryPathTraversal,22
+PrivilegeEscalation,TPHidden_OWB_PrivilegeEscalation,89
+Nikira Fraud Management System "prompt" Cross-Site Scripting,NikiraFraudManagementSystempromptXSS,79
+Sphider Multiple Cross-Site Scripting,SphiderMultipleXSS,79
+Oracle Forms ifcgi60.exe Cross-Site Scripting,OracleFormsifcgi60exeXSS,79
+WordPress wp-Table Plugin wptable-button.php Remote File Inclusion,WordPresswpTablePluginRFI,94
+Netscape FastTrack HTTP GET Request Directory Listing,attNetscapeLowerCaseGet,548
+Sensitive Files Found,GD_SensitiveFiles,538
+ASP.NET Forms Authentication Bypass,attDotNetAuthBypass,89
+Drake CMS PHP Remote File Inclusion,DrakeCMSPHPRemoteFileInclusion,94
+F5 BIG-IP Application Security Manager rep_request.php Cross-Site Scripting,F5BIGIPApplicationSecurityManagerreprequestphpXSS,79
+WebAPP index.cgi Cross-Site Scripting,WebAPPXSS,79
+Beehive Forum links.php Cross-Site Scripting,BeehiveForumlinksphpXSS,79
+Invision Power Board index.php SQL Injection - OBSOLETE BECAUSE IT WAS CONSOLIDATED TO ANOTHER ATTACK,IPBSQLInjection3,307
+Dokeos Multiple SQL Injection,DokeosMultipleSQLInjection,89
+Cartwiz Cross-Site Scripting,cwvCartwizXSS,79
+Microsoft Indexing Service UTF-7 Cross-Site Scripting,MicrosoftIISUTF7XSS,79
+Apache MyFaces Tomahawk JSF Framework Cross-Site Scripting,ApacheMyFacesTomahawkJSFFrameworkXSS,79
+boastMachine admin.php SQL Injection,boastMachineadminphpSQLInjection,89
+iPlanet Default Installation Page Pattern Found,GD_iPlanetDefaultPage,20
+Logging Required,TPHidden_OWB_Logging_Required,89
+PhotoPost PHP Pro Cross-Site Scripting,cwvPhotoPostPHPProXSS,79
+NetOffice sendpassword.php SQL Injection,NetOfficeSQLInjection,89
+OpenPHPNuke master.php Path Traversal,OpenPHPNukePathTraversal,22
+Oracle 9iAS SOAP Default Configuration,OracleAppServerSOAPConfig,264
+ABAP Generic Variable Read,TPHidden_OWB_ABAP_Generic_Variable_Read,16
+Pre ADS Portal Multiple SQL Injection,PreADSPortalSQLInjection,89
+Savant 3.1 CgiTest.exe Buffer Overflow,cwvSavantCgiTestBoF,189
+JSPWiki Path Disclosure,JSPWikiPathDisclosure,20
+gCards loginfunction.php SQL Injection,gCardsSQLInjection,89
+Oracle 10g Buffer Overflow,Oracle10gBufferOverflow,189
+Cross-Site Request Forgery,attCrossSiteRequestForgery,352
+myEZshop Shopping Cart admin.php SQL Injection,myEZshopCartSQLInjection,89
+ABAP DB Query Write,TPHidden_OWB_ABAP_DB_Query_Write,89
+ClipShare uprofile.php SQL Injection,ClipShareuprofilephpSQLInjection,89
+Ibrow Newsdesk.cgi Traversal ,attIbrowNewsdeskcgiTraversalVulnerability,22
+ProfitCode PayProCart 3.0 Directory Traversal,cwvProfitCodePayProCart30DirectoryTraversal,22
+ADOdb SQL Injection,ADOdbSQLInjection,89
+Blind SQL Injection (Time Based),attBlindSqlInjectionTimeOut,89
+Remote Code Execution,GB_CommandExecution,77
+Pngren Remote Command Execution,cwvPngrenCommandExec,77
+miniBB index.php SQL Injection,miniBBindexphpSQLInjection,89
+SQL Injection File Write (requires user verification),attMSSQLInjectionProbe,89
+WordPress wp-comments-post.php Cross-Site Scripting,WordPresswpcommentspostphpXSS,79
+JavaScript Eloqua DOM Cross-Site Scripting,jsEloquaDOMXSS,79
+Todoyu test.php Cross-Site Scripting,TodoyutestphpXSS,79
+Google Search Appliances UTF-7 Cross-Site Scripting,GoogleSearchAppliancesUTF7XSS,79
+Phorum admin.php Cross-Site Scripting (Versions below and including 5.1.20),PhorumadminphpXSS2,79
+Merak Mail Server index.html Cross-Site Scripting,MerakMailServerindexhtmlXSS,79
+Confixx Pro "login" Parameter Cross-Site Scripting,ConfixxProloginParameterXSS,79
+Apache HTTP Method Request Entity Cross-Site Scripting,ApacheHTTPMethodRequestEntityXSS,79
+PhotoStore Multiple SQL Injection,PhotoStoreMultipleSQLInjection,89
+AccessControl Bypass,TPHidden_OWB_AccessControl_Bypass,531
+ASP.NET Cross-Site Scripting,attAspDotNetXSS,307
+Microsoft IIS PROPFIND Method Denial of Service,MicrosoftIISPROPFINDMethodDos,119
+Caucho Resin Directory Listing ,cwvResinWebInfListing,548
+LifeType index.php SQL Injection,LifeTypeindexphpSQLInjection,89
+Unsafe RMI,TPHidden_WB_UnsafeRMI,75
+SOAP Web Services Format String,SoapFormatString,134
+e107 contact.php PHP Code Execution,e107contactphpPHPCodeExecution,489
+Invision Power Board Army System Mod SQL Injection,IPBArmySystemModSQLInjection,89
+ABAP DB CriticalTable Write,TPHidden_OWB_ABAP_DB_CriticalTable_Write,525
+w-agora Multiple Path Disclosure,wagoraMultiplePathDisclosure,307
+Mollify index.php Cross-Site Scripting,MollifyindexphpXSS,79
+Microsoft FrontPage ''_vti_cnf'' Information Leakage,cwvVtiCnfHtm,200
+Injection DB Connection String,TPHidden_OWB_Injection_DBConnectionString,16
+Quality Comments,TPHidden_OWB_Quality_Comments,20
+Joomla! Multiple SQL Injection,JoomlaMultipleSQLInjection,89
+Microsoft IIS ''Translate: f'' Source Code Disclosure,attIISTranslateF,20
+Citrix NetScaler Web Management Cross-Site Scripting,CitrixNetScalerWebManagementXSS,79
+Dolphin get_list.php SQL Injection,DolphingetlistphpSQLInjection,89
+Vignette License Access and Modification,cwvVignetteLicense,119
+VirtueMart Multiple Path Traversal,VirtueMartMultiplePathTraversal,22
+Phorum admin.php Cross-Site Scripting (Versions below and including 5.1.19),PhorumadminphpXSS,79
+Application Debug Mode Enforcement ,attDebugFlag,489
+CubeCart Multiple Cross-Site Scripting (Versions below and including 3.0.11),CubeCartMultipleXSS,79
+Mechanism CrossSiteRequestForgery,TPHidden_OWB_Mechanism_CrossSiteRequestForgery,79
+sPaiz-Nuke modules.php Cross-Site Scripting,sPaizNukeXSS,79
+WebTrends Reporting Center Path Disclosure,cwvWebTrendsPathDisc,200
+CyberBuild Multiple Cross-Site Scripting,CyberBuildMultipleXSS,79
+Coppermine Photo Gallery Path Traversal,CopperminePhotoGalleryPathTraversal,22
+BlackBerry Enterprise Server Cross-Site Scripting,BlackBerryEnterpriseServerXSS,79
+ASPPortal Multiple SQL Injection,ASPPortalSQLInjection,89
+MailMan Webmail Command Execution,attMailManWebmailCommandExecutionVulnerability,77
+WordPress myGallery Plugin Remote File Inclusion,WordPressmyGalleryPluginRFI,94
+doop "page" Path Traversal,dooppagePathTraversal,22
+ABAP AccessControl Submit Alias,TPHidden_OWB_ABAP_AccessControl_Submit_Alias,565
+PHP Remote File Inclusion,PHPRemoteFileInclusion,98
+AppServ index.php Cross-Site Scripting,AppServindexphpXSS,79
+FormHandler.cgi File Download,attFormHandlercgiFileDownload,22
+osTicket ajax.php SQL Injection,osTicketajaxphpSQLInjection,89
+b2evolution Multiple Cross-Site Scripting,b2evolutionMultipleXSS,79
+HLstats hlstats.php Cross-Site Scripting,HLstatshlstatsphpXSS,79
+Validation Date,TPHidden_OWB_Validation_Date,16
+Link to malicious content (malware),TPHidden_MW_LinkToMaliciousContent,16
+BEA WebLogic Command Execution,BEAWeblogicCommandExecution,489
+PeerCast "HTTP::getAuthUserPass()" Buffer Overflow,PeerCastHTTPgetAuthUserPassBufferOverflow,119
+ErrorHandling RevealDetails Message,TPHidden_OWB_ErrorHandling_RevealDetails_Message,20
+PHPNews link_temp.php Cross-Site Scripting,PHPNewslinktempphpXSS,79
+Response Splitting,attResponseSplitting,307
+Apache Default Installation Page Pattern Found,GD_ApacheDefaultPage,20
+Email Address in Hidden Parameter,attEmailParameter,472
+F5 FirePass SSL VPN Multiple Cross-Site Scripting,F5FirePassSSLVPNApplianceMultipleXSS,79
+BBS E-Market Professional postscript.php Remote File Inclusion,BBSEMarketProfessionalRFI,94
+OWB Validation Required URL Domain,TPHidden_OWB_Validation_Required_URL_Domain,489
+xFlow index.cgi SQL Injection,xFlowSQLInjection,89
+Allaire ColdFusion CFCACHE Information Disclosure,attCFCACHE,20
+MailStudio 2000 File Download and Remote Execution,attMailStudio2000FileDownloadRemoteVulnerability,77
+realestateZONE index.cfm Cross-Site Scripting,realestateZONEXSS,79
+PHPList Mailing List Manager SQL Injection,PHPListSQLInjection,89
+BEA WebLogic Administrative Interface,BEAWeblogicAdministrativeInterface,565
+Oracle Application Server login.jsp Cross-Site Scripting,OracleApplicationServerloginjspXSS,79
+PHP iCalendar search.php Path Traversal,PHPiCalendarPathTraversal,22
+PivotX Multiple Cross-Site Scripting,PivotXMultipleXSS,79
+Pligg login.php Cross-Site Scripting,PliggloginphpXSS,79
+Exponent CMS download.php Path Traversal,ExponentCMSdownloadphpPathTraversal,22
+Naxtor Shopping Cart Cross-Site Scripting,cwvNaxtorCartXSS,79
+FormMail Environmental Variables Disclosure,attFormmail,20
+LDAP Injection,attLDAPInjection,90
+Woltlab Burning Board rGallery index.php SQL Injection,WoltlabBurningBoardrGallerySQLInjection,89
+MKPortal index.php Path Traversal,MKPortalPathTraversal,22
+Credit Card Number Pattern Found (Discover),GD_CreditCardDiscover,200
+Information Leakage of Webalizer Usage Statistics,InformationLeakageofWebalizerUsageStatistics,20
+Winmail Server main.php Path Traversal,WinmailServermainphpPathTraversal,22
+Glassfish Multiple Cross-Site Scripting,GlassfishMultipleXSS,79
+PortailPHP SQL Injection,cwvPortailPHPSQLInjection,89
+Netscape Server Arbitrary File Download,NetscapeServerArbitraryFileDownload,22
+TRACE and TRACK HTTP Methods Enabled,cwvTraceMethod,489
+MusicBox Multiple SQL Injection,MusicBoxMultipleSQLInjection,89
+Malicious,TPHidden_OWB_Malicious,16
+Caucho Resin resin-admin Cross-Site Scripting,CauchoResinresinadminXSS,79
+Validation Required Logging,TPHidden_OWB_Validation_Required_Logging,16
+Musicbox viewalbums.php SQL Injection,MusicboxviewalbumsphpSQLInjection,89
+RedDot CMS ioRD.asp SQL Injection,RedDotCMSioRDaspSQLInjection,89
+phplist Cross-Site Scripting,phplistqueryXSS,79
+PHP Fusion Photogallery SQL Injection,PHPFusionSQLInjection,89
+Campsite index.php Cross-Site Scripting,CampsiteindexphpXSS,79
+b2evolution Multiple Remote File Inclusion,b2evolutionMultipleRFI,94
+Microsoft IIS ''Translate: f'' Source Code Disclosure,attIISTranslateF6,540
+Quality NeverCall,TPHidden_OWB_Quality_NeverCall,550
+Microsoft IIS Missing Host Header Information Leakage,MSIISMissingHostHeaderInformationLeakage,20
+OpenEdit Cross-Site Scripting,OpenEditXSS,79
+Privilege Escalation Member Access,TPHidden_OWB_PrivilegeEscalation_MemberAccess,565
+Wordpress WP-DB Backup Plugin edit.php Path Traversal,WordpressWPDBBackupPluginPathTraversal,22
+Cobalt Cube Path Traversal,CobaltCubePathTraversal,22
+PhpMyChat users_popupL.php3 Remote File Inclusion,PhpMyChatuserspopupLphp3RFI,94
+Apache AXIS Non Existent Java Web Service Path Disclosure,cwvNoSuchJavaWebServicePathDisc,200
+HP System Management Homepage "RedirectUrl" Parameter URL Redirection,HPSystemManagementHomepageURLRedirection,601
+Lotus Domino HTTP GET Request Buffer Overflow,attLotusGetOverflow,189
+AWStats URL Cross-Site Scripting,AWStatsURLXSS,79
+e107 Chat Module Remote File Inclusion,e107ChatModuleRFI,94
+photokorn Multiple SQL Injection,photokornMultipleSQLInjection,89
+Dojo Toolkit URL Redirection,DojoToolkitURLRedirection,601
+Joomla! Graphics Component index.php Path Traversal,JoomlaGraphicsComponentindexphpPathTraversal,22
+Module Builder Module (for SugarCRM) DownloadModule.php Path Traversal,ModuleBuilderModuleDownloadModulephpPathTrav,22
+Phpclanwebsite index.php SQL Injection,PhpclanwebsiteSQLInjection,89
+Bea Weblogic Apache Connector Denial of Service,BeaWeblogicApacheConnectorDenialofService,119
+SAP Internet Graphics Server Cross-Site Scripting,SAPInternetGraphicsServerXSS,79
+Client-Side Storage Poisoning,jsWebStoragePoisoning,79
+phpFaber TopSites index.php Cross-Site Scripting (Versions below and including 2.0.9),phpFaberTopSitesindexphpXSS,79
+Microsoft IIS 4.0 Example Site Denial of Service,attMicrosoftIIS40ExampleSiteDenialOfServiceVulnerability,119
+DynamicCode Native,TPHidden_OWB_DynamicCode_Native,16
+RunCms admin.php PHP Code Execution,RunCmsadminphpRFI,94
+SafeNet Sentinel Protection Server/Key Server Path Traversal,SafeNetSentinelProtectionServeKeyServerPathTraversal,22
+Scratcher projects.php Cross-Site Scripting,ScratcherprojectsphpXSS,79
+MODx "id" parameter (index.php) SQL Injection,MODxidparamSQLInjection,89
+Apache AXIS XML External Entity File Retrieval ,cwvApacheAxisFileRetrievalExternalEntity,611
+Info,TPHidden_OWB_Info,550
+JavaScript SWF Object DOM Cross-Site Scripting,jsSWFObjDOMXSS,79
+XOOPS Multiple PHP Code Injection,XOOPSMultiplePHPCodeInjection,94
+My Web Server Denial of Service,MyWebServerDoS,119
+Horde Application Framework icon_browser.php Cross-Site Scripting,HordeApplicationFrameworkiconbrowserphpXSS,79
+WEBalbum Local File Inclusion,WEBalbumFileInc,22
+boastMachine Multiple Cross-Site Scripting,BoastMachineXSS,79
+PHF CGI Remote Command Execution,attPHFCGIRemoteCommandExecution,77
+Poison Null Byte Windows Files Retrieval,attNullByte,626
+webSPELL Multiple Cross-Site Scripting,webSPELLMultipleXSS,79
+vtiger CRM index.php Cross-Site Scripting (version 5.0.4),vtigerCRMindexphpXSS,79
+Net Clubs Pro Multiple Cross-Site Scripting,NetClubsProXSS,79
+SPIP spip.php Cross-Site Scripting,SPIPsphpphpXSS,79
+PerlBlog weblog.pl Path Traversal,PerlBlogWeblogPathTraversal,22
+DCForumLite dcboard.cgi Cross-Site,DCForumLiteXSS,79
+Protocol Manipulation,jsProtocolManipulation,89
+WS_FTP.LOG Information Leakage,cwvWS_FTP_Log,20
+IBM WebSphere ibm_security_logout URL Redirection,IBMWebSpheRedirection,601
+Silvernews Remote Command Execution,cwvSilvernewsOSCommanding,77
+xbtit index.php SQL Injection,xbtitindexphpSQLInjection,89
+AlstraSoft E-Friends index.php SQL Injection,AlstraSoftEFriendsindexphpSQLInjection,89
+eFront Multiple SQL Injection,eFrontMultipleSQLInjection,89
+Configuration,TPHidden_OWB_Configuration,16
+Hyperseek 2000 File Download ,attHyperseek2000FileDownloadVulnerability,22
+Microsoft FrontPage 98 Extensions for IIS dvwssr.dll Buffer Overflow,FrontPage98dvwssrdllBufferOverflow,189
+Microsoft FrontPage Htimage.exe Command Execution and Path Disclosure,attIISHtimage,77
+Validation Required WriteToSocket,TPHidden_OWB_Validation_Required_WriteToSocket,489
+phpBB Openid (module for phpBB) BBStore.php Remote File Include,phpBBOpenidmoduleforphpBBRFI,94
+Oracle Application Server 10g login.jsp Cross-Site Scripting,OracleApplicationServer10gloginjspXSS,79
+Simplog login.php Cross-Site Scripting,SimplogXSS,79
+HTTP Header SQL Injection,attHeaderSqlInjection,307
+Clinet-Side XPath Injection,jsXPath,91
+WebSphere Multiple Phishing through Administrator Console,WebSphereMultPhishingAdminConsole,74
+Apache AXIS XML Parser echoheaders.jws Sample Web Service Denial of Service,cwvAxisEchoHeadersExplodeEntity,16
+Native Library,TPHidden_OWB_Native_Library,189
+ABAP AccessControl AuthCheck Alias,TPHidden_OWB_ABAP_AccessControl_AuthCheck_Alias,565
+Visale Multiple Cross-Site Scripting,VisaleXSS,79
+Novell Web Server Sample Page Source Disclosure,attNovellSourceDisclosure,22
+Undefined Behavior Awt List,TPHidden_OWB_UndefinedBehavior_AwtList,489
+Mailto.cgi Remote Command Execution,attMailtocgiRemoteCommandExecution,77
+Quality Not Implemented,TPHidden_OWB_Quality_Not_Implemented,550
+DotNetNuke BDPDT Module Command Execution,DotNetNukeBDPDTModuleCommandExecution,77
+Xitami Web Server Information Leakage,attXitamiWebServerInformationLeakage,20
+Q-Shop search.asp Cross-Site Scripting,QShopsearchaspXSS,79
+Lyris List Manager Access Control Bypass ,attLyrisListManagerAccessControlBypassVulnerability,565
+Dragoran Portal module for Invision Power Board index.php SQL Injection,IPBDragoranSQLInjection,89
+Invision Power Board index.php Cross-Site Scripting,IPBXSS,79
+Built2go News Manager Blog Multiple Cross-Site Scripting,Built2goNewsManagerBlogMultipleXSS,79
+Cross-Site Scripting through Flash (ActionScript 3),AS3_CrossSiteScriptingThroughFlash,79
+phpMyQuote index.php Cross-Site Scripting,phpMyQuoteindexphpXSS,79
+Apache stronghold-status Information Disclosure,ApachestrongholdstatusInfDisc,20
+Coppermine Photo Gallery showdoc.php Cross-Site Scripting (Version 1.4.14),CopperminePhotoGalleryshowdocphpXSS,79
+Apache Range Header Denial of Service,Apache2RangeDoS,400
+PHP-Nuke vWar Module Cross-Site Scripting,PHPNukevWarModuleXSS,79
+SAP Products Cfolders Engine Multiple Cross-Site Scripting,SAPProductsCfoldersEngineMultipleXSS,79
+Adobe ColdFusion MX File Content Disclosure,AdobeColdFusionMXFileContentDisclosure,20
+Matt Wright Guestbook.pl Server Side Includes Execution,attMattWrightsGuestbookplCanBeUsedToExecuteServerSideIncludes,97
+Microsoft FrontPage Extensions Site Defacement,attPossibilityForWebPageDefacementThroughPermissionsProblemsWithFrontPageExtensions,565
+eTicket open.php Cross-Site Scripting,eTicketopenphpXSS,79
+Sun Java Hotspot Performance Engine Denial of Service,attSunJavaHotSpotDoS,119
+I-Rater Platinum common.php Path Traversal,IRaterPlatinumPathTraversal,22
+MacOS X Finder Apache Directory Contents Disclosure,cwvMacOsXFinderDirContents,548
+i-Gallery Directory Traversal,iGalleryDirTraversal,22
+Credit Card Number Pattern Found (American Express) in Parameter,GD_CreditCardAmericanExpressParameterIsSSL,311
+Kmita FAQ index.php SQL Injection,KmitaFAQSQLInjection,89
+HP OpenView Network Node Manager Denial of Service,HPOpenViewNNManagerDoS,189
+Nuked-Klan index.php SQL Injection,NukedKlanSQLInjection,89
+Microsoft FrontPage Server Extensions Cross-Site Scripting,MicrosoftFrontPageServerExtensionsXSS,79
+Joomla redSHOP Component index.php SQL Injection,JoomlaredSHOPComponentindexphpSQLInjection,89
+SalesLogix eViewer Application Denial of Service,attSalesLogixDoS,119
+WordPress Filebase Plugin wpfb-ajax.php SQL Injection,WPFilebasePluginwpfbajaxphpSQLInjection,89
+Cryptography,TPHidden_OWB_Cryptography,307
+WordPress Newsletter Plugin stnl_iframe.php SQL Injection,WordPressNewsletterPluginstnliframephpSQLInjection,89
+MyBB usercp.php SQL Injection,MyBBUserCpSQLInjection,89
+Calcium calcium40.pl Cross-Site Scripting,Calciumcalcium40plXSS,79
+RadLance Gold popup.php Path Traversal,RadLanceGoldPathTraversal,22
+Singapore index.php Path Traversal,SingaporePathTraversal,22
+SimpleNews print.php SQL Injection,SimpleNewsprintphpSQLInjection,89
+Simple Forum thumbnail.php Path Traversal,SimpleForumthumbnailphpPathTraversal,22
+Netscape PublishingXpert 2.5 Arbitrary File Download,attNetscapeFileRetrieval,22
+Zikula Application Framework Multiple Cross-Site Scripting,ZikulaApplicationFrameworkMultipleXSS,79
+phpFaber TopSites index.php Cross-Site Scripting (Versions below and including 1.9.1),phpFaberTopSitesXSS,79
+Concurrent Execution using Shared Resource with Improper Synchronization (''Race Condition''),TPHidden_OWB_RaceCondition,362
+ZeroBoard Multiple Path Traversal,ZeroBoardMultiplePathTraversal,22
+Unencrypted __VIEWSTATE Parameter,attViewStateNotEncrypted,77
+Family Connections Multiple SQL Injection,FamilyConnectionsMultipleSQLInjection,89
+Mantis manage_user_page.php SQL Injection,MantisSQLInjection,89
+Phishing Through Flash (ActionScript 2),PhishingThroughFlash,74
+ABAP Quality Condition SYHOST,TPHidden_OWB_ABAP_Quality_Condition_SYHOST,20
+MemHT Portal ajax_rating.php SQL Injection,MemHTPortalajaxratingphpSQLInjection,89
+Pixelpost index.php Path Traversal,PixelpostindexphpPathTraversal,22
+Application Test Script Detected,ApplicationTestScriptDetected,531
+phpBB Activity Mod Plus Module lang_activity.php Path Traversal,phpBBActivityModPlusModulePathTraversal,22
+Joomla! GCalendar Component index.php Path Traversal,JoomlaGCalendarComponentindexphpPathTraversal,22
+Microsoft IIS 5.0 SSL Buffer Overflow,IIS50SSLBOF,77
+PerlCal Web Calendar Cross-Site Scripting,PerlCalXSS,79
+Nimda Worm Remote Command Execution,attNimdaWormVulnerabilityBackdoorLeftByTheCodeRed,77
+Internal IP Disclosure Pattern Found,GD_InternalIP,200
+type.severities,,,16
+Information,Information,1,1
+Informational,Informational,1,1
+Low,Low,2,2
+Medium,Medium,3,3
+High,High,4,4

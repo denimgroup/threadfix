@@ -1,0 +1,8 @@
+9/15/2014 1:05:00
+type.info,
+CWE differences between Version 2.6 and Version 2.7,
+type.vulnerabilities,
+338,Use of Cryptographically Weak Pseudo-Random Number Generator (PRNG)
+563,Assignment to Variable without Use ('Unused Variable')
+942,Overly Permissive Cross-domain Whitelist
+943,Improper Neutralization of Special Elements in Data Query Logic

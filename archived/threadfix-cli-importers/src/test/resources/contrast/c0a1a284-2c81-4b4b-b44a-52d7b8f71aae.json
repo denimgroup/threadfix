@@ -1,0 +1,98 @@
+[
+  {
+    "uuid": "Y50I-SLWG-VKY0-DLQJ",
+    "status": "Reported",
+    "platform": "Oracle Corporation",
+    "language": "Java",
+    "title": "XSS from untrusted sources on \"1\" page (detailHeader.jsp, line 18)",
+    "likelihood": "Medium",
+    "impact": "High",
+    "confidence": "High",
+    "request": {
+      "protocol": "http",
+      "version": "1.0",
+      "uri": "\/threadfix\/organizations\/1\/applications\/1",
+      "queryString": "nonce=F7C00D421F80A619EA73451C4B64B4D2",
+      "method": "GET",
+      "port": 0,
+      "headers": [
+        {
+          "name": "Cache-control",
+          "value": "max-age=0"
+        },
+        {
+          "name": "Cookie",
+          "value": "JSESSIONID=0859CAAEA7FE7A57D1BF104365E22EF7"
+        },
+        {
+          "name": "Connection",
+          "value": "keep-alive"
+        },
+        {
+          "name": "Accept-language",
+          "value": "en-US,en;q=0.5"
+        },
+        {
+          "name": "Host",
+          "value": "localhost:8080"
+        },
+        {
+          "name": "Accept",
+          "value": "text\/html,application\/xhtml+xml,application\/xml;q=0.9,*\/*;q=0.8"
+        },
+        {
+          "name": "User-agent",
+          "value": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10.10; rv:34.0) Gecko\/20100101 Firefox\/34.0"
+        },
+        {
+          "name": "Referer",
+          "value": "http:\/\/localhost:8080\/threadfix\/teams?nonce=F5A173A154E0B075D1ED234D4EFF148E"
+        },
+        {
+          "name": "Accept-encoding",
+          "value": "gzip, deflate"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "nonce",
+          "value": "F7C00D421F80A619EA73451C4B64B4D2"
+        }
+      ],
+      "links": [
+
+      ]
+    },
+    "events": [
+      {
+        "eventId": 1060294,
+        "type": "Creation",
+        "codeContext": null
+      },
+      {
+        "eventId": 1060295,
+        "type": "Trigger",
+        "codeContext": null
+      }
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/ng\/2942df92-eeb7-4691-baae-52a8cf6327ec\/traces\/c0a1a284-2c81-4b4b-b44a-52d7b8f71aae\/Y50I-SLWG-VKY0-DLQJ"
+      },
+      {
+        "rel": "application",
+        "href": "https:\/\/app.contrastsecurity.com\/Contrast\/api\/applications\/c0a1a284-2c81-4b4b-b44a-52d7b8f71aae"
+      }
+    ],
+    "trace-id": 209454,
+    "total-traces-received": 2,
+    "last-time-seen": 1420492321503,
+    "first-time-seen": 1420492321400,
+    "sub-status": "",
+    "sub-title": "from untrusted sources on \"1\" page (detailHeader.jsp, line 18)",
+    "reported-to-bug-tracker": false,
+    "rule-name": "reflected-xss",
+    "severity": "High"
+  }
+]

@@ -1,0 +1,56 @@
+target/
+
+# Java #
+
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+
+# Eclipse #
+
+*.pydevproject
+.metadata
+.gradle
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# CDT-specific
+.cproject
+
+# PDT-specific
+.buildpath
+
+# TeXlipse plugin
+.texlipse
+
+
+# IntelliJ IDEA #
+
+*.iml
+*.ipr
+*.iws
+.idea/
+out/
+
+.project
+.classpath
+
+

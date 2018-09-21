@@ -1,0 +1,197 @@
+11/22/2015 17:14:00
+type.info,,,
+Acunetix WVS
+type.vulnerabilities,,,
+Slow HTTP Denial of Service Attack,Slow HTTP Denial of Service Attack,400
+Possible sensitive directories,Possible sensitive directories,538
+Password type input with auto-complete enabled,Password type input with auto-complete enabled,524
+WordPress plugin All in One SEO Pack privilege escalation vulnerabilities,WordPress plugin All in One SEO Pack privilege escalation vulnerabilities,269
+Amazon S3 public bucket,Amazon S3 public bucket,264
+Apache 2.0.43 Win32 file reading vulnerability,Apache 2.0.43 Win32 file reading vulnerability,20
+Apache Roller OGNL injection,Apache Roller OGNL injection,20
+Apache solr service exposed,Apache solr service exposed,16
+Apache Tomcat version older than 6.0.35,Apache Tomcat version older than 6.0.35,264
+Apache Tomcat version older than 6.0.36,Apache Tomcat version older than 6.0.36,20
+Apache Tomcat version older than 7.0.21,Apache Tomcat version older than 7.0.21,264
+Apache Tomcat version older than 7.0.23,Apache Tomcat version older than 7.0.23,189
+Apache Tomcat version older than 7.0.28,Apache Tomcat version older than 7.0.28,20
+Apache Tomcat version older than 7.0.30,Apache Tomcat version older than 7.0.30,20
+Apache Tomcat version older than 7.0.32,Apache Tomcat version older than 7.0.32,264
+Apache Tomcat examples directory vulnerabilities,Apache Tomcat examples directory vulnerabilities,264
+XSS on Apache HTTP Server 413 error pages via malformed HTTP method,XSS on Apache HTTP Server 413 error pages via malformed HTTP method,79
+File upload XSS (Java applet),File upload XSS (Java applet),79
+Basic authentication over HTTP,Basic authentication over HTTP,16
+Blind XSS,Blind XSS,80
+BREACH attack,BREACH attack,310
+Chrome Logger information disclosure,Chrome Logger information disclosure,16
+CKEditor 4.0.1 cross-site scripting vulnerability,CKEditor 4.0.1 cross-site scripting vulnerability,79
+Clickjacking: X-Frame-Options header missing,Clickjacking: X-Frame-Options header missing,693
+Cross site scripting vulnerability in clipboard.swf,Cross site scripting vulnerability in clipboard.swf,79
+CodeIgniter 2.1.3 xss_clean() filter bypass,CodeIgniter 2.1.3 xss_clean() filter bypass,80
+Adobe ColdFusion directory traversal ,Adobe ColdFusion directory traversal ,22
+Security update: Hotfix available for ColdFusion,Security update: Hotfix available for ColdFusion,255
+Adobe ColdFusion 9 administrative login bypass,Adobe ColdFusion 9 administrative login bypass,287
+Files listed in robots.txt but not linked,Files listed in robots.txt but not linked,200
+Javascript eval() usage,Javascript eval() usage,200
+Possible SQL Statement in comment,Possible SQL Statement in comment,200
+Suspicious comment,Suspicious comment,200
+CRIME SSL/TLS attack,CRIME SSL/TLS attack,310
+Cross domain data hijacking,Cross domain data hijacking,20
+WordPress plugin Custom Contact Forms critical vulnerability,WordPress plugin Custom Contact Forms critical vulnerability,287
+CVS web repository ,CVS web repository ,16
+Database connection string disclosure,Database connection string disclosure,200
+DOM-based cross site scripting,DOM-based cross site scripting,79
+DotNetNuke multiple vulnerabilities,DotNetNuke multiple vulnerabilities,79
+Drupal 7 arbitrary PHP code execution and information disclosure,Drupal 7 arbitrary PHP code execution and information disclosure,264
+Drupal Views module information disclosure vulnerability,Drupal Views module information disclosure vulnerability,200
+Ektron CMS Account Hijack,Ektron CMS Account Hijack,264
+Ektron CMS400.NET ContentRatingGraph.aspx SQL injection,Ektron CMS400.NET ContentRatingGraph.aspx SQL injection,89
+Ektron CMS multiple vulnerabilities,Ektron CMS multiple vulnerabilities,434
+Ektron CMS unauthenticated code execution and Local File Read,Ektron CMS unauthenticated code execution and Local File Read,20
+Elasticsearch service accessible,Elasticsearch service accessible,16
+Elasticsearch remote code execution,Elasticsearch remote code execution,78
+Email Header Injection,Email Header Injection,20
+Environment variable information disclosure,Environment variable information disclosure,200
+ExtJS charts.swf cross site scripting,ExtJS charts.swf cross site scripting,80
+FCKeditor spellchecker.php cross site scripting vulnerability,FCKeditor spellchecker.php cross site scripting vulnerability,79
+Insecure Flash embed parameter,Insecure Flash embed parameter,284
+Flask debug mode,Flask debug mode,16
+HTML form susceptible to spam,HTML form susceptible to spam,20
+Gallery 3.0.4 remote code execution,Gallery 3.0.4 remote code execution,20
+Cross-site scripting vulnerability in Google Web Toolkit,Cross-site scripting vulnerability in Google Web Toolkit,80
+Cross-site scripting vulnerability in Google Web Toolkit,Cross-site scripting vulnerability in Google Web Toolkit,80
+Cross-site scripting vulnerability in Google Web Toolkit,Cross-site scripting vulnerability in Google Web Toolkit,80
+Cross-site scripting vulnerability in Google Web Toolkit,Cross-site scripting vulnerability in Google Web Toolkit,80
+Multiple XSS vulnerabilities in Google Web Toolkit,Multiple XSS vulnerabilities in Google Web Toolkit,80
+The Heartbleed Bug,The Heartbleed Bug,200
+Horde/IMP Plesk webmail exploit,Horde/IMP Plesk webmail exploit,20
+Horde remote code execution,Horde remote code execution,94
+Host header attack,Host header attack,20
+Host header attack,Host header attack,20
+Host header attack,Host header attack,20
+Host header attack,Host header attack,20
+HTML injection,HTML injection,80
+IBM Tivoli Access Manager directory traversal,IBM Tivoli Access Manager directory traversal,22
+IBM Web Content Manager XPath injection,IBM Web Content Manager XPath injection,264
+Microsoft IIS 5.1 directory authentication bypass ,Microsoft IIS 5.1 directory authentication bypass ,287
+Global.asa backup file found,Global.asa backup file found,538
+Microsoft IIS Server service.cnf file found,Microsoft IIS Server service.cnf file found,538
+Microsoft IIS tilde directory enumeration,Microsoft IIS tilde directory enumeration,20
+Multiple vulnerabilities in Ioncube loader-wizard.php,Multiple vulnerabilities in Ioncube loader-wizard.php,16
+Invision Power Board version 3.3.4 unserialize PHP code execution,Invision Power Board version 3.3.4 unserialize PHP code execution,20
+JAAS authentication bypass,JAAS authentication bypass,16
+Java Debug Wire Protocol remote code execution,Java Debug Wire Protocol remote code execution,16
+JBoss Seam remoting vulnerabilities,JBoss Seam remoting vulnerabilities,611
+Jenkins dashboard,Jenkins dashboard,200
+Jetpack 2.9.3: Critical Security Update,Jetpack 2.9.3: Critical Security Update,287
+Joomla! JCE arbitrary file upload,Joomla! JCE arbitrary file upload,20
+Joomla! JomSocial remote code execution,Joomla! JomSocial remote code execution,94
+Joomla! component Kunena Forum multiple vulnerabilities,Joomla! component Kunena Forum multiple vulnerabilities,89
+Joomla! 3.2.1 sql injection,Joomla! 3.2.1 sql injection,89
+Joomla! v3.2.2 SQL injection,Joomla! v3.2.2 SQL injection,89
+jQuery cross site scripting,jQuery cross site scripting,79
+JSP authentication bypass,JSP authentication bypass,287
+Kayako Fusion v4.51.1891 - multiple web vulnerabilities,Kayako Fusion v4.51.1891 - multiple web vulnerabilities,79
+Liferay JSON service API authentication vulnerability,Liferay JSON service API authentication vulnerability,287
+lighttpd v1.4.34 SQL injection and path traversal,lighttpd v1.4.34 SQL injection and path traversal,89
+IBM Lotus Domino web server Cross-Site Scripting vulnerabilities,IBM Lotus Domino web server Cross-Site Scripting vulnerabilities,79
+MediaWiki multiple remote vulnerabilities,MediaWiki multiple remote vulnerabilities,79
+MediaWiki chunked uploads security issue,MediaWiki chunked uploads security issue,434
+MediaWiki remote code execution,MediaWiki remote code execution,20
+Minify arbitrary file disclosure,Minify arbitrary file disclosure,538
+MoinMoin CVE-2012-6081 multiple arbitrary code execution vulnerabilities,MoinMoin CVE-2012-6081 multiple arbitrary code execution vulnerabilities,434
+MongoDB HTTP status interface,MongoDB HTTP status interface,16
+Moveable Type 4.x unauthenticated remote command execution,Moveable Type 4.x unauthenticated remote command execution,287
+Vulnerabilities in SharePoint could allow elevation of privilege,Vulnerabilities in SharePoint could allow elevation of privilege,79
+MySQL 5.1 to  5.1.18 multiple vulnerabilities,MySQL 5.1 to  5.1.18 multiple vulnerabilities,264
+MySQL connection credentials,MySQL connection credentials,538
+MySQL database dump,MySQL database dump,538
+MySQL username disclosure,MySQL username disclosure,538
+Nagios core config manager SQL injection vulnerability ,Nagios core config manager SQL injection vulnerability ,89
+Nginx stack-based buffer overflow,Nginx stack-based buffer overflow,189
+nginx SPDY heap buffer overflow,nginx SPDY heap buffer overflow,122
+Nginx memory disclosure with specially crafted HTTP backend responses,Nginx memory disclosure with specially crafted HTTP backend responses,399
+Unrestricted file upload vulnerability in ofc_upload_image.php,Unrestricted file upload vulnerability in ofc_upload_image.php,434
+OpenX 2.8.10 backdoor,OpenX 2.8.10 backdoor,95
+OpenX xajaxargs SQL injection vulnerability,OpenX xajaxargs SQL injection vulnerability,89
+Oracle JavaServer Faces multiple vulnerabilities,Oracle JavaServer Faces multiple vulnerabilities,22
+Oracle Reports rwservlet vulnerabilities,Oracle Reports rwservlet vulnerabilities,20
+Multiple vulnerabilities reported in Parallels Plesk Sitebuilder,Multiple vulnerabilities reported in Parallels Plesk Sitebuilder,94
+PHP.exe Windows CGI for Apache may let remote users view files on the server ,PHP.exe Windows CGI for Apache may let remote users view files on the server ,16
+phpLiteAdmin default password,phpLiteAdmin default password,16
+phpMyAdmin v3.5.2.2 backdoor,phpMyAdmin v3.5.2.2 backdoor,95
+phpMyAdmin SQL dump,phpMyAdmin SQL dump,538
+PHP 5.3.9 remote code execution,PHP 5.3.9 remote code execution,399
+Multiple vulnerabilities fixed in PHP versions 5.5.12 and 5.4.28,Multiple vulnerabilities fixed in PHP versions 5.5.12 and 5.4.28,16
+Parallels Plesk SQL injection vulnerability,Parallels Plesk SQL injection vulnerability,89
+Parallels Plesk SSO XML External Entity and Cross-site scripting,Parallels Plesk SSO XML External Entity and Cross-site scripting,611
+Plupload cross-site scripting vulnerability,Plupload cross-site scripting vulnerability,79
+Possible virtual host found,Possible virtual host found,200
+Public key certificate,Public key certificate,200
+Ruby on Rails CookieStore session cookie persistence ,Ruby on Rails CookieStore session cookie persistence ,284
+Ruby on Rails database configuration file,Ruby on Rails database configuration file,538
+Ruby on Rails SQL injection,Ruby on Rails SQL injection,89
+Ruby on Rails XML processor YAML deserialization code execution,Ruby on Rails XML processor YAML deserialization code execution,20
+Documentation file,Documentation file,538
+Http redirect security bypass,Http redirect security bypass,20
+Roundcube security updates 0.8.6 and 0.7.3,Roundcube security updates 0.8.6 and 0.7.3,22
+Ruby on Rails directory traversal vulnerability,Ruby on Rails directory traversal vulnerability,22
+Same site scripting,Same site scripting,16
+Session fixation,Session fixation,384
+SFTP/FTP credentials exposure,SFTP/FTP credentials exposure,200
+SSL 2.0 deprecated  protocol,SSL 2.0 deprecated  protocol,16
+SSL certificate public key less than 2048 bit,SSL certificate public key less than 2048 bit,310
+NSS Library SSL v.2.0 remote command execution,NSS Library SSL v.2.0 remote command execution,119
+Server side request forgery,Server side request forgery,918
+Apache Struts 2 ClassLoader manipulation and denial of service,Apache Struts 2 ClassLoader manipulation and denial of service,701
+Apache Struts 2 ClassLoader manipulation and denial of service,Apache Struts 2 ClassLoader manipulation and denial of service,701
+Apache Struts 2 ClassLoader manipulation and denial of service,Apache Struts 2 ClassLoader manipulation and denial of service,701
+Apache Struts 2 ClassLoader manipulation and denial of service,Apache Struts 2 ClassLoader manipulation and denial of service,701
+Apache Struts 2 DefaultActionMapper Prefixes OGNL Code Execution,Apache Struts 2 DefaultActionMapper Prefixes OGNL Code Execution,20
+Struts 2 development mode,Struts 2 development mode,16
+SWFUpload movieName cross site scripting vulnerability,SWFUpload movieName cross site scripting vulnerability,79
+Symfony web debug toolbar,Symfony web debug toolbar,16
+SQL Injection in Symphony: CVE-2013-2559,SQL Injection in Symphony: CVE-2013-2559,89
+Apache Tomcat JK connector security bypass,Apache Tomcat JK connector security bypass,16
+You are using an old version of Typo3,You are using an old version of Typo3,16
+Umbraco CMS remote code execution,Umbraco CMS remote code execution,94
+Umbraco CMS TemplateService remote code execution,Umbraco CMS TemplateService remote code execution,94
+Uncontrolled format string,Uncontrolled format string,134
+Unicode transformation issues,Unicode transformation issues,176
+User controllable charset,User controllable charset,20
+User controllable script source,User controllable script source,79
+Partial user controllable script source,Partial user controllable script source,20
+vBSEO 3.6.0 PHP code injection,vBSEO 3.6.0 PHP code injection,94
+vBulletin 5.1.2 SQL injection,vBulletin 5.1.2 SQL injection,89
+vBulletin customer number disclosure,vBulletin customer number disclosure,264
+vBulletin PHP object injection vulnerability,vBulletin PHP object injection vulnerability,915
+View state MAC disabled,View state MAC disabled,16
+Virtual host directory listing,Virtual host directory listing,538
+Vulnerable Javascript library,Vulnerable Javascript library,16
+Web Application Firewall detected,Web Application Firewall detected,16
+CodeIgniter weak encryption key,CodeIgniter weak encryption key,200
+Ruby on Rails weak/known secret token,Ruby on Rails weak/known secret token,200
+webadmin.php script,webadmin.php script,16
+Configuration file disclosure,Configuration file disclosure,538
+WebLogic admin console weak credentials,WebLogic admin console weak credentials,16
+WordPress PHP Object Injection,WordPress PHP Object Injection,94
+WordPress 3.8.2 security release,WordPress 3.8.2 security release,16
+WordPress OptimizePress unrestricted file upload,WordPress OptimizePress unrestricted file upload,20
+Wordpress pingback scanner,Wordpress pingback scanner,918
+WordPress username enumeration,WordPress username enumeration,200
+Wordpress W3 Total Cache plugin predictable cache filenames,Wordpress W3 Total Cache plugin predictable cache filenames,200
+Wordpress MailPoet Newsletters (wysija-newsletters) unauthenticated file upload,Wordpress MailPoet Newsletters (wysija-newsletters) unauthenticated file upload,434
+WordPress XML-RPC authentication brute force,WordPress XML-RPC authentication brute force,521
+WordPress plugin WPtouch insecure nonce generation,WordPress plugin WPtouch insecure nonce generation,287
+WordPress 3.4.2 cross site request forgery,WordPress 3.4.2 cross site request forgery,352
+Wordpress caching plugins PHP code execution,Wordpress caching plugins PHP code execution,95
+X-Forwarded-For HTTP header security bypass,X-Forwarded-For HTTP header security bypass,287
+XML quadratic blowup denial of service attack,XML quadratic blowup denial of service attack,400
+YUI uploader.swf cross site scripting,YUI uploader.swf cross site scripting,79
+Zabbix 1.8.x-2.2.x Local File Inclusion via XXE Attack,Zabbix 1.8.x-2.2.x Local File Inclusion via XXE Attack,611
+Zabbix SQL injection,Zabbix SQL injection,89
+Zend framework configuration file information disclosure,Zend framework configuration file information disclosure,538
+Zend Framework local file disclosure via XXE injection,Zend Framework local file disclosure via XXE injection,611
+type.severities,,,
+high,high,4,5
+

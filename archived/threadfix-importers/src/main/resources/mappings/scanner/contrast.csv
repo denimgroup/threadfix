@@ -1,0 +1,21 @@
+1/14/2015 12:28:00
+type.info,,,
+Contrast,http://www1.contrastsecurity.com/,1,Use as a Remote Provider
+type.vulnerabilities,,,
+Reflected Cross-Site Scripting,reflected-xss,79,
+Insecure JSP Placement,insecure-jsp-access,425
+Pages Without Anti-Clickjacking Controls,clickjacking-control-missing,693
+Parameter Pollution,parameter-pollution,88
+Forms Without Autocomplete Prevention,autocomplete-missing,525
+Session Rewriting,session-rewriting,384
+Anti-Caching Controls Missing,cache-controls-missing,524
+SQL Injection,sql-injection,89
+Trust Boundary Violation,trust-boundary-violation,501
+Insecure Hash Algorithms,crypto-bad-mac,327
+Insecure Encryption Algorithm,crypto-bad-ciphers,327
+type.severities,,,
+Note,Note,1,1
+Critical,Critical,5,5
+High,High,4,4
+Medium,Medium,3,3
+Low,Low,2,2

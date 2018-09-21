@@ -1,0 +1,11 @@
+2/25/2015 12:31:00
+type.name
+Contrast,http://www1.contrastsecurity.com/,1,Use as a Remote Provider
+type.credentials
+usernamepassword
+type.channelname
+Contrast
+type.authenticationfields
+Username,false,true
+API Key,true,true
+Service Key,true,true

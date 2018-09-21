@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<detailedreport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://www.veracode.com/schema/reports/export/1.0" xsi:schemaLocation="https://www.veracode.com/schema/reports/export/1.0 https://analysiscenter.veracode.com/resource/detailedreport.xsd" report_format_version="1.4" app_name="Metamail" app_id="20363" first_build_submitted_date="2011-03-16 17:42:33 UTC" version="2.7" build_id="22882" submitter="Veracode" platform="Solaris" assurance_level="3" business_criticality="3" generation_date="2014-06-03 14:43:26 UTC" veracode_level="VL1" total_flaws="24" flaws_not_mitigated="24" teams="" life_cycle_stage="Maintenance (only bug fixes)" planned_deployment_date="" last_update_time="2011-03-17 01:44:40 UTC" is_latest_build="true" policy_name="Veracode Transitional Medium" policy_version="1" policy_compliance_status="Did Not Pass" policy_rules_status="Did Not Pass" grace_period_expired="true" scan_overdue="false" business_owner="" business_unit="Not Specified" tags="" legacy_scan_engine="false">
+<static-analysis rating="B" score="65" submitted_date="2011-03-16 17:42:39 UTC" published_date="2011-03-17 01:44:38 UTC" analysis_size_bytes="203647">
+<modules>
+<module name="metamail.dwarf2" compiler="GCC_Linux_IA32_3_2_3" os="Red Hat Enterprise Linux v5 (IA32)" architecture="IA32" loc="3484" score="0" numflawssev0="0" numflawssev1="0" numflawssev2="8" numflawssev3="5" numflawssev4="0" numflawssev5="11"/>
+</modules>
+</static-analysis>
+<severity level="5">
+<category categoryid="3" categoryname="Buffer Overflow" pcirelated="false">
+<desc>
+<para text="Buffer overflows (or buffer overruns) occur when a program attempts to put more data in a buffer than it has been allocated to hold.  Writing to areas of memory not intended by the application developer can lead to serious security vulnerabilities and can cause an application to execute arbitrary code on behalf of an attacker."/>
+<para text="The degree of exploitability of buffer overflows varies depending on a number of factors, including buffer location, execution path, and platform.  Often, the resultant behavior is limited to corrupting data or crashing the application.  However, in many cases, specially crafted attacks can be constructed that will execute arbitrary code with the privileges of the vulnerable application.  "/>
+</desc>
+<recommendations>
+<para text="There are a number of mitigations that can be applied during both design and implementation to prevent buffer overflows from occurring.  Using multiple techniques provides defense-in-depth. ">
+<bulletitem text="Always use bounded rather than unbounded string manipulation functions, e.g. strncpy() and strncat() instead of strcpy() and strcat()."/>
+<bulletitem text="When using functions that accept a number of bytes to copy, such as strncpy(), be aware that if the destination buffer size is equal to the source buffer size, it may not null-terminate the string."/>
+<bulletitem text="Be careful when working with multi-byte strings, as the number of logical characters in a string is not equivalent to the number of bytes allocated in memory."/>
+<bulletitem text="Use a safe string handling functions such as Microsoft's strsafe.h. These functions prevent data from being written past the end of buffers and guarantees null termination.  Alternatively, use a string abstraction library such as SafeStr, which automatically resizes strings as required.  While neither of these approaches is foolproof, they will prevent many common mistakes."/>
+</para>
+</recommendations>
+<cwe cweid="121" cwename="Stack-based Buffer Overflow" pcirelated="false" sans="120">
+<description>
+<text text="There is a potential buffer overflow with these functions.  If an attacker can control the data written into the buffer, the overflow may result in execution of arbitrary code."/>
+</description>
+<staticflaws>
+<flaw severity="5" categoryname="Stack-based Buffer Overflow" count="1" issueid="35" module="metamail.dwarf2" type="strcat" description="This call to strcat() contains a buffer overflow. If the length of the source buffer exceeds the length of user-controlled destination buffer contents, the overflow may result in execution of arbitrary code. The first argument to strcat() contains tainted data from the variable FullCmd. The tainted data originated from an earlier call to getenv.
+
+Use precision specifiers for all string placeholders, and ensure that the destination buffer is large enough to hold the source string plus the null terminator.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/121.html) 
+OWASP (http://www.owasp.org/index.php/Buffer_Overflow) 
+WASC (http://webappsec.pbworks.com/Buffer-Overflow)
+
+" note="" cweid="121" remediationeffort="2" exploitLevel="2" categoryid="3" pcirelated="false" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="ccc" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="993" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="int RunInNewWindow(char * *, int, char * *, FILE /*148*/ *)" functionrelativelocation="71">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="2">
+<note>The source buffer in this overflow does not undergo any validation before the vulnerable code.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+<flaw severity="5" categoryname="Stack-based Buffer Overflow" count="1" issueid="70" module="metamail.dwarf2" type="strcat" description="This call to strcat() contains a buffer overflow. The source string has an allocated size of 200000001 bytes, and the destination buffer is 1200 bytes. If an attacker can control the data written into the buffer, the overflow may result in execution of arbitrary code.
+
+Ensure that the destination buffer is of sufficient size, either by allocating it dynamically or by restricting the size of the source to a reasonable length.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/121.html) 
+OWASP (http://www.owasp.org/index.php/Buffer_Overflow) 
+WASC (http://webappsec.pbworks.com/Buffer-Overflow)
+
+" note="" cweid="121" remediationeffort="2" exploitLevel="2" categoryid="3" pcirelated="false" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="ccc" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="1235" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="int ExecuteMailcapEntry(struct MailcapEntry, char *, char *, __span32)" functionrelativelocation="18">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="2">
+<note>The source buffer in this overflow does not undergo any validation before the vulnerable code.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+<flaw severity="5" categoryname="Stack-based Buffer Overflow" count="1" issueid="32" module="metamail.dwarf2" type="strcpy" description="This call to strcpy() contains a buffer overflow. The source string has an allocated size of 200000001 bytes, and the destination buffer is 1200 bytes. If an attacker can control the data written into the buffer, the overflow may result in execution of arbitrary code.
+
+Ensure that the destination buffer is of sufficient size, either by allocating it dynamically or by restricting the size of the source to a reasonable length.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/121.html) 
+OWASP (http://www.owasp.org/index.php/Buffer_Overflow) 
+WASC (http://webappsec.pbworks.com/Buffer-Overflow)
+
+" note="" cweid="121" remediationeffort="2" exploitLevel="2" categoryid="3" pcirelated="false" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="ccc" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="2344" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="int CreateNewWindowPrefix(char *, __span32)" functionrelativelocation="14">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="2">
+<note>The source buffer in this overflow does not undergo any validation before the vulnerable code.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+<flaw severity="5" categoryname="Stack-based Buffer Overflow" count="1" issueid="15" module="metamail.dwarf2" type="strcat" description="This call to strcat() contains a buffer overflow. The source string has an allocated size of 200000001 bytes, and the destination buffer is 1200 bytes. If an attacker can control the data written into the buffer, the overflow may result in execution of arbitrary code.
+
+Ensure that the destination buffer is of sufficient size, either by allocating it dynamically or by restricting the size of the source to a reasonable length.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/121.html) 
+OWASP (http://www.owasp.org/index.php/Buffer_Overflow) 
+WASC (http://webappsec.pbworks.com/Buffer-Overflow)
+
+" note="" cweid="121" remediationeffort="2" exploitLevel="2" categoryid="3" pcirelated="false" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="ccc" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="2356" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="int CreateNewWindowPrefix(char *, __span32)" functionrelativelocation="35">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="2">
+<note>The source buffer in this overflow does not undergo any validation before the vulnerable code.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+<flaw severity="5" categoryname="Stack-based Buffer Overflow" count="1" issueid="68" module="metamail.dwarf2" type="strcat" description="This call to strcat() contains a buffer overflow. The source string in this or previous call to strcat, 200000001 bytes, and the destination buffer is 1200 bytes. If an attacker can control the data written into the buffer, the overflow may result in execution of arbitrary code.
+
+Ensure that the destination buffer is of sufficient size, either by allocating it dynamically or by restricting the size of the source to a reasonable length.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/121.html) 
+OWASP (http://www.owasp.org/index.php/Buffer_Overflow) 
+WASC (http://webappsec.pbworks.com/Buffer-Overflow)
+
+" note="" cweid="121" remediationeffort="2" exploitLevel="2" categoryid="3" pcirelated="false" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="ccc" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="2357" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="int CreateNewWindowPrefix(char *, __span32)" functionrelativelocation="42">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="2">
+<note>The source buffer in this overflow does not undergo any validation before the vulnerable code.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+<flaw severity="5" categoryname="Stack-based Buffer Overflow" count="1" issueid="48" module="metamail.dwarf2" type="strcat" description="This call to strcat() contains a buffer overflow. If the length of the source buffer exceeds the length of user-controlled destination buffer contents, the overflow may result in execution of arbitrary code. The first argument to strcat() contains tainted data from the variable pat2. The tainted data originated from earlier calls to getenv, and getenv.
+
+Use precision specifiers for all string placeholders, and ensure that the destination buffer is large enough to hold the source string plus the null terminator.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/121.html) 
+OWASP (http://www.owasp.org/index.php/Buffer_Overflow) 
+WASC (http://webappsec.pbworks.com/Buffer-Overflow)
+
+" note="" cweid="121" remediationeffort="2" exploitLevel="2" categoryid="3" pcirelated="false" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="ccc" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="2448" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="int CtypeMatch(char *, char *)" functionrelativelocation="37">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="2">
+<note>The source buffer in this overflow does not undergo any validation before the vulnerable code.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+</staticflaws>
+</cwe>
+</category>
+<category categoryid="9" categoryname="Dangerous Functions" pcirelated="false">
+<desc>
+<para text="Certain functions behave in dangerous ways regardless of how they are used. Functions in this category were often implemented without taking security concerns into account. For example, the gets() function is unsafe because it does not perform bounds checking on the size of its input, nor does it provide a mechanism for specifying a maximum size.  "/>
+</desc>
+<recommendations>
+<para text="Most inherently dangerous functions were implemented before application security was a prevalent concern and have since been replaced by safer alternatives.  In rare cases where no safe alternative exists, wrap the dangerous function with an appropriate conditional such as a boundary check before calling it."/>
+</recommendations>
+<cwe cweid="242" cwename="Use of Inherently Dangerous Function" pcirelated="false" certc="748">
+<description>
+<text text="These functions are inherently unsafe because they does not perform bounds checking on the size of their input.  An attacker can send overly long input and overflow the destination buffer, potentially resulting in execution of arbitrary code."/>
+</description>
+<staticflaws>
+<flaw severity="5" categoryname="Use of Inherently Dangerous Function" count="1" issueid="42" module="metamail.dwarf2" type="gets" description="The gets() function is inherently unsafe because it does not perform bounds checking on the size of its input. An attacker can send overly long input to gets() and overflow the destination buffer, potentially resulting in execution of arbitrary code.
+
+Replace gets() with fgets(), which provides the ability to set an upper bound on the size of the input.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/242.html) 
+US-CERT (https://buildsecurityin.us-cert.gov/daisy/bsi-rules/home/g1/756.html)
+
+" note="" cweid="242" remediationeffort="2" exploitLevel="2" categoryid="9" pcirelated="false" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="ccc" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="582" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="int HandleMessage(char *, int, __span32)" functionrelativelocation="76"/>
+<flaw severity="5" categoryname="Use of Inherently Dangerous Function" count="1" issueid="20" module="metamail.dwarf2" type="gets" description="The gets() function is inherently unsafe because it does not perform bounds checking on the size of its input. An attacker can send overly long input to gets() and overflow the destination buffer, potentially resulting in execution of arbitrary code.
+
+Replace gets() with fgets(), which provides the ability to set an upper bound on the size of the input.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/242.html) 
+US-CERT (https://buildsecurityin.us-cert.gov/daisy/bsi-rules/home/g1/756.html)
+
+" note="" cweid="242" remediationeffort="2" exploitLevel="2" categoryid="9" pcirelated="false" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="ccc" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="1826" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="int OKToRun(char *, char *, char *)" functionrelativelocation="43"/>
+</staticflaws>
+</cwe>
+</category>
+<category categoryid="18" categoryname="OS Command Injection" pcirelated="true">
+<desc>
+<para text="OS command injection vulnerabilities occur when data enters an application from an untrusted source and is used to dynamically construct and execute a system command.  This allows an attacker to either alter the command executed by the application or append additional commands.  The command is typically executed with the privileges of the executing process and gives an attacker a privilege or capability that he would not otherwise have."/>
+</desc>
+<recommendations>
+<para text="Careful handling of all untrusted data is critical in preventing OS command injection attacks.   Using one or more of the following techniques provides defense-in-depth and minimizes the likelihood of an vulnerability.">
+<bulletitem text="If possible, use library calls rather than external processes to recreate the desired functionality."/>
+<bulletitem text="Validate user-supplied input using positive filters (white lists) to ensure that it conforms to the expected format, using centralized data validation routines when possible. "/>
+<bulletitem text="Select safe API routines.  Some APIs that execute system commands take an array of strings as input rather than a single string, which protects against some forms of command injection by ensuring that a user-supplied argument cannot be interpreted as part of the command."/>
+</para>
+</recommendations>
+<cwe cweid="78" cwename="Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')" pcirelated="true" owasp="929" sans="801" certc="741" certcpp="875" certjava="845">
+<description>
+<text text="This call contains a command injection flaw.  The argument to the function is constructed using user-supplied input.  If an attacker is allowed to specify all or part of the command, it may be possible to execute commands on the server with the privileges of the executing process.  The level of exposure depends on the effectiveness of input validation routines, if any."/>
+</description>
+<staticflaws>
+<flaw severity="5" categoryname="Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')" count="1" issueid="72" module="metamail.dwarf2" type="system" description="This call to system() contains a command injection flaw. The argument to the function is constructed using user-supplied input. If an attacker is allowed to specify all or part of the command, it may be possible to execute commands on the server with the privileges of the executing process. The level of exposure depends on the effectiveness of input validation routines, if any. The first argument to system() contains tainted data from the variable FullCmd. The tainted data originated from an earlier call to getenv.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using black lists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters. Most APIs the execute system commands also have a &quot;safe&quot; version of the method that takes an array of strings as input rather than a single string, which protects against some forms of command injection.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/78.html) 
+OWASP (http://www.owasp.org/index.php/Command_Injection) 
+WASC (http://webappsec.pbworks.com/OS-Commanding)
+
+" note="" cweid="78" remediationeffort="3" exploitLevel="1" categoryid="18" pcirelated="true" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="ccp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="979" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="int RunInNewWindow(char * *, int, char * *, FILE /*148*/ *)" functionrelativelocation="36"/>
+<flaw severity="5" categoryname="Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')" count="1" issueid="25" module="metamail.dwarf2" type="system" description="This call to system() contains a command injection flaw. The argument to the function is constructed using user-supplied input. If an attacker is allowed to specify all or part of the command, it may be possible to execute commands on the server with the privileges of the executing process. The level of exposure depends on the effectiveness of input validation routines, if any. The first argument to system() contains tainted data from the variable FullCmd. The tainted data originated from an earlier call to getenv.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using black lists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters. Most APIs the execute system commands also have a &quot;safe&quot; version of the method that takes an array of strings as input rather than a single string, which protects against some forms of command injection.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/78.html) 
+OWASP (http://www.owasp.org/index.php/Command_Injection) 
+WASC (http://webappsec.pbworks.com/OS-Commanding)
+
+" note="" cweid="78" remediationeffort="3" exploitLevel="1" categoryid="18" pcirelated="true" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="ccp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="1014" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="int RunInNewWindow(char * *, int, char * *, FILE /*148*/ *)" functionrelativelocation="99"/>
+</staticflaws>
+</cwe>
+</category>
+<category categoryid="2" categoryname="Untrusted Search Path" pcirelated="false">
+<desc>
+<para text="Executing commands or loading libraries from an untrusted source or in an untrusted environment can cause an application to execute malicious commands (and payloads) on behalf of an attacker."/>
+<para text="If an attacker is allowed to specify all or part of a filename to certain API function, it may be possible to load arbitrary libraries.  In addition, certain functions perform automatic path searching, iterating over a list of paths to search for desired resources, such as executables, libraries or configuration files.  If an attacker can modify the path, for example, by manipulating an environment variable, he may be able to trick the program into referencing an attacker-controlled resource.  Similarly, the search path is static but an attacker is able to place a malicious copy of the resource higher in the search order than the file the application intends to load, then the application will load the malicious version."/>
+</desc>
+<recommendations>
+<para text="Avoid using user-supplied filenames or paths.  When calling methods that load libraries or launch processes, ensure that full paths are provided specifying the resource to be loaded."/>
+</recommendations>
+<cwe cweid="114" cwename="Process Control" pcirelated="false">
+<description>
+<text text="A function call could result in a process control attack.  An argument to a process control function is either derived from an untrusted source or is hard-coded, both of which may allow an attacker to execute malicious code under certain conditions.  If an attacker is allowed to specify all or part of the filename, it may be possible to load arbitrary libraries.  If the location is hard-coded and an attacker is able to place a malicious copy of the library higher in the search order than the file the application intends to load, then the application will load the malicious version."/>
+</description>
+<staticflaws>
+<flaw severity="5" categoryname="Process Control" count="1" issueid="54" module="metamail.dwarf2" type="popen" description="This call to popen() could result in a process control attack. The argument is either derived from an untrusted source or is hard-coded, both of which may allow an attacker to execute malicious code under certain conditions. If an attacker is allowed to specify all or part of the filename, it may be possible to load arbitrary libraries. If the location is hard-coded and an attacker is able to place a malicious copy of the library higher in the search order than the file the application intends to load, then the application will load the malicious version.
+
+Always validate user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using hard-coded file locations, use fully-qualified filenames to ensure the proper library is being loaded.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/114.html) 
+US-CERT (https://buildsecurityin.us-cert.gov/daisy/bsi-rules/home/g1/766.html?branch=1〈uage=1)
+
+" note="" cweid="114" remediationeffort="2" exploitLevel="0" categoryid="2" pcirelated="false" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="ccc" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="805" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="int ProcessArguments(int, char * *, __span32)" functionrelativelocation="60"/>
+</staticflaws>
+</cwe>
+</category>
+</severity>
+<severity level="4"/>
+<severity level="3">
+<category categoryid="4" categoryname="Buffer Management Errors" pcirelated="false">
+<desc>
+<para text="Buffer errors are related to the creation, modification, management, or deletion of memory buffers.  Reading or writing areas of memory not intended by the application developer can lead to serious security vulnerabilities and can cause an application to execute arbitrary code on behalf of an attacker."/>
+<para text="Unchecked array indexing, improper string length checking, off-by-one errors, and improper null termination are other common flaws related to buffer management.  These flaws can impact application logic by reading or writing from incorrect memory locations, often causing buffer overflows to occur in the process."/>
+</desc>
+<recommendations>
+<para text="There are a number of mitigations that can be applied during both design and implementation to prevent buffer errors from occurring.  Using multiple techniques provides defense-in-depth. ">
+<bulletitem text="When using functions that accept a number of bytes to copy, such as strncpy(), be aware that if the destination buffer size is equal to the source buffer size, it may not null-terminate the string."/>
+<bulletitem text="Be careful when working with multi-byte strings, as the number of logical characters in a string is not equivalent to the number of bytes allocated in memory."/>
+<bulletitem text="Include sanity checks to ensure the validity of any values used as index variables. In loops, use greater-than-or-equal-to, or less-than-or-equal-to, as opposed to simply greater-than, or less-than compare statements."/>
+<bulletitem text="Use a safe string handling functions such as Microsoft's strsafe.h. These functions prevent data from being written past the end of buffers and guarantees null termination.  Alternatively, use a string abstraction library such as SafeStr, which automatically resizes strings as required.  While neither of these approaches is foolproof, they will prevent many common mistakes."/>
+</para>
+</recommendations>
+<cwe cweid="129" cwename="Improper Validation of Array Index" pcirelated="false" sans="802" certc="738" certcpp="874">
+<description>
+<text text="This array access will attempt to reference an array member that does not exist.  The array is valid, but there is code that references array index that is outside the valid bounds of the array.  This causes the application to either read or write an unexpected memory location and may result in an exploitable security vulnerability.  In the case of a write operation, it may be possible to alter program execution or cause unexpected behavior if the overwritten memory location is used to make control flow or security-related decisions.  In some cases, it may be possible to execute arbitrary code."/>
+</description>
+<staticflaws>
+<flaw severity="3" categoryname="Improper Validation of Array Index" count="1" issueid="29" module="metamail.dwarf2" type="array.lookup" description="This array access uses an index value that does not reference a valid position in the array. The array has 0 elements, with valid indexes ranging from 0 to -1, and the code references array index 0.
+
+Use bounds checking to ensure the array index is always valid relative to the array size.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/129.html)
+
+" note="" cweid="129" remediationeffort="2" exploitLevel="-1" categoryid="4" pcirelated="false" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="1769" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="int SetUpEnvironment(__span32)" functionrelativelocation="90">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="-1">
+<note>Although there is a potential for overflow, the array index variable is not tainted by user data.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+<flaw severity="3" categoryname="Improper Validation of Array Index" count="1" issueid="65" module="metamail.dwarf2" type="array.lookup" description="This array access uses an index value that does not reference a valid position in the array. The array has 0 elements, with valid indexes ranging from 0 to -1, and the code references array index 0.
+
+Use bounds checking to ensure the array index is always valid relative to the array size.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/129.html)
+
+" note="" cweid="129" remediationeffort="2" exploitLevel="-1" categoryid="4" pcirelated="false" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="1770" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="int SetUpEnvironment(__span32)" functionrelativelocation="95">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="-1">
+<note>Although there is a potential for overflow, the array index variable is not tainted by user data.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+</staticflaws>
+</cwe>
+</category>
+<category categoryid="1" categoryname="Directory Traversal" pcirelated="false">
+<desc>
+<para text="Allowing user input to control paths used in filesystem operations may enable an attacker to access or modify otherwise protected system resources that would normally be inaccessible to end users.  In some cases, the user-provided input may be passed directly to the filesystem operation, or it may be concatenated to one or more fixed strings to construct a fully-qualified path."/>
+<para text="When an application improperly cleanses special character sequences in user-supplied filenames, a path traversal (or directory traversal) vulnerability may occur.  For example, an attacker could specify a filename such as &quot;../../etc/passwd&quot;, which resolves to a file outside of the intended directory that the attacker would not normally be authorized to view."/>
+</desc>
+<recommendations>
+<para text="Assume all user-supplied input is malicious.  Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.  When using black lists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters and ensure that the end result is not dangerous."/>
+</recommendations>
+<cwe cweid="73" cwename="External Control of File Name or Path" pcirelated="false" sans="22" certcpp="877">
+<description>
+<text text="This call contains a path manipulation flaw.  The argument to the function is a filename constructed using user-supplied input.  If an attacker is allowed to specify all or part of the filename, it may be possible to gain unauthorized access to files on the server, including those outside the webroot, that would be normally be inaccessible to end users.  The level of exposure depends on the effectiveness of input validation routines, if any."/>
+</description>
+<staticflaws>
+<flaw severity="3" categoryname="External Control of File Name or Path" count="1" issueid="52" module="metamail.dwarf2" type="fopen" description="This call to fopen() contains a path manipulation flaw. The argument to the function is a filename constructed using user-supplied input. If an attacker is allowed to specify all or part of the filename, it may be possible to gain unauthorized access to files on the server, including those outside the webroot, that would be normally be inaccessible to end users. The level of exposure depends on the effectiveness of input validation routines, if any. The first argument to fopen() contains tainted data from the variable filename. The tainted data originated from an earlier call to main.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using black lists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/73.html) 
+WASC (http://webappsec.pbworks.com/Path-Traversal)
+
+" note="" cweid="73" remediationeffort="2" exploitLevel="1" categoryid="1" pcirelated="false" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="352" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="int main(int, char * *)" functionrelativelocation="69"/>
+<flaw severity="3" categoryname="External Control of File Name or Path" count="1" issueid="13" module="metamail.dwarf2" type="fopen" description="This call to fopen() contains a path manipulation flaw. The argument to the function is a filename constructed using user-supplied input. If an attacker is allowed to specify all or part of the filename, it may be possible to gain unauthorized access to files on the server, including those outside the webroot, that would be normally be inaccessible to end users. The level of exposure depends on the effectiveness of input validation routines, if any. The first argument to fopen() contains tainted data from the variable file. The tainted data originated from an earlier call to getenv.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using black lists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/73.html) 
+WASC (http://webappsec.pbworks.com/Path-Traversal)
+
+" note="" cweid="73" remediationeffort="2" exploitLevel="1" categoryid="1" pcirelated="false" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="1114" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="int ProcessMailcapFile(char *, char *, __span32)" functionrelativelocation="35"/>
+</staticflaws>
+</cwe>
+</category>
+<category categoryid="14" categoryname="Time and State" pcirelated="false">
+<desc>
+<para text="Time and State flaws are related to unexpected interactions between threads, processes, time, and information. These interactions happen through shared state: semaphores, variables, the filesystem, and basically anything that can store information.  Vulnerabilities occur when there is a discrepancy between the programmer's assumption of how a program executes and what happens in reality. "/>
+<para text="State issues result from improper management or invalid assumptions about system state, such as assuming mutable objects are immutable.  Though these conditions are less commonly exploited by attackers, state issues can lead to unpredictable or undefined application behavior."/>
+</desc>
+<recommendations>
+<para text="Limit the interleaving of operations on resources from multiple processes.  Use locking mechanisms to protect resources effectively.  Follow best practices with respect to mutable objects and internal references.  Pay close attention to asynchronous actions in processes and make copious use of sanity checks in systems that may be subject to synchronization errors."/>
+</recommendations>
+<cwe cweid="377" cwename="Insecure Temporary File" pcirelated="false" certjava="857">
+<description>
+<text text="Creating and using insecure temporary files can leave application and system data vulnerable to attack.  In particular, file names created by the tmpnam family of functions can be easily guessed by an attacker.  If an attacker can predict the filename and create a malicious collision, he may be able to manipulate the behavior of the application."/>
+</description>
+<staticflaws>
+<flaw severity="3" categoryname="Insecure Temporary File" count="1" issueid="11" module="metamail.dwarf2" type="mktemp" description="This call to mktemp() creates an insecure temporary file. Creating and using insecure temporary files can leave application and system data vulnerable to attack.
+
+Some languages provide an API for creating secure temporary files. For example, in C/C++, mkstemp() will attempt to create and open a unique file based on a filename template provided by the user, combined with a series of randomly generated characters. Note that mkstemp() is safe if only the descriptor is used and the returned filename is not used in a subsequent function call with extra privileges. Using mkstemp() does not completely eliminate race conditions but does provide better protection than other methods. Other languages may provide similar mechanisms, or you may need to implement one yourself using a combination of a cryptographic RNG to avoid predictability and synchronization to avoid race conditions. Also, be sure to assign restrictive file permissions to temporary files and to delete them immediately after use.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/377.html) 
+US-CERT (https://buildsecurityin.us-cert.gov/daisy/bsi-rules/home/g1/861.html)
+
+" note="" cweid="377" remediationeffort="2" exploitLevel="0" categoryid="14" pcirelated="false" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="2496" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="int MkTmpFileName(char *)" functionrelativelocation="85"/>
+</staticflaws>
+</cwe>
+</category>
+</severity>
+<severity level="2">
+<category categoryid="16" categoryname="Error Handling" pcirelated="false">
+<desc>
+<para text="Error handling problems occur when an application does not properly handle errors that occur during processing. If a function does not generate the correct return/status codes, or if the product does not handle all possible return/status codes that could be generated by a function, then security issues may result.  Similarly, failing to catch an exception thrown by a function can potentially cause the program to crash or to behave in an unexpected manner."/>
+<para text="This type of problem is most often found in edge conditions that are rarely encountered during normal application use.  Presumably, most bugs related to common conditions are found and eliminated during development and testing. In some cases, the attacker can directly control or influence the environment to trigger these edge conditions."/>
+</desc>
+<recommendations>
+<para text="Never ignore return codes, assuming that a function will always succeed.  Check for and handle all possible return codes to ensure that all scenarios are covered, including boundary or edge conditions.  Subject the application to extensive testing to discover some of the possible instances of where and how errors or return values are not handled."/>
+<para text="Use a standard exception handling mechanism to be sure that the application properly handles all types of processing errors. Do not allow the application to throw errors up to the application container, generally the web application server.   "/>
+</recommendations>
+<cwe cweid="391" cwename="Unchecked Error Condition" pcirelated="false" certc="743" certcpp="880">
+<description>
+<text text="The result of this call are not captured.  Failing to check the return code can result in unexpected behavior."/>
+</description>
+<staticflaws>
+<flaw severity="2" categoryname="Unchecked Error Condition" count="1" issueid="33" module="metamail.dwarf2" type="unlink" description="The result of this call to unlink() is not captured, so it cannot be checked for success. This can result in application instability or crashing if memory is not available.
+
+Be sure to check the result and make sure it is correct before use. Some functions return a pointer which should be validated as not NULL before use. Other functions return integers or Boolean values that must either be zero or non-zero for the results of the function to be used. Consult the API documentation to determine what a correct result is from the function call.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/391.html) 
+OWASP (http://www.owasp.org/index.php/Improper_error_handling)
+
+" note="" cweid="391" remediationeffort="2" exploitLevel="-1" categoryid="16" pcirelated="false" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="nnp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="507" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="int HandleMessage(char *, int, __span32)" functionrelativelocation="45"/>
+<flaw severity="2" categoryname="Unchecked Error Condition" count="1" issueid="36" module="metamail.dwarf2" type="system" description="The result of this call to system() is not captured, so it cannot be checked for success. This can result in application instability or crashing if memory is not available.
+
+Be sure to check the result and make sure it is correct before use. Some functions return a pointer which should be validated as not NULL before use. Other functions return integers or Boolean values that must either be zero or non-zero for the results of the function to be used. Consult the API documentation to determine what a correct result is from the function call.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/391.html) 
+OWASP (http://www.owasp.org/index.php/Improper_error_handling)
+
+" note="" cweid="391" remediationeffort="2" exploitLevel="-1" categoryid="16" pcirelated="false" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="nnp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="835" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="int ProcessArguments(int, char * *, __span32)" functionrelativelocation="67"/>
+<flaw severity="2" categoryname="Unchecked Error Condition" count="1" issueid="73" module="metamail.dwarf2" type="system" description="The result of this call to system() is not captured, so it cannot be checked for success. This can result in application instability or crashing if memory is not available.
+
+Be sure to check the result and make sure it is correct before use. Some functions return a pointer which should be validated as not NULL before use. Other functions return integers or Boolean values that must either be zero or non-zero for the results of the function to be used. Consult the API documentation to determine what a correct result is from the function call.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/391.html) 
+OWASP (http://www.owasp.org/index.php/Improper_error_handling)
+
+" note="" cweid="391" remediationeffort="2" exploitLevel="-1" categoryid="16" pcirelated="false" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="nnp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="979" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="int RunInNewWindow(char * *, int, char * *, FILE /*148*/ *)" functionrelativelocation="36"/>
+<flaw severity="2" categoryname="Unchecked Error Condition" count="1" issueid="75" module="metamail.dwarf2" type="system" description="The result of this call to system() is not captured, so it cannot be checked for success. This can result in application instability or crashing if memory is not available.
+
+Be sure to check the result and make sure it is correct before use. Some functions return a pointer which should be validated as not NULL before use. Other functions return integers or Boolean values that must either be zero or non-zero for the results of the function to be used. Consult the API documentation to determine what a correct result is from the function call.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/391.html) 
+OWASP (http://www.owasp.org/index.php/Improper_error_handling)
+
+" note="" cweid="391" remediationeffort="2" exploitLevel="-1" categoryid="16" pcirelated="false" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="nnp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="1014" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="int RunInNewWindow(char * *, int, char * *, FILE /*148*/ *)" functionrelativelocation="99"/>
+<flaw severity="2" categoryname="Unchecked Error Condition" count="1" issueid="3" module="metamail.dwarf2" type="unlink" description="The result of this call to unlink() is not captured, so it cannot be checked for success. This can result in application instability or crashing if memory is not available.
+
+Be sure to check the result and make sure it is correct before use. Some functions return a pointer which should be validated as not NULL before use. Other functions return integers or Boolean values that must either be zero or non-zero for the results of the function to be used. Consult the API documentation to determine what a correct result is from the function call.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/391.html) 
+OWASP (http://www.owasp.org/index.php/Improper_error_handling)
+
+" note="" cweid="391" remediationeffort="2" exploitLevel="-1" categoryid="16" pcirelated="false" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="nnp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="1306" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="int ExecuteMailcapEntry(struct MailcapEntry, char *, char *, __span32)" functionrelativelocation="65"/>
+<flaw severity="2" categoryname="Unchecked Error Condition" count="1" issueid="22" module="metamail.dwarf2" type="unlink" description="The result of this call to unlink() is not captured, so it cannot be checked for success. This can result in application instability or crashing if memory is not available.
+
+Be sure to check the result and make sure it is correct before use. Some functions return a pointer which should be validated as not NULL before use. Other functions return integers or Boolean values that must either be zero or non-zero for the results of the function to be used. Consult the API documentation to determine what a correct result is from the function call.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/391.html) 
+OWASP (http://www.owasp.org/index.php/Improper_error_handling)
+
+" note="" cweid="391" remediationeffort="2" exploitLevel="-1" categoryid="16" pcirelated="false" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="nnp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="1310" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="int ExecuteMailcapEntry(struct MailcapEntry, char *, char *, __span32)" functionrelativelocation="66"/>
+<flaw severity="2" categoryname="Unchecked Error Condition" count="1" issueid="61" module="metamail.dwarf2" type="unlink" description="The result of this call to unlink() is not captured, so it cannot be checked for success. This can result in application instability or crashing if memory is not available.
+
+Be sure to check the result and make sure it is correct before use. Some functions return a pointer which should be validated as not NULL before use. Other functions return integers or Boolean values that must either be zero or non-zero for the results of the function to be used. Consult the API documentation to determine what a correct result is from the function call.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/391.html) 
+OWASP (http://www.owasp.org/index.php/Improper_error_handling)
+
+" note="" cweid="391" remediationeffort="2" exploitLevel="-1" categoryid="16" pcirelated="false" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="nnp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="1350" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="int ExecuteMailcapEntry(struct MailcapEntry, char *, char *, __span32)" functionrelativelocation="93"/>
+<flaw severity="2" categoryname="Unchecked Error Condition" count="1" issueid="81" module="metamail.dwarf2" type="unlink" description="The result of this call to unlink() is not captured, so it cannot be checked for success. This can result in application instability or crashing if memory is not available.
+
+Be sure to check the result and make sure it is correct before use. Some functions return a pointer which should be validated as not NULL before use. Other functions return integers or Boolean values that must either be zero or non-zero for the results of the function to be used. Consult the API documentation to determine what a correct result is from the function call.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/391.html) 
+OWASP (http://www.owasp.org/index.php/Improper_error_handling)
+
+" note="" cweid="391" remediationeffort="2" exploitLevel="-1" categoryid="16" pcirelated="false" date_first_occurrence="2011-03-16 17:34:17 UTC" remediation_status="New" cia_impact="nnp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="metamail.c" line="2061" sourcefilepath="home/emmerik/compile/metamail/bettamail/mm2.7/src/metamail/" scope="Global Scope" functionprototype="void PrintHeader(char *, int, int)" functionrelativelocation="96"/>
+</staticflaws>
+</cwe>
+</category>
+</severity>
+<severity level="1"/>
+<severity level="0"/>
+<flaw-status new="24" reopen="0" open="0" fixed="0" total="24" not_mitigated="24" sev-1-change="0" sev-2-change="8" sev-3-change="5" sev-4-change="0" sev-5-change="11"/>
+</detailedreport>

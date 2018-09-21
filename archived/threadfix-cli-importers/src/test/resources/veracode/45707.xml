@@ -1,0 +1,1089 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<detailedreport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://www.veracode.com/schema/reports/export/1.0" xsi:schemaLocation="https://www.veracode.com/schema/reports/export/1.0 https://analysiscenter.veracode.com/resource/detailedreport.xsd" report_format_version="1.4" app_name="DVWA" app_id="32702" first_build_submitted_date="2012-03-08 14:53:38 UTC" version="1.0" build_id="45707" submitter="Veracode" platform="PHP" assurance_level="4" business_criticality="4" generation_date="2014-06-03 14:42:38 UTC" veracode_level="VL1" total_flaws="85" flaws_not_mitigated="85" teams="" life_cycle_stage="Not Specified" planned_deployment_date="" last_update_time="2012-03-08 16:52:49 UTC" is_latest_build="true" policy_name="Veracode Transitional High" policy_version="1" policy_compliance_status="Did Not Pass" policy_rules_status="Did Not Pass" grace_period_expired="true" scan_overdue="false" business_owner="" business_unit="Not Specified" tags="demo" legacy_scan_engine="false">
+<static-analysis rating="C" score="68" submitted_date="2012-03-08 14:52:32 UTC" published_date="2012-03-08 16:52:48 UTC" analysis_size_bytes="4243789">
+<modules>
+<module name="PHP files within DVWA-1.0.7.zip" compiler="PHP_5" os="PHP" architecture="PHP" loc="0" score="68" numflawssev0="0" numflawssev1="0" numflawssev2="20" numflawssev3="32" numflawssev4="5" numflawssev5="6"/>
+</modules>
+</static-analysis>
+<dynamic-analysis rating="C" score="87" submitted_date="2012-03-08 14:21:41 UTC" published_date="2012-03-08 14:54:46 UTC" dynamic_scan_type="ds">
+<modules>
+<module name="dynamic_analysis" compiler="Unknown" os="" architecture="" loc="0" score="87" numflawssev0="0" numflawssev1="0" numflawssev2="14" numflawssev3="3" numflawssev4="4" numflawssev5="1" target_url="http://www.example.com/dvwa" domain="example.com"/>
+</modules>
+</dynamic-analysis>
+<severity level="5">
+<category categoryid="18" categoryname="OS Command Injection" pcirelated="true">
+<desc>
+<para text="OS command injection vulnerabilities occur when data enters an application from an untrusted source and is used to dynamically construct and execute a system command.  This allows an attacker to either alter the command executed by the application or append additional commands.  The command is typically executed with the privileges of the executing process and gives an attacker a privilege or capability that he would not otherwise have."/>
+</desc>
+<recommendations>
+<para text="Careful handling of all untrusted data is critical in preventing OS command injection attacks.   Using one or more of the following techniques provides defense-in-depth and minimizes the likelihood of an vulnerability.">
+<bulletitem text="If possible, use library calls rather than external processes to recreate the desired functionality."/>
+<bulletitem text="Validate user-supplied input using positive filters (white lists) to ensure that it conforms to the expected format, using centralized data validation routines when possible. "/>
+<bulletitem text="Select safe API routines.  Some APIs that execute system commands take an array of strings as input rather than a single string, which protects against some forms of command injection by ensuring that a user-supplied argument cannot be interpreted as part of the command."/>
+</para>
+</recommendations>
+<cwe cweid="78" cwename="Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')" pcirelated="true" owasp="929" sans="801" certc="741" certcpp="875" certjava="845">
+<description>
+<text text="This call contains a command injection flaw.  The argument to the function is constructed using user-supplied input.  If an attacker is allowed to specify all or part of the command, it may be possible to execute commands on the server with the privileges of the executing process.  The level of exposure depends on the effectiveness of input validation routines, if any."/>
+</description>
+<staticflaws>
+<flaw severity="5" categoryname="Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')" count="1" issueid="58" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.shell_exec" description="This call to !php_standard_ns.shell_exec() contains a command injection flaw. The argument to the function is constructed using user-supplied input. If an attacker is allowed to specify all or part of the command, it may be possible to execute commands on the server with the privileges of the executing process. The level of exposure depends on the effectiveness of input validation routines, if any. The first argument to shell_exec() contains data from the incoming HTTP request from the variable target. The data from the incoming HTTP request originated from an earlier call to idscomponent.detect.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using black lists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters. Most APIs that execute system commands also have a &quot;safe&quot; version of the method that takes an array of strings as input rather than a single string, which protects against some forms of command injection.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/78.html) 
+OWASP (http://www.owasp.org/index.php/Command_Injection) 
+WASC (http://webappsec.pbworks.com/OS-Commanding)
+
+" note="" cweid="78" remediationeffort="3" exploitLevel="0" categoryid="18" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ccp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="high.php" line="23" sourcefilepath="dvwa/vulnerabilities/exec/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="77">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="-1">
+<note>The source of the tainted data in this web application flaw is not a web request.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+<flaw severity="5" categoryname="Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')" count="1" issueid="74" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.shell_exec" description="This call to !php_standard_ns.shell_exec() contains a command injection flaw. The argument to the function is constructed using user-supplied input. If an attacker is allowed to specify all or part of the command, it may be possible to execute commands on the server with the privileges of the executing process. The level of exposure depends on the effectiveness of input validation routines, if any. The first argument to shell_exec() contains data from the incoming HTTP request from the variable target. The data from the incoming HTTP request originated from an earlier call to idscomponent.detect.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using black lists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters. Most APIs that execute system commands also have a &quot;safe&quot; version of the method that takes an array of strings as input rather than a single string, which protects against some forms of command injection.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/78.html) 
+OWASP (http://www.owasp.org/index.php/Command_Injection) 
+WASC (http://webappsec.pbworks.com/OS-Commanding)
+
+" note="" cweid="78" remediationeffort="3" exploitLevel="0" categoryid="18" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ccp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="high.php" line="28" sourcefilepath="dvwa/vulnerabilities/exec/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="87">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="-1">
+<note>The source of the tainted data in this web application flaw is not a web request.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+<flaw severity="5" categoryname="Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')" count="1" issueid="27" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.shell_exec" description="This call to !php_standard_ns.shell_exec() contains a command injection flaw. The argument to the function is constructed using user-supplied input. If an attacker is allowed to specify all or part of the command, it may be possible to execute commands on the server with the privileges of the executing process. The level of exposure depends on the effectiveness of input validation routines, if any. The first argument to shell_exec() contains data from the incoming HTTP request from the variable target. The data from the incoming HTTP request originated from an earlier call to idscomponent.detect.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using black lists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters. Most APIs that execute system commands also have a &quot;safe&quot; version of the method that takes an array of strings as input rather than a single string, which protects against some forms of command injection.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/78.html) 
+OWASP (http://www.owasp.org/index.php/Command_Injection) 
+WASC (http://webappsec.pbworks.com/OS-Commanding)
+
+" note="" cweid="78" remediationeffort="3" exploitLevel="0" categoryid="18" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ccp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="low.php" line="10" sourcefilepath="dvwa/vulnerabilities/exec/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="50">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="-1">
+<note>The source of the tainted data in this web application flaw is not a web request.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+<flaw severity="5" categoryname="Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')" count="1" issueid="63" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.shell_exec" description="This call to !php_standard_ns.shell_exec() contains a command injection flaw. The argument to the function is constructed using user-supplied input. If an attacker is allowed to specify all or part of the command, it may be possible to execute commands on the server with the privileges of the executing process. The level of exposure depends on the effectiveness of input validation routines, if any. The first argument to shell_exec() contains data from the incoming HTTP request from the variable target. The data from the incoming HTTP request originated from an earlier call to idscomponent.detect.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using black lists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters. Most APIs that execute system commands also have a &quot;safe&quot; version of the method that takes an array of strings as input rather than a single string, which protects against some forms of command injection.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/78.html) 
+OWASP (http://www.owasp.org/index.php/Command_Injection) 
+WASC (http://webappsec.pbworks.com/OS-Commanding)
+
+" note="" cweid="78" remediationeffort="3" exploitLevel="0" categoryid="18" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ccp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="low.php" line="15" sourcefilepath="dvwa/vulnerabilities/exec/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="76">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="-1">
+<note>The source of the tainted data in this web application flaw is not a web request.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+<flaw severity="5" categoryname="Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')" count="1" issueid="53" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.shell_exec" description="This call to !php_standard_ns.shell_exec() contains a command injection flaw. The argument to the function is constructed using user-supplied input. If an attacker is allowed to specify all or part of the command, it may be possible to execute commands on the server with the privileges of the executing process. The level of exposure depends on the effectiveness of input validation routines, if any. The first argument to shell_exec() contains data from the incoming HTTP request from the variable target. The data from the incoming HTTP request originated from an earlier call to idscomponent.detect.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using black lists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters. Most APIs that execute system commands also have a &quot;safe&quot; version of the method that takes an array of strings as input rather than a single string, which protects against some forms of command injection.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/78.html) 
+OWASP (http://www.owasp.org/index.php/Command_Injection) 
+WASC (http://webappsec.pbworks.com/OS-Commanding)
+
+" note="" cweid="78" remediationeffort="3" exploitLevel="0" categoryid="18" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ccp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="medium.php" line="18" sourcefilepath="dvwa/vulnerabilities/exec/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="62">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="-1">
+<note>The source of the tainted data in this web application flaw is not a web request.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+<flaw severity="5" categoryname="Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')" count="1" issueid="75" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.shell_exec" description="This call to !php_standard_ns.shell_exec() contains a command injection flaw. The argument to the function is constructed using user-supplied input. If an attacker is allowed to specify all or part of the command, it may be possible to execute commands on the server with the privileges of the executing process. The level of exposure depends on the effectiveness of input validation routines, if any. The first argument to shell_exec() contains data from the incoming HTTP request from the variable target. The data from the incoming HTTP request originated from an earlier call to idscomponent.detect.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using black lists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters. Most APIs that execute system commands also have a &quot;safe&quot; version of the method that takes an array of strings as input rather than a single string, which protects against some forms of command injection.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/78.html) 
+OWASP (http://www.owasp.org/index.php/Command_Injection) 
+WASC (http://webappsec.pbworks.com/OS-Commanding)
+
+" note="" cweid="78" remediationeffort="3" exploitLevel="0" categoryid="18" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ccp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="medium.php" line="23" sourcefilepath="dvwa/vulnerabilities/exec/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="82">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="-1">
+<note>The source of the tainted data in this web application flaw is not a web request.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+</staticflaws>
+<dynamicflaws>
+<flaw severity="5" categoryname="Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')" count="1" issueid="15" module="dynamic_analysis" type="Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')" description="It is possible to execute arbitrary OS commands at http://10.10.31.202/dvwa/vulnerabilities/exec/ by injecting veracodetest|7c|ping -c 15 127.0.0.1|7c||7c|ping -n 15 127.0.0.1|7c||7c|echo into the value veracode of application/x-www-form-urlencoded body parameter ip at position 0 parameter. OS command injection attacks are exploited by using shell meta characters to escape, or break out of, the hardcoded command and issue additional commands on the system.
+
+Do not allow the end user to submit data which will be used in constructing OS commands to be executed. If it is necessary to use user input, properly escape shell meta characters before including the input in operating system commands. Most APIs that execute system commands also have a &quot;safe&quot; version of the method that takes an array of strings as input rather than a single string, which protects against some forms of command injection.
+
+
+CWE (http://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=78) 
+OWASP (http://www.owasp.org/index.php/Command_Injection) 
+WASC (http://webappsec.pbworks.com/OS-Commanding)
+
+" note="" cweid="78" remediationeffort="3" categoryid="18" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ccp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" url="http://10.10.31.202/dvwa/vulnerabilities/exec/" vuln_parameter="ip"/>
+</dynamicflaws>
+</cwe>
+</category>
+</severity>
+<severity level="4">
+<category categoryid="11" categoryname="Authentication Issues" pcirelated="true">
+<desc>
+<para text="Authentication is the process of attempting to verify the digital identity of the sender of a communication such as a request to login to an application. Authentication is a way to ensure users are who they claim to be and that the user who attempts to perform functions in a system is in fact the user who is authorized to do so.  When an application does not properly ensure that the user has proven their identity or provides a way to bypass or circumvent the authentication process, the security of the application is compromised."/>
+</desc>
+<recommendations>
+<para text="When using password systems, implement strong password complexity requirements to evade brute force attacks, and ensure that accounts with default or predictable credentials are removed from production systems.  Re-authenticate users for high-value transactions and access to protected areas.  Use the most appropriate form of authentication for the assets being protected, e.g. multi-factor authentication for high assurance applications."/>
+</recommendations>
+<cwe cweid="287" cwename="Improper Authentication" pcirelated="true" owasp="930">
+<description>
+<text text="A valid username and password combination was discovered for the application. Default passwords and trivial passwords expose an application to unauthorized access. If a user chooses a very insecure password, then that user's account information can be compromised and the account can be used to attempt to compromise the application."/>
+</description>
+<dynamicflaws>
+<flaw severity="4" categoryname="Improper Authentication" count="1" issueid="4" module="dynamic_analysis" type="Improper Authentication" description="It was possible to login to the application with commonly-used credentials: username &quot;admin&quot;, password &quot;password&quot;.
+
+Purge predictable accounts and ensure that password complexity requirements follow security best practices or adhere to your organization's password policy.
+
+
+CWE (http://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=287) 
+OWASP (http://www.owasp.org/index.php/Testing_for_Brute_Force) 
+WASC (http://webappsec.pbworks.com/Brute-Force)
+
+" note="" cweid="287" remediationeffort="2" categoryid="11" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" url="http://www.example.com/dvwa"/>
+</dynamicflaws>
+</cwe>
+</category>
+<category categoryid="19" categoryname="SQL Injection" pcirelated="true">
+<desc>
+<para text="SQL injection vulnerabilities occur when data enters an application from an untrusted source and is used to dynamically construct a SQL query.  This allows an attacker to manipulate database queries in order to access, modify, or delete arbitrary data.  Depending on the platform, database type, and configuration, it may also be possible to execute administrative operations on the database, access the filesystem, or execute arbitrary system commands.  SQL injection attacks can also be used to subvert authentication and authorization schemes, which would enable an attacker to gain privileged access to restricted portions of the application."/>
+</desc>
+<recommendations>
+<para text="Several techniques can be used to prevent SQL injection attacks. These techniques complement each other and address security at different points in the application. Using multiple techniques provides defense-in-depth and minimizes the likelihood of a SQL injection vulnerability.">
+<bulletitem text="Use parameterized prepared statements rather than dynamically constructing SQL queries.  This will prevent the database from interpreting the contents of bind variables as part of the query and is the most effective defense against SQL injection."/>
+<bulletitem text="Validate user-supplied input using positive filters (white lists) to ensure that it conforms to the expected format, using centralized data validation routines when possible. "/>
+<bulletitem text="Normalize all user-supplied data before applying filters or regular expressions, or submitting the data to a database. This means that all URL-encoded (%xx), HTML-encoded (&amp;#xx;), or other encoding schemes should be reduced to the internal character representation expected by the application. This prevents attackers from using alternate encoding schemes to bypass filters."/>
+<bulletitem text="When using database abstraction libraries such as Hibernate, do not assume that all methods exposed by the API will automatically prevent SQL injection attacks.  Most libraries contain methods that pass arbitrary queries to the database in an unsafe manner."/>
+</para>
+</recommendations>
+<cwe cweid="89" cwename="Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')" pcirelated="true" owasp="929" sans="801">
+<description>
+<text text="This database query contains a SQL injection flaw.  The function call constructs a dynamic SQL query using a variable derived from user-supplied input.  An attacker could exploit this flaw to execute arbitrary SQL queries against the database."/>
+</description>
+<staticflaws>
+<flaw severity="4" categoryname="Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')" count="1" issueid="31" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.mysql_query" description="This database query contains a SQL injection flaw. The call to !php_standard_ns.mysql_query() constructs a dynamic SQL query using a variable derived from user-supplied input. An attacker could exploit this flaw to execute arbitrary SQL queries against the database. The first argument to mysql_query() contains data from the incoming HTTP request from the variable getid.
+
+Avoid dynamically constructing SQL queries. Instead, use parameterized prepared statements to prevent the database from interpreting the contents of bind variables as part of the query. Always validate user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/89.html) 
+OWASP (http://www.owasp.org/index.php/SQL_injection) 
+WASC (http://webappsec.pbworks.com/SQL-Injection)
+
+" note="" cweid="89" remediationeffort="3" exploitLevel="0" categoryid="19" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="low.php" line="10" sourcefilepath="dvwa/vulnerabilities/sqli_blind/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="26">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="-1">
+<note>The source of the tainted data in this web application flaw is not a web request.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+<flaw severity="4" categoryname="Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')" count="1" issueid="49" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.mysql_query" description="This database query contains a SQL injection flaw. The call to !php_standard_ns.mysql_query() constructs a dynamic SQL query using a variable derived from user-supplied input. An attacker could exploit this flaw to execute arbitrary SQL queries against the database. The first argument to mysql_query() contains data from the incoming HTTP request from the variable getid.
+
+Avoid dynamically constructing SQL queries. Instead, use parameterized prepared statements to prevent the database from interpreting the contents of bind variables as part of the query. Always validate user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/89.html) 
+OWASP (http://www.owasp.org/index.php/SQL_injection) 
+WASC (http://webappsec.pbworks.com/SQL-Injection)
+
+" note="" cweid="89" remediationeffort="3" exploitLevel="0" categoryid="19" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="low.php" line="10" sourcefilepath="dvwa/vulnerabilities/sqli/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="23">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="-1">
+<note>The source of the tainted data in this web application flaw is not a web request.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+<flaw severity="4" categoryname="Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')" count="1" issueid="36" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.mysql_query" description="This database query contains a SQL injection flaw. The call to !php_standard_ns.mysql_query() constructs a dynamic SQL query using a variable derived from user-supplied input. An attacker could exploit this flaw to execute arbitrary SQL queries against the database. The first argument to mysql_query() contains data from the incoming HTTP request from the variable qry.
+
+Avoid dynamically constructing SQL queries. Instead, use parameterized prepared statements to prevent the database from interpreting the contents of bind variables as part of the query. Always validate user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/89.html) 
+OWASP (http://www.owasp.org/index.php/SQL_injection) 
+WASC (http://webappsec.pbworks.com/SQL-Injection)
+
+" note="" cweid="89" remediationeffort="3" exploitLevel="0" categoryid="19" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="low.php" line="11" sourcefilepath="dvwa/vulnerabilities/brute/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="36">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="-1">
+<note>The source of the tainted data in this web application flaw is not a web request.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+<flaw severity="4" categoryname="Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')" count="1" issueid="41" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.mysql_query" description="This database query contains a SQL injection flaw. The call to !php_standard_ns.mysql_query() constructs a dynamic SQL query using a variable derived from user-supplied input. An attacker could exploit this flaw to execute arbitrary SQL queries against the database. The first argument to mysql_query() contains data from the incoming HTTP request from the variable insert. The data from the incoming HTTP request originated from an earlier call to idscomponent.detect.
+
+Avoid dynamically constructing SQL queries. Instead, use parameterized prepared statements to prevent the database from interpreting the contents of bind variables as part of the query. Always validate user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/89.html) 
+OWASP (http://www.owasp.org/index.php/SQL_injection) 
+WASC (http://webappsec.pbworks.com/SQL-Injection)
+
+" note="" cweid="89" remediationeffort="3" exploitLevel="0" categoryid="19" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="MySQL.php" line="57" sourcefilepath="dvwa/dvwa/includes/DBMS/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="68">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="-1">
+<note>The source of the tainted data in this web application flaw is not a web request.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+<flaw severity="4" categoryname="Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')" count="1" issueid="56" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.pg_query" description="This database query contains a SQL injection flaw. The call to !php_standard_ns.pg_query() constructs a dynamic SQL query using a variable derived from user-supplied input. An attacker could exploit this flaw to execute arbitrary SQL queries against the database. The first argument to pg_query() contains data from the incoming HTTP request from the variable insert. The data from the incoming HTTP request originated from an earlier call to idscomponent.detect.
+
+Avoid dynamically constructing SQL queries. Instead, use parameterized prepared statements to prevent the database from interpreting the contents of bind variables as part of the query. Always validate user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/89.html) 
+OWASP (http://www.owasp.org/index.php/SQL_injection) 
+WASC (http://webappsec.pbworks.com/SQL-Injection)
+
+" note="" cweid="89" remediationeffort="3" exploitLevel="0" categoryid="19" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="PGSQL.php" line="66" sourcefilepath="dvwa/dvwa/includes/DBMS/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="65">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="-1">
+<note>The source of the tainted data in this web application flaw is not a web request.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+</staticflaws>
+<dynamicflaws>
+<flaw severity="4" categoryname="Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')" count="1" issueid="14" module="dynamic_analysis" type="Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')" description="By injecting invalid SQL queries or commands such as veracode' into the value veracode of URI query parameter username at position 0 parameter, the application displayed SQL error messages. This is a classic form of SQL Injection where an attacker simply injects invalid SQL queries and waits for the server to respond with a SQL error, identifying itself as vulnerable.
+
+Avoid dynamically constructing SQL queries. Instead, use parameterized prepared statements to prevent the database from interpreting the contents of bind variables as part of the query.
+
+
+CWE (http://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=89) 
+OWASP (http://www.owasp.org/index.php/SQL_injection) 
+WASC (http://webappsec.pbworks.com/SQL-Injection)
+
+" note="" cweid="89" remediationeffort="3" categoryid="19" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" url="http://10.10.31.202/dvwa/vulnerabilities/brute/?username=veracode%27&amp;password=veracode&amp;Login=Login" vuln_parameter="username"/>
+<flaw severity="4" categoryname="Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')" count="1" issueid="16" module="dynamic_analysis" type="Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')" description="By injecting invalid SQL queries or commands such as 0' into the value 0 of URI query parameter id at position 0 parameter, the application displayed SQL error messages. This is a classic form of SQL Injection where an attacker simply injects invalid SQL queries and waits for the server to respond with a SQL error, identifying itself as vulnerable.
+
+Avoid dynamically constructing SQL queries. Instead, use parameterized prepared statements to prevent the database from interpreting the contents of bind variables as part of the query.
+
+
+CWE (http://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=89) 
+OWASP (http://www.owasp.org/index.php/SQL_injection) 
+WASC (http://webappsec.pbworks.com/SQL-Injection)
+
+" note="" cweid="89" remediationeffort="3" categoryid="19" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" url="http://10.10.31.202/dvwa/vulnerabilities/sqli/?id=0%27&amp;Submit=Submit" vuln_parameter="id"/>
+<flaw severity="4" categoryname="Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')" count="1" issueid="18" module="dynamic_analysis" type="Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')" description="By injecting long-running SQL queries such as 0'+(is_used_lock(65)or(sleep(15))or(get_lock(65,1)))+' into value 0 of URI query parameter id at position 0 it was possible to exploit SQL Injection attacks by means of timing attacks. SQL Injection based timing attacks are designed to determine vulnerability of a system by inferring how long a query or series of queries take to execute. This technique is commonly used when error reporting has been properly implemented and does not display SQL errors to end users.
+
+Avoid dynamically constructing SQL queries. Instead, use parameterized prepared statements to prevent the database from interpreting the contents of bind variables as part of the query.
+
+
+CWE (http://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=89) 
+OWASP (http://www.owasp.org/index.php/SQL_injection) 
+WASC (http://webappsec.pbworks.com/SQL-Injection)
+
+" note="" cweid="89" remediationeffort="3" categoryid="19" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" url="http://10.10.31.202/dvwa/vulnerabilities/sqli_blind/?id=0%27%2b%28is_used_lock%2865%29or%28sleep%2815%29%29or%28get_lock%2865%2c1%29%29%29%2b%27&amp;Submit=Submit" vuln_parameter="id"/>
+</dynamicflaws>
+</cwe>
+</category>
+</severity>
+<severity level="3">
+<category categoryid="20" categoryname="Cross-Site Scripting" pcirelated="true">
+<desc>
+<para text="Cross-site scripting (XSS) attacks occur when an attacker uses a web application to send malicious code, generally in the form of a browser side script, to a different end user. Flaws that allow these attacks to succeed occur whenever a web application uses untrusted data in the output it generates without validating or encoding it.  XSS vulnerabilities are commonly exploited to steal or manipulate cookies, modify presentation of content, and compromise sensitive information, with new attack vectors being discovered on a regular basis.  XSS is also commonly referred to as HTML injection."/>
+<para text="XSS vulnerabilities can be either persistent or transient (often referred to as stored and reflected, respectively).  In a persistent XSS vulnerability, the injected code is stored by the application, for example within a blog comment or message board.  The attack occurs whenever a victim views the page containing the malicious script.  In a transient XSS vulnerability, the injected code is included directly in the HTTP request.  These attacks are often carried out via malicious URLs sent via email or another website and requires the victim to browse to that link.  The consequence of an XSS attack to a victim is the same regardless of whether it is persistent or transient; however, persistent XSS vulnerabilities are likely to affect a greater number of victims due to its delivery mechanism."/>
+</desc>
+<recommendations>
+<para text="Several techniques can be used to prevent XSS attacks. These techniques complement each other and address security at different points in the application. Using multiple techniques provides defense-in-depth and minimizes the likelihood of a XSS vulnerability.">
+<bulletitem text="Use output filtering to sanitize all output generated from user-supplied input, selecting the appropriate method of encoding based on the use case of the untrusted data.  For example, if the data is being written to the body of an HTML page, use HTML entity encoding.  However, if the data is being used to construct generated Javascript or if it is consumed by client-side methods that may interpret it as code (a common technique in Web 2.0 applications), additional restrictions may be necessary beyond simple HTML encoding."/>
+<bulletitem text="Validate user-supplied input using positive filters (white lists) to ensure that it conforms to the expected format, using centralized data validation routines when possible. "/>
+<bulletitem text="Do not permit users to include HTML content in posts, notes, or other data that will be displayed by the application.  If users are permitted to include HTML tags, then carefully limit access to specific elements or attributes, and use strict validation filters to prevent abuse."/>
+</para>
+</recommendations>
+<cwe cweid="80" cwename="Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)" pcirelated="true" owasp="931" sans="79">
+<description>
+<text text="This call contains a cross-site scripting (XSS) flaw.  The application populates the HTTP response with user-supplied input, allowing an attacker to embed malicious content, such as Javascript code, which will be executed in the context of the victim's browser.  XSS vulnerabilities are commonly exploited to steal or manipulate cookies, modify presentation of content, and compromise confidential information, with new attack vectors being discovered on a regular basis."/>
+</description>
+<staticflaws>
+<flaw severity="3" categoryname="Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)" count="1" issueid="81" module="PHP files within DVWA-1.0.7.zip" type="!operator_phpecho" description="This call to !operator_phpecho() contains a cross-site scripting (XSS) flaw. The application populates the HTTP response with user-supplied input, allowing an attacker to embed malicious content, such as Javascript code, which will be executed in the context of the victim's browser. XSS vulnerabilities are commonly exploited to steal or manipulate cookies, modify presentation of content, and compromise confidential information, with new attack vectors being discovered on a regular basis. The first argument to !operator_phpecho() contains data from the incoming HTTP request from the variable systemInfoHtml.
+
+Use contextual escaping on all untrusted data before using it to construct any portion of an HTTP response. The escaping method should be chosen based on the specific use case of the untrusted data, otherwise it may not protect fully against the attack. For example, if the data is being written to the body of an HTML page, use HTML entity escaping; if the data is being written to an attribute, use attribute escaping; etc. Both the OWASP ESAPI library for Java and the Microsoft AntiXSS library provide contextual escaping methods. For more details on contextual escaping, see https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet. In addition, as a best practice, always validate user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/79.html) 
+OWASP (http://www.owasp.org/index.php/XSS) 
+WASC (http://webappsec.pbworks.com/Cross-Site-Scripting)
+
+" note="" cweid="80" remediationeffort="3" exploitLevel="0" categoryid="20" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="dvwaPage.inc.php" line="381" sourcefilepath="dvwa/dvwa/includes/" scope="Global Scope" functionprototype="dvwaHtmlEcho(array $)" functionrelativelocation="98">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="-1">
+<note>The source of the tainted data in this web application flaw is not a web request.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+</staticflaws>
+<dynamicflaws>
+<flaw severity="3" categoryname="Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)" count="1" issueid="20" module="dynamic_analysis" type="Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)" description="It is possible to inject arbitrary HTML tags such as &quot;&lt;/script&gt;&lt;script&gt;window.pholcidCallback(5665513930)&lt;/script&gt; into the value include.php of URI query parameter page at position 0 parameter on http://10.10.31.202/dvwa/vulnerabilities/fi/?page=include.php which results in Javascript code being executed on http://10.10.31.202/dvwa/vulnerabilities/fi/?page=include.php. This form of Cross-Site Scripting is considered persistent XSS due to the fact that once the injected data is sent to the server, it is stored and persists across requests. This can have varying consequences depending on where and to whom the inserted data is displayed. XSS vulnerabilities are commonly exploited to steal or manipulate cookies, modify presentation of content, and compromise confidential information, with new attack vectors being discovered on a regular basis.
+
+Use contextual escaping on all untrusted data before using it to construct any portion of an HTTP response. The escaping method should be chosen based on the specific use case of the untrusted data, otherwise it may not protect fully against the attack. For example, if the data is being written to the body of an HTML page, use HTML entity encoding (e.g. StringEscapeUtils.escapeHtml() in J2EE or HttpUtility.HtmlEncode() in ASP.NET). For more details on contextual escaping, see https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet.
+
+
+CWE (http://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=80) 
+OWASP (http://www.owasp.org/index.php/XSS) 
+WASC (http://webappsec.pbworks.com/Cross-Site-Scripting)
+
+" note="" cweid="80" remediationeffort="3" categoryid="20" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" url="http://10.10.31.202/dvwa/vulnerabilities/fi/?page=%22%3c%2fscript%3e%3cscript%3ewindow.pholcidCallback%285665513930%29%3c%2fscript%3e" vuln_parameter="page"/>
+<flaw severity="3" categoryname="Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)" count="1" issueid="21" module="dynamic_analysis" type="Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)" description="It is possible to inject arbitrary HTML tags such as &quot;&lt;/script&gt;&lt;script&gt;window.pholcidCallback(9867389090)&lt;/script&gt; into the value brute of URI query parameter id at position 0 parameter on http://10.10.31.202/dvwa/vulnerabilities/view_help.php?id=brute&amp;security=low which results in Javascript code being executed on http://10.10.31.202/dvwa/vulnerabilities/view_help.php?id=brute&amp;security=low. This form of Cross-Site Scripting is considered persistent XSS due to the fact that once the injected data is sent to the server, it is stored and persists across requests. This can have varying consequences depending on where and to whom the inserted data is displayed. XSS vulnerabilities are commonly exploited to steal or manipulate cookies, modify presentation of content, and compromise confidential information, with new attack vectors being discovered on a regular basis.
+
+Use contextual escaping on all untrusted data before using it to construct any portion of an HTTP response. The escaping method should be chosen based on the specific use case of the untrusted data, otherwise it may not protect fully against the attack. For example, if the data is being written to the body of an HTML page, use HTML entity encoding (e.g. StringEscapeUtils.escapeHtml() in J2EE or HttpUtility.HtmlEncode() in ASP.NET). For more details on contextual escaping, see https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet.
+
+
+CWE (http://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=80) 
+OWASP (http://www.owasp.org/index.php/XSS) 
+WASC (http://webappsec.pbworks.com/Cross-Site-Scripting)
+
+" note="" cweid="80" remediationeffort="3" categoryid="20" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" url="http://10.10.31.202/dvwa/vulnerabilities/view_help.php?id=%22%3c%2fscript%3e%3cscript%3ewindow.pholcidCallback%289867389090%29%3c%2fscript%3e&amp;security=low" vuln_parameter="id"/>
+<flaw severity="3" categoryname="Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)" count="1" issueid="22" module="dynamic_analysis" type="Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)" description="It is possible to inject arbitrary HTML tags such as &quot;&lt;/script&gt;&lt;script&gt;window.pholcidCallback(2678846360)&lt;/script&gt; into the value veracode of URI query parameter name at position 0 parameter on http://10.10.31.202/dvwa/vulnerabilities/xss_r/?name=veracode which results in Javascript code being executed on http://10.10.31.202/dvwa/vulnerabilities/xss_r/?name=veracode. This form of Cross-Site Scripting is considered persistent XSS due to the fact that once the injected data is sent to the server, it is stored and persists across requests. This can have varying consequences depending on where and to whom the inserted data is displayed. XSS vulnerabilities are commonly exploited to steal or manipulate cookies, modify presentation of content, and compromise confidential information, with new attack vectors being discovered on a regular basis.
+
+Use contextual escaping on all untrusted data before using it to construct any portion of an HTTP response. The escaping method should be chosen based on the specific use case of the untrusted data, otherwise it may not protect fully against the attack. For example, if the data is being written to the body of an HTML page, use HTML entity encoding (e.g. StringEscapeUtils.escapeHtml() in J2EE or HttpUtility.HtmlEncode() in ASP.NET). For more details on contextual escaping, see https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet.
+
+
+CWE (http://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=80) 
+OWASP (http://www.owasp.org/index.php/XSS) 
+WASC (http://webappsec.pbworks.com/Cross-Site-Scripting)
+
+" note="" cweid="80" remediationeffort="3" categoryid="20" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" url="http://10.10.31.202/dvwa/vulnerabilities/xss_r/?name=%22%3c%2fscript%3e%3cscript%3ewindow.pholcidCallback%282678846360%29%3c%2fscript%3e" vuln_parameter="name"/>
+</dynamicflaws>
+</cwe>
+</category>
+<category categoryid="12" categoryname="Cryptographic Issues" pcirelated="true">
+<desc>
+<para text="Applications commonly use cryptography to implement authentication mechanisms and to ensure the confidentiality and integrity of sensitive data, both in transit and at rest.  The proper and accurate implementation of cryptography is extremely critical to its efficacy.  Configuration or coding mistakes as well as incorrect assumptions may negate a large degree of the protection it affords, leaving the crypto implementation vulnerable to attack."/>
+<para text="Common cryptographic mistakes include, but are not limited to, selecting weak keys or weak cipher modes, unintentionally exposing sensitive cryptographic data, using predictable entropy sources, and mismanaging or hard-coding keys.  "/>
+<para text="Developers often make the dangerous assumption that they can improve security by designing their own cryptographic algorithm; however, one of the basic tenets of cryptography is that any cipher whose effectiveness is reliant on the secrecy of the algorithm is fundamentally flawed.  "/>
+</desc>
+<recommendations>
+<para text="Select the appropriate type of cryptography for the intended purpose.  Avoid proprietary encryption algorithms as they typically rely on &quot;security through obscurity&quot; rather than sound mathematics.  Select key sizes appropriate for the data being protected; for high assurance applications, 256-bit symmetric keys and 2048-bit asymmetric keys are sufficient.  Follow best practices for key storage, and ensure that plaintext data and key material are not inadvertently exposed."/>
+</recommendations>
+<cwe cweid="327" cwename="Use of a Broken or Risky Cryptographic Algorithm" pcirelated="true" sans="803" certcpp="883">
+<description>
+<text text="The use of a broken or risky cryptographic algorithm is an unnecessary risk that may result in the disclosure of sensitive information."/>
+</description>
+<staticflaws>
+<flaw severity="3" categoryname="Use of a Broken or Risky Cryptographic Algorithm" count="1" issueid="69" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.md5" description="This function uses the !php_standard_ns.md5() function, which uses a hash algorithm that is considered weak. In recent years, researchers have demonstrated ways to breach many uses of previously-thought-safe hash functions such as MD5.
+
+Consider using a stronger algorithm in order to prevent attackers from being able to manipulate hash results. If passwords are being stored, consider using an algorithm that is computationally expensive in order to prevent dictionary attacks. Examples of algorithms designed to safeguard passwords are bcrypt and scrypt.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/327.html)
+
+" note="" cweid="327" remediationeffort="1" exploitLevel="1" categoryid="12" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="Config.php" line="162" sourcefilepath="dvwa/external/phpids/0.6/lib/IDS/vendors/htmlpurifier/HTMLPurifier/" scope="HTMLPurifier_Config" functionprototype="getBatchSerial($)" functionrelativelocation="63"/>
+<flaw severity="3" categoryname="Use of a Broken or Risky Cryptographic Algorithm" count="1" issueid="67" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.md5" description="This function uses the !php_standard_ns.md5() function, which uses a hash algorithm that is considered weak. In recent years, researchers have demonstrated ways to breach many uses of previously-thought-safe hash functions such as MD5.
+
+Consider using a stronger algorithm in order to prevent attackers from being able to manipulate hash results. If passwords are being stored, consider using an algorithm that is computationally expensive in order to prevent dictionary attacks. Examples of algorithms designed to safeguard passwords are bcrypt and scrypt.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/327.html)
+
+" note="" cweid="327" remediationeffort="1" exploitLevel="1" categoryid="12" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="Config.php" line="173" sourcefilepath="dvwa/external/phpids/0.6/lib/IDS/vendors/htmlpurifier/HTMLPurifier/" scope="HTMLPurifier_Config" functionprototype="getSerial()" functionrelativelocation="53"/>
+<flaw severity="3" categoryname="Use of a Broken or Risky Cryptographic Algorithm" count="1" issueid="46" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.md5" description="This function uses the !php_standard_ns.md5() function, which uses a hash algorithm that is considered weak. In recent years, researchers have demonstrated ways to breach many uses of previously-thought-safe hash functions such as MD5.
+
+Consider using a stronger algorithm in order to prevent attackers from being able to manipulate hash results. If passwords are being stored, consider using an algorithm that is computationally expensive in order to prevent dictionary attacks. Examples of algorithms designed to safeguard passwords are bcrypt and scrypt.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/327.html)
+
+" note="" cweid="327" remediationeffort="1" exploitLevel="1" categoryid="12" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="Email.php" line="238" sourcefilepath="dvwa/external/phpids/0.6/lib/IDS/Log/" scope="IDS_Log_Email" functionprototype="isSpamAttempt()" functionrelativelocation="58"/>
+<flaw severity="3" categoryname="Use of a Broken or Risky Cryptographic Algorithm" count="1" issueid="29" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.md5" description="This function uses the !php_standard_ns.md5() function, which uses a hash algorithm that is considered weak. In recent years, researchers have demonstrated ways to breach many uses of previously-thought-safe hash functions such as MD5.
+
+Consider using a stronger algorithm in order to prevent attackers from being able to manipulate hash results. If passwords are being stored, consider using an algorithm that is computationally expensive in order to prevent dictionary attacks. Examples of algorithms designed to safeguard passwords are bcrypt and scrypt.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/327.html)
+
+" note="" cweid="327" remediationeffort="1" exploitLevel="1" categoryid="12" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="high.php" line="13" sourcefilepath="dvwa/vulnerabilities/csrf/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="26"/>
+<flaw severity="3" categoryname="Use of a Broken or Risky Cryptographic Algorithm" count="1" issueid="28" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.md5" description="This function uses the !php_standard_ns.md5() function, which uses a hash algorithm that is considered weak. In recent years, researchers have demonstrated ways to breach many uses of previously-thought-safe hash functions such as MD5.
+
+Consider using a stronger algorithm in order to prevent attackers from being able to manipulate hash results. If passwords are being stored, consider using an algorithm that is computationally expensive in order to prevent dictionary attacks. Examples of algorithms designed to safeguard passwords are bcrypt and scrypt.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/327.html)
+
+" note="" cweid="327" remediationeffort="1" exploitLevel="1" categoryid="12" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="high.php" line="14" sourcefilepath="dvwa/vulnerabilities/brute/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="34"/>
+<flaw severity="3" categoryname="Use of a Broken or Risky Cryptographic Algorithm" count="1" issueid="23" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.md5" description="This function uses the !php_standard_ns.md5() function, which uses a hash algorithm that is considered weak. In recent years, researchers have demonstrated ways to breach many uses of previously-thought-safe hash functions such as MD5.
+
+Consider using a stronger algorithm in order to prevent attackers from being able to manipulate hash results. If passwords are being stored, consider using an algorithm that is computationally expensive in order to prevent dictionary attacks. Examples of algorithms designed to safeguard passwords are bcrypt and scrypt.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/327.html)
+
+" note="" cweid="327" remediationeffort="1" exploitLevel="1" categoryid="12" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="high.php" line="21" sourcefilepath="dvwa/vulnerabilities/csrf/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="68"/>
+<flaw severity="3" categoryname="Use of a Broken or Risky Cryptographic Algorithm" count="1" issueid="33" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.md5" description="This function uses the !php_standard_ns.md5() function, which uses a hash algorithm that is considered weak. In recent years, researchers have demonstrated ways to breach many uses of previously-thought-safe hash functions such as MD5.
+
+Consider using a stronger algorithm in order to prevent attackers from being able to manipulate hash results. If passwords are being stored, consider using an algorithm that is computationally expensive in order to prevent dictionary attacks. Examples of algorithms designed to safeguard passwords are bcrypt and scrypt.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/327.html)
+
+" note="" cweid="327" remediationeffort="1" exploitLevel="1" categoryid="12" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="login.php" line="21" sourcefilepath="dvwa/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="34"/>
+<flaw severity="3" categoryname="Use of a Broken or Risky Cryptographic Algorithm" count="1" issueid="70" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.md5" description="This function uses the !php_standard_ns.md5() function, which uses a hash algorithm that is considered weak. In recent years, researchers have demonstrated ways to breach many uses of previously-thought-safe hash functions such as MD5.
+
+Consider using a stronger algorithm in order to prevent attackers from being able to manipulate hash results. If passwords are being stored, consider using an algorithm that is computationally expensive in order to prevent dictionary attacks. Examples of algorithms designed to safeguard passwords are bcrypt and scrypt.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/327.html)
+
+" note="" cweid="327" remediationeffort="1" exploitLevel="1" categoryid="12" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="low.php" line="8" sourcefilepath="dvwa/vulnerabilities/brute/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="19"/>
+<flaw severity="3" categoryname="Use of a Broken or Risky Cryptographic Algorithm" count="1" issueid="42" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.md5" description="This function uses the !php_standard_ns.md5() function, which uses a hash algorithm that is considered weak. In recent years, researchers have demonstrated ways to breach many uses of previously-thought-safe hash functions such as MD5.
+
+Consider using a stronger algorithm in order to prevent attackers from being able to manipulate hash results. If passwords are being stored, consider using an algorithm that is computationally expensive in order to prevent dictionary attacks. Examples of algorithms designed to safeguard passwords are bcrypt and scrypt.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/327.html)
+
+" note="" cweid="327" remediationeffort="1" exploitLevel="1" categoryid="12" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="low.php" line="12" sourcefilepath="dvwa/vulnerabilities/csrf/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="40"/>
+<flaw severity="3" categoryname="Use of a Broken or Risky Cryptographic Algorithm" count="1" issueid="85" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.md5" description="This function uses the !php_standard_ns.md5() function, which uses a hash algorithm that is considered weak. In recent years, researchers have demonstrated ways to breach many uses of previously-thought-safe hash functions such as MD5.
+
+Consider using a stronger algorithm in order to prevent attackers from being able to manipulate hash results. If passwords are being stored, consider using an algorithm that is computationally expensive in order to prevent dictionary attacks. Examples of algorithms designed to safeguard passwords are bcrypt and scrypt.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/327.html)
+
+" note="" cweid="327" remediationeffort="1" exploitLevel="1" categoryid="12" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="medium.php" line="12" sourcefilepath="dvwa/vulnerabilities/brute/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="29"/>
+<flaw severity="3" categoryname="Use of a Broken or Risky Cryptographic Algorithm" count="1" issueid="65" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.md5" description="This function uses the !php_standard_ns.md5() function, which uses a hash algorithm that is considered weak. In recent years, researchers have demonstrated ways to breach many uses of previously-thought-safe hash functions such as MD5.
+
+Consider using a stronger algorithm in order to prevent attackers from being able to manipulate hash results. If passwords are being stored, consider using an algorithm that is computationally expensive in order to prevent dictionary attacks. Examples of algorithms designed to safeguard passwords are bcrypt and scrypt.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/327.html)
+
+" note="" cweid="327" remediationeffort="1" exploitLevel="1" categoryid="12" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="medium.php" line="14" sourcefilepath="dvwa/vulnerabilities/csrf/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="46"/>
+</staticflaws>
+</cwe>
+</category>
+<category categoryid="1" categoryname="Directory Traversal" pcirelated="false">
+<desc>
+<para text="Allowing user input to control paths used in filesystem operations may enable an attacker to access or modify otherwise protected system resources that would normally be inaccessible to end users.  In some cases, the user-provided input may be passed directly to the filesystem operation, or it may be concatenated to one or more fixed strings to construct a fully-qualified path."/>
+<para text="When an application improperly cleanses special character sequences in user-supplied filenames, a path traversal (or directory traversal) vulnerability may occur.  For example, an attacker could specify a filename such as &quot;../../etc/passwd&quot;, which resolves to a file outside of the intended directory that the attacker would not normally be authorized to view."/>
+</desc>
+<recommendations>
+<para text="Assume all user-supplied input is malicious.  Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.  When using black lists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters and ensure that the end result is not dangerous."/>
+</recommendations>
+<cwe cweid="73" cwename="External Control of File Name or Path" pcirelated="false" sans="22" certcpp="877">
+<description>
+<text text="This call contains a path manipulation flaw.  The argument to the function is a filename constructed using user-supplied input.  If an attacker is allowed to specify all or part of the filename, it may be possible to gain unauthorized access to files on the server, including those outside the webroot, that would be normally be inaccessible to end users.  The level of exposure depends on the effectiveness of input validation routines, if any."/>
+</description>
+<staticflaws>
+<flaw severity="3" categoryname="External Control of File Name or Path" count="1" issueid="73" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.move_uploaded_file" description="This call to !php_standard_ns.move_uploaded_file() contains a path manipulation flaw. The argument to the function is a filename constructed using user-supplied input. If an attacker is allowed to specify all or part of the filename, it may be possible to gain unauthorized access to files on the server, including those outside the webroot, that would be normally be inaccessible to end users. The level of exposure depends on the effectiveness of input validation routines, if any. The second argument to move_uploaded_file() contains data from the incoming HTTP request from the variable target_path.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using black lists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/73.html) 
+WASC (http://webappsec.pbworks.com/Path-Traversal)
+
+" note="" cweid="73" remediationeffort="2" exploitLevel="0" categoryid="1" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="high.php" line="13" sourcefilepath="dvwa/vulnerabilities/upload/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="75">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="-1">
+<note>The source of the tainted data in this web application flaw is not a web request.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+<flaw severity="3" categoryname="External Control of File Name or Path" count="1" issueid="30" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.move_uploaded_file" description="This call to !php_standard_ns.move_uploaded_file() contains a path manipulation flaw. The argument to the function is a filename constructed using user-supplied input. If an attacker is allowed to specify all or part of the filename, it may be possible to gain unauthorized access to files on the server, including those outside the webroot, that would be normally be inaccessible to end users. The level of exposure depends on the effectiveness of input validation routines, if any. The second argument to move_uploaded_file() contains data from the incoming HTTP request from the variable target_path.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using black lists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/73.html) 
+WASC (http://webappsec.pbworks.com/Path-Traversal)
+
+" note="" cweid="73" remediationeffort="2" exploitLevel="0" categoryid="1" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="low.php" line="7" sourcefilepath="dvwa/vulnerabilities/upload/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="62">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="-1">
+<note>The source of the tainted data in this web application flaw is not a web request.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+<flaw severity="3" categoryname="External Control of File Name or Path" count="1" issueid="25" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.move_uploaded_file" description="This call to !php_standard_ns.move_uploaded_file() contains a path manipulation flaw. The argument to the function is a filename constructed using user-supplied input. If an attacker is allowed to specify all or part of the filename, it may be possible to gain unauthorized access to files on the server, including those outside the webroot, that would be normally be inaccessible to end users. The level of exposure depends on the effectiveness of input validation routines, if any. The second argument to move_uploaded_file() contains data from the incoming HTTP request from the variable target_path.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using black lists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/73.html) 
+WASC (http://webappsec.pbworks.com/Path-Traversal)
+
+" note="" cweid="73" remediationeffort="2" exploitLevel="0" categoryid="1" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="medium.php" line="13" sourcefilepath="dvwa/vulnerabilities/upload/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="72">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="-1">
+<note>The source of the tainted data in this web application flaw is not a web request.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+<flaw severity="3" categoryname="External Control of File Name or Path" count="1" issueid="82" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.file_get_contents" description="This call to !php_standard_ns.file_get_contents() contains a path manipulation flaw. The argument to the function is a filename constructed using user-supplied input. If an attacker is allowed to specify all or part of the filename, it may be possible to gain unauthorized access to files on the server, including those outside the webroot, that would be normally be inaccessible to end users. The level of exposure depends on the effectiveness of input validation routines, if any. The first argument to file_get_contents() contains data from the incoming HTTP request from the variable _GET.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using black lists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/73.html) 
+WASC (http://webappsec.pbworks.com/Path-Traversal)
+
+" note="" cweid="73" remediationeffort="2" exploitLevel="0" categoryid="1" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="view_help.php" line="14" sourcefilepath="dvwa/vulnerabilities/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="73">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="-1">
+<note>The source of the tainted data in this web application flaw is not a web request.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+<flaw severity="3" categoryname="External Control of File Name or Path" count="1" issueid="43" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.file_get_contents" description="This call to !php_standard_ns.file_get_contents() contains a path manipulation flaw. The argument to the function is a filename constructed using user-supplied input. If an attacker is allowed to specify all or part of the filename, it may be possible to gain unauthorized access to files on the server, including those outside the webroot, that would be normally be inaccessible to end users. The level of exposure depends on the effectiveness of input validation routines, if any. The first argument to file_get_contents() contains data from the incoming HTTP request from the variable _GET.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using black lists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/73.html) 
+WASC (http://webappsec.pbworks.com/Path-Traversal)
+
+" note="" cweid="73" remediationeffort="2" exploitLevel="0" categoryid="1" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="view_source.php" line="44" sourcefilepath="dvwa/vulnerabilities/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="73">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="-1">
+<note>The source of the tainted data in this web application flaw is not a web request.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+<flaw severity="3" categoryname="External Control of File Name or Path" count="1" issueid="64" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.file_get_contents" description="This call to !php_standard_ns.file_get_contents() contains a path manipulation flaw. The argument to the function is a filename constructed using user-supplied input. If an attacker is allowed to specify all or part of the filename, it may be possible to gain unauthorized access to files on the server, including those outside the webroot, that would be normally be inaccessible to end users. The level of exposure depends on the effectiveness of input validation routines, if any. The first argument to file_get_contents() contains data from the incoming HTTP request from the variable _GET.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using black lists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/73.html) 
+WASC (http://webappsec.pbworks.com/Path-Traversal)
+
+" note="" cweid="73" remediationeffort="2" exploitLevel="0" categoryid="1" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="view_source_all.php" line="12" sourcefilepath="dvwa/vulnerabilities/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="21">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="-1">
+<note>The source of the tainted data in this web application flaw is not a web request.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+<flaw severity="3" categoryname="External Control of File Name or Path" count="1" issueid="44" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.file_get_contents" description="This call to !php_standard_ns.file_get_contents() contains a path manipulation flaw. The argument to the function is a filename constructed using user-supplied input. If an attacker is allowed to specify all or part of the filename, it may be possible to gain unauthorized access to files on the server, including those outside the webroot, that would be normally be inaccessible to end users. The level of exposure depends on the effectiveness of input validation routines, if any. The first argument to file_get_contents() contains data from the incoming HTTP request from the variable _GET.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using black lists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/73.html) 
+WASC (http://webappsec.pbworks.com/Path-Traversal)
+
+" note="" cweid="73" remediationeffort="2" exploitLevel="0" categoryid="1" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="view_source_all.php" line="16" sourcefilepath="dvwa/vulnerabilities/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="35">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="-1">
+<note>The source of the tainted data in this web application flaw is not a web request.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+<flaw severity="3" categoryname="External Control of File Name or Path" count="1" issueid="55" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.file_get_contents" description="This call to !php_standard_ns.file_get_contents() contains a path manipulation flaw. The argument to the function is a filename constructed using user-supplied input. If an attacker is allowed to specify all or part of the filename, it may be possible to gain unauthorized access to files on the server, including those outside the webroot, that would be normally be inaccessible to end users. The level of exposure depends on the effectiveness of input validation routines, if any. The first argument to file_get_contents() contains data from the incoming HTTP request from the variable _GET.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using black lists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/73.html) 
+WASC (http://webappsec.pbworks.com/Path-Traversal)
+
+" note="" cweid="73" remediationeffort="2" exploitLevel="0" categoryid="1" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="view_source_all.php" line="20" sourcefilepath="dvwa/vulnerabilities/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="50">
+<exploitability_adjustments>
+<exploitability_adjustment score_adjustment="-1">
+<note>The source of the tainted data in this web application flaw is not a web request.</note>
+</exploitability_adjustment>
+</exploitability_adjustments>
+</flaw>
+</staticflaws>
+</cwe>
+</category>
+<category categoryid="18" categoryname="OS Command Injection" pcirelated="true">
+<desc>
+<para text="OS command injection vulnerabilities occur when data enters an application from an untrusted source and is used to dynamically construct and execute a system command.  This allows an attacker to either alter the command executed by the application or append additional commands.  The command is typically executed with the privileges of the executing process and gives an attacker a privilege or capability that he would not otherwise have."/>
+</desc>
+<recommendations>
+<para text="Careful handling of all untrusted data is critical in preventing OS command injection attacks.   Using one or more of the following techniques provides defense-in-depth and minimizes the likelihood of an vulnerability.">
+<bulletitem text="If possible, use library calls rather than external processes to recreate the desired functionality."/>
+<bulletitem text="Validate user-supplied input using positive filters (white lists) to ensure that it conforms to the expected format, using centralized data validation routines when possible. "/>
+<bulletitem text="Select safe API routines.  Some APIs that execute system commands take an array of strings as input rather than a single string, which protects against some forms of command injection by ensuring that a user-supplied argument cannot be interpreted as part of the command."/>
+</para>
+</recommendations>
+<cwe cweid="88" cwename="Argument Injection or Modification" pcirelated="true" owasp="929" certc="741" certcpp="875">
+<description>
+<text text="This call contains an argument injection flaw.  The argument to the function is constructed using user-supplied input without properly delimiting or sanitizing it.  It may be possible for an attacker to influence the behavior of the program, for example, changing the destination of an outbound network request or injecting additional commands into an argument or parameter.  The level of exposure depends on the effectiveness of input validation routines, if any."/>
+</description>
+<staticflaws>
+<flaw severity="3" categoryname="Argument Injection or Modification" count="1" issueid="24" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.set_include_path" description="This call to !php_standard_ns.set_include_path() contains an argument injection flaw. The argument to the function is constructed using user-supplied input without properly delimiting or sanitizing it. It may be possible for an attacker to influence the behavior of the program, for example, changing the destination of an outbound network request or injecting additional commands into an argument or parameter. The first argument to set_include_path() contains data from an environment variable from the variable get_include_path(). The data from an environment variable originated from an earlier call to get_include_path.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/88.html)
+
+" note="" cweid="88" remediationeffort="3" exploitLevel="1" categoryid="18" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="CachingTest.php" line="23" sourcefilepath="dvwa/external/phpids/0.6/tests/IDS/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="53"/>
+<flaw severity="3" categoryname="Argument Injection or Modification" count="1" issueid="40" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.set_include_path" description="This call to !php_standard_ns.set_include_path() contains an argument injection flaw. The argument to the function is constructed using user-supplied input without properly delimiting or sanitizing it. It may be possible for an attacker to influence the behavior of the program, for example, changing the destination of an outbound network request or injecting additional commands into an argument or parameter. The first argument to set_include_path() contains data from an environment variable from the variable get_include_path(). The data from an environment variable originated from an earlier call to get_include_path.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/88.html)
+
+" note="" cweid="88" remediationeffort="3" exploitLevel="1" categoryid="18" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="dvwaPhpIds.inc.php" line="12" sourcefilepath="dvwa/dvwa/includes/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="77"/>
+<flaw severity="3" categoryname="Argument Injection or Modification" count="1" issueid="71" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.set_include_path" description="This call to !php_standard_ns.set_include_path() contains an argument injection flaw. The argument to the function is constructed using user-supplied input without properly delimiting or sanitizing it. It may be possible for an attacker to influence the behavior of the program, for example, changing the destination of an outbound network request or injecting additional commands into an argument or parameter. The first argument to set_include_path() contains data from an environment variable from the variable get_include_path(). The data from an environment variable originated from an earlier call to get_include_path.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/88.html)
+
+" note="" cweid="88" remediationeffort="3" exploitLevel="1" categoryid="18" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="EventTest.php" line="23" sourcefilepath="dvwa/external/phpids/0.6/tests/IDS/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="53"/>
+<flaw severity="3" categoryname="Argument Injection or Modification" count="1" issueid="61" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.set_include_path" description="This call to !php_standard_ns.set_include_path() contains an argument injection flaw. The argument to the function is constructed using user-supplied input without properly delimiting or sanitizing it. It may be possible for an attacker to influence the behavior of the program, for example, changing the destination of an outbound network request or injecting additional commands into an argument or parameter. The first argument to set_include_path() contains data from an environment variable from the variable get_include_path(). The data from an environment variable originated from an earlier call to get_include_path.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/88.html)
+
+" note="" cweid="88" remediationeffort="3" exploitLevel="1" categoryid="18" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="example.php" line="21" sourcefilepath="dvwa/external/phpids/0.6/docs/examples/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="4"/>
+<flaw severity="3" categoryname="Argument Injection or Modification" count="1" issueid="79" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.set_include_path" description="This call to !php_standard_ns.set_include_path() contains an argument injection flaw. The argument to the function is constructed using user-supplied input without properly delimiting or sanitizing it. It may be possible for an attacker to influence the behavior of the program, for example, changing the destination of an outbound network request or injecting additional commands into an argument or parameter. The first argument to set_include_path() contains data from an environment variable from the variable get_include_path(). The data from an environment variable originated from an earlier call to get_include_path.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/88.html)
+
+" note="" cweid="88" remediationeffort="3" exploitLevel="1" categoryid="18" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="ExceptionTest.php" line="23" sourcefilepath="dvwa/external/phpids/0.6/tests/IDS/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="40"/>
+<flaw severity="3" categoryname="Argument Injection or Modification" count="1" issueid="32" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.set_include_path" description="This call to !php_standard_ns.set_include_path() contains an argument injection flaw. The argument to the function is constructed using user-supplied input without properly delimiting or sanitizing it. It may be possible for an attacker to influence the behavior of the program, for example, changing the destination of an outbound network request or injecting additional commands into an argument or parameter. The first argument to set_include_path() contains data from an environment variable from the variable get_include_path(). The data from an environment variable originated from an earlier call to get_include_path.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/88.html)
+
+" note="" cweid="88" remediationeffort="3" exploitLevel="1" categoryid="18" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="FilterTest.php" line="23" sourcefilepath="dvwa/external/phpids/0.6/tests/IDS/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="57"/>
+<flaw severity="3" categoryname="Argument Injection or Modification" count="1" issueid="26" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.set_include_path" description="This call to !php_standard_ns.set_include_path() contains an argument injection flaw. The argument to the function is constructed using user-supplied input without properly delimiting or sanitizing it. It may be possible for an attacker to influence the behavior of the program, for example, changing the destination of an outbound network request or injecting additional commands into an argument or parameter. The first argument to set_include_path() contains data from an environment variable from the variable get_include_path(). The data from an environment variable originated from an earlier call to get_include_path.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/88.html)
+
+" note="" cweid="88" remediationeffort="3" exploitLevel="1" categoryid="18" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="HTMLPurifier.auto.php" line="7" sourcefilepath="dvwa/external/phpids/0.6/lib/IDS/vendors/htmlpurifier/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="54"/>
+<flaw severity="3" categoryname="Argument Injection or Modification" count="1" issueid="47" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.set_include_path" description="This call to !php_standard_ns.set_include_path() contains an argument injection flaw. The argument to the function is constructed using user-supplied input without properly delimiting or sanitizing it. It may be possible for an attacker to influence the behavior of the program, for example, changing the destination of an outbound network request or injecting additional commands into an argument or parameter. The first argument to set_include_path() contains data from an environment variable from the variable get_include_path(). The data from an environment variable originated from an earlier call to get_include_path.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/88.html)
+
+" note="" cweid="88" remediationeffort="3" exploitLevel="1" categoryid="18" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="HTMLPurifier.path.php" line="9" sourcefilepath="dvwa/external/phpids/0.6/lib/IDS/vendors/htmlpurifier/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="66"/>
+<flaw severity="3" categoryname="Argument Injection or Modification" count="1" issueid="37" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.set_include_path" description="This call to !php_standard_ns.set_include_path() contains an argument injection flaw. The argument to the function is constructed using user-supplied input without properly delimiting or sanitizing it. It may be possible for an attacker to influence the behavior of the program, for example, changing the destination of an outbound network request or injecting additional commands into an argument or parameter. The first argument to set_include_path() contains data from an environment variable from the variable path. The data from an environment variable originated from an earlier call to get_include_path.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/88.html)
+
+" note="" cweid="88" remediationeffort="3" exploitLevel="1" categoryid="18" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="ids.php" line="129" sourcefilepath="dvwa/external/phpids/0.6/docs/examples/cakephp/" scope="IdsComponent" functionprototype="detect($)" functionrelativelocation="80"/>
+<flaw severity="3" categoryname="Argument Injection or Modification" count="1" issueid="34" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.set_include_path" description="This call to !php_standard_ns.set_include_path() contains an argument injection flaw. The argument to the function is constructed using user-supplied input without properly delimiting or sanitizing it. It may be possible for an attacker to influence the behavior of the program, for example, changing the destination of an outbound network request or injecting additional commands into an argument or parameter. The first argument to set_include_path() contains data from an environment variable from the variable get_include_path(). The data from an environment variable originated from an earlier call to get_include_path.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/88.html)
+
+" note="" cweid="88" remediationeffort="3" exploitLevel="1" categoryid="18" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="InitTest.php" line="23" sourcefilepath="dvwa/external/phpids/0.6/tests/IDS/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="57"/>
+<flaw severity="3" categoryname="Argument Injection or Modification" count="1" issueid="66" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.set_include_path" description="This call to !php_standard_ns.set_include_path() contains an argument injection flaw. The argument to the function is constructed using user-supplied input without properly delimiting or sanitizing it. It may be possible for an attacker to influence the behavior of the program, for example, changing the destination of an outbound network request or injecting additional commands into an argument or parameter. The first argument to set_include_path() contains data from an environment variable from the variable get_include_path(). The data from an environment variable originated from an earlier call to get_include_path.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/88.html)
+
+" note="" cweid="88" remediationeffort="3" exploitLevel="1" categoryid="18" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="MonitorTest.php" line="22" sourcefilepath="dvwa/external/phpids/0.6/tests/IDS/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="50"/>
+<flaw severity="3" categoryname="Argument Injection or Modification" count="1" issueid="57" module="PHP files within DVWA-1.0.7.zip" type="!php_standard_ns.set_include_path" description="This call to !php_standard_ns.set_include_path() contains an argument injection flaw. The argument to the function is constructed using user-supplied input without properly delimiting or sanitizing it. It may be possible for an attacker to influence the behavior of the program, for example, changing the destination of an outbound network request or injecting additional commands into an argument or parameter. The first argument to set_include_path() contains data from an environment variable from the variable get_include_path(). The data from an environment variable originated from an earlier call to get_include_path.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/88.html)
+
+" note="" cweid="88" remediationeffort="3" exploitLevel="1" categoryid="18" pcirelated="true" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="ReportTest.php" line="23" sourcefilepath="dvwa/external/phpids/0.6/tests/IDS/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="53"/>
+</staticflaws>
+</cwe>
+</category>
+</severity>
+<severity level="2">
+<category categoryid="10" categoryname="Credentials Management" pcirelated="false">
+<desc>
+<para text="Improper management of credentials, such as usernames and passwords, may compromise system security.  In particular, storing passwords in plaintext or hard-coding passwords directly into application code are design issues that cannot be easily remedied.  Not only does embedding a password allow all of the project's developers to view the password, it also makes fixing the problem extremely difficult.  Once the code is in production, the password cannot be changed without patching the software.  If a hard-coded password is compromised in a commercial product, all deployed instances may be vulnerable to attack, putting customers at risk."/>
+<para text="One variation on hard-coding plaintext passwords is to hard-code a constant string which is the result of a cryptographic one-way hash.  For example, instead of storing the word &quot;secret,&quot; the application stores an MD5 hash of the word.  This is a common mechanism for obscuring hard-coded passwords from casual viewing but does not significantly reduce risk.  However, using cryptographic hashes for data stored outside the application code can be an effective practice."/>
+</desc>
+<recommendations>
+<para text="Avoid storing passwords in easily accessible locations, and never store any type of sensitive data in plaintext.  Avoid using hard-coded usernames, passwords, or hash constants whenever possible, particularly in relation to security-critical components.   Store passwords out-of-band from the application code.  Follow best practices for protecting credentials stored in alternate locations such as configuration or properties files."/>
+</recommendations>
+<cwe cweid="359" cwename="Privacy Violation" pcirelated="false" certjava="857">
+<description>
+<text text="Mishandling private information, such as customer passwords or social security numbers, can compromise user privacy and is often illegal."/>
+</description>
+<dynamicflaws>
+<flaw severity="2" categoryname="Exposure of Private Information ('Privacy Violation')" count="1" issueid="5" module="dynamic_analysis" type="Privacy Violation" description="An e-mail address was detected: dvwa@dvwa.co.uk. Content scrapers and spammers frequently crawl web sites looking for e-mail addresses.
+
+Ensure this e-mail address is intended for public consumption. Otherwise, do not expose personally identifiable information such as e-mail addresses in the content of your application.
+
+
+CWE (http://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=359)
+
+" note="" cweid="359" remediationeffort="2" categoryid="10" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" url="http://10.10.31.202/dvwa/instructions.php"/>
+<flaw severity="2" categoryname="Exposure of Private Information ('Privacy Violation')" count="1" issueid="13" module="dynamic_analysis" type="Privacy Violation" description="An e-mail address was detected: dvwa@ethicalhack3r.co.uk. Content scrapers and spammers frequently crawl web sites looking for e-mail addresses.
+
+Ensure this e-mail address is intended for public consumption. Otherwise, do not expose personally identifiable information such as e-mail addresses in the content of your application.
+
+
+CWE (http://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=359)
+
+" note="" cweid="359" remediationeffort="2" categoryid="10" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" url="http://10.10.31.202/dvwa/instructions.php?doc=changelog"/>
+<flaw severity="2" categoryname="Exposure of Private Information ('Privacy Violation')" count="1" issueid="8" module="dynamic_analysis" type="Privacy Violation" description="A phone number was detected: 300351 2010.
+
+Ensure this number is for public consumption and not an individual user or a customers private line. Otherwise, do not expose personally identifiable information such as phone numbers in the content of your application.
+
+
+CWE (http://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=359)
+
+" note="" cweid="359" remediationeffort="2" categoryid="10" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" url="http://10.10.31.202/dvwa/phpinfo.php"/>
+<flaw severity="2" categoryname="Exposure of Private Information ('Privacy Violation')" count="1" issueid="9" module="dynamic_analysis" type="Privacy Violation" description="A phone number was detected: 300470 2010.
+
+Ensure this number is for public consumption and not an individual user or a customers private line. Otherwise, do not expose personally identifiable information such as phone numbers in the content of your application.
+
+
+CWE (http://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=359)
+
+" note="" cweid="359" remediationeffort="2" categoryid="10" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" url="http://10.10.31.202/dvwa/phpinfo.php"/>
+</dynamicflaws>
+</cwe>
+</category>
+<category categoryid="8" categoryname="Information Leakage" pcirelated="true">
+<desc>
+<para text="An information leak is the intentional or unintentional disclosure of information that is either regarded as sensitive within the product's own functionality or provides information about the product or its environment that could be useful in an attack.  Information leakage issues are commonly overlooked because they cannot be used to directly exploit the application.  However, information leaks should be viewed as building blocks that an attacker uses to carry out other, more complicated attacks."/>
+<para text="There are many different types of problems that involve information leaks, with severities that can range widely depending on the type of information leaked and the context of the information with respect to the application.  Common sources of information leakage include, but are not limited to:">
+<bulletitem text="Source code disclosure"/>
+<bulletitem text="Browsable directories"/>
+<bulletitem text="Log files or backup files in web-accessible directories"/>
+<bulletitem text="Unfiltered backend error messages"/>
+<bulletitem text="Exception stack traces"/>
+<bulletitem text="Server version information"/>
+<bulletitem text="Transmission of uninitialized memory containing sensitive data"/>
+</para>
+</desc>
+<recommendations>
+<para text="Configure applications and servers to return generic error messages and to suppress stack traces from being displayed to end users.  Ensure that errors generated by the application do not provide insight into specific backend issues.  "/>
+<para text="Remove all backup files, binary archives, alternate versions of files, and test files from web-accessible directories of production servers.  The only files that should be present in the application's web document root are files required by the application.  Ensure that deployment procedures include the removal of these file types by an administrator.  Keep web and application servers fully patched to minimize exposure to publicly-disclosed information leakage vulnerabilities."/>
+</recommendations>
+<cwe cweid="215" cwename="Information Exposure Through Debug Information" pcirelated="false">
+<description>
+<text text="The TRACE verb supported by most web servers can be manipulated to produce a cross-site scripting attack that results in sending arbitrary HTML to the victim's browser. The TRACE verb is designed to echo a user's input and intended for debugging or testing a web server. The TRACE verb is not generally required for web applications to function."/>
+<text text="An attacker will usually exploit Cross-Site Tracing (XST) in conjuction with a Cross-Site Scripting (XSS) vulnerability on a separate website.  However, XST is caused by the web server configuration whereas XSS is a flaw in the web application itself."/>
+</description>
+<dynamicflaws>
+<flaw severity="2" categoryname="Information Exposure Through Debug Information" count="1" issueid="3" module="dynamic_analysis" type="Information Exposure Through Debug Information" description="The HTTP TRACE method is enabled at http://10.10.31.202/. The TRACE method is a debug method and should not be enabled in production systems.
+
+For Apache web servers set the TraceEnable directive to off. More information can be found at http://httpd.apache.org/docs/2.2/mod/core.html#traceenable.
+
+
+CWE (http://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=215) 
+WASC (http://webappsec.pbworks.com/Server-Misconfiguration)
+
+" note="" cweid="215" remediationeffort="1" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" url="http://10.10.31.202/"/>
+</dynamicflaws>
+</cwe>
+<cwe cweid="548" cwename="Information Exposure Through Directory Listing" pcirelated="true">
+<description>
+<text text="A full directory listing is inappropriately exposed, yielding potentially sensitive information to attackers, including file names, and directory structures. This directory listing gives a potential attacker a listing of the files in this directory and the ability to browse sub-directories. Files containing potentially sensitive information is usually exposed through this vulnerability."/>
+</description>
+<dynamicflaws>
+<flaw severity="2" categoryname="Information Exposure Through Directory Listing" count="1" issueid="6" module="dynamic_analysis" type="Information Exposure Through Directory Listing" description="It was possible to list the contents of the directory at http://10.10.31.202/dvwa/dvwa/ due to directory browsing being allowed. This configuration often exposes files that are not meant to be visible to the general public.
+
+In Apache all directory element's &quot;Options&quot; setting should have Indexes value set to &quot;-Indexes&quot;. More information can be found at http://httpd.apache.org/docs/current/mod/core.html#options.
+
+
+CWE (http://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=548) 
+OWASP (http://www.owasp.org/index.php/File_System) 
+WASC (http://webappsec.pbworks.com/Directory-Indexing)
+
+" note="" cweid="548" remediationeffort="1" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" url="http://10.10.31.202/dvwa/dvwa/"/>
+<flaw severity="2" categoryname="Information Exposure Through Directory Listing" count="1" issueid="10" module="dynamic_analysis" type="Information Exposure Through Directory Listing" description="It was possible to list the contents of the directory at http://10.10.31.202/dvwa/dvwa/css/ due to directory browsing being allowed. This configuration often exposes files that are not meant to be visible to the general public.
+
+In Apache all directory element's &quot;Options&quot; setting should have Indexes value set to &quot;-Indexes&quot;. More information can be found at http://httpd.apache.org/docs/current/mod/core.html#options.
+
+
+CWE (http://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=548) 
+OWASP (http://www.owasp.org/index.php/File_System) 
+WASC (http://webappsec.pbworks.com/Directory-Indexing)
+
+" note="" cweid="548" remediationeffort="1" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" url="http://10.10.31.202/dvwa/dvwa/css/"/>
+<flaw severity="2" categoryname="Information Exposure Through Directory Listing" count="1" issueid="7" module="dynamic_analysis" type="Information Exposure Through Directory Listing" description="It was possible to list the contents of the directory at http://10.10.31.202/dvwa/dvwa/images/ due to directory browsing being allowed. This configuration often exposes files that are not meant to be visible to the general public.
+
+In Apache all directory element's &quot;Options&quot; setting should have Indexes value set to &quot;-Indexes&quot;. More information can be found at http://httpd.apache.org/docs/current/mod/core.html#options.
+
+
+CWE (http://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=548) 
+OWASP (http://www.owasp.org/index.php/File_System) 
+WASC (http://webappsec.pbworks.com/Directory-Indexing)
+
+" note="" cweid="548" remediationeffort="1" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" url="http://10.10.31.202/dvwa/dvwa/images/"/>
+<flaw severity="2" categoryname="Information Exposure Through Directory Listing" count="1" issueid="12" module="dynamic_analysis" type="Information Exposure Through Directory Listing" description="It was possible to list the contents of the directory at http://10.10.31.202/dvwa/dvwa/includes/ due to directory browsing being allowed. This configuration often exposes files that are not meant to be visible to the general public.
+
+In Apache all directory element's &quot;Options&quot; setting should have Indexes value set to &quot;-Indexes&quot;. More information can be found at http://httpd.apache.org/docs/current/mod/core.html#options.
+
+
+CWE (http://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=548) 
+OWASP (http://www.owasp.org/index.php/File_System) 
+WASC (http://webappsec.pbworks.com/Directory-Indexing)
+
+" note="" cweid="548" remediationeffort="1" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" url="http://10.10.31.202/dvwa/dvwa/includes/"/>
+<flaw severity="2" categoryname="Information Exposure Through Directory Listing" count="1" issueid="19" module="dynamic_analysis" type="Information Exposure Through Directory Listing" description="It was possible to list the contents of the directory at http://10.10.31.202/dvwa/dvwa/includes/DBMS/ due to directory browsing being allowed. This configuration often exposes files that are not meant to be visible to the general public.
+
+In Apache all directory element's &quot;Options&quot; setting should have Indexes value set to &quot;-Indexes&quot;. More information can be found at http://httpd.apache.org/docs/current/mod/core.html#options.
+
+
+CWE (http://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=548) 
+OWASP (http://www.owasp.org/index.php/File_System) 
+WASC (http://webappsec.pbworks.com/Directory-Indexing)
+
+" note="" cweid="548" remediationeffort="1" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" url="http://10.10.31.202/dvwa/dvwa/includes/DBMS/"/>
+<flaw severity="2" categoryname="Information Exposure Through Directory Listing" count="1" issueid="11" module="dynamic_analysis" type="Information Exposure Through Directory Listing" description="It was possible to list the contents of the directory at http://10.10.31.202/dvwa/dvwa/js/ due to directory browsing being allowed. This configuration often exposes files that are not meant to be visible to the general public.
+
+In Apache all directory element's &quot;Options&quot; setting should have Indexes value set to &quot;-Indexes&quot;. More information can be found at http://httpd.apache.org/docs/current/mod/core.html#options.
+
+
+CWE (http://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=548) 
+OWASP (http://www.owasp.org/index.php/File_System) 
+WASC (http://webappsec.pbworks.com/Directory-Indexing)
+
+" note="" cweid="548" remediationeffort="1" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" url="http://10.10.31.202/dvwa/dvwa/js/"/>
+<flaw severity="2" categoryname="Information Exposure Through Directory Listing" count="1" issueid="17" module="dynamic_analysis" type="Information Exposure Through Directory Listing" description="It was possible to list the contents of the directory at http://10.10.31.202/dvwa/vulnerabilities/ due to directory browsing being allowed. This configuration often exposes files that are not meant to be visible to the general public.
+
+In Apache all directory element's &quot;Options&quot; setting should have Indexes value set to &quot;-Indexes&quot;. More information can be found at http://httpd.apache.org/docs/current/mod/core.html#options.
+
+
+CWE (http://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=548) 
+OWASP (http://www.owasp.org/index.php/File_System) 
+WASC (http://webappsec.pbworks.com/Directory-Indexing)
+
+" note="" cweid="548" remediationeffort="1" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" url="http://10.10.31.202/dvwa/vulnerabilities/"/>
+</dynamicflaws>
+</cwe>
+<cwe cweid="526" cwename="Information Exposure Through Environmental Variables" pcirelated="false">
+<description>
+<text text="This web server appears to be in a default configuration. Default configurations of web servers often provide too much information about their platform and version in HTTP headers and on error pages. This data is not itself dangerous, but it can help an attacker focus on vulnerabilities associated with your specific web server platform/version."/>
+</description>
+<dynamicflaws>
+<flaw severity="2" categoryname="Information Exposure Through Environmental Variables" count="1" issueid="1" module="dynamic_analysis" type="Information Exposure Through Environmental Variables" description="HTTP response headers often contain information identifying technologies and version numbers that can be used by tools or attackers to target subsequent attacks. For 10.10.31.202, &quot;Server: Apache/2.2.15 (Fedora)&quot; was observed in the server response.
+
+To suppress version information from Apache, set ServerTokens to prod. More information can be found at http://httpd.apache.org/docs/current/mod/core.html#servertokens.
+
+
+CWE (http://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=526) 
+Microsoft (http://www.microsoft.com/technet/security/prodtech/IIS.mspx) 
+OWASP (http://www.owasp.org/index.php/Testing_for_Web_Application_Fingerprint) 
+WASC (http://webappsec.pbworks.com/Server-Misconfiguration)
+
+" note="" cweid="526" remediationeffort="1" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" url="http://10.10.31.202/dvwa/index.php"/>
+<flaw severity="2" categoryname="Information Exposure Through Environmental Variables" count="1" issueid="2" module="dynamic_analysis" type="Information Exposure Through Environmental Variables" description="X-Powered-By headers provide no benefit and leak supported technologies and version information.
+
+In PHP remove the X-Powered-By header by setting &quot;expose_php = Off&quot;. More information can be found at http://www.php.net/manual/en/ini.core.php.
+
+
+CWE (http://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=526) 
+Microsoft (http://www.microsoft.com/technet/security/prodtech/IIS.mspx) 
+OWASP (http://www.owasp.org/index.php/Testing_for_Web_Application_Fingerprint) 
+WASC (http://webappsec.pbworks.com/Server-Misconfiguration)
+
+" note="" cweid="526" remediationeffort="1" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" url="http://10.10.31.202/dvwa/index.php"/>
+</dynamicflaws>
+</cwe>
+<cwe cweid="209" cwename="Information Exposure Through an Error Message" pcirelated="true" sans="801" certcpp="880" certjava="851">
+<description>
+<text text="The software generates an error message that includes sensitive information about its environment, users, or associated data.  The sensitive information may be valuable information on its own (such as a password), or it may be useful for launching other, more deadly attacks. If an attack fails, an attacker may use error information provided by the server to launch another more focused attack.  For example, file locations disclosed by an exception stack trace may be leveraged by an attacker to exploit a path traversal issue elsewhere in the application."/>
+</description>
+<staticflaws>
+<flaw severity="2" categoryname="Information Exposure Through an Error Message" count="1" issueid="35" module="PHP files within DVWA-1.0.7.zip" type="!operator_phpexit" description="The application calls the !operator_phpexit() function, which may expose information about the application logic or other details such as the names and versions of the application container and associated components. This information can be useful in executing other attacks and can also enable the attacker to target known vulnerabilities in application components. The first argument to !operator_phpexit() contains data from an error message (possibly containing user-specified or database data) from the variable mysql_error(). The data from an error message (possibly containing user-specified or database data) originated from an earlier call to mysql_error.
+
+Ensure that error codes or other messages returned to end users are not overly verbose. Sanitize all messages of any sensitive information that is not absolutely necessary.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/209.html)
+
+" note="" cweid="209" remediationeffort="1" exploitLevel="0" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="DBMS.php" line="23" sourcefilepath="dvwa/dvwa/includes/DBMS/" scope="Global Scope" functionprototype="db_login($, $)" functionrelativelocation="44"/>
+<flaw severity="2" categoryname="Information Exposure Through an Error Message" count="1" issueid="54" module="PHP files within DVWA-1.0.7.zip" type="!operator_phpexit" description="The application calls the !operator_phpexit() function, which may expose information about the application logic or other details such as the names and versions of the application container and associated components. This information can be useful in executing other attacks and can also enable the attacker to target known vulnerabilities in application components. The first argument to !operator_phpexit() contains data from an error message (possibly containing user-specified or database data) from the variable pg_last_error(). The data from an error message (possibly containing user-specified or database data) originated from an earlier call to pg_last_error.
+
+Ensure that error codes or other messages returned to end users are not overly verbose. Sanitize all messages of any sensitive information that is not absolutely necessary.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/209.html)
+
+" note="" cweid="209" remediationeffort="1" exploitLevel="0" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="DBMS.php" line="47" sourcefilepath="dvwa/dvwa/includes/DBMS/" scope="Global Scope" functionprototype="db_login($, $)" functionrelativelocation="44"/>
+<flaw severity="2" categoryname="Information Exposure Through an Error Message" count="1" issueid="60" module="PHP files within DVWA-1.0.7.zip" type="!operator_phpexit" description="The application calls the !operator_phpexit() function, which may expose information about the application logic or other details such as the names and versions of the application container and associated components. This information can be useful in executing other attacks and can also enable the attacker to target known vulnerabilities in application components. The first argument to !operator_phpexit() contains data from an error message (possibly containing user-specified or database data) from the variable DBMS_connError. The data from an error message (possibly containing user-specified or database data) originated from earlier calls to mysql_error, and pg_last_error.
+
+Ensure that error codes or other messages returned to end users are not overly verbose. Sanitize all messages of any sensitive information that is not absolutely necessary.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/209.html)
+
+" note="" cweid="209" remediationeffort="1" exploitLevel="0" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="DBMS.php" line="79" sourcefilepath="dvwa/dvwa/includes/DBMS/" scope="Global Scope" functionprototype="dvwaDatabaseConnect(void)" functionrelativelocation="47"/>
+<flaw severity="2" categoryname="Information Exposure Through an Error Message" count="1" issueid="39" module="PHP files within DVWA-1.0.7.zip" type="!operator_phpexit" description="The application calls the !operator_phpexit() function, which may expose information about the application logic or other details such as the names and versions of the application container and associated components. This information can be useful in executing other attacks and can also enable the attacker to target known vulnerabilities in application components. The first argument to !operator_phpexit() contains data from an error message (possibly containing user-specified or database data) from the variable DBMS_connError. The data from an error message (possibly containing user-specified or database data) originated from earlier calls to mysql_error, and pg_last_error.
+
+Ensure that error codes or other messages returned to end users are not overly verbose. Sanitize all messages of any sensitive information that is not absolutely necessary.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/209.html)
+
+" note="" cweid="209" remediationeffort="1" exploitLevel="0" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="DBMS.php" line="85" sourcefilepath="dvwa/dvwa/includes/DBMS/" scope="Global Scope" functionprototype="dvwaDatabaseConnect(void)" functionrelativelocation="90"/>
+<flaw severity="2" categoryname="Information Exposure Through an Error Message" count="1" issueid="80" module="PHP files within DVWA-1.0.7.zip" type="!operator_phpexit" description="The application calls the !operator_phpexit() function, which may expose information about the application logic or other details such as the names and versions of the application container and associated components. This information can be useful in executing other attacks and can also enable the attacker to target known vulnerabilities in application components. The first argument to !operator_phpexit() contains data from an error message (possibly containing user-specified or database data) from the variable DBMS_connError. The data from an error message (possibly containing user-specified or database data) originated from earlier calls to mysql_error, and pg_last_error.
+
+Ensure that error codes or other messages returned to end users are not overly verbose. Sanitize all messages of any sensitive information that is not absolutely necessary.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/209.html)
+
+" note="" cweid="209" remediationeffort="1" exploitLevel="0" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="dvwaPage.inc.php" line="540" sourcefilepath="dvwa/dvwa/includes/" scope="Global Scope" functionprototype="dvwaDatabaseConnect(void)" functionrelativelocation="51"/>
+<flaw severity="2" categoryname="Information Exposure Through an Error Message" count="1" issueid="38" module="PHP files within DVWA-1.0.7.zip" type="!operator_phpexit" description="The application calls the !operator_phpexit() function, which may expose information about the application logic or other details such as the names and versions of the application container and associated components. This information can be useful in executing other attacks and can also enable the attacker to target known vulnerabilities in application components. The first argument to !operator_phpexit() contains data from an error message (possibly containing user-specified or database data) from the variable DBMS_connError. The data from an error message (possibly containing user-specified or database data) originated from earlier calls to mysql_error, and pg_last_error.
+
+Ensure that error codes or other messages returned to end users are not overly verbose. Sanitize all messages of any sensitive information that is not absolutely necessary.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/209.html)
+
+" note="" cweid="209" remediationeffort="1" exploitLevel="0" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="dvwaPage.inc.php" line="548" sourcefilepath="dvwa/dvwa/includes/" scope="Global Scope" functionprototype="dvwaDatabaseConnect(void)" functionrelativelocation="89"/>
+<flaw severity="2" categoryname="Information Exposure Through an Error Message" count="1" issueid="83" module="PHP files within DVWA-1.0.7.zip" type="!operator_phpexit" description="The application calls the !operator_phpexit() function, which may expose information about the application logic or other details such as the names and versions of the application container and associated components. This information can be useful in executing other attacks and can also enable the attacker to target known vulnerabilities in application components. The first argument to !operator_phpexit() contains data from an error message (possibly containing user-specified or database data) from the variable mysql_error(). The data from an error message (possibly containing user-specified or database data) originated from an earlier call to mysql_error.
+
+Ensure that error codes or other messages returned to end users are not overly verbose. Sanitize all messages of any sensitive information that is not absolutely necessary.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/209.html)
+
+" note="" cweid="209" remediationeffort="1" exploitLevel="0" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="high.php" line="14" sourcefilepath="dvwa/vulnerabilities/sqli/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="43"/>
+<flaw severity="2" categoryname="Information Exposure Through an Error Message" count="1" issueid="52" module="PHP files within DVWA-1.0.7.zip" type="!operator_phpexit" description="The application calls the !operator_phpexit() function, which may expose information about the application logic or other details such as the names and versions of the application container and associated components. This information can be useful in executing other attacks and can also enable the attacker to target known vulnerabilities in application components. The first argument to !operator_phpexit() contains data from an error message (possibly containing user-specified or database data) from the variable mysql_error(). The data from an error message (possibly containing user-specified or database data) originated from an earlier call to mysql_error.
+
+Ensure that error codes or other messages returned to end users are not overly verbose. Sanitize all messages of any sensitive information that is not absolutely necessary.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/209.html)
+
+" note="" cweid="209" remediationeffort="1" exploitLevel="0" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="high.php" line="17" sourcefilepath="dvwa/vulnerabilities/brute/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="56"/>
+<flaw severity="2" categoryname="Information Exposure Through an Error Message" count="1" issueid="77" module="PHP files within DVWA-1.0.7.zip" type="!operator_phpexit" description="The application calls the !operator_phpexit() function, which may expose information about the application logic or other details such as the names and versions of the application container and associated components. This information can be useful in executing other attacks and can also enable the attacker to target known vulnerabilities in application components. The first argument to !operator_phpexit() contains data from an error message (possibly containing user-specified or database data) from the variable mysql_error(). The data from an error message (possibly containing user-specified or database data) originated from an earlier call to mysql_error.
+
+Ensure that error codes or other messages returned to end users are not overly verbose. Sanitize all messages of any sensitive information that is not absolutely necessary.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/209.html)
+
+" note="" cweid="209" remediationeffort="1" exploitLevel="0" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="high.php" line="17" sourcefilepath="dvwa/vulnerabilities/csrf/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="44"/>
+<flaw severity="2" categoryname="Information Exposure Through an Error Message" count="1" issueid="78" module="PHP files within DVWA-1.0.7.zip" type="!operator_phpexit" description="The application calls the !operator_phpexit() function, which may expose information about the application logic or other details such as the names and versions of the application container and associated components. This information can be useful in executing other attacks and can also enable the attacker to target known vulnerabilities in application components. The first argument to !operator_phpexit() contains data from an error message (possibly containing user-specified or database data) from the variable mysql_error(). The data from an error message (possibly containing user-specified or database data) originated from an earlier call to mysql_error.
+
+Ensure that error codes or other messages returned to end users are not overly verbose. Sanitize all messages of any sensitive information that is not absolutely necessary.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/209.html)
+
+" note="" cweid="209" remediationeffort="1" exploitLevel="0" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="high.php" line="21" sourcefilepath="dvwa/vulnerabilities/xss_s/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="88"/>
+<flaw severity="2" categoryname="Information Exposure Through an Error Message" count="1" issueid="48" module="PHP files within DVWA-1.0.7.zip" type="!operator_phpexit" description="The application calls the !operator_phpexit() function, which may expose information about the application logic or other details such as the names and versions of the application container and associated components. This information can be useful in executing other attacks and can also enable the attacker to target known vulnerabilities in application components. The first argument to !operator_phpexit() contains data from an error message (possibly containing user-specified or database data) from the variable mysql_error(). The data from an error message (possibly containing user-specified or database data) originated from an earlier call to mysql_error.
+
+Ensure that error codes or other messages returned to end users are not overly verbose. Sanitize all messages of any sensitive information that is not absolutely necessary.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/209.html)
+
+" note="" cweid="209" remediationeffort="1" exploitLevel="0" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="high.php" line="24" sourcefilepath="dvwa/vulnerabilities/csrf/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="86"/>
+<flaw severity="2" categoryname="Information Exposure Through an Error Message" count="1" issueid="51" module="PHP files within DVWA-1.0.7.zip" type="!operator_phpexit" description="The application calls the !operator_phpexit() function, which may expose information about the application logic or other details such as the names and versions of the application container and associated components. This information can be useful in executing other attacks and can also enable the attacker to target known vulnerabilities in application components. The first argument to !operator_phpexit() contains data from an error message (possibly containing user-specified or database data) from the variable mysql_error(). The data from an error message (possibly containing user-specified or database data) originated from an earlier call to mysql_error.
+
+Ensure that error codes or other messages returned to end users are not overly verbose. Sanitize all messages of any sensitive information that is not absolutely necessary.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/209.html)
+
+" note="" cweid="209" remediationeffort="1" exploitLevel="0" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="login.php" line="25" sourcefilepath="dvwa/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="50"/>
+<flaw severity="2" categoryname="Information Exposure Through an Error Message" count="1" issueid="50" module="PHP files within DVWA-1.0.7.zip" type="!operator_phpexit" description="The application calls the !operator_phpexit() function, which may expose information about the application logic or other details such as the names and versions of the application container and associated components. This information can be useful in executing other attacks and can also enable the attacker to target known vulnerabilities in application components. The first argument to !operator_phpexit() contains data from an error message (possibly containing user-specified or database data) from the variable mysql_error(). The data from an error message (possibly containing user-specified or database data) originated from an earlier call to mysql_error.
+
+Ensure that error codes or other messages returned to end users are not overly verbose. Sanitize all messages of any sensitive information that is not absolutely necessary.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/209.html)
+
+" note="" cweid="209" remediationeffort="1" exploitLevel="0" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="low.php" line="10" sourcefilepath="dvwa/vulnerabilities/sqli/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="34"/>
+<flaw severity="2" categoryname="Information Exposure Through an Error Message" count="1" issueid="62" module="PHP files within DVWA-1.0.7.zip" type="!operator_phpexit" description="The application calls the !operator_phpexit() function, which may expose information about the application logic or other details such as the names and versions of the application container and associated components. This information can be useful in executing other attacks and can also enable the attacker to target known vulnerabilities in application components. The first argument to !operator_phpexit() contains data from an error message (possibly containing user-specified or database data) from the variable mysql_error(). The data from an error message (possibly containing user-specified or database data) originated from an earlier call to mysql_error.
+
+Ensure that error codes or other messages returned to end users are not overly verbose. Sanitize all messages of any sensitive information that is not absolutely necessary.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/209.html)
+
+" note="" cweid="209" remediationeffort="1" exploitLevel="0" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="low.php" line="11" sourcefilepath="dvwa/vulnerabilities/brute/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="47"/>
+<flaw severity="2" categoryname="Information Exposure Through an Error Message" count="1" issueid="72" module="PHP files within DVWA-1.0.7.zip" type="!operator_phpexit" description="The application calls the !operator_phpexit() function, which may expose information about the application logic or other details such as the names and versions of the application container and associated components. This information can be useful in executing other attacks and can also enable the attacker to target known vulnerabilities in application components. The first argument to !operator_phpexit() contains data from an error message (possibly containing user-specified or database data) from the variable mysql_error(). The data from an error message (possibly containing user-specified or database data) originated from an earlier call to mysql_error.
+
+Ensure that error codes or other messages returned to end users are not overly verbose. Sanitize all messages of any sensitive information that is not absolutely necessary.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/209.html)
+
+" note="" cweid="209" remediationeffort="1" exploitLevel="0" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="low.php" line="15" sourcefilepath="dvwa/vulnerabilities/csrf/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="73"/>
+<flaw severity="2" categoryname="Information Exposure Through an Error Message" count="1" issueid="84" module="PHP files within DVWA-1.0.7.zip" type="!operator_phpexit" description="The application calls the !operator_phpexit() function, which may expose information about the application logic or other details such as the names and versions of the application container and associated components. This information can be useful in executing other attacks and can also enable the attacker to target known vulnerabilities in application components. The first argument to !operator_phpexit() contains data from an error message (possibly containing user-specified or database data) from the variable mysql_error(). The data from an error message (possibly containing user-specified or database data) originated from an earlier call to mysql_error.
+
+Ensure that error codes or other messages returned to end users are not overly verbose. Sanitize all messages of any sensitive information that is not absolutely necessary.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/209.html)
+
+" note="" cweid="209" remediationeffort="1" exploitLevel="0" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="low.php" line="18" sourcefilepath="dvwa/vulnerabilities/xss_s/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="86"/>
+<flaw severity="2" categoryname="Information Exposure Through an Error Message" count="1" issueid="68" module="PHP files within DVWA-1.0.7.zip" type="!operator_phpexit" description="The application calls the !operator_phpexit() function, which may expose information about the application logic or other details such as the names and versions of the application container and associated components. This information can be useful in executing other attacks and can also enable the attacker to target known vulnerabilities in application components. The first argument to !operator_phpexit() contains data from an error message (possibly containing user-specified or database data) from the variable mysql_error(). The data from an error message (possibly containing user-specified or database data) originated from an earlier call to mysql_error.
+
+Ensure that error codes or other messages returned to end users are not overly verbose. Sanitize all messages of any sensitive information that is not absolutely necessary.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/209.html)
+
+" note="" cweid="209" remediationeffort="1" exploitLevel="0" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="medium.php" line="12" sourcefilepath="dvwa/vulnerabilities/sqli/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="37"/>
+<flaw severity="2" categoryname="Information Exposure Through an Error Message" count="1" issueid="45" module="PHP files within DVWA-1.0.7.zip" type="!operator_phpexit" description="The application calls the !operator_phpexit() function, which may expose information about the application logic or other details such as the names and versions of the application container and associated components. This information can be useful in executing other attacks and can also enable the attacker to target known vulnerabilities in application components. The first argument to !operator_phpexit() contains data from an error message (possibly containing user-specified or database data) from the variable mysql_error(). The data from an error message (possibly containing user-specified or database data) originated from an earlier call to mysql_error.
+
+Ensure that error codes or other messages returned to end users are not overly verbose. Sanitize all messages of any sensitive information that is not absolutely necessary.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/209.html)
+
+" note="" cweid="209" remediationeffort="1" exploitLevel="0" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="medium.php" line="15" sourcefilepath="dvwa/vulnerabilities/brute/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="53"/>
+<flaw severity="2" categoryname="Information Exposure Through an Error Message" count="1" issueid="76" module="PHP files within DVWA-1.0.7.zip" type="!operator_phpexit" description="The application calls the !operator_phpexit() function, which may expose information about the application logic or other details such as the names and versions of the application container and associated components. This information can be useful in executing other attacks and can also enable the attacker to target known vulnerabilities in application components. The first argument to !operator_phpexit() contains data from an error message (possibly containing user-specified or database data) from the variable mysql_error(). The data from an error message (possibly containing user-specified or database data) originated from an earlier call to mysql_error.
+
+Ensure that error codes or other messages returned to end users are not overly verbose. Sanitize all messages of any sensitive information that is not absolutely necessary.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/209.html)
+
+" note="" cweid="209" remediationeffort="1" exploitLevel="0" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="medium.php" line="17" sourcefilepath="dvwa/vulnerabilities/csrf/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="75"/>
+<flaw severity="2" categoryname="Information Exposure Through an Error Message" count="1" issueid="59" module="PHP files within DVWA-1.0.7.zip" type="!operator_phpexit" description="The application calls the !operator_phpexit() function, which may expose information about the application logic or other details such as the names and versions of the application container and associated components. This information can be useful in executing other attacks and can also enable the attacker to target known vulnerabilities in application components. The first argument to !operator_phpexit() contains data from an error message (possibly containing user-specified or database data) from the variable mysql_error(). The data from an error message (possibly containing user-specified or database data) originated from an earlier call to mysql_error.
+
+Ensure that error codes or other messages returned to end users are not overly verbose. Sanitize all messages of any sensitive information that is not absolutely necessary.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/209.html)
+
+" note="" cweid="209" remediationeffort="1" exploitLevel="0" categoryid="8" pcirelated="false" date_first_occurrence="2012-03-08 14:20:41 UTC" remediation_status="New" cia_impact="pnn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="medium.php" line="20" sourcefilepath="dvwa/vulnerabilities/xss_s/source/" scope="Global Scope" functionprototype="(void)" functionrelativelocation="89"/>
+</staticflaws>
+</cwe>
+</category>
+</severity>
+<severity level="1"/>
+<severity level="0"/>
+<flaw-status new="85" reopen="0" open="0" fixed="0" total="85" not_mitigated="85" sev-1-change="0" sev-2-change="34" sev-3-change="35" sev-4-change="9" sev-5-change="7"/>
+</detailedreport>

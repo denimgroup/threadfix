@@ -1,0 +1,61 @@
+var myAppModule = angular.module('threadfix');
+
+myAppModule.controller('ScanHistoryController', function($scope, $log, $rootScope, $http, $window, tfEncoder, customSeverityService) {
+
+    $scope.initialized = false;
+
+    $scope.page = 1;
+    $scope.numScans = 0;
+
+    // since we need the csrfToken to make the request, we need to wait until it's initialized
+    $scope.$on('rootScopeInitialized', function() {
+        $scope.refresh(true, false);
+    });
+
+    $scope.refresh = function(newValue, oldValue) {
+        if (newValue !== oldValue) {
+            $scope.loading = true;
+            $http.post(tfEncoder.encode("/scans/table/" + $scope.page)).
+                success(function(data, status, headers, config) {
+                    $scope.initialized = true;
+
+                    if (data.success) {
+                        $scope.scans = data.object.scanList;
+
+                        if ($scope.scans && $scope.scans.length) {
+                            $scope.scans.forEach(function(scan) {
+                                scan.pageUrl = getScanUrl(scan);
+                            });
+                        }
+                        $scope.numScans = data.object.numScans;
+                        $scope.numberOfPages = Math.ceil(data.object.numScans/100);
+
+                        customSeverityService.setSeverities(data.object.genericSeverities);
+                    } else {
+                        $scope.output = "Failure. Message was : " + data.message;
+                    }
+                    $scope.loading = false;
+                }).
+                error(function(data, status, headers, config) {
+                    $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
+                    $scope.loading = false;
+                });
+        }
+    };
+
+    $scope.$watch('page', $scope.refresh);
+
+    $scope.goToPage = function(valid) {
+        if (valid) {
+            $scope.page = $scope.pageInput;
+        }
+    };
+
+    var getScanUrl = function(scan) {
+        return tfEncoder.encode(
+            "/organizations/" + scan.team.id +
+            "/applications/" + scan.app.id +
+            "/scans/" + scan.id);
+    };
+
+});

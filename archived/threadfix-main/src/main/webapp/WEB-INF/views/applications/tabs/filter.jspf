@@ -1,0 +1,36 @@
+<button id="showFilters" ng-hide="showFilters || !vulns || empty" ng-click="showFilters = true" class="btn">Show Filters</button>
+<button ng-show="showFilters" id="hideFiltersButton" ng-click="showFilters = false" class="btn">Hide Filters</button>
+<button ng-show="showFilters" id="refreshButton" ng-click="refresh(true, false)" class="btn">Refresh</button>
+<button ng-show="showFilters" id="clearButton" ng-click="clearFilters()" class="btn">Clear</button>
+
+<div ng-show="showFilters" style="padding-top: 10px" ng-enter="refresh(true, false)">
+    <div class="filter-table">
+        <div class="row">
+            <div class="span2">Vulnerability Type</div>
+            <div class="span4">
+                <input id="vulnerabilityTypeFilterInput" type="text"
+                      class="form-control"
+                      ng-model="cweFilter"
+                      typeahead="(vulnerability.name + ' (CWE ' + vulnerability.displayId + ')') for vulnerability in genericVulnerabilities | filter:$viewValue | limitTo:10"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span2">Severity Filter</div>
+            <div class="span4">
+                <input id="severityFilterInput" type="text" ng-model="severityFilter"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span2">Path Filter</div>
+            <div class="span4">
+                <input id="pathFilterInput" type="text" ng-model="locationFilter"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span2">Parameter Filter</div>
+            <div class="span4">
+                <input id="parameterFilterInput" type="text" ng-model="parameterFilter"/>
+            </div>
+        </div>
+    </div>
+</div>

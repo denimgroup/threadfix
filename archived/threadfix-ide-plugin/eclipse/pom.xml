@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+      <groupId>eclipse</groupId>
+      <artifactId>parent</artifactId>
+      <version>0.1.0</version>
+      <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <repositories>
+        <repository>
+            <id>kepler</id>
+            <layout>p2</layout>
+            <url>http://download.eclipse.org/releases/kepler</url>
+        </repository>
+    </repositories>
+
+  <artifactId>com.denimgroup.threadfix.plugin.eclipse.views.VulnerabilitiesView</artifactId>
+  <packaging>eclipse-plugin</packaging>
+</project>

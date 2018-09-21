@@ -1,0 +1,199 @@
+11/23/2015 00:00:00
+type.info,,
+WhiteHat Sentinel
+type.vulnerabilities,,
+Access of Unique Device Id,Access of Unique Device Id,284
+Access.Native.Win32,Access.Native.Win32,284
+Application Fails to Leverage SSLv3/TLS,Application Fails to Leverage SSLv3/TLS,311
+Application Misconfiguration,Application Misconfiguration,16
+Application Misconfiguration: AspNet Enable Header Checking,Application Misconfiguration: AspNet Enable Header Checking,16
+Authentication Impersonation: UI Redressing,Authentication Impersonation: UI Redressing,287
+Authorization Bypass,Authorization Bypass,287
+Basic Authentication Usage,Basic Authentication Usage,592
+Cipher Transformation Insecure,Cipher Transformation Insecure,327
+Cleartext Password,Cleartext Password,312
+Command Execution: LDAP,Command Execution: LDAP,90
+Conditional Assignment,Conditional Assignment,480
+Cross Site Scripting,Cross Site Scripting,79
+Cryptography key cleartext,Cryptography key cleartext,312
+Cryptography PRNG insecure,Cryptography PRNG insecure,326
+Cryptography Provider Undefined,Cryptography Provider Undefined,327
+Custom Cryptography Algorithm,Custom Cryptography Algorithm,327
+Dangerous Method Usage: JNI,Dangerous Method Usage: JNI,111
+Debug Enabled,Debug Enabled,489
+Denial of Service: ReadFile,Denial of Service: ReadFile,400
+Denial of Service: ReadLine,Denial of Service: ReadLine,400
+Denial of Service: Regex,Denial of Service: Regex,400
+EMail Injection,EMail Injection,74
+Excessive Environment Permissions,Excessive Environment Permissions,276
+General Injection,General Injection,74
+Global Error Handling Disabled,Global Error Handling Disabled,388
+Hard Coded Cryptographic Salt,Hard Coded Cryptographic Salt,321
+Hard Coded Cryptographic Seed,Hard Coded Cryptographic Seed,321
+HardCoded Cryptographic Key,HardCoded Cryptographic Key,321
+HardCoded IpAddress,HardCoded IpAddress,547
+HardCoded IV,HardCoded IV,547
+Hardcoded Password,Hardcoded Password,259
+HTTP Header Injection,HTTP Header Injection,113
+HTTP Request Injection,HTTP Request Injection,113
+HTTP Request Splitting,HTTP Request Splitting,113
+HTTP Response Splitting,HTTP Response Splitting,113
+Improper Certificate Validation,Improper Certificate Validation,295
+Improper File Handling,Improper File Handling,66
+Information Leakage: CCN,Information Leakage: CCN,200
+Information Leakage: CVV,Information Leakage: CVV,200
+Information Leakage: Device ID,Information Leakage: Device ID,200
+Information leakage: Device ID Disclosure,Information leakage: Device ID Disclosure,200
+Information Leakage: Error Disclosure,Information Leakage: Error Disclosure,200
+Information Leakage: Password,Information Leakage: Password,200
+Information Leakage: Session ID,Information Leakage: Session ID,200
+Information Leakage: SSN,Information Leakage: SSN,200
+Information Leakage: SSO,Information Leakage: SSO,200
+Injection environment variable,Injection environment variable,74
+injection general,injection general,78
+injection net http body,injection net http body,74
+Injection net http url,Injection net http url,74
+injection net mail,injection net mail,74
+Injection net sms,Injection net sms,74
+Injection net socket,Injection net socket,74
+injection xml xpath,injection xml xpath,91
+Injection: FTP Command,Injection: FTP Command,74
+Injection: FTP Url,Injection: FTP Url,74
+Injection: Hibernate Query Language,Injection: Hibernate Query Language,89
+Injection: SQL,Injection: SQL,89
+Injection: XPath,Injection: XPath,91
+Injection.Environment.Reflection,Injection.Environment.Reflection,74
+Injection.Environment.Variable,Injection.Environment.Variable,74
+Injection.Net.Http.Body,Injection.Net.Http.Body,74
+Injection.Net.Sms,Injection.Net.Sms,74
+Injection.Net.Socket,Injection.Net.Socket,74
+Insecure Cipher Mode,Insecure Cipher Mode,327
+Insecure Cipher Padding,Insecure Cipher Padding,327
+Insecure Cryptographic Cipher,Insecure Cryptographic Cipher,327
+Insecure Cryptographic Protocol,Insecure Cryptographic Protocol,327
+Insecure Digest,Insecure Digest,327
+Insecure MAC,Insecure MAC,327
+Insecure Session Url,Insecure Session Url,327
+Insufficient Authorization: Bypass Method,Insufficient Authorization: Bypass Method,285
+Insufficient Authorization: HTTP Verb Tampering,Insufficient Authorization: HTTP Verb Tampering,285
+Insufficient Authorization: Role Manipulation,Insufficient Authorization: Role Manipulation,285
+Insufficient Session Expiration,Insufficient Session Expiration,613
+Insufficient Transport Layer Protection,Insufficient Transport Layer Protection,311
+Maliciouscode compilation source,Maliciouscode compilation source,506
+Maliciouscode injection bytecode,Maliciouscode injection bytecode,94
+Maliciouscode malware url,Maliciouscode malware url,601
+MaliciousCode.Compilation.Source,MaliciousCode.Compilation.Source,506
+MaliciousCode.Injection.ByteCode,MaliciousCode.Injection.ByteCode,94
+MaliciousCode.Malware.Url,MaliciousCode.Malware.Url,601
+Missing Access Strategy,Missing Access Strategy,862
+Non HttpOnly Session Cookie,Non HttpOnly Session Cookie,565
+OS Commanding,OS Commanding,78
+Overly Permissive CORS Policy,Overly Permissive CORS Policy,264
+Path Traversal,Path Traversal,22
+Platform Configuration Android BackupAllowed,Platform Configuration Android BackupAllowed,530
+Platform configuration php codeignite csrfprotectiondisabled,Platform configuration php codeignite csrfprotectiondisabled,352
+Platform configuration php codeignite xssfilteringdisabled,Platform configuration php codeignite xssfilteringdisabled,79
+Platform configuration php symfony csrfprotectiondisabled,Platform configuration php symfony csrfprotectiondisabled,352
+Platform configuration php yii cookievalidationdisabled,Platform configuration php yii cookievalidationdisabled,565
+Platform configuration php yii csrfprotectiondisabled,Platform configuration php yii csrfprotectiondisabled,352
+Platform.Configuration.Php.CodeIgnite.CsrfProtectionDisabled,Platform.Configuration.Php.CodeIgnite.CsrfProtectionDisabled,352
+Platform.Configuration.Php.CodeIgnite.XssFilteringDisabled,Platform.Configuration.Php.CodeIgnite.XssFilteringDisabled,79
+Platform.Configuration.Php.Symfony.CsrfProtectionDisabled,Platform.Configuration.Php.Symfony.CsrfProtectionDisabled,352
+Platform.Configuration.Php.Yii.CookieValidationDisabled,Platform.Configuration.Php.Yii.CookieValidationDisabled,565
+Platform.Configuration.Php.Yii.CsrfProtectionDisabled,Platform.Configuration.Php.Yii.CsrfProtectionDisabled,352
+Remote File Inclusion,Remote File Inclusion,98
+Script Evaluation,Script Evaluation,79
+Sensitive Data Logging,Sensitive Data Logging,532
+Sensitivedata location disclosure,Sensitivedata location disclosure,532
+SensitiveData.Location.Disclosure,SensitiveData.Location.Disclosure,532
+Session State Disclosure,Session State Disclosure,200
+Unencrypted CCN Storage,Unencrypted CCN Storage,311
+Unencrypted CVV Storage,Unencrypted CVV Storage,311
+Unencrypted Password Storage,Unencrypted Password Storage,311
+Unencrypted SSN Storage,Unencrypted SSN Storage,311
+Unencrypted SSO Storage,Unencrypted SSO Storage,311
+Unpatched Library,Unpatched Library,327
+Unsafe Code Usage,Unsafe Code Usage,470
+Unsalted Hash Mechanism,Unsalted Hash Mechanism,759
+Unsecured Session Cookie,Unsecured Session Cookie,614
+Unvalidated Automatic Library Activation,Unvalidated Automatic Library Activation,470
+Unverified SSL Host,Unverified SSL Host,319
+Url Redirect Abuse,Url Redirect Abuse,601
+Brute Force,Brute Force,307
+Cross-Site Request Forgery,Cross-Site Request Forgery,352
+Denial of Service,Denial of Service,400
+Insecure Indexing,Insecure Indexing,548
+Insufficient Anti-automation,Insufficient Anti-automation,799
+Insufficient Authentication,Insufficient Authentication,287
+Insufficient Authorization,Insufficient Authorization,285
+Insufficient Password Recovery,Insufficient Password Recovery,640
+Insufficient Session Expiration,Insufficient Session Expiration,613
+Session Fixation,Session Fixation,384
+Application Misconfiguration,Application Misconfiguration,16
+Buffer Overflow,Buffer Overflow,120
+Content Spoofing,Content Spoofing,290
+Cross-Site Scripting,Cross-Site Scripting,79
+Fingerprinting,Fingerprinting,205
+Format String,Format String,134
+HTTP Request Smuggling,HTTP Request Smuggling,444
+HTTP Request Splitting,HTTP Request Splitting,113
+HTTP Response Smuggling,HTTP Response Smuggling,444
+HTTP Response Splitting,HTTP Response Splitting,113
+Improper Filesystem Permissions,Improper Filesystem Permissions,280
+Improper Input Handling,Improper Input Handling,20
+Improper Output Handling,Improper Output Handling,116
+Information Leakage,Information Leakage,200
+Insufficient Transport Layer Protection,Insufficient Transport Layer Protection,311
+Integer Overflows,Integer Overflows,190
+LDAP Injection,LDAP Injection,90
+Mail Command Injection,Mail Command Injection,88
+Null Byte Injection,Null Byte Injection,158
+OS Commanding,OS Commanding,78
+Path Traversal,Path Traversal,22
+Predictable Resource Location,Predictable Resource Location,425
+Remote File Inclusion (RFI),Remote File Inclusion (RFI),73
+Routing Detour,Routing Detour,441
+Server Misconfiguration,Server Misconfiguration,16
+SOAP Array Abuse,SOAP Array Abuse,789
+SQL Injection,SQL Injection,89
+SSI Injection,SSI Injection,97
+URL Redirector Abuse ,URL Redirector Abuse ,601
+XML Attribute Blowup,XML Attribute Blowup,91
+XML Entity Expansion ,XML Entity Expansion ,91
+XML External Entities,XML External Entities,91
+XML Injection,XML Injection,91
+XQuery Injection,XQuery Injection,91
+Autocomplete Attribute,Autocomplete Attribute,525
+Insufficient Password Aging,Insufficient Password Aging,263
+Non-HttpOnly Session Cookie,Non-HttpOnly Session Cookie,565
+Secured Cachable HTTP Messages,Secured Cachable HTTP Messages,209
+Insufficient Cookie Access Control,Insufficient Cookie Access Control,285
+Insufficient Password Strength,Insufficient Password Strength,521
+Persistent Session Cookie,Persistent Session Cookie,539
+Insufficient Cross-domain Configuration,Insufficient Cross-domain Configuration,352
+Invalid HTTP Method Usage,Invalid HTTP Method Usage,16
+Personally Identifiable Information,Personally Identifiable Information,359
+Insecure Data Storage: Unencrypted Password,Insecure Data Storage: Unencrypted Password,311
+Insecure Data Storage: Unencrypted SSN,Insecure Data Storage: Unencrypted SSN,311
+Disclosure: Hardcoded Password,Disclosure: Hardcoded Password,259
+Injection: Unknown Interpreter,Injection: Unknown Interpreter,74
+Injection: HTTP Response Splitting,Injection: HTTP Response Splitting,113
+Cryptography: Insecure Digest,Cryptography: Insecure Digest,327
+Insecure Data Storage: Unencrypted CCN,Insecure Data Storage: Unencrypted CCN,311
+Cryptography: Improper Pseudo-Random Number Generator Usage,Cryptography: Improper Pseudo-Random Number Generator Usage,327
+Injection: Mail Command,Injection: Mail Command,88
+Insufficient Authentication: Basic Authentication Usage,Insufficient Authentication: Basic Authentication Usage,592
+Disclosure: Cleartext Password,Disclosure: Cleartext Password,312
+Application Misconfiguration: Global Error Handling Disabled,Application Misconfiguration: Global Error Handling Disabled,388
+Application Misconfiguration: Exposed Axis Administration Servlet,Application Misconfiguration: Exposed Axis Administration Servlet,16
+type.severities,,,
+note,note,1,1
+critical,critical,10,5
+high,high,8,4
+medium,medium,6,3
+low,low,3,2
+1,1,1,2
+2,2,4,3
+3,3,5,3
+4,4,7,4
+5,5,9,5

@@ -1,0 +1,321 @@
+3/27/2015 11:45:00
+type.info,,
+WebInspect
+type.vulnerabilities,,
+Password Field Auto Complete Active,Password Field Auto Complete Active,200
+"vBulletin Two-Step External Links ""url"" Parameter Cross-Site Scripting","vBulletin Two-Step External Links ""url"" Parameter Cross-Site Scripting",79
+PHP Password Page (password.php3),PHP Password Page (password.php3),200
+NetBilling 'nmember.cgi' Information Disclosure,NetBilling 'nmember.cgi' Information Disclosure,200
+AnimatedImage CAPTCHA Detected,AnimatedImage CAPTCHA Detected,200
+MyBB member.php 'fid' parameter SQL Injection,MyBB member.php 'fid' parameter SQL Injection,89
+Blind SQL Injection Aggressive Option,Blind SQL Injection Aggressive Option,89
+Insufficient Transport Layer Protection - Weak Cipher,Insufficient Transport Layer Protection - Weak Cipher,327
+PHP Debug Application (debug.php),PHP Debug Application (debug.php),16
+LylaCaptcha Detected,LylaCaptcha Detected,200
+Possible Commerce Information,Possible Commerce Information,200
+ActionScript Source Path Disclosure,ActionScript Source Path Disclosure,200
+Crossdomain.xml Probing,Crossdomain.xml Probing,200
+PHP Password Page (passwords.php3),PHP Password Page (passwords.php3),200
+Mobile UUID Disclosure,Mobile UUID Disclosure,359
+LoadBytes Usage,LoadBytes Usage,94
+PHP Password Page (pass.php3),PHP Password Page (pass.php3),200
+California Driver's License Number Disclosed,California Driver's License Number Disclosed,200
+Insufficient Transport Layer Protection,Insufficient Transport Layer Protection,327
+Session Fixation,Session Fixation,384
+Geolocation Information Disclosure,Geolocation Information Disclosure,359
+Netflow Analyzer index.jsp 'view' Cross-Site Scripting,Netflow Analyzer index.jsp 'view' Cross-Site Scripting,79
+Possible Database Connection String (Access and Oracle ODBC -- Standard Security for MS Access and ODBC Oracle Driver,Possible Database Connection String (Access and Oracle ODBC -- Standard Security for MS Access and ODBC Oracle Driver,200
+SQL Injection in Megabbs Forum's,SQL Injection in Megabbs Forum's,89
+MSAccess,MSAccess,16
+User-Controllable Character Set,User-Controllable Character Set,116
+Debug Messaging,Debug Messaging,200
+Invision Power Board 'showuser' Cross-Site Scripting,Invision Power Board 'showuser' Cross-Site Scripting,79
+Xampp ming.php Cross-Site Scripting,Xampp ming.php Cross-Site Scripting,79
+@Mail admin.php 'type' Cross-Site Scripting,@Mail admin.php 'type' Cross-Site Scripting,79
+Expression Language Injection (HttpOnly Restriction Bypass),Expression Language Injection (HttpOnly Restriction Bypass),78
+PHP Admin Application (admin.php),PHP Admin Application (admin.php),284
+Apache Tomcat calendar 'time' Cross-Site Scripting,Apache Tomcat calendar 'time' Cross-Site Scripting,79
+Charset Not Set To Unicode,Charset Not Set To Unicode,79
+cPanel 'addhandle.html' Cross-Site Scripting,cPanel 'addhandle.html' Cross-Site Scripting,79
+QuickCaptcha Detected,QuickCaptcha Detected,200
+Simple PHP-CAPTCHA Detected,Simple PHP-CAPTCHA Detected,200
+Privacy Violation: Credit Card Number,Privacy Violation: Credit Card Number,359
+Silverlight Settings Allow HTML Access,Silverlight Settings Allow HTML Access,79
+Tektronix PhaserLink ncl_subjects.html Administratiion,Tektronix PhaserLink ncl_subjects.html Administratiion,284
+Joomla! index.php 'theme_background' Cross-SiteScripting,Joomla! index.php 'theme_background' Cross-SiteScripting,79
+Possible Database Connection String (Oracle ODBC New Microsoft Driver,Possible Database Connection String (Oracle ODBC New Microsoft Driver,200
+Falt4 CMS index.php 'handler' Parameter Cross-Site Scripting,Falt4 CMS index.php 'handler' Parameter Cross-Site Scripting,79
+Novell Groupwise WebAccess 'User.Theme.index' Cross-Site Scripting,Novell Groupwise WebAccess 'User.Theme.index' Cross-Site Scripting,79
+ZDR Captcha Detected,ZDR Captcha Detected,200
+Security Image CAPTCHA Detected,Security Image CAPTCHA Detected,200
+Netflow Analyzer index.jsp 'section' Cross-Site Scripting,Netflow Analyzer index.jsp 'section' Cross-Site Scripting,79
+Insecure Cache-control Policy for Session Cookies,Insecure Cache-control Policy for Session Cookies,3
+Insufficient Session ID Length,Insufficient Session ID Length,361
+Possible SQL Query,Possible SQL Query,200
+ENABLEDEBUGGER Tag Detected,ENABLEDEBUGGER Tag Detected,16
+HacmeBank Settings Template,HacmeBank Settings Template,16
+MyBB member.php 'uid' parameter SQL Injection Vulnerability,MyBB member.php 'uid' parameter SQL Injection Vulnerability,89
+Arbitrary File Upload,Arbitrary File Upload,87
+PostMessage Broadcast Vulnerability,PostMessage Broadcast Vulnerability,200
+PHP-Nuke SQL Injection Probing,PHP-Nuke SQL Injection Probing,16
+ASP Security Image Generator (CAPTCHA) Detected,ASP Security Image Generator (CAPTCHA) Detected,16
+PHP Debug Application (debug.php4),PHP Debug Application (debug.php4),284
+Fusebox Framework in Use,Fusebox Framework in Use,16
+Oracle,Oracle,89
+WebSphere PlantsByWebSphere AccountServlet 'userid' Cross-Site Scripting,WebSphere PlantsByWebSphere AccountServlet 'userid' Cross-Site Scripting,79
+JiRo's Statistics System SQL Injection,JiRo's Statistics System SQL Injection,89
+MySQL,MySQL,89
+SOAP: Parameter Manipulation Directory Traversal (\..\..\..\..\..\..\..\..\..\..\etc\passwd%00),SOAP: Parameter Manipulation Directory Traversal (\..\..\..\..\..\..\..\..\..\..\etc\passwd%00),22
+SOAP: Parameter Manipulation Directory Traversal (..\..\..\..\..\..\..\..\..\..\boot.ini%00),SOAP: Parameter Manipulation Directory Traversal (..\..\..\..\..\..\..\..\..\..\boot.ini%00),22
+Character Set Not Enforced,Character Set Not Enforced,116
+Sambar 'dumpenv.pl' Cross-Site Scripting,Sambar 'dumpenv.pl' Cross-Site Scripting,79
+FlashVars Cross-Site Scripting,FlashVars Cross-Site Scripting,79
+Missing Ciphersuite For Perfect Forward Secrecy,Missing Ciphersuite For Perfect Forward Secrecy,326
+SquirrelMail 'compose.php' Cross-Site Scripting,SquirrelMail 'compose.php' Cross-Site Scripting,79
+Use of captchas.net Service Detected,Use of captchas.net Service Detected,200
+IBM Rational ClearQuest 'contextid' Cross-Site Scripting,IBM Rational ClearQuest 'contextid' Cross-Site Scripting,79
+OpenSSL Heartbeat Read Overrun,OpenSSL Heartbeat Read Overrun,119
+Missing Cross-Frame Scripting Protection,Missing Cross-Frame Scripting Protection,352
+PHP Debug Application (debug.php3),PHP Debug Application (debug.php3),284
+PHP iCalendar year.php Cross-Site Scripting,PHP iCalendar year.php Cross-Site Scripting,79
+WebGoat Settings Template,WebGoat Settings Template,16
+PHP Admin Application (admin.php5),PHP Admin Application (admin.php5),284
+CuteNews 'show_archives.php' Cross-Site Scripting,CuteNews 'show_archives.php' Cross-Site Scripting,79
+reCAPTCHA Implementation Detected,reCAPTCHA Implementation Detected,200
+MyBB misc.php 'fid' parameter SQL Injection,MyBB misc.php 'fid' parameter SQL Injection,89
+AnimatedCaptcha Detected,AnimatedCaptcha Detected,200
+Cobalt RaQ telnetUsage.cgi Log Information Disclosure,Cobalt RaQ telnetUsage.cgi Log Information Disclosure,200
+CAPTCHA for ASP Detected,CAPTCHA for ASP Detected,200
+Blackboard Academic Suite 'viewCatalog' Cross-Site Scripting,Blackboard Academic Suite 'viewCatalog' Cross-Site Scripting,79
+cpLinks search.php Cross-Site Scripting,cpLinks search.php Cross-Site Scripting,79
+Invision Power Board 'f' Cross-Site Scripting,Invision Power Board 'f' Cross-Site Scripting,79
+vBulletin 'index.php' Cross-Site Scripting,vBulletin 'index.php' Cross-Site Scripting,79
+WEBgais Websendmail Password File Retrieval Vulnerability,WEBgais Websendmail Password File Retrieval Vulnerability,200
+PHP Test Page (test.php),PHP Test Page (test.php),200
+CAPTCHA Image for ASP Detected,CAPTCHA Image for ASP Detected,200
+CVS Entries Parser,CVS Entries Parser,16
+Use of FlashVars in System.security.loadPolicyFile Detected,Use of FlashVars in System.security.loadPolicyFile Detected,200
+phpMyAdmin index.php Cross-Site Scripting,phpMyAdmin index.php Cross-Site Scripting,79
+Kontiki DMS 'action' Cross-Site Scripting,Kontiki DMS 'action' Cross-Site Scripting,79
+Robots.txt Parser,Robots.txt Parser,16
+Lil'HTTP Pbcgi.cgi Cross-Site Scripting,Lil'HTTP Pbcgi.cgi Cross-Site Scripting,79
+Reflected HTTP Parameter Pollution,Reflected HTTP Parameter Pollution,16
+Hesk 'admin_main.php' Administrative Access,Hesk 'admin_main.php' Administrative Access,284
+PHP Users Page (user.php5),PHP Users Page (user.php5),200
+Phorum 'search.php' HTTP Response Splitting,Phorum 'search.php' HTTP Response Splitting,79
+Mobile Attack Surface Enumeration,Mobile Attack Surface Enumeration,16
+SecurImage CAPTCHA Detected,SecurImage CAPTCHA Detected,200
+Idut Human Checker CAPTCHA Detected,Idut Human Checker CAPTCHA Detected,200
+XMB 'forumdisplay.php' Cross-Site Scripting,XMB 'forumdisplay.php' Cross-Site Scripting,79
+Aweb's Banner Generator Cross-Site Scripting Vulnerability,Aweb's Banner Generator Cross-Site Scripting Vulnerability,79
+Apache Struts ClassLoader Manipulation,Apache Struts ClassLoader Manipulation,470
+CuteNews 'example2.php' Cross-Site Scripting,CuteNews 'example2.php' Cross-Site Scripting,79
+WordPress Footnotes Plugin admin_panel.php 'style_rules' Cross-Site Scripting,WordPress Footnotes Plugin admin_panel.php 'style_rules' Cross-Site Scripting,79
+Aestiva HTML/OS 'start' Cross-Site Scripting,Aestiva HTML/OS 'start' Cross-Site Scripting,79
+Secure Section Must Require SSL Access,Secure Section Must Require SSL Access,287
+Local File Inclusion (Tomcat),Local File Inclusion (Tomcat),16
+Browser Mime Sniffing is not disabled,Browser Mime Sniffing is not disabled,79
+Apache Struts 2 Remote Code Execution,Apache Struts 2 Remote Code Execution,94
+PHP Users Page (users.php),PHP Users Page (users.php),200
+ENABLEDEBUGGER2 Tag Detected,ENABLEDEBUGGER2 Tag Detected,16
+SQL Injection ('),SQL Injection ('),89
+Misconfigured Content-Security-Policy,Misconfigured Content-Security-Policy,265
+CORS Unsafe Methods Allowed,CORS Unsafe Methods Allowed,732
+CuteNews 'example1.php' Cross-Site Scripting,CuteNews 'example1.php' Cross-Site Scripting,79
+Prolonged Caching of CORS Preflight Response,Prolonged Caching of CORS Preflight Response,525
+PHP Users Page (user.php),PHP Users Page (user.php),200
+PHP Users Page (user.php4),PHP Users Page (user.php4),200
+PHP Debug Application (debug.php5),PHP Debug Application (debug.php5),284
+Possible Social Security Number,Possible Social Security Number,359
+Lanapsoft BotDetect CAPTCHA Detected,Lanapsoft BotDetect CAPTCHA Detected,200
+Missing Content-Type Header,Missing Content-Type Header,79
+Lyris ListManager search Cross-Site Scripting,Lyris ListManager search Cross-Site Scripting,79
+SOAP: Parameter Manipulation Directory Traversal (\..\..\..\..\..\..\..\..\..\..\etc\passwd),SOAP: Parameter Manipulation Directory Traversal (\..\..\..\..\..\..\..\..\..\..\etc\passwd),22
+Cross-Origin Resource Sharing,Cross-Origin Resource Sharing,16
+MongoDB Script Injection Attack,MongoDB Script Injection Attack,78
+FlashVars Cross-Site Scripting / Request Forgery,FlashVars Cross-Site Scripting / Request Forgery,79
+Insecure Domain Access Policy for Session Cookies,Insecure Domain Access Policy for Session Cookies,16
+CyberOffice Client-side Price Manipulation,CyberOffice Client-side Price Manipulation,16
+WordPress Footnotes Plugin admin_panel.php 'pre_footnotes' Cross-Site Scripting,WordPress Footnotes Plugin admin_panel.php 'pre_footnotes' Cross-Site Scripting,79
+Joomla guestBook Extension 'gbid' SQL Injection,Joomla guestBook Extension 'gbid' SQL Injection,89
+PhotoPost PHP 'comments.php' SQL Injection,PhotoPost PHP 'comments.php' SQL Injection,89
+Sambar Server 'ssienv.shtml' Cross-Site Scripting,Sambar Server 'ssienv.shtml' Cross-Site Scripting,79
+CORS Functionality Abuse,CORS Functionality Abuse,227
+Apache Roller 'search' Cross-Site Scripting,Apache Roller 'search' Cross-Site Scripting,79
+DotNetNuke Captcha Control Detected,DotNetNuke Captcha Control Detected,200
+Expression Language Injection (Server Data Revealed),Expression Language Injection (Server Data Revealed),78
+PHP Users Page (user.php3),PHP Users Page (user.php3),200
+SOAP: Parameter Manipulation Directory Traversal (..\..\..\..\..\..\..\..\..\..\boot.ini),SOAP: Parameter Manipulation Directory Traversal (..\..\..\..\..\..\..\..\..\..\boot.ini),22
+BEA Weblogic 'weblogic.xml' Information Disclosure,BEA Weblogic 'weblogic.xml' Information Disclosure,200
+Directory Enumeration,Directory Enumeration,16
+Unused Parameter Detected,Unused Parameter Detected,489
+Sambar 'showini.asp' Information Disclosure,Sambar 'showini.asp' Information Disclosure,200
+PROTECT Tag detected,PROTECT Tag detected,200
+Misconfigured HTTP Strict-Transport-Security Header,Misconfigured HTTP Strict-Transport-Security Header,319
+W3Mail Mail Attachment Disclosure,W3Mail Mail Attachment Disclosure,200
+Blank'N'Berg Cross-Site Scripting Vulnerability,Blank'N'Berg Cross-Site Scripting Vulnerability,79
+Suggested Security Controls for Embedding SWF Files in HTML,Suggested Security Controls for Embedding SWF Files in HTML,16
+Sambar 'show.asp' Cross-Site Scripting,Sambar 'show.asp' Cross-Site Scripting,79
+Micro Captcha Detected,Micro Captcha Detected,200
+MongoDB PHP Request Injection Attack,MongoDB PHP Request Injection Attack,89
+Aestiva HTML/OS 'htmlos' Cross-Site Scripting,Aestiva HTML/OS 'htmlos' Cross-Site Scripting,79
+rwAuction Pro Cross-Site Scripting,rwAuction Pro Cross-Site Scripting,79
+Possible Database Connection String (Oracle .NET DataProvider from Microsoft and Oracle - Standard Connection)],Possible Database Connection String (Oracle .NET DataProvider from Microsoft and Oracle - Standard Connection)],200
+HumanVerify CAPTCHA Detected,HumanVerify CAPTCHA Detected,200
+SQL Injection (' OR),SQL Injection (' OR),89
+Use of FlashVars in loadMovie Detected,Use of FlashVars in loadMovie Detected,200
+Possible Cryptographic Data,Possible Cryptographic Data,321
+PHP Password Page (passwords.php),PHP Password Page (passwords.php),200
+WhoDomLite whois.cgi Cross-Site Scripting,WhoDomLite whois.cgi Cross-Site Scripting,79
+Missing HTTP Strict-Transport-Security Header,Missing HTTP Strict-Transport-Security Header,319
+Photo Cart index.php Cross-Site Scripting,Photo Cart index.php Cross-Site Scripting,79
+OLE DB Universal Data Link Files (.udl),OLE DB Universal Data Link Files (.udl),200
+Session ID Fingerprinting,Session ID Fingerprinting,812
+Possible Database Connection String (IBM DB2 ODBC without DSN and OleDb IBM Driver,Possible Database Connection String (IBM DB2 ODBC without DSN and OleDb IBM Driver,200
+SOAP: Parameter Manipulation Directory Traversal (\..\..\..\..\..\..\..\..\..\..\boot.ini),SOAP: Parameter Manipulation Directory Traversal (\..\..\..\..\..\..\..\..\..\..\boot.ini),22
+WebSphere PlantsByWebSphere ShoppingServlet 'category' Cross-Site Scripting,WebSphere PlantsByWebSphere ShoppingServlet 'category' Cross-Site Scripting,79
+Cobalt RaQ siteUserMod.cgi Privilege Escalation,Cobalt RaQ siteUserMod.cgi Privilege Escalation,287
+Form Validation Disabled,Form Validation Disabled,20
+Privacy Violation: Social Security Number,Privacy Violation: Social Security Number,359
+Possible IMG-Tag Embedded Javascript Cross-Site Scripting,Possible IMG-Tag Embedded Javascript Cross-Site Scripting,79
+SQLServer,SQLServer,89
+PHP Users Page (users.php3),PHP Users Page (users.php3),200
+Possible Application Information Disclosure,Possible Application Information Disclosure,200
+Expression Language Injection,Expression Language Injection,78
+File Extension,File Extension,16
+DB2,DB2,89
+CouchDB Instance,CouchDB Instance,16
+Insufficient Session ID Entropy,Insufficient Session ID Entropy,361
+OpenBB 'member.php' Cross-Site Scripting,OpenBB 'member.php' Cross-Site Scripting,79
+Shared Flash Storage Object,Shared Flash Storage Object,227
+Mambo 'com_content' SQL Injection Vulnerability,Mambo 'com_content' SQL Injection Vulnerability,89
+WEB-INF Directory Listing,WEB-INF Directory Listing,538
+Third Party Undisclosed Cross-Site Scripting,Third Party Undisclosed Cross-Site Scripting,79
+Sun Java System Messenger Express 'error' Cross-Site Scripting,Sun Java System Messenger Express 'error' Cross-Site Scripting,79
+Yabbse 'Admin.php' Path Disclosure,Yabbse 'Admin.php' Path Disclosure,200
+Possible Database Connection String (Credential Needed),Possible Database Connection String (Credential Needed),200
+Persistent Cross-Site Scripting (User Interaction),Persistent Cross-Site Scripting (User Interaction),87
+Node.js Script Injection Attack,Node.js Script Injection Attack,78
+SQL Missmatch Regular Expressions,SQL Missmatch Regular Expressions,89
+Possible Comment Injection Cross-Site Scripting,Possible Comment Injection Cross-Site Scripting,79
+Missing Content Type,Missing Content Type,79
+Insecure OAuth Communication Channel,Insecure OAuth Communication Channel,319
+PHP Users Page (users.php4),PHP Users Page (users.php4),200
+CIS Image Verification CAPTCHA Detected,CIS Image Verification CAPTCHA Detected,200
+Cobalt RaQ 'admin' Directory Traversal File Access,Cobalt RaQ 'admin' Directory Traversal File Access,22
+phpOpenCaptcha Detected,phpOpenCaptcha Detected,200
+Insufficient Transport Layer Protection - Weak Protocol,Insufficient Transport Layer Protection - Weak Protocol,327
+Site Search,Site Search,78
+Oracle 'isqlplus' Cross-Site Scripting,Oracle 'isqlplus' Cross-Site Scripting,79
+PHP iCalendar week.php Cross-Site Scripting,PHP iCalendar week.php Cross-Site Scripting,79
+DotNetNuke ErrorPage.aspx Cross-Site Scripting,DotNetNuke ErrorPage.aspx Cross-Site Scripting,79
+Sambar 'showerperf.asp' Cross-Site Scripting,Sambar 'showerperf.asp' Cross-Site Scripting,79
+PHP Users Page (users.php5),PHP Users Page (users.php5),200
+Possible XSS-Proxy Infection,Possible XSS-Proxy Infection,16
+Cobalt RaQ networker.cgi Log Information Disclosure,Cobalt RaQ networker.cgi Log Information Disclosure,287
+PHP Password Page (pass.php),PHP Password Page (pass.php),200
+Invision Power Board 'UserName' Cross-Site Scripting,Invision Power Board 'UserName' Cross-Site Scripting,79
+Possible Information Leakage via BREACH Vulnerability,Possible Information Leakage via BREACH Vulnerability,310
+WordPress Footnotes Plugin admin_panel.php 'post_footnotes' Cross-Site Scripting,WordPress Footnotes Plugin admin_panel.php 'post_footnotes' Cross-Site Scripting,79
+Cached SSL Content,Cached SSL Content,525
+Aestiva HTML/OS start.cgi Cross-Site Scripting,Aestiva HTML/OS start.cgi Cross-Site Scripting,79
+Information Leakage via BREACH Vulnerability,Information Leakage via BREACH Vulnerability,310
+OAuth Version Vulnerable to Session Fixation Found,OAuth Version Vulnerable to Session Fixation Found,384
+Joomla! index.php 'theme_header' Cross-Site Scripting,Joomla! index.php 'theme_header' Cross-Site Scripting,79
+Ruby XML YAML Remote Code Execution,Ruby XML YAML Remote Code Execution,77
+PhotoPost PHP 'uploadphoto.php' SQL Injection,PhotoPost PHP 'uploadphoto.php' SQL Injection,89
+Application Source Available,Application Source Available,16
+phpBB privmsg.php SQL Injection,phpBB privmsg.php SQL Injection,89
+Joomla's Contact Component Spam Vulnerability,Joomla's Contact Component Spam Vulnerability,799
+Local File Inclusion (IIS),Local File Inclusion (IIS),16
+Cobalt RaQ2/RaQ3 cgiwrap Bypass,Cobalt RaQ2/RaQ3 cgiwrap Bypass,284
+PostNuke 'admin.php' Path Disclosure,PostNuke 'admin.php' Path Disclosure,200
+Potentially Interesting Name Encountered,Potentially Interesting Name Encountered,200
+OpenBB 'myhome.php' Cross-Site Scripting,OpenBB 'myhome.php' Cross-Site Scripting,79
+Insecure LocalConnection.allowInsecureDomain() usage,Insecure LocalConnection.allowInsecureDomain() usage,16
+A1-Stats a1disp3.cgi Arbitrary File Source Disclosure,A1-Stats a1disp3.cgi Arbitrary File Source Disclosure,200
+ASP Form Image Code Verification (CAPTCHA) Detected,ASP Form Image Code Verification (CAPTCHA) Detected,200
+Invision Power Board 'functions.php' SQL Injection,Invision Power Board 'functions.php' SQL Injection,89
+ASNative Function Usage Detected,ASNative Function Usage Detected,227
+Insecure LocalConnection.allowDomain() usage,Insecure LocalConnection.allowDomain() usage,16
+WebInspect Agent Findings Configuration,WebInspect Agent Findings Configuration,359
+Mobile Sensitive Information Disclosure Over HTTP,Mobile Sensitive Information Disclosure Over HTTP,319
+Mobile UDID Disclosure,Mobile UDID Disclosure,359
+Web-Portal-System 'wps_shop.cgi' Remote Command Execution,Web-Portal-System 'wps_shop.cgi' Remote Command Execution,78
+Insecure Security.allowInsecureDomain() usage,Insecure Security.allowInsecureDomain() usage,16
+PHP Test Page (test.php4),PHP Test Page (test.php4),200
+PHP Admin Application (admin.php3),PHP Admin Application (admin.php3),284
+TheCAPTCHA Detected,TheCAPTCHA Detected,200
+Minimum Stage Size,Minimum Stage Size,16
+cPanel 'dotaccess' Cross-Site Scripting,cPanel 'dotaccess' Cross-Site Scripting,79
+SQL Injection,SQL Injection,89
+Possible Database Connection String (Oracle ODBC Old Microsoft Driver,Possible Database Connection String (Oracle ODBC Old Microsoft Driver,200
+cPanel 'dodelautores.html' Cross-Site Scripting,cPanel 'dodelautores.html' Cross-Site Scripting,79
+"Possible Cross-Site Scripting in getURL using ""GET"" method","Possible Cross-Site Scripting in getURL using ""GET"" method",79
+Possible IMG-Tag Embedded Javascript Cross-Site Scripting (Extended),Possible IMG-Tag Embedded Javascript Cross-Site Scripting (Extended),79
+WordPress Footnotes Plugin admin_panel.php 'priority' Cross-Site Scripting,WordPress Footnotes Plugin admin_panel.php 'priority' Cross-Site Scripting,79
+Possible TextArea Cross-Site Scripting,Possible TextArea Cross-Site Scripting,79
+Reliance on X-Content-Type-Options,Reliance on X-Content-Type-Options,79
+Session Token Discovery,Session Token Discovery,812
+CuteNews 'show_news.php' Cross-Site Scripting,CuteNews 'show_news.php' Cross-Site Scripting,79
+Kmita Gallery search.php Cross-Site Scripting,Kmita Gallery search.php Cross-Site Scripting,79
+Apache Struts 2 Remote Command Execution,Apache Struts 2 Remote Command Execution,20
+Joomla! index.php 'theme_elements' Cross-Site Scripting,Joomla! index.php 'theme_elements' Cross-Site Scripting,79
+PHP Admin Application (admin.php4),PHP Admin Application (admin.php4),284
+WebSphere PlantsByWebSphere ShoppingServlet 'itemqty7' Cross-Site Scripting,WebSphere PlantsByWebSphere ShoppingServlet 'itemqty7' Cross-Site Scripting,79
+Persistent Cross-Site Scripting,Persistent Cross-Site Scripting,87
+Comment Checks,Comment Checks,200
+A1-Stats a1disp4.cgi Arbitrary File Source Disclosure,A1-Stats a1disp4.cgi Arbitrary File Source Disclosure,200
+Insecure Security.allowDomain() usage,Insecure Security.allowDomain() usage,16
+PHP Test Page (test.php3),PHP Test Page (test.php3),200
+PostNuke 'openwindow.php' Cross-Site Scripting,PostNuke 'openwindow.php' Cross-Site Scripting,79
+CandyPress SA_shipFedExMeter.asp Path Disclosure,CandyPress SA_shipFedExMeter.asp Path Disclosure,22
+Overly Permissive CORS Access Policy,Overly Permissive CORS Access Policy,708
+Sensitive Information Disclosure to External Hosts,Sensitive Information Disclosure to External Hosts,200
+Privacy Policy Not Present,Privacy Policy Not Present,254
+Blackboard 'calender.pl' Cross-Site Scripting,Blackboard 'calender.pl' Cross-Site Scripting,79
+Ws_ftp.log Parser,Ws_ftp.log Parser,16
+Apache HTTPD Range Header Denial of Service,Apache HTTPD Range Header Denial of Service,730
+Struts Framework in Use,Struts Framework in Use,16
+Server Side Script Injection Attack,Server Side Script Injection Attack,78
+PGsql,PGsql,89
+PHP Password Page (passwords.php4),PHP Password Page (passwords.php4),200
+XMLHttpRequest Parameter Manipulation,XMLHttpRequest Parameter Manipulation,601
+Sukru Alatas' GuestBook Database Disclosure Vulnerability,Sukru Alatas' GuestBook Database Disclosure Vulnerability,200
+Campsite attachments.php 'article_id' Parameter SQL Injection,Campsite attachments.php 'article_id' Parameter SQL Injection,89
+Freecap CAPTCHA Detected,Freecap CAPTCHA Detected,200
+PostNuke 'install.php' Path Disclosure,PostNuke 'install.php' Path Disclosure,200
+Simple Captcha Detected,Simple Captcha Detected,200
+Sensitive Data in HTML5 Storage,Sensitive Data in HTML5 Storage,359
+Simple Forum forum.php 'date_show' Parameter Cross-Site Scripting,Simple Forum forum.php 'date_show' Parameter Cross-Site Scripting,79
+Insecure Flash Storage Object,Insecure Flash Storage Object,227
+Predictable Session ID,Predictable Session ID,361
+PHP Password Page (password.php5),PHP Password Page (password.php5),200
+SHA-0/SHA-1 Hash Detected,SHA-0/SHA-1 Hash Detected,327
+Acidcat CMS admin_colors_swatch.asp Cross-Site Scripting,Acidcat CMS admin_colors_swatch.asp Cross-Site Scripting,79
+Matt's Whois Cross-Site Scripting,Matt's Whois Cross-Site Scripting,79
+Joomla! Media Manager Arbitrary File Upload,Joomla! Media Manager Arbitrary File Upload,20
+CAPTCHA Server Control for ASP.NET Detected,CAPTCHA Server Control for ASP.NET Detected,200
+IBM Rational ClearQuest 'schema' Cross-Site Scripting,IBM Rational ClearQuest 'schema' Cross-Site Scripting,79
+CaptchaControl Detected,CaptchaControl Detected,200
+Local File Inclusion (Unix),Local File Inclusion (Unix),16
+OpenBB 'index.php' Cross-Site Scripting,OpenBB 'index.php' Cross-Site Scripting,79
+Captcha PHP Detected,Captcha PHP Detected,200
+Invision Power Board 'c' Cross-Site Scripting,Invision Power Board 'c' Cross-Site Scripting,79
+XML External Entity Injection,XML External Entity Injection,11
+Possible Credit Card Number Disclosure,Possible Credit Card Number Disclosure,359
+PHP Password Page (passwords.php5),PHP Password Page (passwords.php5),200
+PHP Test Page (test.php5),PHP Test Page (test.php5),200
+Certificate Hostname Discrepancy,Certificate Hostname Discrepancy,287
+Cryptographp CAPTCHA Detected,Cryptographp CAPTCHA Detected,200
+Stalkerlab's Mailers CGIMail Spoofing Vulnerability,Stalkerlab's Mailers CGIMail Spoofing Vulnerability,200
+Local File Inclusion (Windows),Local File Inclusion (Windows),16
+phpMyAdmin config.inc.php Cross-Site Scripting,phpMyAdmin config.inc.php Cross-Site Scripting,79
+Misconfigured X-Frame-Options Header,Misconfigured X-Frame-Options Header,352
+ASP CAPTCHA Project Detected,ASP CAPTCHA Project Detected,200
+PHP Password Page (password.php4),PHP Password Page (password.php4),200
+HN Captcha Detected,HN Captcha Detected,200
+Possible FlashVars Cross-Site Scripting in htmlText property of a TextField,Possible FlashVars Cross-Site Scripting in htmlText property of a TextField,79
+MediaWiki 'useskin' Cross-Site Scripting,MediaWiki 'useskin' Cross-Site Scripting,79
+PHP Password Page (password.php),PHP Password Page (password.php),200
+

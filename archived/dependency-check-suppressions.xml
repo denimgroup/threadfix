@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://www.owasp.org/index.php/OWASP_Dependency_Check_Suppression">
+
+	<!-- Command line use:
+
+	dependency-check -s **/*.jar -project threadfix --suppression dependency-check-suppressions.xml 
+
+	-->
+
+	<!-- We don't run a netcat server in threadfix-cli-importers -->
+	<suppress>
+	   <notes><![CDATA[
+	   file name: threadfix-cli-importers-2.3-SNAPSHOT.jar/META-INF/maven/com.jcraft/jsch.agentproxy.usocket-nc/pom.xml
+	   ]]></notes>
+	   <sha1>39da0290c5e8e97631d976f0b7458ffe117eb164</sha1>
+	   <cpe>cpe:/a:netcat:netcat:0.0.7</cpe>
+	</suppress>
+
+	<!-- This vulnerability affects serialized objects; we don't use Java serialization -->
+	<suppress>
+	   <notes><![CDATA[
+	   file name: threadfix-cli-importers-2.3-SNAPSHOT.jar/META-INF/maven/commons-collections/commons-collections/pom.xml
+	   ]]></notes>
+	   <sha1>c812635cfb96cd2431ee315e73418eed86aeb5e4</sha1>
+	   <cpe>cpe:/a:apache:commons_collections:3.2.1</cpe>
+	</suppress>
+
+	<!-- We don't run a struts server -->
+	<suppress>
+	   <notes><![CDATA[
+	   file name: struts-core-1.3.8.jar
+	   ]]></notes>
+	   <sha1>66178d4a9279ebb1cd1eb79c10dc204b4199f061</sha1>
+	   <cpe>cpe:/a:apache:struts:1.3.8</cpe>
+	</suppress>
+	<suppress>
+	   <notes><![CDATA[
+	   file name: struts-tiles-1.3.8.jar
+	   ]]></notes>
+	   <sha1>6d212f8ea5d908bc9906e669428b7694dff60785</sha1>
+	   <cpe>cpe:/a:apache:struts:1.3.8</cpe>
+	</suppress>
+	<suppress>
+	   <notes><![CDATA[
+	   file name: struts-tiles-1.3.8.jar
+	   ]]></notes>
+	   <sha1>6d212f8ea5d908bc9906e669428b7694dff60785</sha1>
+	   <cpe>cpe:/a:apache:tiles:1.3.8</cpe>
+	</suppress>
+	<suppress>
+	   <notes><![CDATA[
+	   file name: sslext-1.2-0.jar
+	   ]]></notes>
+	   <sha1>c86a7db4ac0bc450e675f3d44b3d64cdc934361b</sha1>
+	   <cpe>cpe:/a:apache:struts:1.2.0</cpe>
+	</suppress>
+	<suppress>
+	   <notes><![CDATA[
+	   file name: struts-taglib-1.3.8.jar
+	   ]]></notes>
+	   <sha1>e87e9817bdf03c2367fb5f6d5ead953db2df4c21</sha1>
+	   <cpe>cpe:/a:apache:struts:1.3.8</cpe>
+	</suppress>
+
+	<!-- We don't run a MySQL server -->
+	<suppress>
+	   <notes><![CDATA[
+	   file name: mysql-connector-java-5.1.38.jar
+	   ]]></notes>
+	   <sha1>dbbd7cd309ce167ec8367de4e41c63c2c8593cc5</sha1>
+	   <cpe>cpe:/a:mysql:mysql:5.1.38</cpe>
+	</suppress>
+
+	<!-- Sun disputes this issue, stating "The report makes references to source code and files that do not exist in the mentioned products." -->
+	<suppress>
+	   <notes><![CDATA[
+	   file name: mail-1.4.jar
+	   ]]></notes>
+	   <sha1>1aa1579ae5ecd41920c4f355b0a9ef40b68315dd</sha1>
+	   <cpe>cpe:/a:sun:javamail:1.4</cpe>
+	</suppress>
+
+	<!-- We don't use the vulnerable tags (1) <x:parse> or (2) <x:transform> -->
+	<suppress>
+	   <notes><![CDATA[
+	   file name: jstl-1.2.jar
+	   ]]></notes>
+	   <sha1>74aca283cd4f4b4f3e425f5820cda58f44409547</sha1>
+	   <cpe>cpe:/a:apache:standard_taglibs:1.2.1</cpe>
+	</suppress>
+
+	<!-- We don't use Daemon Tools Lite -->
+	<suppress>
+	   <notes><![CDATA[
+	   file name: cargo-daemon-client-1.4.8.jar
+	   ]]></notes>
+	   <sha1>455ccf4ddfd8298981377584a2580ea81159c76f</sha1>
+	   <cpe>cpe:/a:daemon-tools:daemon_tools:1.4.8</cpe>
+	</suppress>
+
+	<!-- We only use POI to generate files, not to parse them -->
+	<suppress>
+	   <notes><![CDATA[
+	   file name: poi-3.11.jar
+	   ]]></notes>
+	   <sha1>51058d9db469437a5ed0aa508e7de8937019e1d9</sha1>
+	   <cpe>cpe:/a:apache:poi:3.11:beta1</cpe>
+	</suppress>
+	<suppress>
+	   <notes><![CDATA[
+	   file name: poi-ooxml-3.11.jar
+	   ]]></notes>
+	   <sha1>e87975291fbb65888468b09fda2cf00e2996c2a0</sha1>
+	   <cpe>cpe:/a:apache:poi:3.11:beta1</cpe>
+	</suppress>
+
+	<!-- We don't use libneon -->
+	<suppress>
+	   <notes><![CDATA[
+	   file name: svnkit-1.8.11.jar
+	   ]]></notes>
+	   <sha1>aee7f5d4a3d69c2dc033377c89c63a69ac6b67cd</sha1>
+	   <cpe>cpe:/a:subversion:subversion:1.8.11</cpe>
+	</suppress>
+
+	<!-- This dependency is on the Sonar server list of dependencies, so they'll need to fix it -->
+	<suppress>
+	   <notes><![CDATA[
+	   file name: sonar-threadfix-plugin-2.3-SNAPSHOT.jar/META-INF/maven/org.hibernate/hibernate-validator/pom.xml
+	   ]]></notes>
+	   <sha1>ec5bd870faebd2981edb77b748fad378a6c5d419</sha1>
+	   <cpe>cpe:/a:hibernate:hibernate_validator:4.1.0</cpe>
+	</suppress>
+
+</suppressions>

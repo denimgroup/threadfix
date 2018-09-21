@@ -1,0 +1,176 @@
+7/13/2015 10:30:00
+type.info,,
+w3af
+type.vulnerabilities,,
+Unhandled error in web application,Unhandled error in web application,209
+Multiple CORS misconfigurations,Multiple CORS misconfigurations,16
+Sensitive and strange CORS methods enabled,Sensitive and strange CORS methods enabled,16
+Sensitive CORS methods enabled,Sensitive CORS methods enabled,16
+Uncommon CORS methods enabled,Uncommon CORS methods enabled,16
+"Access-Control-Allow-Origin set to ""*""","Access-Control-Allow-Origin set to ""*""",284
+Insecure Access-Control-Allow-Origin with credentials,Insecure Access-Control-Allow-Origin with credentials,284
+Insecure Access-Control-Allow-Origin,Insecure Access-Control-Allow-Origin,284
+Incorrect withCredentials implementation,Incorrect withCredentials implementation,284
+CSRF vulnerability,CSRF vulnerability,352
+Insecure testDAV configuration,Insecure testDAV configuration,16
+DAV incorrect configuration,DAV incorrect configuration,16
+DAV insufficient privileges,DAV insufficient privileges,274
+Potential unidentified vulnerability,Potential unidentified vulnerability,16
+File read error,File read error,434
+Unsafe preg_replace usage,Unsafe preg_replace usage,242
+Potential ReDoS vulnerability,Potential ReDoS vulnerability,16
+Remote code execution,Remote code execution,94
+Remote file inclusion,Remote file inclusion,73
+Potential remote file inclusion,Potential remote file inclusion,73
+SQL injection,SQL injection,89
+Persistent server side include vulnerability,Persistent server side include vulnerability,79
+Insecure SSL version,Insecure SSL version,326
+Invalid SSL certificate,Invalid SSL certificate,295
+Invalid SSL connection,Invalid SSL connection,295
+Soon to expire SSL certificate,Soon to expire SSL certificate,295
+SSL Certificate dump,SSL Certificate dump,295
+Persistent Cross-Site Scripting vulnerability,Persistent Cross-Site Scripting vulnerability,79
+Parameter modifies response headers,Parameter modifies response headers,113
+Eval() code execution,Eval() code execution,95
+Reflected File Download vulnerability,Reflected File Download vulnerability,494
+Shell shock vulnerability,Shell shock vulnerability,20
+PHP register_globals: On,PHP register_globals: On,16
+PHP allow_url_fopen: On,PHP allow_url_fopen: On,16
+PHP allow_url_include: On,PHP allow_url_include: On,16
+PHP display_errors: On,PHP display_errors: On,16
+PHP expose_php: On,PHP expose_php: On,16
+PHP lowest_privilege_test:fail,PHP lowest_privilege_test:fail,16
+PHP disable_functions:few,PHP disable_functions:few,16
+PHP curl_file_support:not_fixed,PHP curl_file_support:not_fixed,16
+PHP cgi_force_redirect: Off,PHP cgi_force_redirect: Off,16
+PHP session.cookie_httponly: Off,PHP session.cookie_httponly: Off,16
+PHP session_save_path:Everyone,PHP session_save_path:Everyone,16
+PHP session_use_trans: On,PHP session_use_trans: On,16
+PHP default_charset: Off,PHP default_charset: Off,16
+PHP enable_dl: On,PHP enable_dl: On,16
+PHP memory_limit:high,PHP memory_limit:high,16
+PHP post_max_size:high,PHP post_max_size:high,16
+PHP upload_max_filesize:high,PHP upload_max_filesize:high,16
+PHP upload_tmp_dir:Everyone,PHP upload_tmp_dir:Everyone,16
+PHP file_uploads: On,PHP file_uploads: On,16
+PHP magic_quotes_gpc: On,PHP magic_quotes_gpc: On,16
+PHP magic_quotes_gpc: Off,PHP magic_quotes_gpc: Off,16
+PHP open_basedir:disabled,PHP open_basedir:disabled,16
+PHP open_basedir:enabled,PHP open_basedir:enabled,16
+PHP session.hash_function:md5,PHP session.hash_function:md5,16
+PHP session.hash_function:sha,PHP session.hash_function:sha,16
+Insecure resource,Insecure resource,99
+.listing file found,.listing file found,538
+Operating system username and group leak,Operating system username and group leak,200
+Google hack database match,Google hack database match,16
+Source code repository,Source code repository,538
+Insecure RIA settings,Insecure RIA settings,16
+Cross-domain allow ACL,Cross-domain allow ACL,284
+Potential web backdoor,Potential web backdoor,489
+Captcha image detected,Captcha image detected,804
+Oracle Application Server,Oracle Application Server,16
+urllist.txt file,urllist.txt file,538
+Fingerprinted operating system,Fingerprinted operating system,16
+Identified installed application,Identified installed application,16
+robots.txt file,robots.txt file,538
+HTTP Content Negotiation enabled,HTTP Content Negotiation enabled,16
+Fingerprinted Wordpress version,Fingerprinted Wordpress version,16
+Gears manifest resource,Gears manifest resource,16
+Invalid RIA settings file,Invalid RIA settings file,16
+Identified WordPress user,Identified WordPress user,200
+WordPress path disclosure,WordPress path disclosure,200
+PHP register_globals: Off,PHP register_globals: Off,16
+PHP enable_dl: Off,PHP enable_dl: Off,16
+Web user home directory,Web user home directory,538
+DOM Cross site scripting,DOM Cross site scripting,79
+Uncommon query string parameter,Uncommon query string parameter,598
+Code disclosure vulnerability,Code disclosure vulnerability,540
+Code disclosure vulnerability in 404 page,Code disclosure vulnerability in 404 page,540
+Authentication without www-authenticate header,Authentication without www-authenticate header,287
+NTLM authentication,NTLM authentication,287
+HTTP Basic authentication,HTTP Basic authentication,287
+Cookie without HttpOnly,Cookie without HttpOnly,200
+Secure cookie over HTTP,Secure cookie over HTTP,200
+Secure flag missing in HTTPS cookie,Secure flag missing in HTTPS cookie,200
+Identified cookie,Identified cookie,200
+Cookie,Cookie,200
+Invalid cookie,Invalid cookie,200
+Click-Jacking vulnerability,Click-Jacking vulnerability,693
+Missing cache control for HTTPS content,Missing cache control for HTTPS content,16
+HTTP Request in HTTP body,HTTP Request in HTTP body,444
+HTTP Response in HTTP body,HTTP Response in HTTP body,444
+Auto-completable form,Auto-completable form,525
+Session ID in URL,Session ID in URL,200
+WSDL resource,WSDL resource,668
+DISCO resource,DISCO resource,668
+Symfony Framework with CSRF protection disabled,Symfony Framework with CSRF protection disabled,352
+Descriptive error page,Descriptive error page,200
+Error page with information disclosure,Error page with information disclosure,200
+Oracle application server,Oracle application server,16
+Strange header,Strange header,113
+Content-Location HTTP header anomaly,Content-Location HTTP header anomaly,113
+.NET Event Validation is disabled,.NET Event Validation is disabled,16
+.NET ViewState encryption is disabled,.NET ViewState encryption is disabled,16
+Exposed email address,Exposed email address,200
+Interesting HTML comment,Interesting HTML comment,200
+HTML comment contains HTML code,HTML comment contains HTML code,200
+Strange HTTP response code,Strange HTTP response code,393
+File upload form,File upload form,434
+AJAX code,AJAX code,79
+Interesting META tag,Interesting META tag,16
+User defined regular expression match,User defined regular expression match,710
+Mark of the web,Mark of the web,16
+Cross-domain javascript source,Cross-domain javascript source,200
+Insecure X-XSS-Protection header usage,Insecure X-XSS-Protection header usage,79
+Browser plugin content,Browser plugin content,16
+Strange HTTP Reason message,Strange HTTP Reason message,209
+Hash string in HTML content,Hash string in HTML content,200
+Blank http response body,Blank http response body,113
+Content feed resource,Content feed resource,200
+Malware identified,Malware identified,200
+Insecure password submission over HTTP,Insecure password submission over HTTP,261
+CSP vulnerability,CSP vulnerability,16
+Missing X-Content-Type-Options header,Missing X-Content-Type-Options header,16
+Missing Strict Transport Security header,Missing Strict Transport Security header,16
+HTML5 WebSocket detected,HTML5 WebSocket detected,200
+Insecure password form access over HTTP,Insecure password form access over HTTP,261
+Potential XSS vulnerability,Potential XSS vulnerability,79
+HTTP and HTTPs hop distance,HTTP and HTTPs hop distance,16
+HTTP traceroute,HTTP traceroute,16
+Apache Server version,Apache Server version,200
+Virtual host identified,Virtual host identified,200
+Email account,Email account,200
+Internal hostname in HTML link,Internal hostname in HTML link,200
+Default virtual host,Default virtual host,16
+No DNS wildcard,No DNS wildcard,16
+DNS wildcard,DNS wildcard,16
+Webserver fingerprint,Webserver fingerprint,16
+Web Application Firewall fingerprint,Web Application Firewall fingerprint,16
+FrontPage configuration information,FrontPage configuration information,200
+Customized frontpage configuration,Customized frontpage configuration,200
+FrontPage FPAdminScriptUrl,FrontPage FPAdminScriptUrl,200
+Operating system,Operating system,16
+Favicon identification,Favicon identification,16
+Favicon identification failed,Favicon identification failed,16
+Transparent proxy detected,Transparent proxy detected,200
+PHP Egg,PHP Egg,16
+Fingerprinted PHP version,Fingerprinted PHP version,16
+Server header,Server header,113
+Omitted server header,Omitted server header,113
+Powered-by header,Powered-by header,113
+Non existent methods default to GET,Non existent methods default to GET,16
+DAV methods enabled,DAV methods enabled,16
+Active filter detected,Active filter detected,200
+Reverse proxy identified,Reverse proxy identified,200
+HTTP load balancer detected,HTTP load balancer detected,200
+Information disclosure via .NET errors,Information disclosure via .NET errors,89
+Potential virtual host misconfiguration,Potential virtual host misconfiguration,16
+DAV Misconfiguration,DAV Misconfiguration,16
+Arbitrary file upload,Arbitrary file upload,434
+OS Commanding code execution,OS Commanding code execution,77
+Code execution via remote file inclusion,Code execution via remote file inclusion,94
+(Blind) SQL injection,(Blind) SQL injection,89
+Arbitrary file read,Arbitrary file read,434
+Manually added vulnerability,Manually added vulnerability,16
+type.severities,,,
+Information,Information,1,1

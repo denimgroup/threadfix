@@ -1,0 +1,5012 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<profile>
+    <name>ThreadFix</name>
+    <language>#</language>
+    <rules>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-1</key>
+            <name>Location</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-2</key>
+            <name>Environment</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-3</key>
+            <name>Technology-specific Environment Issues</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-4</key>
+            <name>J2EE Environment Issues</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-5</key>
+            <name>J2EE Misconfiguration: Data Transmission Without Encryption</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-6</key>
+            <name>J2EE Misconfiguration: Insufficient Session-ID Length</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-7</key>
+            <name>J2EE Misconfiguration: Missing Custom Error Page</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-8</key>
+            <name>J2EE Misconfiguration: Entity Bean Declared Remote</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-9</key>
+            <name>J2EE Misconfiguration: Weak Access Permissions for EJB Methods</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-10</key>
+            <name>ASP.NET Environment Issues</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-11</key>
+            <name>ASP.NET Misconfiguration: Creating Debug Binary</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-12</key>
+            <name>ASP.NET Misconfiguration: Missing Custom Error Page</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-13</key>
+            <name>ASP.NET Misconfiguration: Password in Configuration File</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-14</key>
+            <name>Compiler Removal of Code to Clear Buffers</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-15</key>
+            <name>External Control of System or Configuration Setting</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-16</key>
+            <name>Configuration</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-17</key>
+            <name>Code</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-18</key>
+            <name>Source Code</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-19</key>
+            <name>Data Handling</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-20</key>
+            <name>Improper Input Validation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-21</key>
+            <name>Pathname Traversal and Equivalence Errors</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-22</key>
+            <name>Improper Limitation of a Pathname to a Restricted Directory (''Path Traversal'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-23</key>
+            <name>Relative Path Traversal</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-24</key>
+            <name>Path Traversal: ''../filedir''</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-25</key>
+            <name>Path Traversal: ''/../filedir''</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-26</key>
+            <name>Path Traversal: ''/dir/../filename''</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-27</key>
+            <name>Path Traversal: ''dir/../../filename''</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-28</key>
+            <name>Path Traversal: ''..\filedir''</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-29</key>
+            <name>Path Traversal: ''\..\filename''</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-30</key>
+            <name>Path Traversal: ''\dir\..\filename''</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-31</key>
+            <name>Path Traversal: ''dir\..\..\filename''</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-32</key>
+            <name>Path Traversal: ''...'' (Triple Dot)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-33</key>
+            <name>Path Traversal: ''....'' (Multiple Dot)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-34</key>
+            <name>Path Traversal: ''....//''</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-35</key>
+            <name>Path Traversal: ''.../...//''</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-36</key>
+            <name>Absolute Path Traversal</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-37</key>
+            <name>Path Traversal: ''/absolute/pathname/here''</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-38</key>
+            <name>Path Traversal: ''\absolute\pathname\here''</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-39</key>
+            <name>Path Traversal: ''C:dirname''</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-40</key>
+            <name>Path Traversal: ''\UNC share name'' (Windows UNC Share)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-41</key>
+            <name>Improper Resolution of Path Equivalence</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-42</key>
+            <name>Path Equivalence: ''filename.'' (Trailing Dot)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-43</key>
+            <name>Path Equivalence: ''filename....'' (Multiple Trailing Dot)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-44</key>
+            <name>Path Equivalence: ''file.name'' (Internal Dot)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-45</key>
+            <name>Path Equivalence: ''file...name'' (Multiple Internal Dot)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-46</key>
+            <name>Path Equivalence: ''filename '' (Trailing Space)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-47</key>
+            <name>Path Equivalence: '' filename'' (Leading Space)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-48</key>
+            <name>Path Equivalence: ''file name'' (Internal Whitespace)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-49</key>
+            <name>Path Equivalence: ''filename/'' (Trailing Slash)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-50</key>
+            <name>Path Equivalence: ''//multiple/leading/slash''</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-51</key>
+            <name>Path Equivalence: ''/multiple//internal/slash''</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-52</key>
+            <name>Path Equivalence: ''/multiple/trailing/slash//''</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-53</key>
+            <name>Path Equivalence: ''\multiple\\internal\\backslash''</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-54</key>
+            <name>Path Equivalence: ''filedir\\'' (Trailing Backslash)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-55</key>
+            <name>Path Equivalence: ''/./'' (Single Dot Directory)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-56</key>
+            <name>Path Equivalence: ''filedir*'' (Wildcard)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-57</key>
+            <name>Path Equivalence: ''fakedir/../realdir/filename''</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-58</key>
+            <name>Path Equivalence: Windows 8.3 Filename</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-59</key>
+            <name>Improper Link Resolution Before File Access (''Link Following'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-60</key>
+            <name>UNIX Path Link Problems</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-61</key>
+            <name>UNIX Symbolic Link (Symlink) Following</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-62</key>
+            <name>UNIX Hard Link</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-63</key>
+            <name>Windows Path Link Problems</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-64</key>
+            <name>Windows Shortcut Following (.LNK)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-65</key>
+            <name>Windows Hard Link</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-66</key>
+            <name>Improper Handling of File Names that Identify Virtual Resources</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-67</key>
+            <name>Improper Handling of Windows Device Names</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-68</key>
+            <name>Windows Virtual File Problems</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-69</key>
+            <name>Improper Handling of Windows ::DATA Alternate Data Stream</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-70</key>
+            <name>Mac Virtual File Problems</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-71</key>
+            <name>Apple ''.DS_Store''</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-72</key>
+            <name>Improper Handling of Apple HFS+ Alternate Data Stream Path</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-73</key>
+            <name>External Control of File Name or Path</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-74</key>
+            <name>Improper Neutralization of Special Elements in Output Used by a Downstream Component (''Injection'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-75</key>
+            <name>Failure to Sanitize Special Elements into a Different Plane (Special Element Injection)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-76</key>
+            <name>Improper Neutralization of Equivalent Special Elements</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-77</key>
+            <name>Improper Neutralization of Special Elements used in a Command (''Command Injection'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-78</key>
+            <name>Improper Neutralization of Special Elements used in an OS Command (''OS Command Injection'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-79</key>
+            <name>Improper Neutralization of Input During Web Page Generation (''Cross-site Scripting'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-80</key>
+            <name>Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-81</key>
+            <name>Improper Neutralization of Script in an Error Message Web Page</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-82</key>
+            <name>Improper Neutralization of Script in Attributes of IMG Tags in a Web Page</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-83</key>
+            <name>Improper Neutralization of Script in Attributes in a Web Page</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-84</key>
+            <name>Improper Neutralization of Encoded URI Schemes in a Web Page</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-85</key>
+            <name>Doubled Character XSS Manipulations</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-86</key>
+            <name>Improper Neutralization of Invalid Characters in Identifiers in Web Pages</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-87</key>
+            <name>Improper Neutralization of Alternate XSS Syntax</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-88</key>
+            <name>Argument Injection or Modification</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-89</key>
+            <name>Improper Neutralization of Special Elements used in an SQL Command (''SQL Injection'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-90</key>
+            <name>Improper Neutralization of Special Elements used in an LDAP Query (''LDAP Injection'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-91</key>
+            <name>XML Injection (aka Blind XPath Injection)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-92</key>
+            <name>DEPRECATED: Improper Sanitization of Custom Special Characters</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-93</key>
+            <name>Improper Neutralization of CRLF Sequences (''CRLF Injection'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-94</key>
+            <name>Improper Control of Generation of Code (''Code Injection'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-95</key>
+            <name>Improper Neutralization of Directives in Dynamically Evaluated Code (''Eval Injection'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-96</key>
+            <name>Improper Neutralization of Directives in Statically Saved Code (''Static Code Injection'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-97</key>
+            <name>Improper Neutralization of Server-Side Includes (SSI) Within a Web Page</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-98</key>
+            <name>Improper Control of Filename for Include/Require Statement in PHP Program (''PHP Remote File Inclusion'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-99</key>
+            <name>Improper Control of Resource Identifiers (''Resource Injection'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-100</key>
+            <name>Technology-Specific Input Validation Problems</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-101</key>
+            <name>Struts Validation Problems</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-102</key>
+            <name>Struts: Duplicate Validation Forms</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-103</key>
+            <name>Struts: Incomplete validate() Method Definition</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-104</key>
+            <name>Struts: Form Bean Does Not Extend Validation Class</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-105</key>
+            <name>Struts: Form Field Without Validator</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-106</key>
+            <name>Struts: Plug-in Framework not in Use</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-107</key>
+            <name>Struts: Unused Validation Form</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-108</key>
+            <name>Struts: Unvalidated Action Form</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-109</key>
+            <name>Struts: Validator Turned Off</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-110</key>
+            <name>Struts: Validator Without Form Field</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-111</key>
+            <name>Direct Use of Unsafe JNI</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-112</key>
+            <name>Missing XML Validation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-113</key>
+            <name>Improper Neutralization of CRLF Sequences in HTTP Headers (''HTTP Response Splitting'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-114</key>
+            <name>Process Control</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-115</key>
+            <name>Misinterpretation of Input</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-116</key>
+            <name>Improper Encoding or Escaping of Output</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-117</key>
+            <name>Improper Output Neutralization for Logs</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-118</key>
+            <name>Improper Access of Indexable Resource (''Range Error'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-119</key>
+            <name>Improper Restriction of Operations within the Bounds of a Memory Buffer</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-120</key>
+            <name>Buffer Copy without Checking Size of Input (''Classic Buffer Overflow'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-121</key>
+            <name>Stack-based Buffer Overflow</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-122</key>
+            <name>Heap-based Buffer Overflow</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-123</key>
+            <name>Write-what-where Condition</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-124</key>
+            <name>Buffer Underwrite (''Buffer Underflow'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-125</key>
+            <name>Out-of-bounds Read</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-126</key>
+            <name>Buffer Over-read</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-127</key>
+            <name>Buffer Under-read</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-128</key>
+            <name>Wrap-around Error</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-129</key>
+            <name>Improper Validation of Array Index</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-130</key>
+            <name>Improper Handling of Length Parameter Inconsistency</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-131</key>
+            <name>Incorrect Calculation of Buffer Size</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-132</key>
+            <name>DEPRECATED (Duplicate): Miscalculated Null Termination</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-133</key>
+            <name>String Errors</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-134</key>
+            <name>Uncontrolled Format String</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-135</key>
+            <name>Incorrect Calculation of Multi-Byte String Length</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-136</key>
+            <name>Type Errors</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-137</key>
+            <name>Representation Errors</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-138</key>
+            <name>Improper Neutralization of Special Elements</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-139</key>
+            <name>DEPRECATED: General Special Element Problems</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-140</key>
+            <name>Improper Neutralization of Delimiters</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-141</key>
+            <name>Improper Neutralization of Parameter/Argument Delimiters</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-142</key>
+            <name>Improper Neutralization of Value Delimiters</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-143</key>
+            <name>Improper Neutralization of Record Delimiters</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-144</key>
+            <name>Improper Neutralization of Line Delimiters</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-145</key>
+            <name>Improper Neutralization of Section Delimiters</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-146</key>
+            <name>Improper Neutralization of Expression/Command Delimiters</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-147</key>
+            <name>Improper Neutralization of Input Terminators</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-148</key>
+            <name>Improper Neutralization of Input Leaders</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-149</key>
+            <name>Improper Neutralization of Quoting Syntax</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-150</key>
+            <name>Improper Neutralization of Escape, Meta, or Control Sequences</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-151</key>
+            <name>Improper Neutralization of Comment Delimiters</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-152</key>
+            <name>Improper Neutralization of Macro Symbols</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-153</key>
+            <name>Improper Neutralization of Substitution Characters</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-154</key>
+            <name>Improper Neutralization of Variable Name Delimiters</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-155</key>
+            <name>Improper Neutralization of Wildcards or Matching Symbols</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-156</key>
+            <name>Improper Neutralization of Whitespace</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-157</key>
+            <name>Failure to Sanitize Paired Delimiters</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-158</key>
+            <name>Improper Neutralization of Null Byte or NUL Character</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-159</key>
+            <name>Failure to Sanitize Special Element</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-160</key>
+            <name>Improper Neutralization of Leading Special Elements</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-161</key>
+            <name>Improper Neutralization of Multiple Leading Special Elements</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-162</key>
+            <name>Improper Neutralization of Trailing Special Elements</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-163</key>
+            <name>Improper Neutralization of Multiple Trailing Special Elements</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-164</key>
+            <name>Improper Neutralization of Internal Special Elements</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-165</key>
+            <name>Improper Neutralization of Multiple Internal Special Elements</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-166</key>
+            <name>Improper Handling of Missing Special Element</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-167</key>
+            <name>Improper Handling of Additional Special Element</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-168</key>
+            <name>Improper Handling of Inconsistent Special Elements</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-169</key>
+            <name>Technology-Specific Special Elements</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-170</key>
+            <name>Improper Null Termination</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-171</key>
+            <name>Cleansing, Canonicalization, and Comparison Errors</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-172</key>
+            <name>Encoding Error</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-173</key>
+            <name>Improper Handling of Alternate Encoding</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-174</key>
+            <name>Double Decoding of the Same Data</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-175</key>
+            <name>Improper Handling of Mixed Encoding</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-176</key>
+            <name>Improper Handling of Unicode Encoding</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-177</key>
+            <name>Improper Handling of URL Encoding (Hex Encoding)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-178</key>
+            <name>Improper Handling of Case Sensitivity</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-179</key>
+            <name>Incorrect Behavior Order: Early Validation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-180</key>
+            <name>Incorrect Behavior Order: Validate Before Canonicalize</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-181</key>
+            <name>Incorrect Behavior Order: Validate Before Filter</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-182</key>
+            <name>Collapse of Data into Unsafe Value</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-183</key>
+            <name>Permissive Whitelist</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-184</key>
+            <name>Incomplete Blacklist</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-185</key>
+            <name>Incorrect Regular Expression</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-186</key>
+            <name>Overly Restrictive Regular Expression</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-187</key>
+            <name>Partial Comparison</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-188</key>
+            <name>Reliance on Data/Memory Layout</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-189</key>
+            <name>Numeric Errors</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-190</key>
+            <name>Integer Overflow or Wraparound</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-191</key>
+            <name>Integer Underflow (Wrap or Wraparound)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-192</key>
+            <name>Integer Coercion Error</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-193</key>
+            <name>Off-by-one Error</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-194</key>
+            <name>Unexpected Sign Extension</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-195</key>
+            <name>Signed to Unsigned Conversion Error</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-196</key>
+            <name>Unsigned to Signed Conversion Error</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-197</key>
+            <name>Numeric Truncation Error</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-198</key>
+            <name>Use of Incorrect Byte Ordering</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-199</key>
+            <name>Information Management Errors</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-200</key>
+            <name>Information Exposure</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-201</key>
+            <name>Information Exposure Through Sent Data</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-202</key>
+            <name>Exposure of Sensitive Data Through Data Queries</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-203</key>
+            <name>Information Exposure Through Discrepancy</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-204</key>
+            <name>Response Discrepancy Information Exposure</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-205</key>
+            <name>Information Exposure Through Behavioral Discrepancy</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-206</key>
+            <name>Information Exposure of Internal State Through Behavioral Inconsistency</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-207</key>
+            <name>Information Exposure Through an External Behavioral Inconsistency</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-208</key>
+            <name>Information Exposure Through Timing Discrepancy</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-209</key>
+            <name>Information Exposure Through an Error Message</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-210</key>
+            <name>Information Exposure Through Self-generated Error Message</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-211</key>
+            <name>Information Exposure Through Externally-generated Error Message</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-212</key>
+            <name>Improper Cross-boundary Removal of Sensitive Data</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-213</key>
+            <name>Intentional Information Exposure</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-214</key>
+            <name>Information Exposure Through Process Environment</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-215</key>
+            <name>Information Exposure Through Debug Information</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-216</key>
+            <name>Containment Errors (Container Errors)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-217</key>
+            <name>DEPRECATED: Failure to Protect Stored Data from Modification</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-218</key>
+            <name>DEPRECATED (Duplicate): Failure to provide confidentiality for stored data</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-219</key>
+            <name>Sensitive Data Under Web Root</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-220</key>
+            <name>Sensitive Data Under FTP Root</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-221</key>
+            <name>Information Loss or Omission</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-222</key>
+            <name>Truncation of Security-relevant Information</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-223</key>
+            <name>Omission of Security-relevant Information</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-224</key>
+            <name>Obscured Security-relevant Information by Alternate Name</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-225</key>
+            <name>DEPRECATED (Duplicate): General Information Management Problems</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-226</key>
+            <name>Sensitive Information Uncleared Before Release</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-227</key>
+            <name>Improper Fulfillment of API Contract (''API Abuse'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-228</key>
+            <name>Improper Handling of Syntactically Invalid Structure</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-229</key>
+            <name>Improper Handling of Values</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-230</key>
+            <name>Improper Handling of Missing Values</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-231</key>
+            <name>Improper Handling of Extra Values</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-232</key>
+            <name>Improper Handling of Undefined Values</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-233</key>
+            <name>Improper Handling of Parameters</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-234</key>
+            <name>Failure to Handle Missing Parameter</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-235</key>
+            <name>Improper Handling of Extra Parameters</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-236</key>
+            <name>Improper Handling of Undefined Parameters</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-237</key>
+            <name>Improper Handling of Structural Elements</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-238</key>
+            <name>Improper Handling of Incomplete Structural Elements</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-239</key>
+            <name>Failure to Handle Incomplete Element</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-240</key>
+            <name>Improper Handling of Inconsistent Structural Elements</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-241</key>
+            <name>Improper Handling of Unexpected Data Type</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-242</key>
+            <name>Use of Inherently Dangerous Function</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-243</key>
+            <name>Creation of chroot Jail Without Changing Working Directory</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-244</key>
+            <name>Improper Clearing of Heap Memory Before Release (''Heap Inspection'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-245</key>
+            <name>J2EE Bad Practices: Direct Management of Connections</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-246</key>
+            <name>J2EE Bad Practices: Direct Use of Sockets</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-247</key>
+            <name>DEPRECATED (Duplicate): Reliance on DNS Lookups in a Security Decision</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-248</key>
+            <name>Uncaught Exception</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-249</key>
+            <name>DEPRECATED: Often Misused: Path Manipulation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-250</key>
+            <name>Execution with Unnecessary Privileges</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-251</key>
+            <name>Often Misused: String Management</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-252</key>
+            <name>Unchecked Return Value</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-253</key>
+            <name>Incorrect Check of Function Return Value</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-254</key>
+            <name>Security Features</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-255</key>
+            <name>Credentials Management</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-256</key>
+            <name>Plaintext Storage of a Password</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-257</key>
+            <name>Storing Passwords in a Recoverable Format</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-258</key>
+            <name>Empty Password in Configuration File</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-259</key>
+            <name>Use of Hard-coded Password</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-260</key>
+            <name>Password in Configuration File</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-261</key>
+            <name>Weak Cryptography for Passwords</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-262</key>
+            <name>Not Using Password Aging</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-263</key>
+            <name>Password Aging with Long Expiration</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-264</key>
+            <name>Permissions, Privileges, and Access Controls</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-265</key>
+            <name>Privilege / Sandbox Issues</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-266</key>
+            <name>Incorrect Privilege Assignment</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-267</key>
+            <name>Privilege Defined With Unsafe Actions</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-268</key>
+            <name>Privilege Chaining</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-269</key>
+            <name>Improper Privilege Management</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-270</key>
+            <name>Privilege Context Switching Error</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-271</key>
+            <name>Privilege Dropping / Lowering Errors</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-272</key>
+            <name>Least Privilege Violation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-273</key>
+            <name>Improper Check for Dropped Privileges</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-274</key>
+            <name>Improper Handling of Insufficient Privileges</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-275</key>
+            <name>Permission Issues</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-276</key>
+            <name>Incorrect Default Permissions</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-277</key>
+            <name>Insecure Inherited Permissions</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-278</key>
+            <name>Insecure Preserved Inherited Permissions</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-279</key>
+            <name>Incorrect Execution-Assigned Permissions</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-280</key>
+            <name>Improper Handling of Insufficient Permissions or Privileges</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-281</key>
+            <name>Improper Preservation of Permissions</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-282</key>
+            <name>Improper Ownership Management</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-283</key>
+            <name>Unverified Ownership</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-284</key>
+            <name>Improper Access Control</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-285</key>
+            <name>Improper Authorization</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-286</key>
+            <name>Incorrect User Management</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-287</key>
+            <name>Improper Authentication</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-288</key>
+            <name>Authentication Bypass Using an Alternate Path or Channel</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-289</key>
+            <name>Authentication Bypass by Alternate Name</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-290</key>
+            <name>Authentication Bypass by Spoofing</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-291</key>
+            <name>Reliance on IP Address for Authentication</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-292</key>
+            <name>DEPRECATED (Duplicate): Trusting Self-reported DNS Name</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-293</key>
+            <name>Using Referer Field for Authentication</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-294</key>
+            <name>Authentication Bypass by Capture-replay</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-295</key>
+            <name>Improper Certificate Validation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-296</key>
+            <name>Improper Following of a Certificate''s Chain of Trust</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-297</key>
+            <name>Improper Validation of Certificate with Host Mismatch</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-298</key>
+            <name>Improper Validation of Certificate Expiration</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-299</key>
+            <name>Improper Check for Certificate Revocation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-300</key>
+            <name>Channel Accessible by Non-Endpoint (''Man-in-the-Middle'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-301</key>
+            <name>Reflection Attack in an Authentication Protocol</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-302</key>
+            <name>Authentication Bypass by Assumed-Immutable Data</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-303</key>
+            <name>Incorrect Implementation of Authentication Algorithm</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-304</key>
+            <name>Missing Critical Step in Authentication</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-305</key>
+            <name>Authentication Bypass by Primary Weakness</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-306</key>
+            <name>Missing Authentication for Critical Function</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-307</key>
+            <name>Improper Restriction of Excessive Authentication Attempts</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-308</key>
+            <name>Use of Single-factor Authentication</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-309</key>
+            <name>Use of Password System for Primary Authentication</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-310</key>
+            <name>Cryptographic Issues</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-311</key>
+            <name>Missing Encryption of Sensitive Data</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-312</key>
+            <name>Cleartext Storage of Sensitive Information</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-313</key>
+            <name>Cleartext Storage in a File or on Disk</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-314</key>
+            <name>Cleartext Storage in the Registry</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-315</key>
+            <name>Cleartext Storage of Sensitive Information in a Cookie</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-316</key>
+            <name>Cleartext Storage of Sensitive Information in Memory</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-317</key>
+            <name>Cleartext Storage of Sensitive Information in GUI</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-318</key>
+            <name>Cleartext Storage of Sensitive Information in Executable</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-319</key>
+            <name>Cleartext Transmission of Sensitive Information</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-320</key>
+            <name>Key Management Errors</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-321</key>
+            <name>Use of Hard-coded Cryptographic Key</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-322</key>
+            <name>Key Exchange without Entity Authentication</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-323</key>
+            <name>Reusing a Nonce, Key Pair in Encryption</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-324</key>
+            <name>Use of a Key Past its Expiration Date</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-325</key>
+            <name>Missing Required Cryptographic Step</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-326</key>
+            <name>Inadequate Encryption Strength</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-327</key>
+            <name>Use of a Broken or Risky Cryptographic Algorithm</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-328</key>
+            <name>Reversible One-Way Hash</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-329</key>
+            <name>Not Using a Random IV with CBC Mode</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-330</key>
+            <name>Use of Insufficiently Random Values</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-331</key>
+            <name>Insufficient Entropy</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-332</key>
+            <name>Insufficient Entropy in PRNG</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-333</key>
+            <name>Improper Handling of Insufficient Entropy in TRNG</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-334</key>
+            <name>Small Space of Random Values</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-335</key>
+            <name>PRNG Seed Error</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-336</key>
+            <name>Same Seed in PRNG</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-337</key>
+            <name>Predictable Seed in PRNG</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-338</key>
+            <name>Use of Cryptographically Weak Pseudo-Random Number Generator (PRNG)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-339</key>
+            <name>Small Seed Space in PRNG</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-340</key>
+            <name>Predictability Problems</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-341</key>
+            <name>Predictable from Observable State</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-342</key>
+            <name>Predictable Exact Value from Previous Values</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-343</key>
+            <name>Predictable Value Range from Previous Values</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-344</key>
+            <name>Use of Invariant Value in Dynamically Changing Context</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-345</key>
+            <name>Insufficient Verification of Data Authenticity</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-346</key>
+            <name>Origin Validation Error</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-347</key>
+            <name>Improper Verification of Cryptographic Signature</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-348</key>
+            <name>Use of Less Trusted Source</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-349</key>
+            <name>Acceptance of Extraneous Untrusted Data With Trusted Data</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-350</key>
+            <name>Reliance on Reverse DNS Resolution for a Security-Critical Action</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-351</key>
+            <name>Insufficient Type Distinction</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-352</key>
+            <name>Cross-Site Request Forgery (CSRF)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-353</key>
+            <name>Missing Support for Integrity Check</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-354</key>
+            <name>Improper Validation of Integrity Check Value</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-355</key>
+            <name>User Interface Security Issues</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-356</key>
+            <name>Product UI does not Warn User of Unsafe Actions</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-357</key>
+            <name>Insufficient UI Warning of Dangerous Operations</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-358</key>
+            <name>Improperly Implemented Security Check for Standard</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-359</key>
+            <name>Exposure of Private Information (''Privacy Violation'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-360</key>
+            <name>Trust of System Event Data</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-361</key>
+            <name>Time and State</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-362</key>
+            <name>Concurrent Execution using Shared Resource with Improper Synchronization (''Race Condition'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-363</key>
+            <name>Race Condition Enabling Link Following</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-364</key>
+            <name>Signal Handler Race Condition</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-365</key>
+            <name>Race Condition in Switch</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-366</key>
+            <name>Race Condition within a Thread</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-367</key>
+            <name>Time-of-check Time-of-use (TOCTOU) Race Condition</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-368</key>
+            <name>Context Switching Race Condition</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-369</key>
+            <name>Divide By Zero</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-370</key>
+            <name>Missing Check for Certificate Revocation after Initial Check</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-371</key>
+            <name>State Issues</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-372</key>
+            <name>Incomplete Internal State Distinction</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-373</key>
+            <name>DEPRECATED: State Synchronization Error</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-374</key>
+            <name>Passing Mutable Objects to an Untrusted Method</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-375</key>
+            <name>Returning a Mutable Object to an Untrusted Caller</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-376</key>
+            <name>Temporary File Issues</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-377</key>
+            <name>Insecure Temporary File</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-378</key>
+            <name>Creation of Temporary File With Insecure Permissions</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-379</key>
+            <name>Creation of Temporary File in Directory with Incorrect Permissions</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-380</key>
+            <name>Technology-Specific Time and State Issues</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-381</key>
+            <name>J2EE Time and State Issues</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-382</key>
+            <name>J2EE Bad Practices: Use of System.exit()</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-383</key>
+            <name>J2EE Bad Practices: Direct Use of Threads</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-384</key>
+            <name>Session Fixation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-385</key>
+            <name>Covert Timing Channel</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-386</key>
+            <name>Symbolic Name not Mapping to Correct Object</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-387</key>
+            <name>Signal Errors</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-388</key>
+            <name>Error Handling</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-389</key>
+            <name>Error Conditions, Return Values, Status Codes</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-390</key>
+            <name>Detection of Error Condition Without Action</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-391</key>
+            <name>Unchecked Error Condition</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-392</key>
+            <name>Missing Report of Error Condition</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-393</key>
+            <name>Return of Wrong Status Code</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-394</key>
+            <name>Unexpected Status Code or Return Value</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-395</key>
+            <name>Use of NullPointerException Catch to Detect NULL Pointer Dereference</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-396</key>
+            <name>Declaration of Catch for Generic Exception</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-397</key>
+            <name>Declaration of Throws for Generic Exception</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-398</key>
+            <name>Indicator of Poor Code Quality</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-399</key>
+            <name>Resource Management Errors</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-400</key>
+            <name>Uncontrolled Resource Consumption (''Resource Exhaustion'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-401</key>
+            <name>Improper Release of Memory Before Removing Last Reference (''Memory Leak'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-402</key>
+            <name>Transmission of Private Resources into a New Sphere (''Resource Leak'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-403</key>
+            <name>Exposure of File Descriptor to Unintended Control Sphere (''File Descriptor Leak'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-404</key>
+            <name>Improper Resource Shutdown or Release</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-405</key>
+            <name>Asymmetric Resource Consumption (Amplification)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-406</key>
+            <name>Insufficient Control of Network Message Volume (Network Amplification)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-407</key>
+            <name>Algorithmic Complexity</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-408</key>
+            <name>Incorrect Behavior Order: Early Amplification</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-409</key>
+            <name>Improper Handling of Highly Compressed Data (Data Amplification)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-410</key>
+            <name>Insufficient Resource Pool</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-411</key>
+            <name>Resource Locking Problems</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-412</key>
+            <name>Unrestricted Externally Accessible Lock</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-413</key>
+            <name>Improper Resource Locking</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-414</key>
+            <name>Missing Lock Check</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-415</key>
+            <name>Double Free</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-416</key>
+            <name>Use After Free</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-417</key>
+            <name>Channel and Path Errors</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-418</key>
+            <name>Channel Errors</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-419</key>
+            <name>Unprotected Primary Channel</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-420</key>
+            <name>Unprotected Alternate Channel</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-421</key>
+            <name>Race Condition During Access to Alternate Channel</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-422</key>
+            <name>Unprotected Windows Messaging Channel (''Shatter'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-423</key>
+            <name>DEPRECATED (Duplicate): Proxied Trusted Channel</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-424</key>
+            <name>Improper Protection of Alternate Path</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-425</key>
+            <name>Direct Request (''Forced Browsing'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-426</key>
+            <name>Untrusted Search Path</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-427</key>
+            <name>Uncontrolled Search Path Element</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-428</key>
+            <name>Unquoted Search Path or Element</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-429</key>
+            <name>Handler Errors</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-430</key>
+            <name>Deployment of Wrong Handler</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-431</key>
+            <name>Missing Handler</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-432</key>
+            <name>Dangerous Signal Handler not Disabled During Sensitive Operations</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-433</key>
+            <name>Unparsed Raw Web Content Delivery</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-434</key>
+            <name>Unrestricted Upload of File with Dangerous Type</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-435</key>
+            <name>Interaction Error</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-436</key>
+            <name>Interpretation Conflict</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-437</key>
+            <name>Incomplete Model of Endpoint Features</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-438</key>
+            <name>Behavioral Problems</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-439</key>
+            <name>Behavioral Change in New Version or Environment</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-440</key>
+            <name>Expected Behavior Violation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-441</key>
+            <name>Unintended Proxy or Intermediary (''Confused Deputy'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-442</key>
+            <name>Web Problems</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-443</key>
+            <name>DEPRECATED (Duplicate): HTTP response splitting</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-444</key>
+            <name>Inconsistent Interpretation of HTTP Requests (''HTTP Request Smuggling'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-445</key>
+            <name>User Interface Errors</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-446</key>
+            <name>UI Discrepancy for Security Feature</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-447</key>
+            <name>Unimplemented or Unsupported Feature in UI</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-448</key>
+            <name>Obsolete Feature in UI</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-449</key>
+            <name>The UI Performs the Wrong Action</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-450</key>
+            <name>Multiple Interpretations of UI Input</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-451</key>
+            <name>User Interface (UI) Misrepresentation of Critical Information</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-452</key>
+            <name>Initialization and Cleanup Errors</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-453</key>
+            <name>Insecure Default Variable Initialization</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-454</key>
+            <name>External Initialization of Trusted Variables or Data Stores</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-455</key>
+            <name>Non-exit on Failed Initialization</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-456</key>
+            <name>Missing Initialization of a Variable</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-457</key>
+            <name>Use of Uninitialized Variable</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-458</key>
+            <name>DEPRECATED: Incorrect Initialization</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-459</key>
+            <name>Incomplete Cleanup</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-460</key>
+            <name>Improper Cleanup on Thrown Exception</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-461</key>
+            <name>Data Structure Issues</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-462</key>
+            <name>Duplicate Key in Associative List (Alist)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-463</key>
+            <name>Deletion of Data Structure Sentinel</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-464</key>
+            <name>Addition of Data Structure Sentinel</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-465</key>
+            <name>Pointer Issues</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-466</key>
+            <name>Return of Pointer Value Outside of Expected Range</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-467</key>
+            <name>Use of sizeof() on a Pointer Type</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-468</key>
+            <name>Incorrect Pointer Scaling</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-469</key>
+            <name>Use of Pointer Subtraction to Determine Size</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-470</key>
+            <name>Use of Externally-Controlled Input to Select Classes or Code (''Unsafe Reflection'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-471</key>
+            <name>Modification of Assumed-Immutable Data (MAID)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-472</key>
+            <name>External Control of Assumed-Immutable Web Parameter</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-473</key>
+            <name>PHP External Variable Modification</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-474</key>
+            <name>Use of Function with Inconsistent Implementations</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-475</key>
+            <name>Undefined Behavior for Input to API</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-476</key>
+            <name>NULL Pointer Dereference</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-477</key>
+            <name>Use of Obsolete Functions</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-478</key>
+            <name>Missing Default Case in Switch Statement</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-479</key>
+            <name>Signal Handler Use of a Non-reentrant Function</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-480</key>
+            <name>Use of Incorrect Operator</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-481</key>
+            <name>Assigning instead of Comparing</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-482</key>
+            <name>Comparing instead of Assigning</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-483</key>
+            <name>Incorrect Block Delimitation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-484</key>
+            <name>Omitted Break Statement in Switch</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-485</key>
+            <name>Insufficient Encapsulation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-486</key>
+            <name>Comparison of Classes by Name</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-487</key>
+            <name>Reliance on Package-level Scope</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-488</key>
+            <name>Exposure of Data Element to Wrong Session</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-489</key>
+            <name>Leftover Debug Code</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-490</key>
+            <name>Mobile Code Issues</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-491</key>
+            <name>Public cloneable() Method Without Final (''Object Hijack'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-492</key>
+            <name>Use of Inner Class Containing Sensitive Data</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-493</key>
+            <name>Critical Public Variable Without Final Modifier</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-494</key>
+            <name>Download of Code Without Integrity Check</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-495</key>
+            <name>Private Array-Typed Field Returned From A Public Method</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-496</key>
+            <name>Public Data Assigned to Private Array-Typed Field</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-497</key>
+            <name>Exposure of System Data to an Unauthorized Control Sphere</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-498</key>
+            <name>Cloneable Class Containing Sensitive Information</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-499</key>
+            <name>Serializable Class Containing Sensitive Data</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-500</key>
+            <name>Public Static Field Not Marked Final</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-501</key>
+            <name>Trust Boundary Violation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-502</key>
+            <name>Deserialization of Untrusted Data</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-503</key>
+            <name>Byte/Object Code</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-504</key>
+            <name>Motivation/Intent</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-505</key>
+            <name>Intentionally Introduced Weakness</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-506</key>
+            <name>Embedded Malicious Code</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-507</key>
+            <name>Trojan Horse</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-508</key>
+            <name>Non-Replicating Malicious Code</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-509</key>
+            <name>Replicating Malicious Code (Virus or Worm)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-510</key>
+            <name>Trapdoor</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-511</key>
+            <name>Logic/Time Bomb</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-512</key>
+            <name>Spyware</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-513</key>
+            <name>Intentionally Introduced Nonmalicious Weakness</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-514</key>
+            <name>Covert Channel</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-515</key>
+            <name>Covert Storage Channel</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-516</key>
+            <name>DEPRECATED (Duplicate): Covert Timing Channel</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-517</key>
+            <name>Other Intentional, Nonmalicious Weakness</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-518</key>
+            <name>Inadvertently Introduced Weakness</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-519</key>
+            <name>.NET Environment Issues</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-520</key>
+            <name>.NET Misconfiguration: Use of Impersonation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-521</key>
+            <name>Weak Password Requirements</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-522</key>
+            <name>Insufficiently Protected Credentials</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-523</key>
+            <name>Unprotected Transport of Credentials</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-524</key>
+            <name>Information Exposure Through Caching</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-525</key>
+            <name>Information Exposure Through Browser Caching</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-526</key>
+            <name>Information Exposure Through Environmental Variables</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-527</key>
+            <name>Exposure of CVS Repository to an Unauthorized Control Sphere</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-528</key>
+            <name>Exposure of Core Dump File to an Unauthorized Control Sphere</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-529</key>
+            <name>Exposure of Access Control List Files to an Unauthorized Control Sphere</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-530</key>
+            <name>Exposure of Backup File to an Unauthorized Control Sphere</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-531</key>
+            <name>Information Exposure Through Test Code</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-532</key>
+            <name>Information Exposure Through Log Files</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-533</key>
+            <name>Information Exposure Through Server Log Files</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-534</key>
+            <name>Information Exposure Through Debug Log Files</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-535</key>
+            <name>Information Exposure Through Shell Error Message</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-536</key>
+            <name>Information Exposure Through Servlet Runtime Error Message</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-537</key>
+            <name>Information Exposure Through Java Runtime Error Message</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-538</key>
+            <name>File and Directory Information Exposure</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-539</key>
+            <name>Information Exposure Through Persistent Cookies</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-540</key>
+            <name>Information Exposure Through Source Code</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-541</key>
+            <name>Information Exposure Through Include Source Code</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-542</key>
+            <name>Information Exposure Through Cleanup Log Files</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-543</key>
+            <name>Use of Singleton Pattern Without Synchronization in a Multithreaded Context</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-544</key>
+            <name>Missing Standardized Error Handling Mechanism</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-545</key>
+            <name>Use of Dynamic Class Loading</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-546</key>
+            <name>Suspicious Comment</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-547</key>
+            <name>Use of Hard-coded, Security-relevant Constants</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-548</key>
+            <name>Information Exposure Through Directory Listing</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-549</key>
+            <name>Missing Password Field Masking</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-550</key>
+            <name>Information Exposure Through Server Error Message</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-551</key>
+            <name>Incorrect Behavior Order: Authorization Before Parsing and Canonicalization</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-552</key>
+            <name>Files or Directories Accessible to External Parties</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-553</key>
+            <name>Command Shell in Externally Accessible Directory</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-554</key>
+            <name>ASP.NET Misconfiguration: Not Using Input Validation Framework</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-555</key>
+            <name>J2EE Misconfiguration: Plaintext Password in Configuration File</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-556</key>
+            <name>ASP.NET Misconfiguration: Use of Identity Impersonation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-557</key>
+            <name>Concurrency Issues</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-558</key>
+            <name>Use of getlogin() in Multithreaded Application</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-559</key>
+            <name>Often Misused: Arguments and Parameters</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-560</key>
+            <name>Use of umask() with chmod-style Argument</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-561</key>
+            <name>Dead Code</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-562</key>
+            <name>Return of Stack Variable Address</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-563</key>
+            <name>Assignment to Variable without Use (''Unused Variable'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-564</key>
+            <name>SQL Injection: Hibernate</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-565</key>
+            <name>Reliance on Cookies without Validation and Integrity Checking</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-566</key>
+            <name>Authorization Bypass Through User-Controlled SQL Primary Key</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-567</key>
+            <name>Unsynchronized Access to Shared Data in a Multithreaded Context</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-568</key>
+            <name>finalize() Method Without super.finalize()</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-569</key>
+            <name>Expression Issues</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-570</key>
+            <name>Expression is Always False</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-571</key>
+            <name>Expression is Always True</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-572</key>
+            <name>Call to Thread run() instead of start()</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-573</key>
+            <name>Improper Following of Specification by Caller</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-574</key>
+            <name>EJB Bad Practices: Use of Synchronization Primitives</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-575</key>
+            <name>EJB Bad Practices: Use of AWT Swing</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-576</key>
+            <name>EJB Bad Practices: Use of Java I/O</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-577</key>
+            <name>EJB Bad Practices: Use of Sockets</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-578</key>
+            <name>EJB Bad Practices: Use of Class Loader</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-579</key>
+            <name>J2EE Bad Practices: Non-serializable Object Stored in Session</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-580</key>
+            <name>clone() Method Without super.clone()</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-581</key>
+            <name>Object Model Violation: Just One of Equals and Hashcode Defined</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-582</key>
+            <name>Array Declared Public, Final, and Static</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-583</key>
+            <name>finalize() Method Declared Public</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-584</key>
+            <name>Return Inside Finally Block</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-585</key>
+            <name>Empty Synchronized Block</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-586</key>
+            <name>Explicit Call to Finalize()</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-587</key>
+            <name>Assignment of a Fixed Address to a Pointer</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-588</key>
+            <name>Attempt to Access Child of a Non-structure Pointer</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-589</key>
+            <name>Call to Non-ubiquitous API</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-590</key>
+            <name>Free of Memory not on the Heap</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-591</key>
+            <name>Sensitive Data Storage in Improperly Locked Memory</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-592</key>
+            <name>Authentication Bypass Issues</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-593</key>
+            <name>Authentication Bypass: OpenSSL CTX Object Modified after SSL Objects are Created</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-594</key>
+            <name>J2EE Framework: Saving Unserializable Objects to Disk</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-595</key>
+            <name>Comparison of Object References Instead of Object Contents</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-596</key>
+            <name>Incorrect Semantic Object Comparison</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-597</key>
+            <name>Use of Wrong Operator in String Comparison</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-598</key>
+            <name>Information Exposure Through Query Strings in GET Request</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-599</key>
+            <name>Missing Validation of OpenSSL Certificate</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-600</key>
+            <name>Uncaught Exception in Servlet</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-601</key>
+            <name>URL Redirection to Untrusted Site (''Open Redirect'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-602</key>
+            <name>Client-Side Enforcement of Server-Side Security</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-603</key>
+            <name>Use of Client-Side Authentication</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-604</key>
+            <name>Deprecated Entries</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-605</key>
+            <name>Multiple Binds to the Same Port</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-606</key>
+            <name>Unchecked Input for Loop Condition</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-607</key>
+            <name>Public Static Final Field References Mutable Object</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-608</key>
+            <name>Struts: Non-private Field in ActionForm Class</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-609</key>
+            <name>Double-Checked Locking</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-610</key>
+            <name>Externally Controlled Reference to a Resource in Another Sphere</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-611</key>
+            <name>Improper Restriction of XML External Entity Reference (''XXE'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-612</key>
+            <name>Information Exposure Through Indexing of Private Data</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-613</key>
+            <name>Insufficient Session Expiration</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-614</key>
+            <name>Sensitive Cookie in HTTPS Session Without ''Secure'' Attribute</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-615</key>
+            <name>Information Exposure Through Comments</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-616</key>
+            <name>Incomplete Identification of Uploaded File Variables (PHP)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-617</key>
+            <name>Reachable Assertion</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-618</key>
+            <name>Exposed Unsafe ActiveX Method</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-619</key>
+            <name>Dangling Database Cursor (''Cursor Injection'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-620</key>
+            <name>Unverified Password Change</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-621</key>
+            <name>Variable Extraction Error</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-622</key>
+            <name>Improper Validation of Function Hook Arguments</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-623</key>
+            <name>Unsafe ActiveX Control Marked Safe For Scripting</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-624</key>
+            <name>Executable Regular Expression Error</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-625</key>
+            <name>Permissive Regular Expression</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-626</key>
+            <name>Null Byte Interaction Error (Poison Null Byte)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-627</key>
+            <name>Dynamic Variable Evaluation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-628</key>
+            <name>Function Call with Incorrectly Specified Arguments</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-629</key>
+            <name>Weaknesses in OWASP Top Ten (2007)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-630</key>
+            <name>Weaknesses Examined by SAMATE</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-631</key>
+            <name>Resource-specific Weaknesses</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-632</key>
+            <name>Weaknesses that Affect Files or Directories</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-633</key>
+            <name>Weaknesses that Affect Memory</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-634</key>
+            <name>Weaknesses that Affect System Processes</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-635</key>
+            <name>Weaknesses Used by NVD</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-636</key>
+            <name>Not Failing Securely (''Failing Open'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-637</key>
+            <name>Unnecessary Complexity in Protection Mechanism (Not Using ''Economy of Mechanism'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-638</key>
+            <name>Not Using Complete Mediation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-639</key>
+            <name>Authorization Bypass Through User-Controlled Key</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-640</key>
+            <name>Weak Password Recovery Mechanism for Forgotten Password</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-641</key>
+            <name>Improper Restriction of Names for Files and Other Resources</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-642</key>
+            <name>External Control of Critical State Data</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-643</key>
+            <name>Improper Neutralization of Data within XPath Expressions (''XPath Injection'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-644</key>
+            <name>Improper Neutralization of HTTP Headers for Scripting Syntax</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-645</key>
+            <name>Overly Restrictive Account Lockout Mechanism</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-646</key>
+            <name>Reliance on File Name or Extension of Externally-Supplied File</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-647</key>
+            <name>Use of Non-Canonical URL Paths for Authorization Decisions</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-648</key>
+            <name>Incorrect Use of Privileged APIs</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-649</key>
+            <name>Reliance on Obfuscation or Encryption of Security-Relevant Inputs without Integrity Checking</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-650</key>
+            <name>Trusting HTTP Permission Methods on the Server Side</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-651</key>
+            <name>Information Exposure Through WSDL File</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-652</key>
+            <name>Improper Neutralization of Data within XQuery Expressions (''XQuery Injection'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-653</key>
+            <name>Insufficient Compartmentalization</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-654</key>
+            <name>Reliance on a Single Factor in a Security Decision</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-655</key>
+            <name>Insufficient Psychological Acceptability</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-656</key>
+            <name>Reliance on Security Through Obscurity</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-657</key>
+            <name>Violation of Secure Design Principles</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-658</key>
+            <name>Weaknesses in Software Written in C</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-659</key>
+            <name>Weaknesses in Software Written in C++</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-660</key>
+            <name>Weaknesses in Software Written in Java</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-661</key>
+            <name>Weaknesses in Software Written in PHP</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-662</key>
+            <name>Improper Synchronization</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-663</key>
+            <name>Use of a Non-reentrant Function in a Concurrent Context</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-664</key>
+            <name>Improper Control of a Resource Through its Lifetime</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-665</key>
+            <name>Improper Initialization</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-666</key>
+            <name>Operation on Resource in Wrong Phase of Lifetime</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-667</key>
+            <name>Improper Locking</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-668</key>
+            <name>Exposure of Resource to Wrong Sphere</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-669</key>
+            <name>Incorrect Resource Transfer Between Spheres</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-670</key>
+            <name>Always-Incorrect Control Flow Implementation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-671</key>
+            <name>Lack of Administrator Control over Security</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-672</key>
+            <name>Operation on a Resource after Expiration or Release</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-673</key>
+            <name>External Influence of Sphere Definition</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-674</key>
+            <name>Uncontrolled Recursion</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-675</key>
+            <name>Duplicate Operations on Resource</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-676</key>
+            <name>Use of Potentially Dangerous Function</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-677</key>
+            <name>Weakness Base Elements</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-678</key>
+            <name>Composites</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-679</key>
+            <name>Chain Elements</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-680</key>
+            <name>Integer Overflow to Buffer Overflow</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-681</key>
+            <name>Incorrect Conversion between Numeric Types</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-682</key>
+            <name>Incorrect Calculation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-683</key>
+            <name>Function Call With Incorrect Order of Arguments</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-684</key>
+            <name>Incorrect Provision of Specified Functionality</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-685</key>
+            <name>Function Call With Incorrect Number of Arguments</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-686</key>
+            <name>Function Call With Incorrect Argument Type</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-687</key>
+            <name>Function Call With Incorrectly Specified Argument Value</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-688</key>
+            <name>Function Call With Incorrect Variable or Reference as Argument</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-689</key>
+            <name>Permission Race Condition During Resource Copy</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-690</key>
+            <name>Unchecked Return Value to NULL Pointer Dereference</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-691</key>
+            <name>Insufficient Control Flow Management</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-692</key>
+            <name>Incomplete Blacklist to Cross-Site Scripting</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-693</key>
+            <name>Protection Mechanism Failure</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-694</key>
+            <name>Use of Multiple Resources with Duplicate Identifier</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-695</key>
+            <name>Use of Low-Level Functionality</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-696</key>
+            <name>Incorrect Behavior Order</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-697</key>
+            <name>Insufficient Comparison</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-698</key>
+            <name>Execution After Redirect (EAR)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-699</key>
+            <name>Development Concepts</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-700</key>
+            <name>Seven Pernicious Kingdoms</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-701</key>
+            <name>Weaknesses Introduced During Design</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-702</key>
+            <name>Weaknesses Introduced During Implementation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-703</key>
+            <name>Improper Check or Handling of Exceptional Conditions</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-704</key>
+            <name>Incorrect Type Conversion or Cast</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-705</key>
+            <name>Incorrect Control Flow Scoping</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-706</key>
+            <name>Use of Incorrectly-Resolved Name or Reference</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-707</key>
+            <name>Improper Enforcement of Message or Data Structure</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-708</key>
+            <name>Incorrect Ownership Assignment</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-709</key>
+            <name>Named Chains</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-710</key>
+            <name>Coding Standards Violation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-711</key>
+            <name>Weaknesses in OWASP Top Ten (2004)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-712</key>
+            <name>OWASP Top Ten 2007 Category A1 - Cross Site Scripting (XSS)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-713</key>
+            <name>OWASP Top Ten 2007 Category A2 - Injection Flaws</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-714</key>
+            <name>OWASP Top Ten 2007 Category A3 - Malicious File Execution</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-715</key>
+            <name>OWASP Top Ten 2007 Category A4 - Insecure Direct Object Reference</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-716</key>
+            <name>OWASP Top Ten 2007 Category A5 - Cross Site Request Forgery (CSRF)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-717</key>
+            <name>OWASP Top Ten 2007 Category A6 - Information Leakage and Improper Error Handling</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-718</key>
+            <name>OWASP Top Ten 2007 Category A7 - Broken Authentication and Session Management</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-719</key>
+            <name>OWASP Top Ten 2007 Category A8 - Insecure Cryptographic Storage</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-720</key>
+            <name>OWASP Top Ten 2007 Category A9 - Insecure Communications</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-721</key>
+            <name>OWASP Top Ten 2007 Category A10 - Failure to Restrict URL Access</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-722</key>
+            <name>OWASP Top Ten 2004 Category A1 - Unvalidated Input</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-723</key>
+            <name>OWASP Top Ten 2004 Category A2 - Broken Access Control</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-724</key>
+            <name>OWASP Top Ten 2004 Category A3 - Broken Authentication and Session Management</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-725</key>
+            <name>OWASP Top Ten 2004 Category A4 - Cross-Site Scripting (XSS) Flaws</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-726</key>
+            <name>OWASP Top Ten 2004 Category A5 - Buffer Overflows</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-727</key>
+            <name>OWASP Top Ten 2004 Category A6 - Injection Flaws</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-728</key>
+            <name>OWASP Top Ten 2004 Category A7 - Improper Error Handling</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-729</key>
+            <name>OWASP Top Ten 2004 Category A8 - Insecure Storage</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-730</key>
+            <name>OWASP Top Ten 2004 Category A9 - Denial of Service</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-731</key>
+            <name>OWASP Top Ten 2004 Category A10 - Insecure Configuration Management</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-732</key>
+            <name>Incorrect Permission Assignment for Critical Resource</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-733</key>
+            <name>Compiler Optimization Removal or Modification of Security-critical Code</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-734</key>
+            <name>Weaknesses Addressed by the CERT C Secure Coding Standard</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-735</key>
+            <name>CERT C Secure Coding Section 01 - Preprocessor (PRE)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-736</key>
+            <name>CERT C Secure Coding Section 02 - Declarations and Initialization (DCL)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-737</key>
+            <name>CERT C Secure Coding Section 03 - Expressions (EXP)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-738</key>
+            <name>CERT C Secure Coding Section 04 - Integers (INT)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-739</key>
+            <name>CERT C Secure Coding Section 05 - Floating Point (FLP)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-740</key>
+            <name>CERT C Secure Coding Section 06 - Arrays (ARR)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-741</key>
+            <name>CERT C Secure Coding Section 07 - Characters and Strings (STR)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-742</key>
+            <name>CERT C Secure Coding Section 08 - Memory Management (MEM)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-743</key>
+            <name>CERT C Secure Coding Section 09 - Input Output (FIO)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-744</key>
+            <name>CERT C Secure Coding Section 10 - Environment (ENV)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-745</key>
+            <name>CERT C Secure Coding Section 11 - Signals (SIG)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-746</key>
+            <name>CERT C Secure Coding Section 12 - Error Handling (ERR)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-747</key>
+            <name>CERT C Secure Coding Section 49 - Miscellaneous (MSC)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-748</key>
+            <name>CERT C Secure Coding Section 50 - POSIX (POS)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-749</key>
+            <name>Exposed Dangerous Method or Function</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-750</key>
+            <name>Weaknesses in the 2009 CWE/SANS Top 25 Most Dangerous Programming Errors</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-751</key>
+            <name>2009 Top 25 - Insecure Interaction Between Components</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-752</key>
+            <name>2009 Top 25 - Risky Resource Management</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-753</key>
+            <name>2009 Top 25 - Porous Defenses</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-754</key>
+            <name>Improper Check for Unusual or Exceptional Conditions</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-755</key>
+            <name>Improper Handling of Exceptional Conditions</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-756</key>
+            <name>Missing Custom Error Page</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-757</key>
+            <name>Selection of Less-Secure Algorithm During Negotiation (''Algorithm Downgrade'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-758</key>
+            <name>Reliance on Undefined, Unspecified, or Implementation-Defined Behavior</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-759</key>
+            <name>Use of a One-Way Hash without a Salt</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-760</key>
+            <name>Use of a One-Way Hash with a Predictable Salt</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-761</key>
+            <name>Free of Pointer not at Start of Buffer</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-762</key>
+            <name>Mismatched Memory Management Routines</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-763</key>
+            <name>Release of Invalid Pointer or Reference</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-764</key>
+            <name>Multiple Locks of a Critical Resource</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-765</key>
+            <name>Multiple Unlocks of a Critical Resource</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-766</key>
+            <name>Critical Variable Declared Public</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-767</key>
+            <name>Access to Critical Private Variable via Public Method</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-768</key>
+            <name>Incorrect Short Circuit Evaluation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-769</key>
+            <name>File Descriptor Exhaustion</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-770</key>
+            <name>Allocation of Resources Without Limits or Throttling</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-771</key>
+            <name>Missing Reference to Active Allocated Resource</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-772</key>
+            <name>Missing Release of Resource after Effective Lifetime</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-773</key>
+            <name>Missing Reference to Active File Descriptor or Handle</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-774</key>
+            <name>Allocation of File Descriptors or Handles Without Limits or Throttling</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-775</key>
+            <name>Missing Release of File Descriptor or Handle after Effective Lifetime</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-776</key>
+            <name>Improper Restriction of Recursive Entity References in DTDs (''XML Entity Expansion'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-777</key>
+            <name>Regular Expression without Anchors</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-778</key>
+            <name>Insufficient Logging</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-779</key>
+            <name>Logging of Excessive Data</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-780</key>
+            <name>Use of RSA Algorithm without OAEP</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-781</key>
+            <name>Improper Address Validation in IOCTL with METHOD_NEITHER I/O Control Code</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-782</key>
+            <name>Exposed IOCTL with Insufficient Access Control</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-783</key>
+            <name>Operator Precedence Logic Error</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-784</key>
+            <name>Reliance on Cookies without Validation and Integrity Checking in a Security Decision</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-785</key>
+            <name>Use of Path Manipulation Function without Maximum-sized Buffer</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-786</key>
+            <name>Access of Memory Location Before Start of Buffer</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-787</key>
+            <name>Out-of-bounds Write</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-788</key>
+            <name>Access of Memory Location After End of Buffer</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-789</key>
+            <name>Uncontrolled Memory Allocation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-790</key>
+            <name>Improper Filtering of Special Elements</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-791</key>
+            <name>Incomplete Filtering of Special Elements</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-792</key>
+            <name>Incomplete Filtering of One or More Instances of Special Elements</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-793</key>
+            <name>Only Filtering One Instance of a Special Element</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-794</key>
+            <name>Incomplete Filtering of Multiple Instances of Special Elements</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-795</key>
+            <name>Only Filtering Special Elements at a Specified Location</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-796</key>
+            <name>Only Filtering Special Elements Relative to a Marker</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-797</key>
+            <name>Only Filtering Special Elements at an Absolute Position</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-798</key>
+            <name>Use of Hard-coded Credentials</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-799</key>
+            <name>Improper Control of Interaction Frequency</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-800</key>
+            <name>Weaknesses in the 2010 CWE/SANS Top 25 Most Dangerous Programming Errors</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-801</key>
+            <name>2010 Top 25 - Insecure Interaction Between Components</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-802</key>
+            <name>2010 Top 25 - Risky Resource Management</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-803</key>
+            <name>2010 Top 25 - Porous Defenses</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-804</key>
+            <name>Guessable CAPTCHA</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-805</key>
+            <name>Buffer Access with Incorrect Length Value</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-806</key>
+            <name>Buffer Access Using Size of Source Buffer</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-807</key>
+            <name>Reliance on Untrusted Inputs in a Security Decision</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-808</key>
+            <name>2010 Top 25 - Weaknesses On the Cusp</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-809</key>
+            <name>Weaknesses in OWASP Top Ten (2010)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-810</key>
+            <name>OWASP Top Ten 2010 Category A1 - Injection</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-811</key>
+            <name>OWASP Top Ten 2010 Category A2 - Cross-Site Scripting (XSS)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-812</key>
+            <name>OWASP Top Ten 2010 Category A3 - Broken Authentication and Session Management</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-813</key>
+            <name>OWASP Top Ten 2010 Category A4 - Insecure Direct Object References</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-814</key>
+            <name>OWASP Top Ten 2010 Category A5 - Cross-Site Request Forgery(CSRF)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-815</key>
+            <name>OWASP Top Ten 2010 Category A6 - Security Misconfiguration</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-816</key>
+            <name>OWASP Top Ten 2010 Category A7 - Insecure Cryptographic Storage</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-817</key>
+            <name>OWASP Top Ten 2010 Category A8 - Failure to Restrict URL Access</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-818</key>
+            <name>OWASP Top Ten 2010 Category A9 - Insufficient Transport Layer Protection</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-819</key>
+            <name>OWASP Top Ten 2010 Category A10 - Unvalidated Redirects and Forwards</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-820</key>
+            <name>Missing Synchronization</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-821</key>
+            <name>Incorrect Synchronization</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-822</key>
+            <name>Untrusted Pointer Dereference</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-823</key>
+            <name>Use of Out-of-range Pointer Offset</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-824</key>
+            <name>Access of Uninitialized Pointer</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-825</key>
+            <name>Expired Pointer Dereference</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-826</key>
+            <name>Premature Release of Resource During Expected Lifetime</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-827</key>
+            <name>Improper Control of Document Type Definition</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-828</key>
+            <name>Signal Handler with Functionality that is not Asynchronous-Safe</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-829</key>
+            <name>Inclusion of Functionality from Untrusted Control Sphere</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-830</key>
+            <name>Inclusion of Web Functionality from an Untrusted Source</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-831</key>
+            <name>Signal Handler Function Associated with Multiple Signals</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-832</key>
+            <name>Unlock of a Resource that is not Locked</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-833</key>
+            <name>Deadlock</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-834</key>
+            <name>Excessive Iteration</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-835</key>
+            <name>Loop with Unreachable Exit Condition (''Infinite Loop'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-836</key>
+            <name>Use of Password Hash Instead of Password for Authentication</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-837</key>
+            <name>Improper Enforcement of a Single, Unique Action</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-838</key>
+            <name>Inappropriate Encoding for Output Context</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-839</key>
+            <name>Numeric Range Comparison Without Minimum Check</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-840</key>
+            <name>Business Logic Errors</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-841</key>
+            <name>Improper Enforcement of Behavioral Workflow</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-842</key>
+            <name>Placement of User into Incorrect Group</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-843</key>
+            <name>Access of Resource Using Incompatible Type (''Type Confusion'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-844</key>
+            <name>Weaknesses Addressed by the CERT Java Secure Coding Standard</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-845</key>
+            <name>CERT Java Secure Coding Section 00 - Input Validation and Data Sanitization (IDS)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-846</key>
+            <name>CERT Java Secure Coding Section 01 - Declarations and Initialization (DCL)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-847</key>
+            <name>CERT Java Secure Coding Section 02 - Expressions (EXP)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-848</key>
+            <name>CERT Java Secure Coding Section 03 - Numeric Types and Operations (NUM)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-849</key>
+            <name>CERT Java Secure Coding Section 04 - Object Orientation (OBJ)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-850</key>
+            <name>CERT Java Secure Coding Section 05 - Methods (MET)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-851</key>
+            <name>CERT Java Secure Coding Section 06 - Exceptional Behavior (ERR)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-852</key>
+            <name>CERT Java Secure Coding Section 07 - Visibility and Atomicity (VNA)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-853</key>
+            <name>CERT Java Secure Coding Section 08 - Locking (LCK)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-854</key>
+            <name>CERT Java Secure Coding Section 09 - Thread APIs (THI)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-855</key>
+            <name>CERT Java Secure Coding Section 10 - Thread Pools (TPS)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-856</key>
+            <name>CERT Java Secure Coding Section 11 - Thread-Safety Miscellaneous (TSM)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-857</key>
+            <name>CERT Java Secure Coding Section 12 - Input Output (FIO)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-858</key>
+            <name>CERT Java Secure Coding Section 13 - Serialization (SER)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-859</key>
+            <name>CERT Java Secure Coding Section 14 - Platform Security (SEC)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-860</key>
+            <name>CERT Java Secure Coding Section 15 - Runtime Environment (ENV)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-861</key>
+            <name>CERT Java Secure Coding Section 49 - Miscellaneous (MSC)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-862</key>
+            <name>Missing Authorization</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-863</key>
+            <name>Incorrect Authorization</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-864</key>
+            <name>2011 Top 25 - Insecure Interaction Between Components</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-865</key>
+            <name>2011 Top 25 - Risky Resource Management</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-866</key>
+            <name>2011 Top 25 - Porous Defenses</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-867</key>
+            <name>2011 Top 25 - Weaknesses On the Cusp</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-868</key>
+            <name>Weaknesses Addressed by the CERT C++ Secure Coding Standard</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-869</key>
+            <name>CERT C++ Secure Coding Section 01 - Preprocessor (PRE)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-870</key>
+            <name>CERT C++ Secure Coding Section 02 - Declarations and Initialization (DCL)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-871</key>
+            <name>CERT C++ Secure Coding Section 03 - Expressions (EXP)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-872</key>
+            <name>CERT C++ Secure Coding Section 04 - Integers (INT)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-873</key>
+            <name>CERT C++ Secure Coding Section 05 - Floating Point Arithmetic (FLP)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-874</key>
+            <name>CERT C++ Secure Coding Section 06 - Arrays and the STL (ARR)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-875</key>
+            <name>CERT C++ Secure Coding Section 07 - Characters and Strings (STR)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-876</key>
+            <name>CERT C++ Secure Coding Section 08 - Memory Management (MEM)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-877</key>
+            <name>CERT C++ Secure Coding Section 09 - Input Output (FIO)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-878</key>
+            <name>CERT C++ Secure Coding Section 10 - Environment (ENV)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-879</key>
+            <name>CERT C++ Secure Coding Section 11 - Signals (SIG)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-880</key>
+            <name>CERT C++ Secure Coding Section 12 - Exceptions and Error Handling (ERR)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-881</key>
+            <name>CERT C++ Secure Coding Section 13 - Object Oriented Programming (OOP)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-882</key>
+            <name>CERT C++ Secure Coding Section 14 - Concurrency (CON)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-883</key>
+            <name>CERT C++ Secure Coding Section 49 - Miscellaneous (MSC)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-884</key>
+            <name>CWE Cross-section</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-885</key>
+            <name>SFP Primary Cluster: Risky Values</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-886</key>
+            <name>SFP Primary Cluster: Unused entities</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-887</key>
+            <name>SFP Primary Cluster: API</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-888</key>
+            <name>Software Fault Pattern (SFP) Clusters</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-889</key>
+            <name>SFP Primary Cluster: Exception Management</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-890</key>
+            <name>SFP Primary Cluster: Memory Access</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-891</key>
+            <name>SFP Primary Cluster: Memory Management</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-892</key>
+            <name>SFP Primary Cluster: Resource Management</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-893</key>
+            <name>SFP Primary Cluster: Path Resolution</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-894</key>
+            <name>SFP Primary Cluster: Synchronization</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-895</key>
+            <name>SFP Primary Cluster: Information Leak</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-896</key>
+            <name>SFP Primary Cluster: Tainted Input</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-897</key>
+            <name>SFP Primary Cluster: Entry Points</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-898</key>
+            <name>SFP Primary Cluster: Authentication</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-899</key>
+            <name>SFP Primary Cluster: Access Control</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-900</key>
+            <name>Weaknesses in the 2011 CWE/SANS Top 25 Most Dangerous Software Errors</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-901</key>
+            <name>SFP Primary Cluster: Privilege</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-902</key>
+            <name>SFP Primary Cluster: Channel</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-903</key>
+            <name>SFP Primary Cluster: Cryptography</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-904</key>
+            <name>SFP Primary Cluster: Malware</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-905</key>
+            <name>SFP Primary Cluster: Predictability</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-906</key>
+            <name>SFP Primary Cluster: UI</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-907</key>
+            <name>SFP Primary Cluster: Other</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-908</key>
+            <name>Use of Uninitialized Resource</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-909</key>
+            <name>Missing Initialization of Resource</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-910</key>
+            <name>Use of Expired File Descriptor</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-911</key>
+            <name>Improper Update of Reference Count</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-912</key>
+            <name>Hidden Functionality</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-913</key>
+            <name>Improper Control of Dynamically-Managed Code Resources</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-914</key>
+            <name>Improper Control of Dynamically-Identified Variables</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-915</key>
+            <name>Improperly Controlled Modification of Dynamically-Determined Object Attributes</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-916</key>
+            <name>Use of Password Hash With Insufficient Computational Effort</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-917</key>
+            <name>Improper Neutralization of Special Elements used in an Expression Language Statement (''Expression Language Injection'')</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-918</key>
+            <name>Server-Side Request Forgery (SSRF)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-919</key>
+            <name>Weaknesses in Mobile Applications</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-920</key>
+            <name>Improper Restriction of Power Consumption</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-921</key>
+            <name>Storage of Sensitive Data in a Mechanism without Access Control</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-922</key>
+            <name>Insecure Storage of Sensitive Information</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-923</key>
+            <name>Improper Restriction of Communication Channel to Intended Endpoints</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-924</key>
+            <name>Improper Enforcement of Message Integrity During Transmission in a Communication Channel</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-925</key>
+            <name>Improper Verification of Intent by Broadcast Receiver</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-926</key>
+            <name>Improper Export of Android Application Components</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-927</key>
+            <name>Use of Implicit Intent for Sensitive Communication</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-928</key>
+            <name>Weaknesses in OWASP Top Ten (2013)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-929</key>
+            <name>OWASP Top Ten 2013 Category A1 - Injection</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-930</key>
+            <name>OWASP Top Ten 2013 Category A2 - Broken Authentication and Session Management</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-931</key>
+            <name>OWASP Top Ten 2013 Category A3 - Cross-Site Scripting (XSS)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-932</key>
+            <name>OWASP Top Ten 2013 Category A4 - Insecure Direct Object References</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-933</key>
+            <name>OWASP Top Ten 2013 Category A5 - Security Misconfiguration</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-934</key>
+            <name>OWASP Top Ten 2013 Category A6 - Sensitive Data Exposure</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-935</key>
+            <name>OWASP Top Ten 2013 Category A7 - Missing Function Level Access Control</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-936</key>
+            <name>OWASP Top Ten 2013 Category A8 - Cross-Site Request Forgery (CSRF)</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-937</key>
+            <name>OWASP Top Ten 2013 Category A9 - Using Components with Known Vulnerabilities</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-938</key>
+            <name>OWASP Top Ten 2013 Category A10 - Unvalidated Redirects and Forwards</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-942</key>
+            <name>Overly Permissive Cross-domain Whitelist</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-943</key>
+            <name>Improper Neutralization of Special Elements in Data Query Logic</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-944</key>
+            <name>SFP Secondary Cluster: Access Management</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-945</key>
+            <name>SFP Secondary Cluster: Insecure Resource Access</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-946</key>
+            <name>SFP Secondary Cluster: Insecure Resource Permissions</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-947</key>
+            <name>SFP Secondary Cluster: Authentication Bypass</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-948</key>
+            <name>SFP Secondary Cluster: Digital Certificate</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-949</key>
+            <name>SFP Secondary Cluster: Faulty Endpoint Authentication</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-950</key>
+            <name>SFP Secondary Cluster: Hardcoded Sensitive Data</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-951</key>
+            <name>SFP Secondary Cluster: Insecure Authentication Policy</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-952</key>
+            <name>SFP Secondary Cluster: Missing Authentication</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-953</key>
+            <name>SFP Secondary Cluster: Missing Endpoint Authentication</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-954</key>
+            <name>SFP Secondary Cluster: Multiple Binds to the Same Port</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-955</key>
+            <name>SFP Secondary Cluster: Unrestricted Authentication</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-956</key>
+            <name>SFP Secondary Cluster: Channel Attack</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-957</key>
+            <name>SFP Secondary Cluster: Protocol Error</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-958</key>
+            <name>SFP Secondary Cluster: Broken Cryptography</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-959</key>
+            <name>SFP Secondary Cluster: Weak Cryptography</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-960</key>
+            <name>SFP Secondary Cluster: Ambiguous Exception Type</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-961</key>
+            <name>SFP Secondary Cluster: Incorrect Exception Behavior</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-962</key>
+            <name>SFP Secondary Cluster: Unchecked Status Condition</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-963</key>
+            <name>SFP Secondary Cluster: Exposed Data</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-964</key>
+            <name>SFP Secondary Cluster: Exposure Temporary File</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-965</key>
+            <name>SFP Secondary Cluster: Insecure Session Management</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-966</key>
+            <name>SFP Secondary Cluster: Other Exposures</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-967</key>
+            <name>SFP Secondary Cluster: State Disclosure</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-968</key>
+            <name>SFP Secondary Cluster: Covert Channel</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-969</key>
+            <name>SFP Secondary Cluster: Faulty Memory Release</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-970</key>
+            <name>SFP Secondary Cluster: Faulty Buffer Access</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-971</key>
+            <name>SFP Secondary Cluster: Faulty Pointer Use</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-972</key>
+            <name>SFP Secondary Cluster: Faulty String Expansion</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-973</key>
+            <name>SFP Secondary Cluster: Improper NULL Termination</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-974</key>
+            <name>SFP Secondary Cluster: Incorrect Buffer Length Computation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-975</key>
+            <name>SFP Secondary Cluster: Architecture</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-976</key>
+            <name>SFP Secondary Cluster: Compiler</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-977</key>
+            <name>SFP Secondary Cluster: Design</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-978</key>
+            <name>SFP Secondary Cluster: Implementation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-979</key>
+            <name>SFP Secondary Cluster: Failed Chroot Jail</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-980</key>
+            <name>SFP Secondary Cluster: Link in Resource Name Resolution</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-981</key>
+            <name>SFP Secondary Cluster: Path Traversal</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-982</key>
+            <name>SFP Secondary Cluster: Failure to Release Resource</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-983</key>
+            <name>SFP Secondary Cluster: Faulty Resource Use</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-984</key>
+            <name>SFP Secondary Cluster: Life Cycle</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-985</key>
+            <name>SFP Secondary Cluster: Unrestricted Consumption</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-986</key>
+            <name>SFP Secondary Cluster: Missing Lock</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-987</key>
+            <name>SFP Secondary Cluster: Multiple Locks/Unlocks</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-988</key>
+            <name>SFP Secondary Cluster: Race Condition Window</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-989</key>
+            <name>SFP Secondary Cluster: Unrestricted Lock</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-990</key>
+            <name>SFP Secondary Cluster: Tainted Input to Command</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-991</key>
+            <name>SFP Secondary Cluster: Tainted Input to Environment</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-992</key>
+            <name>SFP Secondary Cluster: Faulty Input Transformation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-993</key>
+            <name>SFP Secondary Cluster: Incorrect Input Handling</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-994</key>
+            <name>SFP Secondary Cluster: Tainted Input to Variable</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-995</key>
+            <name>SFP Secondary Cluster: Feature</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-996</key>
+            <name>SFP Secondary Cluster: Security</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-997</key>
+            <name>SFP Secondary Cluster: Information Loss</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-998</key>
+            <name>SFP Secondary Cluster: Glitch in Computation</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-999</key>
+            <name>Weaknesses without Software Fault Patterns</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-1001</key>
+            <name>SFP Secondary Cluster: Use of an Improper API</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-1002</key>
+            <name>SFP Secondary Cluster: Unexpected Entry Points</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-939</key>
+            <name>Improper Authorization in Handler for Custom URL Scheme</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-940</key>
+            <name>Improper Verification of Source of a Communication Channel</name>
+        </rule>
+        <rule>
+            <repositoryKey>threadfix-rules-#</repositoryKey> 
+            <key>cwe-941</key>
+            <name>Incorrectly Specified Destination in a Communication Channel</name>
+        </rule>
+    </rules>
+</profile>

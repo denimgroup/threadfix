@@ -1,0 +1,28 @@
+11/22/2015 23:45:00
+type.info,,
+OWASP Zed Attack Proxy
+type.vulnerabilities,,
+Information disclosure - suspicious comments,Information disclosure - suspicious comments,200
+HTTP Parameter Override,HTTP Parameter Override,472
+None. Warning only.,None. Warning only.,355
+SQL Injection - MySQL,SQL Injection - MySQL,89
+SQL Injection - Boolean Based,SQL Injection - Boolean Based,89
+SQL Injection - Error Based - Generic SQL RDBMS,SQL Injection - Error Based - Generic SQL RDBMS,89
+SQL Injection - Error Based - MySQL,SQL Injection - Error Based - MySQL,89
+SQL Injection - Error Based - Java,SQL Injection - Error Based - Java,89
+SQL Injection (Hypersonic SQL) - Time Based,SQL Injection (Hypersonic SQL) - Time Based,89
+SQL Injection (MySQL) - Time Based,SQL Injection (MySQL) - Time Based,89
+SQL Injection (Oracle) - Time Based,SQL Injection (Oracle) - Time Based,89
+SQL Injection (PostgreSQL) - Time Based,SQL Injection (PostgreSQL) - Time Based,89
+Viewstate without MAC signature (Unsure),Viewstate without MAC signature (Unsure),353
+Weak Authentication Method,Weak Authentication Method,287
+IE8's XSS protection filter not disabled,IE8's XSS protection filter not disabled,16
+Application Error disclosure,Application Error disclosure,200
+SQL Injection - Hypersonic SQL,SQL Injection - Hypersonic SQL,89
+type.severities,,,
+4,4,5,4
+5,5,6,5
+0,0,1,1
+3,3,4,4
+2,2,3,3
+1,1,2,2

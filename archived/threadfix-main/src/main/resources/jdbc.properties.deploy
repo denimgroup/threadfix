@@ -1,0 +1,21 @@
+# database settings, this can be the central location for different DB settings 
+# that are referenced in /src/main/resources/applicationContext-hibernate.xml.
+
+#HSQLDB
+jdbc.driverClassName=org.hsqldb.jdbcDriver
+jdbc.url=jdbc:hsqldb:/var/lib/tomcat7/database/threadfix
+jdbc.username=sa
+jdbc.password=
+hibernate.dialect=org.hibernate.dialect.HSQLDialect
+hibernate.hbm2ddl.auto=update
+
+#MYSQL
+#jdbc.driverClassName=com.mysql.jdbc.Driver
+#jdbc.url=jdbc:mysql://localhost:3306/stonemill?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&jdbcCompliantTruncation=false
+#jdbc.username=smuser
+#jdbc.password=password
+#hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+#hibernate.hbm2ddl.auto=update
+
+hibernate.show_sql=false
+hibernate.format_sql=true

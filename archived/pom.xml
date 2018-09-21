@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.denimgroup.threadfix</groupId>
+    <artifactId>master-pom</artifactId>
+    <version>2.3-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>ThreadFix</name>
+    <description>
+        ThreadFix is a software vulnerability aggregation and management system that reduces the time it takes to fix software vulnerabilities. ThreadFix imports the results from dynamic, static and manual testing to provide a centralized view of software security defects across development teams and applications. The system allows companies to correlate testing results and streamline software remediation efforts by simplifying feeds to software issue trackers. By auto generating application firewall rules, this tool allows organizations to continue remediation work uninterrupted. ThreadFix empowers managers with vulnerability trending reports that show progress over time, giving them justification for their efforts.
+
+        ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup.com) For information about commercial support and other services, contact Denim Group about ThreadFix http://www.denimgroup.com/threadfix/
+    </description>
+
+    <modules>
+        <module>threadfix-entities</module>
+        <module>ssvl-converter</module>
+        <module>threadfix-data-access</module>
+        <module>threadfix-cli</module>
+        <module>threadfix-ham</module>
+        <module>threadfix-importers</module>
+        <module>threadfix-service-interfaces</module>
+        <module>threadfix-offline</module>
+        <module>threadfix-scanner-plugin/zaproxy</module>
+        <module>threadfix-scanner-plugin/burp</module>
+        <module>threadfix-sonar-plugin</module>
+        <module>threadfix-cli-endpoints</module>
+        <module>threadfix-cli-importers</module>
+        <module>threadfix-data-migration</module>
+        <module>threadfix-main</module>
+    </modules>
+
+    <licenses>
+        <license>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>bbeverly</id>
+            <name>Bryan Beverly</name>
+            <email>bryan@denimgroup.com</email>
+        </developer>
+        <developer>
+            <id>dcornell</id>
+            <name>Dan Cornell</name>
+            <email>dan@denimgroup.com</email>
+        </developer>
+        <developer>
+            <id>manderson</id>
+            <name>Michael Anderson</name>
+            <email>michael@denimgroup.com</email>
+        </developer>
+        <developer>
+            <id>mcollins</id>
+            <name>Mac Collins</name>
+            <email>mcollins@denimgroup.com</email>
+        </developer>
+        <developer>
+            <id>stran</id>
+            <name>Sinh Tran</name>
+            <email>stran@denimgroup.com</email>
+        </developer>
+        <developer>
+            <id>zabdisubhan</id>
+            <name>Zignat Abdisubhan</name>
+            <email>zabdisubhan@denimgroup.com</email>
+        </developer>
+    </developers>
+
+    <organization>
+        <name>Denim Group, Ltd.</name>
+        <url>http://www.denimgroup.com/</url>
+    </organization>
+
+    <!-- Add local repository at /lib so that projects can share jetbrains annotations -->
+    <repositories>
+        <repository>
+            <id>lib</id>
+            <name>lib</name>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </snapshots>
+            <!-- this will be resolved by the internal poms so they need to look up one level.-->
+            <url>file://${project.basedir}${file.separator}..${file.separator}lib</url>
+        </repository>
+        <repository>
+            <id>jboss-public-repository-group</id>
+            <name>JBoss Public Repository Group</name>
+            <url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+            <layout>default</layout>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler.version}</version>
+                    <configuration>
+                        <source>1.7</source>
+                        <target>1.7</target>
+                    </configuration>
+                </plugin>
+                <!-- Skips unit tests by default -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire.version}</version>
+                    <configuration>
+                        <skipTests>true</skipTests>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>enterprise</id>
+            <modules>
+                <module>threadfix-enterprise</module>
+                <module>threadfix-scanagent</module>
+            </modules>
+            <properties>
+                <regression.category>com.denimgroup.threadfix.RegressionTests</regression.category>
+            </properties>
+        </profile>
+        <profile>
+            <id>int</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <!-- Runs unit tests-->
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-surefire-plugin</artifactId>
+                            <version>${maven-surefire.version}</version>
+                            <configuration>
+                                <skipTests>false</skipTests>
+                            </configuration>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>org.apache.maven.surefire</groupId>
+                                    <artifactId>surefire-junit47</artifactId>
+                                    <version>${surefire-junit47.version}</version>
+                                </dependency>
+                            </dependencies>
+                            <executions>
+                                <execution>
+                                    <id>default-test</id>
+                                    <phase>test</phase>
+                                    <goals>
+                                        <goal>test</goal>
+                                    </goals>
+                                    <configuration>
+                                        <includes>
+                                            <include>**/*Test.class</include>
+                                            <include>**/*Tests.class</include>
+                                        </includes>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                        <!-- Provides code coverage for unit tests-->
+                        <plugin>
+                            <groupId>org.jacoco</groupId>
+                            <artifactId>jacoco-maven-plugin</artifactId>
+                            <version>${jacoco.version}</version>
+                            <configuration>
+                                <destFile>${sonar.jacoco.reportPath}</destFile>
+                                <append>true</append>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <id>default-prepare-agent</id>
+                                    <goals>
+                                        <goal>prepare-agent</goal>
+                                    </goals>
+                                </execution>
+                                <execution>
+                                    <id>default-report</id>
+                                    <phase>prepare-package</phase>
+                                    <goals>
+                                        <goal>report</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+        <profile>
+            <id>reg</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-failsafe-plugin</artifactId>
+                            <version>${maven-failsafe.version}</version>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>org.apache.maven.surefire</groupId>
+                                    <artifactId>surefire-junit47</artifactId>
+                                    <version>${surefire-junit47.version}</version>
+                                </dependency>
+                            </dependencies>
+                            <configuration>
+                                <skipTests>false</skipTests>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <goals>
+                                        <goal>integration-test</goal>
+                                    </goals>
+                                    <configuration>
+                                        <groups>${regression.category}</groups>
+                                        <includes>
+                                            <include>**/*.class</include>
+                                        </includes>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+        <profile>
+            <id>dependencycheck</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.owasp</groupId>
+                            <artifactId>dependency-check-maven</artifactId>
+                            <version>${dependencycheck.version}</version>
+                            <executions>
+                                <execution>
+                                    <goals>
+                                        <goal>check</goal>
+                                    </goals>
+                                    <configuration>
+                                        <format>xml</format>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
+
+    <properties>
+        <db.name>stonemill</db.name>
+
+        <!-- Framework dependency versions -->
+        <apache.activemq.version>5.13.0</apache.activemq.version>
+        <apache.poi.version>3.11</apache.poi.version>
+        <apache.httpclient.version>4.5.1</apache.httpclient.version>
+        <apache.httpcore.version>4.4</apache.httpcore.version>
+        <apache.xmlrpc.version>3.1.3</apache.xmlrpc.version>
+        <apache.xbean.version>3.18</apache.xbean.version>
+        <codehaus.jackson.version>1.9.13</codehaus.jackson.version>
+        <cglib.version>3.1</cglib.version>
+        <findbugs.jsr305.version>2.0.3</findbugs.jsr305.version>
+        <commons.beanutils.version>1.9.2</commons.beanutils.version>
+        <commons.codec.version>1.10</commons.codec.version>
+        <commons.collections.version>3.2.2</commons.collections.version>
+        <commons.configuration.version>1.10</commons.configuration.version>
+        <commons.csv.version>1.0</commons.csv.version>
+        <commons.digester.version>2.1</commons.digester.version>
+        <commons.fileupload.version>1.3.1</commons.fileupload.version>
+        <commons.httpclient.version>3.1</commons.httpclient.version>
+        <commons.io.version>2.4</commons.io.version>
+        <commons.lang.version>3.3.2</commons.lang.version>
+        <commons.logging.version>1.2</commons.logging.version>
+        <commons.validator.version>1.4.1</commons.validator.version>
+        <esapi.version>2.1.0-SNAPSHOT</esapi.version>
+        <hibernate.version>3.6.10.Final</hibernate.version>
+        <hibernate-validator.version>5.1.3.Final</hibernate-validator.version>
+        <itext.version>5.5.8</itext.version>
+        <javassist.version>3.19.0-GA</javassist.version>
+        <jgit.version>3.6.2.201501210735-r</jgit.version>
+        <json.version>20090211</json.version>
+        <jstl.version>1.2</jstl.version>
+        <jsp-api.version>2.3.1</jsp-api.version>
+        <jta.version>1.1</jta.version>
+        <log4j.version>1.2.17</log4j.version>
+        <persistence.version>1.0.2</persistence.version>
+        <quartz.version>2.2.1</quartz.version>
+        <javamail.version>1.4</javamail.version>
+        <velocity.version>1.7</velocity.version>
+        <velocity-tools.version>2.0</velocity-tools.version>
+        <selenium.version>2.47.0</selenium.version>
+        <servlet-api.version>3.1.0</servlet-api.version>
+        <sitemesh.version>2.4.2</sitemesh.version>
+        <slf4j.version>1.7.10</slf4j.version>
+        <spring.version>4.1.9.RELEASE</spring.version>
+        <spring-ldap.version>2.0.2.RELEASE</spring-ldap.version>
+        <springsecurity.version>3.2.9.RELEASE</springsecurity.version>
+        <javax-el.version>2.2.4</javax-el.version>
+        <spring-ws.version>2.2.4.RELEASE</spring-ws.version>
+        <tfs-library.version>11.0.0</tfs-library.version>
+        <tuckey.version>4.0.4</tuckey.version>
+        <validation-api.version>1.1.0.Final</validation-api.version>
+        <zap.version>2.2.2</zap.version>
+        <zaphelp.version>2.2.2</zaphelp.version>
+        <dependencycheck.version>1.3.6</dependencycheck.version>
+        <svnkit.version>1.8.11</svnkit.version>
+        <joda.version>2.8.2</joda.version>
+
+        <!-- Testing dependency versions -->
+        <easymock.version>3.0</easymock.version>
+        <hsqldb.version>1.8.0.10</hsqldb.version>
+        <mysql.version>5.1.38</mysql.version>
+        <jackson-2-version>2.5.1</jackson-2-version>
+        <junit.version>4.11</junit.version>
+        <selenium-client.version>1.0.2</selenium-client.version>
+
+        <!-- Plugin versions -->
+        <cargo.version>1.4.8</cargo.version>
+        <emma.version>1.0-alpha-2</emma.version>
+        <maven-compiler.version>2.3.2</maven-compiler.version>
+        <maven-surefire.version>2.17</maven-surefire.version>
+        <maven-failsafe.version>2.17</maven-failsafe.version>
+        <surefire-junit47.version>2.17</surefire-junit47.version>
+        <jacoco.version>0.7.0.201403182114</jacoco.version>
+        <jsoup.version>1.8.2</jsoup.version>
+        <gson.version>2.2.4</gson.version>
+
+        <!-- Testing Properties -->
+        <regression.category>com.denimgroup.threadfix.CommunityTests</regression.category>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
+    </properties>
+
+    <url>http://www.denimgroup.com/threadfix/</url>
+    <scm>
+        <url>https://github.com/denimgroup/threadfix</url>
+    </scm>
+    <issueManagement>
+        <system>https://github.com/denimgroup/threadfix/issues</system>
+    </issueManagement>
+</project>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:amq="http://activemq.apache.org/schema/core"
+	xmlns:jms="http://www.springframework.org/schema/jms" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	   					   http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+						   http://activemq.apache.org/schema/core
+						   http://activemq.apache.org/schema/core/activemq-core-5.2.0.xsd
+						   http://www.springframework.org/schema/jms 
+						   http://www.springframework.org/schema/jms/spring-jms-3.2.xsd">
+
+	<!-- creates an activemq connection factory using the amq namespace -->
+	<amq:connectionFactory id="amqConnectionFactory"
+		brokerURL="${jms.url}" userName="${jms.username}" password="${jms.password} " />
+
+	<!--
+		CachingConnectionFactory Definition, sessionCacheSize property is the
+		number of sessions to cache
+	-->
+	<bean id="connectionFactory"
+		class="org.springframework.jms.connection.CachingConnectionFactory"
+		p:exceptionListener-ref="jmsExceptionListener" p:sessionCacheSize="100">
+		<constructor-arg ref="amqConnectionFactory" />
+	</bean>
+
+	<!-- JmsTemplate Definition -->
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<constructor-arg ref="connectionFactory" />
+	</bean>
+
+    <bean id="errorHandler" class="com.denimgroup.threadfix.service.queue.QueueErrorHandler">
+
+    </bean>
+
+	<!--
+		listener container definition using the jms namespace, concurrency is
+		the max number of concurrent listeners that can be started
+	-->
+	<jms:listener-container concurrency="1" error-handler="errorHandler">
+		<jms:listener id="QueueListener" destination="requestQueue"
+			ref="queueListener" />
+	</jms:listener-container>
+
+</beans>

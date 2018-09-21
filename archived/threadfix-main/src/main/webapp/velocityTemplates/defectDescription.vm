@@ -1,0 +1,155 @@
+##Threadfix is set to filter the templates to strip indentation spaces and linebreaks to allow for nice template formatting here
+##To force evaluation spaces at the beggining of the line or the evaluation of linebreaks, use the $sp and $br variables
+##It filters linebreaks by appending ## at the end each line, if you see that in the output, it means something went wrong in the template
+##in that case, changing the $variable into ${variable} at the end of the line or adding a trailing space should solve the problems
+
+#set( $addFindingsDetails=false )
+
+##This block is more or less what was previously implemented when $addFindingsDetails is false
+#if( $metadata.preamble && $metadata.preamble != "" )
+    #header("General information")$br
+    $metadata.preamble$br
+    $br
+#end
+#set( $vulnIndex=0 )
+#if( $vulnerabilities )
+    #foreach( $vulnerability in $vulnerabilities )
+        #if( $vulnerability.genericVulnerability && $vulnerability.surfaceLocation )
+            Vulnerability\[${vulnIndex}]: #addThreadfixLink( "${baseUrl}$vulnerability.getUri()" )$br
+            $vulnerability.genericVulnerability.name$br
+            CWE entry: http://cwe.mitre.org/data/definitions/${vulnerability.genericVulnerability.id}.html$br
+            #set( $dependencyFinding = "" )
+            #set( $staticFinding = "" )
+            #set( $dynamicFinding = "" )
+
+            #set( $dependencyFinding = $dependencyFindings.get($vulnerability) )
+            #set( $staticFinding = $staticFindings.get($vulnerability) )
+            #set( $dynamicFinding = $dynamicFindings.get($vulnerability) )
+
+            #if( $dependencyFinding && $dependencyFinding.getDependency() )
+                #set( $refId = "" )
+                #set( $refLink = "" )
+                #set( $componentName = "" )
+
+                #set( $refId = $dependencyFinding.getDependency().getRefId() )
+                #set( $refLink = $dependencyFinding.getDependency().getRefLink() )
+                #set( $componentName = $dependencyFinding.getDependency().getComponentName() )
+
+                #if( $refId != "" || $componentName != "" )
+                    Vulnerability dependency:$br
+                    #if( $refId != "" )Reference: $refId #if($refLink != "")($refLink)#end$br#end
+                    #if( $componentName != "" )Component: $componentName$br#end
+                #end
+            #end
+            #if( $staticFinding && $staticFinding.getDataFlowElements() )
+                #set( $dataFlows = "" )
+                #set( $dataFlows = $staticFinding.getDataFlowElements() )
+
+                #if( $dataFlows != "")
+                    Vulnerability source file location:$br
+                    #foreach( $dataFlow in $dataFlows )
+                        #set( $sourceFileLocation = "" )
+                        #set( $lineNumber = "" )
+
+                        #set( $sourceFileLocation = $dataFlow.getSourceFileName() )
+                        #set( $lineNumber = $dataFlow.getLineNumber() )
+
+                        #if( $sourceFileLocation != "" )
+                        File: $sourceFileLocation#if($lineNumber != "") line $lineNumber#end$br
+                        #end
+                    #end
+                #end
+            #end
+            #if( $dynamicFinding && $dynamicFinding.surfaceLocation )
+                #set( $url = "" )
+                #set( $parameter = "" )
+
+                #set( $url = $dynamicFinding.surfaceLocation.getUrl() )
+                #set( $parameter = $dynamicFinding.surfaceLocation.parameter )
+
+                #if( $url != "" || $parameter != "" )
+                    Vulnerability attack surface location:$br
+                    #if( $url != "" )URL: ${url}#end$br
+                    #if( $parameter != "" )Parameter: ${parameter}#end$br
+                #end
+            #end
+
+            #if($addFindingsDetails)
+                #addFindingsDetails( $vulnerability )
+            #end
+            #set( $vulnIndex = $vulnIndex + 1 )
+        #end
+        $br
+    #end
+
+    #if( $customTexts.size() > 0 )
+        #header("ThreadFix Custom Text:")$br
+        #foreach ($customText in $customTexts)
+            $customText
+        #end
+    #end
+#end
+
+##This part will add most of the interesting details of the findings of a vulnerability
+#macro( addFindingsDetails $vulnerability )
+    #if( $vulnerability.findings && !$vulnerability.findings.isEmpty() )
+        #foreach( $finding in $vulnerability.findings )
+            #presentIfNotNull("Scanner Detail" $finding.scannerDetail false)
+            #presentIfNotNull("Scanner Recommendation" $finding.scannerRecommendation false)
+            #presentIfNotNull("Attack String" $finding.attackString true)
+            #presentIfNotNull("Attack Request" $finding.attackRequest true)
+            #presentIfNotNull("Attack Response" $finding.attackResponse true)
+            #addDataFlow($finding)
+        #end
+    #end
+#end
+
+#macro( header $headerContent )
+    #if($defectTrackerName=="JIRA")
+        h4.$headerContent
+    #else
+        $headerContent
+    #end
+#end
+
+#macro( code $codeContent )
+    #if($defectTrackerName=="JIRA")
+        {code}${codeContent}{code}
+    #else
+        ---$br
+        $codeContent$br
+        ---
+    #end
+#end
+
+#macro( addThreadfixLink $link )
+    #if($defectTrackerName=="JIRA")
+        [Threadfix|$link]
+    #else
+        $br
+        $link
+    #end
+#end
+
+#macro( presentIfNotNull $sectionName $content $isCode )
+    #if( $content )
+        $br
+        #header($sectionName)$br
+        #if( $isCode )
+            #code($content)
+        #else
+            $content
+        #end$br
+    #end
+#end
+
+#macro( addDataFlow $finding )
+    #if( $finding.dataFlowElements && ! $finding.dataFlowElements.isEmpty() )
+        $br
+        #header("Data Flow")${br}
+        #foreach( $dataflowElement in $finding.dataFlowElements )
+            $dataflowElement.sourceFileName line $dataflowElement.lineNumber$br
+            #code($dataflowElement.lineText)${br}
+        #end
+    #end
+#end

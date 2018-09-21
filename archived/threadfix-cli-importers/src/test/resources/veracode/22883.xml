@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<detailedreport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://www.veracode.com/schema/reports/export/1.0" xsi:schemaLocation="https://www.veracode.com/schema/reports/export/1.0 https://analysiscenter.veracode.com/resource/detailedreport.xsd" report_format_version="1.4" app_name="Open SSH" app_id="20364" first_build_submitted_date="2011-03-16 17:54:39 UTC" version="3.8.1p1" build_id="22883" submitter="Veracode" platform="Solaris" assurance_level="4" business_criticality="4" generation_date="2014-06-03 14:43:51 UTC" veracode_level="VL1" total_flaws="17" flaws_not_mitigated="17" teams="" life_cycle_stage="Deployed (In production and actively developed)" planned_deployment_date="" last_update_time="2011-03-17 01:45:18 UTC" is_latest_build="true" policy_name="Veracode Transitional High" policy_version="1" policy_compliance_status="Pass" policy_rules_status="Pass" grace_period_expired="false" scan_overdue="false" business_owner="" business_unit="Not Specified" tags="" legacy_scan_engine="false">
+<static-analysis rating="C" score="93" submitted_date="2011-03-16 17:48:23 UTC" published_date="2011-03-17 01:45:16 UTC" analysis_size_bytes="18943889">
+<modules>
+<module name="sshd" compiler="GCC_Linux_IA32_3_2_3" os="Red Hat Enterprise Linux v3 (IA32)" architecture="IA32" loc="30390" score="0" numflawssev0="1" numflawssev1="0" numflawssev2="13" numflawssev3="2" numflawssev4="0" numflawssev5="1"/>
+</modules>
+</static-analysis>
+<severity level="5">
+<category categoryid="18" categoryname="OS Command Injection" pcirelated="true">
+<desc>
+<para text="OS command injection vulnerabilities occur when data enters an application from an untrusted source and is used to dynamically construct and execute a system command.  This allows an attacker to either alter the command executed by the application or append additional commands.  The command is typically executed with the privileges of the executing process and gives an attacker a privilege or capability that he would not otherwise have."/>
+</desc>
+<recommendations>
+<para text="Careful handling of all untrusted data is critical in preventing OS command injection attacks.   Using one or more of the following techniques provides defense-in-depth and minimizes the likelihood of an vulnerability.">
+<bulletitem text="If possible, use library calls rather than external processes to recreate the desired functionality."/>
+<bulletitem text="Validate user-supplied input using positive filters (white lists) to ensure that it conforms to the expected format, using centralized data validation routines when possible. "/>
+<bulletitem text="Select safe API routines.  Some APIs that execute system commands take an array of strings as input rather than a single string, which protects against some forms of command injection by ensuring that a user-supplied argument cannot be interpreted as part of the command."/>
+</para>
+</recommendations>
+<cwe cweid="78" cwename="Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')" pcirelated="true" owasp="929" sans="801" certc="741" certcpp="875" certjava="845">
+<description>
+<text text="This call contains a command injection flaw.  The argument to the function is constructed using user-supplied input.  If an attacker is allowed to specify all or part of the command, it may be possible to execute commands on the server with the privileges of the executing process.  The level of exposure depends on the effectiveness of input validation routines, if any."/>
+</description>
+<staticflaws>
+<flaw severity="5" categoryname="Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')" count="1" issueid="29" module="sshd" type="execv" description="This call to execv() contains a command injection flaw. The argument to the function is constructed using user-supplied input. If an attacker is allowed to specify all or part of the command, it may be possible to execute commands on the server with the privileges of the executing process. The level of exposure depends on the effectiveness of input validation routines, if any. The first argument to execv() contains tainted data from the variable saved_argv. The tainted data originated from an earlier call to main.
+
+Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using black lists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters. Most APIs the execute system commands also have a &quot;safe&quot; version of the method that takes an array of strings as input rather than a single string, which protects against some forms of command injection.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/78.html) 
+OWASP (http://www.owasp.org/index.php/Command_Injection) 
+WASC (http://webappsec.pbworks.com/OS-Commanding)
+
+" note="" cweid="78" remediationeffort="3" exploitLevel="1" categoryid="18" pcirelated="true" date_first_occurrence="2011-03-16 17:42:39 UTC" remediation_status="New" cia_impact="ccp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="sshd.c" line="266" sourcefilepath="home/sjohnson/openssh-3.8.1p1/" scope="Global Scope" functionprototype="void sighup_restart(__span32)" functionrelativelocation="42"/>
+</staticflaws>
+</cwe>
+</category>
+</severity>
+<severity level="4"/>
+<severity level="3">
+<category categoryid="4" categoryname="Buffer Management Errors" pcirelated="false">
+<desc>
+<para text="Buffer errors are related to the creation, modification, management, or deletion of memory buffers.  Reading or writing areas of memory not intended by the application developer can lead to serious security vulnerabilities and can cause an application to execute arbitrary code on behalf of an attacker."/>
+<para text="Unchecked array indexing, improper string length checking, off-by-one errors, and improper null termination are other common flaws related to buffer management.  These flaws can impact application logic by reading or writing from incorrect memory locations, often causing buffer overflows to occur in the process."/>
+</desc>
+<recommendations>
+<para text="There are a number of mitigations that can be applied during both design and implementation to prevent buffer errors from occurring.  Using multiple techniques provides defense-in-depth. ">
+<bulletitem text="When using functions that accept a number of bytes to copy, such as strncpy(), be aware that if the destination buffer size is equal to the source buffer size, it may not null-terminate the string."/>
+<bulletitem text="Be careful when working with multi-byte strings, as the number of logical characters in a string is not equivalent to the number of bytes allocated in memory."/>
+<bulletitem text="Include sanity checks to ensure the validity of any values used as index variables. In loops, use greater-than-or-equal-to, or less-than-or-equal-to, as opposed to simply greater-than, or less-than compare statements."/>
+<bulletitem text="Use a safe string handling functions such as Microsoft's strsafe.h. These functions prevent data from being written past the end of buffers and guarantees null termination.  Alternatively, use a string abstraction library such as SafeStr, which automatically resizes strings as required.  While neither of these approaches is foolproof, they will prevent many common mistakes."/>
+</para>
+</recommendations>
+<cwe cweid="170" cwename="Improper Null Termination" pcirelated="false" certc="741" certcpp="875">
+<description>
+<text text="A call may result in a missing null terminator.  An improperly specified number of bytes to copy can result in the destination buffer not null terminated. This may cause subsequent string operations to overflow."/>
+</description>
+<staticflaws>
+<flaw severity="3" categoryname="Improper Null Termination" count="1" issueid="2" module="sshd" type="strncpy" description="This call to strncpy() may result in a missing null terminator. The source string has an allocated size of (unavailable) bytes, and the number of bytes to write is specified as 4. As a result, the destination buffer will not be null terminated and may cause subsequent string operations to overflow.
+
+Ensure that the destination buffer is large enough to hold the source string plus the null terminator. If the intended behavior is to truncate the source, ensure that the destination is explicitly null terminated.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/170.html)
+
+" note="" cweid="170" remediationeffort="1" exploitLevel="0" categoryid="4" pcirelated="false" date_first_occurrence="2011-03-16 17:42:39 UTC" remediation_status="New" cia_impact="ppn" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="loginrec.c" line="574" sourcefilepath="home/sjohnson/openssh-3.8.1p1/" scope="Global Scope" functionprototype="char * line_abbrevname(char *, const char *, int)" functionrelativelocation="90"/>
+</staticflaws>
+</cwe>
+</category>
+<category categoryid="17" categoryname="Code Quality" pcirelated="false">
+<desc>
+<para text="Code quality issues stem from failure to follow good coding practices and can lead to unpredictable behavior. These may include but are not limited to:">
+<bulletitem text="Neglecting to remove debug code or dead code"/>
+<bulletitem text="Improper resource management, such as using a pointer after it has been freed"/>
+<bulletitem text="Using the incorrect operator to compare objects"/>
+<bulletitem text="Failing to follow an API or framework specification"/>
+<bulletitem text="Using a language feature or API in an unintended manner"/>
+</para>
+<para text="While code quality flaws are generally less severe than other categories and usually are not directly exploitable, they may serve as indicators that developers are not following practices that increase the reliability and security of an application.  For an attacker, code quality issues may provide an opportunity to stress the application in unexpected ways."/>
+</desc>
+<recommendations>
+<para text="The wide variance of code quality issues makes it impractical to generalize how these issues should be addressed.  Refer to individual categories for specific recommendations. "/>
+</recommendations>
+<cwe cweid="415" cwename="Double Free" pcirelated="false" certc="742" certcpp="876">
+<description>
+<text text="This call results in a double free error.  Freeing the same memory allocation twice can lead to a write-what-where condition.  If an attacker can control the data written into the buffer, the double free may result in execution of arbitrary code if the memory chunk structures are corrupted."/>
+</description>
+<staticflaws>
+<flaw severity="3" categoryname="Double Free" count="1" issueid="22" module="sshd" type="xfree" description="This call results in a double free error. Freeing the same memory allocation twice can lead to a write-what-where condition. If an attacker can control the data written into the buffer, the double free may result in execution of arbitrary code if the memory chunk structures are corrupted.
+
+Ensure that each allocation is freed only once. After freeing a chunk, set the pointer to NULL to ensure the pointer cannot be freed again. Ensure that clean-up routines and object destructors delete each chunk of memory only once.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/415.html)
+
+" note="" cweid="415" remediationeffort="2" exploitLevel="0" categoryid="17" pcirelated="false" date_first_occurrence="2011-03-16 17:42:39 UTC" remediation_status="New" cia_impact="npp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="monitor_wrap.c" line="600" sourcefilepath="home/sjohnson/openssh-3.8.1p1/" scope="Global Scope" functionprototype="void mm_send_keystate(struct monitor /*24*/ *)" functionrelativelocation="48"/>
+</staticflaws>
+</cwe>
+</category>
+</severity>
+<severity level="2">
+<category categoryid="17" categoryname="Code Quality" pcirelated="false">
+<desc>
+<para text="Code quality issues stem from failure to follow good coding practices and can lead to unpredictable behavior. These may include but are not limited to:">
+<bulletitem text="Neglecting to remove debug code or dead code"/>
+<bulletitem text="Improper resource management, such as using a pointer after it has been freed"/>
+<bulletitem text="Using the incorrect operator to compare objects"/>
+<bulletitem text="Failing to follow an API or framework specification"/>
+<bulletitem text="Using a language feature or API in an unintended manner"/>
+</para>
+<para text="While code quality flaws are generally less severe than other categories and usually are not directly exploitable, they may serve as indicators that developers are not following practices that increase the reliability and security of an application.  For an attacker, code quality issues may provide an opportunity to stress the application in unexpected ways."/>
+</desc>
+<recommendations>
+<para text="The wide variance of code quality issues makes it impractical to generalize how these issues should be addressed.  Refer to individual categories for specific recommendations. "/>
+</recommendations>
+<cwe cweid="416" cwename="Use After Free" pcirelated="false" certc="742" certcpp="876">
+<description>
+<text text="This variable reference occurs after its memory allocation has been freed.  Using previously freed memory can corrupt valid data such as memory chunk structures or function pointers and may result in the execution of arbitrary code.Ensure that all pointers are set to NULL once the memory they point to has been freed."/>
+</description>
+<staticflaws>
+<flaw severity="2" categoryname="Use After Free" count="1" issueid="11" module="sshd" type="xfree" description="This variable reference occurs after its memory allocation has been freed. Using previously freed memory can corrupt valid data such as memory chunk structures or function pointers and may result in the execution of arbitrary code.
+
+Ensure that all pointers are set to NULL once the memory they point to has been freed.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/416.html) 
+US-CERT (https://buildsecurityin.us-cert.gov/daisy/bsi/articles/knowledge/coding/304.html)
+
+" note="" cweid="416" remediationeffort="2" exploitLevel="-1" categoryid="17" pcirelated="false" date_first_occurrence="2011-03-16 17:42:39 UTC" remediation_status="New" cia_impact="nnp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="monitor_wrap.c" line="599" sourcefilepath="home/sjohnson/openssh-3.8.1p1/" scope="Global Scope" functionprototype="void mm_send_keystate(struct monitor /*24*/ *)" functionrelativelocation="46"/>
+</staticflaws>
+</cwe>
+</category>
+<category categoryid="16" categoryname="Error Handling" pcirelated="false">
+<desc>
+<para text="Error handling problems occur when an application does not properly handle errors that occur during processing. If a function does not generate the correct return/status codes, or if the product does not handle all possible return/status codes that could be generated by a function, then security issues may result.  Similarly, failing to catch an exception thrown by a function can potentially cause the program to crash or to behave in an unexpected manner."/>
+<para text="This type of problem is most often found in edge conditions that are rarely encountered during normal application use.  Presumably, most bugs related to common conditions are found and eliminated during development and testing. In some cases, the attacker can directly control or influence the environment to trigger these edge conditions."/>
+</desc>
+<recommendations>
+<para text="Never ignore return codes, assuming that a function will always succeed.  Check for and handle all possible return codes to ensure that all scenarios are covered, including boundary or edge conditions.  Subject the application to extensive testing to discover some of the possible instances of where and how errors or return values are not handled."/>
+<para text="Use a standard exception handling mechanism to be sure that the application properly handles all types of processing errors. Do not allow the application to throw errors up to the application container, generally the web application server.   "/>
+</recommendations>
+<cwe cweid="391" cwename="Unchecked Error Condition" pcirelated="false" certc="743" certcpp="880">
+<description>
+<text text="The result of this call are not captured.  Failing to check the return code can result in unexpected behavior."/>
+</description>
+<staticflaws>
+<flaw severity="2" categoryname="Unchecked Error Condition" count="1" issueid="13" module="sshd" type="unlink" description="The result of this call to unlink() is not captured, so it cannot be checked for success. This can result in application instability or crashing if memory is not available.
+
+Be sure to check the result and make sure it is correct before use. Some functions return a pointer which should be validated as not NULL before use. Other functions return integers or Boolean values that must either be zero or non-zero for the results of the function to be used. Consult the API documentation to determine what a correct result is from the function call.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/391.html) 
+OWASP (http://www.owasp.org/index.php/Improper_error_handling)
+
+" note="" cweid="391" remediationeffort="2" exploitLevel="-1" categoryid="16" pcirelated="false" date_first_occurrence="2011-03-16 17:42:39 UTC" remediation_status="New" cia_impact="nnp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="authfile.c" line="155" sourcefilepath="home/sjohnson/openssh-3.8.1p1/" scope="Global Scope" functionprototype="int key_save_private_rsa1(Key /*16*/ *, const char *, const char *, const char *)" functionrelativelocation="93"/>
+<flaw severity="2" categoryname="Unchecked Error Condition" count="1" issueid="23" module="sshd" type="xrealloc" description="The result of this call to xrealloc() is not checked for success before being used. This can result in application instability or crashing if memory is not available.
+
+Be sure to check the result and make sure it is correct before use. Some functions return a pointer which should be validated as not NULL before use. Other functions return integers or Boolean values that must either be zero or non-zero for the results of the function to be used. Consult the API documentation to determine what a correct result is from the function call.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/391.html) 
+OWASP (http://www.owasp.org/index.php/Improper_error_handling)
+
+" note="" cweid="391" remediationeffort="2" exploitLevel="-1" categoryid="16" pcirelated="false" date_first_occurrence="2011-03-16 17:42:39 UTC" remediation_status="New" cia_impact="nnp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="buffer.c" line="113" sourcefilepath="home/sjohnson/openssh-3.8.1p1/" scope="Global Scope" functionprototype="void * buffer_append_space(buffer_init::Buffer /*16*/ *, unsigned int)" functionrelativelocation="92"/>
+<flaw severity="2" categoryname="Unchecked Error Condition" count="1" issueid="19" module="sshd" type="xrealloc" description="The result of this call to xrealloc() is not checked for success before being used. This can result in application instability or crashing if memory is not available.
+
+Be sure to check the result and make sure it is correct before use. Some functions return a pointer which should be validated as not NULL before use. Other functions return integers or Boolean values that must either be zero or non-zero for the results of the function to be used. Consult the API documentation to determine what a correct result is from the function call.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/391.html) 
+OWASP (http://www.owasp.org/index.php/Improper_error_handling)
+
+" note="" cweid="391" remediationeffort="2" exploitLevel="-1" categoryid="16" pcirelated="false" date_first_occurrence="2011-03-16 17:42:39 UTC" remediation_status="New" cia_impact="nnp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="channels.c" line="234" sourcefilepath="home/sjohnson/openssh-3.8.1p1/" scope="Global Scope" functionprototype="Channel /*420*/ * channel_new(char *, int, int, int, int, unsigned int, unsigned int, int, char *, int)" functionrelativelocation="33"/>
+<flaw severity="2" categoryname="Unchecked Error Condition" count="1" issueid="20" module="sshd" type="xrealloc" description="The result of this call to xrealloc() is not checked for success before being used. This can result in application instability or crashing if memory is not available.
+
+Be sure to check the result and make sure it is correct before use. Some functions return a pointer which should be validated as not NULL before use. Other functions return integers or Boolean values that must either be zero or non-zero for the results of the function to be used. Consult the API documentation to determine what a correct result is from the function call.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/391.html) 
+OWASP (http://www.owasp.org/index.php/Improper_error_handling)
+
+" note="" cweid="391" remediationeffort="2" exploitLevel="-1" categoryid="16" pcirelated="false" date_first_occurrence="2011-03-16 17:42:39 UTC" remediation_status="New" cia_impact="nnp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="channels.c" line="1671" sourcefilepath="home/sjohnson/openssh-3.8.1p1/" scope="Global Scope" functionprototype="void channel_prepare_select(channel_pre_listener::fd_set /*128*/ * *, channel_pre_listener::fd_set /*128*/ * *, int *, int *, int)" functionrelativelocation="45"/>
+<flaw severity="2" categoryname="Unchecked Error Condition" count="1" issueid="10" module="sshd" type="xrealloc" description="The result of this call to xrealloc() is not checked for success before being used. This can result in application instability or crashing if memory is not available.
+
+Be sure to check the result and make sure it is correct before use. Some functions return a pointer which should be validated as not NULL before use. Other functions return integers or Boolean values that must either be zero or non-zero for the results of the function to be used. Consult the API documentation to determine what a correct result is from the function call.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/391.html) 
+OWASP (http://www.owasp.org/index.php/Improper_error_handling)
+
+" note="" cweid="391" remediationeffort="2" exploitLevel="-1" categoryid="16" pcirelated="false" date_first_occurrence="2011-03-16 17:42:39 UTC" remediation_status="New" cia_impact="nnp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="channels.c" line="1672" sourcefilepath="home/sjohnson/openssh-3.8.1p1/" scope="Global Scope" functionprototype="void channel_prepare_select(channel_pre_listener::fd_set /*128*/ * *, channel_pre_listener::fd_set /*128*/ * *, int *, int *, int)" functionrelativelocation="56"/>
+<flaw severity="2" categoryname="Unchecked Error Condition" count="1" issueid="32" module="sshd" type="strchr" description="The result of this call to strchr() is not checked for success before being used. This can result in application instability or crashing if NULL is returned.
+
+Be sure to check the result and make sure it is not NULL before use.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/391.html)
+
+" note="" cweid="391" remediationeffort="2" exploitLevel="-1" categoryid="16" pcirelated="false" date_first_occurrence="2011-03-16 17:42:39 UTC" remediation_status="New" cia_impact="nnp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="match.c" line="215" sourcefilepath="home/sjohnson/openssh-3.8.1p1/" scope="Global Scope" functionprototype="int match_user(const char *, const char *, const char *, const char *)" functionrelativelocation="49"/>
+<flaw severity="2" categoryname="Unchecked Error Condition" count="1" issueid="25" module="sshd" type="xrealloc" description="The result of this call to xrealloc() is not checked for success before being used. This can result in application instability or crashing if memory is not available.
+
+Be sure to check the result and make sure it is correct before use. Some functions return a pointer which should be validated as not NULL before use. Other functions return integers or Boolean values that must either be zero or non-zero for the results of the function to be used. Consult the API documentation to determine what a correct result is from the function call.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/391.html) 
+OWASP (http://www.owasp.org/index.php/Improper_error_handling)
+
+" note="" cweid="391" remediationeffort="2" exploitLevel="-1" categoryid="16" pcirelated="false" date_first_occurrence="2011-03-16 17:42:39 UTC" remediation_status="New" cia_impact="nnp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="misc.c" line="324" sourcefilepath="home/sjohnson/openssh-3.8.1p1/" scope="Global Scope" functionprototype="void addargs(arglist /*12*/ *, char *, ...)" functionrelativelocation="61"/>
+<flaw severity="2" categoryname="Unchecked Error Condition" count="1" issueid="15" module="sshd" type="xrealloc" description="The result of this call to xrealloc() is not checked for success before being used. This can result in application instability or crashing if memory is not available.
+
+Be sure to check the result and make sure it is correct before use. Some functions return a pointer which should be validated as not NULL before use. Other functions return integers or Boolean values that must either be zero or non-zero for the results of the function to be used. Consult the API documentation to determine what a correct result is from the function call.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/391.html) 
+OWASP (http://www.owasp.org/index.php/Improper_error_handling)
+
+" note="" cweid="391" remediationeffort="2" exploitLevel="-1" categoryid="16" pcirelated="false" date_first_occurrence="2011-03-16 17:42:39 UTC" remediation_status="New" cia_impact="nnp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="session.c" line="834" sourcefilepath="home/sjohnson/openssh-3.8.1p1/" scope="Global Scope" functionprototype="void child_set_env(char * * *, unsigned int *, const char *, const char *)" functionrelativelocation="63"/>
+<flaw severity="2" categoryname="Unchecked Error Condition" count="1" issueid="21" module="sshd" type="getenv" description="The result of this call to getenv() is not captured, so it cannot be checked for success. This can result in application instability or crashing if memory is not available.
+
+Be sure to check the result and make sure it is correct before use. Some functions return a pointer which should be validated as not NULL before use. Other functions return integers or Boolean values that must either be zero or non-zero for the results of the function to be used. Consult the API documentation to determine what a correct result is from the function call.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/391.html) 
+OWASP (http://www.owasp.org/index.php/Improper_error_handling)
+
+" note="" cweid="391" remediationeffort="2" exploitLevel="-1" categoryid="16" pcirelated="false" date_first_occurrence="2011-03-16 17:42:39 UTC" remediation_status="New" cia_impact="nnp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="session.c" line="1038" sourcefilepath="home/sjohnson/openssh-3.8.1p1/" scope="Global Scope" functionprototype="char * * do_setup_env(do_authenticated1::Session /*220*/ *, const char *)" functionrelativelocation="29"/>
+<flaw severity="2" categoryname="Unchecked Error Condition" count="1" issueid="33" module="sshd" type="xrealloc" description="The result of this call to xrealloc() is not checked for success before being used. This can result in application instability or crashing if memory is not available.
+
+Be sure to check the result and make sure it is correct before use. Some functions return a pointer which should be validated as not NULL before use. Other functions return integers or Boolean values that must either be zero or non-zero for the results of the function to be used. Consult the API documentation to determine what a correct result is from the function call.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/391.html) 
+OWASP (http://www.owasp.org/index.php/Improper_error_handling)
+
+" note="" cweid="391" remediationeffort="2" exploitLevel="-1" categoryid="16" pcirelated="false" date_first_occurrence="2011-03-16 17:42:39 UTC" remediation_status="New" cia_impact="nnp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="ssh-rsa.c" line="147" sourcefilepath="home/sjohnson/openssh-3.8.1p1/" scope="Global Scope" functionprototype="int ssh_rsa_verify(const ssh_rsa_sign::Key /*16*/ *, const unsigned char *, unsigned int, const unsigned char *, unsigned int)" functionrelativelocation="56"/>
+<flaw severity="2" categoryname="Unchecked Error Condition" count="1" issueid="17" module="sshd" type="unlink" description="The result of this call to unlink() is not captured, so it cannot be checked for success. This can result in application instability or crashing if memory is not available.
+
+Be sure to check the result and make sure it is correct before use. Some functions return a pointer which should be validated as not NULL before use. Other functions return integers or Boolean values that must either be zero or non-zero for the results of the function to be used. Consult the API documentation to determine what a correct result is from the function call.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/391.html) 
+OWASP (http://www.owasp.org/index.php/Improper_error_handling)
+
+" note="" cweid="391" remediationeffort="2" exploitLevel="-1" categoryid="16" pcirelated="false" date_first_occurrence="2011-03-16 17:42:39 UTC" remediation_status="New" cia_impact="nnp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="sshd.c" line="1253" sourcefilepath="home/sjohnson/openssh-3.8.1p1/" scope="Global Scope" functionprototype="int main(int, char * *)" functionrelativelocation="70"/>
+<flaw severity="2" categoryname="Unchecked Error Condition" count="1" issueid="5" module="sshd" type="unlink" description="The result of this call to unlink() is not captured, so it cannot be checked for success. This can result in application instability or crashing if memory is not available.
+
+Be sure to check the result and make sure it is correct before use. Some functions return a pointer which should be validated as not NULL before use. Other functions return integers or Boolean values that must either be zero or non-zero for the results of the function to be used. Consult the API documentation to determine what a correct result is from the function call.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/391.html) 
+OWASP (http://www.owasp.org/index.php/Improper_error_handling)
+
+" note="" cweid="391" remediationeffort="2" exploitLevel="-1" categoryid="16" pcirelated="false" date_first_occurrence="2011-03-16 17:42:39 UTC" remediation_status="New" cia_impact="nnp" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="xmmap.c" line="58" sourcefilepath="home/sjohnson/openssh-3.8.1p1/openbsd-compat/" scope="Global Scope" functionprototype="void * xmmap(unsigned int)" functionrelativelocation="61"/>
+</staticflaws>
+</cwe>
+</category>
+</severity>
+<severity level="1"/>
+<severity level="0">
+<category categoryid="30" categoryname="Potential Backdoor" pcirelated="false">
+<desc>
+<para text="Application backdoors are modifications to programs that are designed to bypass security mechanisms or inject malicious functionality.  Backdoors are often inserted by rogue developers with legitimate access to the source code or distribution binaries.  Backdoors can take many forms, such as hard-coded credentials, &quot;easter egg&quot; style functionality, rootkits, or time bombs, among others."/>
+</desc>
+<recommendations>
+<para text="Investigate all potential backdoors thoroughly to ensure there is no undesirable functionality. If the backdoors are real, eliminate them, and initiate a broader effort to inspect the entire codebase for malicious code. This may require a detailed review of all code, as it is possible to hide a serious attack in only one or two lines of code. These lines may be located almost anywhere in an application and may have been intentionally obfuscated by the attacker."/>
+</recommendations>
+<cwe cweid="656" cwename="Reliance on Security Through Obscurity" pcirelated="false">
+<description>
+<text text="The strength of a security mechanism depends heavily on its obscurity, such that knowledge of its algorithms or key data is sufficient to allow the mechanism to be compromised."/>
+</description>
+<staticflaws>
+<flaw severity="0" categoryname="Reliance on Security Through Obscurity" count="1" issueid="4" module="sshd" type="write" description="This call to write may be an instance of call hiding. Call Hiding is the process of calling a system or library routine through one or more layers of indirection, often intended to obfuscate the actual operation of the program and to evade proper analysis.
+
+Inspect this call carefully to ensure that it is operating as intended.
+
+References: 
+CWE (http://cwe.mitre.org/data/definitions/656.html)
+
+" note="" cweid="656" remediationeffort="3" exploitLevel="-2" categoryid="30" pcirelated="false" date_first_occurrence="2011-03-16 17:42:39 UTC" remediation_status="New" cia_impact="zzz" grace_period_expires="" affects_policy_compliance="false" mitigation_status="none" mitigation_status_desc="Not Mitigated" sourcefile="atomicio.c" line="45" sourcefilepath="home/sjohnson/openssh-3.8.1p1/" scope="Global Scope" functionprototype="int atomicio(int( * )(int, void *, unsigned int), int, void *, unsigned int)" functionrelativelocation="38"/>
+</staticflaws>
+</cwe>
+</category>
+</severity>
+<flaw-status new="17" reopen="0" open="0" fixed="0" total="17" not_mitigated="17" sev-1-change="0" sev-2-change="13" sev-3-change="2" sev-4-change="0" sev-5-change="1"/>
+</detailedreport>
