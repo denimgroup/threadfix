@@ -369,7 +369,7 @@
         <browserlauncher2.version>1.3</browserlauncher2.version>
         <codehaus.jackson.version>1.6.2</codehaus.jackson.version>
         <cglib.version>2.2.2</cglib.version>
-        <commons.beanutils.version>1.8.3</commons.beanutils.version>
+        <commons.beanutils.version>1.9.2</commons.beanutils.version>
         <commons.codec.version>1.4</commons.codec.version>
         <commons.collections.version>3.2.2</commons.collections.version>
         <commons.configuration.version>1.9</commons.configuration.version>
