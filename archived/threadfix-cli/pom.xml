@@ -151,7 +151,7 @@
     <properties>
         <gson.version>2.2.4</gson.version>
         <commons.httpclient.version>3.1</commons.httpclient.version>
-        <commons.io.version>1.4</commons.io.version>
+        <commons.io.version>2.7</commons.io.version>
         <commons.lang.version>2.5</commons.lang.version>
         <commons.cli.version>1.2</commons.cli.version>
         <jackson.mapper.asl.version>1.9.13</jackson.mapper.asl.version>
