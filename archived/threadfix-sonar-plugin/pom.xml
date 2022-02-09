@@ -149,7 +149,7 @@
     <properties>
         <!-- Sonar contains Hibernate annotations version 3.4.0.GA -->
         <!-- This means we must use a compatible version of hibernate -->
-        <hibernate.version>3.3.2.GA</hibernate.version>
+        <hibernate.version>5.4.24.Final</hibernate.version>
         <!-- Unfortunately Spring 4 only supports hibernate 3.6+. This is the most recent 3.x release -->
         <spring.version>3.2.13.RELEASE</spring.version>
     </properties>
